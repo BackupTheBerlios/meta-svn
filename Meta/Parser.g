@@ -82,6 +82,7 @@ LINE
   {
     const int endOfFileValue=65535;
   }:
+  // too complicated, very performance intensive, I fear
   (NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?) =>
    NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?
   {
@@ -97,10 +98,6 @@ COMMENT
 			(~('\n'|'\r'))* ('\n'|'\r'('\n')?)
 			{$setType(Token.SKIP); newline();}
 		;
-//COMMENT:
-//  ((SPACES!)? "//")=>(SPACES!)? "//" (~('\n'|'\r'))*  ('\n'|'\r'('\n')?)
-//			{$setType(Token.SKIP); newline();}
-//   ;
     
 protected   
 SPACE:  // subrule because of ANTLR bug that results in uncompilable code
@@ -213,37 +210,18 @@ statement:
     )
     (SPACES!)?
     ;
-  
 call:
   (
     select
-    |map
-    |LITERAL
   )
   (SPACES!)?
   (
-    (
-      (
-        select
-        |map
-        |LITERAL
-      )
-      (SPACES!)?
-      (
-        select
-        |map
-        |delayed
-        |LITERAL
-      )
-    )=>call
-    |select
+    call
     |map
-    |delayed
-    |LITERAL
   )
   {
     #call=#([CALL],#call);
-  };
+  };  
 	
 delayed:
   DELAYED!
@@ -252,6 +230,7 @@ delayed:
     #delayed=#([FUNCTION], #delayed);
   };
   
+// rename GATTER to something English
 select:
   (GATTER)=>
   (

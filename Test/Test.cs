@@ -32,7 +32,6 @@ namespace Test {
 		public static string path="";
 		[STAThread]
 		public static void Main(string[] args) {
-			DateTime start=DateTime.Now;
 			//args=new string[]{@"C:\Dokumente und Einstellungen\Christian\Desktop\editor.meta"};
 			//args=new string[]{@"..\..\basicTest.meta"};
 			if(args.Length==0) {
@@ -68,6 +67,9 @@ namespace Test {
 //					Console.ReadLine();
 //				}
 			}
+			DateTime start=DateTime.Now;
+			string file=@"C:\Dokumente und Einstellungen\Christian\Desktop\performance.meta";
+			Interpreter.Run(new StreamReader(file),new Map());
 			DateTime end=DateTime.Now;
 			TimeSpan span=end-start;
 			Console.WriteLine(span.TotalSeconds);

@@ -62,11 +62,10 @@ everythingReturned:ReturnEverything
     'a
     'b
     'c
-argument:
+variableAsArgument:ReturnEverything
     'x
     'y
     'z
-variableAsArgument:ReturnEverything argument
 ReturnFunction:=
     this:=
         this:

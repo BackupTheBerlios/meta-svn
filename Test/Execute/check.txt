@@ -954,25 +954,6 @@ Entry (DictionaryEntry)
         "c"
 Entry (DictionaryEntry)
   Key (Map):
-    "argument"
-  Value (Map):
-    Entry (DictionaryEntry)
-      Key (Integer):
-        "1"
-      Value (Map):
-        "x"
-    Entry (DictionaryEntry)
-      Key (Integer):
-        "2"
-      Value (Map):
-        "y"
-    Entry (DictionaryEntry)
-      Key (Integer):
-        "3"
-      Value (Map):
-        "z"
-Entry (DictionaryEntry)
-  Key (Map):
     "variableAsArgument"
   Value (Map):
     Entry (DictionaryEntry)

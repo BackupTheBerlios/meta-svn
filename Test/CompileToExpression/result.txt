@@ -1002,63 +1002,50 @@ statements (ArrayList):
       expressions (ArrayList):
         Entry (Literal)
           literal (Map):
-            "argument"
-      parents (ArrayList):
-    valueExpression (Program):
-      statements (ArrayList):
-        Entry (Statement)
-          keyExpression (Select):
-            expressions (ArrayList):
-              Entry (Literal)
-                literal (Map):
-                  "this"
-              Entry (Literal)
-                literal (Integer):
-                  "1"
-            parents (ArrayList):
-          valueExpression (Literal):
-            literal (Map):
-              "x"
-        Entry (Statement)
-          keyExpression (Select):
-            expressions (ArrayList):
-              Entry (Literal)
-                literal (Map):
-                  "this"
-              Entry (Literal)
-                literal (Integer):
-                  "2"
-            parents (ArrayList):
-          valueExpression (Literal):
-            literal (Map):
-              "y"
-        Entry (Statement)
-          keyExpression (Select):
-            expressions (ArrayList):
-              Entry (Literal)
-                literal (Map):
-                  "this"
-              Entry (Literal)
-                literal (Integer):
-                  "3"
-            parents (ArrayList):
-          valueExpression (Literal):
-            literal (Map):
-              "z"
-  Entry (Statement)
-    keyExpression (Select):
-      expressions (ArrayList):
-        Entry (Literal)
-          literal (Map):
             "variableAsArgument"
       parents (ArrayList):
     valueExpression (Call):
-      argumentExpression (Select):
-        expressions (ArrayList):
-          Entry (Literal)
-            literal (Map):
-              "argument"
-        parents (ArrayList):
+      argumentExpression (Program):
+        statements (ArrayList):
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "1"
+              parents (ArrayList):
+            valueExpression (Literal):
+              literal (Map):
+                "x"
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "2"
+              parents (ArrayList):
+            valueExpression (Literal):
+              literal (Map):
+                "y"
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "3"
+              parents (ArrayList):
+            valueExpression (Literal):
+              literal (Map):
+                "z"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
