@@ -94,10 +94,11 @@ one='1'
 two='2'
 firstIf='unchanged'
 secondIf='unchanged'
+thenText='then'
 If
   Equal('1',one)
   then==
-    #firstIf='then'
+    #firstIf=thenText
   else==
     #firstIf='else'
 If
@@ -105,4 +106,23 @@ If
   then==
     #secondIf='then'
   else==
-    #secondIf='else'  
+    #secondIf='else'
+firstSwitch='unchanged'
+bigNumber='50020202029029233344'
+Switch
+  bigNumber
+  case=
+    [bigNumber]==
+      #firstSwitch=bigNumber
+  default==
+    #firstSwitch='default'
+secondSwitch='unchanged'
+Switch
+  '3'
+  case=
+    1==
+      #secondSwitch='one'
+    2==
+      #secondSwitch='two'
+  default==
+    #secondSwitch='default'

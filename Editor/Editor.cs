@@ -697,6 +697,8 @@ namespace Editor {
 					if(_isCall) {
 						string text="";
 						if(obj is NetMethod) {
+//							if(lastSelectedNode!=null && lastSelectedNode==Editor.SelectedNode||
+//								lastSelectedNode.Parent==Editor.SelectedNode.Parent
 							if(!lastMethodName.Equals(((NetMethod)obj).methods[0].Name)) {
 								overloadIndex=0;
 							}
@@ -708,9 +710,12 @@ namespace Editor {
 								overloadIndex=overloadNumber-1;
 							}
 							text=Help.GetDoc(((NetMethod)obj).methods[overloadIndex],true,true,true);
-
+							lastMethodName=((NetMethod)obj).methods[0].Name;
 						}
 						else if (obj is NetClass) {
+							if(!lastMethodName.Equals(((NetClass)obj).constructor.methods[0].Name)) {
+								overloadIndex=0;
+							}
 							overloadNumber=((NetClass)obj).constructor.methods.Length;
 							if(overloadIndex>=overloadNumber) {
 								overloadIndex=0;
@@ -719,6 +724,7 @@ namespace Editor {
 								overloadIndex=overloadNumber-1;
 							}
 							text=Help.GetDoc(((NetClass)obj).constructor.methods[overloadIndex],true,true,true);
+							lastMethodName=((NetClass)obj).constructor.methods[0].Name;
 						}
 						else if(obj is Map) {
 							text=FunctionHelp((Map)obj);
