@@ -31,6 +31,7 @@ using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.Xml;
 using System.Runtime.InteropServices;
+using System.Globalization;
 
 namespace Meta {
 	namespace Library {
@@ -186,7 +187,8 @@ namespace Meta {
 				return this[key]!=null;
 			}
 			public IEnumerator GetEnumerator() {
-				return this.Keys.GetEnumerator();
+				//alle Assemblies hier checken
+				return new Hashtable().GetEnumerator();//this.Keys.GetEnumerator();
 			}
 		}
 		// builtin library functions
@@ -306,7 +308,7 @@ namespace Meta {
 					this.target=typeof(Char);
 				}
 				public override object Convert(object obj)   {
-					return System.Convert.ToSByte(((Integer)obj).LongValue());
+					return System.Convert.ToChar(((Integer)obj).LongValue());
 				}
 			}
 			public class IntegerToInt32: ToNetConversion   {
@@ -315,7 +317,16 @@ namespace Meta {
 					this.target=typeof(Int32);
 				}
 				public override object Convert(object obj)   {
-					return System.Convert.ToSByte(((Integer)obj).LongValue());
+					return System.Convert.ToInt32(((Integer)obj).LongValue());
+				}
+			}
+			public class IntegerToUInt32: ToNetConversion   {
+				public IntegerToUInt32()   {
+					this.source=typeof(Integer);
+					this.target=typeof(UInt32);
+				}
+				public override object Convert(object obj)   {
+					return System.Convert.ToUInt32(((Integer)obj).LongValue());
 				}
 			}
 			public class IntegerToInt64: ToNetConversion   {
@@ -324,7 +335,7 @@ namespace Meta {
 					this.target=typeof(Int64);
 				}
 				public override object Convert(object obj)   {
-					return System.Convert.ToSByte(((Integer)obj).LongValue());
+					return System.Convert.ToInt64(((Integer)obj).LongValue());
 				}
 			}
 			public class IntegerToUInt64: ToNetConversion   {
@@ -333,7 +344,7 @@ namespace Meta {
 					this.target=typeof(UInt64);
 				}
 				public override object Convert(object obj)   {
-					return System.Convert.ToSByte(((Integer)obj).LongValue());
+					return System.Convert.ToUInt64(((Integer)obj).LongValue());
 				}
 			}
 			public class IntegerToInt16: ToNetConversion   {
@@ -342,7 +353,7 @@ namespace Meta {
 					this.target=typeof(Int16);
 				}
 				public override object Convert(object obj)   {
-					return System.Convert.ToSByte(((Integer)obj).LongValue());
+					return System.Convert.ToInt16(((Integer)obj).LongValue());
 				}
 			}
 			public class IntegerToUInt16: ToNetConversion   {
@@ -351,7 +362,7 @@ namespace Meta {
 					this.target=typeof(UInt16);
 				}
 				public override object Convert(object obj)   {
-					return System.Convert.ToSByte(((Integer)obj).LongValue());
+					return System.Convert.ToUInt16(((Integer)obj).LongValue());
 				}
 			}
 			public class MapToString: ToNetConversion   {
@@ -841,6 +852,7 @@ namespace Meta {
 				}
 				return result;
 			}
+			public static ArrayList loadedAssemblies=new ArrayList();
 			[MetaMethod("()")]
 			public static Map LoadAssembly(Map map) {
 				Map root=new Map();
@@ -855,6 +867,8 @@ namespace Meta {
 							"The assembly "+name+" could not be found."+
 							"Current directory: "+Directory.GetCurrentDirectory());
 					}
+					loadedAssemblies.Add(assembly.Location);
+
 					foreach(Type type in assembly.GetTypes())  {
 						if(type.DeclaringType==null)  {
 							Map position=root;
@@ -893,7 +907,7 @@ namespace Meta {
 				text+=")";
 				return text;
 			}
-			public static string GetDoc(MemberInfo memberInfo, bool showParams) {
+			public static string GetDoc(MemberInfo memberInfo,bool isSignature,bool isSummary,bool isParameters) {
 				XmlNode comment=GetComments(memberInfo);
 				string text="";
 				string summary="";
@@ -913,8 +927,37 @@ namespace Meta {
 							break;
 					}
 				}
+				if(isSignature) {
+					if(memberInfo is MethodBase) {
+						if(memberInfo is MethodInfo) {
+							text+=((MethodInfo)memberInfo).ReturnType+" ";
+						}
+						text+=((MethodBase)memberInfo).Name;
+						text+=" (";
+						foreach(ParameterInfo parameter in ((MethodBase)memberInfo).GetParameters()) {
+							text+=parameter.ParameterType+" "+parameter.Name+",";
+						}
+						if(((MethodBase)memberInfo).GetParameters().Length>0) {
+							text=text.Remove(text.Length-1,1);
+						}
+						text+=")";
+//						if(memberInfos.Length>1) {
+//							text+=" ( +"+(memberInfos.Length-1)+" overloads)";
+//						}
+					}
+					else if(memberInfo is PropertyInfo) {
+						text+=((PropertyInfo)memberInfo).PropertyType+" "+((PropertyInfo)memberInfo).Name;
+					}
+					else if(memberInfo is FieldInfo) {
+						text+=((FieldInfo)memberInfo).FieldType+" "+((FieldInfo)memberInfo).Name;
+					}
+					else if(memberInfo is Type) {
+						text+="class "+((Type)memberInfo).Name;
+					}
+					text+="\n";
+				}
 				text+=summary+"\n";
-				if(showParams) {
+				if(isParameters) {
 					//text+="\nparameters: \n";
 					foreach(XmlNode node in parameters) {
 						text+=node.Attributes["name"].Value+": "+node.InnerXml;
@@ -924,6 +967,37 @@ namespace Meta {
 					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
 					.Replace("M:","").Replace("E:","");
 			}
+//			public static string GetDoc(MemberInfo memberInfo, bool showParams) {
+//				XmlNode comment=GetComments(memberInfo);
+//				string text="";
+//				string summary="";
+//				ArrayList parameters=new ArrayList();
+//				if(comment==null || comment.ChildNodes==null) {
+//					return "";
+//				}
+//				foreach(XmlNode node in comment.ChildNodes) {
+//					switch(node.Name) {
+//						case "summary":
+//							summary=node.InnerXml;
+//							break;
+//						case "param":
+//							parameters.Add(node);
+//							break;
+//						default:
+//							break;
+//					}
+//				}
+//				text+=summary+"\n";
+//				if(showParams) {
+//					//text+="\nparameters: \n";
+//					foreach(XmlNode node in parameters) {
+//						text+=node.Attributes["name"].Value+": "+node.InnerXml;
+//					}
+//				}
+//				return text.Replace("<para>","").Replace("</para>","").Replace("<see cref=\"","")
+//					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
+//					.Replace("M:","").Replace("E:","");
+//			}
 //			public static string GetDoc(MemberInfo memberInfo) {
 //				XmlNode comment=GetComments(memberInfo);
 //				string text="";
@@ -1291,28 +1365,39 @@ namespace Meta {
 			}
 			public string documentation;
 		}
-		public interface INetDocumented {
-			string Documentation {
-				get;
-			}
-		}
-		public class NetMethod: ICallable, INetDocumented {
-			public string Documentation {
-				get {
-					if(cashedDoc==null) {
-						if(savedMethod!=null) {
-							cashedDoc=Interpreter.GetDoc(savedMethod,false);
-//							cashedDoc=Interpreter.GetDoc(savedMethod,showParams);
-						}
-						else {
-							cashedDoc=Interpreter.GetDoc(methods[0],false)+"(+"+methods.Length.ToString()+"overloads)";
-//							cashedDoc=Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
-						}
-					}
-					return cashedDoc;
-				}
-			}
-			private static string cashedDoc;
+//		public interface INetDocumented {
+//			//string GetDocumentation(bool signature,bool summary,bool parameters);
+//		}
+		public class NetMethod: ICallable {
+//			public string GetDocumentation(bool signature,bool summary,bool parameters) {
+//					if(cashedDoc==null) {
+//						if(savedMethod!=null) {
+//							cashedDoc=Interpreter.GetDoc(savedMethod,false);
+//							//							cashedDoc=Interpreter.GetDoc(savedMethod,showParams);
+//						}
+//						else {
+//							cashedDoc=Interpreter.GetDoc(methods[0],false)+"(+"+methods.Length.ToString()+"overloads)";
+//							//							cashedDoc=Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
+//						}
+//					}
+//					return cashedDoc;
+//			}
+//			public string Documentation {
+//				get {
+//					if(cashedDoc==null) {
+//						if(savedMethod!=null) {
+//							cashedDoc=Interpreter.GetDoc(savedMethod,false);
+////							cashedDoc=Interpreter.GetDoc(savedMethod,showParams);
+//						}
+//						else {
+//							cashedDoc=Interpreter.GetDoc(methods[0],false)+"(+"+methods.Length.ToString()+"overloads)";
+////							cashedDoc=Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
+//						}
+//					}
+//					return cashedDoc;
+//				}
+//			}
+			//private static string cashedDoc;
 //			public string GetDocumentation(bool showParams) {
 //				if(cashedDoc==null) {
 //					if(savedMethod!=null) {
@@ -1351,7 +1436,7 @@ namespace Meta {
 
 			protected object target;
 			protected Type type;
-			private MethodBase savedMethod;
+			public MethodBase savedMethod;
 			private MethodBase[] methods;
 			
 
@@ -1408,7 +1493,8 @@ namespace Meta {
 												args.Add(conversion.Convert(list[counter]));
 												matched=true;
 											}
-											catch {
+											catch (Exception e) {
+												int asdf=0;
 											}
 										}
 									}
@@ -1530,12 +1616,15 @@ namespace Meta {
 				}
 			}
 		}
-		public class NetClass: NetContainer, IKeyValue,ICallable, INetDocumented {
-			public string Documentation {
-				get {
-					return Interpreter.GetDoc(type,true);
-				}
-			}
+		public class NetClass: NetContainer, IKeyValue,ICallable {
+//			public string GetDocumentation(bool signature,bool summary,bool parameters) {
+//					return Interpreter.GetDoc(type,true);
+//			}
+//			public string Documentation {
+//				get {
+//					return Interpreter.GetDoc(type,true);
+//				}
+//			}
 			[IgnoreMember]
 			public NetMethod constructor;
 			public object Call() {
@@ -1545,7 +1634,7 @@ namespace Meta {
 				this.constructor=new NetMethod(this.type);
 			}
 		}
-		public class NetObject: NetContainer, IKeyValue, INetDocumented {
+		public class NetObject: NetContainer, IKeyValue {
 //			public string GetDocumentation (bool showParams){
 //				string text="";
 //				foreach(MemberInfo memberInfo in obj.GetType().GetMembers()) {
@@ -1563,27 +1652,42 @@ namespace Meta {
 				return obj.ToString();
 			}
 		}
-		public abstract class NetContainer: IKeyValue, IEnumerable, INetDocumented,ICustomSerialization {
+		public abstract class NetContainer: IKeyValue, IEnumerable,ICustomSerialization {
 			public string CustomSerialization() {
 				return "";
 			}
-			public string Documentation {
-				get {
-					string text="";
-					MemberInfo[] members=obj==null?
-						type.GetMembers(BindingFlags.Public|BindingFlags.Static):
-						type.GetMembers(BindingFlags.Public|BindingFlags.Instance);
-					foreach(MemberInfo memberInfo in members) {
-						if(memberInfo is MethodInfo) {
-							text+=Interpreter.GetMethodName((MethodInfo)memberInfo)+"\n";
-						}
-						text+=Interpreter.GetDoc(memberInfo,false);
-//						text+=Interpreter.GetDoc(memberInfo,showParams);
-
-					}
-					return text;
-				}
-			}
+//			public string GetDocumentation(bool signature,bool summary,bool parameters) {
+//				string text="";
+//				MemberInfo[] members=obj==null?
+//					type.GetMembers(BindingFlags.Public|BindingFlags.Static):
+//					type.GetMembers(BindingFlags.Public|BindingFlags.Instance);
+//				foreach(MemberInfo memberInfo in members) {
+//					if(memberInfo is MethodInfo) {
+//						text+=Interpreter.GetMethodName((MethodInfo)memberInfo)+"\n";
+//					}
+//					text+=Interpreter.GetDoc(memberInfo,false);
+//					//						text+=Interpreter.GetDoc(memberInfo,showParams);
+//
+//				}
+//				return text;
+//			}
+//			public string Documentation {
+//				get {
+//					string text="";
+//					MemberInfo[] members=obj==null?
+//						type.GetMembers(BindingFlags.Public|BindingFlags.Static):
+//						type.GetMembers(BindingFlags.Public|BindingFlags.Instance);
+//					foreach(MemberInfo memberInfo in members) {
+//						if(memberInfo is MethodInfo) {
+//							text+=Interpreter.GetMethodName((MethodInfo)memberInfo)+"\n";
+//						}
+//						text+=Interpreter.GetDoc(memberInfo,false);
+////						text+=Interpreter.GetDoc(memberInfo,showParams);
+//
+//					}
+//					return text;
+//				}
+//			}
 			private IKeyValue parent;
 			[IgnoreMember]
 			public IKeyValue Parent {
@@ -1666,6 +1770,11 @@ namespace Meta {
 						}
 						catch(Exception e) {
 						}
+					}
+					if(key.Equals(1)) {
+						int asdf=0;
+					}
+					if(obj is String) {
 					}
 					NetMethod indexer=new NetMethod("get_Item",obj,type);
 					try {
@@ -1781,7 +1890,7 @@ namespace Meta {
 				string argumentAdding="Map arg=new Map();";
 				// here bug
 				foreach(ParameterInfo parameter in method.GetParameters()) {
-					argumentList+=parameter.ParameterType.Name+" arg"+counter;
+					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
 					argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";
 					if(counter<method.GetParameters().Length) {
 						argumentList+=",";
@@ -1801,7 +1910,9 @@ namespace Meta {
 				source+="}";
 				source+="private Map callable;";
 				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-				CompilerParameters options=new CompilerParameters(new string[] {"mscorlib.dll","System.dll","Meta.dll"});
+				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll","Meta.dll"});
+				assemblyNames.AddRange(Interpreter.loadedAssemblies);
+				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
 				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
 				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[]
@@ -1842,11 +1953,16 @@ namespace Meta {
 						}
 					}
 					foreach(PropertyInfo property in type.GetProperties(bindingFlags)) {
-						if(property.Name!="Item" && property.Name!="Chars") { table[property.Name]=property.GetValue(obj,new object[]{});
+						if(property.Name!="Item" && property.Name!="Chars") {
+							table[property.Name]=property.GetValue(obj,new object[]{});
 						}
 					}
+					foreach(EventInfo eventInfo in type.GetEvents(bindingFlags)) {
+						//fix here
+						table[eventInfo.Name]=new NetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
+					}
 					int counter=1;
-					if(obj!=null && obj is IEnumerable)  {
+					if(obj!=null && obj is IEnumerable && !(obj is String))  { //string behaviour is too strange
 						foreach(object entry in (IEnumerable)obj) {
 							if(entry is DictionaryEntry)  {
 								table[((DictionaryEntry)entry).Key]=((DictionaryEntry)entry).Value;

@@ -30,6 +30,7 @@ namespace Test {
 	class Test {
 		public static string path="";//Path.Combine("..","..");
 		public static void Main(string[] args) {
+//			Interpreter.Run("spiel.mila",new Map());
 			Directory.SetCurrentDirectory(
 				".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
 			TestExecuter test=new TestExecuter(typeof(Tests),path);

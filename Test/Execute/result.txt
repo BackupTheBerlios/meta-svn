@@ -8,10 +8,6 @@ IEnumerable
       "assemblies"
     Value (Assemblies):
       IEnumerable
-        Entry (String):
-          "antlr.runtime"
-        Entry (String):
-          "Meta"
   Entry (DictionaryEntry):
     Key (String):
       "files"
@@ -23,72 +19,96 @@ IEnumerable
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "Void Write(System.String)"
   Entry (DictionaryEntry):
     Key (String):
       "Read"
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "System.String Read()"
   Entry (DictionaryEntry):
     Key (String):
       "And"
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "Boolean And(Boolean, Boolean)"
   Entry (DictionaryEntry):
     Key (String):
       "Or"
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "Boolean Or(Boolean, Boolean)"
   Entry (DictionaryEntry):
     Key (String):
       "Not"
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "Boolean Not(Boolean)"
   Entry (DictionaryEntry):
     Key (String):
       "Add"
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
       "Subtract"
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
       "Multiply"
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
       "Divide"
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
       "Smaller"
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
       "Greater"
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
       "Equal"
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "Boolean Equal(System.Object, System.Object)"
   Entry (DictionaryEntry):
     Key (Integer):
       "1"
@@ -1895,6 +1915,8 @@ IEnumerable
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "System.Object Invoke(System.Object)"
   Entry (DictionaryEntry):
     Key (String):
       "staticEventResult"
@@ -1910,6 +1932,8 @@ IEnumerable
     Value (NetMethod):
       Documentation (String):
         ""
+      savedMethod (RuntimeMethodInfo):
+        "Int32 Invoke(Int32)"
   Entry (DictionaryEntry):
     Key (String):
       "instanceEventResult"
