@@ -1291,7 +1291,17 @@ namespace Meta {
 			}
 			public string documentation;
 		}
-		public class NetMethod: ICallable {
+		public interface INetDocumented {
+			string Documentation {
+				get;
+			}
+		}
+		public class NetMethod: ICallable, INetDocumented {
+			public string Documentation {
+				get {
+					return "";
+				}
+			}
 			private static string cashedDoc;
 			public string GetDocumentation(bool showParams) {
 				if(cashedDoc==null) {
@@ -1510,7 +1520,7 @@ namespace Meta {
 				}
 			}
 		}
-		public class NetClass: NetContainer, IKeyValue,ICallable {
+		public class NetClass: NetContainer, IKeyValue,ICallable, INetDocumented {
 			public string Documentation {
 				get {
 					return Interpreter.GetDoc(type,true);
@@ -1525,7 +1535,7 @@ namespace Meta {
 				this.constructor=new NetMethod(this.type);
 			}
 		}
-		public class NetObject: NetContainer, IKeyValue {
+		public class NetObject: NetContainer, IKeyValue, INetDocumented {
 			public string GetDocumentation (bool showParams){
 				string text="";
 				foreach(MemberInfo memberInfo in obj.GetType().GetMembers()) {
@@ -1543,9 +1553,14 @@ namespace Meta {
 				return obj.ToString();
 			}
 		}
-		public abstract class NetContainer: IKeyValue, IEnumerable ,ICustomSerialization {
+		public abstract class NetContainer: IKeyValue, IEnumerable, INetDocumented,ICustomSerialization {
 			public string CustomSerialization() {
 				return "";
+			}
+			public string Documentation {
+				get {
+					return "";
+				}
 			}
 			private IKeyValue parent;
 			[IgnoreMember]
