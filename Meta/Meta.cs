@@ -1159,12 +1159,13 @@ namespace Meta {
 			// not unicode safe!:
 			// also, the strategy cannot replace itself in the Map yet
 			public class StringStrategy:MapStrategy {
-//				public override bool Equal(MapStrategy obj) {
-//					if(obj is StringStrategy) {
-//
-//					}
-//					retu
-//				}
+				public override bool Equal(MapStrategy obj) {
+					if(obj is StringStrategy) {
+						return ((StringStrategy)obj).text.Equals(this.text);
+
+					}
+					return base.Equal(obj);
+				}
 
 
 				public override Map Clone() {
