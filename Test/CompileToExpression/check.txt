@@ -3493,3 +3493,51 @@ statements (ArrayList):
             literal (Map):
               "switch"
         parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "font"
+      parents (ArrayList):
+    valueExpression (Call):
+      argumentExpression (Program):
+        statements (ArrayList):
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "1"
+              parents (ArrayList):
+            valueExpression (Literal):
+              literal (Map):
+                "Courier New"
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "2"
+              parents (ArrayList):
+            valueExpression (Literal):
+              literal (Integer):
+                "10"
+      callableExpression (Select):
+        expressions (ArrayList):
+          Entry (Literal)
+            literal (Map):
+              "System"
+          Entry (Literal)
+            literal (Map):
+              "Drawing"
+          Entry (Literal)
+            literal (Map):
+              "Font"
+        parents (ArrayList):

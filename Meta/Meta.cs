@@ -696,6 +696,33 @@ namespace Meta {
 						return System.Convert.ToUInt16(((Integer)obj).LongValue());
 					}
 				}
+				public class ConvertIntegerToDecimal: MetaToDotNetConversion {
+					public ConvertIntegerToDecimal() {
+						this.source=typeof(Integer);
+						this.target=typeof(decimal);
+					}
+					public override object Convert(object obj) {
+						return (decimal)(((Integer)obj).LongValue());
+					}
+				}
+				public class ConvertIntegerToDouble: MetaToDotNetConversion {
+					public ConvertIntegerToDouble() {
+						this.source=typeof(Integer);
+						this.target=typeof(double);
+					}
+					public override object Convert(object obj) {
+						return (double)(((Integer)obj).LongValue());
+					}
+				}
+				public class ConvertIntegerToFloat: MetaToDotNetConversion {
+					public ConvertIntegerToFloat() {
+						this.source=typeof(Integer);
+						this.target=typeof(float);
+					}
+					public override object Convert(object obj) {
+						return (float)(((Integer)obj).LongValue());
+					}
+				}
 				public class ConvertMapToString: MetaToDotNetConversion {
 					public ConvertMapToString() {
 						this.source=typeof(Map);

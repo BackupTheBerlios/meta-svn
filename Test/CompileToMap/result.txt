@@ -7791,3 +7791,153 @@ Entry (DictionaryEntry)
                                                     "literal"
                                                   Value (Map):
                                                     "default"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "89"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "font"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "call"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "function"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "select"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "System"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "2"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "Drawing"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "3"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "Font"
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "argument"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "program"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "key"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "select"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Integer):
+                                        "1"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "literal"
+                                          Value (Map):
+                                            "this"
+                                    Entry (DictionaryEntry)
+                                      Key (Integer):
+                                        "2"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "literal"
+                                          Value (Map):
+                                            "1"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "value"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "Courier New"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "2"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "key"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "select"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Integer):
+                                        "1"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "literal"
+                                          Value (Map):
+                                            "this"
+                                    Entry (DictionaryEntry)
+                                      Key (Integer):
+                                        "2"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "literal"
+                                          Value (Map):
+                                            "2"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "value"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "10"

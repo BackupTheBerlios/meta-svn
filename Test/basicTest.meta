@@ -189,3 +189,6 @@ switch
             #secondSwitch:'two
     default:=
         #secondSwitch:'default
+font:System.Drawing.Font
+    "Courier New"
+    '10

@@ -1907,3 +1907,8 @@ Entry (DictionaryEntry)
     "secondSwitch"
   Value (Map):
     "default"
+Entry (DictionaryEntry)
+  Key (Map):
+    "font"
+  Value (Font):
+    "[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]"
