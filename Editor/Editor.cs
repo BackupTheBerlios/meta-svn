@@ -217,7 +217,7 @@ namespace Editor {
 				if(Help.lastHelpThread.ThreadState==ThreadState.Suspended) {
 					Help.lastHelpThread.Resume();
 				}
-				Help.lastHelpThread.Abort();
+//				Help.lastHelpThread.Abort();
 				Help.lastHelpThread=null;
 			}
 		}
@@ -336,6 +336,7 @@ namespace Editor {
 		}
 		private static void listBox_SelectedIndexChanged(object sender, EventArgs e) {
 			Thread thread=new Thread(new ThreadStart(IndexChangedOtherThread));
+			thread.IsBackground=true;
 			thread.Start();
 		}
 		private static void IndexChangedOtherThread() {
@@ -821,15 +822,17 @@ namespace Editor {
 			_selectedNodeText=selectedNodeText;
 			_isCall=isCall;
 			overloadIndex=0;
-			if(lastSelectedNode==null || helpInvalidated) {
+			if(lastSelectedNode==null || Interpreter.lastProgram==null || helpInvalidated) {
 				helpInvalidated=false;
 				if(lastHelpThread!=null) {
-					lastHelpThread.Abort();
+//					lastHelpThread.Abort();
+//					lastHelpThread.Join();
 					lastHelpThread=null;
 				}
 			}
 			if(lastHelpThread==null) {
 				lastHelpThread=new Thread(new ThreadStart(ShowHelpOtherThread));
+				lastHelpThread.IsBackground=true;
 				lastSelectedNode=Editor.SelectedNode;
 				lastHelpThread.Start();
 				return;
@@ -873,7 +876,7 @@ namespace Editor {
 					new Map());
 			}
 			catch(Exception e) {
-				Help.lastHelpThread.Abort();
+//				Help.lastHelpThread.Abort();
 				Help.lastHelpThread=null;
 			}
 		}
@@ -1028,11 +1031,11 @@ namespace Editor {
 	public class AbortHelpThread:Command {
 		public override void Do() {
 			if(Help.lastHelpThread!=null) {
-				if(Help.lastHelpThread.IsAlive) {
-					Help.lastHelpThread.Resume();
-					Help.lastHelpThread.Abort();
+//				if(Help.lastHelpThread.IsAlive) {
+//					Help.lastHelpThread.Resume();
+//					Help.lastHelpThread.Abort();
 					Help.lastHelpThread=null;
-				}
+//				}
 			}
 		}
 	}

@@ -662,7 +662,7 @@ namespace Meta {
 					try {
 						((Statement)statements[i]).Realize(ref result,isInFunction);
 					}
-					catch {
+					catch (RestartStatementException e) {
 						goto Back;
 					}
 				}
@@ -674,14 +674,12 @@ namespace Meta {
 				return result;
 			}
 		}
-		public abstract class ToNetConversion 		
-		{
+		public abstract class ToNetConversion {
 			public Type source;
 			public Type target;
 			public abstract object Convert(object obj);
 		}
-		public abstract class ToMetaConversion  
-		{
+		public abstract class ToMetaConversion {
 			public Type source;
 			public abstract object Convert(object obj);
 		}
