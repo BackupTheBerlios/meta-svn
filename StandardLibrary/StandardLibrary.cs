@@ -3,6 +3,9 @@ using Meta.Types;
 using Meta.Execution;
 using System.Collections;
 public class @base {
+	public static IKeyValue Merge() { // get rid of use of Map
+		return (Map)Interpreter.Merge((Map)Interpreter.Arg);
+	}
 	public static void Write(string s) {
 		Console.WriteLine(s);
 	}
@@ -62,10 +65,9 @@ public class @base {
 		return result;
 	}
 	public static void Load() {
-		//Map caller=(Map)Interpreter.callers[Interpreter.callers.Count-1];
-		Map map=new Map();
+		Map caller=(Map)Interpreter.callers[Interpreter.callers.Count-1];
 		foreach(DictionaryEntry entry in Interpreter.LoadAssembly((Map)Interpreter.Arg,true)) {
-			map[entry.Key]=entry.Value;
+			caller[entry.Key]=entry.Value;
 		}
 	}
 	public static Map Each() {

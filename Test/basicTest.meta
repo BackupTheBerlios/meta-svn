@@ -1,4 +1,5 @@
-this=meta.Merge(parent,('AssignedToCurrent'))
+this=base.Merge(parent,('AssignedToCurrent'))
+this=base.Merge(parent,base)
 'ImpliedAutokey'
 ='Autokey'
 gacTest=System.Collections

@@ -1,48 +1,29 @@
 IEnumerable
   Entry (DictionaryEntry):
-    Key (String):
-      "meta"
-    Value (NetClass):
-        Entry (DictionaryEntry):
-    Key (String):
-      "Write"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Void Write(System.String)"
-      savedMethod (RuntimeMethodInfo):
-        "Void Write(System.String)"
+    Key (Integer):
+      "1"
+    Value (String):
+      "ImpliedAutokey"
   Entry (DictionaryEntry):
     Key (String):
-      "Read"
+      "Load"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "System.String Read()"
+            "Void Load()"
       savedMethod (RuntimeMethodInfo):
-        "System.String Read()"
+        "Void Load()"
   Entry (DictionaryEntry):
     Key (String):
-      "And"
+      "BinaryOr"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Boolean And(Boolean, Boolean)"
+            "System.Enum BinaryOr(System.Enum[])"
       savedMethod (RuntimeMethodInfo):
-        "Boolean And(Boolean, Boolean)"
-  Entry (DictionaryEntry):
-    Key (String):
-      "Or"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Boolean Or(Boolean, Boolean)"
-      savedMethod (RuntimeMethodInfo):
-        "Boolean Or(Boolean, Boolean)"
+        "System.Enum BinaryOr(System.Enum[])"
   Entry (DictionaryEntry):
     Key (String):
       "Not"
@@ -55,6 +36,16 @@ IEnumerable
         "Boolean Not(Boolean)"
   Entry (DictionaryEntry):
     Key (String):
+      "Or"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Boolean Or(Boolean, Boolean)"
+      savedMethod (RuntimeMethodInfo):
+        "Boolean Or(Boolean, Boolean)"
+  Entry (DictionaryEntry):
+    Key (String):
       "Add"
     Value (NetMethod):
       methods (MethodInfo[]):
@@ -63,16 +54,6 @@ IEnumerable
             "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
       savedMethod (RuntimeMethodInfo):
         "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
-  Entry (DictionaryEntry):
-    Key (String):
-      "Subtract"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
-      savedMethod (RuntimeMethodInfo):
-        "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
       "Multiply"
@@ -85,6 +66,46 @@ IEnumerable
         "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
+      "IsMap"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Boolean IsMap(System.Object)"
+      savedMethod (RuntimeMethodInfo):
+        "Boolean IsMap(System.Object)"
+  Entry (DictionaryEntry):
+    Key (String):
+      "If"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Void If()"
+      savedMethod (RuntimeMethodInfo):
+        "Void If()"
+  Entry (DictionaryEntry):
+    Key (String):
+      "For"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Meta.Types.Map For()"
+      savedMethod (RuntimeMethodInfo):
+        "Meta.Types.Map For()"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Switch"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Void Switch()"
+      savedMethod (RuntimeMethodInfo):
+        "Void Switch()"
+  Entry (DictionaryEntry):
+    Key (String):
       "Divide"
     Value (NetMethod):
       methods (MethodInfo[]):
@@ -95,14 +116,14 @@ IEnumerable
         "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
-      "Smaller"
+      "Merge"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
+            "Meta.Types.IKeyValue Merge()"
       savedMethod (RuntimeMethodInfo):
-        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.IKeyValue Merge()"
   Entry (DictionaryEntry):
     Key (String):
       "Greater"
@@ -125,34 +146,54 @@ IEnumerable
         "Boolean Equal(System.Object, System.Object)"
   Entry (DictionaryEntry):
     Key (String):
-      "BinaryOr"
+      "Smaller"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "System.Enum BinaryOr(System.Enum[])"
+            "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
       savedMethod (RuntimeMethodInfo):
-        "System.Enum BinaryOr(System.Enum[])"
+        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
-      "For"
+      "Subtract"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Meta.Types.Map For()"
+            "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
       savedMethod (RuntimeMethodInfo):
-        "Meta.Types.Map For()"
+        "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
-      "Load"
+      "And"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Void Load()"
+            "Boolean And(Boolean, Boolean)"
       savedMethod (RuntimeMethodInfo):
-        "Void Load()"
+        "Boolean And(Boolean, Boolean)"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Write"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Void Write(System.String)"
+      savedMethod (RuntimeMethodInfo):
+        "Void Write(System.String)"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Read"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "System.String Read()"
+      savedMethod (RuntimeMethodInfo):
+        "System.String Read()"
   Entry (DictionaryEntry):
     Key (String):
       "Each"
@@ -163,41 +204,6 @@ IEnumerable
             "Meta.Types.Map Each()"
       savedMethod (RuntimeMethodInfo):
         "Meta.Types.Map Each()"
-  Entry (DictionaryEntry):
-    Key (String):
-      "IsMap"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Boolean IsMap(System.Object)"
-      savedMethod (RuntimeMethodInfo):
-        "Boolean IsMap(System.Object)"
-  Entry (DictionaryEntry):
-    Key (String):
-      "Switch"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Void Switch()"
-      savedMethod (RuntimeMethodInfo):
-        "Void Switch()"
-  Entry (DictionaryEntry):
-    Key (String):
-      "If"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Void If()"
-      savedMethod (RuntimeMethodInfo):
-        "Void If()"
-  Entry (DictionaryEntry):
-    Key (Integer):
-      "1"
-    Value (String):
-      "ImpliedAutokey"
   Entry (DictionaryEntry):
     Key (Integer):
       "2"
@@ -275,200 +281,6 @@ IEnumerable
       "metaLibTest"
     Value (Map):
       IEnumerable
-        Entry (DictionaryEntry):
-          Key (String):
-            "meta"
-          Value (NetClass):
-                    Entry (DictionaryEntry):
-          Key (String):
-            "Write"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Void Write(System.String)"
-            savedMethod (RuntimeMethodInfo):
-              "Void Write(System.String)"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Read"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "System.String Read()"
-            savedMethod (RuntimeMethodInfo):
-              "System.String Read()"
-        Entry (DictionaryEntry):
-          Key (String):
-            "And"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Boolean And(Boolean, Boolean)"
-            savedMethod (RuntimeMethodInfo):
-              "Boolean And(Boolean, Boolean)"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Or"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Boolean Or(Boolean, Boolean)"
-            savedMethod (RuntimeMethodInfo):
-              "Boolean Or(Boolean, Boolean)"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Not"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Boolean Not(Boolean)"
-            savedMethod (RuntimeMethodInfo):
-              "Boolean Not(Boolean)"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Add"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
-            savedMethod (RuntimeMethodInfo):
-              "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Subtract"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
-            savedMethod (RuntimeMethodInfo):
-              "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Multiply"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
-            savedMethod (RuntimeMethodInfo):
-              "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Divide"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
-            savedMethod (RuntimeMethodInfo):
-              "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Smaller"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
-            savedMethod (RuntimeMethodInfo):
-              "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Greater"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
-            savedMethod (RuntimeMethodInfo):
-              "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Equal"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Boolean Equal(System.Object, System.Object)"
-            savedMethod (RuntimeMethodInfo):
-              "Boolean Equal(System.Object, System.Object)"
-        Entry (DictionaryEntry):
-          Key (String):
-            "BinaryOr"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "System.Enum BinaryOr(System.Enum[])"
-            savedMethod (RuntimeMethodInfo):
-              "System.Enum BinaryOr(System.Enum[])"
-        Entry (DictionaryEntry):
-          Key (String):
-            "For"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Meta.Types.Map For()"
-            savedMethod (RuntimeMethodInfo):
-              "Meta.Types.Map For()"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Load"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Void Load()"
-            savedMethod (RuntimeMethodInfo):
-              "Void Load()"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Each"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Meta.Types.Map Each()"
-            savedMethod (RuntimeMethodInfo):
-              "Meta.Types.Map Each()"
-        Entry (DictionaryEntry):
-          Key (String):
-            "IsMap"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Boolean IsMap(System.Object)"
-            savedMethod (RuntimeMethodInfo):
-              "Boolean IsMap(System.Object)"
-        Entry (DictionaryEntry):
-          Key (String):
-            "Switch"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Void Switch()"
-            savedMethod (RuntimeMethodInfo):
-              "Void Switch()"
-        Entry (DictionaryEntry):
-          Key (String):
-            "If"
-          Value (NetMethod):
-            methods (MethodInfo[]):
-              IEnumerable
-                Entry (RuntimeMethodInfo):
-                  "Void If()"
-            savedMethod (RuntimeMethodInfo):
-              "Void If()"
         Entry (DictionaryEntry):
           Key (String):
             "x"
