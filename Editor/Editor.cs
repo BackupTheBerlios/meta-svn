@@ -691,11 +691,15 @@ namespace Editor {
 			listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
 		}
 
+		public static string lastMethodName="";
 		public static void ShowHelpBackThread(object obj) {
 					lastObject=obj;
 					if(_isCall) {
 						string text="";
 						if(obj is NetMethod) {
+							if(!lastMethodName.Equals(((NetMethod)obj).methods[0].Name)) {
+								overloadIndex=0;
+							}
 							overloadNumber=((NetMethod)obj).methods.Length;
 							if(overloadIndex>=overloadNumber) {
 								overloadIndex=0;
@@ -847,7 +851,7 @@ namespace Editor {
 			_selectedNode=selectedNode;
 			_selectedNodeText=selectedNodeText;
 			_isCall=isCall;
-			overloadIndex=0;
+			//overloadIndex=0;
 			if(lastSelectedNode==null || Interpreter.lastProgram==null || helpInvalidated) {
 				if(helpInvalidated) {
 					int asdf=0;
@@ -1464,7 +1468,7 @@ namespace Editor {
 		public override void Do() {
 			Editor.SelectedNode.Nodes.Insert(0,new Node());
 			Editor.SelectedNode=(Node)Editor.SelectedNode.FirstNode;
-			// doesn't work, parsing error:
+			// doesn't work, parsing error: (seems to work now, don't know why)
 			if(!(Editor.SelectedNode.Parent is FileNode)&& Help.IsFunctionCall(((Node)Editor.SelectedNode.Parent).CleanText)) {
 				Help.ShowHelp((Node)Editor.SelectedNode.Parent,((Node)Editor.SelectedNode.Parent).CleanText+".break",true);
 			}
@@ -1482,6 +1486,9 @@ namespace Editor {
 		public override void Do() {
 			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index,new Node());
 			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
+			if(!(Editor.SelectedNode.Parent is FileNode)&& Help.IsFunctionCall(((Node)Editor.SelectedNode.Parent).CleanText)) {
+				Help.ShowHelp((Node)Editor.SelectedNode.Parent,((Node)Editor.SelectedNode.Parent).CleanText+".break",true);
+			}
 			Help.InvalidateHelp();
 		}
 		public override void Undo() {
@@ -1496,6 +1503,10 @@ namespace Editor {
 		public override void Do() {
 			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index+1,new Node());
 			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
+			if(!(Editor.SelectedNode.Parent is FileNode)&& Help.IsFunctionCall(((Node)Editor.SelectedNode.Parent).CleanText)) {
+				Help.ShowHelp((Node)Editor.SelectedNode.Parent,((Node)Editor.SelectedNode.Parent).CleanText+".break",true);
+			}
+			Help.InvalidateHelp();
 		}
 		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;

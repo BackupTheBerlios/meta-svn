@@ -33,6 +33,7 @@ using System.Xml;
 using System.Runtime.InteropServices;
 using System.Globalization;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Meta {
 	namespace Library {
@@ -789,7 +790,7 @@ namespace Meta {
 				return preselection;
 			}
 			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
-				if(keys[0].Equals("n")) {
+				if(keys[0].Equals("textBox")) {
 					int asdf=0;
 				}
 				object selected=current;
@@ -1401,6 +1402,9 @@ namespace Meta {
 				return Interpreter.ConvertToMeta(CallMethod((Map)Interpreter.Arg));
 			}
 			public object CallMethod(Map arguments) {
+				if(type.Equals(typeof(MenuItem))) {
+					int asdf=0;
+				}
 				ArrayList list;
 				if(attribute!=null) {
 					list=new ArrayList();
@@ -1421,7 +1425,7 @@ namespace Meta {
 					}
 					bool executed=false;
 					methods.Reverse();
-					if(this.name.Equals("For")) {
+					if(this.name.Equals("")) {
 						int asdf=0;
 					}
 					foreach(MethodBase method in methods) {
@@ -1440,17 +1444,46 @@ namespace Meta {
 									matched=true;
 								}
 								else {
-									Hashtable toDotNet=(Hashtable)
-										Interpreter.netConversion[parameter.ParameterType];
-									if(toDotNet!=null) {
-										ToNetConversion conversion=(ToNetConversion)toDotNet[list[counter].GetType()];
-										if(conversion!=null) {
-											try {
-												args.Add(conversion.Convert(list[counter]));
-												matched=true;
+									if(parameter.ParameterType.IsSubclassOf(typeof(Delegate))) {
+										try {
+											MethodInfo m=parameter.ParameterType.GetMethod("Invoke",BindingFlags.Instance
+												|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+											Delegate del=CreateDelegate(parameter.ParameterType,m,(Map)list[counter]);
+											args.Add(del);
+											matched=true;
+										}
+										catch{
+										}
+									}
+									if(!matched && parameter.ParameterType.IsArray && ((Map)list[counter]).IntKeyValues.Count!=0) {// cheating
+										try {
+											Type elementType=parameter.ParameterType.GetElementType();
+											Map map=((Map)list[counter]);
+											ArrayList mapValues=map.IntKeyValues;
+											Array array=Array.CreateInstance(elementType,mapValues.Count);
+											for(int i=0;i<mapValues.Count;i++) {
+												array.SetValue(mapValues[i],i);
 											}
-											catch (Exception e) {
-												int asdf=0;
+											args.Add(array);
+											matched=true;										
+										}
+										catch {
+										}
+
+									}
+									if(!matched) {
+										Hashtable toDotNet=(Hashtable)
+											Interpreter.netConversion[parameter.ParameterType];
+										if(toDotNet!=null) {
+											ToNetConversion conversion=(ToNetConversion)toDotNet[list[counter].GetType()];
+											if(conversion!=null) {
+												try {
+													args.Add(conversion.Convert(list[counter]));
+													matched=true;
+												}
+												catch (Exception e) {
+													int asdf=0;
+												}
 											}
 										}
 									}
@@ -1512,6 +1545,60 @@ namespace Meta {
 					text+=e.ToString();
 					throw new ApplicationException(text);
 				}
+			}
+			public Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) {
+				code.Parent=(IKeyValue)Interpreter.callers[Interpreter.callers.Count-1];
+				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
+				ICodeCompiler compiler=codeProvider.CreateCompiler();
+//				FieldInfo field=type.GetField(name,BindingFlags.Instance
+//					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+//
+//				EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
+//					BindingFlags.Static|BindingFlags.Instance);
+//				MethodInfo method=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance
+//					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+
+				string returnTypeName=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
+				string source="using System;using Meta.Types;using Meta.Execution;";
+				source+="public class EventHandlerContainer{public "+returnTypeName+" EventHandlerMethod";
+				int counter=1;
+				string argumentList="(";
+				string argumentAdding="Map arg=new Map();";
+				// here bug
+				foreach(ParameterInfo parameter in method.GetParameters()) {
+					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
+					argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";
+					if(counter<method.GetParameters().Length) {
+						argumentList+=",";
+					}
+					else {
+						argumentList+=")";
+					}
+					counter++;
+				}
+				source+=argumentList+"{";
+				source+=argumentAdding;
+				source+="Interpreter.arguments.Add(arg);object result=callable.Call(null);Interpreter.arguments.Remove(arg);";
+				if(!method.ReturnType.Equals(typeof(void))) {
+					source+="return ("+returnTypeName+")";
+					source+="Interpreter.ConvertToNet(result,typeof("+returnTypeName+"));";
+				}
+				source+="}";
+				source+="private Map callable;";
+				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
+				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll","Meta.dll"});
+				assemblyNames.AddRange(Interpreter.loadedAssemblies);
+				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
+				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
+				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
+				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
+																																			  code});
+				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
+				Delegate del=Delegate.CreateDelegate(delegateType,
+					container,"EventHandlerMethod");
+//				Delegate del=Delegate.CreateDelegate(type.GetEvent(name).EventHandlerType,
+//					container,"EventHandlerMethod");
+				return del;
 			}
 			private void Init(string name,object target,Type type,BindingFlags invokeFlags,
 				MethodBase method,MethodBase[] methods) {
@@ -1751,9 +1838,18 @@ namespace Meta {
 							else if(type.GetMember((string)text,
 								MemberTypes.Event,BindingFlags.Public
 								|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-								SetEvent((string)text,(Map)value);
+								
+								type.GetEvent((string)text).AddEventHandler(obj,CreateEvent((string)text,(Map)value));
 								return;
 							}
+//							else if(type.GetMember((string)text,
+//								MemberTypes.Event,BindingFlags.Public
+//								|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
+//								
+//
+//								SetEvent((string)text,(Map)value);
+//								return;
+//							}
 					}
 					try {
 						NetMethod indexer=new NetMethod("set_Item",obj,type);
@@ -1769,7 +1865,7 @@ namespace Meta {
 					}
 				}
 			}
-			public void SetEvent(string name,Map code) {
+			public Delegate CreateEvent(string name,Map code) {
 				code.Parent=(IKeyValue)Interpreter.callers[Interpreter.callers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 				ICodeCompiler compiler=codeProvider.CreateCompiler();
@@ -1814,13 +1910,117 @@ namespace Meta {
 				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
 				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
-				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[]
-					{code});
+				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
+																																			  code});
 				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
 				Delegate del=Delegate.CreateDelegate(type.GetEvent(name).EventHandlerType,
 					container,"EventHandlerMethod");
-				type.GetEvent(name).AddEventHandler(obj,del);
+				return del;
 			}
+//			public static Delegate CreateEvent(string name,Map code) {
+//				code.Parent=(IKeyValue)Interpreter.callers[Interpreter.callers.Count-1];
+//				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
+//				ICodeCompiler compiler=codeProvider.CreateCompiler();
+//				FieldInfo field=type.GetField(name,BindingFlags.Instance
+//					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+//
+//				EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
+//					BindingFlags.Static|BindingFlags.Instance);
+//				MethodInfo method=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance
+//					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+//
+//				string returnTypeName=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
+//				string source="using System;using Meta.Types;using Meta.Execution;";
+//				source+="public class EventHandlerContainer{public "+returnTypeName+" EventHandlerMethod";
+//				int counter=1;
+//				string argumentList="(";
+//				string argumentAdding="Map arg=new Map();";
+//				// here bug
+//				foreach(ParameterInfo parameter in method.GetParameters()) {
+//					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
+//					argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";
+//					if(counter<method.GetParameters().Length) {
+//						argumentList+=",";
+//					}
+//					else {
+//						argumentList+=")";
+//					}
+//					counter++;
+//				}
+//				source+=argumentList+"{";
+//				source+=argumentAdding;
+//				source+="Interpreter.arguments.Add(arg);object result=callable.Call(null);Interpreter.arguments.Remove(arg);";
+//				if(!method.ReturnType.Equals(typeof(void))) {
+//					source+="return ("+returnTypeName+")";
+//					source+="Interpreter.ConvertToNet(result,typeof("+returnTypeName+"));";
+//				}
+//				source+="}";
+//				source+="private Map callable;";
+//				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
+//				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll","Meta.dll"});
+//				assemblyNames.AddRange(Interpreter.loadedAssemblies);
+//				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
+//				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
+//				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
+//				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
+//					 code});
+//				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
+//				Delegate del=Delegate.CreateDelegate(type.GetEvent(name).EventHandlerType,
+//					container,"EventHandlerMethod");
+//				return del;
+//			}
+//			public void SetEvent(string name,Map code) {
+//				code.Parent=(IKeyValue)Interpreter.callers[Interpreter.callers.Count-1];
+//				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
+//				ICodeCompiler compiler=codeProvider.CreateCompiler();
+//				FieldInfo field=type.GetField(name,BindingFlags.Instance
+//					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+//
+//				EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
+//					BindingFlags.Static|BindingFlags.Instance);
+//				MethodInfo method=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance
+//					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+//
+//				string returnTypeName=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
+//				string source="using System;using Meta.Types;using Meta.Execution;";
+//				source+="public class EventHandlerContainer{public "+returnTypeName+" EventHandlerMethod";
+//				int counter=1;
+//				string argumentList="(";
+//				string argumentAdding="Map arg=new Map();";
+//				// here bug
+//				foreach(ParameterInfo parameter in method.GetParameters()) {
+//					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
+//					argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";
+//					if(counter<method.GetParameters().Length) {
+//						argumentList+=",";
+//					}
+//					else {
+//						argumentList+=")";
+//					}
+//					counter++;
+//				}
+//				source+=argumentList+"{";
+//				source+=argumentAdding;
+//				source+="Interpreter.arguments.Add(arg);object result=callable.Call(null);Interpreter.arguments.Remove(arg);";
+//				if(!method.ReturnType.Equals(typeof(void))) {
+//					source+="return ("+returnTypeName+")";
+//					source+="Interpreter.ConvertToNet(result,typeof("+returnTypeName+"));";
+//				}
+//				source+="}";
+//				source+="private Map callable;";
+//				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
+//				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll","Meta.dll"});
+//				assemblyNames.AddRange(Interpreter.loadedAssemblies);
+//				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
+//				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
+//				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
+//				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[]
+//					{code});
+//				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
+//				Delegate del=Delegate.CreateDelegate(type.GetEvent(name).EventHandlerType,
+//					container,"EventHandlerMethod");
+//				type.GetEvent(name).AddEventHandler(obj,del);
+//			}
 			public bool ContainsKey(object key)  {
 				try  {
 					object o=this[key];
