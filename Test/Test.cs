@@ -34,8 +34,8 @@ namespace Test {
 		public static void Main(string[] args) {
 //			Map map=new Map();
 //			Map child=new Map();
-//			child[Interpreter.StringToMap("number")]=new Number(5000);
-//			child[Interpreter.StringToMap("secondNumber")]=new Number(3000);
+//			child[Interpreter.StringToMap("number")]=new Integer(5000);
+//			child[Interpreter.StringToMap("secondNumber")]=new Integer(3000);
 //			map[Interpreter.StringToMap("hello")]=child;
 //			map[child]=Interpreter.StringToMap("world");
 //			string t=Interpreter.MetaSerialize(map,"",true);
@@ -95,8 +95,8 @@ namespace Test {
 		public class Execute:TestCase {
 			public override object RunTestCase() {
 				Map argument=new Map();
-				argument[new Number(1)]="first arg";
-				argument[new Number(2)]="second=arg";
+				argument[new Integer(1)]="first arg";
+				argument[new Integer(2)]="second=arg";
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
