@@ -124,14 +124,15 @@ namespace Meta {
 		public class Program: IExpression {
 			public object Evaluate(object parent) { // refactor
 				Map local=new Map();
-				local.Parent=(IKeyValue)parent;
+				local.Parent=(IMap)parent;
 				return Evaluate(parent,local,false);
 			}
-			public object Evaluate(object caller,Map existing,bool isInFunction) { // refactor, why does it differ,why the same name?
+			public object Evaluate(object caller,IMap existing,bool isInFunction) { // refactor, why does it differ,why the same name?
 				object result=existing;
 				bool callerIsMap=false;
 				if(caller!=null) {
-					if(caller is Map) {
+					if(caller is IMap) {
+//					if(caller is Map) {
 						callerIsMap=true;
 					}
 					if(callerIsMap) {
@@ -226,20 +227,20 @@ namespace Meta {
 			public void Assign(ref object current,object val,bool isInFunction) {
 				ArrayList keys=new ArrayList();
 				foreach(IExpression expression in expressions) {
-					keys.Add(expression.Evaluate((Map)current));
+					keys.Add(expression.Evaluate((IMap)current));
 				}
 				if(keys.Count==1 && keys[0].Equals("this")) {
 					if(val is IMap) {
 						((IMap)val).Parent=((IMap)current).Parent;
-						current=((IKeyValue)val).Clone();
-						if(current is Map) {
+						current=((IMap)val).Clone();
+						if(current is IMap) {
 							Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 							Interpreter.callers.Add(current);
 						}
 					}
 					else {
 						current=val;
-						if(current is Map) {
+						if(current is IMap) {
 							Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 							Interpreter.callers.Add(current);
 						}
@@ -478,19 +479,31 @@ namespace Meta {
 				}
 				cashedLiterals.Clear();
 			}
-			public static object Run(string path,IKeyValue argument) { //why two different versions?
+			public static object Run(string path,IMap argument) { //why two different versions?
 				return Run(new StreamReader(path),argument);					//not really necessary
 			}
-			public static object Run(TextReader reader,IKeyValue argument) {
+			public static object Run(TextReader reader,IMap argument) {
 				ArrayList parents=new ArrayList();
-				Map existing=new Map();
-				existing.Parent=Meta.Types.Library.library;
+//				argument.Parent=Library.library;
+//				Map existing=new Map();
+//				existing.Parent=Meta.Types.Library.library;
 				Interpreter.arguments.Add(argument);
 				Map lastProgram=Mapify(reader);
-				object result=lastProgram.Call(new Map(),existing);
+				lastProgram.Parent=Library.library;
+				object result=lastProgram.Call(new Map());
 				Interpreter.arguments.Remove(argument);
 				return result;
 			}
+//			public static object Run(TextReader reader,IKeyValue argument) {
+//				ArrayList parents=new ArrayList();
+//				Map existing=new Map();
+//				existing.Parent=Meta.Types.Library.library;
+//				Interpreter.arguments.Add(argument);
+//				Map lastProgram=Mapify(reader);
+//				object result=lastProgram.Call(new Map(),existing);
+//				Interpreter.arguments.Remove(argument);
+//				return result;
+//			}
 			public static AST Parse(TextReader stream)  { //rename, necessary as public method?
 				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser( // only for tests,it seems
 					new AddIndentationTokensToStream(new MetaLexer(stream))); // and some other stuff
@@ -537,7 +550,8 @@ namespace Meta {
 	namespace Types  {
 		public class UnloadedMetaLibrary {
 			public object Load() {
-				return Interpreter.Run(path,Library.library);
+				return Interpreter.Run(path,new Map()); //check that
+//				return Interpreter.Run(path,Library.library);
 			}
 			public UnloadedMetaLibrary(string path) {
 				this.path=path;
@@ -566,7 +580,8 @@ namespace Meta {
 					}
 				}
 				set {
-					throw new ApplicationException("Keys in library cannot be set.");
+					int adf=0;
+					//throw new ApplicationException("Tried to set key "+key.ToString()+" in library.");
 				}
 			}
 			public ArrayList Keys {
@@ -574,7 +589,7 @@ namespace Meta {
 					return cash.Keys;
 				}
 			}
-			public IKeyValue Clone() {
+			public IMap Clone() {
 				return this;
 			}
 			public int Count {
@@ -585,12 +600,18 @@ namespace Meta {
 			public bool ContainsKey(object key) {
 				return cash.ContainsKey(key);
 			}
-			public IKeyValue Parent {
+			public ArrayList IntKeyValues {
+				get {
+					return new ArrayList();
+				}
+			}
+			public IMap Parent {
 				get {
 					return null;
 				}
 				set {
-					throw new ApplicationException("Tried to set parent of library.");
+					int asdf=0;
+					//throw new ApplicationException("Tried to set parent of library.");
 				}
 			}
 			public IEnumerator GetEnumerator() {
@@ -662,28 +683,18 @@ namespace Meta {
 			public static string libraryPath="library"; 
 			//remove
 		}
-//		public interface IMetaType { // rethink what this is useful for
-//		}
-//		public abstract class Callable { // remove
-//			private IKeyValue parent;
-//			[DontSerializeFieldOrProperty]
-//			public IKeyValue Parent {
-//				get {
-//					return parent;
-//				}
-//				set {
-//					parent=value;
-//				}
-//			}
-//		}
-		public interface ICallable{ // not very useful, but ok
+		public interface ICallable {
 			object Call(Map caller);
 		}
 		public interface IMap: IKeyValue {
-			IKeyValue Parent {
+			IMap Parent {
 				get;
 				set;
 			}
+			ArrayList IntKeyValues { // rename
+				get;
+			}
+			IMap Clone();
 		}
 		public interface IKeyValue: IEnumerable { // not used consequently instead of map
 			object this[object key] {
@@ -693,20 +704,17 @@ namespace Meta {
 			ArrayList Keys {
 				get;
 			}
-			IKeyValue Clone();//remove
-			int Count {//remove?
+			int Count {
 				get;
 			}
 			bool ContainsKey(object key);			
 		}		
-		public class Map: IKeyValue,IMap, ICallable, IEnumerable { // could use Callable
-			private IKeyValue parent;
-			public int numberAutokeys=0;
+		public class Map: IKeyValue, IMap, ICallable, IEnumerable { // could use Callable
+			private IMap parent;
 			private ArrayList keys;
-			public HybridDictionary table;
+			private HybridDictionary table;
 			public object compiled;
-
-			public IKeyValue Parent {
+			public IMap Parent {
 				get {
 					return parent;
 				}
@@ -732,10 +740,10 @@ namespace Meta {
 				get {
 					return table[key];
 				}
-				set { //refactor soem more
+				set { //refactor some more
 					if(value!=null) {
 						isHashCashed=false;
-						object val=value is IKeyValue? ((IKeyValue)value).Clone(): value;
+						object val=value is IMap? ((IMap)value).Clone(): value;
 						if(value is IMap) {
 							((IMap)val).Parent=this;
 						}
@@ -746,21 +754,34 @@ namespace Meta {
 					}
 				}
 			}
+//			public object Call(Map caller) { // fix caller
+//				((IMap)Interpreter.Arg).Parent=this.Parent;
+//				return Call(caller,(IMap)Interpreter.Arg);
+//			}
 			public object Call(Map caller) {
-				((Map)Interpreter.Arg).Parent=this.Parent;
-				return Call(caller,(Map)Interpreter.Arg);
-			}
-			public object Call(Map caller,Map local)  {
+				((IMap)Interpreter.Arg).Parent=this.Parent;
 				IExpression callable=(IExpression)Compile();
 				object result;
 				if(callable is Program) { // somehow wrong
-					result=((Program)callable).Evaluate(caller,local,true);
+					result=((Program)callable).Evaluate(caller,(IMap)Interpreter.Arg,true);
 				}
 				else {
-					result=callable.Evaluate(local);
+					result=callable.Evaluate((IMap)Interpreter.Arg);
 				}
 				return result;
 			}
+
+//			public object Call(Map caller,Map local)  {
+//				IExpression callable=(IExpression)Compile();
+//				object result;
+//				if(callable is Program) { // somehow wrong
+//					result=((Program)callable).Evaluate(caller,local,true);
+//				}
+//				else {
+//					result=callable.Evaluate(local);
+//				}
+//				return result;
+//			}
 			public void StopSharing() { // currently not used at all
 				compiled=null;
 				HybridDictionary oldTable=table;
@@ -776,7 +797,7 @@ namespace Meta {
 					return keys;
 				}
 			}
-			public IKeyValue Clone() {
+			public IMap Clone() {
 				Map copy=new Map();
 				foreach(object key in keys) {
 					copy[key]=this[key];
@@ -901,9 +922,9 @@ namespace Meta {
 
 
 			public object Call(Map caller) {
-				return Interpreter.ConvertToMeta(CallMethod((Map)Interpreter.Arg));
+				return Interpreter.ConvertToMeta(CallMethod((IMap)Interpreter.Arg));
 			}
-			public object CallMethod(Map arguments) { //sucks, refactor
+			public object CallMethod(IMap arguments) { //sucks, refactor
 				ArrayList list;
 					list=arguments.IntKeyValues;
 				object result=null;
@@ -974,7 +995,7 @@ namespace Meta {
 											int asdf=0;
 										}
 									}
-									if(!matched && parameter.ParameterType.IsArray && list[counter] is Map && ((Map)list[counter]).IntKeyValues.Count!=0) {// cheating
+									if(!matched && parameter.ParameterType.IsArray && list[counter] is IMap && ((Map)list[counter]).IntKeyValues.Count!=0) {// cheating
 										try {
 											Type elementType=parameter.ParameterType.GetElementType();
 											Map map=((Map)list[counter]);
@@ -1067,7 +1088,7 @@ namespace Meta {
 			}
 			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) {
 				// should caller really be parent of code???
-				code.Parent=(IKeyValue)Interpreter.callers[Interpreter.callers.Count-1];
+				code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 				ICodeCompiler compiler=codeProvider.CreateCompiler();
 				string returnTypeName;

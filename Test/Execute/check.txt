@@ -4,6 +4,11 @@ Entry (DictionaryEntry)
   Value (String):
     "ImpliedAutokey"
 Entry (DictionaryEntry)
+  Key (Integer):
+    "2"
+  Value (String):
+    "Autokey"
+Entry (DictionaryEntry)
   Key (String):
     "Merge"
   Value (NetMethod):
@@ -246,11 +251,6 @@ Entry (DictionaryEntry)
         "Meta.Types.Map Each()"
     savedMethod (RuntimeMethodInfo):
       "Meta.Types.Map Each()"
-Entry (DictionaryEntry)
-  Key (Integer):
-    "2"
-  Value (String):
-    "Autokey"
 Entry (DictionaryEntry)
   Key (String):
     "gacTest"
