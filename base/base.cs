@@ -4,6 +4,26 @@ using Meta.Execution;
 using System.Collections;
 using System.IO;
 public class @base {
+	public static IKeyValue GetKeys(IKeyValue map) {
+		int i=1;
+		Map keys=new Map();
+		foreach(DictionaryEntry entry in map) {
+			keys[new Integer(i)]=entry.Key;
+		}
+		return keys;
+	}
+	public static object Catch(Map function) {
+		try {
+			function.Call((Map)Interpreter.callers[Interpreter.callers.Count-1]); // caller is wrong
+		}
+		catch(Exception e) {
+			return e;
+		}
+		return ""; // really?
+	}
+	public static void SetBreakMethod(BreakMethodDelegate breakMethod) {
+		Interpreter.breakMethod=breakMethod;
+	}
 	public static char Character(string c) {
 		return Convert.ToChar(c);
 	}

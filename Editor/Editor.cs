@@ -691,7 +691,7 @@ namespace Editor {
 			// Get the node from the document
 			return doc.SelectSingleNode(xpath);
 		}
-		public static void OnBreak(object obj) {
+		public static void OnBreak(IKeyValue obj) {
 			listBox.Invoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
 //			listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
 		}

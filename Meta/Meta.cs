@@ -634,7 +634,7 @@ namespace Meta {
 			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
 				object selected=current;
 				int i=0;
-				if(keys[0].Equals("testClasses")) {
+				if(keys.Count==2 && keys[1].Equals("Invoke")) {
 					int asdf=0;
 				}
 				if(keys[0].Equals("this")) {
@@ -685,7 +685,12 @@ namespace Meta {
 				}
 				for(;i<keys.Count-1+lastKeySelect;i++) {
 					if(keys[i].Equals("break")) {
-						Interpreter.breakMethod(selected);
+						if(selected is IKeyValue) {
+							Interpreter.breakMethod((IKeyValue)selected);
+						}
+						else {
+							Interpreter.breakMethod(new NetObject(selected,selected.GetType()));
+						}
 						Thread.CurrentThread.Suspend();
 						if(Interpreter.redoStatement) {
 							Interpreter.redoStatement=false;
@@ -705,6 +710,370 @@ namespace Meta {
 				}
 				return selected;
 			}
+//			public static void ShowHelpBackThread(object obj) {
+//					Help.toolTip.Text=text;
+//					Graphics graphics=toolTip.CreateGraphics();
+//					Size size=graphics.MeasureString(text,
+//						toolTip.Font).ToSize();
+//					toolTip.Size=new Size(size.Width+10,size.Height+13);
+//					toolTip.Visible=true;
+//
+//					TreeNode selected=Editor.SelectedNode;
+//					int depth=0;
+//					while(selected.Parent!=null) {
+//						selected=selected.Parent;
+//						depth++;
+//					}
+//					int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
+//						Convert.ToInt32(
+//						graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
+//
+//					int y=5;
+//					TreeNode node=Editor.SelectedNode;
+//					while(node!=null) {
+//						y+=node.Bounds.Height;
+//						node=node.PrevVisibleNode;
+//					}
+//					toolTip.Location=new Point(x,y);
+//
+//				}
+//				else {
+//					listBox.Items.Clear();
+//					if(obj==null) {
+//						int asdf=0;
+//					}
+//					IKeyValue keyValue=obj is IKeyValue? (IKeyValue)obj:new NetObject(obj,obj.GetType());
+//					ArrayList keys=new ArrayList();
+//					foreach(DictionaryEntry entry in keyValue) {
+//						keys.Add(entry.Key);
+//					}
+//					keys.Sort(new HelpComparer());
+//					foreach(object key in keys) {
+//						object member;
+//						int imageIndex=0;
+//						if(lastObject is Map) {
+//							member=((Map)lastObject)[key];
+//						}
+//						else if(lastObject is NetClass) {
+//							MemberInfo[] members=((NetClass)lastObject).type.GetMember(key.ToString(),
+//								BindingFlags.Public|BindingFlags.Static);
+//							member=members[0];
+//						}
+//						else if(!(lastObject is Map)) {
+//							MemberInfo[] members=lastObject.GetType().GetMember(key.ToString(),
+//								BindingFlags.Public|BindingFlags.Instance);
+//							member=members.Length>0? members[0]:keyValue[key];
+//						}
+//						else {
+//							throw new ApplicationException("bug here");
+//						}
+//						string additionalText="";
+//
+//						if(member is Type || member is NetClass) {
+//							imageIndex=0;
+//						}
+//						else if(member is EventInfo) {
+//							imageIndex=1;
+//						}
+//						else if(member is MethodInfo || member is ConstructorInfo || member is NetMethod) {
+//							imageIndex=2;
+//						}
+//						else if(member is PropertyInfo) {
+//							imageIndex=4;
+//							object o=((PropertyInfo)member).GetValue(obj,new object[] {});
+//							if(o==null) {
+//								additionalText="null";
+//							}
+//							else {
+//								additionalText=o.ToString();
+//							}
+//						}
+//						else if(member is Map) {
+//							imageIndex=5;
+//						}
+//						else {
+//							if(member is FieldInfo) {
+//								additionalText=((FieldInfo)member).GetValue(obj).ToString();
+//							}
+//							else {
+//								additionalText=member.ToString();
+//							}
+//							imageIndex=6;
+//						}
+//						listBox.Items.Add(new GListBoxItem(key,additionalText,imageIndex));
+//					}
+//					Graphics graphics=Editor.window.CreateGraphics();
+//					TreeNode selected=Editor.SelectedNode;
+//					int depth=0;
+//					while(selected.Parent!=null) {
+//						selected=selected.Parent;
+//						depth++;
+//					}
+//					int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
+//						Convert.ToInt32(
+//						graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
+//
+//					int y=5;
+//					TreeNode node=Editor.SelectedNode;
+//					while(node!=null) {
+//						if(node.Bounds.Y<0) {
+//							break;
+//						}	
+//						y+=node.Bounds.Height;
+//						node=node.PrevVisibleNode;
+//
+//					}
+//					listBox.Location=new Point(x,y);
+//					int greatest=0;
+//					foreach(GListBoxItem item in listBox.Items) {
+//						int width=graphics.MeasureString(item.Text,listBox.Font).ToSize().Width;
+//						if(width>greatest){
+//							greatest=width;
+//						}								
+//					}
+//					listBox.Size=new Size(greatest+30,150<listBox.Items.Count*16+10? 150:listBox.Items.Count*16+10);
+//					listBox.Show();
+//					Editor.editor.Focus();
+//				}
+//				Editor.window.Activate();
+//			}
+//			public static void ShowHelpBackThread(object obj) {
+//				lastObject=obj;
+//				if(_isCall) {
+//					string text="";
+//					if(obj is NetMethod) {
+//						//							if(lastSelectedNode!=null && lastSelectedNode==Editor.SelectedNode||
+//						//								lastSelectedNode.Parent==Editor.SelectedNode.Parent
+//						if(!lastMethodName.Equals(((NetMethod)obj).methods[0].Name)) {
+//							overloadIndex=0;
+//						}
+//						overloadNumber=((NetMethod)obj).methods.Length;
+//						if(overloadIndex>=overloadNumber) {
+//							overloadIndex=0;
+//						}
+//						else if(overloadIndex<0) {
+//							overloadIndex=overloadNumber-1;
+//						}
+//						text=Help.GetDoc(((NetMethod)obj).methods[overloadIndex],true,true,true);
+//						lastMethodName=((NetMethod)obj).methods[0].Name;
+//					}
+//					else if (obj is NetClass) {
+//						if(!lastMethodName.Equals(((NetClass)obj).constructor.methods[0].Name)) {
+//							overloadIndex=0;
+//						}
+//						overloadNumber=((NetClass)obj).constructor.methods.Length;
+//						if(overloadIndex>=overloadNumber) {
+//							overloadIndex=0;
+//						}
+//						else if(overloadIndex<0) {
+//							overloadIndex=overloadNumber-1;
+//						}
+//						text=Help.GetDoc(((NetClass)obj).constructor.methods[overloadIndex],true,true,true);
+//						lastMethodName=((NetClass)obj).constructor.methods[0].Name;
+//					}
+//					else if(obj is Map) {
+//						text=FunctionHelp((Map)obj);
+//					}
+//					Help.toolTip.Text=text;
+//					Graphics graphics=toolTip.CreateGraphics();
+//					Size size=graphics.MeasureString(text,
+//						toolTip.Font).ToSize();
+//					toolTip.Size=new Size(size.Width+10,size.Height+13);
+//					toolTip.Visible=true;
+//
+//					TreeNode selected=Editor.SelectedNode;
+//					int depth=0;
+//					while(selected.Parent!=null) {
+//						selected=selected.Parent;
+//						depth++;
+//					}
+//					int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
+//						Convert.ToInt32(
+//						graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
+//
+//					int y=5;
+//					TreeNode node=Editor.SelectedNode;
+//					while(node!=null) {
+//						y+=node.Bounds.Height;
+//						node=node.PrevVisibleNode;
+//					}
+//					toolTip.Location=new Point(x,y);
+//
+//				}
+//				else {
+//					listBox.Items.Clear();
+//					if(obj==null) {
+//						int asdf=0;
+//					}
+//					IKeyValue keyValue=obj is IKeyValue? (IKeyValue)obj:new NetObject(obj,obj.GetType());
+//					ArrayList keys=new ArrayList();
+//					foreach(DictionaryEntry entry in keyValue) {
+//						keys.Add(entry.Key);
+//					}
+//					keys.Sort(new HelpComparer());
+//					foreach(object key in keys) {
+//						object member;
+//						int imageIndex=0;
+//						if(lastObject is Map) {
+//							member=((Map)lastObject)[key];
+//						}
+//						else if(lastObject is NetClass) {
+//							MemberInfo[] members=((NetClass)lastObject).type.GetMember(key.ToString(),
+//								BindingFlags.Public|BindingFlags.Static);
+//							member=members[0];
+//						}
+//						else if(!(lastObject is Map)) {
+//							MemberInfo[] members=lastObject.GetType().GetMember(key.ToString(),
+//								BindingFlags.Public|BindingFlags.Instance);
+//							member=members.Length>0? members[0]:keyValue[key];
+//						}
+//						else {
+//							throw new ApplicationException("bug here");
+//						}
+//						string additionalText="";
+//
+//						if(member is Type || member is NetClass) {
+//							imageIndex=0;
+//						}
+//						else if(member is EventInfo) {
+//							imageIndex=1;
+//						}
+//						else if(member is MethodInfo || member is ConstructorInfo || member is NetMethod) {
+//							imageIndex=2;
+//						}
+//						else if(member is PropertyInfo) {
+//							imageIndex=4;
+//							object o=((PropertyInfo)member).GetValue(obj,new object[] {});
+//							if(o==null) {
+//								additionalText="null";
+//							}
+//							else {
+//								additionalText=o.ToString();
+//							}
+//						}
+//						else if(member is Map) {
+//							imageIndex=5;
+//						}
+//						else {
+//							if(member is FieldInfo) {
+//								additionalText=((FieldInfo)member).GetValue(obj).ToString();
+//							}
+//							else {
+//								additionalText=member.ToString();
+//							}
+//							imageIndex=6;
+//						}
+//						listBox.Items.Add(new GListBoxItem(key,additionalText,imageIndex));
+//					}
+//					Graphics graphics=Editor.window.CreateGraphics();
+//					TreeNode selected=Editor.SelectedNode;
+//					int depth=0;
+//					while(selected.Parent!=null) {
+//						selected=selected.Parent;
+//						depth++;
+//					}
+//					int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
+//						Convert.ToInt32(
+//						graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
+//
+//					int y=5;
+//					TreeNode node=Editor.SelectedNode;
+//					while(node!=null) {
+//						if(node.Bounds.Y<0) {
+//							break;
+//						}	
+//						y+=node.Bounds.Height;
+//						node=node.PrevVisibleNode;
+//
+//					}
+//					listBox.Location=new Point(x,y);
+//					int greatest=0;
+//					foreach(GListBoxItem item in listBox.Items) {
+//						int width=graphics.MeasureString(item.Text,listBox.Font).ToSize().Width;
+//						if(width>greatest){
+//							greatest=width;
+//						}								
+//					}
+//					listBox.Size=new Size(greatest+30,150<listBox.Items.Count*16+10? 150:listBox.Items.Count*16+10);
+//					listBox.Show();
+//					Editor.editor.Focus();
+//				}
+//				Editor.window.Activate();
+//			}
+//			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
+//				object selected=current;
+//				int i=0;
+//				if(keys.Count==2 && keys[1].Equals("Invoke")) {
+//					int asdf=0;
+//				}
+//				if(keys[0].Equals("this")) {
+//					i++;
+//				}
+//				else if(keys[0].Equals("caller")) {
+//					int numCallers=0;
+//					foreach(object key in keys) {
+//						if(key.Equals("caller")) {
+//							numCallers++;
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//					selected=Interpreter.callers[Interpreter.callers.Count-numCallers];
+//				}
+//				else if(keys[0].Equals("parent")) {
+//					foreach(object key in keys) {
+//						if(key.Equals("parent")) {
+//							selected=((IKeyValue)selected).Parent;
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//				}
+//				else if(keys[0].Equals("arg")) {
+//					selected=Interpreter.arguments[Interpreter.arguments.Count-1];
+//					i++;
+//				}				
+//				else if(keys[0].Equals("search")||isRightSide) {
+//					if(keys[0].Equals("search")) {
+//						i++;
+//					}
+//					while(selected!=null && !((IKeyValue)selected).ContainsKey(keys[i])) {
+//						selected=((IKeyValue)selected).Parent;
+//					}
+//					if(selected==null) {
+//						throw new ApplicationException("Key "+keys[i]+" not found");
+//					}
+//				}
+//				int lastKeySelect=0;
+//				if(isSelectLastKey) {
+//					lastKeySelect++;
+//				}
+//				for(;i<keys.Count-1+lastKeySelect;i++) {
+//					if(keys[i].Equals("break")) {
+//						Interpreter.breakMethod(selected);
+//						Thread.CurrentThread.Suspend();
+//						if(Interpreter.redoStatement) {
+//							Interpreter.redoStatement=false;
+//							throw new RestartStatementException();
+//						}
+//					}	
+//					if(selected is IKeyValue) {
+//						selected=((IKeyValue)selected)[keys[i]];
+//					}
+//					else {
+//						if(selected==null) {
+//							throw new ApplicationException("Key "+keys[i]+" does not exist");
+//						}
+//						selected=new NetObject(selected,selected.GetType())[keys[i]];
+//					}
+//
+//				}
+//				return selected;
+//			}
 			public void Assign(ref object current,object val,bool isInFunction) {
 				ArrayList keys=new ArrayList();
 				foreach(IExpression expression in expressions) {
@@ -745,7 +1114,7 @@ namespace Meta {
 		}
 		public class RestartStatementException: ApplicationException {
 		}
-		public delegate void BreakMethodDelegate(object obj);
+		public delegate void BreakMethodDelegate(IKeyValue obj);
 		public class Interpreter  {
 			public static string path;
 			public static bool redoStatement=false; // just for editor, remove
@@ -1496,7 +1865,7 @@ namespace Meta {
 				return Interpreter.ConvertToMeta(CallMethod((Map)Interpreter.Arg));
 			}
 			public object CallMethod(Map arguments) {
-				if(this.name.Equals("Invoke")) {
+				if(this.name.Equals("GetKeys")) {
 					int asdf=0;
 				}
 				ArrayList list;

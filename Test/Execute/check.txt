@@ -6,24 +6,24 @@ IEnumerable
       "ImpliedAutokey"
   Entry (DictionaryEntry):
     Key (String):
-      "Load"
+      "Merge"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Void Load()"
+            "Meta.Types.IKeyValue Merge()"
       savedMethod (RuntimeMethodInfo):
-        "Void Load()"
+        "Meta.Types.IKeyValue Merge()"
   Entry (DictionaryEntry):
     Key (String):
-      "RunString"
+      "Catch"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "System.Object RunString(System.String)"
+            "System.Object Catch(Meta.Types.Map)"
       savedMethod (RuntimeMethodInfo):
-        "System.Object RunString(System.String)"
+        "System.Object Catch(Meta.Types.Map)"
   Entry (DictionaryEntry):
     Key (String):
       "BinaryOr"
@@ -46,6 +46,16 @@ IEnumerable
         "System.String Insert(System.String, Int32, System.String)"
   Entry (DictionaryEntry):
     Key (String):
+      "Multiply"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
+      savedMethod (RuntimeMethodInfo):
+        "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
+  Entry (DictionaryEntry):
+    Key (String):
       "Add"
     Value (NetMethod):
       methods (MethodInfo[]):
@@ -66,14 +76,14 @@ IEnumerable
         "Meta.Types.Map Concat(Meta.Types.Map[])"
   Entry (DictionaryEntry):
     Key (String):
-      "Multiply"
+      "Run"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
+            "System.Object Run(System.String)"
       savedMethod (RuntimeMethodInfo):
-        "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
+        "System.Object Run(System.String)"
   Entry (DictionaryEntry):
     Key (String):
       "IsMap"
@@ -106,6 +116,16 @@ IEnumerable
         "Boolean Not(Boolean)"
   Entry (DictionaryEntry):
     Key (String):
+      "RunString"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "System.Object RunString(System.String)"
+      savedMethod (RuntimeMethodInfo):
+        "System.Object RunString(System.String)"
+  Entry (DictionaryEntry):
+    Key (String):
       "Divide"
     Value (NetMethod):
       methods (MethodInfo[]):
@@ -126,14 +146,14 @@ IEnumerable
         "Char Character(System.String)"
   Entry (DictionaryEntry):
     Key (String):
-      "Run"
+      "SetBreakMethod"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "System.Object Run(System.String)"
+            "Void SetBreakMethod(Meta.Execution.BreakMethodDelegate)"
       savedMethod (RuntimeMethodInfo):
-        "System.Object Run(System.String)"
+        "Void SetBreakMethod(Meta.Execution.BreakMethodDelegate)"
   Entry (DictionaryEntry):
     Key (String):
       "Switch"
@@ -156,14 +176,14 @@ IEnumerable
         "Boolean Or(Boolean, Boolean)"
   Entry (DictionaryEntry):
     Key (String):
-      "Merge"
+      "GetKeys"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Meta.Types.IKeyValue Merge()"
+            "Meta.Types.IKeyValue GetKeys(Meta.Types.IKeyValue)"
       savedMethod (RuntimeMethodInfo):
-        "Meta.Types.IKeyValue Merge()"
+        "Meta.Types.IKeyValue GetKeys(Meta.Types.IKeyValue)"
   Entry (DictionaryEntry):
     Key (String):
       "For"
@@ -254,6 +274,16 @@ IEnumerable
             "Meta.Types.Map Each()"
       savedMethod (RuntimeMethodInfo):
         "Meta.Types.Map Each()"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Load"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Void Load()"
+      savedMethod (RuntimeMethodInfo):
+        "Void Load()"
   Entry (DictionaryEntry):
     Key (Integer):
       "2"
