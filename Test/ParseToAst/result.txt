@@ -3052,7 +3052,7 @@ getFirstChild (CommonAST):
                                                                               getNextSibling:
                                                                                 null
                                                                               getText (String):
-                                                                                "Concatenate"
+                                                                                "concat"
                                                                               Type (Int32):
                                                                                 "22"
                                                                             getText (String):
@@ -5741,7 +5741,7 @@ getFirstChild (CommonAST):
                                                                                                                                                                             getNextSibling:
                                                                                                                                                                               null
                                                                                                                                                                             getText (String):
-                                                                                                                                                                              "If"
+                                                                                                                                                                              "if"
                                                                                                                                                                             Type (Int32):
                                                                                                                                                                               "22"
                                                                                                                                                                           getNextSibling (CommonAST):
@@ -5771,7 +5771,7 @@ getFirstChild (CommonAST):
                                                                                                                                                                                       getNextSibling:
                                                                                                                                                                                         null
                                                                                                                                                                                       getText (String):
-                                                                                                                                                                                        "Equal"
+                                                                                                                                                                                        "equal"
                                                                                                                                                                                       Type (Int32):
                                                                                                                                                                                         "22"
                                                                                                                                                                                     getNextSibling (CommonAST):
@@ -6073,7 +6073,7 @@ getFirstChild (CommonAST):
                                                                                                                                                                               getNextSibling:
                                                                                                                                                                                 null
                                                                                                                                                                               getText (String):
-                                                                                                                                                                                "If"
+                                                                                                                                                                                "if"
                                                                                                                                                                               Type (Int32):
                                                                                                                                                                                 "22"
                                                                                                                                                                             getNextSibling (CommonAST):
@@ -6103,7 +6103,7 @@ getFirstChild (CommonAST):
                                                                                                                                                                                         getNextSibling:
                                                                                                                                                                                           null
                                                                                                                                                                                         getText (String):
-                                                                                                                                                                                          "Equal"
+                                                                                                                                                                                          "equal"
                                                                                                                                                                                         Type (Int32):
                                                                                                                                                                                           "22"
                                                                                                                                                                                       getNextSibling (CommonAST):
@@ -6446,7 +6446,7 @@ getFirstChild (CommonAST):
                                                                                                                                                                                     getNextSibling:
                                                                                                                                                                                       null
                                                                                                                                                                                     getText (String):
-                                                                                                                                                                                      "Switch"
+                                                                                                                                                                                      "switch"
                                                                                                                                                                                     Type (Int32):
                                                                                                                                                                                       "22"
                                                                                                                                                                                   getNextSibling (CommonAST):
@@ -6746,7 +6746,7 @@ getFirstChild (CommonAST):
                                                                                                                                                                                         getNextSibling:
                                                                                                                                                                                           null
                                                                                                                                                                                         getText (String):
-                                                                                                                                                                                          "Switch"
+                                                                                                                                                                                          "switch"
                                                                                                                                                                                         Type (Int32):
                                                                                                                                                                                           "22"
                                                                                                                                                                                       getNextSibling (CommonAST):

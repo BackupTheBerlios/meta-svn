@@ -1647,7 +1647,7 @@ statements (ArrayList):
               "map"
           Entry (Literal)
             literal (Map):
-              "Concatenate"
+              "concat"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
@@ -2890,7 +2890,7 @@ statements (ArrayList):
                 expressions (ArrayList):
                   Entry (Literal)
                     literal (Map):
-                      "Equal"
+                      "equal"
                 parents (ArrayList):
           Entry (Statement)
             keyExpression (Select):
@@ -3008,7 +3008,7 @@ statements (ArrayList):
         expressions (ArrayList):
           Entry (Literal)
             literal (Map):
-              "If"
+              "if"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
@@ -3069,7 +3069,7 @@ statements (ArrayList):
                 expressions (ArrayList):
                   Entry (Literal)
                     literal (Map):
-                      "Equal"
+                      "equal"
                 parents (ArrayList):
           Entry (Statement)
             keyExpression (Select):
@@ -3179,7 +3179,7 @@ statements (ArrayList):
         expressions (ArrayList):
           Entry (Literal)
             literal (Map):
-              "If"
+              "if"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
@@ -3358,7 +3358,7 @@ statements (ArrayList):
         expressions (ArrayList):
           Entry (Literal)
             literal (Map):
-              "Switch"
+              "switch"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
@@ -3565,7 +3565,7 @@ statements (ArrayList):
         expressions (ArrayList):
           Entry (Literal)
             literal (Map):
-              "Switch"
+              "switch"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):

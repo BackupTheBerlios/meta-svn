@@ -3491,7 +3491,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "Concatenate"
+                                "concat"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -6630,7 +6630,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "If"
+                                "if"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -6693,7 +6693,7 @@ Entry (DictionaryEntry)
                                                   Key (Map):
                                                     "literal"
                                                   Value (Map):
-                                                    "Equal"
+                                                    "equal"
                                     Entry (DictionaryEntry)
                                       Key (Map):
                                         "argument"
@@ -6994,7 +6994,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "If"
+                                "if"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -7057,7 +7057,7 @@ Entry (DictionaryEntry)
                                                   Key (Map):
                                                     "literal"
                                                   Value (Map):
-                                                    "Equal"
+                                                    "equal"
                                     Entry (DictionaryEntry)
                                       Key (Map):
                                         "argument"
@@ -7410,7 +7410,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "Switch"
+                                "switch"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -7739,7 +7739,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "Switch"
+                                "switch"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"

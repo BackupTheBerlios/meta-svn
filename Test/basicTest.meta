@@ -51,7 +51,7 @@ FirstLevel:=
   SecondLevel(x:'y')
 SecondLevel:=arg.arg
 argTest:FirstLevel(a:'z')
-concat:map.Concatenate('x','yz')
+concat:map.concat('x','yz')
 this:map.Merge(parent,testClasses)
 testClass:TestClass()
 memberTest:MemberTest()
@@ -106,21 +106,21 @@ two:'2'
 firstIf:'unchanged'
 secondIf:'unchanged'
 thenText:'then'
-If
-  Equal('1',one)
+if
+  equal('1',one)
   then:=
     #firstIf:thenText
   else:=
     #firstIf:'else'
-If
-  Equal('1',two)
+if
+  equal('1',two)
   then:=
     #secondIf:'then'
   else:=
     #secondIf:'else'
 firstSwitch:'unchanged'
 bigNumber:'50020202029029233344'
-Switch
+switch
   bigNumber
   case:
     [bigNumber]:=
@@ -128,7 +128,7 @@ Switch
   default:=
     #firstSwitch:'default'
 secondSwitch:'unchanged'
-Switch
+switch
   '3'
   case:
     1:=

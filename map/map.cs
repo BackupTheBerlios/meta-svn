@@ -4,7 +4,7 @@ using Meta.Types;
 using Meta.Execution;
 
 public class map {
-	public static IKeyValue GetKeys(IKeyValue map) {
+	public static IKeyValue keys(IKeyValue map) {
 		int i=1;
 		Map keys=new Map();
 		foreach(DictionaryEntry entry in map) {
@@ -14,7 +14,7 @@ public class map {
 		return keys;
 	}
 	[MetaLibraryMethod]
-	public static Map Concatenate() {
+	public static Map concat() {
 		ArrayList maps=((Map)Interpreter.Arg).IntKeyValues;
 		int i=1;
 		Map combined=new Map();
