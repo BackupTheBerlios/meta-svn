@@ -1,4 +1,4 @@
-// $ANTLR 2.7.3: "parser.g" -> "MetaLexer.cs"$
+// $ANTLR 2.7.3: "Parser.g" -> "MetaLexer.cs"$
 
 namespace Meta.Parser
 {

@@ -39,6 +39,7 @@ namespace Editor {
 		public static Window window=new Window();
 		public static TreeView editor = new TreeView();
 		public static Hashtable	keyBindings = new Hashtable();
+		public static Hashtable helpKeyBindings = new Hashtable();
 		public static Node clipboard = null;
 
 		private static Node selectedNode=null;
@@ -81,6 +82,11 @@ namespace Editor {
 			editor.KeyPress+=new KeyPressEventHandler(KeyPress);
 			editor.BeforeSelect+=new TreeViewCancelEventHandler(BeforeSelect);
 
+			helpKeyBindings[Keys.Alt|Keys.K]=typeof(MoveKeyDown);
+			helpKeyBindings[Keys.Alt|Keys.L]=typeof(MoveKeyUp);
+			helpKeyBindings[Keys.Tab]=typeof(CompleteWord);
+			helpKeyBindings[Keys.Enter]=typeof(CompleteWord);
+
 			keyBindings[Keys.Control|Keys.X]=typeof(CutNode);
 			keyBindings[Keys.Control|Keys.C]=typeof(CopyNode);
 			keyBindings[Keys.Control|Keys.V]=typeof(PasteNode);
@@ -104,8 +110,6 @@ namespace Editor {
 			keyBindings[Keys.Control|Keys.Alt|Keys.J]=typeof(MoveWordLeft);
 			keyBindings[Keys.Control|Keys.Alt|Keys.Oemtilde]=typeof(MoveWordRight);
 
-			keyBindings[Keys.Tab]=typeof(CompleteWord);
-
 			keyBindings[Keys.Control|Keys.Enter]=typeof(CreateChild);
 			keyBindings[Keys.Enter]=typeof(CreateSibling);
 			keyBindings[Keys.Enter|Keys.Shift]=typeof(CreateSiblingUp);
@@ -118,7 +122,12 @@ namespace Editor {
 			keyBindings[Keys.Alt|Keys.H]=typeof(DeleteNode);
 		}
 		public static void KeyDown(object sender,KeyEventArgs e) {
-			if(keyBindings.ContainsKey(e.KeyData)) {
+			if(Help.listBox.Visible && helpKeyBindings.ContainsKey(e.KeyData)) {
+				Help.listBox.Visible=true;
+				((Command)((Type)helpKeyBindings[e.KeyData]).GetConstructor(new Type[] {})
+					.Invoke(new object[]{})).Run();
+			}
+			else if(keyBindings.ContainsKey(e.KeyData)) {
 				ConstructorInfo constructor=((Type)keyBindings[e.KeyData]).GetConstructor(new Type[]{});
 				((Command)constructor.Invoke(new object[]{})).Run();
 			}
@@ -223,14 +232,24 @@ namespace Editor {
 	public abstract class Help {
 		//public static ToolTip tip=new ToolTip();
 		public static Label toolTip=new Label();
-		public static ListBox listBox=new ListBox();
+		public static GListBox listBox=new GListBox();
 
 		static Help() {
 			listBox.Visible=false;
 			listBox.TabStop=false;
+			listBox.GotFocus+=new EventHandler(listBox_GotFocus);
 			toolTip.Visible=false;
 			//toolTip.AutoSize=true;
 			toolTip.BackColor=Color.LightYellow;
+			ImageList imageList=new ImageList();
+			imageList.TransparentColor = System.Drawing.Color.Lime;
+			imageList.Images.Add(new Bitmap("class.bmp"));
+			imageList.Images.Add(new Bitmap("event.bmp"));
+			imageList.Images.Add(new Bitmap("method.bmp"));
+			imageList.Images.Add(new Bitmap("namespace.bmp"));
+			imageList.Images.Add(new Bitmap("property.bmp"));
+			imageList.Images.Add(new Bitmap("map.bmp"));
+			listBox.ImageList=imageList;
 			toolTip.BorderStyle=BorderStyle.FixedSingle;
 			listBox.SelectedIndexChanged+=new EventHandler(listBox_SelectedIndexChanged);
 //			listBox.GotFocus+=new EventHandler(listBox_GotFocus);
@@ -243,25 +262,58 @@ namespace Editor {
 				return;
 			}
 			string text;
+			MemberInfo[] members;
 			if(lastObject is NetClass) {
-				MemberInfo[] members=lastObject.GetType().GetMember((string)listBox.SelectedItem,
+				members=lastObject.GetType().GetMember(((GListBoxItem)listBox.SelectedItem).Text,
 					BindingFlags.Public|BindingFlags.Static);
-				text=Interpreter.GetDoc(members[0],false);
+				text=Interpreter.GetDoc(member,false);
 			}
 			else if(!(lastObject is Map)) {
-				MemberInfo[] members=lastObject.GetType().GetMember((string)listBox.SelectedItem,
+				members=lastObject.GetType().GetMember(((GListBoxItem)listBox.SelectedItem).Text,
 					BindingFlags.Public|BindingFlags.Instance);
-				text=Interpreter.GetDoc(members[0],false);
+				text=Interpreter.GetDoc(member,false);
 			}
 			else {
+				//FIX here
 				throw new ApplicationException("bug here");
 			}
-//			IKeyValue keyValue=Help.lastObject is IKeyValue? (IKeyValue)Help.lastObject
-//				:new NetObject(Help.lastObject);
-//			object obj=keyValue[listBox.SelectedItem];
-			int height=0;
+			//int height=0;
 			string newText=text.Replace(Environment.NewLine,"").Replace("\n","").
 				Replace("    "," ").Replace("   "," ").Replace("  "," ");
+			MemberInfo member=member;
+			string doc="";
+			if(member is MethodBase) {
+				if(member is MethodInfo) {
+					doc+=((MethodInfo)member).ReturnType+" ";
+				}
+				doc+=((MethodBase)member).Name;
+				doc+=" (";
+				foreach(ParameterInfo parameter in ((MethodBase)member).GetParameters()) {
+					doc+=parameter.ParameterType+" "+parameter.Name+",";
+				}
+				if(((MethodBase)member).GetParameters().Length>0) {
+					doc=doc.Remove(doc.Length-1,1);
+				}
+				doc+=")";
+				if(members.Length>1) {
+					doc+=" ( +"+(members.Length-1)+" overloads)";
+				}
+			}
+			else if(member is PropertyInfo) {
+				doc+=((PropertyInfo)member).PropertyType+" "+((PropertyInfo)member).Name;
+			}
+			else if(member is FieldInfo) {
+				doc+=((FieldInfo)member).FieldType+" "+((FieldInfo)member).Name;
+			}
+			else if(member is Type) {
+				doc+="class "+((Type)member).Name;
+			}
+			else if(member is EventInfo) {
+				doc+="event "+((EventInfo)member).Name;
+			}
+
+			newText=doc+"\n"+newText;
+			newText=newText.Replace("\n ","\n");
 //			bool lastWasSpace=false;
 //			string newText="";
 //			foreach(char c in text) {
@@ -280,8 +332,8 @@ namespace Editor {
 //				toolTip.Width,
 //				height*toolTip.CreateGraphics().MeasureString(text,toolTip.Font));
 			Size size=toolTip.CreateGraphics().MeasureString(newText,toolTip.Font).ToSize();
-			toolTip.Height=toolTip.Height-7;
-			toolTip.Width=size.Width+20;
+			toolTip.Height=size.Height+2;
+			toolTip.Width=size.Width+5;
 			//toolTip.Size=new Size(300,100);
 
 			toolTip.Visible=true;
@@ -290,6 +342,7 @@ namespace Editor {
 			y+=(listBox.SelectedIndex-listBox.TopIndex)*listBox.ItemHeight;
 			toolTip.Location=new Point(x,y);
 			toolTip.Text=newText;
+			Editor.editor.Focus();
 //
 //			if(obj is INetDocumented) {
 ////				toolTip.Visible=true;
@@ -344,29 +397,6 @@ namespace Editor {
 			}
 			return text;
 		}
-//		//TODO
-//		private static string MapToHelp(IKeyValue obj) {
-//			string text="";
-//			if(obj.Count==0) {
-//				text="()";
-//			}
-//			else {
-//				foreach(object key in obj.Keys) {
-//					text+=key.ToString()+" = ";
-//					if(obj[key]==null) {
-//						text+="null";
-//					}
-//					else if(obj[key] is Map) {
-//						text+="...";
-//					}
-//					else {
-//						text+=obj[key].ToString();
-//					}
-//					text+="\n";
-//				}
-//			}
-//			return text.TrimEnd('\n');
-//		}
 		public static object lastObject;
 		// TODO
 		
@@ -387,10 +417,9 @@ namespace Editor {
 				while(!(e.InnerException==null || e is BreakException)) {
 					e=e.InnerException;
 				}
-				if(e is BreakException) {
+				if(e is BreakException && ((BreakException)e).obj!=null) {
 					object obj=((BreakException)e).obj;
-					lastObject=obj;
-
+					lastObject=obj;//???
 					if(isCall) {
 //						if(obj is NetMethod) {
 //							text=((NetMethod)obj).GetDocumentation(true);;
@@ -410,9 +439,55 @@ namespace Editor {
 							keys.Add((string)entry.Key);
 						}
 						keys.Sort();
-						foreach(string key in keys) {
-							listBox.Items.Add(key);
-						}
+//						if(lastObject is Map) {
+//							foreach(object key in keys) {
+//								object o=keyValue[key];
+//								int index=0;
+//								if(o is NetMethod) {
+//									index=2;
+//								}
+//								else if(o is NetClass) {
+//								listBox.Items.Add(new GListBoxItem(key,index));
+//							}
+//						}
+//						else {
+							foreach(string key in keys) {
+								object member;
+								int imageIndex=0;
+								if(lastObject is Map) {
+									member=((Map)lastObject)[key];
+								}
+								else if(lastObject is NetClass) {
+									member=lastObject.GetType().GetMember(key,
+										BindingFlags.Public|BindingFlags.Static)[0];
+									//text=Interpreter.GetDoc(members[0],false);
+								}
+								else if(!(lastObject is Map)) {
+									member=lastObject.GetType().GetMember(key,
+										BindingFlags.Public|BindingFlags.Instance)[0];
+									//text=Interpreter.GetDoc(members[0],false);
+								}
+								else {
+									throw new ApplicationException("bug here");
+								}
+								if(member is Type || member is NetClass) {
+									imageIndex=0;
+								}
+								else if(member is EventInfo) {
+									imageIndex=1;
+								}
+								else if(member is MethodInfo || member is ConstructorInfo || member is NetMethod) {
+									imageIndex=2;
+								}
+								else if(member is PropertyInfo) {
+									imageIndex=4;
+								}
+								else if(member is Map) {
+									imageIndex=5;
+								}
+								listBox.Items.Add(new GListBoxItem(key,imageIndex));
+							}
+//						}
 						Graphics graphics=Editor.window.CreateGraphics();
 						TreeNode selected=Editor.SelectedNode;
 						int depth=0;
@@ -433,22 +508,9 @@ namespace Editor {
 						listBox.Location=new Point(x,y);
 						listBox.Show();
 						Editor.editor.Focus();
-//						if(obj is IKeyValue) {
-//							text=MapToHelp((IKeyValue)obj);
-//						}
-//						else if(obj is NetClass) {
-//							text=((NetClass)obj).Documentation;
-//						}
-//						else {
-//							text+=new NetObject(obj).GetDocumentation(false);
-//						}
 					}
 				}
-//				else {
-//					//text=e.ToString();
-//				}
 			}
-//			tip.SetToolTip(Editor.editor,text);
 			Editor.window.Activate();
 			return;
 		}
@@ -573,6 +635,9 @@ namespace Editor {
 			return keys;
 		}
 
+		private static void listBox_GotFocus(object sender, EventArgs e) {
+			//Editor.editor.Focus();
+		}
 	}
 	public abstract class History {
 		public static void Add(LoggedCommand command) {
@@ -764,20 +829,22 @@ namespace Editor {
 	}
 	public class MoveLineUp:LoggedAnyNodeCommand {
 		public new bool Require() {
-			if(Help.listBox.Visible) {
-				return Help.listBox.SelectedIndex>1;
-			}
-			else {
-				return Editor.SelectedNode.PrevVisibleNode!=null;
-			}
+			return Editor.SelectedNode.PrevVisibleNode!=null;
+//			if(Help.listBox.Visible) {
+//				return Help.listBox.SelectedIndex>1;
+//			}
+//			else {
+//				return Editor.SelectedNode.PrevVisibleNode!=null;
+//			}
 		}
 		public override void Do() {
-			if(Help.listBox.Visible) {
-				Help.listBox.SelectedIndex--;
-			}
-			else {
-				Editor.SelectedNode=(Node)Editor.SelectedNode.PrevVisibleNode;
-			}
+			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevVisibleNode;
+//			if(Help.listBox.Visible) {
+//				Help.listBox.SelectedIndex--;
+//			}
+//			else {
+//				Editor.SelectedNode=(Node)Editor.SelectedNode.PrevVisibleNode;
+//			}
 		}
 		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.NextVisibleNode;
@@ -785,20 +852,22 @@ namespace Editor {
 	}
 	public class MoveLineDown:LoggedAnyNodeCommand {
 		public new bool Require() {
-			if(Help.listBox.Visible) {
-				return Help.listBox.SelectedIndex<Help.listBox.Items.Count-1;
-			}
-			else {
-				return Editor.SelectedNode.NextVisibleNode!=null;
-			}
+			return Editor.SelectedNode.NextVisibleNode!=null;
+//			if(Help.listBox.Visible) {
+//				return Help.listBox.SelectedIndex<Help.listBox.Items.Count-1;
+//			}
+//			else {
+//				return Editor.SelectedNode.NextVisibleNode!=null;
+//			}
 		}
 		public override void Do() {
-			if(Help.listBox.Visible) {
-				Help.listBox.SelectedIndex++;
-			}
-			else {
-				Editor.SelectedNode=(Node)Editor.SelectedNode.NextVisibleNode;
-			}
+			Editor.SelectedNode=(Node)Editor.SelectedNode.NextVisibleNode;
+//			if(Help.listBox.Visible) {
+//				Help.listBox.SelectedIndex++;
+//			}
+//			else {
+//				Editor.SelectedNode=(Node)Editor.SelectedNode.NextVisibleNode;
+//			}
 		}
 		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevVisibleNode;
@@ -1008,11 +1077,36 @@ namespace Editor {
 			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition-1;
 			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
 		}
-	} 
-	public class CompleteWord:LoggedNormalNodeCommand {
+	}
+	public class MoveKeyUp:LoggedNormalNodeCommand {
 		public new bool Require() {
-			return Help.listBox.Visible;
+			return Help.listBox.SelectedIndex>1;
 		}
+		public override void Do() {
+			Help.listBox.SelectedIndex--;
+		}
+		public override void Undo() {
+			Help.listBox.SelectedIndex++;
+		}
+
+	}
+	public class MoveKeyDown:LoggedNormalNodeCommand {
+		public new bool Require() {
+			return Help.listBox.SelectedIndex<Help.listBox.Items.Count-1;
+		}
+		public override void Do() {
+			Help.listBox.SelectedIndex++;
+		}
+		public override void Undo() {
+			Help.listBox.SelectedIndex--;
+		}
+
+
+	}
+	public class CompleteWord:LoggedNormalNodeCommand {
+//		public new bool Require() {
+//			return Help.listBox.Visible;
+//		}
 		public override void Do() {
 			oldText=Editor.SelectedNode.CleanText;
 			cursorPos=Editor.SelectedNode.CursorPosition;
@@ -1020,12 +1114,15 @@ namespace Editor {
 				Editor.SelectedNode.CleanText.Length-InsertCharacter.lastWord.Length,
 				InsertCharacter.lastWord.Length)+Help.listBox.SelectedItem;
 			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CleanText.Length;
+			Help.listBox.Visible=false;
+			Help.toolTip.Visible=false;
 		}
 		string oldText="";
 		int cursorPos=0;
 		public override void Undo() {
 			Editor.SelectedNode.CursorPosition=cursorPos;
 			Editor.SelectedNode.CleanText=oldText;
+			Help.listBox.Visible=true;
 		}
 	}
 	public class CreateChild:LoggedAnyNodeCommand {
@@ -1148,4 +1245,75 @@ namespace Editor {
 			Editor.SelectedNode=(Node)parentNode.Nodes[index];
 		}
 	}
+	// GListBoxItem class 
+	public class GListBoxItem {
+		private string _myText;
+		private int _myImageIndex;
+		// properties 
+		public string Text {
+			get {return _myText;}
+			set {_myText = value;}
+		}
+		public int ImageIndex {
+			get {return _myImageIndex;}
+			set {_myImageIndex = value;}
+		}
+		//constructor
+		public GListBoxItem(string text, int index) {
+			_myText = text;
+			_myImageIndex = index;
+		}
+		public GListBoxItem(string text): this(text,-1){}
+		public GListBoxItem(): this(""){}
+		public override string ToString() {
+			return _myText;
+		}
+	}//End of GListBoxItem class
+
+	// GListBox class 
+	public class GListBox : ListBox {
+		private ImageList _myImageList;//=new ImageList();
+		public ImageList ImageList {
+			get {
+				return _myImageList;
+			}
+			set {
+				_myImageList = value;
+			}
+		}
+		public GListBox() {
+			// Set owner draw mode
+			this.DrawMode = DrawMode.OwnerDrawFixed;
+		}
+		protected override void OnDrawItem(System.Windows.Forms.DrawItemEventArgs e) {
+			e.DrawBackground();
+			e.DrawFocusRectangle();
+			GListBoxItem item;
+			Rectangle bounds = e.Bounds;
+			Size imageSize = _myImageList.ImageSize;
+			try {
+				item = (GListBoxItem) Items[e.Index];
+				if (item.ImageIndex != -1) {
+					_myImageList.Draw(e.Graphics, bounds.Left,bounds.Top,item.ImageIndex); 
+					e.Graphics.DrawString(item.Text, e.Font, new SolidBrush(e.ForeColor), 
+						bounds.Left+imageSize.Width, bounds.Top);
+				}
+				else {
+					e.Graphics.DrawString(item.Text, e.Font,new SolidBrush(e.ForeColor),
+						bounds.Left, bounds.Top);
+				}
+			}
+			catch {
+				if (e.Index != -1) {
+					e.Graphics.DrawString(Items[e.Index].ToString(),e.Font, 
+						new SolidBrush(e.ForeColor) ,bounds.Left, bounds.Top);
+				}
+				else {
+					e.Graphics.DrawString(Text,e.Font,new SolidBrush(e.ForeColor),
+						bounds.Left, bounds.Top);
+				}
+			}
+			base.OnDrawItem(e);
+		}
+	}//End of GListBox class
 }

@@ -594,7 +594,7 @@ namespace Meta {
 			public object Preselect(object current,ArrayList keys,bool isSearch,bool isSelectLastKey) {
 				object selected=current;
 				int i=0;
-				if(keys[0].Equals("result")) {
+				if(keys[0].Equals("this")) {
 					i++;
 				}
 				else if(keys[0].Equals("caller")) {
@@ -653,7 +653,7 @@ namespace Meta {
 				foreach(IExpression expression in expressions) {
 					keys.Add(expression.Evaluate((Map)current));
 				}
-				if(keys.Count==1 && keys[0].Equals("result")) {
+				if(keys.Count==1 && keys[0].Equals("this")) {
 					if(val is IKeyValue) {
 						current=((IKeyValue)val).Clone();
 						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);

@@ -95,7 +95,7 @@
             <Include>
                 <File
                     RelPath = "Editor.cs"
-                    SubType = "Form"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
             </Include>

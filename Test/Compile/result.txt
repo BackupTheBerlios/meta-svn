@@ -8,7 +8,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
         parents (ArrayList):
           IEnumerable
       val (Call):
@@ -23,7 +23,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -49,7 +49,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -68,7 +68,7 @@ statements (ArrayList):
                                 cached:
                                   null
                                 text (String):
-                                  "result"
+                                  "this"
                               Entry (Literal):
                                 cached:
                                   null
@@ -104,7 +104,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -125,7 +125,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -146,7 +146,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -172,7 +172,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Program):
               statements (ArrayList):
                 IEnumerable
@@ -207,7 +207,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -228,7 +228,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -249,7 +249,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -270,7 +270,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -310,7 +310,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -336,7 +336,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -362,7 +362,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -388,7 +388,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -672,7 +672,7 @@ statements (ArrayList):
                                                     Key (String):
                                                       "literal"
                                                     Value (String):
-                                                      "result"
+                                                      "this"
                                 Entry (DictionaryEntry):
                                   Key (String):
                                     "value"
@@ -737,7 +737,7 @@ statements (ArrayList):
                       cached:
                         null
                       text (String):
-                        "result"
+                        "this"
                     Entry (Literal):
                       cached:
                         null
@@ -777,7 +777,7 @@ statements (ArrayList):
                                                     Key (String):
                                                       "literal"
                                                     Value (String):
-                                                      "result"
+                                                      "this"
                                             Entry (DictionaryEntry):
                                               Key (Integer):
                                                 "2"
@@ -806,7 +806,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -827,7 +827,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -846,7 +846,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -881,7 +881,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -962,7 +962,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -1002,7 +1002,7 @@ statements (ArrayList):
                                             Key (String):
                                               "literal"
                                             Value (String):
-                                              "result"
+                                              "this"
                         Entry (DictionaryEntry):
                           Key (String):
                             "value"
@@ -1031,7 +1031,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -1051,7 +1051,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -1072,7 +1072,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -1093,7 +1093,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -1124,7 +1124,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -1143,7 +1143,7 @@ statements (ArrayList):
                       cached:
                         null
                       text (String):
-                        "result"
+                        "this"
                     Entry (Literal):
                       cached:
                         null
@@ -1164,7 +1164,7 @@ statements (ArrayList):
                       cached:
                         null
                       text (String):
-                        "result"
+                        "this"
                     Entry (Literal):
                       cached:
                         null
@@ -1185,7 +1185,7 @@ statements (ArrayList):
                       cached:
                         null
                       text (String):
-                        "result"
+                        "this"
                     Entry (Literal):
                       cached:
                         null
@@ -1206,7 +1206,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -1243,7 +1243,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -1283,7 +1283,7 @@ statements (ArrayList):
                                             Key (String):
                                               "literal"
                                             Value (String):
-                                              "result"
+                                              "this"
                         Entry (DictionaryEntry):
                           Key (String):
                             "value"
@@ -1323,7 +1323,7 @@ statements (ArrayList):
                                                                     Key (String):
                                                                       "literal"
                                                                     Value (String):
-                                                                      "result"
+                                                                      "this"
                                                 Entry (DictionaryEntry):
                                                   Key (String):
                                                     "value"
@@ -1358,7 +1358,7 @@ statements (ArrayList):
                                                                                       Key (String):
                                                                                         "literal"
                                                                                       Value (String):
-                                                                                        "result"
+                                                                                        "this"
                                                                               Entry (DictionaryEntry):
                                                                                 Key (Integer):
                                                                                   "2"
@@ -1403,7 +1403,7 @@ statements (ArrayList):
                                                                                       Key (String):
                                                                                         "literal"
                                                                                       Value (String):
-                                                                                        "result"
+                                                                                        "this"
                                                                               Entry (DictionaryEntry):
                                                                                 Key (Integer):
                                                                                   "2"
@@ -1448,7 +1448,7 @@ statements (ArrayList):
                                                                                       Key (String):
                                                                                         "literal"
                                                                                       Value (String):
-                                                                                        "result"
+                                                                                        "this"
                                                                               Entry (DictionaryEntry):
                                                                                 Key (Integer):
                                                                                   "2"
@@ -1477,7 +1477,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -1517,7 +1517,7 @@ statements (ArrayList):
                                             Key (String):
                                               "literal"
                                             Value (String):
-                                              "result"
+                                              "this"
                         Entry (DictionaryEntry):
                           Key (String):
                             "value"
@@ -1652,7 +1652,7 @@ statements (ArrayList):
                                             Key (String):
                                               "literal"
                                             Value (String):
-                                              "result"
+                                              "this"
                         Entry (DictionaryEntry):
                           Key (String):
                             "value"
@@ -1681,12 +1681,12 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
               text (String):
-                "resultSet"
+                "thisSet"
         parents (ArrayList):
           IEnumerable
       val (Call):
@@ -1727,7 +1727,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
         parents (ArrayList):
           IEnumerable
       val (Call):
@@ -1742,7 +1742,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -1768,7 +1768,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -1819,7 +1819,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -1849,7 +1849,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -1879,7 +1879,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -1905,7 +1905,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -1931,7 +1931,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -1967,7 +1967,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2003,7 +2003,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2024,7 +2024,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2044,7 +2044,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -2065,7 +2065,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -2086,7 +2086,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -2117,7 +2117,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2137,7 +2137,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -2158,7 +2158,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -2179,7 +2179,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -2215,7 +2215,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2235,7 +2235,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -2282,7 +2282,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2318,7 +2318,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -2354,7 +2354,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2384,7 +2384,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2410,7 +2410,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2441,7 +2441,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2462,7 +2462,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2483,7 +2483,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2504,7 +2504,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2528,7 +2528,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2558,7 +2558,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2598,7 +2598,7 @@ statements (ArrayList):
                                             Key (String):
                                               "literal"
                                             Value (String):
-                                              "result"
+                                              "this"
                         Entry (DictionaryEntry):
                           Key (String):
                             "value"
@@ -2608,7 +2608,7 @@ statements (ArrayList):
                                 Key (String):
                                   "literal"
                                 Value (String):
-                                  "simple function result"
+                                  "simple function this"
     Entry (Statement):
       key (Select):
         expressions (ArrayList):
@@ -2617,7 +2617,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2651,7 +2651,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2681,7 +2681,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2745,7 +2745,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2775,7 +2775,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2796,7 +2796,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2830,7 +2830,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2860,7 +2860,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2881,7 +2881,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2902,7 +2902,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2961,7 +2961,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -2980,7 +2980,7 @@ statements (ArrayList):
                 cached:
                   null
                 text (String):
-                  "result"
+                  "this"
               Entry (Literal):
                 cached:
                   null
@@ -3017,7 +3017,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -3069,7 +3069,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -3165,7 +3165,7 @@ statements (ArrayList):
                                             Key (String):
                                               "literal"
                                             Value (String):
-                                              "result"
+                                              "this"
                         Entry (DictionaryEntry):
                           Key (String):
                             "value"
@@ -3204,7 +3204,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -3235,7 +3235,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -3255,7 +3255,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null
@@ -3296,7 +3296,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -3392,7 +3392,7 @@ statements (ArrayList):
                                             Key (String):
                                               "literal"
                                             Value (String):
-                                              "result"
+                                              "this"
                         Entry (DictionaryEntry):
                           Key (String):
                             "value"
@@ -3431,7 +3431,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -3462,7 +3462,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "result"
+                "this"
             Entry (Literal):
               cached:
                 null
@@ -3482,7 +3482,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "result"
+                          "this"
                       Entry (Literal):
                         cached:
                           null

@@ -21,50 +21,74 @@ IEnumerable
     Key (String):
       "Write"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "Read"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "And"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "Or"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "Not"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "Add"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "Subtract"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "Multiply"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "Divide"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "Smaller"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "Greater"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "Equal"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (Integer):
       "1"
@@ -534,7 +558,7 @@ IEnumerable
                                               Key (String):
                                                 "literal"
                                               Value (String):
-                                                "result"
+                                                "this"
                           Entry (DictionaryEntry):
                             Key (String):
                               "value"
@@ -594,7 +618,7 @@ IEnumerable
                                               Key (String):
                                                 "literal"
                                               Value (String):
-                                                "result"
+                                                "this"
                                       Entry (DictionaryEntry):
                                         Key (Integer):
                                           "2"
@@ -684,7 +708,7 @@ IEnumerable
                                         Key (String):
                                           "literal"
                                         Value (String):
-                                          "result"
+                                          "this"
                     Entry (DictionaryEntry):
                       Key (String):
                         "value"
@@ -799,7 +823,7 @@ IEnumerable
                                         Key (String):
                                           "literal"
                                         Value (String):
-                                          "result"
+                                          "this"
                     Entry (DictionaryEntry):
                       Key (String):
                         "value"
@@ -839,7 +863,7 @@ IEnumerable
                                                                 Key (String):
                                                                   "literal"
                                                                 Value (String):
-                                                                  "result"
+                                                                  "this"
                                             Entry (DictionaryEntry):
                                               Key (String):
                                                 "value"
@@ -874,7 +898,7 @@ IEnumerable
                                                                                   Key (String):
                                                                                     "literal"
                                                                                   Value (String):
-                                                                                    "result"
+                                                                                    "this"
                                                                           Entry (DictionaryEntry):
                                                                             Key (Integer):
                                                                               "2"
@@ -919,7 +943,7 @@ IEnumerable
                                                                                   Key (String):
                                                                                     "literal"
                                                                                   Value (String):
-                                                                                    "result"
+                                                                                    "this"
                                                                           Entry (DictionaryEntry):
                                                                             Key (Integer):
                                                                               "2"
@@ -964,7 +988,7 @@ IEnumerable
                                                                                   Key (String):
                                                                                     "literal"
                                                                                   Value (String):
-                                                                                    "result"
+                                                                                    "this"
                                                                           Entry (DictionaryEntry):
                                                                             Key (Integer):
                                                                               "2"
@@ -1019,7 +1043,7 @@ IEnumerable
                                         Key (String):
                                           "literal"
                                         Value (String):
-                                          "result"
+                                          "this"
                     Entry (DictionaryEntry):
                       Key (String):
                         "value"
@@ -1154,7 +1178,7 @@ IEnumerable
                                         Key (String):
                                           "literal"
                                         Value (String):
-                                          "result"
+                                          "this"
                     Entry (DictionaryEntry):
                       Key (String):
                         "value"
@@ -1177,7 +1201,7 @@ IEnumerable
                                           "x"
   Entry (DictionaryEntry):
     Key (String):
-      "resultSet"
+      "thisSet"
     Value (String):
       "haha"
   Entry (DictionaryEntry):
@@ -1594,7 +1618,7 @@ IEnumerable
                                         Key (String):
                                           "literal"
                                         Value (String):
-                                          "result"
+                                          "this"
                     Entry (DictionaryEntry):
                       Key (String):
                         "value"
@@ -1604,7 +1628,7 @@ IEnumerable
                             Key (String):
                               "literal"
                             Value (String):
-                              "simple function result"
+                              "simple function this"
   Entry (DictionaryEntry):
     Key (String):
       "callFunction"
@@ -1659,7 +1683,7 @@ IEnumerable
                                         Key (String):
                                           "literal"
                                         Value (String):
-                                          "result"
+                                          "this"
                     Entry (DictionaryEntry):
                       Key (String):
                         "value"
@@ -1669,7 +1693,7 @@ IEnumerable
                             Key (String):
                               "literal"
                             Value (String):
-                              "simple function result"
+                              "simple function this"
   Entry (DictionaryEntry):
     Key (String):
       "delayedFunction"
@@ -1869,6 +1893,8 @@ IEnumerable
     Key (String):
       "staticEvent"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "staticEventResult"
@@ -1882,6 +1908,8 @@ IEnumerable
     Key (String):
       "instanceEvent"
     Value (NetMethod):
+      Documentation (String):
+        ""
   Entry (DictionaryEntry):
     Key (String):
       "instanceEventResult"

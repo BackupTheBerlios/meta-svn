@@ -1,4 +1,4 @@
-// $ANTLR 2.7.3: "parser.g" -> "MetaANTLRParser.cs"$
+// $ANTLR 2.7.3: "Parser.g" -> "MetaANTLRParser.cs"$
 
 namespace Meta.Parser
 {
@@ -628,7 +628,7 @@ _loop49_breakloop:							;
 								Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 											      Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
 												    CommonAST currentAst=new CommonAST(currentToken);
-												    currentAst.setText("result");
+												    currentAst.setText("this");
 								
 												    Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
 												    CommonAST autokeyAst=new CommonAST(autokeyToken);
@@ -665,7 +665,7 @@ _loop49_breakloop:							;
 								Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 											      Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
 												    CommonAST currentAst=new CommonAST(currentToken);
-												    currentAst.setText("result");
+												    currentAst.setText("this");
 								
 												    Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
 												    CommonAST autokeyAst=new CommonAST(autokeyToken);

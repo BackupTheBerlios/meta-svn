@@ -1,16 +1,16 @@
-result=meta.Merge(parent,('AssignedToCurrent'))
+this=meta.Merge(parent,('AssignedToCurrent'))
 'ImpliedAutokey'
 ='Autokey'
-result.commandLineArguments=arg
-result.[(['a']='a')]='Object'
-result.['normal symbol']='NormalSymbol'
-result.lookupSymbol='LookupSymbol'
-result.['"long key symbol"']='LookupExtendedSymbol'
-result.lookedUpMap=[(['a']='a')]
-result.lookedUpNormalSymbol=['normal symbol']
-result.lookedUpSymbol=lookupSymbol
-result.lookedUpLongSymbol=['"long key symbol"']
-result.object=
+this.commandLineArguments=arg
+this.[(['a']='a')]='Object'
+this.['normal symbol']='NormalSymbol'
+this.lookupSymbol='LookupSymbol'
+this.['"long key symbol"']='LookupExtendedSymbol'
+this.lookedUpMap=[(['a']='a')]
+this.lookedUpNormalSymbol=['normal symbol']
+this.lookedUpSymbol=lookupSymbol
+this.lookedUpLongSymbol=['"long key symbol"']
+this.object=
   a='default'
   autoSearch='default'
   b=()
@@ -19,74 +19,74 @@ result.object=
     autoSearch='changed'
   SetB=-
     caller.b.1=arg.value
-    result='changed'
+    this='changed'
   x=
     a='b'
     c='d'
   =-
-    result.a='b'
-result.a='default'
-result.b=()
-result.aSet=object.SetA ()
-result.bSet=object.SetB(value=(x='7',z='1'))
-result.ReturnEverything=-
-  result=arg
-result.everythingReturned=ReturnEverything('a','b','c')
-result.argument=('x','y','z')
-result.variableAsArgument=ReturnEverything argument
-result.ReturnFunction=-
-  result=-
-    result=('1','2','3')
-result.SetCurrent=-
-  result=(arg=arg,x=arg.symbol)
-  result=x
-result.resultSet=SetCurrent(symbol='haha')
-result=meta.Merge(parent,assemblies.Test.Test)
-result.testClass=TestClass()
-result.memberTest=MemberTest()
-result.MemberTest.classField='a'
-result.memberTest.instanceField='b'
-result.MemberTest.ClassProperty=memberTest.InstanceProperty
-result.memberTest.InstanceProperty=MemberTest.ClassProperty
-result.interceptedSymbol='/hello/'
-result.positionalNoConversion=PositionalNoConversion('m','n','o')
-result.positionalNoConversionConcatenated=positionalNoConversion.Concatenate('r','s','t')
-result.namedNoConversion=NamedNoConversion('m',y='n')
-result.namedNoConversionConcatenated=namedNoConversion.Concatenate(c='t','r')
-result.indexerNoConversion=IndexerNoConversion()
-result.indexerNoConversion.abc='hihi'
-result.indexerNoConversionIndexed=indexerNoConversion.abc
-result.interceptedSymbol2='1'
-result.k='hello'
-result.xyz='w'
-result.literalFunction= -'5'
-result.literalFunctionResult=literalFunction()
-result.function=-
-  result='simple function result'
-result.callFunction=-function
-result.callFunctionResult=callFunction ()
-result.delayedFunction= --(x='y')
-result.delayedFunctionResult=delayedFunction ()
-result.value='xyz'
-result.selectionFunction= -value
-result.selectionFunctionResult=selectionFunction ()
-result.bigInteger='89383838383832839123497123047217340712340720347072304702340720347'
-result.upperLevel='unchanged'
-result.ChangeUpperLevel=-
+    this.a='b'
+this.a='default'
+this.b=()
+this.aSet=object.SetA ()
+this.bSet=object.SetB(value=(x='7',z='1'))
+this.ReturnEverything=-
+  this=arg
+this.everythingReturned=ReturnEverything('a','b','c')
+this.argument=('x','y','z')
+this.variableAsArgument=ReturnEverything argument
+this.ReturnFunction=-
+  this=-
+    this=('1','2','3')
+this.SetCurrent=-
+  this=(arg=arg,x=arg.symbol)
+  this=x
+this.thisSet=SetCurrent(symbol='haha')
+this=meta.Merge(parent,assemblies.Test.Test)
+this.testClass=TestClass()
+this.memberTest=MemberTest()
+this.MemberTest.classField='a'
+this.memberTest.instanceField='b'
+this.MemberTest.ClassProperty=memberTest.InstanceProperty
+this.memberTest.InstanceProperty=MemberTest.ClassProperty
+this.interceptedSymbol='/hello/'
+this.positionalNoConversion=PositionalNoConversion('m','n','o')
+this.positionalNoConversionConcatenated=positionalNoConversion.Concatenate('r','s','t')
+this.namedNoConversion=NamedNoConversion('m',y='n')
+this.namedNoConversionConcatenated=namedNoConversion.Concatenate(c='t','r')
+this.indexerNoConversion=IndexerNoConversion()
+this.indexerNoConversion.abc='hihi'
+this.indexerNoConversionIndexed=indexerNoConversion.abc
+this.interceptedSymbol2='1'
+this.k='hello'
+this.xyz='w'
+this.literalFunction= -'5'
+this.literalFunctionResult=literalFunction()
+this.function=-
+  this='simple function this'
+this.callFunction=-function
+this.callFunctionResult=callFunction ()
+this.delayedFunction= --(x='y')
+this.delayedFunctionResult=delayedFunction ()
+this.value='xyz'
+this.selectionFunction= -value
+this.selectionFunctionResult=selectionFunction ()
+this.bigInteger='89383838383832839123497123047217340712340720347072304702340720347'
+this.upperLevel='unchanged'
+this.ChangeUpperLevel=-
   upperLevel='changed'
-result.ChangeUpperLevel()
+this.ChangeUpperLevel()
 files.['test.txt']='"changed text from file"'
-result.fileText=files.['test.txt']
+this.fileText=files.['test.txt']
 files.['test.txt']='"unchanged text"'
-result.staticEventChanged='false'
+this.staticEventChanged='false'
 TestClass.staticEvent=-
   staticEventChanged='true'
-  result=arg.1
-result.staticEvent=TestClass.staticEvent
-result.staticEventResult=TestClass.staticEvent(testClass)
-result.instanceEventChanged='false'
+  this=arg.1
+this.staticEvent=TestClass.staticEvent
+this.staticEventResult=TestClass.staticEvent(testClass)
+this.instanceEventChanged='false'
 testClass.instanceEvent=-
   instanceEventChanged='true'
-  result=arg.1
-result.instanceEvent=testClass.instanceEvent
-result.instanceEventResult=testClass.instanceEvent('5')
+  this=arg.1
+this.instanceEvent=testClass.instanceEvent
+this.instanceEventResult=testClass.instanceEvent('5')
