@@ -1051,65 +1051,13 @@ namespace Meta {
 					return false;
 				}
 				return ((Map)obj).table.Equal(table);
-//					if(!(obj is Map)) {
-//						equal=false;
-//					}
-//					else {
-//						Map map=(Map)obj;
-//						if(map.Count==Count) {
-//							foreach(DictionaryEntry entry in this)  {
-//								if(!map.ContainsKey(entry.Key)||!map[entry.Key].Equals(entry.Value)) {
-//									equal=false;
-//									break;
-//								}
-//							}
-//						}
-//						else {
-//							equal=false;
-//						}
-//					}
-//				}
-//				return equal;
 			}
-//			public override bool Equals(object obj) {
-//				bool equal=true;
-//				if(!Object.ReferenceEquals(obj,this)) {
-//					if(!(obj is Map)) {
-//						equal=false;
-//					}
-//					else {
-//						Map map=(Map)obj;
-//						if(map.Count==Count) {
-//							foreach(DictionaryEntry entry in this)  {
-//								if(!map.ContainsKey(entry.Key)||!map[entry.Key].Equals(entry.Value)) {
-//									equal=false;
-//									break;
-//								}
-//							}
-//						}
-//						else {
-//							equal=false;
-//						}
-//					}
-//				}
-//				return equal;
-//			}
 
 			public IEnumerator GetEnumerator() {
 				return new MapEnumerator(this);
 			}
-			public override int GetHashCode()  {
-				if(!isHashCashed) {
-					int h=0;
-					foreach(DictionaryEntry entry in this) {
-						unchecked {
-							h+=entry.Key.GetHashCode()*entry.Value.GetHashCode();
-						}
-					}
-					hash=h;
-					isHashCashed=true;
-				}
-				return hash;
+			public override int GetHashCode() {
+				return table.GetHashCode();
 			}
 			public Map(string text) {
 				this.table=new StringStrategy(text);
@@ -1141,6 +1089,28 @@ namespace Meta {
 
 				public abstract bool ContainsKey(object key);
 				//public abstract bool Equal(MapStrategy obj);
+				public override int GetHashCode()  {
+					int h=0;
+					foreach(object key in this.Keys) {
+						unchecked {
+							h+=key.GetHashCode()*this[key].GetHashCode();
+						}
+					}
+					return h;
+				}
+//			public override int GetHashCode()  {
+//				if(!isHashCashed) {
+//					int h=0;
+//					foreach(DictionaryEntry entry in this) {
+//						unchecked {
+//							h+=entry.Key.GetHashCode()*entry.Value.GetHashCode();
+//						}
+//					}
+//					hash=h;
+//					isHashCashed=true;
+//				}
+//				return hash;
+//			}
 				public virtual bool Equal(MapStrategy obj) {
 					if(Object.ReferenceEquals(obj,this)) { // wenn geclont, wäre das möglich, jetzt noch nicht
 						return true;
@@ -1166,11 +1136,9 @@ namespace Meta {
 					}
 					return base.Equal(obj);
 				}
-
-
 				public override Map Clone() {
 					return new Map(new StringStrategy(this)); // das ist ok, vielleicht StringStrategy immutable machen
-					// und zwischen verschiedenen Maps teilen?
+																			// und zwischen verschiedenen Maps teilen?
 				}
 				public override ArrayList IntKeyValues {
 					get {
@@ -1213,8 +1181,9 @@ namespace Meta {
 				public override object this[object key]  {
 					get {
 						if(key is Integer) {
-							if(((Integer)key)>0 && ((Integer)key)<=this.Count) {
-								return new Integer(text[((Integer)key).IntValue()-1]);
+							int i=((Integer)key).IntValue();
+							if(i>0 && i<=this.Count) {
+								return new Integer(text[i-1]);
 							}
 						}
 						return null;
@@ -1224,6 +1193,20 @@ namespace Meta {
 						//table[key]=value;
 					}
 				}
+//				public override object this[object key]  {
+//					get {
+//						if(key is Integer) {
+//							if(((Integer)key)>0 && ((Integer)key)<=this.Count) {
+//								return new Integer(text[((Integer)key).IntValue()-1]);
+//							}
+//						}
+//						return null;
+//					}
+//					set {
+//						int asdf=0;
+//						//table[key]=value;
+//					}
+//				}
 				public override bool ContainsKey(object key)  {
 					if(key is Integer) {
 						return ((Integer)key)>0 && ((Integer)key)<=this.Count;
