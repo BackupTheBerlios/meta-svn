@@ -42,6 +42,9 @@ tokens
 }
 
 EQUAL:
+  ':';
+  
+DELAYED:
   '=';
 
 LBRACKET:
@@ -66,7 +69,7 @@ GATTER:
   '#';
 
 LITERAL_KEY:
-  ( ~ (' '|'\r'|'\n'|'*'|'='|'-'|'.'|','|'\''|'('|')'|'['|']'|'#') )+;
+  ( ~ (' '|'\r'|'\n'|'*'|'='|'-'|'.'|','|'\''|'('|')'|'['|']'|'#'|':') )+;
     
 LITERAL:
   "\'"! ( ~ ('\'') )* "\'"!;
@@ -240,7 +243,7 @@ call:
   };
 	
 delayed:
-  EQUAL!
+  DELAYED!
   expression
   {
     #delayed=#([FUNCTION], #delayed);

@@ -32,7 +32,7 @@ namespace Test {
 		public static string path="";
 		[STAThread]
 		public static void Main(string[] args) {
-			//args=new string[]{@"..\..\doc.meta"};
+//			args=new string[]{@"..\..\basicTest.meta"};
 			if(args.Length==0) {
 				Directory.SetCurrentDirectory(
 					".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
@@ -45,6 +45,15 @@ namespace Test {
 				try {
 					Interpreter.Run(new StreamReader(args[0]),new Map());
 					// fix this to only show original error message
+				}
+				catch(CharStreamException e) {// put this into "Run"
+					Console.WriteLine(e.Message);
+				}
+				catch(RecognitionException e) {
+					Console.WriteLine(e.Message);
+				}
+				catch(TokenStreamException e) {
+					Console.WriteLine(e.Message);
 				}
 				catch(Exception e) {
 					string text="";

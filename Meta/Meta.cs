@@ -332,7 +332,7 @@ namespace Meta {
 						if(!isRightSide) {
 							text+="(";
 							foreach(DictionaryEntry entry in map) {
-								text+='['+MetaSerialize(entry.Key,indent,true)+']'+'='+MetaSerialize(entry.Value,indent,true)+",";
+								text+='['+MetaSerialize(entry.Key,indent,true)+']'+':'+MetaSerialize(entry.Value,indent,true)+",";
 							}
 							if(map.Count!=0) {
 								text=text.Remove(text.Length-1,1);
@@ -341,7 +341,7 @@ namespace Meta {
 						}
 						else {
 							foreach(DictionaryEntry entry in map) {
-								text+=indent+'['+MetaSerialize(entry.Key,indent,false)+']'+'=';
+								text+=indent+'['+MetaSerialize(entry.Key,indent,false)+']'+':';
 								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString()) {
 									text+="\n";
 								}
@@ -362,6 +362,50 @@ namespace Meta {
 					throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
 				}
 			}
+//			public static string MetaSerialize(object meta,string indent,bool isRightSide) {
+//				if(meta is Map) {
+//					string text="";
+//					Map map=(Map)meta;
+//					if(map.IsString()) {
+//						text+="'"+(map).GetDotNetString()+"'";
+//					}
+//					else if(map.Count==0) {
+//						text+="()";
+//					}
+//					else {
+//						if(!isRightSide) {
+//							text+="(";
+//							foreach(DictionaryEntry entry in map) {
+//								text+='['+MetaSerialize(entry.Key,indent,true)+']'+'='+MetaSerialize(entry.Value,indent,true)+",";
+//							}
+//							if(map.Count!=0) {
+//								text=text.Remove(text.Length-1,1);
+//							}
+//							text+=")";
+//						}
+//						else {
+//							foreach(DictionaryEntry entry in map) {
+//								text+=indent+'['+MetaSerialize(entry.Key,indent,false)+']'+'=';
+//								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString()) {
+//									text+="\n";
+//								}
+//								text+=MetaSerialize(entry.Value,indent+"  ",true);
+//								if(!(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString())) {
+//									text+="\n";
+//								}
+//							}
+//						}
+//					}
+//					return text;
+//				}
+//				else if(meta is Integer) {
+//					Integer integer=(Integer)meta;
+//					return "'"+integer.ToString()+"'";
+//				}
+//				else {
+//					throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
+//				}
+//			}
 			public static IKeyValue Merge(params IKeyValue[] maps) {
 				return MergeCollection(maps);
 			}
