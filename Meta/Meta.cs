@@ -575,12 +575,20 @@ namespace Meta {
 				}
 			}
 			public static Map StringToMap(string symbol) {
-				Map map=new Map();
-				foreach(char character in symbol) {
-					map[new Integer(map.Count+1)]=new Integer((int)character);
-				}
-				return map;
+				return new Map(new Map.StringStrategy(symbol));
+//				Map map=new Map();
+//				foreach(char character in symbol) {
+//					map[new Integer(map.Count+1)]=new Integer((int)character);
+//				}
+//				return map;
 			}
+//			public static Map StringToMap(string symbol) {
+//				Map map=new Map();
+//				foreach(char character in symbol) {
+//					map[new Integer(map.Count+1)]=new Integer((int)character);
+//				}
+//				return map;
+//			}
 			public static bool IsMapString(Map map) {
 				if(map.IntKeyValues.Count>0) {
 					try {
@@ -1127,6 +1135,9 @@ namespace Meta {
 				}
 				return hash;
 			}
+			public Map(MapStrategy table) {
+				this.table=table;
+			}
 			public Map() {
 				this.table=new HybridDictionaryStrategy();
 				//this.keys=new ArrayList();
@@ -1157,8 +1168,8 @@ namespace Meta {
 				public override object this[object key]  {
 					get {
 						if(key is Integer) {
-							if(((Integer)key)<this.Count) {
-								return text[((Integer)key).IntValue()];
+							if(((Integer)key)>0 && ((Integer)key)<=this.Count) {
+								return new Integer(text[((Integer)key).IntValue()-1]);
 							}
 						}
 						return null;
@@ -1170,7 +1181,7 @@ namespace Meta {
 				}
 				public override bool ContainsKey(object key)  {
 					if(key is Integer) {
-						return ((Integer)key)<this.Count;
+						return ((Integer)key)>0 && ((Integer)key)<=this.Count;
 					}
 					else {
 						return false;
@@ -1225,6 +1236,9 @@ namespace Meta {
 			public object compiled;
 
 			public string Serialize(string indent,string[] functions) {
+				if(this.Count==1) {
+					int asdf=0;
+				}
 				if(Interpreter.IsMapString(this)) {
 					return indent+"\""+Interpreter.MapToString(this)+"\""+"\n";
 				}
