@@ -104,7 +104,7 @@ public class @base {
 			Map argument=new Map();
 			argument["i"]=new Integer(i);
 			Interpreter.arguments.Add(argument);
-			result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+			result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate();
 			Interpreter.arguments.Remove(argument);
 		}
 		return result;
@@ -126,7 +126,7 @@ public class @base {
 			argument["key"]=entry.Key;
 			argument["value"]=entry.Value;
 			Interpreter.arguments.Add(argument);
-			result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+			result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate();
 			Interpreter.arguments.Remove(argument);
 			i++;
 		}
@@ -141,10 +141,10 @@ public class @base {
 		Map cases=(Map)arg["case"];
 		Map def=(Map)arg["default"];
 		if(cases.ContainsKey(val)) {
-			((IExpression)((Map)cases[val]).Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+			((IExpression)((Map)cases[val]).Compile()).Evaluate();
 		}
 		else if(def!=null) {
-			((IExpression)def.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+			((IExpression)def.Compile()).Evaluate();
 		}				
 	}
 	public static void If() {
@@ -154,12 +154,12 @@ public class @base {
 		Map _else=(Map)arg["else"];
 		if(test) {
 			if(then!=null) {
-				((IExpression)then.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+				((IExpression)then.Compile()).Evaluate();
 			}
 		}
 		else {
 			if(_else!=null) {
-				((IExpression)_else.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+				((IExpression)_else.Compile()).Evaluate();
 			}
 		}	
 	}

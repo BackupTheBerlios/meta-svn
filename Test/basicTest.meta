@@ -23,7 +23,7 @@ object=
     parent.parent.a='c'
     #autoSearch='changed'
   SetB==
-    caller.caller.b.1=value
+    caller.caller.caller.b.1=value
     this='changed'
   x=
     a='b'

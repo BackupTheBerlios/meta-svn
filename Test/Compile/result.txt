@@ -1,495 +1,517 @@
 statements (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "this"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Select):
+            valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "parent"
               parents (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "2"
               parents (ArrayList):
-            val (Program):
+            valueExpression (Program):
               statements (ArrayList):
                 Entry (Statement)
-                  key (Select):
+                  keyExpression (Select):
                     expressions (ArrayList):
                       Entry (Literal)
-                        cached:
-                          null
-                        text (String):
+                        literal (String):
                           "this"
                       Entry (Literal)
-                        cached:
-                          null
-                        text (String):
+                        literal (Integer):
                           "1"
                     parents (ArrayList):
-                  val (Literal):
-                    cached:
-                      null
-                    text (String):
+                  valueExpression (Literal):
+                    literal (String):
                       "AssignedToCurrent"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "base"
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "Merge"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "this"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Select):
+            valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "parent"
               parents (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "2"
               parents (ArrayList):
-            val (Select):
+            valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "base"
               parents (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "base"
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "Merge"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "this"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (Integer):
             "1"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "ImpliedAutokey"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "this"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (Integer):
             "2"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "Autokey"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "gacTest"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "System"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "Collections"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "lazyGACTest"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "Microsoft"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "CSharp"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "metaLibTest"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "metaLib"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "commandLineArguments"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "arg"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "libraryAssemblyTest"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "testClasses"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Program)
           statements (ArrayList):
             Entry (Statement)
-              key (Select):
+              keyExpression (Select):
                 expressions (ArrayList):
                   Entry (Literal)
-                    cached:
-                      null
-                    text (String):
+                    literal (String):
                       "a"
                 parents (ArrayList):
-              val (Literal):
-                cached:
-                  null
-                text (String):
+              valueExpression (Literal):
+                literal (String):
                   "a"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "Object"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "normal symbol"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "NormalSymbol"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "lookupSymbol"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "LookupSymbol"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
-            ""long key symbol""
+          literal (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Integer):
+                "108"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "2"
+              Value (Integer):
+                "111"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "3"
+              Value (Integer):
+                "110"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "4"
+              Value (Integer):
+                "103"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "5"
+              Value (Integer):
+                "32"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "6"
+              Value (Integer):
+                "107"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "7"
+              Value (Integer):
+                "101"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "8"
+              Value (Integer):
+                "121"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "9"
+              Value (Integer):
+                "32"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "10"
+              Value (Integer):
+                "115"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "11"
+              Value (Integer):
+                "121"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "12"
+              Value (Integer):
+                "109"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "13"
+              Value (Integer):
+                "98"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "14"
+              Value (Integer):
+                "111"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "15"
+              Value (Integer):
+                "108"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "LookupExtendedSymbol"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "lookedUpMap"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Program)
           statements (ArrayList):
             Entry (Statement)
-              key (Select):
+              keyExpression (Select):
                 expressions (ArrayList):
                   Entry (Literal)
-                    cached:
-                      null
-                    text (String):
+                    literal (String):
                       "a"
                 parents (ArrayList):
-              val (Literal):
-                cached:
-                  null
-                text (String):
+              valueExpression (Literal):
+                literal (String):
                   "a"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "lookedUpNormalSymbol"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "normal symbol"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "lookedUpSymbol"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "lookupSymbol"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "lookedUpLongSymbol"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
-            ""long key symbol""
+          literal (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Integer):
+                "108"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "2"
+              Value (Integer):
+                "111"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "3"
+              Value (Integer):
+                "110"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "4"
+              Value (Integer):
+                "103"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "5"
+              Value (Integer):
+                "32"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "6"
+              Value (Integer):
+                "107"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "7"
+              Value (Integer):
+                "101"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "8"
+              Value (Integer):
+                "121"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "9"
+              Value (Integer):
+                "32"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "10"
+              Value (Integer):
+                "115"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "11"
+              Value (Integer):
+                "121"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "12"
+              Value (Integer):
+                "109"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "13"
+              Value (Integer):
+                "98"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "14"
+              Value (Integer):
+                "111"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "15"
+              Value (Integer):
+                "108"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "object"
       parents (ArrayList):
-    val (Program):
+    valueExpression (Program):
       statements (ArrayList):
         Entry (Statement)
-          key (Select):
+          keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (String):
                   "a"
             parents (ArrayList):
-          val (Literal):
-            cached:
-              null
-            text (String):
+          valueExpression (Literal):
+            literal (String):
               "default"
         Entry (Statement)
-          key (Select):
+          keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (String):
                   "autoSearch"
             parents (ArrayList):
-          val (Literal):
-            cached:
-              null
-            text (String):
+          valueExpression (Literal):
+            literal (String):
               "default"
         Entry (Statement)
-          key (Select):
+          keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (String):
                   "b"
             parents (ArrayList):
-          val (Program):
+          valueExpression (Program):
             statements (ArrayList):
         Entry (Statement)
-          key (Select):
+          keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (String):
                   "SetA"
             parents (ArrayList):
-          val (Delayed):
-            expression (Map):
+          valueExpression (Delayed):
+            delayed (Map):
               Entry (DictionaryEntry)
                 Key (String):
                   "program"
@@ -582,16 +604,14 @@ statements (ArrayList):
                             Value (String):
                               "changed"
         Entry (Statement)
-          key (Select):
+          keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (String):
                   "SetB"
             parents (ArrayList):
-          val (Delayed):
-            expression (Map):
+          valueExpression (Delayed):
+            delayed (Map):
               Entry (DictionaryEntry)
                 Key (String):
                   "program"
@@ -634,10 +654,19 @@ statements (ArrayList):
                                     Key (String):
                                       "literal"
                                     Value (String):
-                                      "b"
+                                      "caller"
                               Entry (DictionaryEntry)
                                 Key (Integer):
                                   "4"
+                                Value (Map):
+                                  Entry (DictionaryEntry)
+                                    Key (String):
+                                      "literal"
+                                    Value (String):
+                                      "b"
+                              Entry (DictionaryEntry)
+                                Key (Integer):
+                                  "5"
                                 Value (Map):
                                   Entry (DictionaryEntry)
                                     Key (String):
@@ -692,60 +721,46 @@ statements (ArrayList):
                             Value (String):
                               "changed"
         Entry (Statement)
-          key (Select):
+          keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (String):
                   "x"
             parents (ArrayList):
-          val (Program):
+          valueExpression (Program):
             statements (ArrayList):
               Entry (Statement)
-                key (Select):
+                keyExpression (Select):
                   expressions (ArrayList):
                     Entry (Literal)
-                      cached:
-                        null
-                      text (String):
+                      literal (String):
                         "a"
                   parents (ArrayList):
-                val (Literal):
-                  cached:
-                    null
-                  text (String):
+                valueExpression (Literal):
+                  literal (String):
                     "b"
               Entry (Statement)
-                key (Select):
+                keyExpression (Select):
                   expressions (ArrayList):
                     Entry (Literal)
-                      cached:
-                        null
-                      text (String):
+                      literal (String):
                         "c"
                   parents (ArrayList):
-                val (Literal):
-                  cached:
-                    null
-                  text (String):
+                valueExpression (Literal):
+                  literal (String):
                     "d"
         Entry (Statement)
-          key (Select):
+          keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (String):
                   "this"
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (Integer):
                   "1"
             parents (ArrayList):
-          val (Delayed):
-            expression (Map):
+          valueExpression (Delayed):
+            delayed (Map):
               Entry (DictionaryEntry)
                 Key (String):
                   "program"
@@ -790,130 +805,100 @@ statements (ArrayList):
                             Value (String):
                               "b"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "a"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "default"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "b"
       parents (ArrayList):
-    val (Program):
+    valueExpression (Program):
       statements (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "aSet"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "object"
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "SetA"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "bSet"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "value"
               parents (ArrayList):
-            val (Program):
+            valueExpression (Program):
               statements (ArrayList):
                 Entry (Statement)
-                  key (Select):
+                  keyExpression (Select):
                     expressions (ArrayList):
                       Entry (Literal)
-                        cached:
-                          null
-                        text (String):
+                        literal (String):
                           "x"
                     parents (ArrayList):
-                  val (Literal):
-                    cached:
-                      null
-                    text (String):
+                  valueExpression (Literal):
+                    literal (Integer):
                       "7"
                 Entry (Statement)
-                  key (Select):
+                  keyExpression (Select):
                     expressions (ArrayList):
                       Entry (Literal)
-                        cached:
-                          null
-                        text (String):
+                        literal (String):
                           "z"
                     parents (ArrayList):
-                  val (Literal):
-                    cached:
-                      null
-                    text (String):
+                  valueExpression (Literal):
+                    literal (Integer):
                       "1"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "object"
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "SetB"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "ReturnEverything"
       parents (ArrayList):
-    val (Delayed):
-      expression (Map):
+    valueExpression (Delayed):
+      delayed (Map):
         Entry (DictionaryEntry)
           Key (String):
             "program"
@@ -957,187 +942,137 @@ statements (ArrayList):
                               Value (String):
                                 "arg"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "everythingReturned"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "a"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "2"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "b"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "3"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "c"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "ReturnEverything"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "argument"
       parents (ArrayList):
-    val (Program):
+    valueExpression (Program):
       statements (ArrayList):
         Entry (Statement)
-          key (Select):
+          keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (String):
                   "this"
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (Integer):
                   "1"
             parents (ArrayList):
-          val (Literal):
-            cached:
-              null
-            text (String):
+          valueExpression (Literal):
+            literal (String):
               "x"
         Entry (Statement)
-          key (Select):
+          keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (String):
                   "this"
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (Integer):
                   "2"
             parents (ArrayList):
-          val (Literal):
-            cached:
-              null
-            text (String):
+          valueExpression (Literal):
+            literal (String):
               "y"
         Entry (Statement)
-          key (Select):
+          keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (String):
                   "this"
               Entry (Literal)
-                cached:
-                  null
-                text (String):
+                literal (Integer):
                   "3"
             parents (ArrayList):
-          val (Literal):
-            cached:
-              null
-            text (String):
+          valueExpression (Literal):
+            literal (String):
               "z"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "variableAsArgument"
       parents (ArrayList):
-    val (Call):
-      argument (Select):
+    valueExpression (Call):
+      argumentExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "argument"
         parents (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "ReturnEverything"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "ReturnFunction"
       parents (ArrayList):
-    val (Delayed):
-      expression (Map):
+    valueExpression (Delayed):
+      delayed (Map):
         Entry (DictionaryEntry)
           Key (String):
             "program"
@@ -1322,16 +1257,14 @@ statements (ArrayList):
                                                   Value (String):
                                                     "3"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "SetCurrent"
       parents (ArrayList):
-    val (Delayed):
-      expression (Map):
+    valueExpression (Delayed):
+      delayed (Map):
         Entry (DictionaryEntry)
           Key (String):
             "program"
@@ -1480,674 +1413,496 @@ statements (ArrayList):
                               Value (String):
                                 "x"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "thisSet"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "symbol"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "haha"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "SetCurrent"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "this"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Select):
+            valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "parent"
               parents (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "2"
               parents (ArrayList):
-            val (Select):
+            valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "testClasses"
               parents (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "base"
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "Merge"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "testClass"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "TestClass"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "memberTest"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "MemberTest"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "MemberTest"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "classField"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "a"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "memberTest"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "instanceField"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "b"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "MemberTest"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "ClassProperty"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "memberTest"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "InstanceProperty"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "memberTest"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "InstanceProperty"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "MemberTest"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "ClassProperty"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "interceptedSymbol"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "/hello/"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "positionalNoConversion"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "m"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "2"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "n"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "3"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "o"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "PositionalNoConversion"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "positionalNoConversionConcatenated"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "r"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "2"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "s"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "3"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "t"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "positionalNoConversion"
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "Concatenate"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "namedNoConversion"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "m"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "y"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "n"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "NamedNoConversion"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "namedNoConversionConcatenated"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "c"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "t"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (String):
                 "r"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "namedNoConversion"
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "Concatenate"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "indexerNoConversion"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "IndexerNoConversion"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "indexerNoConversion"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "abc"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "hihi"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "indexerNoConversionIndexed"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "indexerNoConversion"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "abc"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "interceptedSymbol2"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (Integer):
         "1"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "k"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "hello"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "xyz"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "w"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "literalFunction"
       parents (ArrayList):
-    val (Delayed):
-      expression (Map):
+    valueExpression (Delayed):
+      delayed (Map):
         Entry (DictionaryEntry)
           Key (String):
             "literal"
           Value (String):
             "5"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "literalFunctionResult"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "literalFunction"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "function"
       parents (ArrayList):
-    val (Delayed):
-      expression (Map):
+    valueExpression (Delayed):
+      delayed (Map):
         Entry (DictionaryEntry)
           Key (String):
             "program"
@@ -2183,16 +1938,14 @@ statements (ArrayList):
                       Value (String):
                         "simple function this"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "callFunction"
       parents (ArrayList):
-    val (Delayed):
-      expression (Map):
+    valueExpression (Delayed):
+      delayed (Map):
         Entry (DictionaryEntry)
           Key (String):
             "select"
@@ -2207,36 +1960,30 @@ statements (ArrayList):
                   Value (String):
                     "function"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "callFunctionResult"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "callFunction"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "delayedFunction"
       parents (ArrayList):
-    val (Delayed):
-      expression (Map):
+    valueExpression (Delayed):
+      delayed (Map):
         Entry (DictionaryEntry)
           Key (String):
             "delayed"
@@ -2276,50 +2023,40 @@ statements (ArrayList):
                           Value (String):
                             "y"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "delayedFunctionResult"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "delayedFunction"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "value"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "xyz"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "selectionFunction"
       parents (ArrayList):
-    val (Delayed):
-      expression (Map):
+    valueExpression (Delayed):
+      delayed (Map):
         Entry (DictionaryEntry)
           Key (String):
             "select"
@@ -2334,64 +2071,50 @@ statements (ArrayList):
                   Value (String):
                     "value"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "selectionFunctionResult"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "selectionFunction"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "bigInteger"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (Integer):
         "89383838383832839123497123047217340712340720347072304702340720347"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "upperLevel"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "unchanged"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "ChangeUpperLevel"
       parents (ArrayList):
-    val (Delayed):
-      expression (Map):
+    valueExpression (Delayed):
+      delayed (Map):
         Entry (DictionaryEntry)
           Key (String):
             "program"
@@ -2436,60 +2159,46 @@ statements (ArrayList):
                       Value (String):
                         "changed"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "this"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (Integer):
             "3"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "ChangeUpperLevel"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "staticEventChanged"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
-        "false"
+    valueExpression (Literal):
+      literal (Boolean):
+        "False"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "TestClass"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "staticEvent"
       parents (ArrayList):
-    val (Delayed):
-      expression (Map):
+    valueExpression (Delayed):
+      delayed (Map):
         Entry (DictionaryEntry)
           Key (String):
             "program"
@@ -2572,180 +2281,136 @@ statements (ArrayList):
                               Value (String):
                                 "1"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "staticEvent"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "TestClass"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "staticEvent"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "this"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (Integer):
             "4"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Delayed):
-              expression (Map):
+            valueExpression (Delayed):
+              delayed (Map):
                 Entry (DictionaryEntry)
                   Key (String):
                     "literal"
                   Value (String):
                     "resultFromDelegate"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "TestClass"
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "TakeDelegate"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "resultFromDelegate"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "TestClass"
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "GetResultFromDelegate"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "staticEventResult"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Select):
+            valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "testClass"
               parents (ArrayList):
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "TestClass"
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "staticEvent"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "instanceEventChanged"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
-        "false"
+    valueExpression (Literal):
+      literal (Boolean):
+        "False"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "testClass"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "instanceEvent"
       parents (ArrayList):
-    val (Delayed):
-      expression (Map):
+    valueExpression (Delayed):
+      delayed (Map):
         Entry (DictionaryEntry)
           Key (String):
             "program"
@@ -2828,235 +2493,173 @@ statements (ArrayList):
                               Value (String):
                                 "1"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "instanceEvent"
       parents (ArrayList):
-    val (Select):
+    valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "testClass"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "instanceEvent"
       parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "instanceEventResult"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (Integer):
                 "5"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "testClass"
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "instanceEvent"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "one"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (Integer):
         "1"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "two"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (Integer):
         "2"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "firstIf"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "unchanged"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "secondIf"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "unchanged"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "thenText"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "then"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "this"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (Integer):
             "5"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Call):
-              argument (Program):
+            valueExpression (Call):
+              argumentExpression (Program):
                 statements (ArrayList):
                   Entry (Statement)
-                    key (Select):
+                    keyExpression (Select):
                       expressions (ArrayList):
                         Entry (Literal)
-                          cached:
-                            null
-                          text (String):
+                          literal (String):
                             "this"
                         Entry (Literal)
-                          cached:
-                            null
-                          text (String):
+                          literal (Integer):
                             "1"
                       parents (ArrayList):
-                    val (Literal):
-                      cached:
-                        null
-                      text (String):
+                    valueExpression (Literal):
+                      literal (Integer):
                         "1"
                   Entry (Statement)
-                    key (Select):
+                    keyExpression (Select):
                       expressions (ArrayList):
                         Entry (Literal)
-                          cached:
-                            null
-                          text (String):
+                          literal (String):
                             "this"
                         Entry (Literal)
-                          cached:
-                            null
-                          text (String):
+                          literal (Integer):
                             "2"
                       parents (ArrayList):
-                    val (Select):
+                    valueExpression (Select):
                       expressions (ArrayList):
                         Entry (Literal)
-                          cached:
-                            null
-                          text (String):
+                          literal (String):
                             "one"
                       parents (ArrayList):
-              callable (Select):
+              callableExpression (Select):
                 expressions (ArrayList):
                   Entry (Literal)
-                    cached:
-                      null
-                    text (String):
+                    literal (String):
                       "Equal"
                 parents (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "then"
               parents (ArrayList):
-            val (Delayed):
-              expression (Map):
+            valueExpression (Delayed):
+              delayed (Map):
                 Entry (DictionaryEntry)
                   Key (String):
                     "program"
@@ -3109,16 +2712,14 @@ statements (ArrayList):
                                       Value (String):
                                         "thenText"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "else"
               parents (ArrayList):
-            val (Delayed):
-              expression (Map):
+            valueExpression (Delayed):
+              delayed (Map):
                 Entry (DictionaryEntry)
                   Key (String):
                     "program"
@@ -3162,108 +2763,82 @@ statements (ArrayList):
                                 "literal"
                               Value (String):
                                 "else"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "If"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "this"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (Integer):
             "6"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Call):
-              argument (Program):
+            valueExpression (Call):
+              argumentExpression (Program):
                 statements (ArrayList):
                   Entry (Statement)
-                    key (Select):
+                    keyExpression (Select):
                       expressions (ArrayList):
                         Entry (Literal)
-                          cached:
-                            null
-                          text (String):
+                          literal (String):
                             "this"
                         Entry (Literal)
-                          cached:
-                            null
-                          text (String):
+                          literal (Integer):
                             "1"
                       parents (ArrayList):
-                    val (Literal):
-                      cached:
-                        null
-                      text (String):
+                    valueExpression (Literal):
+                      literal (Integer):
                         "1"
                   Entry (Statement)
-                    key (Select):
+                    keyExpression (Select):
                       expressions (ArrayList):
                         Entry (Literal)
-                          cached:
-                            null
-                          text (String):
+                          literal (String):
                             "this"
                         Entry (Literal)
-                          cached:
-                            null
-                          text (String):
+                          literal (Integer):
                             "2"
                       parents (ArrayList):
-                    val (Select):
+                    valueExpression (Select):
                       expressions (ArrayList):
                         Entry (Literal)
-                          cached:
-                            null
-                          text (String):
+                          literal (String):
                             "two"
                       parents (ArrayList):
-              callable (Select):
+              callableExpression (Select):
                 expressions (ArrayList):
                   Entry (Literal)
-                    cached:
-                      null
-                    text (String):
+                    literal (String):
                       "Equal"
                 parents (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "then"
               parents (ArrayList):
-            val (Delayed):
-              expression (Map):
+            valueExpression (Delayed):
+              delayed (Map):
                 Entry (DictionaryEntry)
                   Key (String):
                     "program"
@@ -3308,16 +2883,14 @@ statements (ArrayList):
                               Value (String):
                                 "then"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "else"
               parents (ArrayList):
-            val (Delayed):
-              expression (Map):
+            valueExpression (Delayed):
+              delayed (Map):
                 Entry (DictionaryEntry)
                   Key (String):
                     "program"
@@ -3361,106 +2934,82 @@ statements (ArrayList):
                                 "literal"
                               Value (String):
                                 "else"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "If"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "firstSwitch"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "unchanged"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "bigNumber"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (Integer):
         "50020202029029233344"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "this"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (Integer):
             "7"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Select):
+            valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "bigNumber"
               parents (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "case"
               parents (ArrayList):
-            val (Program):
+            valueExpression (Program):
               statements (ArrayList):
                 Entry (Statement)
-                  key (Select):
+                  keyExpression (Select):
                     expressions (ArrayList):
                       Entry (Select)
                         expressions (ArrayList):
                           Entry (Literal)
-                            cached:
-                              null
-                            text (String):
+                            literal (String):
                               "bigNumber"
                         parents (ArrayList):
                     parents (ArrayList):
-                  val (Delayed):
-                    expression (Map):
+                  valueExpression (Delayed):
+                    delayed (Map):
                       Entry (DictionaryEntry)
                         Key (String):
                           "program"
@@ -3513,16 +3062,14 @@ statements (ArrayList):
                                             Value (String):
                                               "bigNumber"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "default"
               parents (ArrayList):
-            val (Delayed):
-              expression (Map):
+            valueExpression (Delayed):
+              delayed (Map):
                 Entry (DictionaryEntry)
                   Key (String):
                     "program"
@@ -3566,86 +3113,66 @@ statements (ArrayList):
                                 "literal"
                               Value (String):
                                 "default"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "Switch"
         parents (ArrayList):
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "secondSwitch"
       parents (ArrayList):
-    val (Literal):
-      cached:
-        null
-      text (String):
+    valueExpression (Literal):
+      literal (String):
         "unchanged"
   Entry (Statement)
-    key (Select):
+    keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (String):
             "this"
         Entry (Literal)
-          cached:
-            null
-          text (String):
+          literal (Integer):
             "8"
       parents (ArrayList):
-    val (Call):
-      argument (Program):
+    valueExpression (Call):
+      argumentExpression (Program):
         statements (ArrayList):
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "this"
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (Integer):
                     "1"
               parents (ArrayList):
-            val (Literal):
-              cached:
-                null
-              text (String):
+            valueExpression (Literal):
+              literal (Integer):
                 "3"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "case"
               parents (ArrayList):
-            val (Program):
+            valueExpression (Program):
               statements (ArrayList):
                 Entry (Statement)
-                  key (Select):
+                  keyExpression (Select):
                     expressions (ArrayList):
                       Entry (Literal)
-                        cached:
-                          null
-                        text (String):
+                        literal (Integer):
                           "1"
                     parents (ArrayList):
-                  val (Delayed):
-                    expression (Map):
+                  valueExpression (Delayed):
+                    delayed (Map):
                       Entry (DictionaryEntry)
                         Key (String):
                           "program"
@@ -3690,16 +3217,14 @@ statements (ArrayList):
                                     Value (String):
                                       "one"
                 Entry (Statement)
-                  key (Select):
+                  keyExpression (Select):
                     expressions (ArrayList):
                       Entry (Literal)
-                        cached:
-                          null
-                        text (String):
+                        literal (Integer):
                           "2"
                     parents (ArrayList):
-                  val (Delayed):
-                    expression (Map):
+                  valueExpression (Delayed):
+                    delayed (Map):
                       Entry (DictionaryEntry)
                         Key (String):
                           "program"
@@ -3744,16 +3269,14 @@ statements (ArrayList):
                                     Value (String):
                                       "two"
           Entry (Statement)
-            key (Select):
+            keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  cached:
-                    null
-                  text (String):
+                  literal (String):
                     "default"
               parents (ArrayList):
-            val (Delayed):
-              expression (Map):
+            valueExpression (Delayed):
+              delayed (Map):
                 Entry (DictionaryEntry)
                   Key (String):
                     "program"
@@ -3797,11 +3320,9 @@ statements (ArrayList):
                                 "literal"
                               Value (String):
                                 "default"
-      callable (Select):
+      callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            cached:
-              null
-            text (String):
+            literal (String):
               "Switch"
         parents (ArrayList):

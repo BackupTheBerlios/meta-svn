@@ -40,131 +40,100 @@ using System.GAC;
 namespace Meta {
 	namespace Execution {
 		public interface IExpression {
-			object Evaluate(object current);
-			bool IdenticalTo(object obj);
-			void ReplaceWith(IExpression replace);
+			object Evaluate();
+			bool IsIdenticalWithOtherExpression(object obj);
+			void ReplaceWithOtherExpression(IExpression replace);
 		}
 		public class Statement {
-			public void Realize(ref object scope) {
-				key.Assign(ref scope,this.val.Evaluate(scope));
+			public void Realize() {
+				keyExpression.Assign(this.valueExpression.Evaluate());
 			}
-			public void ReplaceWith(Statement statement) {
-				if(!key.IdenticalTo(statement.key)) {
-					key=(Select)Interpreter.ReplaceExpression(key,statement.key);
+			public void ReplaceWithOtherExpression(Statement statement) {
+				if(!keyExpression.IsIdenticalWithOtherExpression(statement.keyExpression)) {
+					keyExpression=(Select)Interpreter.ReplaceExpressionWithOtherExpression(keyExpression,statement.keyExpression);
 				}
-				if(!val.IdenticalTo(statement.val)) {
-					val=(IExpression)Interpreter.ReplaceExpression(val,statement.val);
+				if(!valueExpression.IsIdenticalWithOtherExpression(statement.valueExpression)) {
+					valueExpression=(IExpression)Interpreter.ReplaceExpressionWithOtherExpression(valueExpression,statement.valueExpression);
 				}
 			}
-			public bool IdenticalTo(object obj) {
-				return obj is Statement && ((Statement)obj).key.IdenticalTo(key) && ((Statement)obj).val.IdenticalTo(val);
+			public bool IsIdenticalWithOtherExpression(object obj) {
+				return obj is Statement && ((Statement)obj).keyExpression.IsIdenticalWithOtherExpression(keyExpression) && ((Statement)obj).valueExpression.IsIdenticalWithOtherExpression(valueExpression);
 			}
-			public Statement(Map obj) {
-				this.key=(Select)((Map)obj["key"]).Compile();
-				this.val=(IExpression)((Map)obj["value"]).Compile();
+			public Statement(Map code) {
+				this.keyExpression=(Select)((Map)code["key"]).Compile();
+				this.valueExpression=(IExpression)((Map)code["value"]).Compile();
 			}
-			public Select key;
-			public IExpression val;
+			public Select keyExpression;
+			public IExpression valueExpression;
 		}
-		public class Call: IExpression {	
-			public object Evaluate(object current) {
-				return ((ICallable)callable.Evaluate(current)).Call((Map)current,(IMap)argument.Evaluate(current));
+		public class Call: IExpression {
+			public object Evaluate() {
+				return ((ICallable)callableExpression.Evaluate()).Call((IMap)argumentExpression.Evaluate());
 			}
-			public void ReplaceWith(IExpression replace) { // check
-				if(!this.IdenticalTo(replace)) {
+			public void ReplaceWithOtherExpression(IExpression replace) {
+				if(!this.IsIdenticalWithOtherExpression(replace)) {
 					Call call=(Call)replace;
-					if(!callable.IdenticalTo(call.callable)) {
-						callable=(IExpression)Interpreter.ReplaceExpression(callable,call.callable);
+					if(!callableExpression.IsIdenticalWithOtherExpression(call.callableExpression)) {
+						callableExpression=(IExpression)Interpreter.ReplaceExpressionWithOtherExpression(callableExpression,call.callableExpression);
 					}
-					if(!argument.IdenticalTo(call.argument)) {
-						argument=(IExpression)Interpreter.ReplaceExpression(argument,call.argument);
+					if(!argumentExpression.IsIdenticalWithOtherExpression(call.argumentExpression)) {
+						argumentExpression=(IExpression)Interpreter.ReplaceExpressionWithOtherExpression(argumentExpression,call.argumentExpression);
 					}
 				}
 			}
-			public bool IdenticalTo(object obj) { // check
-				return obj is Call && ((Call)obj).callable.IdenticalTo(callable) &&
-					((Call)obj).argument.IdenticalTo(argument);
+			public bool IsIdenticalWithOtherExpression(object obj) {
+				return obj is Call && ((Call)obj).callableExpression.IsIdenticalWithOtherExpression(callableExpression) &&
+					((Call)obj).argumentExpression.IsIdenticalWithOtherExpression(argumentExpression);
 			}
 			public Call(Map obj) {
 				Map expression=(Map)obj["call"];
-				this.callable=(IExpression)((Map)expression["function"]).Compile();
-				this.argument=(IExpression)((Map)expression["argument"]).Compile();
+				this.callableExpression=(IExpression)((Map)expression["function"]).Compile();
+				this.argumentExpression=(IExpression)((Map)expression["argument"]).Compile();
 			}
-			public IExpression argument;
-			public IExpression callable;
+			public IExpression argumentExpression;
+			public IExpression callableExpression;
 		}
 		public class Delayed: IExpression {
-			public object Evaluate(object current) {
-				return expression;
+			public object Evaluate() {
+				return delayed;
 			}
-			public void ReplaceWith(IExpression replace) {
-				if(!this.IdenticalTo(replace)) {
-					Delayed delayed=(Delayed)replace;
-					delayed.expression.Compile();
-					if(expression.compiled!=null) {
-						expression.compiled=Interpreter.ReplaceExpression(expression.compiled,delayed.expression.compiled);
-						delayed.expression.compiled=expression.compiled;
+			public void ReplaceWithOtherExpression(IExpression replace) { // move editor stuff somewhere else
+				if(!this.IsIdenticalWithOtherExpression(replace)) {
+					Delayed other=(Delayed)replace;
+					other.delayed.Compile();
+					if(delayed.compiled!=null) {
+						delayed.compiled=Interpreter.ReplaceExpressionWithOtherExpression(delayed.compiled,other.delayed.compiled);
+						other.delayed.compiled=delayed.compiled;
 					}
-					expression=delayed.expression;
+					delayed=other.delayed;
 				}
 			}
-			public bool IdenticalTo(object obj) {
-				return obj is Delayed && expression.Equals(((Delayed)obj).expression);
+			public bool IsIdenticalWithOtherExpression(object obj) {
+				return obj is Delayed && delayed.Equals(((Delayed)obj).delayed);
 			}
 			public Delayed(Map code) {
-				this.expression=(Map)code["delayed"];
+				this.delayed=(Map)code["delayed"];
 			}
-			public Map expression;
+			public Map delayed;
 		}
 		public class Program: IExpression {
-			public object Evaluate(object parent) { // refactor
-				return EvaluateWithCurrent((IMap)parent);
-			}
-//			public object Evaluate(object parent) { // refactor
-//				Map local=new Map();
-//				local.Parent=(IMap)parent;
-//				return EvaluateWithCurrent(local);
-//			}
-			public object EvaluateWithCurrent(IMap current) { // refactor, why does it differ,why the same name?
-				object result=new Map();
-				((Map)result).Parent=current;
-				Interpreter.callers.Add(result);
+			public object Evaluate() {
+				object localMap=new Map();
+				((IMap)localMap).Parent=(IMap)Interpreter.Current;
+				Interpreter.callers.Add(localMap);
 				for(int i=0;i<statements.Count;i++) {
-					if(i==21) {
-						int asdf=0;
-					}
-					((Statement)statements[i]).Realize(ref result);
+					((Statement)statements[i]).Realize();
 				}
-				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1); // add local map to callers, even when not caller (always)
+				object result=Interpreter.Current;
+				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 				return result;
 			}
-//			public object Evaluate(object caller,IMap existing) { // refactor, why does it differ,why the same name?
-//				object result=existing;
-//				bool callerIsMap=false;
-//				if(caller!=null) {
-//					if(caller is IMap) {
-//						callerIsMap=true;
-//					}
-//					if(callerIsMap) {
-//						Interpreter.callers.Add(caller);
-//					}
-//				}
-//				for(int i=0;i<statements.Count;i++) {
-//					((Statement)statements[i]).Realize(ref result);
-//				}
-//				if(caller!=null) {
-//					if(callerIsMap) {
-//						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1); // add local map to callers, even when not caller (always)
-//					}
-//				}
-//				return result;
-//			}
-			public bool IdenticalTo(object obj) { // check
+			public bool IsIdenticalWithOtherExpression(object obj) {
 				if(obj is Program) {
 					Program program=(Program)obj;
 					if(program.statements.Count==statements.Count) {
 						for(int i=0;i<statements.Count;i++) {
-							if(!((Statement)statements[i]).IdenticalTo(program.statements[i])) {
+							if(!((Statement)statements[i]).IsIdenticalWithOtherExpression(program.statements[i])) {
 								return false;
 							}
 						}
@@ -173,13 +142,13 @@ namespace Meta {
 				}
 				return false;
 			}
-			public void ReplaceWith(IExpression replace) { // check
-				if(!IdenticalTo(replace)) {
+			public void ReplaceWithOtherExpression(IExpression replace) {
+				if(!IsIdenticalWithOtherExpression(replace)) {
 					Program program=(Program)replace;
 					int i=0;
 					for(;i<program.statements.Count && i<statements.Count;i++)  {
-						if(!((Statement)statements[i]).IdenticalTo((Statement)program.statements[i])) {
-							statements[i]=Interpreter.ReplaceExpression(statements[i],
+						if(!((Statement)statements[i]).IsIdenticalWithOtherExpression((Statement)program.statements[i])) {
+							statements[i]=Interpreter.ReplaceExpressionWithOtherExpression(statements[i],
 								(Statement)program.statements[i]);
 						}
 					}
@@ -191,84 +160,67 @@ namespace Meta {
 					}
 				}
 			}
-			public Program(Map programCode) {
-				foreach(Map statementCode in ((Map)programCode["program"]).IntKeyValues) {
-					this.statements.Add(statementCode.Compile());
+			public Program(Map code) {
+				foreach(Map statement in ((Map)code["program"]).IntKeyValues) {
+					this.statements.Add(statement.Compile()); // should we save the original maps?
 				}
 			}
 			public readonly ArrayList statements=new ArrayList();
 		}
 		public class Literal: IExpression {
-			public object Evaluate(object current) {
-				if(cached==null) {
-					cached=Interpreter.RecognizeLiteral(text);
-				}
-				return cached;
+			public object Evaluate() {
+				return literal;
 			}
-			public bool IdenticalTo(object obj) { // check
-				return obj is Literal && text==((Literal)obj).text;
+			public bool IsIdenticalWithOtherExpression(object obj) {
+				return obj is Literal && literal==((Literal)obj).literal;
 			}
-			public void ReplaceWith(IExpression replace) { // check
-				Literal literal=(Literal)replace;
-				text=literal.text;
-				cached=literal.cached;
+			public void ReplaceWithOtherExpression(IExpression replace) {
+				literal=((Literal)replace).literal;
 			}
 			public Literal(Map code) {
-				this.text=(string)code["literal"];
+				this.literal=Interpreter.RecognizeLiteralText((string)code["literal"]);
 			}
-			public string text;
-			public object cached=null;
+			public object literal=null;
 		}
 		public class Select: IExpression { 
-			public object Evaluate(object current) {
-				ArrayList keys=new ArrayList();
+			public object Evaluate() {
+				ArrayList keysToBeSelected=new ArrayList();
 				foreach(IExpression expression in expressions) {
-					keys.Add(expression.Evaluate(current));
+					keysToBeSelected.Add(expression.Evaluate());
 				}
-				object preselection=Preselect(current,keys,true,true);
-				return preselection;
+				return SearchAndSelectKeysInCurrentMap(keysToBeSelected,true,true);
 			}
-			public void Assign(ref object current,object val) {
-				ArrayList keys=new ArrayList();
+			public void Assign(object valueToBeAssigned) {
+				ArrayList keysToBeSelected=new ArrayList();
 				foreach(IExpression expression in expressions) {
-					keys.Add(expression.Evaluate((IMap)current));
+					keysToBeSelected.Add(expression.Evaluate());
 				}
-				if(keys.Count==1 && keys[0].Equals("this")) {
-					if(val is IMap) {
-						((IMap)val).Parent=((IMap)current).Parent;
-						current=((IMap)val).Clone();
-						if(current is IMap) { // isn't this always true?
-							Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-							Interpreter.callers.Add(current);
-						}
+				if(keysToBeSelected.Count==1 && keysToBeSelected[0].Equals("this")) {
+					if(valueToBeAssigned is IMap) {
+						IMap parent=((IMap)Interpreter.Current).Parent;
+						Interpreter.Current=((IMap)valueToBeAssigned).Clone();
+						((IMap)Interpreter.Current).Parent=parent;
 					}
 					else {
-						current=val;
-						if(current is IMap) {
-							Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-							Interpreter.callers.Add(current);
-						}
+						Interpreter.Current=valueToBeAssigned;
 					}
 				}
 				else {
-					object selected=Preselect(current,keys,false,false);
-					IKeyValue keyValue;
-					if(selected is IKeyValue) {
-						keyValue=(IKeyValue)selected;
+					object selectionOfAllKeysExceptLastOne=SearchAndSelectKeysInCurrentMap(keysToBeSelected,false,false);
+					IKeyValue mapToAssignIn;
+					if(selectionOfAllKeysExceptLastOne is IKeyValue) {
+						mapToAssignIn=(IKeyValue)selectionOfAllKeysExceptLastOne;
 					}
 					else {
-						if(selected==null) { // when can this happen?
-							int asdf=0;
-						}
-						keyValue=new NetObject(selected,selected.GetType());
+						mapToAssignIn=new NetObject(selectionOfAllKeysExceptLastOne);
 					}
-					keyValue[keys[keys.Count-1]]=val;
+					mapToAssignIn[keysToBeSelected[keysToBeSelected.Count-1]]=valueToBeAssigned;
 				}
 			}
-			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
-				object selected=current;
+			public object SearchAndSelectKeysInCurrentMap(ArrayList keys,bool isRightSide,bool isSelectLastKey) {
+				object selection=Interpreter.Current;
 				int i=0;
-				if(keys[0].Equals("If")) {
+				if(keys[0]==null) {
 					int asdf=0;
 				}
 				if(keys[0].Equals("this")) {
@@ -285,12 +237,12 @@ namespace Meta {
 							break;
 						}
 					}
-					selected=Interpreter.callers[Interpreter.callers.Count-numCallers];
+					selection=Interpreter.callers[Interpreter.callers.Count-numCallers];
 				}
 				else if(keys[0].Equals("parent")) { //ignore arguments here
 					foreach(object key in keys) {
 						if(key.Equals("parent")) {
-							selected=((IMap)selected).Parent;
+							selection=((IMap)selection).Parent;
 							i++;
 						}
 						else {
@@ -299,17 +251,17 @@ namespace Meta {
 					}
 				}
 				else if(keys[0].Equals("arg")) {
-					selected=Interpreter.arguments[Interpreter.arguments.Count-1]; //change
+					selection=Interpreter.arguments[Interpreter.arguments.Count-1]; //change
 					i++;
 				}				
 				else if(keys[0].Equals("search")||isRightSide) {
 					if(keys[0].Equals("search")) {
 						i++;
 					}
-					while(selected!=null && !((IKeyValue)selected).ContainsKey(keys[i])) {
-						selected=((IMap)selected).Parent;
+					while(selection!=null && !((IKeyValue)selection).ContainsKey(keys[i])) {
+						selection=((IMap)selection).Parent;
 					}
-					if(selected==null) {
+					if(selection==null) {
 						throw new ApplicationException("Key "+keys[i]+" not found");
 					}
 				}
@@ -319,33 +271,32 @@ namespace Meta {
 				}
 				for(;i<keys.Count-1+lastKeySelect;i++) {
 					if(keys[i].Equals("break")) {
-						if(selected is IKeyValue) {
-							Interpreter.breakMethod((IKeyValue)selected);
+						if(selection is IKeyValue) {
+							Interpreter.breakMethod((IKeyValue)selection);
 						}
 						else {
-							Interpreter.breakMethod(new NetObject(selected,selected.GetType()));
+							Interpreter.breakMethod(new NetObject(selection));
 						}
 						Thread.CurrentThread.Suspend();
 					}	
-					if(selected is IKeyValue) {
-						selected=((IKeyValue)selected)[keys[i]];
+					if(selection is IKeyValue) {
+						selection=((IKeyValue)selection)[keys[i]];
 					}
 					else {
-						if(selected==null) {
+						if(selection==null) {
 							throw new ApplicationException("Key "+keys[i]+" does not exist");
 						}
-						selected=new NetObject(selected,selected.GetType())[keys[i]];
+						selection=new NetObject(selection)[keys[i]];
 					}
-
 				}
-				return selected;
+				return selection;
 			}
-			public bool IdenticalTo(object obj) { // check
+			public bool IsIdenticalWithOtherExpression(object obj) {
 				if(obj is Select) {
 					Select select=(Select)obj;
 					if(expressions.Count==select.expressions.Count)  {
 						for(int i=0;i<expressions.Count;i++) {
-							if(!((IExpression)expressions[i]).IdenticalTo(select.expressions[i])) {
+							if(!((IExpression)expressions[i]).IsIdenticalWithOtherExpression(select.expressions[i])) {
 								return false;
 							}
 						}
@@ -354,12 +305,12 @@ namespace Meta {
 				}
 				return false;
 			}
-			public void ReplaceWith(IExpression replace) { // check
-				if(!IdenticalTo(replace)) {
+			public void ReplaceWithOtherExpression(IExpression replace) {
+				if(!IsIdenticalWithOtherExpression(replace)) {
 					Select select=(Select)replace;
 					int i=0;
 					for(;i<expressions.Count && i<select.expressions.Count;i++) {
-						expressions[i]=Interpreter.ReplaceExpression(
+						expressions[i]=Interpreter.ReplaceExpressionWithOtherExpression(
 							expressions[i],select.expressions[i]);
 					}
 					if(expressions.Count>select.expressions.Count) {
@@ -378,12 +329,12 @@ namespace Meta {
 			public readonly ArrayList expressions=new ArrayList();
 			public ArrayList parents=new ArrayList();
 		}
-		public delegate void BreakMethodDelegate(IKeyValue obj);//rename
+		public delegate void BreakMethodDelegate(IKeyValue obj);
 		public class Interpreter  {
 			public static IKeyValue Merge(params IKeyValue[] maps) {
 				return MergeCollection(maps);
 			}
-			public static IKeyValue MergeCollection(ICollection maps) { //rename
+			public static IKeyValue MergeCollection(ICollection maps) {
 				Map result=new Map();
 				foreach(IKeyValue map in maps) {
 					foreach(DictionaryEntry entry in (IKeyValue)map) {
@@ -398,7 +349,7 @@ namespace Meta {
 				}
 				return result;
 			}	
-			public static object RecognizeLiteral(string text) {
+			public static object RecognizeLiteralText(string text) {
 				for(int i=literalRecognitions.Count-1;i>=0;i--) {
 					object recognized=((RecognizeLiteral)literalRecognitions[i]).Recognize(text);
 					if(recognized!=null) {
@@ -407,13 +358,13 @@ namespace Meta {
 				}
 				return null;
 			}
-			public static object ReplaceExpression(object original,object replacement) { //not great
+			public static object ReplaceExpressionWithOtherExpression(object original,object replacement) { //not great
 				if(original.GetType().Equals(replacement.GetType())) {
 					if(original is Statement) {
-						((Statement)original).ReplaceWith((Statement)replacement);
+						((Statement)original).ReplaceWithOtherExpression((Statement)replacement);
 					}
 					else {
-						((IExpression)original).ReplaceWith((IExpression)replacement);
+						((IExpression)original).ReplaceWithOtherExpression((IExpression)replacement);
 					}
 					return original;
 				}
@@ -446,7 +397,7 @@ namespace Meta {
 			public static object Run(TextReader reader,IMap argument) {
 				Map lastProgram=CompileToMap(reader);
 				lastProgram.Parent=Library.library;    // move argument adding somewhere else
-				object result=lastProgram.Call(new Map(),argument);
+				object result=lastProgram.Call(argument);
 				return result;
 			}
 			public static AST ParseToAst(TextReader stream)  {
@@ -462,6 +413,27 @@ namespace Meta {
 				get {
 					return arguments[arguments.Count-1];
 				}
+			}
+			public static object Current {
+				get {
+					return callers[callers.Count-1];
+				}
+				set {
+					callers[callers.Count-1]=value;
+				}
+			}
+			public static object ConvertMetaObjectToTargetDotNetType(object metaObject,Type targetType,out bool isConverted) {
+				Hashtable toDotNet=(Hashtable)
+					Interpreter.netConversion[targetType];
+				if(toDotNet!=null) {
+					ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)toDotNet[metaObject.GetType()];
+					if(conversion!=null) {
+						isConverted=true;
+						return conversion.Convert(metaObject);
+					}
+				}
+				isConverted=false;
+				return null;
 			}
 			static Interpreter() {
 				Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
@@ -491,9 +463,299 @@ namespace Meta {
 			public static ArrayList loadedAssemblies=new ArrayList();
 
 			private static ArrayList literalRecognitions=new ArrayList();
+
+			public abstract class RecognizeLiteral {
+				public abstract object Recognize(string text);
+			}
+			public abstract class ConvertMetaToDotNet {
+				public Type source;
+				public Type target;
+				public abstract object Convert(object obj);
+			}
+			public abstract class ConvertDotNetToMeta {
+				public Type source;
+				public abstract object Convert(object obj);
+			}
+			public class LiteralRecognitions {
+				// Attention! order of classes matters
+				public class RecognizeDotNetString: RecognizeLiteral  {
+					public override object Recognize(string text)  {
+						return text;
+					}
+				}
+				public class RecognizeInteger: RecognizeLiteral  {
+					public override object Recognize(string text)  { 
+						if(text.Equals("")) {
+							return null;
+						}
+						else {
+							Integer number=new Integer(0);
+							int i=0;
+							if(text[0]=='-') {
+								i++;
+							}
+							// the following should be incorrect for multi-byte unicode
+							for(;i<text.Length;i++) {
+								if(char.IsDigit(text[i])) {
+									number=number*10+(text[i]-'0');
+								}
+								else {
+									return null;
+								}
+							}
+							if(text[0]=='-') {
+								number=-number;
+							}
+							return number;
+						}
+					}
+				}
+				public class RecognizeString:RecognizeLiteral {
+					public override object Recognize(string text) {
+						if(text.StartsWith("\"") && text.EndsWith("\"")) {
+							return StringToMap(text.Substring(1,text.Length-2));
+						}
+						else {
+							return null;
+						}
+					}
+				}
+				public class RecognizeBoolean:RecognizeLiteral {
+					public override object Recognize(string text) {
+						switch(text) {
+							case "true":
+								return true;
+							case "false":
+								return false;
+							default:
+								return null;
+						}
+					}
+				}
+			}
+			private abstract class MetaToDotNetConversions {
+				public class ConvertIntegerToByte: ConvertMetaToDotNet {
+					public ConvertIntegerToByte() {
+						this.source=typeof(Integer);
+						this.target=typeof(Byte);
+					}
+					public override object Convert(object obj) {
+						return System.Convert.ToByte(((Integer)obj).LongValue());
+					}
+				}
+				public class ConvertIntegerToSByte: ConvertMetaToDotNet {
+					public ConvertIntegerToSByte() {
+						this.source=typeof(Integer);
+						this.target=typeof(SByte);
+					}
+					public override object Convert(object obj) {
+						return System.Convert.ToSByte(((Integer)obj).LongValue());
+					}
+				}
+				public class ConvertIntegerToChar: ConvertMetaToDotNet {
+					public ConvertIntegerToChar() {
+						this.source=typeof(Integer);
+						this.target=typeof(Char);
+					}
+					public override object Convert(object obj) {
+						return System.Convert.ToChar(((Integer)obj).LongValue());
+					}
+				}
+				public class ConvertIntegerToInt32: ConvertMetaToDotNet {
+					public ConvertIntegerToInt32() {
+						this.source=typeof(Integer);
+						this.target=typeof(Int32);
+					}
+					public override object Convert(object obj) {
+						return System.Convert.ToInt32(((Integer)obj).LongValue());
+					}
+				}
+				public class ConvertIntegerToUInt32: ConvertMetaToDotNet {
+					public ConvertIntegerToUInt32() {
+						this.source=typeof(Integer);
+						this.target=typeof(UInt32);
+					}
+					public override object Convert(object obj) {
+						return System.Convert.ToUInt32(((Integer)obj).LongValue());
+					}
+				}
+				public class ConvertIntegerToInt64: ConvertMetaToDotNet {
+					public ConvertIntegerToInt64() {
+						this.source=typeof(Integer);
+						this.target=typeof(Int64);
+					}
+					public override object Convert(object obj) {
+						return System.Convert.ToInt64(((Integer)obj).LongValue());
+					}
+				}
+				public class ConvertIntegerToUInt64: ConvertMetaToDotNet {
+					public ConvertIntegerToUInt64() {
+						this.source=typeof(Integer);
+						this.target=typeof(UInt64);
+					}
+					public override object Convert(object obj) {
+						return System.Convert.ToUInt64(((Integer)obj).LongValue());
+					}
+				}
+				public class ConvertIntegerToInt16: ConvertMetaToDotNet {
+					public ConvertIntegerToInt16() {
+						this.source=typeof(Integer);
+						this.target=typeof(Int16);
+					}
+					public override object Convert(object obj) {
+						return System.Convert.ToInt16(((Integer)obj).LongValue());
+					}
+				}
+				public class ConvertIntegerToUInt16: ConvertMetaToDotNet {
+					public ConvertIntegerToUInt16() {
+						this.source=typeof(Integer);
+						this.target=typeof(UInt16);
+					}
+					public override object Convert(object obj) {
+						return System.Convert.ToUInt16(((Integer)obj).LongValue());
+					}
+				}
+				public class ConvertMapToString: ConvertMetaToDotNet {
+					public ConvertMapToString() {
+						this.source=typeof(Map);
+						this.target=typeof(string);
+					}
+					public override object Convert(object obj) {
+						Map symbol=(Map)obj;
+						string text="";
+						for(Integer i=new Integer(1);;i++) {
+							object val=symbol[i];
+							if(val==null) {
+								break;
+							}
+							else {
+								if(val is Integer) {
+									text+=System.Convert.ToChar(((Integer)val).LongValue());
+								}
+							}
+						}
+						return text;
+					}
+				}
+			}
+			public static Map StringToMap(string symbol) {
+				Map map=new Map();
+				foreach(char character in symbol) {
+					map[new Integer(map.Count+1)]=new Integer((int)character);
+				}
+				return map;
+			}
+			private abstract class DotNetToMetaConversions {
+				public class ConvertStringToMap: ConvertDotNetToMeta {
+					public ConvertStringToMap()   {
+						this.source=typeof(string);
+					}
+					public override object Convert(object obj) {
+						return StringToMap((string)obj);
+					}
+				}
+				public class ConvertByteToInteger: ConvertDotNetToMeta {
+					public ConvertByteToInteger() {
+						this.source=typeof(Byte);
+					}
+					public override object Convert(object obj) {
+						return new Integer((Byte)obj);
+					}
+				}
+				public class ConvertSByteToInteger: ConvertDotNetToMeta {
+					public ConvertSByteToInteger() {
+						this.source=typeof(SByte);
+					}
+					public override object Convert(object obj) {
+						return new Integer((SByte)obj);
+					}
+				}
+				public class ConvertCharToInteger: ConvertDotNetToMeta {
+					public ConvertCharToInteger() {
+						this.source=typeof(Char);
+					}
+					public override object Convert(object obj) {
+						return new Integer((Char)obj);
+					}
+				}
+				public class ConvertInt32ToInteger: ConvertDotNetToMeta {
+					public ConvertInt32ToInteger() {
+						this.source=typeof(Int32);
+					}
+					public override object Convert(object obj) {
+						return new Integer((Int32)obj);
+					}
+				}
+				public class ConvertUInt32ToInteger: ConvertDotNetToMeta {
+					public ConvertUInt32ToInteger() {
+						this.source=typeof(UInt32);
+					}
+					public override object Convert(object obj) {
+						return new Integer((UInt32)obj);
+					}
+				}
+				public class ConvertInt64ToInteger: ConvertDotNetToMeta {
+					public ConvertInt64ToInteger() {
+						this.source=typeof(Int64);
+					}
+					public override object Convert(object obj) {
+						return new Integer((Int64)obj);
+					}
+				}
+				public class ConvertUInt64ToInteger: ConvertDotNetToMeta {
+					public ConvertUInt64ToInteger() {
+						this.source=typeof(UInt64);
+					}
+					public override object Convert(object obj) {
+						return new Integer((Int64)(UInt64)obj);
+					}
+				}
+				public class ConvertInt16ToInteger: ConvertDotNetToMeta {
+					public ConvertInt16ToInteger() {
+						this.source=typeof(Int16);
+					}
+					public override object Convert(object obj) {
+						return new Integer((Int16)obj);
+					}
+				}
+				public class ConvertUInt16ToInteger: ConvertDotNetToMeta {
+					public ConvertUInt16ToInteger() {
+						this.source=typeof(UInt16);
+					}
+					public override object Convert(object obj) {
+						return new Integer((UInt16)obj);
+					}
+				}
+			}
 		}
 	}
 	namespace Types  {
+		public interface ICallable {
+			object Call(IMap argument);
+		}
+		public interface IMap: IKeyValue {
+			IMap Parent {
+				get;
+				set;
+			}
+			ArrayList IntKeyValues { // rename
+				get;
+			}
+			IMap Clone();
+		}
+		public interface IKeyValue: IEnumerable { // not used consequently instead of map
+			object this[object key] {
+				get;
+				set;
+			}
+			ArrayList Keys {
+				get;
+			}
+			int Count {
+				get;
+			}
+			bool ContainsKey(object key);			
+		}		
 		public class UnloadedMetaLibrary {
 			public object Load() {
 				return Interpreter.Run(new StreamReader(path),new Map()); //check that
@@ -624,35 +886,8 @@ namespace Meta {
 			public static Library library=new Library();
 			private Map cash=new Map();
 			public static string libraryPath="library"; 
-			//remove
 		}
-		public interface ICallable {
-			object Call(Map caller,IMap argument);
-		}
-		public interface IMap: IKeyValue {
-			IMap Parent {
-				get;
-				set;
-			}
-			ArrayList IntKeyValues { // rename
-				get;
-			}
-			IMap Clone();
-		}
-		public interface IKeyValue: IEnumerable { // not used consequently instead of map
-			object this[object key] {
-				get;
-				set;
-			}
-			ArrayList Keys {
-				get;
-			}
-			int Count {
-				get;
-			}
-			bool ContainsKey(object key);			
-		}		
-		public class Map: IKeyValue, IMap, ICallable, IEnumerable { // could use Callable
+		public class Map: IKeyValue, IMap, ICallable, IEnumerable {
 			public IMap Parent {
 				get {
 					return parent;
@@ -666,7 +901,7 @@ namespace Meta {
 					return table.Count;
 				}
 			}
-			public ArrayList IntKeyValues { // rename
+			public ArrayList IntKeyValues {
 				get {
 					ArrayList list=new ArrayList();
 					for(Integer i=new Integer(1);ContainsKey(i);i++) {
@@ -679,7 +914,7 @@ namespace Meta {
 				get {
 					return table[key];
 				}
-				set { //refactor some more
+				set {
 					if(value!=null) {
 						isHashCashed=false;
 						object val=value is IMap? ((IMap)value).Clone(): value;
@@ -693,36 +928,17 @@ namespace Meta {
 					}
 				}
 			}
-			public object Call(Map caller,IMap argument) {
+			public object Call(IMap argument) {
 				((IMap)argument).Parent=this.Parent;
 				IExpression callable=(IExpression)Compile();
 				object result;
 				Interpreter.arguments.Add(argument);
-				if(callable is Program) { // somehow wrong
-					result=((Program)callable).EvaluateWithCurrent((IMap)Interpreter.Arg);
-					//					result=((Program)callable).Evaluate(caller,(IMap)Interpreter.Arg);
-				}
-				else {
-					result=callable.Evaluate((IMap)Interpreter.Arg);
-				}
+				Interpreter.callers.Add(argument);
+				result=callable.Evaluate();
+				Interpreter.callers.Remove(argument);
 				Interpreter.arguments.Remove(argument);
 				return result;
 			}
-//			public object Call(Map caller,IMap argument) {
-//				((IMap)argument).Parent=this.Parent;
-//				IExpression callable=(IExpression)Compile();
-//				object result;
-//				Interpreter.arguments.Add(argument);
-//				if(callable is Program) { // somehow wrong
-//					result=((Program)callable).Evaluate((IMap)Interpreter.Arg);
-////					result=((Program)callable).Evaluate(caller,(IMap)Interpreter.Arg);
-//				}
-//				else {
-//					result=callable.Evaluate((IMap)Interpreter.Arg);
-//				}
-//				Interpreter.arguments.Remove(argument);
-//				return result;
-//			}
 			public ArrayList Keys {
 				get {
 					return keys;
@@ -737,7 +953,7 @@ namespace Meta {
 				copy.compiled=compiled;
 				return copy;
 			}
-			public object Compile()  { //don't return anything, keep it private
+			public object Compile()  {
 				if(compiled==null)  {
 					switch((string)this.Keys[0]) {
 						case "call":
@@ -815,7 +1031,7 @@ namespace Meta {
 			private bool isHashCashed=false;
 			private int hash;
 		}
-		public class MapEnumerator: IEnumerator { //make this useful for NetContainer, too?
+		public class MapEnumerator: IEnumerator {
 			private Map map; public MapEnumerator(Map map) {
 				this.map=map;
 			}
@@ -835,10 +1051,9 @@ namespace Meta {
 		}
 		public delegate object NullDelegate();
 		public class NetMethod: ICallable {
-			public object Call(Map caller,IMap argument) {
+			public object Call(IMap argument) { // refactor
 				IMap arguments=argument;
 				Interpreter.arguments.Add(argument);
-//				IMap arguments=(IMap)Interpreter.Arg;
 				ArrayList list;
 				list=arguments.IntKeyValues;
 				object result=null;
@@ -914,7 +1129,7 @@ namespace Meta {
 										Hashtable toDotNet=(Hashtable)
 											Interpreter.netConversion[parameter.ParameterType]; // move this into Interpreter
 										if(toDotNet!=null) {
-											ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)toDotNet[list[counter].GetType()];
+											Interpreter.ConvertMetaToDotNet conversion=(Interpreter.ConvertMetaToDotNet)toDotNet[list[counter].GetType()];
 											if(conversion!=null) {
 												try {
 													args.Add(conversion.Convert(list[counter]));
@@ -1021,7 +1236,7 @@ namespace Meta {
 				argumentList+=")";
 				source+=argumentList+"{";
 				source+=argumentAdding;
-				source+="object result=callable.Call(null,arg);";
+				source+="object result=callable.Call(arg);";
 				if(method!=null) {
 					if(!method.ReturnType.Equals(typeof(void))) {
 						source+="return ("+returnTypeName+")";
@@ -1105,35 +1320,44 @@ namespace Meta {
 			}
 			private BindingFlags invokeMemberFlags;// what's that
 			private string name;
-			private IKeyValue parent;
+//			private IKeyValue parent;
 			protected object target;
 			protected Type type;
 			public MethodBase savedMethod;
 			public MethodBase[] methods;
 
 		}
-		public class NetClass: NetContainer, IKeyValue,ICallable {
+		public class NetClass: NetClassOrObject, IKeyValue,ICallable {
 			[DontSerializeFieldOrProperty]
 			public NetMethod constructor;
 			public NetClass(Type type):base(null,type) {
 				this.constructor=new NetMethod(this.type);
 			}
-			public object Call(Map caller,IMap argument) {
-				return constructor.Call(null,argument);
+			public object Call(IMap argument) {
+				return constructor.Call(argument);
 			}
 		}
-		public class NetObject: NetContainer, IKeyValue {
-			public NetObject(object obj,Type type):base(obj,type) {
+		public class NetObject: NetClassOrObject, IKeyValue {
+			public NetObject(object obj):base(obj,obj.GetType()) {
 			}
 			public override string ToString() {
 				return obj.ToString();
 			}
 		}
-		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial {
-			public string Serialize() {
-				return "";
+		public abstract class NetClassOrObject: IKeyValue, IEnumerable,ISerializeSpecial {
+			public bool ContainsKey(object key)  { // not great
+				try  {
+					object o=this[key];
+				}
+				catch {
+					return false;
+				}
+				return true;
 			}
-			public IKeyValue Parent { //put this into IKeyValue
+			public IEnumerator GetEnumerator() {
+				return Table.GetEnumerator();
+			}
+			public IKeyValue Parent {
 				get {
 					return parent;
 				}
@@ -1152,11 +1376,10 @@ namespace Meta {
 				}
 			}
 			public virtual object this[object key]  {
-				get { //improve some more
+				get {
 					if(key is string) {
 						string text=(string)key;
-						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|
-							BindingFlags.Static|BindingFlags.Instance);
+						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
 								return new NetMethod(text,obj,type);
@@ -1165,7 +1388,7 @@ namespace Meta {
 								return Interpreter.ConvertDotNetObjectToMetaObject(type.GetField(text).GetValue(obj));
 							}
 							else if(members[0] is PropertyInfo) {
-								return Interpreter.ConvertDotNetObjectToMetaObject( type.GetProperty(text).GetValue(obj,new object[]{}));
+								return Interpreter.ConvertDotNetObjectToMetaObject(type.GetProperty(text).GetValue(obj,new object[]{}));
 							}
 							else if(members[0] is EventInfo) {
 								Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
@@ -1177,59 +1400,16 @@ namespace Meta {
 					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
 					Map arguments=new Map();
 					arguments[new Integer(1)]=key;
-//					Interpreter.arguments.Add(arguments);
 					try {
-						object result=indexerMethod.Call(null,arguments);
-						return result;
+						return indexerMethod.Call(arguments);
 					}
 					catch(Exception) {
 						return null;
 					}
-					finally {
-//						Interpreter.arguments.Remove(arguments);
-					}
 				}
-//				get { //improve some more
-//					if(key is string) {
-//						string text=(string)key;
-//						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|
-//							BindingFlags.Static|BindingFlags.Instance);
-//						if(members.Length>0) {
-//							if(members[0] is MethodBase) {
-//								return new NetMethod(text,obj,type);
-//							}
-//							if(members[0] is FieldInfo) {
-//								return Interpreter.ConvertDotNetObjectToMetaObject(type.GetField(text).GetValue(obj));
-//							}
-//							else if(members[0] is PropertyInfo) {
-//								return Interpreter.ConvertDotNetObjectToMetaObject( type.GetProperty(text).GetValue(obj,new object[]{}));
-//							}
-//							else if(members[0] is EventInfo) {
-//								Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
-//									BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
-//								return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
-//							}
-//						}
-//					}
-//					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
-//					Map arguments=new Map();
-//					arguments[new Integer(1)]=key;
-//					Interpreter.arguments.Add(arguments);
-//					try {
-//						object result=indexerMethod.Call(null);
-//						return result;
-//					}
-//					catch(Exception) {
-//						return null;
-//					}
-//					finally {
-//						Interpreter.arguments.Remove(arguments);
-//					}
-//				}
 				set {	//make correct
 					if(key is string) {
-						MemberInfo[] members=type.GetMember((string)key,BindingFlags.Public|BindingFlags.Static|
-							BindingFlags.Instance);
+						MemberInfo[] members=type.GetMember((string)key,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
 								throw new ApplicationException("Methods cannot be set.");
@@ -1241,32 +1421,26 @@ namespace Meta {
 									return;
 								}
 								else {
-									Hashtable toDotNet=(Hashtable) //combine?
-										Interpreter.netConversion[field.FieldType];
-									if(toDotNet!=null) {
-										ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)toDotNet[value.GetType()];
-										if(conversion!=null) {
-											field.SetValue(obj,conversion.Convert(value));
-											return;
-										}
+									bool isConverted;
+									object converted=Interpreter.ConvertMetaObjectToTargetDotNetType(value,field.FieldType,out isConverted);
+									if(isConverted) {
+										field.SetValue(obj,converted);
+										return;
 									}
 								}
 							}
 							else if(members[0] is PropertyInfo) {
-								PropertyInfo field=(PropertyInfo)members[0];
-								if(field.PropertyType.IsAssignableFrom(value.GetType())) {
-									field.SetValue(obj,value,null);
+								PropertyInfo property=(PropertyInfo)members[0];
+								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
+									property.SetValue(obj,value,null);
 									return;
 								}
 								else {
-									Hashtable toDotNet=(Hashtable)
-										Interpreter.netConversion[field.PropertyType];
-									if(toDotNet!=null) {
-										ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)toDotNet[value.GetType()];
-										if(conversion!=null) {
-											field.SetValue(obj,conversion.Convert(value),null);
-											return;
-										}
+									bool isConverted;
+									object converted=Interpreter.ConvertMetaObjectToTargetDotNetType(value,property.PropertyType,out isConverted);
+									if(isConverted) {
+										property.SetValue(obj,converted,null);
+										return;
 									}
 								}
 							}
@@ -1280,143 +1454,26 @@ namespace Meta {
 					Map arguments=new Map();
 					arguments[new Integer(1)]=key;
 					arguments[new Integer(2)]=value;
-//					Interpreter.arguments.Add(arguments);
 					try {
-						indexer.Call(null,arguments);
+						indexer.Call(arguments);
 					}
 					catch(Exception) {
 						throw new ApplicationException(key.ToString()+" not found in "+ToString());
 					}
-					finally {
-//						Interpreter.arguments.Remove(arguments);
-					}
 				}
 			}
-//			public virtual object this[object key]  {
-//				get { //improve some more
-//					if(key is string) {
-//						string text=(string)key;
-//						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|
-//							BindingFlags.Static|BindingFlags.Instance);
-//						if(members.Length>0) {
-//							if(members[0] is MethodBase) {
-//								return new NetMethod(text,obj,type);
-//							}
-//							if(members[0] is FieldInfo) {
-//								return Interpreter.ConvertDotNetObjectToMetaObject(type.GetField(text).GetValue(obj));
-//							}
-//							else if(members[0] is PropertyInfo) {
-//								return Interpreter.ConvertDotNetObjectToMetaObject( type.GetProperty(text).GetValue(obj,new object[]{}));
-//							}
-//							else if(members[0] is EventInfo) {
-//								Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
-//									BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
-//								return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
-//							}
-//						}
-//					}
-//					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
-//					Map arguments=new Map();
-//					arguments[new Integer(1)]=key;
-//					Interpreter.arguments.Add(arguments);
-//					try {
-//						object result=indexerMethod.Call(null);
-//						return result;
-//					}
-//					catch(Exception) {
-//						return null;
-//					}
-//					finally {
-//						Interpreter.arguments.Remove(arguments);
-//					}
-//				}
-//				set {	//make correct
-//					if(key is string) {
-//						MemberInfo[] members=type.GetMember((string)key,BindingFlags.Public|BindingFlags.Static|
-//							BindingFlags.Instance);
-//						if(members.Length>0) {
-//							if(members[0] is MethodBase) {
-//								throw new ApplicationException("Methods cannot be set.");
-//							}
-//							else if(members[0] is FieldInfo) {
-//								FieldInfo field=(FieldInfo)members[0];
-//								if(field.FieldType.IsAssignableFrom(value.GetType())) {
-//									field.SetValue(obj,value);
-//									return;
-//								}
-//								else {
-//									Hashtable toDotNet=(Hashtable) //combine?
-//										Interpreter.netConversion[field.FieldType];
-//									if(toDotNet!=null) {
-//										ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)toDotNet[value.GetType()];
-//										if(conversion!=null) {
-//											field.SetValue(obj,conversion.Convert(value));
-//											return;
-//										}
-//									}
-//								}
-//							}
-//							else if(members[0] is PropertyInfo) {
-//								PropertyInfo field=(PropertyInfo)members[0];
-//								if(field.PropertyType.IsAssignableFrom(value.GetType())) {
-//									field.SetValue(obj,value,null);
-//									return;
-//								}
-//								else {
-//									Hashtable toDotNet=(Hashtable)
-//										Interpreter.netConversion[field.PropertyType];
-//									if(toDotNet!=null) {
-//										ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)toDotNet[value.GetType()];
-//										if(conversion!=null) {
-//											field.SetValue(obj,conversion.Convert(value),null);
-//											return;
-//										}
-//									}
-//								}
-//							}
-//							else if(members[0] is EventInfo) {
-//								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent((string)key,(Map)value));
-//								return;
-//							}
-//						}
-//					}
-//					NetMethod indexer=new NetMethod("set_Item",obj,type);
-//					Map arguments=new Map();
-//					arguments[new Integer(1)]=key;
-//					arguments[new Integer(2)]=value;
-//					Interpreter.arguments.Add(arguments);
-//					try {
-//						indexer.Call(null);
-//					}
-//					catch(Exception) {
-//						throw new ApplicationException(key.ToString()+" not found in "+ToString());
-//					}
-//					finally {
-//						Interpreter.arguments.Remove(arguments);
-//					}
-//				}
-//			}
+			public string Serialize() {
+				return "";
+			}
 			public Delegate CreateEvent(string name,Map code) {
 				EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
-					BindingFlags.Static|BindingFlags.Instance);
-				MethodInfo method=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance
-					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+															 BindingFlags.Static|BindingFlags.Instance);
+				MethodInfo method=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
+																						 |BindingFlags.Public|BindingFlags.NonPublic);
 				Delegate del=NetMethod.CreateDelegate(eventInfo.EventHandlerType,method,code);
 				return del;
 			}
-			public bool ContainsKey(object key)  { // not great
-				try  {
-					object o=this[key];
-				}
-				catch {
-					return false;
-				}
-				return true;
-			}
-			public IEnumerator GetEnumerator() {
-				return Table.GetEnumerator();
-			}
-			private IDictionary Table { // left the way it is for now, since there is no test for it
+			private IDictionary Table {
 				get {
 					HybridDictionary table=new HybridDictionary();
 					BindingFlags bindingFlags;
@@ -1457,275 +1514,13 @@ namespace Meta {
 					return table;
 				}
 			}
-			public NetContainer(object obj,Type type) {
+			public NetClassOrObject(object obj,Type type) {
 				this.obj=obj;
 				this.type=type;
 			}
 			private IKeyValue parent;
 			public object obj;
 			public Type type;
-		}
-		public abstract class RecognizeLiteral {
-			public abstract object Recognize(string text);
-		}
-		public abstract class ConvertMetaToDotNet {
-			public Type source;
-			public Type target;
-			public abstract object Convert(object obj);
-		}
-		public abstract class ConvertDotNetToMeta {
-			public Type source;
-			public abstract object Convert(object obj);
-		}
-		public class LiteralRecognitions {
-			// order of classes is important here
-			public class RecognizeDotNetString: RecognizeLiteral  {
-				public override object Recognize(string text)  {
-					return text;
-				}
-			}
-			public class RecognizeInteger: RecognizeLiteral  {
-				public override object Recognize(string text)  { // this doesn't handle multi-byte unicode correctly
-					if(text.Equals("")) {
-						return null;
-					}
-					else {
-						Integer number=new Integer(0);
-						int i=0;
-						if(text[0]=='-') {
-							i++;
-						}
-						for(;i<text.Length;i++) {
-							if(char.IsDigit(text[i])) {
-								number=number*10+(text[i]-'0');
-							}
-							else {
-								return null;
-							}
-						}
-						if(text[0]=='-') {
-							number=-number;
-						}
-						return number;
-					}
-				}
-			}
-			public class RecognizeString:RecognizeLiteral {
-				public override object Recognize(string text) {
-					if(text.StartsWith("\"") && text.EndsWith("\"")) {
-						return DotNetToMetaConversions.ConvertStringToMap.StringToMap(text.Substring(1,text.Length-2));
-					}
-					else {
-						return null;
-					}
-				}
-			}
-			public class RecognizeBoolean:RecognizeLiteral {
-				public override object Recognize(string text) {
-					switch(text) {
-						case "true":
-							return true;
-						case "false":
-							return false;
-						default:
-							return null;
-					}
-				}
-			}
-		}
-		public abstract class MetaToDotNetConversions { // these haven't all been tested
-			public class ConvertIntegerToByte: ConvertMetaToDotNet {
-				public ConvertIntegerToByte() {
-					this.source=typeof(Integer);
-					this.target=typeof(Byte);
-				}
-				public override object Convert(object obj) {
-					return System.Convert.ToByte(((Integer)obj).LongValue());
-				}
-			}
-			public class ConvertIntegerToSByte: ConvertMetaToDotNet {
-				public ConvertIntegerToSByte() {
-					this.source=typeof(Integer);
-					this.target=typeof(SByte);
-				}
-				public override object Convert(object obj) {
-					return System.Convert.ToSByte(((Integer)obj).LongValue());
-				}
-			}
-			public class ConvertIntegerToChar: ConvertMetaToDotNet {
-				public ConvertIntegerToChar() {
-					this.source=typeof(Integer);
-					this.target=typeof(Char);
-				}
-				public override object Convert(object obj) {
-					return System.Convert.ToChar(((Integer)obj).LongValue());
-				}
-			}
-			public class ConvertIntegerToInt32: ConvertMetaToDotNet {
-				public ConvertIntegerToInt32() {
-					this.source=typeof(Integer);
-					this.target=typeof(Int32);
-				}
-				public override object Convert(object obj) {
-					return System.Convert.ToInt32(((Integer)obj).LongValue());
-				}
-			}
-			public class ConvertIntegerToUInt32: ConvertMetaToDotNet {
-				public ConvertIntegerToUInt32() {
-					this.source=typeof(Integer);
-					this.target=typeof(UInt32);
-				}
-				public override object Convert(object obj) {
-					return System.Convert.ToUInt32(((Integer)obj).LongValue());
-				}
-			}
-			public class ConvertIntegerToInt64: ConvertMetaToDotNet {
-				public ConvertIntegerToInt64() {
-					this.source=typeof(Integer);
-					this.target=typeof(Int64);
-				}
-				public override object Convert(object obj) {
-					return System.Convert.ToInt64(((Integer)obj).LongValue());
-				}
-			}
-			public class ConvertIntegerToUInt64: ConvertMetaToDotNet {
-				public ConvertIntegerToUInt64() {
-					this.source=typeof(Integer);
-					this.target=typeof(UInt64);
-				}
-				public override object Convert(object obj) {
-					return System.Convert.ToUInt64(((Integer)obj).LongValue());
-				}
-			}
-			public class ConvertIntegerToInt16: ConvertMetaToDotNet {
-				public ConvertIntegerToInt16() {
-					this.source=typeof(Integer);
-					this.target=typeof(Int16);
-				}
-				public override object Convert(object obj) {
-					return System.Convert.ToInt16(((Integer)obj).LongValue());
-				}
-			}
-			public class ConvertIntegerToUInt16: ConvertMetaToDotNet {
-				public ConvertIntegerToUInt16() {
-					this.source=typeof(Integer);
-					this.target=typeof(UInt16);
-				}
-				public override object Convert(object obj) {
-					return System.Convert.ToUInt16(((Integer)obj).LongValue());
-				}
-			}
-			public class ConvertMapToString: ConvertMetaToDotNet {
-				public ConvertMapToString() {
-					this.source=typeof(Map);
-					this.target=typeof(string);
-				}
-				public override object Convert(object obj) {
-					Map symbol=(Map)obj;
-					string text="";
-					for(Integer i=new Integer(1);;i++) {
-						object val=symbol[i];
-						if(val==null) {
-							break;
-						}
-						else {
-							if(val is Integer) {
-								text+=System.Convert.ToChar(((Integer)val).LongValue());
-							}
-						}
-					}
-					return text;
-				}
-			}
-		}
-		public abstract class DotNetToMetaConversions { // these haven't all been tested
-			public class ConvertStringToMap: ConvertDotNetToMeta {
-				public ConvertStringToMap()   {
-					this.source=typeof(string);
-				}
-				public override object Convert(object obj) {
-					return StringToMap((string)obj);
-				}
-				public static Map StringToMap(string symbol) { // move, not really needed here, but in conversions
-					Map map=new Map();
-					foreach(char character in symbol) {
-						map[new Integer(map.Count+1)]=new Integer((int)character);
-					}
-					return map;
-				}
-			}
-			public class ConvertByteToInteger: ConvertDotNetToMeta {
-				public ConvertByteToInteger() {
-					this.source=typeof(Byte);
-				}
-				public override object Convert(object obj) {
-					return new Integer((Byte)obj);
-				}
-			}
-			public class ConvertSByteToInteger: ConvertDotNetToMeta {
-				public ConvertSByteToInteger() {
-					this.source=typeof(SByte);
-				}
-				public override object Convert(object obj) {
-					return new Integer((SByte)obj);
-				}
-			}
-			public class ConvertCharToInteger: ConvertDotNetToMeta {
-				public ConvertCharToInteger() {
-					this.source=typeof(Char);
-				}
-				public override object Convert(object obj) {
-					return new Integer((Char)obj);
-				}
-			}
-			public class ConvertInt32ToInteger: ConvertDotNetToMeta {
-				public ConvertInt32ToInteger() {
-					this.source=typeof(Int32);
-				}
-				public override object Convert(object obj) {
-					return new Integer((Int32)obj);
-				}
-			}
-			public class ConvertUInt32ToInteger: ConvertDotNetToMeta {
-				public ConvertUInt32ToInteger() {
-					this.source=typeof(UInt32);
-				}
-				public override object Convert(object obj) {
-					return new Integer((UInt32)obj);
-				}
-			}
-			public class ConvertInt64ToInteger: ConvertDotNetToMeta {
-				public ConvertInt64ToInteger() {
-					this.source=typeof(Int64);
-				}
-				public override object Convert(object obj) {
-					return new Integer((Int64)obj);
-				}
-			}
-			public class ConvertUInt64ToInteger: ConvertDotNetToMeta {
-				public ConvertUInt64ToInteger() {
-					this.source=typeof(UInt64);
-				}
-				public override object Convert(object obj) {
-					return new Integer((Int64)(UInt64)obj);
-				}
-			}
-			public class ConvertInt16ToInteger: ConvertDotNetToMeta {
-				public ConvertInt16ToInteger() {
-					this.source=typeof(Int16);
-				}
-				public override object Convert(object obj) {
-					return new Integer((Int16)obj);
-				}
-			}
-			public class ConvertUInt16ToInteger: ConvertDotNetToMeta {
-				public ConvertUInt16ToInteger() {
-					this.source=typeof(UInt16);
-				}
-				public override object Convert(object obj) {
-					return new Integer((UInt16)obj);
-				}
-			}
 		}
 	}
 	namespace Parser  {

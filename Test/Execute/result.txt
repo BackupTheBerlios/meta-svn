@@ -855,10 +855,19 @@ Entry (DictionaryEntry)
                               Key (String):
                                 "literal"
                               Value (String):
-                                "b"
+                                "caller"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "4"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "b"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "5"
                           Value (Map):
                             Entry (DictionaryEntry)
                               Key (String):

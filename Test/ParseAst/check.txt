@@ -1024,14 +1024,21 @@ getFirstChild (CommonAST):
                                                                   getNextSibling (CommonAST):
                                                                     getFirstChild:
                                                                       null
-                                                                    getNextSibling:
-                                                                      null
+                                                                    getNextSibling (CommonAST):
+                                                                      getFirstChild:
+                                                                        null
+                                                                      getNextSibling:
+                                                                        null
+                                                                      getText (String):
+                                                                        "1"
+                                                                      Type (Int32):
+                                                                        "21"
                                                                     getText (String):
-                                                                      "1"
+                                                                      "b"
                                                                     Type (Int32):
                                                                       "21"
                                                                   getText (String):
-                                                                    "b"
+                                                                    "caller"
                                                                   Type (Int32):
                                                                     "21"
                                                                 getText (String):
