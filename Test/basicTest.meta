@@ -1,5 +1,6 @@
 this=map.Merge(parent,('AssignedToCurrent'))
-this=map.Merge(parent,flow,logic,map,math)
+this=map.Merge(parent,programFlow,logic,map,math)
+form=With(System.Windows.Forms.Form(),(Text='hello',Controls=(System.Windows.Forms.TreeView())))
 'ImpliedAutokey'
 ='Autokey'
 gacTest=System.Collections
@@ -50,6 +51,7 @@ FirstLevel==
   SecondLevel(x='y')
 SecondLevel==arg.arg
 argTest=FirstLevel(a='z')
+concat=map.Concatenate('x','yz')
 this=map.Merge(parent,testClasses)
 testClass=TestClass()
 memberTest=MemberTest()
@@ -60,7 +62,7 @@ memberTest.InstanceProperty=MemberTest.ClassProperty
 interceptedSymbol='/hello/'
 positionalNoConversion=PositionalNoConversion('m','n','o')
 positionalNoConversionConcatenated=positionalNoConversion.Concatenate('r','s','t')
-namedNoConversion=NamedNoConversion('m',y='n')
+namedNoConversion=NamedNoConversion(('m',y='n'))
 namedNoConversionConcatenated=namedNoConversion.Concatenate(c='t','r')
 indexerNoConversion=IndexerNoConversion()
 indexerNoConversion.abc='hihi'
@@ -136,4 +138,4 @@ Switch
   default==
     #secondSwitch='default'
 form=System.Windows.Forms.Form()
-Init(form,(Text='hello'))
+With(form,(Text='hello'))

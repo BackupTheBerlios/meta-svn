@@ -21,4 +21,7 @@ public class math
 	public static bool Greater(Integer x,Integer y) {
 		return x>y;
 	}
+	public static Integer BitwiseOr(Integer x,Integer y) {
+		return x|y;
+	}
 }

@@ -107,6 +107,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "doc.meta"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "Test.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

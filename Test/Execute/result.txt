@@ -7,6 +7,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "For"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.Map For()"
@@ -14,6 +16,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "Foreach"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.Map Foreach()"
@@ -21,6 +25,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "Switch"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Void Switch()"
@@ -28,6 +34,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "If"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Void If()"
@@ -35,6 +43,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "Equal"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Equal(System.Object, System.Object)"
@@ -42,6 +52,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "And"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean And(Boolean, Boolean)"
@@ -49,6 +61,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "Or"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Or(Boolean, Boolean)"
@@ -56,6 +70,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "Not"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Not(Boolean)"
@@ -63,6 +79,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "GetKeys"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.IKeyValue GetKeys(Meta.Types.IKeyValue)"
@@ -70,27 +88,35 @@ Entry (DictionaryEntry)
   Key (Map):
     "Concatenate"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map Concatenate(Meta.Types.Map[])"
+        "Meta.Types.Map Concatenate()"
 Entry (DictionaryEntry)
   Key (Map):
     "Merge"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.IKeyValue Merge()"
 Entry (DictionaryEntry)
   Key (Map):
-    "Init"
+    "With"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Void Init(System.Object, Meta.Types.IMap)"
+        "System.Object With(System.Object, Meta.Types.IMap)"
 Entry (DictionaryEntry)
   Key (Map):
     "Add"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
@@ -98,6 +124,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "Subtract"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
@@ -105,6 +133,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "Multiply"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
@@ -112,6 +142,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "Divide"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
@@ -119,6 +151,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "Smaller"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
@@ -126,9 +160,25 @@ Entry (DictionaryEntry)
   Key (Map):
     "Greater"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "BitwiseOr"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Integer BitwiseOr(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "form"
+  Value (Form):
+    "System.Windows.Forms.Form, Text: hello"
 Entry (DictionaryEntry)
   Key (Integer):
     "2"
@@ -1411,6 +1461,11 @@ Entry (DictionaryEntry)
             "z"
 Entry (DictionaryEntry)
   Key (Map):
+    "concat"
+  Value (Map):
+    "xyz"
+Entry (DictionaryEntry)
+  Key (Map):
     "MemberTest"
   Value (NetClass):
     Entry (DictionaryEntry)
@@ -1780,6 +1835,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "staticEvent"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.Object Invoke(System.Object)"
@@ -1801,6 +1858,8 @@ Entry (DictionaryEntry)
   Key (Map):
     "instanceEvent"
   Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Int32 Invoke(Int32)"
@@ -1850,7 +1909,7 @@ Entry (DictionaryEntry)
   Value (Map):
     "default"
 Entry (DictionaryEntry)
-  Key (Map):
-    "form"
+  Key (Integer):
+    "9"
   Value (Form):
     "System.Windows.Forms.Form, Text: hello"

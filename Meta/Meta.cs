@@ -1317,114 +1317,144 @@ namespace Meta {
 			private int index=-1;
 		}
 		public delegate object DelegateCreatedForGenericDelegates();
+		[AttributeUsage(AttributeTargets.Method)]
+		public class MetaLibraryMethodAttribute:Attribute {
+		}
 		public class NetMethod: ICallable {
-			public object Call(IMap argument) { // could be more logical, simpler and reliable:
-				Interpreter.arguments.Add(argument);
-				ArrayList argumentList=argument.IntKeyValues;
-				object returnValue=null;
-				bool executed=false;
-				object result=null;
-				foreach(MethodBase method in methods) {
-					ArrayList args=new ArrayList();
-					int counter=0;
-					bool argumentsMatched=true;
-					ParameterInfo[] parameters=method.GetParameters();
-					if(parameters.Length!=0 && argumentList.Count>parameters.Length) {
-						Type lastParameter=parameters[parameters.Length-1].ParameterType;
-						if(lastParameter.IsArray || lastParameter.IsSubclassOf(typeof(Array))) { // is variable argument method?
-							Map lastArg=new Map();
-							ArrayList paramsArgs=argumentList.GetRange(parameters.Length-1,argumentList.Count-(parameters.Length-1));
-							for(int i=0;i<paramsArgs.Count;i++) {
-								lastArg[new Integer(i+1)]=paramsArgs[i];
-							}
-							argumentList[parameters.Length-1]=lastArg;									
-							argumentList.RemoveRange(parameters.Length,argumentList.Count-parameters.Length);
-						}
+			public bool isMetaLibraryMethod=false;
+			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
+									// make more exact, move into its own method
+				assigned=true;
+				Type type=oldValue.GetType();
+				if(type.GetMethod("Add")!=null && type.GetConstructor(new Type[]{})!=null) {
+					object obj=type.GetConstructor(new Type[]{}).Invoke(new object[]{});
+					foreach(object val in map.IntKeyValues) { // combine this with Library function "Init"
+						obj.GetType().GetMethod("Add").Invoke(obj,new object[]{val});
 					}
-					if(argumentList.Count!=parameters.Length) { // don't match if different parameter list length
-						argumentsMatched=false;
+					//					return obj;
+				}
+				else if(type.GetMethod("Add")!=null && oldValue!=null) {
+					//object obj=parameter.GetConstructor(new Type[]{}).Invoke(new object[]{});
+					foreach(object val in map.IntKeyValues) { // combine this with Library function "Init"
+						oldValue.GetType().GetMethod("Add").Invoke(oldValue,new object[]{val});
+					}
+					//					return oldValue;
+				}
+				// old, rethink
+				else if(type.GetMethod("set_Item")!=null && type.GetConstructor(new Type[]{})!=null) {
+					NetObject obj=new NetObject(type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+					foreach(DictionaryEntry entry in map) { // combine this with Library function "Init"
+						obj[entry.Key]=entry.Value;
+					}
+					//					return obj.obj;
+				}
+				else {
+					assigned=false;
+				}
+				return oldValue;
+			}
+			public static object ConvertParameter(object meta,Type parameter,out bool converted) {//,object oldValue,
+				converted=true;
+				if(parameter.IsAssignableFrom(meta.GetType())) {
+					return meta;
+				}
+				else if((parameter.IsSubclassOf(typeof(Delegate))
+					||parameter.Equals(typeof(Delegate))) && (meta is Map)) { // add check, that the map contains code
+					MethodInfo m=parameter.GetMethod("Invoke",BindingFlags.Instance
+						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+					Delegate del=CreateDelegate(parameter,m,(Map)meta);
+					return del;
+				}
+				else if(parameter.IsArray && meta is IMap && ((Map)meta).IntKeyValues.Count!=0) {// cheating, not very understandable
+					try {
+						Type arrayType=parameter.GetElementType();
+						Map map=((Map)meta);
+						ArrayList mapValues=map.IntKeyValues;
+						Array array=Array.CreateInstance(arrayType,mapValues.Count);
+						for(int i=0;i<mapValues.Count;i++) {
+							array.SetValue(mapValues[i],i);
+						}
+						return array;
+					}
+					catch {
+					}
+				}
+//					// make more exact, move into its own method
+//				else if(meta is Map && parameter.GetMethod("Add")!=null && parameter.GetConstructor(new Type[]{})!=null) {
+//					object obj=parameter.GetConstructor(new Type[]{}).Invoke(new object[]{});
+//					foreach(object val in ((Map)meta).IntKeyValues) { // combine this with Library function "Init"
+//						obj.GetType().GetMethod("Add").Invoke(obj,new object[]{val});
+//					}
+//					return obj;
+//				}
+//				else if(meta is Map && parameter.GetMethod("Add")!=null && oldValue!=null) {
+//					//object obj=parameter.GetConstructor(new Type[]{}).Invoke(new object[]{});
+//					foreach(object val in ((Map)meta).IntKeyValues) { // combine this with Library function "Init"
+//						oldValue.GetType().GetMethod("Add").Invoke(oldValue,new object[]{val});
+//					}
+//					return oldValue;
+//				}
+//				else if(meta is Map && parameter.GetMethod("set_Item")!=null && parameter.GetConstructor(new Type[]{})!=null) {
+//					NetObject obj=new NetObject(parameter.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+//					foreach(DictionaryEntry entry in (Map)meta) { // combine this with Library function "Init"
+//						obj[entry.Key]=entry.Value;
+//					}
+//					return obj.obj;
+//				}
+				else {
+					bool isConverted;//refactor with converted
+					object result=Interpreter.ConvertMetaToDotNet(meta,
+						parameter,out isConverted);
+					if(isConverted) {
+						return result;
+					}
+				}
+				converted=false;
+				return null;
+			}
+			public object Call(IMap argument) {
+				if(this.name=="Init") {
+					int asdf=0;
+				}
+				Interpreter.arguments.Add(argument);
+				object result=null;
+				if(isMetaLibraryMethod) {
+					if(methods[0] is ConstructorInfo) {
+						// call methods without arguments, ugly and redundant
+						result=((ConstructorInfo)methods[0]).Invoke(new object[] {}); 
 					}
 					else {
-						foreach(ParameterInfo parameter in method.GetParameters()) {
-							bool parameterMatched=false;
-							if(parameter.ParameterType.IsAssignableFrom(argumentList[counter].GetType())) {
-								args.Add(argumentList[counter]);
-								parameterMatched=true;
-							}
-							else {
-								if(parameter.ParameterType.IsSubclassOf(typeof(Delegate))
-									||parameter.ParameterType.Equals(typeof(Delegate))) {
-									try {
-										MethodInfo m=parameter.ParameterType.GetMethod("Invoke",BindingFlags.Instance
-											|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-										Delegate del=CreateDelegate(parameter.ParameterType,m,(Map)argumentList[counter]);
-										args.Add(del);
-										parameterMatched=true;
-									}
-									catch(Exception e){
-										int asdf=0;
-									}
-								}
-								if(!parameterMatched && parameter.ParameterType.IsArray && argumentList[counter] is IMap && ((Map)argumentList[counter]).IntKeyValues.Count!=0) {// cheating, not very understandable
-									try {
-										Type arrayType=parameter.ParameterType.GetElementType();
-										Map map=((Map)argumentList[counter]);
-										ArrayList mapValues=map.IntKeyValues;
-										Array array=Array.CreateInstance(arrayType,mapValues.Count);
-										for(int i=0;i<mapValues.Count;i++) {
-											array.SetValue(mapValues[i],i);
-										}
-										args.Add(array);
-										parameterMatched=true;										
-									}
-									catch {
-									}
-
-								}
-								if(!parameterMatched) {
-									bool isConverted;
-									object converted=Interpreter.ConvertMetaToDotNet(argumentList[counter],
-										parameter.ParameterType,out isConverted);
-									if(isConverted) {
-										args.Add(converted);
-										parameterMatched=true;
-									}
-								}
-							}
-							if(!parameterMatched) {
-								argumentsMatched=false;
-								break;
-							}
-							counter++;
+						result=methods[0].Invoke(target,new object[] {});
+					}
+				}
+				else {
+					ArrayList argumentList=argument.IntKeyValues;
+					object returnValue=null;
+					ArrayList sameLengthMethods=new ArrayList();
+					foreach(MethodBase method in methods) {
+						if(argumentList.Count==method.GetParameters().Length) { // don't match if different parameter list length
+							sameLengthMethods.Add(method);
 						}
 					}
-					if(argumentsMatched) {
-						if(!executed) {
+					foreach(MethodBase method in sameLengthMethods) {
+						ArrayList args=new ArrayList();
+						bool argumentsMatched=true;
+						ParameterInfo[] parameters=method.GetParameters();
+						for(int i=0;argumentsMatched && i<parameters.Length;i++) {
+							args.Add(ConvertParameter(argumentList[i],parameters[i].ParameterType,out argumentsMatched));
+						}
+						if(argumentsMatched) {
 							if(method is ConstructorInfo) {
 								returnValue=((ConstructorInfo)method).Invoke(args.ToArray());
 							}
 							else {
 								returnValue=method.Invoke(target,args.ToArray());
 							}
-							executed=true;
-						}
-						else { //what here? -well, yes, what?
-							//throw new ApplicationException("\nArguments match more than one overload of "+name);
+							break;
 						}
 					}
-				}
-				if(!executed) {
-					if(methods[0] is ConstructorInfo) {
-						result=((ConstructorInfo)methods[0]).Invoke(new object[] {});
-					}
-					else {
-						result=methods[0].Invoke(target,new object[] {});
-					}
-
-				}
-				else {
 					result=returnValue;
-				}
+				}		
 				Interpreter.arguments.Remove(argument);
 				return Interpreter.ConvertDotNetToMeta(result);
 			}
@@ -1503,6 +1533,9 @@ namespace Meta {
 									 // would otherwise come before Console.WriteLine(string)
 									 // not a good solution, though
 				methods=(MethodBase[])list.ToArray(typeof(MethodBase));
+				if(methods.Length==1 && methods[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
+					this.isMetaLibraryMethod=true;
+				}
 			}
 			public NetMethod(string name,object target,Type type) {
 				this.Initialize(name,target,type);
@@ -1605,6 +1638,7 @@ namespace Meta {
 								return new NetMethod(text,obj,type);
 							}
 							if(members[0] is FieldInfo) {
+								// convert arrays to maps here?
 								return Interpreter.ConvertDotNetToMeta(type.GetField(text).GetValue(obj));
 							}
 							else if(members[0] is PropertyInfo) {
@@ -1630,6 +1664,9 @@ namespace Meta {
 				set {
 					if(key is Map && ((Map)key).IsString()) {
 						string text=((Map)key).GetDotNetString();
+						if(text=="Controls") {
+							int asdf=0;
+						}
 						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
@@ -1637,33 +1674,65 @@ namespace Meta {
 							}
 							else if(members[0] is FieldInfo) {
 								FieldInfo field=(FieldInfo)members[0];
-								if(field.FieldType.IsAssignableFrom(value.GetType())) {
-									field.SetValue(obj,value);
-									return;
+								bool converted;
+								object val;
+								val=NetMethod.ConvertParameter(value,field.FieldType,out converted);
+								if(converted) {
+									field.SetValue(obj,val);
 								}
-								else {
-									bool isConverted;
-									object converted=Interpreter.ConvertMetaToDotNet(value,field.FieldType,out isConverted);
-									if(isConverted) {
-										field.SetValue(obj,converted);
-										return;
+								if(!converted) {
+									if(value is Map) {
+										val=NetMethod.DoModifiableCollectionAssignment((Map)value,field.GetValue(obj),out converted);
 									}
 								}
+								if(!converted) {
+									throw new ApplicationException("Field value could not be assigned because it cannot be converted.");
+								}
+								//refactor
+								return;
 							}
 							else if(members[0] is PropertyInfo) {
 								PropertyInfo property=(PropertyInfo)members[0];
-								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
-									property.SetValue(obj,value,null);
-									return;
+								bool converted;
+								//object oldValue=property.GetValue(obj,new object[]{});
+								object val=NetMethod.ConvertParameter(value,property.PropertyType,out converted);
+								if(converted) {
+									property.SetValue(obj,val,new object[]{});
 								}
-								else {
-									bool isConverted;
-									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
-									if(isConverted) {
-										property.SetValue(obj,converted,null);
-										return;
+								if(!converted) {
+									if(value is Map) {
+										NetMethod.DoModifiableCollectionAssignment((Map)value,property.GetValue(obj,new object[]{}),out converted);
+									}
+									if(!converted) {
+										throw new ApplicationException("Property value could not be assigned because it cannot be converted.");
 									}
 								}
+								return;
+//								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
+//									property.SetValue(obj,value,null);
+//									return;
+//								}
+//								else {
+//									bool isConverted;
+//									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
+//									if(isConverted) {
+//										property.SetValue(obj,converted,null);
+//										return;
+//									}
+//								}
+//								PropertyInfo property=(PropertyInfo)members[0];
+//								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
+//									property.SetValue(obj,value,null);
+//									return;
+//								}
+//								else {
+//									bool isConverted;
+//									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
+//									if(isConverted) {
+//										property.SetValue(obj,converted,null);
+//										return;
+//									}
+//								}
 							}
 							else if(members[0] is EventInfo) {
 								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(Map)value));
@@ -1674,7 +1743,7 @@ namespace Meta {
 					NetMethod indexer=new NetMethod("set_Item",obj,type);
 					Map arguments=new Map();
 					arguments[new Integer(1)]=key;
-					arguments[new Integer(2)]=value;
+					arguments[new Integer(2)]=value;//lazy
 					try {
 						indexer.Call(arguments);
 					}
@@ -1683,6 +1752,94 @@ namespace Meta {
 					}
 				}
 			}
+//			public virtual object this[object key]  {
+//				get {
+//					if(key is Map && ((Map)key).IsString()) {
+//						string text=((Map)key).GetDotNetString();
+//						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
+//						if(members.Length>0) {
+//							if(members[0] is MethodBase) {
+//								return new NetMethod(text,obj,type);
+//							}
+//							if(members[0] is FieldInfo) {
+//								return Interpreter.ConvertDotNetToMeta(type.GetField(text).GetValue(obj));
+//							}
+//							else if(members[0] is PropertyInfo) {
+//								return Interpreter.ConvertDotNetToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
+//							}
+//							else if(members[0] is EventInfo) {
+//								Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
+//									BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
+//								return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+//							}
+//						}
+//					}
+//					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
+//					Map arguments=new Map();
+//					arguments[new Integer(1)]=key;
+//					try {
+//						return indexerMethod.Call(arguments);
+//					}
+//					catch(Exception) {
+//						return null;
+//					}
+//				}
+//				set {
+//					if(key is Map && ((Map)key).IsString()) {
+//						string text=((Map)key).GetDotNetString();
+//						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
+//						if(members.Length>0) {
+//							if(members[0] is MethodBase) {
+//								throw new ApplicationException("Cannot set method "+key+".");
+//							}
+//							else if(members[0] is FieldInfo) {
+//								FieldInfo field=(FieldInfo)members[0];
+//								if(field.FieldType.IsAssignableFrom(value.GetType())) {
+//									field.SetValue(obj,value);
+//									return;
+//								}
+//								else {
+//									bool isConverted;
+//									object converted=Interpreter.ConvertMetaToDotNet(value,field.FieldType,out isConverted);
+//									if(isConverted) {
+//										field.SetValue(obj,converted);
+//										return;
+//									}
+//								}
+//							}
+//							else if(members[0] is PropertyInfo) {
+//								PropertyInfo property=(PropertyInfo)members[0];
+//								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
+//									property.SetValue(obj,value,null);
+//									return;
+//								}
+//								else {
+//									bool isConverted;
+//									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
+//									if(isConverted) {
+//										property.SetValue(obj,converted,null);
+//										return;
+//									}
+//								}
+//							}
+//							else if(members[0] is EventInfo) {
+//								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(Map)value));
+//								return;
+//							}
+//						}
+//					}
+//					NetMethod indexer=new NetMethod("set_Item",obj,type);
+//					Map arguments=new Map();
+//					arguments[new Integer(1)]=key;
+//					arguments[new Integer(2)]=value;
+//					try {
+//						indexer.Call(arguments);
+//					}
+//					catch(Exception) {
+//						throw new ApplicationException("Cannot set "+key.ToString()+".");
+//					}
+//				}
+//			}
 			public string Serialize(string indent,string[] functions) {
 				return indent;
 			}

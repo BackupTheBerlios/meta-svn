@@ -60,8 +60,9 @@ namespace testClasses
 	}
 	public class NamedNoConversion:TestClass { //refactor
 //		[MetaMethod("(1,y,2)")]
-		public NamedNoConversion() {
-			Map arg=(Map)Interpreter.Arg;
+		//[MetaLibraryMethod]
+		public NamedNoConversion(Map arg) {
+			//Map arg=(Map)Interpreter.Arg;
 			Map def=new Map();
 //<<<<<<< .mine
 			def[new Integer(1)]=new Map("null");
@@ -77,6 +78,7 @@ namespace testClasses
 			this.y=(string)((Map)arg[new Map("y")]).GetDotNetString();
 			this.z=(string)((Map)arg[new Map("p2")]).GetDotNetString();
 		}
+		[MetaLibraryMethod]
 		public string Concatenate() {
 			Map arg=(Map)Interpreter.Arg;
 			Map def=new Map();

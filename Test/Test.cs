@@ -32,19 +32,7 @@ namespace Test {
 		public static string path="";
 		[STAThread]
 		public static void Main(string[] args) {
-//			Map map=new Map();
-//			Map child=new Map();
-//			child[Interpreter.StringToMap("number")]=new Integer(5000);
-//			child[Interpreter.StringToMap("secondNumber")]=new Integer(3000);
-//			map[Interpreter.StringToMap("hello")]=child;
-//			map[child]=Interpreter.StringToMap("world");
-//			string t=Interpreter.MetaSerialize(map,"",true);
-//			Interpreter.SaveToFile(map,Path.Combine(Interpreter.metaInstallationPath,"savedMap.meta"));
-//			object o=Interpreter.RunWithoutLibrary(Path.Combine(Interpreter.metaInstallationPath,"savedMap.meta"),new Map());
-//			bool equal=map.Equals(o);
-
-
-			//args=new string[]{"hello.meta"};
+			//args=new string[]{@"..\..\doc.meta"};
 			if(args.Length==0) {
 				Directory.SetCurrentDirectory(
 					".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);

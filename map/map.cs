@@ -13,7 +13,9 @@ public class map {
 		}
 		return keys;
 	}
-	public static Map Concatenate(params Map[] maps) {
+	[MetaLibraryMethod]
+	public static Map Concatenate() {
+		ArrayList maps=((Map)Interpreter.Arg).IntKeyValues;
 		int i=1;
 		Map combined=new Map();
 		foreach(Map map in maps) {
@@ -24,13 +26,32 @@ public class map {
 		}
 		return combined;
 	}
+//	public static Map Concatenate(params Map[] maps) {
+//		int i=1;
+//		Map combined=new Map();
+//		foreach(Map map in maps) {
+//			foreach(object val in map.IntKeyValues) {
+//				combined[new Integer(i)]=val;
+//				i++;
+//			}
+//		}
+//		return combined;
+//	}
+	[MetaLibraryMethod]
 	public static IKeyValue Merge() {
 		return (Map)Interpreter.MergeCollection(((Map)Interpreter.Arg).IntKeyValues);
 	}
-	public static void Init(object obj,IMap map) {
+	public static object With(object obj,IMap map) {
 		NetObject netObject=new NetObject(obj);
 		foreach(DictionaryEntry entry in map) {
 			netObject[entry.Key]=entry.Value;
 		}
+		return obj;
 	}
+	public Map GetStructure(Map maps) {
+		Map structure=new Map();
+		Hashtable keys=new Hashtable();
+		return structure;
+	}
+
 }

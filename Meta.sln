@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "math", "math\math.csproj", 
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "flow", "flow\flow.csproj", "{56F6A165-0A09-4C75-968C-D3839DDFD165}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "programFlow", "flow\programFlow.csproj", "{56F6A165-0A09-4C75-968C-D3839DDFD165}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
