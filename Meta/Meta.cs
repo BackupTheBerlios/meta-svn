@@ -43,12 +43,14 @@ namespace Meta {
 			object Evaluate(IMap parent);
 		}
 		public class Statement {
+		public static readonly Map keyString=Interpreter.StringToMap("key");
+		public static readonly Map valueString=Interpreter.StringToMap("value");
 			public void Realize(IMap parent) {
 				keyExpression.Assign(parent,this.valueExpression.Evaluate(parent));
 			}
 			public Statement(Map code) {
-				this.keyExpression=(Select)((Map)code[Interpreter.StringToMap("key")]).Compile();
-				this.valueExpression=(IExpression)((Map)code[Interpreter.StringToMap("value")]).Compile();
+				this.keyExpression=(Select)((Map)code[keyString]).Compile();
+				this.valueExpression=(IExpression)((Map)code[valueString]).Compile();
 			}
 			public Select keyExpression;
 			public IExpression valueExpression;
@@ -57,10 +59,13 @@ namespace Meta {
 			public object Evaluate(IMap parent) {
 				return ((ICallable)callableExpression.Evaluate(parent)).Call((IMap)argumentExpression.Evaluate(parent));
 			}
+			public static readonly Map callString=Interpreter.StringToMap("call");
+			public static readonly Map functionString=Interpreter.StringToMap("function");
+			public static readonly Map argumentString=Interpreter.StringToMap("argument");
 			public Call(Map obj) {
-				Map expression=(Map)obj[Interpreter.StringToMap("call")];
-				this.callableExpression=(IExpression)((Map)expression[Interpreter.StringToMap("function")]).Compile();
-				this.argumentExpression=(IExpression)((Map)expression[Interpreter.StringToMap("argument")]).Compile();
+				Map expression=(Map)obj[callString];
+				this.callableExpression=(IExpression)((Map)expression[functionString]).Compile();
+				this.argumentExpression=(IExpression)((Map)expression[argumentString]).Compile();
 			}
 			public IExpression argumentExpression;
 			public IExpression callableExpression;
@@ -69,8 +74,9 @@ namespace Meta {
 			public object Evaluate(IMap parent) {
 				return delayed;
 			}
+			public static readonly Map delayedString=Interpreter.StringToMap("delayed");
 			public Delayed(Map code) {
-				this.delayed=(Map)code[Interpreter.StringToMap("delayed")];
+				this.delayed=(Map)code[delayedString];
 			}
 			public Map delayed;
 		}
@@ -87,8 +93,9 @@ namespace Meta {
 				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 				return result;
 			}
+			public static readonly Map programString=Interpreter.StringToMap("program");
 			public Program(Map code) {
-				foreach(Map statement in ((Map)code[Interpreter.StringToMap("program")]).IntKeyValues) {
+				foreach(Map statement in ((Map)code[programString]).IntKeyValues) {
 					this.statements.Add(statement.Compile()); // should we save the original maps?
 				}
 			}
@@ -98,8 +105,9 @@ namespace Meta {
 			public object Evaluate(IMap parent) {
 				return literal;
 			}
+			public static readonly Map literalString=Interpreter.StringToMap("literal");
 			public Literal(Map code) {
-				this.literal=Interpreter.RecognizeLiteralText((string)Interpreter.MapToString((Map)code[Interpreter.StringToMap("literal")]));
+				this.literal=Interpreter.RecognizeLiteralText((string)Interpreter.MapToString((Map)code[literalString]));
 			}
 			public object literal=null;
 		}
@@ -229,8 +237,9 @@ namespace Meta {
 				}
 				return selection;
 			}
+			public static readonly Map selectString=Interpreter.StringToMap("select");
 			public Select(Map code) {
-				foreach(Map expression in ((Map)code[Interpreter.StringToMap("select")]).IntKeyValues) {
+				foreach(Map expression in ((Map)code[selectString]).IntKeyValues) {
 					this.expressions.Add(expression.Compile());
 				}
 			}
@@ -239,6 +248,52 @@ namespace Meta {
 		}
 		public delegate void BreakMethodDelegate(IKeyValue obj);
 		public class Interpreter  {
+			public static void SaveToFile(object meta,string fileName) {
+				StreamWriter writer=new StreamWriter(File.Create(fileName));
+				writer.Write(MetaSerialize(meta,"",true));
+				writer.Close();
+			}
+			public static string MetaSerialize(object meta,string indent,bool isRightSide) {
+				if(meta is Map) {
+					string text="";
+					Map map=(Map)meta;
+					if(Interpreter.IsMapString(map)) {
+						text+="'"+Interpreter.MapToString(map)+"'";
+					}
+					else {
+						if(!isRightSide) {
+							text+="(";
+							foreach(DictionaryEntry entry in map) {
+								text+='['+MetaSerialize(entry.Key,indent,true)+']'+'='+MetaSerialize(entry.Value,indent,true)+",";
+							}
+							if(map.Count!=0) {
+								text=text.Remove(text.Length-1,1);
+							}
+							text+=")";
+						}
+						else {
+							foreach(DictionaryEntry entry in map) {
+								text+=indent+'['+MetaSerialize(entry.Key,indent,false)+']'+'=';
+								if(entry.Value is Map && !Interpreter.IsMapString((Map)entry.Value)) {
+									text+="\n";
+								}
+								text+=MetaSerialize(entry.Value,indent+"  ",true);
+								if(!(entry.Value is Map && !Interpreter.IsMapString((Map)entry.Value))) {
+									text+="\n";
+								}
+							}
+						}
+					}
+					return text;
+				}
+				else if(meta is Integer) {
+					Integer integer=(Integer)meta;
+					return "'"+integer.ToString()+"'";
+				}
+				else {
+					throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
+				}
+			}
 			public static IKeyValue Merge(params IKeyValue[] maps) {
 				return MergeCollection(maps);
 			}
@@ -1113,9 +1168,9 @@ namespace Meta {
 						default:
 							throw new ApplicationException("Cannot compile non-code map.");
 					}
-					if(!Interpreter.compiledMaps.Contains(this)) { // necessary?
-						Interpreter.compiledMaps.Add(this);
-					}
+//					if(!Interpreter.compiledMaps.Contains(this)) { // necessary?
+//						Interpreter.compiledMaps.Add(this);
+//					}
 				}
 				return compiled;
 			}
@@ -1171,6 +1226,7 @@ namespace Meta {
 			public object compiled;
 			private bool isHashCashed=false;
 			private int hash;
+
 			public string Serialize(string indent,string[] functions) {
 				if(Interpreter.IsMapString(this)) {
 					return indent+"\""+Interpreter.MapToString(this)+"\""+"\n";

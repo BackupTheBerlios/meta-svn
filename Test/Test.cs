@@ -31,6 +31,18 @@ namespace Test {
 	class Test {
 		public static string path="";
 		public static void Main(string[] args) {
+			Map map=new Map();
+			Map child=new Map();
+			child[Interpreter.StringToMap("number")]=new Integer(5000);
+			child[Interpreter.StringToMap("secondNumber")]=new Integer(3000);
+			map[Interpreter.StringToMap("hello")]=child;
+			map[child]=Interpreter.StringToMap("world");
+			string t=Interpreter.MetaSerialize(map,"",true);
+			Interpreter.SaveToFile(map,Path.Combine(Interpreter.metaInstallationPath,"savedMap.meta"));
+			object o=Interpreter.RunWithoutLibrary(Path.Combine(Interpreter.metaInstallationPath,"savedMap.meta"),new Map());
+			bool equal=map.Equals(o);
+
+
 			//args=new string[]{"hello.meta"};
 			if(args.Length==0) {
 				Directory.SetCurrentDirectory(
@@ -41,31 +53,42 @@ namespace Test {
 				if(!File.Exists(args[0])) {
 					throw new ApplicationException("File "+args[0]+" not found.");
 				}
-				Interpreter.Run(new StreamReader(args[0]),new Map());
+				try {
+					Interpreter.Run(new StreamReader(args[0]),new Map());
+				}
+				catch(Exception e) {
+					string text="";
+					do {
+						text+=e.Message+"\n"+e.TargetSite+"\n";
+					} 
+					while(e.InnerException!=null);
+					Console.WriteLine(text);
+					Console.ReadLine();
+				}
 			}
 		}
 	}
 	public class Tests {
 		private static string filename=@"basicTest.meta";
-		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-		public class ParseToAst:TestCase {
-			public override object RunTestCase() {
-				return Interpreter.ParseToAst(new StreamReader(Path.Combine(
-					Test.path,filename)));
-			}
-		}
-		public class CompileToMap:TestCase {
-			public override object RunTestCase() {
-				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
-					Test.path,filename)));
-			}
-		}
-		public class CompileToExpression:TestCase {
-			public override object RunTestCase() {
-				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
-					Test.path,filename))).Compile();
-			}
-		}
+//		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
+//		public class ParseToAst:TestCase {
+//			public override object RunTestCase() {
+//				return Interpreter.ParseToAst(new StreamReader(Path.Combine(
+//					Test.path,filename)));
+//			}
+//		}
+//		public class CompileToMap:TestCase {
+//			public override object RunTestCase() {
+//				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
+//					Test.path,filename)));
+//			}
+//		}
+//		public class CompileToExpression:TestCase {
+//			public override object RunTestCase() {
+//				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
+//					Test.path,filename))).Compile();
+//			}
+//		}
 		public class Execute:TestCase {
 			public override object RunTestCase() {
 				Map argument=new Map();

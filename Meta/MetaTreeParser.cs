@@ -134,9 +134,9 @@ namespace Meta.Parser
 			_t = retTree_;
 		}
 		
-		call[Interpreter.StringToMap("function")]=delayed;
-		call[Interpreter.StringToMap("argument")]=argument;
-		result[Interpreter.StringToMap("call")]=call;
+		call[Call.functionString]=delayed;
+		call[Call.argumentString]=argument;
+		result[Call.callString]=call;
 		
 		_t = __t92;
 		_t = _t.getNextSibling();
@@ -180,8 +180,8 @@ namespace Meta.Parser
 					_t = retTree_;
 					
 					Map statement=new Map();
-										statement[Interpreter.StringToMap("key")]=key;
-										statement[Interpreter.StringToMap("value")]=val;
+										statement[Statement.keyString]=key;
+										statement[Statement.valueString]=val;
 										statements[new Integer(counter)]=statement;
 										counter++;
 									
@@ -199,7 +199,7 @@ _loop90_breakloop:			;
 		_t = __t87;
 		_t = _t.getNextSibling();
 		
-		result[Interpreter.StringToMap("program")]=statements;
+		result[Program.programString]=statements;
 		
 		retTree_ = _t;
 		return result;
@@ -250,7 +250,7 @@ _loop99_breakloop:			;
 		_t = __t96;
 		_t = _t.getNextSibling();
 		
-		result[Interpreter.StringToMap("select")]=selection;
+		result[Select.selectString]=selection;
 		
 		retTree_ = _t;
 		return result;
@@ -270,7 +270,7 @@ _loop99_breakloop:			;
 		match(_t,LITERAL);
 		_t = _t.getNextSibling();
 		
-		result[Interpreter.StringToMap("literal")]=Interpreter.StringToMap(token.getText());
+		result[Literal.literalString]=Interpreter.StringToMap(token.getText());
 		
 		retTree_ = _t;
 		return result;
@@ -295,7 +295,7 @@ _loop99_breakloop:			;
 		_t = __t102;
 		_t = _t.getNextSibling();
 		
-		result[Interpreter.StringToMap("delayed")]=delayed;
+		result[Delayed.delayedString]=delayed;
 		
 		retTree_ = _t;
 		return result;
