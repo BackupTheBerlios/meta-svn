@@ -130,7 +130,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "gacTest"
-  Value (Map):
+  Value (LazyNamespace):
     Entry (DictionaryEntry)
       Key (Map):
         "IEnumerable"
@@ -218,7 +218,7 @@ Entry (DictionaryEntry)
             Entry (DictionaryEntry)
       Key (Map):
         "Specialized"
-      Value (Map):
+      Value (LazyNamespace):
         Entry (DictionaryEntry)
           Key (Map):
             "BitVector32"
@@ -258,7 +258,7 @@ Entry (DictionaryEntry)
             Entry (DictionaryEntry)
   Key (Map):
     "lazyGACTest"
-  Value (Map):
+  Value (LazyNamespace):
     Entry (DictionaryEntry)
       Key (Map):
         "ErrorLevel"
@@ -292,7 +292,7 @@ Entry (DictionaryEntry)
     Entry (DictionaryEntry)
       Key (Map):
         "gacFromMetaLib"
-      Value (Map):
+      Value (LazyNamespace):
         Entry (DictionaryEntry)
           Key (Map):
             "IEnumerable"
@@ -380,7 +380,7 @@ Entry (DictionaryEntry)
                     Entry (DictionaryEntry)
           Key (Map):
             "Specialized"
-          Value (Map):
+          Value (LazyNamespace):
             Entry (DictionaryEntry)
               Key (Map):
                 "BitVector32"
@@ -434,7 +434,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "libraryAssemblyTest"
-  Value (Map):
+  Value (LazyNamespace):
     Entry (DictionaryEntry)
       Key (Map):
         "MemberTest"

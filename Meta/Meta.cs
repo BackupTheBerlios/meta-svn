@@ -297,6 +297,12 @@ namespace Meta {
 				reader.Close();
 				return result;
 			}
+			public static object RunWithoutLibrary(string fileName,IMap argument) {
+				StreamReader reader=new StreamReader(fileName);
+				Map program=CompileToMap(reader);
+				reader.Close();
+				return program.Call(argument);
+			}
 			public static object Run(TextReader reader,IMap argument) {
 				Map lastProgram=CompileToMap(reader);
 				lastProgram.Parent=Library.library;
@@ -663,21 +669,97 @@ namespace Meta {
 			}
 			bool ContainsKey(object key);			
 		}		
-		public class UnloadedMetaLibrary {
+		public class MetaLibrary {
 			public object Load() {
 				return Interpreter.Run(new StreamReader(path),new Map()); //check that
 			}
-			public UnloadedMetaLibrary(string path) {
+			public MetaLibrary(string path) {
 				this.path=path;
 			}
 			string path;
+		}
+		public class LazyNamespace: IKeyValue {
+			public object this[object key] {
+				get {
+					if(cache==null) {
+						Load();
+					}
+					return cache[key];
+				}
+				set {
+					throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
+				}
+			}
+			public ArrayList Keys {
+				get {
+					if(cache==null) {
+						Load();
+					}
+					return cache.Keys;
+				}
+			}
+			public int Count {
+				get {
+					if(cache==null) {
+						Load();
+					}
+					return cache.Count;
+				}
+			}
+			public string fullName;
+			public ArrayList cachedAssemblies=new ArrayList();
+			public Hashtable namespaces=new Hashtable();
+			public LazyNamespace(string fullName) {
+				this.fullName=fullName;
+			}
+			public void Load() {
+				cache=new Map();
+				foreach(CachedAssembly cachedAssembly in cachedAssemblies) {
+					cache=(Map)Interpreter.Merge(cache,cachedAssembly.GetNamespaceContents(fullName));
+				}
+				foreach(DictionaryEntry entry in namespaces) {
+					cache[Interpreter.StringToMap((string)entry.Key)]=entry.Value;
+				}
+			}
+			public Map cache;
+			public bool ContainsKey(object key) {
+				if(cache==null) {
+					Load();
+				}
+				return cache.ContainsKey(key);
+			}
+			public IEnumerator GetEnumerator() {
+				if(cache==null) {
+					Load();
+				}
+				return cache.GetEnumerator();
+			}
+		}
+		public class CachedAssembly {
+			private Assembly assembly;
+			public CachedAssembly(Assembly assembly) {
+				this.assembly=assembly;
+			}
+			public Map GetNamespaceContents(string fullName) {
+				if(map==null) {
+					map=Library.LoadAssemblies(new object[] {assembly});
+				}
+				Map selected=map;
+				if(fullName!="") {
+					foreach(string name in fullName.Split('.')) {
+						selected=(Map)selected[Interpreter.StringToMap(name)];
+					}
+				}
+				return selected;
+			}			
+			private Map map;
 		}
 		public class Library: IKeyValue,IMap {
 			public object this[object key] {
 				get {
 					if(cash.ContainsKey(key)) {
-						if(cash[key] is UnloadedMetaLibrary) {
-							cash[key]=((UnloadedMetaLibrary)cash[key]).Load();
+						if(cash[key] is MetaLibrary) {
+							cash[key]=((MetaLibrary)cash[key]).Load();
 						}
 						return cash[key];
 					}
@@ -689,6 +771,22 @@ namespace Meta {
 					throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
 				}
 			}
+//			public object this[object key] {
+//				get {
+//					if(cash.ContainsKey(key)) {
+//						if(cash[key] is MetaLibrary) {
+//							cash[key]=((MetaLibrary)cash[key]).Load();
+//						}
+//						return cash[key];
+//					}
+//					else {
+//						return null;
+//					}
+//				}
+//				set {
+//					throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
+//				}
+//			}
 			public ArrayList Keys {
 				get {
 					return cash.Keys;
@@ -762,9 +860,7 @@ namespace Meta {
 				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
 				while (AssemblyCache.GetNextAssembly(e, out an) == 0) {
 					name=GetAssemblyName(an);
-					if(!name.Name.StartsWith("Microsoft")) {
-						assemblies.Add(Assembly.LoadWithPartialName(name.Name));
-					}
+					assemblies.Add(Assembly.LoadWithPartialName(name.Name));
 				}
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
 					assemblies.Add(Assembly.LoadFrom(fileName));
@@ -772,11 +868,165 @@ namespace Meta {
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.exe")) {
 					assemblies.Add(Assembly.LoadFrom(fileName));
 				}
-				cash=LoadAssemblies(assemblies);
+				cash=LoadNamespaces(assemblies);
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
-					cash[Interpreter.StringToMap(Path.GetFileNameWithoutExtension(fileName))]=new UnloadedMetaLibrary(fileName);
+					cash[Interpreter.StringToMap(Path.GetFileNameWithoutExtension(fileName))]=new MetaLibrary(fileName);
 				}
 			}
+			public ArrayList GetNamespaces(Assembly assembly) { //integrate
+				ArrayList namespaces=new ArrayList();
+				foreach(Type type in assembly.GetExportedTypes()) {
+					if(!namespaces.Contains(type.Namespace)) {
+						if(type.Namespace==null) {
+							namespaces.Add("");
+						}
+						else {
+							namespaces.Add(type.Namespace);
+						}
+					}
+				}
+				return namespaces;
+			}
+			public Map LoadNamespaces(ArrayList assemblies) {
+				LazyNamespace root=new LazyNamespace("");
+				foreach(Assembly assembly in assemblies) {
+					ArrayList names=GetNamespaces(assembly);
+					CachedAssembly cachedAssembly=new CachedAssembly(assembly);
+					foreach(string name in names) {
+						LazyNamespace selected=root;
+						if(name=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.metaInstallationPath,"library"))) {
+							continue;
+						}
+						if(name!="") {
+							foreach(string subpath in name.Split('.')) {
+								if(!selected.namespaces.ContainsKey(subpath)) {
+									string fullName=selected.fullName;
+									if(fullName!="") {
+										fullName+=".";
+									}
+									fullName+=subpath;
+									selected.namespaces[subpath]=new LazyNamespace(fullName);
+								}
+								selected=(LazyNamespace)selected.namespaces[subpath];
+							}
+						}
+						selected.cachedAssemblies.Add(cachedAssembly);
+					}
+				}
+				
+				root.Load();
+				return root.cache;
+			}
+//			public Map LoadNamespaces (ArrayList assemblies) {
+//				Map root=new Map();
+//				foreach(Assembly assembly in assemblies) {
+//					ArrayList names=GetNamespaces(assembly);
+//					foreach(string name in names.GetRange(1,names.Count-1)) {
+//						if(!namespaces.ContainsKey(name)) {
+//							namespaces[name]=new ArrayList();
+//						}
+//						((ArrayList)namespaces[name]).Add(assembly);
+//					}
+//				}
+//			}
+
+
+
+
+
+//			public Map LoadNamespaces(ArrayList assemblies) {
+//				Map root=new Map();
+//				foreach(Assembly assembly in assemblies) {
+//					foreach(Type type in assembly.GetExportedTypes())  {
+//						if(type.DeclaringType==null)  {
+//							Map position=root;
+//							ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
+//							subPaths.RemoveAt(subPaths.Count-1);
+//							foreach(string subPath in subPaths)  {
+//								if(!position.ContainsKey(Interpreter.StringToMap(subPath)))  {
+//									position[Interpreter.StringToMap(subPath)]=new Map();
+//								}
+//								position=(Map)position[Interpreter.StringToMap(subPath)];
+//							}
+//							position[Interpreter.StringToMap(type.Name)]=new NetClass(type);
+//						}
+//					}				
+//				}
+//			}
+//			public Library() {
+//				ArrayList assemblies=new ArrayList();
+//				libraryPath=Path.Combine(Interpreter.metaInstallationPath,"library");
+//				IAssemblyEnum e=AssemblyCache.CreateGACEnum();
+//				IAssemblyName an; 
+//				AssemblyName name;
+//				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
+//				while (AssemblyCache.GetNextAssembly(e, out an) == 0) {
+//					name=GetAssemblyName(an);
+//					assemblies.Add(Assembly.LoadWithPartialName(name.Name));
+//				}
+//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
+//					assemblies.Add(Assembly.LoadFrom(fileName));
+//				}
+//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.exe")) {
+//					assemblies.Add(Assembly.LoadFrom(fileName));
+//				}
+//				cash=LoadAssemblies(assemblies);
+//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
+//					cash[Interpreter.StringToMap(Path.GetFileNameWithoutExtension(fileName))]=new MetaLibrary(fileName);
+//				}
+//			}
+			//			public Library() {
+			//				libraryPath=Path.Combine(Interpreter.metaInstallationPath,"library");
+			//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
+			//					cash[Interpreter.StringToMap(Path.GetFileNameWithoutExtension(fileName))]=new MetaLibrary(fileName);
+			//				}	
+			//
+			//				ArrayList assemblies=new ArrayList();
+			//				IAssemblyEnum e=AssemblyCache.CreateGACEnum();
+			//				IAssemblyName an; 
+			//				AssemblyName name;
+			//				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
+			//				while (AssemblyCache.GetNextAssembly(e, out an) == 0) {
+			//					name=GetAssemblyName(an);
+			//					assemblies.Add(Assembly.LoadWithPartialName(name.Name));
+			//				}
+			//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
+			//					assemblies.Add(Assembly.LoadFrom(fileName));
+			//				}
+			//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.exe")) {
+			//					assemblies.Add(Assembly.LoadFrom(fileName));
+			//				}
+			//				string assemblyFilePath=Path.Combine(Interpreter.metaInstallationPath,"assemblies.meta");
+			//				Map map=new Map();
+			//				if(File.Exists(assemblyFilePath)) {
+			//					map=Interpreter.RunWithoutLibrary();
+			//				}
+			//				Hashtable assemblyNames=new Hashtable();
+			//				foreach(Assembly assembly in assemblies) {
+			//					Map name=Interpreter.StringToMap(assembly.GetName().Name);
+			//					DateTime dateTime=File.GetLastAccessTimeUtc(assembly.Location);
+			//					bool reload=true;
+			//					if(map.ContainsKey(name)) {
+			//						Map info=(Map)map(name);
+			//						Map lastAccess=info[Interpreter.StringToMap("lastAccess")];
+			//						if(Interpreter.MapToString(lastAccess).Equals(dateTime.ToString())) {
+			//							reload=false;
+			//						}
+			//					}
+			//					if(reload) {
+			//						map[name]=GetAssemblyNamespaces(assembly);
+			//					}
+			//					foreach(DictionaryEntry entry in map[name]
+			//					assemblyNames[name]=true;
+			//				}
+			//				foreach(DictionaryEntry entry in map) {
+			//					if(!assemblyNames.ContainsKey(entry.Key)) {
+			//						map[entry.Key]=null;
+			//					}
+			//				}
+			//				Interpreter.SerializeMap(map,"assembly.meta");
+			//			}
+			//cash=LoadAssemblies(assemblies);
 			public static Library library=new Library();
 			private Map cash=new Map();
 			public static string libraryPath="library"; 
