@@ -1153,9 +1153,13 @@ namespace Meta {
 			// also, the strategy cannot replace itself in the Map yet
 			public class StringStrategy:MapStrategy {
 				public override Map Clone() {
-					return new Map(new StringStrategy(text)); // das ist ok, vielleicht StringStrategy immutable machen
-																			// und zwischen verschiedenen Maps teilen?
+					return new Map(new StringStrategy(this)); // das ist ok, vielleicht StringStrategy immutable machen
+					// und zwischen verschiedenen Maps teilen?
 				}
+//				public override Map Clone() {
+//					return new Map(new StringStrategy(text)); // das ist ok, vielleicht StringStrategy immutable machen
+//																			// und zwischen verschiedenen Maps teilen?
+//				}
 
 				public override ArrayList IntKeyValues {
 					get {
@@ -1180,10 +1184,10 @@ namespace Meta {
 				}
 				private ArrayList keys=new ArrayList();
 				private string text;
-//				public StringStrategy(StringStrategy clone) {
-//					this.text=clone.text;
-//					this.keys=clone.keys.Clone();
-//				}
+				public StringStrategy(StringStrategy clone) {
+					this.text=clone.text;
+					this.keys=(ArrayList)clone.keys.Clone();
+				}
 				public StringStrategy(string text) {
 					this.text=text;
 					for(int i=1;i<=text.Length;i++) {
@@ -1222,13 +1226,13 @@ namespace Meta {
 			public class HybridDictionaryStrategy:MapStrategy {
 				ArrayList keys;
 				//rename
-				private Hashtable table;
+				private HybridDictionary table;
 //				ArrayList keys=new ArrayList();
-//				private Hashtable table=new Hashtable();
+//				private HybridDictionary table=new HybridDictionary();
 
 //				public HybridDictionaryStrategy(HybridDictionaryStrategy clone) {
 //					keys=(ArrayList)clone.keys.Clone();
-//					table=new Hashtable();
+//					table=new HybridDictionary();
 //					foreach(object key in clone.keys) {
 //						object val=clone.table[key];
 //						if(val is IMap) {
@@ -1238,9 +1242,11 @@ namespace Meta {
 //						table[key]=val;
 //					}
 //				}
-				public HybridDictionaryStrategy() {
-					this.keys=new ArrayList();
-					this.table=new Hashtable();
+				public HybridDictionaryStrategy():this(2) {
+				}
+				public HybridDictionaryStrategy(int count) {
+					this.keys=new ArrayList(count);
+					this.table=new HybridDictionary(count);
 				}
 //				object val=value is IMap? ((IMap)value).Clone(): value;
 //				if(value is IMap) {
@@ -1251,7 +1257,7 @@ namespace Meta {
 //			//						}
 //			table[key]=val;
 				public override Map Clone() {
-					Map clone=new Map(new HybridDictionaryStrategy());
+					Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
 					foreach(object key in keys) {
 						clone[key]=table[key];
 					}
