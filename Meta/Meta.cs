@@ -1122,19 +1122,6 @@ namespace Meta {
 					}
 					return h;
 				}
-//			public override int GetHashCode()  {
-//				if(!isHashCashed) {
-//					int h=0;
-//					foreach(DictionaryEntry entry in this) {
-//						unchecked {
-//							h+=entry.Key.GetHashCode()*entry.Value.GetHashCode();
-//						}
-//					}
-//					hash=h;
-//					isHashCashed=true;
-//				}
-//				return hash;
-//			}
 				public virtual bool Equal(MapStrategy obj) {
 					if(Object.ReferenceEquals(obj,this)) { // wenn geclont, wäre das möglich, jetzt noch nicht
 						return true;
@@ -1153,9 +1140,6 @@ namespace Meta {
 			// not unicode safe!:
 			// also, the strategy cannot replace itself in the Map yet
 			public class StringStrategy:MapStrategy {
-//				public override int GetHashCode() {
-//					foreach(char c in 
-//				}
 				// is this really identical?
 				public override int GetHashCode() {
 					int hash=0;
@@ -1164,20 +1148,6 @@ namespace Meta {
 					}
 					return hash;
 				}
-//				int h=0;
-//				foreach(object key in this.Keys) {
-//				unchecked {
-//				h+=key.GetHashCode()*this[key].GetHashCode();
-//			}
-//		}
-//		return h;
-//					Integer x=new Integer(this);
-//					while(x>int.MaxValue) {
-//						x=x%int.MaxValue;
-//					}
-//					return x.IntValue();
-
-
 				public override bool Equal(MapStrategy obj) {
 					if(obj is StringStrategy) {
 						return ((StringStrategy)obj).text.Equals(this.text);
@@ -1242,20 +1212,6 @@ namespace Meta {
 						//table[key]=value;
 					}
 				}
-//				public override object this[object key]  {
-//					get {
-//						if(key is Integer) {
-//							if(((Integer)key)>0 && ((Integer)key)<=this.Count) {
-//								return new Integer(text[((Integer)key).IntValue()-1]);
-//							}
-//						}
-//						return null;
-//					}
-//					set {
-//						int asdf=0;
-//						//table[key]=value;
-//					}
-//				}
 				public override bool ContainsKey(object key)  {
 					if(key is Integer) {
 						return ((Integer)key)>0 && ((Integer)key)<=this.Count;
