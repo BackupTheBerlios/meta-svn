@@ -1128,6 +1128,9 @@ namespace Meta {
 			bool microsoftLoaded=false;
 			public object this[object key] {
 				get {
+					if(key.Equals("Test")) {
+						int asdf=0;
+					}
 					if(cash.ContainsKey(key)) {
 						if(key.Equals("Microsoft")) {
 							if(!microsoftLoaded) {

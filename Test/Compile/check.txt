@@ -236,6 +236,27 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "libraryAssemblyTest"
+        parents (ArrayList):
+          IEnumerable
+      val (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "Test"
+        parents (ArrayList):
+          IEnumerable
+    Entry (Statement):
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
             Entry (Program):
               statements (ArrayList):
                 IEnumerable

@@ -5,6 +5,7 @@ gacTest=System.Collections
 lazyGACTest=Microsoft.CSharp
 metaLibTest=metaLib
 commandLineArguments=arg
+libraryAssemblyTest=Test
 [(['a']='a')]='Object'
 ['normal symbol']='NormalSymbol'
 lookupSymbol='LookupSymbol'

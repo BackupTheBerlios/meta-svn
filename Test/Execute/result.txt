@@ -636,6 +636,39 @@ IEnumerable
                 Value (Integer):
                   "103"
   Entry (DictionaryEntry):
+    Key (String):
+      "libraryAssemblyTest"
+    Value (Map):
+      IEnumerable
+        Entry (DictionaryEntry):
+          Key (String):
+            "MemberTest"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "IntEvent"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "NormalEvent"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "TestClass"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "PositionalNoConversion"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "NamedNoConversion"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "IndexerNoConversion"
+          Value (NetClass):
+              Entry (DictionaryEntry):
     Key (Map):
       IEnumerable
         Entry (DictionaryEntry):
