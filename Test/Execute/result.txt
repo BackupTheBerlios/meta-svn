@@ -216,6 +216,90 @@ IEnumerable
       IEnumerable
         Entry (DictionaryEntry):
           Key (String):
+            "IEnumerable"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "ICollection"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "IList"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "IEnumerator"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "ArrayList"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "BitArray"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "IComparer"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "CaseInsensitiveComparer"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "IHashCodeProvider"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "CaseInsensitiveHashCodeProvider"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "CollectionBase"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "Comparer"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "IDictionary"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "DictionaryBase"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "DictionaryEntry"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "Hashtable"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "IDictionaryEnumerator"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "Queue"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "ReadOnlyCollectionBase"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "SortedList"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "Stack"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
             "Specialized"
           Value (Map):
             IEnumerable
@@ -297,6 +381,90 @@ IEnumerable
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
+                Key (String):
+                  "IEnumerable"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "ICollection"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "IList"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "IEnumerator"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "ArrayList"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "BitArray"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "IComparer"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "CaseInsensitiveComparer"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "IHashCodeProvider"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "CaseInsensitiveHashCodeProvider"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "CollectionBase"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "Comparer"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "IDictionary"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "DictionaryBase"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "DictionaryEntry"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "Hashtable"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "IDictionaryEnumerator"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "Queue"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "ReadOnlyCollectionBase"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "SortedList"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
+                Key (String):
+                  "Stack"
+                Value (NetClass):
+                                Entry (DictionaryEntry):
                 Key (String):
                   "Specialized"
                 Value (Map):

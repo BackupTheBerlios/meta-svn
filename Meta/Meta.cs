@@ -874,7 +874,8 @@ namespace Meta {
 					BindingFlags.Public|BindingFlags.Static)) {
 					existing[method.Name]=new NetMethod(method.Name,null,typeof(Functions));
 				}
-				existing.Parent=new Meta.Types.Library();
+//				existing.Parent=new Meta.Types.Library();
+				existing.Parent=Meta.Types.Library.library;
 				Interpreter.arguments.Add(argument);
 				lastProgram=Mapify(reader);
 				object result=lastProgram.Call(new Map(),existing);
@@ -1088,19 +1089,27 @@ namespace Meta {
 				IAssemblyEnum e=AssemblyCache.CreateGACEnum();
 				IAssemblyName an; 
 				AssemblyName name;
-				cash["Microsoft"]=new Map();
+				cash=(Map)Interpreter.MergeTwo(cash,(Map)LoadAssembly(Assembly.LoadWithPartialName("mscorlib")));
+//				cash["Microsoft"]=new Map();
 				while (AssemblyCache.GetNextAssembly(e, out an) == 0) { 
 					name=GetAssemblyName(an);
 					Assembly assembly=Assembly.LoadWithPartialName(name.Name);
+//					if(name.Name.StartsWith("mscorlib")) {
+//						int adf=0;
+//					}
+//					if(name.Name.Equals("System")) {
+//						int asdf=0;
+//					}
 					if(name.Name.StartsWith("Microsoft.")) {
-						int startIndex=name.Name.IndexOf(".");
-						int endIndex=name.Name.IndexOf(".",startIndex+1);
-						if(endIndex==-1) {
-							endIndex=name.Name.Length;
-						}
-						string subNamespace=name.Name.Substring(startIndex+1,endIndex-startIndex-1);
-						((Map)cash["Microsoft"])[subNamespace]
-							=assembly;
+						microsoftAssemblies.Add(assembly);
+//						int startIndex=name.Name.IndexOf(".");
+//						int endIndex=name.Name.IndexOf(".",startIndex+1);
+//						if(endIndex==-1) {
+//							endIndex=name.Name.Length;
+//						}
+//						string subNamespace=name.Name.Substring(startIndex+1,endIndex-startIndex-1);
+//						((Map)cash["Microsoft"])[subNamespace]
+//							=assembly;
 					}
 					else {
 						cash=(Map)Interpreter.MergeTwo(cash,LoadAssembly(assembly));
@@ -1120,6 +1129,7 @@ namespace Meta {
 					cash[Path.GetFileNameWithoutExtension(fileName)]=new UnloadedMetaLibrary(fileName);
 				}
 			}
+			ArrayList microsoftAssemblies=new ArrayList();
 			private static AssemblyName GetAssemblyName(IAssemblyName nameRef) {
 				AssemblyName name = new AssemblyName();
 				name.Name = AssemblyCache.GetName(nameRef);
@@ -1137,11 +1147,14 @@ namespace Meta {
 					if(cash.ContainsKey(key)) {
 						if(key.Equals("Microsoft")) {
 							if(!microsoftLoaded) {
-								foreach(DictionaryEntry entry in (Map)cash["Microsoft"]) {
-									if(entry.Value is Assembly) { // could get assemblies from fusion, too
-										cash=(Map)Interpreter.MergeTwo(cash,LoadAssembly((Assembly)entry.Value));
-									}
+								foreach(Assembly assembly in microsoftAssemblies) {
+									cash=(Map)Interpreter.MergeTwo(cash,LoadAssembly(assembly));
 								}
+//								foreach(DictionaryEntry entry in (Map)cash["Microsoft"]) {
+//									if(entry.Value is Assembly) { // could get assemblies from fusion, too
+//										cash=(Map)Interpreter.MergeTwo(cash,LoadAssembly((Assembly)entry.Value));
+//									}
+//								}
 								microsoftLoaded=true;
 							}
 						}
