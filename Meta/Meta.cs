@@ -717,16 +717,13 @@ namespace Meta {
 					}
 				}
 				else {
-					if(keys[0].Equals("textBox")) {
-						int asdf=0;
-					}
 					object selected=Preselect(current,keys,false,false);
 					IKeyValue keyValue;
 					if(selected is IKeyValue) {
 						keyValue=(IKeyValue)selected;
 					}
 					else {
-						if(selected==null) {
+						if(selected==null) { // when can this happen?
 							int asdf=0;
 						}
 						keyValue=new NetObject(selected,selected.GetType());
@@ -739,15 +736,23 @@ namespace Meta {
 		}
 		public delegate void BreakMethodDelegate(object obj);
 		public class Interpreter  {
-			public static bool redoStatement=false;
-			public static BreakMethodDelegate breakMethod;
+			public static bool redoStatement=false; // just for editor, remove
+			public static BreakMethodDelegate breakMethod; // editor, remove?
+
 			public static ArrayList callers=new ArrayList();
 			public static ArrayList arguments=new ArrayList();
+
 			public static Hashtable netConversion=new Hashtable();
 			public static Hashtable metaConversion=new Hashtable();
-			public static ArrayList compiledMaps=new ArrayList();
 
-			public static object Replace(object original,object replace) {
+			public static ArrayList compiledMaps=new ArrayList(); // needed when conversion are added.
+																					// make adding of conversions illegal?
+			public static Map lastProgram; // only for editor, maybe move
+
+			public static ArrayList loadedAssemblies=new ArrayList(); // not public
+
+
+			public static object Replace(object original,object replace) { //check
 				if(original.GetType().Equals(replace.GetType())) {
 					if(original is Statement) {
 						((Statement)original).Replace((Statement)replace);
@@ -761,18 +766,18 @@ namespace Meta {
 					return replace;
 				}
 			}
-			public static object Arg {
+			public static object Arg {	//not needed very often
 				get {
 					return arguments[arguments.Count-1];
 				}
 			}
-			public static ILiteralRecognition[] Interceptions {
+			public static ILiteralRecognition[] Interceptions { // only used once
 				get {
 					return (ILiteralRecognition[])interception.ToArray(typeof(ILiteralRecognition));
 				}
 			}
 
-			public static object ConvertToMeta(object obj) {
+			public static object ConvertToMeta(object obj) { 
 				if(obj==null) {
 					return null;
 				}
@@ -794,24 +799,23 @@ namespace Meta {
 					return obj;
 				}
 			}
-
-			public static void AddToNetConversion(ToNetConversion conversion) {
+			public static void AddToNetConversion(ToNetConversion conversion) { // maybe remove
 				if(!netConversion.ContainsKey(conversion.target)) {
 					netConversion[conversion.target]=new Hashtable();
 				}
 				((Hashtable)netConversion[conversion.target])[conversion.source]=conversion;
 			}
-			public static void AddToMetaConversion(ToMetaConversion conversion) {
+			public static void AddToMetaConversion(ToMetaConversion conversion) { // maybe remove
 				metaConversion[conversion.source]=conversion;
 			}
-			public static Map String(string symbol) {
+			public static Map String(string symbol) { // maybe remove
 				Map map=new Map();
 				foreach(char character in symbol) {
 					map[new Integer(map.Count+1)]=new Integer((int)character);
 				}
 				return map;
 			}
-			public static string String(Map symbol) {
+			public static string String(Map symbol) { // move somewhere else
 				string text="";
 				for(Integer i=new Integer(1);;i++) {
 					object val=symbol[i];
@@ -829,20 +833,19 @@ namespace Meta {
 			[IgnoreMember]
 			private static ArrayList interception=new ArrayList();
 			[IgnoreMember]
-			public static ArrayList cashedLiterals=new ArrayList();
+			public static ArrayList cashedLiterals=new ArrayList(); // maybe remove, if interceptions cannot be added
+																					  // at runtime
 
-			public static void AddInterception(ILiteralRecognition i)  {
+			public static void AddInterception(ILiteralRecognition i)  { //maybe remove
 				interception.Add(i);
 				foreach(Literal createLiteral in cashedLiterals) {
 					createLiteral.cached=null;
 				}
 				cashedLiterals.Clear();
 			}
-			public static object Run(string path,Map argument) {
-				return Run(new StreamReader(path),argument);
-			}
-			public static Map lastProgram;
-			public static object RunNormal(string path,Map argument) {
+
+			// which methods are necessary here?
+			public static object RunNormal(string path,Map argument) { // remove, will (soon) not be needed anymore
 				Interpreter.arguments.Add(argument);
 				StreamReader reader=new StreamReader(path);
 				lastProgram=Mapify(reader);
@@ -850,6 +853,9 @@ namespace Meta {
 				Interpreter.arguments.Remove(argument);
 				reader.Close();
 				return result;
+			}
+			public static object Run(string path,Map argument) {
+				return Run(new StreamReader(path),argument);
 			}
 			public static object Run(TextReader reader,Map argument) {
 				ArrayList parents=new ArrayList();
@@ -865,37 +871,34 @@ namespace Meta {
 				Interpreter.arguments.Remove(argument);
 				return result;
 			}
-			public static AST Parse(TextReader stream)  {
+			public static AST Parse(TextReader stream)  { //rename
 				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser(
 					new IndentParser(new MetaLexer(stream)));
 				parser.map();
 				return parser.getAST();
 			}
-			public static Map Mapify(TextReader input) {
+			public static Map Mapify(TextReader input) { //rename
 				return (new MetaTreeParser()).map(Parse(input));
 			}
 			static Interpreter() {
-				foreach(Type type in typeof(LiteralRecognitions).GetNestedTypes())
-				{
+				foreach(Type type in typeof(LiteralRecognitions).GetNestedTypes()) {
 					AddInterception((ILiteralRecognition)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
-				foreach(Type type in typeof(ToMetaConversions).GetNestedTypes())
-				{
+				foreach(Type type in typeof(ToMetaConversions).GetNestedTypes()) {
 					AddToMetaConversion((ToMetaConversion)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
-				foreach(Type type in typeof(ToNetConversions).GetNestedTypes())
-				{
+				foreach(Type type in typeof(ToNetConversions).GetNestedTypes()) {
 					AddToNetConversion((ToNetConversion)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
 			}
-			public static IKeyValue MergeTwo(IKeyValue first,IKeyValue second) {
+			public static IKeyValue MergeTwo(IKeyValue first,IKeyValue second) { // remove
 				Map map=new Map();
 				map[new Integer(1)]=first;
 				map[new Integer(2)]=second;
 				return Merge(map);
 			}
 			[MetaMethod("")]
-			public static IKeyValue Merge(Map maps) {
+			public static IKeyValue Merge(Map maps) { // get rid of use of Map
 				Map result=new Map();
 				foreach(DictionaryEntry i in maps) {
 					foreach(DictionaryEntry j in (IKeyValue)i.Value) {
@@ -909,8 +912,7 @@ namespace Meta {
 				}
 				return result;
 			}
-			public static ArrayList loadedAssemblies=new ArrayList();
-			public static Map LoadAssembly(Map map,bool collapseNamespaces) {
+			public static Map LoadAssembly(Map map,bool collapseNamespaces) { // move to LibraryMap
 				Map root=new Map();
 				foreach(DictionaryEntry entry in map) {
 					string name=(string)entry.Value;
@@ -944,37 +946,38 @@ namespace Meta {
 				}
 				return root;
 			}
-
-			public static string GetMethodName(MethodBase methodInfo) {
-				int counter=0;
-				string text="";
-				if(methodInfo is MethodInfo) {
-					text+=((MethodInfo)methodInfo).ReturnType.Name+" "+methodInfo.Name;
-				}
-				else {
-					text+=methodInfo.ReflectedType.Name;
-				}
-				text+=" (";
-				foreach(ParameterInfo parameter in methodInfo.GetParameters()) {
-					text+=parameter.ParameterType.Name+" "+parameter.Name;
-					if(counter!=methodInfo.GetParameters().Length-1) {
-						text+=",";
-					}
-					counter++;
-				}
-				text+=")";
-				return text;
-			}			
+//
+//			public static string GetMethodName(MethodBase methodInfo) {
+//				int counter=0;
+//				string text="";
+//				if(methodInfo is MethodInfo) {
+//					text+=((MethodInfo)methodInfo).ReturnType.Name+" "+methodInfo.Name;
+//				}
+//				else {
+//					text+=methodInfo.ReflectedType.Name;
+//				}
+//				text+=" (";
+//				foreach(ParameterInfo parameter in methodInfo.GetParameters()) {
+//					text+=parameter.ParameterType.Name+" "+parameter.Name;
+//					if(counter!=methodInfo.GetParameters().Length-1) {
+//						text+=",";
+//					}
+//					counter++;
+//				}
+//				text+=")";
+//				return text;
+//			}			
 		}
 	}
 	namespace Types  {
-		public interface IMetaType {
+		public interface IMetaType { // rethink what this is useful for
 			IKeyValue Parent {
 				get;
 				set;
 			}
 		}
-		public abstract class Callable {
+		public abstract class Callable { // confusing, just because of Parent, really still needed?
+													// if useful, rename
 			private IKeyValue parent;
 			[IgnoreMember]
 			public IKeyValue Parent {
@@ -986,10 +989,10 @@ namespace Meta {
 				}
 			}
 		}
-		public interface ICallable: IMetaType{
+		public interface ICallable: IMetaType{ // not very useful, but ok
 			object Call(Map caller);
 		}
-		public interface IKeyValue: IMetaType,IEnumerable {
+		public interface IKeyValue: IMetaType,IEnumerable { // not used consequently instead of map
 			object this[object key] {
 				get;
 				set;
@@ -1004,10 +1007,14 @@ namespace Meta {
 
 			bool ContainsKey(object key);			
 		}		
-
-		public class Map: IKeyValue, ICallable, IEnumerable {
+		public class Map: IKeyValue, ICallable, IEnumerable { // could use Callable
 			public Map arg;
 			private IKeyValue parent;
+			public int numberAutokeys=0;
+			private ArrayList keys;
+			public HybridDictionary table;
+			public object compiled;
+
 			public IKeyValue Parent {
 				get {
 					return parent;
@@ -1016,18 +1023,12 @@ namespace Meta {
 					parent=value;
 				}
 			}
-			public int numberAutokeys=0;
-			private ArrayList keys;
-			public HybridDictionary table;
-			public object compiled;
-
-
 			public int Count {
 				get {
 					return table.Count;
 				}
 			}
-			public ArrayList IntKeyValues {
+			public ArrayList IntKeyValues { // rename
 				get {
 					ArrayList list=new ArrayList();
 					for(Integer i=new Integer(1);ContainsKey(i);i++) {
@@ -1074,7 +1075,8 @@ namespace Meta {
 				local.Parent=this;
 				return Call(caller,local);
 			}
-			public object Call(Map caller,Map existing)  {
+			public object Call(Map caller,Map existing)  { // check, not very nice, use Parent
+																		  // to pass in stuff?
 				IExpression callable=(IExpression)Compile();
 				object result;
 				if(callable is Program) { // somehow wrong
@@ -1085,7 +1087,7 @@ namespace Meta {
 				}
 				return result;
 			}
-			public void StopSharing() {
+			public void StopSharing() { // currently not used at all
 				compiled=null;
 				HybridDictionary oldTable=table;
 				ArrayList oldKeys=keys;
@@ -1128,7 +1130,7 @@ namespace Meta {
 						default:
 							throw new ApplicationException("Map cannot be compiled because it is not an expression.");
 					}
-					if(!Interpreter.compiledMaps.Contains(this)) {
+					if(!Interpreter.compiledMaps.Contains(this)) { // necessary?
 						Interpreter.compiledMaps.Add(this);
 					}
 				}
@@ -1213,7 +1215,7 @@ namespace Meta {
 			}
 		}
 		[AttributeUsage(AttributeTargets.Method|AttributeTargets.Constructor,Inherited=true)]
-		public class MetaMethodAttribute:Attribute {
+		public class MetaMethodAttribute:Attribute { // still needed? maybe needed again soon
 			public MetaMethodAttribute(string documentation) {
 				if(documentation!="") {
 					this.documentation=documentation;
@@ -1259,7 +1261,8 @@ namespace Meta {
 					list=arguments.IntKeyValues;
 				}
 				object result=null;
-				try {
+				try { // doubtful usage of try
+					//refactor
 					ArrayList methods;
 					if(name=="") {
 						methods=new ArrayList(type.GetConstructors());
@@ -1409,6 +1412,7 @@ namespace Meta {
 				}
 			}
 			public Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) {
+				// should caller really be parent of code???
 				code.Parent=(IKeyValue)Interpreter.callers[Interpreter.callers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 				ICodeCompiler compiler=codeProvider.CreateCompiler();
@@ -1452,6 +1456,7 @@ namespace Meta {
 					container,"EventHandlerMethod");
 				return del;
 			}
+			//rename
 			private void Init(string name,object target,Type type,BindingFlags invokeFlags,
 				MethodBase method,MethodBase[] methods) {
 				this.name=name;
@@ -1467,8 +1472,8 @@ namespace Meta {
 					}
 				}
 				this.methods=methods;
-				
 			}
+			// refactor
 			public NetMethod(string name,object target,Type type) {
 				MethodBase method=null;
 				MethodInfo[] methods=
@@ -1482,6 +1487,7 @@ namespace Meta {
 					BindingFlags.Public|BindingFlags.Instance
 					|BindingFlags.Static|BindingFlags.InvokeMethod,method,methods);
 			}
+			// is 'constructor' necessary or do 'constructors' suffice?
 			public NetMethod(Type type) {
 				MethodBase constructor=null;
 				MethodBase[] constructors=type.GetConstructors();
@@ -1532,7 +1538,6 @@ namespace Meta {
 				return "";
 			}
 			private IKeyValue parent;
-			[IgnoreMember]
 			public IKeyValue Parent {
 				get {
 					return parent;
@@ -1541,11 +1546,8 @@ namespace Meta {
 					parent=value;
 				}
 			}
-			[IgnoreMember]
 			public object obj;
-			[IgnoreMember]
 			public Type type;
-			[IgnoreMember]
 			public ArrayList Keys {
 				get {
 					return new ArrayList(Table.Keys);
@@ -1557,7 +1559,6 @@ namespace Meta {
 				this.type=type;
 				
 			}
-			[IgnoreMember]
 			public int Count  {
 				get {
 					int count=0;
@@ -1570,9 +1571,6 @@ namespace Meta {
 			public IKeyValue Clone() {
 				return this;
 			}
-
-
-
 			public virtual object this[object key]  {
 				get {
 					if(key is string) {
@@ -1819,25 +1817,9 @@ namespace Meta {
 	namespace Parser  {
 		class IndentParser: TokenStream {
 			protected Queue tokenBuffer=new Queue();
-
 			protected TokenStream tokenStream;
 			protected int indent=-1;
 			protected const int indentWidth=2;
-
-			protected void AddIndentationTokens(int newIndent)  {
-				int level=newIndent-indent; if(level==0) {
-					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
-				} else if(level==1) {
-					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));
-				} else if(level<0) { for(int i=level;i<0;i++) {
-						tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
-					}
-					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
-				} else if(level>1) {
-					throw new ApplicationException("Line is indented too much.");
-				}
-				indent=newIndent;
-			}
 			public IndentParser(TokenStream tokenStream)  {
 				this.tokenStream=tokenStream;
 				AddIndentationTokens(0);
@@ -1858,7 +1840,22 @@ namespace Meta {
 					}
 				}
 				return (Token)tokenBuffer.Dequeue();
+			}	
+			protected void AddIndentationTokens(int newIndent)  { // refactor
+				int level=newIndent-indent; if(level==0) {
+					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
+				} else if(level==1) {
+					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));
+				} else if(level<0) { for(int i=level;i<0;i++) {
+						tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
+					}
+					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
+				} else if(level>1) {
+					throw new ApplicationException("Line is indented too much.");
+				}
+				indent=newIndent;
 			}
+
 		}
 	}
 
@@ -1866,13 +1863,13 @@ namespace Meta {
 		public abstract class MetaTest {
 			public abstract object GetTestResult();
 		}
-		public class CustomSerializationException:Exception {
+		public class CustomSerializationException:Exception { // used at all?
 		}
 		public interface ICustomSerialization {
 			string CustomSerialization();
 		}
 		public class TestExecuter {	
-			public TestExecuter(Type classType,string path) {
+			public TestExecuter(Type classType,string path) { // refactor
 				bool allTestsSuccessful=true;
 				Type[] testClasses=classType.GetNestedTypes();
 
@@ -2006,7 +2003,7 @@ namespace Meta {
 			}
 		}
 
-		internal class MemberSorter:IComparer {
+		internal class MemberSorter:IComparer { // rename
 			public int Compare(object first,object second) {
 				return ((MemberInfo)first).Name.CompareTo(((MemberInfo)second).Name);
 			}
