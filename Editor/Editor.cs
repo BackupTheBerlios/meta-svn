@@ -86,9 +86,12 @@ namespace Editor {
 
 			functionHelpKeyBindings[Keys.Alt|Keys.L]=typeof(PreviousOverload);
 			functionHelpKeyBindings[Keys.Alt|Keys.K]=typeof(NextOverload);
+
 			helpKeyBindings[Keys.Alt|Keys.K]=typeof(MoveKeyDown);
 			helpKeyBindings[Keys.Alt|Keys.L]=typeof(MoveKeyUp);
-			helpKeyBindings[Keys.Tab]=typeof(CompleteWord);
+			helpKeyBindings[Keys.Down]=typeof(MoveKeyDown);
+			helpKeyBindings[Keys.Up]=typeof(MoveKeyUp);
+//			helpKeyBindings[Keys.Tab]=typeof(CompleteWord);
 			helpKeyBindings[Keys.Enter]=typeof(CompleteWord);
 
 			keyBindings[Keys.Control|Keys.X]=typeof(CutNode);
@@ -99,19 +102,31 @@ namespace Editor {
 			keyBindings[Keys.Control|Keys.Y]=typeof(Redo);
 
 			keyBindings[Keys.Alt|Keys.J]=typeof(MoveCharLeft);
+			keyBindings[Keys.Left]=typeof(MoveCharLeft);
 			keyBindings[Keys.Alt|Keys.Oemtilde]=typeof(MoveCharRight);
+			keyBindings[Keys.Right]=typeof(MoveCharRight);
+			keyBindings[Keys.Up]=typeof(MoveLineUp);
 			keyBindings[Keys.Alt|Keys.L]=typeof(MoveLineUp);
+			keyBindings[Keys.Down]=typeof(MoveLineDown);
 			keyBindings[Keys.Alt|Keys.K]=typeof(MoveLineDown);
 
+			keyBindings[Keys.End]=typeof(MoveEndOfLine);
 			keyBindings[Keys.Alt|Keys.OemSemicolon]=typeof(MoveEndOfLine);
+			keyBindings[Keys.Home]=typeof(MoveStartOfLine);
 			keyBindings[Keys.Alt|Keys.U]=typeof(MoveStartOfLine);
 
+			keyBindings[Keys.Delete]=typeof(DeleteCharRight);
 			keyBindings[Keys.Alt|Keys.M]=typeof(DeleteCharRight);
+			keyBindings[Keys.Back]=typeof(DeleteCharLeft);
 			keyBindings[Keys.Alt|Keys.N]=typeof(DeleteCharLeft);
+			keyBindings[Keys.Control|Keys.Delete]=typeof(DeleteWordRight);
 			keyBindings[Keys.Control|Keys.Alt|Keys.M]=typeof(DeleteWordRight);
+			keyBindings[Keys.Control|Keys.Back]=typeof(DeleteWordLeft);
 			keyBindings[Keys.Control|Keys.Alt|Keys.N]=typeof(DeleteWordLeft);
 
+			keyBindings[Keys.Control|Keys.Left]=typeof(MoveWordLeft);
 			keyBindings[Keys.Control|Keys.Alt|Keys.J]=typeof(MoveWordLeft);
+			keyBindings[Keys.Control|Keys.Right]=typeof(MoveWordRight);
 			keyBindings[Keys.Control|Keys.Alt|Keys.Oemtilde]=typeof(MoveWordRight);
 
 			keyBindings[Keys.Control|Keys.Enter]=typeof(CreateChild);
