@@ -8,7 +8,7 @@ this:map.merge
     logic
     map
     math
-form:With
+form:with
     System.Windows.Forms.Form()
     :
         Text:'hello'
@@ -192,7 +192,7 @@ switch
     default:=
         #secondSwitch:'default'
 form:System.Windows.Forms.Form()
-With
+with
     form
     :
         Text:'hello'

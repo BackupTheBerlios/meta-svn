@@ -532,7 +532,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "With"
+                                "with"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -8184,7 +8184,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "With"
+                                "with"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"

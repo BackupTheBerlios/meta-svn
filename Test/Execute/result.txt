@@ -77,6 +77,15 @@ Entry (DictionaryEntry)
         "Boolean or()"
 Entry (DictionaryEntry)
   Key (Map):
+    "contains"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Boolean contains(System.Object, Meta.Types.Map)"
+Entry (DictionaryEntry)
+  Key (Map):
     "keys"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
@@ -100,13 +109,13 @@ Entry (DictionaryEntry)
         "Meta.Types.IKeyValue merge()"
 Entry (DictionaryEntry)
   Key (Map):
-    "With"
+    "with"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "System.Object With(System.Object, Meta.Types.IMap)"
+        "System.Object with(System.Object, Meta.Types.IMap)"
 Entry (DictionaryEntry)
   Key (Map):
     "add"

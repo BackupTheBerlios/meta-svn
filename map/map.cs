@@ -3,6 +3,9 @@ using System.Collections;
 using Meta.Types;
 using Meta.Execution;
 public class map {
+	public static bool contains(object key,Map map) {
+		return map.ContainsKey(key);
+	}
 	public static IKeyValue keys(IKeyValue map) {
 		int i=1;
 		Map keys=new Map();
@@ -31,7 +34,7 @@ public class map {
 	}
 	// integrate this into .NET constructor in NetClass, which is cleaner
 	// possibly remove completely, let's see how the editor turns out
-	public static object With(object obj,IMap map) {
+	public static object with(object obj,IMap map) {
 		NetObject netObject=new NetObject(obj);
 		foreach(DictionaryEntry entry in map) {
 			netObject[entry.Key]=entry.Value;

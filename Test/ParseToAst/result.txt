@@ -443,7 +443,7 @@ getFirstChild (CommonAST):
               getNextSibling:
                 null
               getText (String):
-                "With"
+                "with"
               Type (Int32):
                 "22"
             getNextSibling (CommonAST):
@@ -7147,7 +7147,7 @@ getFirstChild (CommonAST):
                                                                                                                                                                                               getNextSibling:
                                                                                                                                                                                                 null
                                                                                                                                                                                               getText (String):
-                                                                                                                                                                                                "With"
+                                                                                                                                                                                                "with"
                                                                                                                                                                                               Type (Int32):
                                                                                                                                                                                                 "22"
                                                                                                                                                                                             getNextSibling (CommonAST):
