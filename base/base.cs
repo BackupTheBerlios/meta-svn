@@ -49,7 +49,7 @@ public class @base {
 		return Interpreter.Run(new StringReader(code),new Map());
 	}
 	public static IKeyValue Merge() {
-		return (Map)Interpreter.Merge((Map)Interpreter.Arg);
+		return (Map)Interpreter.MergeCollection(((Map)Interpreter.Arg).IntKeyValues);
 	}
 	public static void Write(string s) {
 		Console.WriteLine(s);
@@ -109,12 +109,12 @@ public class @base {
 		}
 		return result;
 	}
-	public static void Load() {
-		Map caller=(Map)Interpreter.callers[Interpreter.callers.Count-1];
-		foreach(DictionaryEntry entry in Interpreter.LoadAssembly((Map)Interpreter.Arg,true)) {
-			caller[entry.Key]=entry.Value;
-		}
-	}
+//	public static void Load() {
+//		Map caller=(Map)Interpreter.callers[Interpreter.callers.Count-1];
+//		foreach(DictionaryEntry entry in Interpreter.LoadAssembly((Map)Interpreter.Arg,true)) {
+//			caller[entry.Key]=entry.Value;
+//		}
+//	}
 	public static Map Each() {
 		Map arg=((Map)Interpreter.Arg);
 		Map over=(Map)arg[new Integer(1)];

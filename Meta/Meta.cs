@@ -39,75 +39,77 @@ using System.GAC;
 
 namespace Meta {
 	namespace Execution {
+		public interface IExpression {
+			object Evaluate(object current);
+			bool IdenticalTo(object obj);
+			void ReplaceWith(IExpression replace);
+		}
 		public class Statement {
-			public Select key;
-			public IExpression val;
-			public void Replace(Statement statement) { // check
-				key=(Select)Interpreter.Replace(key,statement.key);
-				val=(IExpression)Interpreter.Replace(val,statement.val);
+			public void Realize(ref object scope,bool isInFunction) { //wrong name 'isInFunction'
+				key.Assign(ref scope,this.val.Evaluate(scope),isInFunction);
 			}
-			public override bool Equals(object obj) { // check
+			public void ReplaceWith(Statement statement) { // check
+				key=(Select)Interpreter.ReplaceWith(key,statement.key);
+				val=(IExpression)Interpreter.ReplaceWith(val,statement.val);
+			}
+			public bool IdenticalTo(object obj) { // check
 				if(obj is Statement) {
-					if(((Statement)obj).key.Equals(key)) {
-						if(((Statement)obj).val.Equals(val)) {
+					if(((Statement)obj).key.IdenticalTo(key)) {
+						if(((Statement)obj).val.IdenticalTo(val)) {
 							return true;
 						}
 					}
 				}
 				return false;
 			}
-			public void Realize(ref object scope,bool isInFunction) {
-				key.Assign(ref scope,this.val.Evaluate(scope),isInFunction);
-			}
 			public Statement(Map obj) {
 				this.key=(Select)((Map)obj["key"]).Compile();
 				this.val=(IExpression)((Map)obj["value"]).Compile();
 			}
-		}
-		public interface IExpression {
-			object Evaluate(object current);
-			void Replace(IExpression replace);
+			public Select key;
+			public IExpression val;
 		}
 		public class Call: IExpression {	
-			public IExpression argument;
-			public IExpression callable;
-			public void Replace(IExpression replace) { // check
-				if(!this.Equals(replace)) {
+			public object Evaluate(object current) {
+				object arg=argument.Evaluate(current);
+				ICallable toBeCalled=(ICallable)callable.Evaluate(current);
+				Interpreter.arguments.Add(arg); // make this a private method in Interpreter
+				object result=toBeCalled.Call((Map)current);
+				Interpreter.arguments.Remove(arg);
+				return result;
+			}
+			public void ReplaceWith(IExpression replace) { // check
+				if(!this.IdenticalTo(replace)) {
 					Call call=(Call)replace;
-					callable=(IExpression)Interpreter.Replace(callable,call.callable);
-					argument=(IExpression)Interpreter.Replace(argument,call.argument);
+					callable=(IExpression)Interpreter.ReplaceWith(callable,call.callable);
+					argument=(IExpression)Interpreter.ReplaceWith(argument,call.argument);
 				}
 			}
-			public override bool Equals(object obj) { // check
-				return obj is Call && ((Call)obj).callable.Equals(callable) &&
-					((Call)obj).argument.Equals(argument);
+			public bool IdenticalTo(object obj) { // check
+				return obj is Call && ((Call)obj).callable.IdenticalTo(callable) &&
+					((Call)obj).argument.IdenticalTo(argument);
 			}
 			public Call(Map obj) {
 				Map expression=(Map)obj["call"];
 				this.callable=(IExpression)((Map)expression["function"]).Compile();
 				this.argument=(IExpression)((Map)expression["argument"]).Compile();
 			}
-			public object Evaluate(object current) {
-				object arg=argument.Evaluate(current);
-				ICallable toBeCalled=(ICallable)callable.Evaluate(current);
-				Interpreter.arguments.Add(arg);
-				object result=toBeCalled.Call((Map)current);
-				Interpreter.arguments.Remove(arg);
-				return result;
-			}
+			public IExpression argument;
+			public IExpression callable;
 		}
 		public class Delayed: IExpression {
-			public Map delayedExpression;
-			public override bool Equals(object o) { // check
-				return o is Delayed &&
-					delayedExpression.Equals(((Delayed)o).delayedExpression);
+			public object Evaluate(object current) { // current necessary?
+				return delayedExpression;
 			}
-			public void Replace(IExpression replace) { // check
-				if(!this.Equals(replace)) {
+			public bool IdenticalTo(object obj) { // check
+				return obj is Delayed && delayedExpression.Equals(((Delayed)obj).delayedExpression);
+			}
+			public void ReplaceWith(IExpression replace) { // check
+				if(!this.IdenticalTo(replace)) {
 					Delayed delayed=(Delayed)replace;
 					delayed.delayedExpression.Compile();
 					if(delayedExpression.compiled!=null) {
-						delayedExpression.compiled=Interpreter.Replace(delayedExpression.compiled,delayed.delayedExpression.compiled);
+						delayedExpression.compiled=Interpreter.ReplaceWith(delayedExpression.compiled,delayed.delayedExpression.compiled);
 						delayed.delayedExpression.compiled=delayedExpression.compiled;
 					}
 					delayedExpression=delayed.delayedExpression;
@@ -117,19 +119,41 @@ namespace Meta {
 				this.delayedExpression=(Map)code["delayed"];
 				this.delayedExpression.Compile();
 			}
-			public object Evaluate(object current) {
-				return delayedExpression;
-			}
+			public Map delayedExpression;
 		}
 		public class Program: IExpression {
-			public readonly ArrayList statements=new ArrayList();
-
-			public override bool Equals(object obj) { // check
+			public object Evaluate(object parent) { // refactor
+				Map local=new Map();
+				local.Parent=(IKeyValue)parent;
+				return Evaluate(parent,local,false);
+			}
+			public object Evaluate(object caller,Map existing,bool isInFunction) { // refactor, why does it differ,why the same name?
+				object result=existing;
+				bool callerIsMap=false;
+				if(caller!=null) {
+					if(caller is Map) {
+						callerIsMap=true;
+					}
+					if(callerIsMap) {
+						Interpreter.callers.Add(caller);
+					}
+				}
+				for(int i=0;i<statements.Count;i++) {
+					((Statement)statements[i]).Realize(ref result,isInFunction);
+				}
+				if(caller!=null) {
+					if(callerIsMap) {
+						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1); // add local map to callers, even when not caller (always)
+					}
+				}
+				return result;
+			}
+			public bool IdenticalTo(object obj) { // check
 				if(obj is Program) {
 					Program program=(Program)obj;
 					if(program.statements.Count==statements.Count) {
 						for(int i=0;i<statements.Count;i++) {
-							if(!statements[i].Equals(program.statements[i])) {
+							if(!((Statement)statements[i]).IdenticalTo(program.statements[i])) {
 								return false;
 							}
 						}
@@ -138,13 +162,13 @@ namespace Meta {
 				}
 				return false;
 			}
-			public void Replace(IExpression replace) { // check
-				if(!Equals(replace)) {
+			public void ReplaceWith(IExpression replace) { // check
+				if(!IdenticalTo(replace)) {
 					Program program=(Program)replace;
 					int i=0;
 					for(;i<program.statements.Count && i<statements.Count;i++)  {
-						if(!((Statement)statements[i]).Equals((Statement)program.statements[i])) {
-							statements[i]=Interpreter.Replace(statements[i],
+						if(!((Statement)statements[i]).IdenticalTo((Statement)program.statements[i])) {
+							statements[i]=Interpreter.ReplaceWith(statements[i],
 								(Statement)program.statements[i]);
 						}
 					}
@@ -161,69 +185,12 @@ namespace Meta {
 					this.statements.Add(statementCode.Compile());
 				}
 			}
-			public object Evaluate(object parent) { // refactor
-				Map local=new Map();
-				local.Parent=(IKeyValue)parent;
-				return Evaluate(parent,local,false);
-			}
-			public object Evaluate(object caller,Map existing,bool isInFunction) { // refactor
-				object result=existing;
-				bool callerIsMap=false;
-				if(caller!=null) {
-					if(caller is Map) {
-						callerIsMap=true;
-					}
-					if(callerIsMap) {
-						Interpreter.callers.Add(caller);
-					}
-				}
-				for(int i=0;i<statements.Count;i++) {
-				Back:
-					try {
-						((Statement)statements[i]).Realize(ref result,isInFunction);
-					}
-					catch (RestartStatementException e) {
-						goto Back;
-					}
-				}
-				if(caller!=null) {
-					if(callerIsMap) {
-						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-					}
-				}
-				return result;
-			}
-		}
-		public abstract class ConvertMetaToDotNet { //rename
-			public Type source;
-			public Type target;
-			public abstract object Convert(object obj);
-		}
-		public abstract class ConvertDotNetToMeta { //rename
-			public Type source;
-			public abstract object Convert(object obj);
-		}
-		public abstract class RecognizeLiteral {
-			public abstract object Recognize(string text);
+			public readonly ArrayList statements=new ArrayList();
 		}
 		public class Literal: IExpression {
-			public string text;
-			public object cached=null;
-			public override bool Equals(object obj) { // check
-				return obj is Literal && text==((Literal)obj).text;
-			}
-			public void Replace(IExpression replace) { // check
-				Literal literal=(Literal)replace;
-				text=literal.text;
-				cached=literal.cached;
-			}
-			public Literal(Map obj) {
-				this.text=(string)obj["literal"];
-				
-			}
 			public object Evaluate(object current) {
 				if(cached==null) {
-					Interpreter.cashedLiterals.Add(this);
+					Interpreter.cashedLiterals.Add(this);// remove?
 					for(int i=Interpreter.Interceptions.Length-1;i>=0;i--) {
 						cached=((RecognizeLiteral)Interpreter.Interceptions[i]).Recognize(text);
 						if(cached!=null) {
@@ -233,45 +200,21 @@ namespace Meta {
 				}
 				return cached;
 			}
+			public bool IdenticalTo(object obj) { // check
+				return obj is Literal && text==((Literal)obj).text;
+			}
+			public void ReplaceWith(IExpression replace) { // check
+				Literal literal=(Literal)replace;
+				text=literal.text;
+				cached=literal.cached;
+			}
+			public Literal(Map code) {
+				this.text=(string)code["literal"];
+			}
+			public string text;
+			public object cached=null;
 		}
 		public class Select: IExpression { 
-			public readonly ArrayList expressions=new ArrayList();
-			public ArrayList parents=new ArrayList();
-			public override bool Equals(object obj) { // check
-				if(obj is Select) {
-					Select select=(Select)obj;
-					if(expressions.Count==select.expressions.Count)  {
-						for(int i=0;i<expressions.Count;i++) {
-							if(!((IExpression)expressions[i]).Equals(select.expressions[i])) {
-								return false;
-							}
-						}
-						return true;
-					}
-				}
-				return false;
-			}
-			public void Replace(IExpression replace) { // check
-				if(!Equals(replace)) {
-					Select select=(Select)replace;
-					int i=0;
-					for(;i<expressions.Count && i<select.expressions.Count;i++) {
-						expressions[i]=Interpreter.Replace(
-							expressions[i],select.expressions[i]);
-					}
-					if(expressions.Count>select.expressions.Count) {
-						expressions.RemoveRange(i,expressions.Count-i);
-					}
-					else {
-						expressions.AddRange(select.expressions.GetRange(i,select.expressions.Count-i));
-					}
-				}
-			}
-			public Select(Map code) {
-				foreach(Map expression in ((Map)code["select"]).IntKeyValues) {
-					this.expressions.Add(expression.Compile());
-				}
-			}
 			public object Evaluate(object current) {
 				ArrayList keys=new ArrayList();
 				foreach(IExpression expression in expressions) {
@@ -280,457 +223,14 @@ namespace Meta {
 				object preselection=Preselect(current,keys,true,true);
 				return preselection;
 			}
-			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
-				object selected=current;
-				int i=0;
-				if(keys.Count==2 && keys[1].Equals("Invoke")) {
-					int asdf=0;
-				}
-				if(keys[0].Equals("this")) {
-					i++;
-				}
-				else if(keys[0].Equals("caller")) {
-					int numCallers=0;
-					foreach(object key in keys) {
-						if(key.Equals("caller")) {
-							numCallers++;
-							i++;
-						}
-						else {
-							break;
-						}
-					}
-					selected=Interpreter.callers[Interpreter.callers.Count-numCallers];
-				}
-				else if(keys[0].Equals("parent")) {
-					foreach(object key in keys) {
-						if(key.Equals("parent")) {
-							selected=((IKeyValue)selected).Parent;
-							i++;
-						}
-						else {
-							break;
-						}
-					}
-				}
-				else if(keys[0].Equals("arg")) {
-					selected=Interpreter.arguments[Interpreter.arguments.Count-1];
-					i++;
-				}				
-				else if(keys[0].Equals("search")||isRightSide) {
-					if(keys[0].Equals("search")) {
-						i++;
-					}
-					while(selected!=null && !((IKeyValue)selected).ContainsKey(keys[i])) {
-						selected=((IKeyValue)selected).Parent;
-					}
-					if(selected==null) {
-						throw new ApplicationException("Key "+keys[i]+" not found");
-					}
-				}
-				int lastKeySelect=0;
-				if(isSelectLastKey) {
-					lastKeySelect++;
-				}
-				for(;i<keys.Count-1+lastKeySelect;i++) {
-					if(keys[i].Equals("break")) {
-						if(selected is IKeyValue) {
-							Interpreter.breakMethod((IKeyValue)selected);
-						}
-						else {
-							Interpreter.breakMethod(new NetObject(selected,selected.GetType()));
-						}
-						Thread.CurrentThread.Suspend();
-						if(Interpreter.redoStatement) {
-							Interpreter.redoStatement=false;
-							throw new RestartStatementException();
-						}
-					}	
-					if(selected is IKeyValue) {
-						selected=((IKeyValue)selected)[keys[i]];
-					}
-					else {
-						if(selected==null) {
-							throw new ApplicationException("Key "+keys[i]+" does not exist");
-						}
-						selected=new NetObject(selected,selected.GetType())[keys[i]];
-					}
-
-				}
-				return selected;
-			}
-//			public static void ShowHelpBackThread(object obj) {
-//					Help.toolTip.Text=text;
-//					Graphics graphics=toolTip.CreateGraphics();
-//					Size size=graphics.MeasureString(text,
-//						toolTip.Font).ToSize();
-//					toolTip.Size=new Size(size.Width+10,size.Height+13);
-//					toolTip.Visible=true;
-//
-//					TreeNode selected=Editor.SelectedNode;
-//					int depth=0;
-//					while(selected.Parent!=null) {
-//						selected=selected.Parent;
-//						depth++;
-//					}
-//					int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
-//						Convert.ToInt32(
-//						graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
-//
-//					int y=5;
-//					TreeNode node=Editor.SelectedNode;
-//					while(node!=null) {
-//						y+=node.Bounds.Height;
-//						node=node.PrevVisibleNode;
-//					}
-//					toolTip.Location=new Point(x,y);
-//
-//				}
-//				else {
-//					listBox.Items.Clear();
-//					if(obj==null) {
-//						int asdf=0;
-//					}
-//					IKeyValue keyValue=obj is IKeyValue? (IKeyValue)obj:new NetObject(obj,obj.GetType());
-//					ArrayList keys=new ArrayList();
-//					foreach(DictionaryEntry entry in keyValue) {
-//						keys.Add(entry.Key);
-//					}
-//					keys.Sort(new HelpComparer());
-//					foreach(object key in keys) {
-//						object member;
-//						int imageIndex=0;
-//						if(lastObject is Map) {
-//							member=((Map)lastObject)[key];
-//						}
-//						else if(lastObject is NetClass) {
-//							MemberInfo[] members=((NetClass)lastObject).type.GetMember(key.ToString(),
-//								BindingFlags.Public|BindingFlags.Static);
-//							member=members[0];
-//						}
-//						else if(!(lastObject is Map)) {
-//							MemberInfo[] members=lastObject.GetType().GetMember(key.ToString(),
-//								BindingFlags.Public|BindingFlags.Instance);
-//							member=members.Length>0? members[0]:keyValue[key];
-//						}
-//						else {
-//							throw new ApplicationException("bug here");
-//						}
-//						string additionalText="";
-//
-//						if(member is Type || member is NetClass) {
-//							imageIndex=0;
-//						}
-//						else if(member is EventInfo) {
-//							imageIndex=1;
-//						}
-//						else if(member is MethodInfo || member is ConstructorInfo || member is NetMethod) {
-//							imageIndex=2;
-//						}
-//						else if(member is PropertyInfo) {
-//							imageIndex=4;
-//							object o=((PropertyInfo)member).GetValue(obj,new object[] {});
-//							if(o==null) {
-//								additionalText="null";
-//							}
-//							else {
-//								additionalText=o.ToString();
-//							}
-//						}
-//						else if(member is Map) {
-//							imageIndex=5;
-//						}
-//						else {
-//							if(member is FieldInfo) {
-//								additionalText=((FieldInfo)member).GetValue(obj).ToString();
-//							}
-//							else {
-//								additionalText=member.ToString();
-//							}
-//							imageIndex=6;
-//						}
-//						listBox.Items.Add(new GListBoxItem(key,additionalText,imageIndex));
-//					}
-//					Graphics graphics=Editor.window.CreateGraphics();
-//					TreeNode selected=Editor.SelectedNode;
-//					int depth=0;
-//					while(selected.Parent!=null) {
-//						selected=selected.Parent;
-//						depth++;
-//					}
-//					int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
-//						Convert.ToInt32(
-//						graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
-//
-//					int y=5;
-//					TreeNode node=Editor.SelectedNode;
-//					while(node!=null) {
-//						if(node.Bounds.Y<0) {
-//							break;
-//						}	
-//						y+=node.Bounds.Height;
-//						node=node.PrevVisibleNode;
-//
-//					}
-//					listBox.Location=new Point(x,y);
-//					int greatest=0;
-//					foreach(GListBoxItem item in listBox.Items) {
-//						int width=graphics.MeasureString(item.Text,listBox.Font).ToSize().Width;
-//						if(width>greatest){
-//							greatest=width;
-//						}								
-//					}
-//					listBox.Size=new Size(greatest+30,150<listBox.Items.Count*16+10? 150:listBox.Items.Count*16+10);
-//					listBox.Show();
-//					Editor.editor.Focus();
-//				}
-//				Editor.window.Activate();
-//			}
-//			public static void ShowHelpBackThread(object obj) {
-//				lastObject=obj;
-//				if(_isCall) {
-//					string text="";
-//					if(obj is NetMethod) {
-//						//							if(lastSelectedNode!=null && lastSelectedNode==Editor.SelectedNode||
-//						//								lastSelectedNode.Parent==Editor.SelectedNode.Parent
-//						if(!lastMethodName.Equals(((NetMethod)obj).methods[0].Name)) {
-//							overloadIndex=0;
-//						}
-//						overloadNumber=((NetMethod)obj).methods.Length;
-//						if(overloadIndex>=overloadNumber) {
-//							overloadIndex=0;
-//						}
-//						else if(overloadIndex<0) {
-//							overloadIndex=overloadNumber-1;
-//						}
-//						text=Help.GetDoc(((NetMethod)obj).methods[overloadIndex],true,true,true);
-//						lastMethodName=((NetMethod)obj).methods[0].Name;
-//					}
-//					else if (obj is NetClass) {
-//						if(!lastMethodName.Equals(((NetClass)obj).constructor.methods[0].Name)) {
-//							overloadIndex=0;
-//						}
-//						overloadNumber=((NetClass)obj).constructor.methods.Length;
-//						if(overloadIndex>=overloadNumber) {
-//							overloadIndex=0;
-//						}
-//						else if(overloadIndex<0) {
-//							overloadIndex=overloadNumber-1;
-//						}
-//						text=Help.GetDoc(((NetClass)obj).constructor.methods[overloadIndex],true,true,true);
-//						lastMethodName=((NetClass)obj).constructor.methods[0].Name;
-//					}
-//					else if(obj is Map) {
-//						text=FunctionHelp((Map)obj);
-//					}
-//					Help.toolTip.Text=text;
-//					Graphics graphics=toolTip.CreateGraphics();
-//					Size size=graphics.MeasureString(text,
-//						toolTip.Font).ToSize();
-//					toolTip.Size=new Size(size.Width+10,size.Height+13);
-//					toolTip.Visible=true;
-//
-//					TreeNode selected=Editor.SelectedNode;
-//					int depth=0;
-//					while(selected.Parent!=null) {
-//						selected=selected.Parent;
-//						depth++;
-//					}
-//					int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
-//						Convert.ToInt32(
-//						graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
-//
-//					int y=5;
-//					TreeNode node=Editor.SelectedNode;
-//					while(node!=null) {
-//						y+=node.Bounds.Height;
-//						node=node.PrevVisibleNode;
-//					}
-//					toolTip.Location=new Point(x,y);
-//
-//				}
-//				else {
-//					listBox.Items.Clear();
-//					if(obj==null) {
-//						int asdf=0;
-//					}
-//					IKeyValue keyValue=obj is IKeyValue? (IKeyValue)obj:new NetObject(obj,obj.GetType());
-//					ArrayList keys=new ArrayList();
-//					foreach(DictionaryEntry entry in keyValue) {
-//						keys.Add(entry.Key);
-//					}
-//					keys.Sort(new HelpComparer());
-//					foreach(object key in keys) {
-//						object member;
-//						int imageIndex=0;
-//						if(lastObject is Map) {
-//							member=((Map)lastObject)[key];
-//						}
-//						else if(lastObject is NetClass) {
-//							MemberInfo[] members=((NetClass)lastObject).type.GetMember(key.ToString(),
-//								BindingFlags.Public|BindingFlags.Static);
-//							member=members[0];
-//						}
-//						else if(!(lastObject is Map)) {
-//							MemberInfo[] members=lastObject.GetType().GetMember(key.ToString(),
-//								BindingFlags.Public|BindingFlags.Instance);
-//							member=members.Length>0? members[0]:keyValue[key];
-//						}
-//						else {
-//							throw new ApplicationException("bug here");
-//						}
-//						string additionalText="";
-//
-//						if(member is Type || member is NetClass) {
-//							imageIndex=0;
-//						}
-//						else if(member is EventInfo) {
-//							imageIndex=1;
-//						}
-//						else if(member is MethodInfo || member is ConstructorInfo || member is NetMethod) {
-//							imageIndex=2;
-//						}
-//						else if(member is PropertyInfo) {
-//							imageIndex=4;
-//							object o=((PropertyInfo)member).GetValue(obj,new object[] {});
-//							if(o==null) {
-//								additionalText="null";
-//							}
-//							else {
-//								additionalText=o.ToString();
-//							}
-//						}
-//						else if(member is Map) {
-//							imageIndex=5;
-//						}
-//						else {
-//							if(member is FieldInfo) {
-//								additionalText=((FieldInfo)member).GetValue(obj).ToString();
-//							}
-//							else {
-//								additionalText=member.ToString();
-//							}
-//							imageIndex=6;
-//						}
-//						listBox.Items.Add(new GListBoxItem(key,additionalText,imageIndex));
-//					}
-//					Graphics graphics=Editor.window.CreateGraphics();
-//					TreeNode selected=Editor.SelectedNode;
-//					int depth=0;
-//					while(selected.Parent!=null) {
-//						selected=selected.Parent;
-//						depth++;
-//					}
-//					int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
-//						Convert.ToInt32(
-//						graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
-//
-//					int y=5;
-//					TreeNode node=Editor.SelectedNode;
-//					while(node!=null) {
-//						if(node.Bounds.Y<0) {
-//							break;
-//						}	
-//						y+=node.Bounds.Height;
-//						node=node.PrevVisibleNode;
-//
-//					}
-//					listBox.Location=new Point(x,y);
-//					int greatest=0;
-//					foreach(GListBoxItem item in listBox.Items) {
-//						int width=graphics.MeasureString(item.Text,listBox.Font).ToSize().Width;
-//						if(width>greatest){
-//							greatest=width;
-//						}								
-//					}
-//					listBox.Size=new Size(greatest+30,150<listBox.Items.Count*16+10? 150:listBox.Items.Count*16+10);
-//					listBox.Show();
-//					Editor.editor.Focus();
-//				}
-//				Editor.window.Activate();
-//			}
-//			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
-//				object selected=current;
-//				int i=0;
-//				if(keys.Count==2 && keys[1].Equals("Invoke")) {
-//					int asdf=0;
-//				}
-//				if(keys[0].Equals("this")) {
-//					i++;
-//				}
-//				else if(keys[0].Equals("caller")) {
-//					int numCallers=0;
-//					foreach(object key in keys) {
-//						if(key.Equals("caller")) {
-//							numCallers++;
-//							i++;
-//						}
-//						else {
-//							break;
-//						}
-//					}
-//					selected=Interpreter.callers[Interpreter.callers.Count-numCallers];
-//				}
-//				else if(keys[0].Equals("parent")) {
-//					foreach(object key in keys) {
-//						if(key.Equals("parent")) {
-//							selected=((IKeyValue)selected).Parent;
-//							i++;
-//						}
-//						else {
-//							break;
-//						}
-//					}
-//				}
-//				else if(keys[0].Equals("arg")) {
-//					selected=Interpreter.arguments[Interpreter.arguments.Count-1];
-//					i++;
-//				}				
-//				else if(keys[0].Equals("search")||isRightSide) {
-//					if(keys[0].Equals("search")) {
-//						i++;
-//					}
-//					while(selected!=null && !((IKeyValue)selected).ContainsKey(keys[i])) {
-//						selected=((IKeyValue)selected).Parent;
-//					}
-//					if(selected==null) {
-//						throw new ApplicationException("Key "+keys[i]+" not found");
-//					}
-//				}
-//				int lastKeySelect=0;
-//				if(isSelectLastKey) {
-//					lastKeySelect++;
-//				}
-//				for(;i<keys.Count-1+lastKeySelect;i++) {
-//					if(keys[i].Equals("break")) {
-//						Interpreter.breakMethod(selected);
-//						Thread.CurrentThread.Suspend();
-//						if(Interpreter.redoStatement) {
-//							Interpreter.redoStatement=false;
-//							throw new RestartStatementException();
-//						}
-//					}	
-//					if(selected is IKeyValue) {
-//						selected=((IKeyValue)selected)[keys[i]];
-//					}
-//					else {
-//						if(selected==null) {
-//							throw new ApplicationException("Key "+keys[i]+" does not exist");
-//						}
-//						selected=new NetObject(selected,selected.GetType())[keys[i]];
-//					}
-//
-//				}
-//				return selected;
-//			}
 			public void Assign(ref object current,object val,bool isInFunction) {
 				ArrayList keys=new ArrayList();
 				foreach(IExpression expression in expressions) {
 					keys.Add(expression.Evaluate((Map)current));
 				}
 				if(keys.Count==1 && keys[0].Equals("this")) {
-					if(val is IKeyValue) {
-						((IKeyValue)val).Parent=((IKeyValue)current).Parent;
+					if(val is IMap) {
+						((IMap)val).Parent=((IMap)current).Parent;
 						current=((IKeyValue)val).Clone();
 						if(current is Map) {
 							Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
@@ -760,35 +260,143 @@ namespace Meta {
 					keyValue[keys[keys.Count-1]]=val;
 				}
 			}
+			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
+				object selected=current;
+				int i=0;
+				if(keys.Count==2 && keys[1].Equals("Invoke")) {
+					int asdf=0;
+				}
+				if(keys[0].Equals("this")) {
+					i++;
+				}
+				else if(keys[0].Equals("caller")) {
+					int numCallers=0;
+					foreach(object key in keys) {
+						if(key.Equals("caller")) {
+							numCallers++;
+							i++;
+						}
+						else {
+							break;
+						}
+					}
+					selected=Interpreter.callers[Interpreter.callers.Count-numCallers];
+				}
+				else if(keys[0].Equals("parent")) {
+					foreach(object key in keys) {
+						if(key.Equals("parent")) {
+							selected=((IMap)selected).Parent;
+							i++;
+						}
+						else {
+							break;
+						}
+					}
+				}
+				else if(keys[0].Equals("arg")) {
+					selected=Interpreter.arguments[Interpreter.arguments.Count-1];
+					i++;
+				}				
+				else if(keys[0].Equals("search")||isRightSide) {
+					if(keys[0].Equals("search")) {
+						i++;
+					}
+					while(selected!=null && !((IKeyValue)selected).ContainsKey(keys[i])) {
+						selected=((IMap)selected).Parent;
+					}
+					if(selected==null) {
+						throw new ApplicationException("Key "+keys[i]+" not found");
+					}
+				}
+				int lastKeySelect=0;
+				if(isSelectLastKey) {
+					lastKeySelect++;
+				}
+				for(;i<keys.Count-1+lastKeySelect;i++) {
+					if(keys[i].Equals("break")) {
+						if(selected is IKeyValue) {
+							Interpreter.breakMethod((IKeyValue)selected);
+						}
+						else {
+							Interpreter.breakMethod(new NetObject(selected,selected.GetType()));
+						}
+						Thread.CurrentThread.Suspend();
+					}	
+					if(selected is IKeyValue) {
+						selected=((IKeyValue)selected)[keys[i]];
+					}
+					else {
+						if(selected==null) {
+							throw new ApplicationException("Key "+keys[i]+" does not exist");
+						}
+						selected=new NetObject(selected,selected.GetType())[keys[i]];
+					}
+
+				}
+				return selected;
+			}
+			public bool IdenticalTo(object obj) { // check
+				if(obj is Select) {
+					Select select=(Select)obj;
+					if(expressions.Count==select.expressions.Count)  {
+						for(int i=0;i<expressions.Count;i++) {
+							if(!((IExpression)expressions[i]).IdenticalTo(select.expressions[i])) {
+								return false;
+							}
+						}
+						return true;
+					}
+				}
+				return false;
+			}
+			public void ReplaceWith(IExpression replace) { // check
+				if(!IdenticalTo(replace)) {
+					Select select=(Select)replace;
+					int i=0;
+					for(;i<expressions.Count && i<select.expressions.Count;i++) {
+						expressions[i]=Interpreter.ReplaceWith(
+							expressions[i],select.expressions[i]);
+					}
+					if(expressions.Count>select.expressions.Count) {
+						expressions.RemoveRange(i,expressions.Count-i);
+					}
+					else {
+						expressions.AddRange(select.expressions.GetRange(i,select.expressions.Count-i));
+					}
+				}
+			}
+			public Select(Map code) {
+				foreach(Map expression in ((Map)code["select"]).IntKeyValues) {
+					this.expressions.Add(expression.Compile());
+				}
+			}
+			public readonly ArrayList expressions=new ArrayList();
+			public ArrayList parents=new ArrayList();
 		}
-		public class RestartStatementException: ApplicationException {
-		}
-		public delegate void BreakMethodDelegate(IKeyValue obj);
+		public delegate void BreakMethodDelegate(IKeyValue obj);//rename
 		public class Interpreter  {
 			public static string path;
-			public static bool redoStatement=false; // just for editor, remove
 			public static BreakMethodDelegate breakMethod; // editor, remove?
 
-			public static ArrayList callers=new ArrayList();
+			public static ArrayList callers=new ArrayList();  // make these stacks?, make them private?
 			public static ArrayList arguments=new ArrayList();
 
-			public static Hashtable netConversion=new Hashtable();
+			public static Hashtable netConversion=new Hashtable(); //move conversions into interpreter?
 			public static Hashtable metaConversion=new Hashtable();
 
 			public static ArrayList compiledMaps=new ArrayList(); // needed when conversion are added.
 																					// make adding of conversions illegal?
-			public static Map lastProgram; // only for editor, maybe move
 
 			public static ArrayList loadedAssemblies=new ArrayList(); // not public
 
 
-			public static object Replace(object original,object replace) { //check
+			public static object ReplaceWith(object original,object replace) { //check
 				if(original.GetType().Equals(replace.GetType())) {
 					if(original is Statement) {
-						((Statement)original).Replace((Statement)replace);
+						((Statement)original).ReplaceWith((Statement)replace);
 					}
 					else {
-						((IExpression)original).Replace((IExpression)replace);
+						((IExpression)original).ReplaceWith((IExpression)replace);
 					}
 					return original;
 				}
@@ -796,27 +404,26 @@ namespace Meta {
 					return replace;
 				}
 			}
-			public static object Arg {	//not needed very often
+			public static object Arg {	//not needed very often, combine with above
 				get {
 					return arguments[arguments.Count-1];
 				}
 			}
-			public static RecognizeLiteral[] Interceptions { // only used once
+			public static RecognizeLiteral[] Interceptions { // only used once, remove, make private
 				get {
 					return (RecognizeLiteral[])interception.ToArray(typeof(RecognizeLiteral));
 				}
 			}
-
 			public static object ConvertToMeta(object obj) { 
 				if(obj==null) {
 					return null;
 				}
 				ConvertDotNetToMeta conversion=(ConvertDotNetToMeta)metaConversion[obj.GetType()];
-				if(conversion!=null) {
-					return conversion.Convert(obj);
+				if(conversion==null) {
+					return obj;
 				}
 				else {
-					return obj;
+					return conversion.Convert(obj);
 				}
 			}
 			public static object ConvertToNet(object obj,Type targetType) {
@@ -829,16 +436,16 @@ namespace Meta {
 					return obj;
 				}
 			}
-			public static void AddConvertMetaToDotNet(ConvertMetaToDotNet conversion) { // maybe remove
+			public static void AddConvertMetaToDotNet(ConvertMetaToDotNet conversion) { // remove, do in constructor
 				if(!netConversion.ContainsKey(conversion.target)) {
 					netConversion[conversion.target]=new Hashtable();
 				}
 				((Hashtable)netConversion[conversion.target])[conversion.source]=conversion;
 			}
-			public static void AddConvertDotNetToMeta(ConvertDotNetToMeta conversion) { // maybe remove
+			public static void AddConvertDotNetToMeta(ConvertDotNetToMeta conversion) { // remove, do in constructor
 				metaConversion[conversion.source]=conversion;
 			}
-			public static Map String(string symbol) { // maybe remove
+			public static Map String(string symbol) { // move, not really needed here, but in conversions
 				Map map=new Map();
 				foreach(char character in symbol) {
 					map[new Integer(map.Count+1)]=new Integer((int)character);
@@ -860,52 +467,33 @@ namespace Meta {
 				}
 				return text;
 			}
-//			[DontSerializeFieldOrProperty]
-			private static ArrayList interception=new ArrayList();
-//			[DontSerializeFieldOrProperty]
+			private static ArrayList interception=new ArrayList();  //rename
 			public static ArrayList cashedLiterals=new ArrayList(); // maybe remove, if interceptions cannot be added
 																					  // at runtime
 
-			public static void AddInterception(RecognizeLiteral i)  { //maybe remove
+			public static void AddInterception(RecognizeLiteral i)  { //remove
 				interception.Add(i);
 				foreach(Literal createLiteral in cashedLiterals) {
 					createLiteral.cached=null;
 				}
 				cashedLiterals.Clear();
 			}
-
-			// which methods are necessary here?
-//			public static object RunNormal(string path,Map argument) { // remove, will (soon) not be needed anymore
-//				Interpreter.arguments.Add(argument);
-//				StreamReader reader=new StreamReader(path);
-//				lastProgram=Mapify(reader);
-//				object result=lastProgram.Call((Map)callers[callers.Count-1],new Map());
-//				Interpreter.arguments.Remove(argument);
-//				reader.Close();
-//				return result;
-//			}
-			public static object Run(string path,IKeyValue argument) {
-				return Run(new StreamReader(path),argument);
+			public static object Run(string path,IKeyValue argument) { //why two different versions?
+				return Run(new StreamReader(path),argument);					//not really necessary
 			}
 			public static object Run(TextReader reader,IKeyValue argument) {
 				ArrayList parents=new ArrayList();
 				Map existing=new Map();
-//				existing["meta"]=new NetClass(typeof(Interpreter));
-//				foreach(MethodInfo method in typeof(Functions).GetMethods(
-//					BindingFlags.Public|BindingFlags.Static)) {
-//					existing[method.Name]=new NetMethod(method.Name,null,typeof(Functions));
-//				}
-//				existing.Parent=new Meta.Types.Library();
 				existing.Parent=Meta.Types.Library.library;
 				Interpreter.arguments.Add(argument);
-				lastProgram=Mapify(reader);
+				Map lastProgram=Mapify(reader);
 				object result=lastProgram.Call(new Map(),existing);
 				Interpreter.arguments.Remove(argument);
 				return result;
 			}
-			public static AST Parse(TextReader stream)  { //rename
-				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser(
-					new AddIndentationTokensToStream(new MetaLexer(stream)));
+			public static AST Parse(TextReader stream)  { //rename, necessary as public method?
+				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser( // only for tests,it seems
+					new AddIndentationTokensToStream(new MetaLexer(stream))); // and some other stuff
 				parser.map();
 				return parser.getAST();
 			}
@@ -914,8 +502,8 @@ namespace Meta {
 			}
 			static Interpreter() {
 				Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
-				path=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName;
-				//path=Path.Combine(directoryName,"library");
+				path=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName; //????? 
+																														 //fix that path stuff
 				foreach(Type type in typeof(LiteralRecognitions).GetNestedTypes()) {
 					AddInterception((RecognizeLiteral)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
@@ -926,151 +514,44 @@ namespace Meta {
 					AddConvertMetaToDotNet((ConvertMetaToDotNet)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
 			}
-			public static IKeyValue MergeTwo(IKeyValue first,IKeyValue second) { // remove
-				Map map=new Map();
-				map.Parent=first.Parent; //probably unnecessary
-				map[new Integer(1)]=first;
-				map[new Integer(2)]=second;
-				return Merge(map);
+			public static IKeyValue Merge(params IKeyValue[] maps) { // why two versions?
+				return MergeCollection(maps);
 			}
-//			[MetaMethod("")]
-			public static IKeyValue Merge(Map maps) { // get rid of use of Map
+			public static IKeyValue MergeCollection(ICollection maps) {
 				Map result=new Map();
-				foreach(DictionaryEntry i in maps) {
-					foreach(DictionaryEntry j in (IKeyValue)i.Value) {
-						if(j.Value is IKeyValue && !(j.Value is NetClass)&& result.ContainsKey(j.Key) 
-							&& result[j.Key] is IKeyValue && !(result[j.Key] is NetClass)) {
-							result[j.Key]=MergeTwo((IKeyValue)result[j.Key],(IKeyValue)j.Value);
+				foreach(IKeyValue map in maps) {
+					foreach(DictionaryEntry entry in (IKeyValue)map) {
+						if(entry.Value is IKeyValue && !(entry.Value is NetClass)&& result.ContainsKey(entry.Key) 
+							&& result[entry.Key] is IKeyValue && !(result[entry.Key] is NetClass)) {
+							result[entry.Key]=Merge((IKeyValue)result[entry.Key],(IKeyValue)entry.Value);
 						}
 						else {
-							result[j.Key]=j.Value;
+							result[entry.Key]=entry.Value;
 						}
 					}
 				}
 				return result;
 			}
-			public static Map LoadAssembly(Map map,bool collapseNamespaces) { // move to LibraryMap
-				Map root=new Map();
-				foreach(DictionaryEntry entry in map) {
-					string name=(string)entry.Value;
-					Assembly assembly=Assembly.LoadWithPartialName(name);
-					if(assembly==null)  {
-						assembly=Assembly.LoadFrom(name);
-					}
-					if(assembly==null) {
-						throw new ApplicationException(
-							"The assembly "+name+" could not be found."+
-							"Current directory: "+Directory.GetCurrentDirectory());
-					}
-					loadedAssemblies.Add(assembly.Location);
-
-					foreach(Type type in assembly.GetTypes())  {
-						if(type.DeclaringType==null)  {
-							Map position=root;
-							if(! collapseNamespaces) {
-								ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
-								subPaths.RemoveAt(subPaths.Count-1);
-								foreach(string subPath in subPaths)  {
-									if(!position.ContainsKey(subPath))  {
-										position[subPath]=new Map();
-									}
-									position=(Map)position[subPath];
-								}
-							}
-							position[type.Name]=new NetClass(type);
-						}
-					}
-				}
-				return root;
-			}
 		}
 	}
 	namespace Types  {
 		public class UnloadedMetaLibrary {
-			string path;
-			public UnloadedMetaLibrary(string path) {
-				this.path=path;
-			}
 			public object Load() {
 				return Interpreter.Run(path,Library.library);
 			}
+			public UnloadedMetaLibrary(string path) {
+				this.path=path;
+			}
+			string path;
 		}
-		public class Library: IKeyValue {
-			public static Library library=new Library();
-			private Map cash=new Map();
-			public static string libraryPath="library"; // FIXME: how on earth to find this path?
-																	  // maybe need config file
-						
-			public static Map LoadAssembly(Assembly assembly) {
-				Map root=new Map();
-				foreach(Type type in assembly.GetExportedTypes())  {
-					if(type.DeclaringType==null)  {
-						Map position=root;
-						//								if(! collapseNamespaces) {
-						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
-						subPaths.RemoveAt(subPaths.Count-1);
-						foreach(string subPath in subPaths)  {
-							if(!position.ContainsKey(subPath))  {
-								position[subPath]=new Map();
-							}
-							position=(Map)position[subPath];
-						}
-						//								}
-						position[type.Name]=new NetClass(type);
-					}
-				}
-				Interpreter.loadedAssemblies.Add(assembly.Location); //assemblies in library
-																							  // folder still missing
-				return root;
-			}
-			public Library() {
-				libraryPath=Path.Combine(Interpreter.path,"library");
-
-				IAssemblyEnum e=AssemblyCache.CreateGACEnum();
-				IAssemblyName an; 
-				AssemblyName name;
-				cash=(Map)Interpreter.MergeTwo(cash,(Map)LoadAssembly(Assembly.LoadWithPartialName("mscorlib")));
-				while (AssemblyCache.GetNextAssembly(e, out an) == 0) { 
-					name=GetAssemblyName(an);
-					Assembly assembly=Assembly.LoadWithPartialName(name.Name);
-					if(name.Name.StartsWith("Microsoft.")) {
-						microsoftAssemblies.Add(assembly);
-					}
-					else {
-						cash=(Map)Interpreter.MergeTwo(cash,LoadAssembly(assembly));
-					}
-				}
-				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
-					Assembly assembly=Assembly.LoadFrom(fileName);
-					Interpreter.loadedAssemblies.Add(assembly.Location);
-					cash=(Map)Interpreter.MergeTwo(cash,LoadAssembly(assembly));
-				}
-				foreach(string fileName in Directory.GetFiles(libraryPath,"*.exe")) {
-					Assembly assembly=Assembly.LoadFrom(fileName);
-					Interpreter.loadedAssemblies.Add(assembly.Location);
-					cash=(Map)Interpreter.MergeTwo(cash,LoadAssembly(assembly));
-				}
-				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
-					cash[Path.GetFileNameWithoutExtension(fileName)]=new UnloadedMetaLibrary(fileName);
-				}
-			}
-			ArrayList microsoftAssemblies=new ArrayList();
-			private static AssemblyName GetAssemblyName(IAssemblyName nameRef) {
-				AssemblyName name = new AssemblyName();
-				name.Name = AssemblyCache.GetName(nameRef);
-				name.Version = AssemblyCache.GetVersion(nameRef);
-				name.CultureInfo = AssemblyCache.GetCulture(nameRef);
-				name.SetPublicKeyToken(AssemblyCache.GetPublicKeyToken(nameRef));
-				return name;
-			}
-			bool microsoftLoaded=false;
+		public class Library: IKeyValue,IMap {
 			public object this[object key] {
 				get {
 					if(cash.ContainsKey(key)) {
 						if(key.Equals("Microsoft")) {
 							if(!microsoftLoaded) {
 								foreach(Assembly assembly in microsoftAssemblies) {
-									cash=(Map)Interpreter.MergeTwo(cash,LoadAssembly(assembly));
+									cash=(Map)Interpreter.Merge(cash,LoadAssembly(assembly));
 								}
 								microsoftLoaded=true;
 							}
@@ -1090,7 +571,7 @@ namespace Meta {
 			}
 			public ArrayList Keys {
 				get {
-					return new ArrayList(cash.Keys);
+					return cash.Keys;
 				}
 			}
 			public IKeyValue Clone() {
@@ -1114,35 +595,97 @@ namespace Meta {
 			}
 			public IEnumerator GetEnumerator() {
 				foreach(DictionaryEntry entry in cash) { // to make sure everything is loaded
-					object o=cash[entry.Key];						  // not good, should make own enumerator
+					object o=cash[entry.Key];				  // not good, should make own enumerator
 				}
 				return cash.GetEnumerator();
 			}
-		}
+			public static Map LoadAssembly(Assembly assembly) { //refactor
+				Map root=new Map();
+				foreach(Type type in assembly.GetExportedTypes())  {
+					if(type.DeclaringType==null)  {
+						Map position=root;
+						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
+						subPaths.RemoveAt(subPaths.Count-1);
+						foreach(string subPath in subPaths)  {
+							if(!position.ContainsKey(subPath))  {
+								position[subPath]=new Map();
+							}
+							position=(Map)position[subPath];
+						}
+						position[type.Name]=new NetClass(type);
+					}
+				}
+				Interpreter.loadedAssemblies.Add(assembly.Location);
+				return root;
+			}
+			private static AssemblyName GetAssemblyName(IAssemblyName nameRef) {
+				AssemblyName name = new AssemblyName();
+				name.Name = AssemblyCache.GetName(nameRef);
+				name.Version = AssemblyCache.GetVersion(nameRef);
+				name.CultureInfo = AssemblyCache.GetCulture(nameRef);
+				name.SetPublicKeyToken(AssemblyCache.GetPublicKeyToken(nameRef));
+				return name;
+			}
+			public Library() {
+				libraryPath=Path.Combine(Interpreter.path,"library");
 
-		public interface IMetaType { // rethink what this is useful for
+				IAssemblyEnum e=AssemblyCache.CreateGACEnum();
+				IAssemblyName an; 
+				AssemblyName name;
+				cash=(Map)Interpreter.Merge(cash,(Map)LoadAssembly(Assembly.LoadWithPartialName("mscorlib")));
+				while (AssemblyCache.GetNextAssembly(e, out an) == 0) { 
+					name=GetAssemblyName(an);
+					Assembly assembly=Assembly.LoadWithPartialName(name.Name);
+					if(name.Name.StartsWith("Microsoft.")) {
+						microsoftAssemblies.Add(assembly);
+					}
+					else {
+						cash=(Map)Interpreter.Merge(cash,LoadAssembly(assembly));
+					}
+				}
+				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
+					Assembly assembly=Assembly.LoadFrom(fileName);
+					cash=(Map)Interpreter.Merge(cash,LoadAssembly(assembly));
+				}
+				foreach(string fileName in Directory.GetFiles(libraryPath,"*.exe")) {
+					Assembly assembly=Assembly.LoadFrom(fileName);
+					cash=(Map)Interpreter.Merge(cash,LoadAssembly(assembly));
+				}
+				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
+					cash[Path.GetFileNameWithoutExtension(fileName)]=new UnloadedMetaLibrary(fileName);
+				}
+			}
+			ArrayList microsoftAssemblies=new ArrayList();
+			bool microsoftLoaded=false;
+			public static Library library=new Library();
+			private Map cash=new Map();
+			public static string libraryPath="library"; 
+			//remove
+		}
+//		public interface IMetaType { // rethink what this is useful for
+//		}
+//		public abstract class Callable { // remove
+//			private IKeyValue parent;
+//			[DontSerializeFieldOrProperty]
+//			public IKeyValue Parent {
+//				get {
+//					return parent;
+//				}
+//				set {
+//					parent=value;
+//				}
+//			}
+//		}
+		public interface ICallable{ // not very useful, but ok
+			object Call(Map caller);
+		}
+		public interface IMap: IKeyValue {
 			IKeyValue Parent {
 				get;
 				set;
 			}
 		}
-		public abstract class Callable { // confusing, just because of Parent, really still needed?
-													// if useful, rename
-			private IKeyValue parent;
-			[DontSerializeFieldOrProperty]
-			public IKeyValue Parent {
-				get {
-					return parent;
-				}
-				set {
-					parent=value;
-				}
-			}
-		}
-		public interface ICallable: IMetaType{ // not very useful, but ok
-			object Call(Map caller);
-		}
-		public interface IKeyValue: IMetaType,IEnumerable { // not used consequently instead of map
+		public interface IKeyValue: IEnumerable { // not used consequently instead of map
 			object this[object key] {
 				get;
 				set;
@@ -1150,15 +693,13 @@ namespace Meta {
 			ArrayList Keys {
 				get;
 			}
-			IKeyValue Clone();
-			int Count {
+			IKeyValue Clone();//remove
+			int Count {//remove?
 				get;
 			}
-
 			bool ContainsKey(object key);			
 		}		
-		public class Map: IKeyValue, ICallable, IEnumerable { // could use Callable
-			public Map arg;
+		public class Map: IKeyValue,IMap, ICallable, IEnumerable { // could use Callable
 			private IKeyValue parent;
 			public int numberAutokeys=0;
 			private ArrayList keys;
@@ -1188,27 +729,15 @@ namespace Meta {
 				}
 			}
 			public object this[object key]  {
-				get  {
-					object firstResult=table[key];
-					if(firstResult==null) {
-						if(arg!=null) {
-							return arg[key];
-						}
-					}
-					return firstResult;
+				get {
+					return table[key];
 				}
-				set  {
+				set { //refactor soem more
 					if(value!=null) {
 						isHashCashed=false;
-						object val;
-						if(value is IKeyValue) {
-							val=((IKeyValue)value).Clone();
-						}
-						else {
-							val=value;
-						}			
-						if(value is IMetaType) {
-							((IMetaType)val).Parent=this;
+						object val=value is IKeyValue? ((IKeyValue)value).Clone(): value;
+						if(value is IMap) {
+							((IMap)val).Parent=this;
 						}
 						if(!table.Contains(key)) {
 							keys.Add(key);
@@ -1282,17 +811,9 @@ namespace Meta {
 				return compiled;
 			}
 			public bool ContainsKey(object key)  {
-				if(!table.Contains(key)) {
-					if(arg!=null) {
-						return arg.ContainsKey(key);
-					}
-					else {
-						return false;
-					}
-				}
-				return true;
+				return table.Contains(key);
 			}
-			public override bool Equals(object obj) { // change because of arg necessary???
+			public override bool Equals(object obj) {
 				bool equal=true;
 				if(!Object.ReferenceEquals(obj,this)) {
 					if(!(obj is Map)) {
@@ -1320,7 +841,7 @@ namespace Meta {
 			}
 			private bool isHashCashed=false;
 			private int hash;
-			public override int GetHashCode()  { // change because of arg necessary???
+			public override int GetHashCode()  {
 				if(!isHashCashed) {
 					int h=0;
 					foreach(DictionaryEntry entry in table) {
@@ -1338,7 +859,7 @@ namespace Meta {
 				this.keys=new ArrayList();
 			}
 		}
-		public class MapEnumerator: IEnumerator {
+		public class MapEnumerator: IEnumerator { //make this useful for NetContainer, too?
 			private int index=-1;
 			private Map map; public MapEnumerator(Map map) {
 				this.map=map;
@@ -1356,18 +877,6 @@ namespace Meta {
 				index=-1;
 			}
 		}
-//		[AttributeUsage(AttributeTargets.Method|AttributeTargets.Constructor,Inherited=true)]
-//		public class MetaMethodAttribute:Attribute { // still needed? maybe needed again soon
-//			public MetaMethodAttribute(string documentation) {
-//				if(documentation!="") {
-//					this.documentation=documentation;
-//				}
-//				else {
-//					this.documentation="<no documentation>";
-//				}
-//			}
-//			public string documentation;
-//		}
 		public delegate object NullDelegate();
 		public class NetMethod: ICallable {
 			private IKeyValue parent;
@@ -1395,17 +904,8 @@ namespace Meta {
 				return Interpreter.ConvertToMeta(CallMethod((Map)Interpreter.Arg));
 			}
 			public object CallMethod(Map arguments) { //sucks, refactor
-				if(this.name.Equals("GetKeys")) {
-					int asdf=0;
-				}
 				ArrayList list;
-//				if(attribute!=null) {
-//					list=new ArrayList();
-//					list.Add(arguments);
-//				}
-//				else {
 					list=arguments.IntKeyValues;
-//				}
 				object result=null;
 				try { // doubtful usage of try
 					//refactor
@@ -1524,7 +1024,7 @@ namespace Meta {
 								}
 								executed=true;
 							}
-							else {
+							else { //what here?
 								//throw new ApplicationException("\nArguments match more than one overload of "+name);
 							}
 						}
@@ -1532,11 +1032,9 @@ namespace Meta {
 					if(!executed) {
 						if(savedMethod is ConstructorInfo) {
 							return ((ConstructorInfo)savedMethod).Invoke(new object[] {});
-//							result=((ConstructorInfo)method).Invoke(args.ToArray());
 						}
 						else {
 							return savedMethod.Invoke(target,new object[] {});
-//							result=method.Invoke(target,args.ToArray());
 						}
 
 					}
@@ -1635,13 +1133,6 @@ namespace Meta {
 				this.type=type;
 				this.invokeMemberFlags=invokeFlags;
 				this.savedMethod=method;
-				if(method!=null) {
-//					Attribute[] attributes=(Attribute[])
-//						method.GetCustomAttributes(typeof(MetaMethodAttribute),true);
-//					if(attributes.Length!=0) {
-//						this.attribute=(MetaMethodAttribute)attributes[0];
-//					}
-				}
 				this.methods=methods;
 			}
 			// refactor
@@ -1906,6 +1397,18 @@ namespace Meta {
 					return table;
 				}
 			}
+		}
+		public abstract class ConvertMetaToDotNet {
+			public Type source;
+			public Type target;
+			public abstract object Convert(object obj);
+		}
+		public abstract class ConvertDotNetToMeta {
+			public Type source;
+			public abstract object Convert(object obj);
+		}
+		public abstract class RecognizeLiteral {
+			public abstract object Recognize(string text);
 		}
 		public class LiteralRecognitions {
 			// order of classes is important here !

@@ -247,15 +247,6 @@ Entry (DictionaryEntry)
     savedMethod (RuntimeMethodInfo):
       "Meta.Types.Map Each()"
 Entry (DictionaryEntry)
-  Key (String):
-    "Load"
-  Value (NetMethod):
-    methods (MethodInfo[]):
-      Entry (RuntimeMethodInfo)
-        "Void Load()"
-    savedMethod (RuntimeMethodInfo):
-      "Void Load()"
-Entry (DictionaryEntry)
   Key (Integer):
     "2"
   Value (String):

@@ -106,7 +106,7 @@
             <Include>
                 <File
                     RelPath = "Editor.cs"
-                    SubType = "Component"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
