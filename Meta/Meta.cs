@@ -485,7 +485,7 @@ namespace Meta {
 			}
 			public static AST ParseToAst(TextReader stream)  {
 				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser(
-					new AddIndentationTokensToStream(new MetaLexer(stream)));
+					new IndentationParser(new MetaLexer(stream)));
 				parser.map();
 				return parser.getAST();
 			}
@@ -2039,8 +2039,8 @@ namespace Meta {
 		}
 	}
 	namespace Parser  {
-		public class AddIndentationTokensToStream: TokenStream {
-			public AddIndentationTokensToStream(TokenStream originalStream)  {
+		public class IndentationParser: TokenStream {
+			public IndentationParser(TokenStream originalStream)  {
 				this.originalStream=originalStream;
 				AddIndentationTokensToGetToLevel(0);
 			}
@@ -2052,7 +2052,7 @@ namespace Meta {
 							AddIndentationTokensToGetToLevel(-1);
 							break;
 						case MetaLexerTokenTypes.INDENTATION:
-							AddIndentationTokensToGetToLevel(t.getText().Length/2);
+							AddIndentationTokensToGetToLevel(t.getText().Length/4);
 							break;
 						default:
 							streamBuffer.Enqueue(t);
