@@ -229,7 +229,7 @@ namespace Editor {
 			listBox.Visible=false;
 			listBox.TabStop=false;
 			toolTip.Visible=false;
-			toolTip.AutoSize=true;
+			//toolTip.AutoSize=true;
 			toolTip.BackColor=Color.LightYellow;
 			toolTip.BorderStyle=BorderStyle.FixedSingle;
 			listBox.SelectedIndexChanged+=new EventHandler(listBox_SelectedIndexChanged);
@@ -239,6 +239,9 @@ namespace Editor {
 		}
 
 		private static void listBox_SelectedIndexChanged(object sender, EventArgs e) {
+			if(listBox.SelectedItem==null) {
+				return;
+			}
 			string text;
 			if(lastObject is NetClass) {
 				MemberInfo[] members=lastObject.GetType().GetMember((string)listBox.SelectedItem,
@@ -256,7 +259,18 @@ namespace Editor {
 //			IKeyValue keyValue=Help.lastObject is IKeyValue? (IKeyValue)Help.lastObject
 //				:new NetObject(Help.lastObject);
 //			object obj=keyValue[listBox.SelectedItem];
-//			int height=0;
+			int height=0;
+			string newText=text.Replace(Environment.NewLine,"").Replace("\n","").
+				Replace("    "," ").Replace("   "," ").Replace("  "," ");
+//			bool lastWasSpace=false;
+//			string newText="";
+//			foreach(char c in text) {
+//				if((c!=' ' || !lastWasSpace)) {
+//					newText+=c;
+//				}
+//			}
+//			text=text.Trim(new char[]{'\n'});
+//			text.Replace("\n","");
 //			foreach(char c in text) {
 //				if(c.Equals('\n')) {
 //					height++;
@@ -265,7 +279,9 @@ namespace Editor {
 //			toolTip.Size=new Size(
 //				toolTip.Width,
 //				height*toolTip.CreateGraphics().MeasureString(text,toolTip.Font));
-			//toolTip.Size=toolTip.CreateGraphics().MeasureString(text,toolTip.Font).ToSize();
+			Size size=toolTip.CreateGraphics().MeasureString(newText,toolTip.Font).ToSize();
+			toolTip.Height=toolTip.Height-7;
+			toolTip.Width=size.Width+20;
 			//toolTip.Size=new Size(300,100);
 
 			toolTip.Visible=true;
@@ -273,7 +289,7 @@ namespace Editor {
 			int y=listBox.Top;
 			y+=(listBox.SelectedIndex-listBox.TopIndex)*listBox.ItemHeight;
 			toolTip.Location=new Point(x,y);
-			toolTip.Text=text;
+			toolTip.Text=newText;
 //
 //			if(obj is INetDocumented) {
 ////				toolTip.Visible=true;
