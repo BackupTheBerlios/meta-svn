@@ -326,7 +326,7 @@ map
           Map statement=new Map();
 					statement[Statement.keyString]=key;
 					statement[Statement.valueString]=val;
-					statements[new Number(counter)]=statement;
+					statements[new Integer(counter)]=statement;
 					counter++;
 				}
       )
@@ -371,7 +371,7 @@ select
       (
         key=expression
         {
-          selection[new Number(counter)]=key;
+          selection[new Integer(counter)]=key;
           counter++;
         }
       )+
@@ -389,7 +389,7 @@ literal
   }:
   token:LITERAL
   {
-    result[Literal.literalString]=Interpreter.StringToMap(token.getText());
+    result[Literal.literalString]=new Map(token.getText());
   };
 
 
