@@ -20,10 +20,10 @@ using System.Runtime.CompilerServices;
 //
 //      Major Version
 //      Minor Version 
-//      Build Number
+//      Build Integer
 //      Revision
 //
-// You can specify all the values or you can default the Revision and Build Numbers 
+// You can specify all the values or you can default the Revision and Build Integers 
 // by using the '*' as shown below:
 
 [assembly: AssemblyVersion("1.0.*")]

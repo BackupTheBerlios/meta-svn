@@ -63,34 +63,34 @@ namespace testClasses
 		public NamedNoConversion() {
 			Map arg=(Map)Interpreter.Arg;
 			Map def=new Map();
-<<<<<<< .mine
+//<<<<<<< .mine
 			def[new Integer(1)]=new Map("null");
 			def[new Map("y")]=new Map("null");
 			def[new Map("p2")]=new Map("null");
-=======
-			def[new Number(1)]=Interpreter.StringToMap("null");
-			def[Interpreter.StringToMap("y")]=Interpreter.StringToMap("null");
-			def[Interpreter.StringToMap("p2")]=Interpreter.StringToMap("null");
->>>>>>> .r97
+//=======
+//			def[new Integer(1)]=Interpreter.StringToMap("null");
+//			def[Interpreter.StringToMap("y")]=Interpreter.StringToMap("null");
+//			def[Interpreter.StringToMap("p2")]=Interpreter.StringToMap("null");
+//>>>>>>> .r97
 			arg=(Map)Interpreter.Merge(def,arg);
-			this.x=(string)Interpreter.MapToString((Map)arg[new Number(1)]);
+			this.x=(string)Interpreter.MapToString((Map)arg[new Integer(1)]);
 			this.y=(string)Interpreter.MapToString((Map)arg[new Map("y")]);
 			this.z=(string)Interpreter.MapToString((Map)arg[new Map("p2")]);
 		}
 		public string Concatenate() {
 			Map arg=(Map)Interpreter.Arg;
 			Map def=new Map();
-<<<<<<< .mine
+//<<<<<<< .mine
 			def[new Integer(1)]=new Map("null");
 			def[new Map("b")]=new Map("null");
 			def[new Map("c")]=new Map("null");
-=======
-			def[new Number(1)]=Interpreter.StringToMap("null");
-			def[Interpreter.StringToMap("b")]=Interpreter.StringToMap("null");
-			def[Interpreter.StringToMap("c")]=Interpreter.StringToMap("null");
->>>>>>> .r97
+////=======
+//			def[new Integer(1)]=Interpreter.StringToMap("null");
+//			def[Interpreter.StringToMap("b")]=Interpreter.StringToMap("null");
+//			def[Interpreter.StringToMap("c")]=Interpreter.StringToMap("null");
+//>>>>>>> .r97
 			arg=(Map)Interpreter.Merge(def,arg);
-			return (string)Interpreter.MapToString((Map)arg[new Number(1)])+
+			return (string)Interpreter.MapToString((Map)arg[new Integer(1)])+
 				(string)Interpreter.MapToString((Map)arg[new Map("b")])+
 				(string)Interpreter.MapToString((Map)arg[new Map("c")])+
 				this.x+this.y+this.z;
