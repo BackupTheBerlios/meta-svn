@@ -1356,21 +1356,6 @@ IEnumerable
     Value (NetClass):
         Entry (DictionaryEntry):
     Key (String):
-      "path"
-    Value (String):
-      ""
-  Entry (DictionaryEntry):
-    Key (String):
-      "Main"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Void Main(System.String[])"
-      savedMethod (RuntimeMethodInfo):
-        "Void Main(System.String[])"
-  Entry (DictionaryEntry):
-    Key (String):
       "testClass"
     Value (TestClass):
   Entry (DictionaryEntry):

@@ -1,5 +1,4 @@
 this=meta.Merge(parent,('AssignedToCurrent'))
-this=meta.Merge(parent,base)
 'ImpliedAutokey'
 ='Autokey'
 commandLineArguments=arg
@@ -42,7 +41,7 @@ SetCurrent==
   this=(arg=arg,x=arg.symbol)
   this=x
 thisSet=SetCurrent(symbol='haha')
-this=meta.Merge(parent,Load('Test'))
+Load('Test')
 testClass=TestClass()
 memberTest=MemberTest()
 MemberTest.classField='a'
