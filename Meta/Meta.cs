@@ -1590,37 +1590,51 @@ namespace Meta {
 			public object obj;
 			public Type type;
 		}
+//		public interface NumberStrategy {
+//			long Long {
+//				get;
+//			}
+//			int Int {
+//				get;
+//			}
+//			void Increment();
+//			void Decrement();
+////			NumberStrategy Add(Number x);
+////			NumberStrategy Subtract(Number x);
+////			NumberStrategy Multiply(Number x);
+////			NumberStrategy Divide(Number x);
+//		}
 		public class Number {
-			public Number(string integer) {
-				this.integer=new BigInteger.Integer(integer,10);
+			public Number(string num) {
+				this.num=new BigInteger.Integer(num,10);
 			}
-			public Number(long integer) {
-				this.integer=new BigInteger.Integer(integer);
+			public Number(long num) {
+				this.num=new BigInteger.Integer(num);
 			}
 			public Number(Number number) {
-				this.integer=new BigInteger.Integer(number.integer.ToString(),10);
+				this.num=new BigInteger.Integer(number.num.ToString(),10);
 				int asdf=0;
 			}
-			public Number(BigInteger.Integer integer) {
-				this.integer=new BigInteger.Integer(integer.ToString(),10);
+			public Number(BigInteger.Integer num) {
+				this.num=new BigInteger.Integer(num.ToString(),10);
 			}
 			public long LongValue() {
-				return integer.LongValue();
+				return num.LongValue();
 			}
 			public int IntValue() {
-				return integer.IntValue();
+				return num.IntValue();
 			}
 			public static Number operator ++ (Number number) {
-				number.integer++;
+				number.num++;
 				return number;
 			}
 			public static Number operator -- (Number number) {
-				number.integer--;
+				number.num--;
 				return number;
 			}
 			public static Number operator - (Number number) {
 				Number negative=new Number(0);
-				negative.integer=-number.integer;
+				negative.num=-number.num;
 				return negative;
 			}
 			public static Number operator + (Number x,Number y) {
@@ -1635,31 +1649,32 @@ namespace Meta {
 			public static Number operator / (Number x,Number y) {
 				return new Number(x/y);
 			}
+
 			public static Number operator * (Number x,int y) {
-				return new Number((x.integer*y).ToString());
+				return new Number((x.num*y).ToString());
 			}
 			public static Number operator + (Number x,int y) {
-				return new Number((x.integer+y).ToString());
+				return new Number((x.num+y).ToString());
 			}
+
 			public static bool operator < (Number x,Number y) {
-				return x.integer<y.integer;
+				return x.num<y.num;
 			}
 			public static bool operator > (Number x,Number y) {
-				return x.integer>y.integer;
+				return x.num>y.num;
 			}
+
 			public override bool Equals(object obj) {
-				return obj is Number && this.integer.Equals(((Number)obj).integer);
+				return obj is Number && this.num.Equals(((Number)obj).num);
 			}
 			public override int GetHashCode() {
-				return this.integer.GetHashCode();
+				return this.num.GetHashCode();
 			}
+
 			public override string ToString() {
-				return integer.ToString();
+				return num.ToString();
 			}
-
-
-
-			private BigInteger.Integer integer;
+			private BigInteger.Integer num;
 		}
 	}
 	namespace Parser  {
