@@ -1049,50 +1049,47 @@ namespace Meta {
 			}
 			private int index=-1;
 		}
-		public delegate object NullDelegate();
+		public delegate object DelegateCreatedForGenericDelegates();
 		public class NetMethod: ICallable {
-			public object Call(IMap argument) { // refactor
-				IMap arguments=argument;
+			public object Call(IMap argument) {
 				Interpreter.arguments.Add(argument);
-				ArrayList list;
-				list=arguments.IntKeyValues;
-				object result=null;
+				ArrayList argumentList=argument.IntKeyValues;
+				object returnValue=null;
 				try {
-					ArrayList methods;
-					if(name=="") {
-						methods=new ArrayList(type.GetConstructors());
-					}
-					else {
-						methods=new ArrayList(type.GetMember(name,BindingFlags.Public|
-							BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
-					}
+//					ArrayList methods;
+//					if(name==".ctor") {
+//						methods=new ArrayList(type.GetConstructors());
+//					}
+//					else {
+//						methods=new ArrayList(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+//					}
 					bool executed=false;
-					methods.Reverse();
+//					methods.Reverse();
 					foreach(MethodBase method in methods) {
 						ArrayList args=new ArrayList();
 						int counter=0;
-						bool argumentsMatched=true;
+						bool argumentMatched=true;
 						ParameterInfo[] parameters=method.GetParameters();
-						if(list.Count>parameters.Length && parameters.Length>0) {
+						if(argumentList.Count>parameters.Length && parameters.Length>0) {
 							Type lastParameter=parameters[parameters.Length-1].ParameterType;
 							if(lastParameter.IsArray || lastParameter.IsSubclassOf(typeof(Array))) {
 								Map lastArg=new Map();
-								ArrayList paramsArgs=list.GetRange(parameters.Length-1,list.Count-(parameters.Length-1));
+								ArrayList paramsArgs=argumentList.GetRange(parameters.Length-1,argumentList.Count-(parameters.Length-1));
 								for(int i=0;i<paramsArgs.Count;i++) {
 									lastArg[new Integer(i+1)]=paramsArgs[i];
 								}
-								list[parameters.Length-1]=lastArg;									
-								list.RemoveRange(parameters.Length,list.Count-parameters.Length);
+								argumentList[parameters.Length-1]=lastArg;									
+								argumentList.RemoveRange(parameters.Length,argumentList.Count-parameters.Length);
 							}
 						}
-						if(list.Count!=parameters.Length) {
-							argumentsMatched=false;
+						if(argumentList.Count!=parameters.Length) {
+							argumentMatched=false;
 						}
 						else {
 							foreach(ParameterInfo parameter in method.GetParameters()) {
 								bool matched=false;
-								if(parameter.ParameterType.IsAssignableFrom(list[counter].GetType())) {
-									args.Add(list[counter]);
+								if(parameter.ParameterType.IsAssignableFrom(argumentList[counter].GetType())) {
+									args.Add(argumentList[counter]);
 									matched=true;
 								}
 								else {
@@ -1101,18 +1098,18 @@ namespace Meta {
 										try {
 											MethodInfo m=parameter.ParameterType.GetMethod("Invoke",BindingFlags.Instance
 												|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-											Delegate del=CreateDelegate(parameter.ParameterType,m,(Map)list[counter]);
+											Delegate del=CreateDelegate(parameter.ParameterType,m,(Map)argumentList[counter]);
 											args.Add(del);
 											matched=true;
 										}
-										catch(Exception e){// ack
+										catch(Exception e){
 											int asdf=0;
 										}
 									}
-									if(!matched && parameter.ParameterType.IsArray && list[counter] is IMap && ((Map)list[counter]).IntKeyValues.Count!=0) {// cheating
+									if(!matched && parameter.ParameterType.IsArray && argumentList[counter] is IMap && ((Map)argumentList[counter]).IntKeyValues.Count!=0) {// cheating
 										try {
 											Type elementType=parameter.ParameterType.GetElementType();
-											Map map=((Map)list[counter]);
+											Map map=((Map)argumentList[counter]);
 											ArrayList mapValues=map.IntKeyValues;
 											Array array=Array.CreateInstance(elementType,mapValues.Count);
 											for(int i=0;i<mapValues.Count;i++) {
@@ -1129,10 +1126,10 @@ namespace Meta {
 										Hashtable toDotNet=(Hashtable)
 											Interpreter.netConversion[parameter.ParameterType]; // move this into Interpreter
 										if(toDotNet!=null) {
-											Interpreter.ConvertMetaToDotNet conversion=(Interpreter.ConvertMetaToDotNet)toDotNet[list[counter].GetType()];
+											Interpreter.ConvertMetaToDotNet conversion=(Interpreter.ConvertMetaToDotNet)toDotNet[argumentList[counter].GetType()];
 											if(conversion!=null) {
 												try {
-													args.Add(conversion.Convert(list[counter]));
+													args.Add(conversion.Convert(argumentList[counter]));
 													matched=true;
 												}
 												catch (Exception e) {
@@ -1143,19 +1140,19 @@ namespace Meta {
 									}
 								}
 								if(!matched) {
-									argumentsMatched=false;
+									argumentMatched=false;
 									break;
 								}
 								counter++;
 							}
 						}
-						if(argumentsMatched) { // horrible
+						if(argumentMatched) {
 							if(!executed) {
 								if(method is ConstructorInfo) {
-									result=((ConstructorInfo)method).Invoke(args.ToArray());
+									returnValue=((ConstructorInfo)method).Invoke(args.ToArray());
 								}
 								else {
-									result=method.Invoke(target,args.ToArray());
+									returnValue=method.Invoke(target,args.ToArray());
 								}
 								executed=true;
 							}
@@ -1165,18 +1162,18 @@ namespace Meta {
 						}
 					}
 					if(!executed) {
-						if(savedMethod is ConstructorInfo) {
+						if(methods[0] is ConstructorInfo) {
 							return 
 								Interpreter.ConvertDotNetObjectToMetaObject(
-								((ConstructorInfo)savedMethod).Invoke(new object[] {}));
+								((ConstructorInfo)methods[0]).Invoke(new object[] {}));
 						}
 						else {
-							return Interpreter.ConvertDotNetObjectToMetaObject(savedMethod.Invoke(target,new object[] {}));
+							return Interpreter.ConvertDotNetObjectToMetaObject(methods[0].Invoke(target,new object[] {}));
 						}
 
 					}
 					else {
-						return Interpreter.ConvertDotNetObjectToMetaObject(result);
+						return Interpreter.ConvertDotNetObjectToMetaObject(returnValue);
 					}
 
 				}
@@ -1192,7 +1189,7 @@ namespace Meta {
 					text+=".";
 					text+=name;
 					text+="(";
-					foreach(object obj in list) {
+					foreach(object obj in argumentList) {
 						text+=obj.ToString()+",";
 					}
 					text=text.Remove(text.Length-1,1);
@@ -1205,9 +1202,7 @@ namespace Meta {
 					Interpreter.arguments.Remove(argument);
 				}
 			}
-			//refactor
 			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) {
-				// should caller really be parent of code??? after fixing callers, yes
 				code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 				ICodeCompiler compiler=codeProvider.CreateCompiler();
@@ -1260,50 +1255,59 @@ namespace Meta {
 																																			  code});
 				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
 				if(method==null) {
-					delegateType=typeof(NullDelegate);
+					delegateType=typeof(DelegateCreatedForGenericDelegates);
 				}
 				Delegate del=Delegate.CreateDelegate(delegateType,
 				container,"EventHandlerMethod");
 				return del;
 			}
-			//rename
-			private void Init(string name,object target,Type type,BindingFlags invokeFlags,
-				MethodBase method,MethodBase[] methods) {
+			private void Initialize(string name,object target,Type type) {
 				this.name=name;
 				this.target=target;
 				this.type=type;
-				this.invokeMemberFlags=invokeFlags;
-				this.savedMethod=method;
-				this.methods=methods;
+				//this.savedMethod=method;
+//				this.methods=methods;
+				ArrayList list;
+				if(name==".ctor") {
+					list=new ArrayList(type.GetConstructors());
+				}
+				else {
+					list=new ArrayList(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+				}
+				if(list.Count==0) {
+					int asdf=0;
+				}
+				list.Reverse();
+				methods=(MethodBase[])list.ToArray(typeof(MethodBase));
+				if(methods==null) {
+					int asdf=0;
+				}
 			}
 			// refactor
 			public NetMethod(string name,object target,Type type) {
-				MethodBase method=null;
-				MethodInfo[] methods=
-					(MethodInfo[])type.GetMember(name,
-						MemberTypes.Method,BindingFlags.Public
-						|BindingFlags.Static|BindingFlags.Instance);
-				if(methods.Length==1) {
-					method=methods[0];
-				}
-				this.Init(name,target,type,
-					BindingFlags.Public|BindingFlags.Instance
-					|BindingFlags.Static|BindingFlags.InvokeMethod,method,methods);
+//				MethodBase method=null;
+//				MethodInfo[] methods=(MethodInfo[])type.GetMember(name,MemberTypes.Method,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
+//				if(methods.Length==1) {
+//					method=methods[0];
+//				}
+				this.Initialize(name,target,type);
+
+//				this.Initialize(name,target,type,method,methods);
 			}
-			// is 'constructor' necessary or do 'constructors' suffice?
 			public NetMethod(Type type) {
-				MethodBase constructor=null;
-				MethodBase[] constructors=type.GetConstructors();
-				if(constructors.Length==1) {
-					constructor=type.GetConstructors()[0];
-				}
-				this.Init("",null,type,BindingFlags.CreateInstance,constructor,constructors);
+//				MethodBase constructor=null;
+//				MethodBase[] constructors=type.GetConstructors();
+//				if(constructors.Length==1) {
+//					constructor=type.GetConstructors()[0];
+//				}
+				this.Initialize(".ctor",null,type);
+
+//				this.Initialize(".ctor",null,type,constructor,constructors);
 			}
 			public override bool Equals(object obj) {
 				if(obj is NetMethod) {
 					NetMethod method=(NetMethod)obj;
-					if(method.target==target && method.name.Equals(name) && 
-						method.type.Equals(type)) {
+					if(method.target==target && method.name.Equals(name) && method.type.Equals(type)) {
 						return true;
 					}
 				}
@@ -1318,12 +1322,10 @@ namespace Meta {
 					return hash;
 				}
 			}
-			private BindingFlags invokeMemberFlags;// what's that
 			private string name;
-//			private IKeyValue parent;
 			protected object target;
 			protected Type type;
-			public MethodBase savedMethod;
+//			public MethodBase savedMethod;
 			public MethodBase[] methods;
 
 		}
