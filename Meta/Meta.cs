@@ -260,6 +260,9 @@ namespace Meta {
 					if(Interpreter.IsMapString(map)) {
 						text+="'"+Interpreter.MapToString(map)+"'";
 					}
+					else if(map.Count==0) {
+						text+="()";
+					}
 					else {
 						if(!isRightSide) {
 							text+="(";
@@ -274,11 +277,11 @@ namespace Meta {
 						else {
 							foreach(DictionaryEntry entry in map) {
 								text+=indent+'['+MetaSerialize(entry.Key,indent,false)+']'+'=';
-								if(entry.Value is Map && !Interpreter.IsMapString((Map)entry.Value)) {
+								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !Interpreter.IsMapString((Map)entry.Value)) {
 									text+="\n";
 								}
 								text+=MetaSerialize(entry.Value,indent+"  ",true);
-								if(!(entry.Value is Map && !Interpreter.IsMapString((Map)entry.Value))) {
+								if(!(entry.Value is Map && ((Map)entry.Value).Count!=0 && !Interpreter.IsMapString((Map)entry.Value))) {
 									text+="\n";
 								}
 							}
@@ -812,6 +815,9 @@ namespace Meta {
 		public class Library: IKeyValue,IMap {
 			public object this[object key] {
 				get {
+					if(key.Equals(Interpreter.StringToMap("map"))) {
+						int asdf=0;
+					}
 					if(cash.ContainsKey(key)) {
 						if(cash[key] is MetaLibrary) {
 							cash[key]=((MetaLibrary)cash[key]).Load();
@@ -937,13 +943,13 @@ namespace Meta {
 			private Map assemblyInfo=new Map();
 			public ArrayList GetNamespaces(Assembly assembly) { //integrate
 				ArrayList namespaces=new ArrayList();
-				if(assemblyInfo.ContainsKey(Interpreter.StringToMap(assembly.GetName().Name))) {
-					Map info=(Map)assemblyInfo[Interpreter.StringToMap(assembly.GetName().Name)];
+				if(assemblyInfo.ContainsKey(Interpreter.StringToMap(assembly.Location))) {
+					Map info=(Map)assemblyInfo[Interpreter.StringToMap(assembly.Location)];
 					string timestamp=Interpreter.MapToString((Map)info[Interpreter.StringToMap("timestamp")]);
-					if(timestamp.Equals(File.GetCreationTimeUtc(assembly.Location))) {
+					if(timestamp.Equals(File.GetCreationTime(assembly.Location).ToString())) {
 						Map names=(Map)info[Interpreter.StringToMap("namespaces")];
-						foreach(Map name in names) {
-							string text=Interpreter.MapToString(name);
+						foreach(DictionaryEntry entry in names) {
+							string text=Interpreter.MapToString((Map)entry.Value);
 							namespaces.Add(text);
 						}
 						return namespaces;
@@ -952,20 +958,27 @@ namespace Meta {
 				foreach(Type type in assembly.GetExportedTypes()) {
 					if(!namespaces.Contains(type.Namespace)) {
 						if(type.Namespace==null) {
-							namespaces.Add("");
+							if(!namespaces.Contains("")) {
+								namespaces.Add("");
+							}
 						}
 						else {
 							namespaces.Add(type.Namespace);
 						}
 					}
 				}
-				Map n=new Map();
+				Map assemblyInfoMap=new Map();
+				Map nameSpaceMap=new Map();
 				Integer counter=new Integer();
 				foreach(string na in namespaces) {
-					n[counter]=na;
+					nameSpaceMap[counter]=Interpreter.StringToMap(na);// map or string?
 					counter++;
 				}
-				assemblyInfo[Interpreter.StringToMap(assembly.GetName().Name)]=n;
+				assemblyInfoMap[Interpreter.StringToMap("namespaces")]=nameSpaceMap;
+				assemblyInfoMap[Interpreter.StringToMap("timestamp")]=Interpreter.StringToMap(
+					File.GetCreationTime(assembly.Location).ToString());
+				assemblyInfo[Interpreter.StringToMap(assembly.Location)]=assemblyInfoMap;
+//				assemblyInfo[Interpreter.StringToMap(assembly.GetName().Name)]=assemblyInfoMap;
 				return namespaces;
 			}
 //			public ArrayList GetNamespaces(Assembly assembly) { //integrate

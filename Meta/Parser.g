@@ -146,7 +146,7 @@ map:
 	  |
 	  (
 	    INDENT!
-	    statement
+	    (statement)?
 	    (
 	      ENDLINE!
 	      statement

@@ -31,16 +31,16 @@ namespace Test {
 	class Test {
 		public static string path="";
 		public static void Main(string[] args) {
-			Map map=new Map();
-			Map child=new Map();
-			child[Interpreter.StringToMap("number")]=new Integer(5000);
-			child[Interpreter.StringToMap("secondNumber")]=new Integer(3000);
-			map[Interpreter.StringToMap("hello")]=child;
-			map[child]=Interpreter.StringToMap("world");
-			string t=Interpreter.MetaSerialize(map,"",true);
-			Interpreter.SaveToFile(map,Path.Combine(Interpreter.metaInstallationPath,"savedMap.meta"));
-			object o=Interpreter.RunWithoutLibrary(Path.Combine(Interpreter.metaInstallationPath,"savedMap.meta"),new Map());
-			bool equal=map.Equals(o);
+//			Map map=new Map();
+//			Map child=new Map();
+//			child[Interpreter.StringToMap("number")]=new Integer(5000);
+//			child[Interpreter.StringToMap("secondNumber")]=new Integer(3000);
+//			map[Interpreter.StringToMap("hello")]=child;
+//			map[child]=Interpreter.StringToMap("world");
+//			string t=Interpreter.MetaSerialize(map,"",true);
+//			Interpreter.SaveToFile(map,Path.Combine(Interpreter.metaInstallationPath,"savedMap.meta"));
+//			object o=Interpreter.RunWithoutLibrary(Path.Combine(Interpreter.metaInstallationPath,"savedMap.meta"),new Map());
+//			bool equal=map.Equals(o);
 
 
 			//args=new string[]{"hello.meta"};
@@ -70,19 +70,27 @@ namespace Test {
 	}
 	public class Tests {
 		private static string filename=@"basicTest.meta";
-//		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-//		public class ParseToAst:TestCase {
-//			public override object RunTestCase() {
-//				return Interpreter.ParseToAst(new StreamReader(Path.Combine(
-//					Test.path,filename)));
-//			}
-//		}
-//		public class CompileToMap:TestCase {
-//			public override object RunTestCase() {
-//				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
-//					Test.path,filename)));
-//			}
-//		}
+		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
+		public class ParseToAst:TestCase {
+			public override object RunTestCase() {
+				return Interpreter.ParseToAst(new StreamReader(Path.Combine(
+					Test.path,filename)));
+			}
+		}
+		public class CompileToMap:TestCase {
+			public static Map map;
+			public override object RunTestCase() {
+				map=Interpreter.CompileToMap(new StreamReader(Path.Combine(
+					Test.path,filename)));
+				return map;
+			}
+		}
+		public class CompileToExpression:TestCase {
+			public override object RunTestCase() {
+				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
+					Test.path,filename))).Compile();
+			}
+		}
 //		public class CompileToExpression:TestCase {
 //			public override object RunTestCase() {
 //				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
@@ -91,6 +99,10 @@ namespace Test {
 //		}
 		public class Execute:TestCase {
 			public override object RunTestCase() {
+//				Map argument=new Map();
+//				argument[new Integer(1)]="first arg";
+//				argument[new Integer(2)]="second=arg";
+//				return CompileToMap.map.Call(argument);
 				Map argument=new Map();
 				argument[new Integer(1)]="first arg";
 				argument[new Integer(2)]="second=arg";
