@@ -232,7 +232,7 @@ namespace Editor {
 	// rework
 	public abstract class Help {
 		//public static ToolTip tip=new ToolTip();
-		public static Label toolTip=new Label();
+		public static RichTextBox toolTip=new RichTextBox();
 		public static GListBox listBox=new GListBox();
 
 		static Help() {
@@ -243,6 +243,12 @@ namespace Editor {
 			listBox.GotFocus+=new EventHandler(listBox_GotFocus);
 			listBox.DoubleClick+=new EventHandler(listBox_DoubleClick);
 			toolTip.Visible=false;
+			toolTip.WordWrap=true;
+			toolTip.BorderStyle=BorderStyle.FixedSingle;
+			toolTip.GotFocus+=new EventHandler(toolTip_GotFocus);
+//			toolTip.Enabled=false;
+			toolTip.ScrollBars=RichTextBoxScrollBars.None;
+//			toolTip.BorderStyle=BorderStyle.FixedSingle;
 			listBox.ItemHeight=16;
 			//toolTip.AutoSize=true;
 			toolTip.BackColor=Color.LightYellow;
@@ -256,7 +262,6 @@ namespace Editor {
 			imageList.Images.Add(new Bitmap("map.bmp"));
 			imageList.Images.Add(new Bitmap("object.bmp"));
 			listBox.ImageList=imageList;
-			toolTip.BorderStyle=BorderStyle.FixedSingle;
 			listBox.SelectedIndexChanged+=new EventHandler(listBox_SelectedIndexChanged);
 //			listBox.GotFocus+=new EventHandler(listBox_GotFocus);
 //			tip.AutomaticDelay=3000;
@@ -355,9 +360,9 @@ namespace Editor {
 				Replace("    "," ").Replace("   "," ").Replace("  "," ");
 			newText=newText.Replace("\n ","\n");
 
-			Size size=toolTip.CreateGraphics().MeasureString(newText,toolTip.Font).ToSize();
-			toolTip.Height=size.Height+2;
-			toolTip.Width=size.Width+5;
+//			Size size=toolTip.CreateGraphics().MeasureString(newText,toolTip.Font).ToSize();
+//			toolTip.Height=size.Height+2;
+//			toolTip.Width=size.Width+15;
 
 			if(newText!="\n") {
 				toolTip.Visible=true;
@@ -810,6 +815,10 @@ namespace Editor {
 
 		private static void listBox_DoubleClick(object sender, EventArgs e) {
 			new CompleteWord().Run();
+			Editor.editor.Focus();
+		}
+
+		private static void toolTip_GotFocus(object sender, EventArgs e) {
 			Editor.editor.Focus();
 		}
 	}

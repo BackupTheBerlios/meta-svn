@@ -963,9 +963,10 @@ namespace Meta {
 						text+=node.Attributes["name"].Value+": "+node.InnerXml;
 					}
 				}
-				return text.Replace("<para>","").Replace("</para>","").Replace("<see cref=\"","")
+				return text.Replace("<para>","").Replace("\r\n","").Replace("</para>","").Replace("<see cref=\"","")
 					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
-					.Replace("M:","").Replace("E:","");
+					.Replace("M:","").Replace("E:","").Replace("     "," ").Replace("    "," ")
+					.Replace("   "," ").Replace("  "," ").Replace("\n ","\n");
 			}
 //			public static string GetDoc(MemberInfo memberInfo, bool showParams) {
 //				XmlNode comment=GetComments(memberInfo);
