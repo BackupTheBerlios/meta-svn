@@ -982,16 +982,6 @@ IEnumerable
                                               Key (String):
                                                 "literal"
                                               Value (String):
-                                                "arg"
-                                      Entry (DictionaryEntry):
-                                        Key (Integer):
-                                          "2"
-                                        Value (Map):
-                                          IEnumerable
-                                            Entry (DictionaryEntry):
-                                              Key (String):
-                                                "literal"
-                                              Value (String):
                                                 "value"
                     Entry (DictionaryEntry):
                       Key (Integer):
@@ -1596,16 +1586,6 @@ IEnumerable
                                                   Entry (DictionaryEntry):
                                                     Key (Integer):
                                                       "1"
-                                                    Value (Map):
-                                                      IEnumerable
-                                                        Entry (DictionaryEntry):
-                                                          Key (String):
-                                                            "literal"
-                                                          Value (String):
-                                                            "arg"
-                                                  Entry (DictionaryEntry):
-                                                    Key (Integer):
-                                                      "2"
                                                     Value (Map):
                                                       IEnumerable
                                                         Entry (DictionaryEntry):

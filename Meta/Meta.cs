@@ -1291,18 +1291,19 @@ namespace Meta {
 				}
 			}
 			public object Call(Map caller) {
-				Map local=new Map();
-				local.Parent=this.Parent;
-				return Call(caller,local);
+//				Map local=new Map(); //unnecessary for non-programs
+				((Map)Interpreter.Arg).Parent=this.Parent;
+//				local.Parent=(Map)Interpreter.Arg;
+				return Call(caller,(Map)Interpreter.Arg);
 			}
-			public object Call(Map caller,Map existing)  {
+			public object Call(Map caller,Map local)  {
 				IExpression callable=(IExpression)Compile();
 				object result;
 				if(callable is Program) { // somehow wrong
-					result=((Program)callable).Evaluate(caller,existing,true);
+					result=((Program)callable).Evaluate(caller,local,true);
 				}
 				else {
-					result=callable.Evaluate(this);
+					result=callable.Evaluate(local);
 				}
 				return result;
 			}

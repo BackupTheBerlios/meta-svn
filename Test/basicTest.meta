@@ -22,7 +22,7 @@ object=
     parent.a='c'
     #autoSearch='changed'
   SetB==
-    caller.b.1=arg.value
+    caller.b.1=value
     this='changed'
   x=
     a='b'
@@ -42,7 +42,7 @@ ReturnFunction==
   this==
     this=('1','2','3')
 SetCurrent==
-  this=(arg=arg,x=arg.symbol)
+  this=(arg=arg,x=symbol)
   this=x
 thisSet=SetCurrent(symbol='haha')
 Load('Test')
@@ -82,13 +82,13 @@ ChangeUpperLevel()
 staticEventChanged='false'
 TestClass.staticEvent==
   #staticEventChanged='true'
-  this=arg.1
+  this=1
 staticEvent=TestClass.staticEvent
 staticEventResult=TestClass.staticEvent(testClass)
 instanceEventChanged='false'
 testClass.instanceEvent==
   #instanceEventChanged='true'
-  this=arg.1
+  this=1
 instanceEvent=testClass.instanceEvent
 instanceEventResult=testClass.instanceEvent('5')
 one='1'

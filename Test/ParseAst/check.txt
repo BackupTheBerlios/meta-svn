@@ -896,17 +896,10 @@ getFirstChild (CommonAST):
                                                             getFirstChild (CommonAST):
                                                               getFirstChild:
                                                                 null
-                                                              getNextSibling (CommonAST):
-                                                                getFirstChild:
-                                                                  null
-                                                                getNextSibling:
-                                                                  null
-                                                                getText (String):
-                                                                  "value"
-                                                                Type (Int32):
-                                                                  "21"
+                                                              getNextSibling:
+                                                                null
                                                               getText (String):
-                                                                "arg"
+                                                                "value"
                                                               Type (Int32):
                                                                 "21"
                                                             getNextSibling:
@@ -2065,17 +2058,10 @@ getFirstChild (CommonAST):
                                                                           getFirstChild (CommonAST):
                                                                             getFirstChild:
                                                                               null
-                                                                            getNextSibling (CommonAST):
-                                                                              getFirstChild:
-                                                                                null
-                                                                              getNextSibling:
-                                                                                null
-                                                                              getText (String):
-                                                                                "symbol"
-                                                                              Type (Int32):
-                                                                                "21"
+                                                                            getNextSibling:
+                                                                              null
                                                                             getText (String):
-                                                                              "arg"
+                                                                              "symbol"
                                                                             Type (Int32):
                                                                               "21"
                                                                           getNextSibling:
@@ -3999,17 +3985,10 @@ getFirstChild (CommonAST):
                                                                                                                                           getFirstChild (CommonAST):
                                                                                                                                             getFirstChild:
                                                                                                                                               null
-                                                                                                                                            getNextSibling (CommonAST):
-                                                                                                                                              getFirstChild:
-                                                                                                                                                null
-                                                                                                                                              getNextSibling:
-                                                                                                                                                null
-                                                                                                                                              getText (String):
-                                                                                                                                                "1"
-                                                                                                                                              Type (Int32):
-                                                                                                                                                "21"
+                                                                                                                                            getNextSibling:
+                                                                                                                                              null
                                                                                                                                             getText (String):
-                                                                                                                                              "arg"
+                                                                                                                                              "1"
                                                                                                                                             Type (Int32):
                                                                                                                                               "21"
                                                                                                                                           getNextSibling:
@@ -4270,17 +4249,10 @@ getFirstChild (CommonAST):
                                                                                                                                                   getFirstChild (CommonAST):
                                                                                                                                                     getFirstChild:
                                                                                                                                                       null
-                                                                                                                                                    getNextSibling (CommonAST):
-                                                                                                                                                      getFirstChild:
-                                                                                                                                                        null
-                                                                                                                                                      getNextSibling:
-                                                                                                                                                        null
-                                                                                                                                                      getText (String):
-                                                                                                                                                        "1"
-                                                                                                                                                      Type (Int32):
-                                                                                                                                                        "21"
+                                                                                                                                                    getNextSibling:
+                                                                                                                                                      null
                                                                                                                                                     getText (String):
-                                                                                                                                                      "arg"
+                                                                                                                                                      "1"
                                                                                                                                                     Type (Int32):
                                                                                                                                                       "21"
                                                                                                                                                   getNextSibling:

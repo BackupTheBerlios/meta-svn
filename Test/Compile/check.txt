@@ -681,16 +681,6 @@ statements (ArrayList):
                                                     Key (String):
                                                       "literal"
                                                     Value (String):
-                                                      "arg"
-                                            Entry (DictionaryEntry):
-                                              Key (Integer):
-                                                "2"
-                                              Value (Map):
-                                                IEnumerable
-                                                  Entry (DictionaryEntry):
-                                                    Key (String):
-                                                      "literal"
-                                                    Value (String):
                                                       "value"
                           Entry (DictionaryEntry):
                             Key (Integer):
@@ -1605,16 +1595,6 @@ statements (ArrayList):
                                                       Entry (DictionaryEntry):
                                                         Key (Integer):
                                                           "1"
-                                                        Value (Map):
-                                                          IEnumerable
-                                                            Entry (DictionaryEntry):
-                                                              Key (String):
-                                                                "literal"
-                                                              Value (String):
-                                                                "arg"
-                                                      Entry (DictionaryEntry):
-                                                        Key (Integer):
-                                                          "2"
                                                         Value (Map):
                                                           IEnumerable
                                                             Entry (DictionaryEntry):
@@ -2920,16 +2900,6 @@ statements (ArrayList):
                                             Key (String):
                                               "literal"
                                             Value (String):
-                                              "arg"
-                                    Entry (DictionaryEntry):
-                                      Key (Integer):
-                                        "2"
-                                      Value (Map):
-                                        IEnumerable
-                                          Entry (DictionaryEntry):
-                                            Key (String):
-                                              "literal"
-                                            Value (String):
                                               "1"
     Entry (Statement):
       key (Select):
@@ -3136,16 +3106,6 @@ statements (ArrayList):
                                     Entry (DictionaryEntry):
                                       Key (Integer):
                                         "1"
-                                      Value (Map):
-                                        IEnumerable
-                                          Entry (DictionaryEntry):
-                                            Key (String):
-                                              "literal"
-                                            Value (String):
-                                              "arg"
-                                    Entry (DictionaryEntry):
-                                      Key (Integer):
-                                        "2"
                                       Value (Map):
                                         IEnumerable
                                           Entry (DictionaryEntry):
