@@ -186,7 +186,7 @@ namespace Meta {
 							break;
 						}
 					}
-					selection=Interpreter.arguments[Interpreter.arguments.Count-numArgs]; //change
+					selection=Interpreter.arguments[Interpreter.arguments.Count-numArgs];
 				}
 				else if(keys[0].Equals("search")||isRightSide) {
 					if(keys[0].Equals("search")) {
@@ -283,6 +283,15 @@ namespace Meta {
 				catch {
 					return obj;
 				}
+			}
+			public static object Run(string fileName,IMap argument) {
+				StreamReader a=new StreamReader(fileName);
+				string x=a.ReadToEnd();
+				a.Close();
+				StreamReader reader=new StreamReader(fileName);
+				object result=Run(reader,argument);
+				reader.Close();
+				return result;
 			}
 			public static object Run(TextReader reader,IMap argument) {
 				Map lastProgram=CompileToMap(reader);
@@ -756,7 +765,9 @@ namespace Meta {
 				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
 				while (AssemblyCache.GetNextAssembly(e, out an) == 0) {
 					name=GetAssemblyName(an);
-					assemblies.Add(Assembly.LoadWithPartialName(name.Name));
+					if(!name.Name.StartsWith("Microsoft")) {
+						assemblies.Add(Assembly.LoadWithPartialName(name.Name));
+					}
 				}
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
 					assemblies.Add(Assembly.LoadFrom(fileName));
@@ -1365,7 +1376,7 @@ namespace Meta {
 		}
 	}
 	namespace Parser  {
-		class AddIndentationTokensToStream: TokenStream {
+		public class AddIndentationTokensToStream: TokenStream {
 			public AddIndentationTokensToStream(TokenStream originalStream)  {
 				this.originalStream=originalStream;
 				AddIndentationTokensToGetToLevel(0);

@@ -25,38 +25,49 @@ using Meta.Execution;
 using System;
 using Meta.TestingFramework;
 using antlr;
+using System.Threading;
 
 namespace Test {
 	class Test {
 		public static string path="";
 		public static void Main(string[] args) {
-//			args=new string[]{"editor.meta"};
+			//args=new string[]{"edit.meta"};
 			if(args.Length==0) {
 				Directory.SetCurrentDirectory(
 					".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
 				ExecuteTests test=new ExecuteTests(typeof(Tests),path);
 			}
 			else {
+				if(!File.Exists(args[0])) {
+					throw new ApplicationException("File "+args[0]+" not found.");
+				}
+//				StreamReader stream=new StreamReader(args[0]);
+//				new MetaLexer(new StringReader("")); // bug is definitely in ANTLR
+//				object o=new MetaLexer(stream);
+//				//object ox=new AddIndentationTokensToStream(o);
+				Interpreter.ParseToAst(new StreamReader(Path.Combine(
+					Test.path,args[0])));
 				Interpreter.Run(new StreamReader(args[0]),new Map());
 			}
 		}
 	}
 	public class Tests {
 		private static string filename=@"basicTest.meta";
+
 		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-		public class ParseAst:TestCase {
+		public class ParseToAst:TestCase {
 			public override object RunTestCase() {
 				return Interpreter.ParseToAst(new StreamReader(Path.Combine(
 					Test.path,filename)));
 			}
 		}
-		public class ParseObject:TestCase {
+		public class CompileToMap:TestCase {
 			public override object RunTestCase() {
 				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
 					Test.path,filename)));
 			}
 		}
-		public class Compile:TestCase {
+		public class CompileToExpression:TestCase {
 			public override object RunTestCase() {
 				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
 					Test.path,filename))).Compile();
@@ -64,10 +75,14 @@ namespace Test {
 		}
 		public class Execute:TestCase {
 			public override object RunTestCase() {
+//				object o=new AddIndentationTokensToStream(new MetaLexer(stream));
+////				parser.map();
+//				stream.Close();
+////				parser.getAST();
 				Map argument=new Map();
 				argument[new Integer(1)]="first arg";
 				argument[new Integer(2)]="second=arg";
-				return Interpreter.Run(new StreamReader(Path.Combine(Test.path,filename)),argument);
+				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
 	}
