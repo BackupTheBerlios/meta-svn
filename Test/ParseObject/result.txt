@@ -1142,6 +1142,15 @@ Entry (DictionaryEntry)
                                                   Key (String):
                                                     "literal"
                                                   Value (String):
+                                                    "parent"
+                                            Entry (DictionaryEntry)
+                                              Key (Integer):
+                                                "3"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (String):
+                                                    "literal"
+                                                  Value (String):
                                                     "a"
                                     Entry (DictionaryEntry)
                                       Key (String):
@@ -1253,10 +1262,19 @@ Entry (DictionaryEntry)
                                                   Key (String):
                                                     "literal"
                                                   Value (String):
-                                                    "b"
+                                                    "caller"
                                             Entry (DictionaryEntry)
                                               Key (Integer):
                                                 "3"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (String):
+                                                    "literal"
+                                                  Value (String):
+                                                    "b"
+                                            Entry (DictionaryEntry)
+                                              Key (Integer):
+                                                "4"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
                                                   Key (String):

@@ -68,16 +68,17 @@ namespace Meta {
 		}
 		public class Call: IExpression {	
 			public object Evaluate(object current) {
-				object arg=argument.Evaluate(current);
-				ICallable toBeCalled=(ICallable)callable.Evaluate(current);
-				object result=toBeCalled.Call((Map)current,(IMap)arg);
-				return result;
+				return ((ICallable)callable.Evaluate(current)).Call((Map)current,(IMap)argument.Evaluate(current));
 			}
 			public void ReplaceWith(IExpression replace) { // check
 				if(!this.IdenticalTo(replace)) {
 					Call call=(Call)replace;
-					callable=(IExpression)Interpreter.ReplaceExpression(callable,call.callable);
-					argument=(IExpression)Interpreter.ReplaceExpression(argument,call.argument);
+					if(!callable.IdenticalTo(call.callable)) {
+						callable=(IExpression)Interpreter.ReplaceExpression(callable,call.callable);
+					}
+					if(!argument.IdenticalTo(call.argument)) {
+						argument=(IExpression)Interpreter.ReplaceExpression(argument,call.argument);
+					}
 				}
 			}
 			public bool IdenticalTo(object obj) { // check
@@ -93,56 +94,71 @@ namespace Meta {
 			public IExpression callable;
 		}
 		public class Delayed: IExpression {
-			public object Evaluate(object current) { // current necessary?
-				return delayedExpression;
+			public object Evaluate(object current) {
+				return expression;
 			}
-			public bool IdenticalTo(object obj) { // check
-				return obj is Delayed && delayedExpression.Equals(((Delayed)obj).delayedExpression);
-			}
-			public void ReplaceWith(IExpression replace) { // check
+			public void ReplaceWith(IExpression replace) {
 				if(!this.IdenticalTo(replace)) {
 					Delayed delayed=(Delayed)replace;
-					delayed.delayedExpression.Compile();
-					if(delayedExpression.compiled!=null) {
-						delayedExpression.compiled=Interpreter.ReplaceExpression(delayedExpression.compiled,delayed.delayedExpression.compiled);
-						delayed.delayedExpression.compiled=delayedExpression.compiled;
+					delayed.expression.Compile();
+					if(expression.compiled!=null) {
+						expression.compiled=Interpreter.ReplaceExpression(expression.compiled,delayed.expression.compiled);
+						delayed.expression.compiled=expression.compiled;
 					}
-					delayedExpression=delayed.delayedExpression;
+					expression=delayed.expression;
 				}
 			}
-			public Delayed(Map code) {
-				this.delayedExpression=(Map)code["delayed"];
-				this.delayedExpression.Compile();
+			public bool IdenticalTo(object obj) {
+				return obj is Delayed && expression.Equals(((Delayed)obj).expression);
 			}
-			public Map delayedExpression;
+			public Delayed(Map code) {
+				this.expression=(Map)code["delayed"];
+			}
+			public Map expression;
 		}
 		public class Program: IExpression {
 			public object Evaluate(object parent) { // refactor
-				Map local=new Map();
-				local.Parent=(IMap)parent;
-				return Evaluate(parent,local);
+				return EvaluateWithCurrent((IMap)parent);
 			}
-			public object Evaluate(object caller,IMap existing) { // refactor, why does it differ,why the same name?
-				object result=existing;
-				bool callerIsMap=false;
-				if(caller!=null) {
-					if(caller is IMap) {
-						callerIsMap=true;
-					}
-					if(callerIsMap) {
-						Interpreter.callers.Add(caller);
-					}
-				}
+//			public object Evaluate(object parent) { // refactor
+//				Map local=new Map();
+//				local.Parent=(IMap)parent;
+//				return EvaluateWithCurrent(local);
+//			}
+			public object EvaluateWithCurrent(IMap current) { // refactor, why does it differ,why the same name?
+				object result=new Map();
+				((Map)result).Parent=current;
+				Interpreter.callers.Add(result);
 				for(int i=0;i<statements.Count;i++) {
+					if(i==21) {
+						int asdf=0;
+					}
 					((Statement)statements[i]).Realize(ref result);
 				}
-				if(caller!=null) {
-					if(callerIsMap) {
-						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1); // add local map to callers, even when not caller (always)
-					}
-				}
+				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1); // add local map to callers, even when not caller (always)
 				return result;
 			}
+//			public object Evaluate(object caller,IMap existing) { // refactor, why does it differ,why the same name?
+//				object result=existing;
+//				bool callerIsMap=false;
+//				if(caller!=null) {
+//					if(caller is IMap) {
+//						callerIsMap=true;
+//					}
+//					if(callerIsMap) {
+//						Interpreter.callers.Add(caller);
+//					}
+//				}
+//				for(int i=0;i<statements.Count;i++) {
+//					((Statement)statements[i]).Realize(ref result);
+//				}
+//				if(caller!=null) {
+//					if(callerIsMap) {
+//						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1); // add local map to callers, even when not caller (always)
+//					}
+//				}
+//				return result;
+//			}
 			public bool IdenticalTo(object obj) { // check
 				if(obj is Program) {
 					Program program=(Program)obj;
@@ -221,7 +237,7 @@ namespace Meta {
 					if(val is IMap) {
 						((IMap)val).Parent=((IMap)current).Parent;
 						current=((IMap)val).Clone();
-						if(current is IMap) {
+						if(current is IMap) { // isn't this always true?
 							Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 							Interpreter.callers.Add(current);
 						}
@@ -252,7 +268,7 @@ namespace Meta {
 			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
 				object selected=current;
 				int i=0;
-				if(keys[0].Equals("base")) {
+				if(keys[0].Equals("If")) {
 					int asdf=0;
 				}
 				if(keys[0].Equals("this")) {
@@ -271,7 +287,7 @@ namespace Meta {
 					}
 					selected=Interpreter.callers[Interpreter.callers.Count-numCallers];
 				}
-				else if(keys[0].Equals("parent")) {
+				else if(keys[0].Equals("parent")) { //ignore arguments here
 					foreach(object key in keys) {
 						if(key.Equals("parent")) {
 							selected=((IMap)selected).Parent;
@@ -428,21 +444,11 @@ namespace Meta {
 				}
 			}
 			public static object Run(TextReader reader,IMap argument) {
-//				Interpreter.arguments.Add(argument);
 				Map lastProgram=CompileToMap(reader);
 				lastProgram.Parent=Library.library;    // move argument adding somewhere else
 				object result=lastProgram.Call(new Map(),argument);
-//				Interpreter.arguments.Remove(argument);
 				return result;
 			}
-//			public static object Run(TextReader reader,IMap argument) {
-//				Interpreter.arguments.Add(argument);
-//				Map lastProgram=CompileToMap(reader);
-//				lastProgram.Parent=Library.library;    // move argument adding somewhere else
-//				object result=lastProgram.Call(new Map(),new Map());
-//				Interpreter.arguments.Remove(argument);
-//				return result;
-//			}
 			public static AST ParseToAst(TextReader stream)  {
 				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser(
 					new AddIndentationTokensToStream(new MetaLexer(stream)));
@@ -689,12 +695,12 @@ namespace Meta {
 			}
 			public object Call(Map caller,IMap argument) {
 				((IMap)argument).Parent=this.Parent;
-//				((IMap)Interpreter.Arg).Parent=this.Parent;
 				IExpression callable=(IExpression)Compile();
 				object result;
 				Interpreter.arguments.Add(argument);
 				if(callable is Program) { // somehow wrong
-					result=((Program)callable).Evaluate(caller,(IMap)Interpreter.Arg);
+					result=((Program)callable).EvaluateWithCurrent((IMap)Interpreter.Arg);
+					//					result=((Program)callable).Evaluate(caller,(IMap)Interpreter.Arg);
 				}
 				else {
 					result=callable.Evaluate((IMap)Interpreter.Arg);
@@ -703,27 +709,18 @@ namespace Meta {
 				return result;
 			}
 //			public object Call(Map caller,IMap argument) {
-//				((IMap)Interpreter.Arg).Parent=this.Parent;
+//				((IMap)argument).Parent=this.Parent;
 //				IExpression callable=(IExpression)Compile();
 //				object result;
+//				Interpreter.arguments.Add(argument);
 //				if(callable is Program) { // somehow wrong
-//					result=((Program)callable).Evaluate(caller,(IMap)Interpreter.Arg);
+//					result=((Program)callable).Evaluate((IMap)Interpreter.Arg);
+////					result=((Program)callable).Evaluate(caller,(IMap)Interpreter.Arg);
 //				}
 //				else {
 //					result=callable.Evaluate((IMap)Interpreter.Arg);
 //				}
-//				return result;
-//			}
-//			public object Call(Map caller) {
-//				((IMap)Interpreter.Arg).Parent=this.Parent;
-//				IExpression callable=(IExpression)Compile();
-//				object result;
-//				if(callable is Program) { // somehow wrong
-//					result=((Program)callable).Evaluate(caller,(IMap)Interpreter.Arg);
-//				}
-//				else {
-//					result=callable.Evaluate((IMap)Interpreter.Arg);
-//				}
+//				Interpreter.arguments.Remove(argument);
 //				return result;
 //			}
 			public ArrayList Keys {
@@ -993,156 +990,6 @@ namespace Meta {
 					Interpreter.arguments.Remove(argument);
 				}
 			}
-//			public object Call(Map caller,IMap argument) {
-//				IMap arguments=(IMap)Interpreter.Arg;
-//				ArrayList list;
-//				list=arguments.IntKeyValues;
-//				object result=null;
-//				try {
-//					ArrayList methods;
-//					if(name=="") {
-//						methods=new ArrayList(type.GetConstructors());
-//					}
-//					else {
-//						methods=new ArrayList(type.GetMember(name,BindingFlags.Public|
-//							BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
-//					}
-//					bool executed=false;
-//					methods.Reverse();
-//					foreach(MethodBase method in methods) {
-//						ArrayList args=new ArrayList();
-//						int counter=0;
-//						bool argumentsMatched=true;
-//						ParameterInfo[] parameters=method.GetParameters();
-//						if(list.Count>parameters.Length && parameters.Length>0) {
-//							Type lastParameter=parameters[parameters.Length-1].ParameterType;
-//							if(lastParameter.IsArray || lastParameter.IsSubclassOf(typeof(Array))) {
-//								Map lastArg=new Map();
-//								ArrayList paramsArgs=list.GetRange(parameters.Length-1,list.Count-(parameters.Length-1));
-//								for(int i=0;i<paramsArgs.Count;i++) {
-//									lastArg[new Integer(i+1)]=paramsArgs[i];
-//								}
-//								list[parameters.Length-1]=lastArg;									
-//								list.RemoveRange(parameters.Length,list.Count-parameters.Length);
-//							}
-//						}
-//						if(list.Count!=parameters.Length) {
-//							argumentsMatched=false;
-//						}
-//						else {
-//							foreach(ParameterInfo parameter in method.GetParameters()) {
-//								bool matched=false;
-//								if(parameter.ParameterType.IsAssignableFrom(list[counter].GetType())) {
-//									args.Add(list[counter]);
-//									matched=true;
-//								}
-//								else {
-//									if(parameter.ParameterType.IsSubclassOf(typeof(Delegate))
-//										||parameter.ParameterType.Equals(typeof(Delegate))) {
-//										try {
-//											MethodInfo m=parameter.ParameterType.GetMethod("Invoke",BindingFlags.Instance
-//												|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-//											Delegate del=CreateDelegate(parameter.ParameterType,m,(Map)list[counter]);
-//											args.Add(del);
-//											matched=true;
-//										}
-//										catch(Exception e){// ack
-//											int asdf=0;
-//										}
-//									}
-//									if(!matched && parameter.ParameterType.IsArray && list[counter] is IMap && ((Map)list[counter]).IntKeyValues.Count!=0) {// cheating
-//										try {
-//											Type elementType=parameter.ParameterType.GetElementType();
-//											Map map=((Map)list[counter]);
-//											ArrayList mapValues=map.IntKeyValues;
-//											Array array=Array.CreateInstance(elementType,mapValues.Count);
-//											for(int i=0;i<mapValues.Count;i++) {
-//												array.SetValue(mapValues[i],i);
-//											}
-//											args.Add(array);
-//											matched=true;										
-//										}
-//										catch {
-//										}
-//
-//									}
-//									if(!matched) {
-//										Hashtable toDotNet=(Hashtable)
-//											Interpreter.netConversion[parameter.ParameterType]; // move this into Interpreter
-//										if(toDotNet!=null) {
-//											ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)toDotNet[list[counter].GetType()];
-//											if(conversion!=null) {
-//												try {
-//													args.Add(conversion.Convert(list[counter]));
-//													matched=true;
-//												}
-//												catch (Exception e) {
-//													int asdf=0;
-//												}
-//											}
-//										}
-//									}
-//								}
-//								if(!matched) {
-//									argumentsMatched=false;
-//									break;
-//								}
-//								counter++;
-//							}
-//						}
-//						if(argumentsMatched) { // horrible
-//							if(!executed) {
-//								if(method is ConstructorInfo) {
-//									result=((ConstructorInfo)method).Invoke(args.ToArray());
-//								}
-//								else {
-//									result=method.Invoke(target,args.ToArray());
-//								}
-//								executed=true;
-//							}
-//							else { //what here?
-//								//throw new ApplicationException("\nArguments match more than one overload of "+name);
-//							}
-//						}
-//					}
-//					if(!executed) {
-//						if(savedMethod is ConstructorInfo) {
-//							return 
-//								Interpreter.ConvertDotNetObjectToMetaObject(
-//								((ConstructorInfo)savedMethod).Invoke(new object[] {}));
-//						}
-//						else {
-//							return Interpreter.ConvertDotNetObjectToMetaObject(savedMethod.Invoke(target,new object[] {}));
-//						}
-//
-//					}
-//					else {
-//						return Interpreter.ConvertDotNetObjectToMetaObject(result);
-//					}
-//
-//				}
-//				catch(Exception e) {
-//					Exception b=e;
-//					string text="";
-//					if(target!=null) {
-//						text+=target.ToString();
-//					}
-//					else {
-//						text+=type.ToString();
-//					}
-//					text+=".";
-//					text+=name;
-//					text+="(";
-//					foreach(object obj in list) {
-//						text+=obj.ToString()+",";
-//					}
-//					text=text.Remove(text.Length-1,1);
-//					text+=")";
-//					text+=" could not be invoked. ";
-//					text+=e.ToString();
-//					throw new ApplicationException(text);
-//				}
-//			}
 			//refactor
 			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) {
 				// should caller really be parent of code??? after fixing callers, yes
