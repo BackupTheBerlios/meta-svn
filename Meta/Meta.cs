@@ -32,6 +32,7 @@ using System.CodeDom.Compiler;
 using System.Xml;
 using System.Runtime.InteropServices;
 using System.Globalization;
+using System.Threading;
 
 namespace Meta {
 	namespace Library {
@@ -229,6 +230,35 @@ namespace Meta {
 			}
 			public static bool Equal(object a,object b) {
 				return a.Equals(b);
+			}
+			public static Map For() {
+				Map arg=((Map)Interpreter.Arg);
+				int times=(int)((Integer)arg[new Integer(1)]).IntValue();
+				Map function=(Map)arg[new Integer(2)];
+				Map result=new Map();
+//				result.Parent=function.Parent;
+				for(int i=0;i<times;i++) {
+					result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+				}
+				return result;
+//				Map cases=(Map)arg["case"];
+//				Map def=(Map)arg["default"];
+//				if(cases.ContainsKey(val)) {
+//					((IExpression)((Map)cases[val]).Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+//				}
+//				else if(def!=null) {
+//					((IExpression)def.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+//				}	
+//				Map arg=((Map)Interpreter.Arg);
+//				object val=arg[new Integer(1)];
+//				Map cases=(Map)arg["case"];
+//				Map def=(Map)arg["default"];
+//				if(cases.ContainsKey(val)) {
+//					((IExpression)((Map)cases[val]).Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+//				}
+//				else if(def!=null) {
+//					((IExpression)def.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+//				}				
 			}
 			public static void Switch() {
 				Map arg=((Map)Interpreter.Arg);
@@ -476,9 +506,27 @@ namespace Meta {
 		public class Statement {
 			public readonly Select key;
 			public readonly IExpression val;
+			public bool active=false;
+			public void Replace(Statement statement) {
+				key.Replace(statement.key);
+				val.Replace(statement.val);
+			}
+			public override bool Equals(object obj) {
+				if(obj is Statement) {
+					if(((Statement)obj).key.Equals(key)) {
+						if(((Statement)obj).val.Equals(val)) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+
 
 			public void Realize(ref object scope,bool isInFunction) {
+				active=true;
 				key.Assign(ref scope,this.val.Evaluate((Map)scope),isInFunction);
+				active=false;
 			}
 			public Statement(Map obj) {
 				
@@ -488,12 +536,31 @@ namespace Meta {
 		}
 		public interface IExpression {
 			object Evaluate(object current);
+			void Replace(IExpression replace);
 		}
 		public class Call: IExpression {	
-
+			public void Replace(IExpression replace) {
+				if(!this.Equals(replace)) {
+					Call call=(Call)replace;
+					callable.Replace(call.callable);
+					argument.Replace(call.argument);
+				}
+			}
+//			public void Replace(IExpression replace) {
+//				Call call=(Call)replace;
+//				if(!callable.Equals(call.callable)) {
+//					callable.Replace(call.callable);
+//				}
+//				if(!argument.Equals(call.argument)) {
+//					argument.Replace(call.argument);
+//				}
+//			}
+			public override bool Equals(object obj) {
+				return obj is Call && ((Call)obj).callable.Equals(callable) &&
+					((Call)obj).argument.Equals(argument);
+			}
 			public readonly IExpression argument;
 			public readonly IExpression callable;
-
 			public Call(Map obj) {
 				
 				Map expression=(Map)obj["call"];
@@ -504,14 +571,34 @@ namespace Meta {
 				object arg=argument.Evaluate(current);
 				ICallable obj=(ICallable)callable.Evaluate(current);
 				Interpreter.arguments.Add(arg);
-				object result=obj.Call();
+				object result=obj.Call(null);
 				Interpreter.arguments.Remove(arg);
 				return result;
 			}
 
 		}
 		public class Delayed: IExpression {
-			public readonly Map obj;
+			public Map obj;
+			public override bool Equals(object o) {
+				return obj is Delayed &&
+					obj.Equals(((Delayed)o).obj);
+			}
+			public void Replace(IExpression replace) {
+				if(!this.Equals(replace)) {
+					Delayed delayed=(Delayed)replace;
+					delayed.obj.Compile();
+					if(obj.compiled!=null) {
+						if(obj.compiled is Statement) {
+							((Statement)obj.compiled).Replace((Statement)delayed.obj.compiled);
+						}
+						else {
+							((IExpression)obj.compiled).Replace((IExpression)delayed.obj.compiled);
+						}
+						delayed.obj.compiled=obj.compiled;
+					}
+					obj=delayed.obj;// check equality first?
+				}
+			}
 			public Delayed(Map obj) {
 				this.obj=(Map)obj["delayed"];
 				this.obj.Compile();
@@ -523,7 +610,38 @@ namespace Meta {
 		public class Program: IExpression {
 			public readonly ArrayList statements=new ArrayList();
 
+			public override bool Equals(object obj) {
+				if(obj is Program) {
+					Program program=(Program)obj;
+					if(program.statements.Count==statements.Count) {
+						for(int i=0;i<statements.Count;i++) {
+							if(!statements[i].Equals(program.statements[i])) {
+								return false;
+							}
+						}
+						return true;
+					}
+				}
+				return false;
+			}
 
+			public void Replace(IExpression replace) {
+				if(!Equals(replace)) {
+					Program program=(Program)replace;
+					int i=0;
+					for(;i<program.statements.Count && i<statements.Count;i++)  {
+						if(!((Statement)statements[i]).Equals((Statement)program.statements[i])) {
+							((Statement)statements[i]).Replace((Statement)program.statements[i]); //less here
+						}
+					}
+					if(statements.Count>program.statements.Count) {
+						statements.RemoveRange(i,statements.Count-i);
+					}
+					else { //count can also be equal, no bug but no check
+						statements.AddRange(program.statements.GetRange(i,program.statements.Count-i));
+					}
+				}
+			}
 			public Program(Map obj) {
 				
 				foreach(Map map in ((Map)obj["program"]).IntKeyValues) {
@@ -538,18 +656,22 @@ namespace Meta {
 			public object Evaluate(object caller,Map existing,bool isInFunction) {
 				object result=existing;
 				bool callerIsMap=false;
-				if(caller is IKeyValue) { //hack!!!
-					callerIsMap=true;
-				}
-				if(callerIsMap) {
-					Interpreter.callers.Add(caller);
-				}
 
+				if(caller!=null) {
+					if(caller is Map) { //hack!!!
+						callerIsMap=true;
+					}
+					if(callerIsMap) {
+						Interpreter.callers.Add(caller);
+					}
+				}
 				foreach(Statement statement in statements) {
 					statement.Realize(ref result,isInFunction);
 				}
-				if(callerIsMap) {
-					Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+				if(caller!=null) {
+					if(callerIsMap) {
+						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+					}
 				}
 				return result;
 			}
@@ -569,9 +691,16 @@ namespace Meta {
 			object Recognize(string text);
 		}
 		public class Literal: IExpression {
-			public readonly string text;
+			public string text;
 			public object cached=null;
-
+			public override bool Equals(object obj) {
+				return obj is Literal && text==((Literal)obj).text;
+			}
+			public void Replace(IExpression replace) {
+				Literal literal=(Literal)replace;
+				text=literal.text;
+				cached=literal.cached;
+			}
 			public Literal(Map obj) {
 				this.text=(string)obj["literal"];
 				
@@ -589,6 +718,7 @@ namespace Meta {
 				return cached;
 			}
 		}
+		// remove
 		public class BreakException:ApplicationException {
 			public readonly object obj;
 
@@ -600,8 +730,37 @@ namespace Meta {
 			public readonly ArrayList expressions=new ArrayList();
 			public ArrayList parents=new ArrayList();
 
+			public override bool Equals(object obj) {
+				if(obj is Select) {
+					Select select=(Select)obj;
+					if(expressions.Count==select.expressions.Count)  {
+						for(int i=0;i<expressions.Count;i++) {
+							if(!((IExpression)expressions[i]).Equals(select.expressions[i])) {
+								return false;
+							}
+						}
+						return true;
+					}
+				}
+				return false;
+			}
+			public void Replace(IExpression replace)  {
+				if(!Equals(replace)) {
+					Select select=(Select)replace;
+					int i=0;
+					for(;i<expressions.Count && i<select.expressions.Count;i++) {
+						((IExpression)expressions[i]).Replace((IExpression)select.expressions[i]);
+					}
+					if(expressions.Count>select.expressions.Count) {
+						expressions.RemoveRange(i,expressions.Count-i);
+					}
+					else {
+						expressions.AddRange(select.expressions.GetRange(i,select.expressions.Count-i));
+					}
+				}
+			}
+
 			public Select(Map code) {
-				
 				foreach(Map expression in ((Map)code["select"]).IntKeyValues) {
 					this.expressions.Add(expression.Compile());
 				}
@@ -624,7 +783,7 @@ namespace Meta {
 //				return preselection;
 //			}
 			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
-				if(keys[0].Equals("commandLineArguments")) {
+				if(keys[0].Equals("For")) {
 					int asdf=0;
 				}
 				object selected=current;
@@ -643,7 +802,7 @@ namespace Meta {
 							break;
 						}
 					}
-					selected=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
+					selected=Interpreter.callers[Interpreter.callers.Count-numCallers];
 				}
 				else if(keys[0].Equals("parent")) {
 					foreach(object key in keys) {
@@ -671,17 +830,32 @@ namespace Meta {
 						throw new ApplicationException("Key "+keys[i]+" not found");
 					}
 				}
-				int count=keys.Count-1;
+				int lastKeySelect=0;//=keys.Count-1;
 				if(isSelectLastKey) {
-					count++;
+					lastKeySelect++;
 				}
-				for(;i<count;i++) {
+//				int count=keys.Count-1;
+//				if(isSelectLastKey) {
+//					count++;
+//				}
+				for(;i<keys.Count-1+lastKeySelect;i++) {
 					if(keys[i].Equals("assemblies")) {
 						int asdf=0;
 					}	
 
 					if(keys[i].Equals("break")) {
-						throw new BreakException(selected);
+//						Interpreter.breakObject=;
+						Interpreter.breakMethod(selected);
+						Thread.CurrentThread.Suspend();
+						keys=new ArrayList();//ugly hack
+						foreach(IExpression expression in expressions) {
+							keys.Add(expression.Evaluate(current));
+						}
+						return Preselect(current,keys,isRightSide,isSelectLastKey);
+//						i=0;
+//						selected=current;
+//						continue;
+//						throw new BreakException(selected);
 					}	
 					if(selected is IKeyValue) {
 						selected=((IKeyValue)selected)[keys[i]];
@@ -704,13 +878,17 @@ namespace Meta {
 				if(keys.Count==1 && keys[0].Equals("this")) {
 					if(val is IKeyValue) {
 						current=((IKeyValue)val).Clone();
-						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-						Interpreter.callers.Add(current);
+						if(current is Map) {
+							Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+							Interpreter.callers.Add(current);
+						}
 					}
 					else {
 						current=val;
-						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-						Interpreter.callers.Add(current);
+						if(current is Map) {
+							Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+							Interpreter.callers.Add(current);
+						}
 					}
 				}
 				else {
@@ -726,57 +904,15 @@ namespace Meta {
 					keyValue[keys[keys.Count-1]]=val;
 				}
 			}
-//			public void Assign(ref object current,object val,bool isInFunction) {
-//				ArrayList keys=new ArrayList();
-//				foreach(IExpression expression in expressions) {
-//					keys.Add(expression.Evaluate((Map)current));
-//				}
-//				if(keys.Count==1 && keys[0].Equals("this")) {
-//					if(val is IKeyValue) {
-//						current=((IKeyValue)val).Clone();
-//						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-//						Interpreter.callers.Add(current);
-//					}
-//					else {
-//						current=val;
-//						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-//						Interpreter.callers.Add(current);
-//					}
-//				}
-//				else {
-//					object selected=Preselect(current,keys,isInFunction,false);
-//					IKeyValue keyValue;
-//					if(selected is IKeyValue) {
-//						keyValue=(IKeyValue)selected;
-//					}
-//					else {
-//						keyValue=new NetObject(selected);
-//					}
-//					keyValue[keys[keys.Count-1]]=val;
-//				}
-//			}
-//			private object GetValue(object obj,object key) {
-//				IKeyValue map;
-//				if(obj is IKeyValue) { 
-//					map=(IKeyValue)obj;
-//				}
-//				else {
-//					map=(new NetObject(obj));
-//				}
-//				if(key.Equals("break")) {
-//					throw new BreakException(map);
-//				}
-//				else {
-//					return map[key];
-//				}
-//			}
 		}
+		public delegate void BreakMethodDelegate(object obj);
 		public class Interpreter  {
+			public static BreakMethodDelegate breakMethod;
 			public static ArrayList callers=new ArrayList();
 			public static ArrayList arguments=new ArrayList();
 			public static Hashtable netConversion=new Hashtable();
 			public static Hashtable metaConversion=new Hashtable();
-			
+			public static ArrayList compiledMaps=new ArrayList();
 			public static object Arg {
 				get {
 					return arguments[arguments.Count-1];
@@ -859,6 +995,7 @@ namespace Meta {
 			public static object Run(string path,Map argument) {
 				return Run(new StreamReader(path),argument);
 			}
+			public static Map lastProgram;
 
 			public static object Run(TextReader reader,Map argument) {
 				ArrayList parents=new ArrayList();
@@ -871,7 +1008,8 @@ namespace Meta {
 					existing[method.Name]=new NetMethod(method.Name,null,typeof(Functions));
 				}
 				Interpreter.arguments.Add(argument);
-				object result=Mapify(reader).Call(existing);
+				lastProgram=Mapify(reader);
+				object result=lastProgram.Call(existing,existing);
 				Interpreter.arguments.Remove(argument);
 				return result;
 			}
@@ -1180,7 +1318,7 @@ namespace Meta {
 			}
 		}
 		public interface ICallable: IMetaType{
-			object Call();
+			object Call(Map caller);
 		}
 		public interface IKeyValue: IMetaType,IEnumerable {
 			object this[object key] {
@@ -1199,6 +1337,25 @@ namespace Meta {
 		}		
 
 		public class Map: IKeyValue, ICallable, IEnumerable {
+//			public void ReplaceCompiled(Map map) {
+//				if(compiled!=null) {
+//					if(compiled is Statement) {
+//						((Statement)compiled).Replace(this.Compile());
+//					}
+//					else if(compiled is IExpression) {
+//						((IExpression)compiled).Replace(this.Compile());
+//					}
+//					else {
+//						throw new ApplicationException("bug");
+//					}
+//				}
+//				foreach(DictionaryEntry entry in map) {
+//					if(entry.Value is Map) {
+//						((Map)entry.Value).ReplaceCompiled();
+//					}
+//					this[entry.Key]=entry.Value;
+//				}
+//			}
 			private IKeyValue parent;
 			public IKeyValue Parent {
 				get {
@@ -1211,7 +1368,7 @@ namespace Meta {
 			public int numberAutokeys=0;
 			private ArrayList keys;
 			public HybridDictionary table;
-			private object compiled;
+			public object compiled;
 
 
 			public int Count {
@@ -1252,16 +1409,17 @@ namespace Meta {
 					}
 				}
 			}
-			public object Call() {
+			public object Call(Map caller) {
 				Map local=new Map();
 				local.Parent=this;
-				return Call(local);
+				return Call(caller,local);
 			}
-			public object Call(Map existing)  {
+			public object Call(Map caller,Map existing)  {
 				IExpression callable=(IExpression)Compile();
 				object result;
 				if(callable is Program) {
-					result=((Program)callable).Evaluate(this,existing,true);
+					result=((Program)callable).Evaluate(caller,existing,true);
+//					result=((Program)callable).Evaluate(this,existing,true);
 				}
 				else {
 					result=callable.Evaluate(this);
@@ -1289,6 +1447,7 @@ namespace Meta {
 					copy[key]=this[key];
 				}
 				copy.Parent=Parent;
+				copy.compiled=compiled;
 				return copy;
 			}
 			public object Compile()  {
@@ -1309,6 +1468,9 @@ namespace Meta {
 							compiled=new Statement(this);break;
 						default:
 							throw new ApplicationException("Map cannot be compiled because it is not an expression.");
+					}
+					if(!Interpreter.compiledMaps.Contains(this)) {
+						Interpreter.compiledMaps.Add(this);
 					}
 				}
 				return compiled;
@@ -1468,7 +1630,7 @@ namespace Meta {
 			
 
 
-			public object Call() {
+			public object Call(Map caller) {
 //				if(this.name.Equals("Invoke")) {
 //					int asdf=0;
 //				}
@@ -1495,7 +1657,7 @@ namespace Meta {
 					}
 					bool executed=false;
 					methods.Reverse();
-					if(this.name.Equals("Switch")) {
+					if(this.name.Equals("For")) {
 						int asdf=0;
 					}
 					foreach(MethodBase method in methods) {
@@ -1662,8 +1824,8 @@ namespace Meta {
 //			}
 			[IgnoreMember]
 			public NetMethod constructor;
-			public object Call() {
-				return constructor.Call();
+			public object Call(Map caller) {
+				return constructor.Call(null);
 			}
 			public NetClass(Type type):base(null,type) {
 				this.constructor=new NetMethod(this.type);
@@ -1816,7 +1978,7 @@ namespace Meta {
 						Map arguments=new Map();
 						arguments[new Integer(1)]=key;
 						Interpreter.arguments.Add(arguments);
-						object result=indexer.Call();
+						object result=indexer.Call(null);
 						Interpreter.arguments.Remove(arguments);
 						return result;
 					}
@@ -1896,7 +2058,7 @@ namespace Meta {
 						arguments[new Integer(1)]=key;
 						arguments[new Integer(2)]=value;
 						Interpreter.arguments.Add(arguments);
-						indexer.Call();
+						indexer.Call(null);
 						Interpreter.arguments.Remove(arguments);
 					}
 					catch(Exception e) {
@@ -1937,7 +2099,7 @@ namespace Meta {
 				}
 				source+=argumentList+"{";
 				source+=argumentAdding;
-				source+="Interpreter.arguments.Add(arg);object result=callable.Call();Interpreter.arguments.Remove(arg);";
+				source+="Interpreter.arguments.Add(arg);object result=callable.Call(null);Interpreter.arguments.Remove(arg);";
 				if(!method.ReturnType.Equals(typeof(void))) {
 					source+="return ("+returnTypeName+")";
 					source+="Interpreter.ConvertToNet(result,typeof("+returnTypeName+"));";

@@ -115,6 +115,7 @@ namespace Editor {
 			Help.listBox.Location=new Point(x,y);
 		}
 		static Editor() {
+			Interpreter.breakMethod=new BreakMethodDelegate(Help.OnBreak);
 			editor.ShowLines=false;
 			editor.ShowPlusMinus=false;
 			editor.Dock=DockStyle.Fill;
@@ -122,6 +123,7 @@ namespace Editor {
 			editor.ForeColor=unselectedForecolor;
 			editor.BackColor=unselectedBackcolor;
 			editor.TabStop=false;
+			window.Closing+=new System.ComponentModel.CancelEventHandler(window_Closing);
 
 			editor.KeyDown+=new KeyEventHandler(KeyDown);
 			editor.MouseDown+=new MouseEventHandler(MouseDown);
@@ -129,11 +131,6 @@ namespace Editor {
 			editor.BeforeSelect+=new TreeViewCancelEventHandler(BeforeSelect);
 			editor.MouseWheel+=new MouseEventHandler(editor_MouseWheel);
 			editor.MouseEnter+=new EventHandler(editor_MouseEnter);
-//			editor.MouseUp+=new MouseEventHandler(editor_MouseUp);
-//			editor.MouseWheel+=new MouseEventHandler(editor_MouseWheel);
-//			editor.Layout+=new LayoutEventHandler(editor_Layout);
-//			editor.KeyUp+=new KeyEventHandler(editor_KeyUp);
-//			editor.Invalidated+=new InvalidateEventHandler(editor_Invalidated);
 
 			functionHelpKeyBindings[Keys.Alt|Keys.L]=typeof(PreviousOverload);
 			functionHelpKeyBindings[Keys.Alt|Keys.K]=typeof(NextOverload);
@@ -190,6 +187,8 @@ namespace Editor {
 			keyBindings[Keys.Escape]=typeof(AbortHelp);
 
 			keyBindings[Keys.Alt|Keys.H]=typeof(DeleteNode);
+
+			keyBindings[Keys.F4]=typeof(AbortHelpThread);
 		}
 		public static void KeyDown(object sender,KeyEventArgs e) {
 			if(Help.listBox.Visible && helpKeyBindings.ContainsKey(e.KeyData)) {
@@ -244,6 +243,20 @@ namespace Editor {
 
 		private static void editor_MouseEnter(object sender, EventArgs e) {
 			FixListBoxPosition();
+		}
+
+		private static void window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+			if(Help.lastHelpThread!=null) {
+//				if(Help.lastHelpThread.ThreadState==ThreadState.Suspended) {
+//					Help.lastHelpThread.Resume();
+//				}
+				if(Help.lastHelpThread.ThreadState==ThreadState.Suspended) {
+					Help.lastHelpThread.Resume();
+				}
+				Help.lastHelpThread.Abort(); // fails when debugging
+				//				Help.lastHelpThread.Interrupt();
+				Help.lastHelpThread=null;
+			}
 		}
 	}
 	public class Window:Form {
@@ -552,153 +565,6 @@ namespace Editor {
 		}
 		public static int overloadNumber=0;
 		public static int overloadIndex=0;
-//		public static void ShowHelpBackThread(Exception e) {
-//			if(e is BreakException) {
-//				if(((BreakException)e).obj==null) {
-//					toolTip.Visible=true;
-//					toolTip.Text="null";
-//				}
-//				else {
-//					object obj=((BreakException)e).obj;
-//					lastObject=obj;
-//					if(_isCall) {
-//						string text="";
-//						if(obj is NetMethod) {
-//							Help.overloadNumber=((NetMethod)obj).methods.Length;
-//							text=Help.GetDoc(((NetMethod)obj).methods[overloadIndex],true,true,true);//(true);;
-//						}
-//						else if (obj is NetClass) {
-//							Help.overloadNumber=((NetClass)obj).constructor.methods.Length;
-//							text=Help.GetDoc(((NetClass)obj).constructor.methods[overloadIndex],true,true,true);//(true);
-//						}
-//						else if(obj is Map) {
-//							text=FunctionHelp((Map)obj);
-//						}
-//						Help.toolTip.Text=text;
-//						Graphics graphics=toolTip.CreateGraphics();
-//						Size size=graphics.MeasureString(text,
-//							toolTip.Font).ToSize();
-//						toolTip.Size=new Size(size.Width+10,size.Height+13);
-//						toolTip.Visible=true;
-//
-//						TreeNode selected=Editor.SelectedNode;
-//						int depth=0;
-//						while(selected.Parent!=null) {
-//							selected=selected.Parent;
-//							depth++;
-//						}
-//						int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
-//							Convert.ToInt32(
-//							graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
-//
-//						int y=5;
-//						TreeNode node=Editor.SelectedNode;
-//						while(node!=null) {
-//							y+=node.Bounds.Height;
-//							node=node.PrevVisibleNode;
-//						}
-//						toolTip.Location=new Point(x,y);
-//
-//					}
-//					else {
-//						listBox.Items.Clear();
-//						IKeyValue keyValue=obj is IKeyValue? (IKeyValue)obj:new NetObject(obj);
-//						ArrayList keys=new ArrayList();
-//						foreach(DictionaryEntry entry in keyValue) {
-//							keys.Add(entry.Key);
-//						}
-//						keys.Sort(new HelpComparer());
-//						foreach(object key in keys) {
-//							object member;
-//							int imageIndex=0;
-//							if(lastObject is Map) {
-//								member=((Map)lastObject)[key];
-//							}
-//							else if(lastObject is NetClass) {
-//								MemberInfo[] members=((NetClass)lastObject).type.GetMember(key.ToString(),
-//									BindingFlags.Public|BindingFlags.Static);
-//								member=members[0];
-//							}
-//							else if(!(lastObject is Map)) {
-//								MemberInfo[] members=lastObject.GetType().GetMember(key.ToString(),
-//									BindingFlags.Public|BindingFlags.Instance);
-//								member=members.Length>0? members[0]:keyValue[key];
-//							}
-//							else {
-//								throw new ApplicationException("bug here");
-//							}
-//							string additionalText="";
-//
-//							if(member is Type || member is NetClass) {
-//								imageIndex=0;
-//							}
-//							else if(member is EventInfo) {
-//								imageIndex=1;
-//							}
-//							else if(member is MethodInfo || member is ConstructorInfo || member is NetMethod) {
-//								imageIndex=2;
-//							}
-//							else if(member is PropertyInfo) {
-//								imageIndex=4;
-//								object o=((PropertyInfo)member).GetValue(obj,new object[] {});
-//								if(o==null) {
-//									additionalText="null";
-//								}
-//								else {
-//									additionalText=o.ToString();
-//								}
-//							}
-//							else if(member is Map) {
-//								imageIndex=5;
-//							}
-//							else {
-//								if(member is FieldInfo) {
-//									additionalText=((FieldInfo)member).GetValue(obj).ToString();
-//								}
-//								else {
-//									additionalText=member.ToString();
-//								}
-//								imageIndex=6;
-//							}
-//							listBox.Items.Add(new GListBoxItem(key,additionalText,imageIndex));
-//						}
-//						Graphics graphics=Editor.window.CreateGraphics();
-//						TreeNode selected=Editor.SelectedNode;
-//						int depth=0;
-//						while(selected.Parent!=null) {
-//							selected=selected.Parent;
-//							depth++;
-//						}
-//						int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
-//							Convert.ToInt32(
-//							graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
-//
-//						int y=5;
-//						TreeNode node=Editor.SelectedNode;
-//						while(node!=null) {
-//							y+=node.Bounds.Height;
-//							node=node.PrevVisibleNode;
-//						}
-//						listBox.Location=new Point(x,y);
-//						int greatest=0;
-//						foreach(GListBoxItem item in listBox.Items) {
-//							int width=graphics.MeasureString(item.Text,listBox.Font).ToSize().Width;
-//							if(width>greatest){
-//								greatest=width;
-//							}								
-//						}
-//						listBox.Size=new Size(greatest+30,150<listBox.Items.Count*16+10? 150:listBox.Items.Count*16+10);
-//						listBox.Show();
-//						Editor.editor.Focus();
-//					}
-//				}
-//			}
-//			else {
-//				toolTip.Visible=true;
-//				toolTip.Text=e.Message;
-//			}
-//			Editor.window.Activate();
-//		}
 		public static string GetDoc(MemberInfo memberInfo,bool isSignature,bool isSummary,bool isParameters) {
 			XmlNode comment=GetComments(memberInfo);
 			string text="";
@@ -903,6 +769,11 @@ namespace Editor {
 			// Get the node from the document
 			return doc.SelectSingleNode(xpath);
 		}
+		public static void OnBreak(object obj) {
+//			object obj=((BreakException)e).obj;
+			listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
+		}
+
 		public static void ShowHelpBackThread(object obj) {
 					lastObject=obj;
 					if(_isCall) {
@@ -1054,22 +925,77 @@ namespace Editor {
 					}
 			Editor.window.Activate();
 		}
+		public static Thread lastHelpThread;
 		public static void ShowHelp(Node selectedNode,string selectedNodeText,bool isCall) {
 			_selectedNode=selectedNode;
 			_selectedNodeText=selectedNodeText;
 			_isCall=isCall;
 			overloadIndex=0;
-			Thread thread=new Thread(new ThreadStart(ShowHelpOtherThread));
+			if(lastHelpThread==null) {
+				lastHelpThread=new Thread(new ThreadStart(ShowHelpOtherThread));
+				lastHelpThread.Start();
+			}
+			else {
+				Map map=Interpreter.Mapify(
+					new StringReader(
+					SerializeTreeView(
+					Editor.SelectedNode.FileNode,
+					"",
+					CompleteText(_selectedNodeText),
+					Editor.SelectedNode
+					)));
+				Program program=(Program)map.Compile();
+				((IExpression)Interpreter.lastProgram.compiled).Replace(program);
+				map.compiled=Interpreter.lastProgram.compiled;
+				Interpreter.lastProgram=map;
+				lastHelpThread.Resume();
+
+			}
 			//Help.listBox.Visible=true;
-			thread.Start();
 		}
 		delegate void ShowHelpDelegate(object obj);
 		private static Node _selectedNode;
 		private static string _selectedNodeText;
 		private static bool _isCall;
 //		private static Exception _e;
+//		public static void ShowHelpOtherThread() {
+//			try {
+//				Interpreter.Run(
+//					new StringReader(
+//					SerializeTreeView(
+//					Editor.SelectedNode.FileNode,
+//					"",
+//					CompleteText(_selectedNodeText),
+//					Editor.SelectedNode
+//					)),
+//					new Map());
+//			}
+//			catch(Exception e) {
+//				while(!(e.InnerException==null || e is BreakException)) {
+//					e=e.InnerException;
+//				}
+//				if(e is BreakException) {
+//					if(((BreakException)e).obj==null) {
+//						int asdf=0;
+////						toolTip.Visible=true;
+////						toolTip.Text="null";
+//					}
+//					else {
+//						object obj=((BreakException)e).obj;
+//						listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
+//					}
+//				}
+//
+////			}
+////			else {
+////				toolTip.Visible=true;
+////				toolTip.Text=e.Message;
+////			}
+//				//_e=e;
+//			}
+//		}
 		public static void ShowHelpOtherThread() {
-			try {
+//			try {
 				Interpreter.Run(
 					new StringReader(
 					SerializeTreeView(
@@ -1079,32 +1005,22 @@ namespace Editor {
 					Editor.SelectedNode
 					)),
 					new Map());
-			}
-			catch(Exception e) {
-				while(!(e.InnerException==null || e is BreakException)) {
-					e=e.InnerException;
-				}
-				if(e is BreakException) {
-					if(((BreakException)e).obj==null) {
-						int asdf=0;
-//						toolTip.Visible=true;
-//						toolTip.Text="null";
-					}
-					else {
-						object obj=((BreakException)e).obj;
-						listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
-					}
-				}
-
 //			}
-//			else {
-//				toolTip.Visible=true;
-//				toolTip.Text=e.Message;
+//			catch(Exception e) {
+//				while(!(e.InnerException==null || e is BreakException)) {
+//					e=e.InnerException;
+//				}
+//				if(e is BreakException) {
+//					if(((BreakException)e).obj==null) {
+//						int asdf=0;
+//					}
+//					else {
+//						object obj=((BreakException)e).obj;
+//						listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
+//					}
+//				}
 //			}
-				//_e=e;
-			}
 		}
-
 
 		// TODO
 		private static string FunctionHelp(Map map) {
@@ -1254,6 +1170,17 @@ namespace Editor {
 	public abstract class LoggedNormalNodeCommand:LoggedAnyNodeCommand {
 		public new bool Require() {
 			return !(Editor.SelectedNode is FileNode);
+		}
+	}
+	public class AbortHelpThread:Command {
+		public override void Do() {
+			if(Help.lastHelpThread!=null) {
+//				Help.lastHelpThread.Abort();
+				Help.lastHelpThread.Resume();
+				Help.lastHelpThread.Abort();
+//				Help.lastHelpThread.Interrupt();
+				Help.lastHelpThread=null;
+			}
 		}
 	}
 	public class NextOverload:Command {
@@ -1577,6 +1504,7 @@ namespace Editor {
 					Help.toolTip.Visible=false;
 				}
 				else {
+					// some index bug here
 					InsertCharacter.lastWord=InsertCharacter.lastWord.Remove(InsertCharacter.lastWord.Length-1,1);
 					Help.listBox.SelectedIndex=Help.listBox.FindString(InsertCharacter.lastWord);
 				}

@@ -135,6 +135,16 @@ IEnumerable
         "Boolean Equal(System.Object, System.Object)"
   Entry (DictionaryEntry):
     Key (String):
+      "For"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Meta.Types.Map For()"
+      savedMethod (RuntimeMethodInfo):
+        "Meta.Types.Map For()"
+  Entry (DictionaryEntry):
+    Key (String):
       "Switch"
     Value (NetMethod):
       methods (MethodInfo[]):
