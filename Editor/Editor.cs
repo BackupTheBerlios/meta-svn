@@ -861,6 +861,7 @@ namespace Editor {
 			Editor.window.Activate();
 		}
 		public static Thread lastHelpThread;
+		private static RichTextBox box=new RichTextBox();
 		public static void ShowHelp(Node selectedNode,string selectedNodeText,bool isCall) {
 			if(!showHelp) {
 				return;

@@ -2,8 +2,15 @@ using System;
 using Meta.Types;
 using Meta.Execution;
 using System.Collections;
+using System.IO;
 public class @base {
-	public static IKeyValue Merge() { // get rid of use of Map
+	public static char Character(string c) {
+		return Convert.ToChar(c);
+	}
+	public static object Run(string path) {
+		return Interpreter.Run(new StreamReader(path),new Map());
+	}
+	public static IKeyValue Merge() {
 		return (Map)Interpreter.Merge((Map)Interpreter.Arg);
 	}
 	public static void Write(string s) {

@@ -3184,16 +3184,6 @@ IEnumerable
                                     "literal"
                                   Value (String):
                                     "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "3"
               Entry (DictionaryEntry):
                 Key (String):
                   "value"
@@ -3223,7 +3213,17 @@ IEnumerable
                                               Key (String):
                                                 "literal"
                                               Value (String):
-                                                "Load"
+                                                "base"
+                                      Entry (DictionaryEntry):
+                                        Key (Integer):
+                                          "2"
+                                        Value (Map):
+                                          IEnumerable
+                                            Entry (DictionaryEntry):
+                                              Key (String):
+                                                "literal"
+                                              Value (String):
+                                                "Merge"
                           Entry (DictionaryEntry):
                             Key (String):
                               "argument"
@@ -3276,9 +3276,74 @@ IEnumerable
                                                 IEnumerable
                                                   Entry (DictionaryEntry):
                                                     Key (String):
-                                                      "literal"
-                                                    Value (String):
-                                                      "Test"
+                                                      "select"
+                                                    Value (Map):
+                                                      IEnumerable
+                                                        Entry (DictionaryEntry):
+                                                          Key (Integer):
+                                                            "1"
+                                                          Value (Map):
+                                                            IEnumerable
+                                                              Entry (DictionaryEntry):
+                                                                Key (String):
+                                                                  "literal"
+                                                                Value (String):
+                                                                  "parent"
+                                      Entry (DictionaryEntry):
+                                        Key (Integer):
+                                          "2"
+                                        Value (Map):
+                                          IEnumerable
+                                            Entry (DictionaryEntry):
+                                              Key (String):
+                                                "key"
+                                              Value (Map):
+                                                IEnumerable
+                                                  Entry (DictionaryEntry):
+                                                    Key (String):
+                                                      "select"
+                                                    Value (Map):
+                                                      IEnumerable
+                                                        Entry (DictionaryEntry):
+                                                          Key (Integer):
+                                                            "1"
+                                                          Value (Map):
+                                                            IEnumerable
+                                                              Entry (DictionaryEntry):
+                                                                Key (String):
+                                                                  "literal"
+                                                                Value (String):
+                                                                  "this"
+                                                        Entry (DictionaryEntry):
+                                                          Key (Integer):
+                                                            "2"
+                                                          Value (Map):
+                                                            IEnumerable
+                                                              Entry (DictionaryEntry):
+                                                                Key (String):
+                                                                  "literal"
+                                                                Value (String):
+                                                                  "2"
+                                            Entry (DictionaryEntry):
+                                              Key (String):
+                                                "value"
+                                              Value (Map):
+                                                IEnumerable
+                                                  Entry (DictionaryEntry):
+                                                    Key (String):
+                                                      "select"
+                                                    Value (Map):
+                                                      IEnumerable
+                                                        Entry (DictionaryEntry):
+                                                          Key (Integer):
+                                                            "1"
+                                                          Value (Map):
+                                                            IEnumerable
+                                                              Entry (DictionaryEntry):
+                                                                Key (String):
+                                                                  "literal"
+                                                                Value (String):
+                                                                  "Test"
         Entry (DictionaryEntry):
           Key (Integer):
             "31"
@@ -5423,7 +5488,7 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "4"
+                                    "3"
               Entry (DictionaryEntry):
                 Key (String):
                   "value"
@@ -5718,6 +5783,216 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
+                                    "this"
+                          Entry (DictionaryEntry):
+                            Key (Integer):
+                              "2"
+                            Value (Map):
+                              IEnumerable
+                                Entry (DictionaryEntry):
+                                  Key (String):
+                                    "literal"
+                                  Value (String):
+                                    "4"
+              Entry (DictionaryEntry):
+                Key (String):
+                  "value"
+                Value (Map):
+                  IEnumerable
+                    Entry (DictionaryEntry):
+                      Key (String):
+                        "call"
+                      Value (Map):
+                        IEnumerable
+                          Entry (DictionaryEntry):
+                            Key (String):
+                              "function"
+                            Value (Map):
+                              IEnumerable
+                                Entry (DictionaryEntry):
+                                  Key (String):
+                                    "select"
+                                  Value (Map):
+                                    IEnumerable
+                                      Entry (DictionaryEntry):
+                                        Key (Integer):
+                                          "1"
+                                        Value (Map):
+                                          IEnumerable
+                                            Entry (DictionaryEntry):
+                                              Key (String):
+                                                "literal"
+                                              Value (String):
+                                                "TestClass"
+                                      Entry (DictionaryEntry):
+                                        Key (Integer):
+                                          "2"
+                                        Value (Map):
+                                          IEnumerable
+                                            Entry (DictionaryEntry):
+                                              Key (String):
+                                                "literal"
+                                              Value (String):
+                                                "TakeDelegate"
+                          Entry (DictionaryEntry):
+                            Key (String):
+                              "argument"
+                            Value (Map):
+                              IEnumerable
+                                Entry (DictionaryEntry):
+                                  Key (String):
+                                    "program"
+                                  Value (Map):
+                                    IEnumerable
+                                      Entry (DictionaryEntry):
+                                        Key (Integer):
+                                          "1"
+                                        Value (Map):
+                                          IEnumerable
+                                            Entry (DictionaryEntry):
+                                              Key (String):
+                                                "key"
+                                              Value (Map):
+                                                IEnumerable
+                                                  Entry (DictionaryEntry):
+                                                    Key (String):
+                                                      "select"
+                                                    Value (Map):
+                                                      IEnumerable
+                                                        Entry (DictionaryEntry):
+                                                          Key (Integer):
+                                                            "1"
+                                                          Value (Map):
+                                                            IEnumerable
+                                                              Entry (DictionaryEntry):
+                                                                Key (String):
+                                                                  "literal"
+                                                                Value (String):
+                                                                  "this"
+                                                        Entry (DictionaryEntry):
+                                                          Key (Integer):
+                                                            "2"
+                                                          Value (Map):
+                                                            IEnumerable
+                                                              Entry (DictionaryEntry):
+                                                                Key (String):
+                                                                  "literal"
+                                                                Value (String):
+                                                                  "1"
+                                            Entry (DictionaryEntry):
+                                              Key (String):
+                                                "value"
+                                              Value (Map):
+                                                IEnumerable
+                                                  Entry (DictionaryEntry):
+                                                    Key (String):
+                                                      "delayed"
+                                                    Value (Map):
+                                                      IEnumerable
+                                                        Entry (DictionaryEntry):
+                                                          Key (String):
+                                                            "literal"
+                                                          Value (String):
+                                                            "resultFromDelegate"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "66"
+          Value (Map):
+            IEnumerable
+              Entry (DictionaryEntry):
+                Key (String):
+                  "key"
+                Value (Map):
+                  IEnumerable
+                    Entry (DictionaryEntry):
+                      Key (String):
+                        "select"
+                      Value (Map):
+                        IEnumerable
+                          Entry (DictionaryEntry):
+                            Key (Integer):
+                              "1"
+                            Value (Map):
+                              IEnumerable
+                                Entry (DictionaryEntry):
+                                  Key (String):
+                                    "literal"
+                                  Value (String):
+                                    "resultFromDelegate"
+              Entry (DictionaryEntry):
+                Key (String):
+                  "value"
+                Value (Map):
+                  IEnumerable
+                    Entry (DictionaryEntry):
+                      Key (String):
+                        "call"
+                      Value (Map):
+                        IEnumerable
+                          Entry (DictionaryEntry):
+                            Key (String):
+                              "function"
+                            Value (Map):
+                              IEnumerable
+                                Entry (DictionaryEntry):
+                                  Key (String):
+                                    "select"
+                                  Value (Map):
+                                    IEnumerable
+                                      Entry (DictionaryEntry):
+                                        Key (Integer):
+                                          "1"
+                                        Value (Map):
+                                          IEnumerable
+                                            Entry (DictionaryEntry):
+                                              Key (String):
+                                                "literal"
+                                              Value (String):
+                                                "TestClass"
+                                      Entry (DictionaryEntry):
+                                        Key (Integer):
+                                          "2"
+                                        Value (Map):
+                                          IEnumerable
+                                            Entry (DictionaryEntry):
+                                              Key (String):
+                                                "literal"
+                                              Value (String):
+                                                "GetResultFromDelegate"
+                          Entry (DictionaryEntry):
+                            Key (String):
+                              "argument"
+                            Value (Map):
+                              IEnumerable
+                                Entry (DictionaryEntry):
+                                  Key (String):
+                                    "program"
+                                  Value (Map):
+                                    IEnumerable
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "67"
+          Value (Map):
+            IEnumerable
+              Entry (DictionaryEntry):
+                Key (String):
+                  "key"
+                Value (Map):
+                  IEnumerable
+                    Entry (DictionaryEntry):
+                      Key (String):
+                        "select"
+                      Value (Map):
+                        IEnumerable
+                          Entry (DictionaryEntry):
+                            Key (Integer):
+                              "1"
+                            Value (Map):
+                              IEnumerable
+                                Entry (DictionaryEntry):
+                                  Key (String):
+                                    "literal"
+                                  Value (String):
                                     "staticEventResult"
               Entry (DictionaryEntry):
                 Key (String):
@@ -5826,7 +6101,7 @@ IEnumerable
                                                                   "testClass"
         Entry (DictionaryEntry):
           Key (Integer):
-            "66"
+            "68"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -5861,7 +6136,7 @@ IEnumerable
                         "false"
         Entry (DictionaryEntry):
           Key (Integer):
-            "67"
+            "69"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -6001,7 +6276,7 @@ IEnumerable
                                                             "1"
         Entry (DictionaryEntry):
           Key (Integer):
-            "68"
+            "70"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -6056,7 +6331,7 @@ IEnumerable
                                     "instanceEvent"
         Entry (DictionaryEntry):
           Key (Integer):
-            "69"
+            "71"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -6176,7 +6451,7 @@ IEnumerable
                                                       "5"
         Entry (DictionaryEntry):
           Key (Integer):
-            "70"
+            "72"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -6211,7 +6486,7 @@ IEnumerable
                         "1"
         Entry (DictionaryEntry):
           Key (Integer):
-            "71"
+            "73"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -6246,7 +6521,7 @@ IEnumerable
                         "2"
         Entry (DictionaryEntry):
           Key (Integer):
-            "72"
+            "74"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -6281,7 +6556,7 @@ IEnumerable
                         "unchanged"
         Entry (DictionaryEntry):
           Key (Integer):
-            "73"
+            "75"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -6316,7 +6591,7 @@ IEnumerable
                         "unchanged"
         Entry (DictionaryEntry):
           Key (Integer):
-            "74"
+            "76"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -6351,7 +6626,7 @@ IEnumerable
                         "then"
         Entry (DictionaryEntry):
           Key (Integer):
-            "75"
+            "77"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -6781,7 +7056,7 @@ IEnumerable
                                                                               "else"
         Entry (DictionaryEntry):
           Key (Integer):
-            "76"
+            "78"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -7201,7 +7476,7 @@ IEnumerable
                                                                               "else"
         Entry (DictionaryEntry):
           Key (Integer):
-            "77"
+            "79"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -7236,7 +7511,7 @@ IEnumerable
                         "unchanged"
         Entry (DictionaryEntry):
           Key (Integer):
-            "78"
+            "80"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -7271,7 +7546,7 @@ IEnumerable
                         "50020202029029233344"
         Entry (DictionaryEntry):
           Key (Integer):
-            "79"
+            "81"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -7626,7 +7901,7 @@ IEnumerable
                                                                               "default"
         Entry (DictionaryEntry):
           Key (Integer):
-            "80"
+            "82"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):
@@ -7661,7 +7936,7 @@ IEnumerable
                         "unchanged"
         Entry (DictionaryEntry):
           Key (Integer):
-            "81"
+            "83"
           Value (Map):
             IEnumerable
               Entry (DictionaryEntry):

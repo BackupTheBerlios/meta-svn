@@ -36,16 +36,6 @@ IEnumerable
         "Boolean Not(Boolean)"
   Entry (DictionaryEntry):
     Key (String):
-      "Or"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Boolean Or(Boolean, Boolean)"
-      savedMethod (RuntimeMethodInfo):
-        "Boolean Or(Boolean, Boolean)"
-  Entry (DictionaryEntry):
-    Key (String):
       "Add"
     Value (NetMethod):
       methods (MethodInfo[]):
@@ -86,24 +76,14 @@ IEnumerable
         "Void If()"
   Entry (DictionaryEntry):
     Key (String):
-      "For"
+      "Smaller"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Meta.Types.Map For()"
+            "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
       savedMethod (RuntimeMethodInfo):
-        "Meta.Types.Map For()"
-  Entry (DictionaryEntry):
-    Key (String):
-      "Switch"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Void Switch()"
-      savedMethod (RuntimeMethodInfo):
-        "Void Switch()"
+        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
       "Divide"
@@ -116,6 +96,46 @@ IEnumerable
         "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
+      "Character"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Char Character(System.String)"
+      savedMethod (RuntimeMethodInfo):
+        "Char Character(System.String)"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Run"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "System.Object Run(System.String)"
+      savedMethod (RuntimeMethodInfo):
+        "System.Object Run(System.String)"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Switch"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Void Switch()"
+      savedMethod (RuntimeMethodInfo):
+        "Void Switch()"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Or"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Boolean Or(Boolean, Boolean)"
+      savedMethod (RuntimeMethodInfo):
+        "Boolean Or(Boolean, Boolean)"
+  Entry (DictionaryEntry):
+    Key (String):
       "Merge"
     Value (NetMethod):
       methods (MethodInfo[]):
@@ -124,6 +144,16 @@ IEnumerable
             "Meta.Types.IKeyValue Merge()"
       savedMethod (RuntimeMethodInfo):
         "Meta.Types.IKeyValue Merge()"
+  Entry (DictionaryEntry):
+    Key (String):
+      "For"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Meta.Types.Map For()"
+      savedMethod (RuntimeMethodInfo):
+        "Meta.Types.Map For()"
   Entry (DictionaryEntry):
     Key (String):
       "Greater"
@@ -144,16 +174,6 @@ IEnumerable
             "Boolean Equal(System.Object, System.Object)"
       savedMethod (RuntimeMethodInfo):
         "Boolean Equal(System.Object, System.Object)"
-  Entry (DictionaryEntry):
-    Key (String):
-      "Smaller"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
-      savedMethod (RuntimeMethodInfo):
-        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
       "Subtract"
@@ -1625,14 +1645,6 @@ IEnumerable
       "haha"
   Entry (DictionaryEntry):
     Key (String):
-      "Test"
-    Value (NetClass):
-        Entry (DictionaryEntry):
-    Key (String):
-      "Tests"
-    Value (NetClass):
-        Entry (DictionaryEntry):
-    Key (String):
       "MemberTest"
     Value (NetClass):
         Entry (DictionaryEntry):
@@ -2305,7 +2317,7 @@ IEnumerable
                               "changed"
   Entry (DictionaryEntry):
     Key (Integer):
-      "4"
+      "3"
     Value (Map):
       IEnumerable
   Entry (DictionaryEntry):
@@ -2323,6 +2335,101 @@ IEnumerable
             "System.Object Invoke(System.Object)"
       savedMethod (RuntimeMethodInfo):
         "System.Object Invoke(System.Object)"
+  Entry (DictionaryEntry):
+    Key (String):
+      "resultFromDelegate"
+    Value (Map):
+      IEnumerable
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "1"
+          Value (Integer):
+            "114"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "2"
+          Value (Integer):
+            "101"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "3"
+          Value (Integer):
+            "115"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "4"
+          Value (Integer):
+            "117"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "5"
+          Value (Integer):
+            "108"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "6"
+          Value (Integer):
+            "116"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "7"
+          Value (Integer):
+            "70"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "8"
+          Value (Integer):
+            "114"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "9"
+          Value (Integer):
+            "111"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "10"
+          Value (Integer):
+            "109"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "11"
+          Value (Integer):
+            "68"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "12"
+          Value (Integer):
+            "101"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "13"
+          Value (Integer):
+            "108"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "14"
+          Value (Integer):
+            "101"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "15"
+          Value (Integer):
+            "103"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "16"
+          Value (Integer):
+            "97"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "17"
+          Value (Integer):
+            "116"
+        Entry (DictionaryEntry):
+          Key (Integer):
+            "18"
+          Value (Integer):
+            "101"
   Entry (DictionaryEntry):
     Key (String):
       "staticEventResult"

@@ -85,14 +85,20 @@
                     HintPath = "..\antlr.runtime.dll"
                 />
                 <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.Xml"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
+                <Reference
                     Name = "Meta"
                     Project = "{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "System.XML"
-                    AssemblyName = "System.Xml"
-                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                    Name = "Microsoft.mshtml"
+                    AssemblyName = "Microsoft.mshtml"
+                    HintPath = "..\..\..\Programme\Microsoft.NET\Primary Interop Assemblies\Microsoft.mshtml.dll"
+                    AssemblyFolderKey = "hklm\primary interop assemblies"
                 />
             </References>
         </Build>
