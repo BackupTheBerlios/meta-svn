@@ -29,7 +29,6 @@ using Meta.Execution;
 using Meta.StandardLibrary;
 using Microsoft.CSharp;
 using System.CodeDom.Compiler;
-using System.Drawing;
 using System.Xml;
 using System.Runtime.InteropServices;
 
@@ -903,6 +902,179 @@ namespace Meta {
 				}
 				return root;
 			}
+
+			public static string GetMethodName(MethodBase methodInfo) {
+				int counter=0;
+				string text="";
+				if(methodInfo is MethodInfo) {
+					text+=((MethodInfo)methodInfo).ReturnType.Name+" "+methodInfo.Name;
+				}
+				else {
+					text+=methodInfo.ReflectedType.Name;
+				}
+				text+=" (";
+				foreach(ParameterInfo parameter in methodInfo.GetParameters()) {
+					text+=parameter.ParameterType.Name+" "+parameter.Name;
+					if(counter!=methodInfo.GetParameters().Length-1) {
+						text+=",";
+					}
+					counter++;
+				}
+				text+=")";
+				return text;
+			}
+			public static string GetDoc(MemberInfo memberInfo, bool showParams) {
+				XmlNode comment=GetComments(memberInfo);
+				string text="";
+				string summary="";
+				ArrayList parameters=new ArrayList();
+				if(comment==null || comment.ChildNodes==null) {
+					return "";
+				}
+				foreach(XmlNode node in comment.ChildNodes) {
+					switch(node.Name) {
+						case "summary":
+							summary=node.InnerXml;
+							break;
+						case "param":
+							parameters.Add(node);
+							break;
+						default:
+							break;
+					}
+				}
+				text+=summary+"\n";
+				if(showParams) {
+					//text+="\nparameters: \n";
+					foreach(XmlNode node in parameters) {
+						text+=node.Attributes["name"].Value+": "+node.InnerXml;
+					}
+				}
+				return text.Replace("<para>","").Replace("</para>","").Replace("<see cref=\"","")
+					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
+					.Replace("M:","").Replace("E:","");
+			}
+//			public static string GetDoc(MemberInfo memberInfo) {
+//				XmlNode comment=GetComments(memberInfo);
+//				string text="";
+//				string summary="";
+//				ArrayList parameters=new ArrayList();
+//				if(comment==null || comment.ChildNodes==null) {
+//					return "";
+//				}
+//				foreach(XmlNode node in comment.ChildNodes) {
+//					switch(node.Name) {
+//						case "summary":
+//							summary=node.InnerXml;
+//							break;
+//						case "param":
+//							parameters.Add(node);
+//							break;
+//						default:
+//							break;
+//					}
+//				}
+//				text+=summary+"\n\nparameters: \n";
+//				foreach(XmlNode node in parameters) {
+//					text+=node.Attributes["name"].Value+": "+node.InnerXml;
+//				}
+//				return text.Replace("<para>","").Replace("</para>","").Replace("<see cref=\"","")
+//					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
+//					.Replace("M:","").Replace("E:","");
+//			}
+			public static string CreateParamsDescription(ParameterInfo[] parameters) {
+				string text="";
+				if(parameters.Length>0) {
+					text+="(";
+					foreach(ParameterInfo parameter in parameters) {
+						text+=parameter.ParameterType.FullName+",";
+					}
+					text=text.Remove(text.Length-1,1);
+					text+=")";
+				}
+				return text;
+			}
+			private static Hashtable comments=new Hashtable();
+			public static XmlDocument LoadAssemblyComments(Assembly assembly) {
+				if(!comments.ContainsKey(assembly)) {
+					string dllPath=assembly.Location;
+					string dllName=Path.GetFileNameWithoutExtension(dllPath);
+					string dllDirectory=Path.GetDirectoryName(dllPath);
+				
+					string assemblyDirFile=Path.Combine(dllDirectory,dllName+".xml");
+					string runtimeDirFile=Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(),dllName+".xml");
+					string fileName;
+					if(File.Exists(assemblyDirFile)) {
+						fileName=assemblyDirFile;
+					}
+					else if(File.Exists(runtimeDirFile)) {
+						fileName=runtimeDirFile;
+					}
+					else {
+						return null;
+					}
+				
+					XmlDocument xml=new XmlDocument();
+					xml.Load(fileName);
+					comments[assembly]=xml;
+				}
+				return (XmlDocument)comments[assembly];
+			}
+			public static XmlNode GetComments(MemberInfo mi) {
+				Type declType = (mi is Type) ? ((Type)mi) : mi.DeclaringType;
+				XmlDocument doc = LoadAssemblyComments(declType.Assembly);
+				if (doc == null) return null;
+				string xpath;
+
+				// Handle nested classes
+				string typeName = declType.FullName.Replace("+", ".");
+
+				// Based on the member type, get the correct xpath query
+				switch(mi.MemberType) {                    
+					case MemberTypes.NestedType:
+					case MemberTypes.TypeInfo:
+						xpath = "//member[@name='T:" + typeName + "']";
+						break;
+
+					case MemberTypes.Constructor:
+						xpath = "//member[@name='M:" + typeName + "." +
+							"#ctor" + CreateParamsDescription(
+							((ConstructorInfo)mi).GetParameters()) + "']";
+						break;
+
+					case MemberTypes.Method:
+						xpath = "//member[@name='M:" + typeName + "." + 
+							mi.Name + CreateParamsDescription(
+							((MethodInfo)mi).GetParameters());
+						if (mi.Name == "op_Implicit" || mi.Name == "op_Explicit") {
+							xpath += "~{" + 
+								((MethodInfo)mi).ReturnType.FullName + "}";
+						}
+						xpath += "']";
+						break;
+
+					case MemberTypes.Property:
+						xpath = "//member[@name='P:" + typeName + "." + 
+							mi.Name + CreateParamsDescription(
+							((PropertyInfo)mi).GetIndexParameters()) + "']";
+						break;
+
+					case MemberTypes.Field:
+						xpath = "//member[@name='F:" + typeName + "." + mi.Name + "']";
+						break;
+
+					case MemberTypes.Event:
+						xpath = "//member[@name='E:" + typeName + "." + mi.Name + "']";
+						break;
+
+						// Unknown member type, nothing to do
+					default: 
+						return null;
+				}
+
+				// Get the node from the document
+				return doc.SelectSingleNode(xpath);
+			}
 		}
 	}
 	namespace Types  {
@@ -1149,22 +1321,18 @@ namespace Meta {
 			}
 			public string documentation;
 		}
-		public interface IDocumentable {
-			string Documentation {
-				get;
-			}
-		}
-		public class NetMethod: ICallable, IDocumentable {
-			[IgnoreMember]
-			public string Documentation {
-				get {
+		public class NetMethod: ICallable {
+			private static Hashtable cashedDoc;
+			public string GetDocumentation(bool showParams) {
+//				if(cashedDoc==null) {
 					if(savedMethod!=null) {
-						return GetDoc(savedMethod);
+						return Interpreter.GetDoc(savedMethod,showParams);
 					}
 					else {
-						return GetDoc(methods[0])+"(+"+methods.Length.ToString()+"overloads)";
+						return Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
 					}
-				}
+				//}
+//				return doc;
 			}
 			private IKeyValue parent;
 			[IgnoreMember]
@@ -1185,168 +1353,7 @@ namespace Meta {
 			private MethodBase savedMethod;
 			private MethodBase[] methods;
 			
-			public static string GetMethodName(MethodBase methodInfo) {
-				int counter=0;
-				string text="";
-				if(methodInfo is MethodInfo) {
-					text+=((MethodInfo)methodInfo).ReturnType.Name+" "+methodInfo.Name;
-				}
-				else {
-					text+=methodInfo.ReflectedType.Name;
-				}
-				text+=" (";
-				foreach(ParameterInfo parameter in methodInfo.GetParameters()) {
-					text+=parameter.ParameterType.Name+" "+parameter.Name;
-					if(counter!=methodInfo.GetParameters().Length-1) {
-						text+=",";
-					}
-					counter++;
-				}
-				text+=")";
-				return text;
-			}
 
-			public string GetDocumentation() {
-				if(attribute!=null) {
-					return attribute.documentation;
-				}
-				else {
-					if(savedMethod!=null) {
-						string text=GetMethodName(savedMethod)+"\n";
-						text+=GetDoc(this.savedMethod);
-						return text;
-					}
-					else {
-						string complete="";
-						foreach(MethodBase method in methods) {
-							string text=GetMethodName(method)+"\n";
-							text+=GetDoc(method);
-							complete+=text+"\n\n";
-						}
-						if(complete.Length!=0) {
-							complete=complete.Remove(complete.Length-1,1);
-						}
-						return complete;
-					}
-				}
-			}
-			public static string GetDoc(MemberInfo memberInfo) {
-				XmlNode comment=GetComments(memberInfo);
-				string text="";
-				string summary="";
-				ArrayList parameters=new ArrayList();
-				if(comment==null || comment.ChildNodes==null) {
-					return "";
-				}
-				foreach(XmlNode node in comment.ChildNodes) {
-					switch(node.Name) {
-						case "summary":
-							summary=node.InnerXml;
-							break;
-						case "param":
-							parameters.Add(node);
-							break;
-						default:
-							break;
-					}
-				}
-				text+=summary+"\n\nparameters: \n";
-				foreach(XmlNode node in parameters) {
-					text+=node.Attributes["name"].Value+": "+node.InnerXml;
-				}
-				return text.Replace("<para>","").Replace("</para>","").Replace("<see cref=\"","")
-					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
-					.Replace("M:","").Replace("E:","");
-			}
-			public static string CreateParamsDescription(ParameterInfo[] parameters) {
-				string text="";
-				if(parameters.Length>0) {
-					text+="(";
-					foreach(ParameterInfo parameter in parameters) {
-						text+=parameter.ParameterType.FullName+",";
-					}
-					text=text.Remove(text.Length-1,1);
-					text+=")";
-				}
-				return text;
-			}
-			public static XmlDocument LoadAssemblyComments(Assembly assembly) {
-				string dllPath=assembly.Location;
-				string dllName=Path.GetFileNameWithoutExtension(dllPath);
-				string dllDirectory=Path.GetDirectoryName(dllPath);
-			
-				string assemblyDirFile=Path.Combine(dllDirectory,dllName+".xml");
-				string runtimeDirFile=Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(),dllName+".xml");
-				string fileName;
-				if(File.Exists(assemblyDirFile)) {
-					fileName=assemblyDirFile;
-				}
-				else if(File.Exists(runtimeDirFile)) {
-					fileName=runtimeDirFile;
-				}
-				else {
-					return null;
-				}
-			
-				XmlDocument xml=new XmlDocument();
-				xml.Load(fileName);
-				return xml;
-			}
-			public static XmlNode GetComments(MemberInfo mi) {
-				Type declType = (mi is Type) ? ((Type)mi) : mi.DeclaringType;
-				XmlDocument doc = LoadAssemblyComments(declType.Assembly);
-				if (doc == null) return null;
-				string xpath;
-
-				// Handle nested classes
-				string typeName = declType.FullName.Replace("+", ".");
-
-				// Based on the member type, get the correct xpath query
-				switch(mi.MemberType) {                    
-					case MemberTypes.NestedType:
-					case MemberTypes.TypeInfo:
-						xpath = "//member[@name='T:" + typeName + "']";
-						break;
-
-					case MemberTypes.Constructor:
-						xpath = "//member[@name='M:" + typeName + "." +
-							"#ctor" + CreateParamsDescription(
-							((ConstructorInfo)mi).GetParameters()) + "']";
-						break;
-
-					case MemberTypes.Method:
-						xpath = "//member[@name='M:" + typeName + "." + 
-							mi.Name + CreateParamsDescription(
-							((MethodInfo)mi).GetParameters());
-						if (mi.Name == "op_Implicit" || mi.Name == "op_Explicit") {
-							xpath += "~{" + 
-								((MethodInfo)mi).ReturnType.FullName + "}";
-						}
-						xpath += "']";
-						break;
-
-					case MemberTypes.Property:
-						xpath = "//member[@name='P:" + typeName + "." + 
-							mi.Name + CreateParamsDescription(
-							((PropertyInfo)mi).GetIndexParameters()) + "']";
-						break;
-
-					case MemberTypes.Field:
-						xpath = "//member[@name='F:" + typeName + "." + mi.Name + "']";
-						break;
-
-					case MemberTypes.Event:
-						xpath = "//member[@name='E:" + typeName + "." + mi.Name + "']";
-						break;
-
-						// Unknown member type, nothing to do
-					default: 
-						return null;
-				}
-
-				// Get the node from the document
-				return doc.SelectSingleNode(xpath);
-			}
 
 			public object Call() {
 //				if(this.name.Equals("Invoke")) {
@@ -1522,10 +1529,10 @@ namespace Meta {
 				}
 			}
 		}
-		public class NetClass: NetContainer, IKeyValue,ICallable, IDocumentable {
+		public class NetClass: NetContainer, IKeyValue,ICallable {
 			public string Documentation {
 				get {
-					return NetMethod.GetDoc(type);
+					return Interpreter.GetDoc(type,true);
 				}
 			}
 			[IgnoreMember]
@@ -1538,6 +1545,17 @@ namespace Meta {
 			}
 		}
 		public class NetObject: NetContainer, IKeyValue {
+			public string GetDocumentation (bool showParams){
+				string text="";
+				foreach(MemberInfo memberInfo in obj.GetType().GetMembers()) {
+					if(memberInfo is MethodInfo) {
+						text+=Interpreter.GetMethodName((MethodInfo)memberInfo)+"\n";
+					}
+					text+=Interpreter.GetDoc(memberInfo,showParams);
+
+				}
+				return text;
+			}
 			public NetObject(object obj):base(obj,obj.GetType()) {
 			}
 			public override string ToString() {
@@ -1652,7 +1670,6 @@ namespace Meta {
 						int asdf=0;
 					}
 					if(key is string) {
-						try  {
 							string text=(string)key;
 
 							if(type.GetMember((string)text,
@@ -1716,10 +1733,6 @@ namespace Meta {
 								SetEvent((string)text,(Map)value);
 								return;
 							}
-						}
-						catch(Exception e) {
-							int asdf=0;
-						}
 					}
 					try {
 						NetMethod indexer=new NetMethod("set_Item",obj,type);
@@ -1753,6 +1766,7 @@ namespace Meta {
 				int counter=1;
 				string argumentList="(";
 				string argumentAdding="Map arg=new Map();";
+				// here bug
 				foreach(ParameterInfo parameter in method.GetParameters()) {
 					argumentList+=parameter.ParameterType.Name+" arg"+counter;
 					argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";

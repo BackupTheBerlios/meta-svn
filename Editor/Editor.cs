@@ -24,8 +24,8 @@ using System.Reflection;
 using Meta.Types;
 using Meta.Execution;
 
-namespace MetaEditor {
-	public class MetaEditor	{
+namespace Editor {
+	public class Editor	{
 		[STAThread]
 		public static void Main() {
 			window.Controls.Add(editor);
@@ -36,11 +36,11 @@ namespace MetaEditor {
 		public static Window window=new Window();
 		public static TreeView editor = new TreeView();
 		public static Hashtable	keyBindings = new Hashtable();
-		public static MetaNode clipboard = null;
+		public static Node clipboard = null;
 
-		private static MetaNode selectedNode=null;
+		private static Node selectedNode=null;
 
-		public static MetaNode SelectedNode	{
+		public static Node SelectedNode	{
 			get {
 				return selectedNode;
 			}
@@ -55,13 +55,13 @@ namespace MetaEditor {
 				selectedNode=value;
 			}
 		}
-		static MetaEditor() {
+		static Editor() {
 			editor.ShowLines=false;
 			editor.ShowPlusMinus=false;
 			editor.Dock=DockStyle.Fill;
 			editor.Font=new Font("Courier New",10.00F);
-			editor.ForeColor=MetaNode.unselectedForeColor;
-			editor.BackColor=MetaNode.unselectedBackColor;
+			editor.ForeColor=Node.unselectedForeColor;
+			editor.BackColor=Node.unselectedBackColor;
 
 			editor.KeyDown+=new KeyEventHandler(KeyDown);
 			editor.MouseDown+=new MouseEventHandler(MouseDown);
@@ -92,7 +92,7 @@ namespace MetaEditor {
 			keyBindings[Keys.Control|Keys.Alt|Keys.Oemtilde]=typeof(MoveWordRight);
 
 			keyBindings[Keys.Control|Keys.Enter]=typeof(CreateChild);
-			keyBindings[Keys.Enter]=typeof(CreateSiblingDown);
+			keyBindings[Keys.Enter]=typeof(CreateSibling);
 			keyBindings[Keys.Enter|Keys.Shift]=typeof(CreateSiblingUp);
 
 			keyBindings[Keys.F5]=typeof(ExecuteProgram);
@@ -114,7 +114,7 @@ namespace MetaEditor {
 		}
 		public static void MouseDown(object sender,MouseEventArgs e) {
 			if(e.Button==MouseButtons.Left) {
-				MoveToNode moveToNode=new MoveToNode(((MetaNode)editor.GetNodeAt(e.X,e.Y)));
+				MoveToNode moveToNode=new MoveToNode(((Node)editor.GetNodeAt(e.X,e.Y)));
 				moveToNode.Run();
 			}
 		}
@@ -124,10 +124,10 @@ namespace MetaEditor {
 	}
 	public class Window:Form {
 		public Window() {
-			this.Controls.Add(MetaEditor.editor);
+			this.Controls.Add(Editor.editor);
 		}
 	}
-	public class MetaNode:TreeNode {
+	public class Node:TreeNode {
 		public static Color unselectedForeColor=Color.Black;
 		public static Color unselectedBackColor=Color.White;
 		public static Color selectedForeColor=Color.White;
@@ -156,24 +156,24 @@ namespace MetaEditor {
 			}
 		}
 		public override object Clone() {
-			MetaNode clone=(MetaNode)base.Clone();
+			Node clone=(Node)base.Clone();
 			clone.Text=this.CleanText;
 			clone.cursorPosition=this.CursorPosition;
 			return clone;
 		}
 		public void Select() {
-			this.BackColor=MetaNode.selectedBackColor;
-			this.ForeColor=MetaNode.selectedForeColor;
+			this.BackColor=Node.selectedBackColor;
+			this.ForeColor=Node.selectedForeColor;
 			this.Text=this.Text.Insert(this.cursorPosition,cursorPositionCharacter);
 		}
 		public void Unselect() {
-			this.BackColor=MetaNode.unselectedBackColor;
-			this.ForeColor=MetaNode.unselectedForeColor;
+			this.BackColor=Node.unselectedBackColor;
+			this.ForeColor=Node.unselectedForeColor;
 			this.Text=this.CleanText;
 		}
 		public string CleanText {
 			get {
-				if(this==MetaEditor.SelectedNode) {
+				if(this==Editor.SelectedNode) {
 					return this.Text.Remove(this.CursorPosition,1);
 				}
 				else {
@@ -181,7 +181,7 @@ namespace MetaEditor {
 				}
 			}
 			set {
-				if(this==MetaEditor.SelectedNode) {
+				if(this==Editor.SelectedNode) {
 					this.Text=value.Insert(this.CursorPosition,cursorPositionCharacter);
 				}
 				else {
@@ -190,7 +190,7 @@ namespace MetaEditor {
 			}
 		}
 	}
-	public class FileNode: MetaNode {
+	public class FileNode: Node {
 		public FileNode(string path) {
 			StreamReader streamReader=new StreamReader(path);
 			ArrayList lines=new ArrayList(streamReader.ReadToEnd().Split('\n'));
@@ -200,14 +200,14 @@ namespace MetaEditor {
 		}
 		public void Save() {
 			StreamWriter writer=new StreamWriter(this.CleanText);
-			writer.Write(Help.SerializeTree(this,"",MetaEditor.SelectedNode.CleanText,null));
+			writer.Write(Help.SerializeTreeView(this,"",Editor.SelectedNode.CleanText,null));
 			writer.Close();
 		}
-		private void Load(MetaNode current,ArrayList textLines,string currentIndentation) {
+		private void Load(Node current,ArrayList textLines,string currentIndentation) {
 			while(textLines.Count!=0) {
 				string text=(string)textLines[0];
 				if(text.StartsWith(currentIndentation) && text!="") {
-					MetaNode child=new MetaNode();
+					Node child=new Node();
 					child.CleanText=text.TrimStart(' ');
 					current.Nodes.Add(child);
 					textLines.RemoveAt(0);
@@ -247,63 +247,90 @@ namespace MetaEditor {
 			}
 			return completedText;
 		}
-		public static string SerializeTree(MetaNode rootNode,string currentIndentation,string selectedText,MetaNode lastNodeToBeSerialized) {
+		public static string SerializeTreeView(Node rootNode,string currentIndentation,string selectedText,Node lastNodeToBeSerialized) {
 			string text="";
-			foreach(MetaNode child in rootNode.Nodes) {
+			foreach(Node child in rootNode.Nodes) {
 				text+=currentIndentation;
-				if(child==MetaEditor.SelectedNode) {
+				if(child==Editor.SelectedNode) {
 					text+=selectedText;
 				}
 				else {
 					text+=child.CleanText;
 				}
 				text+="\n";
-				text+=SerializeTree(child,currentIndentation+"  ",selectedText,lastNodeToBeSerialized);
+				text+=SerializeTreeView(child,currentIndentation+"  ",selectedText,lastNodeToBeSerialized);
 				if(lastNodeToBeSerialized!=null && child==lastNodeToBeSerialized) {
 					break;
 				}
 			}
 			return text;
 		}
+		private static string MapToHelp(IKeyValue obj) {
+			string text="";
+			if(obj.Count==0) {
+				text="()";
+			}
+			else {
+				foreach(object key in obj.Keys) {
+					text+=key.ToString()+" = ";
+					if(obj[key]==null) {
+						text+="null";
+					}
+					else if(obj[key] is Map) {
+						text+="...";
+					}
+					else {
+						text+=obj[key].ToString();
+					}
+					text+="\n";
+				}
+			}
+			return text.TrimEnd('\n');
+		}
 		// here
-		private static void ShowHelp(MetaNode selectedNode,bool showCallDoc,string selectedNodeCleanText,bool deep) {
-			string text="<code not covered>";
+		public static void ShowHelp(Node selectedNode,string selectedNodeText,bool isCall) {
+			string text="";
 			try {
-				string programText=SerializeTree(
-					MetaEditor.SelectedNode.FileNode,"",CompleteText(selectedNodeCleanText),MetaEditor.SelectedNode);
-				Interpreter.Run(new StringReader(programText),new Map());
+				Interpreter.Run(
+					new StringReader(
+						SerializeTreeView(
+							Editor.SelectedNode.FileNode,
+							"",
+							CompleteText(selectedNodeText),
+							Editor.SelectedNode
+						)),
+					new Map());
 			}
 			catch(Exception e) {
-				while(e.InnerException!=null && !(e is BreakException)) {
+				while(!(e.InnerException==null || e is BreakException)) {
 					e=e.InnerException;
 				}
 				if(e is BreakException) {
 					object obj=((BreakException)e).obj;
 
-					if(showCallDoc) {
+					if(isCall) {
 						if(obj is NetMethod) {
-							text=((NetMethod)obj).GetDocumentation();
+							text=((NetMethod)obj).GetDocumentation(true);;
 						}
 						else if (obj is NetClass) {
-							text=((NetClass)obj).constructor.GetDocumentation();
+							text=((NetClass)obj).constructor.GetDocumentation(true);
 						}
 						else if(obj is Map) {
-							text=GetFunctionHelp((Map)obj);
+							text=FunctionHelp((Map)obj);
 						}
 					}
 					else {
 						if(obj is IKeyValue) {
-							text=MapToHelp((IKeyValue)obj,deep,"",false);
+							text=MapToHelp((IKeyValue)obj);
 						}
 						else if(obj is NetClass) {
-							text="??";
+							text=((NetClass)obj).Documentation;
 						}
-						else if (obj is NetMethod) {
-							text="??";
-						}
+//						else if (obj is NetMethod) {
+//							text=((NetMethod)obj).GetDocumentation(f;
+//						}
 						else {
-							NetObject netObject=new NetObject(obj);
-							text=MapToHelp(netObject,deep,"",true);
+							text+=new NetObject(obj).GetDocumentation(false);
 						}
 					}
 				}
@@ -311,47 +338,57 @@ namespace MetaEditor {
 					text=e.ToString();
 				}
 			}
-			tip.SetToolTip(MetaEditor.editor,text);
-			MetaEditor.window.Activate();
+			tip.SetToolTip(Editor.editor,text);
+			Editor.window.Activate();
 			return;
 		}
-		// here
-		private static string GetFunctionHelp(Map map) {
+		private static string FunctionHelp(Map map) {
 			string text="";
-			ArrayList args=FindArgs((IExpression)map.Compile());
+			ArrayList args=ExtractFunctionArguments((IExpression)map.Compile());
 			ArrayList keys=new ArrayList();
-			foreach(object key in args)
-			{
-				if(keys.IndexOf(key)==-1)
-				{
+			foreach(object key in args) {
+				if(keys.IndexOf(key)==-1) {
 					keys.Add(key);
 				}
 			}
-			foreach(object obj in keys)
-			{
+			foreach(object obj in keys) {
 				text+=obj.ToString()+"\n";
 			}
-			if(text.Length!=0)
-			{
+			if(text.Length!=0) {
 				text=text.Remove(text.Length-1,1);
 			}
 			return text;
 		}
-		private static ArrayList FindArgs(IExpression map)
+		// here
+		public static bool IsFunctionCall(string spacedCleanText) {
+			string text=spacedCleanText.Trim(' ');
+
+			if(text.Length==0) {
+				return false;
+			}
+			else {
+				switch(text[text.Length-1]) {
+					case '=':
+						return false;
+				}
+			}
+			return true;
+		}
+		private static ArrayList ExtractFunctionArguments(IExpression map)
 		{
 			ArrayList keys=new ArrayList();
 			if(map is Program)
 			{
 				foreach(Statement statement in ((Program)map).statements)
 				{
-					keys.AddRange(FindArgs(statement.key));
-					keys.AddRange(FindArgs(statement.val));
+					keys.AddRange(ExtractFunctionArguments(statement.key));
+					keys.AddRange(ExtractFunctionArguments(statement.val));
 				}
 			}
 			else if(map is Call)
 			{
-				keys.AddRange(FindArgs(((Call)map).argument));
-				keys.AddRange(FindArgs(((Call)map).callable));
+				keys.AddRange(ExtractFunctionArguments(((Call)map).argument));
+				keys.AddRange(ExtractFunctionArguments(((Call)map).callable));
 			}
 			else if(map is Select)
 			{
@@ -375,96 +412,11 @@ namespace MetaEditor {
 					}
 					else
 					{
-						keys.AddRange(FindArgs(expression));
+						keys.AddRange(ExtractFunctionArguments(expression));
 					}
 				}
 			}
 			return keys;
-		}
-		private static string MapToHelp(IKeyValue obj,bool deep,string indentation,bool doc)
-		{
-			string text="";
-
-			if(obj.Count==0)
-			{
-				return "()";
-			}
-			ArrayList keys=obj.Keys;
-//			keys.Sort();
-			foreach(object key in keys)
-			{
-				if(doc) {
-					//text+=((IDocumentable)obj[key]).Documentation;
-				}
-				else {
-					object val=obj[key];
-					if(deep && val is IKeyValue) {
-						text=text+key.ToString()+" =\n"+MapToHelp((IKeyValue)val,true,indentation+"  ",doc);
-					}
-					else {
-						string valueText;
-						if(val==null) {
-							valueText="null";
-						}
-						else if(val is Map) {
-							valueText="(..)";
-						}
-						else {
-							valueText=val.ToString();
-						}
-
-						if(valueText.Length>20) {
-							valueText="...";
-						}
-
-						string keyText=key.ToString();
-						if(key is Map) {
-							try {
-								keyText=Interpreter.String((Map)key);
-							}
-							catch {
-								keyText=key.ToString();
-							}
-						}
-						text=text+indentation+keyText+" = "+valueText+"\n";
-					}
-				}
-			}
-			text=text.TrimEnd('\n');
-			return text;
-		}
-		public static bool IsFunctionCall(string spacedCleanText)
-		{
-			string text=spacedCleanText.Trim(' ');
-
-			if(text.Length==0)
-			{
-				return false;
-			}
-			else
-			{
-				switch(text[text.Length-1])
-				{
-					case '=':
-						return false;
-				}
-			}
-			return true;
-		}
-		public static void ShowIndentedCallHelp()
-		{
-			if(!(MetaEditor.SelectedNode.Parent is FileNode)&& Help.IsFunctionCall(((MetaNode)MetaEditor.SelectedNode.Parent).CleanText))
-			{
-				ShowHelp((MetaNode)MetaEditor.SelectedNode.Parent,true,((MetaNode)MetaEditor.SelectedNode.Parent).CleanText+".break",true);
-			}
-		}
-		public static void ShowOneMetaNodeCallHelp()
-		{
-			ShowHelp(MetaEditor.SelectedNode,true,MetaEditor.SelectedNode.CleanText.TrimEnd('(')+".break",true);
-		}
-		public static void ShowSelectHelp()
-		{
-			ShowHelp(MetaEditor.SelectedNode,false,MetaEditor.SelectedNode.CleanText+".break",false);
 		}
 	}
 	public abstract class History
@@ -477,7 +429,6 @@ namespace MetaEditor {
 			}
 			commands.Add(command);
 			present++;
-			//present=commands.Count-1;
 		}
 		public static int present=-1;
 		public static ArrayList commands=new ArrayList();
@@ -532,7 +483,7 @@ namespace MetaEditor {
 			{
 				base.Run();
 				History.Add(this);
-				MetaEditor.SelectedNode.FileNode.Save();
+				Editor.SelectedNode.FileNode.Save();
 			}
 		}
 	}
@@ -540,14 +491,14 @@ namespace MetaEditor {
 	{
 		public bool Require()
 		{
-			return MetaEditor.SelectedNode!=null;
+			return Editor.SelectedNode!=null;
 		}
 	}
 	public abstract class LoggedNonFileNodeCommand:LoggedNodeCommand
 	{
 		public new bool Require()
 		{
-			return !(MetaEditor.SelectedNode is FileNode);
+			return !(Editor.SelectedNode is FileNode);
 		}
 	}
 
@@ -583,19 +534,19 @@ namespace MetaEditor {
 	{
 		public bool Require()
 		{
-			return MetaEditor.SelectedNode!=null;
+			return Editor.SelectedNode!=null;
 		}
 		public override void Do()
 		{
 			try
 			{
-				string programText=Help.SerializeTree(MetaEditor.SelectedNode.FileNode,"",MetaEditor.SelectedNode.CleanText,
-					(MetaNode)MetaEditor.SelectedNode.FileNode.Nodes[MetaEditor.SelectedNode.FileNode.Nodes.Count-1]);
+				string programText=Help.SerializeTreeView(Editor.SelectedNode.FileNode,"",Editor.SelectedNode.CleanText,
+					(Node)Editor.SelectedNode.FileNode.Nodes[Editor.SelectedNode.FileNode.Nodes.Count-1]);
 				Interpreter.Run(new StringReader(programText),new Map());
 			}
 			catch(Exception e)
 			{
-				Help.tip.SetToolTip(MetaEditor.editor,e.ToString());
+				Help.tip.SetToolTip(Editor.editor,e.ToString());
 			}
 		}
 	}
@@ -623,10 +574,11 @@ namespace MetaEditor {
 					return false;
 				}
 			}
-			foreach(FileNode fileNode in MetaEditor.editor.Nodes)
+			foreach(FileNode fileNode in Editor.editor.Nodes)
 			{
 				if(fileNode.CleanText==this.path)
 				{
+					Help.tip.SetToolTip(Editor.editor,"The file is already open.");
 					return false;
 				}
 			}
@@ -636,8 +588,8 @@ namespace MetaEditor {
 		public override void Do()
 		{
 			this.fileNode=new FileNode(this.path);
-			MetaEditor.editor.Nodes.Add(this.fileNode);
-			MetaEditor.SelectedNode=this.fileNode;
+			Editor.editor.Nodes.Add(this.fileNode);
+			Editor.SelectedNode=this.fileNode;
 			this.fileNode.ExpandAll();
 			this.fileNode.EnsureVisible();
 		}
@@ -647,83 +599,35 @@ namespace MetaEditor {
 		}
 	}
 
-	public class CreateChild:LoggedNodeCommand
-	{
-		public override void Do()
-		{
-			MetaEditor.SelectedNode.Nodes.Insert(0,new MetaNode());
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.FirstNode;
-//			if(!(MetaEditor.SelectedNode is FileNode)&& Help.IsFunctionCall(MetaEditor.SelectedNode.CleanText))
-//			{
-				Help.ShowIndentedCallHelp();
-//			}
-		}
-		public override void Undo()
-		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.Parent;
-			MetaEditor.SelectedNode.FirstNode.Remove();
-		}
-	}
+
 	public class MoveToPreviousNode:LoggedNodeCommand
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.PrevNode!=null;
+			return Editor.SelectedNode.PrevNode!=null;
 		}
 		public override void Do()
 		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.PrevNode;
+			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
 		}
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.NextNode;
+			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
 		}
 	}
 	public class MoveToNextNode:LoggedNodeCommand
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.NextNode!=null;
+			return Editor.SelectedNode.NextNode!=null;
 		}
 		public override void Do()
 		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.NextNode;
+			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
 		}
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.PrevNode;
-		}
-	}
-	public class MoveToParentNode:LoggedNodeCommand
-	{
-		public new bool Require()
-		{
-			return MetaEditor.SelectedNode.Parent!=null;
-		}
-		private MetaNode childNode;
-		public override void Do()
-		{
-			this.childNode=MetaEditor.SelectedNode;
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.Parent;
-		}
-		public override void Undo()
-		{
-			MetaEditor.SelectedNode=this.childNode;
-		}
-	}
-	public class MoveToFirstChildNode:LoggedNodeCommand
-	{
-		public new bool Require()
-		{
-			return MetaEditor.SelectedNode.FirstNode!=null;
-		}
-		public override void Do()
-		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.FirstNode;
-		}
-		public override void Undo()
-		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.Parent;
+			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
 		}
 	}
 	public class MoveToNode:LoggedNodeCommand
@@ -732,50 +636,50 @@ namespace MetaEditor {
 		{
 			return this.targetNode!=null;
 		}
-		private MetaNode sourceNode;
-		private MetaNode targetNode;
-		public MoveToNode(MetaNode targetNode)
+		private Node sourceNode;
+		private Node targetNode;
+		public MoveToNode(Node targetNode)
 		{
 			this.targetNode=targetNode;
 		}
 		public override void Do()
 		{
-			this.sourceNode=MetaEditor.SelectedNode;
-			MetaEditor.SelectedNode=this.targetNode;
+			this.sourceNode=Editor.SelectedNode;
+			Editor.SelectedNode=this.targetNode;
 		}
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode=this.sourceNode;
+			Editor.SelectedNode=this.sourceNode;
 		}
 	}
 	public class MoveLineUp:LoggedNodeCommand
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.PrevVisibleNode!=null;
+			return Editor.SelectedNode.PrevVisibleNode!=null;
 		}
 		public override void Do()
 		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.PrevVisibleNode;
+			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevVisibleNode;
 		}
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.NextVisibleNode;
+			Editor.SelectedNode=(Node)Editor.SelectedNode.NextVisibleNode;
 		}
 	}
 	public class MoveLineDown:LoggedNodeCommand
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.NextVisibleNode!=null;
+			return Editor.SelectedNode.NextVisibleNode!=null;
 		}
 		public override void Do()
 		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.NextVisibleNode;
+			Editor.SelectedNode=(Node)Editor.SelectedNode.NextVisibleNode;
 		}
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.PrevVisibleNode;
+			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevVisibleNode;
 		}
 	}
 
@@ -784,91 +688,91 @@ namespace MetaEditor {
 		protected int oldPosition;
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode.CursorPosition=this.oldPosition;
+			Editor.SelectedNode.CursorPosition=this.oldPosition;
 		}
 	}
 	public class MoveStartOfLine:MoveCursor
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.CursorPosition!=0;
+			return Editor.SelectedNode.CursorPosition!=0;
 		}
 		public override void Do()
 		{
-			this.oldPosition=MetaEditor.SelectedNode.CursorPosition;
-			MetaEditor.SelectedNode.CursorPosition=0;
+			this.oldPosition=Editor.SelectedNode.CursorPosition;
+			Editor.SelectedNode.CursorPosition=0;
 		}
 	}
 	public class MoveEndOfLine:MoveCursor
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.CursorPosition!=MetaEditor.SelectedNode.CleanText.Length-1;
+			return Editor.SelectedNode.CursorPosition!=Editor.SelectedNode.CleanText.Length-1;
 		}
 		public override void Do()
 		{
-			this.oldPosition=MetaEditor.SelectedNode.CursorPosition;
-			MetaEditor.SelectedNode.CursorPosition=MetaEditor.SelectedNode.CleanText.Length;
+			this.oldPosition=Editor.SelectedNode.CursorPosition;
+			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CleanText.Length;
 		}
 	}
 	public class MoveWordRight:MoveCursor
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.CursorPosition!=MetaEditor.SelectedNode.CleanText.Length;
+			return Editor.SelectedNode.CursorPosition!=Editor.SelectedNode.CleanText.Length;
 		}
 		public override void Do()
 		{
-			this.oldPosition=MetaEditor.SelectedNode.CursorPosition;
-			int index=MetaEditor.SelectedNode.CursorPosition;
-			for(;index<MetaEditor.SelectedNode.CleanText.Length;index++)
+			this.oldPosition=Editor.SelectedNode.CursorPosition;
+			int index=Editor.SelectedNode.CursorPosition;
+			for(;index<Editor.SelectedNode.CleanText.Length;index++)
 			{
-				if(!Char.IsLetterOrDigit(MetaEditor.SelectedNode.CleanText[index]))
+				if(!Char.IsLetterOrDigit(Editor.SelectedNode.CleanText[index]))
 				{
-					if(index==MetaEditor.SelectedNode.CursorPosition)
+					if(index==Editor.SelectedNode.CursorPosition)
 					{
 						index++;
 					}
 					break;
 				}
 			}
-			MetaEditor.SelectedNode.CursorPosition=index;
+			Editor.SelectedNode.CursorPosition=index;
 		}
 	}
 	public class MoveWordLeft:MoveCursor
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.CursorPosition!=0;
+			return Editor.SelectedNode.CursorPosition!=0;
 		}
 		public override void Do()
 		{
-			this.oldPosition=MetaEditor.SelectedNode.CursorPosition;
-			int index=MetaEditor.SelectedNode.CursorPosition-1;
+			this.oldPosition=Editor.SelectedNode.CursorPosition;
+			int index=Editor.SelectedNode.CursorPosition-1;
 			for(;index>=0;index--)
 			{
-				if(!Char.IsLetterOrDigit(MetaEditor.SelectedNode.CleanText[index]))
+				if(!Char.IsLetterOrDigit(Editor.SelectedNode.CleanText[index]))
 				{
-					if(index==MetaEditor.SelectedNode.CursorPosition-1)
+					if(index==Editor.SelectedNode.CursorPosition-1)
 					{
 						index--;
 					}
 					break;
 				}
 			}
-			MetaEditor.SelectedNode.CursorPosition=index+1;
+			Editor.SelectedNode.CursorPosition=index+1;
 		}
 	}
 	public class MoveCharLeft:MoveCursor
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.CursorPosition!=0;
+			return Editor.SelectedNode.CursorPosition!=0;
 		}
 		public override void Do()
 		{
-			this.oldPosition=MetaEditor.SelectedNode.CursorPosition;
-			MetaEditor.SelectedNode.CursorPosition=this.oldPosition-1;
+			this.oldPosition=Editor.SelectedNode.CursorPosition;
+			Editor.SelectedNode.CursorPosition=this.oldPosition-1;
 		}
 
 	}
@@ -876,12 +780,12 @@ namespace MetaEditor {
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.CursorPosition<MetaEditor.SelectedNode.CleanText.Length;
+			return Editor.SelectedNode.CursorPosition<Editor.SelectedNode.CleanText.Length;
 		}
 		public override void Do()
 		{
-			this.oldPosition=MetaEditor.SelectedNode.CursorPosition;
-			MetaEditor.SelectedNode.CursorPosition=this.oldPosition+1;
+			this.oldPosition=Editor.SelectedNode.CursorPosition;
+			Editor.SelectedNode.CursorPosition=this.oldPosition+1;
 		}
 	}
 
@@ -889,31 +793,31 @@ namespace MetaEditor {
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.CursorPosition!=MetaEditor.SelectedNode.CleanText.Length-1;
+			return Editor.SelectedNode.CursorPosition!=Editor.SelectedNode.CleanText.Length;
 		}
 		private string deletedText;
 		public override void Do()
 		{
-			int index=MetaEditor.SelectedNode.CursorPosition;
-			for(;index<MetaEditor.SelectedNode.CleanText.Length;index++)
+			int index=Editor.SelectedNode.CursorPosition;
+			for(;index<Editor.SelectedNode.CleanText.Length;index++)
 			{
-				if(!Char.IsLetterOrDigit(MetaEditor.SelectedNode.CleanText[index]))
+				if(!Char.IsLetterOrDigit(Editor.SelectedNode.CleanText[index]))
 				{
-					if(index==MetaEditor.SelectedNode.CursorPosition)
+					if(index==Editor.SelectedNode.CursorPosition)
 					{
 						index++;
 					}
 					break;
 				}
 			}
-			int start=MetaEditor.SelectedNode.CursorPosition;
-			int end=index-MetaEditor.SelectedNode.CursorPosition;
-			this.deletedText=MetaEditor.SelectedNode.CleanText.Substring(start,end);
-			MetaEditor.SelectedNode.CleanText=MetaEditor.SelectedNode.CleanText.Remove(start,end);
+			int start=Editor.SelectedNode.CursorPosition;
+			int end=index-Editor.SelectedNode.CursorPosition;
+			this.deletedText=Editor.SelectedNode.CleanText.Substring(start,end);
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(start,end);
 		}
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode.CleanText=MetaEditor.SelectedNode.CleanText.Insert(MetaEditor.SelectedNode.CursorPosition,this.deletedText);
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,this.deletedText);
 		}
 	}
 	
@@ -921,18 +825,18 @@ namespace MetaEditor {
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.CursorPosition!=0;
+			return Editor.SelectedNode.CursorPosition!=0;
 		}
 		private string deletedText;
 		private int start;
 		public override void Do()
 		{
-			int index=MetaEditor.SelectedNode.CursorPosition-1;
+			int index=Editor.SelectedNode.CursorPosition-1;
 			for(;index>=0;index--)
 			{
-				if(!Char.IsLetterOrDigit(MetaEditor.SelectedNode.CleanText[index]))
+				if(!Char.IsLetterOrDigit(Editor.SelectedNode.CleanText[index]))
 				{
-					if(index==MetaEditor.SelectedNode.CursorPosition-1)
+					if(index==Editor.SelectedNode.CursorPosition-1)
 					{
 						index--;
 					}
@@ -941,50 +845,50 @@ namespace MetaEditor {
 			}
 			index++;
 			this.start=index;
-			int end=MetaEditor.SelectedNode.CursorPosition-index;
-			this.deletedText=MetaEditor.SelectedNode.CleanText.Substring(start,end);
-			MetaEditor.SelectedNode.CursorPosition=this.start;
-			MetaEditor.SelectedNode.CleanText=MetaEditor.SelectedNode.CleanText.Remove(start,end);
+			int end=Editor.SelectedNode.CursorPosition-index;
+			this.deletedText=Editor.SelectedNode.CleanText.Substring(start,end);
+			Editor.SelectedNode.CursorPosition=this.start;
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(start,end);
 		}
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode.CleanText=MetaEditor.SelectedNode.CleanText.Insert(start,this.deletedText);
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(start,this.deletedText);
 		}
 	}
 	public class DeleteCharLeft:LoggedNonFileNodeCommand
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.CursorPosition>0;
+			return Editor.SelectedNode.CursorPosition>0;
 		}
 		private char character;
 		public override void Do()
 		{
-			this.character=MetaEditor.SelectedNode.CleanText[MetaEditor.SelectedNode.CursorPosition-1];
-			MetaEditor.SelectedNode.CursorPosition=MetaEditor.SelectedNode.CursorPosition-1;
-			MetaEditor.SelectedNode.CleanText=MetaEditor.SelectedNode.CleanText.Remove(MetaEditor.SelectedNode.CursorPosition,1);
+			this.character=Editor.SelectedNode.CleanText[Editor.SelectedNode.CursorPosition-1];
+			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition-1;
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
 		}
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode.CleanText=MetaEditor.SelectedNode.CleanText.Insert(MetaEditor.SelectedNode.CursorPosition,Convert.ToString(this.character));
-			MetaEditor.SelectedNode.CursorPosition=MetaEditor.SelectedNode.CursorPosition+1;
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(this.character));
+			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition+1;
 		}
 	}
 	public class DeleteCharRight:LoggedNonFileNodeCommand
 	{
 		public new bool Require()
 		{
-			return MetaEditor.SelectedNode.CursorPosition<MetaEditor.SelectedNode.CleanText.Length;
+			return Editor.SelectedNode.CursorPosition<Editor.SelectedNode.CleanText.Length;
 		}
 		private char character;
 		public override void Do()
 		{
-			this.character=MetaEditor.SelectedNode.CleanText[MetaEditor.SelectedNode.CursorPosition];
-			MetaEditor.SelectedNode.CleanText=MetaEditor.SelectedNode.CleanText.Remove(MetaEditor.SelectedNode.CursorPosition,1);
+			this.character=Editor.SelectedNode.CleanText[Editor.SelectedNode.CursorPosition];
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
 		}
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode.CleanText=MetaEditor.SelectedNode.CleanText.Insert(MetaEditor.SelectedNode.CursorPosition,Convert.ToString(this.character));
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(this.character));
 		}
 	}
 
@@ -992,7 +896,7 @@ namespace MetaEditor {
 	{
 		public new bool Require()
 		{
-			return !(MetaEditor.SelectedNode is FileNode) && !Char.IsControl(this.oldChar);
+			return !(Editor.SelectedNode is FileNode) && !Char.IsControl(this.oldChar);
 		}
 		private char oldChar;
 		public InsertCharacter(char oldChar)
@@ -1003,24 +907,64 @@ namespace MetaEditor {
 		{
 			if(this.oldChar=='.')
 			{
-				Help.ShowSelectHelp();
+				Help.ShowHelp(Editor.SelectedNode,Editor.SelectedNode.CleanText+".break",false);
 			}
-			else if(this.oldChar=='(' && Help.IsFunctionCall(MetaEditor.SelectedNode.CleanText))
+			else if(this.oldChar=='(' && Help.IsFunctionCall(Editor.SelectedNode.CleanText))
 			{
-				Help.ShowOneMetaNodeCallHelp();
+				Help.ShowHelp(Editor.SelectedNode,Editor.SelectedNode.CleanText.TrimEnd('(')+".break",true);
 			}
-			MetaEditor.SelectedNode.CleanText=MetaEditor.SelectedNode.CleanText.Insert(MetaEditor.SelectedNode.CursorPosition,Convert.ToString(this.oldChar));
-			MetaEditor.SelectedNode.CursorPosition=MetaEditor.SelectedNode.CursorPosition+1;
-
-//			MetaEditor.SelectedNode.FileNode.Save();
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(this.oldChar));
+			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition+1;
 		}
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode.CursorPosition=MetaEditor.SelectedNode.CursorPosition-1;
-			MetaEditor.SelectedNode.CleanText=MetaEditor.SelectedNode.CleanText.Remove(MetaEditor.SelectedNode.CursorPosition,1);
+			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition-1;
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
 		}
 	}
+	public class CreateChild:LoggedNodeCommand {
+		public override void Do() {
+			Editor.SelectedNode.Nodes.Insert(0,new Node());
+			Editor.SelectedNode=(Node)Editor.SelectedNode.FirstNode;
 
+			if(!(Editor.SelectedNode.Parent is FileNode)&& Help.IsFunctionCall(((Node)Editor.SelectedNode.Parent).CleanText)) {
+				Help.ShowHelp((Node)Editor.SelectedNode.Parent,((Node)Editor.SelectedNode.Parent).CleanText+".break",true);
+			}
+		}
+		public override void Undo() {
+			Editor.SelectedNode=(Node)Editor.SelectedNode.Parent;
+			Editor.SelectedNode.FirstNode.Remove();
+		}
+	}
+	public class CreateSiblingUp:LoggedNonFileNodeCommand {
+		public new bool Require() {
+			return !(Editor.SelectedNode is FileNode);
+		}
+		public override void Do() {
+//			Help.ShowIndentedCallHelp();
+
+			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index,new Node());
+			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
+		}
+		public override void Undo() {
+			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
+			Editor.SelectedNode.PrevNode.Remove();
+		}
+	}
+	public class CreateSibling:LoggedNonFileNodeCommand {
+		public new bool Require() {
+			return !(Editor.SelectedNode is FileNode);
+		}
+		public override void Do() {
+//			Help.ShowIndentedCallHelp();
+			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index+1,new Node());
+			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
+		}
+		public override void Undo() {
+			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
+			Editor.SelectedNode.NextNode.Remove();
+		}
+	}
 	public class CutNode:Command
 	{
 		public override void Do()
@@ -1031,38 +975,38 @@ namespace MetaEditor {
 	}
 	public class CopyNode:LoggedNonFileNodeCommand
 	{
-		private MetaNode selectedNode;
+		private Node selectedNode;
 		public new bool Require()
 		{
-			return !(MetaEditor.SelectedNode is FileNode);
+			return !(Editor.SelectedNode is FileNode);
 		}
 		public override void Do()
 		{
-			this.selectedNode=MetaEditor.clipboard;
-			MetaEditor.clipboard=(MetaNode)MetaEditor.SelectedNode.Clone();
+			this.selectedNode=Editor.clipboard;
+			Editor.clipboard=(Node)Editor.SelectedNode.Clone();
 		}
 		public override void Undo()
 		{
-			MetaEditor.clipboard=this.selectedNode;
+			Editor.clipboard=this.selectedNode;
 		}
 	}
 	public class PasteNodeBackward:LoggedNonFileNodeCommand
 	{
-		private MetaNode selectedNode;
+		private Node selectedNode;
 		public new bool Require()
 		{
-			return MetaEditor.clipboard!=null;
+			return Editor.clipboard!=null;
 		}
 		public override void Do()
 		{
-			this.selectedNode=(MetaNode)MetaEditor.clipboard.Clone();
-			MetaEditor.SelectedNode.Parent.Nodes.Insert(MetaEditor.SelectedNode.Index,this.selectedNode);
+			this.selectedNode=(Node)Editor.clipboard.Clone();
+			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index,this.selectedNode);
 			this.selectedNode.ExpandAll();
-			MetaEditor.SelectedNode=this.selectedNode;
+			Editor.SelectedNode=this.selectedNode;
 		}
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.NextNode;
+			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
 			this.selectedNode.Remove();
 		}
 	}
@@ -1070,121 +1014,57 @@ namespace MetaEditor {
 	{
 		public new bool Require()
 		{
-			return MetaEditor.clipboard!=null;
+			return Editor.clipboard!=null;
 		}
-		private MetaNode selectedNode;
+		private Node selectedNode;
 		public override void Do()
 		{
-			this.selectedNode=(MetaNode)MetaEditor.clipboard.Clone();
-			MetaEditor.SelectedNode.Parent.Nodes.Insert(MetaEditor.SelectedNode.Index+1,this.selectedNode);
+			this.selectedNode=(Node)Editor.clipboard.Clone();
+			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index+1,this.selectedNode);
 			this.selectedNode.ExpandAll();
-			MetaEditor.SelectedNode=this.selectedNode;
+			Editor.SelectedNode=this.selectedNode;
 		}
 		public override void Undo()
 		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.PrevNode;
+			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
 			this.selectedNode.Remove();
 		}
 	}
-
-	public class CollapseNode:LoggedNonFileNodeCommand
-	{
-		public override void Do()
-		{
-			MetaEditor.SelectedNode.Collapse();
-		}
-		public override void Undo()
-		{
-			MetaEditor.SelectedNode.ExpandAll();
-		}
-	}
-	public class ExpandNode:LoggedNonFileNodeCommand
-	{
-		public override void Do()
-		{
-			MetaEditor.SelectedNode.ExpandAll();
-		}
-		public override void Undo()
-		{
-			MetaEditor.SelectedNode.Collapse();
-		}
-	}
-
 	public class DeleteNode:LoggedNonFileNodeCommand
 	{
 		private int index;
-		private MetaNode parentNode;
-		private MetaNode deletedNode;
+		private Node parentNode;
+		private Node deletedNode;
 
 		public new bool Require()
 		{
-			return !(MetaEditor.SelectedNode is FileNode);
+			return !(Editor.SelectedNode is FileNode);
 		}
 		public override void Do()
 		{
-			this.parentNode=(MetaNode)MetaEditor.SelectedNode.Parent;
-			this.index=MetaEditor.SelectedNode.Index;
-			this.deletedNode=MetaEditor.SelectedNode;
+			this.parentNode=(Node)Editor.SelectedNode.Parent;
+			this.index=Editor.SelectedNode.Index;
+			this.deletedNode=Editor.SelectedNode;
 
-			if(MetaEditor.SelectedNode.NextNode!=null)
+			if(Editor.SelectedNode.NextNode!=null)
 			{
-				MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.NextNode;
+				Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
 			}
-			else if(MetaEditor.SelectedNode.PrevNode!=null)
+			else if(Editor.SelectedNode.PrevNode!=null)
 			{
-				MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.PrevNode;
+				Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
 			}
 			else
 			{
-				MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.Parent;
+				Editor.SelectedNode=(Node)Editor.SelectedNode.Parent;
 			}
 			this.deletedNode.Remove();
 		}
 		public override void Undo()
 		{
 			this.parentNode.Nodes.Insert(this.index,this.deletedNode);
-			MetaEditor.SelectedNode=(MetaNode)this.parentNode.Nodes[this.index];
+			Editor.SelectedNode=(Node)this.parentNode.Nodes[this.index];
 		}
 	}
-	public class CreateSiblingUp:LoggedNonFileNodeCommand
-	{
-		public new bool Require()
-		{
-			return !(MetaEditor.SelectedNode is FileNode);
-		}
-		public override void Do()
-		{
-
-			Help.ShowIndentedCallHelp();
-
-			MetaEditor.SelectedNode.Parent.Nodes.Insert(MetaEditor.SelectedNode.Index,new MetaNode());
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.PrevNode;
-		}
-		public override void Undo()
-		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.NextNode;
-			MetaEditor.SelectedNode.PrevNode.Remove();
-		}
-	}
-	public class CreateSiblingDown:LoggedNonFileNodeCommand
-	{
-		public new bool Require()
-		{
-			return !(MetaEditor.SelectedNode is FileNode);
-		}
-		public override void Do()
-		{
-//			if(!(MetaEditor.SelectedNode is FileNode)&& Help.IsFunctionCall(MetaEditor.SelectedNode.CleanText))
-//			{
-				Help.ShowIndentedCallHelp();
-//			}
-			MetaEditor.SelectedNode.Parent.Nodes.Insert(MetaEditor.SelectedNode.Index+1,new MetaNode());
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.NextNode;
-		}
-		public override void Undo()
-		{
-			MetaEditor.SelectedNode=(MetaNode)MetaEditor.SelectedNode.PrevNode;
-			MetaEditor.SelectedNode.NextNode.Remove();
-		}
-	}
+	
 }
