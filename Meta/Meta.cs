@@ -216,15 +216,6 @@ namespace Meta {
 					lastKeySelect++;
 				}
 				for(;i<keys.Count-1+lastKeySelect;i++) {
-//					if(keys[i].Equals("break")) { // remove
-//						if(selection is IKeyValue) {
-//							Interpreter.breakMethod((IKeyValue)selection);
-//						}
-//						else {
-//							Interpreter.breakMethod(new NetObject(selection));
-//						}
-//						Thread.CurrentThread.Suspend();
-//					}	
 					if(selection==null) {
 						throw new ApplicationException("Key "+keys[i]+" does not exist");
 					}
@@ -424,7 +415,6 @@ namespace Meta {
 				}
 			}
 			public static string metaInstallationPath;
-			//public static BreakMethodDelegate breakMethod;
 			public static ArrayList callers=new ArrayList();
 			public static ArrayList arguments=new ArrayList();
 			public static Hashtable netConversion=new Hashtable();
@@ -586,6 +576,9 @@ namespace Meta {
 				}
 			}
 			public static Map StringToMap(string symbol) {
+				if(symbol.Equals("hello")) {
+					int asdf=0;
+				}
 				Map map=new Map();
 				foreach(char character in symbol) {
 					map[new Integer(map.Count+1)]=new Integer((int)character);
@@ -957,7 +950,6 @@ namespace Meta {
 				Map assemblyInfoMap=new Map();
 				Map nameSpaceMap=new Map();
 				Integer counter=new Integer(0);
-//				Integer counter=new Integer();
 				foreach(string na in namespaces) {
 					nameSpaceMap[counter]=Interpreter.StringToMap(na);
 					counter++;
@@ -1131,49 +1123,79 @@ namespace Meta {
 				return hash;
 			}
 			public Map() {
-				this.table=new MapStrategy();//new HybridDictionary();
-//				this.table=new HybridDictionary();
+				this.table=new HybridDictionaryStrategy();
 				this.keys=new ArrayList();
 			}
 			private IMap parent;
-			public class MapStrategy:IEnumerable {
-				public int Count {
+			public class HybridDictionaryStrategy:MapStrategy,IEnumerable {
+				public override int Count {
 					get {
 						return table.Count;
 					}
 				}
-//				public ArrayList Keys {
-//					get {
-//						return keys;
-//					}
-//				}
-				public object this[object key]  {
+				public override object this[object key]  {
 					get {
 						return table[key];
 					}
 					set {
 						table[key]=value;
-//						if(value!=null) {
-//							//isHashCashed=false;
-//							object val=value is IMap? ((IMap)value).Clone(): value;
-////							if(value is IMap) {
-////								((IMap)val).Parent=this;
-////							}
-//							if(!table.Contains(key)) {
-//								keys.Add(key);
-//							}
-//						}
 					}
 				}
-				public bool ContainsKey(object key)  {
+				public override bool ContainsKey(object key)  {
 					return table.Contains(key);
 				}
 				//private ArrayList keys;
 				private HybridDictionary table=new HybridDictionary();
-				public IEnumerator GetEnumerator() {
+				public override IEnumerator GetEnumerator() {
 					return this.table.GetEnumerator();
 				}
 			}
+			public abstract class MapStrategy:IEnumerable {
+				public abstract int Count {
+					get;
+				}
+				public abstract object this[object key]  {
+					get;
+					set;
+				}
+				public abstract bool ContainsKey(object key);
+				//private ArrayList keys;
+//				private HybridDictionary table=new HybridDictionary();
+				public abstract IEnumerator GetEnumerator();
+			}
+//			public class MapStrategy:IEnumerable {
+//				public int Count {
+//					get {
+//						return table.Count;
+//					}
+//				}
+//				public object this[object key]  {
+//					get {
+//						return table[key];
+//					}
+//					set {
+//						table[key]=value;
+////						if(value!=null) {
+////							//isHashCashed=false;
+////							object val=value is IMap? ((IMap)value).Clone(): value;
+//////							if(value is IMap) {
+//////								((IMap)val).Parent=this;
+//////							}
+////							if(!table.Contains(key)) {
+////								keys.Add(key);
+////							}
+////						}
+//					}
+//				}
+//				public bool ContainsKey(object key)  {
+//					return table.Contains(key);
+//				}
+//				//private ArrayList keys;
+//				private HybridDictionary table=new HybridDictionary();
+//				public IEnumerator GetEnumerator() {
+//					return this.table.GetEnumerator();
+//				}
+//			}
 			private ArrayList keys;
 			private MapStrategy table;
 //			private HybridDictionary table;
@@ -1537,7 +1559,10 @@ namespace Meta {
 				else {
 					list=new ArrayList(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
 				}
-				//list.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
+				list.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
+									 // found out, it's for Console.WriteLine, where Console.WriteLine(object)
+									 // would otherwise come before Console.WriteLine(string)
+									 // not a good solution, though
 				methods=(MethodBase[])list.ToArray(typeof(MethodBase));
 			}
 			public NetMethod(string name,object target,Type type) {
