@@ -238,27 +238,44 @@ namespace Meta {
 				Map result=new Map();
 //				result.Parent=function.Parent;
 				for(int i=0;i<times;i++) {
+					Map argument=new Map();
+					argument["i"]=new Integer(i);
+					Interpreter.arguments.Add(argument);
 					result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+					Interpreter.arguments.Remove(argument);
 				}
 				return result;
-//				Map cases=(Map)arg["case"];
-//				Map def=(Map)arg["default"];
-//				if(cases.ContainsKey(val)) {
-//					((IExpression)((Map)cases[val]).Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
-//				}
-//				else if(def!=null) {
-//					((IExpression)def.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
-//				}	
+			}
+			public static Map Load() {
+				return (Map)Interpreter.MergeTwo(
+					(Map)Interpreter.callers[Interpreter.callers.Count-1],
+					Interpreter.LoadAssembly((Map)Interpreter.Arg,true));
+			}
+			public static Map Each() {
+				Map arg=((Map)Interpreter.Arg);
+				Map over=(Map)arg[new Integer(1)];
+				Map function=(Map)arg[new Integer(2)];
+				Map result=new Map();
+				int i=0;
+				foreach(DictionaryEntry entry in over) {
+					Map argument=new Map();
+					argument["key"]=entry.Key;
+					argument["value"]=entry.Value;
+					Interpreter.arguments.Add(argument);
+					result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+					Interpreter.arguments.Remove(argument);
+					i++;
+				}
+				return result;
 //				Map arg=((Map)Interpreter.Arg);
-//				object val=arg[new Integer(1)];
-//				Map cases=(Map)arg["case"];
-//				Map def=(Map)arg["default"];
-//				if(cases.ContainsKey(val)) {
-//					((IExpression)((Map)cases[val]).Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+//				int times=(int)((Integer)arg[new Integer(1)]).IntValue();
+//				Map function=(Map)arg[new Integer(2)];
+//				Map result=new Map();
+//				//				result.Parent=function.Parent;
+//				for(int i=0;i<times;i++) {
+//					result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
 //				}
-//				else if(def!=null) {
-//					((IExpression)def.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
-//				}				
+//				return result;
 			}
 			public static void Switch() {
 				Map arg=((Map)Interpreter.Arg);
@@ -504,12 +521,12 @@ namespace Meta {
 	}
 	namespace Execution {
 		public class Statement {
-			public readonly Select key;
-			public readonly IExpression val;
+			public Select key;
+			public IExpression val;
 			public bool active=false;
 			public void Replace(Statement statement) {
-				key.Replace(statement.key);
-				val.Replace(statement.val);
+				key=(Select)Interpreter.Replace(key,statement.key);
+				val=(IExpression)Interpreter.Replace(val,statement.val);
 			}
 			public override bool Equals(object obj) {
 				if(obj is Statement) {
@@ -525,7 +542,7 @@ namespace Meta {
 
 			public void Realize(ref object scope,bool isInFunction) {
 				active=true;
-				key.Assign(ref scope,this.val.Evaluate((Map)scope),isInFunction);
+				key.Assign(ref scope,this.val.Evaluate(scope),isInFunction);
 				active=false;
 			}
 			public Statement(Map obj) {
@@ -542,8 +559,10 @@ namespace Meta {
 			public void Replace(IExpression replace) {
 				if(!this.Equals(replace)) {
 					Call call=(Call)replace;
-					callable.Replace(call.callable);
-					argument.Replace(call.argument);
+					callable=(IExpression)Interpreter.Replace(callable,call.callable);
+					argument=(IExpression)Interpreter.Replace(argument,call.argument);
+//					callable.Replace(call.callable);
+//					argument.Replace(call.argument);
 				}
 			}
 //			public void Replace(IExpression replace) {
@@ -559,8 +578,8 @@ namespace Meta {
 				return obj is Call && ((Call)obj).callable.Equals(callable) &&
 					((Call)obj).argument.Equals(argument);
 			}
-			public readonly IExpression argument;
-			public readonly IExpression callable;
+			public IExpression argument;
+			public IExpression callable;
 			public Call(Map obj) {
 				
 				Map expression=(Map)obj["call"];
@@ -588,12 +607,13 @@ namespace Meta {
 					Delayed delayed=(Delayed)replace;
 					delayed.obj.Compile();
 					if(obj.compiled!=null) {
-						if(obj.compiled is Statement) {
-							((Statement)obj.compiled).Replace((Statement)delayed.obj.compiled);
-						}
-						else {
-							((IExpression)obj.compiled).Replace((IExpression)delayed.obj.compiled);
-						}
+						obj.compiled=Interpreter.Replace(obj.compiled,delayed.obj.compiled);
+//						if(obj.compiled is Statement) {
+//							((Statement)obj.compiled).Replace((Statement)delayed.obj.compiled);
+//						}
+//						else {
+//							((IExpression)obj.compiled).Replace((IExpression)delayed.obj.compiled);
+//						}
 						delayed.obj.compiled=obj.compiled;
 					}
 					obj=delayed.obj;// check equality first?
@@ -631,7 +651,9 @@ namespace Meta {
 					int i=0;
 					for(;i<program.statements.Count && i<statements.Count;i++)  {
 						if(!((Statement)statements[i]).Equals((Statement)program.statements[i])) {
-							((Statement)statements[i]).Replace((Statement)program.statements[i]); //less here
+							statements[i]=Interpreter.Replace(statements[i],
+								(Statement)program.statements[i]); //less here
+//							((Statement)statements[i]).Replace((Statement)program.statements[i]); //less here
 						}
 					}
 					if(statements.Count>program.statements.Count) {
@@ -665,14 +687,36 @@ namespace Meta {
 						Interpreter.callers.Add(caller);
 					}
 				}
-				foreach(Statement statement in statements) {
-					statement.Realize(ref result,isInFunction);
+				for(int i=0;i<statements.Count;i++) {
+				Back:
+					try {
+						((Statement)statements[i]).Realize(ref result,isInFunction);
+					}
+					catch {
+						goto Back;
+					}
+					//					statement.Realize(ref result,isInFunction);
 				}
 				if(caller!=null) {
 					if(callerIsMap) {
 						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 					}
 				}
+//				foreach(Statement statement in statements) {
+//				Back:
+//					try {
+//						statement.Realize(ref result,isInFunction);
+//					}
+//					catch {
+//						goto Back;
+//					}
+////					statement.Realize(ref result,isInFunction);
+//				}
+//				if(caller!=null) {
+//					if(callerIsMap) {
+//						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+//					}
+//				}
 				return result;
 			}
 		}
@@ -749,7 +793,9 @@ namespace Meta {
 					Select select=(Select)replace;
 					int i=0;
 					for(;i<expressions.Count && i<select.expressions.Count;i++) {
-						((IExpression)expressions[i]).Replace((IExpression)select.expressions[i]);
+						expressions[i]=Interpreter.Replace(
+							expressions[i],select.expressions[i]);
+//						((IExpression)expressions[i]).Replace((IExpression)select.expressions[i]);
 					}
 					if(expressions.Count>select.expressions.Count) {
 						expressions.RemoveRange(i,expressions.Count-i);
@@ -847,11 +893,15 @@ namespace Meta {
 //						Interpreter.breakObject=;
 						Interpreter.breakMethod(selected);
 						Thread.CurrentThread.Suspend();
-						keys=new ArrayList();//ugly hack
-						foreach(IExpression expression in expressions) {
-							keys.Add(expression.Evaluate(current));
+//						keys=new ArrayList();//ugly hack
+//						foreach(IExpression expression in expressions) {
+//							keys.Add(expression.Evaluate(current));
+//						}
+						if(Interpreter.redoStatement) {
+							Interpreter.redoStatement=false;
+							throw new RestartStatementException();
 						}
-						return Preselect(current,keys,isRightSide,isSelectLastKey);
+						//return Preselect(current,keys,isRightSide,isSelectLastKey);
 //						i=0;
 //						selected=current;
 //						continue;
@@ -905,14 +955,32 @@ namespace Meta {
 				}
 			}
 		}
+		public class RestartStatementException: ApplicationException {
+		}
 		public delegate void BreakMethodDelegate(object obj);
 		public class Interpreter  {
+			public static bool redoStatement=false;
 			public static BreakMethodDelegate breakMethod;
 			public static ArrayList callers=new ArrayList();
 			public static ArrayList arguments=new ArrayList();
 			public static Hashtable netConversion=new Hashtable();
 			public static Hashtable metaConversion=new Hashtable();
 			public static ArrayList compiledMaps=new ArrayList();
+
+			public static object Replace(object original,object replace) {
+				if(original.GetType().Equals(replace.GetType())) {
+					if(original is Statement) {
+						((Statement)original).Replace((Statement)replace);
+					}
+					else {
+						((IExpression)original).Replace((IExpression)replace);
+					}
+					return original;
+				}
+				else {
+					return replace;
+				}
+			}
 			public static object Arg {
 				get {
 					return arguments[arguments.Count-1];
@@ -1058,8 +1126,8 @@ namespace Meta {
 				return result;
 			}
 			public static ArrayList loadedAssemblies=new ArrayList();
-			[MetaMethod("()")]
-			public static Map LoadAssembly(Map map) {
+			//[MetaMethod("()")]
+			public static Map LoadAssembly(Map map,bool collapseNamespaces) {
 				Map root=new Map();
 				foreach(DictionaryEntry entry in map) {
 					string name=(string)entry.Value;
@@ -1077,13 +1145,15 @@ namespace Meta {
 					foreach(Type type in assembly.GetTypes())  {
 						if(type.DeclaringType==null)  {
 							Map position=root;
-							ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
-							subPaths.RemoveAt(subPaths.Count-1);
-							foreach(string subPath in subPaths)  {
-								if(!position.ContainsKey(subPath))  {
-									position[subPath]=new Map();
+							if(! collapseNamespaces) {
+								ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
+								subPaths.RemoveAt(subPaths.Count-1);
+								foreach(string subPath in subPaths)  {
+									if(!position.ContainsKey(subPath))  {
+										position[subPath]=new Map();
+									}
+									position=(Map)position[subPath];
 								}
-								position=(Map)position[subPath];
 							}
 							position[type.Name]=new NetClass(type);
 						}

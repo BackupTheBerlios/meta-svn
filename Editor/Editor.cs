@@ -341,7 +341,9 @@ namespace Editor {
 	}
 	// rework
 	public abstract class Help {
+		public static bool helpInvalidated=false;
 		//public static ToolTip tip=new ToolTip();
+		public static Node lastSelectedNode;
 		public static RichTextBox toolTip=new RichTextBox();
 		public static GListBox listBox=new GListBox();
 
@@ -570,23 +572,28 @@ namespace Editor {
 			string text="";
 			string summary="";
 			ArrayList parameters=new ArrayList();
-			if(comment==null || comment.ChildNodes==null) {
-				return "";
-			}
-			foreach(XmlNode node in comment.ChildNodes) {
-				switch(node.Name) {
-					case "summary":
-						summary=node.InnerXml;
-						break;
-					case "param":
-						parameters.Add(node);
-						break;
-					default:
-						break;
+			if(comment!=null && comment.ChildNodes!=null) {
+				foreach(XmlNode node in comment.ChildNodes) {
+					switch(node.Name) {
+						case "summary":
+							summary=node.InnerXml;
+							break;
+						case "param":
+							parameters.Add(node);
+							break;
+						default:
+							break;
+					}
 				}
 			}
 			if(isSignature) {
-				MemberInfo[] overloaded=memberInfo.DeclaringType.GetMember(memberInfo.Name);
+				MemberInfo[] overloaded;
+				if(memberInfo.DeclaringType!=null) {
+					overloaded=memberInfo.DeclaringType.GetMember(memberInfo.Name);
+				}
+				else {
+					overloaded=new MemberInfo[] {memberInfo};
+				}
 				string overloadedText="";
 				if(isParameters) {
 					if(overloadNumber>1) {
@@ -931,12 +938,25 @@ namespace Editor {
 			_selectedNodeText=selectedNodeText;
 			_isCall=isCall;
 			overloadIndex=0;
+			if(lastSelectedNode==null || helpInvalidated) {
+				helpInvalidated=false;
+				if(lastHelpThread!=null) {
+					lastHelpThread.Abort();
+					lastHelpThread=null;
+				}
+			}
 			if(lastHelpThread==null) {
 				lastHelpThread=new Thread(new ThreadStart(ShowHelpOtherThread));
+				lastSelectedNode=Editor.SelectedNode;
 				lastHelpThread.Start();
+				return;
 			}
-			else {
-				Map map=Interpreter.Mapify(
+//			if(lastSelectedNode==Editor.SelectedNode) {
+				Interpreter.redoStatement=true;
+//			}
+			Map map;
+			try {
+				map=Interpreter.Mapify(
 					new StringReader(
 					SerializeTreeView(
 					Editor.SelectedNode.FileNode,
@@ -944,13 +964,17 @@ namespace Editor {
 					CompleteText(_selectedNodeText),
 					Editor.SelectedNode
 					)));
-				Program program=(Program)map.Compile();
-				((IExpression)Interpreter.lastProgram.compiled).Replace(program);
-				map.compiled=Interpreter.lastProgram.compiled;
-				Interpreter.lastProgram=map;
-				lastHelpThread.Resume();
-
 			}
+			catch {
+				return; // not really great
+			}
+			Program program=(Program)map.Compile();
+
+			((IExpression)Interpreter.lastProgram.compiled).Replace(program);
+			map.compiled=Interpreter.lastProgram.compiled;
+			Interpreter.lastProgram=map;
+			lastHelpThread.Resume();
+
 			//Help.listBox.Visible=true;
 		}
 		delegate void ShowHelpDelegate(object obj);
@@ -994,8 +1018,8 @@ namespace Editor {
 //				//_e=e;
 //			}
 //		}
-		public static void ShowHelpOtherThread() {
-//			try {
+		public static void ShowHelpOtherThread() { //still necessary?
+			try {
 				Interpreter.Run(
 					new StringReader(
 					SerializeTreeView(
@@ -1005,6 +1029,11 @@ namespace Editor {
 					Editor.SelectedNode
 					)),
 					new Map());
+			}
+			catch(Exception e) {
+				Help.lastHelpThread.Abort();
+				Help.lastHelpThread=null;
+			}
 //			}
 //			catch(Exception e) {
 //				while(!(e.InnerException==null || e is BreakException)) {
@@ -1176,10 +1205,12 @@ namespace Editor {
 		public override void Do() {
 			if(Help.lastHelpThread!=null) {
 //				Help.lastHelpThread.Abort();
-				Help.lastHelpThread.Resume();
-				Help.lastHelpThread.Abort();
-//				Help.lastHelpThread.Interrupt();
-				Help.lastHelpThread=null;
+				if(Help.lastHelpThread.IsAlive) {
+					Help.lastHelpThread.Resume();
+					Help.lastHelpThread.Abort();
+					//				Help.lastHelpThread.Interrupt();
+					Help.lastHelpThread=null;
+				}
 			}
 		}
 	}
