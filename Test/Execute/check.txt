@@ -145,6 +145,26 @@ IEnumerable
         "Meta.Types.Map For()"
   Entry (DictionaryEntry):
     Key (String):
+      "Load"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Meta.Types.Map Load()"
+      savedMethod (RuntimeMethodInfo):
+        "Meta.Types.Map Load()"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Each"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Meta.Types.Map Each()"
+      savedMethod (RuntimeMethodInfo):
+        "Meta.Types.Map Each()"
+  Entry (DictionaryEntry):
+    Key (String):
       "Switch"
     Value (NetMethod):
       methods (MethodInfo[]):

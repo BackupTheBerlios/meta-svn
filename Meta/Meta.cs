@@ -61,7 +61,6 @@ namespace Meta {
 						return new Files(name);
 					}
 					else if(File.Exists(name)) {
-//						return new StreamReader(name).ReadToEnd();
 						StreamReader reader=new StreamReader(name);
 						string text=reader.ReadToEnd();
 						reader.Close();
@@ -189,10 +188,9 @@ namespace Meta {
 			}
 			public IEnumerator GetEnumerator() {
 				//alle Assemblies hier checken
-				return new Hashtable().GetEnumerator();//this.Keys.GetEnumerator();
+				return new Hashtable().GetEnumerator();
 			}
 		}
-		// builtin library functions
 		public class Functions{
 
 			public static void Write(string s) {
@@ -236,7 +234,6 @@ namespace Meta {
 				int times=(int)((Integer)arg[new Integer(1)]).IntValue();
 				Map function=(Map)arg[new Integer(2)];
 				Map result=new Map();
-//				result.Parent=function.Parent;
 				for(int i=0;i<times;i++) {
 					Map argument=new Map();
 					argument["i"]=new Integer(i);
@@ -267,15 +264,6 @@ namespace Meta {
 					i++;
 				}
 				return result;
-//				Map arg=((Map)Interpreter.Arg);
-//				int times=(int)((Integer)arg[new Integer(1)]).IntValue();
-//				Map function=(Map)arg[new Integer(2)];
-//				Map result=new Map();
-//				//				result.Parent=function.Parent;
-//				for(int i=0;i<times;i++) {
-//					result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
-//				}
-//				return result;
 			}
 			public static void Switch() {
 				Map arg=((Map)Interpreter.Arg);
@@ -561,19 +549,8 @@ namespace Meta {
 					Call call=(Call)replace;
 					callable=(IExpression)Interpreter.Replace(callable,call.callable);
 					argument=(IExpression)Interpreter.Replace(argument,call.argument);
-//					callable.Replace(call.callable);
-//					argument.Replace(call.argument);
 				}
 			}
-//			public void Replace(IExpression replace) {
-//				Call call=(Call)replace;
-//				if(!callable.Equals(call.callable)) {
-//					callable.Replace(call.callable);
-//				}
-//				if(!argument.Equals(call.argument)) {
-//					argument.Replace(call.argument);
-//				}
-//			}
 			public override bool Equals(object obj) {
 				return obj is Call && ((Call)obj).callable.Equals(callable) &&
 					((Call)obj).argument.Equals(argument);
@@ -608,15 +585,9 @@ namespace Meta {
 					delayed.obj.Compile();
 					if(obj.compiled!=null) {
 						obj.compiled=Interpreter.Replace(obj.compiled,delayed.obj.compiled);
-//						if(obj.compiled is Statement) {
-//							((Statement)obj.compiled).Replace((Statement)delayed.obj.compiled);
-//						}
-//						else {
-//							((IExpression)obj.compiled).Replace((IExpression)delayed.obj.compiled);
-//						}
 						delayed.obj.compiled=obj.compiled;
 					}
-					obj=delayed.obj;// check equality first?
+					obj=delayed.obj;
 				}
 			}
 			public Delayed(Map obj) {
@@ -652,14 +623,13 @@ namespace Meta {
 					for(;i<program.statements.Count && i<statements.Count;i++)  {
 						if(!((Statement)statements[i]).Equals((Statement)program.statements[i])) {
 							statements[i]=Interpreter.Replace(statements[i],
-								(Statement)program.statements[i]); //less here
-//							((Statement)statements[i]).Replace((Statement)program.statements[i]); //less here
+								(Statement)program.statements[i]);
 						}
 					}
 					if(statements.Count>program.statements.Count) {
 						statements.RemoveRange(i,statements.Count-i);
 					}
-					else { //count can also be equal, no bug but no check
+					else {
 						statements.AddRange(program.statements.GetRange(i,program.statements.Count-i));
 					}
 				}
@@ -680,7 +650,7 @@ namespace Meta {
 				bool callerIsMap=false;
 
 				if(caller!=null) {
-					if(caller is Map) { //hack!!!
+					if(caller is Map) {
 						callerIsMap=true;
 					}
 					if(callerIsMap) {
@@ -695,28 +665,12 @@ namespace Meta {
 					catch {
 						goto Back;
 					}
-					//					statement.Realize(ref result,isInFunction);
 				}
 				if(caller!=null) {
 					if(callerIsMap) {
 						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 					}
 				}
-//				foreach(Statement statement in statements) {
-//				Back:
-//					try {
-//						statement.Realize(ref result,isInFunction);
-//					}
-//					catch {
-//						goto Back;
-//					}
-////					statement.Realize(ref result,isInFunction);
-//				}
-//				if(caller!=null) {
-//					if(callerIsMap) {
-//						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-//					}
-//				}
 				return result;
 			}
 		}
@@ -762,14 +716,6 @@ namespace Meta {
 				return cached;
 			}
 		}
-		// remove
-		public class BreakException:ApplicationException {
-			public readonly object obj;
-
-			public BreakException(object obj) {
-				this.obj=obj;
-			}
-		}
 		public class Select: IExpression {
 			public readonly ArrayList expressions=new ArrayList();
 			public ArrayList parents=new ArrayList();
@@ -795,7 +741,6 @@ namespace Meta {
 					for(;i<expressions.Count && i<select.expressions.Count;i++) {
 						expressions[i]=Interpreter.Replace(
 							expressions[i],select.expressions[i]);
-//						((IExpression)expressions[i]).Replace((IExpression)select.expressions[i]);
 					}
 					if(expressions.Count>select.expressions.Count) {
 						expressions.RemoveRange(i,expressions.Count-i);
@@ -819,15 +764,6 @@ namespace Meta {
 				object preselection=Preselect(current,keys,true,true);
 				return preselection;
 			}
-
-//			public object Evaluate(object current) {
-//				ArrayList keys=new ArrayList();
-//				foreach(IExpression expression in expressions) {
-//					keys.Add(expression.Evaluate(current));
-//				}
-//				object preselection=Preselect(current,keys,true,true);
-//				return preselection;
-//			}
 			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
 				if(keys[0].Equals("For")) {
 					int asdf=0;
@@ -876,36 +812,22 @@ namespace Meta {
 						throw new ApplicationException("Key "+keys[i]+" not found");
 					}
 				}
-				int lastKeySelect=0;//=keys.Count-1;
+				int lastKeySelect=0;
 				if(isSelectLastKey) {
 					lastKeySelect++;
 				}
-//				int count=keys.Count-1;
-//				if(isSelectLastKey) {
-//					count++;
-//				}
 				for(;i<keys.Count-1+lastKeySelect;i++) {
 					if(keys[i].Equals("assemblies")) {
 						int asdf=0;
 					}	
 
 					if(keys[i].Equals("break")) {
-//						Interpreter.breakObject=;
 						Interpreter.breakMethod(selected);
 						Thread.CurrentThread.Suspend();
-//						keys=new ArrayList();//ugly hack
-//						foreach(IExpression expression in expressions) {
-//							keys.Add(expression.Evaluate(current));
-//						}
 						if(Interpreter.redoStatement) {
 							Interpreter.redoStatement=false;
 							throw new RestartStatementException();
 						}
-						//return Preselect(current,keys,isRightSide,isSelectLastKey);
-//						i=0;
-//						selected=current;
-//						continue;
-//						throw new BreakException(selected);
 					}	
 					if(selected is IKeyValue) {
 						selected=((IKeyValue)selected)[keys[i]];
@@ -943,7 +865,6 @@ namespace Meta {
 				}
 				else {
 					object selected=Preselect(current,keys,false,false);
-//					object selected=Preselect(current,keys,isInFunction,false);
 					IKeyValue keyValue;
 					if(selected is IKeyValue) {
 						keyValue=(IKeyValue)selected;
@@ -1126,7 +1047,6 @@ namespace Meta {
 				return result;
 			}
 			public static ArrayList loadedAssemblies=new ArrayList();
-			//[MetaMethod("()")]
 			public static Map LoadAssembly(Map map,bool collapseNamespaces) {
 				Map root=new Map();
 				foreach(DictionaryEntry entry in map) {
@@ -1181,194 +1101,10 @@ namespace Meta {
 				}
 				text+=")";
 				return text;
-			}
-//			public static string GetDoc(MemberInfo memberInfo,bool isSignature,bool isSummary,bool isParameters) {
-//				XmlNode comment=GetComments(memberInfo);
-//				string text="";
-//				string summary="";
-//				ArrayList parameters=new ArrayList();
-//				if(comment==null || comment.ChildNodes==null) {
-//					return "";
-//				}
-//				foreach(XmlNode node in comment.ChildNodes) {
-//					switch(node.Name) {
-//						case "summary":
-//							summary=node.InnerXml;
-//							break;
-//						case "param":
-//							parameters.Add(node);
-//							break;
-//						default:
-//							break;
-//					}
-//				}
-//				if(isSignature) {
-//					MemberInfo[] overloaded=memberInfo.DeclaringType.GetMember(memberInfo.Name);
-//					string overloadedText="";
-//					if(overloaded.Length>1) {
-//						overloadedText=" ( +"+overloaded.Length.ToString()+" overloads)";
-//					}
-//
-//					if(memberInfo is MethodBase) {
-//						if(memberInfo is MethodInfo) {
-//							text+=((MethodInfo)memberInfo).ReturnType+" ";
-//						}
-//						text+=((MethodBase)memberInfo).Name;
-//						text+=" (";
-//						bool firstParameter=true;
-//						foreach(ParameterInfo parameter in ((MethodBase)memberInfo).GetParameters()) {
-//							if(!firstParameter) {
-//								text+=" ";
-//							}
-//							string parameterName=parameter.ParameterType.ToString();
-////							parameterName=parameterName.Replace("System.String","string").Replace("System.Object","object")
-////								.Replace("System.Boolean","bool")
-////								.Replace("System.Byte","byte").Replace("System.Char","char")
-////								.Replace("System.Decimal","decimal").Replace("System.Double","double")
-////								.Replace("System.Enum","enum").Replace("System.Single","float")
-////								.Replace("System.Int32","int").Replace("System.Int64","long")
-////								.Replace("System.SByte","sbyte").Replace("System.Int16","short")
-////								.Replace("System.UInt32","uint").Replace("System.UInt16","ushort")
-////								.Replace("System.UInt64","ulong").Replace("System.Void","void"); //struct possibly missing (??)
-//                     text+=parameterName;
-//							text+=" "+parameter.Name+",";
-//							firstParameter=false;
-//						}
-//						if(((MethodBase)memberInfo).GetParameters().Length>0) {
-//							text=text.Remove(text.Length-1,1);
-//						}
-//						text+=")";
-//						//						if(memberInfos.Length>1) {
-//						//							text+=" ( +"+(memberInfos.Length-1)+" overloads)";
-//						//						}
-//					}
-//					else if(memberInfo is PropertyInfo) {
-//						text+=((PropertyInfo)memberInfo).PropertyType+" "+((PropertyInfo)memberInfo).Name;
-//					}
-//					else if(memberInfo is FieldInfo) {
-//						text+=((FieldInfo)memberInfo).FieldType+" "+((FieldInfo)memberInfo).Name;
-//					}
-//					else if(memberInfo is Type) {
-//						if(((Type)memberInfo).IsInterface) {
-//							text+="interface ";
-//						}
-//						else {
-//							if(((Type)memberInfo).IsAbstract) {
-//								text+="abstract ";
-//							}
-//							if(((Type)memberInfo).IsValueType) {
-//								text+="struct ";
-//							}
-//							else {
-//								text+="class ";
-//							}
-//						}						 
-//						text+=((Type)memberInfo).Name;
-//					}
-//					else if(memberInfo is EventInfo) {
-//						text+=((EventInfo)memberInfo).EventHandlerType.FullName+" "+
-//							memberInfo.Name;
-//					}
-//					text=text.Replace("System.String","string").Replace("System.Object","object")
-//					.Replace("System.Boolean","bool")
-//					.Replace("System.Byte","byte").Replace("System.Char","char")
-//					.Replace("System.Decimal","decimal").Replace("System.Double","double")
-//					.Replace("System.Enum","enum").Replace("System.Single","float")
-//					.Replace("System.Int32","int").Replace("System.Int64","long")
-//					.Replace("System.SByte","sbyte").Replace("System.Int16","short")
-//					.Replace("System.UInt32","uint").Replace("System.UInt16","ushort")
-//					.Replace("System.UInt64","ulong").Replace("System.Void","void");
-//					text+=overloadedText;
-//					text+="\n";
-//				}
-//				text+=summary+"\n";
-//				if(isParameters) {
-//					//text+="\nparameters: \n";
-//					foreach(XmlNode node in parameters) {
-//						text+=node.Attributes["name"].Value+": "+node.InnerXml+"\n";
-////						text+=node.Attributes["name"].Value+": "+node.InnerXml;
-//					}
-//				}
-//				return text.Replace("<para>","").Replace("\r\n","").Replace("</para>","").Replace("<see cref=\"","")
-//					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
-//					.Replace("M:","").Replace("E:","").Replace("     "," ").Replace("    "," ")
-//					.Replace("   "," ").Replace("  "," ").Replace("\n ","\n");
-//			}
-//			public static string GetDoc(MemberInfo memberInfo, bool showParams) {
-//				XmlNode comment=GetComments(memberInfo);
-//				string text="";
-//				string summary="";
-//				ArrayList parameters=new ArrayList();
-//				if(comment==null || comment.ChildNodes==null) {
-//					return "";
-//				}
-//				foreach(XmlNode node in comment.ChildNodes) {
-//					switch(node.Name) {
-//						case "summary":
-//							summary=node.InnerXml;
-//							break;
-//						case "param":
-//							parameters.Add(node);
-//							break;
-//						default:
-//							break;
-//					}
-//				}
-//				text+=summary+"\n";
-//				if(showParams) {
-//					//text+="\nparameters: \n";
-//					foreach(XmlNode node in parameters) {
-//						text+=node.Attributes["name"].Value+": "+node.InnerXml;
-//					}
-//				}
-//				return text.Replace("<para>","").Replace("</para>","").Replace("<see cref=\"","")
-//					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
-//					.Replace("M:","").Replace("E:","");
-//			}
-//			public static string GetDoc(MemberInfo memberInfo) {
-//				XmlNode comment=GetComments(memberInfo);
-//				string text="";
-//				string summary="";
-//				ArrayList parameters=new ArrayList();
-//				if(comment==null || comment.ChildNodes==null) {
-//					return "";
-//				}
-//				foreach(XmlNode node in comment.ChildNodes) {
-//					switch(node.Name) {
-//						case "summary":
-//							summary=node.InnerXml;
-//							break;
-//						case "param":
-//							parameters.Add(node);
-//							break;
-//						default:
-//							break;
-//					}
-//				}
-//				text+=summary+"\n\nparameters: \n";
-//				foreach(XmlNode node in parameters) {
-//					text+=node.Attributes["name"].Value+": "+node.InnerXml;
-//				}
-//				return text.Replace("<para>","").Replace("</para>","").Replace("<see cref=\"","")
-//					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
-//					.Replace("M:","").Replace("E:","");
-//			}
-			
+			}			
 		}
 	}
 	namespace Types  {
-//		public abstract class Command:  ICallable {
-//			private IKeyValue parent;
-//			public IKeyValue Parent {
-//				get {
-//					return parent;
-//				}
-//				set {
-//					parent=value;
-//				}
-//			}
-//			public abstract object Call();
-//		}
 		public interface IMetaType {
 			IKeyValue Parent {
 				get;
@@ -1407,25 +1143,6 @@ namespace Meta {
 		}		
 
 		public class Map: IKeyValue, ICallable, IEnumerable {
-//			public void ReplaceCompiled(Map map) {
-//				if(compiled!=null) {
-//					if(compiled is Statement) {
-//						((Statement)compiled).Replace(this.Compile());
-//					}
-//					else if(compiled is IExpression) {
-//						((IExpression)compiled).Replace(this.Compile());
-//					}
-//					else {
-//						throw new ApplicationException("bug");
-//					}
-//				}
-//				foreach(DictionaryEntry entry in map) {
-//					if(entry.Value is Map) {
-//						((Map)entry.Value).ReplaceCompiled();
-//					}
-//					this[entry.Key]=entry.Value;
-//				}
-//			}
 			private IKeyValue parent;
 			public IKeyValue Parent {
 				get {
@@ -1489,7 +1206,6 @@ namespace Meta {
 				object result;
 				if(callable is Program) {
 					result=((Program)callable).Evaluate(caller,existing,true);
-//					result=((Program)callable).Evaluate(this,existing,true);
 				}
 				else {
 					result=callable.Evaluate(this);
@@ -1624,61 +1340,7 @@ namespace Meta {
 			}
 			public string documentation;
 		}
-//		public interface INetDocumented {
-//			//string GetDocumentation(bool signature,bool summary,bool parameters);
-//		}
 		public class NetMethod: ICallable {
-//			public string GetDocumentation(bool signature,bool summary,bool parameters) {
-//					if(cashedDoc==null) {
-//						if(savedMethod!=null) {
-//							cashedDoc=Interpreter.GetDoc(savedMethod,false);
-//							//							cashedDoc=Interpreter.GetDoc(savedMethod,showParams);
-//						}
-//						else {
-//							cashedDoc=Interpreter.GetDoc(methods[0],false)+"(+"+methods.Length.ToString()+"overloads)";
-//							//							cashedDoc=Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
-//						}
-//					}
-//					return cashedDoc;
-//			}
-//			public string Documentation {
-//				get {
-//					if(cashedDoc==null) {
-//						if(savedMethod!=null) {
-//							cashedDoc=Interpreter.GetDoc(savedMethod,false);
-////							cashedDoc=Interpreter.GetDoc(savedMethod,showParams);
-//						}
-//						else {
-//							cashedDoc=Interpreter.GetDoc(methods[0],false)+"(+"+methods.Length.ToString()+"overloads)";
-////							cashedDoc=Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
-//						}
-//					}
-//					return cashedDoc;
-//				}
-//			}
-			//private static string cashedDoc;
-//			public string GetDocumentation(bool showParams) {
-//				if(cashedDoc==null) {
-//					if(savedMethod!=null) {
-//						cashedDoc=Interpreter.GetDoc(savedMethod,showParams);
-//					}
-//					else {
-//						cashedDoc=Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
-//					}
-//				}
-//				return cashedDoc;
-//			}
-//			public string GetDocumentation(bool showParams) {
-////				if(cashedDoc==null) {
-//					if(savedMethod!=null) {
-//						return Interpreter.GetDoc(savedMethod,showParams);
-//					}
-//					else {
-//						return Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
-//					}
-//				//}
-////				return doc;
-//			}
 			private IKeyValue parent;
 			[IgnoreMember]
 			public IKeyValue Parent {
@@ -1701,9 +1363,6 @@ namespace Meta {
 
 
 			public object Call(Map caller) {
-//				if(this.name.Equals("Invoke")) {
-//					int asdf=0;
-//				}
 				return Interpreter.ConvertToMeta(CallMethod((Map)Interpreter.Arg));
 			}
 			public object CallMethod(Map arguments) {
@@ -1799,12 +1458,6 @@ namespace Meta {
 				}
 				catch(Exception e) {
 					Exception b=e;
-					while(!(b is BreakException) && b.InnerException!=null) {
-						b=b.InnerException;
-					}
-					if(b is BreakException) {
-						throw b;
-					}
 					string text="";
 					if(target!=null) {
 						text+=target.ToString();
@@ -1884,14 +1537,6 @@ namespace Meta {
 			}
 		}
 		public class NetClass: NetContainer, IKeyValue,ICallable {
-//			public string GetDocumentation(bool signature,bool summary,bool parameters) {
-//					return Interpreter.GetDoc(type,true);
-//			}
-//			public string Documentation {
-//				get {
-//					return Interpreter.GetDoc(type,true);
-//				}
-//			}
 			[IgnoreMember]
 			public NetMethod constructor;
 			public object Call(Map caller) {
@@ -1902,17 +1547,6 @@ namespace Meta {
 			}
 		}
 		public class NetObject: NetContainer, IKeyValue {
-//			public string GetDocumentation (bool showParams){
-//				string text="";
-//				foreach(MemberInfo memberInfo in obj.GetType().GetMembers()) {
-//					if(memberInfo is MethodInfo) {
-//						text+=Interpreter.GetMethodName((MethodInfo)memberInfo)+"\n";
-//					}
-//					text+=Interpreter.GetDoc(memberInfo,showParams);
-//
-//				}
-//				return text;
-//			}
 			public NetObject(object obj):base(obj,obj.GetType()) {
 			}
 			public override string ToString() {
@@ -1923,38 +1557,6 @@ namespace Meta {
 			public string CustomSerialization() {
 				return "";
 			}
-//			public string GetDocumentation(bool signature,bool summary,bool parameters) {
-//				string text="";
-//				MemberInfo[] members=obj==null?
-//					type.GetMembers(BindingFlags.Public|BindingFlags.Static):
-//					type.GetMembers(BindingFlags.Public|BindingFlags.Instance);
-//				foreach(MemberInfo memberInfo in members) {
-//					if(memberInfo is MethodInfo) {
-//						text+=Interpreter.GetMethodName((MethodInfo)memberInfo)+"\n";
-//					}
-//					text+=Interpreter.GetDoc(memberInfo,false);
-//					//						text+=Interpreter.GetDoc(memberInfo,showParams);
-//
-//				}
-//				return text;
-//			}
-//			public string Documentation {
-//				get {
-//					string text="";
-//					MemberInfo[] members=obj==null?
-//						type.GetMembers(BindingFlags.Public|BindingFlags.Static):
-//						type.GetMembers(BindingFlags.Public|BindingFlags.Instance);
-//					foreach(MemberInfo memberInfo in members) {
-//						if(memberInfo is MethodInfo) {
-//							text+=Interpreter.GetMethodName((MethodInfo)memberInfo)+"\n";
-//						}
-//						text+=Interpreter.GetDoc(memberInfo,false);
-////						text+=Interpreter.GetDoc(memberInfo,showParams);
-//
-//					}
-//					return text;
-//				}
-//			}
 			private IKeyValue parent;
 			[IgnoreMember]
 			public IKeyValue Parent {
@@ -2029,10 +1631,6 @@ namespace Meta {
 									BindingFlags.NonPublic|BindingFlags.Static|
 									BindingFlags.Instance).GetValue(obj);
 								return new NetMethod("Invoke",del,del.GetType());
-//								return new NetMethod(((EventInfo)type.GetMember((string)text,
-//									MemberTypes.Event,BindingFlags.Public
-//											 |BindingFlags.Static|BindingFlags.Instance
-//											 )[0]).GetRaiseMethod().Name,obj,type);
 							}
 						}
 						catch(Exception e) {
@@ -2136,7 +1734,6 @@ namespace Meta {
 					}
 				}
 			}
-			// fix .dll dependencies
 			public void SetEvent(string name,Map code) {
 				code.Parent=(IKeyValue)Interpreter.callers[Interpreter.callers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
@@ -2225,11 +1822,10 @@ namespace Meta {
 						}
 					}
 					foreach(EventInfo eventInfo in type.GetEvents(bindingFlags)) {
-						//fix here
 						table[eventInfo.Name]=new NetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
 					}
 					int counter=1;
-					if(obj!=null && obj is IEnumerable && !(obj is String))  { //string behaviour is too strange
+					if(obj!=null && obj is IEnumerable && !(obj is String))  {
 						foreach(object entry in (IEnumerable)obj) {
 							if(entry is DictionaryEntry)  {
 								table[((DictionaryEntry)entry).Key]=((DictionaryEntry)entry).Value;

@@ -29,20 +29,6 @@ using System.Xml;
 using System.Runtime.InteropServices;
 
 namespace Editor {
-//	public class EditorTreeView:TreeView {
-//		protected override void DefWndProc(ref Message m) {
-//			Editor.FixListBoxPosition();
-//			base.DefWndProc (ref m);
-//			this.sc
-//		}
-//		protected override 
-//
-//		protected override void OnPaint(PaintEventArgs e) {
-//			Editor.FixListBoxPosition();
-//			base.OnPaint (e);
-//		}
-//
-//	}
 	public class Editor	{
 		[STAThread]
 		public static void Main() {
@@ -139,7 +125,6 @@ namespace Editor {
 			helpKeyBindings[Keys.Alt|Keys.L]=typeof(MoveKeyUp);
 			helpKeyBindings[Keys.Down]=typeof(MoveKeyDown);
 			helpKeyBindings[Keys.Up]=typeof(MoveKeyUp);
-//			helpKeyBindings[Keys.Tab]=typeof(CompleteWord);
 			helpKeyBindings[Keys.Enter]=typeof(CompleteWord);
 
 			keyBindings[Keys.Control|Keys.X]=typeof(CutNode);
@@ -192,7 +177,6 @@ namespace Editor {
 		}
 		public static void KeyDown(object sender,KeyEventArgs e) {
 			if(Help.listBox.Visible && helpKeyBindings.ContainsKey(e.KeyData)) {
-				//Help.listBox.Visible=true;
 				((Command)((Type)helpKeyBindings[e.KeyData]).GetConstructor(new Type[] {})
 					.Invoke(new object[]{})).Run();
 			}
@@ -220,23 +204,6 @@ namespace Editor {
 		public static void BeforeSelect(object sender,TreeViewCancelEventArgs e) {
 			e.Cancel=true;
 		}
-
-//		private static void editor_MouseUp(object sender, MouseEventArgs e) {
-//			FixListBoxPosition();
-//		}
-//
-//		private static void editor_MouseWheel(object sender, MouseEventArgs e) {
-//			FixListBoxPosition();
-//		}
-////
-////		private static void editor_KeyUp(object sender, KeyEventArgs e) {
-////			FixListBoxPosition();
-//		//		}
-//
-//		private static void editor_Layout(object sender, LayoutEventArgs e) {
-//			FixListBoxPosition();
-		//		}
-
 		private static void editor_MouseWheel(object sender, MouseEventArgs e) {
 			FixListBoxPosition();
 		}
@@ -247,14 +214,10 @@ namespace Editor {
 
 		private static void window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
 			if(Help.lastHelpThread!=null) {
-//				if(Help.lastHelpThread.ThreadState==ThreadState.Suspended) {
-//					Help.lastHelpThread.Resume();
-//				}
 				if(Help.lastHelpThread.ThreadState==ThreadState.Suspended) {
 					Help.lastHelpThread.Resume();
 				}
-				Help.lastHelpThread.Abort(); // fails when debugging
-				//				Help.lastHelpThread.Interrupt();
+				Help.lastHelpThread.Abort();
 				Help.lastHelpThread=null;
 			}
 		}
@@ -339,10 +302,8 @@ namespace Editor {
 			}
 		}
 	}
-	// rework
 	public abstract class Help {
 		public static bool helpInvalidated=false;
-		//public static ToolTip tip=new ToolTip();
 		public static Node lastSelectedNode;
 		public static RichTextBox toolTip=new RichTextBox();
 		public static GListBox listBox=new GListBox();
@@ -352,7 +313,7 @@ namespace Editor {
 			listBox.Font=new Font("Automatic",8.00F);
 			listBox.BorderStyle=BorderStyle.Fixed3D;
 			listBox.TabStop=false;
-			listBox.GotFocus+=new EventHandler(listBox_GotFocus);
+			//listBox.GotFocus+=new EventHandler(listBox_GotFocus);
 			listBox.DoubleClick+=new EventHandler(listBox_DoubleClick);
 			toolTip.Visible=false;
 			toolTip.WordWrap=true;
@@ -425,19 +386,17 @@ namespace Editor {
 					}
 				}
 			}
-			string newText=text.Replace(Environment.NewLine,"").//Replace("\n","").
+			string newText=text.Replace(Environment.NewLine,"").
 				Replace("    "," ").Replace("   "," ").Replace("  "," ");
 			newText=newText.Replace("\n ","\n");
 			toolTip.BeginInvoke(new IndexChangedDelegate(IndexChangedBackThread),new object[] {newText});
 		}
 		private delegate void IndexChangedDelegate(string newText);
-		//private static string _newText;
 		private static void IndexChangedBackThread(string newText) {
 			if(newText!="") {
 				Size size=toolTip.CreateGraphics().MeasureString(newText,toolTip.Font).ToSize();
 				toolTip.Height=size.Height+10;
 				toolTip.Width=size.Width+15;
-				//			toolTip.Width=newText.Length*3;
 
 				if(newText!="\n") {
 					toolTip.Visible=true;
@@ -450,76 +409,6 @@ namespace Editor {
 			}
 			Editor.editor.Focus();
 		}
-//		private static void listBox_SelectedIndexChanged(object sender, EventArgs e) {
-//			if(listBox.SelectedItem==null) {
-//				return;
-//			}
-//			string text="";
-//			object member;
-//			MemberInfo[] members=new MemberInfo[]{};
-//			if(lastObject is NetClass) {
-//				members=((NetClass)lastObject).type.GetMember(((GListBoxItem)listBox.SelectedItem).Text,
-//					BindingFlags.Public|BindingFlags.Static);
-//				text=Help.GetDoc(members[0],true,true,false);
-//				member=members[0];
-//			}
-//			else if(!(lastObject is Map)) {
-//				members=lastObject.GetType().GetMember(((GListBoxItem)listBox.SelectedItem).Text,
-//					BindingFlags.Public|BindingFlags.Instance);
-//				text=Help.GetDoc(members[0],true,true,false);
-//				member=members[0];
-//			}
-//			else {
-//				//FIX here
-//				object key=((GListBoxItem)listBox.SelectedItem).Object;
-//				member=((Map)lastObject)[key];
-//				if(member is NetMethod) {
-//					MethodBase method=((NetMethod)member).methods[0];
-//					if(method is MethodInfo) {
-//						text+=((MethodInfo)method).ReturnType+" ";
-//					}
-//					text+=((MethodBase)method).Name;
-//					text+=" (";
-//					foreach(ParameterInfo parameter in ((MethodBase)method).GetParameters()) {
-//						text+=parameter.ParameterType+" "+parameter.Name+",";
-//					}
-//					if(((MethodBase)method).GetParameters().Length>0) {
-//						text=text.Remove(text.Length-1,1);
-//					}
-//					text+=")";
-//					text+=Help.GetDoc(((NetMethod)member).methods[0],true,true,false);
-//				}
-//				else if(member is NetClass) {
-//					text+=Help.GetDoc(((NetClass)member).type,true,true,false);
-//				}
-//				else {
-//					if(! (member is Map)) {
-//						text+=member.GetType().FullName;
-//					}
-//				}
-//			}
-//			string newText=text.Replace(Environment.NewLine,"").//Replace("\n","").
-//				Replace("    "," ").Replace("   "," ").Replace("  "," ");
-//			newText=newText.Replace("\n ","\n");
-//
-//			if(newText!="") {
-//				Size size=toolTip.CreateGraphics().MeasureString(newText,toolTip.Font).ToSize();
-//				toolTip.Height=size.Height+10;
-//				toolTip.Width=size.Width+15;
-//				//			toolTip.Width=newText.Length*3;
-//
-//				if(newText!="\n") {
-//					toolTip.Visible=true;
-//				}
-//				int x=listBox.Right+2;
-//				int y=listBox.Top;
-//				y+=(listBox.SelectedIndex-listBox.TopIndex)*listBox.ItemHeight;
-//				toolTip.Location=new Point(x,y);
-//				toolTip.Text=newText;
-//			}
-//			Editor.editor.Focus();
-//		}
-		// fix?? rethink
 		private static string CompleteText(string text) {
 			string completedText=text;
 			Queue chars=new Queue();
@@ -625,9 +514,6 @@ namespace Editor {
 						text=text.Remove(text.Length-1,1);
 					}
 					text+=")";
-					//						if(memberInfos.Length>1) {
-					//							text+=" ( +"+(memberInfos.Length-1)+" overloads)";
-					//						}
 				}
 				else if(memberInfo is PropertyInfo) {
 					text+=((PropertyInfo)memberInfo).PropertyType+" "+((PropertyInfo)memberInfo).Name;
@@ -672,10 +558,8 @@ namespace Editor {
 			}
 			text+=summary+"\n";
 			if(isParameters) {
-				//text+="\nparameters: \n";
 				foreach(XmlNode node in parameters) {
 					text+=node.Attributes["name"].Value+": "+node.InnerXml+"\n";
-					//						text+=node.Attributes["name"].Value+": "+node.InnerXml;
 				}
 			}
 			return text.Replace("<para>","").Replace("\r\n","").Replace("</para>","").Replace("<see cref=\"","")
@@ -777,7 +661,6 @@ namespace Editor {
 			return doc.SelectSingleNode(xpath);
 		}
 		public static void OnBreak(object obj) {
-//			object obj=((BreakException)e).obj;
 			listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
 		}
 
@@ -793,7 +676,7 @@ namespace Editor {
 							else if(overloadIndex<0) {
 								overloadIndex=overloadNumber-1;
 							}
-							text=Help.GetDoc(((NetMethod)obj).methods[overloadIndex],true,true,true);//(true);;
+							text=Help.GetDoc(((NetMethod)obj).methods[overloadIndex],true,true,true);
 
 						}
 						else if (obj is NetClass) {
@@ -804,7 +687,7 @@ namespace Editor {
 							else if(overloadIndex<0) {
 								overloadIndex=overloadNumber-1;
 							}
-							text=Help.GetDoc(((NetClass)obj).constructor.methods[overloadIndex],true,true,true);//(true);
+							text=Help.GetDoc(((NetClass)obj).constructor.methods[overloadIndex],true,true,true);
 						}
 						else if(obj is Map) {
 							text=FunctionHelp((Map)obj);
@@ -951,9 +834,7 @@ namespace Editor {
 				lastHelpThread.Start();
 				return;
 			}
-//			if(lastSelectedNode==Editor.SelectedNode) {
-				Interpreter.redoStatement=true;
-//			}
+			Interpreter.redoStatement=true;
 			Map map;
 			try {
 				map=Interpreter.Mapify(
@@ -974,50 +855,11 @@ namespace Editor {
 			map.compiled=Interpreter.lastProgram.compiled;
 			Interpreter.lastProgram=map;
 			lastHelpThread.Resume();
-
-			//Help.listBox.Visible=true;
 		}
 		delegate void ShowHelpDelegate(object obj);
 		private static Node _selectedNode;
 		private static string _selectedNodeText;
 		private static bool _isCall;
-//		private static Exception _e;
-//		public static void ShowHelpOtherThread() {
-//			try {
-//				Interpreter.Run(
-//					new StringReader(
-//					SerializeTreeView(
-//					Editor.SelectedNode.FileNode,
-//					"",
-//					CompleteText(_selectedNodeText),
-//					Editor.SelectedNode
-//					)),
-//					new Map());
-//			}
-//			catch(Exception e) {
-//				while(!(e.InnerException==null || e is BreakException)) {
-//					e=e.InnerException;
-//				}
-//				if(e is BreakException) {
-//					if(((BreakException)e).obj==null) {
-//						int asdf=0;
-////						toolTip.Visible=true;
-////						toolTip.Text="null";
-//					}
-//					else {
-//						object obj=((BreakException)e).obj;
-//						listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
-//					}
-//				}
-//
-////			}
-////			else {
-////				toolTip.Visible=true;
-////				toolTip.Text=e.Message;
-////			}
-//				//_e=e;
-//			}
-//		}
 		public static void ShowHelpOtherThread() { //still necessary?
 			try {
 				Interpreter.Run(
@@ -1034,24 +876,7 @@ namespace Editor {
 				Help.lastHelpThread.Abort();
 				Help.lastHelpThread=null;
 			}
-//			}
-//			catch(Exception e) {
-//				while(!(e.InnerException==null || e is BreakException)) {
-//					e=e.InnerException;
-//				}
-//				if(e is BreakException) {
-//					if(((BreakException)e).obj==null) {
-//						int asdf=0;
-//					}
-//					else {
-//						object obj=((BreakException)e).obj;
-//						listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
-//					}
-//				}
-//			}
 		}
-
-		// TODO
 		private static string FunctionHelp(Map map) {
 			string text="";
 			ArrayList args=ExtractMetaFunctionArguments((IExpression)map.Compile());
@@ -1069,7 +894,6 @@ namespace Editor {
 			}
 			return text;
 		}
-		// maybe not exact enough
 		public static bool IsFunctionCall(string spacedCleanText) {
 			string text=spacedCleanText.Trim(' ');
 
@@ -1120,10 +944,10 @@ namespace Editor {
 			}
 			return keys;
 		}
-
-		private static void listBox_GotFocus(object sender, EventArgs e) {
-			//Editor.editor.Focus();
-		}
+//
+//		private static void listBox_GotFocus(object sender, EventArgs e) {
+//			//Editor.editor.Focus();
+//		}
 
 		private static void listBox_DoubleClick(object sender, EventArgs e) {
 			new CompleteWord().Run();
@@ -1204,36 +1028,24 @@ namespace Editor {
 	public class AbortHelpThread:Command {
 		public override void Do() {
 			if(Help.lastHelpThread!=null) {
-//				Help.lastHelpThread.Abort();
 				if(Help.lastHelpThread.IsAlive) {
 					Help.lastHelpThread.Resume();
 					Help.lastHelpThread.Abort();
-					//				Help.lastHelpThread.Interrupt();
 					Help.lastHelpThread=null;
 				}
 			}
 		}
 	}
 	public class NextOverload:Command {
-//		public bool Require() {
-//			return Help.overloadIndex<Help.overloadNumber;
-//		}
 		public override void Do() {
 			Help.overloadIndex++;
 			Help.ShowHelpBackThread(Help.lastObject);
-//			Help.ShowHelp(Editor.SelectedNode,Editor.SelectedNode.CleanText.Substring(
-//				0,Editor.SelectedNode.CursorPosition).TrimEnd('(')+".break",true);		
 		}
 	}
 	public class PreviousOverload:Command {
-//		public bool Require() {
-////			return Help.overloadIndex>0;
-//		}
 		public override void Do() {
 			Help.overloadIndex--;
 			Help.ShowHelpBackThread(Help.lastObject);
-//			Help.ShowHelp(Editor.SelectedNode,Editor.SelectedNode.CleanText.Substring(
-//				0,Editor.SelectedNode.CursorPosition).TrimEnd('(')+".break",true);
 		}
 	}
 	public class Undo:Command {
@@ -1303,7 +1115,6 @@ namespace Editor {
 			}
 			foreach(FileNode fileNode in Editor.editor.Nodes) {
 				if(fileNode.CleanText==path) {
-					//Help.tip.SetToolTip(Editor.editor,"The file is already open.");
 					return false;
 				}
 			}
