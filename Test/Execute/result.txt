@@ -4,45 +4,30 @@ IEnumerable
       "meta"
     Value (NetClass):
         Entry (DictionaryEntry):
-    Key (String):
-      "Write"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Void Write(System.String)"
-      savedMethod (RuntimeMethodInfo):
-        "Void Write(System.String)"
+    Key (Integer):
+      "1"
+    Value (String):
+      "ImpliedAutokey"
   Entry (DictionaryEntry):
     Key (String):
-      "Read"
+      "Load"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "System.String Read()"
+            "Void Load()"
       savedMethod (RuntimeMethodInfo):
-        "System.String Read()"
+        "Void Load()"
   Entry (DictionaryEntry):
     Key (String):
-      "And"
+      "BinaryOr"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Boolean And(Boolean, Boolean)"
+            "System.Enum BinaryOr(System.Enum[])"
       savedMethod (RuntimeMethodInfo):
-        "Boolean And(Boolean, Boolean)"
-  Entry (DictionaryEntry):
-    Key (String):
-      "Or"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Boolean Or(Boolean, Boolean)"
-      savedMethod (RuntimeMethodInfo):
-        "Boolean Or(Boolean, Boolean)"
+        "System.Enum BinaryOr(System.Enum[])"
   Entry (DictionaryEntry):
     Key (String):
       "Not"
@@ -55,6 +40,16 @@ IEnumerable
         "Boolean Not(Boolean)"
   Entry (DictionaryEntry):
     Key (String):
+      "Or"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Boolean Or(Boolean, Boolean)"
+      savedMethod (RuntimeMethodInfo):
+        "Boolean Or(Boolean, Boolean)"
+  Entry (DictionaryEntry):
+    Key (String):
       "Add"
     Value (NetMethod):
       methods (MethodInfo[]):
@@ -63,16 +58,6 @@ IEnumerable
             "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
       savedMethod (RuntimeMethodInfo):
         "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
-  Entry (DictionaryEntry):
-    Key (String):
-      "Subtract"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
-      savedMethod (RuntimeMethodInfo):
-        "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
       "Multiply"
@@ -85,6 +70,46 @@ IEnumerable
         "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
+      "IsMap"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Boolean IsMap(System.Object)"
+      savedMethod (RuntimeMethodInfo):
+        "Boolean IsMap(System.Object)"
+  Entry (DictionaryEntry):
+    Key (String):
+      "If"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Void If()"
+      savedMethod (RuntimeMethodInfo):
+        "Void If()"
+  Entry (DictionaryEntry):
+    Key (String):
+      "For"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Meta.Types.Map For()"
+      savedMethod (RuntimeMethodInfo):
+        "Meta.Types.Map For()"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Switch"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Void Switch()"
+      savedMethod (RuntimeMethodInfo):
+        "Void Switch()"
+  Entry (DictionaryEntry):
+    Key (String):
       "Divide"
     Value (NetMethod):
       methods (MethodInfo[]):
@@ -93,16 +118,6 @@ IEnumerable
             "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
       savedMethod (RuntimeMethodInfo):
         "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
-  Entry (DictionaryEntry):
-    Key (String):
-      "Smaller"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
-      savedMethod (RuntimeMethodInfo):
-        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
       "Greater"
@@ -125,34 +140,54 @@ IEnumerable
         "Boolean Equal(System.Object, System.Object)"
   Entry (DictionaryEntry):
     Key (String):
-      "BinaryOr"
+      "Smaller"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "System.Enum BinaryOr(System.Enum[])"
+            "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
       savedMethod (RuntimeMethodInfo):
-        "System.Enum BinaryOr(System.Enum[])"
+        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
-      "For"
+      "Subtract"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Meta.Types.Map For()"
+            "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
       savedMethod (RuntimeMethodInfo):
-        "Meta.Types.Map For()"
+        "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
-      "Load"
+      "And"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Void Load()"
+            "Boolean And(Boolean, Boolean)"
       savedMethod (RuntimeMethodInfo):
-        "Void Load()"
+        "Boolean And(Boolean, Boolean)"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Write"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Void Write(System.String)"
+      savedMethod (RuntimeMethodInfo):
+        "Void Write(System.String)"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Read"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "System.String Read()"
+      savedMethod (RuntimeMethodInfo):
+        "System.String Read()"
   Entry (DictionaryEntry):
     Key (String):
       "Each"
@@ -163,41 +198,6 @@ IEnumerable
             "Meta.Types.Map Each()"
       savedMethod (RuntimeMethodInfo):
         "Meta.Types.Map Each()"
-  Entry (DictionaryEntry):
-    Key (String):
-      "IsMap"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Boolean IsMap(System.Object)"
-      savedMethod (RuntimeMethodInfo):
-        "Boolean IsMap(System.Object)"
-  Entry (DictionaryEntry):
-    Key (String):
-      "Switch"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Void Switch()"
-      savedMethod (RuntimeMethodInfo):
-        "Void Switch()"
-  Entry (DictionaryEntry):
-    Key (String):
-      "If"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Void If()"
-      savedMethod (RuntimeMethodInfo):
-        "Void If()"
-  Entry (DictionaryEntry):
-    Key (Integer):
-      "1"
-    Value (String):
-      "ImpliedAutokey"
   Entry (DictionaryEntry):
     Key (Integer):
       "2"
@@ -1320,14 +1320,6 @@ IEnumerable
       "haha"
   Entry (DictionaryEntry):
     Key (String):
-      "Test"
-    Value (NetClass):
-        Entry (DictionaryEntry):
-    Key (String):
-      "Tests"
-    Value (NetClass):
-        Entry (DictionaryEntry):
-    Key (String):
       "MemberTest"
     Value (NetClass):
         Entry (DictionaryEntry):
@@ -1356,744 +1348,5 @@ IEnumerable
     Value (NetClass):
         Entry (DictionaryEntry):
     Key (String):
-      "path"
-    Value (String):
-      ""
-  Entry (DictionaryEntry):
-    Key (String):
-      "Main"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Void Main(System.String[])"
-      savedMethod (RuntimeMethodInfo):
-        "Void Main(System.String[])"
-  Entry (DictionaryEntry):
-    Key (String):
       "testClass"
     Value (TestClass):
-  Entry (DictionaryEntry):
-    Key (String):
-      "memberTest"
-    Value (MemberTest):
-      instanceField (String):
-        "b"
-      InstanceProperty (String):
-        "b"
-  Entry (DictionaryEntry):
-    Key (String):
-      "interceptedSymbol"
-    Value (String):
-      "/hello/"
-  Entry (DictionaryEntry):
-    Key (String):
-      "positionalNoConversion"
-    Value (PositionalNoConversion):
-  Entry (DictionaryEntry):
-    Key (String):
-      "positionalNoConversionConcatenated"
-    Value (Map):
-      IEnumerable
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "1"
-          Value (Integer):
-            "114"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "2"
-          Value (Integer):
-            "115"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "3"
-          Value (Integer):
-            "116"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "4"
-          Value (Integer):
-            "109"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "5"
-          Value (Integer):
-            "110"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "6"
-          Value (Integer):
-            "111"
-  Entry (DictionaryEntry):
-    Key (String):
-      "namedNoConversion"
-    Value (NamedNoConversion):
-  Entry (DictionaryEntry):
-    Key (String):
-      "namedNoConversionConcatenated"
-    Value (Map):
-      IEnumerable
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "1"
-          Value (Integer):
-            "110"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "2"
-          Value (Integer):
-            "117"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "3"
-          Value (Integer):
-            "108"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "4"
-          Value (Integer):
-            "108"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "5"
-          Value (Integer):
-            "110"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "6"
-          Value (Integer):
-            "117"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "7"
-          Value (Integer):
-            "108"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "8"
-          Value (Integer):
-            "108"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "9"
-          Value (Integer):
-            "116"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "10"
-          Value (Integer):
-            "110"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "11"
-          Value (Integer):
-            "117"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "12"
-          Value (Integer):
-            "108"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "13"
-          Value (Integer):
-            "108"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "14"
-          Value (Integer):
-            "110"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "15"
-          Value (Integer):
-            "110"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "16"
-          Value (Integer):
-            "117"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "17"
-          Value (Integer):
-            "108"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "18"
-          Value (Integer):
-            "108"
-  Entry (DictionaryEntry):
-    Key (String):
-      "indexerNoConversion"
-    Value (IndexerNoConversion):
-  Entry (DictionaryEntry):
-    Key (String):
-      "indexerNoConversionIndexed"
-    Value (Map):
-      IEnumerable
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "1"
-          Value (Integer):
-            "97"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "2"
-          Value (Integer):
-            "98"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "3"
-          Value (Integer):
-            "99"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "4"
-          Value (Integer):
-            "104"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "5"
-          Value (Integer):
-            "105"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "6"
-          Value (Integer):
-            "104"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "7"
-          Value (Integer):
-            "105"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "8"
-          Value (Integer):
-            "117"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "9"
-          Value (Integer):
-            "110"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "10"
-          Value (Integer):
-            "99"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "11"
-          Value (Integer):
-            "104"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "12"
-          Value (Integer):
-            "97"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "13"
-          Value (Integer):
-            "110"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "14"
-          Value (Integer):
-            "103"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "15"
-          Value (Integer):
-            "101"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "16"
-          Value (Integer):
-            "100"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "17"
-          Value (Integer):
-            "89"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "18"
-          Value (Integer):
-            "117"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "19"
-          Value (Integer):
-            "110"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "20"
-          Value (Integer):
-            "99"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "21"
-          Value (Integer):
-            "104"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "22"
-          Value (Integer):
-            "97"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "23"
-          Value (Integer):
-            "110"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "24"
-          Value (Integer):
-            "103"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "25"
-          Value (Integer):
-            "101"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "26"
-          Value (Integer):
-            "100"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "27"
-          Value (Integer):
-            "90"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "28"
-          Value (Integer):
-            "97"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "29"
-          Value (Integer):
-            "98"
-        Entry (DictionaryEntry):
-          Key (Integer):
-            "30"
-          Value (Integer):
-            "99"
-  Entry (DictionaryEntry):
-    Key (String):
-      "interceptedSymbol2"
-    Value (Integer):
-      "1"
-  Entry (DictionaryEntry):
-    Key (String):
-      "k"
-    Value (String):
-      "hello"
-  Entry (DictionaryEntry):
-    Key (String):
-      "xyz"
-    Value (String):
-      "w"
-  Entry (DictionaryEntry):
-    Key (String):
-      "literalFunction"
-    Value (Map):
-      IEnumerable
-        Entry (DictionaryEntry):
-          Key (String):
-            "literal"
-          Value (String):
-            "5"
-  Entry (DictionaryEntry):
-    Key (String):
-      "literalFunctionResult"
-    Value (Integer):
-      "5"
-  Entry (DictionaryEntry):
-    Key (String):
-      "function"
-    Value (Map):
-      IEnumerable
-        Entry (DictionaryEntry):
-          Key (String):
-            "program"
-          Value (Map):
-            IEnumerable
-              Entry (DictionaryEntry):
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    Entry (DictionaryEntry):
-                      Key (String):
-                        "key"
-                      Value (Map):
-                        IEnumerable
-                          Entry (DictionaryEntry):
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      Entry (DictionaryEntry):
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "this"
-                    Entry (DictionaryEntry):
-                      Key (String):
-                        "value"
-                      Value (Map):
-                        IEnumerable
-                          Entry (DictionaryEntry):
-                            Key (String):
-                              "literal"
-                            Value (String):
-                              "simple function this"
-  Entry (DictionaryEntry):
-    Key (String):
-      "callFunction"
-    Value (Map):
-      IEnumerable
-        Entry (DictionaryEntry):
-          Key (String):
-            "select"
-          Value (Map):
-            IEnumerable
-              Entry (DictionaryEntry):
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    Entry (DictionaryEntry):
-                      Key (String):
-                        "literal"
-                      Value (String):
-                        "function"
-  Entry (DictionaryEntry):
-    Key (String):
-      "callFunctionResult"
-    Value (Map):
-      IEnumerable
-        Entry (DictionaryEntry):
-          Key (String):
-            "program"
-          Value (Map):
-            IEnumerable
-              Entry (DictionaryEntry):
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    Entry (DictionaryEntry):
-                      Key (String):
-                        "key"
-                      Value (Map):
-                        IEnumerable
-                          Entry (DictionaryEntry):
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      Entry (DictionaryEntry):
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "this"
-                    Entry (DictionaryEntry):
-                      Key (String):
-                        "value"
-                      Value (Map):
-                        IEnumerable
-                          Entry (DictionaryEntry):
-                            Key (String):
-                              "literal"
-                            Value (String):
-                              "simple function this"
-  Entry (DictionaryEntry):
-    Key (String):
-      "delayedFunction"
-    Value (Map):
-      IEnumerable
-        Entry (DictionaryEntry):
-          Key (String):
-            "delayed"
-          Value (Map):
-            IEnumerable
-              Entry (DictionaryEntry):
-                Key (String):
-                  "program"
-                Value (Map):
-                  IEnumerable
-                    Entry (DictionaryEntry):
-                      Key (Integer):
-                        "1"
-                      Value (Map):
-                        IEnumerable
-                          Entry (DictionaryEntry):
-                            Key (String):
-                              "key"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "select"
-                                  Value (Map):
-                                    IEnumerable
-                                      Entry (DictionaryEntry):
-                                        Key (Integer):
-                                          "1"
-                                        Value (Map):
-                                          IEnumerable
-                                            Entry (DictionaryEntry):
-                                              Key (String):
-                                                "literal"
-                                              Value (String):
-                                                "x"
-                          Entry (DictionaryEntry):
-                            Key (String):
-                              "value"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "y"
-  Entry (DictionaryEntry):
-    Key (String):
-      "delayedFunctionResult"
-    Value (Map):
-      IEnumerable
-        Entry (DictionaryEntry):
-          Key (String):
-            "program"
-          Value (Map):
-            IEnumerable
-              Entry (DictionaryEntry):
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    Entry (DictionaryEntry):
-                      Key (String):
-                        "key"
-                      Value (Map):
-                        IEnumerable
-                          Entry (DictionaryEntry):
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      Entry (DictionaryEntry):
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "x"
-                    Entry (DictionaryEntry):
-                      Key (String):
-                        "value"
-                      Value (Map):
-                        IEnumerable
-                          Entry (DictionaryEntry):
-                            Key (String):
-                              "literal"
-                            Value (String):
-                              "y"
-  Entry (DictionaryEntry):
-    Key (String):
-      "value"
-    Value (String):
-      "xyz"
-  Entry (DictionaryEntry):
-    Key (String):
-      "selectionFunction"
-    Value (Map):
-      IEnumerable
-        Entry (DictionaryEntry):
-          Key (String):
-            "select"
-          Value (Map):
-            IEnumerable
-              Entry (DictionaryEntry):
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    Entry (DictionaryEntry):
-                      Key (String):
-                        "literal"
-                      Value (String):
-                        "value"
-  Entry (DictionaryEntry):
-    Key (String):
-      "selectionFunctionResult"
-    Value (String):
-      "xyz"
-  Entry (DictionaryEntry):
-    Key (String):
-      "bigInteger"
-    Value (Integer):
-      "89383838383832839123497123047217340712340720347072304702340720347"
-  Entry (DictionaryEntry):
-    Key (String):
-      "upperLevel"
-    Value (String):
-      "changed"
-  Entry (DictionaryEntry):
-    Key (String):
-      "ChangeUpperLevel"
-    Value (Map):
-      IEnumerable
-        Entry (DictionaryEntry):
-          Key (String):
-            "program"
-          Value (Map):
-            IEnumerable
-              Entry (DictionaryEntry):
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    Entry (DictionaryEntry):
-                      Key (String):
-                        "key"
-                      Value (Map):
-                        IEnumerable
-                          Entry (DictionaryEntry):
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      Entry (DictionaryEntry):
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "search"
-                                Entry (DictionaryEntry):
-                                  Key (Integer):
-                                    "2"
-                                  Value (Map):
-                                    IEnumerable
-                                      Entry (DictionaryEntry):
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "upperLevel"
-                    Entry (DictionaryEntry):
-                      Key (String):
-                        "value"
-                      Value (Map):
-                        IEnumerable
-                          Entry (DictionaryEntry):
-                            Key (String):
-                              "literal"
-                            Value (String):
-                              "changed"
-  Entry (DictionaryEntry):
-    Key (Integer):
-      "4"
-    Value (Map):
-      IEnumerable
-  Entry (DictionaryEntry):
-    Key (String):
-      "staticEventChanged"
-    Value (Boolean):
-      "True"
-  Entry (DictionaryEntry):
-    Key (String):
-      "staticEvent"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "System.Object Invoke(System.Object)"
-      savedMethod (RuntimeMethodInfo):
-        "System.Object Invoke(System.Object)"
-  Entry (DictionaryEntry):
-    Key (String):
-      "staticEventResult"
-    Value (TestClass):
-  Entry (DictionaryEntry):
-    Key (String):
-      "instanceEventChanged"
-    Value (Boolean):
-      "True"
-  Entry (DictionaryEntry):
-    Key (String):
-      "instanceEvent"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          Entry (RuntimeMethodInfo):
-            "Int32 Invoke(Int32)"
-      savedMethod (RuntimeMethodInfo):
-        "Int32 Invoke(Int32)"
-  Entry (DictionaryEntry):
-    Key (String):
-      "instanceEventResult"
-    Value (Integer):
-      "5"
-  Entry (DictionaryEntry):
-    Key (String):
-      "one"
-    Value (Integer):
-      "1"
-  Entry (DictionaryEntry):
-    Key (String):
-      "two"
-    Value (Integer):
-      "2"
-  Entry (DictionaryEntry):
-    Key (String):
-      "firstIf"
-    Value (String):
-      "then"
-  Entry (DictionaryEntry):
-    Key (String):
-      "secondIf"
-    Value (String):
-      "else"
-  Entry (DictionaryEntry):
-    Key (String):
-      "thenText"
-    Value (String):
-      "then"
-  Entry (DictionaryEntry):
-    Key (String):
-      "firstSwitch"
-    Value (Integer):
-      "50020202029029233344"
-  Entry (DictionaryEntry):
-    Key (String):
-      "bigNumber"
-    Value (Integer):
-      "50020202029029233344"
-  Entry (DictionaryEntry):
-    Key (String):
-      "secondSwitch"
-    Value (String):
-      "default"

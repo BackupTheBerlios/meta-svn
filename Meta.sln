@@ -11,6 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta", "Meta\Meta.csproj", 
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardLibrary", "StandardLibrary\StandardLibrary.csproj", "{0BE1545A-E024-4458-9752-CBB85C5AC6AE}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClasses", "TestClasses\TestClasses.csproj", "{0BFC676A-F509-49CF-8F51-A800361F6F5E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -43,6 +51,22 @@ Global
 		{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}.Release.Build.0 = Release|.NET
 		{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}.Test.ActiveCfg = Release|.NET
 		{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}.Test.Build.0 = Release|.NET
+		{0BE1545A-E024-4458-9752-CBB85C5AC6AE}.Debug.ActiveCfg = Debug|.NET
+		{0BE1545A-E024-4458-9752-CBB85C5AC6AE}.Debug.Build.0 = Debug|.NET
+		{0BE1545A-E024-4458-9752-CBB85C5AC6AE}.Interactive.ActiveCfg = Release|.NET
+		{0BE1545A-E024-4458-9752-CBB85C5AC6AE}.Interactive.Build.0 = Release|.NET
+		{0BE1545A-E024-4458-9752-CBB85C5AC6AE}.Release.ActiveCfg = Release|.NET
+		{0BE1545A-E024-4458-9752-CBB85C5AC6AE}.Release.Build.0 = Release|.NET
+		{0BE1545A-E024-4458-9752-CBB85C5AC6AE}.Test.ActiveCfg = Release|.NET
+		{0BE1545A-E024-4458-9752-CBB85C5AC6AE}.Test.Build.0 = Release|.NET
+		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Debug.ActiveCfg = Debug|.NET
+		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Debug.Build.0 = Debug|.NET
+		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Interactive.ActiveCfg = Release|.NET
+		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Interactive.Build.0 = Release|.NET
+		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Release.ActiveCfg = Release|.NET
+		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Release.Build.0 = Release|.NET
+		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Test.ActiveCfg = Release|.NET
+		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Test.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

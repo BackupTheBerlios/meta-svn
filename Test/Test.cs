@@ -28,16 +28,15 @@ using antlr;
 
 namespace Test {
 	class Test {
-		public static string path="";//Path.Combine("..","..");
+		public static string path="";
 		public static void Main(string[] args) {
-//			Interpreter.Run("spiel.mila",new Map());
 			Directory.SetCurrentDirectory(
 				".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
 			TestExecuter test=new TestExecuter(typeof(Tests),path);
 		}
 	}
 	public class Tests {
-		private static string filename=@"basicTest.meta";//Path.Combine("..",Path.Combine("..",));
+		private static string filename=@"basicTest.meta";
 		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
 			public class ParseAst:MetaTest {
 			public override object GetTestResult() {
@@ -63,7 +62,6 @@ namespace Test {
 				argument[new Integer(1)]=Interpreter.String("first arg");
 				argument[new Integer(2)]=Interpreter.String("second=arg");
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
-				//return null;
 			}
 		}
 	}
@@ -91,9 +89,6 @@ namespace Test {
 	public delegate int IntEvent (int intArg);
 	public delegate object NormalEvent (object sender);
 	public class TestClass {
-		//	static TestClass() {
-		//		staticEvent+=new NormalEvent(TestClass_staticEvent);
-		//	}
 		public TestClass(){
 		}
 		public event IntEvent instanceEvent;
@@ -138,7 +133,6 @@ namespace Test {
 			return (string)arg[1]+(string)arg["b"]+(string)arg["c"]+this.x+this.y+this.z;
 		}
 	}
-
 	public class IndexerNoConversion:TestClass {
 		public string this[string a] {
 			get {
