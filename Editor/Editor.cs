@@ -25,8 +25,24 @@ using Meta.Types;
 using Meta.Execution;
 using System.Globalization;
 using System.Threading;
+using System.Xml;
+using System.Runtime.InteropServices;
 
 namespace Editor {
+//	public class EditorTreeView:TreeView {
+//		protected override void DefWndProc(ref Message m) {
+//			Editor.FixListBoxPosition();
+//			base.DefWndProc (ref m);
+//			this.sc
+//		}
+//		protected override 
+//
+//		protected override void OnPaint(PaintEventArgs e) {
+//			Editor.FixListBoxPosition();
+//			base.OnPaint (e);
+//		}
+//
+//	}
 	public class Editor	{
 		[STAThread]
 		public static void Main() {
@@ -71,6 +87,33 @@ namespace Editor {
 				selectedNode=value;
 			}
 		}
+		public static void FixListBoxPosition() {
+			Graphics graphics=Editor.window.CreateGraphics();
+			TreeNode selected=Editor.SelectedNode;
+			if(selected==null) {
+				return;
+			}
+			int depth=0;
+			while(selected.Parent!=null) {
+				selected=selected.Parent;
+				depth++;
+			}
+			int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
+				Convert.ToInt32(
+				graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
+
+			int y=5;
+			TreeNode node=Editor.SelectedNode;
+			while(node!=null) {
+				if(node.Bounds.Y<0) {
+					break;
+				}
+				y+=node.Bounds.Height;
+				node=node.PrevVisibleNode;
+
+			}
+			Help.listBox.Location=new Point(x,y);
+		}
 		static Editor() {
 			editor.ShowLines=false;
 			editor.ShowPlusMinus=false;
@@ -84,6 +127,13 @@ namespace Editor {
 			editor.MouseDown+=new MouseEventHandler(MouseDown);
 			editor.KeyPress+=new KeyPressEventHandler(KeyPress);
 			editor.BeforeSelect+=new TreeViewCancelEventHandler(BeforeSelect);
+			editor.MouseWheel+=new MouseEventHandler(editor_MouseWheel);
+			editor.MouseEnter+=new EventHandler(editor_MouseEnter);
+//			editor.MouseUp+=new MouseEventHandler(editor_MouseUp);
+//			editor.MouseWheel+=new MouseEventHandler(editor_MouseWheel);
+//			editor.Layout+=new LayoutEventHandler(editor_Layout);
+//			editor.KeyUp+=new KeyEventHandler(editor_KeyUp);
+//			editor.Invalidated+=new InvalidateEventHandler(editor_Invalidated);
 
 			functionHelpKeyBindings[Keys.Alt|Keys.L]=typeof(PreviousOverload);
 			functionHelpKeyBindings[Keys.Alt|Keys.K]=typeof(NextOverload);
@@ -147,6 +197,10 @@ namespace Editor {
 				((Command)((Type)helpKeyBindings[e.KeyData]).GetConstructor(new Type[] {})
 					.Invoke(new object[]{})).Run();
 			}
+			else if(Help.toolTip.Visible && functionHelpKeyBindings.ContainsKey(e.KeyData)) {
+				((Command)((Type)functionHelpKeyBindings[e.KeyData]).GetConstructor(new Type[] {})
+					.Invoke(new object[]{})).Run();
+			}
 			else if(keyBindings.ContainsKey(e.KeyData)) {
 				ConstructorInfo constructor=((Type)keyBindings[e.KeyData]).GetConstructor(new Type[]{});
 				((Command)constructor.Invoke(new object[]{})).Run();
@@ -166,6 +220,30 @@ namespace Editor {
 		}
 		public static void BeforeSelect(object sender,TreeViewCancelEventArgs e) {
 			e.Cancel=true;
+		}
+
+//		private static void editor_MouseUp(object sender, MouseEventArgs e) {
+//			FixListBoxPosition();
+//		}
+//
+//		private static void editor_MouseWheel(object sender, MouseEventArgs e) {
+//			FixListBoxPosition();
+//		}
+////
+////		private static void editor_KeyUp(object sender, KeyEventArgs e) {
+////			FixListBoxPosition();
+//		//		}
+//
+//		private static void editor_Layout(object sender, LayoutEventArgs e) {
+//			FixListBoxPosition();
+		//		}
+
+		private static void editor_MouseWheel(object sender, MouseEventArgs e) {
+			FixListBoxPosition();
+		}
+
+		private static void editor_MouseEnter(object sender, EventArgs e) {
+			FixListBoxPosition();
 		}
 	}
 	public class Window:Form {
@@ -294,13 +372,13 @@ namespace Editor {
 			if(lastObject is NetClass) {
 				members=((NetClass)lastObject).type.GetMember(((GListBoxItem)listBox.SelectedItem).Text,
 					BindingFlags.Public|BindingFlags.Static);
-				text=Interpreter.GetDoc(members[0],true,true,false);
+				text=Help.GetDoc(members[0],true,true,false);
 				member=members[0];
 			}
 			else if(!(lastObject is Map)) {
 				members=lastObject.GetType().GetMember(((GListBoxItem)listBox.SelectedItem).Text,
 					BindingFlags.Public|BindingFlags.Instance);
-				text=Interpreter.GetDoc(members[0],true,true,false);
+				text=Help.GetDoc(members[0],true,true,false);
 				member=members[0];
 			}
 			else {
@@ -321,10 +399,10 @@ namespace Editor {
 						text=text.Remove(text.Length-1,1);
 					}
 					text+=")";
-					text+=Interpreter.GetDoc(((NetMethod)member).methods[0],true,true,false);
+					text+=Help.GetDoc(((NetMethod)member).methods[0],true,true,false);
 				}
 				else if(member is NetClass) {
-					text+=Interpreter.GetDoc(((NetClass)member).type,true,true,false);
+					text+=Help.GetDoc(((NetClass)member).type,true,true,false);
 				}
 				else {
 					if(! (member is Map)) {
@@ -367,13 +445,13 @@ namespace Editor {
 //			if(lastObject is NetClass) {
 //				members=((NetClass)lastObject).type.GetMember(((GListBoxItem)listBox.SelectedItem).Text,
 //					BindingFlags.Public|BindingFlags.Static);
-//				text=Interpreter.GetDoc(members[0],true,true,false);
+//				text=Help.GetDoc(members[0],true,true,false);
 //				member=members[0];
 //			}
 //			else if(!(lastObject is Map)) {
 //				members=lastObject.GetType().GetMember(((GListBoxItem)listBox.SelectedItem).Text,
 //					BindingFlags.Public|BindingFlags.Instance);
-//				text=Interpreter.GetDoc(members[0],true,true,false);
+//				text=Help.GetDoc(members[0],true,true,false);
 //				member=members[0];
 //			}
 //			else {
@@ -394,10 +472,10 @@ namespace Editor {
 //						text=text.Remove(text.Length-1,1);
 //					}
 //					text+=")";
-//					text+=Interpreter.GetDoc(((NetMethod)member).methods[0],true,true,false);
+//					text+=Help.GetDoc(((NetMethod)member).methods[0],true,true,false);
 //				}
 //				else if(member is NetClass) {
-//					text+=Interpreter.GetDoc(((NetClass)member).type,true,true,false);
+//					text+=Help.GetDoc(((NetClass)member).type,true,true,false);
 //				}
 //				else {
 //					if(! (member is Map)) {
@@ -474,22 +552,381 @@ namespace Editor {
 		}
 		public static int overloadNumber=0;
 		public static int overloadIndex=0;
-		public static void ShowHelpBackThread(Exception e) {
-			if(e is BreakException) {
-				if(((BreakException)e).obj==null) {
-					toolTip.Visible=true;
-					toolTip.Text="null";
+//		public static void ShowHelpBackThread(Exception e) {
+//			if(e is BreakException) {
+//				if(((BreakException)e).obj==null) {
+//					toolTip.Visible=true;
+//					toolTip.Text="null";
+//				}
+//				else {
+//					object obj=((BreakException)e).obj;
+//					lastObject=obj;
+//					if(_isCall) {
+//						string text="";
+//						if(obj is NetMethod) {
+//							Help.overloadNumber=((NetMethod)obj).methods.Length;
+//							text=Help.GetDoc(((NetMethod)obj).methods[overloadIndex],true,true,true);//(true);;
+//						}
+//						else if (obj is NetClass) {
+//							Help.overloadNumber=((NetClass)obj).constructor.methods.Length;
+//							text=Help.GetDoc(((NetClass)obj).constructor.methods[overloadIndex],true,true,true);//(true);
+//						}
+//						else if(obj is Map) {
+//							text=FunctionHelp((Map)obj);
+//						}
+//						Help.toolTip.Text=text;
+//						Graphics graphics=toolTip.CreateGraphics();
+//						Size size=graphics.MeasureString(text,
+//							toolTip.Font).ToSize();
+//						toolTip.Size=new Size(size.Width+10,size.Height+13);
+//						toolTip.Visible=true;
+//
+//						TreeNode selected=Editor.SelectedNode;
+//						int depth=0;
+//						while(selected.Parent!=null) {
+//							selected=selected.Parent;
+//							depth++;
+//						}
+//						int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
+//							Convert.ToInt32(
+//							graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
+//
+//						int y=5;
+//						TreeNode node=Editor.SelectedNode;
+//						while(node!=null) {
+//							y+=node.Bounds.Height;
+//							node=node.PrevVisibleNode;
+//						}
+//						toolTip.Location=new Point(x,y);
+//
+//					}
+//					else {
+//						listBox.Items.Clear();
+//						IKeyValue keyValue=obj is IKeyValue? (IKeyValue)obj:new NetObject(obj);
+//						ArrayList keys=new ArrayList();
+//						foreach(DictionaryEntry entry in keyValue) {
+//							keys.Add(entry.Key);
+//						}
+//						keys.Sort(new HelpComparer());
+//						foreach(object key in keys) {
+//							object member;
+//							int imageIndex=0;
+//							if(lastObject is Map) {
+//								member=((Map)lastObject)[key];
+//							}
+//							else if(lastObject is NetClass) {
+//								MemberInfo[] members=((NetClass)lastObject).type.GetMember(key.ToString(),
+//									BindingFlags.Public|BindingFlags.Static);
+//								member=members[0];
+//							}
+//							else if(!(lastObject is Map)) {
+//								MemberInfo[] members=lastObject.GetType().GetMember(key.ToString(),
+//									BindingFlags.Public|BindingFlags.Instance);
+//								member=members.Length>0? members[0]:keyValue[key];
+//							}
+//							else {
+//								throw new ApplicationException("bug here");
+//							}
+//							string additionalText="";
+//
+//							if(member is Type || member is NetClass) {
+//								imageIndex=0;
+//							}
+//							else if(member is EventInfo) {
+//								imageIndex=1;
+//							}
+//							else if(member is MethodInfo || member is ConstructorInfo || member is NetMethod) {
+//								imageIndex=2;
+//							}
+//							else if(member is PropertyInfo) {
+//								imageIndex=4;
+//								object o=((PropertyInfo)member).GetValue(obj,new object[] {});
+//								if(o==null) {
+//									additionalText="null";
+//								}
+//								else {
+//									additionalText=o.ToString();
+//								}
+//							}
+//							else if(member is Map) {
+//								imageIndex=5;
+//							}
+//							else {
+//								if(member is FieldInfo) {
+//									additionalText=((FieldInfo)member).GetValue(obj).ToString();
+//								}
+//								else {
+//									additionalText=member.ToString();
+//								}
+//								imageIndex=6;
+//							}
+//							listBox.Items.Add(new GListBoxItem(key,additionalText,imageIndex));
+//						}
+//						Graphics graphics=Editor.window.CreateGraphics();
+//						TreeNode selected=Editor.SelectedNode;
+//						int depth=0;
+//						while(selected.Parent!=null) {
+//							selected=selected.Parent;
+//							depth++;
+//						}
+//						int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
+//							Convert.ToInt32(
+//							graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
+//
+//						int y=5;
+//						TreeNode node=Editor.SelectedNode;
+//						while(node!=null) {
+//							y+=node.Bounds.Height;
+//							node=node.PrevVisibleNode;
+//						}
+//						listBox.Location=new Point(x,y);
+//						int greatest=0;
+//						foreach(GListBoxItem item in listBox.Items) {
+//							int width=graphics.MeasureString(item.Text,listBox.Font).ToSize().Width;
+//							if(width>greatest){
+//								greatest=width;
+//							}								
+//						}
+//						listBox.Size=new Size(greatest+30,150<listBox.Items.Count*16+10? 150:listBox.Items.Count*16+10);
+//						listBox.Show();
+//						Editor.editor.Focus();
+//					}
+//				}
+//			}
+//			else {
+//				toolTip.Visible=true;
+//				toolTip.Text=e.Message;
+//			}
+//			Editor.window.Activate();
+//		}
+		public static string GetDoc(MemberInfo memberInfo,bool isSignature,bool isSummary,bool isParameters) {
+			XmlNode comment=GetComments(memberInfo);
+			string text="";
+			string summary="";
+			ArrayList parameters=new ArrayList();
+			if(comment==null || comment.ChildNodes==null) {
+				return "";
+			}
+			foreach(XmlNode node in comment.ChildNodes) {
+				switch(node.Name) {
+					case "summary":
+						summary=node.InnerXml;
+						break;
+					case "param":
+						parameters.Add(node);
+						break;
+					default:
+						break;
+				}
+			}
+			if(isSignature) {
+				MemberInfo[] overloaded=memberInfo.DeclaringType.GetMember(memberInfo.Name);
+				string overloadedText="";
+				if(isParameters) {
+					if(overloadNumber>1) {
+						overloadedText=(overloadIndex+1).ToString()+" of "+overloadNumber.ToString()+"   ";
+						text+=overloadedText;
+					}
+				}
+				else if(overloaded.Length>1) {
+					overloadedText=" ( +"+overloaded.Length.ToString()+" overloads)";
+				}
+
+				if(memberInfo is MethodBase) {
+					if(memberInfo is MethodInfo) {
+						text+=((MethodInfo)memberInfo).ReturnType+" ";
+					}
+					text+=((MethodBase)memberInfo).Name;
+					text+=" (";
+					bool firstParameter=true;
+					foreach(ParameterInfo parameter in ((MethodBase)memberInfo).GetParameters()) {
+						if(!firstParameter) {
+							text+=" ";
+						}
+						string parameterName=parameter.ParameterType.ToString();
+						text+=parameterName;
+						text+=" "+parameter.Name+",";
+						firstParameter=false;
+					}
+					if(((MethodBase)memberInfo).GetParameters().Length>0) {
+						text=text.Remove(text.Length-1,1);
+					}
+					text+=")";
+					//						if(memberInfos.Length>1) {
+					//							text+=" ( +"+(memberInfos.Length-1)+" overloads)";
+					//						}
+				}
+				else if(memberInfo is PropertyInfo) {
+					text+=((PropertyInfo)memberInfo).PropertyType+" "+((PropertyInfo)memberInfo).Name;
+				}
+				else if(memberInfo is FieldInfo) {
+					text+=((FieldInfo)memberInfo).FieldType+" "+((FieldInfo)memberInfo).Name;
+				}
+				else if(memberInfo is Type) {
+					if(((Type)memberInfo).IsInterface) {
+						text+="interface ";
+					}
+					else {
+						if(((Type)memberInfo).IsAbstract) {
+							text+="abstract ";
+						}
+						if(((Type)memberInfo).IsValueType) {
+							text+="struct ";
+						}
+						else {
+							text+="class ";
+						}
+					}						 
+					text+=((Type)memberInfo).Name;
+				}
+				else if(memberInfo is EventInfo) {
+					text+=((EventInfo)memberInfo).EventHandlerType.FullName+" "+
+						memberInfo.Name;
+				}
+				text=text.Replace("System.String","string").Replace("System.Object","object")
+					.Replace("System.Boolean","bool")
+					.Replace("System.Byte","byte").Replace("System.Char","char")
+					.Replace("System.Decimal","decimal").Replace("System.Double","double")
+					.Replace("System.Enum","enum").Replace("System.Single","float")
+					.Replace("System.Int32","int").Replace("System.Int64","long")
+					.Replace("System.SByte","sbyte").Replace("System.Int16","short")
+					.Replace("System.UInt32","uint").Replace("System.UInt16","ushort")
+					.Replace("System.UInt64","ulong").Replace("System.Void","void");
+				if(!isParameters) {
+					text+=overloadedText;
+				}
+				text+="\n";
+			}
+			text+=summary+"\n";
+			if(isParameters) {
+				//text+="\nparameters: \n";
+				foreach(XmlNode node in parameters) {
+					text+=node.Attributes["name"].Value+": "+node.InnerXml+"\n";
+					//						text+=node.Attributes["name"].Value+": "+node.InnerXml;
+				}
+			}
+			return text.Replace("<para>","").Replace("\r\n","").Replace("</para>","").Replace("<see cref=\"","")
+				.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
+				.Replace("M:","").Replace("E:","").Replace("     "," ").Replace("    "," ")
+				.Replace("   "," ").Replace("  "," ").Replace("\n ","\n");
+		}
+		public static string CreateParamsDescription(ParameterInfo[] parameters) {
+			string text="";
+			if(parameters.Length>0) {
+				text+="(";
+				foreach(ParameterInfo parameter in parameters) {
+					text+=parameter.ParameterType.FullName+",";
+				}
+				text=text.Remove(text.Length-1,1);
+				text+=")";
+			}
+			return text;
+		}
+		private static Hashtable comments=new Hashtable();
+		public static XmlDocument LoadAssemblyComments(Assembly assembly) {
+			if(!comments.ContainsKey(assembly)) {
+				string dllPath=assembly.Location;
+				string dllName=Path.GetFileNameWithoutExtension(dllPath);
+				string dllDirectory=Path.GetDirectoryName(dllPath);
+				
+				string assemblyDirFile=Path.Combine(dllDirectory,dllName+".xml");
+				string runtimeDirFile=Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(),dllName+".xml");
+				string fileName;
+				if(File.Exists(assemblyDirFile)) {
+					fileName=assemblyDirFile;
+				}
+				else if(File.Exists(runtimeDirFile)) {
+					fileName=runtimeDirFile;
 				}
 				else {
-					object obj=((BreakException)e).obj;
+					return null;
+				}
+				
+				XmlDocument xml=new XmlDocument();
+				xml.Load(fileName);
+				comments[assembly]=xml;
+			}
+			return (XmlDocument)comments[assembly];
+		}
+		public static XmlNode GetComments(MemberInfo mi) {
+			Type declType = (mi is Type) ? ((Type)mi) : mi.DeclaringType;
+			XmlDocument doc = LoadAssemblyComments(declType.Assembly);
+			if (doc == null) return null;
+			string xpath;
+
+			// Handle nested classes
+			string typeName = declType.FullName.Replace("+", ".");
+
+			// Based on the member type, get the correct xpath query
+			switch(mi.MemberType) {                    
+				case MemberTypes.NestedType:
+				case MemberTypes.TypeInfo:
+					xpath = "//member[@name='T:" + typeName + "']";
+					break;
+
+				case MemberTypes.Constructor:
+					xpath = "//member[@name='M:" + typeName + "." +
+						"#ctor" + CreateParamsDescription(
+						((ConstructorInfo)mi).GetParameters()) + "']";
+					break;
+
+				case MemberTypes.Method:
+					xpath = "//member[@name='M:" + typeName + "." + 
+						mi.Name + CreateParamsDescription(
+						((MethodInfo)mi).GetParameters());
+					if (mi.Name == "op_Implicit" || mi.Name == "op_Explicit") {
+						xpath += "~{" + 
+							((MethodInfo)mi).ReturnType.FullName + "}";
+					}
+					xpath += "']";
+					break;
+
+				case MemberTypes.Property:
+					xpath = "//member[@name='P:" + typeName + "." + 
+						mi.Name + CreateParamsDescription(
+						((PropertyInfo)mi).GetIndexParameters()) + "']";
+					break;
+
+				case MemberTypes.Field:
+					xpath = "//member[@name='F:" + typeName + "." + mi.Name + "']";
+					break;
+
+				case MemberTypes.Event:
+					xpath = "//member[@name='E:" + typeName + "." + mi.Name + "']";
+					break;
+
+					// Unknown member type, nothing to do
+				default: 
+					return null;
+			}
+
+			// Get the node from the document
+			return doc.SelectSingleNode(xpath);
+		}
+		public static void ShowHelpBackThread(object obj) {
 					lastObject=obj;
 					if(_isCall) {
 						string text="";
 						if(obj is NetMethod) {
-							text=Interpreter.GetDoc(((NetMethod)obj).methods[overloadIndex],true,true,true);//(true);;
+							overloadNumber=((NetMethod)obj).methods.Length;
+							if(overloadIndex>=overloadNumber) {
+								overloadIndex=0;
+							}
+							else if(overloadIndex<0) {
+								overloadIndex=overloadNumber-1;
+							}
+							text=Help.GetDoc(((NetMethod)obj).methods[overloadIndex],true,true,true);//(true);;
+
 						}
 						else if (obj is NetClass) {
-							text=Interpreter.GetDoc(((NetClass)obj).constructor.methods[overloadIndex],true,true,true);//(true);
+							overloadNumber=((NetClass)obj).constructor.methods.Length;
+							if(overloadIndex>=overloadNumber) {
+								overloadIndex=0;
+							}
+							else if(overloadIndex<0) {
+								overloadIndex=overloadNumber-1;
+							}
+							text=Help.GetDoc(((NetClass)obj).constructor.methods[overloadIndex],true,true,true);//(true);
 						}
 						else if(obj is Map) {
 							text=FunctionHelp((Map)obj);
@@ -596,8 +1033,12 @@ namespace Editor {
 						int y=5;
 						TreeNode node=Editor.SelectedNode;
 						while(node!=null) {
+							if(node.Bounds.Y<0) {
+								break;
+							}	
 							y+=node.Bounds.Height;
 							node=node.PrevVisibleNode;
+
 						}
 						listBox.Location=new Point(x,y);
 						int greatest=0;
@@ -611,23 +1052,18 @@ namespace Editor {
 						listBox.Show();
 						Editor.editor.Focus();
 					}
-				}
-			}
-			else {
-				toolTip.Visible=true;
-				toolTip.Text=e.Message;
-			}
 			Editor.window.Activate();
 		}
 		public static void ShowHelp(Node selectedNode,string selectedNodeText,bool isCall) {
 			_selectedNode=selectedNode;
 			_selectedNodeText=selectedNodeText;
 			_isCall=isCall;
+			overloadIndex=0;
 			Thread thread=new Thread(new ThreadStart(ShowHelpOtherThread));
 			//Help.listBox.Visible=true;
 			thread.Start();
 		}
-		delegate void ShowHelpDelegate(Exception e);
+		delegate void ShowHelpDelegate(object obj);
 		private static Node _selectedNode;
 		private static string _selectedNodeText;
 		private static bool _isCall;
@@ -648,8 +1084,24 @@ namespace Editor {
 				while(!(e.InnerException==null || e is BreakException)) {
 					e=e.InnerException;
 				}
+				if(e is BreakException) {
+					if(((BreakException)e).obj==null) {
+						int asdf=0;
+//						toolTip.Visible=true;
+//						toolTip.Text="null";
+					}
+					else {
+						object obj=((BreakException)e).obj;
+						listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
+					}
+				}
+
+//			}
+//			else {
+//				toolTip.Visible=true;
+//				toolTip.Text=e.Message;
+//			}
 				//_e=e;
-				listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{e});
 			}
 		}
 
@@ -805,19 +1257,25 @@ namespace Editor {
 		}
 	}
 	public class NextOverload:Command {
-		public bool Require() {
-			return Help.overloadIndex<Help.overloadNumber;
-		}
+//		public bool Require() {
+//			return Help.overloadIndex<Help.overloadNumber;
+//		}
 		public override void Do() {
 			Help.overloadIndex++;
+			Help.ShowHelpBackThread(Help.lastObject);
+//			Help.ShowHelp(Editor.SelectedNode,Editor.SelectedNode.CleanText.Substring(
+//				0,Editor.SelectedNode.CursorPosition).TrimEnd('(')+".break",true);		
 		}
 	}
 	public class PreviousOverload:Command {
-		public bool Require() {
-			return Help.overloadIndex<Help.overloadNumber;
-		}
+//		public bool Require() {
+////			return Help.overloadIndex>0;
+//		}
 		public override void Do() {
-			Help.overloadIndex++;
+			Help.overloadIndex--;
+			Help.ShowHelpBackThread(Help.lastObject);
+//			Help.ShowHelp(Editor.SelectedNode,Editor.SelectedNode.CleanText.Substring(
+//				0,Editor.SelectedNode.CursorPosition).TrimEnd('(')+".break",true);
 		}
 	}
 	public class Undo:Command {

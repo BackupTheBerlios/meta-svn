@@ -974,86 +974,118 @@ namespace Meta {
 				text+=")";
 				return text;
 			}
-			public static string GetDoc(MemberInfo memberInfo,bool isSignature,bool isSummary,bool isParameters) {
-				XmlNode comment=GetComments(memberInfo);
-				string text="";
-				string summary="";
-				ArrayList parameters=new ArrayList();
-				if(comment==null || comment.ChildNodes==null) {
-					return "";
-				}
-				foreach(XmlNode node in comment.ChildNodes) {
-					switch(node.Name) {
-						case "summary":
-							summary=node.InnerXml;
-							break;
-						case "param":
-							parameters.Add(node);
-							break;
-						default:
-							break;
-					}
-				}
-				if(isSignature) {
-					if(memberInfo is MethodBase) {
-						if(memberInfo is MethodInfo) {
-							text+=((MethodInfo)memberInfo).ReturnType+" ";
-						}
-						text+=((MethodBase)memberInfo).Name;
-						text+=" (";
-						foreach(ParameterInfo parameter in ((MethodBase)memberInfo).GetParameters()) {
-							text+=parameter.ParameterType+" "+parameter.Name+",";
-						}
-						if(((MethodBase)memberInfo).GetParameters().Length>0) {
-							text=text.Remove(text.Length-1,1);
-						}
-						text+=")";
-						//						if(memberInfos.Length>1) {
-						//							text+=" ( +"+(memberInfos.Length-1)+" overloads)";
-						//						}
-					}
-					else if(memberInfo is PropertyInfo) {
-						text+=((PropertyInfo)memberInfo).PropertyType+" "+((PropertyInfo)memberInfo).Name;
-					}
-					else if(memberInfo is FieldInfo) {
-						text+=((FieldInfo)memberInfo).FieldType+" "+((FieldInfo)memberInfo).Name;
-					}
-					else if(memberInfo is Type) {
-						if(((Type)memberInfo).IsInterface) {
-							text+="interface ";
-						}
-						else {
-							if(((Type)memberInfo).IsAbstract) {
-								text+="abstract ";
-							}
-							if(((Type)memberInfo).IsValueType) {
-								text+="struct ";
-							}
-							else {
-								text+="class ";
-							}
-						}						 
-						text+=((Type)memberInfo).Name;
-					}
-					else if(memberInfo is EventInfo) {
-						text+=((EventInfo)memberInfo).EventHandlerType.FullName+" "+
-							memberInfo.Name;
-					}
-					text+="\n";
-				}
-				text+=summary+"\n";
-				if(isParameters) {
-					//text+="\nparameters: \n";
-					foreach(XmlNode node in parameters) {
-						text+=node.Attributes["name"].Value+": "+node.InnerXml;
-//						text+=node.Attributes["name"].Value+": "+node.InnerXml;
-					}
-				}
-				return text.Replace("<para>","").Replace("\r\n","").Replace("</para>","").Replace("<see cref=\"","")
-					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
-					.Replace("M:","").Replace("E:","").Replace("     "," ").Replace("    "," ")
-					.Replace("   "," ").Replace("  "," ").Replace("\n ","\n");
-			}
+//			public static string GetDoc(MemberInfo memberInfo,bool isSignature,bool isSummary,bool isParameters) {
+//				XmlNode comment=GetComments(memberInfo);
+//				string text="";
+//				string summary="";
+//				ArrayList parameters=new ArrayList();
+//				if(comment==null || comment.ChildNodes==null) {
+//					return "";
+//				}
+//				foreach(XmlNode node in comment.ChildNodes) {
+//					switch(node.Name) {
+//						case "summary":
+//							summary=node.InnerXml;
+//							break;
+//						case "param":
+//							parameters.Add(node);
+//							break;
+//						default:
+//							break;
+//					}
+//				}
+//				if(isSignature) {
+//					MemberInfo[] overloaded=memberInfo.DeclaringType.GetMember(memberInfo.Name);
+//					string overloadedText="";
+//					if(overloaded.Length>1) {
+//						overloadedText=" ( +"+overloaded.Length.ToString()+" overloads)";
+//					}
+//
+//					if(memberInfo is MethodBase) {
+//						if(memberInfo is MethodInfo) {
+//							text+=((MethodInfo)memberInfo).ReturnType+" ";
+//						}
+//						text+=((MethodBase)memberInfo).Name;
+//						text+=" (";
+//						bool firstParameter=true;
+//						foreach(ParameterInfo parameter in ((MethodBase)memberInfo).GetParameters()) {
+//							if(!firstParameter) {
+//								text+=" ";
+//							}
+//							string parameterName=parameter.ParameterType.ToString();
+////							parameterName=parameterName.Replace("System.String","string").Replace("System.Object","object")
+////								.Replace("System.Boolean","bool")
+////								.Replace("System.Byte","byte").Replace("System.Char","char")
+////								.Replace("System.Decimal","decimal").Replace("System.Double","double")
+////								.Replace("System.Enum","enum").Replace("System.Single","float")
+////								.Replace("System.Int32","int").Replace("System.Int64","long")
+////								.Replace("System.SByte","sbyte").Replace("System.Int16","short")
+////								.Replace("System.UInt32","uint").Replace("System.UInt16","ushort")
+////								.Replace("System.UInt64","ulong").Replace("System.Void","void"); //struct possibly missing (??)
+//                     text+=parameterName;
+//							text+=" "+parameter.Name+",";
+//							firstParameter=false;
+//						}
+//						if(((MethodBase)memberInfo).GetParameters().Length>0) {
+//							text=text.Remove(text.Length-1,1);
+//						}
+//						text+=")";
+//						//						if(memberInfos.Length>1) {
+//						//							text+=" ( +"+(memberInfos.Length-1)+" overloads)";
+//						//						}
+//					}
+//					else if(memberInfo is PropertyInfo) {
+//						text+=((PropertyInfo)memberInfo).PropertyType+" "+((PropertyInfo)memberInfo).Name;
+//					}
+//					else if(memberInfo is FieldInfo) {
+//						text+=((FieldInfo)memberInfo).FieldType+" "+((FieldInfo)memberInfo).Name;
+//					}
+//					else if(memberInfo is Type) {
+//						if(((Type)memberInfo).IsInterface) {
+//							text+="interface ";
+//						}
+//						else {
+//							if(((Type)memberInfo).IsAbstract) {
+//								text+="abstract ";
+//							}
+//							if(((Type)memberInfo).IsValueType) {
+//								text+="struct ";
+//							}
+//							else {
+//								text+="class ";
+//							}
+//						}						 
+//						text+=((Type)memberInfo).Name;
+//					}
+//					else if(memberInfo is EventInfo) {
+//						text+=((EventInfo)memberInfo).EventHandlerType.FullName+" "+
+//							memberInfo.Name;
+//					}
+//					text=text.Replace("System.String","string").Replace("System.Object","object")
+//					.Replace("System.Boolean","bool")
+//					.Replace("System.Byte","byte").Replace("System.Char","char")
+//					.Replace("System.Decimal","decimal").Replace("System.Double","double")
+//					.Replace("System.Enum","enum").Replace("System.Single","float")
+//					.Replace("System.Int32","int").Replace("System.Int64","long")
+//					.Replace("System.SByte","sbyte").Replace("System.Int16","short")
+//					.Replace("System.UInt32","uint").Replace("System.UInt16","ushort")
+//					.Replace("System.UInt64","ulong").Replace("System.Void","void");
+//					text+=overloadedText;
+//					text+="\n";
+//				}
+//				text+=summary+"\n";
+//				if(isParameters) {
+//					//text+="\nparameters: \n";
+//					foreach(XmlNode node in parameters) {
+//						text+=node.Attributes["name"].Value+": "+node.InnerXml+"\n";
+////						text+=node.Attributes["name"].Value+": "+node.InnerXml;
+//					}
+//				}
+//				return text.Replace("<para>","").Replace("\r\n","").Replace("</para>","").Replace("<see cref=\"","")
+//					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
+//					.Replace("M:","").Replace("E:","").Replace("     "," ").Replace("    "," ")
+//					.Replace("   "," ").Replace("  "," ").Replace("\n ","\n");
+//			}
 //			public static string GetDoc(MemberInfo memberInfo, bool showParams) {
 //				XmlNode comment=GetComments(memberInfo);
 //				string text="";
@@ -1113,99 +1145,7 @@ namespace Meta {
 //					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
 //					.Replace("M:","").Replace("E:","");
 //			}
-			public static string CreateParamsDescription(ParameterInfo[] parameters) {
-				string text="";
-				if(parameters.Length>0) {
-					text+="(";
-					foreach(ParameterInfo parameter in parameters) {
-						text+=parameter.ParameterType.FullName+",";
-					}
-					text=text.Remove(text.Length-1,1);
-					text+=")";
-				}
-				return text;
-			}
-			private static Hashtable comments=new Hashtable();
-			public static XmlDocument LoadAssemblyComments(Assembly assembly) {
-				if(!comments.ContainsKey(assembly)) {
-					string dllPath=assembly.Location;
-					string dllName=Path.GetFileNameWithoutExtension(dllPath);
-					string dllDirectory=Path.GetDirectoryName(dllPath);
-				
-					string assemblyDirFile=Path.Combine(dllDirectory,dllName+".xml");
-					string runtimeDirFile=Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(),dllName+".xml");
-					string fileName;
-					if(File.Exists(assemblyDirFile)) {
-						fileName=assemblyDirFile;
-					}
-					else if(File.Exists(runtimeDirFile)) {
-						fileName=runtimeDirFile;
-					}
-					else {
-						return null;
-					}
-				
-					XmlDocument xml=new XmlDocument();
-					xml.Load(fileName);
-					comments[assembly]=xml;
-				}
-				return (XmlDocument)comments[assembly];
-			}
-			public static XmlNode GetComments(MemberInfo mi) {
-				Type declType = (mi is Type) ? ((Type)mi) : mi.DeclaringType;
-				XmlDocument doc = LoadAssemblyComments(declType.Assembly);
-				if (doc == null) return null;
-				string xpath;
-
-				// Handle nested classes
-				string typeName = declType.FullName.Replace("+", ".");
-
-				// Based on the member type, get the correct xpath query
-				switch(mi.MemberType) {                    
-					case MemberTypes.NestedType:
-					case MemberTypes.TypeInfo:
-						xpath = "//member[@name='T:" + typeName + "']";
-						break;
-
-					case MemberTypes.Constructor:
-						xpath = "//member[@name='M:" + typeName + "." +
-							"#ctor" + CreateParamsDescription(
-							((ConstructorInfo)mi).GetParameters()) + "']";
-						break;
-
-					case MemberTypes.Method:
-						xpath = "//member[@name='M:" + typeName + "." + 
-							mi.Name + CreateParamsDescription(
-							((MethodInfo)mi).GetParameters());
-						if (mi.Name == "op_Implicit" || mi.Name == "op_Explicit") {
-							xpath += "~{" + 
-								((MethodInfo)mi).ReturnType.FullName + "}";
-						}
-						xpath += "']";
-						break;
-
-					case MemberTypes.Property:
-						xpath = "//member[@name='P:" + typeName + "." + 
-							mi.Name + CreateParamsDescription(
-							((PropertyInfo)mi).GetIndexParameters()) + "']";
-						break;
-
-					case MemberTypes.Field:
-						xpath = "//member[@name='F:" + typeName + "." + mi.Name + "']";
-						break;
-
-					case MemberTypes.Event:
-						xpath = "//member[@name='E:" + typeName + "." + mi.Name + "']";
-						break;
-
-						// Unknown member type, nothing to do
-					default: 
-						return null;
-				}
-
-				// Get the node from the document
-				return doc.SelectSingleNode(xpath);
-			}
+			
 		}
 	}
 	namespace Types  {
