@@ -38,25 +38,25 @@ namespace Test {
 	}
 	public class Tests {
 		private static string filename=@"basicTest.meta";//Path.Combine("..",Path.Combine("..",));
-//		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-//			public class ParseAst:MetaTest {
-//			public override object GetTestResult() {
-//				return Interpreter.Parse(new StreamReader(Path.Combine(
-//					Test.path,filename)));
-//			}
-//		}
-//		public class ParseObject:MetaTest {
-//			public override object GetTestResult() {
-//				return Interpreter.Mapify(new StreamReader(Path.Combine(
-//					Test.path,filename)));
-//			}
-//		}
-//		public class Compile:MetaTest {
-//			public override object GetTestResult() {
-//				return Interpreter.Mapify(new StreamReader(Path.Combine(
-//					Test.path,filename))).Compile();
-//			}
-//		}
+		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
+			public class ParseAst:MetaTest {
+			public override object GetTestResult() {
+				return Interpreter.Parse(new StreamReader(Path.Combine(
+					Test.path,filename)));
+			}
+		}
+		public class ParseObject:MetaTest {
+			public override object GetTestResult() {
+				return Interpreter.Mapify(new StreamReader(Path.Combine(
+					Test.path,filename)));
+			}
+		}
+		public class Compile:MetaTest {
+			public override object GetTestResult() {
+				return Interpreter.Mapify(new StreamReader(Path.Combine(
+					Test.path,filename))).Compile();
+			}
+		}
 		public class Execute:MetaTest {
 			public override object GetTestResult() {
 				Map argument=new Map();

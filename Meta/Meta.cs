@@ -671,14 +671,6 @@ namespace Meta {
 						throw new ApplicationException("Key "+keys[i]+" not found");
 					}
 				}
-//				else if(isSearch) {
-//					while(selected!=null && !((IKeyValue)selected).ContainsKey(keys[0])) {
-//						selected=((IKeyValue)selected).Parent;
-//					}
-//					if(selected==null) {
-//						throw new ApplicationException("Key "+keys[i]+" not found");
-//					}
-//				}
 				int count=keys.Count-1;
 				if(isSelectLastKey) {
 					count++;

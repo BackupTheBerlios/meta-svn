@@ -24,6 +24,7 @@ using System.Reflection;
 using Meta.Types;
 using Meta.Execution;
 using System.Globalization;
+using System.Threading;
 
 namespace Editor {
 	public class Editor	{
@@ -280,6 +281,10 @@ namespace Editor {
 			listBox.SelectedIndexChanged+=new EventHandler(listBox_SelectedIndexChanged);
 		}
 		private static void listBox_SelectedIndexChanged(object sender, EventArgs e) {
+			Thread thread=new Thread(new ThreadStart(IndexChangedOtherThread));
+			thread.Start();
+		}
+		private static void IndexChangedOtherThread() {
 			if(listBox.SelectedItem==null) {
 				return;
 			}
@@ -330,7 +335,11 @@ namespace Editor {
 			string newText=text.Replace(Environment.NewLine,"").//Replace("\n","").
 				Replace("    "," ").Replace("   "," ").Replace("  "," ");
 			newText=newText.Replace("\n ","\n");
-
+			toolTip.BeginInvoke(new IndexChangedDelegate(IndexChangedBackThread),new object[] {newText});
+		}
+		private delegate void IndexChangedDelegate(string newText);
+		//private static string _newText;
+		private static void IndexChangedBackThread(string newText) {
 			if(newText!="") {
 				Size size=toolTip.CreateGraphics().MeasureString(newText,toolTip.Font).ToSize();
 				toolTip.Height=size.Height+10;
@@ -348,6 +357,75 @@ namespace Editor {
 			}
 			Editor.editor.Focus();
 		}
+//		private static void listBox_SelectedIndexChanged(object sender, EventArgs e) {
+//			if(listBox.SelectedItem==null) {
+//				return;
+//			}
+//			string text="";
+//			object member;
+//			MemberInfo[] members=new MemberInfo[]{};
+//			if(lastObject is NetClass) {
+//				members=((NetClass)lastObject).type.GetMember(((GListBoxItem)listBox.SelectedItem).Text,
+//					BindingFlags.Public|BindingFlags.Static);
+//				text=Interpreter.GetDoc(members[0],true,true,false);
+//				member=members[0];
+//			}
+//			else if(!(lastObject is Map)) {
+//				members=lastObject.GetType().GetMember(((GListBoxItem)listBox.SelectedItem).Text,
+//					BindingFlags.Public|BindingFlags.Instance);
+//				text=Interpreter.GetDoc(members[0],true,true,false);
+//				member=members[0];
+//			}
+//			else {
+//				//FIX here
+//				object key=((GListBoxItem)listBox.SelectedItem).Object;
+//				member=((Map)lastObject)[key];
+//				if(member is NetMethod) {
+//					MethodBase method=((NetMethod)member).methods[0];
+//					if(method is MethodInfo) {
+//						text+=((MethodInfo)method).ReturnType+" ";
+//					}
+//					text+=((MethodBase)method).Name;
+//					text+=" (";
+//					foreach(ParameterInfo parameter in ((MethodBase)method).GetParameters()) {
+//						text+=parameter.ParameterType+" "+parameter.Name+",";
+//					}
+//					if(((MethodBase)method).GetParameters().Length>0) {
+//						text=text.Remove(text.Length-1,1);
+//					}
+//					text+=")";
+//					text+=Interpreter.GetDoc(((NetMethod)member).methods[0],true,true,false);
+//				}
+//				else if(member is NetClass) {
+//					text+=Interpreter.GetDoc(((NetClass)member).type,true,true,false);
+//				}
+//				else {
+//					if(! (member is Map)) {
+//						text+=member.GetType().FullName;
+//					}
+//				}
+//			}
+//			string newText=text.Replace(Environment.NewLine,"").//Replace("\n","").
+//				Replace("    "," ").Replace("   "," ").Replace("  "," ");
+//			newText=newText.Replace("\n ","\n");
+//
+//			if(newText!="") {
+//				Size size=toolTip.CreateGraphics().MeasureString(newText,toolTip.Font).ToSize();
+//				toolTip.Height=size.Height+10;
+//				toolTip.Width=size.Width+15;
+//				//			toolTip.Width=newText.Length*3;
+//
+//				if(newText!="\n") {
+//					toolTip.Visible=true;
+//				}
+//				int x=listBox.Right+2;
+//				int y=listBox.Top;
+//				y+=(listBox.SelectedIndex-listBox.TopIndex)*listBox.ItemHeight;
+//				toolTip.Location=new Point(x,y);
+//				toolTip.Text=newText;
+//			}
+//			Editor.editor.Focus();
+//		}
 		// fix?? rethink
 		private static string CompleteText(string text) {
 			string completedText=text;
@@ -396,14 +474,172 @@ namespace Editor {
 		}
 		public static int overloadNumber=0;
 		public static int overloadIndex=0;
+		public static void ShowHelpBackThread(Exception e) {
+			if(e is BreakException) {
+				if(((BreakException)e).obj==null) {
+					toolTip.Visible=true;
+					toolTip.Text="null";
+				}
+				else {
+					object obj=((BreakException)e).obj;
+					lastObject=obj;
+					if(_isCall) {
+						string text="";
+						if(obj is NetMethod) {
+							text=Interpreter.GetDoc(((NetMethod)obj).methods[overloadIndex],true,true,true);//(true);;
+						}
+						else if (obj is NetClass) {
+							text=Interpreter.GetDoc(((NetClass)obj).constructor.methods[overloadIndex],true,true,true);//(true);
+						}
+						else if(obj is Map) {
+							text=FunctionHelp((Map)obj);
+						}
+						Help.toolTip.Text=text;
+						Graphics graphics=toolTip.CreateGraphics();
+						Size size=graphics.MeasureString(text,
+							toolTip.Font).ToSize();
+						toolTip.Size=new Size(size.Width+10,size.Height+13);
+						toolTip.Visible=true;
+
+						TreeNode selected=Editor.SelectedNode;
+						int depth=0;
+						while(selected.Parent!=null) {
+							selected=selected.Parent;
+							depth++;
+						}
+						int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
+							Convert.ToInt32(
+							graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
+
+						int y=5;
+						TreeNode node=Editor.SelectedNode;
+						while(node!=null) {
+							y+=node.Bounds.Height;
+							node=node.PrevVisibleNode;
+						}
+						toolTip.Location=new Point(x,y);
+
+					}
+					else {
+						listBox.Items.Clear();
+						IKeyValue keyValue=obj is IKeyValue? (IKeyValue)obj:new NetObject(obj);
+						ArrayList keys=new ArrayList();
+						foreach(DictionaryEntry entry in keyValue) {
+							keys.Add(entry.Key);
+						}
+						keys.Sort(new HelpComparer());
+						foreach(object key in keys) {
+							object member;
+							int imageIndex=0;
+							if(lastObject is Map) {
+								member=((Map)lastObject)[key];
+							}
+							else if(lastObject is NetClass) {
+								MemberInfo[] members=((NetClass)lastObject).type.GetMember(key.ToString(),
+									BindingFlags.Public|BindingFlags.Static);
+								member=members[0];
+							}
+							else if(!(lastObject is Map)) {
+								MemberInfo[] members=lastObject.GetType().GetMember(key.ToString(),
+									BindingFlags.Public|BindingFlags.Instance);
+								member=members.Length>0? members[0]:keyValue[key];
+							}
+							else {
+								throw new ApplicationException("bug here");
+							}
+							string additionalText="";
+
+							if(member is Type || member is NetClass) {
+								imageIndex=0;
+							}
+							else if(member is EventInfo) {
+								imageIndex=1;
+							}
+							else if(member is MethodInfo || member is ConstructorInfo || member is NetMethod) {
+								imageIndex=2;
+							}
+							else if(member is PropertyInfo) {
+								imageIndex=4;
+								object o=((PropertyInfo)member).GetValue(obj,new object[] {});
+								if(o==null) {
+									additionalText="null";
+								}
+								else {
+									additionalText=o.ToString();
+								}
+							}
+							else if(member is Map) {
+								imageIndex=5;
+							}
+							else {
+								if(member is FieldInfo) {
+									additionalText=((FieldInfo)member).GetValue(obj).ToString();
+								}
+								else {
+									additionalText=member.ToString();
+								}
+								imageIndex=6;
+							}
+							listBox.Items.Add(new GListBoxItem(key,additionalText,imageIndex));
+						}
+						Graphics graphics=Editor.window.CreateGraphics();
+						TreeNode selected=Editor.SelectedNode;
+						int depth=0;
+						while(selected.Parent!=null) {
+							selected=selected.Parent;
+							depth++;
+						}
+						int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
+							Convert.ToInt32(
+							graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
+
+						int y=5;
+						TreeNode node=Editor.SelectedNode;
+						while(node!=null) {
+							y+=node.Bounds.Height;
+							node=node.PrevVisibleNode;
+						}
+						listBox.Location=new Point(x,y);
+						int greatest=0;
+						foreach(GListBoxItem item in listBox.Items) {
+							int width=graphics.MeasureString(item.Text,listBox.Font).ToSize().Width;
+							if(width>greatest){
+								greatest=width;
+							}								
+						}
+						listBox.Size=new Size(greatest+30,150<listBox.Items.Count*16+10? 150:listBox.Items.Count*16+10);
+						listBox.Show();
+						Editor.editor.Focus();
+					}
+				}
+			}
+			else {
+				toolTip.Visible=true;
+				toolTip.Text=e.Message;
+			}
+			Editor.window.Activate();
+		}
 		public static void ShowHelp(Node selectedNode,string selectedNodeText,bool isCall) {
+			_selectedNode=selectedNode;
+			_selectedNodeText=selectedNodeText;
+			_isCall=isCall;
+			Thread thread=new Thread(new ThreadStart(ShowHelpOtherThread));
+			//Help.listBox.Visible=true;
+			thread.Start();
+		}
+		delegate void ShowHelpDelegate(Exception e);
+		private static Node _selectedNode;
+		private static string _selectedNodeText;
+		private static bool _isCall;
+//		private static Exception _e;
+		public static void ShowHelpOtherThread() {
 			try {
 				Interpreter.Run(
 					new StringReader(
 					SerializeTreeView(
 					Editor.SelectedNode.FileNode,
 					"",
-					CompleteText(selectedNodeText),
+					CompleteText(_selectedNodeText),
 					Editor.SelectedNode
 					)),
 					new Map());
@@ -412,152 +648,12 @@ namespace Editor {
 				while(!(e.InnerException==null || e is BreakException)) {
 					e=e.InnerException;
 				}
-				if(e is BreakException) {
-					if(((BreakException)e).obj==null) {
-						toolTip.Visible=true;
-						toolTip.Text="null";
-					}
-					else {
-						object obj=((BreakException)e).obj;
-						lastObject=obj;
-						if(isCall) {
-							string text="";
-							if(obj is NetMethod) {
-								text=Interpreter.GetDoc(((NetMethod)obj).methods[overloadIndex],true,true,true);//(true);;
-							}
-							else if (obj is NetClass) {
-								text=Interpreter.GetDoc(((NetClass)obj).constructor.methods[overloadIndex],true,true,true);//(true);
-							}
-							else if(obj is Map) {
-								text=FunctionHelp((Map)obj);
-							}
-							Help.toolTip.Text=text;
-							Graphics graphics=toolTip.CreateGraphics();
-							Size size=graphics.MeasureString(text,
-								toolTip.Font).ToSize();
-							toolTip.Size=new Size(size.Width+10,size.Height+13);
-							toolTip.Visible=true;
-
-							TreeNode selected=Editor.SelectedNode;
-							int depth=0;
-							while(selected.Parent!=null) {
-								selected=selected.Parent;
-								depth++;
-							}
-							int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
-								Convert.ToInt32(
-								graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
-
-							int y=5;
-							TreeNode node=Editor.SelectedNode;
-							while(node!=null) {
-								y+=node.Bounds.Height;
-								node=node.PrevVisibleNode;
-							}
-							toolTip.Location=new Point(x,y);
-
-						}
-						else {
-							listBox.Items.Clear();
-							IKeyValue keyValue=obj is IKeyValue? (IKeyValue)obj:new NetObject(obj);
-							ArrayList keys=new ArrayList();
-							foreach(DictionaryEntry entry in keyValue) {
-								keys.Add(entry.Key);
-							}
-							keys.Sort(new HelpComparer());
-							foreach(object key in keys) {
-								object member;
-								int imageIndex=0;
-								if(lastObject is Map) {
-									member=((Map)lastObject)[key];
-								}
-								else if(lastObject is NetClass) {
-									MemberInfo[] members=((NetClass)lastObject).type.GetMember(key.ToString(),
-										BindingFlags.Public|BindingFlags.Static);
-									member=members[0];
-								}
-								else if(!(lastObject is Map)) {
-									MemberInfo[] members=lastObject.GetType().GetMember(key.ToString(),
-										BindingFlags.Public|BindingFlags.Instance);
-									member=members.Length>0? members[0]:keyValue[key];
-								}
-								else {
-									throw new ApplicationException("bug here");
-								}
-								string additionalText="";
-
-								if(member is Type || member is NetClass) {
-									imageIndex=0;
-								}
-								else if(member is EventInfo) {
-									imageIndex=1;
-								}
-								else if(member is MethodInfo || member is ConstructorInfo || member is NetMethod) {
-									imageIndex=2;
-								}
-								else if(member is PropertyInfo) {
-									imageIndex=4;
-									object o=((PropertyInfo)member).GetValue(obj,new object[] {});
-									if(o==null) {
-										additionalText="null";
-									}
-									else {
-										additionalText=o.ToString();
-									}
-								}
-								else if(member is Map) {
-									imageIndex=5;
-								}
-								else {
-									if(member is FieldInfo) {
-										additionalText=((FieldInfo)member).GetValue(obj).ToString();
-									}
-									else {
-										additionalText=member.ToString();
-									}
-									imageIndex=6;
-								}
-								listBox.Items.Add(new GListBoxItem(key,additionalText,imageIndex));
-							}
-							Graphics graphics=Editor.window.CreateGraphics();
-							TreeNode selected=Editor.SelectedNode;
-							int depth=0;
-							while(selected.Parent!=null) {
-								selected=selected.Parent;
-								depth++;
-							}
-							int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
-								Convert.ToInt32(
-								graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
-
-							int y=5;
-							TreeNode node=Editor.SelectedNode;
-							while(node!=null) {
-								y+=node.Bounds.Height;
-								node=node.PrevVisibleNode;
-							}
-							listBox.Location=new Point(x,y);
-							int greatest=0;
-							foreach(GListBoxItem item in listBox.Items) {
-								int width=graphics.MeasureString(item.Text,listBox.Font).ToSize().Width;
-								if(width>greatest){
-									greatest=width;
-								}								
-							}
-							listBox.Size=new Size(greatest+30,150<listBox.Items.Count*16+10? 150:listBox.Items.Count*16+10);
-							listBox.Show();
-							Editor.editor.Focus();
-						}
-					}
-				}
-				else {
-					toolTip.Visible=true;
-					toolTip.Text=e.Message;
-				}
+				//_e=e;
+				listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{e});
 			}
-			Editor.window.Activate();
-			return;
 		}
+
+
 		// TODO
 		private static string FunctionHelp(Map map) {
 			string text="";
