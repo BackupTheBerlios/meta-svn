@@ -1031,14 +1031,20 @@ namespace Meta {
 				}
 			}
 			public IMap Clone() {
-				Map copy=new Map();
-				foreach(object key in table.Keys) {
-					copy[key]=this[key];
-				}
-				copy.Parent=Parent;
-				copy.compiled=compiled;
-				return copy;
+				Map clone=table.Clone();
+				clone.Parent=Parent;
+				clone.compiled=compiled;
+				return clone;
 			}
+//			public IMap Clone() {
+//				Map copy=new Map();
+//				foreach(object key in table.Keys) {
+//					copy[key]=this[key];
+//				}
+//				copy.Parent=Parent;
+//				copy.compiled=compiled;
+//				return copy;
+//			}
 //			public IMap Clone() {
 //				Map copy=new Map();
 //				foreach(object key in keys) {
@@ -1116,18 +1122,41 @@ namespace Meta {
 			public Map(string text) {
 				this.table=new StringStrategy(text);
 			}
-//			public Map(MapStrategy table) {
-//				this.table=table;
-//			}
+			public Map(MapStrategy table) {
+				this.table=table;
+			}
 			public Map() {
 				this.table=new HybridDictionaryStrategy();
 				//this.keys=new ArrayList();
 			}
 			private IMap parent;
-
+			public abstract class MapStrategy {
+				public abstract Map Clone();
+				public abstract ArrayList IntKeyValues {
+					get;
+				}
+				public abstract bool IsString();
+				public abstract string GetDotNetString();
+				public abstract ArrayList Keys {
+					get;
+				}
+				public abstract int Count {
+					get;
+				}
+				public abstract object this[object key]  {
+					get;
+					set;
+				}
+				public abstract bool ContainsKey(object key);
+			}
 			// not unicode safe!:
-			// the strategy cannot replace itself in the Map yet
+			// also, the strategy cannot replace itself in the Map yet
 			public class StringStrategy:MapStrategy {
+				public override Map Clone() {
+					return new Map(new StringStrategy(text)); // das ist ok, vielleicht StringStrategy immutable machen
+																			// und zwischen verschiedenen Maps teilen?
+				}
+
 				public override ArrayList IntKeyValues {
 					get {
 						ArrayList list=new ArrayList();
@@ -1151,6 +1180,10 @@ namespace Meta {
 				}
 				private ArrayList keys=new ArrayList();
 				private string text;
+//				public StringStrategy(StringStrategy clone) {
+//					this.text=clone.text;
+//					this.keys=clone.keys.Clone();
+//				}
 				public StringStrategy(string text) {
 					this.text=text;
 					for(int i=1;i<=text.Length;i++) {
@@ -1187,6 +1220,57 @@ namespace Meta {
 			}
 			// move IntKeyValues down into Strategy
 			public class HybridDictionaryStrategy:MapStrategy {
+				ArrayList keys;
+				//rename
+				private Hashtable table;
+//				ArrayList keys=new ArrayList();
+//				private Hashtable table=new Hashtable();
+
+//				public HybridDictionaryStrategy(HybridDictionaryStrategy clone) {
+//					keys=(ArrayList)clone.keys.Clone();
+//					table=new Hashtable();
+//					foreach(object key in clone.keys) {
+//						object val=clone.table[key];
+//						if(val is IMap) {
+//							val=((IMap)val).Clone();
+//							((IMap)val).Parent=
+//						}
+//						table[key]=val;
+//					}
+//				}
+				public HybridDictionaryStrategy() {
+					this.keys=new ArrayList();
+					this.table=new Hashtable();
+				}
+//				object val=value is IMap? ((IMap)value).Clone(): value;
+//				if(value is IMap) {
+//				((IMap)val).Parent=this;
+//			}
+//			//						if(!table.ContainsKey(key)) {
+//			//							keys.Add(key);
+//			//						}
+//			table[key]=val;
+				public override Map Clone() {
+					Map clone=new Map(new HybridDictionaryStrategy());
+					foreach(object key in keys) {
+						clone[key]=table[key];
+					}
+					return clone;
+				}
+					
+//					Map copy=new Map();
+//					foreach(object key in table.Keys) {
+//						copy[key]=this[key];
+//					}
+//				public override MapStrategy Clone() {
+//					Map copy=new Map();
+//					foreach(object key in table.Keys) {
+//						copy[key]=this[key];
+//					}
+////					copy.Parent=Parent;
+////					copy.compiled=compiled;
+////					return copy;
+//				}
 				public override ArrayList IntKeyValues {
 					get {
 						ArrayList list=new ArrayList();
@@ -1225,7 +1309,6 @@ namespace Meta {
 						return keys;
 					}
 				}
-				ArrayList keys=new ArrayList();
 
 				public override int Count {
 					get {
@@ -1246,26 +1329,8 @@ namespace Meta {
 				public override bool ContainsKey(object key)  {
 					return table.Contains(key);
 				}
-				private HybridDictionary table=new HybridDictionary();
 			}
-			public abstract class MapStrategy {
-				public abstract ArrayList IntKeyValues {
-					get;
-				}
-				public abstract bool IsString();
-				public abstract string GetDotNetString();
-				public abstract ArrayList Keys {
-					get;
-				}
-				public abstract int Count {
-					get;
-				}
-				public abstract object this[object key]  {
-					get;
-					set;
-				}
-				public abstract bool ContainsKey(object key);
-			}
+
 			private MapStrategy table;
 			private bool isHashCashed=false;
 			private int hash;
