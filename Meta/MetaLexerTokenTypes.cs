@@ -14,22 +14,21 @@ namespace Meta.Parser
 		public const int FUNCTION = 9;
 		public const int STATEMENT = 10;
 		public const int CALL = 11;
-		public const int MINUS = 12;
-		public const int EQUAL = 13;
-		public const int LBRACKET = 14;
-		public const int RBRACKET = 15;
-		public const int LPAREN = 16;
-		public const int RPAREN = 17;
-		public const int POINT = 18;
-		public const int COMMA = 19;
-		public const int GATTER = 20;
-		public const int LITERAL_KEY = 21;
-		public const int LITERAL = 22;
-		public const int SPACES = 23;
-		public const int LINE = 24;
-		public const int SPACE = 25;
-		public const int NEWLINE = 26;
-		public const int SELECT_KEY = 27;
+		public const int EQUAL = 12;
+		public const int LBRACKET = 13;
+		public const int RBRACKET = 14;
+		public const int LPAREN = 15;
+		public const int RPAREN = 16;
+		public const int POINT = 17;
+		public const int COMMA = 18;
+		public const int GATTER = 19;
+		public const int LITERAL_KEY = 20;
+		public const int LITERAL = 21;
+		public const int SPACES = 22;
+		public const int LINE = 23;
+		public const int SPACE = 24;
+		public const int NEWLINE = 25;
+		public const int SELECT_KEY = 26;
 		
 	}
 }

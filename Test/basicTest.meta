@@ -14,30 +14,30 @@ object=
   a='default'
   autoSearch='default'
   b=()
-  SetA=-
+  SetA==
     parent.parent.a='c'
     #autoSearch='changed'
-  SetB=-
+  SetB==
     caller.b.1=arg.value
     this='changed'
   x=
     a='b'
     c='d'
-  =-
+  ==
     this.a='b'
 a='default'
 b=()
 aSet=object.SetA ()
 bSet=object.SetB(value=(x='7',z='1'))
-ReturnEverything=-
+ReturnEverything==
   this=arg
 everythingReturned=ReturnEverything('a','b','c')
 argument=('x','y','z')
 variableAsArgument=ReturnEverything argument
-ReturnFunction=-
-  this=-
+ReturnFunction==
+  this==
     this=('1','2','3')
-SetCurrent=-
+SetCurrent==
   this=(arg=arg,x=arg.symbol)
   this=x
 thisSet=SetCurrent(symbol='haha')
@@ -59,33 +59,33 @@ indexerNoConversionIndexed=indexerNoConversion.abc
 interceptedSymbol2='1'
 k='hello'
 xyz='w'
-literalFunction= -'5'
+literalFunction= ='5'
 literalFunctionResult=literalFunction()
-function=-
+function==
   this='simple function this'
-callFunction=-function
+callFunction==function
 callFunctionResult=callFunction ()
-delayedFunction= --(x='y')
+delayedFunction= ==(x='y')
 delayedFunctionResult=delayedFunction ()
 value='xyz'
-selectionFunction= -value
+selectionFunction= =value
 selectionFunctionResult=selectionFunction ()
 bigInteger='89383838383832839123497123047217340712340720347072304702340720347'
 upperLevel='unchanged'
-ChangeUpperLevel=-
+ChangeUpperLevel==
   #upperLevel='changed'
 ChangeUpperLevel()
 files.['test.txt']='"changed text from file"'
 fileText=files.['test.txt']
 files.['test.txt']='"unchanged text"'
 staticEventChanged='false'
-TestClass.staticEvent=-
+TestClass.staticEvent==
   #staticEventChanged='true'
   this=arg.1
 staticEvent=TestClass.staticEvent
 staticEventResult=TestClass.staticEvent(testClass)
 instanceEventChanged='false'
-testClass.instanceEvent=-
+testClass.instanceEvent==
   #instanceEventChanged='true'
   this=arg.1
 instanceEvent=testClass.instanceEvent

@@ -40,8 +40,6 @@ tokens
   STATEMENT; 
   CALL;
 }
-MINUS:
-  '-';
 
 EQUAL:
   '=';
@@ -222,7 +220,7 @@ call:
   };
 	
 delayed:
-  MINUS!
+  EQUAL!
   expression
   {
     #delayed=#([FUNCTION], #delayed);

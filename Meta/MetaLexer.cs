@@ -41,22 +41,21 @@ namespace Meta.Parser
 		public const int FUNCTION = 9;
 		public const int STATEMENT = 10;
 		public const int CALL = 11;
-		public const int MINUS = 12;
-		public const int EQUAL = 13;
-		public const int LBRACKET = 14;
-		public const int RBRACKET = 15;
-		public const int LPAREN = 16;
-		public const int RPAREN = 17;
-		public const int POINT = 18;
-		public const int COMMA = 19;
-		public const int GATTER = 20;
-		public const int LITERAL_KEY = 21;
-		public const int LITERAL = 22;
-		public const int SPACES = 23;
-		public const int LINE = 24;
-		public const int SPACE = 25;
-		public const int NEWLINE = 26;
-		public const int SELECT_KEY = 27;
+		public const int EQUAL = 12;
+		public const int LBRACKET = 13;
+		public const int RBRACKET = 14;
+		public const int LPAREN = 15;
+		public const int RPAREN = 16;
+		public const int POINT = 17;
+		public const int COMMA = 18;
+		public const int GATTER = 19;
+		public const int LITERAL_KEY = 20;
+		public const int LITERAL = 21;
+		public const int SPACES = 22;
+		public const int LINE = 23;
+		public const int SPACE = 24;
+		public const int NEWLINE = 25;
+		public const int SELECT_KEY = 26;
 		
 		public MetaLexer(Stream ins) : this(new ByteBuffer(ins))
 		{
@@ -96,12 +95,6 @@ tryAgain:
 					{
 						switch ( LA(1) )
 						{
-						case '-':
-						{
-							mMINUS(true);
-							theRetToken = returnToken_;
-							break;
-						}
 						case '=':
 						{
 							mEQUAL(true);
@@ -201,20 +194,6 @@ tryAgain:
 			}
 		}
 		
-	public void mMINUS(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
-{
-		int _ttype; Token _token=null; int _begin=text.Length;
-		_ttype = MINUS;
-		
-		match('-');
-		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
-		{
-			_token = makeToken(_ttype);
-			_token.setText(text.ToString(_begin, text.Length-_begin));
-		}
-		returnToken_ = _token;
-	}
-	
 	public void mEQUAL(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
@@ -333,7 +312,7 @@ tryAgain:
 		_ttype = LITERAL_KEY;
 		
 		{ // ( ... )+
-		int _cnt13=0;
+		int _cnt12=0;
 		for (;;)
 		{
 			if ((tokenSet_0_.member(LA(1))))
@@ -344,12 +323,12 @@ tryAgain:
 			}
 			else
 			{
-				if (_cnt13 >= 1) { goto _loop13_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
+				if (_cnt12 >= 1) { goto _loop12_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
 			}
 			
-			_cnt13++;
+			_cnt12++;
 		}
-_loop13_breakloop:		;
+_loop12_breakloop:		;
 		}    // ( ... )+
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -379,11 +358,11 @@ _loop13_breakloop:		;
 				}
 				else
 				{
-					goto _loop17_breakloop;
+					goto _loop16_breakloop;
 				}
 				
 			}
-_loop17_breakloop:			;
+_loop16_breakloop:			;
 		}    // ( ... )*
 		_saveIndex = text.Length;
 		match("\'");
@@ -402,7 +381,7 @@ _loop17_breakloop:			;
 		_ttype = SPACES;
 		
 		{ // ( ... )+
-		int _cnt20=0;
+		int _cnt19=0;
 		for (;;)
 		{
 			if ((LA(1)==' '))
@@ -411,12 +390,12 @@ _loop17_breakloop:			;
 			}
 			else
 			{
-				if (_cnt20 >= 1) { goto _loop20_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
+				if (_cnt19 >= 1) { goto _loop19_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
 			}
 			
-			_cnt20++;
+			_cnt19++;
 		}
-_loop20_breakloop:		;
+_loop19_breakloop:		;
 		}    // ( ... )+
 		if (0==inputState.guessing)
 		{
@@ -438,11 +417,11 @@ _loop20_breakloop:		;
 		const int endOfFileValue=65535;
 		
 		
-		bool synPredMatched27 = false;
+		bool synPredMatched26 = false;
 		if (((LA(1)=='\n'||LA(1)=='\r')))
 		{
-			int _m27 = mark();
-			synPredMatched27 = true;
+			int _m26 = mark();
+			synPredMatched26 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -456,11 +435,11 @@ _loop20_breakloop:		;
 							}
 							else
 							{
-								goto _loop24_breakloop;
+								goto _loop23_breakloop;
 							}
 							
 						}
-_loop24_breakloop:						;
+_loop23_breakloop:						;
 					}    // ( ... )*
 					{    // ( ... )*
 						for (;;)
@@ -471,11 +450,11 @@ _loop24_breakloop:						;
 							}
 							else
 							{
-								goto _loop26_breakloop;
+								goto _loop25_breakloop;
 							}
 							
 						}
-_loop26_breakloop:						;
+_loop25_breakloop:						;
 					}    // ( ... )*
 					if (!(LA(1)==endOfFileValue))
 					  throw new SemanticException("LA(1)==endOfFileValue");
@@ -483,12 +462,12 @@ _loop26_breakloop:						;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched27 = false;
+				synPredMatched26 = false;
 			}
-			rewind(_m27);
+			rewind(_m26);
 			inputState.guessing--;
 		}
-		if ( synPredMatched27 )
+		if ( synPredMatched26 )
 		{
 			mNEWLINE(false);
 			{    // ( ... )*
@@ -500,11 +479,11 @@ _loop26_breakloop:						;
 					}
 					else
 					{
-						goto _loop29_breakloop;
+						goto _loop28_breakloop;
 					}
 					
 				}
-_loop29_breakloop:				;
+_loop28_breakloop:				;
 			}    // ( ... )*
 			{    // ( ... )*
 				for (;;)
@@ -515,11 +494,11 @@ _loop29_breakloop:				;
 					}
 					else
 					{
-						goto _loop31_breakloop;
+						goto _loop30_breakloop;
 					}
 					
 				}
-_loop31_breakloop:				;
+_loop30_breakloop:				;
 			}    // ( ... )*
 			if (!(LA(1)==endOfFileValue))
 			  throw new SemanticException("LA(1)==endOfFileValue");
@@ -541,11 +520,11 @@ _loop31_breakloop:				;
 					}
 					else
 					{
-						goto _loop33_breakloop;
+						goto _loop32_breakloop;
 					}
 					
 				}
-_loop33_breakloop:				;
+_loop32_breakloop:				;
 			}    // ( ... )*
 			if (0==inputState.guessing)
 			{

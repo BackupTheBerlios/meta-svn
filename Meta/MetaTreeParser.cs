@@ -34,22 +34,21 @@ namespace Meta.Parser
 		public const int FUNCTION = 9;
 		public const int STATEMENT = 10;
 		public const int CALL = 11;
-		public const int MINUS = 12;
-		public const int EQUAL = 13;
-		public const int LBRACKET = 14;
-		public const int RBRACKET = 15;
-		public const int LPAREN = 16;
-		public const int RPAREN = 17;
-		public const int POINT = 18;
-		public const int COMMA = 19;
-		public const int GATTER = 20;
-		public const int LITERAL_KEY = 21;
-		public const int LITERAL = 22;
-		public const int SPACES = 23;
-		public const int LINE = 24;
-		public const int SPACE = 25;
-		public const int NEWLINE = 26;
-		public const int SELECT_KEY = 27;
+		public const int EQUAL = 12;
+		public const int LBRACKET = 13;
+		public const int RBRACKET = 14;
+		public const int LPAREN = 15;
+		public const int RPAREN = 16;
+		public const int POINT = 17;
+		public const int COMMA = 18;
+		public const int GATTER = 19;
+		public const int LITERAL_KEY = 20;
+		public const int LITERAL = 21;
+		public const int SPACES = 22;
+		public const int LINE = 23;
+		public const int SPACE = 24;
+		public const int NEWLINE = 25;
+		public const int SELECT_KEY = 26;
 		
 		public MetaTreeParser()
 		{
@@ -122,7 +121,7 @@ namespace Meta.Parser
 		Map argument=new Map();
 		
 		
-		AST __t87 = _t;
+		AST __t86 = _t;
 		AST tmp19_AST_in = _t;
 		match(_t,CALL);
 		_t = _t.getFirstChild();
@@ -139,7 +138,7 @@ namespace Meta.Parser
 		call["argument"]=argument;
 		result["call"]=call;
 		
-		_t = __t87;
+		_t = __t86;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return result;
@@ -156,7 +155,7 @@ namespace Meta.Parser
 		int counter=1;
 		
 		
-		AST __t82 = _t;
+		AST __t81 = _t;
 		AST tmp20_AST_in = _t;
 		match(_t,MAP);
 		_t = _t.getFirstChild();
@@ -171,7 +170,7 @@ namespace Meta.Parser
 					Map key=null;
 					Map val=null;
 					
-					AST __t84 = _t;
+					AST __t83 = _t;
 					AST tmp21_AST_in = _t;
 					match(_t,STATEMENT);
 					_t = _t.getFirstChild();
@@ -186,18 +185,18 @@ namespace Meta.Parser
 										statements[new Integer(counter)]=statement;
 										counter++;
 									
-					_t = __t84;
+					_t = __t83;
 					_t = _t.getNextSibling();
 				}
 				else
 				{
-					goto _loop85_breakloop;
+					goto _loop84_breakloop;
 				}
 				
 			}
-_loop85_breakloop:			;
+_loop84_breakloop:			;
 		}    // ( ... )*
-		_t = __t82;
+		_t = __t81;
 		_t = _t.getNextSibling();
 		
 		result["program"]=statements;
@@ -218,13 +217,13 @@ _loop85_breakloop:			;
 		int counter=1;
 		
 		
-		AST __t91 = _t;
+		AST __t90 = _t;
 		AST tmp22_AST_in = _t;
 		match(_t,SELECT_KEY);
 		_t = _t.getFirstChild();
 		{
 			{ // ( ... )+
-			int _cnt94=0;
+			int _cnt93=0;
 			for (;;)
 			{
 				if (_t == null)
@@ -240,15 +239,15 @@ _loop85_breakloop:			;
 				}
 				else
 				{
-					if (_cnt94 >= 1) { goto _loop94_breakloop; } else { throw new NoViableAltException(_t);; }
+					if (_cnt93 >= 1) { goto _loop93_breakloop; } else { throw new NoViableAltException(_t);; }
 				}
 				
-				_cnt94++;
+				_cnt93++;
 			}
-_loop94_breakloop:			;
+_loop93_breakloop:			;
 			}    // ( ... )+
 		}
-		_t = __t91;
+		_t = __t90;
 		_t = _t.getNextSibling();
 		
 		result["select"]=selection;
@@ -287,13 +286,13 @@ _loop94_breakloop:			;
 		Map delayed;
 		
 		
-		AST __t97 = _t;
+		AST __t96 = _t;
 		AST tmp23_AST_in = _t;
 		match(_t,FUNCTION);
 		_t = _t.getFirstChild();
 		delayed=expression(_t);
 		_t = retTree_;
-		_t = __t97;
+		_t = __t96;
 		_t = _t.getNextSibling();
 		
 		result["delayed"]=delayed;
@@ -316,7 +315,6 @@ _loop94_breakloop:			;
 		@"""FUNCTION""",
 		@"""STATEMENT""",
 		@"""CALL""",
-		@"""MINUS""",
 		@"""EQUAL""",
 		@"""LBRACKET""",
 		@"""RBRACKET""",
@@ -336,7 +334,7 @@ _loop94_breakloop:			;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 138414848L, 0L};
+		long[] data = { 69208832L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());
