@@ -8,12 +8,8 @@ this:map.merge
     logic
     map
     math
-form:with
-    System.Windows.Forms.Form()
-    :
-        Text:'hello
-        Controls:
-            System.Windows.Forms.TreeView()         
+form:System.Windows.Forms.Form
+    Text:'hello
 'ImpliedAutokey
 :'Autokey
 gacTest:System.Collections
@@ -193,8 +189,3 @@ switch
             #secondSwitch:'two
     default:=
         #secondSwitch:'default
-form:System.Windows.Forms.Form()
-with
-    form
-    :
-        Text:'hello

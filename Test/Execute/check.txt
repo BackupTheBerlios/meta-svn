@@ -1907,8 +1907,3 @@ Entry (DictionaryEntry)
     "secondSwitch"
   Value (Map):
     "default"
-Entry (DictionaryEntry)
-  Key (Integer):
-    "9"
-  Value (Form):
-    "System.Windows.Forms.Form, Text: hello"

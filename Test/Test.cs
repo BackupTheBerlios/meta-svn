@@ -67,13 +67,13 @@ namespace Test {
 //					Console.ReadLine();
 //				}
 			}
-			DateTime start=DateTime.Now;
-			string file=@"C:\Dokumente und Einstellungen\Christian\Desktop\performance.meta";
-			Interpreter.Run(new StreamReader(file),new Map());
-			DateTime end=DateTime.Now;
-			TimeSpan span=end-start;
-			Console.WriteLine(span.TotalSeconds);
-			Console.ReadLine();
+//			DateTime start=DateTime.Now;
+//			string file=@"C:\Dokumente und Einstellungen\Christian\Desktop\performance.meta";
+//			Interpreter.Run(new StreamReader(file),new Map());
+//			DateTime end=DateTime.Now;
+//			TimeSpan span=end-start;
+//			Console.WriteLine(span.TotalSeconds);
+//			Console.ReadLine();
 		}
 	}
 	public class Tests {

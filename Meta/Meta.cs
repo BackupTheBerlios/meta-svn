@@ -1461,6 +1461,7 @@ namespace Meta {
 			public bool isMetaLibraryMethod=false;
 			// Move this to "With" ?
 			// rename oldValue to obj
+			// move to NetContainer
 			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
 
 				if(map.IntKeyValues.Count==0) {
@@ -1599,9 +1600,12 @@ namespace Meta {
 					ArrayList sameLengthMethods=new ArrayList();
 					foreach(MethodBase method in methods) {
 						if(argumentList.Count==method.GetParameters().Length) { // don't match if different parameter list length
-							sameLengthMethods.Add(method);
+							if(argumentList.Count==argument.Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
+								sameLengthMethods.Add(method);
+							}
 						}
 					}
+					bool executed=false;
 					foreach(MethodBase method in sameLengthMethods) {
 						ArrayList args=new ArrayList();
 						bool argumentsMatched=true;
@@ -1616,13 +1620,26 @@ namespace Meta {
 							else {
 								returnValue=method.Invoke(target,args.ToArray());
 							}
+							executed=true;// remove, use argumentsMatched instead
 							break;
 						}
 					}
-					result=returnValue;
+					result=returnValue; // mess, why is this here? put in else after the next if
+					// make this safe
+					if(!executed && methods[0] is ConstructorInfo) {
+						object o=new NetMethod(type).Call(new Map());
+						result=with(o,((Map)Interpreter.Arg));
+					}
 				}		
 				Interpreter.arguments.Remove(argument);
 				return Interpreter.ConvertDotNetToMeta(result);
+			}
+			public static object with(object obj,IMap map) {
+				NetObject netObject=new NetObject(obj);
+				foreach(DictionaryEntry entry in map) {
+					netObject[entry.Key]=entry.Value;
+				}
+				return obj;
 			}
 			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) {
 				code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
