@@ -531,20 +531,7 @@ namespace Meta {
 						this.target=typeof(string);
 					}
 					public override object Convert(object obj) {
-						Map symbol=(Map)obj;
-						string text="";
-						for(Integer i=new Integer(1);;i++) {
-							object val=symbol[i];
-							if(val==null) {
-								break;
-							}
-							else {
-								if(val is Integer) {
-									text+=System.Convert.ToChar(((Integer)val).LongValue());
-								}
-							}
-						}
-						return text;
+						return Interpreter.MapToString((Map)obj);
 					}
 				}
 			}
@@ -554,6 +541,21 @@ namespace Meta {
 					map[new Integer(map.Count+1)]=new Integer((int)character);
 				}
 				return map;
+			}
+			public static string MapToString(Map map) {
+				string text="";
+				for(Integer i=new Integer(1);;i++) {
+					object val=map[i];
+					if(val==null) {
+						break;
+					}
+					else {
+//						if(val is Integer) {
+							text+=System.Convert.ToChar(((Integer)val).LongValue());
+//						}
+					}
+				}
+				return text;
 			}
 			private abstract class DotNetToMetaConversions {
 				public class ConvertStringToMap: ConvertDotNetToMeta {
@@ -784,7 +786,7 @@ namespace Meta {
 			private Map cash=new Map();
 			public static string libraryPath="library"; 
 		}
-		public class Map: IKeyValue, IMap, ICallable, IEnumerable {
+		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
 			public IMap Parent {
 				get {
 					return parent;
@@ -938,6 +940,17 @@ namespace Meta {
 			public object compiled;
 			private bool isHashCashed=false;
 			private int hash;
+			public string Serialize(string indent,string[] functions) {
+				try {
+					if(IntKeyValues.Count>0) {
+						string text=indent+"\""+Interpreter.MapToString(this)+"\""+"\n";
+						return text;
+					}
+				}
+				catch {
+				}
+				return null;//ExecuteTests.Serialize(this,indent,functions);
+			}
 		}
 		public class MapEnumerator: IEnumerator {
 			private Map map; public MapEnumerator(Map map) {
@@ -1314,9 +1327,12 @@ namespace Meta {
 					}
 				}
 			}
-			public string Serialize() {
-				return "";
+			public string Serialize(string indent,string[] functions) {
+				return indent;
 			}
+//			public string Serialize(string indent,string[] functions) {
+//				return "";
+//			}
 			public Delegate CreateEvent(string name,Map code) {
 				EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
 															 BindingFlags.Static|BindingFlags.Instance);
@@ -1424,7 +1440,7 @@ namespace Meta {
 	}
 	namespace TestingFramework {
 		public interface ISerializeSpecial {
-			string Serialize();
+			string Serialize(string indent,string[] functions);
 		}
 		public abstract class TestCase {
 			public abstract object RunTestCase();
@@ -1443,12 +1459,6 @@ namespace Meta {
 					DateTime timeStarted=DateTime.Now;
 					string textToPrint="";
 					object result=((TestCase)testCase.GetConstructors()[0].Invoke(new object[]{})).RunTestCase();
-//					try {
-//					result=testCase.GetMethod("RunTestCase").Invoke(null,new object[]{});
-//					}
-//					catch(Exception e) {
-//						throw e;
-//					}
 					TimeSpan timeSpentInTestCase=DateTime.Now-timeStarted;
 					bool testCaseSuccessful=CompareResults(Path.Combine(pathToSerializeResultsTo,testCase.Name),result,methodNames);
 					if(!testCaseSuccessful) {
@@ -1484,48 +1494,96 @@ namespace Meta {
 				return Serialize(obj,"",new string[]{});
 			}
 			public static string Serialize(object serialize,string indent,string[] methods) {
-				string text="";
+//				string text="";
 				if(serialize==null) {
-					text=indent+"null\n";
+					return indent+"null\n";
 				}
-				else if(serialize is ISerializeSpecial) {
-					text=indent+((ISerializeSpecial)serialize).Serialize();
+				if(serialize is ISerializeSpecial) {
+					string text=((ISerializeSpecial)serialize).Serialize(indent,methods);
+					if(text!=null) {
+						return text;
+					}
 				}
-				else if(serialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
+				if(serialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
 					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) {
-					text=indent+"\""+serialize.ToString()+"\""+"\n";
+					return indent+"\""+serialize.ToString()+"\""+"\n";
 				}
-				else if(serialize is IEnumerable) {
+				if(serialize is IEnumerable) {
+					string text="";
 					foreach(object entry in (IEnumerable)serialize) {
 						text+=indent+"Entry ("+entry.GetType().Name+")\n"+Serialize(entry,indent+"  ",methods);
 					}
+					return text;
 				}
-				else {
-					ArrayList members=new ArrayList();
-					members.AddRange(serialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
-					members.AddRange(serialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
-					foreach(string method in methods) {
-						members.Add(serialize.GetType().GetMethod(method));
-					}
-					members.Sort(new CompareMemberInfos());
-					foreach(MemberInfo member in members) {
-						if(member.Name!="Item") {
-							if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) {
-								object val=serialize.GetType().InvokeMember(member.Name,BindingFlags.Public
-									|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
-									|BindingFlags.InvokeMethod,null,serialize,null);
-								text+=indent+member.Name;
-								if(val!=null) {
-									text+=" ("+val.GetType().Name+")";
-								}
-								text+=":\n"+Serialize(val,indent+"  ",methods);
+				string t="";
+				ArrayList members=new ArrayList();
+				members.AddRange(serialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
+				members.AddRange(serialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
+				foreach(string method in methods) {
+					members.Add(serialize.GetType().GetMethod(method));
+				}
+				members.Sort(new CompareMemberInfos());
+				foreach(MemberInfo member in members) {
+					if(member.Name!="Item") {
+						if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) {
+							object val=serialize.GetType().InvokeMember(member.Name,BindingFlags.Public
+								|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
+								|BindingFlags.InvokeMethod,null,serialize,null);
+							t+=indent+member.Name;
+							if(val!=null) {
+								t+=" ("+val.GetType().Name+")";
 							}
+							t+=":\n"+Serialize(val,indent+"  ",methods);
 						}
 					}
 				}
-				return text;
+				return t;
+
 			}
 		}
+//			public static string Serialize(object serialize,string indent,string[] methods) {
+//				string text="";
+//				if(serialize==null) {
+//					text=indent+"null\n";
+//				}
+//				else if(serialize is ISerializeSpecial) {
+//					text=((ISerializeSpecial)serialize).Serialize(indent,methods);
+//				}
+//				else if(serialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
+//					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) {
+//					text=indent+"\""+serialize.ToString()+"\""+"\n";
+//				}
+//				else if(serialize is IEnumerable) {
+//					foreach(object entry in (IEnumerable)serialize) {
+//						text+=indent+"Entry ("+entry.GetType().Name+")\n"+Serialize(entry,indent+"  ",methods);
+//					}
+//				}
+//				else {
+//					ArrayList members=new ArrayList();
+//					members.AddRange(serialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
+//					members.AddRange(serialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
+//					foreach(string method in methods) {
+//						members.Add(serialize.GetType().GetMethod(method));
+//					}
+//					members.Sort(new CompareMemberInfos());
+//					foreach(MemberInfo member in members) {
+//						if(member.Name!="Item") {
+//							if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) {
+//								object val=serialize.GetType().InvokeMember(member.Name,BindingFlags.Public
+//									|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
+//									|BindingFlags.InvokeMethod,null,serialize,null);
+//								text+=indent+member.Name;
+//								if(val!=null) {
+//									text+=" ("+val.GetType().Name+")";
+//								}
+//								text+=":\n"+Serialize(val,indent+"  ",methods);
+//							}
+//						}
+//					}
+//				}
+//				return text;
+//			}
+//		}
 		internal class CompareMemberInfos:IComparer {
 			public int Compare(object first,object second) {
 				return ((MemberInfo)first).Name.CompareTo(((MemberInfo)second).Name);

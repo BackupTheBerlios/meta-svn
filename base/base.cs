@@ -13,16 +13,16 @@ public class @base {
 		}
 		return keys;
 	}
-	public static void SetBreakMethod(BreakMethodDelegate breakMethod) {
-		Interpreter.breakMethod=breakMethod;
-	}
-	public static char Character(string c) {
-		return Convert.ToChar(c);
-	}
-	public static string Insert(string original,int index,string insert) {
-		return original.Insert(index,insert);
-	}
-	public static Map Concat(params Map[] maps) {
+//	public static void SetBreakMethod(BreakMethodDelegate breakMethod) {
+//		Interpreter.breakMethod=breakMethod;
+//	}
+//	public static char Character(string c) {
+//		return Convert.ToChar(c);
+//	}
+//	public static string Insert(string original,int index,string insert) {
+//		return original.Insert(index,insert);
+//	}
+	public static Map Concatenate(params Map[] maps) {
 		int i=1;
 		Map combined=new Map();
 		foreach(Map map in maps) {
@@ -33,21 +33,21 @@ public class @base {
 		}
 		return combined;
 	}
-	public static object Run(string path) {
-		return Interpreter.Run(new StreamReader(path),new Map());
-	}
-	public static object RunString(string code) {
-		return Interpreter.Run(new StringReader(code),new Map());
-	}
+//	public static object Run(string path) {
+//		return Interpreter.Run(new StreamReader(path),new Map());
+//	}
+//	public static object RunString(string code) {
+//		return Interpreter.Run(new StringReader(code),new Map());
+//	}
 	public static IKeyValue Merge() {
 		return (Map)Interpreter.MergeCollection(((Map)Interpreter.Arg).IntKeyValues);
 	}
-	public static void Write(string s) {
-		Console.WriteLine(s);
-	}
-	public static string Read() {
-		return Console.ReadLine();
-	}
+//	public static void Write(string s) {
+//		Console.WriteLine(s);
+//	}
+//	public static string Read() {
+//		return Console.ReadLine();
+//	}
 	public static bool And(bool a,bool b) {
 		return a && b;
 	}
@@ -78,14 +78,14 @@ public class @base {
 	public static bool Equal(object a,object b) {
 		return a.Equals(b);
 	}
-	public static Enum BinaryOr(params Enum[] enums) {
-		int val=(int)Enum.Parse(enums[0].GetType(),enums[0].ToString());
-		for(int i=1;i<enums.Length;i++) {
-			int newVal=(int)Enum.Parse(enums[i].GetType(),enums[i].ToString());
-			val|=newVal;
-		}
-		return (Enum)Enum.ToObject(enums[0].GetType(),val);
-	}
+//	public static Enum BinaryOr(params Enum[] enums) {
+//		int val=(int)Enum.Parse(enums[0].GetType(),enums[0].ToString());
+//		for(int i=1;i<enums.Length;i++) {
+//			int newVal=(int)Enum.Parse(enums[i].GetType(),enums[i].ToString());
+//			val|=newVal;
+//		}
+//		return (Enum)Enum.ToObject(enums[0].GetType(),val);
+//	}
 	public static Map For() {
 		Map arg=((Map)Interpreter.Arg);
 		int times=(int)((Integer)arg[new Integer(1)]).IntValue();
@@ -113,9 +113,9 @@ public class @base {
 		}
 		return result;
 	}
-	public static bool IsMap(object o) {
-		return o is Map;
-	}
+//	public static bool IsMap(object o) {
+//		return o is Map;
+//	}
 	public static void Switch() {
 		Map arg=((Map)Interpreter.Arg);
 		object val=arg[new Integer(1)];
