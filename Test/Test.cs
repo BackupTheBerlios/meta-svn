@@ -30,9 +30,15 @@ namespace Test {
 	class Test {
 		public static string path="";
 		public static void Main(string[] args) {
-			Directory.SetCurrentDirectory(
-				".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
-			ExecuteTests test=new ExecuteTests(typeof(Tests),path);
+			args=new string[]{"editor.meta"};
+			if(args.Length==0) {
+				Directory.SetCurrentDirectory(
+					".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
+				ExecuteTests test=new ExecuteTests(typeof(Tests),path);
+			}
+			else {
+				Interpreter.Run(new StreamReader(args[0]),new Map());
+			}
 		}
 	}
 	public class Tests {
