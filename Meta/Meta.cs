@@ -1217,18 +1217,18 @@ namespace Meta {
 		}
 	}
 	namespace Types  {
-		public abstract class Command:  ICallable {
-			private IKeyValue parent;
-			public IKeyValue Parent {
-				get {
-					return parent;
-				}
-				set {
-					parent=value;
-				}
-			}
-			public abstract object Call();
-		}
+//		public abstract class Command:  ICallable {
+//			private IKeyValue parent;
+//			public IKeyValue Parent {
+//				get {
+//					return parent;
+//				}
+//				set {
+//					parent=value;
+//				}
+//			}
+//			public abstract object Call();
+//		}
 		public interface IMetaType {
 			IKeyValue Parent {
 				get;
