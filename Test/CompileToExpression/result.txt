@@ -3365,6 +3365,22 @@ statements (ArrayList):
       expressions (ArrayList):
         Entry (Literal)
           literal (Map):
+            "this"
+        Entry (Literal)
+          literal (Integer):
+            "8"
+      parents (ArrayList):
+    valueExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "xasdfss"
+      parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
             "secondSwitch"
       parents (ArrayList):
     valueExpression (Literal):
@@ -3378,7 +3394,7 @@ statements (ArrayList):
             "this"
         Entry (Literal)
           literal (Integer):
-            "8"
+            "9"
       parents (ArrayList):
     valueExpression (Call):
       argumentExpression (Program):
@@ -3600,7 +3616,7 @@ statements (ArrayList):
             "this"
         Entry (Literal)
           literal (Integer):
-            "9"
+            "10"
       parents (ArrayList):
     valueExpression (Call):
       argumentExpression (Program):

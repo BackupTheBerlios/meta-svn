@@ -81,6 +81,19 @@ namespace Meta {
 		public class Program: IExpression {
 			public object Evaluate(IMap parent) {
 				Map local=new Map();
+				return Evaluate(parent,local);
+//				local.Parent=parent;
+//				Interpreter.callers.Add(local);
+//				for(int i=0;i<statements.Count;i++) {
+//					local=(Map)Interpreter.Current;
+//					((Statement)statements[i]).Realize(local);
+//				}
+//				object result=Interpreter.Current;
+//				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+//				return result;
+			}
+			public object Evaluate(IMap parent,IMap local) {
+				//Map local=new Map();
 				local.Parent=parent;
 				Interpreter.callers.Add(local);
 				for(int i=0;i<statements.Count;i++) {
@@ -91,6 +104,18 @@ namespace Meta {
 				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 				return result;
 			}
+//			public object Evaluate(IMap parent) {
+//				Map local=new Map();
+//				local.Parent=parent;
+//				Interpreter.callers.Add(local);
+//				for(int i=0;i<statements.Count;i++) {
+//					local=(Map)Interpreter.Current;
+//					((Statement)statements[i]).Realize(local);
+//				}
+//				object result=Interpreter.Current;
+//				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+//				return result;
+//			}
 			public static readonly Map programString=new Map("program");
 			public Program(Map code) {
 				foreach(Map statement in ((Map)code[programString]).IntKeyValues) {
@@ -156,6 +181,9 @@ namespace Meta {
 					foreach(object key in keys) {
 						if(key is Map && ((Map)key).GetDotNetString().Equals("caller")) {
 							numCallers++;
+							if(numCallers>Interpreter.callers.Count) {
+								throw new ApplicationException(KeyErrorMessage(keys[i]));
+							}
 							i++;
 						}
 						else {
@@ -164,10 +192,26 @@ namespace Meta {
 					}
 					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
 				}
+//				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
+//					int numCallers=0;
+//					foreach(object key in keys) {
+//						if(key is Map && ((Map)key).GetDotNetString().Equals("caller")) {
+//							numCallers++;
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
+//				}
 				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("parent")) {
 					foreach(object key in keys) {
 						if(key is Map && ((Map)key).GetDotNetString().Equals("parent")) {
 							selection=((IMap)selection).Parent;
+							if(selection==null) {
+								throw new ApplicationException(KeyErrorMessage(keys[i]));
+							}
 							i++;
 						}
 						else {
@@ -180,6 +224,9 @@ namespace Meta {
 					foreach(object key in keys) {
 						if(key is Map && ((Map)key).GetDotNetString().Equals("arg")) {
 							numArgs++;
+							if(numArgs>Interpreter.arguments.Count) {
+								throw new ApplicationException(KeyErrorMessage(keys[i]));
+							}
 							i++;
 						}
 						else {
@@ -192,30 +239,46 @@ namespace Meta {
 					if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("search")) {
 						i++;
 					}
-					while(selection!=null && !((IKeyValue)selection).ContainsKey(keys[i])) {
+					while(!((IKeyValue)selection).ContainsKey(keys[i])) {
 						selection=((IMap)selection).Parent;
+						if(selection==null) {
+							throw new ApplicationException(KeyErrorMessage(keys[i]));
+						}
 					}
-					if(selection==null) {
-						throw new ApplicationException(KeyErrorMessage(keys[i]));
-//						string text="Key ";
-//						if(keys[i] is Map) {
-//							text+=((Map)keys[i]).GetDotNetString();
-//						}
-//						else {
-//							text+=keys[i];
-//						}
-//						text+=" not found.";
-//						throw new ApplicationException(text);
-					}
+						//						string text="Key ";
+						//						if(keys[i] is Map) {
+						//							text+=((Map)keys[i]).GetDotNetString();
+						//						}
+						//						else {
+						//							text+=keys[i];
+						//						}
+						//						text+=" not found.";
+						//						throw new ApplicationException(text);
+//					}
+//					while(selection!=null && !((IKeyValue)selection).ContainsKey(keys[i])) {
+//						selection=((IMap)selection).Parent;
+//					}
+//					if(selection==null) {
+//						throw new ApplicationException(KeyErrorMessage(keys[i]));
+////						string text="Key ";
+////						if(keys[i] is Map) {
+////							text+=((Map)keys[i]).GetDotNetString();
+////						}
+////						else {
+////							text+=keys[i];
+////						}
+////						text+=" not found.";
+////						throw new ApplicationException(text);
+//					}
 				}
 				int lastKeySelect=0;
 				if(isSelectLastKey) {
 					lastKeySelect++;
 				}
 				for(;i<keys.Count-1+lastKeySelect;i++) {
-					if(keys[i].Equals(new Map("Value"))) {
-						int asdf=0;
-					}
+//					if(keys[i].Equals(new Map("Value"))) {
+//						int asdf=0;
+//					}
 					if(selection is IKeyValue) {
 						selection=((IKeyValue)selection)[keys[i]];
 					}
@@ -302,6 +365,7 @@ namespace Meta {
 			public static IKeyValue Merge(params IKeyValue[] maps) {
 				return MergeCollection(maps);
 			}
+			// really use IKeyValue?
 			public static IKeyValue MergeCollection(ICollection maps) {
 				Map result=new Map();//use clone here?
 				foreach(IKeyValue map in maps) {
@@ -363,6 +427,12 @@ namespace Meta {
 				reader.Close();
 				return program.Call(argument);
 			}
+//			public static object RunWithExisting(TextReader reader,IMap argument,IMap existing) {
+//				Map lastProgram=CompileToMap(reader);
+//				lastProgram.Parent=Library.library;
+//				object result=lastProgram.Call(argument);
+//				return result;
+//			}
 			public static object Run(TextReader reader,IMap argument) {
 				Map lastProgram=CompileToMap(reader);
 				lastProgram.Parent=Library.library;
@@ -410,6 +480,7 @@ namespace Meta {
 			static Interpreter() {
 				Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
 				metaInstallationPath=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName; 
+//				metaInstallationPath=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName; 
 				foreach(Type type in typeof(LiteralRecognitions).GetNestedTypes()) {
 					literalRecognitions.Add((RecognizeLiteral)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
@@ -1340,6 +1411,7 @@ namespace Meta {
 		}
 		public class NetMethod: ICallable {
 			public bool isMetaLibraryMethod=false;
+			// Move this to "With" ?
 			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
 									// make more exact, move into its own method
 				assigned=true;
@@ -1431,11 +1503,13 @@ namespace Meta {
 				return null;
 			}
 			public object Call(IMap argument) {
-				if(this.name=="Init") {
+				if(this.name=="GetStructure") {
 					int asdf=0;
 				}
 				Interpreter.arguments.Add(argument);
 				object result=null;
+				// check this for every method:
+				// introduce own method info class?
 				if(isMetaLibraryMethod) {
 					if(methods[0] is ConstructorInfo) {
 						// call methods without arguments, ugly and redundant

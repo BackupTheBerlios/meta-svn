@@ -113,6 +113,24 @@ Entry (DictionaryEntry)
         "System.Object With(System.Object, Meta.Types.IMap)"
 Entry (DictionaryEntry)
   Key (Map):
+    "GetStructure"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "True"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Map GetStructure()"
+Entry (DictionaryEntry)
+  Key (Map):
+    "FixStructure"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Map FixStructure(Meta.Types.Map)"
+Entry (DictionaryEntry)
+  Key (Map):
     "Add"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):

@@ -7675,6 +7675,53 @@ Entry (DictionaryEntry)
                       Key (Map):
                         "literal"
                       Value (Map):
+                        "this"
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "2"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "8"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "xasdfss"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "88"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
                         "secondSwitch"
         Entry (DictionaryEntry)
           Key (Map):
@@ -7687,7 +7734,7 @@ Entry (DictionaryEntry)
                 "unchanged"
     Entry (DictionaryEntry)
       Key (Integer):
-        "88"
+        "89"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7714,7 +7761,7 @@ Entry (DictionaryEntry)
                       Key (Map):
                         "literal"
                       Value (Map):
-                        "8"
+                        "9"
         Entry (DictionaryEntry)
           Key (Map):
             "value"
@@ -8034,7 +8081,7 @@ Entry (DictionaryEntry)
                                                     "default"
     Entry (DictionaryEntry)
       Key (Integer):
-        "89"
+        "90"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -8115,7 +8162,7 @@ Entry (DictionaryEntry)
                       Value (Map):
     Entry (DictionaryEntry)
       Key (Integer):
-        "90"
+        "91"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -8142,7 +8189,7 @@ Entry (DictionaryEntry)
                       Key (Map):
                         "literal"
                       Value (Map):
-                        "9"
+                        "10"
         Entry (DictionaryEntry)
           Key (Map):
             "value"
