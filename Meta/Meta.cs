@@ -59,7 +59,11 @@ namespace Meta {
 						return new Files(name);
 					}
 					else if(File.Exists(name)) {
-                  return new StreamReader(name).ReadToEnd();
+//						return new StreamReader(name).ReadToEnd();
+						StreamReader reader=new StreamReader(name);
+						string text=reader.ReadToEnd();
+						reader.Close();
+						return text;
 					}
 					else {
 						return null;
@@ -584,18 +588,12 @@ namespace Meta {
 				foreach(IExpression expression in expressions) {
 					keys.Add(expression.Evaluate(current));
 				}
-				if(keys[0].Equals("result")) {
-					int asdf=0;
-				}
 				object preselection=Preselect(current,keys,true,true);
 				return preselection;
 			}
 			public object Preselect(object current,ArrayList keys,bool isSearch,bool isSelectLastKey) {
 				object selected=current;
 				int i=0;
-				if(keys[0].Equals("staticEventChanged")) {
-					int asdf=0;
-				}
 				if(keys[0].Equals("result")) {
 					i++;
 				}
@@ -654,12 +652,6 @@ namespace Meta {
 				ArrayList keys=new ArrayList();
 				foreach(IExpression expression in expressions) {
 					keys.Add(expression.Evaluate((Map)current));
-				}
-				if(keys[0].Equals("testClass")) {
-					int asdf=0;
-				}
-				if(keys.Count==3 && keys[2].Equals("a")) {
-					int asf=0;
 				}
 				if(keys.Count==1 && keys[0].Equals("result")) {
 					if(val is IKeyValue) {
@@ -1599,9 +1591,6 @@ namespace Meta {
 
 			public virtual object this[object key]  {
 				get {
-					if(key.Equals("staticEvent")) {
-						int asdf=0;
-					}
 					if(key is string) {
 						try {
 							string text=(string)key;
@@ -1655,9 +1644,6 @@ namespace Meta {
 					}
 				}
 				set {		
-					if(key.Equals("staticEvent")) {
-						int asdf=0;
-					}
 					if(key is string) {
 							string text=(string)key;
 
@@ -1790,9 +1776,6 @@ namespace Meta {
 			}
 			public bool ContainsKey(object key)  {
 				try  {
-					if(key.Equals("staticEvent")) {
-						int asdf=0;
-					}
 					object o=this[key];
 				}
 				catch {
@@ -1965,9 +1948,6 @@ namespace Meta {
 				if(obj==null) {
 					return indentation + "null\n";
 				}
-				if(obj is ArrayList) {
-					int asdf=0;
-				}
 				if(obj is ICustomSerialization) {
 					try {
 						return indentation + ((ICustomSerialization)obj).CustomSerialization();
@@ -1990,11 +1970,6 @@ namespace Meta {
 					text=text + indentation + "IEnumerable\n";
 					int count=0;
 					foreach(object entry in (IEnumerable)obj) {
-						if(entry is ArrayList) {
-							int asdf=0;
-						}
-						if(count==42) {
-						}
 						count++;
 						text=text + indentation + "  " + "Entry (" + entry.GetType().Name + "):\n" + 
 							Serialize(entry,indentation + "    ",methodNames);
@@ -2018,13 +1993,7 @@ namespace Meta {
 					members.Sort(new MemberSorter());
 
 					foreach(MemberInfo memberInfo in members) {
-						if(memberInfo.Name.Equals("callers")) {
-							int asdf=0;
-						}
 						if(memberInfo.Name!="Item") {
-							if(memberInfo.Name.Equals("cashedLiterals")) {
-								int asdf=0;
-							}
 							object[] ignoreAttributes=
 								memberInfo.GetCustomAttributes(typeof(IgnoreMemberAttribute),false);
 							if(ignoreAttributes.Length==0) {
@@ -2036,9 +2005,6 @@ namespace Meta {
 
 								if(val!=null) {
 									text=text + " ("  +  val.GetType().Name  + ")";
-								}
-								if(val is ArrayList) {
-									int asdf=0;
 								}
 								text=text + ":\n" + Serialize(val,indentation + "  ",methodNames);
 							}
