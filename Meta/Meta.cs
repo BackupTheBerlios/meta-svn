@@ -1135,39 +1135,48 @@ namespace Meta {
 
 			// not unicode safe!:
 			// the strategy cannot replace itself in the Map yet
-//			public class StringStrategy:MapStrategy {
-//				private string text;
-//				public StringStrategy(string text) {
-//					this.text=text;
-//				}
-//				public override int Count {
-//					get {
-//						return text.Length;
-//					}
-//				}
-//				public override object this[object key]  {
-//					get {
-//						if(key is Integer) {
-//							if(((Integer)key)<this.Count) {
-//								return text[((Integer)key).IntValue()];
-//							}
-//						}
-//						return null;
-//					}
-//					set {
-//						int asdf=0;
-//						//table[key]=value;
-//					}
-//				}
-//				public override bool ContainsKey(object key)  {
-//					if(key is Integer) {
-//						return ((Integer)key)<this.Count;
-//					}
-//					else {
-//						return false;
-//					}
-//				}
-//			}
+			public class StringStrategy:MapStrategy {
+				public override ArrayList Keys {
+					get {
+						return keys;
+					}
+				}
+				private ArrayList keys=new ArrayList();
+				private string text;
+				public StringStrategy(string text) {
+					this.text=text;
+					for(int i=1;i<=text.Length;i++) {
+						keys.Add(new Integer(i));
+					}
+				}
+				public override int Count {
+					get {
+						return text.Length;
+					}
+				}
+				public override object this[object key]  {
+					get {
+						if(key is Integer) {
+							if(((Integer)key)<this.Count) {
+								return text[((Integer)key).IntValue()];
+							}
+						}
+						return null;
+					}
+					set {
+						int asdf=0;
+						//table[key]=value;
+					}
+				}
+				public override bool ContainsKey(object key)  {
+					if(key is Integer) {
+						return ((Integer)key)<this.Count;
+					}
+					else {
+						return false;
+					}
+				}
+			}
 			public class HybridDictionaryStrategy:MapStrategy {
 				public override ArrayList Keys {
 					get {
@@ -1209,9 +1218,7 @@ namespace Meta {
 					set;
 				}
 				public abstract bool ContainsKey(object key);
-				//public abstract IEnumerator GetEnumerator();
 			}
-			//private ArrayList keys;
 			private MapStrategy table;
 			private bool isHashCashed=false;
 			private int hash;
