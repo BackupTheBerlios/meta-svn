@@ -12,25 +12,11 @@ Entry (DictionaryEntry)
         "Meta.Types.Map For()"
 Entry (DictionaryEntry)
   Key (Map):
-    "Greater"
+    "Foreach"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "Divide"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "Not"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean Not(Boolean)"
+        "Meta.Types.Map Foreach()"
 Entry (DictionaryEntry)
   Key (Map):
     "Switch"
@@ -40,32 +26,18 @@ Entry (DictionaryEntry)
         "Void Switch()"
 Entry (DictionaryEntry)
   Key (Map):
-    "Smaller"
+    "If"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
+        "Void If()"
 Entry (DictionaryEntry)
   Key (Map):
-    "Add"
+    "Equal"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "Foreach"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Map Foreach()"
-Entry (DictionaryEntry)
-  Key (Map):
-    "Multiply"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
+        "Boolean Equal(System.Object, System.Object)"
 Entry (DictionaryEntry)
   Key (Map):
     "And"
@@ -82,18 +54,18 @@ Entry (DictionaryEntry)
         "Boolean Or(Boolean, Boolean)"
 Entry (DictionaryEntry)
   Key (Map):
-    "Merge"
+    "Not"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue Merge()"
+        "Boolean Not(Boolean)"
 Entry (DictionaryEntry)
   Key (Map):
-    "Subtract"
+    "GetKeys"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.IKeyValue GetKeys(Meta.Types.IKeyValue)"
 Entry (DictionaryEntry)
   Key (Map):
     "Concatenate"
@@ -103,25 +75,53 @@ Entry (DictionaryEntry)
         "Meta.Types.Map Concatenate(Meta.Types.Map[])"
 Entry (DictionaryEntry)
   Key (Map):
-    "Equal"
+    "Merge"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean Equal(System.Object, System.Object)"
+        "Meta.Types.IKeyValue Merge()"
 Entry (DictionaryEntry)
   Key (Map):
-    "If"
+    "Add"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Void If()"
+        "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "GetKeys"
+    "Subtract"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue GetKeys(Meta.Types.IKeyValue)"
+        "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "Multiply"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "Divide"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "Smaller"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "Greater"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Integer):
     "2"

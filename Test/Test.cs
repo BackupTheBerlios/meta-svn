@@ -41,15 +41,12 @@ namespace Test {
 				if(!File.Exists(args[0])) {
 					throw new ApplicationException("File "+args[0]+" not found.");
 				}
-//				Interpreter.ParseToAst(new StreamReader(Path.Combine(
-//					Test.path,args[0])));
 				Interpreter.Run(new StreamReader(args[0]),new Map());
 			}
 		}
 	}
 	public class Tests {
 		private static string filename=@"basicTest.meta";
-
 		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
 		public class ParseToAst:TestCase {
 			public override object RunTestCase() {

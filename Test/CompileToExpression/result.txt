@@ -54,7 +54,7 @@ statements (ArrayList):
         expressions (ArrayList):
           Entry (Literal)
             literal (Map):
-              "base"
+              "map"
           Entry (Literal)
             literal (Map):
               "Merge"
@@ -99,13 +99,61 @@ statements (ArrayList):
               expressions (ArrayList):
                 Entry (Literal)
                   literal (Map):
-                    "base"
+                    "flow"
+              parents (ArrayList):
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "3"
+              parents (ArrayList):
+            valueExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "logic"
+              parents (ArrayList):
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "4"
+              parents (ArrayList):
+            valueExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "map"
+              parents (ArrayList):
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "5"
+              parents (ArrayList):
+            valueExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "math"
               parents (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
             literal (Map):
-              "base"
+              "map"
           Entry (Literal)
             literal (Map):
               "Merge"
@@ -1490,7 +1538,7 @@ statements (ArrayList):
         expressions (ArrayList):
           Entry (Literal)
             literal (Map):
-              "base"
+              "map"
           Entry (Literal)
             literal (Map):
               "Merge"

@@ -1,5 +1,5 @@
-this=base.Merge(parent,('AssignedToCurrent'))
-this=base.Merge(parent,base)
+this=map.Merge(parent,('AssignedToCurrent'))
+this=map.Merge(parent,flow,logic,map,math)
 'ImpliedAutokey'
 ='Autokey'
 gacTest=System.Collections
@@ -50,7 +50,7 @@ FirstLevel==
   SecondLevel(x='y')
 SecondLevel==arg.arg
 argTest=FirstLevel(a='z')
-this=base.Merge(parent,testClasses)
+this=map.Merge(parent,testClasses)
 testClass=TestClass()
 memberTest=MemberTest()
 MemberTest.classField='a'
