@@ -22,7 +22,6 @@ namespace Editor {
 			form.Controls.Add(help);
 			form.Controls.Add(text);
 			text.KeyPress+=new KeyPressEventHandler(text_KeyPress);
-
 		}
 		private static void text_KeyPress(object sender, KeyPressEventArgs e) {
 			if(e.KeyChar.Equals('.')) {

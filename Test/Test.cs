@@ -30,7 +30,7 @@ namespace Test {
 	class Test {
 		public static string path="";
 		public static void Main(string[] args) {
-			args=new string[]{"editor.meta"};
+//			args=new string[]{"editor.meta"};
 			if(args.Length==0) {
 				Directory.SetCurrentDirectory(
 					".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
