@@ -32,6 +32,7 @@ namespace Test {
 		public static string path="";
 		[STAThread]
 		public static void Main(string[] args) {
+			//args=new string[]{@"..\..\basicTest.meta"};
 			//args=new string[]{@"C:\Dokumente und Einstellungen\Christian\Desktop\editor.meta"};
 			//args=new string[]{@"..\..\basicTest.meta"};
 			if(args.Length==0) {

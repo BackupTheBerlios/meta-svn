@@ -1136,7 +1136,8 @@ namespace Meta {
 				object result;
 				Interpreter.arguments.Add(argument);
 				result=function.Evaluate(this);
-				Interpreter.arguments.Remove(argument);
+				Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);
+//				Interpreter.arguments.Remove(argument);
 				return result;
 			}
 //			public object Call(IMap argument) {
@@ -1631,7 +1632,7 @@ namespace Meta {
 						result=with(o,((Map)Interpreter.Arg));
 					}
 				}		
-				Interpreter.arguments.Remove(argument);
+				Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);// change to RemoveAt
 				return Interpreter.ConvertDotNetToMeta(result);
 			}
 			public static object with(object obj,IMap map) {
