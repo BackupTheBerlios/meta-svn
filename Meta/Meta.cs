@@ -1036,7 +1036,7 @@ namespace Meta {
 						if(value is IMap) {
 							((IMap)val).Parent=this;
 						}
-						if(!table.Contains(key)) {
+						if(!table.ContainsKey(key)) {
 							keys.Add(key);
 						}
 						table[key]=val;
@@ -1088,8 +1088,9 @@ namespace Meta {
 				return compiled;
 			}
 			public bool ContainsKey(object key)  {
-				return table.Contains(key);
+				return table.ContainsKey(key);
 			}
+			//move optimization into strategy?
 			public override bool Equals(object obj) {
 				bool equal=true;
 				if(!Object.ReferenceEquals(obj,this)) {
@@ -1130,15 +1131,55 @@ namespace Meta {
 				return hash;
 			}
 			public Map() {
-				this.table=new HybridDictionary();
+				this.table=new MapStrategy();//new HybridDictionary();
+//				this.table=new HybridDictionary();
 				this.keys=new ArrayList();
 			}
 			private IMap parent;
+			public class MapStrategy:IEnumerable {
+				public int Count {
+					get {
+						return table.Count;
+					}
+				}
+//				public ArrayList Keys {
+//					get {
+//						return keys;
+//					}
+//				}
+				public object this[object key]  {
+					get {
+						return table[key];
+					}
+					set {
+						table[key]=value;
+//						if(value!=null) {
+//							//isHashCashed=false;
+//							object val=value is IMap? ((IMap)value).Clone(): value;
+////							if(value is IMap) {
+////								((IMap)val).Parent=this;
+////							}
+//							if(!table.Contains(key)) {
+//								keys.Add(key);
+//							}
+//						}
+					}
+				}
+				public bool ContainsKey(object key)  {
+					return table.Contains(key);
+				}
+				//private ArrayList keys;
+				private HybridDictionary table=new HybridDictionary();
+				public IEnumerator GetEnumerator() {
+					return this.table.GetEnumerator();
+				}
+			}
 			private ArrayList keys;
-			private HybridDictionary table;
-			public object compiled;
+			private MapStrategy table;
+//			private HybridDictionary table;
 			private bool isHashCashed=false;
 			private int hash;
+			public object compiled;
 
 			public string Serialize(string indent,string[] functions) {
 				if(Interpreter.IsMapString(this)) {
@@ -1149,6 +1190,153 @@ namespace Meta {
 				}
 			}
 		}
+//		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
+//			public IMap Parent {
+//				get {
+//					return parent;
+//				}
+//				set {
+//					parent=value;
+//				}
+//			}
+//			public int Count {
+//				get {
+//					return table.Count;
+//				}
+//			}
+//			public ArrayList IntKeyValues {
+//				get {
+//					ArrayList list=new ArrayList();
+//					for(Integer i=new Integer(1);ContainsKey(i);i++) {
+//						list.Add(this[i]);
+//					}
+//					return list;
+//				}
+//			}
+//			public object this[object key]  {
+//				get {
+//					return table[key];
+//				}
+//				set {
+//					if(value!=null) {
+//						isHashCashed=false;
+//						object val=value is IMap? ((IMap)value).Clone(): value;
+//						if(value is IMap) {
+//							((IMap)val).Parent=this;
+//						}
+//						if(!table.Contains(key)) {
+//							keys.Add(key);
+//						}
+//						table[key]=val;
+//					}
+//				}
+//			}
+//			public object Call(IMap argument) {
+//				IExpression function=(IExpression)Compile();
+//				object result;
+//				Interpreter.arguments.Add(argument);
+//				result=function.Evaluate(this.Parent);
+//				Interpreter.arguments.Remove(argument);
+//				return result;
+//			}
+//			public ArrayList Keys {
+//				get {
+//					return keys;
+//				}
+//			}
+//			public IMap Clone() {
+//				Map copy=new Map();
+//				foreach(object key in keys) {
+//					copy[key]=this[key];
+//				}
+//				copy.Parent=Parent;
+//				copy.compiled=compiled;
+//				return copy;
+//			}
+//			public object Compile()  {
+//				if(compiled==null)  {
+//					switch((string)Interpreter.MapToString((Map)this.Keys[0])) {
+//						case "call":
+//							compiled=new Call(this);break;
+//						case "delayed":
+//							compiled=new Delayed(this);break;
+//						case "program":
+//							compiled=new Program(this);break;
+//						case "literal":
+//							compiled=new Literal(this);break;
+//						case "select":
+//							compiled=new Select(this);break;
+//						case "value":
+//						case "key":
+//							compiled=new Statement(this);break;
+//						default:
+//							throw new ApplicationException("Cannot compile non-code map.");
+//					}
+//				}
+//				return compiled;
+//			}
+//			public bool ContainsKey(object key)  {
+//				return table.Contains(key);
+//			}
+//			public override bool Equals(object obj) {
+//				bool equal=true;
+//				if(!Object.ReferenceEquals(obj,this)) {
+//					if(!(obj is Map)) {
+//						equal=false;
+//					}
+//					else {
+//						Map map=(Map)obj;
+//						if(map.Count==Count) {
+//							foreach(DictionaryEntry entry in this)  {
+//								if(!map.ContainsKey(entry.Key)||!map[entry.Key].Equals(entry.Value)) {
+//									equal=false;
+//									break;
+//								}
+//							}
+//						}
+//						else {
+//							equal=false;
+//						}
+//					}
+//				}
+//				return equal;
+//			}
+//			public IEnumerator GetEnumerator() {
+//				return new MapEnumerator(this);
+//			}
+//			public override int GetHashCode()  {
+//				if(!isHashCashed) {
+//					int h=0;
+//					foreach(DictionaryEntry entry in table) {
+//						unchecked {
+//							h+=entry.Key.GetHashCode()*entry.Value.GetHashCode();
+//						}
+//					}
+//					hash=h;
+//					isHashCashed=true;
+//				}
+//				return hash;
+//			}
+//			public Map() {
+//				this.table=new HybridDictionary();
+//				this.keys=new ArrayList();
+//			}
+//			private IMap parent;
+//			private ArrayList keys;
+//			private HybridDictionary table;
+//			public object compiled;
+//			private bool isHashCashed=false;
+//			private int hash;
+//
+//			public string Serialize(string indent,string[] functions) {
+//				if(Interpreter.IsMapString(this)) {
+//					return indent+"\""+Interpreter.MapToString(this)+"\""+"\n";
+//				}
+//				else {
+//					return null;
+//				}
+//			}
+//		}
 		public class MapEnumerator: IEnumerator {
 			private Map map; public MapEnumerator(Map map) {
 				this.map=map;
