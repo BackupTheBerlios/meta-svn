@@ -2057,3 +2057,23 @@ IEnumerable
       "secondIf"
     Value (String):
       "else"
+  Entry (DictionaryEntry):
+    Key (String):
+      "thenText"
+    Value (String):
+      "then"
+  Entry (DictionaryEntry):
+    Key (String):
+      "firstSwitch"
+    Value (Integer):
+      "50020202029029233344"
+  Entry (DictionaryEntry):
+    Key (String):
+      "bigNumber"
+    Value (Integer):
+      "50020202029029233344"
+  Entry (DictionaryEntry):
+    Key (String):
+      "secondSwitch"
+    Value (String):
+      "default"

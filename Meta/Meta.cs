@@ -230,6 +230,21 @@ namespace Meta {
 			public static bool Equal(object a,object b) {
 				return a.Equals(b);
 			}
+			public static Enum BinaryOr(params Enum[] enums) {
+				int val=(int)Enum.Parse(enums[0].GetType(),enums[0].ToString());
+				for(int i=1;i<enums.Length;i++) {
+					int newVal=(int)Enum.Parse(enums[i].GetType(),enums[i].ToString());
+					val|=newVal;
+				}
+				return (Enum)Enum.ToObject(enums[0].GetType(),val);
+			}
+//			public static Enum BinaryOr(Enum x,Enum y) {
+//				return (Enum)Enum.ToObject(x.GetType(),
+//					(int)Enum.Parse(x.GetType(),x.ToString())
+//					|(int)Enum.Parse(y.GetType(),y.ToString()));
+//				//return Enum.ToObject(x.GetType(),Enum.|(int)y);
+////				return new Integer(x.IntValue()|y.IntValue());
+//			}
 			public static Map For() {
 				Map arg=((Map)Interpreter.Arg);
 				int times=(int)((Integer)arg[new Integer(1)]).IntValue();
@@ -293,16 +308,6 @@ namespace Meta {
 						((IExpression)_else.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
 					}
 				}	
-//				Map arg=((Map)Interpreter.Arg);
-//				object val=arg[new Integer(1)];
-//				Map cases=(Map)arg["case"];
-//				Map def=(Map)arg["default"];
-//				if(cases.ContainsKey(val)) {
-//					((IExpression)((Map)cases[val]).Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
-//				}
-//				else if(def!=null) {
-//					((IExpression)def.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
-//				}				
 			}
 		}
 		public class LiteralRecognitions {
@@ -848,6 +853,7 @@ namespace Meta {
 
 					if(keys[i].Equals("break")) {
 						Interpreter.breakMethod(selected);
+						//Thread.Sleep(new TimeSpan(1,0,0));
 						Thread.CurrentThread.Suspend();
 						if(Interpreter.redoStatement) {
 							Interpreter.redoStatement=false;
@@ -861,7 +867,7 @@ namespace Meta {
 						if(selected==null) {
 							throw new ApplicationException("Key "+keys[i]+" does not exist");
 						}
-						selected=new NetObject(selected)[keys[i]];
+						selected=new NetObject(selected,selected.GetType())[keys[i]];
 					}
 
 				}
@@ -889,13 +895,19 @@ namespace Meta {
 					}
 				}
 				else {
+					if(keys[0].Equals("textBox")) {
+						int asdf=0;
+					}
 					object selected=Preselect(current,keys,false,false);
 					IKeyValue keyValue;
 					if(selected is IKeyValue) {
 						keyValue=(IKeyValue)selected;
 					}
 					else {
-						keyValue=new NetObject(selected);
+						if(selected==null) {
+							int asdf=0;
+						}
+						keyValue=new NetObject(selected,selected.GetType());
 					}
 					keyValue[keys[keys.Count-1]]=val;
 				}
@@ -1402,9 +1414,6 @@ namespace Meta {
 				return Interpreter.ConvertToMeta(CallMethod((Map)Interpreter.Arg));
 			}
 			public object CallMethod(Map arguments) {
-				if(type.Equals(typeof(MenuItem))) {
-					int asdf=0;
-				}
 				ArrayList list;
 				if(attribute!=null) {
 					list=new ArrayList();
@@ -1425,19 +1434,36 @@ namespace Meta {
 					}
 					bool executed=false;
 					methods.Reverse();
-					if(this.name.Equals("")) {
+					if(this.name.Equals("BinaryOr")) {
 						int asdf=0;
 					}
 					foreach(MethodBase method in methods) {
 						ArrayList args=new ArrayList();
 						int counter=0;
 						bool argumentsMatched=true;
-						if(list.Count!=method.GetParameters().Length) {
+						ParameterInfo[] parameters=method.GetParameters();
+						if(list.Count>parameters.Length && parameters.Length>0) {
+							Type lastParameter=parameters[parameters.Length-1].ParameterType;
+							if(lastParameter.IsArray || lastParameter.IsSubclassOf(typeof(Array))) {
+								Map lastArg=new Map();
+								ArrayList paramsArgs=list.GetRange(parameters.Length-1,list.Count-(parameters.Length-1));
+								for(int i=0;i<paramsArgs.Count;i++) {
+									lastArg[new Integer(i+1)]=paramsArgs[i];
+								}
+								list[parameters.Length-1]=lastArg;									
+								list.RemoveRange(parameters.Length,list.Count-parameters.Length);
+							}
+						}
+						if(list.Count!=parameters.Length) {
 							argumentsMatched=false;
 						}
 						else {
 							foreach(ParameterInfo parameter in method.GetParameters()) {
 								bool matched=false;
+								if(name.Equals("BinaryOr")) {
+									Type t=list[counter].GetType();
+									int asdf=0;
+								}
 								if(list[counter].GetType().Equals(parameter.ParameterType)
 									||list[counter].GetType().IsSubclassOf(parameter.ParameterType)) {
 									args.Add(list[counter]);
@@ -1455,6 +1481,14 @@ namespace Meta {
 										catch{
 										}
 									}
+									//									if(!matched && list[counter].GetType().IsSubclassOf(typeof(Enum))) {
+									//										try {
+									//											args.Add((int)list[counter]);
+									//											matched=true;										
+									//										}
+									//										catch {
+									//										}
+									//									}
 									if(!matched && parameter.ParameterType.IsArray && ((Map)list[counter]).IntKeyValues.Count!=0) {// cheating
 										try {
 											Type elementType=parameter.ParameterType.GetElementType();
@@ -1511,13 +1545,13 @@ namespace Meta {
 						}
 					}
 					if(!executed) {
-//						try {
-							return savedMethod.Invoke(target,new object[] {});
-//						}
-//						catch {
-//							throw new ApplicationException(name+" could not be invoked,"+
-//								"the parameters do not match");
-//						}
+						//						try {
+						return savedMethod.Invoke(target,new object[] {});
+						//						}
+						//						catch {
+						//							throw new ApplicationException(name+" could not be invoked,"+
+						//								"the parameters do not match");
+						//						}
 					}
 					else {
 						return result;
@@ -1546,6 +1580,164 @@ namespace Meta {
 					throw new ApplicationException(text);
 				}
 			}
+//			public object CallMethod(Map arguments) {
+//				if(type.Equals(typeof(MenuItem))) {
+//					int asdf=0;
+//				}
+//
+//				ArrayList list;
+//				if(attribute!=null) {
+//					list=new ArrayList();
+//					list.Add(arguments);
+//				}
+//				else {
+//					list=arguments.IntKeyValues;
+//				}
+//				object result=null;
+//				try {
+//					ArrayList methods;
+//					if(name=="") {
+//						methods=new ArrayList(type.GetConstructors());
+//					}
+//					else {
+//						methods=new ArrayList(type.GetMember(name,BindingFlags.Public|
+//							BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+//					}
+//					bool executed=false;
+//					methods.Reverse();
+//					if(this.name.Equals("BinaryOr")) {
+//						int asdf=0;
+//					}
+//					foreach(MethodBase method in methods) {
+//						ArrayList args=new ArrayList();
+//						int counter=0;
+//						bool argumentsMatched=true;
+//						if(list.Count!=method.GetParameters().Length) {
+//							argumentsMatched=false;
+//						}
+//						else {
+//							foreach(ParameterInfo parameter in method.GetParameters()) {
+//								bool matched=false;
+//								if(name.Equals("BinaryOr")) {
+//									Type t=list[counter].GetType();
+//									int asdf=0;
+//								}
+//								if(list[counter].GetType().Equals(parameter.ParameterType)
+//									||list[counter].GetType().IsSubclassOf(parameter.ParameterType)) {
+//									args.Add(list[counter]);
+//									matched=true;
+//								}
+//								else {
+//									if(parameter.ParameterType.IsSubclassOf(typeof(Delegate))) {
+//										try {
+//											MethodInfo m=parameter.ParameterType.GetMethod("Invoke",BindingFlags.Instance
+//												|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+//											Delegate del=CreateDelegate(parameter.ParameterType,m,(Map)list[counter]);
+//											args.Add(del);
+//											matched=true;
+//										}
+//										catch{
+//										}
+//									}
+////									if(!matched && list[counter].GetType().IsSubclassOf(typeof(Enum))) {
+////										try {
+////											args.Add((int)list[counter]);
+////											matched=true;										
+////										}
+////										catch {
+////										}
+////									}
+//									if(!matched && parameter.ParameterType.IsArray && ((Map)list[counter]).IntKeyValues.Count!=0) {// cheating
+//										try {
+//											Type elementType=parameter.ParameterType.GetElementType();
+//											Map map=((Map)list[counter]);
+//											ArrayList mapValues=map.IntKeyValues;
+//											Array array=Array.CreateInstance(elementType,mapValues.Count);
+//											for(int i=0;i<mapValues.Count;i++) {
+//												array.SetValue(mapValues[i],i);
+//											}
+//											args.Add(array);
+//											matched=true;										
+//										}
+//										catch {
+//										}
+//
+//									}
+//									if(!matched) {
+//										Hashtable toDotNet=(Hashtable)
+//											Interpreter.netConversion[parameter.ParameterType];
+//										if(toDotNet!=null) {
+//											ToNetConversion conversion=(ToNetConversion)toDotNet[list[counter].GetType()];
+//											if(conversion!=null) {
+//												try {
+//													args.Add(conversion.Convert(list[counter]));
+//													matched=true;
+//												}
+//												catch (Exception e) {
+//													int asdf=0;
+//												}
+//											}
+//										}
+//									}
+//								}
+//								if(!matched) {
+//									argumentsMatched=false;
+//									break;
+//								}
+//								counter++;
+//							}
+//						}
+//						if(argumentsMatched) {
+//							if(!executed) {
+//								if(method is ConstructorInfo) {
+//									result=((ConstructorInfo)method).Invoke(args.ToArray());
+//								}
+//								else {
+//									result=method.Invoke(target,args.ToArray());
+//								}
+//								executed=true;
+//							}
+//							else {
+//								//throw new ApplicationException("\nArguments match more than one overload of "+name);
+//							}
+//						}
+//					}
+//					if(!executed) {
+////						try {
+//							return savedMethod.Invoke(target,new object[] {});
+////						}
+////						catch {
+////							throw new ApplicationException(name+" could not be invoked,"+
+////								"the parameters do not match");
+////						}
+//					}
+//					else {
+//						return result;
+//					}
+//
+//				}
+//				catch(Exception e) {
+//					Exception b=e;
+//					string text="";
+//					if(target!=null) {
+//						text+=target.ToString();
+//					}
+//					else {
+//						text+=type.ToString();
+//					}
+//					text+=".";
+//					text+=name;
+//					text+="(";
+//					foreach(object obj in list) {
+//						text+=obj.ToString()+",";
+//					}
+//					text=text.Remove(text.Length-1,1);
+//					text+=")";
+//					text+=" could not be invoked. ";
+//					text+=e.ToString();
+//					throw new ApplicationException(text);
+//				}
+//			}
 			public Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) {
 				code.Parent=(IKeyValue)Interpreter.callers[Interpreter.callers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
@@ -1669,8 +1861,10 @@ namespace Meta {
 			}
 		}
 		public class NetObject: NetContainer, IKeyValue {
-			public NetObject(object obj):base(obj,obj.GetType()) {
+			public NetObject(object obj,Type type):base(obj,type) {
 			}
+//			public NetObject(object obj):base(obj,obj.GetType()) {
+//			}
 			public override string ToString() {
 				return obj.ToString();
 			}

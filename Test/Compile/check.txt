@@ -3547,6 +3547,24 @@ statements (ArrayList):
               cached:
                 null
               text (String):
+                "thenText"
+        parents (ArrayList):
+          IEnumerable
+      val (Literal):
+        cached:
+          null
+        text (String):
+          "then"
+    Entry (Statement):
+      active (Boolean):
+        "False"
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
                 "this"
             Entry (Literal):
               cached:
@@ -3705,9 +3723,19 @@ statements (ArrayList):
                                       IEnumerable
                                         Entry (DictionaryEntry):
                                           Key (String):
-                                            "literal"
-                                          Value (String):
-                                            "then"
+                                            "select"
+                                          Value (Map):
+                                            IEnumerable
+                                              Entry (DictionaryEntry):
+                                                Key (Integer):
+                                                  "1"
+                                                Value (Map):
+                                                  IEnumerable
+                                                    Entry (DictionaryEntry):
+                                                      Key (String):
+                                                        "literal"
+                                                      Value (String):
+                                                        "thenText"
               Entry (Statement):
                 active (Boolean):
                   "False"
@@ -4029,5 +4057,551 @@ statements (ArrayList):
                   null
                 text (String):
                   "If"
+          parents (ArrayList):
+            IEnumerable
+    Entry (Statement):
+      active (Boolean):
+        "False"
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "firstSwitch"
+        parents (ArrayList):
+          IEnumerable
+      val (Literal):
+        cached:
+          null
+        text (String):
+          "unchanged"
+    Entry (Statement):
+      active (Boolean):
+        "False"
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "bigNumber"
+        parents (ArrayList):
+          IEnumerable
+      val (Literal):
+        cached:
+          null
+        text (String):
+          "50020202029029233344"
+    Entry (Statement):
+      active (Boolean):
+        "False"
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "this"
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "6"
+        parents (ArrayList):
+          IEnumerable
+      val (Call):
+        argument (Program):
+          statements (ArrayList):
+            IEnumerable
+              Entry (Statement):
+                active (Boolean):
+                  "False"
+                key (Select):
+                  expressions (ArrayList):
+                    IEnumerable
+                      Entry (Literal):
+                        cached:
+                          null
+                        text (String):
+                          "this"
+                      Entry (Literal):
+                        cached:
+                          null
+                        text (String):
+                          "1"
+                  parents (ArrayList):
+                    IEnumerable
+                val (Select):
+                  expressions (ArrayList):
+                    IEnumerable
+                      Entry (Literal):
+                        cached:
+                          null
+                        text (String):
+                          "bigNumber"
+                  parents (ArrayList):
+                    IEnumerable
+              Entry (Statement):
+                active (Boolean):
+                  "False"
+                key (Select):
+                  expressions (ArrayList):
+                    IEnumerable
+                      Entry (Literal):
+                        cached:
+                          null
+                        text (String):
+                          "case"
+                  parents (ArrayList):
+                    IEnumerable
+                val (Program):
+                  statements (ArrayList):
+                    IEnumerable
+                      Entry (Statement):
+                        active (Boolean):
+                          "False"
+                        key (Select):
+                          expressions (ArrayList):
+                            IEnumerable
+                              Entry (Select):
+                                expressions (ArrayList):
+                                  IEnumerable
+                                    Entry (Literal):
+                                      cached:
+                                        null
+                                      text (String):
+                                        "bigNumber"
+                                parents (ArrayList):
+                                  IEnumerable
+                          parents (ArrayList):
+                            IEnumerable
+                        val (Delayed):
+                          obj (Map):
+                            IEnumerable
+                              Entry (DictionaryEntry):
+                                Key (String):
+                                  "program"
+                                Value (Map):
+                                  IEnumerable
+                                    Entry (DictionaryEntry):
+                                      Key (Integer):
+                                        "1"
+                                      Value (Map):
+                                        IEnumerable
+                                          Entry (DictionaryEntry):
+                                            Key (String):
+                                              "key"
+                                            Value (Map):
+                                              IEnumerable
+                                                Entry (DictionaryEntry):
+                                                  Key (String):
+                                                    "select"
+                                                  Value (Map):
+                                                    IEnumerable
+                                                      Entry (DictionaryEntry):
+                                                        Key (Integer):
+                                                          "1"
+                                                        Value (Map):
+                                                          IEnumerable
+                                                            Entry (DictionaryEntry):
+                                                              Key (String):
+                                                                "literal"
+                                                              Value (String):
+                                                                "search"
+                                                      Entry (DictionaryEntry):
+                                                        Key (Integer):
+                                                          "2"
+                                                        Value (Map):
+                                                          IEnumerable
+                                                            Entry (DictionaryEntry):
+                                                              Key (String):
+                                                                "literal"
+                                                              Value (String):
+                                                                "firstSwitch"
+                                          Entry (DictionaryEntry):
+                                            Key (String):
+                                              "value"
+                                            Value (Map):
+                                              IEnumerable
+                                                Entry (DictionaryEntry):
+                                                  Key (String):
+                                                    "select"
+                                                  Value (Map):
+                                                    IEnumerable
+                                                      Entry (DictionaryEntry):
+                                                        Key (Integer):
+                                                          "1"
+                                                        Value (Map):
+                                                          IEnumerable
+                                                            Entry (DictionaryEntry):
+                                                              Key (String):
+                                                                "literal"
+                                                              Value (String):
+                                                                "bigNumber"
+              Entry (Statement):
+                active (Boolean):
+                  "False"
+                key (Select):
+                  expressions (ArrayList):
+                    IEnumerable
+                      Entry (Literal):
+                        cached:
+                          null
+                        text (String):
+                          "default"
+                  parents (ArrayList):
+                    IEnumerable
+                val (Delayed):
+                  obj (Map):
+                    IEnumerable
+                      Entry (DictionaryEntry):
+                        Key (String):
+                          "program"
+                        Value (Map):
+                          IEnumerable
+                            Entry (DictionaryEntry):
+                              Key (Integer):
+                                "1"
+                              Value (Map):
+                                IEnumerable
+                                  Entry (DictionaryEntry):
+                                    Key (String):
+                                      "key"
+                                    Value (Map):
+                                      IEnumerable
+                                        Entry (DictionaryEntry):
+                                          Key (String):
+                                            "select"
+                                          Value (Map):
+                                            IEnumerable
+                                              Entry (DictionaryEntry):
+                                                Key (Integer):
+                                                  "1"
+                                                Value (Map):
+                                                  IEnumerable
+                                                    Entry (DictionaryEntry):
+                                                      Key (String):
+                                                        "literal"
+                                                      Value (String):
+                                                        "search"
+                                              Entry (DictionaryEntry):
+                                                Key (Integer):
+                                                  "2"
+                                                Value (Map):
+                                                  IEnumerable
+                                                    Entry (DictionaryEntry):
+                                                      Key (String):
+                                                        "literal"
+                                                      Value (String):
+                                                        "firstSwitch"
+                                  Entry (DictionaryEntry):
+                                    Key (String):
+                                      "value"
+                                    Value (Map):
+                                      IEnumerable
+                                        Entry (DictionaryEntry):
+                                          Key (String):
+                                            "literal"
+                                          Value (String):
+                                            "default"
+        callable (Select):
+          expressions (ArrayList):
+            IEnumerable
+              Entry (Literal):
+                cached:
+                  null
+                text (String):
+                  "Switch"
+          parents (ArrayList):
+            IEnumerable
+    Entry (Statement):
+      active (Boolean):
+        "False"
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "secondSwitch"
+        parents (ArrayList):
+          IEnumerable
+      val (Literal):
+        cached:
+          null
+        text (String):
+          "unchanged"
+    Entry (Statement):
+      active (Boolean):
+        "False"
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "this"
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "7"
+        parents (ArrayList):
+          IEnumerable
+      val (Call):
+        argument (Program):
+          statements (ArrayList):
+            IEnumerable
+              Entry (Statement):
+                active (Boolean):
+                  "False"
+                key (Select):
+                  expressions (ArrayList):
+                    IEnumerable
+                      Entry (Literal):
+                        cached:
+                          null
+                        text (String):
+                          "this"
+                      Entry (Literal):
+                        cached:
+                          null
+                        text (String):
+                          "1"
+                  parents (ArrayList):
+                    IEnumerable
+                val (Literal):
+                  cached:
+                    null
+                  text (String):
+                    "3"
+              Entry (Statement):
+                active (Boolean):
+                  "False"
+                key (Select):
+                  expressions (ArrayList):
+                    IEnumerable
+                      Entry (Literal):
+                        cached:
+                          null
+                        text (String):
+                          "case"
+                  parents (ArrayList):
+                    IEnumerable
+                val (Program):
+                  statements (ArrayList):
+                    IEnumerable
+                      Entry (Statement):
+                        active (Boolean):
+                          "False"
+                        key (Select):
+                          expressions (ArrayList):
+                            IEnumerable
+                              Entry (Literal):
+                                cached:
+                                  null
+                                text (String):
+                                  "1"
+                          parents (ArrayList):
+                            IEnumerable
+                        val (Delayed):
+                          obj (Map):
+                            IEnumerable
+                              Entry (DictionaryEntry):
+                                Key (String):
+                                  "program"
+                                Value (Map):
+                                  IEnumerable
+                                    Entry (DictionaryEntry):
+                                      Key (Integer):
+                                        "1"
+                                      Value (Map):
+                                        IEnumerable
+                                          Entry (DictionaryEntry):
+                                            Key (String):
+                                              "key"
+                                            Value (Map):
+                                              IEnumerable
+                                                Entry (DictionaryEntry):
+                                                  Key (String):
+                                                    "select"
+                                                  Value (Map):
+                                                    IEnumerable
+                                                      Entry (DictionaryEntry):
+                                                        Key (Integer):
+                                                          "1"
+                                                        Value (Map):
+                                                          IEnumerable
+                                                            Entry (DictionaryEntry):
+                                                              Key (String):
+                                                                "literal"
+                                                              Value (String):
+                                                                "search"
+                                                      Entry (DictionaryEntry):
+                                                        Key (Integer):
+                                                          "2"
+                                                        Value (Map):
+                                                          IEnumerable
+                                                            Entry (DictionaryEntry):
+                                                              Key (String):
+                                                                "literal"
+                                                              Value (String):
+                                                                "secondSwitch"
+                                          Entry (DictionaryEntry):
+                                            Key (String):
+                                              "value"
+                                            Value (Map):
+                                              IEnumerable
+                                                Entry (DictionaryEntry):
+                                                  Key (String):
+                                                    "literal"
+                                                  Value (String):
+                                                    "one"
+                      Entry (Statement):
+                        active (Boolean):
+                          "False"
+                        key (Select):
+                          expressions (ArrayList):
+                            IEnumerable
+                              Entry (Literal):
+                                cached:
+                                  null
+                                text (String):
+                                  "2"
+                          parents (ArrayList):
+                            IEnumerable
+                        val (Delayed):
+                          obj (Map):
+                            IEnumerable
+                              Entry (DictionaryEntry):
+                                Key (String):
+                                  "program"
+                                Value (Map):
+                                  IEnumerable
+                                    Entry (DictionaryEntry):
+                                      Key (Integer):
+                                        "1"
+                                      Value (Map):
+                                        IEnumerable
+                                          Entry (DictionaryEntry):
+                                            Key (String):
+                                              "key"
+                                            Value (Map):
+                                              IEnumerable
+                                                Entry (DictionaryEntry):
+                                                  Key (String):
+                                                    "select"
+                                                  Value (Map):
+                                                    IEnumerable
+                                                      Entry (DictionaryEntry):
+                                                        Key (Integer):
+                                                          "1"
+                                                        Value (Map):
+                                                          IEnumerable
+                                                            Entry (DictionaryEntry):
+                                                              Key (String):
+                                                                "literal"
+                                                              Value (String):
+                                                                "search"
+                                                      Entry (DictionaryEntry):
+                                                        Key (Integer):
+                                                          "2"
+                                                        Value (Map):
+                                                          IEnumerable
+                                                            Entry (DictionaryEntry):
+                                                              Key (String):
+                                                                "literal"
+                                                              Value (String):
+                                                                "secondSwitch"
+                                          Entry (DictionaryEntry):
+                                            Key (String):
+                                              "value"
+                                            Value (Map):
+                                              IEnumerable
+                                                Entry (DictionaryEntry):
+                                                  Key (String):
+                                                    "literal"
+                                                  Value (String):
+                                                    "two"
+              Entry (Statement):
+                active (Boolean):
+                  "False"
+                key (Select):
+                  expressions (ArrayList):
+                    IEnumerable
+                      Entry (Literal):
+                        cached:
+                          null
+                        text (String):
+                          "default"
+                  parents (ArrayList):
+                    IEnumerable
+                val (Delayed):
+                  obj (Map):
+                    IEnumerable
+                      Entry (DictionaryEntry):
+                        Key (String):
+                          "program"
+                        Value (Map):
+                          IEnumerable
+                            Entry (DictionaryEntry):
+                              Key (Integer):
+                                "1"
+                              Value (Map):
+                                IEnumerable
+                                  Entry (DictionaryEntry):
+                                    Key (String):
+                                      "key"
+                                    Value (Map):
+                                      IEnumerable
+                                        Entry (DictionaryEntry):
+                                          Key (String):
+                                            "select"
+                                          Value (Map):
+                                            IEnumerable
+                                              Entry (DictionaryEntry):
+                                                Key (Integer):
+                                                  "1"
+                                                Value (Map):
+                                                  IEnumerable
+                                                    Entry (DictionaryEntry):
+                                                      Key (String):
+                                                        "literal"
+                                                      Value (String):
+                                                        "search"
+                                              Entry (DictionaryEntry):
+                                                Key (Integer):
+                                                  "2"
+                                                Value (Map):
+                                                  IEnumerable
+                                                    Entry (DictionaryEntry):
+                                                      Key (String):
+                                                        "literal"
+                                                      Value (String):
+                                                        "secondSwitch"
+                                  Entry (DictionaryEntry):
+                                    Key (String):
+                                      "value"
+                                    Value (Map):
+                                      IEnumerable
+                                        Entry (DictionaryEntry):
+                                          Key (String):
+                                            "literal"
+                                          Value (String):
+                                            "default"
+        callable (Select):
+          expressions (ArrayList):
+            IEnumerable
+              Entry (Literal):
+                cached:
+                  null
+                text (String):
+                  "Switch"
           parents (ArrayList):
             IEnumerable

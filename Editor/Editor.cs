@@ -416,7 +416,8 @@ namespace Editor {
 			string newText=text.Replace(Environment.NewLine,"").
 				Replace("    "," ").Replace("   "," ").Replace("  "," ");
 			newText=newText.Replace("\n ","\n");
-			toolTip.BeginInvoke(new IndexChangedDelegate(IndexChangedBackThread),new object[] {newText});
+			toolTip.Invoke(new IndexChangedDelegate(IndexChangedBackThread),new object[] {newText});
+//			toolTip.BeginInvoke(new IndexChangedDelegate(IndexChangedBackThread),new object[] {newText});
 		}
 		private delegate void IndexChangedDelegate(string newText);
 		private static void IndexChangedBackThread(string newText) {
@@ -688,7 +689,8 @@ namespace Editor {
 			return doc.SelectSingleNode(xpath);
 		}
 		public static void OnBreak(object obj) {
-			listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
+			listBox.Invoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
+//			listBox.BeginInvoke(new ShowHelpDelegate(ShowHelpBackThread),new object[]{obj});
 		}
 
 		public static string lastMethodName="";
@@ -757,7 +759,10 @@ namespace Editor {
 					}
 					else {
 						listBox.Items.Clear();
-						IKeyValue keyValue=obj is IKeyValue? (IKeyValue)obj:new NetObject(obj);
+						if(obj==null) {
+							int asdf=0;
+						}
+						IKeyValue keyValue=obj is IKeyValue? (IKeyValue)obj:new NetObject(obj,obj.GetType());
 						ArrayList keys=new ArrayList();
 						foreach(DictionaryEntry entry in keyValue) {
 							keys.Add(entry.Key);
@@ -915,6 +920,8 @@ namespace Editor {
 			}
 			catch(Exception e) {
 //				Help.lastHelpThread.Abort();
+				Help.toolTip.Text=e.Message;
+				Help.toolTip.Visible=true;
 				Help.lastHelpThread=null;
 			}
 		}
