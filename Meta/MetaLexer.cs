@@ -54,9 +54,10 @@ namespace Meta.Parser
 		public const int LITERAL = 22;
 		public const int SPACES = 23;
 		public const int LINE = 24;
-		public const int SPACE = 25;
-		public const int NEWLINE = 26;
-		public const int SELECT_KEY = 27;
+		public const int COMMENT = 25;
+		public const int SPACE = 26;
+		public const int NEWLINE = 27;
+		public const int SELECT_KEY = 28;
 		
 		public MetaLexer(Stream ins) : this(new ByteBuffer(ins))
 		{
@@ -165,6 +166,12 @@ tryAgain:
 						case '\n':  case '\r':
 						{
 							mLINE(true);
+							theRetToken = returnToken_;
+							break;
+						}
+						case '/':
+						{
+							mCOMMENT(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -403,10 +410,10 @@ _loop17_breakloop:				;
 			{    // ( ... )*
 				for (;;)
 				{
-					if ((tokenSet_0_.member(LA(1))))
+					if ((tokenSet_2_.member(LA(1))))
 					{
 						{
-							match(tokenSet_0_);
+							match(tokenSet_2_);
 						}
 					}
 					else
@@ -665,11 +672,74 @@ _loop36_breakloop:				;
 		returnToken_ = _token;
 	}
 	
+	public void mCOMMENT(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; Token _token=null; int _begin=text.Length;
+		_ttype = COMMENT;
+		
+		match("//");
+		{    // ( ... )*
+			for (;;)
+			{
+				if ((tokenSet_3_.member(LA(1))))
+				{
+					{
+						match(tokenSet_3_);
+					}
+				}
+				else
+				{
+					goto _loop40_breakloop;
+				}
+				
+			}
+_loop40_breakloop:			;
+		}    // ( ... )*
+		{
+			switch ( LA(1) )
+			{
+			case '\n':
+			{
+				match('\n');
+				break;
+			}
+			case '\r':
+			{
+				match('\r');
+				{
+					if ((LA(1)=='\n'))
+					{
+						match('\n');
+					}
+					else {
+					}
+					
+				}
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
+			}
+			 }
+		}
+		if (0==inputState.guessing)
+		{
+			_ttype = Token.SKIP; newline();
+		}
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+		{
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
+		}
+		returnToken_ = _token;
+	}
+	
 	
 	private static long[] mk_tokenSet_0_()
 	{
 		long[] data = new long[2048];
-		data[0]=-2594204832839564808L;
+		data[0]=-2594345570327920136L;
 		data[1]=-671088641L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
@@ -687,6 +757,27 @@ _loop36_breakloop:				;
 		return data;
 	}
 	public static readonly BitSet tokenSet_1_ = new BitSet(mk_tokenSet_1_());
+	private static long[] mk_tokenSet_2_()
+	{
+		long[] data = new long[2048];
+		data[0]=-2594204832839564808L;
+		data[1]=-671088641L;
+		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
+		data[1023]=9223372036854775807L;
+		for (int i = 1024; i<=2047; i++) { data[i]=0L; }
+		return data;
+	}
+	public static readonly BitSet tokenSet_2_ = new BitSet(mk_tokenSet_2_());
+	private static long[] mk_tokenSet_3_()
+	{
+		long[] data = new long[2048];
+		data[0]=-65032L;
+		for (int i = 1; i<=1022; i++) { data[i]=-1L; }
+		data[1023]=9223372036854775807L;
+		for (int i = 1024; i<=2047; i++) { data[i]=0L; }
+		return data;
+	}
+	public static readonly BitSet tokenSet_3_ = new BitSet(mk_tokenSet_3_());
 	
 }
 }

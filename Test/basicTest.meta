@@ -21,6 +21,9 @@ lazyGACTest:Microsoft.CSharp
 metaLibTest:metaLib
 commandLineArguments:arg
 libraryAssemblyTest:testClasses
+//thisIsInAComment=
+//  still comment
+// some more comment
 aMap:
     ['a]:'a
 [aMap]:'Object

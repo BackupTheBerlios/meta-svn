@@ -47,9 +47,10 @@ namespace Meta.Parser
 		public const int LITERAL = 22;
 		public const int SPACES = 23;
 		public const int LINE = 24;
-		public const int SPACE = 25;
-		public const int NEWLINE = 26;
-		public const int SELECT_KEY = 27;
+		public const int COMMENT = 25;
+		public const int SPACE = 26;
+		public const int NEWLINE = 27;
+		public const int SELECT_KEY = 28;
 		
 		public MetaTreeParser()
 		{
@@ -122,7 +123,7 @@ namespace Meta.Parser
 		Map argument=new Map();
 		
 		
-		AST __t98 = _t;
+		AST __t104 = _t;
 		AST tmp23_AST_in = _t;
 		match(_t,CALL);
 		_t = _t.getFirstChild();
@@ -139,7 +140,7 @@ namespace Meta.Parser
 		call[Call.argumentString]=argument;
 		result[Call.callString]=call;
 		
-		_t = __t98;
+		_t = __t104;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return result;
@@ -156,7 +157,7 @@ namespace Meta.Parser
 		int counter=1;
 		
 		
-		AST __t93 = _t;
+		AST __t99 = _t;
 		AST tmp24_AST_in = _t;
 		match(_t,MAP);
 		_t = _t.getFirstChild();
@@ -171,7 +172,7 @@ namespace Meta.Parser
 					Map key=null;
 					Map val=null;
 					
-					AST __t95 = _t;
+					AST __t101 = _t;
 					AST tmp25_AST_in = _t;
 					match(_t,STATEMENT);
 					_t = _t.getFirstChild();
@@ -186,18 +187,18 @@ namespace Meta.Parser
 										statements[new Integer(counter)]=statement;
 										counter++;
 									
-					_t = __t95;
+					_t = __t101;
 					_t = _t.getNextSibling();
 				}
 				else
 				{
-					goto _loop96_breakloop;
+					goto _loop102_breakloop;
 				}
 				
 			}
-_loop96_breakloop:			;
+_loop102_breakloop:			;
 		}    // ( ... )*
-		_t = __t93;
+		_t = __t99;
 		_t = _t.getNextSibling();
 		
 		result[Program.programString]=statements;
@@ -218,13 +219,13 @@ _loop96_breakloop:			;
 		int counter=1;
 		
 		
-		AST __t102 = _t;
+		AST __t108 = _t;
 		AST tmp26_AST_in = _t;
 		match(_t,SELECT_KEY);
 		_t = _t.getFirstChild();
 		{
 			{ // ( ... )+
-			int _cnt105=0;
+			int _cnt111=0;
 			for (;;)
 			{
 				if (_t == null)
@@ -240,15 +241,15 @@ _loop96_breakloop:			;
 				}
 				else
 				{
-					if (_cnt105 >= 1) { goto _loop105_breakloop; } else { throw new NoViableAltException(_t);; }
+					if (_cnt111 >= 1) { goto _loop111_breakloop; } else { throw new NoViableAltException(_t);; }
 				}
 				
-				_cnt105++;
+				_cnt111++;
 			}
-_loop105_breakloop:			;
+_loop111_breakloop:			;
 			}    // ( ... )+
 		}
-		_t = __t102;
+		_t = __t108;
 		_t = _t.getNextSibling();
 		
 		result[Select.selectString]=selection;
@@ -287,13 +288,13 @@ _loop105_breakloop:			;
 		Map delayed;
 		
 		
-		AST __t108 = _t;
+		AST __t114 = _t;
 		AST tmp27_AST_in = _t;
 		match(_t,FUNCTION);
 		_t = _t.getFirstChild();
 		delayed=expression(_t);
 		_t = retTree_;
-		_t = __t108;
+		_t = __t114;
 		_t = _t.getNextSibling();
 		
 		result[Delayed.delayedString]=delayed;
@@ -329,6 +330,7 @@ _loop105_breakloop:			;
 		@"""LITERAL""",
 		@"""SPACES""",
 		@"""LINE""",
+		@"""COMMENT""",
 		@"""SPACE""",
 		@"""NEWLINE""",
 		@"""SELECT_KEY"""
@@ -336,7 +338,7 @@ _loop105_breakloop:			;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 138414848L, 0L};
+		long[] data = { 272632576L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());

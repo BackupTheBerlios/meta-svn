@@ -55,9 +55,10 @@ namespace Meta.Parser
 		public const int LITERAL = 22;
 		public const int SPACES = 23;
 		public const int LINE = 24;
-		public const int SPACE = 25;
-		public const int NEWLINE = 26;
-		public const int SELECT_KEY = 27;
+		public const int COMMENT = 25;
+		public const int SPACE = 26;
+		public const int NEWLINE = 27;
+		public const int SELECT_KEY = 28;
 		
 		
 		protected void initialize()
@@ -98,11 +99,11 @@ namespace Meta.Parser
 		AST expression_AST = null;
 		
 		{
-			bool synPredMatched44 = false;
+			bool synPredMatched50 = false;
 			if (((tokenSet_0_.member(LA(1)))))
 			{
-				int _m44 = mark();
-				synPredMatched44 = true;
+				int _m50 = mark();
+				synPredMatched50 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -111,12 +112,12 @@ namespace Meta.Parser
 				}
 				catch (RecognitionException)
 				{
-					synPredMatched44 = false;
+					synPredMatched50 = false;
 				}
-				rewind(_m44);
+				rewind(_m50);
 				inputState.guessing--;
 			}
-			if ( synPredMatched44 )
+			if ( synPredMatched50 )
 			{
 				call();
 				if (0 == inputState.guessing)
@@ -231,11 +232,11 @@ namespace Meta.Parser
 			 }
 		}
 		{
-			bool synPredMatched71 = false;
+			bool synPredMatched77 = false;
 			if (((tokenSet_0_.member(LA(1)))))
 			{
-				int _m71 = mark();
-				synPredMatched71 = true;
+				int _m77 = mark();
+				synPredMatched77 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -326,12 +327,12 @@ namespace Meta.Parser
 				}
 				catch (RecognitionException)
 				{
-					synPredMatched71 = false;
+					synPredMatched77 = false;
 				}
-				rewind(_m71);
+				rewind(_m77);
 				inputState.guessing--;
 			}
-			if ( synPredMatched71 )
+			if ( synPredMatched77 )
 			{
 				call();
 				if (0 == inputState.guessing)
@@ -421,11 +422,11 @@ namespace Meta.Parser
 						}
 						else
 						{
-							goto _loop78_breakloop;
+							goto _loop84_breakloop;
 						}
 						
 					}
-_loop78_breakloop:					;
+_loop84_breakloop:					;
 				}    // ( ... )*
 				if (0==inputState.guessing)
 				{
@@ -476,11 +477,11 @@ _loop78_breakloop:					;
 						}
 						else
 						{
-							goto _loop81_breakloop;
+							goto _loop87_breakloop;
 						}
 						
 					}
-_loop81_breakloop:					;
+_loop87_breakloop:					;
 				}    // ( ... )*
 				if (0==inputState.guessing)
 				{
@@ -597,11 +598,11 @@ _loop81_breakloop:					;
 							}
 							else
 							{
-								goto _loop52_breakloop;
+								goto _loop58_breakloop;
 							}
 							
 						}
-_loop52_breakloop:						;
+_loop58_breakloop:						;
 					}    // ( ... )*
 					match(DEDENT);
 				}
@@ -668,11 +669,11 @@ _loop52_breakloop:						;
 		ASTPair currentAST = new ASTPair();
 		AST statement_AST = null;
 		
-		bool synPredMatched55 = false;
+		bool synPredMatched61 = false;
 		if (((LA(1)==LBRACKET||LA(1)==GATTER||LA(1)==LITERAL_KEY)))
 		{
-			int _m55 = mark();
-			synPredMatched55 = true;
+			int _m61 = mark();
+			synPredMatched61 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -682,12 +683,12 @@ _loop52_breakloop:						;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched55 = false;
+				synPredMatched61 = false;
 			}
-			rewind(_m55);
+			rewind(_m61);
 			inputState.guessing--;
 		}
-		if ( synPredMatched55 )
+		if ( synPredMatched61 )
 		{
 			{
 				select();
@@ -866,11 +867,11 @@ _loop52_breakloop:						;
 					 }
 				}
 				{
-					bool synPredMatched87 = false;
+					bool synPredMatched93 = false;
 					if (((tokenSet_0_.member(LA(1)))))
 					{
-						int _m87 = mark();
-						synPredMatched87 = true;
+						int _m93 = mark();
+						synPredMatched93 = true;
 						inputState.guessing++;
 						try {
 							{
@@ -879,12 +880,12 @@ _loop52_breakloop:						;
 						}
 						catch (RecognitionException)
 						{
-							synPredMatched87 = false;
+							synPredMatched93 = false;
 						}
-						rewind(_m87);
+						rewind(_m93);
 						inputState.guessing--;
 					}
-					if ( synPredMatched87 )
+					if ( synPredMatched93 )
 					{
 						call();
 						if (0 == inputState.guessing)
@@ -1006,7 +1007,7 @@ _loop52_breakloop:						;
 	}
 	static public void initializeASTFactory( ASTFactory factory )
 	{
-		factory.setMaxNodeType(27);
+		factory.setMaxNodeType(28);
 	}
 	
 	public static readonly string[] tokenNames_ = new string[] {
@@ -1035,6 +1036,7 @@ _loop52_breakloop:						;
 		@"""LITERAL""",
 		@"""SPACES""",
 		@"""LINE""",
+		@"""COMMENT""",
 		@"""SPACE""",
 		@"""NEWLINE""",
 		@"""SELECT_KEY"""
