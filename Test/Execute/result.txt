@@ -251,6 +251,27 @@ IEnumerable
                 Value (NetClass):
                     Entry (DictionaryEntry):
     Key (String):
+      "lazyGACTest"
+    Value (Map):
+      IEnumerable
+        Entry (DictionaryEntry):
+          Key (String):
+            "ErrorLevel"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "CompilerError"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "Compiler"
+          Value (NetClass):
+                    Entry (DictionaryEntry):
+          Key (String):
+            "CSharpCodeProvider"
+          Value (NetClass):
+              Entry (DictionaryEntry):
+    Key (String):
       "metaLibTest"
     Value (Map):
       IEnumerable

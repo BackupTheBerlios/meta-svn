@@ -2,6 +2,7 @@ this=meta.Merge(parent,('AssignedToCurrent'))
 'ImpliedAutokey'
 ='Autokey'
 gacTest=System.Collections
+lazyGACTest=Microsoft.CSharp
 metaLibTest=metaLib
 commandLineArguments=arg
 [(['a']='a')]='Object'

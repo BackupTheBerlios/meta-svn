@@ -172,6 +172,32 @@ statements (ArrayList):
               cached:
                 null
               text (String):
+                "lazyGACTest"
+        parents (ArrayList):
+          IEnumerable
+      val (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "Microsoft"
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "CSharp"
+        parents (ArrayList):
+          IEnumerable
+    Entry (Statement):
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
                 "metaLibTest"
         parents (ArrayList):
           IEnumerable
