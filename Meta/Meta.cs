@@ -1131,42 +1131,48 @@ namespace Meta {
 //				}
 //				return hash;
 //			}
+//			public Map
 			public Map() {
 				this.table=new HybridDictionaryStrategy();
 				this.keys=new ArrayList();
 			}
 			private IMap parent;
 
-			// StringInfo is cool! should make computing hashcodes easy, too
-			// Maybe take out IEnumerable, it's too fricking complicated
-			// also there is no need for IEnumerable to be fast
-//			public class StringStrategy:MapStrategy,IEnumerable {
-//				public StringStrategy(string text) {
-//					this.text=new StringInfo(text);
-//				}
-//				private StringInfo text;
-//				public override int Count {
-//					get {
-//						return table.Count;
-//					}
-//				}
-//				public override object this[object key]  {
-//					get {
-//						return table[key];
-//					}
-//					set {
-//						table[key]=value;
-//					}
-//				}
-//				public override bool ContainsKey(object key)  {
-//					return table.Contains(key);
-//				}
-//				//private ArrayList keys;
-//				private HybridDictionary table=new HybridDictionary();
-//				public override IEnumerator GetEnumerator() {
-//					return this.table.GetEnumerator();
-//				}
-//			}
+			// not unicode safe!:
+			// the strategy cannot replace itself in the Map yet
+			public class StringStrategy:MapStrategy {
+				private string text;
+				public StringStrategy(string text) {
+					this.text=text;
+				}
+				public override int Count {
+					get {
+						return text.Length;
+					}
+				}
+				public override object this[object key]  {
+					get {
+						if(key is Integer) {
+							if(((Integer)key)<this.Count) {
+								return text[((Integer)key).IntValue()];
+							}
+						}
+						return null;
+					}
+					set {
+						int asdf=0;
+						//table[key]=value;
+					}
+				}
+				public override bool ContainsKey(object key)  {
+					if(key is Integer) {
+						return ((Integer)key)<this.Count;
+					}
+					else {
+						return false;
+					}
+				}
+			}
 			public class HybridDictionaryStrategy:MapStrategy {
 				public override int Count {
 					get {
