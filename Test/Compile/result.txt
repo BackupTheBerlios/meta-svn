@@ -542,16 +542,6 @@ statements (ArrayList):
                                                     Key (String):
                                                       "literal"
                                                     Value (String):
-                                                      "parent"
-                                            Entry (DictionaryEntry):
-                                              Key (Integer):
-                                                "3"
-                                              Value (Map):
-                                                IEnumerable
-                                                  Entry (DictionaryEntry):
-                                                    Key (String):
-                                                      "literal"
-                                                    Value (String):
                                                       "a"
                                 Entry (DictionaryEntry):
                                   Key (String):

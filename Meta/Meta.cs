@@ -874,7 +874,7 @@ namespace Meta {
 				existing.Parent=new Meta.Types.Library();
 				Interpreter.arguments.Add(argument);
 				lastProgram=Mapify(reader);
-				object result=lastProgram.Call(existing,existing);
+				object result=lastProgram.Call(new Map(),existing);
 				Interpreter.arguments.Remove(argument);
 				return result;
 			}
@@ -1292,11 +1292,10 @@ namespace Meta {
 			}
 			public object Call(Map caller) {
 				Map local=new Map();
-				local.Parent=this;
+				local.Parent=this.Parent;
 				return Call(caller,local);
 			}
-			public object Call(Map caller,Map existing)  { // check, not very nice, use Parent
-																		  // to pass in stuff?
+			public object Call(Map caller,Map existing)  {
 				IExpression callable=(IExpression)Compile();
 				object result;
 				if(callable is Program) { // somehow wrong

@@ -774,17 +774,10 @@ getFirstChild (CommonAST):
                                                           getNextSibling (CommonAST):
                                                             getFirstChild:
                                                               null
-                                                            getNextSibling (CommonAST):
-                                                              getFirstChild:
-                                                                null
-                                                              getNextSibling:
-                                                                null
-                                                              getText (String):
-                                                                "a"
-                                                              Type (Int32):
-                                                                "21"
+                                                            getNextSibling:
+                                                              null
                                                             getText (String):
-                                                              "parent"
+                                                              "a"
                                                             Type (Int32):
                                                               "21"
                                                           getText (String):
