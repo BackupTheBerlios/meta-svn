@@ -96,7 +96,7 @@ namespace Meta {
 			public static readonly Map programString=Interpreter.StringToMap("program");
 			public Program(Map code) {
 				foreach(Map statement in ((Map)code[programString]).IntKeyValues) {
-					this.statements.Add(statement.Compile()); // should we save the original maps?
+					this.statements.Add(statement.Compile()); // should we save the original maps instead of statements?
 				}
 			}
 			public readonly ArrayList statements=new ArrayList();
@@ -119,7 +119,7 @@ namespace Meta {
 				}
 				return SearchAndSelectKeysInCurrentMap(keysToBeSelected,true,true);
 			}
-			public void Assign(IMap current,object valueToBeAssigned) { // remove current
+			public void Assign(IMap current,object valueToBeAssigned) { 
 				ArrayList keysToBeSelected=new ArrayList();
 				foreach(IExpression expression in expressions) {
 					keysToBeSelected.Add(expression.Evaluate(current));
@@ -168,7 +168,7 @@ namespace Meta {
 					}
 					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
 				}
-				else if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("parent")) { //ignore arguments here (?????)
+				else if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("parent")) {
 					foreach(object key in keys) {
 						if(key is Map && Interpreter.MapToString((Map)key).Equals("parent")) {
 							selection=((IMap)selection).Parent;
@@ -216,15 +216,15 @@ namespace Meta {
 					lastKeySelect++;
 				}
 				for(;i<keys.Count-1+lastKeySelect;i++) {
-					if(keys[i].Equals("break")) { // remove
-						if(selection is IKeyValue) {
-							Interpreter.breakMethod((IKeyValue)selection);
-						}
-						else {
-							Interpreter.breakMethod(new NetObject(selection));
-						}
-						Thread.CurrentThread.Suspend();
-					}	
+//					if(keys[i].Equals("break")) { // remove
+//						if(selection is IKeyValue) {
+//							Interpreter.breakMethod((IKeyValue)selection);
+//						}
+//						else {
+//							Interpreter.breakMethod(new NetObject(selection));
+//						}
+//						Thread.CurrentThread.Suspend();
+//					}	
 					if(selection==null) {
 						throw new ApplicationException("Key "+keys[i]+" does not exist");
 					}
@@ -424,7 +424,7 @@ namespace Meta {
 				}
 			}
 			public static string metaInstallationPath;
-			public static BreakMethodDelegate breakMethod;
+			//public static BreakMethodDelegate breakMethod;
 			public static ArrayList callers=new ArrayList();
 			public static ArrayList arguments=new ArrayList();
 			public static Hashtable netConversion=new Hashtable();
@@ -729,7 +729,7 @@ namespace Meta {
 		}		
 		public class MetaLibrary {
 			public object Load() {
-				return Interpreter.Run(new StreamReader(path),new Map()); //check that
+				return Interpreter.Run(new StreamReader(path),new Map());
 			}
 			public MetaLibrary(string path) {
 				this.path=path;
@@ -867,7 +867,7 @@ namespace Meta {
 			public IEnumerator GetEnumerator() { 
 				foreach(DictionaryEntry entry in cash) { // create separate enumerator for efficiency?
 					object o=cash[entry.Key];				  // or remove IEnumerable from IMap (only needed for foreach)
-				}
+				}														// decide later
 				return cash.GetEnumerator();
 			}
 			public static Map LoadAssemblies(IEnumerable assemblies) {
@@ -959,7 +959,7 @@ namespace Meta {
 				Number counter=new Number(0);
 //				Number counter=new Number();
 				foreach(string na in namespaces) {
-					nameSpaceMap[counter]=Interpreter.StringToMap(na);// map or string?
+					nameSpaceMap[counter]=Interpreter.StringToMap(na);
 					counter++;
 				}
 				assemblyInfoMap[Interpreter.StringToMap("namespaces")]=nameSpaceMap;
@@ -1169,7 +1169,7 @@ namespace Meta {
 		}
 		public delegate object DelegateCreatedForGenericDelegates();
 		public class NetMethod: ICallable {
-			public object Call(IMap argument) {
+			public object Call(IMap argument) { // could be more logical, simpler and reliable:
 				Interpreter.arguments.Add(argument);
 				ArrayList argumentList=argument.IntKeyValues;
 				object returnValue=null;
@@ -1216,7 +1216,7 @@ namespace Meta {
 										int asdf=0;
 									}
 								}
-								if(!parameterMatched && parameter.ParameterType.IsArray && argumentList[counter] is IMap && ((Map)argumentList[counter]).IntKeyValues.Count!=0) {// cheating
+								if(!parameterMatched && parameter.ParameterType.IsArray && argumentList[counter] is IMap && ((Map)argumentList[counter]).IntKeyValues.Count!=0) {// cheating, not very understandable
 									try {
 										Type arrayType=parameter.ParameterType.GetElementType();
 										Map map=((Map)argumentList[counter]);
@@ -1259,7 +1259,7 @@ namespace Meta {
 							}
 							executed=true;
 						}
-						else { //what here?
+						else { //what here? -well, yes, what?
 							//throw new ApplicationException("\nArguments match more than one overload of "+name);
 						}
 					}
@@ -1322,9 +1322,9 @@ namespace Meta {
 				source+="}";
 				source+="private Map callable;";
 				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-				string metaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;//why needed?
+				string metaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
 				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
-				assemblyNames.AddRange(Interpreter.loadedAssemblies); // does this still work correctly
+				assemblyNames.AddRange(Interpreter.loadedAssemblies);
 				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
 				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
@@ -1349,7 +1349,7 @@ namespace Meta {
 				else {
 					list=new ArrayList(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
 				}
-				list.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
+				//list.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
 				methods=(MethodBase[])list.ToArray(typeof(MethodBase));
 			}
 			public NetMethod(string name,object target,Type type) {
@@ -1541,7 +1541,7 @@ namespace Meta {
 				Delegate del=NetMethod.CreateDelegate(eventInfo.EventHandlerType,method,code);
 				return del;
 			}
-			private IDictionary Table {
+			private IDictionary Table { // strange, what use is this
 				get {
 					HybridDictionary table=new HybridDictionary();
 					BindingFlags bindingFlags;
@@ -1732,7 +1732,7 @@ namespace Meta {
 			public abstract object RunTestCase();
 		}
 		public class ExecuteTests {	
-			public ExecuteTests(Type classThatContainsTests,string pathToSerializeResultsTo) { // refactor
+			public ExecuteTests(Type classThatContainsTests,string pathToSerializeResultsTo) { // refactor -maybe, looks quite ok
 				bool waitAtEndOfTestRun=false;
 				Type[] testCases=classThatContainsTests.GetNestedTypes();
 				foreach(Type testCase in testCases) {

@@ -30,6 +30,7 @@ using System.Threading;
 namespace Test {
 	class Test {
 		public static string path="";
+		[STAThread]
 		public static void Main(string[] args) {
 //			Map map=new Map();
 //			Map child=new Map();

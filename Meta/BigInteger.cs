@@ -131,7 +131,7 @@
 //************************************************************************************
 
 using System;
-namespace BigInteger
+namespace Meta.Types
 {
 
 	public class Integer
@@ -986,11 +986,17 @@ namespace BigInteger
 			return true;
 		}
 
-
-		public override int GetHashCode()
-		{
-			return this.ToString().GetHashCode();
+		public override int GetHashCode() {
+			uint hash=7;
+			for(int i = 0; i < this.dataLength; i++) {
+				hash*=this.data[i];
+			}		
+			return (int)hash;
 		}
+//		public override int GetHashCode()
+//		{
+//			return this.ToString().GetHashCode();
+//		}
 
 
 		//***********************************************************************
