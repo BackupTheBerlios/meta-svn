@@ -150,7 +150,7 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
-						case '"':
+						case '"':  case '\'':
 						{
 							mLITERAL(true);
 							theRetToken = returnToken_;
@@ -364,30 +364,66 @@ _loop13_breakloop:		;
 		int _ttype; Token _token=null; int _begin=text.Length;
 		_ttype = LITERAL;
 		
-		int _saveIndex = 0;
-		_saveIndex = text.Length;
-		match("\"");
-		text.Length = _saveIndex;
-		{    // ( ... )*
-			for (;;)
-			{
-				if ((tokenSet_1_.member(LA(1))))
+		switch ( LA(1) )
+		{
+		case '"':
+		{
+			int _saveIndex = 0;
+			_saveIndex = text.Length;
+			match("\"");
+			text.Length = _saveIndex;
+			{    // ( ... )*
+				for (;;)
 				{
+					if ((tokenSet_1_.member(LA(1))))
 					{
-						match(tokenSet_1_);
+						{
+							match(tokenSet_1_);
+						}
 					}
+					else
+					{
+						goto _loop17_breakloop;
+					}
+					
 				}
-				else
+_loop17_breakloop:				;
+			}    // ( ... )*
+			_saveIndex = text.Length;
+			match("\"");
+			text.Length = _saveIndex;
+			break;
+		}
+		case '\'':
+		{
+			int _saveIndex = 0;
+			_saveIndex = text.Length;
+			match('\'');
+			text.Length = _saveIndex;
+			{    // ( ... )*
+				for (;;)
 				{
-					goto _loop17_breakloop;
+					if ((tokenSet_0_.member(LA(1))))
+					{
+						{
+							match(tokenSet_0_);
+						}
+					}
+					else
+					{
+						goto _loop20_breakloop;
+					}
+					
 				}
-				
-			}
-_loop17_breakloop:			;
-		}    // ( ... )*
-		_saveIndex = text.Length;
-		match("\"");
-		text.Length = _saveIndex;
+_loop20_breakloop:				;
+			}    // ( ... )*
+			break;
+		}
+		default:
+		{
+			throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
+		}
+		 }
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);
@@ -402,7 +438,7 @@ _loop17_breakloop:			;
 		_ttype = SPACES;
 		
 		{ // ( ... )+
-		int _cnt20=0;
+		int _cnt23=0;
 		for (;;)
 		{
 			if ((LA(1)==' '))
@@ -411,12 +447,12 @@ _loop17_breakloop:			;
 			}
 			else
 			{
-				if (_cnt20 >= 1) { goto _loop20_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
+				if (_cnt23 >= 1) { goto _loop23_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
 			}
 			
-			_cnt20++;
+			_cnt23++;
 		}
-_loop20_breakloop:		;
+_loop23_breakloop:		;
 		}    // ( ... )+
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -434,11 +470,11 @@ _loop20_breakloop:		;
 		const int endOfFileValue=65535;
 		
 		
-		bool synPredMatched27 = false;
+		bool synPredMatched30 = false;
 		if (((LA(1)=='\n'||LA(1)=='\r')))
 		{
-			int _m27 = mark();
-			synPredMatched27 = true;
+			int _m30 = mark();
+			synPredMatched30 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -452,11 +488,11 @@ _loop20_breakloop:		;
 							}
 							else
 							{
-								goto _loop24_breakloop;
+								goto _loop27_breakloop;
 							}
 							
 						}
-_loop24_breakloop:						;
+_loop27_breakloop:						;
 					}    // ( ... )*
 					{    // ( ... )*
 						for (;;)
@@ -467,11 +503,11 @@ _loop24_breakloop:						;
 							}
 							else
 							{
-								goto _loop26_breakloop;
+								goto _loop29_breakloop;
 							}
 							
 						}
-_loop26_breakloop:						;
+_loop29_breakloop:						;
 					}    // ( ... )*
 					if (!(LA(1)==endOfFileValue))
 					  throw new SemanticException("LA(1)==endOfFileValue");
@@ -479,12 +515,12 @@ _loop26_breakloop:						;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched27 = false;
+				synPredMatched30 = false;
 			}
-			rewind(_m27);
+			rewind(_m30);
 			inputState.guessing--;
 		}
-		if ( synPredMatched27 )
+		if ( synPredMatched30 )
 		{
 			mNEWLINE(false);
 			{    // ( ... )*
@@ -496,11 +532,11 @@ _loop26_breakloop:						;
 					}
 					else
 					{
-						goto _loop29_breakloop;
+						goto _loop32_breakloop;
 					}
 					
 				}
-_loop29_breakloop:				;
+_loop32_breakloop:				;
 			}    // ( ... )*
 			{    // ( ... )*
 				for (;;)
@@ -511,11 +547,11 @@ _loop29_breakloop:				;
 					}
 					else
 					{
-						goto _loop31_breakloop;
+						goto _loop34_breakloop;
 					}
 					
 				}
-_loop31_breakloop:				;
+_loop34_breakloop:				;
 			}    // ( ... )*
 			if (!(LA(1)==endOfFileValue))
 			  throw new SemanticException("LA(1)==endOfFileValue");
@@ -537,11 +573,11 @@ _loop31_breakloop:				;
 					}
 					else
 					{
-						goto _loop33_breakloop;
+						goto _loop36_breakloop;
 					}
 					
 				}
-_loop33_breakloop:				;
+_loop36_breakloop:				;
 			}    // ( ... )*
 			if (0==inputState.guessing)
 			{

@@ -1,7 +1,7 @@
 this:map.merge
     parent
     :
-        "AssignedToCurrent"
+        'AssignedToCurrent
 this:map.merge
     parent
     programFlow
@@ -11,188 +11,188 @@ this:map.merge
 form:with
     System.Windows.Forms.Form()
     :
-        Text:"hello"
+        Text:'hello
         Controls:
             System.Windows.Forms.TreeView()
-"ImpliedAutokey"
-:"Autokey"
+'ImpliedAutokey
+:'Autokey
 gacTest:System.Collections
 lazyGACTest:Microsoft.CSharp
 metaLibTest:metaLib
 commandLineArguments:arg
 libraryAssemblyTest:testClasses
 aMap:
-    ["a"]:"a"
-[aMap]:"Object"
-["normal symbol"]:"NormalSymbol"
-lookupSymbol:"LookupSymbol"
-["long key symbol"]:"LookupExtendedSymbol"
+    ['a]:'a
+[aMap]:'Object
+["normal symbol"]:'NormalSymbol
+lookupSymbol:'LookupSymbol
+["long key symbol"]:'LookupExtendedSymbol
 lookedUpMap:[aMap]
 lookedUpNormalSymbol:["normal symbol"]
 lookedUpSymbol:lookupSymbol
 lookedUpLongSymbol:["long key symbol"]
 object:
-    a:"default"
-    autoSearch:"default"
+    a:'default
+    autoSearch:'default
     b:()
     SetA:=
-        parent.parent.a:"c"
-        #autoSearch:"changed"
+        parent.parent.a:'c
+        #autoSearch:'changed
     SetB:=
         caller.b.1:arg.value
-        this:"changed"
+        this:'changed
     x:
-        a:"b"
-        c:"d"
+        a:'b
+        c:'d
     :=
-        this.a:"b"
-a:"default"
+        this.a:'b
+a:'default
 b:()
 aSet:object.SetA()
 bSet:object.SetB
     value:
-        x:"7"
-        z:"1"
+        x:'7
+        z:'1
 ReturnEverything:=
     this:arg
 everythingReturned:ReturnEverything
-    "a"
-    "b"
-    "c"
+    'a
+    'b
+    'c
 argument:
-    "x"
-    "y"
-    "z"
+    'x
+    'y
+    'z
 variableAsArgument:ReturnEverything argument
 ReturnFunction:=
     this:=
         this:
-            "1"
-            "2"
-            "3"
+            '1
+            '2
+            '3
 SetCurrent:=
     this:
         arg:arg
         x:arg.symbol
     this:x
 thisSet:SetCurrent
-    symbol:"haha"
+    symbol:'haha
 FirstLevel:=
     SecondLevel
-        x:"y"
+        x:'y
 SecondLevel:=arg.arg
 argTest:FirstLevel
-    a:"z"
+    a:'z
 concat:map.concat
-    "x"
-    "yz"
+    'x
+    'yz
 this:map.merge
     parent
     testClasses
 testClass:TestClass()
 memberTest:MemberTest()
-MemberTest.classField:"a"
-memberTest.instanceField:"b"
+MemberTest.classField:'a
+memberTest.instanceField:'b
 MemberTest.ClassProperty:memberTest.InstanceProperty
 memberTest.InstanceProperty:MemberTest.ClassProperty
-interceptedSymbol:"/hello/"
+interceptedSymbol:'/hello/
 positionalNoConversion:PositionalNoConversion
-    "m"
-    "n"
-    "o"
+    'm
+    'n
+    'o
 positionalNoConversionConcatenated:positionalNoConversion.Concatenate
-    "r"
-    "s"
-    "t"
+    'r
+    's
+    't
 namedNoConversion:NamedNoConversion
     :
-        "m"
-        y:"n"
+        'm
+        y:'n
 namedNoConversionConcatenated:namedNoConversion.Concatenate
-    c:"t"
-    "r"
+    c:'t
+    'r
 indexerNoConversion:IndexerNoConversion()
-indexerNoConversion.abc:"hihi"
+indexerNoConversion.abc:'hihi
 indexerNoConversionIndexed:indexerNoConversion.abc
-interceptedSymbol2:"1"
-k:"hello"
-xyz:"w"
-literalFunction:="5"
+interceptedSymbol2:'1
+k:'hello
+xyz:'w
+literalFunction:='5
 literalFunctionResult:literalFunction()
 function:=
     this:"simple function this"
 callFunction:=function
 callFunctionResult:callFunction ()
 delayedFunction:==
-    x:"y"
+    x:'y
 delayedFunctionResult:delayedFunction ()
-value:"xyz"
+value:'xyz
 selectionFunction:=value
 selectionFunctionResult:selectionFunction ()
-bigInteger:"89383838383832839123497123047217340712340720347072304702340720347"
-upperLevel:"unchanged"
+bigInteger:'89383838383832839123497123047217340712340720347072304702340720347
+upperLevel:'unchanged
 ChangeUpperLevel:=
-    #upperLevel:"changed"
+    #upperLevel:'changed
 ChangeUpperLevel()
-staticEventChanged:"false"
+staticEventChanged:'false
 TestClass.staticEvent:=
-    #staticEventChanged:"true"
+    #staticEventChanged:'true
     this:arg.1
 staticEvent:TestClass.staticEvent
 TestClass.TakeDelegate
-    :="resultFromDelegate"
+    :='resultFromDelegate
 resultFromDelegate:TestClass.GetResultFromDelegate()
 staticEventResult:TestClass.staticEvent
     testClass
-instanceEventChanged:"false"
+instanceEventChanged:'false
 testClass.instanceEvent:=
-    #instanceEventChanged:"true"
+    #instanceEventChanged:'true
     this:arg.1
 instanceEvent:testClass.instanceEvent
 instanceEventResult:testClass.instanceEvent
-    "5"
-one:"1"
-two:"2"
-firstIf:"unchanged"
-secondIf:"unchanged"
-thenText:"then"
+    '5
+one:'1
+two:'2
+firstIf:'unchanged
+secondIf:'unchanged
+thenText:'then
 if
     equal
-        "1"
+        '1
         one
     then:=
         #firstIf:thenText
     else:=
-        #firstIf:"else"
+        #firstIf:'else
 if
     equal
-        "1"
+        '1
         two
     then:=
-        #secondIf:"then"
+        #secondIf:'then
     else:=
-        #secondIf:"else"
-firstSwitch:"unchanged"
-bigNumber:"50020202029029233344"
+        #secondIf:'else
+firstSwitch:'unchanged
+bigNumber:'50020202029029233344
 switch
     bigNumber
     case:
         [bigNumber]:=
             #firstSwitch:bigNumber
     default:=
-        #firstSwitch:"default"
-secondSwitch:"unchanged"
+        #firstSwitch:'default
+secondSwitch:'unchanged
 switch
-    "3"
+    '3
     case:
         1:=
-            #secondSwitch:"one"
+            #secondSwitch:'one
         2:=
-            #secondSwitch:"two"
+            #secondSwitch:'two
     default:=
-        #secondSwitch:"default"
+        #secondSwitch:'default
 form:System.Windows.Forms.Form()
 with
     form
     :
-        Text:"hello"
+        Text:'hello
