@@ -1043,30 +1043,58 @@ namespace Meta {
 			public bool ContainsKey(object key)  {
 				return table.ContainsKey(key);
 			}
-			//move optimization into strategy?
 			public override bool Equals(object obj) {
-				bool equal=true;
-				if(!Object.ReferenceEquals(obj,this)) {
-					if(!(obj is Map)) {
-						equal=false;
-					}
-					else {
-						Map map=(Map)obj;
-						if(map.Count==Count) {
-							foreach(DictionaryEntry entry in this)  {
-								if(!map.ContainsKey(entry.Key)||!map[entry.Key].Equals(entry.Value)) {
-									equal=false;
-									break;
-								}
-							}
-						}
-						else {
-							equal=false;
-						}
-					}
+				if(Object.ReferenceEquals(obj,this)) {
+					return true;
 				}
-				return equal;
+				if(!(obj is Map)) {
+					return false;
+				}
+				return ((Map)obj).table.Equal(table);
+//					if(!(obj is Map)) {
+//						equal=false;
+//					}
+//					else {
+//						Map map=(Map)obj;
+//						if(map.Count==Count) {
+//							foreach(DictionaryEntry entry in this)  {
+//								if(!map.ContainsKey(entry.Key)||!map[entry.Key].Equals(entry.Value)) {
+//									equal=false;
+//									break;
+//								}
+//							}
+//						}
+//						else {
+//							equal=false;
+//						}
+//					}
+//				}
+//				return equal;
 			}
+//			public override bool Equals(object obj) {
+//				bool equal=true;
+//				if(!Object.ReferenceEquals(obj,this)) {
+//					if(!(obj is Map)) {
+//						equal=false;
+//					}
+//					else {
+//						Map map=(Map)obj;
+//						if(map.Count==Count) {
+//							foreach(DictionaryEntry entry in this)  {
+//								if(!map.ContainsKey(entry.Key)||!map[entry.Key].Equals(entry.Value)) {
+//									equal=false;
+//									break;
+//								}
+//							}
+//						}
+//						else {
+//							equal=false;
+//						}
+//					}
+//				}
+//				return equal;
+//			}
+
 			public IEnumerator GetEnumerator() {
 				return new MapEnumerator(this);
 			}
@@ -1110,11 +1138,35 @@ namespace Meta {
 					get;
 					set;
 				}
+
 				public abstract bool ContainsKey(object key);
+				//public abstract bool Equal(MapStrategy obj);
+				public virtual bool Equal(MapStrategy obj) {
+					if(Object.ReferenceEquals(obj,this)) { // wenn geclont, wäre das möglich, jetzt noch nicht
+						return true;
+					}
+					if(obj.Count!=this.Count) {
+						return false;
+					}
+					foreach(object key in this.Keys)  {
+						if(!obj.ContainsKey(key)||!obj[key].Equals(this[key])) {
+							return false;
+						}
+					}
+					return true;
+				}
 			}
 			// not unicode safe!:
 			// also, the strategy cannot replace itself in the Map yet
 			public class StringStrategy:MapStrategy {
+//				public override bool Equal(MapStrategy obj) {
+//					if(obj is StringStrategy) {
+//
+//					}
+//					retu
+//				}
+
+
 				public override Map Clone() {
 					return new Map(new StringStrategy(this)); // das ist ok, vielleicht StringStrategy immutable machen
 					// und zwischen verschiedenen Maps teilen?
@@ -1181,6 +1233,21 @@ namespace Meta {
 				}
 			}
 			public class HybridDictionaryStrategy:MapStrategy {
+//				public override bool Equal(MapStrategy obj) {
+//					if
+//					if(.Count==Count) {
+//						foreach(DictionaryEntry entry in this)  {
+//							if(!map.ContainsKey(entry.Key)||!map[entry.Key].Equals(entry.Value)) {
+//								equal=false;
+//								break;
+//							}
+//						}
+//					}
+//					else {
+//						equal=false;
+//					}
+//					return equal;
+//				}
 				ArrayList keys;
 				private HybridDictionary table;
 				public HybridDictionaryStrategy():this(2) {
