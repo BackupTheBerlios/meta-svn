@@ -933,7 +933,7 @@ namespace Meta {
 				map[new Integer(2)]=second;
 				return Merge(map);
 			}
-			[MetaMethod("")]
+//			[MetaMethod("")]
 			public static IKeyValue Merge(Map maps) { // get rid of use of Map
 				Map result=new Map();
 				foreach(DictionaryEntry i in maps) {
@@ -1356,18 +1356,18 @@ namespace Meta {
 				index=-1;
 			}
 		}
-		[AttributeUsage(AttributeTargets.Method|AttributeTargets.Constructor,Inherited=true)]
-		public class MetaMethodAttribute:Attribute { // still needed? maybe needed again soon
-			public MetaMethodAttribute(string documentation) {
-				if(documentation!="") {
-					this.documentation=documentation;
-				}
-				else {
-					this.documentation="<no documentation>";
-				}
-			}
-			public string documentation;
-		}
+//		[AttributeUsage(AttributeTargets.Method|AttributeTargets.Constructor,Inherited=true)]
+//		public class MetaMethodAttribute:Attribute { // still needed? maybe needed again soon
+//			public MetaMethodAttribute(string documentation) {
+//				if(documentation!="") {
+//					this.documentation=documentation;
+//				}
+//				else {
+//					this.documentation="<no documentation>";
+//				}
+//			}
+//			public string documentation;
+//		}
 		public delegate object NullDelegate();
 		public class NetMethod: ICallable {
 			private IKeyValue parent;
@@ -1380,7 +1380,7 @@ namespace Meta {
 					parent=value;
 				}
 			}
-			private MetaMethodAttribute attribute;
+//			private MetaMethodAttribute attribute;
 			private BindingFlags invokeMemberFlags;
 			private string name;
 
@@ -1394,18 +1394,18 @@ namespace Meta {
 			public object Call(Map caller) {
 				return Interpreter.ConvertToMeta(CallMethod((Map)Interpreter.Arg));
 			}
-			public object CallMethod(Map arguments) {
+			public object CallMethod(Map arguments) { //sucks, refactor
 				if(this.name.Equals("GetKeys")) {
 					int asdf=0;
 				}
 				ArrayList list;
-				if(attribute!=null) {
-					list=new ArrayList();
-					list.Add(arguments);
-				}
-				else {
+//				if(attribute!=null) {
+//					list=new ArrayList();
+//					list.Add(arguments);
+//				}
+//				else {
 					list=arguments.IntKeyValues;
-				}
+//				}
 				object result=null;
 				try { // doubtful usage of try
 					//refactor
@@ -1530,7 +1530,15 @@ namespace Meta {
 						}
 					}
 					if(!executed) {
-						return savedMethod.Invoke(target,new object[] {});
+						if(savedMethod is ConstructorInfo) {
+							return ((ConstructorInfo)savedMethod).Invoke(new object[] {});
+//							result=((ConstructorInfo)method).Invoke(args.ToArray());
+						}
+						else {
+							return savedMethod.Invoke(target,new object[] {});
+//							result=method.Invoke(target,args.ToArray());
+						}
+
 					}
 					else {
 						return result;
@@ -1628,11 +1636,11 @@ namespace Meta {
 				this.invokeMemberFlags=invokeFlags;
 				this.savedMethod=method;
 				if(method!=null) {
-					Attribute[] attributes=(Attribute[])
-						method.GetCustomAttributes(typeof(MetaMethodAttribute),true);
-					if(attributes.Length!=0) {
-						this.attribute=(MetaMethodAttribute)attributes[0];
-					}
+//					Attribute[] attributes=(Attribute[])
+//						method.GetCustomAttributes(typeof(MetaMethodAttribute),true);
+//					if(attributes.Length!=0) {
+//						this.attribute=(MetaMethodAttribute)attributes[0];
+//					}
 				}
 				this.methods=methods;
 			}
@@ -1682,11 +1690,11 @@ namespace Meta {
 		public class NetClass: NetContainer, IKeyValue,ICallable {
 			[DontSerializeFieldOrProperty]
 			public NetMethod constructor;
-			public object Call(Map caller) {
-				return constructor.Call(null);
-			}
 			public NetClass(Type type):base(null,type) {
 				this.constructor=new NetMethod(this.type);
+			}
+			public object Call(Map caller) {
+				return constructor.Call(null);
 			}
 		}
 		public class NetObject: NetContainer, IKeyValue {
@@ -1701,7 +1709,7 @@ namespace Meta {
 				return "";
 			}
 			private IKeyValue parent;
-			public IKeyValue Parent {
+			public IKeyValue Parent { //put this into IKeyValue
 				get {
 					return parent;
 				}
@@ -2195,7 +2203,13 @@ namespace Meta {
 					Console.Write(testCase.Name + "...");
 					DateTime timeStarted=DateTime.Now;
 					string textToPrint="";
-					object result=testCase.GetMethod("RunTestCase").Invoke(null,new object[]{});
+					object result=null;
+					try {
+						result=testCase.GetMethod("RunTestCase").Invoke(null,new object[]{});
+					}
+					catch(Exception e) {
+						int asdf=0;
+					}
 					TimeSpan timeSpentInTestCase=DateTime.Now-timeStarted;
 					bool testCaseSuccessful=CompareResults(Path.Combine(pathToSerializeResultsTo,testCase.Name),result,methodNames);
 					if(!testCaseSuccessful) {
