@@ -73,9 +73,9 @@ namespace testClasses
 //			def[Interpreter.StringToMap("p2")]=Interpreter.StringToMap("null");
 //>>>>>>> .r97
 			arg=(Map)Interpreter.Merge(def,arg);
-			this.x=(string)Interpreter.MapToString((Map)arg[new Integer(1)]);
-			this.y=(string)Interpreter.MapToString((Map)arg[new Map("y")]);
-			this.z=(string)Interpreter.MapToString((Map)arg[new Map("p2")]);
+			this.x=(string)((Map)arg[new Integer(1)]).GetDotNetString();
+			this.y=(string)((Map)arg[new Map("y")]).GetDotNetString();
+			this.z=(string)((Map)arg[new Map("p2")]).GetDotNetString();
 		}
 		public string Concatenate() {
 			Map arg=(Map)Interpreter.Arg;
@@ -90,9 +90,9 @@ namespace testClasses
 //			def[Interpreter.StringToMap("c")]=Interpreter.StringToMap("null");
 //>>>>>>> .r97
 			arg=(Map)Interpreter.Merge(def,arg);
-			return (string)Interpreter.MapToString((Map)arg[new Integer(1)])+
-				(string)Interpreter.MapToString((Map)arg[new Map("b")])+
-				(string)Interpreter.MapToString((Map)arg[new Map("c")])+
+			return (string)((Map)arg[new Integer(1)]).GetDotNetString()+
+				(string)((Map)arg[new Map("b")]).GetDotNetString()+
+				(string)((Map)arg[new Map("c")]).GetDotNetString()+
 				this.x+this.y+this.z;
 		}
 		//		[MetaMethod("(1,b,c)")]

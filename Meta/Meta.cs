@@ -105,7 +105,7 @@ namespace Meta {
 			}
 			public static readonly Map literalString=new Map("literal");
 			public Literal(Map code) {
-				this.literal=Interpreter.RecognizeLiteralText((string)Interpreter.MapToString((Map)code[literalString]));
+				this.literal=Interpreter.RecognizeLiteralText((string)((Map)code[literalString]).GetDotNetString());
 			}
 			public object literal=null;
 		}
@@ -122,7 +122,7 @@ namespace Meta {
 				foreach(IExpression expression in expressions) {
 					keysToBeSelected.Add(expression.Evaluate(current));
 				}
-				if(keysToBeSelected.Count==1 && keysToBeSelected[0] is Map && Interpreter.MapToString((Map)keysToBeSelected[0]).Equals("this")) {
+				if(keysToBeSelected.Count==1 && keysToBeSelected[0] is Map && ((Map)keysToBeSelected[0]).GetDotNetString().Equals("this")) {
 					if(valueToBeAssigned is IMap) {
 						IMap parent=((IMap)Interpreter.Current).Parent;
 						Interpreter.Current=((IMap)valueToBeAssigned).Clone();
@@ -150,13 +150,13 @@ namespace Meta {
 				if(keys[0]==null) {
 					int asdf=0;
 				}
-				if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("this")) {
+				if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("this")) {
 					i++;
 				}
-				else if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("caller")) {
+				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
 					int numCallers=0;
 					foreach(object key in keys) {
-						if(key is Map && Interpreter.MapToString((Map)key).Equals("caller")) {
+						if(key is Map && ((Map)key).GetDotNetString().Equals("caller")) {
 							numCallers++;
 							i++;
 						}
@@ -166,9 +166,9 @@ namespace Meta {
 					}
 					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
 				}
-				else if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("parent")) {
+				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("parent")) {
 					foreach(object key in keys) {
-						if(key is Map && Interpreter.MapToString((Map)key).Equals("parent")) {
+						if(key is Map && ((Map)key).GetDotNetString().Equals("parent")) {
 							selection=((IMap)selection).Parent;
 							i++;
 						}
@@ -177,10 +177,10 @@ namespace Meta {
 						}
 					}
 				}
-				else if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("arg")) {
+				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("arg")) {
 					int numArgs=0;
 					foreach(object key in keys) {
-						if(key is Map && Interpreter.MapToString((Map)key).Equals("arg")) {
+						if(key is Map && ((Map)key).GetDotNetString().Equals("arg")) {
 							numArgs++;
 							i++;
 						}
@@ -190,8 +190,8 @@ namespace Meta {
 					}
 					selection=Interpreter.arguments[Interpreter.arguments.Count-numArgs];
 				}
-				else if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("search")||isRightSide) {
-					if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("search")) {
+				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("search")||isRightSide) {
+					if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("search")) {
 						i++;
 					}
 					while(selection!=null && !((IKeyValue)selection).ContainsKey(keys[i])) {
@@ -200,7 +200,7 @@ namespace Meta {
 					if(selection==null) {
 						string text="Key ";
 						if(keys[i] is Map) {
-							text+=Interpreter.MapToString((Map)keys[i]);
+							text+=((Map)keys[i]).GetDotNetString();
 						}
 						else {
 							text+=keys[i];
@@ -246,8 +246,8 @@ namespace Meta {
 				if(meta is Map) {
 					string text="";
 					Map map=(Map)meta;
-					if(Interpreter.IsMapString(map)) {
-						text+="'"+Interpreter.MapToString(map)+"'";
+					if(map.IsString()) {
+						text+="'"+(map).GetDotNetString()+"'";
 					}
 					else if(map.Count==0) {
 						text+="()";
@@ -266,11 +266,11 @@ namespace Meta {
 						else {
 							foreach(DictionaryEntry entry in map) {
 								text+=indent+'['+MetaSerialize(entry.Key,indent,false)+']'+'=';
-								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !Interpreter.IsMapString((Map)entry.Value)) {
+								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString()) {
 									text+="\n";
 								}
 								text+=MetaSerialize(entry.Value,indent+"  ",true);
-								if(!(entry.Value is Map && ((Map)entry.Value).Count!=0 && !Interpreter.IsMapString((Map)entry.Value))) {
+								if(!(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString())) {
 									text+="\n";
 								}
 							}
@@ -570,16 +570,16 @@ namespace Meta {
 						this.target=typeof(string);
 					}
 					public override object Convert(object obj) {
-						return Interpreter.MapToString((Map)obj);
+						return ((Map)obj).GetDotNetString();
 					}
 				}
 			}
-			public static bool IsMapString(Map map) {
-				return map.IsString();
-			}
-			public static string MapToString(Map map) {
-				return map.GetDotNetString();
-			}
+//			public static bool IsMapString(Map map) {
+//				return map.IsString();
+//			}
+//			public static string MapToString(Map map) {
+//				return map.GetDotNetString();
+//			}
 			private abstract class DotNetToMetaConversions {
 				public class ConvertStringToMap: DotNetToMetaConversion {
 					public ConvertStringToMap()   {
@@ -896,11 +896,11 @@ namespace Meta {
 				ArrayList namespaces=new ArrayList();
 				if(assemblyInfo.ContainsKey(new Map(assembly.Location))) {
 					Map info=(Map)assemblyInfo[new Map(assembly.Location)];
-					string timestamp=Interpreter.MapToString((Map)info[new Map("timestamp")]);
+					string timestamp=((Map)info[new Map("timestamp")]).GetDotNetString();
 					if(timestamp.Equals(File.GetCreationTime(assembly.Location).ToString())) {
 						Map names=(Map)info[new Map("namespaces")];
 						foreach(DictionaryEntry entry in names) {
-							string text=Interpreter.MapToString((Map)entry.Value);
+							string text=((Map)entry.Value).GetDotNetString();
 							namespaces.Add(text);
 						}
 						return namespaces;
@@ -1050,7 +1050,7 @@ namespace Meta {
 //			}
 			public object Compile()  {
 				if(compiled==null)  {
-					switch((string)Interpreter.MapToString((Map)this.Keys[0])) {
+					switch((string)((Map)this.Keys[0]).GetDotNetString()) {
 						case "call":
 							compiled=new Call(this);break;
 						case "delayed":
@@ -1275,8 +1275,8 @@ namespace Meta {
 				if(this.Count==1) {
 					int asdf=0;
 				}
-				if(Interpreter.IsMapString(this)) {
-					return indent+"\""+Interpreter.MapToString(this)+"\""+"\n";
+				if(this.IsString()) {
+					return indent+"\""+this.GetDotNetString()+"\""+"\n";
 				}
 				else {
 					return null;
@@ -1539,8 +1539,8 @@ namespace Meta {
 		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial {
 			public bool ContainsKey(object key) {
 				if(key is Map) {
-					if(Interpreter.IsMapString((Map)key)) {
-						string text=Interpreter.MapToString((Map)key);
+					if(((Map)key).IsString()) {
+						string text=((Map)key).GetDotNetString();
 						if(type.GetMember((string)key,
 							BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
 							return true;
@@ -1581,8 +1581,8 @@ namespace Meta {
 			}
 			public virtual object this[object key]  {
 				get {
-					if(key is Map && Interpreter.IsMapString((Map)key)) {
-						string text=Interpreter.MapToString((Map)key);
+					if(key is Map && ((Map)key).IsString()) {
+						string text=((Map)key).GetDotNetString();
 						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
@@ -1612,8 +1612,8 @@ namespace Meta {
 					}
 				}
 				set {
-					if(key is Map && Interpreter.IsMapString((Map)key)) {
-						string text=Interpreter.MapToString((Map)key);
+					if(key is Map && ((Map)key).IsString()) {
+						string text=((Map)key).GetDotNetString();
 						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
