@@ -41,6 +41,7 @@ namespace Editor {
 		public static TreeView editor = new TreeView();
 		public static Hashtable	keyBindings = new Hashtable();
 		public static Hashtable helpKeyBindings = new Hashtable();
+		public static Hashtable functionHelpKeyBindings=new Hashtable();
 		public static Node clipboard = null;
 
 		private static Node selectedNode=null;
@@ -83,6 +84,8 @@ namespace Editor {
 			editor.KeyPress+=new KeyPressEventHandler(KeyPress);
 			editor.BeforeSelect+=new TreeViewCancelEventHandler(BeforeSelect);
 
+			functionHelpKeyBindings[Keys.Alt|Keys.L]=typeof(PreviousOverload);
+			functionHelpKeyBindings[Keys.Alt|Keys.K]=typeof(NextOverload);
 			helpKeyBindings[Keys.Alt|Keys.K]=typeof(MoveKeyDown);
 			helpKeyBindings[Keys.Alt|Keys.L]=typeof(MoveKeyUp);
 			helpKeyBindings[Keys.Tab]=typeof(CompleteWord);
@@ -293,7 +296,7 @@ namespace Editor {
 				object key=((GListBoxItem)listBox.SelectedItem).Object;
 				member=((Map)lastObject)[key];
 				if(member is NetMethod) {
-					MethodBase method=((NetMethod)member).savedMethod;
+					MethodBase method=((NetMethod)member).methods[0];
 					if(method is MethodInfo) {
 						text+=((MethodInfo)method).ReturnType+" ";
 					}
@@ -307,7 +310,7 @@ namespace Editor {
 					}
 					text+=")";
 					//				text+=((NetMethod)member).GetDocumentation(true,true,false);
-					text+=Interpreter.GetDoc(((NetMethod)member).savedMethod,true,true,false);
+					text+=Interpreter.GetDoc(((NetMethod)member).methods[0],true,true,false);
 				}
 				else if(member is NetClass) {
 					text+=Interpreter.GetDoc(((NetClass)member).type,true,true,false);
@@ -356,22 +359,25 @@ namespace Editor {
 			
 
 			//string newText=doc+"\n"+text;
-			string newText=text.Replace(Environment.NewLine,"").Replace("\n","").
+			string newText=text.Replace(Environment.NewLine,"").//Replace("\n","").
 				Replace("    "," ").Replace("   "," ").Replace("  "," ");
 			newText=newText.Replace("\n ","\n");
 
-//			Size size=toolTip.CreateGraphics().MeasureString(newText,toolTip.Font).ToSize();
-//			toolTip.Height=size.Height+2;
-//			toolTip.Width=size.Width+15;
+			if(newText!="") {
+				Size size=toolTip.CreateGraphics().MeasureString(newText,toolTip.Font).ToSize();
+				toolTip.Height=size.Height+10;
+				toolTip.Width=size.Width+15;
+				//			toolTip.Width=newText.Length*3;
 
-			if(newText!="\n") {
-				toolTip.Visible=true;
+				if(newText!="\n") {
+					toolTip.Visible=true;
+				}
+				int x=listBox.Right+2;
+				int y=listBox.Top;
+				y+=(listBox.SelectedIndex-listBox.TopIndex)*listBox.ItemHeight;
+				toolTip.Location=new Point(x,y);
+				toolTip.Text=newText;
 			}
-			int x=listBox.Right+2;
-			int y=listBox.Top;
-			y+=(listBox.SelectedIndex-listBox.TopIndex)*listBox.ItemHeight;
-			toolTip.Location=new Point(x,y);
-			toolTip.Text=newText;
 			Editor.editor.Focus();
 
 
@@ -436,7 +442,7 @@ namespace Editor {
 //				doc+="event "+((EventInfo)member).Name;
 //			}
 //			else if(member is NetMethod) {
-//				MethodBase method=((NetMethod)member).savedMethod;
+//				MethodBase method=((NetMethod)member).methods[0];
 //				if(method is MethodInfo) {
 //					doc+=((MethodInfo)method).ReturnType+" ";
 //				}
@@ -450,7 +456,7 @@ namespace Editor {
 //				}
 //				doc+=")";
 ////				doc+=((NetMethod)member).GetDocumentation(true,true,false);
-//				doc+=Interpreter.GetDoc(((NetMethod)member).savedMethod,true,true,false);
+//				doc+=Interpreter.GetDoc(((NetMethod)member).methods[0],true,true,false);
 //			}
 //			else if(member is NetClass) {
 //				doc+=Interpreter.GetDoc(((NetClass)member).type,true,true,false);
@@ -533,7 +539,8 @@ namespace Editor {
 				return x.ToString().CompareTo(y.ToString());
 			}
 		}
-
+		public static int overloadNumber=0;
+		public static int overloadIndex=0;
 		public static void ShowHelp(Node selectedNode,string selectedNodeText,bool isCall) {
 			try {
 				Interpreter.Run(
@@ -550,67 +557,73 @@ namespace Editor {
 				while(!(e.InnerException==null || e is BreakException)) {
 					e=e.InnerException;
 				}
-				if(e is BreakException && ((BreakException)e).obj!=null) {
-					object obj=((BreakException)e).obj;
-					lastObject=obj;
-					if(isCall) {
-						string text="";
-						if(obj is NetMethod) {
-							text=Interpreter.GetDoc(((NetMethod)obj).savedMethod,true,true,true);//(true);;
-//							text=((NetMethod)obj).GetDocumentation(true,true,true);//(true);;
-						}
-						else if (obj is NetClass) {
-							text=Interpreter.GetDoc(((NetClass)obj).constructor.savedMethod,true,true,true);//(true);
-						}
-						else if(obj is Map) {
-							text=FunctionHelp((Map)obj);
-						}
-						Help.toolTip.Text=text;
-						Graphics graphics=toolTip.CreateGraphics();//Editor.window.CreateGraphics();
-						Size size=graphics.MeasureString(text,
-							toolTip.Font).ToSize();
-						toolTip.Size=new Size(size.Width,size.Height+20);//new Size(x,y);
+				if(e is BreakException) {
+					if(((BreakException)e).obj==null) {
 						toolTip.Visible=true;
-
-						TreeNode selected=Editor.SelectedNode;
-						int depth=0;
-						while(selected.Parent!=null) {
-							selected=selected.Parent;
-							depth++;
-						}
-						int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
-							Convert.ToInt32(
-							graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
-
-						int y=5;
-						TreeNode node=Editor.SelectedNode;
-						while(node!=null) {
-							y+=node.Bounds.Height;
-							node=node.PrevVisibleNode;
-						}
-						toolTip.Location=new Point(x,y);
-
+						toolTip.Text="null";
 					}
 					else {
-						listBox.Items.Clear();
-						IKeyValue keyValue=obj is IKeyValue? (IKeyValue)obj:new NetObject(obj);
-						ArrayList keys=new ArrayList();
-						foreach(DictionaryEntry entry in keyValue) {
-							keys.Add(entry.Key);
+						object obj=((BreakException)e).obj;
+						lastObject=obj;
+						if(isCall) {
+							string text="";
+							if(obj is NetMethod) {
+								text=Interpreter.GetDoc(((NetMethod)obj).methods[overloadIndex],true,true,true);//(true);;
+								//							text=((NetMethod)obj).GetDocumentation(true,true,true);//(true);;
+							}
+							else if (obj is NetClass) {
+								text=Interpreter.GetDoc(((NetClass)obj).constructor.methods[overloadIndex],true,true,true);//(true);
+							}
+							else if(obj is Map) {
+								text=FunctionHelp((Map)obj);
+							}
+							Help.toolTip.Text=text;
+							//						Help.toolTip.Text=text;
+							Graphics graphics=toolTip.CreateGraphics();//Editor.window.CreateGraphics();
+							Size size=graphics.MeasureString(text,
+								toolTip.Font).ToSize();
+							toolTip.Size=new Size(size.Width+10,size.Height+13);//new Size(x,y);
+							toolTip.Visible=true;
+
+							TreeNode selected=Editor.SelectedNode;
+							int depth=0;
+							while(selected.Parent!=null) {
+								selected=selected.Parent;
+								depth++;
+							}
+							int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
+								Convert.ToInt32(
+								graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
+
+							int y=5;
+							TreeNode node=Editor.SelectedNode;
+							while(node!=null) {
+								y+=node.Bounds.Height;
+								node=node.PrevVisibleNode;
+							}
+							toolTip.Location=new Point(x,y);
+
 						}
-						keys.Sort(new HelpComparer());
-//						if(lastObject is Map) {
-//							foreach(object key in keys) {
-//								object o=keyValue[key];
-//								int index=0;
-//								if(o is NetMethod) {
-//									index=2;
-//								}
-//								else if(o is NetClass) {
-//								listBox.Items.Add(new GListBoxItem(key,index));
-//							}
-//						}
-//						else {
+						else {
+							listBox.Items.Clear();
+							IKeyValue keyValue=obj is IKeyValue? (IKeyValue)obj:new NetObject(obj);
+							ArrayList keys=new ArrayList();
+							foreach(DictionaryEntry entry in keyValue) {
+								keys.Add(entry.Key);
+							}
+							keys.Sort(new HelpComparer());
+							//						if(lastObject is Map) {
+							//							foreach(object key in keys) {
+							//								object o=keyValue[key];
+							//								int index=0;
+							//								if(o is NetMethod) {
+							//									index=2;
+							//								}
+							//								else if(o is NetClass) {
+							//								listBox.Items.Add(new GListBoxItem(key,index));
+							//							}
+							//						}
+							//						else {
 							foreach(object key in keys) {
 								object member;
 								int imageIndex=0;
@@ -633,6 +646,8 @@ namespace Editor {
 								else {
 									throw new ApplicationException("bug here");
 								}
+								string additionalText="";
+
 								if(member is Type || member is NetClass) {
 									imageIndex=0;
 								}
@@ -644,45 +659,63 @@ namespace Editor {
 								}
 								else if(member is PropertyInfo) {
 									imageIndex=4;
+									object o=((PropertyInfo)member).GetValue(obj,new object[] {});
+									if(o==null) {
+										additionalText="null";
+									}
+									else {
+										additionalText=o.ToString();
+									}
 								}
 								else if(member is Map) {
 									imageIndex=5;
 								}
 								else {
+									if(member is FieldInfo) {
+										additionalText=((FieldInfo)member).GetValue(obj).ToString();
+									}
+									else {
+										additionalText=member.ToString();
+									}
 									imageIndex=6;
 								}
-								listBox.Items.Add(new GListBoxItem(key,imageIndex));
+								listBox.Items.Add(new GListBoxItem(key,additionalText,imageIndex));
 							}
-//					}
-						Graphics graphics=Editor.window.CreateGraphics();
-						TreeNode selected=Editor.SelectedNode;
-						int depth=0;
-						while(selected.Parent!=null) {
-							selected=selected.Parent;
-							depth++;
-						}
-						int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
-							Convert.ToInt32(
-							graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
+							//					}
+							Graphics graphics=Editor.window.CreateGraphics();
+							TreeNode selected=Editor.SelectedNode;
+							int depth=0;
+							while(selected.Parent!=null) {
+								selected=selected.Parent;
+								depth++;
+							}
+							int x=-5+Editor.editor.Top+Editor.editor.Indent*depth+
+								Convert.ToInt32(
+								graphics.MeasureString(Editor.SelectedNode.CleanText,Editor.editor.Font).Width);
 
-						int y=5;
-						TreeNode node=Editor.SelectedNode;
-						while(node!=null) {
-							y+=node.Bounds.Height;
-							node=node.PrevVisibleNode;
+							int y=5;
+							TreeNode node=Editor.SelectedNode;
+							while(node!=null) {
+								y+=node.Bounds.Height;
+								node=node.PrevVisibleNode;
+							}
+							listBox.Location=new Point(x,y);
+							int greatest=0;
+							foreach(GListBoxItem item in listBox.Items) {
+								int width=graphics.MeasureString(item.Text,listBox.Font).ToSize().Width;
+								if(width>greatest){
+									greatest=width;
+								}								
+							}
+							listBox.Size=new Size(greatest+30,150<listBox.Items.Count*16+10? 150:listBox.Items.Count*16+10);
+							listBox.Show();
+							Editor.editor.Focus();
 						}
-						listBox.Location=new Point(x,y);
-						int greatest=0;
-						foreach(GListBoxItem item in listBox.Items) {
-							int width=graphics.MeasureString(item.Text,listBox.Font).ToSize().Width;
-							if(width>greatest){
-								greatest=width;
-							}								
-						}
-						listBox.Size=new Size(greatest+30,150<listBox.Items.Count*16+10? 150:listBox.Items.Count*16+10);
-						listBox.Show();
-						Editor.editor.Focus();
 					}
+				}
+				else {
+					toolTip.Visible=true;
+					toolTip.Text=e.Message;
 				}
 			}
 			Editor.window.Activate();
@@ -769,6 +802,8 @@ namespace Editor {
 			else {
 				switch(text[text.Length-1]) {
 					case '=':
+						return false;
+					case '-':
 						return false;
 				}
 			}
@@ -889,6 +924,22 @@ namespace Editor {
 			return !(Editor.SelectedNode is FileNode);
 		}
 	}
+	public class NextOverload:Command {
+		public new bool Require() {
+			return Help.overloadIndex<Help.overloadNumber;
+		}
+		public override void Do() {
+			Help.overloadIndex++;
+		}
+	}
+	public class PreviousOverload:Command {
+		public new bool Require() {
+			return Help.overloadIndex<Help.overloadNumber;
+		}
+		public override void Do() {
+			Help.overloadIndex++;
+		}
+	}
 	public class Undo:Command {
 		public bool Require() {
 			return History.present>-1;
@@ -922,7 +973,8 @@ namespace Editor {
 			}
 			catch(Exception e) {
 				string t=e.ToString();
-				Help.toolTip.Size=Help.toolTip.CreateGraphics().MeasureString(t,Help.toolTip.Font).ToSize();
+				Size size=Help.toolTip.CreateGraphics().MeasureString(t,Help.toolTip.Font).ToSize();
+				Help.toolTip.Size=new Size(size.Width,size.Height+12);
 				Help.toolTip.Text=t;
 				Help.toolTip.Visible=true;
 			}
@@ -1466,9 +1518,11 @@ namespace Editor {
 		public object Object {
 			get {return _myObject;}
 		}
+		public string valueText;
 		//constructor
-		public GListBoxItem(object obj, int index) {
+		public GListBoxItem(object obj, string valueText, int index) {
 			_myObject=obj;
+			this.valueText=valueText;
 			_myText = obj.ToString();
 			_myImageIndex = index;
 		}
@@ -1476,7 +1530,7 @@ namespace Editor {
 //			_myText = text;
 //			_myImageIndex = index;
 //		}
-		public GListBoxItem(string text): this(text,-1){}
+		public GListBoxItem(string text): this(text,"",-1){}
 		public GListBoxItem(): this(""){}
 		public override string ToString() {
 			return _myText;
@@ -1504,12 +1558,24 @@ namespace Editor {
 			GListBoxItem item;
 			Rectangle bounds = e.Bounds;
 			Size imageSize = _myImageList.ImageSize;
+			int longest=0;
+			foreach(GListBoxItem i in this.Items) {
+				if(i.Text.Length>longest) {
+               longest=i.Text.Length;
+				}
+			}
 			try {
 				item = (GListBoxItem) Items[e.Index];
 				if (item.ImageIndex != -1) {
 					_myImageList.Draw(e.Graphics, bounds.Left,bounds.Top,item.ImageIndex); 
-					e.Graphics.DrawString(item.Text, e.Font, new SolidBrush(e.ForeColor), 
+					e.Graphics.DrawString(item.Text.PadRight(longest+1,' ')+item.valueText, e.Font, new SolidBrush(e.ForeColor), 
 						bounds.Left+imageSize.Width, bounds.Top);
+					Size size=e.Graphics.MeasureString(item.Text.PadRight(longest+1,' ')+item.valueText,e.Font).ToSize();
+					if(size.Width+50>Size.Width) {
+						Size=new Size(size.Width+50,Size.Height);
+					}
+//					e.Graphics.DrawString(item.valueText,e.Font,new SolidBrush(e.ForeColor),
+//						bounds.Left
 				}
 				else {
 					e.Graphics.DrawString(item.Text, e.Font,new SolidBrush(e.ForeColor),

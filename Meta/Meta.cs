@@ -709,21 +709,21 @@ namespace Meta {
 					keyValue[keys[keys.Count-1]]=val;
 				}
 			}
-			private object GetValue(object obj,object key) {
-				IKeyValue map;
-				if(obj is IKeyValue) { 
-					map=(IKeyValue)obj;
-				}
-				else {
-					map=(new NetObject(obj));
-				}
-				if(key.Equals("break")) {
-					throw new BreakException(map);
-				}
-				else {
-					return map[key];
-				}
-			}
+//			private object GetValue(object obj,object key) {
+//				IKeyValue map;
+//				if(obj is IKeyValue) { 
+//					map=(IKeyValue)obj;
+//				}
+//				else {
+//					map=(new NetObject(obj));
+//				}
+//				if(key.Equals("break")) {
+//					throw new BreakException(map);
+//				}
+//				else {
+//					return map[key];
+//				}
+//			}
 		}
 		public class Interpreter  {
 			public static ArrayList callers=new ArrayList();
