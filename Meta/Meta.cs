@@ -47,8 +47,8 @@ namespace Meta {
 				keyExpression.Assign(parent,this.valueExpression.Evaluate(parent));
 			}
 			public Statement(Map code) {
-				this.keyExpression=(Select)((Map)code["key"]).Compile();
-				this.valueExpression=(IExpression)((Map)code["value"]).Compile();
+				this.keyExpression=(Select)((Map)code[Interpreter.StringToMap("key")]).Compile();
+				this.valueExpression=(IExpression)((Map)code[Interpreter.StringToMap("value")]).Compile();
 			}
 			public Select keyExpression;
 			public IExpression valueExpression;
@@ -58,9 +58,9 @@ namespace Meta {
 				return ((ICallable)callableExpression.Evaluate(parent)).Call((IMap)argumentExpression.Evaluate(parent));
 			}
 			public Call(Map obj) {
-				Map expression=(Map)obj["call"];
-				this.callableExpression=(IExpression)((Map)expression["function"]).Compile();
-				this.argumentExpression=(IExpression)((Map)expression["argument"]).Compile();
+				Map expression=(Map)obj[Interpreter.StringToMap("call")];
+				this.callableExpression=(IExpression)((Map)expression[Interpreter.StringToMap("function")]).Compile();
+				this.argumentExpression=(IExpression)((Map)expression[Interpreter.StringToMap("argument")]).Compile();
 			}
 			public IExpression argumentExpression;
 			public IExpression callableExpression;
@@ -70,7 +70,7 @@ namespace Meta {
 				return delayed;
 			}
 			public Delayed(Map code) {
-				this.delayed=(Map)code["delayed"];
+				this.delayed=(Map)code[Interpreter.StringToMap("delayed")];
 			}
 			public Map delayed;
 		}
@@ -88,7 +88,7 @@ namespace Meta {
 				return result;
 			}
 			public Program(Map code) {
-				foreach(Map statement in ((Map)code["program"]).IntKeyValues) {
+				foreach(Map statement in ((Map)code[Interpreter.StringToMap("program")]).IntKeyValues) {
 					this.statements.Add(statement.Compile()); // should we save the original maps?
 				}
 			}
@@ -99,7 +99,7 @@ namespace Meta {
 				return literal;
 			}
 			public Literal(Map code) {
-				this.literal=Interpreter.RecognizeLiteralText((string)code["literal"]);
+				this.literal=Interpreter.RecognizeLiteralText((string)Interpreter.MapToString((Map)code[Interpreter.StringToMap("literal")]));
 			}
 			public object literal=null;
 		}
@@ -116,10 +116,7 @@ namespace Meta {
 				foreach(IExpression expression in expressions) {
 					keysToBeSelected.Add(expression.Evaluate(current));
 				}
-				if(keysToBeSelected[0].Equals("testClass")) {
-					int asdf=0;
-				}
-				if(keysToBeSelected.Count==1 && keysToBeSelected[0].Equals("this")) {
+				if(keysToBeSelected.Count==1 && keysToBeSelected[0] is Map && Interpreter.MapToString((Map)keysToBeSelected[0]).Equals("this")) {
 					if(valueToBeAssigned is IMap) {
 						IMap parent=((IMap)Interpreter.Current).Parent;
 						Interpreter.Current=((IMap)valueToBeAssigned).Clone();
@@ -141,19 +138,49 @@ namespace Meta {
 					mapToAssignIn[keysToBeSelected[keysToBeSelected.Count-1]]=valueToBeAssigned;
 				}
 			}
+//			public void Assign(IMap current,object valueToBeAssigned) { // remove current
+//				ArrayList keysToBeSelected=new ArrayList();
+//				foreach(IExpression expression in expressions) {
+//					keysToBeSelected.Add(expression.Evaluate(current));
+//				}
+//				if(keysToBeSelected[0].Equals("testClass")) {
+//					int asdf=0;
+//				}
+//				if(keysToBeSelected.Count==1 && keysToBeSelected[0].Equals("this")) {
+//					if(valueToBeAssigned is IMap) {
+//						IMap parent=((IMap)Interpreter.Current).Parent;
+//						Interpreter.Current=((IMap)valueToBeAssigned).Clone();
+//						((IMap)Interpreter.Current).Parent=parent;
+//					}
+//					else {
+//						Interpreter.Current=valueToBeAssigned;
+//					}
+//				}
+//				else {
+//					object selectionOfAllKeysExceptLastOne=SearchAndSelectKeysInCurrentMap(keysToBeSelected,false,false);
+//					IKeyValue mapToAssignIn;
+//					if(selectionOfAllKeysExceptLastOne is IKeyValue) {
+//						mapToAssignIn=(IKeyValue)selectionOfAllKeysExceptLastOne;
+//					}
+//					else {
+//						mapToAssignIn=new NetObject(selectionOfAllKeysExceptLastOne);
+//					}
+//					mapToAssignIn[keysToBeSelected[keysToBeSelected.Count-1]]=valueToBeAssigned;
+//				}
+//			}
 			public object SearchAndSelectKeysInCurrentMap(ArrayList keys,bool isRightSide,bool isSelectLastKey) {
 				object selection=Interpreter.Current;
 				int i=0;
 				if(keys[0]==null) {
 					int asdf=0;
 				}
-				if(keys[0].Equals("this")) {
+				if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("this")) {
 					i++;
 				}
-				else if(keys[0].Equals("caller")) {
+				else if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("caller")) {
 					int numCallers=0;
 					foreach(object key in keys) {
-						if(key.Equals("caller")) {
+						if(key is Map && Interpreter.MapToString((Map)key).Equals("caller")) {
 							numCallers++;
 							i++;
 						}
@@ -162,11 +189,11 @@ namespace Meta {
 						}
 					}
 					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
-//					selection=Interpreter.callers[Interpreter.callers.Count-numCallers];
+					//					selection=Interpreter.callers[Interpreter.callers.Count-numCallers];
 				}
-				else if(keys[0].Equals("parent")) { //ignore arguments here
+				else if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("parent")) { //ignore arguments here
 					foreach(object key in keys) {
-						if(key.Equals("parent")) {
+						if(key is Map && Interpreter.MapToString((Map)key).Equals("parent")) {
 							selection=((IMap)selection).Parent;
 							i++;
 						}
@@ -175,10 +202,10 @@ namespace Meta {
 						}
 					}
 				}
-				else if(keys[0].Equals("arg")) {
+				else if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("arg")) {
 					int numArgs=0;
 					foreach(object key in keys) {
-						if(key.Equals("arg")) {
+						if(key is Map && Interpreter.MapToString((Map)key).Equals("arg")) {
 							numArgs++;
 							i++;
 						}
@@ -188,15 +215,26 @@ namespace Meta {
 					}
 					selection=Interpreter.arguments[Interpreter.arguments.Count-numArgs];
 				}
-				else if(keys[0].Equals("search")||isRightSide) {
-					if(keys[0].Equals("search")) {
+				else if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("search")||isRightSide) {
+					if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("search")) {
 						i++;
+					}
+					if(keys[0].Equals(Interpreter.StringToMap("x")) && isRightSide) {
+						int asdf=0;
 					}
 					while(selection!=null && !((IKeyValue)selection).ContainsKey(keys[i])) {
 						selection=((IMap)selection).Parent;
 					}
 					if(selection==null) {
-						throw new ApplicationException("Key "+keys[i]+" not found.");
+						string text="Key ";
+						if(keys[i] is Map) {
+							text+=Interpreter.MapToString((Map)keys[i]);
+						}
+						else {
+							text+=keys[i];
+						}
+						text+=" not found.";
+						throw new ApplicationException();
 					}
 				}
 				int lastKeySelect=0;
@@ -204,7 +242,7 @@ namespace Meta {
 					lastKeySelect++;
 				}
 				for(;i<keys.Count-1+lastKeySelect;i++) {
-					if(keys[i].Equals("break")) {
+					if(keys[i].Equals("break")) { // remove
 						if(selection is IKeyValue) {
 							Interpreter.breakMethod((IKeyValue)selection);
 						}
@@ -225,8 +263,100 @@ namespace Meta {
 				}
 				return selection;
 			}
+//			public object SearchAndSelectKeysInCurrentMap(ArrayList keys,bool isRightSide,bool isSelectLastKey) {
+//				object selection=Interpreter.Current;
+//				int i=0;
+//				if(keys[0]==null) {
+//					int asdf=0;
+//				}
+//				if(keys[0].Equals("this")) {
+//					i++;
+//				}
+//				else if(keys[0].Equals("caller")) {
+//					int numCallers=0;
+//					foreach(object key in keys) {
+//						if(key.Equals("caller")) {
+//							numCallers++;
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
+////					selection=Interpreter.callers[Interpreter.callers.Count-numCallers];
+//				}
+//				else if(keys[0].Equals("parent")) { //ignore arguments here
+//					foreach(object key in keys) {
+//						if(key.Equals("parent")) {
+//							selection=((IMap)selection).Parent;
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//				}
+//				else if(keys[0].Equals("arg")) {
+//					int numArgs=0;
+//					foreach(object key in keys) {
+//						if(key.Equals("arg")) {
+//							numArgs++;
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//					selection=Interpreter.arguments[Interpreter.arguments.Count-numArgs];
+//				}
+//				else if(keys[0].Equals("search")||isRightSide) {
+//					if(keys[0].Equals("search")) {
+//						i++;
+//					}
+//					while(selection!=null && !((IKeyValue)selection).ContainsKey(keys[i])) {
+//						selection=((IMap)selection).Parent;
+//					}
+//					if(selection==null) {
+//						string text="Key ";
+//						if(keys[i] is Map) {
+//							text+=Interpreter.MapToString((Map)keys[i]);
+//						}
+//						else {
+//							text+=keys[i];
+//						}
+//						text+=" not found.";
+//						throw new ApplicationException();
+//					}
+//				}
+//				int lastKeySelect=0;
+//				if(isSelectLastKey) {
+//					lastKeySelect++;
+//				}
+//				for(;i<keys.Count-1+lastKeySelect;i++) {
+//					if(keys[i].Equals("break")) {
+//						if(selection is IKeyValue) {
+//							Interpreter.breakMethod((IKeyValue)selection);
+//						}
+//						else {
+//							Interpreter.breakMethod(new NetObject(selection));
+//						}
+//						Thread.CurrentThread.Suspend();
+//					}	
+//					if(selection==null) {
+//						throw new ApplicationException("Key "+keys[i]+" does not exist");
+//					}
+//					if(selection is IKeyValue) {
+//						selection=((IKeyValue)selection)[keys[i]];
+//					}
+//					else {
+//						selection=new NetObject(selection)[keys[i]];
+//					}
+//				}
+//				return selection;
+//			}
 			public Select(Map code) {
-				foreach(Map expression in ((Map)code["select"]).IntKeyValues) {
+				foreach(Map expression in ((Map)code[Interpreter.StringToMap("select")]).IntKeyValues) {
 					this.expressions.Add(expression.Compile());
 				}
 			}
@@ -262,6 +392,15 @@ namespace Meta {
 				}
 				return null;
 			}
+//			public static object RecognizeLiteralText(string text) {
+//				for(int i=literalRecognitions.Count-1;i>=0;i--) {
+//					object recognized=((RecognizeLiteral)literalRecognitions[i]).Recognize(text);
+//					if(recognized!=null) {
+//						return recognized;
+//					}
+//				}
+//				return null;
+//			}
 			public static object ConvertDotNetObjectToMetaObject(object obj) { 
 				if(obj==null) {
 					return null;
@@ -388,9 +527,14 @@ namespace Meta {
 			}
 			public class LiteralRecognitions {
 				// Attention! order of classes matters
-				public class RecognizeDotNetString: RecognizeLiteral  {
-					public override object Recognize(string text)  {
-						return text;
+//				public class RecognizeDotNetString: RecognizeLiteral  {
+//					public override object Recognize(string text)  {
+//						return text;
+//					}
+//				}
+				public class RecognizeString:RecognizeLiteral {
+					public override object Recognize(string text) {
+						return StringToMap(text);
 					}
 				}
 				public class RecognizeInteger: RecognizeLiteral  {
@@ -420,16 +564,16 @@ namespace Meta {
 						}
 					}
 				}
-				public class RecognizeString:RecognizeLiteral {
-					public override object Recognize(string text) {
-						if(text.StartsWith("\"") && text.EndsWith("\"")) {
-							return StringToMap(text.Substring(1,text.Length-2));
-						}
-						else {
-							return null;
-						}
-					}
-				}
+//				public class RecognizeString:RecognizeLiteral {
+//					public override object Recognize(string text) {
+//						if(text.StartsWith("\"") && text.EndsWith("\"")) {
+//							return StringToMap(text.Substring(1,text.Length-2));
+//						}
+//						else {
+//							return null;
+//						}
+//					}
+//				}
 				public class RecognizeBoolean:RecognizeLiteral {
 					public override object Recognize(string text) {
 						switch(text) {
@@ -541,6 +685,17 @@ namespace Meta {
 					map[new Integer(map.Count+1)]=new Integer((int)character);
 				}
 				return map;
+			}
+			public static bool IsMapString(Map map) {
+				if(map.IntKeyValues.Count>0) {
+					try {
+						MapToString(map);
+						return true;
+					}
+					catch{
+					}
+				}
+				return false;
 			}
 			public static string MapToString(Map map) {
 				string text="";
@@ -732,24 +887,48 @@ namespace Meta {
 			public static Map LoadAssemblies(IEnumerable assemblies) {
 				Map root=new Map();
 				foreach(Assembly assembly in assemblies) {
+					if(Path.GetFileNameWithoutExtension(assembly.Location).IndexOf("test")!=-1) {
+						int asdf=0;
+					}
 					foreach(Type type in assembly.GetExportedTypes())  {
 						if(type.DeclaringType==null)  {
 							Map position=root;
 							ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
 							subPaths.RemoveAt(subPaths.Count-1);
 							foreach(string subPath in subPaths)  {
-								if(!position.ContainsKey(subPath))  {
-									position[subPath]=new Map();
+								if(!position.ContainsKey(Interpreter.StringToMap(subPath)))  {
+									position[Interpreter.StringToMap(subPath)]=new Map();
 								}
-								position=(Map)position[subPath];
+								position=(Map)position[Interpreter.StringToMap(subPath)];
 							}
-							position[type.Name]=new NetClass(type);
+							position[Interpreter.StringToMap(type.Name)]=new NetClass(type);
 						}
 					}
 					Interpreter.loadedAssemblies.Add(assembly.Location);
 				}
 				return root;
 			}
+//			public static Map LoadAssemblies(IEnumerable assemblies) {
+//				Map root=new Map();
+//				foreach(Assembly assembly in assemblies) {
+//					foreach(Type type in assembly.GetExportedTypes())  {
+//						if(type.DeclaringType==null)  {
+//							Map position=root;
+//							ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
+//							subPaths.RemoveAt(subPaths.Count-1);
+//							foreach(string subPath in subPaths)  {
+//								if(!position.ContainsKey(subPath))  {
+//									position[subPath]=new Map();
+//								}
+//								position=(Map)position[subPath];
+//							}
+//							position[type.Name]=new NetClass(type);
+//						}
+//					}
+//					Interpreter.loadedAssemblies.Add(assembly.Location);
+//				}
+//				return root;
+//			}
 			private static AssemblyName GetAssemblyName(IAssemblyName nameRef) {
 				AssemblyName name = new AssemblyName();
 				name.Name = AssemblyCache.GetName(nameRef);
@@ -779,8 +958,11 @@ namespace Meta {
 				}
 				cash=LoadAssemblies(assemblies);
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
-					cash[Path.GetFileNameWithoutExtension(fileName)]=new UnloadedMetaLibrary(fileName);
+					cash[Interpreter.StringToMap(Path.GetFileNameWithoutExtension(fileName))]=new UnloadedMetaLibrary(fileName);
 				}
+//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
+//					cash[Path.GetFileNameWithoutExtension(fileName)]=new UnloadedMetaLibrary(fileName);
+//				}
 			}
 			public static Library library=new Library();
 			private Map cash=new Map();
@@ -865,7 +1047,7 @@ namespace Meta {
 			}
 			public object Compile()  {
 				if(compiled==null)  {
-					switch((string)this.Keys[0]) {
+					switch((string)Interpreter.MapToString((Map)this.Keys[0])) {
 						case "call":
 							compiled=new Call(this);break;
 						case "delayed":
@@ -941,16 +1123,24 @@ namespace Meta {
 			private bool isHashCashed=false;
 			private int hash;
 			public string Serialize(string indent,string[] functions) {
-				try {
-					if(IntKeyValues.Count>0) {
-						string text=indent+"\""+Interpreter.MapToString(this)+"\""+"\n";
-						return text;
-					}
+				if(Interpreter.IsMapString(this)) {
+					return indent+"\""+Interpreter.MapToString(this)+"\""+"\n";
 				}
-				catch {
+				else {
+					return null;
 				}
-				return null;//ExecuteTests.Serialize(this,indent,functions);
 			}
+//			public string Serialize(string indent,string[] functions) {
+//				try {
+//					if(IntKeyValues.Count>0) {
+//						string text=indent+"\""+Interpreter.MapToString(this)+"\""+"\n";
+//						return text;
+//					}
+//				}
+//				catch {
+//				}
+//				return null;
+//			}
 		}
 		public class MapEnumerator: IEnumerator {
 			private Map map; public MapEnumerator(Map map) {
@@ -1185,7 +1375,7 @@ namespace Meta {
 			public MethodBase[] methods;
 
 		}
-		public class NetClass: NetClassOrObject, IKeyValue,ICallable {
+		public class NetClass: NetContainer, IKeyValue,ICallable {
 			[DontSerializeFieldOrProperty]
 			public NetMethod constructor;
 			public NetClass(Type type):base(null,type) {
@@ -1195,18 +1385,27 @@ namespace Meta {
 				return constructor.Call(argument);
 			}
 		}
-		public class NetObject: NetClassOrObject, IKeyValue {
+		public class NetObject: NetContainer, IKeyValue {
 			public NetObject(object obj):base(obj,obj.GetType()) {
 			}
 			public override string ToString() {
 				return obj.ToString();
 			}
 		}
-		public abstract class NetClassOrObject: IKeyValue, IEnumerable,ISerializeSpecial {
+		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial {
 			public bool ContainsKey(object key) {
-				if(key is string && type.GetMember((string)key,
-											BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-					return true;
+				if(key is Map) {
+					if(Interpreter.IsMapString((Map)key)) {
+						string text=Interpreter.MapToString((Map)key);
+						if(type.GetMember((string)key,
+							BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
+							return true;
+						}
+//						if(key is string && type.GetMember((string)key,
+//							BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
+//							return true;
+//						}
+					}
 				}
 				NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
 				Map arguments=new Map();
@@ -1219,6 +1418,22 @@ namespace Meta {
 					return false;
 				}
 			}
+//			public bool ContainsKey(object key) {
+//				if(key is string && type.GetMember((string)key,
+//											BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
+//					return true;
+//				}
+//				NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
+//				Map arguments=new Map();
+//				arguments[new Integer(1)]=key;
+//				try {
+//					indexerMethod.Call(arguments);
+//					return true;
+//				}
+//				catch(Exception) {
+//					return false;
+//				}
+//			}
 			public IEnumerator GetEnumerator() {
 				return Table.GetEnumerator();
 			}
@@ -1242,8 +1457,8 @@ namespace Meta {
 			}
 			public virtual object this[object key]  {
 				get {
-					if(key is string) {
-						string text=(string)key;
+					if(key is Map && Interpreter.IsMapString((Map)key)) {
+						string text=Interpreter.MapToString((Map)key);
 						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
@@ -1273,8 +1488,9 @@ namespace Meta {
 					}
 				}
 				set {
-					if(key is string) {
-						MemberInfo[] members=type.GetMember((string)key,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
+					if(key is Map && Interpreter.IsMapString((Map)key)) {
+						string text=Interpreter.MapToString((Map)key);
+						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
 								throw new ApplicationException("Cannot set method "+key+".");
@@ -1310,7 +1526,7 @@ namespace Meta {
 								}
 							}
 							else if(members[0] is EventInfo) {
-								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent((string)key,(Map)value));
+								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(Map)value));
 								return;
 							}
 						}
@@ -1327,6 +1543,93 @@ namespace Meta {
 					}
 				}
 			}
+//			public virtual object this[object key]  {
+//				get {
+//					if(key is string) {
+//						string text=(string)key;
+//						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
+//						if(members.Length>0) {
+//							if(members[0] is MethodBase) {
+//								return new NetMethod(text,obj,type);
+//							}
+//							if(members[0] is FieldInfo) {
+//								return Interpreter.ConvertDotNetObjectToMetaObject(type.GetField(text).GetValue(obj));
+//							}
+//							else if(members[0] is PropertyInfo) {
+//								return Interpreter.ConvertDotNetObjectToMetaObject(type.GetProperty(text).GetValue(obj,new object[]{}));
+//							}
+//							else if(members[0] is EventInfo) {
+//								Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
+//									BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
+//								return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+//							}
+//						}
+//					}
+//					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
+//					Map arguments=new Map();
+//					arguments[new Integer(1)]=key;
+//					try {
+//						return indexerMethod.Call(arguments);
+//					}
+//					catch(Exception) {
+//						return null;
+//					}
+//				}
+//				set {
+//					if(key is string) {
+//						MemberInfo[] members=type.GetMember((string)key,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
+//						if(members.Length>0) {
+//							if(members[0] is MethodBase) {
+//								throw new ApplicationException("Cannot set method "+key+".");
+//							}
+//							else if(members[0] is FieldInfo) {
+//								FieldInfo field=(FieldInfo)members[0];
+//								if(field.FieldType.IsAssignableFrom(value.GetType())) {
+//									field.SetValue(obj,value);
+//									return;
+//								}
+//								else {
+//									bool isConverted;
+//									object converted=Interpreter.ConvertMetaObjectToTargetDotNetType(value,field.FieldType,out isConverted);
+//									if(isConverted) {
+//										field.SetValue(obj,converted);
+//										return;
+//									}
+//								}
+//							}
+//							else if(members[0] is PropertyInfo) {
+//								PropertyInfo property=(PropertyInfo)members[0];
+//								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
+//									property.SetValue(obj,value,null);
+//									return;
+//								}
+//								else {
+//									bool isConverted;
+//									object converted=Interpreter.ConvertMetaObjectToTargetDotNetType(value,property.PropertyType,out isConverted);
+//									if(isConverted) {
+//										property.SetValue(obj,converted,null);
+//										return;
+//									}
+//								}
+//							}
+//							else if(members[0] is EventInfo) {
+//								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent((string)key,(Map)value));
+//								return;
+//							}
+//						}
+//					}
+//					NetMethod indexer=new NetMethod("set_Item",obj,type);
+//					Map arguments=new Map();
+//					arguments[new Integer(1)]=key;
+//					arguments[new Integer(2)]=value;
+//					try {
+//						indexer.Call(arguments);
+//					}
+//					catch(Exception) {
+//						throw new ApplicationException("Cannot set "+key.ToString()+".");
+//					}
+//				}
+//			}
 			public string Serialize(string indent,string[] functions) {
 				return indent;
 			}
@@ -1352,29 +1655,36 @@ namespace Meta {
 						bindingFlags=BindingFlags.Public|BindingFlags.Instance;
 					}
 					foreach(FieldInfo field in type.GetFields(bindingFlags)) {
-						table[field.Name]=field.GetValue(obj);
+						table[Interpreter.StringToMap(field.Name)]=field.GetValue(obj);
 					}
 					foreach(MethodInfo method in type.GetMethods(bindingFlags))  {
 						if(!method.IsSpecialName) {
-							table[method.Name]=new NetMethod(method.Name,obj,type);
+							table[Interpreter.StringToMap(method.Name)]=new NetMethod(method.Name,obj,type);
 						}
 					}
 					foreach(PropertyInfo property in type.GetProperties(bindingFlags)) {
 						if(property.Name!="Item" && property.Name!="Chars") {
-							table[property.Name]=property.GetValue(obj,new object[]{});
+							table[Interpreter.StringToMap(property.Name)]=property.GetValue(obj,new object[]{});
 						}
 					}
 					foreach(EventInfo eventInfo in type.GetEvents(bindingFlags)) {
-						table[eventInfo.Name]=new NetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
+						table[Interpreter.StringToMap(eventInfo.Name)]=new NetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
 					}
 					int counter=1;
 					if(obj!=null && obj is IEnumerable && !(obj is String)) { // is this useful?
 						foreach(object entry in (IEnumerable)obj) {
 							if(entry is DictionaryEntry) {
-								table[((DictionaryEntry)entry).Key]=((DictionaryEntry)entry).Value;
+								table[Interpreter.ConvertDotNetObjectToMetaObject(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+
+//								if(((DictionaryEntry)entry).Key is String) {
+//									table[Interpreter.StringToMap((string)((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+//								}
+//								else {
+//									table[((DictionaryEntry)entry).Key]=((DictionaryEntry)entry).Value;
+//								}
 							}
 							else {
-								table[counter]=entry;
+								table[new Integer(counter)]=entry;
 								counter++;
 							}
 						}
@@ -1382,7 +1692,48 @@ namespace Meta {
 					return table;
 				}
 			}
-			public NetClassOrObject(object obj,Type type) {
+//			private IDictionary Table {
+//				get {
+//					HybridDictionary table=new HybridDictionary();
+//					BindingFlags bindingFlags;
+//					if(obj==null)  {
+//						bindingFlags=BindingFlags.Public|BindingFlags.Static;
+//					}
+//					else  {
+//						bindingFlags=BindingFlags.Public|BindingFlags.Instance;
+//					}
+//					foreach(FieldInfo field in type.GetFields(bindingFlags)) {
+//						table[field.Name]=field.GetValue(obj);
+//					}
+//					foreach(MethodInfo method in type.GetMethods(bindingFlags))  {
+//						if(!method.IsSpecialName) {
+//							table[method.Name]=new NetMethod(method.Name,obj,type);
+//						}
+//					}
+//					foreach(PropertyInfo property in type.GetProperties(bindingFlags)) {
+//						if(property.Name!="Item" && property.Name!="Chars") {
+//							table[property.Name]=property.GetValue(obj,new object[]{});
+//						}
+//					}
+//					foreach(EventInfo eventInfo in type.GetEvents(bindingFlags)) {
+//						table[eventInfo.Name]=new NetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
+//					}
+//					int counter=1;
+//					if(obj!=null && obj is IEnumerable && !(obj is String)) { // is this useful?
+//						foreach(object entry in (IEnumerable)obj) {
+//							if(entry is DictionaryEntry) {
+//								table[((DictionaryEntry)entry).Key]=((DictionaryEntry)entry).Value;
+//							}
+//							else {
+//								table[counter]=entry;
+//								counter++;
+//							}
+//						}
+//					}
+//					return table;
+//				}
+//			}
+			public NetContainer(object obj,Type type) {
 				this.obj=obj;
 				this.type=type;
 			}
@@ -1541,49 +1892,6 @@ namespace Meta {
 
 			}
 		}
-//			public static string Serialize(object serialize,string indent,string[] methods) {
-//				string text="";
-//				if(serialize==null) {
-//					text=indent+"null\n";
-//				}
-//				else if(serialize is ISerializeSpecial) {
-//					text=((ISerializeSpecial)serialize).Serialize(indent,methods);
-//				}
-//				else if(serialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
-//					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) {
-//					text=indent+"\""+serialize.ToString()+"\""+"\n";
-//				}
-//				else if(serialize is IEnumerable) {
-//					foreach(object entry in (IEnumerable)serialize) {
-//						text+=indent+"Entry ("+entry.GetType().Name+")\n"+Serialize(entry,indent+"  ",methods);
-//					}
-//				}
-//				else {
-//					ArrayList members=new ArrayList();
-//					members.AddRange(serialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
-//					members.AddRange(serialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
-//					foreach(string method in methods) {
-//						members.Add(serialize.GetType().GetMethod(method));
-//					}
-//					members.Sort(new CompareMemberInfos());
-//					foreach(MemberInfo member in members) {
-//						if(member.Name!="Item") {
-//							if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) {
-//								object val=serialize.GetType().InvokeMember(member.Name,BindingFlags.Public
-//									|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
-//									|BindingFlags.InvokeMethod,null,serialize,null);
-//								text+=indent+member.Name;
-//								if(val!=null) {
-//									text+=" ("+val.GetType().Name+")";
-//								}
-//								text+=":\n"+Serialize(val,indent+"  ",methods);
-//							}
-//						}
-//					}
-//				}
-//				return text;
-//			}
-//		}
 		internal class CompareMemberInfos:IComparer {
 			public int Compare(object first,object second) {
 				return ((MemberInfo)first).Name.CompareTo(((MemberInfo)second).Name);

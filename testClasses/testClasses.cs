@@ -58,29 +58,41 @@ namespace testClasses
 			return p1+b+c+this.x+this.y+this.z;
 		}
 	}
-	public class NamedNoConversion:TestClass {
+	public class NamedNoConversion:TestClass { //refactor
 //		[MetaMethod("(1,y,2)")]
 		public NamedNoConversion() {
 			Map arg=(Map)Interpreter.Arg;
 			Map def=new Map();
-			def[1]="null";
-			def["y"]="null";
-			def["p2"]="null";
+			def[new Integer(1)]=Interpreter.StringToMap("null");
+			def[Interpreter.StringToMap("y")]=Interpreter.StringToMap("null");
+			def[Interpreter.StringToMap("p2")]=Interpreter.StringToMap("null");
 			arg=(Map)Interpreter.Merge(def,arg);
-			this.x=(string)arg[1];
-			this.y=(string)arg["y"];
-			this.z=(string)arg["p2"];
+			this.x=(string)Interpreter.MapToString((Map)arg[new Integer(1)]);
+			this.y=(string)Interpreter.MapToString((Map)arg[Interpreter.StringToMap("y")]);
+			this.z=(string)Interpreter.MapToString((Map)arg[Interpreter.StringToMap("p2")]);
 		}
-		//		[MetaMethod("(1,b,c)")]
 		public string Concatenate() {
 			Map arg=(Map)Interpreter.Arg;
 			Map def=new Map();
-			def[1]="null";
-			def["b"]="null";
-			def["c"]="null";
+			def[new Integer(1)]=Interpreter.StringToMap("null");
+			def[Interpreter.StringToMap("b")]=Interpreter.StringToMap("null");
+			def[Interpreter.StringToMap("c")]=Interpreter.StringToMap("null");
 			arg=(Map)Interpreter.Merge(def,arg);
-			return (string)arg[1]+(string)arg["b"]+(string)arg["c"]+this.x+this.y+this.z;
+			return (string)Interpreter.MapToString((Map)arg[new Integer(1)])+
+				(string)Interpreter.MapToString((Map)arg[Interpreter.StringToMap("b")])+
+				(string)Interpreter.MapToString((Map)arg[Interpreter.StringToMap("c")])+
+				this.x+this.y+this.z;
 		}
+		//		[MetaMethod("(1,b,c)")]
+//		public string Concatenate() {
+//			Map arg=(Map)Interpreter.Arg;
+//			Map def=new Map();
+//			def[1]="null";
+//			def["b"]="null";
+//			def["c"]="null";
+//			arg=(Map)Interpreter.Merge(def,arg);
+//			return (string)arg[1]+(string)arg["b"]+(string)arg["c"]+this.x+this.y+this.z;
+//		}
 //		public NamedNoConversion(Map arg) {
 //			Map def=new Map();
 //			def[1]="null";

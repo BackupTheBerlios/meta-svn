@@ -93,7 +93,7 @@ public class @base {
 		Map result=new Map();
 		for(int i=0;i<times;i++) {
 			Map argument=new Map();
-			argument["i"]=new Integer(i);
+			argument[Interpreter.StringToMap("i")]=new Integer(i);
 			result[new Integer(i+1)]=function.Call(argument);
 		}
 		return result;
@@ -106,8 +106,8 @@ public class @base {
 		int i=0;
 		foreach(DictionaryEntry entry in over) {
 			Map argument=new Map();
-			argument["key"]=entry.Key;
-			argument["value"]=entry.Value;
+			argument[Interpreter.StringToMap("key")]=entry.Key;
+			argument[Interpreter.StringToMap("value")]=entry.Value;
 			result[new Integer(i+1)]=function.Call(argument);
 			i++;
 		}
@@ -119,8 +119,8 @@ public class @base {
 	public static void Switch() {
 		Map arg=((Map)Interpreter.Arg);
 		object val=arg[new Integer(1)];
-		Map cases=(Map)arg["case"];
-		Map def=(Map)arg["default"];
+		Map cases=(Map)arg[Interpreter.StringToMap("case")];
+		Map def=(Map)arg[Interpreter.StringToMap("default")];
 		if(cases.ContainsKey(val)) {
 			((Map)cases[val]).Call(new Map());
 		}
@@ -131,8 +131,8 @@ public class @base {
 	public static void If() {
 		Map arg=((Map)Interpreter.Arg);
 		bool test=(bool)arg[new Integer(1)];
-		Map then=(Map)arg["then"];
-		Map _else=(Map)arg["else"];
+		Map then=(Map)arg[Interpreter.StringToMap("then")];
+		Map _else=(Map)arg[Interpreter.StringToMap("else")];
 		if(test) {
 			if(then!=null) {
 				then.Call(new Map());

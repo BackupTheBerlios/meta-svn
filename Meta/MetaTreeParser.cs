@@ -134,9 +134,9 @@ namespace Meta.Parser
 			_t = retTree_;
 		}
 		
-		call["function"]=delayed;
-		call["argument"]=argument;
-		result["call"]=call;
+		call[Interpreter.StringToMap("function")]=delayed;
+		call[Interpreter.StringToMap("argument")]=argument;
+		result[Interpreter.StringToMap("call")]=call;
 		
 		_t = __t92;
 		_t = _t.getNextSibling();
@@ -180,8 +180,8 @@ namespace Meta.Parser
 					_t = retTree_;
 					
 					Map statement=new Map();
-										statement["key"]=key;
-										statement["value"]=val;
+										statement[Interpreter.StringToMap("key")]=key;
+										statement[Interpreter.StringToMap("value")]=val;
 										statements[new Integer(counter)]=statement;
 										counter++;
 									
@@ -199,7 +199,7 @@ _loop90_breakloop:			;
 		_t = __t87;
 		_t = _t.getNextSibling();
 		
-		result["program"]=statements;
+		result[Interpreter.StringToMap("program")]=statements;
 		
 		retTree_ = _t;
 		return result;
@@ -250,7 +250,7 @@ _loop99_breakloop:			;
 		_t = __t96;
 		_t = _t.getNextSibling();
 		
-		result["select"]=selection;
+		result[Interpreter.StringToMap("select")]=selection;
 		
 		retTree_ = _t;
 		return result;
@@ -270,7 +270,7 @@ _loop99_breakloop:			;
 		match(_t,LITERAL);
 		_t = _t.getNextSibling();
 		
-		result["literal"]=token.getText();
+		result[Interpreter.StringToMap("literal")]=Interpreter.StringToMap(token.getText());
 		
 		retTree_ = _t;
 		return result;
@@ -295,7 +295,7 @@ _loop99_breakloop:			;
 		_t = __t102;
 		_t = _t.getNextSibling();
 		
-		result["delayed"]=delayed;
+		result[Interpreter.StringToMap("delayed")]=delayed;
 		
 		retTree_ = _t;
 		return result;

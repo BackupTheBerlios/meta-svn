@@ -3,7 +3,7 @@ statements (ArrayList):
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "this"
       parents (ArrayList):
     valueExpression (Call):
@@ -13,7 +13,7 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -22,14 +22,14 @@ statements (ArrayList):
             valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "parent"
               parents (ArrayList):
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -41,29 +41,29 @@ statements (ArrayList):
                   keyExpression (Select):
                     expressions (ArrayList):
                       Entry (Literal)
-                        literal (String):
+                        literal (Map):
                           "this"
                       Entry (Literal)
                         literal (Integer):
                           "1"
                     parents (ArrayList):
                   valueExpression (Literal):
-                    literal (String):
+                    literal (Map):
                       "AssignedToCurrent"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "base"
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "Merge"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "this"
       parents (ArrayList):
     valueExpression (Call):
@@ -73,7 +73,7 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -82,14 +82,14 @@ statements (ArrayList):
             valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "parent"
               parents (ArrayList):
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -98,113 +98,113 @@ statements (ArrayList):
             valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "base"
               parents (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "base"
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "Merge"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "this"
         Entry (Literal)
           literal (Integer):
             "1"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "ImpliedAutokey"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "this"
         Entry (Literal)
           literal (Integer):
             "2"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "Autokey"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "gacTest"
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "System"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "Collections"
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "lazyGACTest"
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "Microsoft"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "CSharp"
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "metaLibTest"
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "metaLib"
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "commandLineArguments"
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "arg"
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "libraryAssemblyTest"
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "testClasses"
       parents (ArrayList):
   Entry (Statement)
@@ -216,35 +216,35 @@ statements (ArrayList):
               keyExpression (Select):
                 expressions (ArrayList):
                   Entry (Literal)
-                    literal (String):
+                    literal (Map):
                       "a"
                 parents (ArrayList):
               valueExpression (Literal):
-                literal (String):
+                literal (Map):
                   "a"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "Object"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "normal symbol"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "NormalSymbol"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "lookupSymbol"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "LookupSymbol"
   Entry (Statement)
     keyExpression (Select):
@@ -254,13 +254,13 @@ statements (ArrayList):
             "long key symbol"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "LookupExtendedSymbol"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "lookedUpMap"
       parents (ArrayList):
     valueExpression (Select):
@@ -271,44 +271,44 @@ statements (ArrayList):
               keyExpression (Select):
                 expressions (ArrayList):
                   Entry (Literal)
-                    literal (String):
+                    literal (Map):
                       "a"
                 parents (ArrayList):
               valueExpression (Literal):
-                literal (String):
+                literal (Map):
                   "a"
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "lookedUpNormalSymbol"
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "normal symbol"
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "lookedUpSymbol"
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "lookupSymbol"
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "lookedUpLongSymbol"
       parents (ArrayList):
     valueExpression (Select):
@@ -321,7 +321,7 @@ statements (ArrayList):
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "object"
       parents (ArrayList):
     valueExpression (Program):
@@ -330,27 +330,27 @@ statements (ArrayList):
           keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                literal (String):
+                literal (Map):
                   "a"
             parents (ArrayList):
           valueExpression (Literal):
-            literal (String):
+            literal (Map):
               "default"
         Entry (Statement)
           keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                literal (String):
+                literal (Map):
                   "autoSearch"
             parents (ArrayList):
           valueExpression (Literal):
-            literal (String):
+            literal (Map):
               "default"
         Entry (Statement)
           keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                literal (String):
+                literal (Map):
                   "b"
             parents (ArrayList):
           valueExpression (Program):
@@ -359,13 +359,13 @@ statements (ArrayList):
           keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                literal (String):
+                literal (Map):
                   "SetA"
             parents (ArrayList):
           valueExpression (Delayed):
             delayed (Map):
               Entry (DictionaryEntry)
-                Key (String):
+                Key (Map):
                   "program"
                 Value (Map):
                   Entry (DictionaryEntry)
@@ -373,11 +373,11 @@ statements (ArrayList):
                       "1"
                     Value (Map):
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "key"
                         Value (Map):
                           Entry (DictionaryEntry)
-                            Key (String):
+                            Key (Map):
                               "select"
                             Value (Map):
                               Entry (DictionaryEntry)
@@ -385,38 +385,38 @@ statements (ArrayList):
                                   "1"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "parent"
                               Entry (DictionaryEntry)
                                 Key (Integer):
                                   "2"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "a"
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "value"
                         Value (Map):
                           Entry (DictionaryEntry)
-                            Key (String):
+                            Key (Map):
                               "literal"
-                            Value (String):
+                            Value (Map):
                               "c"
                   Entry (DictionaryEntry)
                     Key (Integer):
                       "2"
                     Value (Map):
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "key"
                         Value (Map):
                           Entry (DictionaryEntry)
-                            Key (String):
+                            Key (Map):
                               "select"
                             Value (Map):
                               Entry (DictionaryEntry)
@@ -424,39 +424,39 @@ statements (ArrayList):
                                   "1"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "search"
                               Entry (DictionaryEntry)
                                 Key (Integer):
                                   "2"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "autoSearch"
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "value"
                         Value (Map):
                           Entry (DictionaryEntry)
-                            Key (String):
+                            Key (Map):
                               "literal"
-                            Value (String):
+                            Value (Map):
                               "changed"
         Entry (Statement)
           keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                literal (String):
+                literal (Map):
                   "SetB"
             parents (ArrayList):
           valueExpression (Delayed):
             delayed (Map):
               Entry (DictionaryEntry)
-                Key (String):
+                Key (Map):
                   "program"
                 Value (Map):
                   Entry (DictionaryEntry)
@@ -464,11 +464,11 @@ statements (ArrayList):
                       "1"
                     Value (Map):
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "key"
                         Value (Map):
                           Entry (DictionaryEntry)
-                            Key (String):
+                            Key (Map):
                               "select"
                             Value (Map):
                               Entry (DictionaryEntry)
@@ -476,34 +476,34 @@ statements (ArrayList):
                                   "1"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "caller"
                               Entry (DictionaryEntry)
                                 Key (Integer):
                                   "2"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "b"
                               Entry (DictionaryEntry)
                                 Key (Integer):
                                   "3"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "1"
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "value"
                         Value (Map):
                           Entry (DictionaryEntry)
-                            Key (String):
+                            Key (Map):
                               "select"
                             Value (Map):
                               Entry (DictionaryEntry)
@@ -511,29 +511,29 @@ statements (ArrayList):
                                   "1"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "arg"
                               Entry (DictionaryEntry)
                                 Key (Integer):
                                   "2"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "value"
                   Entry (DictionaryEntry)
                     Key (Integer):
                       "2"
                     Value (Map):
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "key"
                         Value (Map):
                           Entry (DictionaryEntry)
-                            Key (String):
+                            Key (Map):
                               "select"
                             Value (Map):
                               Entry (DictionaryEntry)
@@ -541,24 +541,24 @@ statements (ArrayList):
                                   "1"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "this"
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "value"
                         Value (Map):
                           Entry (DictionaryEntry)
-                            Key (String):
+                            Key (Map):
                               "literal"
-                            Value (String):
+                            Value (Map):
                               "changed"
         Entry (Statement)
           keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                literal (String):
+                literal (Map):
                   "x"
             parents (ArrayList):
           valueExpression (Program):
@@ -567,27 +567,27 @@ statements (ArrayList):
                 keyExpression (Select):
                   expressions (ArrayList):
                     Entry (Literal)
-                      literal (String):
+                      literal (Map):
                         "a"
                   parents (ArrayList):
                 valueExpression (Literal):
-                  literal (String):
+                  literal (Map):
                     "b"
               Entry (Statement)
                 keyExpression (Select):
                   expressions (ArrayList):
                     Entry (Literal)
-                      literal (String):
+                      literal (Map):
                         "c"
                   parents (ArrayList):
                 valueExpression (Literal):
-                  literal (String):
+                  literal (Map):
                     "d"
         Entry (Statement)
           keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                literal (String):
+                literal (Map):
                   "this"
               Entry (Literal)
                 literal (Integer):
@@ -596,7 +596,7 @@ statements (ArrayList):
           valueExpression (Delayed):
             delayed (Map):
               Entry (DictionaryEntry)
-                Key (String):
+                Key (Map):
                   "program"
                 Value (Map):
                   Entry (DictionaryEntry)
@@ -604,11 +604,11 @@ statements (ArrayList):
                       "1"
                     Value (Map):
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "key"
                         Value (Map):
                           Entry (DictionaryEntry)
-                            Key (String):
+                            Key (Map):
                               "select"
                             Value (Map):
                               Entry (DictionaryEntry)
@@ -616,43 +616,43 @@ statements (ArrayList):
                                   "1"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "this"
                               Entry (DictionaryEntry)
                                 Key (Integer):
                                   "2"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "a"
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "value"
                         Value (Map):
                           Entry (DictionaryEntry)
-                            Key (String):
+                            Key (Map):
                               "literal"
-                            Value (String):
+                            Value (Map):
                               "b"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "a"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "default"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "b"
       parents (ArrayList):
     valueExpression (Program):
@@ -661,7 +661,7 @@ statements (ArrayList):
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "aSet"
       parents (ArrayList):
     valueExpression (Call):
@@ -670,17 +670,17 @@ statements (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "object"
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "SetA"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "bSet"
       parents (ArrayList):
     valueExpression (Call):
@@ -690,7 +690,7 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "value"
               parents (ArrayList):
             valueExpression (Program):
@@ -699,7 +699,7 @@ statements (ArrayList):
                   keyExpression (Select):
                     expressions (ArrayList):
                       Entry (Literal)
-                        literal (String):
+                        literal (Map):
                           "x"
                     parents (ArrayList):
                   valueExpression (Literal):
@@ -709,7 +709,7 @@ statements (ArrayList):
                   keyExpression (Select):
                     expressions (ArrayList):
                       Entry (Literal)
-                        literal (String):
+                        literal (Map):
                           "z"
                     parents (ArrayList):
                   valueExpression (Literal):
@@ -718,23 +718,23 @@ statements (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "object"
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "SetB"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "ReturnEverything"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "program"
           Value (Map):
             Entry (DictionaryEntry)
@@ -742,11 +742,11 @@ statements (ArrayList):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -754,16 +754,16 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "this"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -771,15 +771,15 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "arg"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "everythingReturned"
       parents (ArrayList):
     valueExpression (Call):
@@ -789,52 +789,52 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
                     "1"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "a"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
                     "2"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "b"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
                     "3"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "c"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "ReturnEverything"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "argument"
       parents (ArrayList):
     valueExpression (Program):
@@ -843,72 +843,72 @@ statements (ArrayList):
           keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                literal (String):
+                literal (Map):
                   "this"
               Entry (Literal)
                 literal (Integer):
                   "1"
             parents (ArrayList):
           valueExpression (Literal):
-            literal (String):
+            literal (Map):
               "x"
         Entry (Statement)
           keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                literal (String):
+                literal (Map):
                   "this"
               Entry (Literal)
                 literal (Integer):
                   "2"
             parents (ArrayList):
           valueExpression (Literal):
-            literal (String):
+            literal (Map):
               "y"
         Entry (Statement)
           keyExpression (Select):
             expressions (ArrayList):
               Entry (Literal)
-                literal (String):
+                literal (Map):
                   "this"
               Entry (Literal)
                 literal (Integer):
                   "3"
             parents (ArrayList):
           valueExpression (Literal):
-            literal (String):
+            literal (Map):
               "z"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "variableAsArgument"
       parents (ArrayList):
     valueExpression (Call):
       argumentExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "argument"
         parents (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "ReturnEverything"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "ReturnFunction"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "program"
           Value (Map):
             Entry (DictionaryEntry)
@@ -916,11 +916,11 @@ statements (ArrayList):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -928,20 +928,20 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "this"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "delayed"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "program"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -949,11 +949,11 @@ statements (ArrayList):
                                 "1"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (String):
+                                  Key (Map):
                                     "key"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "select"
                                       Value (Map):
                                         Entry (DictionaryEntry)
@@ -961,16 +961,16 @@ statements (ArrayList):
                                             "1"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "literal"
-                                              Value (String):
+                                              Value (Map):
                                                 "this"
                                 Entry (DictionaryEntry)
-                                  Key (String):
+                                  Key (Map):
                                     "value"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "program"
                                       Value (Map):
                                         Entry (DictionaryEntry)
@@ -978,11 +978,11 @@ statements (ArrayList):
                                             "1"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "key"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (String):
+                                                  Key (Map):
                                                     "select"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
@@ -990,38 +990,38 @@ statements (ArrayList):
                                                         "1"
                                                       Value (Map):
                                                         Entry (DictionaryEntry)
-                                                          Key (String):
+                                                          Key (Map):
                                                             "literal"
-                                                          Value (String):
+                                                          Value (Map):
                                                             "this"
                                                     Entry (DictionaryEntry)
                                                       Key (Integer):
                                                         "2"
                                                       Value (Map):
                                                         Entry (DictionaryEntry)
-                                                          Key (String):
+                                                          Key (Map):
                                                             "literal"
-                                                          Value (String):
+                                                          Value (Map):
                                                             "1"
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "value"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (String):
+                                                  Key (Map):
                                                     "literal"
-                                                  Value (String):
+                                                  Value (Map):
                                                     "1"
                                         Entry (DictionaryEntry)
                                           Key (Integer):
                                             "2"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "key"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (String):
+                                                  Key (Map):
                                                     "select"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
@@ -1029,38 +1029,38 @@ statements (ArrayList):
                                                         "1"
                                                       Value (Map):
                                                         Entry (DictionaryEntry)
-                                                          Key (String):
+                                                          Key (Map):
                                                             "literal"
-                                                          Value (String):
+                                                          Value (Map):
                                                             "this"
                                                     Entry (DictionaryEntry)
                                                       Key (Integer):
                                                         "2"
                                                       Value (Map):
                                                         Entry (DictionaryEntry)
-                                                          Key (String):
+                                                          Key (Map):
                                                             "literal"
-                                                          Value (String):
+                                                          Value (Map):
                                                             "2"
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "value"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (String):
+                                                  Key (Map):
                                                     "literal"
-                                                  Value (String):
+                                                  Value (Map):
                                                     "2"
                                         Entry (DictionaryEntry)
                                           Key (Integer):
                                             "3"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "key"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (String):
+                                                  Key (Map):
                                                     "select"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
@@ -1068,39 +1068,39 @@ statements (ArrayList):
                                                         "1"
                                                       Value (Map):
                                                         Entry (DictionaryEntry)
-                                                          Key (String):
+                                                          Key (Map):
                                                             "literal"
-                                                          Value (String):
+                                                          Value (Map):
                                                             "this"
                                                     Entry (DictionaryEntry)
                                                       Key (Integer):
                                                         "2"
                                                       Value (Map):
                                                         Entry (DictionaryEntry)
-                                                          Key (String):
+                                                          Key (Map):
                                                             "literal"
-                                                          Value (String):
+                                                          Value (Map):
                                                             "3"
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "value"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (String):
+                                                  Key (Map):
                                                     "literal"
-                                                  Value (String):
+                                                  Value (Map):
                                                     "3"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "SetCurrent"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "program"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1108,11 +1108,11 @@ statements (ArrayList):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1120,16 +1120,16 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "this"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "program"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1137,11 +1137,11 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "key"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (String):
+                                  Key (Map):
                                     "select"
                                   Value (Map):
                                     Entry (DictionaryEntry)
@@ -1149,16 +1149,16 @@ statements (ArrayList):
                                         "1"
                                       Value (Map):
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "literal"
-                                          Value (String):
+                                          Value (Map):
                                             "arg"
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "value"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (String):
+                                  Key (Map):
                                     "select"
                                   Value (Map):
                                     Entry (DictionaryEntry)
@@ -1166,20 +1166,20 @@ statements (ArrayList):
                                         "1"
                                       Value (Map):
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "literal"
-                                          Value (String):
+                                          Value (Map):
                                             "arg"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "key"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (String):
+                                  Key (Map):
                                     "select"
                                   Value (Map):
                                     Entry (DictionaryEntry)
@@ -1187,16 +1187,16 @@ statements (ArrayList):
                                         "1"
                                       Value (Map):
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "literal"
-                                          Value (String):
+                                          Value (Map):
                                             "x"
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "value"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (String):
+                                  Key (Map):
                                     "select"
                                   Value (Map):
                                     Entry (DictionaryEntry)
@@ -1204,29 +1204,29 @@ statements (ArrayList):
                                         "1"
                                       Value (Map):
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "literal"
-                                          Value (String):
+                                          Value (Map):
                                             "arg"
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "2"
                                       Value (Map):
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "literal"
-                                          Value (String):
+                                          Value (Map):
                                             "symbol"
             Entry (DictionaryEntry)
               Key (Integer):
                 "2"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1234,16 +1234,16 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "this"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1251,15 +1251,15 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "x"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "thisSet"
       parents (ArrayList):
     valueExpression (Call):
@@ -1269,29 +1269,29 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "symbol"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "haha"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "SetCurrent"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "FirstLevel"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "program"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1299,11 +1299,11 @@ statements (ArrayList):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1311,33 +1311,33 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "this"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "1"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "call"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "function"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -1345,16 +1345,16 @@ statements (ArrayList):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "SecondLevel"
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "argument"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "program"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -1362,11 +1362,11 @@ statements (ArrayList):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "key"
                                       Value (Map):
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "select"
                                           Value (Map):
                                             Entry (DictionaryEntry)
@@ -1374,30 +1374,30 @@ statements (ArrayList):
                                                 "1"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (String):
+                                                  Key (Map):
                                                     "literal"
-                                                  Value (String):
+                                                  Value (Map):
                                                     "x"
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "value"
                                       Value (Map):
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "literal"
-                                          Value (String):
+                                          Value (Map):
                                             "y"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "SecondLevel"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "select"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1405,24 +1405,24 @@ statements (ArrayList):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "literal"
-                  Value (String):
+                  Value (Map):
                     "arg"
             Entry (DictionaryEntry)
               Key (Integer):
                 "2"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "literal"
-                  Value (String):
+                  Value (Map):
                     "arg"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "argTest"
       parents (ArrayList):
     valueExpression (Call):
@@ -1432,23 +1432,23 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "a"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "z"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "FirstLevel"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "this"
       parents (ArrayList):
     valueExpression (Call):
@@ -1458,7 +1458,7 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -1467,14 +1467,14 @@ statements (ArrayList):
             valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "parent"
               parents (ArrayList):
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -1483,23 +1483,23 @@ statements (ArrayList):
             valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "testClasses"
               parents (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "base"
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "Merge"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "testClass"
       parents (ArrayList):
     valueExpression (Call):
@@ -1508,14 +1508,14 @@ statements (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "TestClass"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "memberTest"
       parents (ArrayList):
     valueExpression (Call):
@@ -1524,88 +1524,88 @@ statements (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "MemberTest"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "MemberTest"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "classField"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "a"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "memberTest"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "instanceField"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "b"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "MemberTest"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "ClassProperty"
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "memberTest"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "InstanceProperty"
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "memberTest"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "InstanceProperty"
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "MemberTest"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "ClassProperty"
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "interceptedSymbol"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "/hello/"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "positionalNoConversion"
       parents (ArrayList):
     valueExpression (Call):
@@ -1615,52 +1615,52 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
                     "1"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "m"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
                     "2"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "n"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
                     "3"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "o"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "PositionalNoConversion"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "positionalNoConversionConcatenated"
       parents (ArrayList):
     valueExpression (Call):
@@ -1670,55 +1670,55 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
                     "1"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "r"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
                     "2"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "s"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
                     "3"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "t"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "positionalNoConversion"
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "Concatenate"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "namedNoConversion"
       parents (ArrayList):
     valueExpression (Call):
@@ -1728,36 +1728,36 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
                     "1"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "m"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "y"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "n"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "NamedNoConversion"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "namedNoConversionConcatenated"
       parents (ArrayList):
     valueExpression (Call):
@@ -1767,39 +1767,39 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "c"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "t"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
                     "1"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (String):
+              literal (Map):
                 "r"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "namedNoConversion"
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "Concatenate"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "indexerNoConversion"
       parents (ArrayList):
     valueExpression (Call):
@@ -1808,43 +1808,43 @@ statements (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "IndexerNoConversion"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "indexerNoConversion"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "abc"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "hihi"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "indexerNoConversionIndexed"
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "indexerNoConversion"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "abc"
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "interceptedSymbol2"
       parents (ArrayList):
     valueExpression (Literal):
@@ -1854,41 +1854,41 @@ statements (ArrayList):
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "k"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "hello"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "xyz"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "w"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "literalFunction"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "literal"
-          Value (String):
+          Value (Map):
             "5"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "literalFunctionResult"
       parents (ArrayList):
     valueExpression (Call):
@@ -1897,20 +1897,20 @@ statements (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "literalFunction"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "function"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "program"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1918,11 +1918,11 @@ statements (ArrayList):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1930,30 +1930,30 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "this"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "literal"
-                      Value (String):
+                      Value (Map):
                         "simple function this"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "callFunction"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "select"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1961,15 +1961,15 @@ statements (ArrayList):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "literal"
-                  Value (String):
+                  Value (Map):
                     "function"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "callFunctionResult"
       parents (ArrayList):
     valueExpression (Call):
@@ -1978,24 +1978,24 @@ statements (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "callFunction"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "delayedFunction"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "delayed"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "program"
               Value (Map):
                 Entry (DictionaryEntry)
@@ -2003,11 +2003,11 @@ statements (ArrayList):
                     "1"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "key"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "select"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -2015,24 +2015,24 @@ statements (ArrayList):
                                 "1"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (String):
+                                  Key (Map):
                                     "literal"
-                                  Value (String):
+                                  Value (Map):
                                     "x"
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "value"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "y"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "delayedFunctionResult"
       parents (ArrayList):
     valueExpression (Call):
@@ -2041,30 +2041,30 @@ statements (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "delayedFunction"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "value"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "xyz"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "selectionFunction"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "select"
           Value (Map):
             Entry (DictionaryEntry)
@@ -2072,15 +2072,15 @@ statements (ArrayList):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "literal"
-                  Value (String):
+                  Value (Map):
                     "value"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "selectionFunctionResult"
       parents (ArrayList):
     valueExpression (Call):
@@ -2089,14 +2089,14 @@ statements (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "selectionFunction"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "bigInteger"
       parents (ArrayList):
     valueExpression (Literal):
@@ -2106,23 +2106,23 @@ statements (ArrayList):
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "upperLevel"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "unchanged"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "ChangeUpperLevel"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "program"
           Value (Map):
             Entry (DictionaryEntry)
@@ -2130,11 +2130,11 @@ statements (ArrayList):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -2142,33 +2142,33 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "search"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "upperLevel"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "literal"
-                      Value (String):
+                      Value (Map):
                         "changed"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "this"
         Entry (Literal)
           literal (Integer):
@@ -2180,14 +2180,14 @@ statements (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "ChangeUpperLevel"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "staticEventChanged"
       parents (ArrayList):
     valueExpression (Literal):
@@ -2197,16 +2197,16 @@ statements (ArrayList):
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "TestClass"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "staticEvent"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "program"
           Value (Map):
             Entry (DictionaryEntry)
@@ -2214,11 +2214,11 @@ statements (ArrayList):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -2226,38 +2226,38 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "search"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "staticEventChanged"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "literal"
-                      Value (String):
+                      Value (Map):
                         "true"
             Entry (DictionaryEntry)
               Key (Integer):
                 "2"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -2265,16 +2265,16 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "this"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -2282,40 +2282,40 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "arg"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "1"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "staticEvent"
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "TestClass"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "staticEvent"
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "this"
         Entry (Literal)
           literal (Integer):
@@ -2328,7 +2328,7 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -2337,24 +2337,24 @@ statements (ArrayList):
             valueExpression (Delayed):
               delayed (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "literal"
-                  Value (String):
+                  Value (Map):
                     "resultFromDelegate"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "TestClass"
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "TakeDelegate"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "resultFromDelegate"
       parents (ArrayList):
     valueExpression (Call):
@@ -2363,17 +2363,17 @@ statements (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "TestClass"
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "GetResultFromDelegate"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "staticEventResult"
       parents (ArrayList):
     valueExpression (Call):
@@ -2383,7 +2383,7 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -2392,23 +2392,23 @@ statements (ArrayList):
             valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "testClass"
               parents (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "TestClass"
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "staticEvent"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "instanceEventChanged"
       parents (ArrayList):
     valueExpression (Literal):
@@ -2418,16 +2418,16 @@ statements (ArrayList):
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "testClass"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "instanceEvent"
       parents (ArrayList):
     valueExpression (Delayed):
       delayed (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "program"
           Value (Map):
             Entry (DictionaryEntry)
@@ -2435,11 +2435,11 @@ statements (ArrayList):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -2447,38 +2447,38 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "search"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "instanceEventChanged"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "literal"
-                      Value (String):
+                      Value (Map):
                         "true"
             Entry (DictionaryEntry)
               Key (Integer):
                 "2"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -2486,16 +2486,16 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "this"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -2503,40 +2503,40 @@ statements (ArrayList):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "arg"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "1"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "instanceEvent"
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "testClass"
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "instanceEvent"
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "instanceEventResult"
       parents (ArrayList):
     valueExpression (Call):
@@ -2546,7 +2546,7 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -2558,17 +2558,17 @@ statements (ArrayList):
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "testClass"
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "instanceEvent"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "one"
       parents (ArrayList):
     valueExpression (Literal):
@@ -2578,7 +2578,7 @@ statements (ArrayList):
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "two"
       parents (ArrayList):
     valueExpression (Literal):
@@ -2588,37 +2588,37 @@ statements (ArrayList):
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "firstIf"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "unchanged"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "secondIf"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "unchanged"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "thenText"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "then"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "this"
         Entry (Literal)
           literal (Integer):
@@ -2631,7 +2631,7 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -2644,7 +2644,7 @@ statements (ArrayList):
                     keyExpression (Select):
                       expressions (ArrayList):
                         Entry (Literal)
-                          literal (String):
+                          literal (Map):
                             "this"
                         Entry (Literal)
                           literal (Integer):
@@ -2657,7 +2657,7 @@ statements (ArrayList):
                     keyExpression (Select):
                       expressions (ArrayList):
                         Entry (Literal)
-                          literal (String):
+                          literal (Map):
                             "this"
                         Entry (Literal)
                           literal (Integer):
@@ -2666,26 +2666,26 @@ statements (ArrayList):
                     valueExpression (Select):
                       expressions (ArrayList):
                         Entry (Literal)
-                          literal (String):
+                          literal (Map):
                             "one"
                       parents (ArrayList):
               callableExpression (Select):
                 expressions (ArrayList):
                   Entry (Literal)
-                    literal (String):
+                    literal (Map):
                       "Equal"
                 parents (ArrayList):
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "then"
               parents (ArrayList):
             valueExpression (Delayed):
               delayed (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "program"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -2693,11 +2693,11 @@ statements (ArrayList):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "key"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -2705,25 +2705,25 @@ statements (ArrayList):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "search"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "firstIf"
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "value"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -2731,21 +2731,21 @@ statements (ArrayList):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "thenText"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "else"
               parents (ArrayList):
             valueExpression (Delayed):
               delayed (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "program"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -2753,11 +2753,11 @@ statements (ArrayList):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "key"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -2765,39 +2765,39 @@ statements (ArrayList):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "search"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "firstIf"
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "value"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "else"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "If"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "this"
         Entry (Literal)
           literal (Integer):
@@ -2810,7 +2810,7 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -2823,7 +2823,7 @@ statements (ArrayList):
                     keyExpression (Select):
                       expressions (ArrayList):
                         Entry (Literal)
-                          literal (String):
+                          literal (Map):
                             "this"
                         Entry (Literal)
                           literal (Integer):
@@ -2836,7 +2836,7 @@ statements (ArrayList):
                     keyExpression (Select):
                       expressions (ArrayList):
                         Entry (Literal)
-                          literal (String):
+                          literal (Map):
                             "this"
                         Entry (Literal)
                           literal (Integer):
@@ -2845,26 +2845,26 @@ statements (ArrayList):
                     valueExpression (Select):
                       expressions (ArrayList):
                         Entry (Literal)
-                          literal (String):
+                          literal (Map):
                             "two"
                       parents (ArrayList):
               callableExpression (Select):
                 expressions (ArrayList):
                   Entry (Literal)
-                    literal (String):
+                    literal (Map):
                       "Equal"
                 parents (ArrayList):
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "then"
               parents (ArrayList):
             valueExpression (Delayed):
               delayed (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "program"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -2872,11 +2872,11 @@ statements (ArrayList):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "key"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -2884,39 +2884,39 @@ statements (ArrayList):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "search"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "secondIf"
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "value"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "then"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "else"
               parents (ArrayList):
             valueExpression (Delayed):
               delayed (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "program"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -2924,11 +2924,11 @@ statements (ArrayList):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "key"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -2936,49 +2936,49 @@ statements (ArrayList):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "search"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "secondIf"
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "value"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "else"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "If"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "firstSwitch"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "unchanged"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "bigNumber"
       parents (ArrayList):
     valueExpression (Literal):
@@ -2988,7 +2988,7 @@ statements (ArrayList):
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "this"
         Entry (Literal)
           literal (Integer):
@@ -3001,7 +3001,7 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -3010,14 +3010,14 @@ statements (ArrayList):
             valueExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "bigNumber"
               parents (ArrayList):
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "case"
               parents (ArrayList):
             valueExpression (Program):
@@ -3028,14 +3028,14 @@ statements (ArrayList):
                       Entry (Select)
                         expressions (ArrayList):
                           Entry (Literal)
-                            literal (String):
+                            literal (Map):
                               "bigNumber"
                         parents (ArrayList):
                     parents (ArrayList):
                   valueExpression (Delayed):
                     delayed (Map):
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "program"
                         Value (Map):
                           Entry (DictionaryEntry)
@@ -3043,11 +3043,11 @@ statements (ArrayList):
                               "1"
                             Value (Map):
                               Entry (DictionaryEntry)
-                                Key (String):
+                                Key (Map):
                                   "key"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "select"
                                     Value (Map):
                                       Entry (DictionaryEntry)
@@ -3055,25 +3055,25 @@ statements (ArrayList):
                                           "1"
                                         Value (Map):
                                           Entry (DictionaryEntry)
-                                            Key (String):
+                                            Key (Map):
                                               "literal"
-                                            Value (String):
+                                            Value (Map):
                                               "search"
                                       Entry (DictionaryEntry)
                                         Key (Integer):
                                           "2"
                                         Value (Map):
                                           Entry (DictionaryEntry)
-                                            Key (String):
+                                            Key (Map):
                                               "literal"
-                                            Value (String):
+                                            Value (Map):
                                               "firstSwitch"
                               Entry (DictionaryEntry)
-                                Key (String):
+                                Key (Map):
                                   "value"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "select"
                                     Value (Map):
                                       Entry (DictionaryEntry)
@@ -3081,21 +3081,21 @@ statements (ArrayList):
                                           "1"
                                         Value (Map):
                                           Entry (DictionaryEntry)
-                                            Key (String):
+                                            Key (Map):
                                               "literal"
-                                            Value (String):
+                                            Value (Map):
                                               "bigNumber"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "default"
               parents (ArrayList):
             valueExpression (Delayed):
               delayed (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "program"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -3103,11 +3103,11 @@ statements (ArrayList):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "key"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -3115,49 +3115,49 @@ statements (ArrayList):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "search"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "firstSwitch"
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "value"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "default"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "Switch"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "secondSwitch"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (String):
+      literal (Map):
         "unchanged"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
         Entry (Literal)
-          literal (String):
+          literal (Map):
             "this"
         Entry (Literal)
           literal (Integer):
@@ -3170,7 +3170,7 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "this"
                 Entry (Literal)
                   literal (Integer):
@@ -3183,7 +3183,7 @@ statements (ArrayList):
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "case"
               parents (ArrayList):
             valueExpression (Program):
@@ -3198,7 +3198,7 @@ statements (ArrayList):
                   valueExpression (Delayed):
                     delayed (Map):
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "program"
                         Value (Map):
                           Entry (DictionaryEntry)
@@ -3206,11 +3206,11 @@ statements (ArrayList):
                               "1"
                             Value (Map):
                               Entry (DictionaryEntry)
-                                Key (String):
+                                Key (Map):
                                   "key"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "select"
                                     Value (Map):
                                       Entry (DictionaryEntry)
@@ -3218,27 +3218,27 @@ statements (ArrayList):
                                           "1"
                                         Value (Map):
                                           Entry (DictionaryEntry)
-                                            Key (String):
+                                            Key (Map):
                                               "literal"
-                                            Value (String):
+                                            Value (Map):
                                               "search"
                                       Entry (DictionaryEntry)
                                         Key (Integer):
                                           "2"
                                         Value (Map):
                                           Entry (DictionaryEntry)
-                                            Key (String):
+                                            Key (Map):
                                               "literal"
-                                            Value (String):
+                                            Value (Map):
                                               "secondSwitch"
                               Entry (DictionaryEntry)
-                                Key (String):
+                                Key (Map):
                                   "value"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "one"
                 Entry (Statement)
                   keyExpression (Select):
@@ -3250,7 +3250,7 @@ statements (ArrayList):
                   valueExpression (Delayed):
                     delayed (Map):
                       Entry (DictionaryEntry)
-                        Key (String):
+                        Key (Map):
                           "program"
                         Value (Map):
                           Entry (DictionaryEntry)
@@ -3258,11 +3258,11 @@ statements (ArrayList):
                               "1"
                             Value (Map):
                               Entry (DictionaryEntry)
-                                Key (String):
+                                Key (Map):
                                   "key"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "select"
                                     Value (Map):
                                       Entry (DictionaryEntry)
@@ -3270,39 +3270,39 @@ statements (ArrayList):
                                           "1"
                                         Value (Map):
                                           Entry (DictionaryEntry)
-                                            Key (String):
+                                            Key (Map):
                                               "literal"
-                                            Value (String):
+                                            Value (Map):
                                               "search"
                                       Entry (DictionaryEntry)
                                         Key (Integer):
                                           "2"
                                         Value (Map):
                                           Entry (DictionaryEntry)
-                                            Key (String):
+                                            Key (Map):
                                               "literal"
-                                            Value (String):
+                                            Value (Map):
                                               "secondSwitch"
                               Entry (DictionaryEntry)
-                                Key (String):
+                                Key (Map):
                                   "value"
                                 Value (Map):
                                   Entry (DictionaryEntry)
-                                    Key (String):
+                                    Key (Map):
                                       "literal"
-                                    Value (String):
+                                    Value (Map):
                                       "two"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
                 Entry (Literal)
-                  literal (String):
+                  literal (Map):
                     "default"
               parents (ArrayList):
             valueExpression (Delayed):
               delayed (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "program"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -3310,11 +3310,11 @@ statements (ArrayList):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "key"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -3322,31 +3322,31 @@ statements (ArrayList):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "search"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "secondSwitch"
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "value"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "default"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
-            literal (String):
+            literal (Map):
               "Switch"
         parents (ArrayList):

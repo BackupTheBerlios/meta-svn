@@ -637,7 +637,7 @@ getFirstChild (CommonAST):
                               getNextSibling:
                                 null
                               getText (String):
-                                ""long key symbol""
+                                "long key symbol"
                               Type (Int32):
                                 "21"
                             getNextSibling (CommonAST):
@@ -792,7 +792,7 @@ getFirstChild (CommonAST):
                                         getNextSibling:
                                           null
                                         getText (String):
-                                          ""long key symbol""
+                                          "long key symbol"
                                         Type (Int32):
                                           "21"
                                       getNextSibling:

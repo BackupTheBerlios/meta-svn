@@ -1,424 +1,424 @@
 Entry (DictionaryEntry)
   Key (Integer):
     "1"
-  Value (String):
+  Value (Map):
     "ImpliedAutokey"
 Entry (DictionaryEntry)
-  Key (String):
-    "Not"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean Not(Boolean)"
-Entry (DictionaryEntry)
-  Key (String):
-    "Or"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean Or(Boolean, Boolean)"
-Entry (DictionaryEntry)
-  Key (String):
-    "GetKeys"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue GetKeys(Meta.Types.IKeyValue)"
-Entry (DictionaryEntry)
-  Key (String):
-    "Concatenate"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Map Concatenate(Meta.Types.Map[])"
-Entry (DictionaryEntry)
-  Key (String):
-    "Multiply"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
-Entry (DictionaryEntry)
-  Key (String):
-    "If"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Void If()"
-Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "For"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.Map For()"
 Entry (DictionaryEntry)
-  Key (String):
-    "Foreach"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Map Foreach()"
-Entry (DictionaryEntry)
-  Key (String):
-    "Add"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
-Entry (DictionaryEntry)
-  Key (String):
-    "Switch"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Void Switch()"
-Entry (DictionaryEntry)
-  Key (String):
-    "Divide"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
-Entry (DictionaryEntry)
-  Key (String):
-    "Merge"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue Merge()"
-Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "Greater"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
-  Key (String):
-    "Equal"
+  Key (Map):
+    "Divide"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean Equal(System.Object, System.Object)"
+        "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
+    "Not"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Boolean Not(Boolean)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "Switch"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Void Switch()"
+Entry (DictionaryEntry)
+  Key (Map):
     "Smaller"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
-  Key (String):
-    "Subtract"
+  Key (Map):
+    "Add"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
+    "Foreach"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Map Foreach()"
+Entry (DictionaryEntry)
+  Key (Map):
+    "Multiply"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (Map):
     "And"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean And(Boolean, Boolean)"
 Entry (DictionaryEntry)
+  Key (Map):
+    "Or"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Boolean Or(Boolean, Boolean)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "Merge"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.IKeyValue Merge()"
+Entry (DictionaryEntry)
+  Key (Map):
+    "Subtract"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "Concatenate"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Map Concatenate(Meta.Types.Map[])"
+Entry (DictionaryEntry)
+  Key (Map):
+    "Equal"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Boolean Equal(System.Object, System.Object)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "If"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Void If()"
+Entry (DictionaryEntry)
+  Key (Map):
+    "GetKeys"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.IKeyValue GetKeys(Meta.Types.IKeyValue)"
+Entry (DictionaryEntry)
   Key (Integer):
     "2"
-  Value (String):
+  Value (Map):
     "Autokey"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "gacTest"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "IEnumerable"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "ICollection"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "IList"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "IEnumerator"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "ArrayList"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "BitArray"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "IComparer"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "CaseInsensitiveComparer"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "IHashCodeProvider"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "CaseInsensitiveHashCodeProvider"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "CollectionBase"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "Comparer"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "IDictionary"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "DictionaryBase"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "DictionaryEntry"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "Hashtable"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "IDictionaryEnumerator"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "Queue"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "ReadOnlyCollectionBase"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "SortedList"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "Stack"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "Specialized"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "BitVector32"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "CollectionsUtil"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "HybridDictionary"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "ListDictionary"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "NameObjectCollectionBase"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "NameValueCollection"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "StringCollection"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "StringEnumerator"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "StringDictionary"
           Value (NetClass):
             Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "lazyGACTest"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "ErrorLevel"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "CompilerError"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "Compiler"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "CSharpCodeProvider"
       Value (NetClass):
         Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "metaLibTest"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "x"
-      Value (String):
+      Value (Map):
         "hello"
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "y"
-      Value (String):
+      Value (Map):
         "world"
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "gacFromMetaLib"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "IEnumerable"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "ICollection"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "IList"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "IEnumerator"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "ArrayList"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "BitArray"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "IComparer"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "CaseInsensitiveComparer"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "IHashCodeProvider"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "CaseInsensitiveHashCodeProvider"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "CollectionBase"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "Comparer"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "IDictionary"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "DictionaryBase"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "DictionaryEntry"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "Hashtable"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "IDictionaryEnumerator"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "Queue"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "ReadOnlyCollectionBase"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "SortedList"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "Stack"
           Value (NetClass):
                     Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "Specialized"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "BitVector32"
               Value (NetClass):
                             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "CollectionsUtil"
               Value (NetClass):
                             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "HybridDictionary"
               Value (NetClass):
                             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "ListDictionary"
               Value (NetClass):
                             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "NameObjectCollectionBase"
               Value (NetClass):
                             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "NameValueCollection"
               Value (NetClass):
                             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "StringCollection"
               Value (NetClass):
                             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "StringEnumerator"
               Value (NetClass):
                             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "StringDictionary"
               Value (NetClass):
                 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "commandLineArguments"
   Value (Map):
     Entry (DictionaryEntry)
@@ -432,105 +432,105 @@ Entry (DictionaryEntry)
       Value (String):
         "second=arg"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "libraryAssemblyTest"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "MemberTest"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "IntEvent"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "NormalEvent"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "TestClass"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "PositionalNoConversion"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "NamedNoConversion"
       Value (NetClass):
             Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "IndexerNoConversion"
       Value (NetClass):
         Entry (DictionaryEntry)
   Key (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "a"
-      Value (String):
+      Value (Map):
         "a"
-  Value (String):
+  Value (Map):
     "Object"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "normal symbol"
-  Value (String):
+  Value (Map):
     "NormalSymbol"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "lookupSymbol"
-  Value (String):
+  Value (Map):
     "LookupSymbol"
 Entry (DictionaryEntry)
   Key (Map):
     "long key symbol"
-  Value (String):
+  Value (Map):
     "LookupExtendedSymbol"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "lookedUpMap"
-  Value (String):
+  Value (Map):
     "Object"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "lookedUpNormalSymbol"
-  Value (String):
+  Value (Map):
     "NormalSymbol"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "lookedUpSymbol"
-  Value (String):
+  Value (Map):
     "LookupSymbol"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "lookedUpLongSymbol"
-  Value (String):
+  Value (Map):
     "LookupExtendedSymbol"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "object"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "a"
-      Value (String):
+      Value (Map):
         "c"
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "autoSearch"
-      Value (String):
+      Value (Map):
         "changed"
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "b"
       Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "SetA"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "program"
           Value (Map):
             Entry (DictionaryEntry)
@@ -538,11 +538,11 @@ Entry (DictionaryEntry)
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -550,38 +550,38 @@ Entry (DictionaryEntry)
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "parent"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "a"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "literal"
-                      Value (String):
+                      Value (Map):
                         "c"
             Entry (DictionaryEntry)
               Key (Integer):
                 "2"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -589,34 +589,34 @@ Entry (DictionaryEntry)
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "search"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "autoSearch"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "literal"
-                      Value (String):
+                      Value (Map):
                         "changed"
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "SetB"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "program"
           Value (Map):
             Entry (DictionaryEntry)
@@ -624,11 +624,11 @@ Entry (DictionaryEntry)
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -636,34 +636,34 @@ Entry (DictionaryEntry)
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "caller"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "b"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "3"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "1"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -671,29 +671,29 @@ Entry (DictionaryEntry)
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "arg"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "value"
             Entry (DictionaryEntry)
               Key (Integer):
                 "2"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -701,39 +701,39 @@ Entry (DictionaryEntry)
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "this"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "literal"
-                      Value (String):
+                      Value (Map):
                         "changed"
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "x"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "a"
-          Value (String):
+          Value (Map):
             "b"
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "c"
-          Value (String):
+          Value (Map):
             "d"
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "program"
           Value (Map):
             Entry (DictionaryEntry)
@@ -741,11 +741,11 @@ Entry (DictionaryEntry)
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -753,35 +753,35 @@ Entry (DictionaryEntry)
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "this"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "a"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "literal"
-                      Value (String):
+                      Value (Map):
                         "b"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "a"
-  Value (String):
+  Value (Map):
     "default"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "b"
   Value (Map):
     Entry (DictionaryEntry)
@@ -789,30 +789,30 @@ Entry (DictionaryEntry)
         "1"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "x"
           Value (Integer):
             "7"
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "z"
           Value (Integer):
             "1"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "aSet"
   Value (Map):
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "bSet"
-  Value (String):
+  Value (Map):
     "changed"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "ReturnEverything"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "program"
       Value (Map):
         Entry (DictionaryEntry)
@@ -820,11 +820,11 @@ Entry (DictionaryEntry)
             "1"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -832,16 +832,16 @@ Entry (DictionaryEntry)
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "this"
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "value"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -849,73 +849,73 @@ Entry (DictionaryEntry)
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "arg"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "everythingReturned"
   Value (Map):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (String):
+      Value (Map):
         "a"
     Entry (DictionaryEntry)
       Key (Integer):
         "2"
-      Value (String):
+      Value (Map):
         "b"
     Entry (DictionaryEntry)
       Key (Integer):
         "3"
-      Value (String):
+      Value (Map):
         "c"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "argument"
   Value (Map):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (String):
+      Value (Map):
         "x"
     Entry (DictionaryEntry)
       Key (Integer):
         "2"
-      Value (String):
+      Value (Map):
         "y"
     Entry (DictionaryEntry)
       Key (Integer):
         "3"
-      Value (String):
+      Value (Map):
         "z"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "variableAsArgument"
   Value (Map):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (String):
+      Value (Map):
         "x"
     Entry (DictionaryEntry)
       Key (Integer):
         "2"
-      Value (String):
+      Value (Map):
         "y"
     Entry (DictionaryEntry)
       Key (Integer):
         "3"
-      Value (String):
+      Value (Map):
         "z"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "ReturnFunction"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "program"
       Value (Map):
         Entry (DictionaryEntry)
@@ -923,11 +923,11 @@ Entry (DictionaryEntry)
             "1"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -935,20 +935,20 @@ Entry (DictionaryEntry)
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "this"
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "value"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "delayed"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "program"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -956,11 +956,11 @@ Entry (DictionaryEntry)
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "key"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (String):
+                                  Key (Map):
                                     "select"
                                   Value (Map):
                                     Entry (DictionaryEntry)
@@ -968,16 +968,16 @@ Entry (DictionaryEntry)
                                         "1"
                                       Value (Map):
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "literal"
-                                          Value (String):
+                                          Value (Map):
                                             "this"
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "value"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (String):
+                                  Key (Map):
                                     "program"
                                   Value (Map):
                                     Entry (DictionaryEntry)
@@ -985,11 +985,11 @@ Entry (DictionaryEntry)
                                         "1"
                                       Value (Map):
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "key"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "select"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
@@ -997,38 +997,38 @@ Entry (DictionaryEntry)
                                                     "1"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
-                                                      Key (String):
+                                                      Key (Map):
                                                         "literal"
-                                                      Value (String):
+                                                      Value (Map):
                                                         "this"
                                                 Entry (DictionaryEntry)
                                                   Key (Integer):
                                                     "2"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
-                                                      Key (String):
+                                                      Key (Map):
                                                         "literal"
-                                                      Value (String):
+                                                      Value (Map):
                                                         "1"
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "value"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "literal"
-                                              Value (String):
+                                              Value (Map):
                                                 "1"
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "2"
                                       Value (Map):
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "key"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "select"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
@@ -1036,38 +1036,38 @@ Entry (DictionaryEntry)
                                                     "1"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
-                                                      Key (String):
+                                                      Key (Map):
                                                         "literal"
-                                                      Value (String):
+                                                      Value (Map):
                                                         "this"
                                                 Entry (DictionaryEntry)
                                                   Key (Integer):
                                                     "2"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
-                                                      Key (String):
+                                                      Key (Map):
                                                         "literal"
-                                                      Value (String):
+                                                      Value (Map):
                                                         "2"
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "value"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "literal"
-                                              Value (String):
+                                              Value (Map):
                                                 "2"
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "3"
                                       Value (Map):
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "key"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "select"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
@@ -1075,34 +1075,34 @@ Entry (DictionaryEntry)
                                                     "1"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
-                                                      Key (String):
+                                                      Key (Map):
                                                         "literal"
-                                                      Value (String):
+                                                      Value (Map):
                                                         "this"
                                                 Entry (DictionaryEntry)
                                                   Key (Integer):
                                                     "2"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
-                                                      Key (String):
+                                                      Key (Map):
                                                         "literal"
-                                                      Value (String):
+                                                      Value (Map):
                                                         "3"
                                         Entry (DictionaryEntry)
-                                          Key (String):
+                                          Key (Map):
                                             "value"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "literal"
-                                              Value (String):
+                                              Value (Map):
                                                 "3"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "SetCurrent"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "program"
       Value (Map):
         Entry (DictionaryEntry)
@@ -1110,11 +1110,11 @@ Entry (DictionaryEntry)
             "1"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -1122,16 +1122,16 @@ Entry (DictionaryEntry)
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "this"
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "value"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "program"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -1139,11 +1139,11 @@ Entry (DictionaryEntry)
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "key"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -1151,16 +1151,16 @@ Entry (DictionaryEntry)
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "arg"
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "value"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -1168,20 +1168,20 @@ Entry (DictionaryEntry)
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "arg"
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "2"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "key"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -1189,16 +1189,16 @@ Entry (DictionaryEntry)
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "x"
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "value"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -1206,29 +1206,29 @@ Entry (DictionaryEntry)
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "arg"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "symbol"
         Entry (DictionaryEntry)
           Key (Integer):
             "2"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -1236,16 +1236,16 @@ Entry (DictionaryEntry)
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "this"
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "value"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -1253,21 +1253,21 @@ Entry (DictionaryEntry)
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "x"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "thisSet"
-  Value (String):
+  Value (Map):
     "haha"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "FirstLevel"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "program"
       Value (Map):
         Entry (DictionaryEntry)
@@ -1275,11 +1275,11 @@ Entry (DictionaryEntry)
             "1"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -1287,33 +1287,33 @@ Entry (DictionaryEntry)
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "this"
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "2"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "1"
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "value"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "call"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "function"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "select"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -1321,16 +1321,16 @@ Entry (DictionaryEntry)
                                 "1"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (String):
+                                  Key (Map):
                                     "literal"
-                                  Value (String):
+                                  Value (Map):
                                     "SecondLevel"
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "argument"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "program"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -1338,11 +1338,11 @@ Entry (DictionaryEntry)
                                 "1"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (String):
+                                  Key (Map):
                                     "key"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "select"
                                       Value (Map):
                                         Entry (DictionaryEntry)
@@ -1350,25 +1350,25 @@ Entry (DictionaryEntry)
                                             "1"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (String):
+                                              Key (Map):
                                                 "literal"
-                                              Value (String):
+                                              Value (Map):
                                                 "x"
                                 Entry (DictionaryEntry)
-                                  Key (String):
+                                  Key (Map):
                                     "value"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (String):
+                                      Key (Map):
                                         "literal"
-                                      Value (String):
+                                      Value (Map):
                                         "y"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "SecondLevel"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "select"
       Value (Map):
         Entry (DictionaryEntry)
@@ -1376,21 +1376,21 @@ Entry (DictionaryEntry)
             "1"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "literal"
-              Value (String):
+              Value (Map):
                 "arg"
         Entry (DictionaryEntry)
           Key (Integer):
             "2"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "literal"
-              Value (String):
+              Value (Map):
                 "arg"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "argTest"
   Value (Map):
     Entry (DictionaryEntry)
@@ -1398,44 +1398,44 @@ Entry (DictionaryEntry)
         "1"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "a"
-          Value (String):
+          Value (Map):
             "z"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "MemberTest"
   Value (NetClass):
     Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "IntEvent"
   Value (NetClass):
     Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "NormalEvent"
   Value (NetClass):
     Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "TestClass"
   Value (NetClass):
     Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "PositionalNoConversion"
   Value (NetClass):
     Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "NamedNoConversion"
   Value (NetClass):
     Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "IndexerNoConversion"
   Value (NetClass):
     Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "testClass"
   Value (TestClass):
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "memberTest"
   Value (MemberTest):
     instanceField (String):
@@ -1443,72 +1443,72 @@ Entry (DictionaryEntry)
     InstanceProperty (String):
       "b"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "interceptedSymbol"
-  Value (String):
+  Value (Map):
     "/hello/"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "positionalNoConversion"
   Value (PositionalNoConversion):
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "positionalNoConversionConcatenated"
   Value (Map):
     "rstmno"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "namedNoConversion"
   Value (NamedNoConversion):
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "namedNoConversionConcatenated"
   Value (Map):
-    "nullnulltnullnnull"
+    "rullnulltullmullnullnull"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "indexerNoConversion"
   Value (IndexerNoConversion):
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "indexerNoConversionIndexed"
   Value (Map):
     "abchihiunchangedYunchangedZabc"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "interceptedSymbol2"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "k"
-  Value (String):
+  Value (Map):
     "hello"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "xyz"
-  Value (String):
+  Value (Map):
     "w"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "literalFunction"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "literal"
-      Value (String):
+      Value (Map):
         "5"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "literalFunctionResult"
   Value (Integer):
     "5"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "function"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "program"
       Value (Map):
         Entry (DictionaryEntry)
@@ -1516,11 +1516,11 @@ Entry (DictionaryEntry)
             "1"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -1528,25 +1528,25 @@ Entry (DictionaryEntry)
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "this"
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "value"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "literal"
-                  Value (String):
+                  Value (Map):
                     "simple function this"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "callFunction"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "select"
       Value (Map):
         Entry (DictionaryEntry)
@@ -1554,16 +1554,16 @@ Entry (DictionaryEntry)
             "1"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "literal"
-              Value (String):
+              Value (Map):
                 "function"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "callFunctionResult"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "program"
       Value (Map):
         Entry (DictionaryEntry)
@@ -1571,11 +1571,11 @@ Entry (DictionaryEntry)
             "1"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -1583,29 +1583,29 @@ Entry (DictionaryEntry)
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "this"
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "value"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "literal"
-                  Value (String):
+                  Value (Map):
                     "simple function this"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "delayedFunction"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "delayed"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (String):
+          Key (Map):
             "program"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1613,11 +1613,11 @@ Entry (DictionaryEntry)
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1625,25 +1625,25 @@ Entry (DictionaryEntry)
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (String):
+                              Key (Map):
                                 "literal"
-                              Value (String):
+                              Value (Map):
                                 "x"
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "value"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (String):
+                      Key (Map):
                         "literal"
-                      Value (String):
+                      Value (Map):
                         "y"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "delayedFunctionResult"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "program"
       Value (Map):
         Entry (DictionaryEntry)
@@ -1651,11 +1651,11 @@ Entry (DictionaryEntry)
             "1"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -1663,30 +1663,30 @@ Entry (DictionaryEntry)
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "x"
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "value"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "literal"
-                  Value (String):
+                  Value (Map):
                     "y"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "value"
-  Value (String):
+  Value (Map):
     "xyz"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "selectionFunction"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "select"
       Value (Map):
         Entry (DictionaryEntry)
@@ -1694,31 +1694,31 @@ Entry (DictionaryEntry)
             "1"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "literal"
-              Value (String):
+              Value (Map):
                 "value"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "selectionFunctionResult"
-  Value (String):
+  Value (Map):
     "xyz"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "bigInteger"
   Value (Integer):
     "89383838383832839123497123047217340712340720347072304702340720347"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "upperLevel"
-  Value (String):
+  Value (Map):
     "changed"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "ChangeUpperLevel"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (String):
+      Key (Map):
         "program"
       Value (Map):
         Entry (DictionaryEntry)
@@ -1726,11 +1726,11 @@ Entry (DictionaryEntry)
             "1"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
@@ -1738,107 +1738,107 @@ Entry (DictionaryEntry)
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "search"
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "2"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (String):
+                          Key (Map):
                             "literal"
-                          Value (String):
+                          Value (Map):
                             "upperLevel"
             Entry (DictionaryEntry)
-              Key (String):
+              Key (Map):
                 "value"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (String):
+                  Key (Map):
                     "literal"
-                  Value (String):
+                  Value (Map):
                     "changed"
 Entry (DictionaryEntry)
   Key (Integer):
     "3"
   Value (Map):
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "staticEventChanged"
   Value (Boolean):
     "True"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "staticEvent"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.Object Invoke(System.Object)"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "resultFromDelegate"
   Value (Map):
     "resultFromDelegate"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "staticEventResult"
   Value (TestClass):
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "instanceEventChanged"
   Value (Boolean):
     "True"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "instanceEvent"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Int32 Invoke(Int32)"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "instanceEventResult"
   Value (Integer):
     "5"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "one"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "two"
   Value (Integer):
     "2"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "firstIf"
-  Value (String):
+  Value (Map):
     "then"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "secondIf"
-  Value (String):
+  Value (Map):
     "else"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "thenText"
-  Value (String):
+  Value (Map):
     "then"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "firstSwitch"
   Value (Integer):
     "50020202029029233344"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "bigNumber"
   Value (Integer):
     "50020202029029233344"
 Entry (DictionaryEntry)
-  Key (String):
+  Key (Map):
     "secondSwitch"
-  Value (String):
+  Value (Map):
     "default"

@@ -10,11 +10,11 @@ libraryAssemblyTest=testClasses
 [(['a']='a')]='Object'
 ['normal symbol']='NormalSymbol'
 lookupSymbol='LookupSymbol'
-['"long key symbol"']='LookupExtendedSymbol'
+['long key symbol']='LookupExtendedSymbol'
 lookedUpMap=[(['a']='a')]
 lookedUpNormalSymbol=['normal symbol']
 lookedUpSymbol=lookupSymbol
-lookedUpLongSymbol=['"long key symbol"']
+lookedUpLongSymbol=['long key symbol']
 object=
   a='default'
   autoSearch='default'

@@ -324,8 +324,8 @@ map
           val=expression
         {
           Map statement=new Map();
-					statement["key"]=key;
-					statement["value"]=val;
+					statement[Interpreter.StringToMap("key")]=key;
+					statement[Interpreter.StringToMap("value")]=val;
 					statements[new Integer(counter)]=statement;
 					counter++;
 				}
@@ -333,7 +333,7 @@ map
     )*
   )
   {
-    result["program"]=statements;
+    result[Interpreter.StringToMap("program")]=statements;
   };
 
 call
@@ -352,9 +352,9 @@ call
       argument=expression
     )
     {
-      call["function"]=delayed;
-      call["argument"]=argument;
-      result["call"]=call;
+      call[Interpreter.StringToMap("function")]=delayed;
+      call[Interpreter.StringToMap("argument")]=argument;
+      result[Interpreter.StringToMap("call")]=call;
     }
   );
   
@@ -378,7 +378,7 @@ select
     )
   )
   {
-    result["select"]=selection;
+    result[Interpreter.StringToMap("select")]=selection;
   };
 
  
@@ -389,7 +389,7 @@ literal
   }:
   token:LITERAL
   {
-    result["literal"]=token.getText();
+    result[Interpreter.StringToMap("literal")]=Interpreter.StringToMap(token.getText());
   };
 
 
@@ -401,5 +401,5 @@ delayed
     }:
     #(FUNCTION delayed=expression)
     {
-        result["delayed"]=delayed;
+        result[Interpreter.StringToMap("delayed")]=delayed;
     };
