@@ -63,6 +63,7 @@ namespace Editor {
 					selectedNode.BackColor=unselectedBackcolor;
 					selectedNode.ForeColor=unselectedForecolor;
 					selectedNode.Text=selectedNode.CleanText;
+					selectedNode.CheckColor();
 				}
 				if(value!=null) {
 					value.BackColor=selectedBackcolor;
@@ -108,6 +109,7 @@ namespace Editor {
 			editor.Font=new Font("Courier New",10.00F);
 			editor.ForeColor=unselectedForecolor;
 			editor.BackColor=unselectedBackcolor;
+			editor.FullRowSelect=true;
 			editor.TabStop=false;
 			window.Closing+=new System.ComponentModel.CancelEventHandler(window_Closing);
 
@@ -190,7 +192,7 @@ namespace Editor {
 			}
 		}
 		public static void KeyPress(object sender,KeyPressEventArgs e) {
-			if(e.KeyChar!='µ') { // (this is Alt+Ctrl+M)
+			if(e.KeyChar!='µ') { // ( 'µ' is (accidentally) created by Alt+Ctrl+M)
 				InsertCharacter insertCharacter=new InsertCharacter(e.KeyChar);
 				insertCharacter.Run();
 			}
@@ -254,10 +256,19 @@ namespace Editor {
 			clone.cursorPosition=CursorPosition;
 			return clone;
 		}
+		public new string Text {
+			get {
+				return base.Text;
+			}
+			set {
+				base.Text=value;
+			}
+		}
 		public string CleanText {
 			get {
 				if(this==Editor.SelectedNode) {
-					return Text.Remove(CursorPosition,1);
+					return Text.Replace("|","");
+					//return Text.Remove(CursorPosition,1); //index bug
 				}
 				else {
 					return Text;
@@ -270,6 +281,12 @@ namespace Editor {
 				else {
 					Text=value;
 				}
+				CheckColor();
+			}
+		}
+		public void CheckColor() {
+			if(CleanText.IndexOf("==")!=-1) {
+				ForeColor=Color.Blue;
 			}
 		}
 	}
@@ -291,8 +308,9 @@ namespace Editor {
 				string text=(string)textLines[0];
 				if(text.StartsWith(currentIndentation) && text!="") {
 					Node child=new Node();
-					child.CleanText=text.TrimStart(' ');
 					current.Nodes.Add(child);
+					child.CheckColor();
+					child.CleanText=text.TrimStart(' ');
 					textLines.RemoveAt(0);
 					Load(child,textLines,currentIndentation+"  ");
 				}
@@ -308,12 +326,20 @@ namespace Editor {
 		public static RichTextBox toolTip=new RichTextBox();
 		public static GListBox listBox=new GListBox();
 
+		public static void InvalidateHelp() {
+			if(lastSelectedNode!=null) {
+				if(Editor.SelectedNode.Parent!=lastSelectedNode.Parent
+					|| Editor.SelectedNode.Index<lastSelectedNode.Index) {
+					helpInvalidated=true;
+				}
+			}
+
+		}
 		static Help() {
 			listBox.Visible=false;
 			listBox.Font=new Font("Automatic",8.00F);
 			listBox.BorderStyle=BorderStyle.Fixed3D;
 			listBox.TabStop=false;
-			//listBox.GotFocus+=new EventHandler(listBox_GotFocus);
 			listBox.DoubleClick+=new EventHandler(listBox_DoubleClick);
 			toolTip.Visible=false;
 			toolTip.WordWrap=true;
@@ -823,10 +849,12 @@ namespace Editor {
 			_isCall=isCall;
 			overloadIndex=0;
 			if(lastSelectedNode==null || Interpreter.lastProgram==null || helpInvalidated) {
+				if(helpInvalidated) {
+					int asdf=0;
+				}
 				helpInvalidated=false;
 				if(lastHelpThread!=null) {
 //					lastHelpThread.Abort();
-//					lastHelpThread.Join();
 					lastHelpThread=null;
 				}
 			}
@@ -947,11 +975,6 @@ namespace Editor {
 			}
 			return keys;
 		}
-//
-//		private static void listBox_GotFocus(object sender, EventArgs e) {
-//			//Editor.editor.Focus();
-//		}
-
 		private static void listBox_DoubleClick(object sender, EventArgs e) {
 			new CompleteWord().Run();
 			Editor.editor.Focus();
@@ -961,6 +984,13 @@ namespace Editor {
 			Editor.editor.Focus();
 		}
 	}
+
+
+
+
+
+
+
 	public abstract class History {
 		public static void Add(LoggedCommand command) {
 			if(commands.Count>present+1) {
@@ -973,11 +1003,16 @@ namespace Editor {
 		public static ArrayList commands=new ArrayList();
 	}
 
+
+
+
+
+
 	public abstract class Command {
 		public abstract void Do();
 
 		public virtual void Run() {
-			if(Preconditions()) { //double preconditions!
+			if(Preconditions()) {
 				if(!(this is InsertCharacter || this is DeleteCharLeft)) {
 					Help.listBox.Visible=false;
 					Help.toolTip.Visible=false;
@@ -990,14 +1025,14 @@ namespace Editor {
 		}
 		protected bool Preconditions() {
 			ArrayList requirements=new ArrayList();
-			Type current=GetType();
-			while(!current.Equals(typeof(Command))) {
-				MethodInfo requirement=current.GetMethod(
+			Type type=GetType();
+			while(!type.Equals(typeof(Command))) {
+				MethodInfo requirement=type.GetMethod(
 					"Require",BindingFlags.DeclaredOnly|BindingFlags.Instance|BindingFlags.Public);
 				if(requirement!=null) {
 					requirements.Add(requirement);
 				}
-				current=current.BaseType;
+				type=type.BaseType;
 			}
 			requirements.Reverse();
 			foreach(MethodInfo requirement in requirements) {
@@ -1018,12 +1053,12 @@ namespace Editor {
 			}
 		}
 	}
-	public abstract class LoggedAnyNodeCommand:LoggedCommand {
+	public abstract class LoggedNonFileNodeCommand:LoggedCommand {
 		public bool Require() {
 			return Editor.SelectedNode!=null;
 		}
 	}
-	public abstract class LoggedNormalNodeCommand:LoggedAnyNodeCommand {
+	public abstract class LoggedNormalNodeCommand:LoggedNonFileNodeCommand {
 		public new bool Require() {
 			return !(Editor.SelectedNode is FileNode);
 		}
@@ -1035,10 +1070,12 @@ namespace Editor {
 //					Help.lastHelpThread.Resume();
 //					Help.lastHelpThread.Abort();
 					Help.lastHelpThread=null;
-//				}
 			}
 		}
 	}
+
+
+
 	public class NextOverload:Command {
 		public override void Do() {
 			Help.overloadIndex++;
@@ -1050,6 +1087,14 @@ namespace Editor {
 			Help.overloadIndex--;
 			Help.ShowHelpBackThread(Help.lastObject);
 		}
+	}
+
+	public class AbortHelp: Command {
+		public override void Do() {
+			Help.listBox.Visible=false;
+			Help.toolTip.Visible=false;
+		}
+
 	}
 	public class Undo:Command {
 		public bool Require() {
@@ -1091,13 +1136,7 @@ namespace Editor {
 			}
 		}
 	}
-	public class AbortHelp: Command {
-		public override void Do() {
-			Help.listBox.Visible=false;
-			Help.toolTip.Visible=false;
-		}
 
-	}
 	public class OpenFile: LoggedCommand {
 		static OpenFileDialog  openFileDialog=new OpenFileDialog();
 		private string path;
@@ -1136,30 +1175,7 @@ namespace Editor {
 		}
 	}
 
-
-	public class MoveToPreviousNode:LoggedAnyNodeCommand {
-		public new bool Require() {
-			return Editor.SelectedNode.PrevNode!=null;
-		}
-		public override void Do() {
-			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
-		}
-		public override void Undo() {
-			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
-		}
-	}
-	public class MoveToNextNode:LoggedAnyNodeCommand {
-		public new bool Require() {
-			return Editor.SelectedNode.NextNode!=null;
-		}
-		public override void Do() {
-			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
-		}
-		public override void Undo() {
-			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
-		}
-	}
-	public class MoveToNode:LoggedAnyNodeCommand {
+	public class MoveToNode:LoggedNonFileNodeCommand {
 		public new bool Require() {
 			return targetNode!=null;
 		}
@@ -1176,7 +1192,30 @@ namespace Editor {
 			Editor.SelectedNode=sourceNode;
 		}
 	}
-	public class MoveLineUp:LoggedAnyNodeCommand {
+	public class MoveToPreviousNode:LoggedNonFileNodeCommand {
+		public new bool Require() {
+			return Editor.SelectedNode.PrevNode!=null;
+		}
+		public override void Do() {
+			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
+		}
+		public override void Undo() {
+			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
+		}
+	}
+	public class MoveToNextNode:LoggedNonFileNodeCommand {
+		public new bool Require() {
+			return Editor.SelectedNode.NextNode!=null;
+		}
+		public override void Do() {
+			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
+		}
+		public override void Undo() {
+			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
+		}
+	}
+
+	public class MoveLineUp:LoggedNonFileNodeCommand {
 		public new bool Require() {
 			return Editor.SelectedNode.PrevVisibleNode!=null;
 		}
@@ -1187,7 +1226,7 @@ namespace Editor {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.NextVisibleNode;
 		}
 	}
-	public class MoveLineDown:LoggedAnyNodeCommand {
+	public class MoveLineDown:LoggedNonFileNodeCommand {
 		public new bool Require() {
 			return Editor.SelectedNode.NextVisibleNode!=null;
 		}
@@ -1199,28 +1238,29 @@ namespace Editor {
 		}
 	}
 
-	public abstract class MoveCursor:LoggedNormalNodeCommand {
-		protected int oldPosition;
-		public override void Undo() {
-			Editor.SelectedNode.CursorPosition=oldPosition;
-		}
-	}
-	public class MoveStartOfLine:MoveCursor {
+	public class MoveCharLeft:MoveCursor {
 		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition!=0;
 		}
 		public override void Do() {
 			oldPosition=Editor.SelectedNode.CursorPosition;
-			Editor.SelectedNode.CursorPosition=0;
+			Editor.SelectedNode.CursorPosition=oldPosition-1;
 		}
+
 	}
-	public class MoveEndOfLine:MoveCursor {
+	public class MoveCharRight:MoveCursor {
 		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition<Editor.SelectedNode.CleanText.Length;
 		}
 		public override void Do() {
 			oldPosition=Editor.SelectedNode.CursorPosition;
-			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CleanText.Length;
+			Editor.SelectedNode.CursorPosition=oldPosition+1;
+		}
+	}
+	public abstract class MoveCursor:LoggedNormalNodeCommand {
+		protected int oldPosition;
+		public override void Undo() {
+			Editor.SelectedNode.CursorPosition=oldPosition;
 		}
 	}
 	public class MoveWordRight:MoveCursor {
@@ -1259,26 +1299,107 @@ namespace Editor {
 			Editor.SelectedNode.CursorPosition=index+1;
 		}
 	}
-	public class MoveCharLeft:MoveCursor {
+	public class MoveStartOfLine:MoveCursor {
 		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition!=0;
 		}
 		public override void Do() {
 			oldPosition=Editor.SelectedNode.CursorPosition;
-			Editor.SelectedNode.CursorPosition=oldPosition-1;
+			Editor.SelectedNode.CursorPosition=0;
 		}
-
 	}
-	public class MoveCharRight:MoveCursor {
+	public class MoveEndOfLine:MoveCursor {
 		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition<Editor.SelectedNode.CleanText.Length;
 		}
 		public override void Do() {
 			oldPosition=Editor.SelectedNode.CursorPosition;
-			Editor.SelectedNode.CursorPosition=oldPosition+1;
+			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CleanText.Length;
 		}
 	}
-
+	
+	public class InsertCharacter: LoggedNormalNodeCommand {
+		public new bool Require() {
+			return !(Editor.SelectedNode is FileNode) && !Char.IsControl(insertedChar);
+		}
+		private char insertedChar;
+		public InsertCharacter(char insertedChar) {
+			this.insertedChar=insertedChar;
+		}
+		public static string lastWord="";
+		public override void Do() {
+			if(insertedChar=='.') {
+				Help.toolTip.Visible=false;
+				lastWord="";
+				Help.ShowHelp(Editor.SelectedNode,Editor.SelectedNode.CleanText.Substring(
+					0,Editor.SelectedNode.CursorPosition)+".break",false);
+			}
+			else if(insertedChar=='(' && Help.IsFunctionCall(Editor.SelectedNode.CleanText)) {
+				Help.toolTip.Visible=false;
+				Help.listBox.Visible=false;
+				Help.ShowHelp(Editor.SelectedNode,Editor.SelectedNode.CleanText.Substring(
+					0,Editor.SelectedNode.CursorPosition).TrimEnd('(')+".break",true);
+			}
+			else if(insertedChar=='=') {
+				Help.toolTip.Visible=false;
+				Help.listBox.Visible=false;
+			}
+			else if(Help.listBox.Visible) {
+				lastWord+=insertedChar;
+				Help.listBox.SelectedIndex=Help.listBox.FindString(lastWord);
+			}
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(insertedChar));
+			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition+1;
+			Help.InvalidateHelp();
+		}
+		public override void Undo() {
+			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition-1;
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
+		}
+	}
+	public class DeleteCharLeft:LoggedNormalNodeCommand {
+		public new bool Require() {
+			return Editor.SelectedNode.CursorPosition>0;
+		}
+		private char character;
+		public override void Do() {
+			character=Editor.SelectedNode.CleanText[Editor.SelectedNode.CursorPosition-1];
+			if(Help.listBox.Visible) {
+				if(character.Equals('.')) {
+					Help.listBox.Visible=false;
+					Help.toolTip.Visible=false;
+				}
+				else {
+					// some index bug here
+					if(InsertCharacter.lastWord.Length>0) {
+						InsertCharacter.lastWord=InsertCharacter.lastWord.Remove(InsertCharacter.lastWord.Length-1,1);
+						Help.listBox.SelectedIndex=Help.listBox.FindString(InsertCharacter.lastWord);
+					}
+				}
+			}
+			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition-1;
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
+			Help.InvalidateHelp();
+		}
+		public override void Undo() {
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(character));
+			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition+1;
+		}
+	}
+	public class DeleteCharRight:LoggedNormalNodeCommand {
+		public new bool Require() {
+			return Editor.SelectedNode.CursorPosition<Editor.SelectedNode.CleanText.Length;
+		}
+		private char character;
+		public override void Do() {
+			character=Editor.SelectedNode.CleanText[Editor.SelectedNode.CursorPosition];
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
+			Help.InvalidateHelp();
+		}
+		public override void Undo() {
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(character));
+		}
+	}
 	public class DeleteWordRight:LoggedNormalNodeCommand {
 		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition!=Editor.SelectedNode.CleanText.Length;
@@ -1300,6 +1421,7 @@ namespace Editor {
 			int end=index-Editor.SelectedNode.CursorPosition;
 			deletedText=Editor.SelectedNode.CleanText.Substring(start,end);
 			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(start,end);
+			Help.InvalidateHelp();
 		}
 		public override void Undo() {
 			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,deletedText);
@@ -1330,147 +1452,23 @@ namespace Editor {
 			deletedText=Editor.SelectedNode.CleanText.Substring(start,end);
 			Editor.SelectedNode.CursorPosition=start;
 			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(start,end);
+			Help.InvalidateHelp();
 		}
 		public override void Undo() {
 			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(start,deletedText);
 			Editor.SelectedNode.CursorPosition=oldCursorPosition;
 		}
-	}
-	public class DeleteCharLeft:LoggedNormalNodeCommand {
-		public new bool Require() {
-			return Editor.SelectedNode.CursorPosition>0;
-		}
-		private char character;
-		public override void Do() {
-			character=Editor.SelectedNode.CleanText[Editor.SelectedNode.CursorPosition-1];
-			if(Help.listBox.Visible) {
-				if(character.Equals('.')) {
-					Help.listBox.Visible=false;
-					Help.toolTip.Visible=false;
-				}
-				else {
-					// some index bug here
-					InsertCharacter.lastWord=InsertCharacter.lastWord.Remove(InsertCharacter.lastWord.Length-1,1);
-					Help.listBox.SelectedIndex=Help.listBox.FindString(InsertCharacter.lastWord);
-				}
-			}
-			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition-1;
-			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
-		}
-		public override void Undo() {
-			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(character));
-			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition+1;
-		}
-	}
-	public class DeleteCharRight:LoggedNormalNodeCommand {
-		public new bool Require() {
-			return Editor.SelectedNode.CursorPosition<Editor.SelectedNode.CleanText.Length;
-		}
-		private char character;
-		public override void Do() {
-			character=Editor.SelectedNode.CleanText[Editor.SelectedNode.CursorPosition];
-			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
-		}
-		public override void Undo() {
-			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(character));
-		}
-	}
+	}	
 
-	public class InsertCharacter: LoggedNormalNodeCommand {
-		public new bool Require() {
-			return !(Editor.SelectedNode is FileNode) && !Char.IsControl(oldChar);
-		}
-		//rename 'oldChar'
-		private char oldChar;
-		public InsertCharacter(char oldChar) {
-			this.oldChar=oldChar;
-		}
-		public static string lastWord="";
-		public override void Do() {
-			if(oldChar=='.') {
-				Help.toolTip.Visible=false;
-				lastWord="";
-				Help.ShowHelp(Editor.SelectedNode,Editor.SelectedNode.CleanText.Substring(
-					0,Editor.SelectedNode.CursorPosition)+".break",false);
-			}
-			else if(oldChar=='(' && Help.IsFunctionCall(Editor.SelectedNode.CleanText)) {
-				Help.toolTip.Visible=false;
-				Help.listBox.Visible=false;
-				Help.ShowHelp(Editor.SelectedNode,Editor.SelectedNode.CleanText.Substring(
-					0,Editor.SelectedNode.CursorPosition).TrimEnd('(')+".break",true);
-			}
-			else if(oldChar=='=') {
-				Help.toolTip.Visible=false;
-				Help.listBox.Visible=false;
-			}
-			else if(Help.listBox.Visible) {
-				lastWord+=oldChar;
-				Help.listBox.SelectedIndex=Help.listBox.FindString(lastWord);
-			}
-			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(oldChar));
-			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition+1;
-		}
-		public override void Undo() {
-			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition-1;
-			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
-		}
-	}
-	public class MoveKeyUp:LoggedNormalNodeCommand {
-		public new bool Require() {
-			return Help.listBox.SelectedIndex>0;
-		}
-		public override void Do() {
-			Help.listBox.SelectedIndex--;
-			Help.listBox.Visible=true;
-		}
-		public override void Undo() {
-			Help.listBox.SelectedIndex++;
-			Help.listBox.Visible=true;
-		}
-
-	}
-	public class MoveKeyDown:LoggedNormalNodeCommand {
-		public new bool Require() {
-			return Help.listBox.SelectedIndex<Help.listBox.Items.Count-1;
-		}
-		public override void Do() {
-			Help.listBox.SelectedIndex++;
-			Help.listBox.Visible=true;
-		}
-		public override void Undo() {
-			Help.listBox.SelectedIndex--;
-			Help.listBox.Visible=true;
-		}
-
-
-	}
-	public class CompleteWord:LoggedNormalNodeCommand {
-		public override void Do() {//improve here
-			oldText=Editor.SelectedNode.CleanText;
-			cursorPos=Editor.SelectedNode.CursorPosition;
-			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(
-				Editor.SelectedNode.CleanText.Length-InsertCharacter.lastWord.Length,
-				InsertCharacter.lastWord.Length)+Help.listBox.SelectedItem;
-			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CleanText.Length;
-			Help.listBox.Visible=false;
-			Help.toolTip.Visible=false;
-		}
-		string oldText="";
-		int cursorPos=0;
-		public override void Undo() {
-			Editor.SelectedNode.CursorPosition=cursorPos;
-			Editor.SelectedNode.CleanText=oldText;
-			Help.listBox.Visible=true;
-		}
-	}
-	public class CreateChild:LoggedAnyNodeCommand {
+	public class CreateChild:LoggedNonFileNodeCommand {
 		public override void Do() {
 			Editor.SelectedNode.Nodes.Insert(0,new Node());
 			Editor.SelectedNode=(Node)Editor.SelectedNode.FirstNode;
-
+			// doesn't work, parsing error:
 			if(!(Editor.SelectedNode.Parent is FileNode)&& Help.IsFunctionCall(((Node)Editor.SelectedNode.Parent).CleanText)) {
 				Help.ShowHelp((Node)Editor.SelectedNode.Parent,((Node)Editor.SelectedNode.Parent).CleanText+".break",true);
 			}
+			Help.InvalidateHelp();
 		}
 		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.Parent;
@@ -1484,6 +1482,7 @@ namespace Editor {
 		public override void Do() {
 			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index,new Node());
 			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
+			Help.InvalidateHelp();
 		}
 		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
@@ -1507,6 +1506,8 @@ namespace Editor {
 		public override void Do() {
 			(new CopyNode()).Run();
 			(new DeleteNode()).Run();
+			Help.InvalidateHelp();
+
 		}
 	}
 	public class CopyNode:LoggedNormalNodeCommand {
@@ -1532,6 +1533,7 @@ namespace Editor {
 			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index,selectedNode);
 			selectedNode.ExpandAll();
 			Editor.SelectedNode=selectedNode;
+			Help.InvalidateHelp();
 		}
 		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
@@ -1548,6 +1550,7 @@ namespace Editor {
 			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index+1,selectedNode);
 			selectedNode.ExpandAll();
 			Editor.SelectedNode=selectedNode;
+			Help.InvalidateHelp();
 		}
 		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
@@ -1558,7 +1561,6 @@ namespace Editor {
 		private int index;
 		private Node parentNode;
 		private Node deletedNode;
-
 		public new bool Require() {
 			return !(Editor.SelectedNode is FileNode);
 		}
@@ -1577,12 +1579,60 @@ namespace Editor {
 				Editor.SelectedNode=(Node)Editor.SelectedNode.Parent;
 			}
 			deletedNode.Remove();
+			Help.InvalidateHelp();
 		}
 		public override void Undo() {
 			parentNode.Nodes.Insert(index,deletedNode);
 			Editor.SelectedNode=(Node)parentNode.Nodes[index];
 		}
 	}
+
+	public class MoveKeyUp:LoggedNormalNodeCommand {
+		public new bool Require() {
+			return Help.listBox.SelectedIndex>0;
+		}
+		public override void Do() {
+			Help.listBox.SelectedIndex--;
+			Help.listBox.Visible=true;
+		}
+		public override void Undo() {
+			Help.listBox.SelectedIndex++;
+			Help.listBox.Visible=true;
+		}
+	}
+	public class MoveKeyDown:LoggedNormalNodeCommand {
+		public new bool Require() {
+			return Help.listBox.SelectedIndex<Help.listBox.Items.Count-1;
+		}
+		public override void Do() {
+			Help.listBox.SelectedIndex++;
+			Help.listBox.Visible=true;
+		}
+		public override void Undo() {
+			Help.listBox.SelectedIndex--;
+			Help.listBox.Visible=true;
+		}
+	}
+	public class CompleteWord:LoggedNormalNodeCommand {
+		public override void Do() {
+			oldText=Editor.SelectedNode.CleanText;
+			cursorPos=Editor.SelectedNode.CursorPosition;
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(
+				Editor.SelectedNode.CleanText.Length-InsertCharacter.lastWord.Length,
+				InsertCharacter.lastWord.Length)+Help.listBox.SelectedItem;
+			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CleanText.Length;
+			Help.listBox.Visible=false;
+			Help.toolTip.Visible=false;
+		}
+		string oldText="";
+		int cursorPos=0;
+		public override void Undo() {
+			Editor.SelectedNode.CursorPosition=cursorPos;
+			Editor.SelectedNode.CleanText=oldText;
+			Help.listBox.Visible=true;
+		}
+	}
+	
 	public class GListBoxItem {
 		private string _myText;
 		private int _myImageIndex;

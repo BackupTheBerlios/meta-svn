@@ -277,6 +277,32 @@ namespace Meta {
 					((IExpression)def.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
 				}				
 			}
+			public static void If() {
+				Map arg=((Map)Interpreter.Arg);
+				bool test=(bool)arg[new Integer(1)];
+				Map then=(Map)arg["then"];
+				Map _else=(Map)arg["else"];
+				if(test) {
+					if(then!=null) {
+						((IExpression)then.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+					}
+				}
+				else {
+					if(_else!=null) {
+						((IExpression)_else.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+					}
+				}	
+//				Map arg=((Map)Interpreter.Arg);
+//				object val=arg[new Integer(1)];
+//				Map cases=(Map)arg["case"];
+//				Map def=(Map)arg["default"];
+//				if(cases.ContainsKey(val)) {
+//					((IExpression)((Map)cases[val]).Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+//				}
+//				else if(def!=null) {
+//					((IExpression)def.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+//				}				
+			}
 		}
 		public class LiteralRecognitions {
 			// order of classes is important here !
@@ -567,7 +593,7 @@ namespace Meta {
 				object arg=argument.Evaluate(current);
 				ICallable obj=(ICallable)callable.Evaluate(current);
 				Interpreter.arguments.Add(arg);
-				object result=obj.Call(null);
+				object result=obj.Call((Map)current);
 				Interpreter.arguments.Remove(arg);
 				return result;
 			}
@@ -763,7 +789,7 @@ namespace Meta {
 				return preselection;
 			}
 			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
-				if(keys[0].Equals("For")) {
+				if(keys[0].Equals("n")) {
 					int asdf=0;
 				}
 				object selected=current;
@@ -1202,7 +1228,7 @@ namespace Meta {
 			public object Call(Map caller,Map existing)  {
 				IExpression callable=(IExpression)Compile();
 				object result;
-				if(callable is Program) {
+				if(callable is Program) { // somehow wrong
 					result=((Program)callable).Evaluate(caller,existing,true);
 				}
 				else {
@@ -1210,6 +1236,17 @@ namespace Meta {
 				}
 				return result;
 			}
+//			public object Call(Map caller,Map existing)  {
+//				IExpression callable=(IExpression)Compile();
+//				object result;
+//				if(callable is Program) {
+//					result=((Program)callable).Evaluate(caller,existing,true);
+//				}
+//				else {
+//					result=callable.Evaluate(this);
+//				}
+//				return result;
+//			}
 			public void StopSharing() {
 				compiled=null;
 				HybridDictionary oldTable=table;
