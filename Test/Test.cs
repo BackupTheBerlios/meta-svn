@@ -71,27 +71,27 @@ namespace Test {
 	}
 	public class Tests {
 		private static string filename=@"basicTest.meta";
-//		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-//		public class ParseToAst:TestCase {
-//			public override object RunTestCase() {
-//				return Interpreter.ParseToAst(new StreamReader(Path.Combine(
-//					Test.path,filename)));
-//			}
-//		}
-//		public class CompileToMap:TestCase {
-//			public static Map map;
-//			public override object RunTestCase() {
-//				map=Interpreter.CompileToMap(new StreamReader(Path.Combine(
-//					Test.path,filename)));
-//				return map;
-//			}
-//		}
-//		public class CompileToExpression:TestCase {
-//			public override object RunTestCase() {
-//				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
-//					Test.path,filename))).Compile();
-//			}
-//		}
+		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
+		public class ParseToAst:TestCase {
+			public override object RunTestCase() {
+				return Interpreter.ParseToAst(new StreamReader(Path.Combine(
+					Test.path,filename)));
+			}
+		}
+		public class CompileToMap:TestCase {
+			public static Map map;
+			public override object RunTestCase() {
+				map=Interpreter.CompileToMap(new StreamReader(Path.Combine(
+					Test.path,filename)));
+				return map;
+			}
+		}
+		public class CompileToExpression:TestCase {
+			public override object RunTestCase() {
+				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
+					Test.path,filename))).Compile();
+			}
+		}
 		public class Execute:TestCase {
 			public override object RunTestCase() {
 				Map argument=new Map();

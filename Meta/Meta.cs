@@ -574,12 +574,6 @@ namespace Meta {
 					}
 				}
 			}
-//			public static bool IsMapString(Map map) {
-//				return map.IsString();
-//			}
-//			public static string MapToString(Map map) {
-//				return map.GetDotNetString();
-//			}
 			private abstract class DotNetToMetaConversions {
 				public class ConvertStringToMap: DotNetToMetaConversion {
 					public ConvertStringToMap()   {
@@ -990,15 +984,6 @@ namespace Meta {
 					return table.IntKeyValues;
 				}
 			}
-//			public ArrayList IntKeyValues {
-//				get {
-//					ArrayList list=new ArrayList();
-//					for(Integer i=new Integer(1);ContainsKey(i);i++) {
-//						list.Add(this[i]);
-//					}
-//					return list;
-//				}
-//			}
 			public object this[object key]  {
 				get {
 					return table[key];
@@ -1010,9 +995,6 @@ namespace Meta {
 						if(value is IMap) {
 							((IMap)val).Parent=this;
 						}
-//						if(!table.ContainsKey(key)) {
-//							keys.Add(key);
-//						}
 						table[key]=val;
 					}
 				}
@@ -1036,24 +1018,6 @@ namespace Meta {
 				clone.compiled=compiled;
 				return clone;
 			}
-//			public IMap Clone() {
-//				Map copy=new Map();
-//				foreach(object key in table.Keys) {
-//					copy[key]=this[key];
-//				}
-//				copy.Parent=Parent;
-//				copy.compiled=compiled;
-//				return copy;
-//			}
-//			public IMap Clone() {
-//				Map copy=new Map();
-//				foreach(object key in keys) {
-//					copy[key]=this[key];
-//				}
-//				copy.Parent=Parent;
-//				copy.compiled=compiled;
-//				return copy;
-//			}
 			public object Compile()  {
 				if(compiled==null)  {
 					switch((string)((Map)this.Keys[0]).GetDotNetString()) {
@@ -1127,7 +1091,6 @@ namespace Meta {
 			}
 			public Map() {
 				this.table=new HybridDictionaryStrategy();
-				//this.keys=new ArrayList();
 			}
 			private IMap parent;
 			public abstract class MapStrategy {
@@ -1156,11 +1119,6 @@ namespace Meta {
 					return new Map(new StringStrategy(this)); // das ist ok, vielleicht StringStrategy immutable machen
 					// und zwischen verschiedenen Maps teilen?
 				}
-//				public override Map Clone() {
-//					return new Map(new StringStrategy(text)); // das ist ok, vielleicht StringStrategy immutable machen
-//																			// und zwischen verschiedenen Maps teilen?
-//				}
-
 				public override ArrayList IntKeyValues {
 					get {
 						ArrayList list=new ArrayList();
@@ -1222,40 +1180,15 @@ namespace Meta {
 					}
 				}
 			}
-			// move IntKeyValues down into Strategy
 			public class HybridDictionaryStrategy:MapStrategy {
 				ArrayList keys;
-				//rename
 				private HybridDictionary table;
-//				ArrayList keys=new ArrayList();
-//				private HybridDictionary table=new HybridDictionary();
-
-//				public HybridDictionaryStrategy(HybridDictionaryStrategy clone) {
-//					keys=(ArrayList)clone.keys.Clone();
-//					table=new HybridDictionary();
-//					foreach(object key in clone.keys) {
-//						object val=clone.table[key];
-//						if(val is IMap) {
-//							val=((IMap)val).Clone();
-//							((IMap)val).Parent=
-//						}
-//						table[key]=val;
-//					}
-//				}
 				public HybridDictionaryStrategy():this(2) {
 				}
 				public HybridDictionaryStrategy(int count) {
 					this.keys=new ArrayList(count);
 					this.table=new HybridDictionary(count);
 				}
-//				object val=value is IMap? ((IMap)value).Clone(): value;
-//				if(value is IMap) {
-//				((IMap)val).Parent=this;
-//			}
-//			//						if(!table.ContainsKey(key)) {
-//			//							keys.Add(key);
-//			//						}
-//			table[key]=val;
 				public override Map Clone() {
 					Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
 					foreach(object key in keys) {
@@ -1263,20 +1196,7 @@ namespace Meta {
 					}
 					return clone;
 				}
-					
-//					Map copy=new Map();
-//					foreach(object key in table.Keys) {
-//						copy[key]=this[key];
-//					}
-//				public override MapStrategy Clone() {
-//					Map copy=new Map();
-//					foreach(object key in table.Keys) {
-//						copy[key]=this[key];
-//					}
-////					copy.Parent=Parent;
-////					copy.compiled=compiled;
-////					return copy;
-//				}
+
 				public override ArrayList IntKeyValues {
 					get {
 						ArrayList list=new ArrayList();
@@ -1287,7 +1207,7 @@ namespace Meta {
 					}
 				}
 				public override bool IsString() {
-					if(IntKeyValues.Count>0) { // not quite correct without
+					if(IntKeyValues.Count>0) {
 						try {
 							GetDotNetString();
 							return true;
