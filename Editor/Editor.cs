@@ -28,6 +28,7 @@ namespace Editor {
 	public class Editor	{
 		[STAThread]
 		public static void Main() {
+			window.Controls.Add(Help.toolTip);
 			window.Controls.Add(Help.listBox);
 			window.Controls.Add(editor);
 			window.Size=new Size(1000,700);
@@ -221,13 +222,16 @@ namespace Editor {
 	// rework
 	public abstract class Help {
 		//public static ToolTip tip=new ToolTip();
-		public static ListBox listBox=new ListBox();
 		public static Label toolTip=new Label();
+		public static ListBox listBox=new ListBox();
 
 		static Help() {
 			listBox.Visible=false;
 			listBox.TabStop=false;
 			toolTip.Visible=false;
+			toolTip.AutoSize=true;
+			toolTip.BackColor=Color.LightYellow;
+			toolTip.BorderStyle=BorderStyle.FixedSingle;
 			listBox.SelectedIndexChanged+=new EventHandler(listBox_SelectedIndexChanged);
 //			listBox.GotFocus+=new EventHandler(listBox_GotFocus);
 //			tip.AutomaticDelay=3000;
@@ -237,12 +241,12 @@ namespace Editor {
 		private static void listBox_SelectedIndexChanged(object sender, EventArgs e) {
 			IKeyValue keyValue=Help.lastObject is IKeyValue? (IKeyValue)Help.lastObject
 				:new NetObject(Help.lastObject);
-			object obj=keyValue[listBox.SelectedValue];
+			object obj=keyValue[listBox.SelectedItem];
 			if(obj is INetDocumented) {
 				toolTip.Visible=true;
 				int x=listBox.Right;
 				int y=listBox.Top;
-				y+=(listBox.SelectedIndex-listBox.TopIndex-1)*listBox.ItemHeight;
+				y+=(listBox.SelectedIndex-listBox.TopIndex)*listBox.ItemHeight;
 				toolTip.Location=new Point(x,y);
 				toolTip.Text=((INetDocumented)obj).Documentation;
 			}

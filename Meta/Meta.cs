@@ -1299,21 +1299,31 @@ namespace Meta {
 		public class NetMethod: ICallable, INetDocumented {
 			public string Documentation {
 				get {
-					return "";
+					if(cashedDoc==null) {
+						if(savedMethod!=null) {
+							cashedDoc=Interpreter.GetDoc(savedMethod,false);
+//							cashedDoc=Interpreter.GetDoc(savedMethod,showParams);
+						}
+						else {
+							cashedDoc=Interpreter.GetDoc(methods[0],false)+"(+"+methods.Length.ToString()+"overloads)";
+//							cashedDoc=Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
+						}
+					}
+					return cashedDoc;
 				}
 			}
 			private static string cashedDoc;
-			public string GetDocumentation(bool showParams) {
-				if(cashedDoc==null) {
-					if(savedMethod!=null) {
-						cashedDoc=Interpreter.GetDoc(savedMethod,showParams);
-					}
-					else {
-						cashedDoc=Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
-					}
-				}
-				return cashedDoc;
-			}
+//			public string GetDocumentation(bool showParams) {
+//				if(cashedDoc==null) {
+//					if(savedMethod!=null) {
+//						cashedDoc=Interpreter.GetDoc(savedMethod,showParams);
+//					}
+//					else {
+//						cashedDoc=Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
+//					}
+//				}
+//				return cashedDoc;
+//			}
 //			public string GetDocumentation(bool showParams) {
 ////				if(cashedDoc==null) {
 //					if(savedMethod!=null) {
@@ -1536,17 +1546,17 @@ namespace Meta {
 			}
 		}
 		public class NetObject: NetContainer, IKeyValue, INetDocumented {
-			public string GetDocumentation (bool showParams){
-				string text="";
-				foreach(MemberInfo memberInfo in obj.GetType().GetMembers()) {
-					if(memberInfo is MethodInfo) {
-						text+=Interpreter.GetMethodName((MethodInfo)memberInfo)+"\n";
-					}
-					text+=Interpreter.GetDoc(memberInfo,showParams);
-
-				}
-				return text;
-			}
+//			public string GetDocumentation (bool showParams){
+//				string text="";
+//				foreach(MemberInfo memberInfo in obj.GetType().GetMembers()) {
+//					if(memberInfo is MethodInfo) {
+//						text+=Interpreter.GetMethodName((MethodInfo)memberInfo)+"\n";
+//					}
+//					text+=Interpreter.GetDoc(memberInfo,showParams);
+//
+//				}
+//				return text;
+//			}
 			public NetObject(object obj):base(obj,obj.GetType()) {
 			}
 			public override string ToString() {
@@ -1559,7 +1569,19 @@ namespace Meta {
 			}
 			public string Documentation {
 				get {
-					return "";
+					string text="";
+					MemberInfo[] members=obj==null?
+						type.GetMembers(BindingFlags.Public|BindingFlags.Static):
+						type.GetMembers(BindingFlags.Public|BindingFlags.Instance);
+					foreach(MemberInfo memberInfo in members) {
+						if(memberInfo is MethodInfo) {
+							text+=Interpreter.GetMethodName((MethodInfo)memberInfo)+"\n";
+						}
+						text+=Interpreter.GetDoc(memberInfo,false);
+//						text+=Interpreter.GetDoc(memberInfo,showParams);
+
+					}
+					return text;
 				}
 			}
 			private IKeyValue parent;
