@@ -41,44 +41,80 @@ tokens
   CALL;
 }
 
-COLON:
+COLON
+  options {
+    paraphrase="':'";
+  }:
   ':';
   
-EQUAL:
+EQUAL
+  options {
+    paraphrase="'='";
+  }:
   '=';
 
-LBRACKET:
+LBRACKET
+  options {
+    paraphrase="'['";
+  }:
   '[';
 
-RBRACKET:
+RBRACKET
+  options {
+    paraphrase="']'";
+  }:
   ']';
 
-LPAREN:
+LPAREN
+  options {
+    paraphrase="'('";
+  }:
   '(';
 
-RPAREN:
+RPAREN
+  options {
+    paraphrase="')'";
+  }:
   ')';
 
-POINT:
+POINT
+  options {
+    paraphrase="'.'";
+  }:
   '.';
   
-HASH:
+HASH
+  options {
+    paraphrase="'#'";
+  }:
   '#';
 
 // fix the exact characters allowed
 // rename to LOOKUP_LITERAL
-LITERAL_KEY:
+LITERAL_KEY
+  options {
+    paraphrase="a key";
+  }:
   ( ~ (' '|'\r'|'\n'|'='|'.'|'/'|'\''|'"'|'('|')'|'['|']'|'#'|':') )+;
     
-LITERAL:
+LITERAL
+  options {
+    paraphrase="a literal";
+  }:
   "\""! ( ~ ('\"') )* "\""!
   |
   '\''! ( ~ (' '|'\r'|'\n'|'='|'.'|'\''|'"'|'('|')'|'['|']'|'#'|':') )*;
 
-SPACES:
+SPACES
+  options {
+    paraphrase="whitespace";
+  }:
   (' ')+ ;//{_ttype=Token.SKIP;}
 
 LINE
+  options {
+    paraphrase="a line";
+  }
   {
     const int endOfFileValue=65535;
   }:
@@ -94,17 +130,23 @@ LINE
   };
 
 COMMENT
-		:	"//"
-			(~('\n'|'\r'))* ('\n'|'\r'('\n')?)
-			{$setType(Token.SKIP); newline();}
-		;
+  options {
+    paraphrase="a comment";
+  }:
+		"//"
+		(~('\n'|'\r'))* ('\n'|'\r'('\n')?)
+		{$setType(Token.SKIP); newline();}
+	;
     
 protected   
 SPACE:  // subrule because of ANTLR bug that results in uncompilable code
   ' '!;
 
 protected
-NEWLINE:
+NEWLINE
+  options {
+    paraphrase="a newline";
+  }:
   (
     '\n'!
     |('\r'! '\n'!)
