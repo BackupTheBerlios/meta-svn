@@ -923,13 +923,32 @@ namespace Meta {
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.exe")) {
 					assemblies.Add(Assembly.LoadFrom(fileName));
 				}
+				string infoFileName=Path.Combine(Interpreter.metaInstallationPath,"assemblyInfo.meta");
+				if(File.Exists(infoFileName)) {
+					assemblyInfo=(Map)Interpreter.RunWithoutLibrary(infoFileName,new Map());
+				}
+				
 				cash=LoadNamespaces(assemblies);
+				Interpreter.SaveToFile(assemblyInfo,infoFileName);
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
 					cash[Interpreter.StringToMap(Path.GetFileNameWithoutExtension(fileName))]=new MetaLibrary(fileName);
 				}
 			}
+			private Map assemblyInfo=new Map();
 			public ArrayList GetNamespaces(Assembly assembly) { //integrate
 				ArrayList namespaces=new ArrayList();
+				if(assemblyInfo.ContainsKey(Interpreter.StringToMap(assembly.GetName().Name))) {
+					Map info=(Map)assemblyInfo[Interpreter.StringToMap(assembly.GetName().Name)];
+					string timestamp=Interpreter.MapToString((Map)info[Interpreter.StringToMap("timestamp")]);
+					if(timestamp.Equals(File.GetCreationTimeUtc(assembly.Location))) {
+						Map names=(Map)info[Interpreter.StringToMap("namespaces")];
+						foreach(Map name in names) {
+							string text=Interpreter.MapToString(name);
+							namespaces.Add(text);
+						}
+						return namespaces;
+					}
+				}
 				foreach(Type type in assembly.GetExportedTypes()) {
 					if(!namespaces.Contains(type.Namespace)) {
 						if(type.Namespace==null) {
@@ -940,8 +959,29 @@ namespace Meta {
 						}
 					}
 				}
+				Map n=new Map();
+				Integer counter=new Integer();
+				foreach(string na in namespaces) {
+					n[counter]=na;
+					counter++;
+				}
+				assemblyInfo[Interpreter.StringToMap(assembly.GetName().Name)]=n;
 				return namespaces;
 			}
+//			public ArrayList GetNamespaces(Assembly assembly) { //integrate
+//				ArrayList namespaces=new ArrayList();
+//				foreach(Type type in assembly.GetExportedTypes()) {
+//					if(!namespaces.Contains(type.Namespace)) {
+//						if(type.Namespace==null) {
+//							namespaces.Add("");
+//						}
+//						else {
+//							namespaces.Add(type.Namespace);
+//						}
+//					}
+//				}
+//				return namespaces;
+//			}
 			public Map LoadNamespaces(ArrayList assemblies) {
 				LazyNamespace root=new LazyNamespace("");
 				foreach(Assembly assembly in assemblies) {
