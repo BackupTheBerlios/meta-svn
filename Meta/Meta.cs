@@ -1024,9 +1024,9 @@ namespace Meta {
 						if(value is IMap) {
 							((IMap)val).Parent=this;
 						}
-						if(!table.ContainsKey(key)) {
-							keys.Add(key);
-						}
+//						if(!table.ContainsKey(key)) {
+//							keys.Add(key);
+//						}
 						table[key]=val;
 					}
 				}
@@ -1041,18 +1041,27 @@ namespace Meta {
 			}
 			public ArrayList Keys {
 				get {
-					return keys;
+					return table.Keys;
 				}
 			}
 			public IMap Clone() {
 				Map copy=new Map();
-				foreach(object key in keys) {
+				foreach(object key in table.Keys) {
 					copy[key]=this[key];
 				}
 				copy.Parent=Parent;
 				copy.compiled=compiled;
 				return copy;
 			}
+//			public IMap Clone() {
+//				Map copy=new Map();
+//				foreach(object key in keys) {
+//					copy[key]=this[key];
+//				}
+//				copy.Parent=Parent;
+//				copy.compiled=compiled;
+//				return copy;
+//			}
 			public object Compile()  {
 				if(compiled==null)  {
 					switch((string)Interpreter.MapToString((Map)this.Keys[0])) {
@@ -1118,62 +1127,55 @@ namespace Meta {
 				}
 				return hash;
 			}
-//			public override int GetHashCode()  {
-//				if(!isHashCashed) {
-//					int h=0;
-//					foreach(DictionaryEntry entry in table) {
-//						unchecked {
-//							h+=entry.Key.GetHashCode()*entry.Value.GetHashCode();
-//						}
-//					}
-//					hash=h;
-//					isHashCashed=true;
-//				}
-//				return hash;
-//			}
-//			public Map
 			public Map() {
 				this.table=new HybridDictionaryStrategy();
-				this.keys=new ArrayList();
+				//this.keys=new ArrayList();
 			}
 			private IMap parent;
 
 			// not unicode safe!:
 			// the strategy cannot replace itself in the Map yet
-			public class StringStrategy:MapStrategy {
-				private string text;
-				public StringStrategy(string text) {
-					this.text=text;
-				}
-				public override int Count {
-					get {
-						return text.Length;
-					}
-				}
-				public override object this[object key]  {
-					get {
-						if(key is Integer) {
-							if(((Integer)key)<this.Count) {
-								return text[((Integer)key).IntValue()];
-							}
-						}
-						return null;
-					}
-					set {
-						int asdf=0;
-						//table[key]=value;
-					}
-				}
-				public override bool ContainsKey(object key)  {
-					if(key is Integer) {
-						return ((Integer)key)<this.Count;
-					}
-					else {
-						return false;
-					}
-				}
-			}
+//			public class StringStrategy:MapStrategy {
+//				private string text;
+//				public StringStrategy(string text) {
+//					this.text=text;
+//				}
+//				public override int Count {
+//					get {
+//						return text.Length;
+//					}
+//				}
+//				public override object this[object key]  {
+//					get {
+//						if(key is Integer) {
+//							if(((Integer)key)<this.Count) {
+//								return text[((Integer)key).IntValue()];
+//							}
+//						}
+//						return null;
+//					}
+//					set {
+//						int asdf=0;
+//						//table[key]=value;
+//					}
+//				}
+//				public override bool ContainsKey(object key)  {
+//					if(key is Integer) {
+//						return ((Integer)key)<this.Count;
+//					}
+//					else {
+//						return false;
+//					}
+//				}
+//			}
 			public class HybridDictionaryStrategy:MapStrategy {
+				public override ArrayList Keys {
+					get {
+						return keys;
+					}
+				}
+				ArrayList keys=new ArrayList();
+
 				public override int Count {
 					get {
 						return table.Count;
@@ -1184,19 +1186,21 @@ namespace Meta {
 						return table[key];
 					}
 					set {
+						if(!this.ContainsKey(key)) {
+							keys.Add(key);
+						}
 						table[key]=value;
 					}
 				}
 				public override bool ContainsKey(object key)  {
 					return table.Contains(key);
 				}
-				//private ArrayList keys;
 				private HybridDictionary table=new HybridDictionary();
-//				public override IEnumerator GetEnumerator() {
-//					return this.table.GetEnumerator();
-//				}
 			}
 			public abstract class MapStrategy {
+				public abstract ArrayList Keys {
+					get;
+				}
 				public abstract int Count {
 					get;
 				}
@@ -1207,7 +1211,7 @@ namespace Meta {
 				public abstract bool ContainsKey(object key);
 				//public abstract IEnumerator GetEnumerator();
 			}
-			private ArrayList keys;
+			//private ArrayList keys;
 			private MapStrategy table;
 			private bool isHashCashed=false;
 			private int hash;
