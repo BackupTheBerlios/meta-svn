@@ -182,7 +182,7 @@ namespace Meta.Parser
 					Map statement=new Map();
 										statement[Statement.keyString]=key;
 										statement[Statement.valueString]=val;
-										statements[new Number(counter)]=statement;
+										statements[new Integer(counter)]=statement;
 										counter++;
 									
 					_t = __t90;
@@ -233,7 +233,7 @@ _loop91_breakloop:			;
 					key=expression(_t);
 					_t = retTree_;
 					
-					selection[new Number(counter)]=key;
+					selection[new Integer(counter)]=key;
 					counter++;
 					
 				}
@@ -270,7 +270,7 @@ _loop100_breakloop:			;
 		match(_t,LITERAL);
 		_t = _t.getNextSibling();
 		
-		result[Literal.literalString]=Interpreter.StringToMap(token.getText());
+		result[Literal.literalString]=new Map(token.getText());
 		
 		retTree_ = _t;
 		return result;
