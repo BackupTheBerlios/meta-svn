@@ -1153,6 +1153,31 @@ namespace Meta {
 			// not unicode safe!:
 			// also, the strategy cannot replace itself in the Map yet
 			public class StringStrategy:MapStrategy {
+//				public override int GetHashCode() {
+//					foreach(char c in 
+//				}
+				// is this really identical?
+				public override int GetHashCode() {
+					int hash=0;
+					for(int i=0;i<text.Length;i++) {//(char c in this.text) {
+						hash+=(i+1)*text[i];
+					}
+					return hash;
+				}
+//				int h=0;
+//				foreach(object key in this.Keys) {
+//				unchecked {
+//				h+=key.GetHashCode()*this[key].GetHashCode();
+//			}
+//		}
+//		return h;
+//					Integer x=new Integer(this);
+//					while(x>int.MaxValue) {
+//						x=x%int.MaxValue;
+//					}
+//					return x.IntValue();
+
+
 				public override bool Equal(MapStrategy obj) {
 					if(obj is StringStrategy) {
 						return ((StringStrategy)obj).text.Equals(this.text);

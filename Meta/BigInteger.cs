@@ -985,14 +985,22 @@ namespace Meta.Types
 			}
 			return true;
 		}
-
+		// very simple hashcode that must be implemented identically everywhere
+		// maybe make separate method that does the job? would only work with generics
 		public override int GetHashCode() {
-			uint hash=7;
-			for(int i = 0; i < this.dataLength; i++) {
-				hash*=this.data[i];
-			}		
-			return (int)hash;
+			Integer x=new Integer(this);
+			while(x>int.MaxValue) {
+				x=x%int.MaxValue;
+			}
+			return x.IntValue();
 		}
+//		public override int GetHashCode() {
+//			uint hash=7;
+//			for(int i = 0; i < this.dataLength; i++) {
+//				hash*=this.data[i];
+//			}		
+//			return (int)hash;
+//		}
 //		public override int GetHashCode()
 //		{
 //			return this.ToString().GetHashCode();
