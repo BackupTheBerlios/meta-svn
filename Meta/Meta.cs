@@ -1716,118 +1716,90 @@ namespace Meta {
 					return new ArrayList(Table.Keys);
 				}
 			}
-			
 			public NetContainer(object obj,Type type) {
 				this.obj=obj;
 				this.type=type;
-				
 			}
 			public int Count  {
 				get {
-					int count=0;
-					foreach(object obj in this) {
-						count++;
-					}
-					return count;
+					return Table.Count;
 				}
 			}
 			public IKeyValue Clone() {
 				return this;
 			}
 			public virtual object this[object key]  {
-				get {
-					if(key is string) { //refactor
-						try {
-							string text=(string)key;
-							if(type.GetMember((string)text,
-								MemberTypes.Method,BindingFlags.Public
-								|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-								return new NetMethod((string)text,obj,type);
-							}
-							if(type.GetMember((string)text,
-								MemberTypes.Field,BindingFlags.Public
-								|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-								return Interpreter.ConvertToMeta(
-									type.GetField((string)text).GetValue(obj));
-							}
-							else if(type.GetMember((string)text,
-								MemberTypes.Property,BindingFlags.Public
-								|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-								return Interpreter.ConvertToMeta( type.GetProperty((string)text).GetValue(obj,new object[]{}));
-							}
-							else if(type.GetMember((string)text,
-								MemberTypes.Event,BindingFlags.Public
-								|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-									EventInfo eventInfo=((EventInfo)type.GetMember(
-									(string)text,MemberTypes.Event,BindingFlags.Public|
-									BindingFlags.NonPublic|BindingFlags.Static|
-									BindingFlags.Instance)[0]);
-								Delegate del=(Delegate)type.GetField((string)text,BindingFlags.Public|
-									BindingFlags.NonPublic|BindingFlags.Static|
-									BindingFlags.Instance).GetValue(obj);
-								return new NetMethod("Invoke",del,del.GetType());
-							}
+				get { //improve some more
+					if(key is string) {
+						string text=(string)key;
+						if(type.GetMember((string)text,MemberTypes.Method,BindingFlags.Public|
+								BindingFlags.Static|BindingFlags.Instance).Length!=0) {
+							return new NetMethod((string)text,obj,type);
 						}
-						catch(Exception e) {
+						if(type.GetMember((string)text,MemberTypes.Field,BindingFlags.Public|
+								BindingFlags.Static|BindingFlags.Instance).Length!=0) {
+							return Interpreter.ConvertToMeta(type.GetField((string)text).GetValue(obj));
+						}
+						else if(type.GetMember((string)text,MemberTypes.Property,BindingFlags.Public|
+								BindingFlags.Static|BindingFlags.Instance).Length!=0) {
+							return Interpreter.ConvertToMeta( type.GetProperty((string)text).GetValue(obj,new object[]{}));
+						}
+						else if(type.GetMember((string)text,MemberTypes.Event,BindingFlags.Public|
+									BindingFlags.Static|BindingFlags.Instance).Length!=0) {
+							EventInfo eventInfo=((EventInfo)type.GetMember((string)text,MemberTypes.Event,
+								BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static|
+								BindingFlags.Instance)[0]);
+							Delegate eventDelegate=(Delegate)type.GetField((string)text,BindingFlags.Public|
+								BindingFlags.NonPublic|BindingFlags.Static|
+								BindingFlags.Instance).GetValue(obj);
+							return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
 						}
 					}
-					if(key.Equals(1)) {
-						int asdf=0;
-					}
-					if(obj is String) {
-					}
-					NetMethod indexer=new NetMethod("get_Item",obj,type);
+					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
+					Map arguments=new Map();
+					arguments[new Integer(1)]=key;
+					Interpreter.arguments.Add(arguments);
 					try {
-						Map arguments=new Map();
-						arguments[new Integer(1)]=key;
-						Interpreter.arguments.Add(arguments);
-						object result=indexer.Call(null);
-						Interpreter.arguments.Remove(arguments);
+						object result=indexerMethod.Call(null);
 						return result;
 					}
-					catch(Exception e) {
+					catch(Exception) {
 						return null;
 					}
+					finally {
+						Interpreter.arguments.Remove(arguments);
+					}
 				}
-				set {		
+				set {	//make correct
 					if(key is string) {
-							string text=(string)key;
-
-							if(type.GetMember((string)text,
-								MemberTypes.Method,BindingFlags.Public
-								|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
+						string text=(string)key;
+						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|
+							BindingFlags.Instance);
+						if(members.Length>0) {
+							if(members[0] is MethodBase) {
 								throw new ApplicationException("Methods cannot be set.");
 							}
-							else if(type.GetMember((string)text,
-								MemberTypes.Field,BindingFlags.Public
-								|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-								FieldInfo field=type.GetField((string)text);
-								if(field.FieldType.Equals(value.GetType())) {
+							else if(members[0] is FieldInfo) {
+								FieldInfo field=(FieldInfo)members[0];
+								if(field.FieldType.IsAssignableFrom(value.GetType())) {
 									field.SetValue(obj,value);
 									return;
 								}
 								else {
-									Hashtable toDotNet=(Hashtable)
+									Hashtable toDotNet=(Hashtable) //combine?
 										Interpreter.netConversion[field.FieldType];
 									if(toDotNet!=null) {
 										ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)toDotNet[value.GetType()];
 										if(conversion!=null) {
-											try {
-												field.SetValue(obj,conversion.Convert(value));
-												return;
-											}
-											catch{
-											}
+											field.SetValue(obj,conversion.Convert(value));
+											return;
 										}
 									}
-
 								}
 							}
-							else if(type.GetMember((string)text,
-								MemberTypes.Property,BindingFlags.Public
-								|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-								PropertyInfo field=type.GetProperty((string)text);
-								if(field.PropertyType.Equals(value.GetType())) {
+							else if(members[0] is PropertyInfo) {
+								PropertyInfo field=(PropertyInfo)members[0];
+								if(field.PropertyType.IsAssignableFrom(value.GetType())) {
 									field.SetValue(obj,value,null);
 									return;
 								}
@@ -1837,36 +1809,31 @@ namespace Meta {
 									if(toDotNet!=null) {
 										ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)toDotNet[value.GetType()];
 										if(conversion!=null) {
-											try {
-												field.SetValue(obj,conversion.Convert(value),null);
-												return;
-											}
-											catch{
-											}
+											field.SetValue(obj,conversion.Convert(value),null);
+											return;
 										}
 									}
-
 								}
 							}
-							else if(type.GetMember((string)text,
-								MemberTypes.Event,BindingFlags.Public
-								|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-								
-								type.GetEvent((string)text).AddEventHandler(obj,CreateEvent((string)text,(Map)value));
+							else if(members[0] is EventInfo) {
+								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(Map)value));
 								return;
 							}
+						}
 					}
+					NetMethod indexer=new NetMethod("set_Item",obj,type);
+					Map arguments=new Map();
+					arguments[new Integer(1)]=key;
+					arguments[new Integer(2)]=value;
+					Interpreter.arguments.Add(arguments);
 					try {
-						NetMethod indexer=new NetMethod("set_Item",obj,type);
-						Map arguments=new Map();
-						arguments[new Integer(1)]=key;
-						arguments[new Integer(2)]=value;
-						Interpreter.arguments.Add(arguments);
 						indexer.Call(null);
-						Interpreter.arguments.Remove(arguments);
 					}
-					catch(Exception e) {
+					catch(Exception) {
 						throw new ApplicationException(key.ToString()+" not found in "+ToString());
+					}
+					finally {
+						Interpreter.arguments.Remove(arguments);
 					}
 				}
 			}
@@ -1898,9 +1865,7 @@ namespace Meta {
 					}
 					counter++;
 				}
-//				else {
-					argumentList+=")";
-//				}
+				argumentList+=")";
 				source+=argumentList+"{";
 				source+=argumentAdding;
 				source+="Interpreter.arguments.Add(arg);object result=callable.Call(null);Interpreter.arguments.Remove(arg);";
@@ -1916,16 +1881,13 @@ namespace Meta {
 				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
 				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
-				object container=containerClass.GetConstructors()[0].Invoke(new object[] {
-																																			  code});
-//				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
-//																																			  code});
+				object container=containerClass.GetConstructors()[0].Invoke(new object[] {code});
 				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
 				Delegate del=Delegate.CreateDelegate(type.GetEvent(name).EventHandlerType,
 					container,"EventHandlerMethod");
 				return del;
 			}
-			public bool ContainsKey(object key)  {
+			public bool ContainsKey(object key)  { // not great
 				try  {
 					object o=this[key];
 				}
@@ -1937,7 +1899,7 @@ namespace Meta {
 			public IEnumerator GetEnumerator() {
 				return Table.GetEnumerator();
 			}
-			private IDictionary Table {
+			private IDictionary Table { // left the way it is for now, since there is no test for it
 				get {
 					HybridDictionary table=new HybridDictionary();
 					BindingFlags bindingFlags;
@@ -1964,9 +1926,9 @@ namespace Meta {
 						table[eventInfo.Name]=new NetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
 					}
 					int counter=1;
-					if(obj!=null && obj is IEnumerable && !(obj is String))  {
+					if(obj!=null && obj is IEnumerable && !(obj is String)) { // is this useful?
 						foreach(object entry in (IEnumerable)obj) {
-							if(entry is DictionaryEntry)  {
+							if(entry is DictionaryEntry) {
 								table[((DictionaryEntry)entry).Key]=((DictionaryEntry)entry).Value;
 							}
 							else {
@@ -2034,17 +1996,6 @@ namespace Meta {
 					}
 				}
 			}
-//			public class RecognizeBoolean:RecognizeLiteral {
-//				public override object Recognize(string text) {
-//					switch(text) {
-//						case "true":
-//							return true;
-//						case "false":
-//							return false;
-//					}
-//					return null;
-//				}
-//			}
 		}
 		public abstract class MetaToDotNetConversions { // these haven't all been tested
 			public class ConvertIntegerToByte: ConvertMetaToDotNet {
@@ -2225,17 +2176,17 @@ namespace Meta {
 		class AddIndentationTokensToStream: TokenStream {
 			public AddIndentationTokensToStream(TokenStream originalStream)  {
 				this.originalStream=originalStream;
-				AddIndentationTokensForLevel(0);
+				AddIndentationTokensToGetToLevel(0);
 			}
 			public Token nextToken()  {
 				if(tokenBuffer.Count==0)  {
 					Token t=originalStream.nextToken();
 					switch(t.Type) {
 						case MetaLexerTokenTypes.EOF:
-							AddIndentationTokensForLevel(-1);
+							AddIndentationTokensToGetToLevel(-1);
 							break;
 						case MetaLexerTokenTypes.INDENTATION:
-							AddIndentationTokensForLevel(t.getText().Length/2);
+							AddIndentationTokensToGetToLevel(t.getText().Length/2);
 							break;
 						default:
 							tokenBuffer.Enqueue(t);
@@ -2244,7 +2195,7 @@ namespace Meta {
 				}
 				return (Token)tokenBuffer.Dequeue();
 			}	
-			protected void AddIndentationTokensForLevel(int newIndentationLevel)  { // refactor
+			protected void AddIndentationTokensToGetToLevel(int newIndentationLevel)  { // refactor
 				int indentationDifference=newIndentationLevel-presentIndentationLevel; 
 				if(indentationDifference==0) {
 					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
@@ -2349,8 +2300,9 @@ namespace Meta {
 					foreach(MemberInfo member in members) {
 						if(member.Name!="Item") {
 							if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) {
-								object val=serialize.GetType().InvokeMember(member.Name,BindingFlags.Public|BindingFlags.Instance|
-									BindingFlags.GetProperty|BindingFlags.GetField|BindingFlags.InvokeMethod,null,serialize,null);
+								object val=serialize.GetType().InvokeMember(member.Name,BindingFlags.Public
+									|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
+									|BindingFlags.InvokeMethod,null,serialize,null);
 								text+=indent+member.Name;
 								if(val!=null) {
 									text+=" ("+val.GetType().Name+")";
