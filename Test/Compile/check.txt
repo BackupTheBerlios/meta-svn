@@ -146,6 +146,53 @@ statements (ArrayList):
               cached:
                 null
               text (String):
+                "gacTest"
+        parents (ArrayList):
+          IEnumerable
+      val (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "System"
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "Collections"
+        parents (ArrayList):
+          IEnumerable
+    Entry (Statement):
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "metaLibTest"
+        parents (ArrayList):
+          IEnumerable
+      val (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "metaLib"
+        parents (ArrayList):
+          IEnumerable
+    Entry (Statement):
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
                 "commandLineArguments"
         parents (ArrayList):
           IEnumerable
@@ -1673,88 +1720,6 @@ statements (ArrayList):
                   null
                 text (String):
                   "Load"
-          parents (ArrayList):
-            IEnumerable
-    Entry (Statement):
-      key (Select):
-        expressions (ArrayList):
-          IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
-        parents (ArrayList):
-          IEnumerable
-      val (Call):
-        argument (Program):
-          statements (ArrayList):
-            IEnumerable
-              Entry (Statement):
-                key (Select):
-                  expressions (ArrayList):
-                    IEnumerable
-                      Entry (Literal):
-                        cached:
-                          null
-                        text (String):
-                          "this"
-                      Entry (Literal):
-                        cached:
-                          null
-                        text (String):
-                          "1"
-                  parents (ArrayList):
-                    IEnumerable
-                val (Select):
-                  expressions (ArrayList):
-                    IEnumerable
-                      Entry (Literal):
-                        cached:
-                          null
-                        text (String):
-                          "parent"
-                  parents (ArrayList):
-                    IEnumerable
-              Entry (Statement):
-                key (Select):
-                  expressions (ArrayList):
-                    IEnumerable
-                      Entry (Literal):
-                        cached:
-                          null
-                        text (String):
-                          "this"
-                      Entry (Literal):
-                        cached:
-                          null
-                        text (String):
-                          "2"
-                  parents (ArrayList):
-                    IEnumerable
-                val (Select):
-                  expressions (ArrayList):
-                    IEnumerable
-                      Entry (Literal):
-                        cached:
-                          null
-                        text (String):
-                          "Test"
-                  parents (ArrayList):
-                    IEnumerable
-        callable (Select):
-          expressions (ArrayList):
-            IEnumerable
-              Entry (Literal):
-                cached:
-                  null
-                text (String):
-                  "meta"
-              Entry (Literal):
-                cached:
-                  null
-                text (String):
-                  "Merge"
           parents (ArrayList):
             IEnumerable
     Entry (Statement):

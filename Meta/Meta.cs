@@ -39,12 +39,139 @@ using System.Windows.Forms;
 <<<<<<< .mine
 using System.GAC;
 =======
+<<<<<<< .mine
+using System.GAC;
+=======
 using System.GAC;
 >>>>>>> .r36
+>>>>>>> .r38
 
 namespace Meta {
 <<<<<<< .mine
 	namespace Library {
+<<<<<<< .mine
+		public class Functions{
+			public static void Write(string s) {
+				Console.WriteLine(s);
+			}
+			public static string Read() {
+				return Console.ReadLine();
+			}
+			public static bool And(bool a,bool b) {
+				return a && b;
+			}
+			public static bool Or(bool a,bool b) {
+				return a || b;
+			}
+			public static bool Not(bool a) {
+				return !a;
+			}
+			public static Integer Add(Integer x,Integer y) {
+				return x+y;
+			}
+			public static Integer Subtract(Integer x,Integer y) {
+				return x-y;		
+			}
+			public static Integer Multiply(Integer x,Integer y) {
+				return x*y;
+			}
+			public static Integer Divide(Integer x,Integer y) {
+				return x/y;
+			}
+			public static bool Smaller(Integer x,Integer y) {
+				return x<y;
+			}
+			public static bool Greater(Integer x,Integer y) {
+				return x>y;
+			}
+			public static bool Equal(object a,object b) {
+				return a.Equals(b);
+			}
+			public static Enum BinaryOr(params Enum[] enums) {
+				int val=(int)Enum.Parse(enums[0].GetType(),enums[0].ToString());
+				for(int i=1;i<enums.Length;i++) {
+					int newVal=(int)Enum.Parse(enums[i].GetType(),enums[i].ToString());
+					val|=newVal;
+				}
+				return (Enum)Enum.ToObject(enums[0].GetType(),val);
+			}
+			public static Map For() {
+				Map arg=((Map)Interpreter.Arg);
+				int times=(int)((Integer)arg[new Integer(1)]).IntValue();
+				Map function=(Map)arg[new Integer(2)];
+				Map result=new Map();
+				for(int i=0;i<times;i++) {
+					Map argument=new Map();
+					argument["i"]=new Integer(i);
+					Interpreter.arguments.Add(argument);
+					result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+					Interpreter.arguments.Remove(argument);
+				}
+				return result;
+			}
+			public static void Load() {
+				Map caller=(Map)Interpreter.callers[Interpreter.callers.Count-1];
+				foreach(DictionaryEntry entry in Interpreter.LoadAssembly((Map)Interpreter.Arg,true)) {
+					caller[entry.Key]=entry.Value;
+				}
+			}
+			public static Map Each() {
+				Map arg=((Map)Interpreter.Arg);
+				Map over=(Map)arg[new Integer(1)];
+				Map function=(Map)arg[new Integer(2)];
+				Map result=new Map();
+				int i=0;
+				foreach(DictionaryEntry entry in over) {
+					Map argument=new Map();
+					argument["key"]=entry.Key;
+					argument["value"]=entry.Value;
+					Interpreter.arguments.Add(argument);
+					result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+					Interpreter.arguments.Remove(argument);
+					i++;
+				}
+				return result;
+			}
+			public static bool IsMap(object o) {
+				return o is Map;
+			}
+			public static void Switch() {
+				Map arg=((Map)Interpreter.Arg);
+				object val=arg[new Integer(1)];
+				Map cases=(Map)arg["case"];
+				Map def=(Map)arg["default"];
+				if(cases.ContainsKey(val)) {
+					((IExpression)((Map)cases[val]).Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+				}
+				else if(def!=null) {
+					((IExpression)def.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+				}				
+			}
+			public static void If() {
+				Map arg=((Map)Interpreter.Arg);
+				bool test=(bool)arg[new Integer(1)];
+				Map then=(Map)arg["then"];
+				Map _else=(Map)arg["else"];
+				if(test) {
+					if(then!=null) {
+						((IExpression)then.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+					}
+				}
+				else {
+					if(_else!=null) {
+						((IExpression)_else.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+					}
+				}	
+			}
+		}
+		public class LiteralRecognitions {
+			// order of classes is important here !
+			public class StringRecognition: ILiteralRecognition  {
+				public object Recognize(string text)  {
+					return text;
+				}
+			}
+=======
 		public class Functions{
 			public static void Write(string s) {
 				Console.WriteLine(s);
@@ -289,6 +416,7 @@ namespace Meta {
 					return text;
 				}
 			}
+>>>>>>> .r38
 >>>>>>> .r36
 			public class IntegerRecognition: ILiteralRecognition  {
 				public object Recognize(string text)  {
@@ -766,6 +894,9 @@ namespace Meta {
 				}
 				object selected=current;
 				int i=0;
+				if(keys[0].Equals("System")) {
+					int asdf=0;
+				}
 				if(keys[0].Equals("this")) {
 					i++;
 				}
@@ -876,9 +1007,13 @@ namespace Meta {
 		}
 		public delegate void BreakMethodDelegate(object obj);
 		public class Interpreter  {
+<<<<<<< .mine
+			public static string path;
+=======
 			
 			public static string path;
 
+>>>>>>> .r38
 			public static bool redoStatement=false; // just for editor, remove
 			public static BreakMethodDelegate breakMethod; // editor, remove?
 
@@ -997,6 +1132,18 @@ namespace Meta {
 
 			// which methods are necessary here?
 <<<<<<< .mine
+//			public static object RunNormal(string path,Map argument) { // remove, will (soon) not be needed anymore
+//				Interpreter.arguments.Add(argument);
+//				StreamReader reader=new StreamReader(path);
+//				lastProgram=Mapify(reader);
+//				object result=lastProgram.Call((Map)callers[callers.Count-1],new Map());
+//				Interpreter.arguments.Remove(argument);
+//				reader.Close();
+//				return result;
+//			}
+			public static object Run(string path,IKeyValue argument) {
+=======
+<<<<<<< .mine
 			public static object RunNormal(string path,IKeyValue argument) { // remove, will (soon) not be needed anymore
 				Interpreter.arguments.Add(argument);
 				StreamReader reader=new StreamReader(path);
@@ -1019,8 +1166,12 @@ namespace Meta {
 //			}
 			public static object Run(string path,IKeyValue argument) {
 >>>>>>> .r36
+>>>>>>> .r38
 				return Run(new StreamReader(path),argument);
 			}
+<<<<<<< .mine
+			public static object Run(TextReader reader,IKeyValue argument) {
+=======
 <<<<<<< .mine
 			public static object Run(TextReader reader,IKeyValue argument) {
 =======
@@ -1030,9 +1181,17 @@ namespace Meta {
 //			}
 			public static object Run(TextReader reader,IKeyValue argument) {
 >>>>>>> .r36
+>>>>>>> .r38
 				ArrayList parents=new ArrayList();
 				Map existing=new Map();
 				existing["meta"]=new NetClass(typeof(Interpreter));
+<<<<<<< .mine
+				foreach(MethodInfo method in typeof(Functions).GetMethods(
+					BindingFlags.Public|BindingFlags.Static)) {
+					existing[method.Name]=new NetMethod(method.Name,null,typeof(Functions));
+				}
+				existing.Parent=new Meta.Types.Library();
+=======
 <<<<<<< .mine
 				foreach(MethodInfo method in typeof(Functions).GetMethods(
 					BindingFlags.Public|BindingFlags.Static)) {
@@ -1046,6 +1205,7 @@ namespace Meta {
 //				}
 				existing.Parent=new Library();
 >>>>>>> .r36
+>>>>>>> .r38
 				Interpreter.arguments.Add(argument);
 				lastProgram=Mapify(reader);
 				object result=lastProgram.Call(existing,existing);
@@ -1067,10 +1227,16 @@ namespace Meta {
 				path=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName;
 				//path=Path.Combine(directoryName,"library");
 =======
+<<<<<<< .mine
+				Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
+				path=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName;
+				//path=Path.Combine(directoryName,"library");
+=======
 				Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
 				path=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName;
 				//path=Path.Combine(directoryName,"library");
 >>>>>>> .r36
+>>>>>>> .r38
 				foreach(Type type in typeof(LiteralRecognitions).GetNestedTypes()) {
 					AddInterception((ILiteralRecognition)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
@@ -1162,6 +1328,152 @@ namespace Meta {
 		}
 	}
 	namespace Types  {
+<<<<<<< .mine
+		public class UnloadedAssembly {
+			Assembly assembly;
+			public UnloadedAssembly(Assembly assembly) {
+				this.assembly=assembly;
+			}
+			public object Load() {
+				return Library.LoadAssembly(assembly);
+			}
+		}
+		public class UnloadedMetaLibrary {
+			string path;
+			public UnloadedMetaLibrary(string path) {
+				this.path=path;
+			}
+			public object Load() {
+				return Interpreter.Run(path,Library.library);
+			}
+		}
+		public class Library: IKeyValue {
+			public static Library library=new Library();
+			private Map cash=new Map();
+			public static string libraryPath="library"; // FIXME: how on earth to find this path?
+																	  // maybe need config file
+						
+			public static Map LoadAssembly(Assembly assembly) {
+				Map root=new Map();
+				foreach(Type type in assembly.GetExportedTypes())  {
+					if(type.DeclaringType==null)  {
+						Map position=root;
+						//								if(! collapseNamespaces) {
+						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
+						subPaths.RemoveAt(subPaths.Count-1);
+						foreach(string subPath in subPaths)  {
+							if(!position.ContainsKey(subPath))  {
+								position[subPath]=new Map();
+							}
+							position=(Map)position[subPath];
+						}
+						//								}
+						position[type.Name]=new NetClass(type);
+					}
+				}
+				return root;
+			}
+			public Library() {
+				libraryPath=Path.Combine(Interpreter.path,"library");
+//				Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
+//				string directoryName=Directory.GetParent(metaAssembly.Location).Parent.FullName;
+//				libraryPath=Path.Combine(directoryName,"library");
+
+				IAssemblyEnum e=AssemblyCache.CreateGACEnum();
+				IAssemblyName an; 
+				AssemblyName name;
+				cash["Microsoft"]=new Map();
+				while (AssemblyCache.GetNextAssembly(e, out an) == 0) { 
+					name=GetAssemblyName(an);
+					Assembly assembly=Assembly.LoadWithPartialName(name.Name);
+					if(name.Name.StartsWith("Microsoft.")) {
+						int startIndex=name.Name.IndexOf(".");
+						int endIndex=name.Name.IndexOf(".",startIndex+1);
+						if(endIndex==-1) {
+							endIndex=name.Name.Length;
+						}
+						string subNamespace=name.Name.Substring(startIndex+1,endIndex-startIndex-1);
+						((Map)cash["Microsoft"])[subNamespace]
+							=new UnloadedAssembly(assembly);
+					}
+					else {
+						cash=(Map)Interpreter.MergeTwo(cash,LoadAssembly(assembly));
+					}
+				}
+				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
+					Assembly assembly=Assembly.LoadFrom(fileName);
+					cash=(Map)Interpreter.MergeTwo(cash,LoadAssembly(assembly));
+				}
+				foreach(string fileName in Directory.GetFiles(libraryPath,"*.exe")) {
+					Assembly assembly=Assembly.LoadFrom(fileName);
+					cash=(Map)Interpreter.MergeTwo(cash,LoadAssembly(assembly));
+				}
+//				Map x=(Map)cash["Test"];
+//				object y=x["TestClass"];
+				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
+					cash[Path.GetFileNameWithoutExtension(fileName)]=new UnloadedMetaLibrary(fileName);
+				}
+			}
+			private static AssemblyName GetAssemblyName(IAssemblyName nameRef) {
+				AssemblyName name = new AssemblyName();
+				name.Name = AssemblyCache.GetName(nameRef);
+				name.Version = AssemblyCache.GetVersion(nameRef);
+				name.CultureInfo = AssemblyCache.GetCulture(nameRef);
+				name.SetPublicKeyToken(AssemblyCache.GetPublicKeyToken(nameRef));
+				return name;
+			}
+			public object this[object key] {
+				get {
+					if(cash.ContainsKey(key)) {
+						if(cash[key] is UnloadedAssembly) {
+							cash=(Map)Interpreter.MergeTwo(cash,(IKeyValue)((UnloadedAssembly)cash[key]).Load());
+						}
+						else if(cash[key] is UnloadedMetaLibrary) {
+							cash[key]=((UnloadedMetaLibrary)cash[key]).Load();
+						}
+						return cash[key];
+					}
+					else {
+						return null;
+					}
+				}
+				set {
+					throw new ApplicationException("Keys in library cannot be set.");
+				}
+			}
+			public ArrayList Keys {
+				get {
+					return new ArrayList(cash.Keys);
+				}
+			}
+			public IKeyValue Clone() {
+				return this;
+			}
+			public int Count {
+				get {
+					return cash.Count;
+				}
+			}
+			public bool ContainsKey(object key) {
+				return cash.ContainsKey(key);
+			}
+			public IKeyValue Parent {
+				get {
+					return null;
+				}
+				set {
+					throw new ApplicationException("Tried to set parent of library.");
+				}
+			}
+			public IEnumerator GetEnumerator() {
+				foreach(DictionaryEntry entry in cash) { // to make sure everything is loaded
+					object o=cash[entry.Key];						  // not good, should make own enumerator
+				}
+				return cash.GetEnumerator();
+			}
+		}
+
+=======
 <<<<<<< .mine
 		public class UnloadedAssembly {
 			Assembly assembly;
@@ -1453,6 +1765,7 @@ namespace Meta {
 		}
 
 >>>>>>> .r36
+>>>>>>> .r38
 		public interface IMetaType { // rethink what this is useful for
 			IKeyValue Parent {
 				get;
@@ -2061,12 +2374,19 @@ namespace Meta {
 			public IKeyValue Clone() {
 				return this;
 			}
+=======
+<<<<<<< .mine
+			}
+			public IKeyValue Clone() {
+				return this;
+			}
 			public virtual object this[object key]  { // refactor
 =======
 			}
 			public IKeyValue Clone() {
 				return this;
 			}
+>>>>>>> .r38
 			public virtual object this[object key]  { // refactor
 >>>>>>> .r36
 				get {
@@ -2249,8 +2569,15 @@ namespace Meta {
 				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
 				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
+<<<<<<< .mine
+				object container=containerClass.GetConstructors()[0].Invoke(new object[] {
+																																			  code});
+=======
 				object container=containerClass.GetConstructors()[0].Invoke(new object[] {code});
 //				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {code});
+>>>>>>> .r38
+//				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
+//																																			  code});
 				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
 				Delegate del=Delegate.CreateDelegate(type.GetEvent(name).EventHandlerType,
 					container,"EventHandlerMethod");

@@ -146,6 +146,53 @@ statements (ArrayList):
               cached:
                 null
               text (String):
+                "gacTest"
+        parents (ArrayList):
+          IEnumerable
+      val (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "System"
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "Collections"
+        parents (ArrayList):
+          IEnumerable
+    Entry (Statement):
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "metaLibTest"
+        parents (ArrayList):
+          IEnumerable
+      val (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "metaLib"
+        parents (ArrayList):
+          IEnumerable
+    Entry (Statement):
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
                 "commandLineArguments"
         parents (ArrayList):
           IEnumerable

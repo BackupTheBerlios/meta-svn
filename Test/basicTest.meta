@@ -1,6 +1,8 @@
 this=meta.Merge(parent,('AssignedToCurrent'))
 'ImpliedAutokey'
 ='Autokey'
+gacTest=System.Collections
+metaLibTest=metaLib
 commandLineArguments=arg
 [(['a']='a')]='Object'
 ['normal symbol']='NormalSymbol'
