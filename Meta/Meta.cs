@@ -170,6 +170,9 @@ namespace Meta {
 				}
 			}
 			public object SearchAndSelectKeysInCurrentMap(ArrayList keys,bool isRightSide,bool isSelectLastKey) {
+				if(keys[0].Equals(new Map("asdf"))) {
+					int asdf=0;
+				}
 				object selection=Interpreter.Current;
 				int i=0;
 

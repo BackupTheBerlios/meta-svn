@@ -361,18 +361,31 @@ statements (ArrayList):
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
-        Entry (Program)
-          statements (ArrayList):
-            Entry (Statement)
-              keyExpression (Select):
-                expressions (ArrayList):
-                  Entry (Literal)
-                    literal (Map):
-                      "a"
-                parents (ArrayList):
-              valueExpression (Literal):
+        Entry (Literal)
+          literal (Map):
+            "aMap"
+      parents (ArrayList):
+    valueExpression (Program):
+      statements (ArrayList):
+        Entry (Statement)
+          keyExpression (Select):
+            expressions (ArrayList):
+              Entry (Literal)
                 literal (Map):
                   "a"
+            parents (ArrayList):
+          valueExpression (Literal):
+            literal (Map):
+              "a"
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Select)
+          expressions (ArrayList):
+            Entry (Literal)
+              literal (Map):
+                "aMap"
+          parents (ArrayList):
       parents (ArrayList):
     valueExpression (Literal):
       literal (Map):
@@ -416,18 +429,12 @@ statements (ArrayList):
       parents (ArrayList):
     valueExpression (Select):
       expressions (ArrayList):
-        Entry (Program)
-          statements (ArrayList):
-            Entry (Statement)
-              keyExpression (Select):
-                expressions (ArrayList):
-                  Entry (Literal)
-                    literal (Map):
-                      "a"
-                parents (ArrayList):
-              valueExpression (Literal):
-                literal (Map):
-                  "a"
+        Entry (Select)
+          expressions (ArrayList):
+            Entry (Literal)
+              literal (Map):
+                "aMap"
+          parents (ArrayList):
       parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):

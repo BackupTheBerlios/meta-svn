@@ -21,11 +21,13 @@ lazyGACTest:Microsoft.CSharp
 metaLibTest:metaLib
 commandLineArguments:arg
 libraryAssemblyTest:testClasses
-[(['a']:'a')]:'Object'
+aMap:
+    ['a']:'a'
+[aMap]:'Object'
 ['normal symbol']:'NormalSymbol'
 lookupSymbol:'LookupSymbol'
 ['long key symbol']:'LookupExtendedSymbol'
-lookedUpMap:[(['a']:'a')]
+lookedUpMap:[aMap]
 lookedUpNormalSymbol:['normal symbol']
 lookedUpSymbol:lookupSymbol
 lookedUpLongSymbol:['long key symbol']

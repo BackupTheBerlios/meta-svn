@@ -136,14 +136,6 @@ map:
     (   
       LPAREN! 
       (SPACES!)?
-      ( 
-        statement
-        (
-          COMMA!
-          (SPACES!)?
-          statement
-        )*
-      )? 
       RPAREN! 
     )
 	  |

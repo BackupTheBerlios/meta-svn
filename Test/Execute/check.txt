@@ -518,6 +518,15 @@ Entry (DictionaryEntry)
       Value (NetClass):
         Entry (DictionaryEntry)
   Key (Map):
+    "aMap"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Map):
+        "a"
+      Value (Map):
+        "a"
+Entry (DictionaryEntry)
+  Key (Map):
     Entry (DictionaryEntry)
       Key (Map):
         "a"
