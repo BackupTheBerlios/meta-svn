@@ -186,18 +186,8 @@ namespace Meta {
 							break;
 						}
 					}
-//					selection=Interpreter.callers[Interpreter.callers.Count-numArgs-1];
-
-					if(numArgs==2) {
-						int asdf=0;
-					}
 					selection=Interpreter.arguments[Interpreter.arguments.Count-numArgs]; //change
-//					i++;
 				}
-//				else if(keys[0].Equals("arg")) {
-//					selection=Interpreter.arguments[Interpreter.arguments.Count-1]; //change
-//					i++;
-//				}				
 				else if(keys[0].Equals("search")||isRightSide) {
 					if(keys[0].Equals("search")) {
 						i++;
@@ -206,7 +196,7 @@ namespace Meta {
 						selection=((IMap)selection).Parent;
 					}
 					if(selection==null) {
-						throw new ApplicationException("Key "+keys[i]+" not found");
+						throw new ApplicationException("Key "+keys[i]+" not found.");
 					}
 				}
 				int lastKeySelect=0;
@@ -223,13 +213,13 @@ namespace Meta {
 						}
 						Thread.CurrentThread.Suspend();
 					}	
+					if(selection==null) {
+						throw new ApplicationException("Key "+keys[i]+" does not exist");
+					}
 					if(selection is IKeyValue) {
 						selection=((IKeyValue)selection)[keys[i]];
 					}
 					else {
-						if(selection==null) {
-							throw new ApplicationException("Key "+keys[i]+" does not exist");
-						}
 						selection=new NetObject(selection)[keys[i]];
 					}
 				}
@@ -690,7 +680,7 @@ namespace Meta {
 					}
 				}
 				set {
-					throw new ApplicationException("Tried to set key "+key.ToString()+" in library.");
+					throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
 				}
 			}
 			public ArrayList Keys {
@@ -719,8 +709,7 @@ namespace Meta {
 					return null;
 				}
 				set {
-					int asdf=0;
-					//throw new ApplicationException("Tried to set parent of library.");
+					throw new ApplicationException("Cannot set parent of library.");
 				}
 			}
 			public IEnumerator GetEnumerator() { 
@@ -878,7 +867,7 @@ namespace Meta {
 						case "key":
 							compiled=new Statement(this);break;
 						default:
-							throw new ApplicationException("Map cannot be compiled because it is not an expression.");
+							throw new ApplicationException("Cannot compile non-code map.");
 					}
 					if(!Interpreter.compiledMaps.Contains(this)) { // necessary?
 						Interpreter.compiledMaps.Add(this);
@@ -963,137 +952,111 @@ namespace Meta {
 				Interpreter.arguments.Add(argument);
 				ArrayList argumentList=argument.IntKeyValues;
 				object returnValue=null;
-				try {
-					bool executed=false;
-					foreach(MethodBase method in methods) {
-						ArrayList args=new ArrayList();
-						int counter=0;
-						bool argumentsMatched=true;
-						ParameterInfo[] parameters=method.GetParameters();
-						if(parameters.Length!=0 && argumentList.Count>parameters.Length) {
-							Type lastParameter=parameters[parameters.Length-1].ParameterType;
-							if(lastParameter.IsArray || lastParameter.IsSubclassOf(typeof(Array))) { // is variable argument method?
-								Map lastArg=new Map();
-								ArrayList paramsArgs=argumentList.GetRange(parameters.Length-1,argumentList.Count-(parameters.Length-1));
-								for(int i=0;i<paramsArgs.Count;i++) {
-									lastArg[new Integer(i+1)]=paramsArgs[i];
-								}
-								argumentList[parameters.Length-1]=lastArg;									
-								argumentList.RemoveRange(parameters.Length,argumentList.Count-parameters.Length);
+				bool executed=false;
+				object result=null;
+				foreach(MethodBase method in methods) {
+					ArrayList args=new ArrayList();
+					int counter=0;
+					bool argumentsMatched=true;
+					ParameterInfo[] parameters=method.GetParameters();
+					if(parameters.Length!=0 && argumentList.Count>parameters.Length) {
+						Type lastParameter=parameters[parameters.Length-1].ParameterType;
+						if(lastParameter.IsArray || lastParameter.IsSubclassOf(typeof(Array))) { // is variable argument method?
+							Map lastArg=new Map();
+							ArrayList paramsArgs=argumentList.GetRange(parameters.Length-1,argumentList.Count-(parameters.Length-1));
+							for(int i=0;i<paramsArgs.Count;i++) {
+								lastArg[new Integer(i+1)]=paramsArgs[i];
 							}
+							argumentList[parameters.Length-1]=lastArg;									
+							argumentList.RemoveRange(parameters.Length,argumentList.Count-parameters.Length);
 						}
-						if(argumentList.Count!=parameters.Length) { // doesn't match if different parameter list length
-							argumentsMatched=false;
-						}
-						else {
-							foreach(ParameterInfo parameter in method.GetParameters()) {
-								bool parameterMatched=false;
-								if(parameter.ParameterType.IsAssignableFrom(argumentList[counter].GetType())) {
-									args.Add(argumentList[counter]);
-									parameterMatched=true;
+					}
+					if(argumentList.Count!=parameters.Length) { // doesn't match if different parameter list length
+						argumentsMatched=false;
+					}
+					else {
+						foreach(ParameterInfo parameter in method.GetParameters()) {
+							bool parameterMatched=false;
+							if(parameter.ParameterType.IsAssignableFrom(argumentList[counter].GetType())) {
+								args.Add(argumentList[counter]);
+								parameterMatched=true;
+							}
+							else {
+								if(parameter.ParameterType.IsSubclassOf(typeof(Delegate))
+									||parameter.ParameterType.Equals(typeof(Delegate))) {
+									try {
+										MethodInfo m=parameter.ParameterType.GetMethod("Invoke",BindingFlags.Instance
+											|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+										Delegate del=CreateDelegate(parameter.ParameterType,m,(Map)argumentList[counter]);
+										args.Add(del);
+										parameterMatched=true;
+									}
+									catch(Exception e){
+										int asdf=0;
+									}
 								}
-								else {
-									if(parameter.ParameterType.IsSubclassOf(typeof(Delegate))
-										||parameter.ParameterType.Equals(typeof(Delegate))) {
-										try {
-											MethodInfo m=parameter.ParameterType.GetMethod("Invoke",BindingFlags.Instance
-												|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-											Delegate del=CreateDelegate(parameter.ParameterType,m,(Map)argumentList[counter]);
-											args.Add(del);
-											parameterMatched=true;
+								if(!parameterMatched && parameter.ParameterType.IsArray && argumentList[counter] is IMap && ((Map)argumentList[counter]).IntKeyValues.Count!=0) {// cheating
+									try {
+										Type arrayType=parameter.ParameterType.GetElementType();
+										Map map=((Map)argumentList[counter]);
+										ArrayList mapValues=map.IntKeyValues;
+										Array array=Array.CreateInstance(arrayType,mapValues.Count);
+										for(int i=0;i<mapValues.Count;i++) {
+											array.SetValue(mapValues[i],i);
 										}
-										catch(Exception e){
-											int asdf=0;
-										}
+										args.Add(array);
+										parameterMatched=true;										
 									}
-									if(!parameterMatched && parameter.ParameterType.IsArray && argumentList[counter] is IMap && ((Map)argumentList[counter]).IntKeyValues.Count!=0) {// cheating
-										try {
-											Type arrayType=parameter.ParameterType.GetElementType();
-											Map map=((Map)argumentList[counter]);
-											ArrayList mapValues=map.IntKeyValues;
-											Array array=Array.CreateInstance(arrayType,mapValues.Count);
-											for(int i=0;i<mapValues.Count;i++) {
-												array.SetValue(mapValues[i],i);
-											}
-											args.Add(array);
-											parameterMatched=true;										
-										}
-										catch {
-										}
+									catch {
+									}
 
-									}
-									if(!parameterMatched) {
-										bool isConverted;
-										object converted=Interpreter.ConvertMetaObjectToTargetDotNetType(argumentList[counter],
-															     parameter.ParameterType,out isConverted);
-										if(isConverted) {
-											args.Add(converted);
-											parameterMatched=true;
-										}
-									}
 								}
 								if(!parameterMatched) {
-									argumentsMatched=false;
-									break;
+									bool isConverted;
+									object converted=Interpreter.ConvertMetaObjectToTargetDotNetType(argumentList[counter],
+										parameter.ParameterType,out isConverted);
+									if(isConverted) {
+										args.Add(converted);
+										parameterMatched=true;
+									}
 								}
-								counter++;
 							}
-						}
-						if(argumentsMatched) {
-							if(!executed) {
-								if(method is ConstructorInfo) {
-									returnValue=((ConstructorInfo)method).Invoke(args.ToArray());
-								}
-								else {
-									returnValue=method.Invoke(target,args.ToArray());
-								}
-								executed=true;
+							if(!parameterMatched) {
+								argumentsMatched=false;
+								break;
 							}
-							else { //what here?
-								//throw new ApplicationException("\nArguments match more than one overload of "+name);
-							}
+							counter++;
 						}
 					}
-					if(!executed) {
-						if(methods[0] is ConstructorInfo) {
-							return 
-								Interpreter.ConvertDotNetObjectToMetaObject(
-								((ConstructorInfo)methods[0]).Invoke(new object[] {}));
+					if(argumentsMatched) {
+						if(!executed) {
+							if(method is ConstructorInfo) {
+								returnValue=((ConstructorInfo)method).Invoke(args.ToArray());
+							}
+							else {
+								returnValue=method.Invoke(target,args.ToArray());
+							}
+							executed=true;
 						}
-						else {
-							return Interpreter.ConvertDotNetObjectToMetaObject(methods[0].Invoke(target,new object[] {}));
+						else { //what here?
+							//throw new ApplicationException("\nArguments match more than one overload of "+name);
 						}
-
+					}
+				}
+				if(!executed) {
+					if(methods[0] is ConstructorInfo) {
+						result=((ConstructorInfo)methods[0]).Invoke(new object[] {});
 					}
 					else {
-						return Interpreter.ConvertDotNetObjectToMetaObject(returnValue);
+						result=methods[0].Invoke(target,new object[] {});
 					}
 
 				}
-				catch(Exception e) {
-					Exception b=e;
-					string text="";
-					if(target!=null) {
-						text+=target.ToString();
-					}
-					else {
-						text+=type.ToString();
-					}
-					text+=".";
-					text+=name;
-					text+="(";
-					foreach(object obj in argumentList) {
-						text+=obj.ToString()+",";
-					}
-					text=text.Remove(text.Length-1,1);
-					text+=")";
-					text+=" could not be invoked. ";
-					text+=e.ToString();
-					throw new ApplicationException(text);
+				else {
+					result=returnValue;
 				}
-				finally {
-					Interpreter.arguments.Remove(argument);
-				}
+				Interpreter.arguments.Remove(argument);
+				return Interpreter.ConvertDotNetObjectToMetaObject(result);
 			}
 			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) {
 				code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
@@ -1290,7 +1253,7 @@ namespace Meta {
 						MemberInfo[] members=type.GetMember((string)key,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
-								throw new ApplicationException("Methods cannot be set.");
+								throw new ApplicationException("Cannot set method "+key+".");
 							}
 							else if(members[0] is FieldInfo) {
 								FieldInfo field=(FieldInfo)members[0];
@@ -1336,7 +1299,7 @@ namespace Meta {
 						indexer.Call(arguments);
 					}
 					catch(Exception) {
-						throw new ApplicationException(key.ToString()+" not found in "+ToString());
+						throw new ApplicationException("Cannot set "+key.ToString()+".");
 					}
 				}
 			}
@@ -1439,7 +1402,7 @@ namespace Meta {
 					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
 				}
 				else if(indentationDifference>1) {
-					throw new ApplicationException("Line is indented too much.");
+					throw new ApplicationException("Incorrect indentation.");
 				}
 				presentIndentationLevel=newIndentationLevel;
 			}
@@ -1451,6 +1414,9 @@ namespace Meta {
 	namespace TestingFramework {
 		public interface ISerializeSpecial {
 			string Serialize();
+		}
+		public abstract class TestCase {
+			public abstract object RunTestCase();
 		}
 		public class ExecuteTests {	
 			public ExecuteTests(Type classThatContainsTests,string pathToSerializeResultsTo) { // refactor
@@ -1465,13 +1431,13 @@ namespace Meta {
 					Console.Write(testCase.Name + "...");
 					DateTime timeStarted=DateTime.Now;
 					string textToPrint="";
-					object result=null;
-					try {
-						result=testCase.GetMethod("RunTestCase").Invoke(null,new object[]{});
-					}
-					catch(Exception e) {
-						throw e;
-					}
+					object result=((TestCase)testCase.GetConstructors()[0].Invoke(new object[]{})).RunTestCase();
+//					try {
+//					result=testCase.GetMethod("RunTestCase").Invoke(null,new object[]{});
+//					}
+//					catch(Exception e) {
+//						throw e;
+//					}
 					TimeSpan timeSpentInTestCase=DateTime.Now-timeStarted;
 					bool testCaseSuccessful=CompareResults(Path.Combine(pathToSerializeResultsTo,testCase.Name),result,methodNames);
 					if(!testCaseSuccessful) {

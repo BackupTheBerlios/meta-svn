@@ -44,26 +44,26 @@ namespace Test {
 	public class Tests {
 		private static string filename=@"basicTest.meta";
 		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-		public class ParseAst {
-			public static object RunTestCase() {
+		public class ParseAst:TestCase {
+			public override object RunTestCase() {
 				return Interpreter.ParseToAst(new StreamReader(Path.Combine(
 					Test.path,filename)));
 			}
 		}
-		public class ParseObject {
-			public static object RunTestCase() {
+		public class ParseObject:TestCase {
+			public override object RunTestCase() {
 				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
 					Test.path,filename)));
 			}
 		}
-		public class Compile {
-			public static object RunTestCase() {
+		public class Compile:TestCase {
+			public override object RunTestCase() {
 				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
 					Test.path,filename))).Compile();
 			}
 		}
-		public class Execute {
-			public static object RunTestCase() {
+		public class Execute:TestCase {
+			public override object RunTestCase() {
 				Map argument=new Map();
 				argument[new Integer(1)]="first arg";
 				argument[new Integer(2)]="second=arg";
