@@ -13,15 +13,15 @@ public class @base {
 		}
 		return keys;
 	}
-	public static object Catch(Map function) {
-		try {
-			function.Call((Map)Interpreter.callers[Interpreter.callers.Count-1]); // caller is wrong
-		}
-		catch(Exception e) {
-			return e;
-		}
-		return ""; // really?
-	}
+//	public static object Catch(Map function) {
+//		try {
+//			function.Call((Map)Interpreter.callers[Interpreter.callers.Count-1]); // caller is wrong
+//		}
+//		catch(Exception e) {
+//			return e;
+//		}
+//		return ""; // really?
+//	}
 	public static void SetBreakMethod(BreakMethodDelegate breakMethod) {
 		Interpreter.breakMethod=breakMethod;
 	}

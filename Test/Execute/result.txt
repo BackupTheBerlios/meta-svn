@@ -19,13 +19,13 @@ Entry (DictionaryEntry)
       "Meta.Types.IKeyValue Merge()"
 Entry (DictionaryEntry)
   Key (String):
-    "Catch"
+    "RunString"
   Value (NetMethod):
     methods (MethodInfo[]):
       Entry (RuntimeMethodInfo)
-        "System.Object Catch(Meta.Types.Map)"
+        "System.Object RunString(System.String)"
     savedMethod (RuntimeMethodInfo):
-      "System.Object Catch(Meta.Types.Map)"
+      "System.Object RunString(System.String)"
 Entry (DictionaryEntry)
   Key (String):
     "BinaryOr"
@@ -46,15 +46,6 @@ Entry (DictionaryEntry)
       "System.String Insert(System.String, Int32, System.String)"
 Entry (DictionaryEntry)
   Key (String):
-    "Multiply"
-  Value (NetMethod):
-    methods (MethodInfo[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
-    savedMethod (RuntimeMethodInfo):
-      "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
-Entry (DictionaryEntry)
-  Key (String):
     "Add"
   Value (NetMethod):
     methods (MethodInfo[]):
@@ -73,13 +64,13 @@ Entry (DictionaryEntry)
       "Meta.Types.Map Concat(Meta.Types.Map[])"
 Entry (DictionaryEntry)
   Key (String):
-    "Run"
+    "Multiply"
   Value (NetMethod):
     methods (MethodInfo[]):
       Entry (RuntimeMethodInfo)
-        "System.Object Run(System.String)"
+        "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
     savedMethod (RuntimeMethodInfo):
-      "System.Object Run(System.String)"
+      "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (String):
     "IsMap"
@@ -109,15 +100,6 @@ Entry (DictionaryEntry)
       "Boolean Not(Boolean)"
 Entry (DictionaryEntry)
   Key (String):
-    "RunString"
-  Value (NetMethod):
-    methods (MethodInfo[]):
-      Entry (RuntimeMethodInfo)
-        "System.Object RunString(System.String)"
-    savedMethod (RuntimeMethodInfo):
-      "System.Object RunString(System.String)"
-Entry (DictionaryEntry)
-  Key (String):
     "Divide"
   Value (NetMethod):
     methods (MethodInfo[]):
@@ -143,6 +125,15 @@ Entry (DictionaryEntry)
         "Void SetBreakMethod(Meta.Execution.BreakMethodDelegate)"
     savedMethod (RuntimeMethodInfo):
       "Void SetBreakMethod(Meta.Execution.BreakMethodDelegate)"
+Entry (DictionaryEntry)
+  Key (String):
+    "Run"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
+        "System.Object Run(System.String)"
+    savedMethod (RuntimeMethodInfo):
+      "System.Object Run(System.String)"
 Entry (DictionaryEntry)
   Key (String):
     "Switch"
@@ -548,106 +539,13 @@ Entry (DictionaryEntry)
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (Map):
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "1"
-          Value (Integer):
-            "102"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "2"
-          Value (Integer):
-            "105"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "3"
-          Value (Integer):
-            "114"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "4"
-          Value (Integer):
-            "115"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "5"
-          Value (Integer):
-            "116"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "6"
-          Value (Integer):
-            "32"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "7"
-          Value (Integer):
-            "97"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "8"
-          Value (Integer):
-            "114"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "9"
-          Value (Integer):
-            "103"
+      Value (String):
+        "first arg"
     Entry (DictionaryEntry)
       Key (Integer):
         "2"
-      Value (Map):
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "1"
-          Value (Integer):
-            "115"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "2"
-          Value (Integer):
-            "101"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "3"
-          Value (Integer):
-            "99"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "4"
-          Value (Integer):
-            "111"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "5"
-          Value (Integer):
-            "110"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "6"
-          Value (Integer):
-            "100"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "7"
-          Value (Integer):
-            "61"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "8"
-          Value (Integer):
-            "97"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "9"
-          Value (Integer):
-            "114"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "10"
-          Value (Integer):
-            "103"
+      Value (String):
+        "second=arg"
 Entry (DictionaryEntry)
   Key (String):
     "libraryAssemblyTest"
