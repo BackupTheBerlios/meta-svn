@@ -2340,8 +2340,15 @@ getFirstChild (CommonAST):
                                                                     getNextSibling (CommonAST):
                                                                       getFirstChild:
                                                                         null
-                                                                      getNextSibling:
-                                                                        null
+                                                                      getNextSibling (CommonAST):
+                                                                        getFirstChild:
+                                                                          null
+                                                                        getNextSibling:
+                                                                          null
+                                                                        getText (String):
+                                                                          "Test"
+                                                                        Type (Int32):
+                                                                          "21"
                                                                       getText (String):
                                                                         "Test"
                                                                       Type (Int32):

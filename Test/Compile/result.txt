@@ -1789,6 +1789,11 @@ statements (ArrayList):
                           null
                         text (String):
                           "Test"
+                      Entry (Literal):
+                        cached:
+                          null
+                        text (String):
+                          "Test"
                   parents (ArrayList):
                     IEnumerable
         callable (Select):

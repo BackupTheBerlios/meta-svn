@@ -3199,6 +3199,16 @@ IEnumerable
                                                                   "literal"
                                                                 Value (String):
                                                                   "Test"
+                                                        Entry (DictionaryEntry):
+                                                          Key (Integer):
+                                                            "3"
+                                                          Value (Map):
+                                                            IEnumerable
+                                                              Entry (DictionaryEntry):
+                                                                Key (String):
+                                                                  "literal"
+                                                                Value (String):
+                                                                  "Test"
         Entry (DictionaryEntry):
           Key (Integer):
             "26"

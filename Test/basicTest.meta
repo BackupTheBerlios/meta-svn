@@ -41,7 +41,7 @@ result.SetCurrent=-
   result=(arg=arg,x=arg.symbol)
   result=x
 result.resultSet=SetCurrent(symbol='haha')
-result=meta.Merge(parent,assemblies.Test)
+result=meta.Merge(parent,assemblies.Test.Test)
 result.testClass=TestClass()
 result.memberTest=MemberTest()
 result.MemberTest.classField='a'

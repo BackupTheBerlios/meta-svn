@@ -80,16 +80,6 @@ namespace Meta {
 								string text=reader.ReadToEnd();
 								reader.Close();
 								return Interpreter.String(text);
-//							case ".ogg":
-//							case ".au":
-//							case ".spx":
-//							case ".midi":
-//							case ".mid":
-//								return new Sound(name);
-//							case ".bmp":
-//							case ".png":
-//							case ".jpg":
-//								return new Image(name);
 							default:
 								return null;
 						}
@@ -137,62 +127,6 @@ namespace Meta {
 				return this.Keys.GetEnumerator();
 			}
 		}
-
-//
-//		public class Libraries: IKeyValue {
-//			private string path;
-//			public Libraries(string path) {
-//				this.path=path;
-//				LoadAll();
-//			}
-//			public IKeyValue Clone() {
-//				return this;
-//			}
-//			private IKeyValue parent;
-//			public IKeyValue Parent {
-//				get {
-//					return parent;
-//				}
-//				set {
-//					parent=value;
-//				}
-//			}
-//			private Hashtable cached=new Hashtable();
-//			public object this[object key] {
-//				get {
-//					return cached[key];
-//				}
-//				set {
-//					throw new ApplicationException("Cannot set keys in library map.");
-//				}
-//			}
-//			public int Count {
-//				get {
-//					return cached.Count;
-//				}
-//			}
-//			public ArrayList Keys {
-//				get {
-//					ArrayList keys=new ArrayList();
-//					foreach(string name in Directory.GetFiles(path,"*.meta")) {
-//						keys.Add(Path.GetFileNameWithoutExtension(name));
-//					}
-//					return keys;
-//				}
-//			}
-//			private void LoadAll() {
-//				foreach(string name in Directory.GetFiles(path,"*.meta")) {
-//					cached[Path.GetFileNameWithoutExtension(name)]=Interpreter.Mapify(new StreamReader(name));
-//				}
-//			}
-//
-//			public bool ContainsKey(object key) {
-//				return this.cached.ContainsKey(key);
-//			}
-//			public IEnumerator GetEnumerator() {
-//				return this.cached.GetEnumerator();
-//			}
-//		}
 		public class Assemblies: IKeyValue {
 			public IKeyValue Clone() {
 				return this;
@@ -274,40 +208,6 @@ namespace Meta {
 				return this.Keys.GetEnumerator();
 			}
 		}
-
-//		public class Image{
-//			public static Surface screen;
-//			public static Surface surf;
-//			private SDLImage image;
-//			public Image(string name) {
-//				image=new SDLImage(name);
-//			}
-//			public void Draw(int x,int y) {
-//				if(surf==null) {
-//					SetWindowSize(640,480);
-//				}
-//
-//				SDL sdl = SDL.Instance; // get SDL object
-////				sdl.Video.HideMouseCursor(); // hide the cursor
-//				image.Draw(surf,new Rectangle(new Point(0,0),image.Size));
-//				surf.Blit(screen, new Rectangle(new Point(0, 0), screen.Size));
-//				screen.Flip();
-//			}
-//			public static void SetWindowSize(int width,int height) {
-//				screen = SDL.Instance.Video.SetVideoModeWindow(width, height, true);
-//				surf=Image.screen.CreateCompatibleSurface(width, height, true);
-//			}
-//		}
-//		public class Sound{
-//			private Sample sample;
-//			public Sound(string name) {
-//				sample=SDL.Instance.Mixer.LoadWAV(name);
-//			}
-//			public object Play() {
-//				SDL.Instance.Mixer.PlaySample(sample);
-//				return null;
-//			}
-//		}
 		// builtin library functions
 		public class Functions{
 
@@ -349,7 +249,7 @@ namespace Meta {
 			}
 		}
 		public class LiteralRecognitions {
-			// !!! order of classes matters
+			// order of classes is important here !
 			public class StringRecognition: ILiteralRecognition  {
 				public object Recognize(string text)  {
 					return text;
@@ -761,13 +661,6 @@ namespace Meta {
 				}
 				for(;i<count;i++) {
 					if(keys[i].Equals("break")) {
-//						IKeyValue keyValue;
-//						if(selected is IKeyValue) {
-//							keyValue=(IKeyValue)selected;
-//						}
-//						else {
-//							keyValue=new NetObject(selected);
-//						}
 						throw new BreakException(selected);
 					}	
 					if(selected is IKeyValue) {
@@ -879,12 +772,6 @@ namespace Meta {
 				}
 				((Hashtable)netConversion[conversion.target])[conversion.source]=conversion;
 			}
-//			public static void AddToNetConversion(ToNetConversion conversion) {
-//				if(!netConversion.ContainsKey(conversion.source)) {
-//					netConversion[conversion.target]=new Hashtable();
-//				}
-//				((Hashtable)netConversion[conversion.target])[conversion.source]=conversion;
-//			}
 			public static void AddToMetaConversion(ToMetaConversion conversion) {
 				metaConversion[conversion.source]=conversion;
 			}
@@ -923,29 +810,19 @@ namespace Meta {
 				cashedLiterals.Clear();
 			}
 			public static object Run(string path,Map argument) {
-				//Directory.SetCurrentDirectory(path);
 				return Run(new StreamReader(path),argument);
 			}
 
 			public static object Run(TextReader reader,Map argument) {
-//				Music music = SDL.Instance.Mixer.LoadMusic("fard-two.ogg");
-//				SDL.Instance.Mixer.PlayMusic(music, -1);
-
 				ArrayList parents=new ArrayList();
 				Map existing=new Map();
 				existing["meta"]=new NetClass(typeof(Interpreter));
 				existing["assemblies"]=new Assemblies();
 				existing["files"]=new Files();
-				// TODO: fix path; libraries important even?
-				//existing["libraries"]=new Libraries(@"C:\_ProjectSupportMaterial\Meta\libraries");
-				//existing
 				foreach(MethodInfo method in typeof(Functions).GetMethods(
 					BindingFlags.Public|BindingFlags.Static)) {
 					existing[method.Name]=new NetMethod(method.Name,null,typeof(Functions));
 				}
-//				foreach(Type type in typeof(Classes).GetNestedTypes()) {
-//					existing[type.Name.ToLower]=new NetClass(type);
-//				}
 				Interpreter.arguments.Add(argument);
 				object result=Mapify(reader).Call(existing);
 				Interpreter.arguments.Remove(argument);
@@ -1138,7 +1015,6 @@ namespace Meta {
 				return Call(local);
 			}
 			public object Call(Map existing)  {
-				//Interpreter.arguments.Add(argument);
 				IExpression callable=(IExpression)Compile();
 				object result;
 				if(callable is Program) {
@@ -1147,7 +1023,6 @@ namespace Meta {
 				else {
 					result=callable.Evaluate(this);
 				}
-				//Interpreter.arguments.Remove(argument);
 				return result;
 			}
 			public void StopSharing() {
@@ -1309,9 +1184,6 @@ namespace Meta {
 			protected Type type;
 			private MethodBase savedMethod;
 			private MethodBase[] methods;
-//			public override string ToString() {
-//				return "Method";
-//			}
 			
 			public static string GetMethodName(MethodBase methodInfo) {
 				int counter=0;
@@ -1360,7 +1232,6 @@ namespace Meta {
 			}
 			public static string GetDoc(MemberInfo memberInfo) {
 				XmlNode comment=GetComments(memberInfo);
-				//object o=comment["summary"];
 				string text="";
 				string summary="";
 				ArrayList parameters=new ArrayList();
@@ -1387,21 +1258,6 @@ namespace Meta {
 					.Replace("\" />","").Replace("T:","").Replace("F:","").Replace("P:","")
 					.Replace("M:","").Replace("E:","");
 			}
-//			public static string CleanupXml(XmlNode node) {
-//				string text="";
-//				foreach(XmlNode n in node) {
-//					if(n.Name.Equals("para")) {
-//						text+=CleanupXml(n)+"\n";
-//					}
-//					else if(n.Name.Equals("see")) {
-//						int start=n.OuterXml.LastIndexOf(".")+1;
-//						int length=n.OuterXml.LastIndexOf("/")-start;
-//						text+=n.OuterXml.Substring(start,length);
-//
-//					}
-//				}
-//				return text;
-//			}
 			public static string CreateParamsDescription(ParameterInfo[] parameters) {
 				string text="";
 				if(parameters.Length>0) {
@@ -1492,51 +1348,10 @@ namespace Meta {
 				return doc.SelectSingleNode(xpath);
 			}
 
-//			public string Documentation() {
-//				if(attribute!=null) {
-//					return attribute.documentation;
-//				}
-//				else {
-//					if(savedMethod!=null) {
-//						string text="(";
-//						int counter=0;
-//						foreach(ParameterInfo parameter in savedMethod.GetParameters()) {
-//							text+=parameter.ParameterType.Name+" "+parameter.Name;
-//							if(counter!=savedMethod.GetParameters().Length-1) {
-//								text+=",";
-//							}
-//							counter++;
-//						}
-//						text+=")";
-//						return text;
-//					}
-//					else {
-//						string complete="";
-//						foreach(MethodBase method in methods) {
-//							string text="(";
-//							int counter=0;
-//							foreach(ParameterInfo parameter in method.GetParameters()) {
-//								text+=parameter.ParameterType;
-//								if(counter!=method.GetParameters().Length-1) {
-//									text+=",";
-//								}
-//								counter++;
-//							}
-//							text+=")\n";
-//							complete+=text;
-//						}
-//						if(complete.Length!=0) {
-//							complete=complete.Remove(complete.Length-1,1);
-//						}
-//						return complete;
-//					}
-//				}
-//			}
-
 			public object Call() {
-				if(this.name.Equals("Invoke")) {
-					int asdf=0;
-				}
+//				if(this.name.Equals("Invoke")) {
+//					int asdf=0;
+//				}
 				return Interpreter.ConvertToMeta(CallMethod((Map)Interpreter.Arg));
 			}
 			public object CallMethod(Map arguments) {
@@ -1933,7 +1748,6 @@ namespace Meta {
 				MethodInfo method=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance
 					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
 
-				//MethodInfo method=((Delegate)field.GetValue(obj)).Method;
 				string source="using System;using Meta.Types;using Meta.Execution;";
 				source+="public class EventHandlerContainer{public "+method.ReturnType.Name+" EventHandlerMethod";
 				int counter=1;
@@ -1942,7 +1756,6 @@ namespace Meta {
 				foreach(ParameterInfo parameter in method.GetParameters()) {
 					argumentList+=parameter.ParameterType.Name+" arg"+counter;
 					argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";
-//					argumentAdding+="arg[new Integer("+counter+")]=Interpreter.ConvertToMeta(arg"+counter+");";
 					if(counter<=parameter.Position) {
 						argumentList+=",";
 					}
@@ -1953,8 +1766,6 @@ namespace Meta {
 				}
 				source+=argumentList+"{";
 				source+=argumentAdding;
-				//source+="Console.WriteLine(\"Hello\");";
-				//source+="Console.WriteLine(this.callable);";
 				source+="Interpreter.arguments.Add(arg);object result=callable.Call();Interpreter.arguments.Remove(arg);";
 				source+="return ("+method.ReturnType.FullName+")";
 				source+="Interpreter.ConvertToNet(result,typeof("+method.ReturnType.FullName+"));}";
@@ -2119,7 +1930,6 @@ namespace Meta {
 				}
 			}
 
-			// save text representation of test run and compare with check file
 			private bool SetResult(MetaTest test,string path,object obj,string[] functions) {
 				Directory.CreateDirectory(path);
 				if(!File.Exists(Path.Combine(path,"check.txt"))) {
@@ -2142,7 +1952,6 @@ namespace Meta {
 			public static string Serialize(object obj) {
 				return Serialize(obj,"",new string[]{});
 			}
-			// create text representation of an object
 			public static string Serialize(object obj,string indentation,string[] methodNames) {
 				if(obj==null) {
 					return indentation + "null\n";
@@ -2171,7 +1980,6 @@ namespace Meta {
 					string text="";
 					text=text + indentation + "IEnumerable\n";
 					int count=0;
-					//int asdf=0;
 					foreach(object entry in (IEnumerable)obj) {
 						if(entry is ArrayList) {
 							int asdf=0;
