@@ -1559,7 +1559,7 @@ namespace Meta {
 					throw new ApplicationException(text);
 				}
 			}
-			public Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) {
+			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) {
 				// should caller really be parent of code???
 				code.Parent=(IKeyValue)Interpreter.callers[Interpreter.callers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
@@ -1837,54 +1837,12 @@ namespace Meta {
 					}
 				}
 			}
-			// refactor/combine with other method
 			public Delegate CreateEvent(string name,Map code) {
-				code.Parent=(IKeyValue)Interpreter.callers[Interpreter.callers.Count-1];
-				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
-				ICodeCompiler compiler=codeProvider.CreateCompiler();
-				FieldInfo field=type.GetField(name,BindingFlags.Instance
-					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-
 				EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
 					BindingFlags.Static|BindingFlags.Instance);
 				MethodInfo method=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance
 					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-
-				string returnTypeName=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
-				string source="using System;using Meta.Types;using Meta.Execution;";
-				source+="public class EventHandlerContainer{public "+returnTypeName+" EventHandlerMethod";
-				int counter=1;
-				string argumentList="(";
-				string argumentAdding="Map arg=new Map();";
-				// here bug
-				foreach(ParameterInfo parameter in method.GetParameters()) {
-					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
-					argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";
-					if(counter<method.GetParameters().Length) {
-						argumentList+=",";
-					}
-					counter++;
-				}
-				argumentList+=")";
-				source+=argumentList+"{";
-				source+=argumentAdding;
-				source+="Interpreter.arguments.Add(arg);object result=callable.Call(null);Interpreter.arguments.Remove(arg);";
-				if(!method.ReturnType.Equals(typeof(void))) {
-					source+="return ("+returnTypeName+")";
-					source+="Interpreter.ConvertToNet(result,typeof("+returnTypeName+"));";
-				}
-				source+="}";
-				source+="private Map callable;";
-				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll","Meta.dll"});
-				assemblyNames.AddRange(Interpreter.loadedAssemblies);
-				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
-				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
-				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
-				object container=containerClass.GetConstructors()[0].Invoke(new object[] {code});
-				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
-				Delegate del=Delegate.CreateDelegate(type.GetEvent(name).EventHandlerType,
-					container,"EventHandlerMethod");
+				Delegate del=NetMethod.CreateDelegate(eventInfo.EventHandlerType,method,code);
 				return del;
 			}
 			public bool ContainsKey(object key)  { // not great
