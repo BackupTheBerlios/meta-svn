@@ -42,29 +42,29 @@ namespace Test {
 				if(!File.Exists(args[0])) {
 					throw new ApplicationException("File "+args[0]+" not found.");
 				}
-				try {
+//				try {
 					Interpreter.Run(new StreamReader(args[0]),new Map());
 					// fix this to only show original error message
-				}
-				catch(CharStreamException e) {// put this into "Run"
-					Console.WriteLine(e.Message);
-				}
-				catch(RecognitionException e) {
-					Console.WriteLine(e.Message);
-				}
-				catch(TokenStreamException e) {
-					Console.WriteLine(e.Message);
-				}
-				catch(Exception e) {
-					string text="";
-					do {
-						text+=e.Message+"\n"+e.TargetSite+"\n";
-						e=e.InnerException;
-					} 
-					while(e!=null);
-					Console.WriteLine(text);
-					Console.ReadLine();
-				}
+//				}
+//				catch(CharStreamException e) {// put this into "Run"
+//					Console.WriteLine(e.Message);
+//				}
+//				catch(RecognitionException e) {
+//					Console.WriteLine(e.Message);
+//				}
+//				catch(TokenStreamException e) {
+//					Console.WriteLine(e.Message);
+//				}
+//				catch(Exception e) {
+//					string text="";
+//					do {
+//						text+=e.Message+"\n"+e.TargetSite+"\n";
+//						e=e.InnerException;
+//					} 
+//					while(e!=null);
+//					Console.WriteLine(text);
+//					Console.ReadLine();
+//				}
 			}
 		}
 	}

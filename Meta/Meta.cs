@@ -1460,37 +1460,63 @@ namespace Meta {
 		public class NetMethod: ICallable {
 			public bool isMetaLibraryMethod=false;
 			// Move this to "With" ?
+			// rename oldValue to obj
 			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
-									// make more exact, move into its own method
-				assigned=true;
+
+				if(map.IntKeyValues.Count==0) {
+					assigned=false;
+					return null;
+				}
 				Type type=oldValue.GetType();
-				if(type.GetMethod("Add")!=null && type.GetConstructor(new Type[]{})!=null) {
-					object obj=type.GetConstructor(new Type[]{}).Invoke(new object[]{});
+				MethodInfo method=type.GetMethod("Add",new Type[]{map.IntKeyValues[0].GetType()});
+				if(method!=null) {
 					foreach(object val in map.IntKeyValues) { // combine this with Library function "Init"
-						obj.GetType().GetMethod("Add").Invoke(obj,new object[]{val});
+						method.Invoke(oldValue,new object[]{val});//  call method from above!
 					}
-					//					return obj;
-				}
-				else if(type.GetMethod("Add")!=null && oldValue!=null) {
-					//object obj=parameter.GetConstructor(new Type[]{}).Invoke(new object[]{});
-					foreach(object val in map.IntKeyValues) { // combine this with Library function "Init"
-						oldValue.GetType().GetMethod("Add").Invoke(oldValue,new object[]{val});
-					}
-					//					return oldValue;
-				}
-				// old, rethink
-				else if(type.GetMethod("set_Item")!=null && type.GetConstructor(new Type[]{})!=null) {
-					NetObject obj=new NetObject(type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-					foreach(DictionaryEntry entry in map) { // combine this with Library function "Init"
-						obj[entry.Key]=entry.Value;
-					}
-					//					return obj.obj;
+					assigned=true;
 				}
 				else {
 					assigned=false;
 				}
+//				foreach(object val in map.IntKeyValues) {
+//				}
+				
+				// make more exact, move into its own method
+//				assigned=true;
+
 				return oldValue;
 			}
+//			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
+//									// make more exact, move into its own method
+//				assigned=true;
+//				Type type=oldValue.GetType();
+//				if(type.GetMethod("Add")!=null && type.GetConstructor(new Type[]{})!=null) {
+//					object obj=type.GetConstructor(new Type[]{}).Invoke(new object[]{});
+//					foreach(object val in map.IntKeyValues) { // combine this with Library function "Init"
+//						obj.GetType().GetMethod("Add").Invoke(obj,new object[]{val});
+//					}
+//					//					return obj;
+//				}
+//				else if(type.GetMethod("Add")!=null && oldValue!=null) {
+//					//object obj=parameter.GetConstructor(new Type[]{}).Invoke(new object[]{});
+//					foreach(object val in map.IntKeyValues) { // combine this with Library function "Init"
+//						oldValue.GetType().GetMethod("Add").Invoke(oldValue,new object[]{val});
+//					}
+//					//					return oldValue;
+//				}
+//				// old, rethink
+//				else if(type.GetMethod("set_Item")!=null && type.GetConstructor(new Type[]{})!=null) {
+//					NetObject obj=new NetObject(type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+//					foreach(DictionaryEntry entry in map) { // combine this with Library function "Init"
+//						obj[entry.Key]=entry.Value;
+//					}
+//					//					return obj.obj;
+//				}
+//				else {
+//					assigned=false;
+//				}
+//				return oldValue;
+//			}
 			public static object ConvertParameter(object meta,Type parameter,out bool converted) {//,object oldValue,
 				converted=true;
 				if(parameter.IsAssignableFrom(meta.GetType())) {

@@ -13,7 +13,7 @@ form:with
     :
         Text:'hello
         Controls:
-            System.Windows.Forms.TreeView()
+            System.Windows.Forms.TreeView()         
 'ImpliedAutokey
 :'Autokey
 gacTest:System.Collections
