@@ -785,19 +785,10 @@ Entry (DictionaryEntry)
                               Key (String):
                                 "literal"
                               Value (String):
-                                "caller"
-                        Entry (DictionaryEntry)
-                          Key (Integer):
-                            "3"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (String):
-                                "literal"
-                              Value (String):
                                 "b"
                         Entry (DictionaryEntry)
                           Key (Integer):
-                            "4"
+                            "3"
                           Value (Map):
                             Entry (DictionaryEntry)
                               Key (String):
@@ -1408,6 +1399,146 @@ Entry (DictionaryEntry)
     "thisSet"
   Value (String):
     "haha"
+Entry (DictionaryEntry)
+  Key (String):
+    "FirstLevel"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "program"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "1"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (String):
+                "key"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "select"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "1"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "this"
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "2"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "1"
+            Entry (DictionaryEntry)
+              Key (String):
+                "value"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "call"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "function"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "select"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Integer):
+                                "1"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (String):
+                                    "literal"
+                                  Value (String):
+                                    "SecondLevel"
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "argument"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "program"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Integer):
+                                "1"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (String):
+                                    "key"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (String):
+                                        "select"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (Integer):
+                                            "1"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (String):
+                                                "literal"
+                                              Value (String):
+                                                "x"
+                                Entry (DictionaryEntry)
+                                  Key (String):
+                                    "value"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (String):
+                                        "literal"
+                                      Value (String):
+                                        "y"
+Entry (DictionaryEntry)
+  Key (String):
+    "SecondLevel"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "select"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "1"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (String):
+                "literal"
+              Value (String):
+                "arg"
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "2"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (String):
+                "literal"
+              Value (String):
+                "arg"
+Entry (DictionaryEntry)
+  Key (String):
+    "argTest"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (String):
+            "a"
+          Value (String):
+            "z"
 Entry (DictionaryEntry)
   Key (String):
     "MemberTest"

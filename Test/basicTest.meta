@@ -23,7 +23,7 @@ object=
     parent.a='c'
     #autoSearch='changed'
   SetB==
-    caller.caller.b.1=arg.value
+    caller.b.1=arg.value
     this='changed'
   x=
     a='b'
@@ -46,6 +46,10 @@ SetCurrent==
   this=(arg=arg,x=arg.symbol)
   this=x
 thisSet=SetCurrent(symbol='haha')
+FirstLevel==
+  SecondLevel(x='y')
+SecondLevel==arg.arg
+argTest=FirstLevel(a='z')
 this=base.Merge(parent,testClasses)
 testClass=TestClass()
 memberTest=MemberTest()

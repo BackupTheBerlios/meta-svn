@@ -161,7 +161,8 @@ namespace Meta {
 							break;
 						}
 					}
-					selection=Interpreter.callers[Interpreter.callers.Count-numCallers];
+					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
+//					selection=Interpreter.callers[Interpreter.callers.Count-numCallers];
 				}
 				else if(keys[0].Equals("parent")) { //ignore arguments here
 					foreach(object key in keys) {
@@ -175,9 +176,28 @@ namespace Meta {
 					}
 				}
 				else if(keys[0].Equals("arg")) {
-					selection=Interpreter.arguments[Interpreter.arguments.Count-1]; //change
-					i++;
-				}				
+					int numArgs=0;
+					foreach(object key in keys) {
+						if(key.Equals("arg")) {
+							numArgs++;
+							i++;
+						}
+						else {
+							break;
+						}
+					}
+//					selection=Interpreter.callers[Interpreter.callers.Count-numArgs-1];
+
+					if(numArgs==2) {
+						int asdf=0;
+					}
+					selection=Interpreter.arguments[Interpreter.arguments.Count-numArgs]; //change
+//					i++;
+				}
+//				else if(keys[0].Equals("arg")) {
+//					selection=Interpreter.arguments[Interpreter.arguments.Count-1]; //change
+//					i++;
+//				}				
 				else if(keys[0].Equals("search")||isRightSide) {
 					if(keys[0].Equals("search")) {
 						i++;

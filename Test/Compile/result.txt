@@ -636,19 +636,10 @@ statements (ArrayList):
                                     Key (String):
                                       "literal"
                                     Value (String):
-                                      "caller"
-                              Entry (DictionaryEntry)
-                                Key (Integer):
-                                  "3"
-                                Value (Map):
-                                  Entry (DictionaryEntry)
-                                    Key (String):
-                                      "literal"
-                                    Value (String):
                                       "b"
                               Entry (DictionaryEntry)
                                 Key (Integer):
-                                  "4"
+                                  "3"
                                 Value (Map):
                                   Entry (DictionaryEntry)
                                     Key (String):
@@ -1437,6 +1428,169 @@ statements (ArrayList):
           Entry (Literal)
             literal (String):
               "SetCurrent"
+        parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (String):
+            "FirstLevel"
+      parents (ArrayList):
+    valueExpression (Delayed):
+      delayed (Map):
+        Entry (DictionaryEntry)
+          Key (String):
+            "program"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "key"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "select"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "this"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "2"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "1"
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "value"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "call"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "function"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "select"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (String):
+                                        "literal"
+                                      Value (String):
+                                        "SecondLevel"
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "argument"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "program"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (String):
+                                        "key"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (String):
+                                            "select"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (Integer):
+                                                "1"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (String):
+                                                    "literal"
+                                                  Value (String):
+                                                    "x"
+                                    Entry (DictionaryEntry)
+                                      Key (String):
+                                        "value"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (String):
+                                            "literal"
+                                          Value (String):
+                                            "y"
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (String):
+            "SecondLevel"
+      parents (ArrayList):
+    valueExpression (Delayed):
+      delayed (Map):
+        Entry (DictionaryEntry)
+          Key (String):
+            "select"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "literal"
+                  Value (String):
+                    "arg"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "2"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "literal"
+                  Value (String):
+                    "arg"
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (String):
+            "argTest"
+      parents (ArrayList):
+    valueExpression (Call):
+      argumentExpression (Program):
+        statements (ArrayList):
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (String):
+                    "a"
+              parents (ArrayList):
+            valueExpression (Literal):
+              literal (String):
+                "z"
+      callableExpression (Select):
+        expressions (ArrayList):
+          Entry (Literal)
+            literal (String):
+              "FirstLevel"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
