@@ -27,4 +27,10 @@ public class map {
 	public static IKeyValue Merge() {
 		return (Map)Interpreter.MergeCollection(((Map)Interpreter.Arg).IntKeyValues);
 	}
+	public static void Init(object obj,IMap map) {
+		NetObject netObject=new NetObject(obj);
+		foreach(DictionaryEntry entry in map) {
+			netObject[entry.Key]=entry.Value;
+		}
+	}
 }

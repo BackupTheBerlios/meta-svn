@@ -71,6 +71,7 @@ namespace Test {
 	}
 	public class Tests {
 		private static string filename=@"basicTest.meta";
+		// make it possible to choose between different tests on command line
 		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
 		public class ParseToAst:TestCase {
 			public override object RunTestCase() {

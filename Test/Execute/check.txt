@@ -82,6 +82,13 @@ Entry (DictionaryEntry)
         "Meta.Types.IKeyValue Merge()"
 Entry (DictionaryEntry)
   Key (Map):
+    "Init"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Void Init(System.Object, Meta.Types.IMap)"
+Entry (DictionaryEntry)
+  Key (Map):
     "Add"
   Value (NetMethod):
     methods (MethodBase[]):
@@ -1842,3 +1849,8 @@ Entry (DictionaryEntry)
     "secondSwitch"
   Value (Map):
     "default"
+Entry (DictionaryEntry)
+  Key (Map):
+    "form"
+  Value (Form):
+    "System.Windows.Forms.Form, Text: hello"

@@ -290,7 +290,7 @@ namespace Meta {
 				return MergeCollection(maps);
 			}
 			public static IKeyValue MergeCollection(ICollection maps) {
-				Map result=new Map();
+				Map result=new Map();//use clone here?
 				foreach(IKeyValue map in maps) {
 					foreach(DictionaryEntry entry in (IKeyValue)map) {
 						if(entry.Value is IKeyValue && !(entry.Value is NetClass)&& result.ContainsKey(entry.Key) 
@@ -1544,6 +1544,7 @@ namespace Meta {
 				return constructor.Call(argument);
 			}
 		}
+		// rename to DotNetObject ??
 		public class NetObject: NetContainer, IKeyValue {
 			public NetObject(object obj):base(obj,obj.GetType()) {
 			}

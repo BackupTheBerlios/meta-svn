@@ -3398,3 +3398,85 @@ statements (ArrayList):
             literal (Map):
               "Switch"
         parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "form"
+      parents (ArrayList):
+    valueExpression (Call):
+      argumentExpression (Program):
+        statements (ArrayList):
+      callableExpression (Select):
+        expressions (ArrayList):
+          Entry (Literal)
+            literal (Map):
+              "System"
+          Entry (Literal)
+            literal (Map):
+              "Windows"
+          Entry (Literal)
+            literal (Map):
+              "Forms"
+          Entry (Literal)
+            literal (Map):
+              "Form"
+        parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "this"
+        Entry (Literal)
+          literal (Integer):
+            "9"
+      parents (ArrayList):
+    valueExpression (Call):
+      argumentExpression (Program):
+        statements (ArrayList):
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "1"
+              parents (ArrayList):
+            valueExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "form"
+              parents (ArrayList):
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "2"
+              parents (ArrayList):
+            valueExpression (Program):
+              statements (ArrayList):
+                Entry (Statement)
+                  keyExpression (Select):
+                    expressions (ArrayList):
+                      Entry (Literal)
+                        literal (Map):
+                          "Text"
+                    parents (ArrayList):
+                  valueExpression (Literal):
+                    literal (Map):
+                      "hello"
+      callableExpression (Select):
+        expressions (ArrayList):
+          Entry (Literal)
+            literal (Map):
+              "Init"
+        parents (ArrayList):

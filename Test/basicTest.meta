@@ -135,3 +135,5 @@ Switch
       #secondSwitch='two'
   default==
     #secondSwitch='default'
+form=System.Windows.Forms.Form()
+Init(form,(Text='hello'))
