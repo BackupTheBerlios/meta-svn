@@ -743,7 +743,7 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "Test"
+                                    "testClasses"
         Entry (DictionaryEntry):
           Key (Integer):
             "10"
@@ -3343,7 +3343,7 @@ IEnumerable
                                                                 Key (String):
                                                                   "literal"
                                                                 Value (String):
-                                                                  "Test"
+                                                                  "testClasses"
         Entry (DictionaryEntry):
           Key (Integer):
             "31"

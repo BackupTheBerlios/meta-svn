@@ -332,7 +332,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "Test"
+                "testClasses"
         parents (ArrayList):
           IEnumerable
     Entry (Statement):
@@ -1834,7 +1834,7 @@ statements (ArrayList):
                         cached:
                           null
                         text (String):
-                          "Test"
+                          "testClasses"
                   parents (ArrayList):
                     IEnumerable
         callable (Select):
