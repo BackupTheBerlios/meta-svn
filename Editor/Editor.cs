@@ -30,7 +30,6 @@ namespace Editor {
 		public static void Main() {
 			window.Controls.Add(editor);
 			window.Size=new Size(1000,700);
-			Help.tip.SetToolTip(editor,"Press Ctrl + O to open a file, F5 to execute.");
 			Application.Run(window);
 		}
 		public static Window window=new Window();
@@ -40,16 +39,25 @@ namespace Editor {
 
 		private static Node selectedNode=null;
 
+		public static Color unselectedForecolor=Color.Black;
+		public static Color unselectedBackcolor=Color.White;
+		public static Color selectedForecolor=Color.White;
+		public static Color selectedBackcolor=Color.Black;
+
 		public static Node SelectedNode	{
 			get {
 				return selectedNode;
 			}
 			set {
 				if(selectedNode!=null) {
-					selectedNode.Unselect();
+					selectedNode.BackColor=unselectedBackcolor;
+					selectedNode.ForeColor=unselectedForecolor;
+					selectedNode.Text=selectedNode.CleanText;
 				}
 				if(value!=null) {
-					value.Select();
+					value.BackColor=selectedBackcolor;
+					value.ForeColor=selectedForecolor;
+					value.Text=value.Text.Insert(value.CursorPosition,Node.cursorCharacter);
 					value.EnsureVisible();
 				}
 				selectedNode=value;
@@ -60,8 +68,8 @@ namespace Editor {
 			editor.ShowPlusMinus=false;
 			editor.Dock=DockStyle.Fill;
 			editor.Font=new Font("Courier New",10.00F);
-			editor.ForeColor=Node.unselectedForeColor;
-			editor.BackColor=Node.unselectedBackColor;
+			editor.ForeColor=unselectedForecolor;
+			editor.BackColor=unselectedBackcolor;
 
 			editor.KeyDown+=new KeyEventHandler(KeyDown);
 			editor.MouseDown+=new MouseEventHandler(MouseDown);
@@ -72,8 +80,8 @@ namespace Editor {
 			keyBindings[Keys.Control|Keys.C]=typeof(CopyNode);
 			keyBindings[Keys.Control|Keys.V]=typeof(PasteNode);
 			keyBindings[Keys.Control|Keys.Shift|Keys.V]=typeof(PasteNodeBackward);		
-			keyBindings[Keys.Control|Keys.Z]=typeof(UndoCommand);
-			keyBindings[Keys.Control|Keys.Y]=typeof(RedoCommand);
+			keyBindings[Keys.Control|Keys.Z]=typeof(Undo);
+			keyBindings[Keys.Control|Keys.Y]=typeof(Redo);
 
 			keyBindings[Keys.Alt|Keys.J]=typeof(MoveCharLeft);
 			keyBindings[Keys.Alt|Keys.Oemtilde]=typeof(MoveCharRight);
@@ -95,7 +103,7 @@ namespace Editor {
 			keyBindings[Keys.Enter]=typeof(CreateSibling);
 			keyBindings[Keys.Enter|Keys.Shift]=typeof(CreateSiblingUp);
 
-			keyBindings[Keys.F5]=typeof(ExecuteProgram);
+			keyBindings[Keys.F5]=typeof(Execute);
 			keyBindings[Keys.Control|Keys.O]=typeof(OpenFile);
 
 			keyBindings[Keys.Alt|Keys.H]=typeof(DeleteNode);
@@ -124,68 +132,51 @@ namespace Editor {
 	}
 	public class Window:Form {
 		public Window() {
-			this.Controls.Add(Editor.editor);
+			Controls.Add(Editor.editor);
 		}
 	}
 	public class Node:TreeNode {
-		public static Color unselectedForeColor=Color.Black;
-		public static Color unselectedBackColor=Color.White;
-		public static Color selectedForeColor=Color.White;
-		public static Color selectedBackColor=Color.Black;
-
-		private static string cursorPositionCharacter="|";
-
+		public static string cursorCharacter="|";
 		private int cursorPosition=0;
-
 		public int CursorPosition {
 			get {
-				return this.cursorPosition;
+				return cursorPosition;
 			} 
 			set {
-				this.Text=this.CleanText.Insert(value,cursorPositionCharacter);
-				this.cursorPosition=value;
+				Text=CleanText.Insert(value,cursorCharacter);
+				cursorPosition=value;
 			}
 		}
 		public FileNode FileNode {
 			get {
-				TreeNode selectedNode=this;
-				while(!(selectedNode is FileNode)) {
-					selectedNode=selectedNode.Parent;
+				TreeNode selected=this;
+				while(!(selected is FileNode)) {
+					selected=selected.Parent;
 				}
-				return (FileNode)selectedNode;
+				return (FileNode)selected;
 			}
 		}
 		public override object Clone() {
 			Node clone=(Node)base.Clone();
-			clone.Text=this.CleanText;
-			clone.cursorPosition=this.CursorPosition;
+			clone.Text=CleanText;
+			clone.cursorPosition=CursorPosition;
 			return clone;
-		}
-		public void Select() {
-			this.BackColor=Node.selectedBackColor;
-			this.ForeColor=Node.selectedForeColor;
-			this.Text=this.Text.Insert(this.cursorPosition,cursorPositionCharacter);
-		}
-		public void Unselect() {
-			this.BackColor=Node.unselectedBackColor;
-			this.ForeColor=Node.unselectedForeColor;
-			this.Text=this.CleanText;
 		}
 		public string CleanText {
 			get {
 				if(this==Editor.SelectedNode) {
-					return this.Text.Remove(this.CursorPosition,1);
+					return Text.Remove(CursorPosition,1);
 				}
 				else {
-					return this.Text;
+					return Text;
 				}
 			}
 			set {
 				if(this==Editor.SelectedNode) {
-					this.Text=value.Insert(this.CursorPosition,cursorPositionCharacter);
+					Text=value.Insert(CursorPosition,cursorCharacter);
 				}
 				else {
-					this.Text=value;
+					Text=value;
 				}
 			}
 		}
@@ -194,12 +185,12 @@ namespace Editor {
 		public FileNode(string path) {
 			StreamReader streamReader=new StreamReader(path);
 			ArrayList lines=new ArrayList(streamReader.ReadToEnd().Split('\n'));
-			this.CleanText=path;
-			this.Load(this,lines,"");
+			CleanText=path;
+			Load(this,lines,"");
 			streamReader.Close();
 		}
 		public void Save() {
-			StreamWriter writer=new StreamWriter(this.CleanText);
+			StreamWriter writer=new StreamWriter(CleanText);
 			writer.Write(Help.SerializeTreeView(this,"",Editor.SelectedNode.CleanText,null));
 			writer.Close();
 		}
@@ -219,6 +210,7 @@ namespace Editor {
 			}
 		}
 	}
+	// rework
 	public abstract class Help {
 		public static ToolTip tip=new ToolTip();
 
@@ -265,6 +257,7 @@ namespace Editor {
 			}
 			return text;
 		}
+		//TODO
 		private static string MapToHelp(IKeyValue obj) {
 			string text="";
 			if(obj.Count==0) {
@@ -287,7 +280,7 @@ namespace Editor {
 			}
 			return text.TrimEnd('\n');
 		}
-		// here
+		// TODO
 		public static void ShowHelp(Node selectedNode,string selectedNodeText,bool isCall) {
 			string text="";
 			try {
@@ -326,9 +319,6 @@ namespace Editor {
 						else if(obj is NetClass) {
 							text=((NetClass)obj).Documentation;
 						}
-//						else if (obj is NetMethod) {
-//							text=((NetMethod)obj).GetDocumentation(f;
-//						}
 						else {
 							text+=new NetObject(obj).GetDocumentation(false);
 						}
@@ -342,9 +332,10 @@ namespace Editor {
 			Editor.window.Activate();
 			return;
 		}
+		// TODO
 		private static string FunctionHelp(Map map) {
 			string text="";
-			ArrayList args=ExtractFunctionArguments((IExpression)map.Compile());
+			ArrayList args=ExtractMetaFunctionArguments((IExpression)map.Compile());
 			ArrayList keys=new ArrayList();
 			foreach(object key in args) {
 				if(keys.IndexOf(key)==-1) {
@@ -359,7 +350,7 @@ namespace Editor {
 			}
 			return text;
 		}
-		// here
+		// TODO
 		public static bool IsFunctionCall(string spacedCleanText) {
 			string text=spacedCleanText.Trim(' ');
 
@@ -374,57 +365,44 @@ namespace Editor {
 			}
 			return true;
 		}
-		private static ArrayList ExtractFunctionArguments(IExpression map)
+		private static ArrayList ExtractMetaFunctionArguments(IExpression map)
 		{
 			ArrayList keys=new ArrayList();
-			if(map is Program)
-			{
-				foreach(Statement statement in ((Program)map).statements)
-				{
-					keys.AddRange(ExtractFunctionArguments(statement.key));
-					keys.AddRange(ExtractFunctionArguments(statement.val));
+			if(map is Program) {
+				foreach(Statement statement in ((Program)map).statements) {
+					keys.AddRange(ExtractMetaFunctionArguments(statement.key));
+					keys.AddRange(ExtractMetaFunctionArguments(statement.val));
 				}
 			}
-			else if(map is Call)
-			{
-				keys.AddRange(ExtractFunctionArguments(((Call)map).argument));
-				keys.AddRange(ExtractFunctionArguments(((Call)map).callable));
+			else if(map is Call) {
+				keys.AddRange(ExtractMetaFunctionArguments(((Call)map).argument));
+				keys.AddRange(ExtractMetaFunctionArguments(((Call)map).callable));
 			}
-			else if(map is Select)
-			{
+			else if(map is Select) {
 				bool nextIsArgKey=false;
-				foreach(IExpression expression in ((Select)map).expressions)
-				{
-					if(expression is Literal)
-					{
-						if(nextIsArgKey)
-						{
+				foreach(IExpression expression in ((Select)map).expressions) {
+					if(expression is Literal) {
+						if(nextIsArgKey) {
 							keys.Add(((Literal)expression).text);
 						}
 					}
 					nextIsArgKey=false;
-					if(expression is Literal)
-					{
-						if(((Literal)expression).text=="arg")
-						{
+					if(expression is Literal) {
+						if(((Literal)expression).text=="arg") {
 							nextIsArgKey=true;
 						}
 					}
-					else
-					{
-						keys.AddRange(ExtractFunctionArguments(expression));
+					else {
+						keys.AddRange(ExtractMetaFunctionArguments(expression));
 					}
 				}
 			}
 			return keys;
 		}
 	}
-	public abstract class History
-	{
-		public static void Add(LoggedCommand command)
-		{
-			if(commands.Count>present+1)
-			{
+	public abstract class History {
+		public static void Add(LoggedCommand command) {
+			if(commands.Count>present+1) {
 				commands.RemoveRange(present+1,commands.Count-(present+1));
 			}
 			commands.Add(command);
@@ -434,150 +412,111 @@ namespace Editor {
 		public static ArrayList commands=new ArrayList();
 	}
 
-	public abstract class Command
-	{
+	public abstract class Command {
 		public abstract void Do();
 
-		public virtual void Run()
-		{
-			if(this.CheckRequirements())
-			{
-				this.Do();
+		public virtual void Run() {
+			if(Preconditions()) {
+				Do();
+				Editor.SelectedNode.FileNode.Save();
 			}
 		}
-		protected bool CheckRequirements()
-		{
+		protected bool Preconditions() {
 			ArrayList requirements=new ArrayList();
-			Type currentType=this.GetType();
-
-			while(!currentType.Equals(typeof(Command)))
-			{
-				MethodInfo requirement=currentType.GetMethod(
+			Type current=GetType();
+			while(!current.Equals(typeof(Command))) {
+				MethodInfo requirement=current.GetMethod(
 					"Require",BindingFlags.DeclaredOnly|BindingFlags.Instance|BindingFlags.Public);
-				if(requirement!=null)
-				{
+				if(requirement!=null) {
 					requirements.Add(requirement);
 				}
-				currentType=currentType.BaseType;
+				current=current.BaseType;
 			}
-
 			requirements.Reverse();
-
-			foreach(MethodInfo requirement in requirements)
-			{
-				if(!(bool)requirement.Invoke(this,null))
-				{
+			foreach(MethodInfo requirement in requirements) {
+				if(!(bool)requirement.Invoke(this,null)) {
 					return false;
 				}
 			}
 			return true;
-
 		}
 	}
-	public abstract class LoggedCommand:Command
-	{
+	public abstract class LoggedCommand:Command {
 		public abstract void Undo();
-		public override void Run()
-		{
-			if(this.CheckRequirements())
-			{
+		public override void Run() {
+			if(Preconditions()) {
 				base.Run();
 				History.Add(this);
 				Editor.SelectedNode.FileNode.Save();
 			}
 		}
 	}
-	public abstract class LoggedNodeCommand:LoggedCommand
-	{
-		public bool Require()
-		{
+	public abstract class LoggedAnyNodeCommand:LoggedCommand {
+		public bool Require() {
 			return Editor.SelectedNode!=null;
 		}
 	}
-	public abstract class LoggedNonFileNodeCommand:LoggedNodeCommand
-	{
-		public new bool Require()
-		{
+	public abstract class LoggedNormalNodeCommand:LoggedAnyNodeCommand {
+		public new bool Require() {
 			return !(Editor.SelectedNode is FileNode);
 		}
 	}
-
-	public class UndoCommand:Command
-	{
-		public bool Require()
-		{
+	public class Undo:Command {
+		public bool Require() {
 			return History.present>-1;
 		}
-		public override void Do()
-		{
+		public override void Do() {
 			LoggedCommand command=(LoggedCommand)History.commands[History.present];
 			command.Undo();
 			History.present--;
 		}
 	}
-	public class RedoCommand:Command
-	{
-		public bool Require()
-		{
+	public class Redo:Command {
+		public bool Require() {
 			return History.present<History.commands.Count-1;
 		}
-		public override void Do()
-		{
+		public override void Do() {
 			LoggedCommand command=(LoggedCommand)History.commands[History.present+1];
 			command.Do();
 			History.present++;
 		}
 	}
-
-
-	public class ExecuteProgram: Command
-	{
-		public bool Require()
-		{
+	public class Execute: Command {
+		public bool Require() {
 			return Editor.SelectedNode!=null;
 		}
-		public override void Do()
-		{
-			try
-			{
-				string programText=Help.SerializeTreeView(Editor.SelectedNode.FileNode,"",Editor.SelectedNode.CleanText,
+		public override void Do() {
+			try {
+				string text=Help.SerializeTreeView(Editor.SelectedNode.FileNode,
+					"",Editor.SelectedNode.CleanText,
 					(Node)Editor.SelectedNode.FileNode.Nodes[Editor.SelectedNode.FileNode.Nodes.Count-1]);
-				Interpreter.Run(new StringReader(programText),new Map());
+				Interpreter.Run(new StringReader(text),new Map());
 			}
-			catch(Exception e)
-			{
+			catch(Exception e) {
 				Help.tip.SetToolTip(Editor.editor,e.ToString());
 			}
 		}
 	}
-	public class OpenFile: LoggedCommand
-	{
+	public class OpenFile: LoggedCommand {
 		static OpenFileDialog  openFileDialog=new OpenFileDialog();
 		private string path;
 		private FileNode fileNode;
 
-		static OpenFile()
-		{
+		static OpenFile() {
 			openFileDialog.Filter="All files (*.*)|*.*|Meta files (*.meta)|*.meta";
 		}
 
-		public bool Require()
-		{
-			if(this.path==null)
-			{
-				if(openFileDialog.ShowDialog()==DialogResult.OK)
-				{
-					this.path=openFileDialog.FileName;
+		public bool Require() {
+			if(path==null) {
+				if(openFileDialog.ShowDialog()==DialogResult.OK) {
+					path=openFileDialog.FileName;
 				}
-				else
-				{
+				else {
 					return false;
 				}
 			}
-			foreach(FileNode fileNode in Editor.editor.Nodes)
-			{
-				if(fileNode.CleanText==this.path)
-				{
+			foreach(FileNode fileNode in Editor.editor.Nodes) {
+				if(fileNode.CleanText==path) {
 					Help.tip.SetToolTip(Editor.editor,"The file is already open.");
 					return false;
 				}
@@ -585,152 +524,115 @@ namespace Editor {
 			return true;
 		}
 
-		public override void Do()
-		{
-			this.fileNode=new FileNode(this.path);
-			Editor.editor.Nodes.Add(this.fileNode);
-			Editor.SelectedNode=this.fileNode;
-			this.fileNode.ExpandAll();
-			this.fileNode.EnsureVisible();
+		public override void Do() {
+			fileNode=new FileNode(path);
+			Editor.editor.Nodes.Add(fileNode);
+			Editor.SelectedNode=fileNode;
+			fileNode.ExpandAll();
+			fileNode.EnsureVisible();
 		}
-		public override void Undo()
-		{
-			this.fileNode.Remove();
+		public override void Undo() {
+			fileNode.Remove();
 		}
 	}
 
 
-	public class MoveToPreviousNode:LoggedNodeCommand
-	{
-		public new bool Require()
-		{
+	public class MoveToPreviousNode:LoggedAnyNodeCommand {
+		public new bool Require() {
 			return Editor.SelectedNode.PrevNode!=null;
 		}
-		public override void Do()
-		{
+		public override void Do() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
 		}
-		public override void Undo()
-		{
+		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
 		}
 	}
-	public class MoveToNextNode:LoggedNodeCommand
-	{
-		public new bool Require()
-		{
+	public class MoveToNextNode:LoggedAnyNodeCommand {
+		public new bool Require() {
 			return Editor.SelectedNode.NextNode!=null;
 		}
-		public override void Do()
-		{
+		public override void Do() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
 		}
-		public override void Undo()
-		{
+		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
 		}
 	}
-	public class MoveToNode:LoggedNodeCommand
-	{
-		public new bool Require()
-		{
-			return this.targetNode!=null;
+	public class MoveToNode:LoggedAnyNodeCommand {
+		public new bool Require() {
+			return targetNode!=null;
 		}
 		private Node sourceNode;
 		private Node targetNode;
-		public MoveToNode(Node targetNode)
-		{
+		public MoveToNode(Node targetNode) {
 			this.targetNode=targetNode;
 		}
-		public override void Do()
-		{
-			this.sourceNode=Editor.SelectedNode;
-			Editor.SelectedNode=this.targetNode;
+		public override void Do() {
+			sourceNode=Editor.SelectedNode;
+			Editor.SelectedNode=targetNode;
 		}
-		public override void Undo()
-		{
-			Editor.SelectedNode=this.sourceNode;
+		public override void Undo() {
+			Editor.SelectedNode=sourceNode;
 		}
 	}
-	public class MoveLineUp:LoggedNodeCommand
-	{
-		public new bool Require()
-		{
+	public class MoveLineUp:LoggedAnyNodeCommand {
+		public new bool Require() {
 			return Editor.SelectedNode.PrevVisibleNode!=null;
 		}
-		public override void Do()
-		{
+		public override void Do() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevVisibleNode;
 		}
-		public override void Undo()
-		{
+		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.NextVisibleNode;
 		}
 	}
-	public class MoveLineDown:LoggedNodeCommand
-	{
-		public new bool Require()
-		{
+	public class MoveLineDown:LoggedAnyNodeCommand {
+		public new bool Require() {
 			return Editor.SelectedNode.NextVisibleNode!=null;
 		}
-		public override void Do()
-		{
+		public override void Do() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.NextVisibleNode;
 		}
-		public override void Undo()
-		{
+		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevVisibleNode;
 		}
 	}
 
-	public abstract class MoveCursor:LoggedNonFileNodeCommand
-	{
+	public abstract class MoveCursor:LoggedNormalNodeCommand {
 		protected int oldPosition;
-		public override void Undo()
-		{
-			Editor.SelectedNode.CursorPosition=this.oldPosition;
+		public override void Undo() {
+			Editor.SelectedNode.CursorPosition=oldPosition;
 		}
 	}
-	public class MoveStartOfLine:MoveCursor
-	{
-		public new bool Require()
-		{
+	public class MoveStartOfLine:MoveCursor {
+		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition!=0;
 		}
-		public override void Do()
-		{
-			this.oldPosition=Editor.SelectedNode.CursorPosition;
+		public override void Do() {
+			oldPosition=Editor.SelectedNode.CursorPosition;
 			Editor.SelectedNode.CursorPosition=0;
 		}
 	}
-	public class MoveEndOfLine:MoveCursor
-	{
-		public new bool Require()
-		{
+	public class MoveEndOfLine:MoveCursor {
+		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition!=Editor.SelectedNode.CleanText.Length-1;
 		}
-		public override void Do()
-		{
-			this.oldPosition=Editor.SelectedNode.CursorPosition;
+		public override void Do() {
+			oldPosition=Editor.SelectedNode.CursorPosition;
 			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CleanText.Length;
 		}
 	}
-	public class MoveWordRight:MoveCursor
-	{
-		public new bool Require()
-		{
+	public class MoveWordRight:MoveCursor {
+		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition!=Editor.SelectedNode.CleanText.Length;
 		}
-		public override void Do()
-		{
-			this.oldPosition=Editor.SelectedNode.CursorPosition;
+		public override void Do() {
+			oldPosition=Editor.SelectedNode.CursorPosition;
 			int index=Editor.SelectedNode.CursorPosition;
-			for(;index<Editor.SelectedNode.CleanText.Length;index++)
-			{
-				if(!Char.IsLetterOrDigit(Editor.SelectedNode.CleanText[index]))
-				{
-					if(index==Editor.SelectedNode.CursorPosition)
-					{
+			for(;index<Editor.SelectedNode.CleanText.Length;index++) {
+				if(!Char.IsLetterOrDigit(Editor.SelectedNode.CleanText[index])) {
+					if(index==Editor.SelectedNode.CursorPosition) {
 						index++;
 					}
 					break;
@@ -739,22 +641,16 @@ namespace Editor {
 			Editor.SelectedNode.CursorPosition=index;
 		}
 	}
-	public class MoveWordLeft:MoveCursor
-	{
-		public new bool Require()
-		{
+	public class MoveWordLeft:MoveCursor {
+		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition!=0;
 		}
-		public override void Do()
-		{
-			this.oldPosition=Editor.SelectedNode.CursorPosition;
+		public override void Do() {
+			oldPosition=Editor.SelectedNode.CursorPosition;
 			int index=Editor.SelectedNode.CursorPosition-1;
-			for(;index>=0;index--)
-			{
-				if(!Char.IsLetterOrDigit(Editor.SelectedNode.CleanText[index]))
-				{
-					if(index==Editor.SelectedNode.CursorPosition-1)
-					{
+			for(;index>=0;index--) {
+				if(!Char.IsLetterOrDigit(Editor.SelectedNode.CleanText[index])) {
+					if(index==Editor.SelectedNode.CursorPosition-1) {
 						index--;
 					}
 					break;
@@ -763,48 +659,38 @@ namespace Editor {
 			Editor.SelectedNode.CursorPosition=index+1;
 		}
 	}
-	public class MoveCharLeft:MoveCursor
-	{
-		public new bool Require()
-		{
+	public class MoveCharLeft:MoveCursor {
+		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition!=0;
 		}
-		public override void Do()
-		{
-			this.oldPosition=Editor.SelectedNode.CursorPosition;
-			Editor.SelectedNode.CursorPosition=this.oldPosition-1;
+		public override void Do() {
+			oldPosition=Editor.SelectedNode.CursorPosition;
+			Editor.SelectedNode.CursorPosition=oldPosition-1;
 		}
 
 	}
-	public class MoveCharRight:MoveCursor
-	{
-		public new bool Require()
-		{
+	public class MoveCharRight:MoveCursor {
+		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition<Editor.SelectedNode.CleanText.Length;
 		}
-		public override void Do()
-		{
-			this.oldPosition=Editor.SelectedNode.CursorPosition;
-			Editor.SelectedNode.CursorPosition=this.oldPosition+1;
+		public override void Do() {
+			oldPosition=Editor.SelectedNode.CursorPosition;
+			Editor.SelectedNode.CursorPosition=oldPosition+1;
 		}
 	}
 
-	public class DeleteWordRight:LoggedNonFileNodeCommand
-	{
-		public new bool Require()
-		{
+	public class DeleteWordRight:LoggedNormalNodeCommand {
+		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition!=Editor.SelectedNode.CleanText.Length;
 		}
 		private string deletedText;
-		public override void Do()
-		{
+		private int oldCursorPosition;
+		public override void Do() {
+			oldCursorPosition=Editor.SelectedNode.CursorPosition;
 			int index=Editor.SelectedNode.CursorPosition;
-			for(;index<Editor.SelectedNode.CleanText.Length;index++)
-			{
-				if(!Char.IsLetterOrDigit(Editor.SelectedNode.CleanText[index]))
-				{
-					if(index==Editor.SelectedNode.CursorPosition)
-					{
+			for(;index<Editor.SelectedNode.CleanText.Length;index++) {
+				if(!Char.IsLetterOrDigit(Editor.SelectedNode.CleanText[index])) {
+					if(index==Editor.SelectedNode.CursorPosition) {
 						index++;
 					}
 					break;
@@ -812,117 +698,97 @@ namespace Editor {
 			}
 			int start=Editor.SelectedNode.CursorPosition;
 			int end=index-Editor.SelectedNode.CursorPosition;
-			this.deletedText=Editor.SelectedNode.CleanText.Substring(start,end);
+			deletedText=Editor.SelectedNode.CleanText.Substring(start,end);
 			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(start,end);
 		}
-		public override void Undo()
-		{
-			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,this.deletedText);
+		public override void Undo() {
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,deletedText);
+			Editor.SelectedNode.CursorPosition=oldCursorPosition;
 		}
 	}
-	
-	public class DeleteWordLeft:LoggedNonFileNodeCommand
-	{
-		public new bool Require()
-		{
+	public class DeleteWordLeft:LoggedNormalNodeCommand {
+		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition!=0;
 		}
 		private string deletedText;
 		private int start;
-		public override void Do()
-		{
+		private int oldCursorPosition;
+		public override void Do() {
+			oldCursorPosition=Editor.SelectedNode.CursorPosition;
 			int index=Editor.SelectedNode.CursorPosition-1;
-			for(;index>=0;index--)
-			{
-				if(!Char.IsLetterOrDigit(Editor.SelectedNode.CleanText[index]))
-				{
-					if(index==Editor.SelectedNode.CursorPosition-1)
-					{
+			for(;index>=0;index--) {
+				if(!Char.IsLetterOrDigit(Editor.SelectedNode.CleanText[index])) {
+					if(index==Editor.SelectedNode.CursorPosition-1) {
 						index--;
 					}
 					break;
 				}
 			}
 			index++;
-			this.start=index;
+			start=index;
 			int end=Editor.SelectedNode.CursorPosition-index;
-			this.deletedText=Editor.SelectedNode.CleanText.Substring(start,end);
-			Editor.SelectedNode.CursorPosition=this.start;
+			deletedText=Editor.SelectedNode.CleanText.Substring(start,end);
+			Editor.SelectedNode.CursorPosition=start;
 			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(start,end);
 		}
-		public override void Undo()
-		{
-			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(start,this.deletedText);
+		public override void Undo() {
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(start,deletedText);
+			Editor.SelectedNode.CursorPosition=oldCursorPosition;
 		}
 	}
-	public class DeleteCharLeft:LoggedNonFileNodeCommand
-	{
-		public new bool Require()
-		{
+	public class DeleteCharLeft:LoggedNormalNodeCommand {
+		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition>0;
 		}
 		private char character;
-		public override void Do()
-		{
-			this.character=Editor.SelectedNode.CleanText[Editor.SelectedNode.CursorPosition-1];
+		public override void Do() {
+			character=Editor.SelectedNode.CleanText[Editor.SelectedNode.CursorPosition-1];
 			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition-1;
 			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
 		}
-		public override void Undo()
-		{
-			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(this.character));
+		public override void Undo() {
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(character));
 			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition+1;
 		}
 	}
-	public class DeleteCharRight:LoggedNonFileNodeCommand
-	{
-		public new bool Require()
-		{
+	public class DeleteCharRight:LoggedNormalNodeCommand {
+		public new bool Require() {
 			return Editor.SelectedNode.CursorPosition<Editor.SelectedNode.CleanText.Length;
 		}
 		private char character;
-		public override void Do()
-		{
-			this.character=Editor.SelectedNode.CleanText[Editor.SelectedNode.CursorPosition];
+		public override void Do() {
+			character=Editor.SelectedNode.CleanText[Editor.SelectedNode.CursorPosition];
 			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
 		}
-		public override void Undo()
-		{
-			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(this.character));
+		public override void Undo() {
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(character));
 		}
 	}
 
-	public class InsertCharacter: LoggedNonFileNodeCommand
-	{
-		public new bool Require()
-		{
-			return !(Editor.SelectedNode is FileNode) && !Char.IsControl(this.oldChar);
+	public class InsertCharacter: LoggedNormalNodeCommand {
+		public new bool Require() {
+			return !(Editor.SelectedNode is FileNode) && !Char.IsControl(oldChar);
 		}
 		private char oldChar;
-		public InsertCharacter(char oldChar)
-		{
+		public InsertCharacter(char oldChar) {
 			this.oldChar=oldChar;
 		}
-		public override void Do()
-		{
-			if(this.oldChar=='.')
-			{
+		public override void Do() {
+			if(oldChar=='.') {
 				Help.ShowHelp(Editor.SelectedNode,Editor.SelectedNode.CleanText+".break",false);
 			}
-			else if(this.oldChar=='(' && Help.IsFunctionCall(Editor.SelectedNode.CleanText))
-			{
+			else if(oldChar=='(' && Help.IsFunctionCall(Editor.SelectedNode.CleanText)) {
 				Help.ShowHelp(Editor.SelectedNode,Editor.SelectedNode.CleanText.TrimEnd('(')+".break",true);
 			}
-			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(this.oldChar));
+			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Insert(Editor.SelectedNode.CursorPosition,Convert.ToString(oldChar));
 			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition+1;
 		}
-		public override void Undo()
-		{
+		public override void Undo() {
 			Editor.SelectedNode.CursorPosition=Editor.SelectedNode.CursorPosition-1;
 			Editor.SelectedNode.CleanText=Editor.SelectedNode.CleanText.Remove(Editor.SelectedNode.CursorPosition,1);
 		}
-	}
-	public class CreateChild:LoggedNodeCommand {
+	} 
+	public class CreateChild:LoggedAnyNodeCommand {
 		public override void Do() {
 			Editor.SelectedNode.Nodes.Insert(0,new Node());
 			Editor.SelectedNode=(Node)Editor.SelectedNode.FirstNode;
@@ -936,13 +802,11 @@ namespace Editor {
 			Editor.SelectedNode.FirstNode.Remove();
 		}
 	}
-	public class CreateSiblingUp:LoggedNonFileNodeCommand {
+	public class CreateSiblingUp:LoggedNormalNodeCommand {
 		public new bool Require() {
 			return !(Editor.SelectedNode is FileNode);
 		}
 		public override void Do() {
-//			Help.ShowIndentedCallHelp();
-
 			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index,new Node());
 			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
 		}
@@ -951,12 +815,11 @@ namespace Editor {
 			Editor.SelectedNode.PrevNode.Remove();
 		}
 	}
-	public class CreateSibling:LoggedNonFileNodeCommand {
+	public class CreateSibling:LoggedNormalNodeCommand {
 		public new bool Require() {
 			return !(Editor.SelectedNode is FileNode);
 		}
 		public override void Do() {
-//			Help.ShowIndentedCallHelp();
 			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index+1,new Node());
 			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
 		}
@@ -965,106 +828,85 @@ namespace Editor {
 			Editor.SelectedNode.NextNode.Remove();
 		}
 	}
-	public class CutNode:Command
-	{
-		public override void Do()
-		{
+	public class CutNode:Command {
+		public override void Do() {
 			(new CopyNode()).Run();
 			(new DeleteNode()).Run();
 		}
 	}
-	public class CopyNode:LoggedNonFileNodeCommand
-	{
+	public class CopyNode:LoggedNormalNodeCommand {
 		private Node selectedNode;
-		public new bool Require()
-		{
+		public new bool Require() {
 			return !(Editor.SelectedNode is FileNode);
 		}
-		public override void Do()
-		{
-			this.selectedNode=Editor.clipboard;
+		public override void Do() {
+			selectedNode=Editor.clipboard;
 			Editor.clipboard=(Node)Editor.SelectedNode.Clone();
 		}
-		public override void Undo()
-		{
-			Editor.clipboard=this.selectedNode;
+		public override void Undo() {
+			Editor.clipboard=selectedNode;
 		}
 	}
-	public class PasteNodeBackward:LoggedNonFileNodeCommand
-	{
+	public class PasteNodeBackward:LoggedNormalNodeCommand {
 		private Node selectedNode;
-		public new bool Require()
-		{
+		public new bool Require() {
 			return Editor.clipboard!=null;
 		}
-		public override void Do()
-		{
-			this.selectedNode=(Node)Editor.clipboard.Clone();
-			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index,this.selectedNode);
-			this.selectedNode.ExpandAll();
-			Editor.SelectedNode=this.selectedNode;
+		public override void Do() {
+			selectedNode=(Node)Editor.clipboard.Clone();
+			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index,selectedNode);
+			selectedNode.ExpandAll();
+			Editor.SelectedNode=selectedNode;
 		}
-		public override void Undo()
-		{
+		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
-			this.selectedNode.Remove();
+			selectedNode.Remove();
 		}
 	}
-	public class PasteNode:LoggedNonFileNodeCommand
-	{
-		public new bool Require()
-		{
+	public class PasteNode:LoggedNormalNodeCommand {
+		public new bool Require() {
 			return Editor.clipboard!=null;
 		}
 		private Node selectedNode;
-		public override void Do()
-		{
-			this.selectedNode=(Node)Editor.clipboard.Clone();
-			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index+1,this.selectedNode);
-			this.selectedNode.ExpandAll();
-			Editor.SelectedNode=this.selectedNode;
+		public override void Do() {
+			selectedNode=(Node)Editor.clipboard.Clone();
+			Editor.SelectedNode.Parent.Nodes.Insert(Editor.SelectedNode.Index+1,selectedNode);
+			selectedNode.ExpandAll();
+			Editor.SelectedNode=selectedNode;
 		}
-		public override void Undo()
-		{
+		public override void Undo() {
 			Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
-			this.selectedNode.Remove();
+			selectedNode.Remove();
 		}
 	}
-	public class DeleteNode:LoggedNonFileNodeCommand
-	{
+	public class DeleteNode:LoggedNormalNodeCommand {
 		private int index;
 		private Node parentNode;
 		private Node deletedNode;
 
-		public new bool Require()
-		{
+		public new bool Require() {
 			return !(Editor.SelectedNode is FileNode);
 		}
-		public override void Do()
-		{
-			this.parentNode=(Node)Editor.SelectedNode.Parent;
-			this.index=Editor.SelectedNode.Index;
-			this.deletedNode=Editor.SelectedNode;
+		public override void Do() {
+			parentNode=(Node)Editor.SelectedNode.Parent;
+			index=Editor.SelectedNode.Index;
+			deletedNode=Editor.SelectedNode;
 
-			if(Editor.SelectedNode.NextNode!=null)
-			{
+			if(Editor.SelectedNode.NextNode!=null) {
 				Editor.SelectedNode=(Node)Editor.SelectedNode.NextNode;
 			}
-			else if(Editor.SelectedNode.PrevNode!=null)
-			{
+			else if(Editor.SelectedNode.PrevNode!=null) {
 				Editor.SelectedNode=(Node)Editor.SelectedNode.PrevNode;
 			}
-			else
-			{
+			else {
 				Editor.SelectedNode=(Node)Editor.SelectedNode.Parent;
 			}
-			this.deletedNode.Remove();
+			deletedNode.Remove();
 		}
-		public override void Undo()
+		public override void Undo() 
 		{
-			this.parentNode.Nodes.Insert(this.index,this.deletedNode);
-			Editor.SelectedNode=(Node)this.parentNode.Nodes[this.index];
+			parentNode.Nodes.Insert(index,deletedNode);
+			Editor.SelectedNode=(Node)parentNode.Nodes[index];
 		}
 	}
-	
 }

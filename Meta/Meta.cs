@@ -26,62 +26,40 @@ using Meta.TestingFramework;
 using Meta.Parser;
 using Meta.Types;
 using Meta.Execution;
-using Meta.StandardLibrary;
+using Meta.Library;
 using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.Xml;
 using System.Runtime.InteropServices;
 
 namespace Meta {
-	namespace StandardLibrary {
+	namespace Library {
 		public class Files:IKeyValue {
 			public IKeyValue Clone() {
 				return this;
 			}
-			private IKeyValue parent;
-			public IKeyValue Parent {
-				get {
-					return parent;
-				}
-				set {
-					parent=value;
-				}
-			}
-			private string path;
-			public Files() {
-				this.path=Directory.GetCurrentDirectory();
-			}
 			public Files(string path) {
 				this.path=path;
 			}
+			public IKeyValue Parent {get{return parent;}set{parent=value;}}private IKeyValue parent;
+			private string path;
 			public object this[object key] {
 				get {
 					if(key.Equals("up")) {
-						return new Files(Directory.GetParent(Directory.GetCurrentDirectory()).FullName);
+						return new Files(Directory.GetParent(path).FullName);
 					}
-					string name=this.path+Path.DirectorySeparatorChar;
+					string name=path+Path.DirectorySeparatorChar;
 					if(key is String) {
 						name+=(string)key;
 					}
 					else if(key is Map) {
 						name+=Interpreter.String((Map)key);
 					}
-					else {
-						return null;
-					}
 					if(Directory.Exists(name)) {
 						return new Files(name);
 					}
 					else if(File.Exists(name)) {
-						switch(Path.GetExtension(name)) {
-							case ".txt":
-								StreamReader reader=new StreamReader(name);
-								string text=reader.ReadToEnd();
-								reader.Close();
-								return Interpreter.String(text);
-							default:
-								return null;
-						}
+                  return new StreamReader(name).ReadToEnd();
 					}
 					else {
 						return null;
@@ -817,7 +795,7 @@ namespace Meta {
 				Map existing=new Map();
 				existing["meta"]=new NetClass(typeof(Interpreter));
 				existing["assemblies"]=new Assemblies();
-				existing["files"]=new Files();
+				existing["files"]=new Files(Directory.GetCurrentDirectory());
 				foreach(MethodInfo method in typeof(Functions).GetMethods(
 					BindingFlags.Public|BindingFlags.Static)) {
 					existing[method.Name]=new NetMethod(method.Name,null,typeof(Functions));
@@ -1322,18 +1300,29 @@ namespace Meta {
 			public string documentation;
 		}
 		public class NetMethod: ICallable {
-			private static Hashtable cashedDoc;
+			private static string cashedDoc;
 			public string GetDocumentation(bool showParams) {
-//				if(cashedDoc==null) {
+				if(cashedDoc==null) {
 					if(savedMethod!=null) {
-						return Interpreter.GetDoc(savedMethod,showParams);
+						cashedDoc=Interpreter.GetDoc(savedMethod,showParams);
 					}
 					else {
-						return Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
+						cashedDoc=Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
 					}
-				//}
-//				return doc;
+				}
+				return cashedDoc;
 			}
+//			public string GetDocumentation(bool showParams) {
+////				if(cashedDoc==null) {
+//					if(savedMethod!=null) {
+//						return Interpreter.GetDoc(savedMethod,showParams);
+//					}
+//					else {
+//						return Interpreter.GetDoc(methods[0],showParams)+"(+"+methods.Length.ToString()+"overloads)";
+//					}
+//				//}
+////				return doc;
+//			}
 			private IKeyValue parent;
 			[IgnoreMember]
 			public IKeyValue Parent {
@@ -1761,8 +1750,9 @@ namespace Meta {
 				MethodInfo method=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance
 					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
 
+				string returnTypeName=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
 				string source="using System;using Meta.Types;using Meta.Execution;";
-				source+="public class EventHandlerContainer{public "+method.ReturnType.Name+" EventHandlerMethod";
+				source+="public class EventHandlerContainer{public "+returnTypeName+" EventHandlerMethod";
 				int counter=1;
 				string argumentList="(";
 				string argumentAdding="Map arg=new Map();";
@@ -1770,7 +1760,7 @@ namespace Meta {
 				foreach(ParameterInfo parameter in method.GetParameters()) {
 					argumentList+=parameter.ParameterType.Name+" arg"+counter;
 					argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";
-					if(counter<=parameter.Position) {
+					if(counter<method.GetParameters().Length) {
 						argumentList+=",";
 					}
 					else {
@@ -1781,8 +1771,11 @@ namespace Meta {
 				source+=argumentList+"{";
 				source+=argumentAdding;
 				source+="Interpreter.arguments.Add(arg);object result=callable.Call();Interpreter.arguments.Remove(arg);";
-				source+="return ("+method.ReturnType.FullName+")";
-				source+="Interpreter.ConvertToNet(result,typeof("+method.ReturnType.FullName+"));}";
+				if(!method.ReturnType.Equals(typeof(void))) {
+					source+="return ("+returnTypeName+")";
+					source+="Interpreter.ConvertToNet(result,typeof("+returnTypeName+"));";
+				}
+				source+="}";
 				source+="private Map callable;";
 				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
 				CompilerParameters options=new CompilerParameters(new string[] {"mscorlib.dll","System.dll","Meta.dll"});
@@ -1790,8 +1783,10 @@ namespace Meta {
 				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
 				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[]
 					{code});
-				type.GetEvent(name).AddEventHandler(obj,Delegate.CreateDelegate(type.GetEvent(name).EventHandlerType,
-					container,"EventHandlerMethod"));
+				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
+				Delegate del=Delegate.CreateDelegate(type.GetEvent(name).EventHandlerType,
+					container,"EventHandlerMethod");
+				type.GetEvent(name).AddEventHandler(obj,del);
 			}
 			public bool ContainsKey(object key)  {
 				try  {
