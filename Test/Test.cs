@@ -32,7 +32,9 @@ namespace Test {
 		public static string path="";
 		[STAThread]
 		public static void Main(string[] args) {
-//			args=new string[]{@"..\..\basicTest.meta"};
+			DateTime start=DateTime.Now;
+			//args=new string[]{@"C:\Dokumente und Einstellungen\Christian\Desktop\editor.meta"};
+			//args=new string[]{@"..\..\basicTest.meta"};
 			if(args.Length==0) {
 				Directory.SetCurrentDirectory(
 					".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
@@ -66,6 +68,10 @@ namespace Test {
 //					Console.ReadLine();
 //				}
 			}
+			DateTime end=DateTime.Now;
+			TimeSpan span=end-start;
+			Console.WriteLine(span.TotalSeconds);
+			Console.ReadLine();
 		}
 	}
 	public class Tests {

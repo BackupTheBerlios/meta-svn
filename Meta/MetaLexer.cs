@@ -48,16 +48,15 @@ namespace Meta.Parser
 		public const int LPAREN = 16;
 		public const int RPAREN = 17;
 		public const int POINT = 18;
-		public const int COMMA = 19;
-		public const int GATTER = 20;
-		public const int LITERAL_KEY = 21;
-		public const int LITERAL = 22;
-		public const int SPACES = 23;
-		public const int LINE = 24;
-		public const int COMMENT = 25;
-		public const int SPACE = 26;
-		public const int NEWLINE = 27;
-		public const int SELECT_KEY = 28;
+		public const int GATTER = 19;
+		public const int LITERAL_KEY = 20;
+		public const int LITERAL = 21;
+		public const int SPACES = 22;
+		public const int LINE = 23;
+		public const int COMMENT = 24;
+		public const int SPACE = 25;
+		public const int NEWLINE = 26;
+		public const int SELECT_KEY = 27;
 		
 		public MetaLexer(Stream ins) : this(new ByteBuffer(ins))
 		{
@@ -136,12 +135,6 @@ tryAgain:
 						case '.':
 						{
 							mPOINT(true);
-							theRetToken = returnToken_;
-							break;
-						}
-						case ',':
-						{
-							mCOMMA(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -306,20 +299,6 @@ tryAgain:
 		returnToken_ = _token;
 	}
 	
-	public void mCOMMA(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
-{
-		int _ttype; Token _token=null; int _begin=text.Length;
-		_ttype = COMMA;
-		
-		match(',');
-		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
-		{
-			_token = makeToken(_ttype);
-			_token.setText(text.ToString(_begin, text.Length-_begin));
-		}
-		returnToken_ = _token;
-	}
-	
 	public void mGATTER(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
@@ -340,7 +319,7 @@ tryAgain:
 		_ttype = LITERAL_KEY;
 		
 		{ // ( ... )+
-		int _cnt13=0;
+		int _cnt12=0;
 		for (;;)
 		{
 			if ((tokenSet_0_.member(LA(1))))
@@ -351,12 +330,12 @@ tryAgain:
 			}
 			else
 			{
-				if (_cnt13 >= 1) { goto _loop13_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
+				if (_cnt12 >= 1) { goto _loop12_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
 			}
 			
-			_cnt13++;
+			_cnt12++;
 		}
-_loop13_breakloop:		;
+_loop12_breakloop:		;
 		}    // ( ... )+
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -390,11 +369,11 @@ _loop13_breakloop:		;
 					}
 					else
 					{
-						goto _loop17_breakloop;
+						goto _loop16_breakloop;
 					}
 					
 				}
-_loop17_breakloop:				;
+_loop16_breakloop:				;
 			}    // ( ... )*
 			_saveIndex = text.Length;
 			match("\"");
@@ -418,11 +397,11 @@ _loop17_breakloop:				;
 					}
 					else
 					{
-						goto _loop20_breakloop;
+						goto _loop19_breakloop;
 					}
 					
 				}
-_loop20_breakloop:				;
+_loop19_breakloop:				;
 			}    // ( ... )*
 			break;
 		}
@@ -445,7 +424,7 @@ _loop20_breakloop:				;
 		_ttype = SPACES;
 		
 		{ // ( ... )+
-		int _cnt23=0;
+		int _cnt22=0;
 		for (;;)
 		{
 			if ((LA(1)==' '))
@@ -454,12 +433,12 @@ _loop20_breakloop:				;
 			}
 			else
 			{
-				if (_cnt23 >= 1) { goto _loop23_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
+				if (_cnt22 >= 1) { goto _loop22_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
 			}
 			
-			_cnt23++;
+			_cnt22++;
 		}
-_loop23_breakloop:		;
+_loop22_breakloop:		;
 		}    // ( ... )+
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -477,11 +456,11 @@ _loop23_breakloop:		;
 		const int endOfFileValue=65535;
 		
 		
-		bool synPredMatched30 = false;
+		bool synPredMatched29 = false;
 		if (((LA(1)=='\n'||LA(1)=='\r')))
 		{
-			int _m30 = mark();
-			synPredMatched30 = true;
+			int _m29 = mark();
+			synPredMatched29 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -495,11 +474,11 @@ _loop23_breakloop:		;
 							}
 							else
 							{
-								goto _loop27_breakloop;
+								goto _loop26_breakloop;
 							}
 							
 						}
-_loop27_breakloop:						;
+_loop26_breakloop:						;
 					}    // ( ... )*
 					{    // ( ... )*
 						for (;;)
@@ -510,11 +489,11 @@ _loop27_breakloop:						;
 							}
 							else
 							{
-								goto _loop29_breakloop;
+								goto _loop28_breakloop;
 							}
 							
 						}
-_loop29_breakloop:						;
+_loop28_breakloop:						;
 					}    // ( ... )*
 					if (!(LA(1)==endOfFileValue))
 					  throw new SemanticException("LA(1)==endOfFileValue");
@@ -522,12 +501,12 @@ _loop29_breakloop:						;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched30 = false;
+				synPredMatched29 = false;
 			}
-			rewind(_m30);
+			rewind(_m29);
 			inputState.guessing--;
 		}
-		if ( synPredMatched30 )
+		if ( synPredMatched29 )
 		{
 			mNEWLINE(false);
 			{    // ( ... )*
@@ -539,11 +518,11 @@ _loop29_breakloop:						;
 					}
 					else
 					{
-						goto _loop32_breakloop;
+						goto _loop31_breakloop;
 					}
 					
 				}
-_loop32_breakloop:				;
+_loop31_breakloop:				;
 			}    // ( ... )*
 			{    // ( ... )*
 				for (;;)
@@ -554,11 +533,11 @@ _loop32_breakloop:				;
 					}
 					else
 					{
-						goto _loop34_breakloop;
+						goto _loop33_breakloop;
 					}
 					
 				}
-_loop34_breakloop:				;
+_loop33_breakloop:				;
 			}    // ( ... )*
 			if (!(LA(1)==endOfFileValue))
 			  throw new SemanticException("LA(1)==endOfFileValue");
@@ -580,11 +559,11 @@ _loop34_breakloop:				;
 					}
 					else
 					{
-						goto _loop36_breakloop;
+						goto _loop35_breakloop;
 					}
 					
 				}
-_loop36_breakloop:				;
+_loop35_breakloop:				;
 			}    // ( ... )*
 			if (0==inputState.guessing)
 			{
@@ -689,11 +668,11 @@ _loop36_breakloop:				;
 				}
 				else
 				{
-					goto _loop40_breakloop;
+					goto _loop39_breakloop;
 				}
 				
 			}
-_loop40_breakloop:			;
+_loop39_breakloop:			;
 		}    // ( ... )*
 		{
 			switch ( LA(1) )
@@ -739,7 +718,7 @@ _loop40_breakloop:			;
 	private static long[] mk_tokenSet_0_()
 	{
 		long[] data = new long[2048];
-		data[0]=-2594345570327920136L;
+		data[0]=-2594288395723275784L;
 		data[1]=-671088641L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
@@ -760,7 +739,7 @@ _loop40_breakloop:			;
 	private static long[] mk_tokenSet_2_()
 	{
 		long[] data = new long[2048];
-		data[0]=-2594204832839564808L;
+		data[0]=-2594147658234920456L;
 		data[1]=-671088641L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
