@@ -113,6 +113,7 @@ class MetaANTLRParser extends Parser;
 options {
 	buildAST = true;
 	k=1;
+  defaultErrorHandler=false;
 }
 expression:
   (
@@ -258,7 +259,9 @@ literalKey:
   using Meta.Execution;
 }      
 class MetaTreeParser extends TreeParser;
-
+options {
+        defaultErrorHandler=false;
+}
 expression
   returns[Map result]
   {

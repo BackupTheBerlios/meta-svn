@@ -64,56 +64,46 @@ namespace Meta.Parser
 		result=null;
 		
 		
-		try {      // for error handling
-			{
-				if (null == _t)
-					_t = ASTNULL;
-				switch ( _t.Type )
-				{
-				case CALL:
-				{
-					result=call(_t);
-					_t = retTree_;
-					break;
-				}
-				case MAP:
-				{
-					result=map(_t);
-					_t = retTree_;
-					break;
-				}
-				case SELECT_KEY:
-				{
-					result=select(_t);
-					_t = retTree_;
-					break;
-				}
-				case LITERAL:
-				{
-					result=literal(_t);
-					_t = retTree_;
-					break;
-				}
-				case FUNCTION:
-				{
-					result=delayed(_t);
-					_t = retTree_;
-					break;
-				}
-				default:
-				{
-					throw new NoViableAltException(_t);
-				}
-				 }
-			}
-		}
-		catch (RecognitionException ex)
 		{
-			reportError(ex);
-			if (null != _t)
+			if (null == _t)
+				_t = ASTNULL;
+			switch ( _t.Type )
 			{
-				_t = _t.getNextSibling();
+			case CALL:
+			{
+				result=call(_t);
+				_t = retTree_;
+				break;
 			}
+			case MAP:
+			{
+				result=map(_t);
+				_t = retTree_;
+				break;
+			}
+			case SELECT_KEY:
+			{
+				result=select(_t);
+				_t = retTree_;
+				break;
+			}
+			case LITERAL:
+			{
+				result=literal(_t);
+				_t = retTree_;
+				break;
+			}
+			case FUNCTION:
+			{
+				result=delayed(_t);
+				_t = retTree_;
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltException(_t);
+			}
+			 }
 		}
 		retTree_ = _t;
 		return result;
@@ -131,35 +121,25 @@ namespace Meta.Parser
 		Map argument=new Map();
 		
 		
-		try {      // for error handling
-			AST __t80 = _t;
-			AST tmp17_AST_in = _t;
-			match(_t,CALL);
-			_t = _t.getFirstChild();
-			{
-				delayed=expression(_t);
-				_t = retTree_;
-			}
-			{
-				argument=expression(_t);
-				_t = retTree_;
-			}
-			
-			call["function"]=delayed;
-			call["argument"]=argument;
-			result["call"]=call;
-			
-			_t = __t80;
-			_t = _t.getNextSibling();
-		}
-		catch (RecognitionException ex)
+		AST __t80 = _t;
+		AST tmp17_AST_in = _t;
+		match(_t,CALL);
+		_t = _t.getFirstChild();
 		{
-			reportError(ex);
-			if (null != _t)
-			{
-				_t = _t.getNextSibling();
-			}
+			delayed=expression(_t);
+			_t = retTree_;
 		}
+		{
+			argument=expression(_t);
+			_t = retTree_;
+		}
+		
+		call["function"]=delayed;
+		call["argument"]=argument;
+		result["call"]=call;
+		
+		_t = __t80;
+		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return result;
 	}
@@ -175,62 +155,52 @@ namespace Meta.Parser
 		int counter=1;
 		
 		
-		try {      // for error handling
-			AST __t75 = _t;
-			AST tmp18_AST_in = _t;
-			match(_t,MAP);
-			_t = _t.getFirstChild();
-			{    // ( ... )*
-				for (;;)
-				{
-					if (_t == null)
-						_t = ASTNULL;
-					if ((_t.Type==STATEMENT))
-					{
-						
-						Map key=null;
-						Map val=null;
-						
-						AST __t77 = _t;
-						AST tmp19_AST_in = _t;
-						match(_t,STATEMENT);
-						_t = _t.getFirstChild();
-						key=select(_t);
-						_t = retTree_;
-						val=expression(_t);
-						_t = retTree_;
-						
-						Map statement=new Map();
-											statement["key"]=key;
-											statement["value"]=val;
-											statements[new Integer(counter)]=statement;
-											counter++;
-										
-						_t = __t77;
-						_t = _t.getNextSibling();
-					}
-					else
-					{
-						goto _loop78_breakloop;
-					}
-					
-				}
-_loop78_breakloop:				;
-			}    // ( ... )*
-			_t = __t75;
-			_t = _t.getNextSibling();
-			
-			result["program"]=statements;
-			
-		}
-		catch (RecognitionException ex)
-		{
-			reportError(ex);
-			if (null != _t)
+		AST __t75 = _t;
+		AST tmp18_AST_in = _t;
+		match(_t,MAP);
+		_t = _t.getFirstChild();
+		{    // ( ... )*
+			for (;;)
 			{
-				_t = _t.getNextSibling();
+				if (_t == null)
+					_t = ASTNULL;
+				if ((_t.Type==STATEMENT))
+				{
+					
+					Map key=null;
+					Map val=null;
+					
+					AST __t77 = _t;
+					AST tmp19_AST_in = _t;
+					match(_t,STATEMENT);
+					_t = _t.getFirstChild();
+					key=select(_t);
+					_t = retTree_;
+					val=expression(_t);
+					_t = retTree_;
+					
+					Map statement=new Map();
+										statement["key"]=key;
+										statement["value"]=val;
+										statements[new Integer(counter)]=statement;
+										counter++;
+									
+					_t = __t77;
+					_t = _t.getNextSibling();
+				}
+				else
+				{
+					goto _loop78_breakloop;
+				}
+				
 			}
-		}
+_loop78_breakloop:			;
+		}    // ( ... )*
+		_t = __t75;
+		_t = _t.getNextSibling();
+		
+		result["program"]=statements;
+		
 		retTree_ = _t;
 		return result;
 	}
@@ -247,51 +217,41 @@ _loop78_breakloop:				;
 		int counter=1;
 		
 		
-		try {      // for error handling
-			AST __t84 = _t;
-			AST tmp20_AST_in = _t;
-			match(_t,SELECT_KEY);
-			_t = _t.getFirstChild();
-			{
-				{ // ( ... )+
-				int _cnt87=0;
-				for (;;)
-				{
-					if (_t == null)
-						_t = ASTNULL;
-					if ((tokenSet_0_.member(_t.Type)))
-					{
-						key=expression(_t);
-						_t = retTree_;
-						
-						selection[new Integer(counter)]=key;
-						counter++;
-						
-					}
-					else
-					{
-						if (_cnt87 >= 1) { goto _loop87_breakloop; } else { throw new NoViableAltException(_t);; }
-					}
-					
-					_cnt87++;
-				}
-_loop87_breakloop:				;
-				}    // ( ... )+
-			}
-			_t = __t84;
-			_t = _t.getNextSibling();
-			
-			result["select"]=selection;
-			
-		}
-		catch (RecognitionException ex)
+		AST __t84 = _t;
+		AST tmp20_AST_in = _t;
+		match(_t,SELECT_KEY);
+		_t = _t.getFirstChild();
 		{
-			reportError(ex);
-			if (null != _t)
+			{ // ( ... )+
+			int _cnt87=0;
+			for (;;)
 			{
-				_t = _t.getNextSibling();
+				if (_t == null)
+					_t = ASTNULL;
+				if ((tokenSet_0_.member(_t.Type)))
+				{
+					key=expression(_t);
+					_t = retTree_;
+					
+					selection[new Integer(counter)]=key;
+					counter++;
+					
+				}
+				else
+				{
+					if (_cnt87 >= 1) { goto _loop87_breakloop; } else { throw new NoViableAltException(_t);; }
+				}
+				
+				_cnt87++;
 			}
+_loop87_breakloop:			;
+			}    // ( ... )+
 		}
+		_t = __t84;
+		_t = _t.getNextSibling();
+		
+		result["select"]=selection;
+		
 		retTree_ = _t;
 		return result;
 	}
@@ -306,22 +266,12 @@ _loop87_breakloop:				;
 		result=new Map();
 		
 		
-		try {      // for error handling
-			token = _t;
-			match(_t,LITERAL);
-			_t = _t.getNextSibling();
-			
-			result["literal"]=token.getText();
-			
-		}
-		catch (RecognitionException ex)
-		{
-			reportError(ex);
-			if (null != _t)
-			{
-				_t = _t.getNextSibling();
-			}
-		}
+		token = _t;
+		match(_t,LITERAL);
+		_t = _t.getNextSibling();
+		
+		result["literal"]=token.getText();
+		
 		retTree_ = _t;
 		return result;
 	}
@@ -336,27 +286,17 @@ _loop87_breakloop:				;
 		Map delayed;
 		
 		
-		try {      // for error handling
-			AST __t90 = _t;
-			AST tmp21_AST_in = _t;
-			match(_t,FUNCTION);
-			_t = _t.getFirstChild();
-			delayed=expression(_t);
-			_t = retTree_;
-			_t = __t90;
-			_t = _t.getNextSibling();
-			
-			result["delayed"]=delayed;
-			
-		}
-		catch (RecognitionException ex)
-		{
-			reportError(ex);
-			if (null != _t)
-			{
-				_t = _t.getNextSibling();
-			}
-		}
+		AST __t90 = _t;
+		AST tmp21_AST_in = _t;
+		match(_t,FUNCTION);
+		_t = _t.getFirstChild();
+		delayed=expression(_t);
+		_t = retTree_;
+		_t = __t90;
+		_t = _t.getNextSibling();
+		
+		result["delayed"]=delayed;
+		
 		retTree_ = _t;
 		return result;
 	}

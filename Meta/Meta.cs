@@ -230,6 +230,18 @@ namespace Meta {
 			public static bool Equal(object a,object b) {
 				return a.Equals(b);
 			}
+			public static void Switch() {
+				Map arg=((Map)Interpreter.Arg);
+				object val=arg[new Integer(1)];
+				Map cases=(Map)arg["case"];
+				Map def=(Map)arg["default"];
+				if(cases.ContainsKey(val)) {
+					((IExpression)((Map)cases[val]).Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+				}
+				else if(def!=null) {
+					((IExpression)def.Compile()).Evaluate(Interpreter.callers[Interpreter.callers.Count-1]);
+				}				
+			}
 		}
 		public class LiteralRecognitions {
 			// order of classes is important here !
@@ -603,6 +615,9 @@ namespace Meta {
 				return preselection;
 			}
 			public object Preselect(object current,ArrayList keys,bool isSearch,bool isSelectLastKey) {
+				if(keys[0].Equals("Switch")) {
+					int asdf=0;
+				}
 				object selected=current;
 				int i=0;
 				if(keys[0].Equals("this")) {
@@ -637,8 +652,11 @@ namespace Meta {
 					i++;
 				}				
 				else if(isSearch) {
-					while(!((IKeyValue)selected).ContainsKey(keys[0])) {
+					while(selected!=null && !((IKeyValue)selected).ContainsKey(keys[0])) {
 						selected=((IKeyValue)selected).Parent;
+					}
+					if(selected==null) {
+						throw new ApplicationException("Key "+keys[i]+" not found");
 					}
 				}
 				int count=keys.Count-1;
@@ -653,6 +671,9 @@ namespace Meta {
 						selected=((IKeyValue)selected)[keys[i]];
 					}
 					else {
+						if(selected==null) {
+							throw new ApplicationException("Key "+keys[i]+" does not exist");
+						}
 						selected=new NetObject(selected)[keys[i]];
 					}
 
@@ -941,9 +962,9 @@ namespace Meta {
 							text=text.Remove(text.Length-1,1);
 						}
 						text+=")";
-//						if(memberInfos.Length>1) {
-//							text+=" ( +"+(memberInfos.Length-1)+" overloads)";
-//						}
+						//						if(memberInfos.Length>1) {
+						//							text+=" ( +"+(memberInfos.Length-1)+" overloads)";
+						//						}
 					}
 					else if(memberInfo is PropertyInfo) {
 						text+=((PropertyInfo)memberInfo).PropertyType+" "+((PropertyInfo)memberInfo).Name;
@@ -952,7 +973,25 @@ namespace Meta {
 						text+=((FieldInfo)memberInfo).FieldType+" "+((FieldInfo)memberInfo).Name;
 					}
 					else if(memberInfo is Type) {
-						text+="class "+((Type)memberInfo).Name;
+						if(((Type)memberInfo).IsInterface) {
+							text+="interface ";
+						}
+						else {
+							if(((Type)memberInfo).IsAbstract) {
+								text+="abstract ";
+							}
+							if(((Type)memberInfo).IsValueType) {
+								text+="struct ";
+							}
+							else {
+								text+="class ";
+							}
+						}						 
+						text+=((Type)memberInfo).Name;
+					}
+					else if(memberInfo is EventInfo) {
+						text+=((EventInfo)memberInfo).EventHandlerType.FullName+" "+
+							memberInfo.Name;
 					}
 					text+="\n";
 				}
@@ -961,6 +1000,7 @@ namespace Meta {
 					//text+="\nparameters: \n";
 					foreach(XmlNode node in parameters) {
 						text+=node.Attributes["name"].Value+": "+node.InnerXml;
+//						text+=node.Attributes["name"].Value+": "+node.InnerXml;
 					}
 				}
 				return text.Replace("<para>","").Replace("\r\n","").Replace("</para>","").Replace("<see cref=\"","")
@@ -1438,7 +1478,7 @@ namespace Meta {
 			protected object target;
 			protected Type type;
 			public MethodBase savedMethod;
-			private MethodBase[] methods;
+			public MethodBase[] methods;
 			
 
 
@@ -1469,6 +1509,9 @@ namespace Meta {
 					}
 					bool executed=false;
 					methods.Reverse();
+					if(this.name.Equals("Switch")) {
+						int asdf=0;
+					}
 					foreach(MethodBase method in methods) {
 						ArrayList args=new ArrayList();
 						int counter=0;
@@ -1523,8 +1566,13 @@ namespace Meta {
 						}
 					}
 					if(!executed) {
-						throw new ApplicationException(name+" could not be invoked,"+
-							"the parameters do not match");
+//						try {
+							return savedMethod.Invoke(target,new object[] {});
+//						}
+//						catch {
+//							throw new ApplicationException(name+" could not be invoked,"+
+//								"the parameters do not match");
+//						}
 					}
 					else {
 						return result;
