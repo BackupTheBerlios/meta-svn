@@ -345,7 +345,7 @@ namespace Meta {
 								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString()) {
 									text+="\n";
 								}
-								text+=MetaSerialize(entry.Value,indent+"  ",true);
+								text+=MetaSerialize(entry.Value,indent+"    ",true);
 								if(!(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString())) {
 									text+="\n";
 								}
