@@ -6,7 +6,7 @@ gacTest=System.Collections
 lazyGACTest=Microsoft.CSharp
 metaLibTest=metaLib
 commandLineArguments=arg
-libraryAssemblyTest=Test
+libraryAssemblyTest=testClasses
 [(['a']='a')]='Object'
 ['normal symbol']='NormalSymbol'
 lookupSymbol='LookupSymbol'
@@ -46,7 +46,7 @@ SetCurrent==
   this=(arg=arg,x=symbol)
   this=x
 thisSet=SetCurrent(symbol='haha')
-this=base.Merge(parent,Test)
+this=base.Merge(parent,testClasses)
 testClass=TestClass()
 memberTest=MemberTest()
 MemberTest.classField='a'

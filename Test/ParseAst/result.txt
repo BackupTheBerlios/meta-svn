@@ -516,7 +516,7 @@ getFirstChild (CommonAST):
                         getNextSibling:
                           null
                         getText (String):
-                          "Test"
+                          "testClasses"
                         Type (Int32):
                           "21"
                       getNextSibling:
@@ -2453,7 +2453,7 @@ getFirstChild (CommonAST):
                                                                               getNextSibling:
                                                                                 null
                                                                               getText (String):
-                                                                                "Test"
+                                                                                "testClasses"
                                                                               Type (Int32):
                                                                                 "21"
                                                                             getNextSibling:

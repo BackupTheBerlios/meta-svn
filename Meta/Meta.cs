@@ -634,7 +634,7 @@ namespace Meta {
 			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
 				object selected=current;
 				int i=0;
-				if(keys[0].Equals("programText")) {
+				if(keys[0].Equals("testClasses")) {
 					int asdf=0;
 				}
 				if(keys[0].Equals("this")) {
@@ -1148,7 +1148,7 @@ namespace Meta {
 			bool microsoftLoaded=false;
 			public object this[object key] {
 				get {
-					if(key.Equals("Test")) {
+					if(key.Equals("testClasses")) {
 						int asdf=0;
 					}
 					if(cash.ContainsKey(key)) {
