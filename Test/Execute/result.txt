@@ -103,6 +103,13 @@ Entry (DictionaryEntry)
         "System.Object Run(System.String)"
 Entry (DictionaryEntry)
   Key (String):
+    "Foreach"
+  Value (NetMethod):
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Map Foreach()"
+Entry (DictionaryEntry)
+  Key (String):
     "Switch"
   Value (NetMethod):
     methods (MethodBase[]):
@@ -178,13 +185,6 @@ Entry (DictionaryEntry)
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.String Read()"
-Entry (DictionaryEntry)
-  Key (String):
-    "Each"
-  Value (NetMethod):
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Map Each()"
 Entry (DictionaryEntry)
   Key (Integer):
     "2"

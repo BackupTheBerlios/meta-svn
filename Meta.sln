@@ -3,11 +3,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", 
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor.csproj", "{F76CE7F8-6024-431E-9FC3-B91D0E489904}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta", "Meta\Meta.csproj", "{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaCore", "Meta\MetaCore.csproj", "{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -35,14 +31,6 @@ Global
 		{870B2FE3-C18D-4072-BBA8-75A639A34D18}.Release.Build.0 = Release|.NET
 		{870B2FE3-C18D-4072-BBA8-75A639A34D18}.Test.ActiveCfg = Release|.NET
 		{870B2FE3-C18D-4072-BBA8-75A639A34D18}.Test.Build.0 = Release|.NET
-		{F76CE7F8-6024-431E-9FC3-B91D0E489904}.Debug.ActiveCfg = Debug|.NET
-		{F76CE7F8-6024-431E-9FC3-B91D0E489904}.Debug.Build.0 = Debug|.NET
-		{F76CE7F8-6024-431E-9FC3-B91D0E489904}.Interactive.ActiveCfg = Release|.NET
-		{F76CE7F8-6024-431E-9FC3-B91D0E489904}.Interactive.Build.0 = Release|.NET
-		{F76CE7F8-6024-431E-9FC3-B91D0E489904}.Release.ActiveCfg = Release|.NET
-		{F76CE7F8-6024-431E-9FC3-B91D0E489904}.Release.Build.0 = Release|.NET
-		{F76CE7F8-6024-431E-9FC3-B91D0E489904}.Test.ActiveCfg = Release|.NET
-		{F76CE7F8-6024-431E-9FC3-B91D0E489904}.Test.Build.0 = Release|.NET
 		{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}.Debug.ActiveCfg = Debug|.NET
 		{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}.Debug.Build.0 = Debug|.NET
 		{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}.Interactive.ActiveCfg = Release|.NET

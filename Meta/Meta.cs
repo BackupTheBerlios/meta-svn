@@ -769,15 +769,7 @@ namespace Meta {
 			public object this[object key] {
 				get {
 					if(cash.ContainsKey(key)) {
-						if(key.Equals("Microsoft")) {
-							if(!microsoftLoaded) {
-								foreach(Assembly assembly in microsoftAssemblies) {
-									cash=(Map)Interpreter.Merge(cash,LoadAssembly(assembly));
-								}
-								microsoftLoaded=true;
-							}
-						}
-						else if(cash[key] is UnloadedMetaLibrary) {
+						if(cash[key] is UnloadedMetaLibrary) {
 							cash[key]=((UnloadedMetaLibrary)cash[key]).Load();
 						}
 						return cash[key];
@@ -819,29 +811,31 @@ namespace Meta {
 					throw new ApplicationException("Tried to set parent of library.");
 				}
 			}
-			public IEnumerator GetEnumerator() {
-				foreach(DictionaryEntry entry in cash) { // to make sure everything is loaded
-					object o=cash[entry.Key];				  // not good, should make own enumerator
+			public IEnumerator GetEnumerator() { 
+				foreach(DictionaryEntry entry in cash) { // create separate enumerator for efficiency?
+					object o=cash[entry.Key];				  // or remove IEnumerable from IMap (only needed for foreach)
 				}
 				return cash.GetEnumerator();
 			}
-			public static Map LoadAssembly(Assembly assembly) { //refactor
+			public static Map LoadAssemblies(IEnumerable assemblies) {
 				Map root=new Map();
-				foreach(Type type in assembly.GetExportedTypes())  {
-					if(type.DeclaringType==null)  {
-						Map position=root;
-						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
-						subPaths.RemoveAt(subPaths.Count-1);
-						foreach(string subPath in subPaths)  {
-							if(!position.ContainsKey(subPath))  {
-								position[subPath]=new Map();
+				foreach(Assembly assembly in assemblies) {
+					foreach(Type type in assembly.GetExportedTypes())  {
+						if(type.DeclaringType==null)  {
+							Map position=root;
+							ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
+							subPaths.RemoveAt(subPaths.Count-1);
+							foreach(string subPath in subPaths)  {
+								if(!position.ContainsKey(subPath))  {
+									position[subPath]=new Map();
+								}
+								position=(Map)position[subPath];
 							}
-							position=(Map)position[subPath];
+							position[type.Name]=new NetClass(type);
 						}
-						position[type.Name]=new NetClass(type);
 					}
+					Interpreter.loadedAssemblies.Add(assembly.Location);
 				}
-				Interpreter.loadedAssemblies.Add(assembly.Location);
 				return root;
 			}
 			private static AssemblyName GetAssemblyName(IAssemblyName nameRef) {
@@ -853,36 +847,27 @@ namespace Meta {
 				return name;
 			}
 			public Library() {
+				ArrayList assemblies=new ArrayList();
 				libraryPath=Path.Combine(Interpreter.metaInstallationPath,"library");
-
 				IAssemblyEnum e=AssemblyCache.CreateGACEnum();
 				IAssemblyName an; 
 				AssemblyName name;
-				cash=(Map)Interpreter.Merge(cash,(Map)LoadAssembly(Assembly.LoadWithPartialName("mscorlib")));
-				while (AssemblyCache.GetNextAssembly(e, out an) == 0) { 
+				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
+				while (AssemblyCache.GetNextAssembly(e, out an) == 0) {
 					name=GetAssemblyName(an);
-					Assembly assembly=Assembly.LoadWithPartialName(name.Name);
-					if(name.Name.StartsWith("Microsoft.")) {
-						microsoftAssemblies.Add(assembly);
-					}
-					else {
-						cash=(Map)Interpreter.Merge(cash,LoadAssembly(assembly));
-					}
+					assemblies.Add(Assembly.LoadWithPartialName(name.Name));
 				}
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
-					Assembly assembly=Assembly.LoadFrom(fileName);
-					cash=(Map)Interpreter.Merge(cash,LoadAssembly(assembly));
+					assemblies.Add(Assembly.LoadFrom(fileName));
 				}
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.exe")) {
-					Assembly assembly=Assembly.LoadFrom(fileName);
-					cash=(Map)Interpreter.Merge(cash,LoadAssembly(assembly));
+					assemblies.Add(Assembly.LoadFrom(fileName));
 				}
+				cash=LoadAssemblies(assemblies);
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
 					cash[Path.GetFileNameWithoutExtension(fileName)]=new UnloadedMetaLibrary(fileName);
 				}
 			}
-			ArrayList microsoftAssemblies=new ArrayList();
-			bool microsoftLoaded=false;
 			public static Library library=new Library();
 			private Map cash=new Map();
 			public static string libraryPath="library"; 

@@ -13,15 +13,6 @@ public class @base {
 		}
 		return keys;
 	}
-//	public static object Catch(Map function) {
-//		try {
-//			function.Call((Map)Interpreter.callers[Interpreter.callers.Count-1]); // caller is wrong
-//		}
-//		catch(Exception e) {
-//			return e;
-//		}
-//		return ""; // really?
-//	}
 	public static void SetBreakMethod(BreakMethodDelegate breakMethod) {
 		Interpreter.breakMethod=breakMethod;
 	}
@@ -115,7 +106,7 @@ public class @base {
 //			caller[entry.Key]=entry.Value;
 //		}
 //	}
-	public static Map Each() {
+	public static Map Foreach() {
 		Map arg=((Map)Interpreter.Arg);
 		Map over=(Map)arg[new Integer(1)];
 		Map function=(Map)arg[new Integer(2)];
