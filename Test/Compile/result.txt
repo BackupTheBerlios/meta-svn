@@ -1755,6 +1755,56 @@ statements (ArrayList):
                           "1"
                   parents (ArrayList):
                     IEnumerable
+                val (Literal):
+                  cached:
+                    null
+                  text (String):
+                    "Test"
+        callable (Select):
+          expressions (ArrayList):
+            IEnumerable
+              Entry (Literal):
+                cached:
+                  null
+                text (String):
+                  "Load"
+          parents (ArrayList):
+            IEnumerable
+    Entry (Statement):
+      active (Boolean):
+        "False"
+      key (Select):
+        expressions (ArrayList):
+          IEnumerable
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "this"
+        parents (ArrayList):
+          IEnumerable
+      val (Call):
+        argument (Program):
+          statements (ArrayList):
+            IEnumerable
+              Entry (Statement):
+                active (Boolean):
+                  "False"
+                key (Select):
+                  expressions (ArrayList):
+                    IEnumerable
+                      Entry (Literal):
+                        cached:
+                          null
+                        text (String):
+                          "this"
+                      Entry (Literal):
+                        cached:
+                          null
+                        text (String):
+                          "1"
+                  parents (ArrayList):
+                    IEnumerable
                 val (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -1786,16 +1836,6 @@ statements (ArrayList):
                 val (Select):
                   expressions (ArrayList):
                     IEnumerable
-                      Entry (Literal):
-                        cached:
-                          null
-                        text (String):
-                          "assemblies"
-                      Entry (Literal):
-                        cached:
-                          null
-                        text (String):
-                          "Test"
                       Entry (Literal):
                         cached:
                           null
@@ -2932,80 +2972,6 @@ statements (ArrayList):
                   "ChangeUpperLevel"
           parents (ArrayList):
             IEnumerable
-    Entry (Statement):
-      active (Boolean):
-        "False"
-      key (Select):
-        expressions (ArrayList):
-          IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "files"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "test.txt"
-        parents (ArrayList):
-          IEnumerable
-      val (Literal):
-        cached:
-          null
-        text (String):
-          ""changed text from file""
-    Entry (Statement):
-      active (Boolean):
-        "False"
-      key (Select):
-        expressions (ArrayList):
-          IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "fileText"
-        parents (ArrayList):
-          IEnumerable
-      val (Select):
-        expressions (ArrayList):
-          IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "files"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "test.txt"
-        parents (ArrayList):
-          IEnumerable
-    Entry (Statement):
-      active (Boolean):
-        "False"
-      key (Select):
-        expressions (ArrayList):
-          IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "files"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "test.txt"
-        parents (ArrayList):
-          IEnumerable
-      val (Literal):
-        cached:
-          null
-        text (String):
-          ""unchanged text""
     Entry (Statement):
       active (Boolean):
         "False"

@@ -41,7 +41,8 @@ SetCurrent==
   this=(arg=arg,x=arg.symbol)
   this=x
 thisSet=SetCurrent(symbol='haha')
-this=meta.Merge(parent,assemblies.Test.Test)
+this=Load('Test')
+this=meta.Merge(parent,Test)
 testClass=TestClass()
 memberTest=MemberTest()
 MemberTest.classField='a'
@@ -75,9 +76,6 @@ upperLevel='unchanged'
 ChangeUpperLevel==
   #upperLevel='changed'
 ChangeUpperLevel()
-files.['test.txt']='"changed text from file"'
-fileText=files.['test.txt']
-files.['test.txt']='"unchanged text"'
 staticEventChanged='false'
 TestClass.staticEvent==
   #staticEventChanged='true'

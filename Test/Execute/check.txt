@@ -5,16 +5,6 @@ IEnumerable
     Value (NetClass):
         Entry (DictionaryEntry):
     Key (String):
-      "assemblies"
-    Value (Assemblies):
-      IEnumerable
-  Entry (DictionaryEntry):
-    Key (String):
-      "files"
-    Value (Files):
-      IEnumerable
-  Entry (DictionaryEntry):
-    Key (String):
       "Write"
     Value (NetMethod):
       methods (MethodInfo[]):
@@ -173,6 +163,16 @@ IEnumerable
             "Meta.Types.Map Each()"
       savedMethod (RuntimeMethodInfo):
         "Meta.Types.Map Each()"
+  Entry (DictionaryEntry):
+    Key (String):
+      "IsMap"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Boolean IsMap(System.Object)"
+      savedMethod (RuntimeMethodInfo):
+        "Boolean IsMap(System.Object)"
   Entry (DictionaryEntry):
     Key (String):
       "Switch"
@@ -1356,6 +1356,21 @@ IEnumerable
     Value (NetClass):
         Entry (DictionaryEntry):
     Key (String):
+      "path"
+    Value (String):
+      ""
+  Entry (DictionaryEntry):
+    Key (String):
+      "Main"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Void Main(System.String[])"
+      savedMethod (RuntimeMethodInfo):
+        "Void Main(System.String[])"
+  Entry (DictionaryEntry):
+    Key (String):
       "testClass"
     Value (TestClass):
   Entry (DictionaryEntry):
@@ -2003,11 +2018,6 @@ IEnumerable
       "3"
     Value (Map):
       IEnumerable
-  Entry (DictionaryEntry):
-    Key (String):
-      "fileText"
-    Value (String):
-      "changed text from file"
   Entry (DictionaryEntry):
     Key (String):
       "staticEventChanged"

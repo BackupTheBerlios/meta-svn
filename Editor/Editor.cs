@@ -176,6 +176,8 @@ namespace Editor {
 			keyBindings[Keys.Alt|Keys.H]=typeof(DeleteNode);
 
 			keyBindings[Keys.F4]=typeof(AbortHelpThread);
+
+			keyBindings[Keys.F2]=typeof(ToggleHelp);
 		}
 		public static void KeyDown(object sender,KeyEventArgs e) {
 			if(Help.listBox.Visible && helpKeyBindings.ContainsKey(e.KeyData)) {
@@ -192,7 +194,7 @@ namespace Editor {
 			}
 		}
 		public static void KeyPress(object sender,KeyPressEventArgs e) {
-			if(e.KeyChar!='µ') { // ( 'µ' is (accidentally) created by Alt+Ctrl+M)
+			if(e.KeyChar!='µ') { // ( 'µ' is created by Alt+Ctrl+M)
 				InsertCharacter insertCharacter=new InsertCharacter(e.KeyChar);
 				insertCharacter.Run();
 			}
@@ -321,6 +323,7 @@ namespace Editor {
 		}
 	}
 	public abstract class Help {
+		public static bool showHelp=true;
 		public static bool helpInvalidated=false;
 		public static Node lastSelectedNode;
 		public static RichTextBox toolTip=new RichTextBox();
@@ -859,6 +862,9 @@ namespace Editor {
 		}
 		public static Thread lastHelpThread;
 		public static void ShowHelp(Node selectedNode,string selectedNodeText,bool isCall) {
+			if(!showHelp) {
+				return;
+			}
 			_selectedNode=selectedNode;
 			_selectedNodeText=selectedNodeText;
 			_isCall=isCall;
@@ -892,8 +898,12 @@ namespace Editor {
 					Editor.SelectedNode
 					)));
 			}
-			catch {
-				return; // not really great
+			catch(Exception e){
+				Help.toolTip.Text=e.Message;
+				Help.toolTip.Location=new Point(100,100);
+				Help.toolTip.Visible=true;
+				Help.lastHelpThread=null;
+				return; 
 			}
 			Program program=(Program)map.Compile();
 
@@ -1088,6 +1098,16 @@ namespace Editor {
 //					Help.lastHelpThread.Resume();
 //					Help.lastHelpThread.Abort();
 					Help.lastHelpThread=null;
+			}
+		}
+	}
+	public class ToggleHelp:Command {
+		public override void Do() {
+			if(Help.showHelp) {
+				Help.showHelp=false;
+			}
+			else {
+				Help.showHelp=true;
 			}
 		}
 	}
