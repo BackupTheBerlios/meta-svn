@@ -8,7 +8,7 @@ public class map {
 		int i=1;
 		Map keys=new Map();
 		foreach(DictionaryEntry entry in map) {
-			keys[new Integer(i)]=entry.Key;
+			keys[new Number(i)]=entry.Key;
 			i++;
 		}
 		return keys;
@@ -18,7 +18,7 @@ public class map {
 		Map combined=new Map();
 		foreach(Map map in maps) {
 			foreach(object val in map.IntKeyValues) {
-				combined[new Integer(i)]=val;
+				combined[new Number(i)]=val;
 				i++;
 			}
 		}

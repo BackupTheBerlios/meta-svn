@@ -182,7 +182,7 @@ namespace Meta.Parser
 					Map statement=new Map();
 										statement[Statement.keyString]=key;
 										statement[Statement.valueString]=val;
-										statements[new Integer(counter)]=statement;
+										statements[new Number(counter)]=statement;
 										counter++;
 									
 					_t = __t90;
@@ -233,7 +233,7 @@ _loop91_breakloop:			;
 					key=expression(_t);
 					_t = retTree_;
 					
-					selection[new Integer(counter)]=key;
+					selection[new Number(counter)]=key;
 					counter++;
 					
 				}

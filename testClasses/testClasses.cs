@@ -63,22 +63,22 @@ namespace testClasses
 		public NamedNoConversion() {
 			Map arg=(Map)Interpreter.Arg;
 			Map def=new Map();
-			def[new Integer(1)]=Interpreter.StringToMap("null");
+			def[new Number(1)]=Interpreter.StringToMap("null");
 			def[Interpreter.StringToMap("y")]=Interpreter.StringToMap("null");
 			def[Interpreter.StringToMap("p2")]=Interpreter.StringToMap("null");
 			arg=(Map)Interpreter.Merge(def,arg);
-			this.x=(string)Interpreter.MapToString((Map)arg[new Integer(1)]);
+			this.x=(string)Interpreter.MapToString((Map)arg[new Number(1)]);
 			this.y=(string)Interpreter.MapToString((Map)arg[Interpreter.StringToMap("y")]);
 			this.z=(string)Interpreter.MapToString((Map)arg[Interpreter.StringToMap("p2")]);
 		}
 		public string Concatenate() {
 			Map arg=(Map)Interpreter.Arg;
 			Map def=new Map();
-			def[new Integer(1)]=Interpreter.StringToMap("null");
+			def[new Number(1)]=Interpreter.StringToMap("null");
 			def[Interpreter.StringToMap("b")]=Interpreter.StringToMap("null");
 			def[Interpreter.StringToMap("c")]=Interpreter.StringToMap("null");
 			arg=(Map)Interpreter.Merge(def,arg);
-			return (string)Interpreter.MapToString((Map)arg[new Integer(1)])+
+			return (string)Interpreter.MapToString((Map)arg[new Number(1)])+
 				(string)Interpreter.MapToString((Map)arg[Interpreter.StringToMap("b")])+
 				(string)Interpreter.MapToString((Map)arg[Interpreter.StringToMap("c")])+
 				this.x+this.y+this.z;

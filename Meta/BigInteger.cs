@@ -131,7 +131,7 @@
 //************************************************************************************
 
 using System;
-namespace Meta.Types
+namespace BigInteger
 {
 
 	public class Integer

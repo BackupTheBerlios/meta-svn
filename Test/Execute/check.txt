@@ -1,5 +1,5 @@
 Entry (DictionaryEntry)
-  Key (Integer):
+  Key (Number):
     "1"
   Value (Map):
     "ImpliedAutokey"
@@ -86,44 +86,44 @@ Entry (DictionaryEntry)
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Number Add(Meta.Types.Number, Meta.Types.Number)"
 Entry (DictionaryEntry)
   Key (Map):
     "Subtract"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Number Subtract(Meta.Types.Number, Meta.Types.Number)"
 Entry (DictionaryEntry)
   Key (Map):
     "Multiply"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Number Multiply(Meta.Types.Number, Meta.Types.Number)"
 Entry (DictionaryEntry)
   Key (Map):
     "Divide"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Number Divide(Meta.Types.Number, Meta.Types.Number)"
 Entry (DictionaryEntry)
   Key (Map):
     "Smaller"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
+        "Boolean Smaller(Meta.Types.Number, Meta.Types.Number)"
 Entry (DictionaryEntry)
   Key (Map):
     "Greater"
   Value (NetMethod):
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
+        "Boolean Greater(Meta.Types.Number, Meta.Types.Number)"
 Entry (DictionaryEntry)
-  Key (Integer):
+  Key (Number):
     "2"
   Value (Map):
     "Autokey"
@@ -422,12 +422,12 @@ Entry (DictionaryEntry)
     "commandLineArguments"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "1"
       Value (String):
         "first arg"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "2"
       Value (String):
         "second=arg"
@@ -534,7 +534,7 @@ Entry (DictionaryEntry)
             "program"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (Number):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
@@ -546,7 +546,7 @@ Entry (DictionaryEntry)
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -555,7 +555,7 @@ Entry (DictionaryEntry)
                               Value (Map):
                                 "parent"
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -573,7 +573,7 @@ Entry (DictionaryEntry)
                       Value (Map):
                         "c"
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (Number):
                 "2"
               Value (Map):
                 Entry (DictionaryEntry)
@@ -585,7 +585,7 @@ Entry (DictionaryEntry)
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -594,7 +594,7 @@ Entry (DictionaryEntry)
                               Value (Map):
                                 "search"
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -620,7 +620,7 @@ Entry (DictionaryEntry)
             "program"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (Number):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
@@ -632,7 +632,7 @@ Entry (DictionaryEntry)
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -641,7 +641,7 @@ Entry (DictionaryEntry)
                               Value (Map):
                                 "caller"
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -650,7 +650,7 @@ Entry (DictionaryEntry)
                               Value (Map):
                                 "b"
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "3"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -667,7 +667,7 @@ Entry (DictionaryEntry)
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -676,7 +676,7 @@ Entry (DictionaryEntry)
                               Value (Map):
                                 "arg"
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -685,7 +685,7 @@ Entry (DictionaryEntry)
                               Value (Map):
                                 "value"
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (Number):
                 "2"
               Value (Map):
                 Entry (DictionaryEntry)
@@ -697,7 +697,7 @@ Entry (DictionaryEntry)
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -729,7 +729,7 @@ Entry (DictionaryEntry)
           Value (Map):
             "d"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "1"
       Value (Map):
         Entry (DictionaryEntry)
@@ -737,7 +737,7 @@ Entry (DictionaryEntry)
             "program"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (Number):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
@@ -749,7 +749,7 @@ Entry (DictionaryEntry)
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -758,7 +758,7 @@ Entry (DictionaryEntry)
                               Value (Map):
                                 "this"
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "2"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -785,18 +785,18 @@ Entry (DictionaryEntry)
     "b"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "1"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
             "x"
-          Value (Integer):
+          Value (Number):
             "7"
         Entry (DictionaryEntry)
           Key (Map):
             "z"
-          Value (Integer):
+          Value (Number):
             "1"
 Entry (DictionaryEntry)
   Key (Map):
@@ -816,7 +816,7 @@ Entry (DictionaryEntry)
         "program"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "1"
           Value (Map):
             Entry (DictionaryEntry)
@@ -828,7 +828,7 @@ Entry (DictionaryEntry)
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -845,7 +845,7 @@ Entry (DictionaryEntry)
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -858,17 +858,17 @@ Entry (DictionaryEntry)
     "everythingReturned"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "1"
       Value (Map):
         "a"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "2"
       Value (Map):
         "b"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "3"
       Value (Map):
         "c"
@@ -877,17 +877,17 @@ Entry (DictionaryEntry)
     "argument"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "1"
       Value (Map):
         "x"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "2"
       Value (Map):
         "y"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "3"
       Value (Map):
         "z"
@@ -896,17 +896,17 @@ Entry (DictionaryEntry)
     "variableAsArgument"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "1"
       Value (Map):
         "x"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "2"
       Value (Map):
         "y"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "3"
       Value (Map):
         "z"
@@ -919,7 +919,7 @@ Entry (DictionaryEntry)
         "program"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "1"
           Value (Map):
             Entry (DictionaryEntry)
@@ -931,7 +931,7 @@ Entry (DictionaryEntry)
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -952,7 +952,7 @@ Entry (DictionaryEntry)
                         "program"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -964,7 +964,7 @@ Entry (DictionaryEntry)
                                     "select"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (Integer):
+                                      Key (Number):
                                         "1"
                                       Value (Map):
                                         Entry (DictionaryEntry)
@@ -981,7 +981,7 @@ Entry (DictionaryEntry)
                                     "program"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (Integer):
+                                      Key (Number):
                                         "1"
                                       Value (Map):
                                         Entry (DictionaryEntry)
@@ -993,7 +993,7 @@ Entry (DictionaryEntry)
                                                 "select"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (Integer):
+                                                  Key (Number):
                                                     "1"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
@@ -1002,7 +1002,7 @@ Entry (DictionaryEntry)
                                                       Value (Map):
                                                         "this"
                                                 Entry (DictionaryEntry)
-                                                  Key (Integer):
+                                                  Key (Number):
                                                     "2"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
@@ -1020,7 +1020,7 @@ Entry (DictionaryEntry)
                                               Value (Map):
                                                 "1"
                                     Entry (DictionaryEntry)
-                                      Key (Integer):
+                                      Key (Number):
                                         "2"
                                       Value (Map):
                                         Entry (DictionaryEntry)
@@ -1032,7 +1032,7 @@ Entry (DictionaryEntry)
                                                 "select"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (Integer):
+                                                  Key (Number):
                                                     "1"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
@@ -1041,7 +1041,7 @@ Entry (DictionaryEntry)
                                                       Value (Map):
                                                         "this"
                                                 Entry (DictionaryEntry)
-                                                  Key (Integer):
+                                                  Key (Number):
                                                     "2"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
@@ -1059,7 +1059,7 @@ Entry (DictionaryEntry)
                                               Value (Map):
                                                 "2"
                                     Entry (DictionaryEntry)
-                                      Key (Integer):
+                                      Key (Number):
                                         "3"
                                       Value (Map):
                                         Entry (DictionaryEntry)
@@ -1071,7 +1071,7 @@ Entry (DictionaryEntry)
                                                 "select"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (Integer):
+                                                  Key (Number):
                                                     "1"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
@@ -1080,7 +1080,7 @@ Entry (DictionaryEntry)
                                                       Value (Map):
                                                         "this"
                                                 Entry (DictionaryEntry)
-                                                  Key (Integer):
+                                                  Key (Number):
                                                     "2"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
@@ -1106,7 +1106,7 @@ Entry (DictionaryEntry)
         "program"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "1"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1118,7 +1118,7 @@ Entry (DictionaryEntry)
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1135,7 +1135,7 @@ Entry (DictionaryEntry)
                     "program"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1147,7 +1147,7 @@ Entry (DictionaryEntry)
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (Number):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
@@ -1164,7 +1164,7 @@ Entry (DictionaryEntry)
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (Number):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
@@ -1173,7 +1173,7 @@ Entry (DictionaryEntry)
                                       Value (Map):
                                         "arg"
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "2"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1185,7 +1185,7 @@ Entry (DictionaryEntry)
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (Number):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
@@ -1202,7 +1202,7 @@ Entry (DictionaryEntry)
                                 "select"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (Number):
                                     "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
@@ -1211,7 +1211,7 @@ Entry (DictionaryEntry)
                                       Value (Map):
                                         "arg"
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (Number):
                                     "2"
                                   Value (Map):
                                     Entry (DictionaryEntry)
@@ -1220,7 +1220,7 @@ Entry (DictionaryEntry)
                                       Value (Map):
                                         "symbol"
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "2"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1232,7 +1232,7 @@ Entry (DictionaryEntry)
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1249,7 +1249,7 @@ Entry (DictionaryEntry)
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1271,7 +1271,7 @@ Entry (DictionaryEntry)
         "program"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "1"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1283,7 +1283,7 @@ Entry (DictionaryEntry)
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1292,7 +1292,7 @@ Entry (DictionaryEntry)
                           Value (Map):
                             "this"
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "2"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1317,7 +1317,7 @@ Entry (DictionaryEntry)
                             "select"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (Integer):
+                              Key (Number):
                                 "1"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -1334,7 +1334,7 @@ Entry (DictionaryEntry)
                             "program"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (Integer):
+                              Key (Number):
                                 "1"
                               Value (Map):
                                 Entry (DictionaryEntry)
@@ -1346,7 +1346,7 @@ Entry (DictionaryEntry)
                                         "select"
                                       Value (Map):
                                         Entry (DictionaryEntry)
-                                          Key (Integer):
+                                          Key (Number):
                                             "1"
                                           Value (Map):
                                             Entry (DictionaryEntry)
@@ -1372,7 +1372,7 @@ Entry (DictionaryEntry)
         "select"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "1"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1381,7 +1381,7 @@ Entry (DictionaryEntry)
               Value (Map):
                 "arg"
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "2"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1394,7 +1394,7 @@ Entry (DictionaryEntry)
     "argTest"
   Value (Map):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (Number):
         "1"
       Value (Map):
         Entry (DictionaryEntry)
@@ -1477,7 +1477,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "interceptedSymbol2"
-  Value (Integer):
+  Value (Number):
     "1"
 Entry (DictionaryEntry)
   Key (Map):
@@ -1501,7 +1501,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "literalFunctionResult"
-  Value (Integer):
+  Value (Number):
     "5"
 Entry (DictionaryEntry)
   Key (Map):
@@ -1512,7 +1512,7 @@ Entry (DictionaryEntry)
         "program"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "1"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1524,7 +1524,7 @@ Entry (DictionaryEntry)
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1550,7 +1550,7 @@ Entry (DictionaryEntry)
         "select"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "1"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1567,7 +1567,7 @@ Entry (DictionaryEntry)
         "program"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "1"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1579,7 +1579,7 @@ Entry (DictionaryEntry)
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1609,7 +1609,7 @@ Entry (DictionaryEntry)
             "program"
           Value (Map):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (Number):
                 "1"
               Value (Map):
                 Entry (DictionaryEntry)
@@ -1621,7 +1621,7 @@ Entry (DictionaryEntry)
                         "select"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Number):
                             "1"
                           Value (Map):
                             Entry (DictionaryEntry)
@@ -1647,7 +1647,7 @@ Entry (DictionaryEntry)
         "program"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "1"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1659,7 +1659,7 @@ Entry (DictionaryEntry)
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1690,7 +1690,7 @@ Entry (DictionaryEntry)
         "select"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "1"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1706,7 +1706,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "bigInteger"
-  Value (Integer):
+  Value (Number):
     "89383838383832839123497123047217340712340720347072304702340720347"
 Entry (DictionaryEntry)
   Key (Map):
@@ -1722,7 +1722,7 @@ Entry (DictionaryEntry)
         "program"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (Number):
             "1"
           Value (Map):
             Entry (DictionaryEntry)
@@ -1734,7 +1734,7 @@ Entry (DictionaryEntry)
                     "select"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "1"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1743,7 +1743,7 @@ Entry (DictionaryEntry)
                           Value (Map):
                             "search"
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (Number):
                         "2"
                       Value (Map):
                         Entry (DictionaryEntry)
@@ -1761,7 +1761,7 @@ Entry (DictionaryEntry)
                   Value (Map):
                     "changed"
 Entry (DictionaryEntry)
-  Key (Integer):
+  Key (Number):
     "3"
   Value (Map):
 Entry (DictionaryEntry)
@@ -1800,17 +1800,17 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "instanceEventResult"
-  Value (Integer):
+  Value (Number):
     "5"
 Entry (DictionaryEntry)
   Key (Map):
     "one"
-  Value (Integer):
+  Value (Number):
     "1"
 Entry (DictionaryEntry)
   Key (Map):
     "two"
-  Value (Integer):
+  Value (Number):
     "2"
 Entry (DictionaryEntry)
   Key (Map):
@@ -1830,12 +1830,12 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "firstSwitch"
-  Value (Integer):
+  Value (Number):
     "50020202029029233344"
 Entry (DictionaryEntry)
   Key (Map):
     "bigNumber"
-  Value (Integer):
+  Value (Number):
     "50020202029029233344"
 Entry (DictionaryEntry)
   Key (Map):

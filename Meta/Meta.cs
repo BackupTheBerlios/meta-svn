@@ -289,8 +289,8 @@ namespace Meta {
 					}
 					return text;
 				}
-				else if(meta is Integer) {
-					Integer integer=(Integer)meta;
+				else if(meta is Number) {
+					Number integer=(Number)meta;
 					return "'"+integer.ToString()+"'";
 				}
 				else {
@@ -453,13 +453,13 @@ namespace Meta {
 						return StringToMap(text);
 					}
 				}
-				public class RecognizeInteger: RecognizeLiteral  {
+				public class RecognizeNumber: RecognizeLiteral  {
 					public override object Recognize(string text)  { 
 						if(text.Equals("")) {
 							return null;
 						}
 						else {
-							Integer number=new Integer(0);
+							Number number=new Number(0);
 							int i=0;
 							if(text[0]=='-') {
 								i++;
@@ -494,85 +494,85 @@ namespace Meta {
 				}
 			}
 			private abstract class MetaToDotNetConversions {
-				public class ConvertIntegerToByte: MetaToDotNetConversion {
-					public ConvertIntegerToByte() {
-						this.source=typeof(Integer);
+				public class ConvertNumberToByte: MetaToDotNetConversion {
+					public ConvertNumberToByte() {
+						this.source=typeof(Number);
 						this.target=typeof(Byte);
 					}
 					public override object Convert(object obj) {
-						return System.Convert.ToByte(((Integer)obj).LongValue());
+						return System.Convert.ToByte(((Number)obj).LongValue());
 					}
 				}
-				public class ConvertIntegerToSByte: MetaToDotNetConversion {
-					public ConvertIntegerToSByte() {
-						this.source=typeof(Integer);
+				public class ConvertNumberToSByte: MetaToDotNetConversion {
+					public ConvertNumberToSByte() {
+						this.source=typeof(Number);
 						this.target=typeof(SByte);
 					}
 					public override object Convert(object obj) {
-						return System.Convert.ToSByte(((Integer)obj).LongValue());
+						return System.Convert.ToSByte(((Number)obj).LongValue());
 					}
 				}
-				public class ConvertIntegerToChar: MetaToDotNetConversion {
-					public ConvertIntegerToChar() {
-						this.source=typeof(Integer);
+				public class ConvertNumberToChar: MetaToDotNetConversion {
+					public ConvertNumberToChar() {
+						this.source=typeof(Number);
 						this.target=typeof(Char);
 					}
 					public override object Convert(object obj) {
-						return System.Convert.ToChar(((Integer)obj).LongValue());
+						return System.Convert.ToChar(((Number)obj).LongValue());
 					}
 				}
-				public class ConvertIntegerToInt32: MetaToDotNetConversion {
-					public ConvertIntegerToInt32() {
-						this.source=typeof(Integer);
+				public class ConvertNumberToInt32: MetaToDotNetConversion {
+					public ConvertNumberToInt32() {
+						this.source=typeof(Number);
 						this.target=typeof(Int32);
 					}
 					public override object Convert(object obj) {
-						return System.Convert.ToInt32(((Integer)obj).LongValue());
+						return System.Convert.ToInt32(((Number)obj).LongValue());
 					}
 				}
-				public class ConvertIntegerToUInt32: MetaToDotNetConversion {
-					public ConvertIntegerToUInt32() {
-						this.source=typeof(Integer);
+				public class ConvertNumberToUInt32: MetaToDotNetConversion {
+					public ConvertNumberToUInt32() {
+						this.source=typeof(Number);
 						this.target=typeof(UInt32);
 					}
 					public override object Convert(object obj) {
-						return System.Convert.ToUInt32(((Integer)obj).LongValue());
+						return System.Convert.ToUInt32(((Number)obj).LongValue());
 					}
 				}
-				public class ConvertIntegerToInt64: MetaToDotNetConversion {
-					public ConvertIntegerToInt64() {
-						this.source=typeof(Integer);
+				public class ConvertNumberToInt64: MetaToDotNetConversion {
+					public ConvertNumberToInt64() {
+						this.source=typeof(Number);
 						this.target=typeof(Int64);
 					}
 					public override object Convert(object obj) {
-						return System.Convert.ToInt64(((Integer)obj).LongValue());
+						return System.Convert.ToInt64(((Number)obj).LongValue());
 					}
 				}
-				public class ConvertIntegerToUInt64: MetaToDotNetConversion {
-					public ConvertIntegerToUInt64() {
-						this.source=typeof(Integer);
+				public class ConvertNumberToUInt64: MetaToDotNetConversion {
+					public ConvertNumberToUInt64() {
+						this.source=typeof(Number);
 						this.target=typeof(UInt64);
 					}
 					public override object Convert(object obj) {
-						return System.Convert.ToUInt64(((Integer)obj).LongValue());
+						return System.Convert.ToUInt64(((Number)obj).LongValue());
 					}
 				}
-				public class ConvertIntegerToInt16: MetaToDotNetConversion {
-					public ConvertIntegerToInt16() {
-						this.source=typeof(Integer);
+				public class ConvertNumberToInt16: MetaToDotNetConversion {
+					public ConvertNumberToInt16() {
+						this.source=typeof(Number);
 						this.target=typeof(Int16);
 					}
 					public override object Convert(object obj) {
-						return System.Convert.ToInt16(((Integer)obj).LongValue());
+						return System.Convert.ToInt16(((Number)obj).LongValue());
 					}
 				}
-				public class ConvertIntegerToUInt16: MetaToDotNetConversion {
-					public ConvertIntegerToUInt16() {
-						this.source=typeof(Integer);
+				public class ConvertNumberToUInt16: MetaToDotNetConversion {
+					public ConvertNumberToUInt16() {
+						this.source=typeof(Number);
 						this.target=typeof(UInt16);
 					}
 					public override object Convert(object obj) {
-						return System.Convert.ToUInt16(((Integer)obj).LongValue());
+						return System.Convert.ToUInt16(((Number)obj).LongValue());
 					}
 				}
 				public class ConvertMapToString: MetaToDotNetConversion {
@@ -588,7 +588,7 @@ namespace Meta {
 			public static Map StringToMap(string symbol) {
 				Map map=new Map();
 				foreach(char character in symbol) {
-					map[new Integer(map.Count+1)]=new Integer((int)character);
+					map[new Number(map.Count+1)]=new Number((int)character);
 				}
 				return map;
 			}
@@ -605,13 +605,13 @@ namespace Meta {
 			}
 			public static string MapToString(Map map) {
 				string text="";
-				for(Integer i=new Integer(1);;i++) {
+				for(Number i=new Number(1);;i++) {
 					object val=map[i];
 					if(val==null) {
 						break;
 					}
 					else {
-						text+=System.Convert.ToChar(((Integer)val).LongValue());
+						text+=System.Convert.ToChar(((Number)val).LongValue());
 					}
 				}
 				return text;
@@ -625,76 +625,76 @@ namespace Meta {
 						return StringToMap((string)obj);
 					}
 				}
-				public class ConvertByteToInteger: DotNetToMetaConversion {
-					public ConvertByteToInteger() {
+				public class ConvertByteToNumber: DotNetToMetaConversion {
+					public ConvertByteToNumber() {
 						this.source=typeof(Byte);
 					}
 					public override object Convert(object obj) {
-						return new Integer((Byte)obj);
+						return new Number((Byte)obj);
 					}
 				}
-				public class ConvertSByteToInteger: DotNetToMetaConversion {
-					public ConvertSByteToInteger() {
+				public class ConvertSByteToNumber: DotNetToMetaConversion {
+					public ConvertSByteToNumber() {
 						this.source=typeof(SByte);
 					}
 					public override object Convert(object obj) {
-						return new Integer((SByte)obj);
+						return new Number((SByte)obj);
 					}
 				}
-				public class ConvertCharToInteger: DotNetToMetaConversion {
-					public ConvertCharToInteger() {
+				public class ConvertCharToNumber: DotNetToMetaConversion {
+					public ConvertCharToNumber() {
 						this.source=typeof(Char);
 					}
 					public override object Convert(object obj) {
-						return new Integer((Char)obj);
+						return new Number((Char)obj);
 					}
 				}
-				public class ConvertInt32ToInteger: DotNetToMetaConversion {
-					public ConvertInt32ToInteger() {
+				public class ConvertInt32ToNumber: DotNetToMetaConversion {
+					public ConvertInt32ToNumber() {
 						this.source=typeof(Int32);
 					}
 					public override object Convert(object obj) {
-						return new Integer((Int32)obj);
+						return new Number((Int32)obj);
 					}
 				}
-				public class ConvertUInt32ToInteger: DotNetToMetaConversion {
-					public ConvertUInt32ToInteger() {
+				public class ConvertUInt32ToNumber: DotNetToMetaConversion {
+					public ConvertUInt32ToNumber() {
 						this.source=typeof(UInt32);
 					}
 					public override object Convert(object obj) {
-						return new Integer((UInt32)obj);
+						return new Number((UInt32)obj);
 					}
 				}
-				public class ConvertInt64ToInteger: DotNetToMetaConversion {
-					public ConvertInt64ToInteger() {
+				public class ConvertInt64ToNumber: DotNetToMetaConversion {
+					public ConvertInt64ToNumber() {
 						this.source=typeof(Int64);
 					}
 					public override object Convert(object obj) {
-						return new Integer((Int64)obj);
+						return new Number((Int64)obj);
 					}
 				}
-				public class ConvertUInt64ToInteger: DotNetToMetaConversion {
-					public ConvertUInt64ToInteger() {
+				public class ConvertUInt64ToNumber: DotNetToMetaConversion {
+					public ConvertUInt64ToNumber() {
 						this.source=typeof(UInt64);
 					}
 					public override object Convert(object obj) {
-						return new Integer((Int64)(UInt64)obj);
+						return new Number((Int64)(UInt64)obj);
 					}
 				}
-				public class ConvertInt16ToInteger: DotNetToMetaConversion {
-					public ConvertInt16ToInteger() {
+				public class ConvertInt16ToNumber: DotNetToMetaConversion {
+					public ConvertInt16ToNumber() {
 						this.source=typeof(Int16);
 					}
 					public override object Convert(object obj) {
-						return new Integer((Int16)obj);
+						return new Number((Int16)obj);
 					}
 				}
-				public class ConvertUInt16ToInteger: DotNetToMetaConversion {
-					public ConvertUInt16ToInteger() {
+				public class ConvertUInt16ToNumber: DotNetToMetaConversion {
+					public ConvertUInt16ToNumber() {
 						this.source=typeof(UInt16);
 					}
 					public override object Convert(object obj) {
-						return new Integer((UInt16)obj);
+						return new Number((UInt16)obj);
 					}
 				}
 			}
@@ -739,6 +739,9 @@ namespace Meta {
 		public class LazyNamespace: IKeyValue {
 			public object this[object key] {
 				get {
+					if(key.Equals(Interpreter.StringToMap("Collections"))) {
+						int asdf=0;
+					}
 					if(cache==null) {
 						Load();
 					}
@@ -953,7 +956,8 @@ namespace Meta {
 				}
 				Map assemblyInfoMap=new Map();
 				Map nameSpaceMap=new Map();
-				Integer counter=new Integer();
+				Number counter=new Number(0);
+//				Number counter=new Number();
 				foreach(string na in namespaces) {
 					nameSpaceMap[counter]=Interpreter.StringToMap(na);// map or string?
 					counter++;
@@ -1015,7 +1019,7 @@ namespace Meta {
 			public ArrayList IntKeyValues {
 				get {
 					ArrayList list=new ArrayList();
-					for(Integer i=new Integer(1);ContainsKey(i);i++) {
+					for(Number i=new Number(1);ContainsKey(i);i++) {
 						list.Add(this[i]);
 					}
 					return list;
@@ -1182,7 +1186,7 @@ namespace Meta {
 							Map lastArg=new Map();
 							ArrayList paramsArgs=argumentList.GetRange(parameters.Length-1,argumentList.Count-(parameters.Length-1));
 							for(int i=0;i<paramsArgs.Count;i++) {
-								lastArg[new Integer(i+1)]=paramsArgs[i];
+								lastArg[new Number(i+1)]=paramsArgs[i];
 							}
 							argumentList[parameters.Length-1]=lastArg;									
 							argumentList.RemoveRange(parameters.Length,argumentList.Count-parameters.Length);
@@ -1294,7 +1298,7 @@ namespace Meta {
 				if(method!=null) {
 					foreach(ParameterInfo parameter in method.GetParameters()) {
 						argumentList+=parameter.ParameterType.FullName+" arg"+counter;
-						argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";
+						argumentAdding+="arg[new Number("+counter+")]=arg"+counter+";";
 						if(counter<method.GetParameters().Length) {
 							argumentList+=",";
 						}
@@ -1408,7 +1412,7 @@ namespace Meta {
 				}
 				NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
 				Map arguments=new Map();
-				arguments[new Integer(1)]=key;
+				arguments[new Number(1)]=key;
 				try {
 					indexerMethod.Call(arguments);
 					return true;
@@ -1462,7 +1466,7 @@ namespace Meta {
 					}
 					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
 					Map arguments=new Map();
-					arguments[new Integer(1)]=key;
+					arguments[new Number(1)]=key;
 					try {
 						return indexerMethod.Call(arguments);
 					}
@@ -1516,8 +1520,8 @@ namespace Meta {
 					}
 					NetMethod indexer=new NetMethod("set_Item",obj,type);
 					Map arguments=new Map();
-					arguments[new Integer(1)]=key;
-					arguments[new Integer(2)]=value;
+					arguments[new Number(1)]=key;
+					arguments[new Number(2)]=value;
 					try {
 						indexer.Call(arguments);
 					}
@@ -1570,7 +1574,7 @@ namespace Meta {
 								table[Interpreter.ConvertDotNetToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
 							}
 							else {
-								table[new Integer(counter)]=entry;
+								table[new Number(counter)]=entry;
 								counter++;
 							}
 						}
@@ -1585,6 +1589,77 @@ namespace Meta {
 			private IKeyValue parent;
 			public object obj;
 			public Type type;
+		}
+		public class Number {
+			public Number(string integer) {
+				this.integer=new BigInteger.Integer(integer,10);
+			}
+			public Number(long integer) {
+				this.integer=new BigInteger.Integer(integer);
+			}
+			public Number(Number number) {
+				this.integer=new BigInteger.Integer(number.integer.ToString(),10);
+				int asdf=0;
+			}
+			public Number(BigInteger.Integer integer) {
+				this.integer=new BigInteger.Integer(integer.ToString(),10);
+			}
+			public long LongValue() {
+				return integer.LongValue();
+			}
+			public int IntValue() {
+				return integer.IntValue();
+			}
+			public static Number operator ++ (Number number) {
+				number.integer++;
+				return number;
+			}
+			public static Number operator -- (Number number) {
+				number.integer--;
+				return number;
+			}
+			public static Number operator - (Number number) {
+				Number negative=new Number(0);
+				negative.integer=-number.integer;
+				return negative;
+			}
+			public static Number operator + (Number x,Number y) {
+				return new Number(x+y);
+			}
+			public static Number operator - (Number x,Number y) {
+				return new Number(x-y);
+			}
+			public static Number operator * (Number x,Number y) {
+				return new Number(x*y);
+			}
+			public static Number operator / (Number x,Number y) {
+				return new Number(x/y);
+			}
+			public static Number operator * (Number x,int y) {
+				return new Number((x.integer*y).ToString());
+			}
+			public static Number operator + (Number x,int y) {
+				return new Number((x.integer+y).ToString());
+			}
+			public static bool operator < (Number x,Number y) {
+				return x.integer<y.integer;
+			}
+			public static bool operator > (Number x,Number y) {
+				return x.integer>y.integer;
+			}
+			public override bool Equals(object obj) {
+				return obj is Number && this.integer.Equals(((Number)obj).integer);
+			}
+			public override int GetHashCode() {
+				return this.integer.GetHashCode();
+			}
+			public override string ToString() {
+				return integer.ToString();
+			}
+
+
+
+			private BigInteger.Integer integer;
 		}
 	}
 	namespace Parser  {

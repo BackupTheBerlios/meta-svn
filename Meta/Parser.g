@@ -326,7 +326,7 @@ map
           Map statement=new Map();
 					statement[Statement.keyString]=key;
 					statement[Statement.valueString]=val;
-					statements[new Integer(counter)]=statement;
+					statements[new Number(counter)]=statement;
 					counter++;
 				}
       )
@@ -371,7 +371,7 @@ select
       (
         key=expression
         {
-          selection[new Integer(counter)]=key;
+          selection[new Number(counter)]=key;
           counter++;
         }
       )+
