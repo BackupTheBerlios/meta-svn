@@ -15,8 +15,6 @@
 //	License along with this library; if not, write to the Free Software
 //	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-// TODO: rename variables, methods and classes
-
 using System;
 using System.IO;
 using System.Collections;
@@ -455,6 +453,7 @@ namespace Meta {
 								i++;
 							}
 							// the following is probably incorrect for multi-byte unicode
+							// use StringInfo in the future instead
 							for(;i<text.Length;i++) {
 								if(char.IsDigit(text[i])) {
 									number=number*10+(text[i]-'0');
@@ -576,9 +575,6 @@ namespace Meta {
 				}
 			}
 			public static Map StringToMap(string symbol) {
-				if(symbol.Equals("hello")) {
-					int asdf=0;
-				}
 				Map map=new Map();
 				foreach(char character in symbol) {
 					map[new Integer(map.Count+1)]=new Integer((int)character);
@@ -1112,7 +1108,7 @@ namespace Meta {
 			public override int GetHashCode()  {
 				if(!isHashCashed) {
 					int h=0;
-					foreach(DictionaryEntry entry in table) {
+					foreach(DictionaryEntry entry in this) {
 						unchecked {
 							h+=entry.Key.GetHashCode()*entry.Value.GetHashCode();
 						}
@@ -1122,12 +1118,56 @@ namespace Meta {
 				}
 				return hash;
 			}
+//			public override int GetHashCode()  {
+//				if(!isHashCashed) {
+//					int h=0;
+//					foreach(DictionaryEntry entry in table) {
+//						unchecked {
+//							h+=entry.Key.GetHashCode()*entry.Value.GetHashCode();
+//						}
+//					}
+//					hash=h;
+//					isHashCashed=true;
+//				}
+//				return hash;
+//			}
 			public Map() {
 				this.table=new HybridDictionaryStrategy();
 				this.keys=new ArrayList();
 			}
 			private IMap parent;
-			public class HybridDictionaryStrategy:MapStrategy,IEnumerable {
+
+			// StringInfo is cool! should make computing hashcodes easy, too
+			// Maybe take out IEnumerable, it's too fricking complicated
+			// also there is no need for IEnumerable to be fast
+//			public class StringStrategy:MapStrategy,IEnumerable {
+//				public StringStrategy(string text) {
+//					this.text=new StringInfo(text);
+//				}
+//				private StringInfo text;
+//				public override int Count {
+//					get {
+//						return table.Count;
+//					}
+//				}
+//				public override object this[object key]  {
+//					get {
+//						return table[key];
+//					}
+//					set {
+//						table[key]=value;
+//					}
+//				}
+//				public override bool ContainsKey(object key)  {
+//					return table.Contains(key);
+//				}
+//				//private ArrayList keys;
+//				private HybridDictionary table=new HybridDictionary();
+//				public override IEnumerator GetEnumerator() {
+//					return this.table.GetEnumerator();
+//				}
+//			}
+			public class HybridDictionaryStrategy:MapStrategy {
 				public override int Count {
 					get {
 						return table.Count;
@@ -1146,11 +1186,11 @@ namespace Meta {
 				}
 				//private ArrayList keys;
 				private HybridDictionary table=new HybridDictionary();
-				public override IEnumerator GetEnumerator() {
-					return this.table.GetEnumerator();
-				}
+//				public override IEnumerator GetEnumerator() {
+//					return this.table.GetEnumerator();
+//				}
 			}
-			public abstract class MapStrategy:IEnumerable {
+			public abstract class MapStrategy {
 				public abstract int Count {
 					get;
 				}
@@ -1159,46 +1199,10 @@ namespace Meta {
 					set;
 				}
 				public abstract bool ContainsKey(object key);
-				//private ArrayList keys;
-//				private HybridDictionary table=new HybridDictionary();
-				public abstract IEnumerator GetEnumerator();
+				//public abstract IEnumerator GetEnumerator();
 			}
-//			public class MapStrategy:IEnumerable {
-//				public int Count {
-//					get {
-//						return table.Count;
-//					}
-//				}
-//				public object this[object key]  {
-//					get {
-//						return table[key];
-//					}
-//					set {
-//						table[key]=value;
-////						if(value!=null) {
-////							//isHashCashed=false;
-////							object val=value is IMap? ((IMap)value).Clone(): value;
-//////							if(value is IMap) {
-//////								((IMap)val).Parent=this;
-//////							}
-////							if(!table.Contains(key)) {
-////								keys.Add(key);
-////							}
-////						}
-//					}
-//				}
-//				public bool ContainsKey(object key)  {
-//					return table.Contains(key);
-//				}
-//				//private ArrayList keys;
-//				private HybridDictionary table=new HybridDictionary();
-//				public IEnumerator GetEnumerator() {
-//					return this.table.GetEnumerator();
-//				}
-//			}
 			private ArrayList keys;
 			private MapStrategy table;
-//			private HybridDictionary table;
 			private bool isHashCashed=false;
 			private int hash;
 			public object compiled;
@@ -1212,153 +1216,6 @@ namespace Meta {
 				}
 			}
 		}
-//		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
-//			public IMap Parent {
-//				get {
-//					return parent;
-//				}
-//				set {
-//					parent=value;
-//				}
-//			}
-//			public int Count {
-//				get {
-//					return table.Count;
-//				}
-//			}
-//			public ArrayList IntKeyValues {
-//				get {
-//					ArrayList list=new ArrayList();
-//					for(Integer i=new Integer(1);ContainsKey(i);i++) {
-//						list.Add(this[i]);
-//					}
-//					return list;
-//				}
-//			}
-//			public object this[object key]  {
-//				get {
-//					return table[key];
-//				}
-//				set {
-//					if(value!=null) {
-//						isHashCashed=false;
-//						object val=value is IMap? ((IMap)value).Clone(): value;
-//						if(value is IMap) {
-//							((IMap)val).Parent=this;
-//						}
-//						if(!table.Contains(key)) {
-//							keys.Add(key);
-//						}
-//						table[key]=val;
-//					}
-//				}
-//			}
-//			public object Call(IMap argument) {
-//				IExpression function=(IExpression)Compile();
-//				object result;
-//				Interpreter.arguments.Add(argument);
-//				result=function.Evaluate(this.Parent);
-//				Interpreter.arguments.Remove(argument);
-//				return result;
-//			}
-//			public ArrayList Keys {
-//				get {
-//					return keys;
-//				}
-//			}
-//			public IMap Clone() {
-//				Map copy=new Map();
-//				foreach(object key in keys) {
-//					copy[key]=this[key];
-//				}
-//				copy.Parent=Parent;
-//				copy.compiled=compiled;
-//				return copy;
-//			}
-//			public object Compile()  {
-//				if(compiled==null)  {
-//					switch((string)Interpreter.MapToString((Map)this.Keys[0])) {
-//						case "call":
-//							compiled=new Call(this);break;
-//						case "delayed":
-//							compiled=new Delayed(this);break;
-//						case "program":
-//							compiled=new Program(this);break;
-//						case "literal":
-//							compiled=new Literal(this);break;
-//						case "select":
-//							compiled=new Select(this);break;
-//						case "value":
-//						case "key":
-//							compiled=new Statement(this);break;
-//						default:
-//							throw new ApplicationException("Cannot compile non-code map.");
-//					}
-//				}
-//				return compiled;
-//			}
-//			public bool ContainsKey(object key)  {
-//				return table.Contains(key);
-//			}
-//			public override bool Equals(object obj) {
-//				bool equal=true;
-//				if(!Object.ReferenceEquals(obj,this)) {
-//					if(!(obj is Map)) {
-//						equal=false;
-//					}
-//					else {
-//						Map map=(Map)obj;
-//						if(map.Count==Count) {
-//							foreach(DictionaryEntry entry in this)  {
-//								if(!map.ContainsKey(entry.Key)||!map[entry.Key].Equals(entry.Value)) {
-//									equal=false;
-//									break;
-//								}
-//							}
-//						}
-//						else {
-//							equal=false;
-//						}
-//					}
-//				}
-//				return equal;
-//			}
-//			public IEnumerator GetEnumerator() {
-//				return new MapEnumerator(this);
-//			}
-//			public override int GetHashCode()  {
-//				if(!isHashCashed) {
-//					int h=0;
-//					foreach(DictionaryEntry entry in table) {
-//						unchecked {
-//							h+=entry.Key.GetHashCode()*entry.Value.GetHashCode();
-//						}
-//					}
-//					hash=h;
-//					isHashCashed=true;
-//				}
-//				return hash;
-//			}
-//			public Map() {
-//				this.table=new HybridDictionary();
-//				this.keys=new ArrayList();
-//			}
-//			private IMap parent;
-//			private ArrayList keys;
-//			private HybridDictionary table;
-//			public object compiled;
-//			private bool isHashCashed=false;
-//			private int hash;
-//
-//			public string Serialize(string indent,string[] functions) {
-//				if(Interpreter.IsMapString(this)) {
-//					return indent+"\""+Interpreter.MapToString(this)+"\""+"\n";
-//				}
-//				else {
-//					return null;
-//				}
-//			}
-//		}
 		public class MapEnumerator: IEnumerator {
 			private Map map; public MapEnumerator(Map map) {
 				this.map=map;
@@ -1803,92 +1660,6 @@ namespace Meta {
 			public object obj;
 			public Type type;
 		}
-//		public interface IntegerStrategy {
-//			long Long {
-//				get;
-//			}
-//			int Int {
-//				get;
-//			}
-//			void Increment();
-//			void Decrement();
-////			IntegerStrategy Add(Integer x);
-////			IntegerStrategy Subtract(Integer x);
-////			IntegerStrategy Multiply(Integer x);
-////			IntegerStrategy Divide(Integer x);
-//		}
-//		public class Integer {
-//			public Integer(string num) {
-//				this.num=new BigInteger.Integer(num,10);
-//			}
-//			public Integer(long num) {
-//				this.num=new BigInteger.Integer(num);
-//			}
-//			public Integer(Integer number) {
-//				this.num=new BigInteger.Integer(number.num.ToString(),10);
-//				int asdf=0;
-//			}
-//			public Integer(BigInteger.Integer num) {
-//				this.num=new BigInteger.Integer(num.ToString(),10);
-//			}
-//			public long LongValue() {
-//				return num.LongValue();
-//			}
-//			public int IntValue() {
-//				return num.IntValue();
-//			}
-//			public static Integer operator ++ (Integer number) {
-//				number.num++;
-//				return number;
-//			}
-//			public static Integer operator -- (Integer number) {
-//				number.num--;
-//				return number;
-//			}
-//			public static Integer operator - (Integer number) {
-//				Integer negative=new Integer(0);
-//				negative.num=-number.num;
-//				return negative;
-//			}
-//			public static Integer operator + (Integer x,Integer y) {
-//				return new Integer(x+y);
-//			}
-//			public static Integer operator - (Integer x,Integer y) {
-//				return new Integer(x-y);
-//			}
-//			public static Integer operator * (Integer x,Integer y) {
-//				return new Integer(x*y);
-//			}
-//			public static Integer operator / (Integer x,Integer y) {
-//				return new Integer(x/y);
-//			}
-//
-//			public static Integer operator * (Integer x,int y) {
-//				return new Integer((x.num*y).ToString());
-//			}
-//			public static Integer operator + (Integer x,int y) {
-//				return new Integer((x.num+y).ToString());
-//			}
-//
-//			public static bool operator < (Integer x,Integer y) {
-//				return x.num<y.num;
-//			}
-//			public static bool operator > (Integer x,Integer y) {
-//				return x.num>y.num;
-//			}
-//
-//			public override bool Equals(object obj) {
-//				return obj is Integer && this.num.Equals(((Integer)obj).num);
-//			}
-//			public override int GetHashCode() {
-//				return this.num.GetHashCode();
-//			}
-//
-//			public override string ToString() {
-//				return num.ToString();
-//			}
-//			private BigInteger.Integer num;
-//		}
 	}
 	namespace Parser  {
 		public class AddIndentationTokensToStream: TokenStream {
