@@ -41,8 +41,8 @@ namespace Meta {
 			object Evaluate(IMap parent);
 		}
 		public class Statement {
-		public static readonly Map keyString=Interpreter.StringToMap("key");
-		public static readonly Map valueString=Interpreter.StringToMap("value");
+		public static readonly Map keyString=new Map("key");
+		public static readonly Map valueString=new Map("value");
 			public void Realize(IMap parent) {
 				keyExpression.Assign(parent,this.valueExpression.Evaluate(parent));
 			}
@@ -57,9 +57,9 @@ namespace Meta {
 			public object Evaluate(IMap parent) {
 				return ((ICallable)callableExpression.Evaluate(parent)).Call((IMap)argumentExpression.Evaluate(parent));
 			}
-			public static readonly Map callString=Interpreter.StringToMap("call");
-			public static readonly Map functionString=Interpreter.StringToMap("function");
-			public static readonly Map argumentString=Interpreter.StringToMap("argument");
+			public static readonly Map callString=new Map("call");
+			public static readonly Map functionString=new Map("function");
+			public static readonly Map argumentString=new Map("argument");
 			public Call(Map obj) {
 				Map expression=(Map)obj[callString];
 				this.callableExpression=(IExpression)((Map)expression[functionString]).Compile();
@@ -72,7 +72,7 @@ namespace Meta {
 			public object Evaluate(IMap parent) {
 				return delayed;
 			}
-			public static readonly Map delayedString=Interpreter.StringToMap("delayed");
+			public static readonly Map delayedString=new Map("delayed");
 			public Delayed(Map code) {
 				this.delayed=(Map)code[delayedString];
 			}
@@ -91,7 +91,7 @@ namespace Meta {
 				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 				return result;
 			}
-			public static readonly Map programString=Interpreter.StringToMap("program");
+			public static readonly Map programString=new Map("program");
 			public Program(Map code) {
 				foreach(Map statement in ((Map)code[programString]).IntKeyValues) {
 					this.statements.Add(statement.Compile()); // should we save the original maps instead of statements?
@@ -103,7 +103,7 @@ namespace Meta {
 			public object Evaluate(IMap parent) {
 				return literal;
 			}
-			public static readonly Map literalString=Interpreter.StringToMap("literal");
+			public static readonly Map literalString=new Map("literal");
 			public Literal(Map code) {
 				this.literal=Interpreter.RecognizeLiteralText((string)Interpreter.MapToString((Map)code[literalString]));
 			}
@@ -226,7 +226,7 @@ namespace Meta {
 				}
 				return selection;
 			}
-			public static readonly Map selectString=Interpreter.StringToMap("select");
+			public static readonly Map selectString=new Map("select");
 			public Select(Map code) {
 				foreach(Map expression in ((Map)code[selectString]).IntKeyValues) {
 					this.expressions.Add(expression.Compile());
@@ -438,7 +438,7 @@ namespace Meta {
 				// Attention! order of classes matters here
 				public class RecognizeString:RecognizeLiteral {
 					public override object Recognize(string text) {
-						return StringToMap(text);
+						return new Map(text);
 					}
 				}
 				public class RecognizeInteger: RecognizeLiteral  {
@@ -574,44 +574,11 @@ namespace Meta {
 					}
 				}
 			}
-			public static Map StringToMap(string symbol) {
-				return new Map(new Map.StringStrategy(symbol));
-//				Map map=new Map();
-//				foreach(char character in symbol) {
-//					map[new Integer(map.Count+1)]=new Integer((int)character);
-//				}
-//				return map;
-			}
-//			public static Map StringToMap(string symbol) {
-//				Map map=new Map();
-//				foreach(char character in symbol) {
-//					map[new Integer(map.Count+1)]=new Integer((int)character);
-//				}
-//				return map;
-//			}
 			public static bool IsMapString(Map map) {
-				if(map.IntKeyValues.Count>0) {
-					try {
-						MapToString(map);
-						return true;
-					}
-					catch{
-					}
-				}
-				return false;
+				return map.IsString();
 			}
 			public static string MapToString(Map map) {
-				string text="";
-				for(Integer i=new Integer(1);;i++) {
-					object val=map[i];
-					if(val==null) {
-						break;
-					}
-					else {
-						text+=System.Convert.ToChar(((Integer)val).LongValue());
-					}
-				}
-				return text;
+				return map.GetDotNetString();
 			}
 			private abstract class DotNetToMetaConversions {
 				public class ConvertStringToMap: DotNetToMetaConversion {
@@ -619,7 +586,7 @@ namespace Meta {
 						this.source=typeof(string);
 					}
 					public override object Convert(object obj) {
-						return StringToMap((string)obj);
+						return new Map((string)obj);
 					}
 				}
 				public class ConvertByteToInteger: DotNetToMetaConversion {
@@ -736,7 +703,7 @@ namespace Meta {
 		public class LazyNamespace: IKeyValue {
 			public object this[object key] {
 				get {
-					if(key.Equals(Interpreter.StringToMap("Collections"))) {
+					if(key.Equals(new Map("Collections"))) {
 						int asdf=0;
 					}
 					if(cache==null) {
@@ -776,7 +743,7 @@ namespace Meta {
 					cache=(Map)Interpreter.Merge(cache,cachedAssembly.GetNamespaceContents(fullName));
 				}
 				foreach(DictionaryEntry entry in namespaces) {
-					cache[Interpreter.StringToMap((string)entry.Key)]=entry.Value;
+					cache[new Map((string)entry.Key)]=entry.Value;
 				}
 			}
 			public Map cache;
@@ -805,7 +772,7 @@ namespace Meta {
 				Map selected=map;
 				if(fullName!="") {
 					foreach(string name in fullName.Split('.')) {
-						selected=(Map)selected[Interpreter.StringToMap(name)];
+						selected=(Map)selected[new Map(name)];
 					}
 				}
 				return selected;
@@ -815,7 +782,7 @@ namespace Meta {
 		public class Library: IKeyValue,IMap {
 			public object this[object key] {
 				get {
-					if(key.Equals(Interpreter.StringToMap("map"))) {
+					if(key.Equals(new Map("map"))) {
 						int asdf=0;
 					}
 					if(cash.ContainsKey(key)) {
@@ -876,12 +843,12 @@ namespace Meta {
 							ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
 							subPaths.RemoveAt(subPaths.Count-1);
 							foreach(string subPath in subPaths)  {
-								if(!position.ContainsKey(Interpreter.StringToMap(subPath)))  {
-									position[Interpreter.StringToMap(subPath)]=new Map();
+								if(!position.ContainsKey(new Map(subPath)))  {
+									position[new Map(subPath)]=new Map();
 								}
-								position=(Map)position[Interpreter.StringToMap(subPath)];
+								position=(Map)position[new Map(subPath)];
 							}
-							position[Interpreter.StringToMap(type.Name)]=new NetClass(type);
+							position[new Map(type.Name)]=new NetClass(type);
 						}
 					}
 					Interpreter.loadedAssemblies.Add(assembly.Location);
@@ -921,17 +888,17 @@ namespace Meta {
 				cash=LoadNamespaces(assemblies);
 				Interpreter.SaveToFile(assemblyInfo,infoFileName);
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
-					cash[Interpreter.StringToMap(Path.GetFileNameWithoutExtension(fileName))]=new MetaLibrary(fileName);
+					cash[new Map(Path.GetFileNameWithoutExtension(fileName))]=new MetaLibrary(fileName);
 				}
 			}
 			private Map assemblyInfo=new Map();
 			public ArrayList GetNamespaces(Assembly assembly) { //refactor, integrate into LoadNamespaces???
 				ArrayList namespaces=new ArrayList();
-				if(assemblyInfo.ContainsKey(Interpreter.StringToMap(assembly.Location))) {
-					Map info=(Map)assemblyInfo[Interpreter.StringToMap(assembly.Location)];
-					string timestamp=Interpreter.MapToString((Map)info[Interpreter.StringToMap("timestamp")]);
+				if(assemblyInfo.ContainsKey(new Map(assembly.Location))) {
+					Map info=(Map)assemblyInfo[new Map(assembly.Location)];
+					string timestamp=Interpreter.MapToString((Map)info[new Map("timestamp")]);
 					if(timestamp.Equals(File.GetCreationTime(assembly.Location).ToString())) {
-						Map names=(Map)info[Interpreter.StringToMap("namespaces")];
+						Map names=(Map)info[new Map("namespaces")];
 						foreach(DictionaryEntry entry in names) {
 							string text=Interpreter.MapToString((Map)entry.Value);
 							namespaces.Add(text);
@@ -955,13 +922,13 @@ namespace Meta {
 				Map nameSpaceMap=new Map();
 				Integer counter=new Integer(0);
 				foreach(string na in namespaces) {
-					nameSpaceMap[counter]=Interpreter.StringToMap(na);
+					nameSpaceMap[counter]=new Map(na);
 					counter++;
 				}
-				assemblyInfoMap[Interpreter.StringToMap("namespaces")]=nameSpaceMap;
-				assemblyInfoMap[Interpreter.StringToMap("timestamp")]=Interpreter.StringToMap(
+				assemblyInfoMap[new Map("namespaces")]=nameSpaceMap;
+				assemblyInfoMap[new Map("timestamp")]=new Map(
 					File.GetCreationTime(assembly.Location).ToString());
-				assemblyInfo[Interpreter.StringToMap(assembly.Location)]=assemblyInfoMap;
+				assemblyInfo[new Map(assembly.Location)]=assemblyInfoMap;
 				return namespaces;
 			}
 			public Map LoadNamespaces(ArrayList assemblies) {
@@ -999,6 +966,12 @@ namespace Meta {
 			public static string libraryPath="library"; 
 		}
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
+			public bool IsString() {
+				return table.IsString();
+			}
+			public string GetDotNetString() {
+				return table.GetDotNetString();
+			}
 			public IMap Parent {
 				get {
 					return parent;
@@ -1014,13 +987,18 @@ namespace Meta {
 			}
 			public ArrayList IntKeyValues {
 				get {
-					ArrayList list=new ArrayList();
-					for(Integer i=new Integer(1);ContainsKey(i);i++) {
-						list.Add(this[i]);
-					}
-					return list;
+					return table.IntKeyValues;
 				}
 			}
+//			public ArrayList IntKeyValues {
+//				get {
+//					ArrayList list=new ArrayList();
+//					for(Integer i=new Integer(1);ContainsKey(i);i++) {
+//						list.Add(this[i]);
+//					}
+//					return list;
+//				}
+//			}
 			public object this[object key]  {
 				get {
 					return table[key];
@@ -1135,9 +1113,12 @@ namespace Meta {
 				}
 				return hash;
 			}
-			public Map(MapStrategy table) {
-				this.table=table;
+			public Map(string text) {
+				this.table=new StringStrategy(text);
 			}
+//			public Map(MapStrategy table) {
+//				this.table=table;
+//			}
 			public Map() {
 				this.table=new HybridDictionaryStrategy();
 				//this.keys=new ArrayList();
@@ -1147,6 +1128,22 @@ namespace Meta {
 			// not unicode safe!:
 			// the strategy cannot replace itself in the Map yet
 			public class StringStrategy:MapStrategy {
+				public override ArrayList IntKeyValues {
+					get {
+						ArrayList list=new ArrayList();
+						foreach(char c in text) {
+							list.Add(new Integer(c));
+						}
+						return list;
+					}
+				}
+
+				public override bool IsString() {
+					return true;
+				}
+				public override string GetDotNetString() {
+					return text;
+				}
 				public override ArrayList Keys {
 					get {
 						return keys;
@@ -1188,7 +1185,41 @@ namespace Meta {
 					}
 				}
 			}
+			// move IntKeyValues down into Strategy
 			public class HybridDictionaryStrategy:MapStrategy {
+				public override ArrayList IntKeyValues {
+					get {
+						ArrayList list=new ArrayList();
+						for(Integer i=new Integer(1);ContainsKey(i);i++) {
+							list.Add(this[i]);
+						}
+						return list;
+					}
+				}
+				public override bool IsString() {
+					if(IntKeyValues.Count>0) { // not quite correct without
+						try {
+							GetDotNetString();
+							return true;
+						}
+						catch{
+						}
+					}
+					return false;
+				}
+				public override string GetDotNetString() {
+					string text="";
+					for(Integer i=new Integer(1);;i++) {
+						object val=table[i];
+						if(val==null) {
+							break;
+						}
+						else {
+							text+=System.Convert.ToChar(((Integer)val).LongValue());
+						}
+					}
+					return text;
+				}
 				public override ArrayList Keys {
 					get {
 						return keys;
@@ -1218,6 +1249,11 @@ namespace Meta {
 				private HybridDictionary table=new HybridDictionary();
 			}
 			public abstract class MapStrategy {
+				public abstract ArrayList IntKeyValues {
+					get;
+				}
+				public abstract bool IsString();
+				public abstract string GetDotNetString();
 				public abstract ArrayList Keys {
 					get;
 				}
@@ -1653,20 +1689,20 @@ namespace Meta {
 						bindingFlags=BindingFlags.Public|BindingFlags.Instance;
 					}
 					foreach(FieldInfo field in type.GetFields(bindingFlags)) {
-						table[Interpreter.StringToMap(field.Name)]=field.GetValue(obj);
+						table[new Map(field.Name)]=field.GetValue(obj);
 					}
 					foreach(MethodInfo method in type.GetMethods(bindingFlags))  {
 						if(!method.IsSpecialName) {
-							table[Interpreter.StringToMap(method.Name)]=new NetMethod(method.Name,obj,type);
+							table[new Map(method.Name)]=new NetMethod(method.Name,obj,type);
 						}
 					}
 					foreach(PropertyInfo property in type.GetProperties(bindingFlags)) {
 						if(property.Name!="Item" && property.Name!="Chars") {
-							table[Interpreter.StringToMap(property.Name)]=property.GetValue(obj,new object[]{});
+							table[new Map(property.Name)]=property.GetValue(obj,new object[]{});
 						}
 					}
 					foreach(EventInfo eventInfo in type.GetEvents(bindingFlags)) {
-						table[Interpreter.StringToMap(eventInfo.Name)]=new NetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
+						table[new Map(eventInfo.Name)]=new NetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
 					}
 					int counter=1;
 					if(obj!=null && obj is IEnumerable && !(obj is String)) { // is this useful?

@@ -11,8 +11,13 @@ public class flow
 		Map result=new Map();
 		for(int i=0;i<times;i++) {
 			Map argument=new Map();
+<<<<<<< .mine
+			argument[new Map("i")]=new Integer(i);
+			result[new Integer(i+1)]=function.Call(argument);
+=======
 			argument[Interpreter.StringToMap("i")]=new Number(i);
 			result[new Number(i+1)]=function.Call(argument);
+>>>>>>> .r97
 		}
 		return result;
 	}
@@ -24,8 +29,8 @@ public class flow
 		int i=0;
 		foreach(DictionaryEntry entry in over) {
 			Map argument=new Map();
-			argument[Interpreter.StringToMap("key")]=entry.Key;
-			argument[Interpreter.StringToMap("value")]=entry.Value;
+			argument[new Map("key")]=entry.Key;
+			argument[new Map("value")]=entry.Value;
 			result[new Number(i+1)]=function.Call(argument);
 			i++;
 		}
@@ -34,8 +39,8 @@ public class flow
 	public static void Switch() {
 		Map arg=((Map)Interpreter.Arg);
 		object val=arg[new Number(1)];
-		Map cases=(Map)arg[Interpreter.StringToMap("case")];
-		Map def=(Map)arg[Interpreter.StringToMap("default")];
+		Map cases=(Map)arg[new Map("case")];
+		Map def=(Map)arg[new Map("default")];
 		if(cases.ContainsKey(val)) {
 			((Map)cases[val]).Call(new Map());
 		}
@@ -46,8 +51,8 @@ public class flow
 	public static void If() {
 		Map arg=((Map)Interpreter.Arg);
 		bool test=(bool)arg[new Number(1)];
-		Map then=(Map)arg[Interpreter.StringToMap("then")];
-		Map _else=(Map)arg[Interpreter.StringToMap("else")];
+		Map then=(Map)arg[new Map("then")];
+		Map _else=(Map)arg[new Map("else")];
 		if(test) {
 			if(then!=null) {
 				then.Call(new Map());
