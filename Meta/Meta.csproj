@@ -122,6 +122,10 @@
                     RelPath = "Parser.g"
                     BuildAction = "None"
                 />
+                <File
+                    RelPath = "TheMetaProgrammingLanguage.txt"
+                    BuildAction = "Content"
+                />
             </Include>
         </Files>
     </CSHARP>
