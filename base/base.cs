@@ -94,18 +94,10 @@ public class @base {
 		for(int i=0;i<times;i++) {
 			Map argument=new Map();
 			argument["i"]=new Integer(i);
-			Interpreter.arguments.Add(argument);
-			result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate();
-			Interpreter.arguments.Remove(argument);
+			result[new Integer(i+1)]=function.Call(argument);
 		}
 		return result;
 	}
-//	public static void Load() {
-//		Map caller=(Map)Interpreter.callers[Interpreter.callers.Count-1];
-//		foreach(DictionaryEntry entry in Interpreter.LoadAssembly((Map)Interpreter.Arg,true)) {
-//			caller[entry.Key]=entry.Value;
-//		}
-//	}
 	public static Map Foreach() {
 		Map arg=((Map)Interpreter.Arg);
 		Map over=(Map)arg[new Integer(1)];
@@ -116,9 +108,7 @@ public class @base {
 			Map argument=new Map();
 			argument["key"]=entry.Key;
 			argument["value"]=entry.Value;
-			Interpreter.arguments.Add(argument);
-			result[new Integer(i+1)]=((IExpression)function.Compile()).Evaluate();
-			Interpreter.arguments.Remove(argument);
+			result[new Integer(i+1)]=function.Call(argument);
 			i++;
 		}
 		return result;
@@ -132,10 +122,10 @@ public class @base {
 		Map cases=(Map)arg["case"];
 		Map def=(Map)arg["default"];
 		if(cases.ContainsKey(val)) {
-			((IExpression)((Map)cases[val]).Compile()).Evaluate();
+			((Map)cases[val]).Call(new Map());
 		}
 		else if(def!=null) {
-			((IExpression)def.Compile()).Evaluate();
+			def.Call(new Map());
 		}				
 	}
 	public static void If() {
@@ -145,12 +135,12 @@ public class @base {
 		Map _else=(Map)arg["else"];
 		if(test) {
 			if(then!=null) {
-				((IExpression)then.Compile()).Evaluate();
+				then.Call(new Map());
 			}
 		}
 		else {
 			if(_else!=null) {
-				((IExpression)_else.Compile()).Evaluate();
+				_else.Call(new Map());
 			}
 		}	
 	}

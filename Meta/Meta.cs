@@ -40,24 +40,11 @@ using System.GAC;
 namespace Meta {
 	namespace Execution {
 		public interface IExpression {
-			object Evaluate();
-			bool IsIdenticalWithOtherExpression(object obj);
-			void ReplaceWithOtherExpression(IExpression replace);
+			object Evaluate(IMap parent);
 		}
 		public class Statement {
-			public void Realize() {
-				keyExpression.Assign(this.valueExpression.Evaluate());
-			}
-			public void ReplaceWithOtherExpression(Statement statement) {
-				if(!keyExpression.IsIdenticalWithOtherExpression(statement.keyExpression)) {
-					keyExpression=(Select)Interpreter.ReplaceExpressionWithOtherExpression(keyExpression,statement.keyExpression);
-				}
-				if(!valueExpression.IsIdenticalWithOtherExpression(statement.valueExpression)) {
-					valueExpression=(IExpression)Interpreter.ReplaceExpressionWithOtherExpression(valueExpression,statement.valueExpression);
-				}
-			}
-			public bool IsIdenticalWithOtherExpression(object obj) {
-				return obj is Statement && ((Statement)obj).keyExpression.IsIdenticalWithOtherExpression(keyExpression) && ((Statement)obj).valueExpression.IsIdenticalWithOtherExpression(valueExpression);
+			public void Realize(IMap parent) {
+				keyExpression.Assign(parent,this.valueExpression.Evaluate(parent));
 			}
 			public Statement(Map code) {
 				this.keyExpression=(Select)((Map)code["key"]).Compile();
@@ -67,23 +54,8 @@ namespace Meta {
 			public IExpression valueExpression;
 		}
 		public class Call: IExpression {
-			public object Evaluate() {
-				return ((ICallable)callableExpression.Evaluate()).Call((IMap)argumentExpression.Evaluate());
-			}
-			public void ReplaceWithOtherExpression(IExpression replace) {
-				if(!this.IsIdenticalWithOtherExpression(replace)) {
-					Call call=(Call)replace;
-					if(!callableExpression.IsIdenticalWithOtherExpression(call.callableExpression)) {
-						callableExpression=(IExpression)Interpreter.ReplaceExpressionWithOtherExpression(callableExpression,call.callableExpression);
-					}
-					if(!argumentExpression.IsIdenticalWithOtherExpression(call.argumentExpression)) {
-						argumentExpression=(IExpression)Interpreter.ReplaceExpressionWithOtherExpression(argumentExpression,call.argumentExpression);
-					}
-				}
-			}
-			public bool IsIdenticalWithOtherExpression(object obj) {
-				return obj is Call && ((Call)obj).callableExpression.IsIdenticalWithOtherExpression(callableExpression) &&
-					((Call)obj).argumentExpression.IsIdenticalWithOtherExpression(argumentExpression);
+			public object Evaluate(IMap parent) {
+				return ((ICallable)callableExpression.Evaluate(parent)).Call((IMap)argumentExpression.Evaluate(parent));
 			}
 			public Call(Map obj) {
 				Map expression=(Map)obj["call"];
@@ -94,22 +66,8 @@ namespace Meta {
 			public IExpression callableExpression;
 		}
 		public class Delayed: IExpression {
-			public object Evaluate() {
+			public object Evaluate(IMap parent) {
 				return delayed;
-			}
-			public void ReplaceWithOtherExpression(IExpression replace) { // move editor stuff somewhere else
-				if(!this.IsIdenticalWithOtherExpression(replace)) {
-					Delayed other=(Delayed)replace;
-					other.delayed.Compile();
-					if(delayed.compiled!=null) {
-						delayed.compiled=Interpreter.ReplaceExpressionWithOtherExpression(delayed.compiled,other.delayed.compiled);
-						other.delayed.compiled=delayed.compiled;
-					}
-					delayed=other.delayed;
-				}
-			}
-			public bool IsIdenticalWithOtherExpression(object obj) {
-				return obj is Delayed && delayed.Equals(((Delayed)obj).delayed);
 			}
 			public Delayed(Map code) {
 				this.delayed=(Map)code["delayed"];
@@ -117,48 +75,17 @@ namespace Meta {
 			public Map delayed;
 		}
 		public class Program: IExpression {
-			public object Evaluate() {
-				object localMap=new Map();
-				((IMap)localMap).Parent=(IMap)Interpreter.Current;
-				Interpreter.callers.Add(localMap);
+			public object Evaluate(IMap parent) {
+				Map local=new Map();
+				local.Parent=parent;
+				Interpreter.callers.Add(local);
 				for(int i=0;i<statements.Count;i++) {
-					((Statement)statements[i]).Realize();
+					local=(Map)Interpreter.Current;
+					((Statement)statements[i]).Realize(local);
 				}
 				object result=Interpreter.Current;
 				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 				return result;
-			}
-			public bool IsIdenticalWithOtherExpression(object obj) {
-				if(obj is Program) {
-					Program program=(Program)obj;
-					if(program.statements.Count==statements.Count) {
-						for(int i=0;i<statements.Count;i++) {
-							if(!((Statement)statements[i]).IsIdenticalWithOtherExpression(program.statements[i])) {
-								return false;
-							}
-						}
-						return true;
-					}
-				}
-				return false;
-			}
-			public void ReplaceWithOtherExpression(IExpression replace) {
-				if(!IsIdenticalWithOtherExpression(replace)) {
-					Program program=(Program)replace;
-					int i=0;
-					for(;i<program.statements.Count && i<statements.Count;i++)  {
-						if(!((Statement)statements[i]).IsIdenticalWithOtherExpression((Statement)program.statements[i])) {
-							statements[i]=Interpreter.ReplaceExpressionWithOtherExpression(statements[i],
-								(Statement)program.statements[i]);
-						}
-					}
-					if(statements.Count>program.statements.Count) {
-						statements.RemoveRange(i,statements.Count-i);
-					}
-					else {
-						statements.AddRange(program.statements.GetRange(i,program.statements.Count-i));
-					}
-				}
 			}
 			public Program(Map code) {
 				foreach(Map statement in ((Map)code["program"]).IntKeyValues) {
@@ -168,14 +95,8 @@ namespace Meta {
 			public readonly ArrayList statements=new ArrayList();
 		}
 		public class Literal: IExpression {
-			public object Evaluate() {
+			public object Evaluate(IMap parent) {
 				return literal;
-			}
-			public bool IsIdenticalWithOtherExpression(object obj) {
-				return obj is Literal && literal==((Literal)obj).literal;
-			}
-			public void ReplaceWithOtherExpression(IExpression replace) {
-				literal=((Literal)replace).literal;
 			}
 			public Literal(Map code) {
 				this.literal=Interpreter.RecognizeLiteralText((string)code["literal"]);
@@ -183,17 +104,20 @@ namespace Meta {
 			public object literal=null;
 		}
 		public class Select: IExpression { 
-			public object Evaluate() {
+			public object Evaluate(IMap parent) {
 				ArrayList keysToBeSelected=new ArrayList();
 				foreach(IExpression expression in expressions) {
-					keysToBeSelected.Add(expression.Evaluate());
+					keysToBeSelected.Add(expression.Evaluate(parent));
 				}
 				return SearchAndSelectKeysInCurrentMap(keysToBeSelected,true,true);
 			}
-			public void Assign(object valueToBeAssigned) {
+			public void Assign(IMap current,object valueToBeAssigned) { // remove current
 				ArrayList keysToBeSelected=new ArrayList();
 				foreach(IExpression expression in expressions) {
-					keysToBeSelected.Add(expression.Evaluate());
+					keysToBeSelected.Add(expression.Evaluate(current));
+				}
+				if(keysToBeSelected[0].Equals("testClass")) {
+					int asdf=0;
 				}
 				if(keysToBeSelected.Count==1 && keysToBeSelected[0].Equals("this")) {
 					if(valueToBeAssigned is IMap) {
@@ -291,36 +215,6 @@ namespace Meta {
 				}
 				return selection;
 			}
-			public bool IsIdenticalWithOtherExpression(object obj) {
-				if(obj is Select) {
-					Select select=(Select)obj;
-					if(expressions.Count==select.expressions.Count)  {
-						for(int i=0;i<expressions.Count;i++) {
-							if(!((IExpression)expressions[i]).IsIdenticalWithOtherExpression(select.expressions[i])) {
-								return false;
-							}
-						}
-						return true;
-					}
-				}
-				return false;
-			}
-			public void ReplaceWithOtherExpression(IExpression replace) {
-				if(!IsIdenticalWithOtherExpression(replace)) {
-					Select select=(Select)replace;
-					int i=0;
-					for(;i<expressions.Count && i<select.expressions.Count;i++) {
-						expressions[i]=Interpreter.ReplaceExpressionWithOtherExpression(
-							expressions[i],select.expressions[i]);
-					}
-					if(expressions.Count>select.expressions.Count) {
-						expressions.RemoveRange(i,expressions.Count-i);
-					}
-					else {
-						expressions.AddRange(select.expressions.GetRange(i,select.expressions.Count-i));
-					}
-				}
-			}
 			public Select(Map code) {
 				foreach(Map expression in ((Map)code["select"]).IntKeyValues) {
 					this.expressions.Add(expression.Compile());
@@ -358,20 +252,6 @@ namespace Meta {
 				}
 				return null;
 			}
-			public static object ReplaceExpressionWithOtherExpression(object original,object replacement) { //not great
-				if(original.GetType().Equals(replacement.GetType())) {
-					if(original is Statement) {
-						((Statement)original).ReplaceWithOtherExpression((Statement)replacement);
-					}
-					else {
-						((IExpression)original).ReplaceWithOtherExpression((IExpression)replacement);
-					}
-					return original;
-				}
-				else {
-					return replacement;
-				}
-			}
 			public static object ConvertDotNetObjectToMetaObject(object obj) { 
 				if(obj==null) {
 					return null;
@@ -396,10 +276,18 @@ namespace Meta {
 			}
 			public static object Run(TextReader reader,IMap argument) {
 				Map lastProgram=CompileToMap(reader);
-				lastProgram.Parent=Library.library;    // move argument adding somewhere else
+//				Interpreter.callers.Add(Library.library);
+				lastProgram.Parent=Library.library;
 				object result=lastProgram.Call(argument);
+//				Interpreter.callers.RemoveAt(callers.Count-1);
 				return result;
 			}
+//			public static object Run(TextReader reader,IMap argument) {
+//				Map lastProgram=CompileToMap(reader);
+//				lastProgram.Parent=Library.library;    // move argument adding somewhere else
+//				object result=lastProgram.Call(argument);
+//				return result;
+//			}
 			public static AST ParseToAst(TextReader stream)  {
 				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser(
 					new AddIndentationTokensToStream(new MetaLexer(stream)));
@@ -416,6 +304,9 @@ namespace Meta {
 			}
 			public static object Current {
 				get {
+					if(callers.Count==0) {
+						return null;
+					}
 					return callers[callers.Count-1];
 				}
 				set {
@@ -808,7 +699,8 @@ namespace Meta {
 					return null;
 				}
 				set {
-					throw new ApplicationException("Tried to set parent of library.");
+					int asdf=0;
+					//throw new ApplicationException("Tried to set parent of library.");
 				}
 			}
 			public IEnumerator GetEnumerator() { 
@@ -914,16 +806,27 @@ namespace Meta {
 				}
 			}
 			public object Call(IMap argument) {
-				((IMap)argument).Parent=this.Parent;
-				IExpression callable=(IExpression)Compile();
+				IExpression function=(IExpression)Compile();
 				object result;
 				Interpreter.arguments.Add(argument);
-				Interpreter.callers.Add(argument);
-				result=callable.Evaluate();
-				Interpreter.callers.Remove(argument);
+//				if(function is Program) {
+				result=function.Evaluate(this.Parent);
+//				}
+//				result=function.Evaluate();
 				Interpreter.arguments.Remove(argument);
 				return result;
 			}
+//			public object Call(IMap argument) {
+//				((IMap)argument).Parent=this.Parent;
+//				IExpression callable=(IExpression)Compile();
+//				object result;
+//				Interpreter.arguments.Add(argument);
+////				Interpreter.callers.Add(argument);
+//				result=callable.Evaluate();
+////				Interpreter.callers.Remove(argument);
+//				Interpreter.arguments.Remove(argument);
+//				return result;
+//			}
 			public ArrayList Keys {
 				get {
 					return keys;
