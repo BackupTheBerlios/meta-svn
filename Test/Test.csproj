@@ -108,7 +108,15 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "Copy (2) of basicTest.meta"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "Copy (2) of doc.meta"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Copy of basicTest.meta"
                     BuildAction = "None"
                 />
                 <File
