@@ -22,13 +22,14 @@ namespace Meta.Parser
 		public const int RPAREN = 17;
 		public const int POINT = 18;
 		public const int COMMA = 19;
-		public const int LITERAL_KEY = 20;
-		public const int LITERAL = 21;
-		public const int SPACES = 22;
-		public const int LINE = 23;
-		public const int SPACE = 24;
-		public const int NEWLINE = 25;
-		public const int SELECT_KEY = 26;
+		public const int GATTER = 20;
+		public const int LITERAL_KEY = 21;
+		public const int LITERAL = 22;
+		public const int SPACES = 23;
+		public const int LINE = 24;
+		public const int SPACE = 25;
+		public const int NEWLINE = 26;
+		public const int SELECT_KEY = 27;
 		
 	}
 }

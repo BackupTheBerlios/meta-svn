@@ -1,22 +1,22 @@
 this=meta.Merge(parent,('AssignedToCurrent'))
 'ImpliedAutokey'
 ='Autokey'
-this.commandLineArguments=arg
-this.[(['a']='a')]='Object'
-this.['normal symbol']='NormalSymbol'
-this.lookupSymbol='LookupSymbol'
-this.['"long key symbol"']='LookupExtendedSymbol'
-this.lookedUpMap=[(['a']='a')]
-this.lookedUpNormalSymbol=['normal symbol']
-this.lookedUpSymbol=lookupSymbol
-this.lookedUpLongSymbol=['"long key symbol"']
-this.object=
+commandLineArguments=arg
+[(['a']='a')]='Object'
+['normal symbol']='NormalSymbol'
+lookupSymbol='LookupSymbol'
+['"long key symbol"']='LookupExtendedSymbol'
+lookedUpMap=[(['a']='a')]
+lookedUpNormalSymbol=['normal symbol']
+lookedUpSymbol=lookupSymbol
+lookedUpLongSymbol=['"long key symbol"']
+object=
   a='default'
   autoSearch='default'
   b=()
   SetA=-
     parent.parent.a='c'
-    autoSearch='changed'
+    #autoSearch='changed'
   SetB=-
     caller.b.1=arg.value
     this='changed'
@@ -25,68 +25,68 @@ this.object=
     c='d'
   =-
     this.a='b'
-this.a='default'
-this.b=()
-this.aSet=object.SetA ()
-this.bSet=object.SetB(value=(x='7',z='1'))
-this.ReturnEverything=-
+a='default'
+b=()
+aSet=object.SetA ()
+bSet=object.SetB(value=(x='7',z='1'))
+ReturnEverything=-
   this=arg
-this.everythingReturned=ReturnEverything('a','b','c')
-this.argument=('x','y','z')
-this.variableAsArgument=ReturnEverything argument
-this.ReturnFunction=-
+everythingReturned=ReturnEverything('a','b','c')
+argument=('x','y','z')
+variableAsArgument=ReturnEverything argument
+ReturnFunction=-
   this=-
     this=('1','2','3')
-this.SetCurrent=-
+SetCurrent=-
   this=(arg=arg,x=arg.symbol)
   this=x
-this.thisSet=SetCurrent(symbol='haha')
+thisSet=SetCurrent(symbol='haha')
 this=meta.Merge(parent,assemblies.Test.Test)
-this.testClass=TestClass()
-this.memberTest=MemberTest()
-this.MemberTest.classField='a'
-this.memberTest.instanceField='b'
-this.MemberTest.ClassProperty=memberTest.InstanceProperty
-this.memberTest.InstanceProperty=MemberTest.ClassProperty
-this.interceptedSymbol='/hello/'
-this.positionalNoConversion=PositionalNoConversion('m','n','o')
-this.positionalNoConversionConcatenated=positionalNoConversion.Concatenate('r','s','t')
-this.namedNoConversion=NamedNoConversion('m',y='n')
-this.namedNoConversionConcatenated=namedNoConversion.Concatenate(c='t','r')
-this.indexerNoConversion=IndexerNoConversion()
-this.indexerNoConversion.abc='hihi'
-this.indexerNoConversionIndexed=indexerNoConversion.abc
-this.interceptedSymbol2='1'
-this.k='hello'
-this.xyz='w'
-this.literalFunction= -'5'
-this.literalFunctionResult=literalFunction()
-this.function=-
+testClass=TestClass()
+memberTest=MemberTest()
+MemberTest.classField='a'
+memberTest.instanceField='b'
+MemberTest.ClassProperty=memberTest.InstanceProperty
+memberTest.InstanceProperty=MemberTest.ClassProperty
+interceptedSymbol='/hello/'
+positionalNoConversion=PositionalNoConversion('m','n','o')
+positionalNoConversionConcatenated=positionalNoConversion.Concatenate('r','s','t')
+namedNoConversion=NamedNoConversion('m',y='n')
+namedNoConversionConcatenated=namedNoConversion.Concatenate(c='t','r')
+indexerNoConversion=IndexerNoConversion()
+indexerNoConversion.abc='hihi'
+indexerNoConversionIndexed=indexerNoConversion.abc
+interceptedSymbol2='1'
+k='hello'
+xyz='w'
+literalFunction= -'5'
+literalFunctionResult=literalFunction()
+function=-
   this='simple function this'
-this.callFunction=-function
-this.callFunctionResult=callFunction ()
-this.delayedFunction= --(x='y')
-this.delayedFunctionResult=delayedFunction ()
-this.value='xyz'
-this.selectionFunction= -value
-this.selectionFunctionResult=selectionFunction ()
-this.bigInteger='89383838383832839123497123047217340712340720347072304702340720347'
-this.upperLevel='unchanged'
-this.ChangeUpperLevel=-
-  upperLevel='changed'
-this.ChangeUpperLevel()
+callFunction=-function
+callFunctionResult=callFunction ()
+delayedFunction= --(x='y')
+delayedFunctionResult=delayedFunction ()
+value='xyz'
+selectionFunction= -value
+selectionFunctionResult=selectionFunction ()
+bigInteger='89383838383832839123497123047217340712340720347072304702340720347'
+upperLevel='unchanged'
+ChangeUpperLevel=-
+  #upperLevel='changed'
+ChangeUpperLevel()
 files.['test.txt']='"changed text from file"'
-this.fileText=files.['test.txt']
+fileText=files.['test.txt']
 files.['test.txt']='"unchanged text"'
-this.staticEventChanged='false'
+staticEventChanged='false'
 TestClass.staticEvent=-
-  staticEventChanged='true'
+  #staticEventChanged='true'
   this=arg.1
-this.staticEvent=TestClass.staticEvent
-this.staticEventResult=TestClass.staticEvent(testClass)
-this.instanceEventChanged='false'
+staticEvent=TestClass.staticEvent
+staticEventResult=TestClass.staticEvent(testClass)
+instanceEventChanged='false'
 testClass.instanceEvent=-
-  instanceEventChanged='true'
+  #instanceEventChanged='true'
   this=arg.1
-this.instanceEvent=testClass.instanceEvent
-this.instanceEventResult=testClass.instanceEvent('5')
+instanceEvent=testClass.instanceEvent
+instanceEventResult=testClass.instanceEvent('5')

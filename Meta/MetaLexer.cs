@@ -49,13 +49,14 @@ namespace Meta.Parser
 		public const int RPAREN = 17;
 		public const int POINT = 18;
 		public const int COMMA = 19;
-		public const int LITERAL_KEY = 20;
-		public const int LITERAL = 21;
-		public const int SPACES = 22;
-		public const int LINE = 23;
-		public const int SPACE = 24;
-		public const int NEWLINE = 25;
-		public const int SELECT_KEY = 26;
+		public const int GATTER = 20;
+		public const int LITERAL_KEY = 21;
+		public const int LITERAL = 22;
+		public const int SPACES = 23;
+		public const int LINE = 24;
+		public const int SPACE = 25;
+		public const int NEWLINE = 26;
+		public const int SELECT_KEY = 27;
 		
 		public MetaLexer(Stream ins) : this(new ByteBuffer(ins))
 		{
@@ -140,6 +141,12 @@ tryAgain:
 						case ',':
 						{
 							mCOMMA(true);
+							theRetToken = returnToken_;
+							break;
+						}
+						case '#':
+						{
+							mGATTER(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -306,13 +313,27 @@ tryAgain:
 		returnToken_ = _token;
 	}
 	
+	public void mGATTER(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; Token _token=null; int _begin=text.Length;
+		_ttype = GATTER;
+		
+		match('#');
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+		{
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
+		}
+		returnToken_ = _token;
+	}
+	
 	public void mLITERAL_KEY(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
 		_ttype = LITERAL_KEY;
 		
 		{ // ( ... )+
-		int _cnt12=0;
+		int _cnt13=0;
 		for (;;)
 		{
 			if ((tokenSet_0_.member(LA(1))))
@@ -323,12 +344,12 @@ tryAgain:
 			}
 			else
 			{
-				if (_cnt12 >= 1) { goto _loop12_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
+				if (_cnt13 >= 1) { goto _loop13_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
 			}
 			
-			_cnt12++;
+			_cnt13++;
 		}
-_loop12_breakloop:		;
+_loop13_breakloop:		;
 		}    // ( ... )+
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -358,11 +379,11 @@ _loop12_breakloop:		;
 				}
 				else
 				{
-					goto _loop16_breakloop;
+					goto _loop17_breakloop;
 				}
 				
 			}
-_loop16_breakloop:			;
+_loop17_breakloop:			;
 		}    // ( ... )*
 		_saveIndex = text.Length;
 		match("\'");
@@ -381,7 +402,7 @@ _loop16_breakloop:			;
 		_ttype = SPACES;
 		
 		{ // ( ... )+
-		int _cnt19=0;
+		int _cnt20=0;
 		for (;;)
 		{
 			if ((LA(1)==' '))
@@ -390,12 +411,12 @@ _loop16_breakloop:			;
 			}
 			else
 			{
-				if (_cnt19 >= 1) { goto _loop19_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
+				if (_cnt20 >= 1) { goto _loop20_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
 			}
 			
-			_cnt19++;
+			_cnt20++;
 		}
-_loop19_breakloop:		;
+_loop20_breakloop:		;
 		}    // ( ... )+
 		if (0==inputState.guessing)
 		{
@@ -417,11 +438,11 @@ _loop19_breakloop:		;
 		const int endOfFileValue=65535;
 		
 		
-		bool synPredMatched26 = false;
+		bool synPredMatched27 = false;
 		if (((LA(1)=='\n'||LA(1)=='\r')))
 		{
-			int _m26 = mark();
-			synPredMatched26 = true;
+			int _m27 = mark();
+			synPredMatched27 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -435,11 +456,11 @@ _loop19_breakloop:		;
 							}
 							else
 							{
-								goto _loop23_breakloop;
+								goto _loop24_breakloop;
 							}
 							
 						}
-_loop23_breakloop:						;
+_loop24_breakloop:						;
 					}    // ( ... )*
 					{    // ( ... )*
 						for (;;)
@@ -450,11 +471,11 @@ _loop23_breakloop:						;
 							}
 							else
 							{
-								goto _loop25_breakloop;
+								goto _loop26_breakloop;
 							}
 							
 						}
-_loop25_breakloop:						;
+_loop26_breakloop:						;
 					}    // ( ... )*
 					if (!(LA(1)==endOfFileValue))
 					  throw new SemanticException("LA(1)==endOfFileValue");
@@ -462,12 +483,12 @@ _loop25_breakloop:						;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched26 = false;
+				synPredMatched27 = false;
 			}
-			rewind(_m26);
+			rewind(_m27);
 			inputState.guessing--;
 		}
-		if ( synPredMatched26 )
+		if ( synPredMatched27 )
 		{
 			mNEWLINE(false);
 			{    // ( ... )*
@@ -479,11 +500,11 @@ _loop25_breakloop:						;
 					}
 					else
 					{
-						goto _loop28_breakloop;
+						goto _loop29_breakloop;
 					}
 					
 				}
-_loop28_breakloop:				;
+_loop29_breakloop:				;
 			}    // ( ... )*
 			{    // ( ... )*
 				for (;;)
@@ -494,11 +515,11 @@ _loop28_breakloop:				;
 					}
 					else
 					{
-						goto _loop30_breakloop;
+						goto _loop31_breakloop;
 					}
 					
 				}
-_loop30_breakloop:				;
+_loop31_breakloop:				;
 			}    // ( ... )*
 			if (!(LA(1)==endOfFileValue))
 			  throw new SemanticException("LA(1)==endOfFileValue");
@@ -520,11 +541,11 @@ _loop30_breakloop:				;
 					}
 					else
 					{
-						goto _loop32_breakloop;
+						goto _loop33_breakloop;
 					}
 					
 				}
-_loop32_breakloop:				;
+_loop33_breakloop:				;
 			}    // ( ... )*
 			if (0==inputState.guessing)
 			{
@@ -616,7 +637,7 @@ _loop32_breakloop:				;
 	private static long[] mk_tokenSet_0_()
 	{
 		long[] data = new long[2048];
-		data[0]=-2305974405148245512L;
+		data[0]=-2305974439507983880L;
 		data[1]=-671088641L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;

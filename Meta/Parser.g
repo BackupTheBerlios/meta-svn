@@ -63,9 +63,12 @@ POINT:
 
 COMMA:
   ',';
+  
+GATTER:
+  '#';
 
 LITERAL_KEY:
-  ( ~ (' '|'\r'|'\n'|'*'|'='|'-'|'.'|','|'\''|'('|')'|'['|']') )+;
+  ( ~ (' '|'\r'|'\n'|'*'|'='|'-'|'.'|','|'\''|'('|')'|'['|']'|'#') )+;
     
 LITERAL:
   "\'"! ( ~ ('\'') )* "\'"!;
@@ -226,13 +229,36 @@ delayed:
   };
   
 select:
-  lookup
+  (GATTER)=>
   (
-    POINT! lookup
-  )*
-  {
-    #select=#([SELECT_KEY],#select);
-  };  
+    GATTER!
+    lookup
+    (
+      POINT! lookup
+    )*
+    {
+      Counters.autokey.Push((int)Counters.autokey.Pop()+1);
+			Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
+			CommonAST currentAst=new CommonAST(currentToken);
+			currentAst.setText("search");
+
+			//Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
+			//CommonAST autokeyAst=new CommonAST(autokeyToken);
+			//autokeyAst.setText(Counters.autokey.Peek().ToString());
+      #select=#([SELECT_KEY],currentAst,#select);
+      //#select=#([SELECT_KEY],#select);
+    }
+  )
+  |
+  (
+    lookup
+    (
+      POINT! lookup
+    )*
+    {
+      #select=#([SELECT_KEY],#select);
+    }
+  );
 
 lookup:
   (

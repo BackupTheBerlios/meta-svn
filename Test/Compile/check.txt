@@ -146,11 +146,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "commandLineArguments"
         parents (ArrayList):
           IEnumerable
@@ -168,11 +163,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Program):
               statements (ArrayList):
                 IEnumerable
@@ -207,11 +197,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "normal symbol"
         parents (ArrayList):
           IEnumerable
@@ -224,11 +209,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -249,11 +229,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 ""long key symbol""
         parents (ArrayList):
           IEnumerable
@@ -266,11 +241,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -310,11 +280,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "lookedUpNormalSymbol"
         parents (ArrayList):
           IEnumerable
@@ -332,11 +297,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -362,11 +322,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "lookedUpLongSymbol"
         parents (ArrayList):
           IEnumerable
@@ -384,11 +339,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -537,6 +487,16 @@ statements (ArrayList):
                                             Entry (DictionaryEntry):
                                               Key (Integer):
                                                 "1"
+                                              Value (Map):
+                                                IEnumerable
+                                                  Entry (DictionaryEntry):
+                                                    Key (String):
+                                                      "literal"
+                                                    Value (String):
+                                                      "search"
+                                            Entry (DictionaryEntry):
+                                              Key (Integer):
+                                                "2"
                                               Value (Map):
                                                 IEnumerable
                                                   Entry (DictionaryEntry):
@@ -806,11 +766,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "a"
         parents (ArrayList):
           IEnumerable
@@ -827,11 +782,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "b"
         parents (ArrayList):
           IEnumerable
@@ -842,11 +792,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -877,11 +822,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -962,11 +902,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "ReturnEverything"
         parents (ArrayList):
           IEnumerable
@@ -1027,11 +962,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -1124,11 +1054,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "argument"
         parents (ArrayList):
           IEnumerable
@@ -1206,11 +1131,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "variableAsArgument"
         parents (ArrayList):
           IEnumerable
@@ -1239,11 +1159,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -1477,11 +1392,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "SetCurrent"
         parents (ArrayList):
           IEnumerable
@@ -1681,11 +1591,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "thisSet"
         parents (ArrayList):
           IEnumerable
@@ -1819,11 +1724,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "testClass"
         parents (ArrayList):
           IEnumerable
@@ -1845,11 +1745,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -1879,11 +1774,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "MemberTest"
             Entry (Literal):
               cached:
@@ -1901,11 +1791,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -1931,11 +1816,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "MemberTest"
             Entry (Literal):
               cached:
@@ -1967,11 +1847,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "memberTest"
             Entry (Literal):
               cached:
@@ -1999,11 +1874,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -2020,11 +1890,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -2113,11 +1978,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -2215,11 +2075,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "namedNoConversion"
         parents (ArrayList):
           IEnumerable
@@ -2278,11 +2133,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -2354,11 +2204,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "indexerNoConversion"
         parents (ArrayList):
           IEnumerable
@@ -2384,11 +2229,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "indexerNoConversion"
             Entry (Literal):
               cached:
@@ -2406,11 +2246,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -2441,11 +2276,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "interceptedSymbol2"
         parents (ArrayList):
           IEnumerable
@@ -2458,11 +2288,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -2483,11 +2308,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "xyz"
         parents (ArrayList):
           IEnumerable
@@ -2500,11 +2320,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -2524,11 +2339,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -2554,11 +2364,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -2617,11 +2422,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "callFunction"
         parents (ArrayList):
           IEnumerable
@@ -2651,11 +2451,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "callFunctionResult"
         parents (ArrayList):
           IEnumerable
@@ -2677,11 +2472,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -2745,11 +2535,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "delayedFunctionResult"
         parents (ArrayList):
           IEnumerable
@@ -2775,11 +2560,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "value"
         parents (ArrayList):
           IEnumerable
@@ -2792,11 +2572,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -2830,11 +2605,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "selectionFunctionResult"
         parents (ArrayList):
           IEnumerable
@@ -2860,11 +2630,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "bigInteger"
         parents (ArrayList):
           IEnumerable
@@ -2881,11 +2646,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "upperLevel"
         parents (ArrayList):
           IEnumerable
@@ -2898,11 +2658,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -2936,6 +2691,16 @@ statements (ArrayList):
                                     Entry (DictionaryEntry):
                                       Key (Integer):
                                         "1"
+                                      Value (Map):
+                                        IEnumerable
+                                          Entry (DictionaryEntry):
+                                            Key (String):
+                                              "literal"
+                                            Value (String):
+                                              "search"
+                                    Entry (DictionaryEntry):
+                                      Key (Integer):
+                                        "2"
                                       Value (Map):
                                         IEnumerable
                                           Entry (DictionaryEntry):
@@ -2980,11 +2745,6 @@ statements (ArrayList):
                 cached:
                   null
                 text (String):
-                  "this"
-              Entry (Literal):
-                cached:
-                  null
-                text (String):
                   "ChangeUpperLevel"
           parents (ArrayList):
             IEnumerable
@@ -3013,11 +2773,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -3065,11 +2820,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -3124,6 +2874,16 @@ statements (ArrayList):
                                     Entry (DictionaryEntry):
                                       Key (Integer):
                                         "1"
+                                      Value (Map):
+                                        IEnumerable
+                                          Entry (DictionaryEntry):
+                                            Key (String):
+                                              "literal"
+                                            Value (String):
+                                              "search"
+                                    Entry (DictionaryEntry):
+                                      Key (Integer):
+                                        "2"
                                       Value (Map):
                                         IEnumerable
                                           Entry (DictionaryEntry):
@@ -3204,11 +2964,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "staticEvent"
         parents (ArrayList):
           IEnumerable
@@ -3231,11 +2986,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null
@@ -3296,11 +3046,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "instanceEventChanged"
         parents (ArrayList):
           IEnumerable
@@ -3351,6 +3096,16 @@ statements (ArrayList):
                                     Entry (DictionaryEntry):
                                       Key (Integer):
                                         "1"
+                                      Value (Map):
+                                        IEnumerable
+                                          Entry (DictionaryEntry):
+                                            Key (String):
+                                              "literal"
+                                            Value (String):
+                                              "search"
+                                    Entry (DictionaryEntry):
+                                      Key (Integer):
+                                        "2"
                                       Value (Map):
                                         IEnumerable
                                           Entry (DictionaryEntry):
@@ -3431,11 +3186,6 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "this"
-            Entry (Literal):
-              cached:
-                null
-              text (String):
                 "instanceEvent"
         parents (ArrayList):
           IEnumerable
@@ -3458,11 +3208,6 @@ statements (ArrayList):
       key (Select):
         expressions (ArrayList):
           IEnumerable
-            Entry (Literal):
-              cached:
-                null
-              text (String):
-                "this"
             Entry (Literal):
               cached:
                 null

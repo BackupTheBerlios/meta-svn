@@ -614,8 +614,17 @@ namespace Meta {
 				object preselection=Preselect(current,keys,true,true);
 				return preselection;
 			}
-			public object Preselect(object current,ArrayList keys,bool isSearch,bool isSelectLastKey) {
-				if(keys[0].Equals("Switch")) {
+
+//			public object Evaluate(object current) {
+//				ArrayList keys=new ArrayList();
+//				foreach(IExpression expression in expressions) {
+//					keys.Add(expression.Evaluate(current));
+//				}
+//				object preselection=Preselect(current,keys,true,true);
+//				return preselection;
+//			}
+			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
+				if(keys[0].Equals("commandLineArguments")) {
 					int asdf=0;
 				}
 				object selected=current;
@@ -651,19 +660,34 @@ namespace Meta {
 					selected=Interpreter.arguments[Interpreter.arguments.Count-1];
 					i++;
 				}				
-				else if(isSearch) {
-					while(selected!=null && !((IKeyValue)selected).ContainsKey(keys[0])) {
+				else if(keys[0].Equals("search")||isRightSide) {
+					if(keys[0].Equals("search")) {
+						i++;
+					}
+					while(selected!=null && !((IKeyValue)selected).ContainsKey(keys[i])) {
 						selected=((IKeyValue)selected).Parent;
 					}
 					if(selected==null) {
 						throw new ApplicationException("Key "+keys[i]+" not found");
 					}
 				}
+//				else if(isSearch) {
+//					while(selected!=null && !((IKeyValue)selected).ContainsKey(keys[0])) {
+//						selected=((IKeyValue)selected).Parent;
+//					}
+//					if(selected==null) {
+//						throw new ApplicationException("Key "+keys[i]+" not found");
+//					}
+//				}
 				int count=keys.Count-1;
 				if(isSelectLastKey) {
 					count++;
 				}
 				for(;i<count;i++) {
+					if(keys[i].Equals("assemblies")) {
+						int asdf=0;
+					}	
+
 					if(keys[i].Equals("break")) {
 						throw new BreakException(selected);
 					}	
@@ -698,7 +722,8 @@ namespace Meta {
 					}
 				}
 				else {
-					object selected=Preselect(current,keys,isInFunction,false);
+					object selected=Preselect(current,keys,false,false);
+//					object selected=Preselect(current,keys,isInFunction,false);
 					IKeyValue keyValue;
 					if(selected is IKeyValue) {
 						keyValue=(IKeyValue)selected;
@@ -709,6 +734,35 @@ namespace Meta {
 					keyValue[keys[keys.Count-1]]=val;
 				}
 			}
+//			public void Assign(ref object current,object val,bool isInFunction) {
+//				ArrayList keys=new ArrayList();
+//				foreach(IExpression expression in expressions) {
+//					keys.Add(expression.Evaluate((Map)current));
+//				}
+//				if(keys.Count==1 && keys[0].Equals("this")) {
+//					if(val is IKeyValue) {
+//						current=((IKeyValue)val).Clone();
+//						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+//						Interpreter.callers.Add(current);
+//					}
+//					else {
+//						current=val;
+//						Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+//						Interpreter.callers.Add(current);
+//					}
+//				}
+//				else {
+//					object selected=Preselect(current,keys,isInFunction,false);
+//					IKeyValue keyValue;
+//					if(selected is IKeyValue) {
+//						keyValue=(IKeyValue)selected;
+//					}
+//					else {
+//						keyValue=new NetObject(selected);
+//					}
+//					keyValue[keys[keys.Count-1]]=val;
+//				}
+//			}
 //			private object GetValue(object obj,object key) {
 //				IKeyValue map;
 //				if(obj is IKeyValue) { 

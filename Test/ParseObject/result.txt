@@ -338,16 +338,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "commandLineArguments"
               Entry (DictionaryEntry):
                 Key (String):
@@ -387,16 +377,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -473,16 +453,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "normal symbol"
               Entry (DictionaryEntry):
                 Key (String):
@@ -512,16 +482,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -563,16 +523,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     ""long key symbol""
               Entry (DictionaryEntry):
                 Key (String):
@@ -602,16 +552,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -698,16 +638,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "lookedUpNormalSymbol"
               Entry (DictionaryEntry):
                 Key (String):
@@ -747,16 +677,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -808,16 +728,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "lookedUpLongSymbol"
               Entry (DictionaryEntry):
                 Key (String):
@@ -857,16 +767,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -1102,6 +1002,16 @@ IEnumerable
                                                                     Entry (DictionaryEntry):
                                                                       Key (Integer):
                                                                         "1"
+                                                                      Value (Map):
+                                                                        IEnumerable
+                                                                          Entry (DictionaryEntry):
+                                                                            Key (String):
+                                                                              "literal"
+                                                                            Value (String):
+                                                                              "search"
+                                                                    Entry (DictionaryEntry):
+                                                                      Key (Integer):
+                                                                        "2"
                                                                       Value (Map):
                                                                         IEnumerable
                                                                           Entry (DictionaryEntry):
@@ -1493,16 +1403,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "a"
               Entry (DictionaryEntry):
                 Key (String):
@@ -1538,16 +1438,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "b"
               Entry (DictionaryEntry):
                 Key (String):
@@ -1577,16 +1467,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -1662,16 +1542,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -1858,16 +1728,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "ReturnEverything"
               Entry (DictionaryEntry):
                 Key (String):
@@ -1947,16 +1807,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -2163,16 +2013,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "argument"
               Entry (DictionaryEntry):
                 Key (String):
@@ -2343,16 +2183,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "variableAsArgument"
               Entry (DictionaryEntry):
                 Key (String):
@@ -2422,16 +2252,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -2688,16 +2508,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "SetCurrent"
               Entry (DictionaryEntry):
                 Key (String):
@@ -2912,16 +2722,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -3233,16 +3033,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "testClass"
               Entry (DictionaryEntry):
                 Key (String):
@@ -3302,16 +3092,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -3383,20 +3163,10 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "MemberTest"
                           Entry (DictionaryEntry):
                             Key (Integer):
-                              "3"
+                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -3438,20 +3208,10 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "memberTest"
                           Entry (DictionaryEntry):
                             Key (Integer):
-                              "3"
+                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -3493,20 +3253,10 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "MemberTest"
                           Entry (DictionaryEntry):
                             Key (Integer):
-                              "3"
+                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -3568,20 +3318,10 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "memberTest"
                           Entry (DictionaryEntry):
                             Key (Integer):
-                              "3"
+                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -3643,16 +3383,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "interceptedSymbol"
               Entry (DictionaryEntry):
                 Key (String):
@@ -3682,16 +3412,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -3892,16 +3612,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -4118,16 +3828,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "namedNoConversion"
               Entry (DictionaryEntry):
                 Key (String):
@@ -4267,16 +3967,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -4438,16 +4128,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "indexerNoConversion"
               Entry (DictionaryEntry):
                 Key (String):
@@ -4513,20 +4193,10 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "indexerNoConversion"
                           Entry (DictionaryEntry):
                             Key (Integer):
-                              "3"
+                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -4562,16 +4232,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -4633,16 +4293,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "interceptedSymbol2"
               Entry (DictionaryEntry):
                 Key (String):
@@ -4672,16 +4322,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -4723,16 +4363,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "xyz"
               Entry (DictionaryEntry):
                 Key (String):
@@ -4762,16 +4392,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -4812,16 +4432,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -4887,16 +4497,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -4978,16 +4578,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "callFunction"
               Entry (DictionaryEntry):
                 Key (String):
@@ -5032,16 +4622,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -5107,16 +4687,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -5203,16 +4773,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "delayedFunctionResult"
               Entry (DictionaryEntry):
                 Key (String):
@@ -5278,16 +4838,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "value"
               Entry (DictionaryEntry):
                 Key (String):
@@ -5317,16 +4867,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -5377,16 +4917,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -5458,16 +4988,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "bigInteger"
               Entry (DictionaryEntry):
                 Key (String):
@@ -5497,16 +5017,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -5548,16 +5058,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "ChangeUpperLevel"
               Entry (DictionaryEntry):
                 Key (String):
@@ -5592,6 +5092,16 @@ IEnumerable
                                                   Entry (DictionaryEntry):
                                                     Key (Integer):
                                                       "1"
+                                                    Value (Map):
+                                                      IEnumerable
+                                                        Entry (DictionaryEntry):
+                                                          Key (String):
+                                                            "literal"
+                                                          Value (String):
+                                                            "search"
+                                                  Entry (DictionaryEntry):
+                                                    Key (Integer):
+                                                      "2"
                                                     Value (Map):
                                                       IEnumerable
                                                         Entry (DictionaryEntry):
@@ -5673,16 +5183,6 @@ IEnumerable
                                               Key (String):
                                                 "literal"
                                               Value (String):
-                                                "this"
-                                      Entry (DictionaryEntry):
-                                        Key (Integer):
-                                          "2"
-                                        Value (Map):
-                                          IEnumerable
-                                            Entry (DictionaryEntry):
-                                              Key (String):
-                                                "literal"
-                                              Value (String):
                                                 "ChangeUpperLevel"
                           Entry (DictionaryEntry):
                             Key (String):
@@ -5757,16 +5257,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -5873,16 +5363,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "staticEventChanged"
               Entry (DictionaryEntry):
                 Key (String):
@@ -5962,6 +5442,16 @@ IEnumerable
                                                   Entry (DictionaryEntry):
                                                     Key (Integer):
                                                       "1"
+                                                    Value (Map):
+                                                      IEnumerable
+                                                        Entry (DictionaryEntry):
+                                                          Key (String):
+                                                            "literal"
+                                                          Value (String):
+                                                            "search"
+                                                  Entry (DictionaryEntry):
+                                                    Key (Integer):
+                                                      "2"
                                                     Value (Map):
                                                       IEnumerable
                                                         Entry (DictionaryEntry):
@@ -6058,16 +5548,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "staticEvent"
               Entry (DictionaryEntry):
                 Key (String):
@@ -6117,16 +5597,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):
@@ -6263,16 +5733,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "instanceEventChanged"
               Entry (DictionaryEntry):
                 Key (String):
@@ -6352,6 +5812,16 @@ IEnumerable
                                                   Entry (DictionaryEntry):
                                                     Key (Integer):
                                                       "1"
+                                                    Value (Map):
+                                                      IEnumerable
+                                                        Entry (DictionaryEntry):
+                                                          Key (String):
+                                                            "literal"
+                                                          Value (String):
+                                                            "search"
+                                                  Entry (DictionaryEntry):
+                                                    Key (Integer):
+                                                      "2"
                                                     Value (Map):
                                                       IEnumerable
                                                         Entry (DictionaryEntry):
@@ -6448,16 +5918,6 @@ IEnumerable
                                   Key (String):
                                     "literal"
                                   Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
                                     "instanceEvent"
               Entry (DictionaryEntry):
                 Key (String):
@@ -6507,16 +5967,6 @@ IEnumerable
                           Entry (DictionaryEntry):
                             Key (Integer):
                               "1"
-                            Value (Map):
-                              IEnumerable
-                                Entry (DictionaryEntry):
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "this"
-                          Entry (DictionaryEntry):
-                            Key (Integer):
-                              "2"
                             Value (Map):
                               IEnumerable
                                 Entry (DictionaryEntry):

@@ -492,6 +492,16 @@ IEnumerable
                                               Key (String):
                                                 "literal"
                                               Value (String):
+                                                "search"
+                                      Entry (DictionaryEntry):
+                                        Key (Integer):
+                                          "2"
+                                        Value (Map):
+                                          IEnumerable
+                                            Entry (DictionaryEntry):
+                                              Key (String):
+                                                "literal"
+                                              Value (String):
                                                 "autoSearch"
                           Entry (DictionaryEntry):
                             Key (String):
@@ -1911,6 +1921,16 @@ IEnumerable
                                 Entry (DictionaryEntry):
                                   Key (Integer):
                                     "1"
+                                  Value (Map):
+                                    IEnumerable
+                                      Entry (DictionaryEntry):
+                                        Key (String):
+                                          "literal"
+                                        Value (String):
+                                          "search"
+                                Entry (DictionaryEntry):
+                                  Key (Integer):
+                                    "2"
                                   Value (Map):
                                     IEnumerable
                                       Entry (DictionaryEntry):
