@@ -77,6 +77,15 @@ Entry (DictionaryEntry)
         "Boolean or()"
 Entry (DictionaryEntry)
   Key (Map):
+    "run"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "System.Object run(System.String)"
+Entry (DictionaryEntry)
+  Key (Map):
     "contains"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):

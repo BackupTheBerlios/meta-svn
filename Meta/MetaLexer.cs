@@ -41,14 +41,14 @@ namespace Meta.Parser
 		public const int FUNCTION = 9;
 		public const int STATEMENT = 10;
 		public const int CALL = 11;
-		public const int EQUAL = 12;
-		public const int DELAYED = 13;
+		public const int COLON = 12;
+		public const int EQUAL = 13;
 		public const int LBRACKET = 14;
 		public const int RBRACKET = 15;
 		public const int LPAREN = 16;
 		public const int RPAREN = 17;
 		public const int POINT = 18;
-		public const int GATTER = 19;
+		public const int HASH = 19;
 		public const int LITERAL_KEY = 20;
 		public const int LITERAL = 21;
 		public const int SPACES = 22;
@@ -98,13 +98,13 @@ tryAgain:
 						{
 						case ':':
 						{
-							mEQUAL(true);
+							mCOLON(true);
 							theRetToken = returnToken_;
 							break;
 						}
 						case '=':
 						{
-							mDELAYED(true);
+							mEQUAL(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -140,7 +140,7 @@ tryAgain:
 						}
 						case '#':
 						{
-							mGATTER(true);
+							mHASH(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -201,10 +201,10 @@ tryAgain:
 			}
 		}
 		
-	public void mEQUAL(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+	public void mCOLON(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
-		_ttype = EQUAL;
+		_ttype = COLON;
 		
 		match(':');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
@@ -215,10 +215,10 @@ tryAgain:
 		returnToken_ = _token;
 	}
 	
-	public void mDELAYED(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+	public void mEQUAL(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
-		_ttype = DELAYED;
+		_ttype = EQUAL;
 		
 		match('=');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
@@ -299,10 +299,10 @@ tryAgain:
 		returnToken_ = _token;
 	}
 	
-	public void mGATTER(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+	public void mHASH(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
-		_ttype = GATTER;
+		_ttype = HASH;
 		
 		match('#');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))

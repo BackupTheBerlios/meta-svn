@@ -42,14 +42,14 @@ namespace Meta.Parser
 		public const int FUNCTION = 9;
 		public const int STATEMENT = 10;
 		public const int CALL = 11;
-		public const int EQUAL = 12;
-		public const int DELAYED = 13;
+		public const int COLON = 12;
+		public const int EQUAL = 13;
 		public const int LBRACKET = 14;
 		public const int RBRACKET = 15;
 		public const int LPAREN = 16;
 		public const int RPAREN = 17;
 		public const int POINT = 18;
-		public const int GATTER = 19;
+		public const int HASH = 19;
 		public const int LITERAL_KEY = 20;
 		public const int LITERAL = 21;
 		public const int SPACES = 22;
@@ -110,7 +110,7 @@ namespace Meta.Parser
 				}
 				break;
 			}
-			case DELAYED:
+			case EQUAL:
 			{
 				delayed();
 				if (0 == inputState.guessing)
@@ -129,7 +129,7 @@ namespace Meta.Parser
 			}
 			default:
 				bool synPredMatched49 = false;
-				if (((LA(1)==LBRACKET||LA(1)==GATTER||LA(1)==LITERAL_KEY)))
+				if (((LA(1)==LBRACKET||LA(1)==HASH||LA(1)==LITERAL_KEY)))
 				{
 					int _m49 = mark();
 					synPredMatched49 = true;
@@ -154,7 +154,7 @@ namespace Meta.Parser
 						astFactory.addASTChild(currentAST, returnAST);
 					}
 				}
-				else if ((LA(1)==LBRACKET||LA(1)==GATTER||LA(1)==LITERAL_KEY)) {
+				else if ((LA(1)==LBRACKET||LA(1)==HASH||LA(1)==LITERAL_KEY)) {
 					select();
 					if (0 == inputState.guessing)
 					{
@@ -196,7 +196,7 @@ namespace Meta.Parser
 			case INDENT:
 			case LBRACKET:
 			case LPAREN:
-			case GATTER:
+			case HASH:
 			case LITERAL_KEY:
 			{
 				break;
@@ -211,7 +211,7 @@ namespace Meta.Parser
 			switch ( LA(1) )
 			{
 			case LBRACKET:
-			case GATTER:
+			case HASH:
 			case LITERAL_KEY:
 			{
 				call();
@@ -263,10 +263,10 @@ namespace Meta.Parser
 		
 		switch ( LA(1) )
 		{
-		case GATTER:
+		case HASH:
 		{
 			{
-				match(GATTER);
+				match(HASH);
 				lookup();
 				if (0 == inputState.guessing)
 				{
@@ -422,11 +422,11 @@ _loop81_breakloop:					;
 						switch ( LA(1) )
 						{
 						case INDENT:
+						case COLON:
 						case EQUAL:
-						case DELAYED:
 						case LBRACKET:
 						case LPAREN:
-						case GATTER:
+						case HASH:
 						case LITERAL_KEY:
 						case LITERAL:
 						{
@@ -503,7 +503,7 @@ _loop57_breakloop:						;
 		ASTPair currentAST = new ASTPair();
 		AST delayed_AST = null;
 		
-		match(DELAYED);
+		match(EQUAL);
 		expression();
 		if (0 == inputState.guessing)
 		{
@@ -534,7 +534,7 @@ _loop57_breakloop:						;
 		AST statement_AST = null;
 		
 		bool synPredMatched60 = false;
-		if (((LA(1)==LBRACKET||LA(1)==GATTER||LA(1)==LITERAL_KEY)))
+		if (((LA(1)==LBRACKET||LA(1)==HASH||LA(1)==LITERAL_KEY)))
 		{
 			int _m60 = mark();
 			synPredMatched60 = true;
@@ -542,7 +542,7 @@ _loop57_breakloop:						;
 			try {
 				{
 					select();
-					match(EQUAL);
+					match(COLON);
 				}
 			}
 			catch (RecognitionException)
@@ -560,7 +560,7 @@ _loop57_breakloop:						;
 				{
 					astFactory.addASTChild(currentAST, returnAST);
 				}
-				match(EQUAL);
+				match(COLON);
 				expression();
 				if (0 == inputState.guessing)
 				{
@@ -586,10 +586,10 @@ _loop57_breakloop:						;
 			{
 				switch ( LA(1) )
 				{
-				case EQUAL:
+				case COLON:
 				{
 					{
-						match(EQUAL);
+						match(COLON);
 						expression();
 						if (0 == inputState.guessing)
 						{
@@ -621,10 +621,10 @@ _loop57_breakloop:						;
 					break;
 				}
 				case INDENT:
-				case DELAYED:
+				case EQUAL:
 				case LBRACKET:
 				case LPAREN:
-				case GATTER:
+				case HASH:
 				case LITERAL_KEY:
 				case LITERAL:
 				{
@@ -715,10 +715,10 @@ _loop57_breakloop:						;
 						break;
 					}
 					case INDENT:
-					case DELAYED:
+					case EQUAL:
 					case LBRACKET:
 					case LPAREN:
-					case GATTER:
+					case HASH:
 					case LITERAL_KEY:
 					case LITERAL:
 					{
@@ -751,7 +751,7 @@ _loop57_breakloop:						;
 						match(LITERAL);
 						break;
 					}
-					case DELAYED:
+					case EQUAL:
 					{
 						delayed();
 						if (0 == inputState.guessing)
@@ -762,7 +762,7 @@ _loop57_breakloop:						;
 					}
 					default:
 						bool synPredMatched87 = false;
-						if (((LA(1)==LBRACKET||LA(1)==GATTER||LA(1)==LITERAL_KEY)))
+						if (((LA(1)==LBRACKET||LA(1)==HASH||LA(1)==LITERAL_KEY)))
 						{
 							int _m87 = mark();
 							synPredMatched87 = true;
@@ -787,7 +787,7 @@ _loop57_breakloop:						;
 								astFactory.addASTChild(currentAST, returnAST);
 							}
 						}
-						else if ((LA(1)==LBRACKET||LA(1)==GATTER||LA(1)==LITERAL_KEY)) {
+						else if ((LA(1)==LBRACKET||LA(1)==HASH||LA(1)==LITERAL_KEY)) {
 							select();
 							if (0 == inputState.guessing)
 							{
@@ -897,14 +897,14 @@ _loop57_breakloop:						;
 		@"""FUNCTION""",
 		@"""STATEMENT""",
 		@"""CALL""",
+		@"""COLON""",
 		@"""EQUAL""",
-		@"""DELAYED""",
 		@"""LBRACKET""",
 		@"""RBRACKET""",
 		@"""LPAREN""",
 		@"""RPAREN""",
 		@"""POINT""",
-		@"""GATTER""",
+		@"""HASH""",
 		@"""LITERAL_KEY""",
 		@"""LITERAL""",
 		@"""SPACES""",

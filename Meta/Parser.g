@@ -41,10 +41,10 @@ tokens
   CALL;
 }
 
-EQUAL:
+COLON:
   ':';
   
-DELAYED:
+EQUAL:
   '=';
 
 LBRACKET:
@@ -62,7 +62,7 @@ RPAREN:
 POINT:
   '.';
   
-GATTER:
+HASH:
   '#';
 
 // fix the exact characters allowed
@@ -163,10 +163,10 @@ map:
 	};
 	
 statement:
-    (select EQUAL)=>
+    (select COLON)=>
     (
       select
-      EQUAL! 
+      COLON! 
       expression
       {
         #statement=#([STATEMENT],#statement);
@@ -174,9 +174,9 @@ statement:
     )
     |
     (
-      (EQUAL)=>
+      (COLON)=>
       (
-        EQUAL!
+        COLON!
         expression
         {
             //Counters.counter++;
@@ -224,17 +224,17 @@ call:
   };  
 	
 delayed:
-  DELAYED!
+  EQUAL!
   expression
   {
     #delayed=#([FUNCTION], #delayed);
   };
   
-// rename GATTER to something English
+// rename HASH to something English
 select:
-  (GATTER)=>
+  (HASH)=>
   (
-    GATTER!
+    HASH!
     lookup
     (
       POINT! lookup

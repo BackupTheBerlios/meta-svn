@@ -34,14 +34,14 @@ namespace Meta.Parser
 		public const int FUNCTION = 9;
 		public const int STATEMENT = 10;
 		public const int CALL = 11;
-		public const int EQUAL = 12;
-		public const int DELAYED = 13;
+		public const int COLON = 12;
+		public const int EQUAL = 13;
 		public const int LBRACKET = 14;
 		public const int RBRACKET = 15;
 		public const int LPAREN = 16;
 		public const int RPAREN = 17;
 		public const int POINT = 18;
-		public const int GATTER = 19;
+		public const int HASH = 19;
 		public const int LITERAL_KEY = 20;
 		public const int LITERAL = 21;
 		public const int SPACES = 22;
@@ -316,14 +316,14 @@ _loop105_breakloop:			;
 		@"""FUNCTION""",
 		@"""STATEMENT""",
 		@"""CALL""",
+		@"""COLON""",
 		@"""EQUAL""",
-		@"""DELAYED""",
 		@"""LBRACKET""",
 		@"""RBRACKET""",
 		@"""LPAREN""",
 		@"""RPAREN""",
 		@"""POINT""",
-		@"""GATTER""",
+		@"""HASH""",
 		@"""LITERAL_KEY""",
 		@"""LITERAL""",
 		@"""SPACES""",
