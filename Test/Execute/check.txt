@@ -1,2556 +1,2346 @@
-IEnumerable
-  DictionaryEntry in IEnumerable:
-    Key (Integer):
-      "1"
-    Value (String):
-      "ImpliedAutokey"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Merge"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Meta.Types.IKeyValue Merge()"
-      savedMethod (RuntimeMethodInfo):
+Entry (DictionaryEntry)
+  Key (Integer):
+    "1"
+  Value (String):
+    "ImpliedAutokey"
+Entry (DictionaryEntry)
+  Key (String):
+    "Merge"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Meta.Types.IKeyValue Merge()"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Catch"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "System.Object Catch(Meta.Types.Map)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Meta.Types.IKeyValue Merge()"
+Entry (DictionaryEntry)
+  Key (String):
+    "Catch"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "System.Object Catch(Meta.Types.Map)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "BinaryOr"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "System.Enum BinaryOr(System.Enum[])"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "System.Object Catch(Meta.Types.Map)"
+Entry (DictionaryEntry)
+  Key (String):
+    "BinaryOr"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "System.Enum BinaryOr(System.Enum[])"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Insert"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "System.String Insert(System.String, Int32, System.String)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "System.Enum BinaryOr(System.Enum[])"
+Entry (DictionaryEntry)
+  Key (String):
+    "Insert"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "System.String Insert(System.String, Int32, System.String)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Multiply"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "System.String Insert(System.String, Int32, System.String)"
+Entry (DictionaryEntry)
+  Key (String):
+    "Multiply"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Add"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (String):
+    "Add"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Concat"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Meta.Types.Map Concat(Meta.Types.Map[])"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (String):
+    "Concat"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Meta.Types.Map Concat(Meta.Types.Map[])"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Run"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "System.Object Run(System.String)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Meta.Types.Map Concat(Meta.Types.Map[])"
+Entry (DictionaryEntry)
+  Key (String):
+    "Run"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "System.Object Run(System.String)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "IsMap"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Boolean IsMap(System.Object)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "System.Object Run(System.String)"
+Entry (DictionaryEntry)
+  Key (String):
+    "IsMap"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Boolean IsMap(System.Object)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "If"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Void If()"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Boolean IsMap(System.Object)"
+Entry (DictionaryEntry)
+  Key (String):
+    "If"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Void If()"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Not"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Boolean Not(Boolean)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Void If()"
+Entry (DictionaryEntry)
+  Key (String):
+    "Not"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Boolean Not(Boolean)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "RunString"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "System.Object RunString(System.String)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Boolean Not(Boolean)"
+Entry (DictionaryEntry)
+  Key (String):
+    "RunString"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "System.Object RunString(System.String)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Divide"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "System.Object RunString(System.String)"
+Entry (DictionaryEntry)
+  Key (String):
+    "Divide"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Character"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Char Character(System.String)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (String):
+    "Character"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Char Character(System.String)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "SetBreakMethod"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Void SetBreakMethod(Meta.Execution.BreakMethodDelegate)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Char Character(System.String)"
+Entry (DictionaryEntry)
+  Key (String):
+    "SetBreakMethod"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Void SetBreakMethod(Meta.Execution.BreakMethodDelegate)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Switch"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Void Switch()"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Void SetBreakMethod(Meta.Execution.BreakMethodDelegate)"
+Entry (DictionaryEntry)
+  Key (String):
+    "Switch"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Void Switch()"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Or"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Boolean Or(Boolean, Boolean)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Void Switch()"
+Entry (DictionaryEntry)
+  Key (String):
+    "Or"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Boolean Or(Boolean, Boolean)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "GetKeys"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Meta.Types.IKeyValue GetKeys(Meta.Types.IKeyValue)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Boolean Or(Boolean, Boolean)"
+Entry (DictionaryEntry)
+  Key (String):
+    "GetKeys"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Meta.Types.IKeyValue GetKeys(Meta.Types.IKeyValue)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "For"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Meta.Types.Map For()"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Meta.Types.IKeyValue GetKeys(Meta.Types.IKeyValue)"
+Entry (DictionaryEntry)
+  Key (String):
+    "For"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Meta.Types.Map For()"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Greater"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Meta.Types.Map For()"
+Entry (DictionaryEntry)
+  Key (String):
+    "Greater"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Equal"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Boolean Equal(System.Object, System.Object)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (String):
+    "Equal"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Boolean Equal(System.Object, System.Object)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Smaller"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Boolean Equal(System.Object, System.Object)"
+Entry (DictionaryEntry)
+  Key (String):
+    "Smaller"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Subtract"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (String):
+    "Subtract"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "And"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Boolean And(Boolean, Boolean)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (String):
+    "And"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Boolean And(Boolean, Boolean)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Write"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Void Write(System.String)"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Boolean And(Boolean, Boolean)"
+Entry (DictionaryEntry)
+  Key (String):
+    "Write"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Void Write(System.String)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Read"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "System.String Read()"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Void Write(System.String)"
+Entry (DictionaryEntry)
+  Key (String):
+    "Read"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "System.String Read()"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Each"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Meta.Types.Map Each()"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "System.String Read()"
+Entry (DictionaryEntry)
+  Key (String):
+    "Each"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Meta.Types.Map Each()"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "Load"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Void Load()"
-      savedMethod (RuntimeMethodInfo):
+    savedMethod (RuntimeMethodInfo):
+      "Meta.Types.Map Each()"
+Entry (DictionaryEntry)
+  Key (String):
+    "Load"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Void Load()"
-  DictionaryEntry in IEnumerable:
-    Key (Integer):
-      "2"
-    Value (String):
-      "Autokey"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "gacTest"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
+    savedMethod (RuntimeMethodInfo):
+      "Void Load()"
+Entry (DictionaryEntry)
+  Key (Integer):
+    "2"
+  Value (String):
+    "Autokey"
+Entry (DictionaryEntry)
+  Key (String):
+    "gacTest"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "IEnumerable"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "ICollection"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "IList"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "IEnumerator"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "ArrayList"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "BitArray"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "IComparer"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "CaseInsensitiveComparer"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "IHashCodeProvider"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "CaseInsensitiveHashCodeProvider"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "CollectionBase"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "Comparer"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "IDictionary"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "DictionaryBase"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "DictionaryEntry"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "Hashtable"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "IDictionaryEnumerator"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "Queue"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "ReadOnlyCollectionBase"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "SortedList"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "Stack"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "Specialized"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (String):
+            "BitVector32"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (String):
+            "CollectionsUtil"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (String):
+            "HybridDictionary"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (String):
+            "ListDictionary"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (String):
+            "NameObjectCollectionBase"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (String):
+            "NameValueCollection"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (String):
+            "StringCollection"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (String):
+            "StringEnumerator"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (String):
+            "StringDictionary"
+          Value (NetClass):
+            Entry (DictionaryEntry)
+  Key (String):
+    "lazyGACTest"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "ErrorLevel"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "CompilerError"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "Compiler"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "CSharpCodeProvider"
+      Value (NetClass):
+        Entry (DictionaryEntry)
+  Key (String):
+    "metaLibTest"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "x"
+      Value (String):
+        "hello"
+    Entry (DictionaryEntry)
+      Key (String):
+        "y"
+      Value (String):
+        "world"
+    Entry (DictionaryEntry)
+      Key (String):
+        "gacFromMetaLib"
+      Value (Map):
+        Entry (DictionaryEntry)
           Key (String):
             "IEnumerable"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "ICollection"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "IList"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "IEnumerator"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "ArrayList"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "BitArray"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "IComparer"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "CaseInsensitiveComparer"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "IHashCodeProvider"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "CaseInsensitiveHashCodeProvider"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "CollectionBase"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "Comparer"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "IDictionary"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "DictionaryBase"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "DictionaryEntry"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "Hashtable"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "IDictionaryEnumerator"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "Queue"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "ReadOnlyCollectionBase"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "SortedList"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "Stack"
           Value (NetClass):
-                    DictionaryEntry in IEnumerable:
+                    Entry (DictionaryEntry)
           Key (String):
             "Specialized"
           Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (String):
-                  "BitVector32"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "CollectionsUtil"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "HybridDictionary"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "ListDictionary"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "NameObjectCollectionBase"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "NameValueCollection"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "StringCollection"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "StringEnumerator"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "StringDictionary"
-                Value (NetClass):
-                    DictionaryEntry in IEnumerable:
-    Key (String):
-      "lazyGACTest"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "ErrorLevel"
-          Value (NetClass):
-                    DictionaryEntry in IEnumerable:
-          Key (String):
-            "CompilerError"
-          Value (NetClass):
-                    DictionaryEntry in IEnumerable:
-          Key (String):
-            "Compiler"
-          Value (NetClass):
-                    DictionaryEntry in IEnumerable:
-          Key (String):
-            "CSharpCodeProvider"
-          Value (NetClass):
-              DictionaryEntry in IEnumerable:
-    Key (String):
-      "metaLibTest"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "x"
-          Value (String):
-            "hello"
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "y"
-          Value (String):
-            "world"
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "gacFromMetaLib"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (String):
-                  "IEnumerable"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "ICollection"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "IList"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "IEnumerator"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "ArrayList"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "BitArray"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "IComparer"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "CaseInsensitiveComparer"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "IHashCodeProvider"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "CaseInsensitiveHashCodeProvider"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "CollectionBase"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "Comparer"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "IDictionary"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "DictionaryBase"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "DictionaryEntry"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "Hashtable"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "IDictionaryEnumerator"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "Queue"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "ReadOnlyCollectionBase"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "SortedList"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "Stack"
-                Value (NetClass):
-                                DictionaryEntry in IEnumerable:
-                Key (String):
-                  "Specialized"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "BitVector32"
-                      Value (NetClass):
-                                            DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "CollectionsUtil"
-                      Value (NetClass):
-                                            DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "HybridDictionary"
-                      Value (NetClass):
-                                            DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "ListDictionary"
-                      Value (NetClass):
-                                            DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "NameObjectCollectionBase"
-                      Value (NetClass):
-                                            DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "NameValueCollection"
-                      Value (NetClass):
-                                            DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "StringCollection"
-                      Value (NetClass):
-                                            DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "StringEnumerator"
-                      Value (NetClass):
-                                            DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "StringDictionary"
-                      Value (NetClass):
-                          DictionaryEntry in IEnumerable:
-    Key (String):
-      "commandLineArguments"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "1"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "1"
-                Value (Integer):
-                  "102"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "2"
-                Value (Integer):
-                  "105"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "3"
-                Value (Integer):
-                  "114"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "4"
-                Value (Integer):
-                  "115"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "5"
-                Value (Integer):
-                  "116"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "6"
-                Value (Integer):
-                  "32"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "7"
-                Value (Integer):
-                  "97"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "8"
-                Value (Integer):
-                  "114"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "9"
-                Value (Integer):
-                  "103"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "2"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "1"
-                Value (Integer):
-                  "115"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "2"
-                Value (Integer):
-                  "101"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "3"
-                Value (Integer):
-                  "99"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "4"
-                Value (Integer):
-                  "111"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "5"
-                Value (Integer):
-                  "110"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "6"
-                Value (Integer):
-                  "100"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "7"
-                Value (Integer):
-                  "61"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "8"
-                Value (Integer):
-                  "97"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "9"
-                Value (Integer):
-                  "114"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "10"
-                Value (Integer):
-                  "103"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "libraryAssemblyTest"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "MemberTest"
-          Value (NetClass):
-                    DictionaryEntry in IEnumerable:
-          Key (String):
-            "IntEvent"
-          Value (NetClass):
-                    DictionaryEntry in IEnumerable:
-          Key (String):
-            "NormalEvent"
-          Value (NetClass):
-                    DictionaryEntry in IEnumerable:
-          Key (String):
-            "TestClass"
-          Value (NetClass):
-                    DictionaryEntry in IEnumerable:
-          Key (String):
-            "PositionalNoConversion"
-          Value (NetClass):
-                    DictionaryEntry in IEnumerable:
-          Key (String):
-            "NamedNoConversion"
-          Value (NetClass):
-                    DictionaryEntry in IEnumerable:
-          Key (String):
-            "IndexerNoConversion"
-          Value (NetClass):
-              DictionaryEntry in IEnumerable:
-    Key (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "a"
-          Value (String):
-            "a"
-    Value (String):
-      "Object"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "normal symbol"
-    Value (String):
-      "NormalSymbol"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "lookupSymbol"
-    Value (String):
-      "LookupSymbol"
-  DictionaryEntry in IEnumerable:
-    Key (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
+            Entry (DictionaryEntry)
+              Key (String):
+                "BitVector32"
+              Value (NetClass):
+                            Entry (DictionaryEntry)
+              Key (String):
+                "CollectionsUtil"
+              Value (NetClass):
+                            Entry (DictionaryEntry)
+              Key (String):
+                "HybridDictionary"
+              Value (NetClass):
+                            Entry (DictionaryEntry)
+              Key (String):
+                "ListDictionary"
+              Value (NetClass):
+                            Entry (DictionaryEntry)
+              Key (String):
+                "NameObjectCollectionBase"
+              Value (NetClass):
+                            Entry (DictionaryEntry)
+              Key (String):
+                "NameValueCollection"
+              Value (NetClass):
+                            Entry (DictionaryEntry)
+              Key (String):
+                "StringCollection"
+              Value (NetClass):
+                            Entry (DictionaryEntry)
+              Key (String):
+                "StringEnumerator"
+              Value (NetClass):
+                            Entry (DictionaryEntry)
+              Key (String):
+                "StringDictionary"
+              Value (NetClass):
+                Entry (DictionaryEntry)
+  Key (String):
+    "commandLineArguments"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (Map):
+        Entry (DictionaryEntry)
           Key (Integer):
             "1"
           Value (Integer):
-            "108"
-        DictionaryEntry in IEnumerable:
+            "102"
+        Entry (DictionaryEntry)
           Key (Integer):
             "2"
           Value (Integer):
-            "111"
-        DictionaryEntry in IEnumerable:
+            "105"
+        Entry (DictionaryEntry)
           Key (Integer):
             "3"
           Value (Integer):
-            "110"
-        DictionaryEntry in IEnumerable:
+            "114"
+        Entry (DictionaryEntry)
           Key (Integer):
             "4"
           Value (Integer):
-            "103"
-        DictionaryEntry in IEnumerable:
+            "115"
+        Entry (DictionaryEntry)
           Key (Integer):
             "5"
           Value (Integer):
-            "32"
-        DictionaryEntry in IEnumerable:
+            "116"
+        Entry (DictionaryEntry)
           Key (Integer):
             "6"
           Value (Integer):
-            "107"
-        DictionaryEntry in IEnumerable:
+            "32"
+        Entry (DictionaryEntry)
           Key (Integer):
             "7"
           Value (Integer):
-            "101"
-        DictionaryEntry in IEnumerable:
+            "97"
+        Entry (DictionaryEntry)
           Key (Integer):
             "8"
           Value (Integer):
-            "121"
-        DictionaryEntry in IEnumerable:
+            "114"
+        Entry (DictionaryEntry)
           Key (Integer):
             "9"
           Value (Integer):
-            "32"
-        DictionaryEntry in IEnumerable:
+            "103"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "2"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "1"
+          Value (Integer):
+            "115"
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "2"
+          Value (Integer):
+            "101"
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "3"
+          Value (Integer):
+            "99"
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "4"
+          Value (Integer):
+            "111"
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "5"
+          Value (Integer):
+            "110"
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "6"
+          Value (Integer):
+            "100"
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "7"
+          Value (Integer):
+            "61"
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "8"
+          Value (Integer):
+            "97"
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "9"
+          Value (Integer):
+            "114"
+        Entry (DictionaryEntry)
           Key (Integer):
             "10"
           Value (Integer):
-            "115"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "11"
-          Value (Integer):
-            "121"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "12"
-          Value (Integer):
-            "109"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "13"
-          Value (Integer):
-            "98"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "14"
-          Value (Integer):
-            "111"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "15"
-          Value (Integer):
-            "108"
-    Value (String):
-      "LookupExtendedSymbol"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "lookedUpMap"
-    Value (String):
-      "Object"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "lookedUpNormalSymbol"
-    Value (String):
-      "NormalSymbol"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "lookedUpSymbol"
-    Value (String):
-      "LookupSymbol"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "lookedUpLongSymbol"
-    Value (String):
-      "LookupExtendedSymbol"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "object"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
+            "103"
+Entry (DictionaryEntry)
+  Key (String):
+    "libraryAssemblyTest"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "MemberTest"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "IntEvent"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "NormalEvent"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "TestClass"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "PositionalNoConversion"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "NamedNoConversion"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (String):
+        "IndexerNoConversion"
+      Value (NetClass):
+        Entry (DictionaryEntry)
+  Key (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "a"
+      Value (String):
+        "a"
+  Value (String):
+    "Object"
+Entry (DictionaryEntry)
+  Key (String):
+    "normal symbol"
+  Value (String):
+    "NormalSymbol"
+Entry (DictionaryEntry)
+  Key (String):
+    "lookupSymbol"
+  Value (String):
+    "LookupSymbol"
+Entry (DictionaryEntry)
+  Key (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (Integer):
+        "108"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "2"
+      Value (Integer):
+        "111"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "3"
+      Value (Integer):
+        "110"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "4"
+      Value (Integer):
+        "103"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "5"
+      Value (Integer):
+        "32"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "6"
+      Value (Integer):
+        "107"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "7"
+      Value (Integer):
+        "101"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "8"
+      Value (Integer):
+        "121"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "9"
+      Value (Integer):
+        "32"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "10"
+      Value (Integer):
+        "115"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "11"
+      Value (Integer):
+        "121"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "12"
+      Value (Integer):
+        "109"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "13"
+      Value (Integer):
+        "98"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "14"
+      Value (Integer):
+        "111"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "15"
+      Value (Integer):
+        "108"
+  Value (String):
+    "LookupExtendedSymbol"
+Entry (DictionaryEntry)
+  Key (String):
+    "lookedUpMap"
+  Value (String):
+    "Object"
+Entry (DictionaryEntry)
+  Key (String):
+    "lookedUpNormalSymbol"
+  Value (String):
+    "NormalSymbol"
+Entry (DictionaryEntry)
+  Key (String):
+    "lookedUpSymbol"
+  Value (String):
+    "LookupSymbol"
+Entry (DictionaryEntry)
+  Key (String):
+    "lookedUpLongSymbol"
+  Value (String):
+    "LookupExtendedSymbol"
+Entry (DictionaryEntry)
+  Key (String):
+    "object"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "a"
+      Value (String):
+        "c"
+    Entry (DictionaryEntry)
+      Key (String):
+        "autoSearch"
+      Value (String):
+        "changed"
+    Entry (DictionaryEntry)
+      Key (String):
+        "b"
+      Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "SetA"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (String):
+            "program"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "key"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "select"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "parent"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "2"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "a"
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "value"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "literal"
+                      Value (String):
+                        "c"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "2"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "key"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "select"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "search"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "2"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "autoSearch"
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "value"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "literal"
+                      Value (String):
+                        "changed"
+    Entry (DictionaryEntry)
+      Key (String):
+        "SetB"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (String):
+            "program"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "key"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "select"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "caller"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "2"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "b"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "3"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "1"
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "value"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "select"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "value"
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "2"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "key"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "select"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "this"
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "value"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "literal"
+                      Value (String):
+                        "changed"
+    Entry (DictionaryEntry)
+      Key (String):
+        "x"
+      Value (Map):
+        Entry (DictionaryEntry)
           Key (String):
             "a"
           Value (String):
-            "c"
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "autoSearch"
-          Value (String):
-            "changed"
-        DictionaryEntry in IEnumerable:
-          Key (String):
             "b"
-          Value (Map):
-            IEnumerable
-        DictionaryEntry in IEnumerable:
+        Entry (DictionaryEntry)
           Key (String):
-            "SetA"
+            "c"
+          Value (String):
+            "d"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (String):
+            "program"
           Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (String):
-                  "program"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "key"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "select"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "this"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "2"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "a"
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "value"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "literal"
+                      Value (String):
+                        "b"
+Entry (DictionaryEntry)
+  Key (String):
+    "a"
+  Value (String):
+    "default"
+Entry (DictionaryEntry)
+  Key (String):
+    "b"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (String):
+            "x"
+          Value (Integer):
+            "7"
+        Entry (DictionaryEntry)
+          Key (String):
+            "z"
+          Value (Integer):
+            "1"
+Entry (DictionaryEntry)
+  Key (String):
+    "aSet"
+  Value (Map):
+Entry (DictionaryEntry)
+  Key (String):
+    "bSet"
+  Value (String):
+    "changed"
+Entry (DictionaryEntry)
+  Key (String):
+    "ReturnEverything"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "program"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "1"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (String):
+                "key"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "select"
+                  Value (Map):
+                    Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
                       Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "key"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (String):
-                                    "select"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "1"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "literal"
-                                              Value (String):
-                                                "parent"
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "2"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "literal"
-                                              Value (String):
-                                                "a"
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "value"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "c"
-                    DictionaryEntry in IEnumerable:
-                      Key (Integer):
-                        "2"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "key"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (String):
-                                    "select"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "1"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "literal"
-                                              Value (String):
-                                                "search"
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "2"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "literal"
-                                              Value (String):
-                                                "autoSearch"
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "value"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "changed"
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "SetB"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (String):
-                  "program"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "this"
+            Entry (DictionaryEntry)
+              Key (String):
+                "value"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "select"
+                  Value (Map):
+                    Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
                       Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "key"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "arg"
+Entry (DictionaryEntry)
+  Key (String):
+    "everythingReturned"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (String):
+        "a"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "2"
+      Value (String):
+        "b"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "3"
+      Value (String):
+        "c"
+Entry (DictionaryEntry)
+  Key (String):
+    "argument"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (String):
+        "x"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "2"
+      Value (String):
+        "y"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "3"
+      Value (String):
+        "z"
+Entry (DictionaryEntry)
+  Key (String):
+    "variableAsArgument"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (String):
+        "x"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "2"
+      Value (String):
+        "y"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "3"
+      Value (String):
+        "z"
+Entry (DictionaryEntry)
+  Key (String):
+    "ReturnFunction"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "program"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "1"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (String):
+                "key"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "select"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "1"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "this"
+            Entry (DictionaryEntry)
+              Key (String):
+                "value"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "delayed"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (String):
+                        "program"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "key"
+                              Value (Map):
+                                Entry (DictionaryEntry)
                                   Key (String):
                                     "select"
                                   Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "1"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
+                                    Entry (DictionaryEntry)
+                                      Key (Integer):
+                                        "1"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (String):
+                                            "literal"
+                                          Value (String):
+                                            "this"
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "value"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (String):
+                                    "program"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Integer):
+                                        "1"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (String):
+                                            "key"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
                                               Key (String):
-                                                "literal"
-                                              Value (String):
-                                                "caller"
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "2"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "literal"
-                                              Value (String):
-                                                "b"
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "3"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
+                                                "select"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (Integer):
+                                                    "1"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (String):
+                                                        "literal"
+                                                      Value (String):
+                                                        "this"
+                                                Entry (DictionaryEntry)
+                                                  Key (Integer):
+                                                    "2"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (String):
+                                                        "literal"
+                                                      Value (String):
+                                                        "1"
+                                        Entry (DictionaryEntry)
+                                          Key (String):
+                                            "value"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
                                               Key (String):
                                                 "literal"
                                               Value (String):
                                                 "1"
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "value"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (String):
-                                    "select"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "1"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
+                                    Entry (DictionaryEntry)
+                                      Key (Integer):
+                                        "2"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (String):
+                                            "key"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (String):
+                                                "select"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (Integer):
+                                                    "1"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (String):
+                                                        "literal"
+                                                      Value (String):
+                                                        "this"
+                                                Entry (DictionaryEntry)
+                                                  Key (Integer):
+                                                    "2"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (String):
+                                                        "literal"
+                                                      Value (String):
+                                                        "2"
+                                        Entry (DictionaryEntry)
+                                          Key (String):
+                                            "value"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
                                               Key (String):
                                                 "literal"
                                               Value (String):
-                                                "value"
-                    DictionaryEntry in IEnumerable:
+                                                "2"
+                                    Entry (DictionaryEntry)
+                                      Key (Integer):
+                                        "3"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (String):
+                                            "key"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (String):
+                                                "select"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (Integer):
+                                                    "1"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (String):
+                                                        "literal"
+                                                      Value (String):
+                                                        "this"
+                                                Entry (DictionaryEntry)
+                                                  Key (Integer):
+                                                    "2"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (String):
+                                                        "literal"
+                                                      Value (String):
+                                                        "3"
+                                        Entry (DictionaryEntry)
+                                          Key (String):
+                                            "value"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (String):
+                                                "literal"
+                                              Value (String):
+                                                "3"
+Entry (DictionaryEntry)
+  Key (String):
+    "SetCurrent"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "program"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "1"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (String):
+                "key"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "select"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "1"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "this"
+            Entry (DictionaryEntry)
+              Key (String):
+                "value"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "program"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "1"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "key"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "select"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (String):
+                                        "literal"
+                                      Value (String):
+                                        "arg"
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "value"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "select"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (String):
+                                        "literal"
+                                      Value (String):
+                                        "arg"
+                    Entry (DictionaryEntry)
                       Key (Integer):
                         "2"
                       Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "key"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (String):
-                                    "select"
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "key"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "select"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
                                   Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "1"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "literal"
-                                              Value (String):
-                                                "this"
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "value"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "changed"
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "x"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (String):
-                  "a"
-                Value (String):
-                  "b"
-              DictionaryEntry in IEnumerable:
-                Key (String):
-                  "c"
-                Value (String):
-                  "d"
-        DictionaryEntry in IEnumerable:
+                                    Entry (DictionaryEntry)
+                                      Key (String):
+                                        "literal"
+                                      Value (String):
+                                        "x"
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "value"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "select"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (String):
+                                        "literal"
+                                      Value (String):
+                                        "symbol"
+        Entry (DictionaryEntry)
           Key (Integer):
-            "1"
+            "2"
           Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (String):
-                  "program"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
+            Entry (DictionaryEntry)
+              Key (String):
+                "key"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "select"
+                  Value (Map):
+                    Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
                       Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "key"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (String):
-                                    "select"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "1"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "literal"
-                                              Value (String):
-                                                "this"
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "2"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "literal"
-                                              Value (String):
-                                                "a"
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "value"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "b"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "a"
-    Value (String):
-      "default"
-  DictionaryEntry in IEnumerable:
-    Key (String):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "this"
+            Entry (DictionaryEntry)
+              Key (String):
+                "value"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "select"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "1"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "x"
+Entry (DictionaryEntry)
+  Key (String):
+    "thisSet"
+  Value (String):
+    "haha"
+Entry (DictionaryEntry)
+  Key (String):
+    "MemberTest"
+  Value (NetClass):
+    Entry (DictionaryEntry)
+  Key (String):
+    "IntEvent"
+  Value (NetClass):
+    Entry (DictionaryEntry)
+  Key (String):
+    "NormalEvent"
+  Value (NetClass):
+    Entry (DictionaryEntry)
+  Key (String):
+    "TestClass"
+  Value (NetClass):
+    Entry (DictionaryEntry)
+  Key (String):
+    "PositionalNoConversion"
+  Value (NetClass):
+    Entry (DictionaryEntry)
+  Key (String):
+    "NamedNoConversion"
+  Value (NetClass):
+    Entry (DictionaryEntry)
+  Key (String):
+    "IndexerNoConversion"
+  Value (NetClass):
+    Entry (DictionaryEntry)
+  Key (String):
+    "testClass"
+  Value (TestClass):
+Entry (DictionaryEntry)
+  Key (String):
+    "memberTest"
+  Value (MemberTest):
+    instanceField (String):
       "b"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
+    InstanceProperty (String):
+      "b"
+Entry (DictionaryEntry)
+  Key (String):
+    "interceptedSymbol"
+  Value (String):
+    "/hello/"
+Entry (DictionaryEntry)
+  Key (String):
+    "positionalNoConversion"
+  Value (PositionalNoConversion):
+Entry (DictionaryEntry)
+  Key (String):
+    "positionalNoConversionConcatenated"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (Integer):
+        "114"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "2"
+      Value (Integer):
+        "115"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "3"
+      Value (Integer):
+        "116"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "4"
+      Value (Integer):
+        "109"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "5"
+      Value (Integer):
+        "110"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "6"
+      Value (Integer):
+        "111"
+Entry (DictionaryEntry)
+  Key (String):
+    "namedNoConversion"
+  Value (NamedNoConversion):
+Entry (DictionaryEntry)
+  Key (String):
+    "namedNoConversionConcatenated"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (Integer):
+        "110"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "2"
+      Value (Integer):
+        "117"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "3"
+      Value (Integer):
+        "108"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "4"
+      Value (Integer):
+        "108"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "5"
+      Value (Integer):
+        "110"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "6"
+      Value (Integer):
+        "117"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "7"
+      Value (Integer):
+        "108"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "8"
+      Value (Integer):
+        "108"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "9"
+      Value (Integer):
+        "116"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "10"
+      Value (Integer):
+        "110"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "11"
+      Value (Integer):
+        "117"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "12"
+      Value (Integer):
+        "108"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "13"
+      Value (Integer):
+        "108"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "14"
+      Value (Integer):
+        "110"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "15"
+      Value (Integer):
+        "110"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "16"
+      Value (Integer):
+        "117"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "17"
+      Value (Integer):
+        "108"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "18"
+      Value (Integer):
+        "108"
+Entry (DictionaryEntry)
+  Key (String):
+    "indexerNoConversion"
+  Value (IndexerNoConversion):
+Entry (DictionaryEntry)
+  Key (String):
+    "indexerNoConversionIndexed"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (Integer):
+        "97"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "2"
+      Value (Integer):
+        "98"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "3"
+      Value (Integer):
+        "99"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "4"
+      Value (Integer):
+        "104"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "5"
+      Value (Integer):
+        "105"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "6"
+      Value (Integer):
+        "104"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "7"
+      Value (Integer):
+        "105"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "8"
+      Value (Integer):
+        "117"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "9"
+      Value (Integer):
+        "110"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "10"
+      Value (Integer):
+        "99"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "11"
+      Value (Integer):
+        "104"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "12"
+      Value (Integer):
+        "97"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "13"
+      Value (Integer):
+        "110"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "14"
+      Value (Integer):
+        "103"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "15"
+      Value (Integer):
+        "101"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "16"
+      Value (Integer):
+        "100"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "17"
+      Value (Integer):
+        "89"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "18"
+      Value (Integer):
+        "117"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "19"
+      Value (Integer):
+        "110"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "20"
+      Value (Integer):
+        "99"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "21"
+      Value (Integer):
+        "104"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "22"
+      Value (Integer):
+        "97"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "23"
+      Value (Integer):
+        "110"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "24"
+      Value (Integer):
+        "103"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "25"
+      Value (Integer):
+        "101"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "26"
+      Value (Integer):
+        "100"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "27"
+      Value (Integer):
+        "90"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "28"
+      Value (Integer):
+        "97"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "29"
+      Value (Integer):
+        "98"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "30"
+      Value (Integer):
+        "99"
+Entry (DictionaryEntry)
+  Key (String):
+    "interceptedSymbol2"
+  Value (Integer):
+    "1"
+Entry (DictionaryEntry)
+  Key (String):
+    "k"
+  Value (String):
+    "hello"
+Entry (DictionaryEntry)
+  Key (String):
+    "xyz"
+  Value (String):
+    "w"
+Entry (DictionaryEntry)
+  Key (String):
+    "literalFunction"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "literal"
+      Value (String):
+        "5"
+Entry (DictionaryEntry)
+  Key (String):
+    "literalFunctionResult"
+  Value (Integer):
+    "5"
+Entry (DictionaryEntry)
+  Key (String):
+    "function"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "program"
+      Value (Map):
+        Entry (DictionaryEntry)
           Key (Integer):
             "1"
           Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (String):
-                  "x"
-                Value (Integer):
-                  "7"
-              DictionaryEntry in IEnumerable:
-                Key (String):
-                  "z"
-                Value (Integer):
-                  "1"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "aSet"
-    Value (Map):
-      IEnumerable
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "bSet"
-    Value (String):
-      "changed"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "ReturnEverything"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "program"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "key"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "this"
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "value"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "arg"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "everythingReturned"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "1"
-          Value (String):
-            "a"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "2"
-          Value (String):
-            "b"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "3"
-          Value (String):
-            "c"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "argument"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "1"
-          Value (String):
-            "x"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "2"
-          Value (String):
-            "y"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "3"
-          Value (String):
-            "z"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "variableAsArgument"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "1"
-          Value (String):
-            "x"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "2"
-          Value (String):
-            "y"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "3"
-          Value (String):
-            "z"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "ReturnFunction"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "program"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "key"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "this"
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "value"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "delayed"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (String):
-                                    "program"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "1"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "key"
-                                              Value (Map):
-                                                IEnumerable
-                                                  DictionaryEntry in IEnumerable:
-                                                    Key (String):
-                                                      "select"
-                                                    Value (Map):
-                                                      IEnumerable
-                                                        DictionaryEntry in IEnumerable:
-                                                          Key (Integer):
-                                                            "1"
-                                                          Value (Map):
-                                                            IEnumerable
-                                                              DictionaryEntry in IEnumerable:
-                                                                Key (String):
-                                                                  "literal"
-                                                                Value (String):
-                                                                  "this"
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "value"
-                                              Value (Map):
-                                                IEnumerable
-                                                  DictionaryEntry in IEnumerable:
-                                                    Key (String):
-                                                      "program"
-                                                    Value (Map):
-                                                      IEnumerable
-                                                        DictionaryEntry in IEnumerable:
-                                                          Key (Integer):
-                                                            "1"
-                                                          Value (Map):
-                                                            IEnumerable
-                                                              DictionaryEntry in IEnumerable:
-                                                                Key (String):
-                                                                  "key"
-                                                                Value (Map):
-                                                                  IEnumerable
-                                                                    DictionaryEntry in IEnumerable:
-                                                                      Key (String):
-                                                                        "select"
-                                                                      Value (Map):
-                                                                        IEnumerable
-                                                                          DictionaryEntry in IEnumerable:
-                                                                            Key (Integer):
-                                                                              "1"
-                                                                            Value (Map):
-                                                                              IEnumerable
-                                                                                DictionaryEntry in IEnumerable:
-                                                                                  Key (String):
-                                                                                    "literal"
-                                                                                  Value (String):
-                                                                                    "this"
-                                                                          DictionaryEntry in IEnumerable:
-                                                                            Key (Integer):
-                                                                              "2"
-                                                                            Value (Map):
-                                                                              IEnumerable
-                                                                                DictionaryEntry in IEnumerable:
-                                                                                  Key (String):
-                                                                                    "literal"
-                                                                                  Value (String):
-                                                                                    "1"
-                                                              DictionaryEntry in IEnumerable:
-                                                                Key (String):
-                                                                  "value"
-                                                                Value (Map):
-                                                                  IEnumerable
-                                                                    DictionaryEntry in IEnumerable:
-                                                                      Key (String):
-                                                                        "literal"
-                                                                      Value (String):
-                                                                        "1"
-                                                        DictionaryEntry in IEnumerable:
-                                                          Key (Integer):
-                                                            "2"
-                                                          Value (Map):
-                                                            IEnumerable
-                                                              DictionaryEntry in IEnumerable:
-                                                                Key (String):
-                                                                  "key"
-                                                                Value (Map):
-                                                                  IEnumerable
-                                                                    DictionaryEntry in IEnumerable:
-                                                                      Key (String):
-                                                                        "select"
-                                                                      Value (Map):
-                                                                        IEnumerable
-                                                                          DictionaryEntry in IEnumerable:
-                                                                            Key (Integer):
-                                                                              "1"
-                                                                            Value (Map):
-                                                                              IEnumerable
-                                                                                DictionaryEntry in IEnumerable:
-                                                                                  Key (String):
-                                                                                    "literal"
-                                                                                  Value (String):
-                                                                                    "this"
-                                                                          DictionaryEntry in IEnumerable:
-                                                                            Key (Integer):
-                                                                              "2"
-                                                                            Value (Map):
-                                                                              IEnumerable
-                                                                                DictionaryEntry in IEnumerable:
-                                                                                  Key (String):
-                                                                                    "literal"
-                                                                                  Value (String):
-                                                                                    "2"
-                                                              DictionaryEntry in IEnumerable:
-                                                                Key (String):
-                                                                  "value"
-                                                                Value (Map):
-                                                                  IEnumerable
-                                                                    DictionaryEntry in IEnumerable:
-                                                                      Key (String):
-                                                                        "literal"
-                                                                      Value (String):
-                                                                        "2"
-                                                        DictionaryEntry in IEnumerable:
-                                                          Key (Integer):
-                                                            "3"
-                                                          Value (Map):
-                                                            IEnumerable
-                                                              DictionaryEntry in IEnumerable:
-                                                                Key (String):
-                                                                  "key"
-                                                                Value (Map):
-                                                                  IEnumerable
-                                                                    DictionaryEntry in IEnumerable:
-                                                                      Key (String):
-                                                                        "select"
-                                                                      Value (Map):
-                                                                        IEnumerable
-                                                                          DictionaryEntry in IEnumerable:
-                                                                            Key (Integer):
-                                                                              "1"
-                                                                            Value (Map):
-                                                                              IEnumerable
-                                                                                DictionaryEntry in IEnumerable:
-                                                                                  Key (String):
-                                                                                    "literal"
-                                                                                  Value (String):
-                                                                                    "this"
-                                                                          DictionaryEntry in IEnumerable:
-                                                                            Key (Integer):
-                                                                              "2"
-                                                                            Value (Map):
-                                                                              IEnumerable
-                                                                                DictionaryEntry in IEnumerable:
-                                                                                  Key (String):
-                                                                                    "literal"
-                                                                                  Value (String):
-                                                                                    "3"
-                                                              DictionaryEntry in IEnumerable:
-                                                                Key (String):
-                                                                  "value"
-                                                                Value (Map):
-                                                                  IEnumerable
-                                                                    DictionaryEntry in IEnumerable:
-                                                                      Key (String):
-                                                                        "literal"
-                                                                      Value (String):
-                                                                        "3"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "SetCurrent"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "program"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "key"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "this"
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "value"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "program"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "key"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "select"
-                                              Value (Map):
-                                                IEnumerable
-                                                  DictionaryEntry in IEnumerable:
-                                                    Key (Integer):
-                                                      "1"
-                                                    Value (Map):
-                                                      IEnumerable
-                                                        DictionaryEntry in IEnumerable:
-                                                          Key (String):
-                                                            "literal"
-                                                          Value (String):
-                                                            "arg"
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "value"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "select"
-                                              Value (Map):
-                                                IEnumerable
-                                                  DictionaryEntry in IEnumerable:
-                                                    Key (Integer):
-                                                      "1"
-                                                    Value (Map):
-                                                      IEnumerable
-                                                        DictionaryEntry in IEnumerable:
-                                                          Key (String):
-                                                            "literal"
-                                                          Value (String):
-                                                            "arg"
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "2"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "key"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "select"
-                                              Value (Map):
-                                                IEnumerable
-                                                  DictionaryEntry in IEnumerable:
-                                                    Key (Integer):
-                                                      "1"
-                                                    Value (Map):
-                                                      IEnumerable
-                                                        DictionaryEntry in IEnumerable:
-                                                          Key (String):
-                                                            "literal"
-                                                          Value (String):
-                                                            "x"
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "value"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "select"
-                                              Value (Map):
-                                                IEnumerable
-                                                  DictionaryEntry in IEnumerable:
-                                                    Key (Integer):
-                                                      "1"
-                                                    Value (Map):
-                                                      IEnumerable
-                                                        DictionaryEntry in IEnumerable:
-                                                          Key (String):
-                                                            "literal"
-                                                          Value (String):
-                                                            "symbol"
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "2"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "key"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "this"
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "value"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "x"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "thisSet"
-    Value (String):
-      "haha"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "MemberTest"
-    Value (NetClass):
-        DictionaryEntry in IEnumerable:
-    Key (String):
-      "IntEvent"
-    Value (NetClass):
-        DictionaryEntry in IEnumerable:
-    Key (String):
-      "NormalEvent"
-    Value (NetClass):
-        DictionaryEntry in IEnumerable:
-    Key (String):
-      "TestClass"
-    Value (NetClass):
-        DictionaryEntry in IEnumerable:
-    Key (String):
-      "PositionalNoConversion"
-    Value (NetClass):
-        DictionaryEntry in IEnumerable:
-    Key (String):
-      "NamedNoConversion"
-    Value (NetClass):
-        DictionaryEntry in IEnumerable:
-    Key (String):
-      "IndexerNoConversion"
-    Value (NetClass):
-        DictionaryEntry in IEnumerable:
-    Key (String):
-      "testClass"
-    Value (TestClass):
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "memberTest"
-    Value (MemberTest):
-      instanceField (String):
-        "b"
-      InstanceProperty (String):
-        "b"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "interceptedSymbol"
-    Value (String):
-      "/hello/"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "positionalNoConversion"
-    Value (PositionalNoConversion):
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "positionalNoConversionConcatenated"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "1"
-          Value (Integer):
-            "114"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "2"
-          Value (Integer):
-            "115"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "3"
-          Value (Integer):
-            "116"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "4"
-          Value (Integer):
-            "109"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "5"
-          Value (Integer):
-            "110"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "6"
-          Value (Integer):
-            "111"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "namedNoConversion"
-    Value (NamedNoConversion):
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "namedNoConversionConcatenated"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "1"
-          Value (Integer):
-            "110"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "2"
-          Value (Integer):
-            "117"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "3"
-          Value (Integer):
-            "108"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "4"
-          Value (Integer):
-            "108"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "5"
-          Value (Integer):
-            "110"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "6"
-          Value (Integer):
-            "117"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "7"
-          Value (Integer):
-            "108"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "8"
-          Value (Integer):
-            "108"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "9"
-          Value (Integer):
-            "116"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "10"
-          Value (Integer):
-            "110"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "11"
-          Value (Integer):
-            "117"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "12"
-          Value (Integer):
-            "108"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "13"
-          Value (Integer):
-            "108"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "14"
-          Value (Integer):
-            "110"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "15"
-          Value (Integer):
-            "110"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "16"
-          Value (Integer):
-            "117"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "17"
-          Value (Integer):
-            "108"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "18"
-          Value (Integer):
-            "108"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "indexerNoConversion"
-    Value (IndexerNoConversion):
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "indexerNoConversionIndexed"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "1"
-          Value (Integer):
-            "97"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "2"
-          Value (Integer):
-            "98"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "3"
-          Value (Integer):
-            "99"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "4"
-          Value (Integer):
-            "104"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "5"
-          Value (Integer):
-            "105"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "6"
-          Value (Integer):
-            "104"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "7"
-          Value (Integer):
-            "105"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "8"
-          Value (Integer):
-            "117"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "9"
-          Value (Integer):
-            "110"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "10"
-          Value (Integer):
-            "99"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "11"
-          Value (Integer):
-            "104"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "12"
-          Value (Integer):
-            "97"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "13"
-          Value (Integer):
-            "110"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "14"
-          Value (Integer):
-            "103"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "15"
-          Value (Integer):
-            "101"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "16"
-          Value (Integer):
-            "100"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "17"
-          Value (Integer):
-            "89"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "18"
-          Value (Integer):
-            "117"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "19"
-          Value (Integer):
-            "110"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "20"
-          Value (Integer):
-            "99"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "21"
-          Value (Integer):
-            "104"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "22"
-          Value (Integer):
-            "97"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "23"
-          Value (Integer):
-            "110"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "24"
-          Value (Integer):
-            "103"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "25"
-          Value (Integer):
-            "101"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "26"
-          Value (Integer):
-            "100"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "27"
-          Value (Integer):
-            "90"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "28"
-          Value (Integer):
-            "97"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "29"
-          Value (Integer):
-            "98"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "30"
-          Value (Integer):
-            "99"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "interceptedSymbol2"
-    Value (Integer):
-      "1"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "k"
-    Value (String):
-      "hello"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "xyz"
-    Value (String):
-      "w"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "literalFunction"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "literal"
-          Value (String):
-            "5"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "literalFunctionResult"
-    Value (Integer):
-      "5"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "function"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "program"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "key"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "this"
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "value"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "literal"
-                            Value (String):
-                              "simple function this"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "callFunction"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "select"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "literal"
-                      Value (String):
-                        "function"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "callFunctionResult"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "program"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "key"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "this"
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "value"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "literal"
-                            Value (String):
-                              "simple function this"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "delayedFunction"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "delayed"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (String):
-                  "program"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
+            Entry (DictionaryEntry)
+              Key (String):
+                "key"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "select"
+                  Value (Map):
+                    Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
                       Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "key"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (String):
-                                    "select"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (Integer):
-                                          "1"
-                                        Value (Map):
-                                          IEnumerable
-                                            DictionaryEntry in IEnumerable:
-                                              Key (String):
-                                                "literal"
-                                              Value (String):
-                                                "x"
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "value"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (String):
-                                    "literal"
-                                  Value (String):
-                                    "y"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "delayedFunctionResult"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "this"
+            Entry (DictionaryEntry)
+              Key (String):
+                "value"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "literal"
+                  Value (String):
+                    "simple function this"
+Entry (DictionaryEntry)
+  Key (String):
+    "callFunction"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "select"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "1"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (String):
+                "literal"
+              Value (String):
+                "function"
+Entry (DictionaryEntry)
+  Key (String):
+    "callFunctionResult"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "program"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "1"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (String):
+                "key"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "select"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "1"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "this"
+            Entry (DictionaryEntry)
+              Key (String):
+                "value"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "literal"
+                  Value (String):
+                    "simple function this"
+Entry (DictionaryEntry)
+  Key (String):
+    "delayedFunction"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "delayed"
+      Value (Map):
+        Entry (DictionaryEntry)
           Key (String):
             "program"
           Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "key"
+                  Value (Map):
+                    Entry (DictionaryEntry)
                       Key (String):
-                        "key"
+                        "select"
                       Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "x"
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "value"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "literal"
-                            Value (String):
-                              "y"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "value"
-    Value (String):
-      "xyz"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "selectionFunction"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "select"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (String):
+                                "literal"
+                              Value (String):
+                                "x"
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "value"
+                  Value (Map):
+                    Entry (DictionaryEntry)
                       Key (String):
                         "literal"
                       Value (String):
-                        "value"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "selectionFunctionResult"
-    Value (String):
-      "xyz"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "bigInteger"
-    Value (Integer):
-      "89383838383832839123497123047217340712340720347072304702340720347"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "upperLevel"
-    Value (String):
-      "changed"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "ChangeUpperLevel"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
-          Key (String):
-            "program"
-          Value (Map):
-            IEnumerable
-              DictionaryEntry in IEnumerable:
-                Key (Integer):
-                  "1"
-                Value (Map):
-                  IEnumerable
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "key"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "select"
-                            Value (Map):
-                              IEnumerable
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "search"
-                                DictionaryEntry in IEnumerable:
-                                  Key (Integer):
-                                    "2"
-                                  Value (Map):
-                                    IEnumerable
-                                      DictionaryEntry in IEnumerable:
-                                        Key (String):
-                                          "literal"
-                                        Value (String):
-                                          "upperLevel"
-                    DictionaryEntry in IEnumerable:
-                      Key (String):
-                        "value"
-                      Value (Map):
-                        IEnumerable
-                          DictionaryEntry in IEnumerable:
-                            Key (String):
-                              "literal"
-                            Value (String):
-                              "changed"
-  DictionaryEntry in IEnumerable:
-    Key (Integer):
-      "3"
-    Value (Map):
-      IEnumerable
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "staticEventChanged"
-    Value (Boolean):
-      "True"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "staticEvent"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "System.Object Invoke(System.Object)"
-      savedMethod (RuntimeMethodInfo):
-        "System.Object Invoke(System.Object)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "resultFromDelegate"
-    Value (Map):
-      IEnumerable
-        DictionaryEntry in IEnumerable:
+                        "y"
+Entry (DictionaryEntry)
+  Key (String):
+    "delayedFunctionResult"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "program"
+      Value (Map):
+        Entry (DictionaryEntry)
           Key (Integer):
             "1"
-          Value (Integer):
-            "114"
-        DictionaryEntry in IEnumerable:
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (String):
+                "key"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "select"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "1"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "x"
+            Entry (DictionaryEntry)
+              Key (String):
+                "value"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "literal"
+                  Value (String):
+                    "y"
+Entry (DictionaryEntry)
+  Key (String):
+    "value"
+  Value (String):
+    "xyz"
+Entry (DictionaryEntry)
+  Key (String):
+    "selectionFunction"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "select"
+      Value (Map):
+        Entry (DictionaryEntry)
           Key (Integer):
-            "2"
-          Value (Integer):
-            "101"
-        DictionaryEntry in IEnumerable:
+            "1"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (String):
+                "literal"
+              Value (String):
+                "value"
+Entry (DictionaryEntry)
+  Key (String):
+    "selectionFunctionResult"
+  Value (String):
+    "xyz"
+Entry (DictionaryEntry)
+  Key (String):
+    "bigInteger"
+  Value (Integer):
+    "89383838383832839123497123047217340712340720347072304702340720347"
+Entry (DictionaryEntry)
+  Key (String):
+    "upperLevel"
+  Value (String):
+    "changed"
+Entry (DictionaryEntry)
+  Key (String):
+    "ChangeUpperLevel"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (String):
+        "program"
+      Value (Map):
+        Entry (DictionaryEntry)
           Key (Integer):
-            "3"
-          Value (Integer):
-            "115"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "4"
-          Value (Integer):
-            "117"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "5"
-          Value (Integer):
-            "108"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "6"
-          Value (Integer):
-            "116"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "7"
-          Value (Integer):
-            "70"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "8"
-          Value (Integer):
-            "114"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "9"
-          Value (Integer):
-            "111"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "10"
-          Value (Integer):
-            "109"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "11"
-          Value (Integer):
-            "68"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "12"
-          Value (Integer):
-            "101"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "13"
-          Value (Integer):
-            "108"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "14"
-          Value (Integer):
-            "101"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "15"
-          Value (Integer):
-            "103"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "16"
-          Value (Integer):
-            "97"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "17"
-          Value (Integer):
-            "116"
-        DictionaryEntry in IEnumerable:
-          Key (Integer):
-            "18"
-          Value (Integer):
-            "101"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "staticEventResult"
-    Value (TestClass):
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "instanceEventChanged"
-    Value (Boolean):
-      "True"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "instanceEvent"
-    Value (NetMethod):
-      methods (MethodInfo[]):
-        IEnumerable
-          RuntimeMethodInfo in IEnumerable:
-            "Int32 Invoke(Int32)"
-      savedMethod (RuntimeMethodInfo):
+            "1"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (String):
+                "key"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "select"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "1"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "search"
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "2"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (String):
+                            "literal"
+                          Value (String):
+                            "upperLevel"
+            Entry (DictionaryEntry)
+              Key (String):
+                "value"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (String):
+                    "literal"
+                  Value (String):
+                    "changed"
+Entry (DictionaryEntry)
+  Key (Integer):
+    "3"
+  Value (Map):
+Entry (DictionaryEntry)
+  Key (String):
+    "staticEventChanged"
+  Value (Boolean):
+    "True"
+Entry (DictionaryEntry)
+  Key (String):
+    "staticEvent"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
+        "System.Object Invoke(System.Object)"
+    savedMethod (RuntimeMethodInfo):
+      "System.Object Invoke(System.Object)"
+Entry (DictionaryEntry)
+  Key (String):
+    "resultFromDelegate"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (Integer):
+        "114"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "2"
+      Value (Integer):
+        "101"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "3"
+      Value (Integer):
+        "115"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "4"
+      Value (Integer):
+        "117"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "5"
+      Value (Integer):
+        "108"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "6"
+      Value (Integer):
+        "116"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "7"
+      Value (Integer):
+        "70"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "8"
+      Value (Integer):
+        "114"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "9"
+      Value (Integer):
+        "111"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "10"
+      Value (Integer):
+        "109"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "11"
+      Value (Integer):
+        "68"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "12"
+      Value (Integer):
+        "101"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "13"
+      Value (Integer):
+        "108"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "14"
+      Value (Integer):
+        "101"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "15"
+      Value (Integer):
+        "103"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "16"
+      Value (Integer):
+        "97"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "17"
+      Value (Integer):
+        "116"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "18"
+      Value (Integer):
+        "101"
+Entry (DictionaryEntry)
+  Key (String):
+    "staticEventResult"
+  Value (TestClass):
+Entry (DictionaryEntry)
+  Key (String):
+    "instanceEventChanged"
+  Value (Boolean):
+    "True"
+Entry (DictionaryEntry)
+  Key (String):
+    "instanceEvent"
+  Value (NetMethod):
+    methods (MethodInfo[]):
+      Entry (RuntimeMethodInfo)
         "Int32 Invoke(Int32)"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "instanceEventResult"
-    Value (Integer):
-      "5"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "one"
-    Value (Integer):
-      "1"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "two"
-    Value (Integer):
-      "2"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "firstIf"
-    Value (String):
-      "then"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "secondIf"
-    Value (String):
-      "else"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "thenText"
-    Value (String):
-      "then"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "firstSwitch"
-    Value (Integer):
-      "50020202029029233344"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "bigNumber"
-    Value (Integer):
-      "50020202029029233344"
-  DictionaryEntry in IEnumerable:
-    Key (String):
-      "secondSwitch"
-    Value (String):
-      "default"
+    savedMethod (RuntimeMethodInfo):
+      "Int32 Invoke(Int32)"
+Entry (DictionaryEntry)
+  Key (String):
+    "instanceEventResult"
+  Value (Integer):
+    "5"
+Entry (DictionaryEntry)
+  Key (String):
+    "one"
+  Value (Integer):
+    "1"
+Entry (DictionaryEntry)
+  Key (String):
+    "two"
+  Value (Integer):
+    "2"
+Entry (DictionaryEntry)
+  Key (String):
+    "firstIf"
+  Value (String):
+    "then"
+Entry (DictionaryEntry)
+  Key (String):
+    "secondIf"
+  Value (String):
+    "else"
+Entry (DictionaryEntry)
+  Key (String):
+    "thenText"
+  Value (String):
+    "then"
+Entry (DictionaryEntry)
+  Key (String):
+    "firstSwitch"
+  Value (Integer):
+    "50020202029029233344"
+Entry (DictionaryEntry)
+  Key (String):
+    "bigNumber"
+  Value (Integer):
+    "50020202029029233344"
+Entry (DictionaryEntry)
+  Key (String):
+    "secondSwitch"
+  Value (String):
+    "default"

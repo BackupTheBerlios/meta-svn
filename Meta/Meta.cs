@@ -2342,15 +2342,27 @@ namespace Meta {
 					text=indent+"\""+serialize.ToString()+"\""+"\n";
 				}
 				else if(serialize is IEnumerable) {
-					text=indent + "IEnumerable\n";
+//					text=indent+
+//						"IEnumerable\n";
 					foreach(object entry in (IEnumerable)serialize) {
 						text+=indent+
-								"  "+
-								entry.GetType().Name+
-								" in IEnumerable:\n"+
-								Serialize(entry,indent+"    ",methods);
+							"Entry ("+
+							entry.GetType().Name+
+							")\n"+
+							Serialize(entry,indent+"  ",methods);
 					}
 				}
+//				else if(serialize is IEnumerable) {
+//					text=indent+
+//						  "IEnumerable\n";
+//					foreach(object entry in (IEnumerable)serialize) {
+//						text+=indent+
+//								"  "+
+//								entry.GetType().Name+
+//								" in IEnumerable:\n"+
+//								Serialize(entry,indent+"    ",methods);
+//					}
+//				}
 				else {
 					PropertyInfo[] properties=
 						serialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance);
