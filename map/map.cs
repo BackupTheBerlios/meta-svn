@@ -1,8 +1,12 @@
 using System;
+using System.IO;
 using System.Collections;
 using Meta.Types;
 using Meta.Execution;
 public class map {
+	public static object run(string fileName) {
+		return Interpreter.Run(fileName,new Map());
+	}
 	public static bool contains(object key,Map map) {
 		return map.ContainsKey(key);
 	}

@@ -463,11 +463,20 @@ namespace Meta {
 				StreamReader a=new StreamReader(fileName);
 				string x=a.ReadToEnd();
 				a.Close();
-				StreamReader reader=new StreamReader(fileName);
-				object result=Run(reader,argument);
-				reader.Close();
+//				StreamReader reader=new StreamReader(fileName);
+				object result=Run(new StringReader(x),argument);
+//				reader.Close();
 				return result;
 			}
+//			public static object Run(string fileName,IMap argument) {
+//				StreamReader a=new StreamReader(fileName);
+//				string x=a.ReadToEnd();
+//				a.Close();
+//				StreamReader reader=new StreamReader(fileName);
+//				object result=Run(reader,argument);
+//				reader.Close();
+//				return result;
+//			}
 			public static object RunWithoutLibrary(string fileName,IMap argument) {
 				StreamReader reader=new StreamReader(fileName);
 				Map program=CompileToMap(reader);
@@ -846,6 +855,7 @@ namespace Meta {
 		}		
 		public class MetaLibrary {
 			public object Load() {
+				// StreamReader must be closed
 				return Interpreter.Run(new StreamReader(path),new Map());
 			}
 			public MetaLibrary(string path) {
@@ -2208,6 +2218,7 @@ namespace Meta {
 				StreamWriter copyWriter=new StreamWriter(Path.Combine(path,"resultCopy.txt"));
 				copyWriter.Write(result);
 				copyWriter.Close();
+				// StreamReader must be closed
 				string check=new StreamReader(Path.Combine(path,"check.txt")).ReadToEnd();
 				return result.Equals(check);
 			}

@@ -32,7 +32,7 @@ namespace Test {
 		public static string path="";
 		[STAThread]
 		public static void Main(string[] args) {
-			//args=new string[]{@"..\..\basicTest.meta"};
+			args=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
 			//args=new string[]{@"C:\Dokumente und Einstellungen\Christian\Desktop\editor.meta"};
 			//args=new string[]{@"..\..\basicTest.meta"};
 			if(args.Length==0) {
@@ -44,29 +44,36 @@ namespace Test {
 				if(!File.Exists(args[0])) {
 					throw new ApplicationException("File "+args[0]+" not found.");
 				}
-//				try {
-					Interpreter.Run(new StreamReader(args[0]),new Map());
+				try {
+					Interpreter.Run(args[0],new Map());
+//					StreamReader reader=new StreamReader(args[0]);
+//					string text=reader.ReadToEnd();
+//					reader.Close();
+//					Interpreter.Run(new StringReader(text),new Map());
 					// fix this to only show original error message
-//				}
-//				catch(CharStreamException e) {// put this into "Run"
-//					Console.WriteLine(e.Message);
-//				}
-//				catch(RecognitionException e) {
-//					Console.WriteLine(e.Message);
-//				}
-//				catch(TokenStreamException e) {
-//					Console.WriteLine(e.Message);
-//				}
-//				catch(Exception e) {
-//					string text="";
-//					do {
-//						text+=e.Message+"\n"+e.TargetSite+"\n";
-//						e=e.InnerException;
-//					} 
-//					while(e!=null);
-//					Console.WriteLine(text);
-//					Console.ReadLine();
-//				}
+				}
+				catch(CharStreamException e) {// put this into "Run"
+					Console.WriteLine(e.Message);
+					Console.ReadLine();
+				}
+				catch(RecognitionException e) {
+					Console.WriteLine(e.Message);
+					Console.ReadLine();
+				}
+				catch(TokenStreamException e) {
+					Console.WriteLine(e.Message);
+					Console.ReadLine();
+ 				}
+				catch(Exception e) {
+					string text="";
+					do {
+						text+=e.Message+"\n"+e.TargetSite+"\n";
+						e=e.InnerException;
+					} 
+					while(e!=null);
+					Console.WriteLine(text);
+					Console.ReadLine();
+				}
 			}
 //			DateTime start=DateTime.Now;
 //			string file=@"C:\Dokumente und Einstellungen\Christian\Desktop\performance.meta";
