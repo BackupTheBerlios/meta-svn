@@ -87,7 +87,7 @@
                 <Reference
                     Name = "antlr.runtime"
                     AssemblyName = "antlr.runtime"
-                    HintPath = "..\antlr.runtime.dll"
+                    HintPath = "bin\Debug\antlr.runtime.dll"
                 />
             </References>
         </Build>
