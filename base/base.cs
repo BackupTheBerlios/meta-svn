@@ -9,6 +9,7 @@ public class @base {
 		Map keys=new Map();
 		foreach(DictionaryEntry entry in map) {
 			keys[new Integer(i)]=entry.Key;
+			i++;
 		}
 		return keys;
 	}
