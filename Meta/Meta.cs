@@ -194,17 +194,17 @@ namespace Meta {
 				return result;
 			}
 		}
-		public abstract class ToNetConversion { //rename
+		public abstract class ConvertMetaToDotNet { //rename
 			public Type source;
 			public Type target;
 			public abstract object Convert(object obj);
 		}
-		public abstract class ToMetaConversion { //rename
+		public abstract class ConvertDotNetToMeta { //rename
 			public Type source;
 			public abstract object Convert(object obj);
 		}
-		public interface ILiteralRecognition {
-			object Recognize(string text);
+		public abstract class RecognizeLiteral {
+			public abstract object Recognize(string text);
 		}
 		public class Literal: IExpression {
 			public string text;
@@ -225,7 +225,7 @@ namespace Meta {
 				if(cached==null) {
 					Interpreter.cashedLiterals.Add(this);
 					for(int i=Interpreter.Interceptions.Length-1;i>=0;i--) {
-						cached=((ILiteralRecognition)Interpreter.Interceptions[i]).Recognize(text);
+						cached=((RecognizeLiteral)Interpreter.Interceptions[i]).Recognize(text);
 						if(cached!=null) {
 							break;
 						}
@@ -801,9 +801,9 @@ namespace Meta {
 					return arguments[arguments.Count-1];
 				}
 			}
-			public static ILiteralRecognition[] Interceptions { // only used once
+			public static RecognizeLiteral[] Interceptions { // only used once
 				get {
-					return (ILiteralRecognition[])interception.ToArray(typeof(ILiteralRecognition));
+					return (RecognizeLiteral[])interception.ToArray(typeof(RecognizeLiteral));
 				}
 			}
 
@@ -811,7 +811,7 @@ namespace Meta {
 				if(obj==null) {
 					return null;
 				}
-				ToMetaConversion conversion=(ToMetaConversion)metaConversion[obj.GetType()];
+				ConvertDotNetToMeta conversion=(ConvertDotNetToMeta)metaConversion[obj.GetType()];
 				if(conversion!=null) {
 					return conversion.Convert(obj);
 				}
@@ -821,7 +821,7 @@ namespace Meta {
 			}
 			public static object ConvertToNet(object obj,Type targetType) {
 				try {
-					ToNetConversion conversion=(ToNetConversion)((Hashtable)
+					ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)((Hashtable)
 						Interpreter.netConversion[obj.GetType()])[targetType];
 					return conversion.Convert(obj);
 				}
@@ -829,13 +829,13 @@ namespace Meta {
 					return obj;
 				}
 			}
-			public static void AddToNetConversion(ToNetConversion conversion) { // maybe remove
+			public static void AddConvertMetaToDotNet(ConvertMetaToDotNet conversion) { // maybe remove
 				if(!netConversion.ContainsKey(conversion.target)) {
 					netConversion[conversion.target]=new Hashtable();
 				}
 				((Hashtable)netConversion[conversion.target])[conversion.source]=conversion;
 			}
-			public static void AddToMetaConversion(ToMetaConversion conversion) { // maybe remove
+			public static void AddConvertDotNetToMeta(ConvertDotNetToMeta conversion) { // maybe remove
 				metaConversion[conversion.source]=conversion;
 			}
 			public static Map String(string symbol) { // maybe remove
@@ -866,7 +866,7 @@ namespace Meta {
 			public static ArrayList cashedLiterals=new ArrayList(); // maybe remove, if interceptions cannot be added
 																					  // at runtime
 
-			public static void AddInterception(ILiteralRecognition i)  { //maybe remove
+			public static void AddInterception(RecognizeLiteral i)  { //maybe remove
 				interception.Add(i);
 				foreach(Literal createLiteral in cashedLiterals) {
 					createLiteral.cached=null;
@@ -905,7 +905,7 @@ namespace Meta {
 			}
 			public static AST Parse(TextReader stream)  { //rename
 				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser(
-					new IndentParser(new MetaLexer(stream)));
+					new AddIndentationTokensToStream(new MetaLexer(stream)));
 				parser.map();
 				return parser.getAST();
 			}
@@ -917,13 +917,13 @@ namespace Meta {
 				path=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName;
 				//path=Path.Combine(directoryName,"library");
 				foreach(Type type in typeof(LiteralRecognitions).GetNestedTypes()) {
-					AddInterception((ILiteralRecognition)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+					AddInterception((RecognizeLiteral)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
-				foreach(Type type in typeof(ToMetaConversions).GetNestedTypes()) {
-					AddToMetaConversion((ToMetaConversion)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+				foreach(Type type in typeof(DotNetToMetaConversions).GetNestedTypes()) {
+					AddConvertDotNetToMeta((ConvertDotNetToMeta)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
-				foreach(Type type in typeof(ToNetConversions).GetNestedTypes()) {
-					AddToNetConversion((ToNetConversion)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+				foreach(Type type in typeof(MetaToDotNetConversions).GetNestedTypes()) {
+					AddConvertMetaToDotNet((ConvertMetaToDotNet)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
 			}
 			public static IKeyValue MergeTwo(IKeyValue first,IKeyValue second) { // remove
@@ -1494,7 +1494,7 @@ namespace Meta {
 										Hashtable toDotNet=(Hashtable)
 											Interpreter.netConversion[parameter.ParameterType];
 										if(toDotNet!=null) {
-											ToNetConversion conversion=(ToNetConversion)toDotNet[list[counter].GetType()];
+											ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)toDotNet[list[counter].GetType()];
 											if(conversion!=null) {
 												try {
 													args.Add(conversion.Convert(list[counter]));
@@ -1810,7 +1810,7 @@ namespace Meta {
 									Hashtable toDotNet=(Hashtable)
 										Interpreter.netConversion[field.FieldType];
 									if(toDotNet!=null) {
-										ToNetConversion conversion=(ToNetConversion)toDotNet[value.GetType()];
+										ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)toDotNet[value.GetType()];
 										if(conversion!=null) {
 											try {
 												field.SetValue(obj,conversion.Convert(value));
@@ -1835,7 +1835,7 @@ namespace Meta {
 									Hashtable toDotNet=(Hashtable)
 										Interpreter.netConversion[field.PropertyType];
 									if(toDotNet!=null) {
-										ToNetConversion conversion=(ToNetConversion)toDotNet[value.GetType()];
+										ConvertMetaToDotNet conversion=(ConvertMetaToDotNet)toDotNet[value.GetType()];
 										if(conversion!=null) {
 											try {
 												field.SetValue(obj,conversion.Convert(value),null);
@@ -1981,255 +1981,261 @@ namespace Meta {
 		}
 		public class LiteralRecognitions {
 			// order of classes is important here !
-			public class StringRecognition: ILiteralRecognition  {
-				public object Recognize(string text)  {
+			public class RecognizeDotNetString: RecognizeLiteral  {
+				public override object Recognize(string text)  {
 					return text;
 				}
 			}
-			public class IntegerRecognition: ILiteralRecognition  {
-				public object Recognize(string text)  {
+			public class RecognizeInteger: RecognizeLiteral  {
+				public override object Recognize(string text)  { // doesn't handle multi-byte unicode correctly
 					if(text.Equals("")) {
 						return null;
 					}
-					Integer number=new Integer(0);
-					bool negative=false;
-					foreach(char c in text) {
-						if(c=='-') {
-							negative=true;
+					else {
+						Integer number=new Integer(0);
+						int i=0;
+						if(text[0]=='-') {
+							i++;
 						}
-						else if(!char.IsDigit(c)) {
-							number=null;
-							break;
+						for(;i<text.Length;i++) {
+							if(char.IsDigit(text[i])) {
+								number=number*10+(text[i]-'0');
+							}
+							else {
+								return null;
+							}
 						}
-						else {
-							number=number*10+(c-'0');
+						if(text[0]=='-') {
+							number=-number;
 						}
+						return number;
 					}
-					if(negative) {
-						number=-number;
-					}
-					return number;
 				}
 			}
-			public class SymbolRecognition:ILiteralRecognition {
-				public object Recognize(string text) {
-					object recognized=null;
-					if(text.StartsWith("\"")&&text.EndsWith("\"")) {
-						recognized=Interpreter.String(text.Substring(1,text.Length-2));
+			public class RecognizeString:RecognizeLiteral {
+				public override object Recognize(string text) {
+					if(text.StartsWith("\"") && text.EndsWith("\"")) {
+						return Interpreter.String(text.Substring(1,text.Length-2));
 					}
-					return recognized;
+					else {
+						return null;
+					}
 				}
 			}
-			public class BooleanRecognition:ILiteralRecognition {
-				public object Recognize(string text) {
+			public class RecognizeBoolean:RecognizeLiteral {
+				public override object Recognize(string text) {
 					switch(text) {
 						case "true":
 							return true;
 						case "false":
 							return false;
+						default:
+							return null;
 					}
-					return null;
 				}
 			}
+//			public class RecognizeBoolean:RecognizeLiteral {
+//				public override object Recognize(string text) {
+//					switch(text) {
+//						case "true":
+//							return true;
+//						case "false":
+//							return false;
+//					}
+//					return null;
+//				}
+//			}
 		}
-		// automatic conversions that occur when a .NET method is called, or when 
-		// a .NET property, indexer, or field is assigned to
-		public abstract class ToNetConversions  { // these haven't all been tested
-			public class IntegerToByte: ToNetConversion   {
-				public IntegerToByte()   {
+		public abstract class MetaToDotNetConversions { // these haven't all been tested
+			public class ConvertIntegerToByte: ConvertMetaToDotNet {
+				public ConvertIntegerToByte() {
 					this.source=typeof(Integer);
 					this.target=typeof(Byte);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return System.Convert.ToByte(((Integer)obj).LongValue());
 				}
 			}
-			public class IntegerToSByte: ToNetConversion   {
-				public IntegerToSByte()   {
+			public class ConvertIntegerToSByte: ConvertMetaToDotNet {
+				public ConvertIntegerToSByte() {
 					this.source=typeof(Integer);
 					this.target=typeof(SByte);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return System.Convert.ToSByte(((Integer)obj).LongValue());
 				}
 			}
-			public class IntegerToChar: ToNetConversion   {
-				public IntegerToChar()   {
+			public class ConvertIntegerToChar: ConvertMetaToDotNet {
+				public ConvertIntegerToChar() {
 					this.source=typeof(Integer);
 					this.target=typeof(Char);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return System.Convert.ToChar(((Integer)obj).LongValue());
 				}
 			}
-			public class IntegerToInt32: ToNetConversion   {
-				public IntegerToInt32()   {
+			public class ConvertIntegerToInt32: ConvertMetaToDotNet {
+				public ConvertIntegerToInt32() {
 					this.source=typeof(Integer);
 					this.target=typeof(Int32);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return System.Convert.ToInt32(((Integer)obj).LongValue());
 				}
 			}
-			public class IntegerToUInt32: ToNetConversion   {
-				public IntegerToUInt32()   {
+			public class ConvertIntegerToUInt32: ConvertMetaToDotNet {
+				public ConvertIntegerToUInt32() {
 					this.source=typeof(Integer);
 					this.target=typeof(UInt32);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return System.Convert.ToUInt32(((Integer)obj).LongValue());
 				}
 			}
-			public class IntegerToInt64: ToNetConversion   {
-				public IntegerToInt64()   {
+			public class ConvertIntegerToInt64: ConvertMetaToDotNet {
+				public ConvertIntegerToInt64() {
 					this.source=typeof(Integer);
 					this.target=typeof(Int64);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return System.Convert.ToInt64(((Integer)obj).LongValue());
 				}
 			}
-			public class IntegerToUInt64: ToNetConversion   {
-				public IntegerToUInt64()   {
+			public class ConvertIntegerToUInt64: ConvertMetaToDotNet {
+				public ConvertIntegerToUInt64() {
 					this.source=typeof(Integer);
 					this.target=typeof(UInt64);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return System.Convert.ToUInt64(((Integer)obj).LongValue());
 				}
 			}
-			public class IntegerToInt16: ToNetConversion   {
-				public IntegerToInt16()   {
+			public class ConvertIntegerToInt16: ConvertMetaToDotNet {
+				public ConvertIntegerToInt16() {
 					this.source=typeof(Integer);
 					this.target=typeof(Int16);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return System.Convert.ToInt16(((Integer)obj).LongValue());
 				}
 			}
-			public class IntegerToUInt16: ToNetConversion   {
-				public IntegerToUInt16()   {
+			public class ConvertIntegerToUInt16: ConvertMetaToDotNet {
+				public ConvertIntegerToUInt16() {
 					this.source=typeof(Integer);
 					this.target=typeof(UInt16);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return System.Convert.ToUInt16(((Integer)obj).LongValue());
 				}
 			}
-			public class MapToString: ToNetConversion   {
-				public MapToString()  {
+			public class ConvertMapToString: ConvertMetaToDotNet {
+				public ConvertMapToString() {
 					this.source=typeof(Map);
 					this.target=typeof(string);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return Interpreter.String((Map)obj);
 				}
 			}
 		}
-		// automatic conversions that occur when a .NET method,
-		// property, indexer, or field returns a value
-		public abstract class ToMetaConversions { // these haven't all been tested
-			public class StringToMap: ToMetaConversion   {
-				public StringToMap()   {
+		public abstract class DotNetToMetaConversions { // these haven't all been tested
+			public class ConvertStringToMap: ConvertDotNetToMeta {
+				public ConvertStringToMap()   {
 					this.source=typeof(string);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return Interpreter.String((string)obj);
 				}
 			}
-			public class ByteToInteger: ToMetaConversion   {
-				public ByteToInteger()   {
+			public class ConvertByteToInteger: ConvertDotNetToMeta {
+				public ConvertByteToInteger() {
 					this.source=typeof(Byte);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return new Integer((Byte)obj);
 				}
 			}
-			public class SByteToInteger: ToMetaConversion   {
-				public SByteToInteger()   {
+			public class ConvertSByteToInteger: ConvertDotNetToMeta {
+				public ConvertSByteToInteger() {
 					this.source=typeof(SByte);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return new Integer((SByte)obj);
 				}
 			}
-			public class CharToInteger: ToMetaConversion   {
-				public CharToInteger()   {
+			public class ConvertCharToInteger: ConvertDotNetToMeta {
+				public ConvertCharToInteger() {
 					this.source=typeof(Char);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return new Integer((Char)obj);
 				}
 			}
-			public class Int32ToInteger: ToMetaConversion   {
-				public Int32ToInteger()   {
+			public class ConvertInt32ToInteger: ConvertDotNetToMeta {
+				public ConvertInt32ToInteger() {
 					this.source=typeof(Int32);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return new Integer((Int32)obj);
 				}
 			}
-			public class UInt32ToInteger: ToMetaConversion   {
-				public UInt32ToInteger()   {
+			public class ConvertUInt32ToInteger: ConvertDotNetToMeta {
+				public ConvertUInt32ToInteger() {
 					this.source=typeof(UInt32);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return new Integer((UInt32)obj);
 				}
 			}
-			public class Int64ToInteger: ToMetaConversion   {
-				public Int64ToInteger()   {
+			public class ConvertInt64ToInteger: ConvertDotNetToMeta {
+				public ConvertInt64ToInteger() {
 					this.source=typeof(Int64);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return new Integer((Int64)obj);
 				}
 			}
-			public class UInt64ToInteger: ToMetaConversion   {
-				public UInt64ToInteger()   {
+			public class ConvertUInt64ToInteger: ConvertDotNetToMeta {
+				public ConvertUInt64ToInteger() {
 					this.source=typeof(UInt64);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return new Integer((Int64)(UInt64)obj);
 				}
 			}
-			public class Int16ToInteger: ToMetaConversion   {
-				public Int16ToInteger()   {
+			public class ConvertInt16ToInteger: ConvertDotNetToMeta {
+				public ConvertInt16ToInteger() {
 					this.source=typeof(Int16);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return new Integer((Int16)obj);
 				}
 			}
-			public class UInt16ToInteger: ToMetaConversion   {
-				public UInt16ToInteger()   {
+			public class ConvertUInt16ToInteger: ConvertDotNetToMeta {
+				public ConvertUInt16ToInteger() {
 					this.source=typeof(UInt16);
 				}
-				public override object Convert(object obj)   {
+				public override object Convert(object obj) {
 					return new Integer((UInt16)obj);
 				}
 			}
 		}
 	}
-	namespace Parser  { // refactor
-		class IndentParser: TokenStream {
-			protected Queue tokenBuffer=new Queue();
-			protected TokenStream tokenStream;
-			protected int indent=-1;
-			protected const int indentWidth=2;
-			public IndentParser(TokenStream tokenStream)  {
-				this.tokenStream=tokenStream;
-				AddIndentationTokens(0);
+	namespace Parser  {
+		class AddIndentationTokensToStream: TokenStream {
+			public AddIndentationTokensToStream(TokenStream originalStream)  {
+				this.originalStream=originalStream;
+				AddIndentationTokensForLevel(0);
 			}
 			public Token nextToken()  {
 				if(tokenBuffer.Count==0)  {
-					Token t=tokenStream.nextToken();
+					Token t=originalStream.nextToken();
 					switch(t.Type) {
 						case MetaLexerTokenTypes.EOF:
-							AddIndentationTokens(-1);
+							AddIndentationTokensForLevel(-1);
 							break;
 						case MetaLexerTokenTypes.INDENTATION:
-							AddIndentationTokens(t.getText().Length/indentWidth);
+							AddIndentationTokensForLevel(t.getText().Length/2);
 							break;
 						default:
 							tokenBuffer.Enqueue(t);
@@ -2238,86 +2244,77 @@ namespace Meta {
 				}
 				return (Token)tokenBuffer.Dequeue();
 			}	
-			protected void AddIndentationTokens(int newIndent)  { // refactor
-				int level=newIndent-indent; if(level==0) {
+			protected void AddIndentationTokensForLevel(int newIndentationLevel)  { // refactor
+				int indentationDifference=newIndentationLevel-presentIndentationLevel; 
+				if(indentationDifference==0) {
 					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
-				} else if(level==1) {
+				}
+				else if(indentationDifference==1) {
 					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));
-				} else if(level<0) { for(int i=level;i<0;i++) {
+				}
+				else if(indentationDifference<0) {
+					for(int i=indentationDifference;i<0;i++) {
 						tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
 					}
 					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
-				} else if(level>1) {
+				}
+				else if(indentationDifference>1) {
 					throw new ApplicationException("Line is indented too much.");
 				}
-				indent=newIndent;
+				presentIndentationLevel=newIndentationLevel;
 			}
-
+			protected Queue tokenBuffer=new Queue();
+			protected TokenStream originalStream;
+			protected int presentIndentationLevel=-1;
 		}
 	}
 
 	namespace TestingFramework {
-		public abstract class MetaTest {
-			public abstract object GetTestResult();
-		}
-//		public class SerializeException:Exception { // used at all?
-//		}
 		public interface ISerializeSpecial {
 			string Serialize();
 		}
-		public class TestExecuter {	
-			public TestExecuter(Type classType,string path) { // refactor
-				bool allTestsSuccessful=true;
-				Type[] testClasses=classType.GetNestedTypes();
-
-				foreach(Type testClass in testClasses) {
-					MetaTest testInstance=(MetaTest)testClass.InvokeMember(
-						"",BindingFlags.CreateInstance,null,null,null);
-
-					object[] methodAttributes=
-						testClass.GetCustomAttributes(typeof(SerializeMethodsAttribute),false);
+		public class ExecuteTests {	
+			public ExecuteTests(Type classThatContainsTests,string pathToSerializeResultsTo) { // refactor
+				bool waitAtEndOfTestRun=false;
+				Type[] testCases=classThatContainsTests.GetNestedTypes();
+				foreach(Type testCase in testCases) {
+					object[] attribute=testCase.GetCustomAttributes(typeof(SerializeMethodsAttribute),false);
 					string[] methodNames=new string[0];
-					if(methodAttributes.Length!=0) {
-						methodNames=((SerializeMethodsAttribute)methodAttributes[0]).names;
+					if(attribute.Length!=0) {
+						methodNames=((SerializeMethodsAttribute)attribute[0]).names;
 					}
-
-					Console.Write(testClass.Name + "...");
-					DateTime startTime=DateTime.Now;
-					string output="";
-					object result=testInstance.GetTestResult();
-					TimeSpan duration=DateTime.Now-startTime;
-					bool testSuccessful=SetResult(
-						testInstance,Path.Combine(path,testClass.Name),result,methodNames);
-					if(!testSuccessful) {
-						output=output + " failed";
-						allTestsSuccessful=false;
+					Console.Write(testCase.Name + "...");
+					DateTime timeStarted=DateTime.Now;
+					string textToPrint="";
+					object result=testCase.GetMethod("RunTestCase").Invoke(null,new object[]{});
+					TimeSpan timeSpentInTestCase=DateTime.Now-timeStarted;
+					bool testCaseSuccessful=CompareResults(Path.Combine(pathToSerializeResultsTo,testCase.Name),result,methodNames);
+					if(!testCaseSuccessful) {
+						textToPrint=textToPrint + " failed";
+						waitAtEndOfTestRun=true;
 					}
 					else {
-						output=output + " succeeded";
+						textToPrint+=" succeeded";
 					}
-					output=output + "  " + duration.TotalSeconds.ToString() + " s";
-					Console.WriteLine(output);
+					textToPrint=textToPrint + "  " + timeSpentInTestCase.TotalSeconds.ToString() + " s";
+					Console.WriteLine(textToPrint);
 				}
-				if(!allTestsSuccessful) {
+				if(waitAtEndOfTestRun) {
 					Console.ReadLine();
 				}
 			}
-
-			private bool SetResult(MetaTest test,string path,object obj,string[] functions) {
+			private bool CompareResults(string path,object obj,string[] functions) {
 				Directory.CreateDirectory(path);
 				if(!File.Exists(Path.Combine(path,"check.txt"))) {
 					File.Create(Path.Combine(path,"check.txt")).Close();
 				}
-
 				string result=Serialize(obj,"",functions);
 				StreamWriter writer=new StreamWriter(Path.Combine(path,"result.txt"));
 				writer.Write(result);
 				writer.Close();
-
 				StreamWriter copyWriter=new StreamWriter(Path.Combine(path,"resultCopy.txt"));
 				copyWriter.Write(result);
 				copyWriter.Close();
-
 				string check=new StreamReader(Path.Combine(path,"check.txt")).ReadToEnd();
 				return result.Equals(check);
 			}
@@ -2332,66 +2329,33 @@ namespace Meta {
 				else if(serialize is ISerializeSpecial) {
 					text=indent+((ISerializeSpecial)serialize).Serialize();
 				}
-				else if(serialize.GetType().GetMethod(
-							"ToString",
-							BindingFlags.Public|BindingFlags.DeclaredOnly|BindingFlags.Instance,
-							null,
-							new Type[]{},
-							new ParameterModifier[]{}
-							)!=null) {
+				else if(serialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
+					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) {
 					text=indent+"\""+serialize.ToString()+"\""+"\n";
 				}
 				else if(serialize is IEnumerable) {
-//					text=indent+
-//						"IEnumerable\n";
 					foreach(object entry in (IEnumerable)serialize) {
-						text+=indent+
-							"Entry ("+
-							entry.GetType().Name+
-							")\n"+
-							Serialize(entry,indent+"  ",methods);
+						text+=indent+"Entry ("+entry.GetType().Name+")\n"+Serialize(entry,indent+"  ",methods);
 					}
 				}
-//				else if(serialize is IEnumerable) {
-//					text=indent+
-//						  "IEnumerable\n";
-//					foreach(object entry in (IEnumerable)serialize) {
-//						text+=indent+
-//								"  "+
-//								entry.GetType().Name+
-//								" in IEnumerable:\n"+
-//								Serialize(entry,indent+"    ",methods);
-//					}
-//				}
 				else {
-					PropertyInfo[] properties=
-						serialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance);
-					FieldInfo[] fields=
-						serialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance);
-
 					ArrayList members=new ArrayList();
-					members.AddRange(properties);
-					members.AddRange(fields);
+					members.AddRange(serialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
+					members.AddRange(serialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
 					foreach(string method in methods) {
 						members.Add(serialize.GetType().GetMethod(method));
 					}
 					members.Sort(new CompareMemberInfos());
-
-					foreach(MemberInfo memberInfo in members) {
-						if(memberInfo.Name!="Item") {
-							object[] ignoreAttributes=
-								memberInfo.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false);
-							if(ignoreAttributes.Length==0) {
-								object val=serialize.GetType().InvokeMember(memberInfo.Name,
-									BindingFlags.Public|BindingFlags.Instance|BindingFlags.GetProperty|
-									BindingFlags.GetField|BindingFlags.InvokeMethod,null,serialize,null);
-
-								text=text + indent + memberInfo.Name;
-
+					foreach(MemberInfo member in members) {
+						if(member.Name!="Item") {
+							if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) {
+								object val=serialize.GetType().InvokeMember(member.Name,BindingFlags.Public|BindingFlags.Instance|
+									BindingFlags.GetProperty|BindingFlags.GetField|BindingFlags.InvokeMethod,null,serialize,null);
+								text+=indent+member.Name;
 								if(val!=null) {
-									text=text + " ("  +  val.GetType().Name  + ")";
+									text+=" ("+val.GetType().Name+")";
 								}
-								text=text + ":\n" + Serialize(val,indent + "  ",methods);
+								text+=":\n"+Serialize(val,indent+"  ",methods);
 							}
 						}
 					}

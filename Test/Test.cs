@@ -33,37 +33,65 @@ namespace Test {
 //			Interpreter.Run("editor.meta",new Map());
 			Directory.SetCurrentDirectory(
 				".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
-			TestExecuter test=new TestExecuter(typeof(Tests),path);
+			ExecuteTests test=new ExecuteTests(typeof(Tests),path);
 		}
 	}
 	public class Tests {
 		private static string filename=@"basicTest.meta";
 		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-			public class ParseAst:MetaTest {
-			public override object GetTestResult() {
+		public class ParseAst {
+			public static object RunTestCase() {
 				return Interpreter.Parse(new StreamReader(Path.Combine(
 					Test.path,filename)));
 			}
 		}
-		public class ParseObject:MetaTest {
-			public override object GetTestResult() {
+		public class ParseObject {
+			public static object RunTestCase() {
 				return Interpreter.Mapify(new StreamReader(Path.Combine(
 					Test.path,filename)));
 			}
 		}
-		public class Compile:MetaTest {
-			public override object GetTestResult() {
+		public class Compile {
+			public static object RunTestCase() {
 				return Interpreter.Mapify(new StreamReader(Path.Combine(
 					Test.path,filename))).Compile();
 			}
 		}
-		public class Execute:MetaTest {
-			public override object GetTestResult() {
+		public class Execute {
+			public static object RunTestCase() {
 				Map argument=new Map();
 				argument[new Integer(1)]=Interpreter.String("first arg");
 				argument[new Integer(2)]=Interpreter.String("second=arg");
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
+//		private static string filename=@"basicTest.meta";
+//		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
+//		public class ParseAst:MetaTest {
+//			public override object GetTestResult() {
+//				return Interpreter.Parse(new StreamReader(Path.Combine(
+//					Test.path,filename)));
+//			}
+//		}
+//		public class ParseObject:MetaTest {
+//			public override object GetTestResult() {
+//				return Interpreter.Mapify(new StreamReader(Path.Combine(
+//					Test.path,filename)));
+//			}
+//		}
+//		public class Compile:MetaTest {
+//			public override object GetTestResult() {
+//				return Interpreter.Mapify(new StreamReader(Path.Combine(
+//					Test.path,filename))).Compile();
+//			}
+//		}
+//		public class Execute:MetaTest {
+//			public override object GetTestResult() {
+//				Map argument=new Map();
+//				argument[new Integer(1)]=Interpreter.String("first arg");
+//				argument[new Integer(2)]=Interpreter.String("second=arg");
+//				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
+//			}
+//		}
 	}
 }
