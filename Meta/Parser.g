@@ -216,7 +216,21 @@ call:
   )
   (SPACES!)?
   (
-    select
+    (
+      (
+        select
+        |map
+        |LITERAL
+      )
+      (SPACES!)?
+      (
+        select
+        |map
+        |delayed
+        |LITERAL
+      )
+    )=>call
+    |select
     |map
     |delayed
     |LITERAL

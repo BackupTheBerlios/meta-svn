@@ -230,51 +230,146 @@ namespace Meta.Parser
 			 }
 		}
 		{
-			switch ( LA(1) )
+			bool synPredMatched71 = false;
+			if (((tokenSet_0_.member(LA(1)))))
 			{
-			case LBRACKET:
-			case GATTER:
-			case LITERAL_KEY:
+				int _m71 = mark();
+				synPredMatched71 = true;
+				inputState.guessing++;
+				try {
+					{
+						{
+							switch ( LA(1) )
+							{
+							case LBRACKET:
+							case GATTER:
+							case LITERAL_KEY:
+							{
+								select();
+								break;
+							}
+							case INDENT:
+							case LPAREN:
+							{
+								map();
+								break;
+							}
+							case LITERAL:
+							{
+								match(LITERAL);
+								break;
+							}
+							default:
+							{
+								throw new NoViableAltException(LT(1), getFilename());
+							}
+							 }
+						}
+						{
+							switch ( LA(1) )
+							{
+							case SPACES:
+							{
+								match(SPACES);
+								break;
+							}
+							case INDENT:
+							case EQUAL:
+							case LBRACKET:
+							case LPAREN:
+							case GATTER:
+							case LITERAL_KEY:
+							case LITERAL:
+							{
+								break;
+							}
+							default:
+							{
+								throw new NoViableAltException(LT(1), getFilename());
+							}
+							 }
+						}
+						{
+							switch ( LA(1) )
+							{
+							case LBRACKET:
+							case GATTER:
+							case LITERAL_KEY:
+							{
+								select();
+								break;
+							}
+							case INDENT:
+							case LPAREN:
+							{
+								map();
+								break;
+							}
+							case EQUAL:
+							{
+								delayed();
+								break;
+							}
+							case LITERAL:
+							{
+								match(LITERAL);
+								break;
+							}
+							default:
+							{
+								throw new NoViableAltException(LT(1), getFilename());
+							}
+							 }
+						}
+					}
+				}
+				catch (RecognitionException)
+				{
+					synPredMatched71 = false;
+				}
+				rewind(_m71);
+				inputState.guessing--;
+			}
+			if ( synPredMatched71 )
 			{
+				call();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, returnAST);
+				}
+			}
+			else if ((LA(1)==LBRACKET||LA(1)==GATTER||LA(1)==LITERAL_KEY)) {
 				select();
 				if (0 == inputState.guessing)
 				{
 					astFactory.addASTChild(currentAST, returnAST);
 				}
-				break;
 			}
-			case INDENT:
-			case LPAREN:
-			{
+			else if ((LA(1)==INDENT||LA(1)==LPAREN)) {
 				map();
 				if (0 == inputState.guessing)
 				{
 					astFactory.addASTChild(currentAST, returnAST);
 				}
-				break;
 			}
-			case EQUAL:
-			{
+			else if ((LA(1)==EQUAL)) {
 				delayed();
 				if (0 == inputState.guessing)
 				{
 					astFactory.addASTChild(currentAST, returnAST);
 				}
-				break;
 			}
-			case LITERAL:
-			{
+			else if ((LA(1)==LITERAL)) {
 				AST tmp4_AST = null;
 				tmp4_AST = astFactory.create(LT(1));
 				astFactory.addASTChild(currentAST, tmp4_AST);
 				match(LITERAL);
-				break;
 			}
-			default:
+			else
 			{
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-			 }
+			
 		}
 		if (0==inputState.guessing)
 		{
@@ -325,11 +420,11 @@ namespace Meta.Parser
 						}
 						else
 						{
-							goto _loop73_breakloop;
+							goto _loop78_breakloop;
 						}
 						
 					}
-_loop73_breakloop:					;
+_loop78_breakloop:					;
 				}    // ( ... )*
 				if (0==inputState.guessing)
 				{
@@ -380,11 +475,11 @@ _loop73_breakloop:					;
 						}
 						else
 						{
-							goto _loop76_breakloop;
+							goto _loop81_breakloop;
 						}
 						
 					}
-_loop76_breakloop:					;
+_loop81_breakloop:					;
 				}    // ( ... )*
 				if (0==inputState.guessing)
 				{
@@ -857,11 +952,11 @@ _loop52_breakloop:						;
 					 }
 				}
 				{
-					bool synPredMatched82 = false;
+					bool synPredMatched87 = false;
 					if (((tokenSet_0_.member(LA(1)))))
 					{
-						int _m82 = mark();
-						synPredMatched82 = true;
+						int _m87 = mark();
+						synPredMatched87 = true;
 						inputState.guessing++;
 						try {
 							{
@@ -870,12 +965,12 @@ _loop52_breakloop:						;
 						}
 						catch (RecognitionException)
 						{
-							synPredMatched82 = false;
+							synPredMatched87 = false;
 						}
-						rewind(_m82);
+						rewind(_m87);
 						inputState.guessing--;
 					}
-					if ( synPredMatched82 )
+					if ( synPredMatched87 )
 					{
 						call();
 						if (0 == inputState.guessing)

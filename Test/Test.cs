@@ -44,13 +44,15 @@ namespace Test {
 				}
 				try {
 					Interpreter.Run(new StreamReader(args[0]),new Map());
+					// fix this to only show original error message
 				}
 				catch(Exception e) {
 					string text="";
 					do {
 						text+=e.Message+"\n"+e.TargetSite+"\n";
+						e=e.InnerException;
 					} 
-					while(e.InnerException!=null);
+					while(e!=null);
 					Console.WriteLine(text);
 					Console.ReadLine();
 				}

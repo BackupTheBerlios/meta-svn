@@ -1614,6 +1614,15 @@ Entry (DictionaryEntry)
                                                   Key (Map):
                                                     "literal"
                                                   Value (Map):
+                                                    "parent"
+                                            Entry (DictionaryEntry)
+                                              Key (Integer):
+                                                "3"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (Map):
+                                                    "literal"
+                                                  Value (Map):
                                                     "a"
                                     Entry (DictionaryEntry)
                                       Key (Map):

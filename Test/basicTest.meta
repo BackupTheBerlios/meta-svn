@@ -21,7 +21,7 @@ object=
   autoSearch='default'
   b=()
   SetA==
-    parent.a='c'
+    parent.parent.a='c'
     #autoSearch='changed'
   SetB==
     caller.b.1=arg.value

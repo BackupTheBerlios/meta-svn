@@ -147,9 +147,7 @@ namespace Meta {
 			public object SearchAndSelectKeysInCurrentMap(ArrayList keys,bool isRightSide,bool isSelectLastKey) {
 				object selection=Interpreter.Current;
 				int i=0;
-				if(keys[0]==null) {
-					int asdf=0;
-				}
+
 				if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("this")) {
 					i++;
 				}
@@ -198,15 +196,16 @@ namespace Meta {
 						selection=((IMap)selection).Parent;
 					}
 					if(selection==null) {
-						string text="Key ";
-						if(keys[i] is Map) {
-							text+=((Map)keys[i]).GetDotNetString();
-						}
-						else {
-							text+=keys[i];
-						}
-						text+=" not found.";
-						throw new ApplicationException();
+						throw new ApplicationException(KeyErrorMessage(keys[i]));
+//						string text="Key ";
+//						if(keys[i] is Map) {
+//							text+=((Map)keys[i]).GetDotNetString();
+//						}
+//						else {
+//							text+=keys[i];
+//						}
+//						text+=" not found.";
+//						throw new ApplicationException(text);
 					}
 				}
 				int lastKeySelect=0;
@@ -214,8 +213,8 @@ namespace Meta {
 					lastKeySelect++;
 				}
 				for(;i<keys.Count-1+lastKeySelect;i++) {
-					if(selection==null) {
-						throw new ApplicationException("Key "+keys[i]+" does not exist");
+					if(keys[i].Equals(new Map("Value"))) {
+						int asdf=0;
 					}
 					if(selection is IKeyValue) {
 						selection=((IKeyValue)selection)[keys[i]];
@@ -223,8 +222,22 @@ namespace Meta {
 					else {
 						selection=new NetObject(selection)[keys[i]];
 					}
+					if(selection==null) {
+						throw new ApplicationException(KeyErrorMessage(keys[i]));
+					}
 				}
 				return selection;
+			}
+			public static string KeyErrorMessage(object key) {
+				string text="Key ";
+				if(key is Map) {
+					text+=((Map)key).GetDotNetString();
+				}
+				else {
+					text+=key;
+				}
+				text+=" not found.";
+				return text;
 			}
 			public static readonly Map selectString=new Map("select");
 			public Select(Map code) {
@@ -1003,10 +1016,18 @@ namespace Meta {
 				IExpression function=(IExpression)Compile();
 				object result;
 				Interpreter.arguments.Add(argument);
-				result=function.Evaluate(this.Parent);
+				result=function.Evaluate(this);
 				Interpreter.arguments.Remove(argument);
 				return result;
 			}
+//			public object Call(IMap argument) {
+//				IExpression function=(IExpression)Compile();
+//				object result;
+//				Interpreter.arguments.Add(argument);
+//				result=function.Evaluate(this.Parent);
+//				Interpreter.arguments.Remove(argument);
+//				return result;
+//			}
 			public ArrayList Keys {
 				get {
 					return table.Keys;
@@ -1020,23 +1041,20 @@ namespace Meta {
 			}
 			public object Compile()  {
 				if(compiled==null)  {
-					switch((string)((Map)this.Keys[0]).GetDotNetString()) {
-						case "call":
-							compiled=new Call(this);break;
-						case "delayed":
-							compiled=new Delayed(this);break;
-						case "program":
-							compiled=new Program(this);break;
-						case "literal":
-							compiled=new Literal(this);break;
-						case "select":
-							compiled=new Select(this);break;
-						case "value":
-						case "key":
-							compiled=new Statement(this);break;
-						default:
-							throw new ApplicationException("Cannot compile non-code map.");
-					}
+					if(this.ContainsKey(new Map("call")))
+						compiled=new Call(this);
+					else if(this.ContainsKey(new Map("delayed")))
+						compiled=new Delayed(this);
+					else if(this.ContainsKey(new Map("program")))
+						compiled=new Program(this);
+					else if(this.ContainsKey(new Map("literal")))
+						compiled=new Literal(this);
+					else if(this.ContainsKey(new Map("select")))
+						compiled=new Select(this);
+					else if(this.ContainsKey(new Map("value")) && this.ContainsKey(new Map("key")))
+						compiled=new Statement(this);
+					else
+						throw new ApplicationException("Cannot compile non-code map.");
 				}
 				return compiled;
 			}
