@@ -59,16 +59,16 @@ indexerNoConversionIndexed=indexerNoConversion.abc
 interceptedSymbol2='1'
 k='hello'
 xyz='w'
-literalFunction= ='5'
+literalFunction=='5'
 literalFunctionResult=literalFunction()
 function==
   this='simple function this'
 callFunction==function
 callFunctionResult=callFunction ()
-delayedFunction= ==(x='y')
+delayedFunction===(x='y')
 delayedFunctionResult=delayedFunction ()
 value='xyz'
-selectionFunction= =value
+selectionFunction==value
 selectionFunctionResult=selectionFunction ()
 bigInteger='89383838383832839123497123047217340712340720347072304702340720347'
 upperLevel='unchanged'

@@ -1022,7 +1022,15 @@ namespace Meta {
 				return Run(new StreamReader(path),argument);
 			}
 			public static Map lastProgram;
-
+			public static object RunNormal(string path,Map argument) {
+				Interpreter.arguments.Add(argument);
+				StreamReader reader=new StreamReader(path);
+				lastProgram=Mapify(reader);
+				object result=lastProgram.Call((Map)callers[callers.Count-1],new Map());
+				Interpreter.arguments.Remove(argument);
+				reader.Close();
+				return result;
+			}
 			public static object Run(TextReader reader,Map argument) {
 				ArrayList parents=new ArrayList();
 				Map existing=new Map();

@@ -135,6 +135,16 @@ IEnumerable
         "Boolean Equal(System.Object, System.Object)"
   Entry (DictionaryEntry):
     Key (String):
+      "BinaryOr"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "System.Enum BinaryOr(System.Enum[])"
+      savedMethod (RuntimeMethodInfo):
+        "System.Enum BinaryOr(System.Enum[])"
+  Entry (DictionaryEntry):
+    Key (String):
       "For"
     Value (NetMethod):
       methods (MethodInfo[]):

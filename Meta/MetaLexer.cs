@@ -397,10 +397,6 @@ _loop16_breakloop:			;
 		}
 _loop19_breakloop:		;
 		}    // ( ... )+
-		if (0==inputState.guessing)
-		{
-			_ttype=Token.SKIP;
-		}
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);

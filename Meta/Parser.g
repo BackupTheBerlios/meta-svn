@@ -72,7 +72,7 @@ LITERAL:
   "\'"! ( ~ ('\'') )* "\'"!;
 
 SPACES:
-  (' ')+ {_ttype=Token.SKIP;};
+  (' ')+ ;//{_ttype=Token.SKIP;}
 
 LINE
   {
@@ -132,10 +132,12 @@ map:
   (
     (   
       LPAREN! 
+      (SPACES!)?
       ( 
         statement
         (
           COMMA!
+          (SPACES!)?
           statement
         )*
       )? 
@@ -201,7 +203,10 @@ statement:
             #statement=#([STATEMENT],#([SELECT_KEY],currentAst,autokeyAst),#statement);
         }
       )
-    );
+     
+    )
+    (SPACES!)?
+    ;
   
 call:
   (
@@ -209,6 +214,7 @@ call:
     |map
     |LITERAL
   )
+  (SPACES!)?
   (
     select
     |map
@@ -261,12 +267,14 @@ select:
 lookup:
   (
     LBRACKET!  
+    (SPACES!)?
     (
       (call)=>call
       |map|LITERAL
       |delayed
       |select
     )
+    (SPACES!)?
     RBRACKET!
   )
   |

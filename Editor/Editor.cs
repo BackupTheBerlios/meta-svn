@@ -519,7 +519,7 @@ namespace Editor {
 					}
 				}
 				else if(overloaded.Length>1) {
-					overloadedText=" ( +"+overloaded.Length.ToString()+" overloads)";
+					overloadedText=" ( +"+(overloaded.Length-1).ToString()+" overloads)";
 				}
 
 				if(memberInfo is MethodBase) {
@@ -921,6 +921,7 @@ namespace Editor {
 			catch(Exception e) {
 //				Help.lastHelpThread.Abort();
 				Help.toolTip.Text=e.Message;
+				Help.toolTip.Location=new Point(100,100);
 				Help.toolTip.Visible=true;
 				Help.lastHelpThread=null;
 			}
