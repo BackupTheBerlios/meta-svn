@@ -1056,9 +1056,19 @@ namespace Meta {
 			public IEnumerator GetEnumerator() {
 				return new MapEnumerator(this);
 			}
-			public override int GetHashCode() {
-				return table.GetHashCode();
+
+			public override int GetHashCode()  {
+				if(!isHashCashed) {
+					hash=this.table.GetHashCode();
+					isHashCashed=true;
+				}
+				return hash;
 			}
+
+			private bool isHashCashed=false;
+			private int hash;
+
+
 			public Map(string text) {
 				this.table=new StringStrategy(text);
 			}
@@ -1069,6 +1079,21 @@ namespace Meta {
 				this.table=new HybridDictionaryStrategy();
 			}
 			private IMap parent;
+			
+			private MapStrategy table;
+			public object compiled;
+
+			public string Serialize(string indent,string[] functions) {
+				if(this.Count==1) {
+					int asdf=0;
+				}
+				if(this.IsString()) {
+					return indent+"\""+this.GetDotNetString()+"\""+"\n";
+				}
+				else {
+					return null;
+				}
+			}
 			public abstract class MapStrategy {
 				public abstract Map Clone();
 				public abstract ArrayList IntKeyValues {
@@ -1088,7 +1113,6 @@ namespace Meta {
 				}
 
 				public abstract bool ContainsKey(object key);
-				//public abstract bool Equal(MapStrategy obj);
 				public override int GetHashCode()  {
 					int h=0;
 					foreach(object key in this.Keys) {
@@ -1217,21 +1241,6 @@ namespace Meta {
 				}
 			}
 			public class HybridDictionaryStrategy:MapStrategy {
-//				public override bool Equal(MapStrategy obj) {
-//					if
-//					if(.Count==Count) {
-//						foreach(DictionaryEntry entry in this)  {
-//							if(!map.ContainsKey(entry.Key)||!map[entry.Key].Equals(entry.Value)) {
-//								equal=false;
-//								break;
-//							}
-//						}
-//					}
-//					else {
-//						equal=false;
-//					}
-//					return equal;
-//				}
 				ArrayList keys;
 				private HybridDictionary table;
 				public HybridDictionaryStrategy():this(2) {
@@ -1305,23 +1314,6 @@ namespace Meta {
 				}
 				public override bool ContainsKey(object key)  {
 					return table.Contains(key);
-				}
-			}
-
-			private MapStrategy table;
-			private bool isHashCashed=false;
-			private int hash;
-			public object compiled;
-
-			public string Serialize(string indent,string[] functions) {
-				if(this.Count==1) {
-					int asdf=0;
-				}
-				if(this.IsString()) {
-					return indent+"\""+this.GetDotNetString()+"\""+"\n";
-				}
-				else {
-					return null;
 				}
 			}
 		}
