@@ -239,17 +239,51 @@ namespace Editor {
 		}
 
 		private static void listBox_SelectedIndexChanged(object sender, EventArgs e) {
-			IKeyValue keyValue=Help.lastObject is IKeyValue? (IKeyValue)Help.lastObject
-				:new NetObject(Help.lastObject);
-			object obj=keyValue[listBox.SelectedItem];
-			if(obj is INetDocumented) {
-				toolTip.Visible=true;
-				int x=listBox.Right;
-				int y=listBox.Top;
-				y+=(listBox.SelectedIndex-listBox.TopIndex)*listBox.ItemHeight;
-				toolTip.Location=new Point(x,y);
-				toolTip.Text=((INetDocumented)obj).Documentation;
+			string text;
+			if(lastObject is NetClass) {
+				MemberInfo[] members=lastObject.GetType().GetMember((string)listBox.SelectedItem,
+					BindingFlags.Public|BindingFlags.Static);
+				text=Interpreter.GetDoc(members[0],false);
 			}
+			else if(!(lastObject is Map)) {
+				MemberInfo[] members=lastObject.GetType().GetMember((string)listBox.SelectedItem,
+					BindingFlags.Public|BindingFlags.Instance);
+				text=Interpreter.GetDoc(members[0],false);
+			}
+			else {
+				throw new ApplicationException("bug here");
+			}
+//			IKeyValue keyValue=Help.lastObject is IKeyValue? (IKeyValue)Help.lastObject
+//				:new NetObject(Help.lastObject);
+//			object obj=keyValue[listBox.SelectedItem];
+//			int height=0;
+//			foreach(char c in text) {
+//				if(c.Equals('\n')) {
+//					height++;
+//				}
+//			}
+//			toolTip.Size=new Size(
+//				toolTip.Width,
+//				height*toolTip.CreateGraphics().MeasureString(text,toolTip.Font));
+			//toolTip.Size=toolTip.CreateGraphics().MeasureString(text,toolTip.Font).ToSize();
+			//toolTip.Size=new Size(300,100);
+
+			toolTip.Visible=true;
+			int x=listBox.Right;
+			int y=listBox.Top;
+			y+=(listBox.SelectedIndex-listBox.TopIndex)*listBox.ItemHeight;
+			toolTip.Location=new Point(x,y);
+			toolTip.Text=text;
+//
+//			if(obj is INetDocumented) {
+////				toolTip.Visible=true;
+////				int x=listBox.Right;
+////				int y=listBox.Top;
+////				y+=(listBox.SelectedIndex-listBox.TopIndex)*listBox.ItemHeight;
+////				toolTip.Location=new Point(x,y);
+////				toolTip.Text=((INetDocumented)obj).Documentation;
+//			}
+			//}
 		}
 //		private static void listBox_GotFocus(object sender, EventArgs e) {
 //			Editor.editor.Focus();
