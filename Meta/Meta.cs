@@ -132,7 +132,6 @@ namespace Meta {
 				bool callerIsMap=false;
 				if(caller!=null) {
 					if(caller is IMap) {
-//					if(caller is Map) {
 						callerIsMap=true;
 					}
 					if(callerIsMap) {
@@ -264,9 +263,6 @@ namespace Meta {
 			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
 				object selected=current;
 				int i=0;
-				if(keys.Count==2 && keys[1].Equals("Invoke")) {
-					int asdf=0;
-				}
 				if(keys[0].Equals("this")) {
 					i++;
 				}
@@ -580,8 +576,7 @@ namespace Meta {
 					}
 				}
 				set {
-					int adf=0;
-					//throw new ApplicationException("Tried to set key "+key.ToString()+" in library.");
+					throw new ApplicationException("Tried to set key "+key.ToString()+" in library.");
 				}
 			}
 			public ArrayList Keys {
@@ -610,8 +605,7 @@ namespace Meta {
 					return null;
 				}
 				set {
-					int asdf=0;
-					//throw new ApplicationException("Tried to set parent of library.");
+					throw new ApplicationException("Tried to set parent of library.");
 				}
 			}
 			public IEnumerator GetEnumerator() {
@@ -710,10 +704,6 @@ namespace Meta {
 			bool ContainsKey(object key);			
 		}		
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable { // could use Callable
-			private IMap parent;
-			private ArrayList keys;
-			private HybridDictionary table;
-			public object compiled;
 			public IMap Parent {
 				get {
 					return parent;
@@ -770,28 +760,16 @@ namespace Meta {
 				}
 				return result;
 			}
-
-//			public object Call(Map caller,Map local)  {
-//				IExpression callable=(IExpression)Compile();
-//				object result;
-//				if(callable is Program) { // somehow wrong
-//					result=((Program)callable).Evaluate(caller,local,true);
+//			public void StopSharing() { // currently not used at all
+//				compiled=null;
+//				HybridDictionary oldTable=table;
+//				ArrayList oldKeys=keys;
+//				table=new HybridDictionary();
+//				keys=new ArrayList();
+//				foreach(object key in oldKeys) {
+//					this[key]=oldTable[key];
 //				}
-//				else {
-//					result=callable.Evaluate(local);
-//				}
-//				return result;
 //			}
-			public void StopSharing() { // currently not used at all
-				compiled=null;
-				HybridDictionary oldTable=table;
-				ArrayList oldKeys=keys;
-				table=new HybridDictionary();
-				keys=new ArrayList();
-				foreach(object key in oldKeys) {
-					this[key]=oldTable[key];
-				}
-			}
 			public ArrayList Keys {
 				get {
 					return keys;
@@ -806,7 +784,7 @@ namespace Meta {
 				copy.compiled=compiled;
 				return copy;
 			}
-			public object Compile()  {
+			public object Compile()  { //don't return anything, keep it private
 				if(compiled==null)  {
 					switch((string)this.Keys[0]) {
 						case "call":
@@ -860,8 +838,6 @@ namespace Meta {
 			public IEnumerator GetEnumerator() {
 				return new MapEnumerator(this);
 			}
-			private bool isHashCashed=false;
-			private int hash;
 			public override int GetHashCode()  {
 				if(!isHashCashed) {
 					int h=0;
@@ -879,9 +855,14 @@ namespace Meta {
 				this.table=new HybridDictionary();
 				this.keys=new ArrayList();
 			}
+			private IMap parent;
+			private ArrayList keys;
+			private HybridDictionary table;
+			public object compiled;
+			private bool isHashCashed=false;
+			private int hash;
 		}
 		public class MapEnumerator: IEnumerator { //make this useful for NetContainer, too?
-			private int index=-1;
 			private Map map; public MapEnumerator(Map map) {
 				this.map=map;
 			}
@@ -897,39 +878,16 @@ namespace Meta {
 			public void Reset() {
 				index=-1;
 			}
+			private int index=-1;
 		}
 		public delegate object NullDelegate();
 		public class NetMethod: ICallable {
-			private IKeyValue parent;
-			[DontSerializeFieldOrProperty]
-			public IKeyValue Parent {
-				get {
-					return parent;
-				}
-				set {
-					parent=value;
-				}
-			}
-//			private MetaMethodAttribute attribute;
-			private BindingFlags invokeMemberFlags;
-			private string name;
-
-			protected object target;
-			protected Type type;
-			public MethodBase savedMethod;
-			public MethodBase[] methods;
-			
-
-
 			public object Call(Map caller) {
-				return Interpreter.ConvertToMeta(CallMethod((IMap)Interpreter.Arg));
-			}
-			public object CallMethod(IMap arguments) { //sucks, refactor
+				IMap arguments=(IMap)Interpreter.Arg;
 				ArrayList list;
-					list=arguments.IntKeyValues;
+				list=arguments.IntKeyValues;
 				object result=null;
-				try { // doubtful usage of try
-					//refactor
+				try {
 					ArrayList methods;
 					if(name=="") {
 						methods=new ArrayList(type.GetConstructors());
@@ -940,15 +898,7 @@ namespace Meta {
 					}
 					bool executed=false;
 					methods.Reverse();
-					if(this.name.Equals("BinaryOr")) {
-						int asdf=0;
-					}
-					int x=0;
 					foreach(MethodBase method in methods) {
-						if(x==15) {
-							int asdf=0;
-						}
-						x++;
 						ArrayList args=new ArrayList();
 						int counter=0;
 						bool argumentsMatched=true;
@@ -971,13 +921,7 @@ namespace Meta {
 						else {
 							foreach(ParameterInfo parameter in method.GetParameters()) {
 								bool matched=false;
-								if(name.Equals("BinaryOr")) {
-									Type t=list[counter].GetType();
-									int asdf=0;
-								}
 								if(parameter.ParameterType.IsAssignableFrom(list[counter].GetType())) {
-//								if(list[counter].GetType().Equals(parameter.ParameterType)
-//									||list[counter].GetType().IsSubclassOf(parameter.ParameterType)) {
 									args.Add(list[counter]);
 									matched=true;
 								}
@@ -991,7 +935,7 @@ namespace Meta {
 											args.Add(del);
 											matched=true;
 										}
-										catch(Exception e){
+										catch(Exception e){// ack
 											int asdf=0;
 										}
 									}
@@ -1035,7 +979,7 @@ namespace Meta {
 								counter++;
 							}
 						}
-						if(argumentsMatched) {
+						if(argumentsMatched) { // horrible
 							if(!executed) {
 								if(method is ConstructorInfo) {
 									result=((ConstructorInfo)method).Invoke(args.ToArray());
@@ -1052,15 +996,17 @@ namespace Meta {
 					}
 					if(!executed) {
 						if(savedMethod is ConstructorInfo) {
-							return ((ConstructorInfo)savedMethod).Invoke(new object[] {});
+							return 
+								Interpreter.ConvertToMeta(
+								((ConstructorInfo)savedMethod).Invoke(new object[] {}));
 						}
 						else {
-							return savedMethod.Invoke(target,new object[] {});
+							return Interpreter.ConvertToMeta(savedMethod.Invoke(target,new object[] {}));
 						}
 
 					}
 					else {
-						return result;
+						return Interpreter.ConvertToMeta(result);
 					}
 
 				}
@@ -1086,8 +1032,9 @@ namespace Meta {
 					throw new ApplicationException(text);
 				}
 			}
+			//refactor
 			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) {
-				// should caller really be parent of code???
+				// should caller really be parent of code??? after fixing callers, yes
 				code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 				ICodeCompiler compiler=codeProvider.CreateCompiler();
@@ -1103,7 +1050,6 @@ namespace Meta {
 				int counter=1;
 				string argumentList="(";
 				string argumentAdding="Map arg=new Map();";
-				// here bug
 				if(method!=null) {
 					foreach(ParameterInfo parameter in method.GetParameters()) {
 						argumentList+=parameter.ParameterType.FullName+" arg"+counter;
@@ -1198,6 +1144,14 @@ namespace Meta {
 					return hash;
 				}
 			}
+			private BindingFlags invokeMemberFlags;// what's that
+			private string name;
+			private IKeyValue parent;
+			protected object target;
+			protected Type type;
+			public MethodBase savedMethod;
+			public MethodBase[] methods;
+
 		}
 		public class NetClass: NetContainer, IKeyValue,ICallable {
 			[DontSerializeFieldOrProperty]
@@ -1220,7 +1174,6 @@ namespace Meta {
 			public string Serialize() {
 				return "";
 			}
-			private IKeyValue parent;
 			public IKeyValue Parent { //put this into IKeyValue
 				get {
 					return parent;
@@ -1229,50 +1182,81 @@ namespace Meta {
 					parent=value;
 				}
 			}
-			public object obj;
-			public Type type;
 			public ArrayList Keys {
 				get {
 					return new ArrayList(Table.Keys);
 				}
-			}
-			public NetContainer(object obj,Type type) {
-				this.obj=obj;
-				this.type=type;
 			}
 			public int Count  {
 				get {
 					return Table.Count;
 				}
 			}
-			public IKeyValue Clone() {
-				return this;
-			}
 			public virtual object this[object key]  {
+//				get { //improve some more
+//					if(key is string) {
+////						string text=(string)key;
+//						MemberInfo[] members=type.GetMember((string)key,MemberTypes.Method,BindingFlags.Public|
+//							BindingFlags.Static|BindingFlags.Instance);
+//						if(members.Length>0) {
+//							if(members[0] is MethodBase) {
+//								return new NetMethod((string)key,obj,type);
+//							}
+//							if(members[0] is FieldInfo) {
+//								return Interpreter.ConvertToMeta(type.GetField((string)key).GetValue(obj));
+//							}
+//							else if(type.GetMember((string)key,MemberTypes.Property,BindingFlags.Public|
+//								BindingFlags.Static|BindingFlags.Instance).Length!=0) {
+//								return Interpreter.ConvertToMeta( type.GetProperty((string)key).GetValue(obj,new object[]{}));
+//							}
+//							else if(type.GetMember((string)key,MemberTypes.Event,BindingFlags.Public|
+//								BindingFlags.Static|BindingFlags.Instance).Length!=0) {
+//								EventInfo eventInfo=((EventInfo)type.GetMember((string)key,MemberTypes.Event,
+//									BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static|
+//									BindingFlags.Instance)[0]);
+//								Delegate eventDelegate=(Delegate)type.GetField((string)key,BindingFlags.Public|
+//									BindingFlags.NonPublic|BindingFlags.Static|
+//									BindingFlags.Instance).GetValue(obj);
+//								return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+//							}
+//						}
+//					}
+//					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
+//					Map arguments=new Map();
+//					arguments[new Integer(1)]=key;
+//					Interpreter.arguments.Add(arguments);
+//					try {
+//						object result=indexerMethod.Call(null);
+//						return result;
+//					}
+//					catch(Exception) {
+//						return null;
+//					}
+//					finally {
+//						Interpreter.arguments.Remove(arguments);
+//					}
+//				}
 				get { //improve some more
 					if(key is string) {
 						string text=(string)key;
-						if(type.GetMember((string)text,MemberTypes.Method,BindingFlags.Public|
-								BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-							return new NetMethod((string)text,obj,type);
-						}
-						if(type.GetMember((string)text,MemberTypes.Field,BindingFlags.Public|
-								BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-							return Interpreter.ConvertToMeta(type.GetField((string)text).GetValue(obj));
-						}
-						else if(type.GetMember((string)text,MemberTypes.Property,BindingFlags.Public|
-								BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-							return Interpreter.ConvertToMeta( type.GetProperty((string)text).GetValue(obj,new object[]{}));
-						}
-						else if(type.GetMember((string)text,MemberTypes.Event,BindingFlags.Public|
-									BindingFlags.Static|BindingFlags.Instance).Length!=0) {
-							EventInfo eventInfo=((EventInfo)type.GetMember((string)text,MemberTypes.Event,
-								BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static|
-								BindingFlags.Instance)[0]);
-							Delegate eventDelegate=(Delegate)type.GetField((string)text,BindingFlags.Public|
-								BindingFlags.NonPublic|BindingFlags.Static|
-								BindingFlags.Instance).GetValue(obj);
-							return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+						MemberInfo[] members=type.GetMember((string)key,BindingFlags.Public|
+							BindingFlags.Static|BindingFlags.Instance);
+						if(members.Length>0) {
+							if(members[0] is MethodBase) {
+								return new NetMethod((string)text,obj,type);
+							}
+							if(members[0] is FieldInfo) {
+								return Interpreter.ConvertToMeta(type.GetField((string)text).GetValue(obj));
+							}
+							else if(members[0] is PropertyInfo) {
+								return Interpreter.ConvertToMeta( type.GetProperty((string)text).GetValue(obj,new object[]{}));
+							}
+							else if(members[0] is EventInfo) {
+								Delegate eventDelegate=(Delegate)type.GetField((string)text,BindingFlags.Public|
+									BindingFlags.NonPublic|BindingFlags.Static|
+									BindingFlags.Instance).GetValue(obj);
+								return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+							}
 						}
 					}
 					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
@@ -1292,8 +1276,7 @@ namespace Meta {
 				}
 				set {	//make correct
 					if(key is string) {
-						string text=(string)key;
-						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|
+						MemberInfo[] members=type.GetMember((string)key,BindingFlags.Public|BindingFlags.Static|
 							BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
@@ -1336,7 +1319,7 @@ namespace Meta {
 								}
 							}
 							else if(members[0] is EventInfo) {
-								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(Map)value));
+								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent((string)key,(Map)value));
 								return;
 							}
 						}
@@ -1418,6 +1401,16 @@ namespace Meta {
 					return table;
 				}
 			}
+			public NetContainer(object obj,Type type) {
+				this.obj=obj;
+				this.type=type;
+			}
+			private IKeyValue parent;
+			public object obj;
+			public Type type;
+		}
+		public abstract class RecognizeLiteral {
+			public abstract object Recognize(string text);
 		}
 		public abstract class ConvertMetaToDotNet {
 			public Type source;
@@ -1428,18 +1421,15 @@ namespace Meta {
 			public Type source;
 			public abstract object Convert(object obj);
 		}
-		public abstract class RecognizeLiteral {
-			public abstract object Recognize(string text);
-		}
 		public class LiteralRecognitions {
-			// order of classes is important here !
+			// order of classes is important here
 			public class RecognizeDotNetString: RecognizeLiteral  {
 				public override object Recognize(string text)  {
 					return text;
 				}
 			}
 			public class RecognizeInteger: RecognizeLiteral  {
-				public override object Recognize(string text)  { // doesn't handle multi-byte unicode correctly
+				public override object Recognize(string text)  { // this doesn't handle multi-byte unicode correctly
 					if(text.Equals("")) {
 						return null;
 					}
@@ -1669,7 +1659,7 @@ namespace Meta {
 				AddIndentationTokensToGetToLevel(0);
 			}
 			public Token nextToken()  {
-				if(tokenBuffer.Count==0)  {
+				if(streamBuffer.Count==0)  {
 					Token t=originalStream.nextToken();
 					switch(t.Type) {
 						case MetaLexerTokenTypes.EOF:
@@ -1679,37 +1669,36 @@ namespace Meta {
 							AddIndentationTokensToGetToLevel(t.getText().Length/2);
 							break;
 						default:
-							tokenBuffer.Enqueue(t);
+							streamBuffer.Enqueue(t);
 							break;
 					}
 				}
-				return (Token)tokenBuffer.Dequeue();
+				return (Token)streamBuffer.Dequeue();
 			}	
 			protected void AddIndentationTokensToGetToLevel(int newIndentationLevel)  { // refactor
 				int indentationDifference=newIndentationLevel-presentIndentationLevel; 
 				if(indentationDifference==0) {
-					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
+					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
 				}
 				else if(indentationDifference==1) {
-					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));
+					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));
 				}
 				else if(indentationDifference<0) {
 					for(int i=indentationDifference;i<0;i++) {
-						tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
+						streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
 					}
-					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
+					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
 				}
 				else if(indentationDifference>1) {
 					throw new ApplicationException("Line is indented too much.");
 				}
 				presentIndentationLevel=newIndentationLevel;
 			}
-			protected Queue tokenBuffer=new Queue();
+			protected Queue streamBuffer=new Queue();
 			protected TokenStream originalStream;
 			protected int presentIndentationLevel=-1;
 		}
 	}
-
 	namespace TestingFramework {
 		public interface ISerializeSpecial {
 			string Serialize();
@@ -1719,21 +1708,15 @@ namespace Meta {
 				bool waitAtEndOfTestRun=false;
 				Type[] testCases=classThatContainsTests.GetNestedTypes();
 				foreach(Type testCase in testCases) {
-					object[] attribute=testCase.GetCustomAttributes(typeof(SerializeMethodsAttribute),false);
+					object[] customSerializationAttributes=testCase.GetCustomAttributes(typeof(SerializeMethodsAttribute),false);
 					string[] methodNames=new string[0];
-					if(attribute.Length!=0) {
-						methodNames=((SerializeMethodsAttribute)attribute[0]).names;
+					if(customSerializationAttributes.Length!=0) {
+						methodNames=((SerializeMethodsAttribute)customSerializationAttributes[0]).names;
 					}
 					Console.Write(testCase.Name + "...");
 					DateTime timeStarted=DateTime.Now;
 					string textToPrint="";
-					object result=null;
-					try {
-						result=testCase.GetMethod("RunTestCase").Invoke(null,new object[]{});
-					}
-					catch(Exception e) {
-						int asdf=0;
-					}
+					object result=testCase.GetMethod("RunTestCase").Invoke(null,new object[]{});
 					TimeSpan timeSpentInTestCase=DateTime.Now-timeStarted;
 					bool testCaseSuccessful=CompareResults(Path.Combine(pathToSerializeResultsTo,testCase.Name),result,methodNames);
 					if(!testCaseSuccessful) {
@@ -1811,7 +1794,7 @@ namespace Meta {
 				return text;
 			}
 		}
-		internal class CompareMemberInfos:IComparer { // rename
+		internal class CompareMemberInfos:IComparer {
 			public int Compare(object first,object second) {
 				return ((MemberInfo)first).Name.CompareTo(((MemberInfo)second).Name);
 			}
