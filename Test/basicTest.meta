@@ -1,5 +1,5 @@
-this:map.Merge(parent,('AssignedToCurrent'))
-this:map.Merge(parent,programFlow,logic,map,math)
+this:map.merge(parent,('AssignedToCurrent'))
+this:map.merge(parent,programFlow,logic,map,math)
 form:With(System.Windows.Forms.Form(),(Text:'hello',Controls:(System.Windows.Forms.TreeView())))
 'ImpliedAutokey'
 :'Autokey'
@@ -52,7 +52,7 @@ FirstLevel:=
 SecondLevel:=arg.arg
 argTest:FirstLevel(a:'z')
 concat:map.concat('x','yz')
-this:map.Merge(parent,testClasses)
+this:map.merge(parent,testClasses)
 testClass:TestClass()
 memberTest:MemberTest()
 MemberTest.classField:'a'

@@ -20,7 +20,7 @@ getFirstChild (CommonAST):
             getNextSibling:
               null
             getText (String):
-              "Merge"
+              "merge"
             Type (Int32):
               "22"
           getText (String):
@@ -184,7 +184,7 @@ getFirstChild (CommonAST):
               getNextSibling:
                 null
               getText (String):
-                "Merge"
+                "merge"
               Type (Int32):
                 "22"
             getText (String):
@@ -3174,7 +3174,7 @@ getFirstChild (CommonAST):
                                                                                 getNextSibling:
                                                                                   null
                                                                                 getText (String):
-                                                                                  "Merge"
+                                                                                  "merge"
                                                                                 Type (Int32):
                                                                                   "22"
                                                                               getText (String):

@@ -50,24 +50,6 @@ Entry (DictionaryEntry)
         "Boolean equal(System.Object, System.Object)"
 Entry (DictionaryEntry)
   Key (Map):
-    "and"
-  Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
-      "False"
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean and(Boolean, Boolean)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "or"
-  Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
-      "False"
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean or(Boolean, Boolean)"
-Entry (DictionaryEntry)
-  Key (Map):
     "not"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
@@ -75,6 +57,24 @@ Entry (DictionaryEntry)
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean not(Boolean)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "and"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "True"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Boolean and()"
+Entry (DictionaryEntry)
+  Key (Map):
+    "or"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "True"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Boolean or()"
 Entry (DictionaryEntry)
   Key (Map):
     "keys"
@@ -91,13 +91,13 @@ Entry (DictionaryEntry)
     "xyz"
 Entry (DictionaryEntry)
   Key (Map):
-    "Merge"
+    "merge"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue Merge()"
+        "Meta.Types.IKeyValue merge()"
 Entry (DictionaryEntry)
   Key (Map):
     "With"
@@ -107,24 +107,6 @@ Entry (DictionaryEntry)
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.Object With(System.Object, Meta.Types.IMap)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "GetStructure"
-  Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
-      "True"
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Map GetStructure()"
-Entry (DictionaryEntry)
-  Key (Map):
-    "FixStructure"
-  Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
-      "False"
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Map FixStructure(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "add"

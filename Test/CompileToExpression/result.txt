@@ -57,7 +57,7 @@ statements (ArrayList):
               "map"
           Entry (Literal)
             literal (Map):
-              "Merge"
+              "merge"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
@@ -156,7 +156,7 @@ statements (ArrayList):
               "map"
           Entry (Literal)
             literal (Map):
-              "Merge"
+              "merge"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
@@ -1698,7 +1698,7 @@ statements (ArrayList):
               "map"
           Entry (Literal)
             literal (Map):
-              "Merge"
+              "merge"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):

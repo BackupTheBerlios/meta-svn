@@ -492,6 +492,7 @@ namespace Meta {
 			public static Map CompileToMap(TextReader input) {
 				return (new MetaTreeParser()).map(ParseToAst(input));
 			}
+			//Make this a map
 			public static object Arg {
 				get {
 					return arguments[arguments.Count-1];
