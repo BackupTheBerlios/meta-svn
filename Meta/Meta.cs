@@ -168,7 +168,7 @@ namespace Meta {
 					}
 					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
 				}
-				else if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("parent")) { //ignore arguments here
+				else if(keys[0] is Map && Interpreter.MapToString((Map)keys[0]).Equals("parent")) { //ignore arguments here (?????)
 					foreach(object key in keys) {
 						if(key is Map && Interpreter.MapToString((Map)key).Equals("parent")) {
 							selection=((IMap)selection).Parent;
@@ -427,7 +427,7 @@ namespace Meta {
 			public static BreakMethodDelegate breakMethod;
 			public static ArrayList callers=new ArrayList();
 			public static ArrayList arguments=new ArrayList();
-			public static Hashtable netConversion=new Hashtable(); //move conversions into interpreter?
+			public static Hashtable netConversion=new Hashtable();
 			public static Hashtable metaConversion=new Hashtable();
 			public static ArrayList compiledMaps=new ArrayList(); 
 			public static ArrayList loadedAssemblies=new ArrayList();
@@ -447,7 +447,7 @@ namespace Meta {
 				public abstract object Convert(object obj);
 			}
 			public class LiteralRecognitions {
-				// Attention! order of classes matters
+				// Attention! order of classes matters here
 				public class RecognizeString:RecognizeLiteral {
 					public override object Recognize(string text) {
 						return StringToMap(text);
@@ -464,7 +464,7 @@ namespace Meta {
 							if(text[0]=='-') {
 								i++;
 							}
-							// the following should be incorrect for multi-byte unicode
+							// the following is probably incorrect for multi-byte unicode
 							for(;i<text.Length;i++) {
 								if(char.IsDigit(text[i])) {
 									number=number*10+(text[i]-'0');
@@ -832,22 +832,6 @@ namespace Meta {
 					throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
 				}
 			}
-//			public object this[object key] {
-//				get {
-//					if(cash.ContainsKey(key)) {
-//						if(cash[key] is MetaLibrary) {
-//							cash[key]=((MetaLibrary)cash[key]).Load();
-//						}
-//						return cash[key];
-//					}
-//					else {
-//						return null;
-//					}
-//				}
-//				set {
-//					throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
-//				}
-//			}
 			public ArrayList Keys {
 				get {
 					return cash.Keys;
@@ -941,7 +925,7 @@ namespace Meta {
 				}
 			}
 			private Map assemblyInfo=new Map();
-			public ArrayList GetNamespaces(Assembly assembly) { //integrate
+			public ArrayList GetNamespaces(Assembly assembly) { //refactor, integrate into LoadNamespaces???
 				ArrayList namespaces=new ArrayList();
 				if(assemblyInfo.ContainsKey(Interpreter.StringToMap(assembly.Location))) {
 					Map info=(Map)assemblyInfo[Interpreter.StringToMap(assembly.Location)];
@@ -978,23 +962,8 @@ namespace Meta {
 				assemblyInfoMap[Interpreter.StringToMap("timestamp")]=Interpreter.StringToMap(
 					File.GetCreationTime(assembly.Location).ToString());
 				assemblyInfo[Interpreter.StringToMap(assembly.Location)]=assemblyInfoMap;
-//				assemblyInfo[Interpreter.StringToMap(assembly.GetName().Name)]=assemblyInfoMap;
 				return namespaces;
 			}
-//			public ArrayList GetNamespaces(Assembly assembly) { //integrate
-//				ArrayList namespaces=new ArrayList();
-//				foreach(Type type in assembly.GetExportedTypes()) {
-//					if(!namespaces.Contains(type.Namespace)) {
-//						if(type.Namespace==null) {
-//							namespaces.Add("");
-//						}
-//						else {
-//							namespaces.Add(type.Namespace);
-//						}
-//					}
-//				}
-//				return namespaces;
-//			}
 			public Map LoadNamespaces(ArrayList assemblies) {
 				LazyNamespace root=new LazyNamespace("");
 				foreach(Assembly assembly in assemblies) {
@@ -1025,116 +994,6 @@ namespace Meta {
 				root.Load();
 				return root.cache;
 			}
-//			public Map LoadNamespaces (ArrayList assemblies) {
-//				Map root=new Map();
-//				foreach(Assembly assembly in assemblies) {
-//					ArrayList names=GetNamespaces(assembly);
-//					foreach(string name in names.GetRange(1,names.Count-1)) {
-//						if(!namespaces.ContainsKey(name)) {
-//							namespaces[name]=new ArrayList();
-//						}
-//						((ArrayList)namespaces[name]).Add(assembly);
-//					}
-//				}
-//			}
-
-
-
-
-
-//			public Map LoadNamespaces(ArrayList assemblies) {
-//				Map root=new Map();
-//				foreach(Assembly assembly in assemblies) {
-//					foreach(Type type in assembly.GetExportedTypes())  {
-//						if(type.DeclaringType==null)  {
-//							Map position=root;
-//							ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
-//							subPaths.RemoveAt(subPaths.Count-1);
-//							foreach(string subPath in subPaths)  {
-//								if(!position.ContainsKey(Interpreter.StringToMap(subPath)))  {
-//									position[Interpreter.StringToMap(subPath)]=new Map();
-//								}
-//								position=(Map)position[Interpreter.StringToMap(subPath)];
-//							}
-//							position[Interpreter.StringToMap(type.Name)]=new NetClass(type);
-//						}
-//					}				
-//				}
-//			}
-//			public Library() {
-//				ArrayList assemblies=new ArrayList();
-//				libraryPath=Path.Combine(Interpreter.metaInstallationPath,"library");
-//				IAssemblyEnum e=AssemblyCache.CreateGACEnum();
-//				IAssemblyName an; 
-//				AssemblyName name;
-//				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
-//				while (AssemblyCache.GetNextAssembly(e, out an) == 0) {
-//					name=GetAssemblyName(an);
-//					assemblies.Add(Assembly.LoadWithPartialName(name.Name));
-//				}
-//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
-//					assemblies.Add(Assembly.LoadFrom(fileName));
-//				}
-//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.exe")) {
-//					assemblies.Add(Assembly.LoadFrom(fileName));
-//				}
-//				cash=LoadAssemblies(assemblies);
-//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
-//					cash[Interpreter.StringToMap(Path.GetFileNameWithoutExtension(fileName))]=new MetaLibrary(fileName);
-//				}
-//			}
-			//			public Library() {
-			//				libraryPath=Path.Combine(Interpreter.metaInstallationPath,"library");
-			//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
-			//					cash[Interpreter.StringToMap(Path.GetFileNameWithoutExtension(fileName))]=new MetaLibrary(fileName);
-			//				}	
-			//
-			//				ArrayList assemblies=new ArrayList();
-			//				IAssemblyEnum e=AssemblyCache.CreateGACEnum();
-			//				IAssemblyName an; 
-			//				AssemblyName name;
-			//				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
-			//				while (AssemblyCache.GetNextAssembly(e, out an) == 0) {
-			//					name=GetAssemblyName(an);
-			//					assemblies.Add(Assembly.LoadWithPartialName(name.Name));
-			//				}
-			//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
-			//					assemblies.Add(Assembly.LoadFrom(fileName));
-			//				}
-			//				foreach(string fileName in Directory.GetFiles(libraryPath,"*.exe")) {
-			//					assemblies.Add(Assembly.LoadFrom(fileName));
-			//				}
-			//				string assemblyFilePath=Path.Combine(Interpreter.metaInstallationPath,"assemblies.meta");
-			//				Map map=new Map();
-			//				if(File.Exists(assemblyFilePath)) {
-			//					map=Interpreter.RunWithoutLibrary();
-			//				}
-			//				Hashtable assemblyNames=new Hashtable();
-			//				foreach(Assembly assembly in assemblies) {
-			//					Map name=Interpreter.StringToMap(assembly.GetName().Name);
-			//					DateTime dateTime=File.GetLastAccessTimeUtc(assembly.Location);
-			//					bool reload=true;
-			//					if(map.ContainsKey(name)) {
-			//						Map info=(Map)map(name);
-			//						Map lastAccess=info[Interpreter.StringToMap("lastAccess")];
-			//						if(Interpreter.MapToString(lastAccess).Equals(dateTime.ToString())) {
-			//							reload=false;
-			//						}
-			//					}
-			//					if(reload) {
-			//						map[name]=GetAssemblyNamespaces(assembly);
-			//					}
-			//					foreach(DictionaryEntry entry in map[name]
-			//					assemblyNames[name]=true;
-			//				}
-			//				foreach(DictionaryEntry entry in map) {
-			//					if(!assemblyNames.ContainsKey(entry.Key)) {
-			//						map[entry.Key]=null;
-			//					}
-			//				}
-			//				Interpreter.SerializeMap(map,"assembly.meta");
-			//			}
-			//cash=LoadAssemblies(assemblies);
 			public static Library library=new Library();
 			private Map cash=new Map();
 			public static string libraryPath="library"; 
@@ -1221,9 +1080,6 @@ namespace Meta {
 						default:
 							throw new ApplicationException("Cannot compile non-code map.");
 					}
-//					if(!Interpreter.compiledMaps.Contains(this)) { // necessary?
-//						Interpreter.compiledMaps.Add(this);
-//					}
 				}
 				return compiled;
 			}
@@ -1332,7 +1188,7 @@ namespace Meta {
 							argumentList.RemoveRange(parameters.Length,argumentList.Count-parameters.Length);
 						}
 					}
-					if(argumentList.Count!=parameters.Length) { // doesn't match if different parameter list length
+					if(argumentList.Count!=parameters.Length) { // don't match if different parameter list length
 						argumentsMatched=false;
 					}
 					else {
@@ -1489,7 +1345,7 @@ namespace Meta {
 				else {
 					list=new ArrayList(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
 				}
-				list.Reverse(); // hack for invocation bug with a certain method, maybe remove
+				list.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
 				methods=(MethodBase[])list.ToArray(typeof(MethodBase));
 			}
 			public NetMethod(string name,object target,Type type) {
