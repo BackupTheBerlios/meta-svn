@@ -15,6 +15,8 @@
 //	License along with this library; if not, write to the Free Software
 //	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// TODO: rename variables, methods and classes
+
 using System;
 using System.IO;
 using System.Collections;
@@ -96,10 +98,11 @@ namespace Meta {
 				}
 				return result;
 			}
-			public static Map Load() {
-				return (Map)Interpreter.MergeTwo(
-					(Map)Interpreter.callers[Interpreter.callers.Count-1],
-					Interpreter.LoadAssembly((Map)Interpreter.Arg,true));
+			public static void Load() {
+				Map caller=(Map)Interpreter.callers[Interpreter.callers.Count-1];
+				foreach(DictionaryEntry entry in Interpreter.LoadAssembly((Map)Interpreter.Arg,true)) {
+					caller[entry.Key]=entry.Value;
+				}
 			}
 			public static Map Each() {
 				Map arg=((Map)Interpreter.Arg);
@@ -202,7 +205,7 @@ namespace Meta {
 		}
 		// automatic conversions that occur when a .NET method is called, or when 
 		// a .NET property, indexer, or field is assigned to
-		public abstract class ToNetConversions  {
+		public abstract class ToNetConversions  { // these haven't all been tested
 			public class IntegerToByte: ToNetConversion   {
 				public IntegerToByte()   {
 					this.source=typeof(Integer);
@@ -296,7 +299,7 @@ namespace Meta {
 		}
 		// automatic conversions that occur when a .NET method,
 		// property, indexer, or field returns a value
-		public abstract class ToMetaConversions   {
+		public abstract class ToMetaConversions { // these haven't all been tested
 			public class StringToMap: ToMetaConversion   {
 				public StringToMap()   {
 					this.source=typeof(string);
@@ -383,12 +386,11 @@ namespace Meta {
 		public class Statement {
 			public Select key;
 			public IExpression val;
-			public bool active=false;
-			public void Replace(Statement statement) {
+			public void Replace(Statement statement) { // check
 				key=(Select)Interpreter.Replace(key,statement.key);
 				val=(IExpression)Interpreter.Replace(val,statement.val);
 			}
-			public override bool Equals(object obj) {
+			public override bool Equals(object obj) { // check
 				if(obj is Statement) {
 					if(((Statement)obj).key.Equals(key)) {
 						if(((Statement)obj).val.Equals(val)) {
@@ -399,12 +401,9 @@ namespace Meta {
 				return false;
 			}
 			public void Realize(ref object scope,bool isInFunction) {
-				active=true;
 				key.Assign(ref scope,this.val.Evaluate(scope),isInFunction);
-				active=false;
 			}
 			public Statement(Map obj) {
-				
 				this.key=(Select)((Map)obj["key"]).Compile();
 				this.val=(IExpression)((Map)obj["value"]).Compile();
 			}
@@ -414,64 +413,62 @@ namespace Meta {
 			void Replace(IExpression replace);
 		}
 		public class Call: IExpression {	
-			public void Replace(IExpression replace) {
+			public IExpression argument;
+			public IExpression callable;
+			public void Replace(IExpression replace) { // check
 				if(!this.Equals(replace)) {
 					Call call=(Call)replace;
 					callable=(IExpression)Interpreter.Replace(callable,call.callable);
 					argument=(IExpression)Interpreter.Replace(argument,call.argument);
 				}
 			}
-			public override bool Equals(object obj) {
+			public override bool Equals(object obj) { // check
 				return obj is Call && ((Call)obj).callable.Equals(callable) &&
 					((Call)obj).argument.Equals(argument);
 			}
-			public IExpression argument;
-			public IExpression callable;
 			public Call(Map obj) {
-				
 				Map expression=(Map)obj["call"];
 				this.callable=(IExpression)((Map)expression["function"]).Compile();
 				this.argument=(IExpression)((Map)expression["argument"]).Compile();
 			}
 			public object Evaluate(object current) {
 				object arg=argument.Evaluate(current);
-				ICallable obj=(ICallable)callable.Evaluate(current);
+				ICallable toBeCalled=(ICallable)callable.Evaluate(current);
 				Interpreter.arguments.Add(arg);
-				object result=obj.Call((Map)current);
+				object result=toBeCalled.Call((Map)current);
 				Interpreter.arguments.Remove(arg);
 				return result;
 			}
-
 		}
 		public class Delayed: IExpression {
-			public Map obj;
-			public override bool Equals(object o) {
+			public Map delayedExpression;
+			public override bool Equals(object o) { // check
 				return o is Delayed &&
-					obj.Equals(((Delayed)o).obj);
+					delayedExpression.Equals(((Delayed)o).delayedExpression);
 			}
-			public void Replace(IExpression replace) {
+			public void Replace(IExpression replace) { // check
 				if(!this.Equals(replace)) {
 					Delayed delayed=(Delayed)replace;
-					delayed.obj.Compile();
-					if(obj.compiled!=null) {
-						obj.compiled=Interpreter.Replace(obj.compiled,delayed.obj.compiled);
-						delayed.obj.compiled=obj.compiled;
+					delayed.delayedExpression.Compile();
+					if(delayedExpression.compiled!=null) {
+						delayedExpression.compiled=Interpreter.Replace(delayedExpression.compiled,delayed.delayedExpression.compiled);
+						delayed.delayedExpression.compiled=delayedExpression.compiled;
 					}
-					obj=delayed.obj;
+					delayedExpression=delayed.delayedExpression;
 				}
 			}
-			public Delayed(Map obj) {
-				this.obj=(Map)obj["delayed"];
-				this.obj.Compile();
+			public Delayed(Map code) {
+				this.delayedExpression=(Map)code["delayed"];
+				this.delayedExpression.Compile();
 			}
 			public object Evaluate(object current) {
-				return obj;
+				return delayedExpression;
 			}
 		}
 		public class Program: IExpression {
 			public readonly ArrayList statements=new ArrayList();
 
-			public override bool Equals(object obj) {
+			public override bool Equals(object obj) { // check
 				if(obj is Program) {
 					Program program=(Program)obj;
 					if(program.statements.Count==statements.Count) {
@@ -485,7 +482,7 @@ namespace Meta {
 				}
 				return false;
 			}
-			public void Replace(IExpression replace) {
+			public void Replace(IExpression replace) { // check
 				if(!Equals(replace)) {
 					Program program=(Program)replace;
 					int i=0;
@@ -503,10 +500,9 @@ namespace Meta {
 					}
 				}
 			}
-			public Program(Map obj) {
-				
-				foreach(Map map in ((Map)obj["program"]).IntKeyValues) {
-					this.statements.Add(map.Compile());
+			public Program(Map programCode) {
+				foreach(Map statementCode in ((Map)programCode["program"]).IntKeyValues) {
+					this.statements.Add(statementCode.Compile());
 				}
 			}
 			public object Evaluate(object parent) {
@@ -517,7 +513,6 @@ namespace Meta {
 			public object Evaluate(object caller,Map existing,bool isInFunction) {
 				object result=existing;
 				bool callerIsMap=false;
-
 				if(caller!=null) {
 					if(caller is Map) {
 						callerIsMap=true;
@@ -543,12 +538,12 @@ namespace Meta {
 				return result;
 			}
 		}
-		public abstract class ToNetConversion {
+		public abstract class ToNetConversion { //rename
 			public Type source;
 			public Type target;
 			public abstract object Convert(object obj);
 		}
-		public abstract class ToMetaConversion {
+		public abstract class ToMetaConversion { //rename
 			public Type source;
 			public abstract object Convert(object obj);
 		}
@@ -558,10 +553,10 @@ namespace Meta {
 		public class Literal: IExpression {
 			public string text;
 			public object cached=null;
-			public override bool Equals(object obj) {
+			public override bool Equals(object obj) { // check
 				return obj is Literal && text==((Literal)obj).text;
 			}
-			public void Replace(IExpression replace) {
+			public void Replace(IExpression replace) { // check
 				Literal literal=(Literal)replace;
 				text=literal.text;
 				cached=literal.cached;
@@ -583,11 +578,10 @@ namespace Meta {
 				return cached;
 			}
 		}
-		public class Select: IExpression {
+		public class Select: IExpression { 
 			public readonly ArrayList expressions=new ArrayList();
 			public ArrayList parents=new ArrayList();
-
-			public override bool Equals(object obj) {
+			public override bool Equals(object obj) { // check
 				if(obj is Select) {
 					Select select=(Select)obj;
 					if(expressions.Count==select.expressions.Count)  {
@@ -601,7 +595,7 @@ namespace Meta {
 				}
 				return false;
 			}
-			public void Replace(IExpression replace)  {
+			public void Replace(IExpression replace) { // check
 				if(!Equals(replace)) {
 					Select select=(Select)replace;
 					int i=0;
@@ -617,7 +611,6 @@ namespace Meta {
 					}
 				}
 			}
-
 			public Select(Map code) {
 				foreach(Map expression in ((Map)code["select"]).IntKeyValues) {
 					this.expressions.Add(expression.Compile());
@@ -632,9 +625,6 @@ namespace Meta {
 				return preselection;
 			}
 			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
-				if(keys[0].Equals("node")) {
-					int asdf=0;
-				}
 				object selected=current;
 				int i=0;
 				if(keys[0].Equals("this")) {
@@ -684,10 +674,6 @@ namespace Meta {
 					lastKeySelect++;
 				}
 				for(;i<keys.Count-1+lastKeySelect;i++) {
-					if(keys[i].Equals("assemblies")) {
-						int asdf=0;
-					}	
-
 					if(keys[i].Equals("break")) {
 						Interpreter.breakMethod(selected);
 						Thread.CurrentThread.Suspend();
@@ -1020,6 +1006,7 @@ namespace Meta {
 		}		
 
 		public class Map: IKeyValue, ICallable, IEnumerable {
+			public Map arg;
 			private IKeyValue parent;
 			public IKeyValue Parent {
 				get {
@@ -1051,8 +1038,17 @@ namespace Meta {
 			}
 			public object this[object key]  {
 				get  {
-					return table[key];
+					object firstResult=table[key];
+					if(firstResult==null) {
+						if(arg!=null) {
+							return arg[key];
+						}
+					}
+					return firstResult;
 				}
+//				get  {
+//					return table[key];
+//				}
 				set  {
 					if(value!=null) {
 						isHashCashed=false;
@@ -1139,9 +1135,20 @@ namespace Meta {
 				return compiled;
 			}
 			public bool ContainsKey(object key)  {
-				return table.Contains(key);
+				if(!table.Contains(key)) {
+					if(arg!=null) {
+						return arg.ContainsKey(key);
+					}
+					else {
+						return false;
+					}
+				}
+				return true;
 			}
-			public override bool Equals(object obj) {
+//			public bool ContainsKey(object key)  {
+//				return table.Contains(key);
+//			}
+			public override bool Equals(object obj) { // change because of arg necessary???
 				bool equal=true;
 				if(!Object.ReferenceEquals(obj,this)) {
 					if(!(obj is Map)) {
@@ -1169,7 +1176,7 @@ namespace Meta {
 			}
 			private bool isHashCashed=false;
 			private int hash;
-			public override int GetHashCode()  {
+			public override int GetHashCode()  { // change because of arg necessary???
 				if(!isHashCashed) {
 					int h=0;
 					foreach(DictionaryEntry entry in table) {

@@ -41,7 +41,7 @@ SetCurrent==
   this=(arg=arg,x=arg.symbol)
   this=x
 thisSet=SetCurrent(symbol='haha')
-this=Load('Test')
+Load('Test')
 this=meta.Merge(parent,Test)
 testClass=TestClass()
 memberTest=MemberTest()

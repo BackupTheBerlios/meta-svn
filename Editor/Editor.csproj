@@ -103,6 +103,11 @@
                     SubType = "Component"
                     BuildAction = "Compile"
                 />
+                <File
+                    RelPath = "Editor2.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
             </Include>
         </Files>
     </CSHARP>

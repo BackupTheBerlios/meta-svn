@@ -1,8 +1,6 @@
 statements (ArrayList):
   IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -18,8 +16,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -46,8 +42,6 @@ statements (ArrayList):
                   parents (ArrayList):
                     IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -67,8 +61,6 @@ statements (ArrayList):
                   statements (ArrayList):
                     IEnumerable
                       Entry (Statement):
-                        active (Boolean):
-                          "False"
                         key (Select):
                           expressions (ArrayList):
                             IEnumerable
@@ -105,8 +97,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -128,8 +118,6 @@ statements (ArrayList):
         text (String):
           "ImpliedAutokey"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -151,8 +139,6 @@ statements (ArrayList):
         text (String):
           "Autokey"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -174,8 +160,6 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -183,8 +167,6 @@ statements (ArrayList):
               statements (ArrayList):
                 IEnumerable
                   Entry (Statement):
-                    active (Boolean):
-                      "False"
                     key (Select):
                       expressions (ArrayList):
                         IEnumerable
@@ -208,8 +190,6 @@ statements (ArrayList):
         text (String):
           "Object"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -226,8 +206,6 @@ statements (ArrayList):
         text (String):
           "NormalSymbol"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -244,8 +222,6 @@ statements (ArrayList):
         text (String):
           "LookupSymbol"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -262,8 +238,6 @@ statements (ArrayList):
         text (String):
           "LookupExtendedSymbol"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -281,8 +255,6 @@ statements (ArrayList):
               statements (ArrayList):
                 IEnumerable
                   Entry (Statement):
-                    active (Boolean):
-                      "False"
                     key (Select):
                       expressions (ArrayList):
                         IEnumerable
@@ -301,8 +273,6 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -324,8 +294,6 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -347,8 +315,6 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -370,8 +336,6 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -386,8 +350,6 @@ statements (ArrayList):
         statements (ArrayList):
           IEnumerable
             Entry (Statement):
-              active (Boolean):
-                "False"
               key (Select):
                 expressions (ArrayList):
                   IEnumerable
@@ -404,8 +366,6 @@ statements (ArrayList):
                 text (String):
                   "default"
             Entry (Statement):
-              active (Boolean):
-                "False"
               key (Select):
                 expressions (ArrayList):
                   IEnumerable
@@ -422,8 +382,6 @@ statements (ArrayList):
                 text (String):
                   "default"
             Entry (Statement):
-              active (Boolean):
-                "False"
               key (Select):
                 expressions (ArrayList):
                   IEnumerable
@@ -438,8 +396,6 @@ statements (ArrayList):
                 statements (ArrayList):
                   IEnumerable
             Entry (Statement):
-              active (Boolean):
-                "False"
               key (Select):
                 expressions (ArrayList):
                   IEnumerable
@@ -451,7 +407,7 @@ statements (ArrayList):
                 parents (ArrayList):
                   IEnumerable
               val (Delayed):
-                obj (Map):
+                delayedExpression (Map):
                   IEnumerable
                     Entry (DictionaryEntry):
                       Key (String):
@@ -559,8 +515,6 @@ statements (ArrayList):
                                         Value (String):
                                           "changed"
             Entry (Statement):
-              active (Boolean):
-                "False"
               key (Select):
                 expressions (ArrayList):
                   IEnumerable
@@ -572,7 +526,7 @@ statements (ArrayList):
                 parents (ArrayList):
                   IEnumerable
               val (Delayed):
-                obj (Map):
+                delayedExpression (Map):
                   IEnumerable
                     Entry (DictionaryEntry):
                       Key (String):
@@ -690,8 +644,6 @@ statements (ArrayList):
                                         Value (String):
                                           "changed"
             Entry (Statement):
-              active (Boolean):
-                "False"
               key (Select):
                 expressions (ArrayList):
                   IEnumerable
@@ -706,8 +658,6 @@ statements (ArrayList):
                 statements (ArrayList):
                   IEnumerable
                     Entry (Statement):
-                      active (Boolean):
-                        "False"
                       key (Select):
                         expressions (ArrayList):
                           IEnumerable
@@ -724,8 +674,6 @@ statements (ArrayList):
                         text (String):
                           "b"
                     Entry (Statement):
-                      active (Boolean):
-                        "False"
                       key (Select):
                         expressions (ArrayList):
                           IEnumerable
@@ -742,8 +690,6 @@ statements (ArrayList):
                         text (String):
                           "d"
             Entry (Statement):
-              active (Boolean):
-                "False"
               key (Select):
                 expressions (ArrayList):
                   IEnumerable
@@ -760,7 +706,7 @@ statements (ArrayList):
                 parents (ArrayList):
                   IEnumerable
               val (Delayed):
-                obj (Map):
+                delayedExpression (Map):
                   IEnumerable
                     Entry (DictionaryEntry):
                       Key (String):
@@ -813,8 +759,6 @@ statements (ArrayList):
                                         Value (String):
                                           "b"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -831,8 +775,6 @@ statements (ArrayList):
         text (String):
           "default"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -847,8 +789,6 @@ statements (ArrayList):
         statements (ArrayList):
           IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -879,8 +819,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -896,8 +834,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -912,8 +848,6 @@ statements (ArrayList):
                   statements (ArrayList):
                     IEnumerable
                       Entry (Statement):
-                        active (Boolean):
-                          "False"
                         key (Select):
                           expressions (ArrayList):
                             IEnumerable
@@ -930,8 +864,6 @@ statements (ArrayList):
                           text (String):
                             "7"
                       Entry (Statement):
-                        active (Boolean):
-                          "False"
                         key (Select):
                           expressions (ArrayList):
                             IEnumerable
@@ -963,8 +895,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -976,7 +906,7 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
       val (Delayed):
-        obj (Map):
+        delayedExpression (Map):
           IEnumerable
             Entry (DictionaryEntry):
               Key (String):
@@ -1029,8 +959,6 @@ statements (ArrayList):
                                             Value (String):
                                               "arg"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1046,8 +974,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -1069,8 +995,6 @@ statements (ArrayList):
                   text (String):
                     "a"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -1092,8 +1016,6 @@ statements (ArrayList):
                   text (String):
                     "b"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -1125,8 +1047,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1141,8 +1061,6 @@ statements (ArrayList):
         statements (ArrayList):
           IEnumerable
             Entry (Statement):
-              active (Boolean):
-                "False"
               key (Select):
                 expressions (ArrayList):
                   IEnumerable
@@ -1164,8 +1082,6 @@ statements (ArrayList):
                 text (String):
                   "x"
             Entry (Statement):
-              active (Boolean):
-                "False"
               key (Select):
                 expressions (ArrayList):
                   IEnumerable
@@ -1187,8 +1103,6 @@ statements (ArrayList):
                 text (String):
                   "y"
             Entry (Statement):
-              active (Boolean):
-                "False"
               key (Select):
                 expressions (ArrayList):
                   IEnumerable
@@ -1210,8 +1124,6 @@ statements (ArrayList):
                 text (String):
                   "z"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1244,8 +1156,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1257,7 +1167,7 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
       val (Delayed):
-        obj (Map):
+        delayedExpression (Map):
           IEnumerable
             Entry (DictionaryEntry):
               Key (String):
@@ -1475,8 +1385,6 @@ statements (ArrayList):
                                                                           Value (String):
                                                                             "3"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1488,7 +1396,7 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
       val (Delayed):
-        obj (Map):
+        delayedExpression (Map):
           IEnumerable
             Entry (DictionaryEntry):
               Key (String):
@@ -1676,8 +1584,6 @@ statements (ArrayList):
                                             Value (String):
                                               "x"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1693,8 +1599,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -1721,8 +1625,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1731,6 +1633,11 @@ statements (ArrayList):
                 null
               text (String):
                 "this"
+            Entry (Literal):
+              cached:
+                null
+              text (String):
+                "3"
         parents (ArrayList):
           IEnumerable
       val (Call):
@@ -1738,8 +1645,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -1771,8 +1676,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1788,8 +1691,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -1816,8 +1717,6 @@ statements (ArrayList):
                   parents (ArrayList):
                     IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -1859,8 +1758,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1886,8 +1783,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1913,8 +1808,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1936,8 +1829,6 @@ statements (ArrayList):
         text (String):
           "a"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1959,8 +1850,6 @@ statements (ArrayList):
         text (String):
           "b"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -1992,8 +1881,6 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2025,8 +1912,6 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2043,8 +1928,6 @@ statements (ArrayList):
         text (String):
           "/hello/"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2060,8 +1943,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -2083,8 +1964,6 @@ statements (ArrayList):
                   text (String):
                     "m"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -2106,8 +1985,6 @@ statements (ArrayList):
                   text (String):
                     "n"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -2139,8 +2016,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2156,8 +2031,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -2179,8 +2052,6 @@ statements (ArrayList):
                   text (String):
                     "r"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -2202,8 +2073,6 @@ statements (ArrayList):
                   text (String):
                     "s"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -2240,8 +2109,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2257,8 +2124,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -2280,8 +2145,6 @@ statements (ArrayList):
                   text (String):
                     "m"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -2308,8 +2171,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2325,8 +2186,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -2343,8 +2202,6 @@ statements (ArrayList):
                   text (String):
                     "t"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -2381,8 +2238,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2408,8 +2263,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2431,8 +2284,6 @@ statements (ArrayList):
         text (String):
           "hihi"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2459,8 +2310,6 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2477,8 +2326,6 @@ statements (ArrayList):
         text (String):
           "1"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2495,8 +2342,6 @@ statements (ArrayList):
         text (String):
           "hello"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2513,8 +2358,6 @@ statements (ArrayList):
         text (String):
           "w"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2526,7 +2369,7 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
       val (Delayed):
-        obj (Map):
+        delayedExpression (Map):
           IEnumerable
             Entry (DictionaryEntry):
               Key (String):
@@ -2534,8 +2377,6 @@ statements (ArrayList):
               Value (String):
                 "5"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2561,8 +2402,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2574,7 +2413,7 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
       val (Delayed):
-        obj (Map):
+        delayedExpression (Map):
           IEnumerable
             Entry (DictionaryEntry):
               Key (String):
@@ -2617,8 +2456,6 @@ statements (ArrayList):
                                 Value (String):
                                   "simple function this"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2630,7 +2467,7 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
       val (Delayed):
-        obj (Map):
+        delayedExpression (Map):
           IEnumerable
             Entry (DictionaryEntry):
               Key (String):
@@ -2648,8 +2485,6 @@ statements (ArrayList):
                           Value (String):
                             "function"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2675,8 +2510,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2688,7 +2521,7 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
       val (Delayed):
-        obj (Map):
+        delayedExpression (Map):
           IEnumerable
             Entry (DictionaryEntry):
               Key (String):
@@ -2736,8 +2569,6 @@ statements (ArrayList):
                                       Value (String):
                                         "y"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2763,8 +2594,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2781,8 +2610,6 @@ statements (ArrayList):
         text (String):
           "xyz"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2794,7 +2621,7 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
       val (Delayed):
-        obj (Map):
+        delayedExpression (Map):
           IEnumerable
             Entry (DictionaryEntry):
               Key (String):
@@ -2812,8 +2639,6 @@ statements (ArrayList):
                           Value (String):
                             "value"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2839,8 +2664,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2857,8 +2680,6 @@ statements (ArrayList):
         text (String):
           "89383838383832839123497123047217340712340720347072304702340720347"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2875,8 +2696,6 @@ statements (ArrayList):
         text (String):
           "unchanged"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2888,7 +2707,7 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
       val (Delayed):
-        obj (Map):
+        delayedExpression (Map):
           IEnumerable
             Entry (DictionaryEntry):
               Key (String):
@@ -2941,8 +2760,6 @@ statements (ArrayList):
                                 Value (String):
                                   "changed"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2955,7 +2772,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "3"
+                "4"
         parents (ArrayList):
           IEnumerable
       val (Call):
@@ -2973,8 +2790,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -2991,8 +2806,6 @@ statements (ArrayList):
         text (String):
           "false"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3009,7 +2822,7 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
       val (Delayed):
-        obj (Map):
+        delayedExpression (Map):
           IEnumerable
             Entry (DictionaryEntry):
               Key (String):
@@ -3117,8 +2930,6 @@ statements (ArrayList):
                                             Value (String):
                                               "1"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3145,8 +2956,6 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3162,8 +2971,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -3205,8 +3012,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3223,8 +3028,6 @@ statements (ArrayList):
         text (String):
           "false"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3241,7 +3044,7 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
       val (Delayed):
-        obj (Map):
+        delayedExpression (Map):
           IEnumerable
             Entry (DictionaryEntry):
               Key (String):
@@ -3349,8 +3152,6 @@ statements (ArrayList):
                                             Value (String):
                                               "1"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3377,8 +3178,6 @@ statements (ArrayList):
         parents (ArrayList):
           IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3394,8 +3193,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -3432,8 +3229,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3450,8 +3245,6 @@ statements (ArrayList):
         text (String):
           "1"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3468,8 +3261,6 @@ statements (ArrayList):
         text (String):
           "2"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3486,8 +3277,6 @@ statements (ArrayList):
         text (String):
           "unchanged"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3504,8 +3293,6 @@ statements (ArrayList):
         text (String):
           "unchanged"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3522,8 +3309,6 @@ statements (ArrayList):
         text (String):
           "then"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3536,7 +3321,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "4"
+                "5"
         parents (ArrayList):
           IEnumerable
       val (Call):
@@ -3544,8 +3329,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -3566,8 +3349,6 @@ statements (ArrayList):
                     statements (ArrayList):
                       IEnumerable
                         Entry (Statement):
-                          active (Boolean):
-                            "False"
                           key (Select):
                             expressions (ArrayList):
                               IEnumerable
@@ -3589,8 +3370,6 @@ statements (ArrayList):
                             text (String):
                               "1"
                         Entry (Statement):
-                          active (Boolean):
-                            "False"
                           key (Select):
                             expressions (ArrayList):
                               IEnumerable
@@ -3627,8 +3406,6 @@ statements (ArrayList):
                     parents (ArrayList):
                       IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -3640,7 +3417,7 @@ statements (ArrayList):
                   parents (ArrayList):
                     IEnumerable
                 val (Delayed):
-                  obj (Map):
+                  delayedExpression (Map):
                     IEnumerable
                       Entry (DictionaryEntry):
                         Key (String):
@@ -3703,8 +3480,6 @@ statements (ArrayList):
                                                       Value (String):
                                                         "thenText"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -3716,7 +3491,7 @@ statements (ArrayList):
                   parents (ArrayList):
                     IEnumerable
                 val (Delayed):
-                  obj (Map):
+                  delayedExpression (Map):
                     IEnumerable
                       Entry (DictionaryEntry):
                         Key (String):
@@ -3779,8 +3554,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -3793,7 +3566,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "5"
+                "6"
         parents (ArrayList):
           IEnumerable
       val (Call):
@@ -3801,8 +3574,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -3823,8 +3594,6 @@ statements (ArrayList):
                     statements (ArrayList):
                       IEnumerable
                         Entry (Statement):
-                          active (Boolean):
-                            "False"
                           key (Select):
                             expressions (ArrayList):
                               IEnumerable
@@ -3846,8 +3615,6 @@ statements (ArrayList):
                             text (String):
                               "1"
                         Entry (Statement):
-                          active (Boolean):
-                            "False"
                           key (Select):
                             expressions (ArrayList):
                               IEnumerable
@@ -3884,8 +3651,6 @@ statements (ArrayList):
                     parents (ArrayList):
                       IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -3897,7 +3662,7 @@ statements (ArrayList):
                   parents (ArrayList):
                     IEnumerable
                 val (Delayed):
-                  obj (Map):
+                  delayedExpression (Map):
                     IEnumerable
                       Entry (DictionaryEntry):
                         Key (String):
@@ -3950,8 +3715,6 @@ statements (ArrayList):
                                           Value (String):
                                             "then"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -3963,7 +3726,7 @@ statements (ArrayList):
                   parents (ArrayList):
                     IEnumerable
                 val (Delayed):
-                  obj (Map):
+                  delayedExpression (Map):
                     IEnumerable
                       Entry (DictionaryEntry):
                         Key (String):
@@ -4026,8 +3789,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -4044,8 +3805,6 @@ statements (ArrayList):
         text (String):
           "unchanged"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -4062,8 +3821,6 @@ statements (ArrayList):
         text (String):
           "50020202029029233344"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -4076,7 +3833,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "6"
+                "7"
         parents (ArrayList):
           IEnumerable
       val (Call):
@@ -4084,8 +3841,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -4112,8 +3867,6 @@ statements (ArrayList):
                   parents (ArrayList):
                     IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -4128,8 +3881,6 @@ statements (ArrayList):
                   statements (ArrayList):
                     IEnumerable
                       Entry (Statement):
-                        active (Boolean):
-                          "False"
                         key (Select):
                           expressions (ArrayList):
                             IEnumerable
@@ -4146,7 +3897,7 @@ statements (ArrayList):
                           parents (ArrayList):
                             IEnumerable
                         val (Delayed):
-                          obj (Map):
+                          delayedExpression (Map):
                             IEnumerable
                               Entry (DictionaryEntry):
                                 Key (String):
@@ -4209,8 +3960,6 @@ statements (ArrayList):
                                                               Value (String):
                                                                 "bigNumber"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -4222,7 +3971,7 @@ statements (ArrayList):
                   parents (ArrayList):
                     IEnumerable
                 val (Delayed):
-                  obj (Map):
+                  delayedExpression (Map):
                     IEnumerable
                       Entry (DictionaryEntry):
                         Key (String):
@@ -4285,8 +4034,6 @@ statements (ArrayList):
           parents (ArrayList):
             IEnumerable
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -4303,8 +4050,6 @@ statements (ArrayList):
         text (String):
           "unchanged"
     Entry (Statement):
-      active (Boolean):
-        "False"
       key (Select):
         expressions (ArrayList):
           IEnumerable
@@ -4317,7 +4062,7 @@ statements (ArrayList):
               cached:
                 null
               text (String):
-                "7"
+                "8"
         parents (ArrayList):
           IEnumerable
       val (Call):
@@ -4325,8 +4070,6 @@ statements (ArrayList):
           statements (ArrayList):
             IEnumerable
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -4348,8 +4091,6 @@ statements (ArrayList):
                   text (String):
                     "3"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -4364,8 +4105,6 @@ statements (ArrayList):
                   statements (ArrayList):
                     IEnumerable
                       Entry (Statement):
-                        active (Boolean):
-                          "False"
                         key (Select):
                           expressions (ArrayList):
                             IEnumerable
@@ -4377,7 +4116,7 @@ statements (ArrayList):
                           parents (ArrayList):
                             IEnumerable
                         val (Delayed):
-                          obj (Map):
+                          delayedExpression (Map):
                             IEnumerable
                               Entry (DictionaryEntry):
                                 Key (String):
@@ -4430,8 +4169,6 @@ statements (ArrayList):
                                                   Value (String):
                                                     "one"
                       Entry (Statement):
-                        active (Boolean):
-                          "False"
                         key (Select):
                           expressions (ArrayList):
                             IEnumerable
@@ -4443,7 +4180,7 @@ statements (ArrayList):
                           parents (ArrayList):
                             IEnumerable
                         val (Delayed):
-                          obj (Map):
+                          delayedExpression (Map):
                             IEnumerable
                               Entry (DictionaryEntry):
                                 Key (String):
@@ -4496,8 +4233,6 @@ statements (ArrayList):
                                                   Value (String):
                                                     "two"
               Entry (Statement):
-                active (Boolean):
-                  "False"
                 key (Select):
                   expressions (ArrayList):
                     IEnumerable
@@ -4509,7 +4244,7 @@ statements (ArrayList):
                   parents (ArrayList):
                     IEnumerable
                 val (Delayed):
-                  obj (Map):
+                  delayedExpression (Map):
                     IEnumerable
                       Entry (DictionaryEntry):
                         Key (String):

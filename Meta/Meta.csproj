@@ -84,6 +84,12 @@
                     AssemblyName = "System.Windows.Forms"
                     HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
                 />
+                <Reference
+                    Name = "adodb"
+                    AssemblyName = "adodb"
+                    HintPath = "..\..\..\Programme\Microsoft.NET\Primary Interop Assemblies\adodb.dll"
+                    AssemblyFolderKey = "hklm\primary interop assemblies"
+                />
             </References>
         </Build>
         <Files>

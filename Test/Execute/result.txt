@@ -150,9 +150,9 @@ IEnumerable
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Meta.Types.Map Load()"
+            "Void Load()"
       savedMethod (RuntimeMethodInfo):
-        "Meta.Types.Map Load()"
+        "Void Load()"
   Entry (DictionaryEntry):
     Key (String):
       "Each"
@@ -2015,7 +2015,7 @@ IEnumerable
                               "changed"
   Entry (DictionaryEntry):
     Key (Integer):
-      "3"
+      "4"
     Value (Map):
       IEnumerable
   Entry (DictionaryEntry):

@@ -2112,8 +2112,15 @@ getFirstChild (CommonAST):
                                                     getFirstChild (CommonAST):
                                                       getFirstChild:
                                                         null
-                                                      getNextSibling:
-                                                        null
+                                                      getNextSibling (CommonAST):
+                                                        getFirstChild:
+                                                          null
+                                                        getNextSibling:
+                                                          null
+                                                        getText (String):
+                                                          "3"
+                                                        Type (Int32):
+                                                          "21"
                                                       getText (String):
                                                         "this"
                                                       Type (Int32):
@@ -3866,7 +3873,7 @@ getFirstChild (CommonAST):
                                                                                                                         getNextSibling:
                                                                                                                           null
                                                                                                                         getText (String):
-                                                                                                                          "3"
+                                                                                                                          "4"
                                                                                                                         Type (Int32):
                                                                                                                           "21"
                                                                                                                       getText (String):
@@ -4573,7 +4580,7 @@ getFirstChild (CommonAST):
                                                                                                                                                     getNextSibling:
                                                                                                                                                       null
                                                                                                                                                     getText (String):
-                                                                                                                                                      "4"
+                                                                                                                                                      "5"
                                                                                                                                                     Type (Int32):
                                                                                                                                                       "21"
                                                                                                                                                   getText (String):
@@ -4905,7 +4912,7 @@ getFirstChild (CommonAST):
                                                                                                                                                       getNextSibling:
                                                                                                                                                         null
                                                                                                                                                       getText (String):
-                                                                                                                                                        "5"
+                                                                                                                                                        "6"
                                                                                                                                                       Type (Int32):
                                                                                                                                                         "21"
                                                                                                                                                     getText (String):
@@ -5278,7 +5285,7 @@ getFirstChild (CommonAST):
                                                                                                                                                             getNextSibling:
                                                                                                                                                               null
                                                                                                                                                             getText (String):
-                                                                                                                                                              "6"
+                                                                                                                                                              "7"
                                                                                                                                                             Type (Int32):
                                                                                                                                                               "21"
                                                                                                                                                           getText (String):
@@ -5578,7 +5585,7 @@ getFirstChild (CommonAST):
                                                                                                                                                                 getNextSibling:
                                                                                                                                                                   null
                                                                                                                                                                 getText (String):
-                                                                                                                                                                  "7"
+                                                                                                                                                                  "8"
                                                                                                                                                                 Type (Int32):
                                                                                                                                                                   "21"
                                                                                                                                                               getText (String):
