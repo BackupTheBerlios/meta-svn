@@ -30,6 +30,7 @@ namespace Test {
 	class Test {
 		public static string path="";
 		public static void Main(string[] args) {
+//			Interpreter.Run("editor.meta",new Map);
 			Directory.SetCurrentDirectory(
 				".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
 			TestExecuter test=new TestExecuter(typeof(Tests),path);

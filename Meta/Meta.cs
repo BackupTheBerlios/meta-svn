@@ -634,7 +634,7 @@ namespace Meta {
 			public object Preselect(object current,ArrayList keys,bool isRightSide,bool isSelectLastKey) {
 				object selected=current;
 				int i=0;
-				if(keys.Count==2 && keys[1].Equals("TakeDelegate")) {
+				if(keys[0].Equals("programText")) {
 					int asdf=0;
 				}
 				if(keys[0].Equals("this")) {

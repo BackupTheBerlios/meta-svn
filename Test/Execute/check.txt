@@ -16,6 +16,16 @@ IEnumerable
         "Void Load()"
   Entry (DictionaryEntry):
     Key (String):
+      "RunString"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "System.Object RunString(System.String)"
+      savedMethod (RuntimeMethodInfo):
+        "System.Object RunString(System.String)"
+  Entry (DictionaryEntry):
+    Key (String):
       "BinaryOr"
     Value (NetMethod):
       methods (MethodInfo[]):
@@ -26,14 +36,14 @@ IEnumerable
         "System.Enum BinaryOr(System.Enum[])"
   Entry (DictionaryEntry):
     Key (String):
-      "Not"
+      "Insert"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Boolean Not(Boolean)"
+            "System.String Insert(System.String, Int32, System.String)"
       savedMethod (RuntimeMethodInfo):
-        "Boolean Not(Boolean)"
+        "System.String Insert(System.String, Int32, System.String)"
   Entry (DictionaryEntry):
     Key (String):
       "Add"
@@ -44,6 +54,16 @@ IEnumerable
             "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
       savedMethod (RuntimeMethodInfo):
         "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Concat"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Meta.Types.Map Concat(Meta.Types.Map[])"
+      savedMethod (RuntimeMethodInfo):
+        "Meta.Types.Map Concat(Meta.Types.Map[])"
   Entry (DictionaryEntry):
     Key (String):
       "Multiply"
@@ -76,14 +96,14 @@ IEnumerable
         "Void If()"
   Entry (DictionaryEntry):
     Key (String):
-      "Smaller"
+      "Not"
     Value (NetMethod):
       methods (MethodInfo[]):
         IEnumerable
           Entry (RuntimeMethodInfo):
-            "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
+            "Boolean Not(Boolean)"
       savedMethod (RuntimeMethodInfo):
-        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
+        "Boolean Not(Boolean)"
   Entry (DictionaryEntry):
     Key (String):
       "Divide"
@@ -174,6 +194,16 @@ IEnumerable
             "Boolean Equal(System.Object, System.Object)"
       savedMethod (RuntimeMethodInfo):
         "Boolean Equal(System.Object, System.Object)"
+  Entry (DictionaryEntry):
+    Key (String):
+      "Smaller"
+    Value (NetMethod):
+      methods (MethodInfo[]):
+        IEnumerable
+          Entry (RuntimeMethodInfo):
+            "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
+      savedMethod (RuntimeMethodInfo):
+        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
   Entry (DictionaryEntry):
     Key (String):
       "Subtract"

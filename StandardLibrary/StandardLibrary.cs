@@ -7,8 +7,25 @@ public class @base {
 	public static char Character(string c) {
 		return Convert.ToChar(c);
 	}
+	public static string Insert(string original,int index,string insert) {
+		return original.Insert(index,insert);
+	}
+	public static Map Concat(params Map[] maps) {
+		int i=1;
+		Map combined=new Map();
+		foreach(Map map in maps) {
+			foreach(object val in map.IntKeyValues) {
+				combined[new Integer(i)]=val;
+				i++;
+			}
+		}
+		return combined;
+	}
 	public static object Run(string path) {
 		return Interpreter.Run(new StreamReader(path),new Map());
+	}
+	public static object RunString(string code) {
+		return Interpreter.Run(new StringReader(code),new Map());
 	}
 	public static IKeyValue Merge() {
 		return (Map)Interpreter.Merge((Map)Interpreter.Arg);
