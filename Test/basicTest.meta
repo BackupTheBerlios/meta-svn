@@ -90,3 +90,19 @@ testClass.instanceEvent==
   this=arg.1
 instanceEvent=testClass.instanceEvent
 instanceEventResult=testClass.instanceEvent('5')
+one='1'
+two='2'
+firstIf='unchanged'
+secondIf='unchanged'
+If
+  Equal('1',one)
+  then==
+    #firstIf='then'
+  else==
+    #firstIf='else'
+If
+  Equal('1',two)
+  then==
+    #secondIf='then'
+  else==
+    #secondIf='else'  

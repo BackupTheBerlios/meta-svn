@@ -2037,3 +2037,23 @@ IEnumerable
       "instanceEventResult"
     Value (Integer):
       "5"
+  Entry (DictionaryEntry):
+    Key (String):
+      "one"
+    Value (Integer):
+      "1"
+  Entry (DictionaryEntry):
+    Key (String):
+      "two"
+    Value (Integer):
+      "2"
+  Entry (DictionaryEntry):
+    Key (String):
+      "firstIf"
+    Value (String):
+      "then"
+  Entry (DictionaryEntry):
+    Key (String):
+      "secondIf"
+    Value (String):
+      "else"
