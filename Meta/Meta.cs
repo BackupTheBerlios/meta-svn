@@ -326,7 +326,7 @@ namespace Meta {
 					string text="";
 					Map map=(Map)meta;
 					if(map.IsString()) {
-						text+="'"+(map).GetDotNetString()+"'";
+						text+="\""+(map).GetDotNetString()+"\"";
 					}
 					else if(map.Count==0) {
 						text+="()";
@@ -359,7 +359,7 @@ namespace Meta {
 				}
 				else if(meta is Integer) {
 					Integer integer=(Integer)meta;
-					return "'"+integer.ToString()+"'";
+					return "\""+integer.ToString()+"\"";
 				}
 				else {
 					throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");

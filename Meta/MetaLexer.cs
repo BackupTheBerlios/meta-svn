@@ -150,7 +150,7 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
-						case '\'':
+						case '"':
 						{
 							mLITERAL(true);
 							theRetToken = returnToken_;
@@ -366,7 +366,7 @@ _loop13_breakloop:		;
 		
 		int _saveIndex = 0;
 		_saveIndex = text.Length;
-		match("\'");
+		match("\"");
 		text.Length = _saveIndex;
 		{    // ( ... )*
 			for (;;)
@@ -386,7 +386,7 @@ _loop13_breakloop:		;
 _loop17_breakloop:			;
 		}    // ( ... )*
 		_saveIndex = text.Length;
-		match("\'");
+		match("\"");
 		text.Length = _saveIndex;
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -633,7 +633,7 @@ _loop33_breakloop:				;
 	private static long[] mk_tokenSet_0_()
 	{
 		long[] data = new long[2048];
-		data[0]=-2594204815659695624L;
+		data[0]=-2594204832839564808L;
 		data[1]=-671088641L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
@@ -644,7 +644,7 @@ _loop33_breakloop:				;
 	private static long[] mk_tokenSet_1_()
 	{
 		long[] data = new long[2048];
-		data[0]=-549755869704L;
+		data[0]=-17179925000L;
 		for (int i = 1; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
 		for (int i = 1024; i<=2047; i++) { data[i]=0L; }
