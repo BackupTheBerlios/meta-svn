@@ -35,45 +35,45 @@ namespace Test {
 			//args=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
 			//args=new string[]{@"C:\Dokumente und Einstellungen\Christian\Desktop\editor.meta"};
 			//args=new string[]{@"..\..\basicTest.meta"};
-			if(args.Length==0) {
-				Directory.SetCurrentDirectory(
-					".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
-				ExecuteTests test=new ExecuteTests(typeof(Tests),path);
-			}
-			else {
-				if(!File.Exists(args[0])) {
-					throw new ApplicationException("File "+args[0]+" not found.");
+			try {
+				if(args.Length==0) {
+					Directory.SetCurrentDirectory(
+						".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
+					ExecuteTests test=new ExecuteTests(typeof(Tests),path);
 				}
-				try {
+				else {
+					if(!File.Exists(args[0])) {
+						throw new ApplicationException("File "+args[0]+" not found.");
+					}
 					Interpreter.Run(args[0],new Map());
-//					StreamReader reader=new StreamReader(args[0]);
-//					string text=reader.ReadToEnd();
-//					reader.Close();
-//					Interpreter.Run(new StringReader(text),new Map());
+					//					StreamReader reader=new StreamReader(args[0]);
+					//					string text=reader.ReadToEnd();
+					//					reader.Close();
+					//					Interpreter.Run(new StringReader(text),new Map());
 					// fix this to only show original error message
 				}
-				catch(CharStreamException e) {// put this into "Run"
-					Console.WriteLine(e.Message);
-					Console.ReadLine();
-				}
-				catch(RecognitionException e) {
-					Console.WriteLine(e.Message);
-					Console.ReadLine();
-				}
-				catch(TokenStreamException e) {
-					Console.WriteLine(e.Message);
-					Console.ReadLine();
- 				}
-				catch(Exception e) {
-					string text="";
-					do {
-						text+=e.Message+"\n"+e.TargetSite+"\n";
-						e=e.InnerException;
-					} 
-					while(e!=null);
-					Console.WriteLine(text);
-					Console.ReadLine();
-				}
+			}
+			catch(CharStreamException e) {// put this into "Run"
+				Console.WriteLine(e.Message);
+				Console.ReadLine();
+			}
+			catch(RecognitionException e) {
+				Console.WriteLine(e.Message+" line:"+e.line+", file:"+e.fileName+", column:"+e.column);
+				Console.ReadLine();
+			}
+			catch(TokenStreamException e) {
+				Console.WriteLine(e.Message);
+				Console.ReadLine();
+			}
+			catch(Exception e) {
+				string text="";
+				do {
+					text+=e.Message+"\n"+e.TargetSite+"\n";
+					e=e.InnerException;
+				} 
+				while(e!=null);
+				Console.WriteLine(text);
+				Console.ReadLine();
 			}
 //			DateTime start=DateTime.Now;
 //			string file=@"C:\Dokumente und Einstellungen\Christian\Desktop\performance.meta";

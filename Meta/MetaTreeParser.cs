@@ -60,7 +60,7 @@ namespace Meta.Parser
 {
 		Map result;
 		
-		LineNumberAST expression_AST_in = (LineNumberAST)_t;
+		AST expression_AST_in = (AST)_t;
 		
 		result=null;
 		
@@ -114,7 +114,7 @@ namespace Meta.Parser
 {
 		Map result;
 		
-		LineNumberAST call_AST_in = (LineNumberAST)_t;
+		AST call_AST_in = (AST)_t;
 		
 		result=new Map();
 		Map call=new Map();
@@ -122,9 +122,9 @@ namespace Meta.Parser
 		Map argument=new Map();
 		
 		
-		AST __t98 = _t;
-		LineNumberAST tmp21_AST_in = (_t==ASTNULL) ? null : (LineNumberAST)_t;
-		match((AST)_t,CALL);
+		AST __t99 = _t;
+		AST tmp22_AST_in = _t;
+		match(_t,CALL);
 		_t = _t.getFirstChild();
 		{
 			delayed=expression(_t);
@@ -139,7 +139,7 @@ namespace Meta.Parser
 		call[Call.argumentString]=argument;
 		result[Call.callString]=call;
 		
-		_t = __t98;
+		_t = __t99;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return result;
@@ -149,16 +149,16 @@ namespace Meta.Parser
 {
 		Map result;
 		
-		LineNumberAST map_AST_in = (LineNumberAST)_t;
+		AST map_AST_in = (AST)_t;
 		
-		result=new Map();
+		result=new Map();//map_AST_in.getLineNumber());
 		Map statements=new Map();
 		int counter=1;
 		
 		
-		AST __t93 = _t;
-		LineNumberAST tmp22_AST_in = (_t==ASTNULL) ? null : (LineNumberAST)_t;
-		match((AST)_t,MAP);
+		AST __t94 = _t;
+		AST tmp23_AST_in = _t;
+		match(_t,MAP);
 		_t = _t.getFirstChild();
 		{    // ( ... )*
 			for (;;)
@@ -171,9 +171,9 @@ namespace Meta.Parser
 					Map key=null;
 					Map val=null;
 					
-					AST __t95 = _t;
-					LineNumberAST tmp23_AST_in = (_t==ASTNULL) ? null : (LineNumberAST)_t;
-					match((AST)_t,STATEMENT);
+					AST __t96 = _t;
+					AST tmp24_AST_in = _t;
+					match(_t,STATEMENT);
 					_t = _t.getFirstChild();
 					key=select(_t);
 					_t = retTree_;
@@ -186,18 +186,18 @@ namespace Meta.Parser
 										statements[new Integer(counter)]=statement;
 										counter++;
 									
-					_t = __t95;
+					_t = __t96;
 					_t = _t.getNextSibling();
 				}
 				else
 				{
-					goto _loop96_breakloop;
+					goto _loop97_breakloop;
 				}
 				
 			}
-_loop96_breakloop:			;
+_loop97_breakloop:			;
 		}    // ( ... )*
-		_t = __t93;
+		_t = __t94;
 		_t = _t.getNextSibling();
 		
 		result[Program.programString]=statements;
@@ -210,7 +210,7 @@ _loop96_breakloop:			;
 {
 		Map result;
 		
-		LineNumberAST select_AST_in = (LineNumberAST)_t;
+		AST select_AST_in = (AST)_t;
 		
 		result=new Map();
 		Map selection=new Map();
@@ -218,13 +218,13 @@ _loop96_breakloop:			;
 		int counter=1;
 		
 		
-		AST __t102 = _t;
-		LineNumberAST tmp24_AST_in = (_t==ASTNULL) ? null : (LineNumberAST)_t;
-		match((AST)_t,SELECT_KEY);
+		AST __t103 = _t;
+		AST tmp25_AST_in = _t;
+		match(_t,SELECT_KEY);
 		_t = _t.getFirstChild();
 		{
 			{ // ( ... )+
-			int _cnt105=0;
+			int _cnt106=0;
 			for (;;)
 			{
 				if (_t == null)
@@ -240,15 +240,15 @@ _loop96_breakloop:			;
 				}
 				else
 				{
-					if (_cnt105 >= 1) { goto _loop105_breakloop; } else { throw new NoViableAltException(_t);; }
+					if (_cnt106 >= 1) { goto _loop106_breakloop; } else { throw new NoViableAltException(_t);; }
 				}
 				
-				_cnt105++;
+				_cnt106++;
 			}
-_loop105_breakloop:			;
+_loop106_breakloop:			;
 			}    // ( ... )+
 		}
-		_t = __t102;
+		_t = __t103;
 		_t = _t.getNextSibling();
 		
 		result[Select.selectString]=selection;
@@ -261,14 +261,14 @@ _loop105_breakloop:			;
 {
 		Map result;
 		
-		LineNumberAST literal_AST_in = (LineNumberAST)_t;
-		LineNumberAST token = null;
+		AST literal_AST_in = (AST)_t;
+		AST token = null;
 		
 		result=new Map();
 		
 		
-		token = (_t==ASTNULL) ? null : (LineNumberAST)_t;
-		match((AST)_t,LITERAL);
+		token = _t;
+		match(_t,LITERAL);
 		_t = _t.getNextSibling();
 		
 		result[Literal.literalString]=new Map(token.getText());
@@ -281,30 +281,25 @@ _loop105_breakloop:			;
 {
 		Map result;
 		
-		LineNumberAST delayed_AST_in = (LineNumberAST)_t;
+		AST delayed_AST_in = (AST)_t;
 		
 		result=new Map();
 		Map delayed;
 		
 		
-		AST __t108 = _t;
-		LineNumberAST tmp25_AST_in = (_t==ASTNULL) ? null : (LineNumberAST)_t;
-		match((AST)_t,FUNCTION);
+		AST __t109 = _t;
+		AST tmp26_AST_in = _t;
+		match(_t,FUNCTION);
 		_t = _t.getFirstChild();
 		delayed=expression(_t);
 		_t = retTree_;
-		_t = __t108;
+		_t = __t109;
 		_t = _t.getNextSibling();
 		
 		result[Delayed.delayedString]=delayed;
 		
 		retTree_ = _t;
 		return result;
-	}
-	
-	public new LineNumberAST getAST()
-	{
-		return (LineNumberAST) returnAST;
 	}
 	
 	

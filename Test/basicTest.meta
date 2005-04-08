@@ -192,3 +192,13 @@ switch
 font:System.Drawing.Font
     "Courier New"
     '10
+lookup:=
+    '10
+    arg.1
+lookupKey:
+    '10
+    '10
+[lookup
+    '10
+]:'hello
+lookupResult:[lookupKey]

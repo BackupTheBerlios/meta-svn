@@ -118,7 +118,6 @@ LINE
   {
     const int endOfFileValue=65535;
   }:
-  // too complicated, very performance intensive, I fear
   (NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?) =>
    NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?
   {
@@ -177,7 +176,7 @@ expression:
     |delayed
     |LITERAL
   );
-
+//rename ENDLINE
 map:
   {
     Counters.autokey.Push(0);
@@ -224,11 +223,11 @@ statement:
             //Counters.counter++;
             Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 			      Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
-				    LineNumberAST currentAst=new LineNumberAST(currentToken);
+				    CommonAST currentAst=new CommonAST(currentToken);
 				    currentAst.setText("this");
 
 				    Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
-				    LineNumberAST autokeyAst=new LineNumberAST(autokeyToken);
+				    CommonAST autokeyAst=new CommonAST(autokeyToken);
 				    autokeyAst.setText(Counters.autokey.Peek().ToString());
             #statement=#([STATEMENT],#([SELECT_KEY],currentAst,autokeyAst),#statement);
         }
@@ -239,11 +238,11 @@ statement:
         {
             Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 			      Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
-				    LineNumberAST currentAst=new LineNumberAST(currentToken);
+				    CommonAST currentAst=new CommonAST(currentToken);
 				    currentAst.setText("this");
 
 				    Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
-				    LineNumberAST autokeyAst=new LineNumberAST(autokeyToken);
+				    CommonAST autokeyAst=new CommonAST(autokeyToken);
 				    autokeyAst.setText(Counters.autokey.Peek().ToString());
             #statement=#([STATEMENT],#([SELECT_KEY],currentAst,autokeyAst),#statement);
         }
@@ -284,11 +283,11 @@ select:
     {
       Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 			Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
-			LineNumberAST currentAst=new LineNumberAST(currentToken);
+			CommonAST currentAst=new CommonAST(currentToken);
 			currentAst.setText("search");
 
 			//Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
-			//LineNumberAST autokeyAst=new LineNumberAST(autokeyToken);
+			//CommonAST autokeyAst=new CommonAST(autokeyToken);
 			//autokeyAst.setText(Counters.autokey.Peek().ToString());
       #select=#([SELECT_KEY],currentAst,#select);
       //#select=#([SELECT_KEY],#select);
@@ -311,11 +310,14 @@ lookup:
     (SPACES!)?
     (
       (call)=>call
-      |map|LITERAL
+      |map
+      |LITERAL
       |delayed
       |select
+      
     )
     (SPACES!)?
+    (ENDLINE!)?
     RBRACKET!
   )
   |
@@ -334,7 +336,7 @@ literalKey:
 class MetaTreeParser extends TreeParser;
 options {
     defaultErrorHandler=false;
-    ASTLabelType = "LineNumberAST";
+    //ASTLabelType = "CommonAST";
 }
 expression
   returns[Map result]
@@ -351,7 +353,7 @@ expression
 map
   returns[Map result]
   {
-    result=new Map();
+    result=new Map();//map_AST_in.getLineNumber());
     Map statements=new Map();
     int counter=1;
   }:

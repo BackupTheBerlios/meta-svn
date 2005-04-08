@@ -55,7 +55,8 @@ namespace Meta {
 		}
 		public class Call: IExpression {
 			public object Evaluate(IMap parent) {
-				return ((ICallable)callableExpression.Evaluate(parent)).Call((IMap)argumentExpression.Evaluate(parent));
+				return ((ICallable)callableExpression.Evaluate(parent)).Call(
+					(IMap)argumentExpression.Evaluate(parent));
 			}
 			public static readonly Map callString=new Map("call");
 			public static readonly Map functionString=new Map("function");
@@ -498,8 +499,7 @@ namespace Meta {
 			public static AST ParseToAst(TextReader stream)  {
 				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser(
 					new IndentationParser(new MetaLexer(stream)));
-				parser.getASTFactory().setASTNodeType("Meta.Parser.LineNumberAST");
-				//				parser->setASTNodeFactory(&MyASTNode::factory);
+				//parser.getASTFactory().setASTNodeType("Meta.Parser.LineNumberAST");
 				parser.map();
 				return parser.getAST();
 			}
@@ -1155,7 +1155,7 @@ namespace Meta {
 					return table.IntKeyValues;
 				}
 			}
-			public object this[object key]  {
+			public virtual object this[object key]  {
 				get {
 					return table[key];
 				}
@@ -1245,15 +1245,18 @@ namespace Meta {
 			private bool isHashCashed=false;
 			private int hash;
 
-
+			int line;
 			public Map(string text) {
 				this.table=new StringStrategy(text);
+				this.line=line;
 			}
 			public Map(MapStrategy table) {
 				this.table=table;
+				this.line=line;
 			}
 			public Map() {
 				this.table=new HybridDictionaryStrategy();
+				this.line=line;
 			}
 			private IMap parent;
 			

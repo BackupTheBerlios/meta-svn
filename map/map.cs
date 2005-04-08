@@ -3,9 +3,17 @@ using System.IO;
 using System.Collections;
 using Meta.Types;
 using Meta.Execution;
+using System.Threading;
+using System.Diagnostics;
+using System.Windows.Forms;
+
 public class map {
-	public static object run(string fileName) {
-		return Interpreter.Run(fileName,new Map());
+	public static void run(string fileName) {
+		Process process=new Process();
+		process.StartInfo.FileName=Application.ExecutablePath;
+		process.StartInfo.Arguments=fileName;
+		process.Start();
+//		return Interpreter.Run(fileName,new Map());
 	}
 	public static bool contains(object key,Map map) {
 		return map.ContainsKey(key);
@@ -59,6 +67,18 @@ public class map {
 		}
 	}
 	public class StorageMap:Map {
+		Storage storage;
+		public StorageMap(Storage storage) {
+			this.storage=storage;
+		}
+		public override object this[object key] {
+			get {
+				return base[key];
+			}
+			set {
+				base[key]=value;
+			}
+		}
 	}
 //	public static Map storage(string path) {
 //		new Storage(path);
