@@ -127,6 +127,15 @@ Entry (DictionaryEntry)
         "System.Object with(System.Object, Meta.Types.IMap)"
 Entry (DictionaryEntry)
   Key (Map):
+    "storage"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Map storage(Meta.Types.Map)"
+Entry (DictionaryEntry)
+  Key (Map):
     "add"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):

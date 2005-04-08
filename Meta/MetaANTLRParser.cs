@@ -298,11 +298,11 @@ _loop78_breakloop:					;
 					
 					Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 								Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
-								CommonAST currentAst=new CommonAST(currentToken);
+								LineNumberAST currentAst=new LineNumberAST(currentToken);
 								currentAst.setText("search");
 					
 								//Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
-								//CommonAST autokeyAst=new CommonAST(autokeyToken);
+								//LineNumberAST autokeyAst=new LineNumberAST(autokeyToken);
 								//autokeyAst.setText(Counters.autokey.Peek().ToString());
 					select_AST=(AST)astFactory.make( (new ASTArray(3)).add(astFactory.create(SELECT_KEY)).add(currentAst).add(select_AST));
 					//#select=#([SELECT_KEY],#select);
@@ -602,11 +602,11 @@ _loop57_breakloop:						;
 							//Counters.counter++;
 							Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 										      Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
-											    CommonAST currentAst=new CommonAST(currentToken);
+											    LineNumberAST currentAst=new LineNumberAST(currentToken);
 											    currentAst.setText("this");
 							
 											    Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
-											    CommonAST autokeyAst=new CommonAST(autokeyToken);
+											    LineNumberAST autokeyAst=new LineNumberAST(autokeyToken);
 											    autokeyAst.setText(Counters.autokey.Peek().ToString());
 							statement_AST=(AST)astFactory.make( (new ASTArray(3)).add(astFactory.create(STATEMENT)).add((AST)astFactory.make( (new ASTArray(3)).add(astFactory.create(SELECT_KEY)).add(currentAst).add(autokeyAst))).add(statement_AST));
 							
@@ -640,11 +640,11 @@ _loop57_breakloop:						;
 							
 							Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 										      Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
-											    CommonAST currentAst=new CommonAST(currentToken);
+											    LineNumberAST currentAst=new LineNumberAST(currentToken);
 											    currentAst.setText("this");
 							
 											    Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
-											    CommonAST autokeyAst=new CommonAST(autokeyToken);
+											    LineNumberAST autokeyAst=new LineNumberAST(autokeyToken);
 											    autokeyAst.setText(Counters.autokey.Peek().ToString());
 							statement_AST=(AST)astFactory.make( (new ASTArray(3)).add(astFactory.create(STATEMENT)).add((AST)astFactory.make( (new ASTArray(3)).add(astFactory.create(SELECT_KEY)).add(currentAst).add(autokeyAst))).add(statement_AST));
 							

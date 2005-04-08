@@ -224,11 +224,11 @@ statement:
             //Counters.counter++;
             Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 			      Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
-				    CommonAST currentAst=new CommonAST(currentToken);
+				    LineNumberAST currentAst=new LineNumberAST(currentToken);
 				    currentAst.setText("this");
 
 				    Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
-				    CommonAST autokeyAst=new CommonAST(autokeyToken);
+				    LineNumberAST autokeyAst=new LineNumberAST(autokeyToken);
 				    autokeyAst.setText(Counters.autokey.Peek().ToString());
             #statement=#([STATEMENT],#([SELECT_KEY],currentAst,autokeyAst),#statement);
         }
@@ -239,11 +239,11 @@ statement:
         {
             Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 			      Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
-				    CommonAST currentAst=new CommonAST(currentToken);
+				    LineNumberAST currentAst=new LineNumberAST(currentToken);
 				    currentAst.setText("this");
 
 				    Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
-				    CommonAST autokeyAst=new CommonAST(autokeyToken);
+				    LineNumberAST autokeyAst=new LineNumberAST(autokeyToken);
 				    autokeyAst.setText(Counters.autokey.Peek().ToString());
             #statement=#([STATEMENT],#([SELECT_KEY],currentAst,autokeyAst),#statement);
         }
@@ -284,11 +284,11 @@ select:
     {
       Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 			Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
-			CommonAST currentAst=new CommonAST(currentToken);
+			LineNumberAST currentAst=new LineNumberAST(currentToken);
 			currentAst.setText("search");
 
 			//Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
-			//CommonAST autokeyAst=new CommonAST(autokeyToken);
+			//LineNumberAST autokeyAst=new LineNumberAST(autokeyToken);
 			//autokeyAst.setText(Counters.autokey.Peek().ToString());
       #select=#([SELECT_KEY],currentAst,#select);
       //#select=#([SELECT_KEY],#select);
@@ -333,7 +333,8 @@ literalKey:
 }      
 class MetaTreeParser extends TreeParser;
 options {
-        defaultErrorHandler=false;
+    defaultErrorHandler=false;
+    ASTLabelType = "LineNumberAST";
 }
 expression
   returns[Map result]

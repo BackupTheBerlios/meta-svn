@@ -498,6 +498,8 @@ namespace Meta {
 			public static AST ParseToAst(TextReader stream)  {
 				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser(
 					new IndentationParser(new MetaLexer(stream)));
+				parser.getASTFactory().setASTNodeType("Meta.Parser.LineNumberAST");
+				//				parser->setASTNodeFactory(&MyASTNode::factory);
 				parser.map();
 				return parser.getAST();
 			}
@@ -2168,6 +2170,39 @@ namespace Meta {
 			protected TokenStream originalStream;
 			protected int presentIndentationLevel=-1;
 		}
+		public class LineNumberAST:CommonAST {
+			private int lineNumber;
+			public LineNumberAST() { }
+			public LineNumberAST(Token tok):base(tok){}
+			//		public LineNumberAST(Token tok) { super(tok); }
+			public override void initialize(AST t) {
+				base.initialize(t);
+				if (t.GetType().Name.Equals("LineNumberAST")) {
+					LineNumberAST t2 = (LineNumberAST)t;
+					lineNumber = t2.lineNumber;
+				}
+			}
+			//		public void initialize(AST t) {
+			//			super.initialize(t);
+			//			if (t.getClass().getName().compareTo("LineNumberAST") == 0) {
+			//				LineNumberAST t2 = (LineNumberAST)t;
+			//				lineNumber = t2.lineNumber;
+			//			}
+			//		}
+			public override void initialize(Token tok) {
+				base.initialize(tok);
+				lineNumber = tok.getLine(); /* store the line number from the token */
+			}
+			//		public void initialize(Token tok) {
+			//			super.initialize(tok);
+			//			lineNumber = tok.getLine(); /* store the line number from the token */
+			//		}
+
+			/* use this function in your tree walker to get the token's line number */
+			public int getLineNumber() {
+				return lineNumber;
+			}
+		}
 	}
 	namespace TestingFramework {
 		public interface ISerializeSpecial {
@@ -2286,5 +2321,28 @@ namespace Meta {
 				this.names=names;
 			}
 		}
+		
+		//	public class LineNumberAST extends LineNumberAST {
+		//											private int lineNumber;
+		//
+		//		public LineNumberAST() { }
+		//		public LineNumberAST(Token tok) { super(tok); }
+		//		public void initialize(AST t) {
+		//			super.initialize(t);
+		//			if (t.getClass().getName().compareTo("LineNumberAST") == 0) {
+		//				LineNumberAST t2 = (LineNumberAST)t;
+		//				lineNumber = t2.lineNumber;
+		//			}
+		//		}
+		//		public void initialize(Token tok) {
+		//			super.initialize(tok);
+		//			lineNumber = tok.getLine(); /* store the line number from the token */
+		//		}
+		//
+		//		/* use this function in your tree walker to get the token's line number */
+		//		public int getLineNumber() {
+		//			return lineNumber;
+		//		}
+		//	}
 	}
 }

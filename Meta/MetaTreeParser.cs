@@ -60,7 +60,7 @@ namespace Meta.Parser
 {
 		Map result;
 		
-		AST expression_AST_in = (AST)_t;
+		LineNumberAST expression_AST_in = (LineNumberAST)_t;
 		
 		result=null;
 		
@@ -114,7 +114,7 @@ namespace Meta.Parser
 {
 		Map result;
 		
-		AST call_AST_in = (AST)_t;
+		LineNumberAST call_AST_in = (LineNumberAST)_t;
 		
 		result=new Map();
 		Map call=new Map();
@@ -123,8 +123,8 @@ namespace Meta.Parser
 		
 		
 		AST __t98 = _t;
-		AST tmp21_AST_in = _t;
-		match(_t,CALL);
+		LineNumberAST tmp21_AST_in = (_t==ASTNULL) ? null : (LineNumberAST)_t;
+		match((AST)_t,CALL);
 		_t = _t.getFirstChild();
 		{
 			delayed=expression(_t);
@@ -149,7 +149,7 @@ namespace Meta.Parser
 {
 		Map result;
 		
-		AST map_AST_in = (AST)_t;
+		LineNumberAST map_AST_in = (LineNumberAST)_t;
 		
 		result=new Map();
 		Map statements=new Map();
@@ -157,8 +157,8 @@ namespace Meta.Parser
 		
 		
 		AST __t93 = _t;
-		AST tmp22_AST_in = _t;
-		match(_t,MAP);
+		LineNumberAST tmp22_AST_in = (_t==ASTNULL) ? null : (LineNumberAST)_t;
+		match((AST)_t,MAP);
 		_t = _t.getFirstChild();
 		{    // ( ... )*
 			for (;;)
@@ -172,8 +172,8 @@ namespace Meta.Parser
 					Map val=null;
 					
 					AST __t95 = _t;
-					AST tmp23_AST_in = _t;
-					match(_t,STATEMENT);
+					LineNumberAST tmp23_AST_in = (_t==ASTNULL) ? null : (LineNumberAST)_t;
+					match((AST)_t,STATEMENT);
 					_t = _t.getFirstChild();
 					key=select(_t);
 					_t = retTree_;
@@ -210,7 +210,7 @@ _loop96_breakloop:			;
 {
 		Map result;
 		
-		AST select_AST_in = (AST)_t;
+		LineNumberAST select_AST_in = (LineNumberAST)_t;
 		
 		result=new Map();
 		Map selection=new Map();
@@ -219,8 +219,8 @@ _loop96_breakloop:			;
 		
 		
 		AST __t102 = _t;
-		AST tmp24_AST_in = _t;
-		match(_t,SELECT_KEY);
+		LineNumberAST tmp24_AST_in = (_t==ASTNULL) ? null : (LineNumberAST)_t;
+		match((AST)_t,SELECT_KEY);
 		_t = _t.getFirstChild();
 		{
 			{ // ( ... )+
@@ -261,14 +261,14 @@ _loop105_breakloop:			;
 {
 		Map result;
 		
-		AST literal_AST_in = (AST)_t;
-		AST token = null;
+		LineNumberAST literal_AST_in = (LineNumberAST)_t;
+		LineNumberAST token = null;
 		
 		result=new Map();
 		
 		
-		token = _t;
-		match(_t,LITERAL);
+		token = (_t==ASTNULL) ? null : (LineNumberAST)_t;
+		match((AST)_t,LITERAL);
 		_t = _t.getNextSibling();
 		
 		result[Literal.literalString]=new Map(token.getText());
@@ -281,15 +281,15 @@ _loop105_breakloop:			;
 {
 		Map result;
 		
-		AST delayed_AST_in = (AST)_t;
+		LineNumberAST delayed_AST_in = (LineNumberAST)_t;
 		
 		result=new Map();
 		Map delayed;
 		
 		
 		AST __t108 = _t;
-		AST tmp25_AST_in = _t;
-		match(_t,FUNCTION);
+		LineNumberAST tmp25_AST_in = (_t==ASTNULL) ? null : (LineNumberAST)_t;
+		match((AST)_t,FUNCTION);
 		_t = _t.getFirstChild();
 		delayed=expression(_t);
 		_t = retTree_;
@@ -300,6 +300,11 @@ _loop105_breakloop:			;
 		
 		retTree_ = _t;
 		return result;
+	}
+	
+	public new LineNumberAST getAST()
+	{
+		return (LineNumberAST) returnAST;
 	}
 	
 	

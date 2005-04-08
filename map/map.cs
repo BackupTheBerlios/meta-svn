@@ -45,6 +45,61 @@ public class map {
 		}
 		return obj;
 	}
+	public static Map storage(Map location) {
+		string path="";
+		foreach(Map loc in location.IntKeyValues) {
+			path=Path.Combine(path,((Map)loc).GetDotNetString());
+		}
+		return new Storage(path);
+	}
+	public class Storage:Map {
+		string path;
+		public Storage(string path){
+			this.path=path;
+		}
+	}
+	public class StorageMap:Map {
+	}
+//	public static Map storage(string path) {
+//		new Storage(path);
+//	}
+//	//make only uppermost class a Storage class?
+//	// could be combined with clone propagation. Not every assignment
+//	// should cause propagation, though. Maybe have separate Propagation
+//	// property. Only problem with Storage class is that I need a Factory
+//	// and that it is another class entirely, which doesn't feel good somehow.
+//
+//	//What should happen if a map within Storage is changed? The assignment
+//	//should cause the thing to be saved. Maps must save line from-to, which
+//	//they have been read from. If map is changed and saved, all lines must
+//	//be corrected. Simply add the difference up. Maybe compute the lines
+//	//lazily in the first place. Reading in the entire file and saving the
+//	//entire file is not acceptable. So, will need separate class anyway.
+//	//Only question is, inherit Map or simply implement IMap interface.
+//	//Implement IMap probably cleaner. Maybe create base class that has a
+//	//Map and passes on all method calls. Inheriting Map is also ok. Line
+//	//numbers must be included when parsing. Who should have the Writer.
+//	
+//	//Storage is a normal Map that has line info, possibly combine with debug
+//	//stuff or similar. Storage "mama" class corresponds to a storage file.
+//	//Storage maps become normal maps when copied. When assigned to, Storage 
+//	//maps alarm the "mama" class, which writes them to the text file and
+//	//updates all line numbers. Writing should be reasonably fast. Look into
+//	//some more best practices here, maybe cache in memory? Probably not,
+//	//because too insecure. Keep it simple at first. Writing should be
+//	//finished when the function returns. No support for transactions, this
+//	//is way overkill for medium sized applications, plus they introduce
+//	//so much complexity as to offer less security rather than more, usually.
+//	//Several entries can be updated at once by assigning a whole map instead
+//	//of just an integer.
+//	private class Storage:Map {
+//		StreamWriter writer;
+//		public Storage(string path) {
+//			Interpreter.RunWithoutLibrary(path,new Map());
+//			this.writer=new StreamWriter(path);
+//		}
+//		private 
+//	}
 }
 
 //public class map {
