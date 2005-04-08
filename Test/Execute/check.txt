@@ -614,6 +614,7 @@ Entry (DictionaryEntry)
       Key (Map):
         "b"
       Value (Map):
+        ""
     Entry (DictionaryEntry)
       Key (Map):
         "SetA"
@@ -882,20 +883,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "b"
   Value (Map):
-    Entry (DictionaryEntry)
-      Key (Integer):
-        "1"
-      Value (Map):
-        Entry (DictionaryEntry)
-          Key (Map):
-            "x"
-          Value (Integer):
-            "7"
-        Entry (DictionaryEntry)
-          Key (Map):
-            "z"
-          Value (Integer):
-            "1"
+    ""
 Entry (DictionaryEntry)
   Key (Map):
     "aSet"
@@ -1925,6 +1913,58 @@ Entry (DictionaryEntry)
     "secondSwitch"
   Value (Map):
     "default"
+Entry (DictionaryEntry)
+  Key (Map):
+    "emptyMap"
+  Value (Map):
+    ""
+Entry (DictionaryEntry)
+  Key (Map):
+    "emptyFunction"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Map):
+        "program"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "1"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "key"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "select"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "1"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "literal"
+                          Value (Map):
+                            "x"
+            Entry (DictionaryEntry)
+              Key (Map):
+                "value"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "literal"
+                  Value (Map):
+                    "hello"
+Entry (DictionaryEntry)
+  Key (Map):
+    "emptyFunctionResult"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Map):
+        "x"
+      Value (Map):
+        "hello"
 Entry (DictionaryEntry)
   Key (Map):
     "font"

@@ -33,7 +33,7 @@ lookedUpLongSymbol:["long key symbol"]
 object:
     a:'default
     autoSearch:'default
-    b:()
+    b:'
     SetA:=
         parent.parent.a:'c
         #autoSearch:'changed
@@ -46,8 +46,8 @@ object:
     :=
         this.a:'b
 a:'default
-b:()
-aSet:object.SetA()
+b:'
+aSet:object.SetA'
 bSet:object.SetB
     value:
         x:'7
@@ -87,8 +87,8 @@ concat:map.concat
 this:map.merge
     parent
     testClasses
-testClass:TestClass()
-memberTest:MemberTest()
+testClass:TestClass'
+memberTest:MemberTest'
 MemberTest.classField:'a
 memberTest.instanceField:'b
 MemberTest.ClassProperty:memberTest.InstanceProperty
@@ -109,29 +109,29 @@ namedNoConversion:NamedNoConversion
 namedNoConversionConcatenated:namedNoConversion.Concatenate
     c:'t
     'r
-indexerNoConversion:IndexerNoConversion()
+indexerNoConversion:IndexerNoConversion'
 indexerNoConversion.abc:'hihi
 indexerNoConversionIndexed:indexerNoConversion.abc
 interceptedSymbol2:'1
 k:'hello
 xyz:'w
 literalFunction:='5
-literalFunctionResult:literalFunction()
+literalFunctionResult:literalFunction'
 function:=
     this:"simple function this"
 callFunction:=function
-callFunctionResult:callFunction ()
+callFunctionResult:callFunction '
 delayedFunction:==
     x:'y
-delayedFunctionResult:delayedFunction ()
+delayedFunctionResult:delayedFunction '
 value:'xyz
 selectionFunction:=value
-selectionFunctionResult:selectionFunction ()
+selectionFunctionResult:selectionFunction '
 bigInteger:'89383838383832839123497123047217340712340720347072304702340720347
 upperLevel:'unchanged
 ChangeUpperLevel:=
     #upperLevel:'changed
-ChangeUpperLevel()
+ChangeUpperLevel'
 staticEventChanged:'false
 TestClass.staticEvent:=
     #staticEventChanged:'true
@@ -139,7 +139,7 @@ TestClass.staticEvent:=
 staticEvent:TestClass.staticEvent
 TestClass.TakeDelegate
     :='resultFromDelegate
-resultFromDelegate:TestClass.GetResultFromDelegate()
+resultFromDelegate:TestClass.GetResultFromDelegate'
 staticEventResult:TestClass.staticEvent
     testClass
 instanceEventChanged:'false
@@ -158,23 +158,23 @@ if
     equal
         '1
         one
-    then:=
+    =
         #firstIf:thenText
-    else:=
+    =
         #firstIf:'else
 if
     equal
         '1
         two
-    then:=
+    =
         #secondIf:'then
-    else:=
+    =
         #secondIf:'else
 firstSwitch:'unchanged
 bigNumber:'50020202029029233344
 switch
     bigNumber
-    case:
+    cases:
         [bigNumber]:=
             #firstSwitch:bigNumber
     default:=
@@ -182,13 +182,17 @@ switch
 secondSwitch:'unchanged
 switch
     '3
-    case:
+    cases:
         1:=
             #secondSwitch:'one
         2:=
             #secondSwitch:'two
     default:=
         #secondSwitch:'default
+emptyMap:'
+emptyFunction:=
+    x:'hello
+emptyFunctionResult:emptyFunction'
 font:System.Drawing.Font
     "Courier New"
     '10

@@ -443,8 +443,9 @@ statements (ArrayList):
                 literal (Map):
                   "b"
             parents (ArrayList):
-          valueExpression (Program):
-            statements (ArrayList):
+          valueExpression (Literal):
+            literal (Map):
+              ""
         Entry (Statement)
           keyExpression (Select):
             expressions (ArrayList):
@@ -754,8 +755,9 @@ statements (ArrayList):
           literal (Map):
             "b"
       parents (ArrayList):
-    valueExpression (Program):
-      statements (ArrayList):
+    valueExpression (Literal):
+      literal (Map):
+        ""
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
@@ -764,8 +766,9 @@ statements (ArrayList):
             "aSet"
       parents (ArrayList):
     valueExpression (Call):
-      argumentExpression (Program):
-        statements (ArrayList):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
@@ -1634,8 +1637,9 @@ statements (ArrayList):
             "testClass"
       parents (ArrayList):
     valueExpression (Call):
-      argumentExpression (Program):
-        statements (ArrayList):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
@@ -1650,8 +1654,9 @@ statements (ArrayList):
             "memberTest"
       parents (ArrayList):
     valueExpression (Call):
-      argumentExpression (Program):
-        statements (ArrayList):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
@@ -1946,8 +1951,9 @@ statements (ArrayList):
             "indexerNoConversion"
       parents (ArrayList):
     valueExpression (Call):
-      argumentExpression (Program):
-        statements (ArrayList):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
@@ -2035,8 +2041,9 @@ statements (ArrayList):
             "literalFunctionResult"
       parents (ArrayList):
     valueExpression (Call):
-      argumentExpression (Program):
-        statements (ArrayList):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
@@ -2116,8 +2123,9 @@ statements (ArrayList):
             "callFunctionResult"
       parents (ArrayList):
     valueExpression (Call):
-      argumentExpression (Program):
-        statements (ArrayList):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
@@ -2179,8 +2187,9 @@ statements (ArrayList):
             "delayedFunctionResult"
       parents (ArrayList):
     valueExpression (Call):
-      argumentExpression (Program):
-        statements (ArrayList):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
@@ -2227,8 +2236,9 @@ statements (ArrayList):
             "selectionFunctionResult"
       parents (ArrayList):
     valueExpression (Call):
-      argumentExpression (Program):
-        statements (ArrayList):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
@@ -2318,8 +2328,9 @@ statements (ArrayList):
             "3"
       parents (ArrayList):
     valueExpression (Call):
-      argumentExpression (Program):
-        statements (ArrayList):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
@@ -2501,8 +2512,9 @@ statements (ArrayList):
             "resultFromDelegate"
       parents (ArrayList):
     valueExpression (Call):
-      argumentExpression (Program):
-        statements (ArrayList):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
@@ -2823,7 +2835,10 @@ statements (ArrayList):
               expressions (ArrayList):
                 Entry (Literal)
                   literal (Map):
-                    "then"
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "2"
               parents (ArrayList):
             valueExpression (Delayed):
               delayed (Map):
@@ -2883,7 +2898,10 @@ statements (ArrayList):
               expressions (ArrayList):
                 Entry (Literal)
                   literal (Map):
-                    "else"
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "3"
               parents (ArrayList):
             valueExpression (Delayed):
               delayed (Map):
@@ -3002,7 +3020,10 @@ statements (ArrayList):
               expressions (ArrayList):
                 Entry (Literal)
                   literal (Map):
-                    "then"
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "2"
               parents (ArrayList):
             valueExpression (Delayed):
               delayed (Map):
@@ -3054,7 +3075,10 @@ statements (ArrayList):
               expressions (ArrayList):
                 Entry (Literal)
                   literal (Map):
-                    "else"
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "3"
               parents (ArrayList):
             valueExpression (Delayed):
               delayed (Map):
@@ -3161,7 +3185,7 @@ statements (ArrayList):
               expressions (ArrayList):
                 Entry (Literal)
                   literal (Map):
-                    "case"
+                    "cases"
               parents (ArrayList):
             valueExpression (Program):
               statements (ArrayList):
@@ -3327,7 +3351,7 @@ statements (ArrayList):
               expressions (ArrayList):
                 Entry (Literal)
                   literal (Map):
-                    "case"
+                    "cases"
               parents (ArrayList):
             valueExpression (Program):
               statements (ArrayList):
@@ -3492,6 +3516,76 @@ statements (ArrayList):
           Entry (Literal)
             literal (Map):
               "switch"
+        parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "emptyMap"
+      parents (ArrayList):
+    valueExpression (Literal):
+      literal (Map):
+        ""
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "emptyFunction"
+      parents (ArrayList):
+    valueExpression (Delayed):
+      delayed (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "program"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "key"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "select"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "x"
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "value"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "hello"
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "emptyFunctionResult"
+      parents (ArrayList):
+    valueExpression (Call):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
+      callableExpression (Select):
+        expressions (ArrayList):
+          Entry (Literal)
+            literal (Map):
+              "emptyFunction"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):

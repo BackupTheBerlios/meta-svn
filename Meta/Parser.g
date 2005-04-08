@@ -181,22 +181,14 @@ map:
   {
     Counters.autokey.Push(0);
   }
-  (
-    (   
-      LPAREN! 
-      (SPACES!)?
-      RPAREN! 
-    )
-	  |
+	(
+	  INDENT!
+	  (statement)?
 	  (
-	    INDENT!
-	    (statement)?
-	    (
-	      ENDLINE!
-	      statement
-	    )*
-	    DEDENT!
-	  )
+	    ENDLINE!
+	    statement
+	  )*
+	  DEDENT!
 	)
 	{
 	  Counters.autokey.Pop();
@@ -259,6 +251,7 @@ call:
   (
     call
     |map
+    |LITERAL
   )
   {
     #call=#([CALL],#call);

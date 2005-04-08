@@ -198,6 +198,7 @@ namespace Meta.Parser
 			case LPAREN:
 			case HASH:
 			case LITERAL_KEY:
+			case LITERAL:
 			{
 				break;
 			}
@@ -229,6 +230,14 @@ namespace Meta.Parser
 				{
 					astFactory.addASTChild(currentAST, returnAST);
 				}
+				break;
+			}
+			case LITERAL:
+			{
+				AST tmp3_AST = null;
+				tmp3_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp3_AST);
+				match(LITERAL);
 				break;
 			}
 			default:
@@ -745,9 +754,9 @@ _loop57_breakloop:						;
 					}
 					case LITERAL:
 					{
-						AST tmp18_AST = null;
-						tmp18_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp18_AST);
+						AST tmp19_AST = null;
+						tmp19_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp19_AST);
 						match(LITERAL);
 						break;
 					}
