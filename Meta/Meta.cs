@@ -1170,6 +1170,24 @@ namespace Meta {
 					}
 				}
 			}
+			public object Execute() {
+				IExpression function=(IExpression)Compile();
+				object result;
+//				Interpreter.arguments.Add(argument);
+				result=function.Evaluate(this);
+//				Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);
+				//				Interpreter.arguments.Remove(argument);
+				return result;
+			}
+//			public object Call(IMap argument) {
+//				IExpression function=(IExpression)Compile();
+//				object result;
+//				Interpreter.arguments.Add(argument);
+//				result=function.Evaluate(this);
+//				Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);
+//				//				Interpreter.arguments.Remove(argument);
+//				return result;
+//			}
 			public object Call(IMap argument) {
 				IExpression function=(IExpression)Compile();
 				object result;
