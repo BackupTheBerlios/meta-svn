@@ -8647,6 +8647,82 @@ Entry (DictionaryEntry)
                       Key (Map):
                         "literal"
                       Value (Map):
+                        "helloh"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "literal"
+              Value (Map):
+                "hi"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "101"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "stringStrategyHashTest"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "select"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "stringTest"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "102"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
                         "x"
         Entry (DictionaryEntry)
           Key (Map):

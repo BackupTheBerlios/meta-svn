@@ -209,6 +209,8 @@ lookupResult:[lookupKey]
 escapedAtText:@"""@
 stringTest:'hello
 stringTest.6:stringTest.1
+helloh:'hi
+stringStrategyHashTest:[stringTest]
 x:
     aLongText:"
         hello word!

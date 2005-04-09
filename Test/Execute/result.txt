@@ -2117,6 +2117,16 @@ Entry (DictionaryEntry)
     "helloh"
 Entry (DictionaryEntry)
   Key (Map):
+    "helloh"
+  Value (Map):
+    "hi"
+Entry (DictionaryEntry)
+  Key (Map):
+    "stringStrategyHashTest"
+  Value (Map):
+    "hi"
+Entry (DictionaryEntry)
+  Key (Map):
     "x"
   Value (Map):
     Entry (DictionaryEntry)

@@ -3867,6 +3867,32 @@ statements (ArrayList):
       expressions (ArrayList):
         Entry (Literal)
           literal (Map):
+            "helloh"
+      parents (ArrayList):
+    valueExpression (Literal):
+      literal (Map):
+        "hi"
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "stringStrategyHashTest"
+      parents (ArrayList):
+    valueExpression (Select):
+      expressions (ArrayList):
+        Entry (Select)
+          expressions (ArrayList):
+            Entry (Literal)
+              literal (Map):
+                "stringTest"
+          parents (ArrayList):
+      parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
             "x"
       parents (ArrayList):
     valueExpression (Program):

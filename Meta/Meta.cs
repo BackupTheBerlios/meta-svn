@@ -1387,7 +1387,6 @@ namespace Meta {
 				}
 			}
 			// not unicode safe!:
-			// also, the strategy cannot replace itself in the Map yet
 			public class StringStrategy:MapStrategy {
 				// is this really identical?
 				public override int GetHashCode() {
