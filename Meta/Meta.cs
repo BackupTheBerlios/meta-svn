@@ -171,6 +171,9 @@ namespace Meta {
 				}
 			}
 			public object SearchAndSelectKeysInCurrentMap(ArrayList keys,bool isRightSide,bool isSelectLastKey) {
+				if(keys.Count==0) {
+					int asdf=0;
+				}
 				if(keys[0].Equals(new Map("asdf"))) {
 					int asdf=0;
 				}
@@ -441,6 +444,9 @@ namespace Meta {
 			public static object ConvertDotNetToMeta(object obj) { 
 				if(obj==null) {
 					return null;
+				}
+				else if(obj.GetType().IsSubclassOf(typeof(Enum))) { // put this in ConvertMetaToDotNet, too
+					return new Integer((int)Convert.ToInt32((Enum)obj));
 				}
 				DotNetToMetaConversion conversion=(DotNetToMetaConversion)metaConversion[obj.GetType()];
 				if(conversion==null) {

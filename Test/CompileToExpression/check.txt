@@ -3910,3 +3910,63 @@ statements (ArrayList):
 hello word!
 hello!
 "
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "ored"
+      parents (ArrayList):
+    valueExpression (Call):
+      argumentExpression (Program):
+        statements (ArrayList):
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "1"
+              parents (ArrayList):
+            valueExpression (Literal):
+              literal (Integer):
+                "20"
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "2"
+              parents (ArrayList):
+            valueExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "System"
+                Entry (Literal)
+                  literal (Map):
+                    "Windows"
+                Entry (Literal)
+                  literal (Map):
+                    "Forms"
+                Entry (Literal)
+                  literal (Map):
+                    "Keys"
+                Entry (Literal)
+                  literal (Map):
+                    "Tab"
+              parents (ArrayList):
+      callableExpression (Select):
+        expressions (ArrayList):
+          Entry (Literal)
+            literal (Map):
+              "math"
+          Entry (Literal)
+            literal (Map):
+              "bitwiseOr"
+        parents (ArrayList):

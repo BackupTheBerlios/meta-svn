@@ -216,3 +216,6 @@ x:
         hello word!
         hello!
         "
+ored:math.bitwiseOr
+    '20
+    System.Windows.Forms.Keys.Tab

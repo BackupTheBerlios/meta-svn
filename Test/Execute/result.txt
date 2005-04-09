@@ -2137,3 +2137,8 @@ Entry (DictionaryEntry)
 hello word!
 hello!
 "
+Entry (DictionaryEntry)
+  Key (Map):
+    "ored"
+  Value (Integer):
+    "29"
