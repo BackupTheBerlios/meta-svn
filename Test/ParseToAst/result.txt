@@ -7563,9 +7563,9 @@ getFirstChild (CommonAST):
                                                                                                                                                                                                                     null
                                                                                                                                                                                                                   getText (String):
                                                                                                                                                                                                                     "
-        hello word!
-        hello!
-        "
+hello word!
+hello!
+"
                                                                                                                                                                                                                   Type (Int32):
                                                                                                                                                                                                                     "21"
                                                                                                                                                                                                                 getText (String):

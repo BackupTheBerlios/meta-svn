@@ -8686,6 +8686,6 @@ Entry (DictionaryEntry)
                             "literal"
                           Value (Map):
                             "
-        hello word!
-        hello!
-        "
+hello word!
+hello!
+"

@@ -2124,6 +2124,6 @@ Entry (DictionaryEntry)
         "aLongText"
       Value (Map):
         "
-        hello word!
-        hello!
-        "
+hello word!
+hello!
+"

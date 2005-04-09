@@ -3881,6 +3881,6 @@ statements (ArrayList):
           valueExpression (Literal):
             literal (Map):
               "
-        hello word!
-        hello!
-        "
+hello word!
+hello!
+"

@@ -2212,13 +2212,48 @@ namespace Meta {
 						case MetaLexerTokenTypes.INDENTATION:
 							AddIndentationTokensToGetToLevel(t.getText().Length/4);
 							break;
+						case MetaLexerTokenTypes.LITERAL: // move this into parser, for correct error handling?
+							string indentation="";
+							for(int i=0;i<presentIndentationLevel+1;i++) {
+								indentation+="    ";
+							}
+							string text=t.getText();
+							text=text.Replace(Environment.NewLine,"\n");
+							string[] lines=text.Split('\n');
+							string result="";
+							if(lines[0].StartsWith(Environment.NewLine)) {
+								int asdf=0;
+							} 
+							for(int k=0;k<lines.Length;k++) {
+								if(lines[k].StartsWith(indentation)) {
+									result+=lines[k].Remove(0,(presentIndentationLevel+1)*4);
+								}
+								else {
+									result+=lines[k];
+								}
+								if(k!=lines.Length-1) {
+									result+=Environment.NewLine;
+								}
+							}
+//							foreach(string line in lines) {
+//								if(line.StartsWith(indentation)) {
+//									result+=line.Remove(0,(presentIndentationLevel+1)*4);
+//								}
+//								else {
+//									result+=line;
+//								}
+//
+//							}
+							t.setText(result);
+							streamBuffer.Enqueue(t);
+							break;
 						default:
 							streamBuffer.Enqueue(t);
 							break;
 					}
 				}
 				return (Token)streamBuffer.Dequeue();
-			}	
+			}
 			protected void AddIndentationTokensToGetToLevel(int newIndentationLevel)  {
 				int indentationDifference=newIndentationLevel-presentIndentationLevel; 
 				if(indentationDifference==0) {
