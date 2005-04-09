@@ -219,3 +219,7 @@ x:
 ored:math.bitwiseOr
     '20
     System.Windows.Forms.Keys.Tab
+arrayList:System.Collections.ArrayList'
+arrayList.Add
+    'hello
+arrayListResult:arrayList.0

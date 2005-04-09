@@ -3970,3 +3970,77 @@ hello!
             literal (Map):
               "bitwiseOr"
         parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "arrayList"
+      parents (ArrayList):
+    valueExpression (Call):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
+      callableExpression (Select):
+        expressions (ArrayList):
+          Entry (Literal)
+            literal (Map):
+              "System"
+          Entry (Literal)
+            literal (Map):
+              "Collections"
+          Entry (Literal)
+            literal (Map):
+              "ArrayList"
+        parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "this"
+        Entry (Literal)
+          literal (Integer):
+            "9"
+      parents (ArrayList):
+    valueExpression (Call):
+      argumentExpression (Program):
+        statements (ArrayList):
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "1"
+              parents (ArrayList):
+            valueExpression (Literal):
+              literal (Map):
+                "hello"
+      callableExpression (Select):
+        expressions (ArrayList):
+          Entry (Literal)
+            literal (Map):
+              "arrayList"
+          Entry (Literal)
+            literal (Map):
+              "Add"
+        parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "arrayListResult"
+      parents (ArrayList):
+    valueExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "arrayList"
+        Entry (Literal)
+          literal (Integer):
+            "0"
+      parents (ArrayList):

@@ -445,7 +445,7 @@ namespace Meta {
 				if(obj==null) {
 					return null;
 				}
-				else if(obj.GetType().IsSubclassOf(typeof(Enum))) { // put this in ConvertMetaToDotNet, too
+				else if(obj.GetType().IsSubclassOf(typeof(Enum))) {
 					return new Integer((int)Convert.ToInt32((Enum)obj));
 				}
 				DotNetToMetaConversion conversion=(DotNetToMetaConversion)metaConversion[obj.GetType()];
@@ -477,6 +477,12 @@ namespace Meta {
 					return obj;
 				}
 			}
+//					return conversion.Convert(obj);
+//				}
+//				catch {
+//					return obj;
+//				}
+//			}
 			public static object Run(string fileName,IMap argument) {
 				StreamReader a=new StreamReader(fileName);
 				string x=a.ReadToEnd();
@@ -540,7 +546,15 @@ namespace Meta {
 					callers[callers.Count-1]=value;
 				}
 			}
+//			public static object ConvertMetaToDotNet(object metaObject,Type targetType) { // fix the whole conversion mess
+//				bool isConverted;
+//				return ConvertMetaToDotNet(metaObject,targetType,out isConverted);
+//			}
 			public static object ConvertMetaToDotNet(object metaObject,Type targetType,out bool isConverted) {
+				if(targetType.IsSubclassOf(typeof(Enum)) && metaObject is Integer) { 
+					isConverted=true;
+					return Enum.ToObject(targetType,((Integer)metaObject).IntValue());
+				}
 				Hashtable toDotNet=(Hashtable)
 					Interpreter.netConversion[targetType];
 				if(toDotNet!=null) {
@@ -1791,7 +1805,7 @@ namespace Meta {
 				if(method!=null) {
 					if(!method.ReturnType.Equals(typeof(void))) {
 						source+="return ("+returnTypeName+")";
-						source+="Interpreter.ConvertMetaToDotNet(result,typeof("+returnTypeName+"));";
+						source+="Interpreter.ConvertMetaToDotNet(result,typeof("+returnTypeName+"));"; // does conversion even make sense here? Must be converted back anyway.
 					}
 				}
 				else {
@@ -1994,6 +2008,9 @@ namespace Meta {
 							else if(members[0] is PropertyInfo) {
 								PropertyInfo property=(PropertyInfo)members[0];
 								bool converted;
+//								if(key.Equals(new Map("ScrollBars"))) {
+//									int asdf=0;
+//								}
 								//object oldValue=property.GetValue(obj,new object[]{});
 								object val=NetMethod.ConvertParameter(value,property.PropertyType,out converted);
 								if(converted) {
@@ -2004,7 +2021,7 @@ namespace Meta {
 										NetMethod.DoModifiableCollectionAssignment((Map)value,property.GetValue(obj,new object[]{}),out converted);
 									}
 									if(!converted) {
-										throw new ApplicationException("Property value could not be assigned because it cannot be converted.");
+										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.MetaSerialize(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
 									}
 								}
 								return;

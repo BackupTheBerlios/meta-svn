@@ -2142,3 +2142,19 @@ Entry (DictionaryEntry)
     "ored"
   Value (Integer):
     "29"
+Entry (DictionaryEntry)
+  Key (Map):
+    "arrayList"
+  Value (ArrayList):
+    Entry (Map)
+      "hello"
+Entry (DictionaryEntry)
+  Key (Integer):
+    "9"
+  Value (Integer):
+    "0"
+Entry (DictionaryEntry)
+  Key (Map):
+    "arrayListResult"
+  Value (Map):
+    "hello"
