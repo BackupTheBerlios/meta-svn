@@ -207,3 +207,10 @@ lookupKey:
 ]:'hello
 lookupResult:[lookupKey]
 escapedAtText:@"""@
+stringTest:'hello
+stringTest.6:stringTest.1
+x:
+    aLongText:"
+        hello word!
+        hello!
+        "

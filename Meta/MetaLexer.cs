@@ -793,7 +793,7 @@ _loop46_breakloop:			;
 	private static long[] mk_tokenSet_2_()
 	{
 		long[] data = new long[2048];
-		data[0]=-2594147658234920456L;
+		data[0]=-2594147623875182088L;
 		data[1]=-671088641L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;

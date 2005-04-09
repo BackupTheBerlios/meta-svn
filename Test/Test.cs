@@ -53,7 +53,7 @@ namespace Test {
 					// fix this to only show original error message
 				}
 			}
-			catch(CharStreamException e) {// put this into "Run"
+			catch(CharStreamException e) {// put this into "Run" ???, no don't, every caller can do this differently
 				Console.WriteLine(e.Message);
 				Console.ReadLine();
 			}

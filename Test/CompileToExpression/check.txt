@@ -3833,3 +3833,54 @@ statements (ArrayList):
     valueExpression (Literal):
       literal (Map):
         """
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "stringTest"
+      parents (ArrayList):
+    valueExpression (Literal):
+      literal (Map):
+        "hello"
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "stringTest"
+        Entry (Literal)
+          literal (Integer):
+            "6"
+      parents (ArrayList):
+    valueExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "stringTest"
+        Entry (Literal)
+          literal (Integer):
+            "1"
+      parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "x"
+      parents (ArrayList):
+    valueExpression (Program):
+      statements (ArrayList):
+        Entry (Statement)
+          keyExpression (Select):
+            expressions (ArrayList):
+              Entry (Literal)
+                literal (Map):
+                  "aLongText"
+            parents (ArrayList):
+          valueExpression (Literal):
+            literal (Map):
+              "
+        hello word!
+        hello!
+        "

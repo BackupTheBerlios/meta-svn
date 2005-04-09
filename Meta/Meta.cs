@@ -1247,7 +1247,7 @@ namespace Meta {
 				}
 			}
 			public IMap Clone() {
-				Map clone=table.Clone();
+				Map clone=table.CloneMap();
 				clone.Parent=Parent;
 				clone.compiled=compiled;
 				return clone;
@@ -1300,18 +1300,21 @@ namespace Meta {
 			private int hash;
 
 			int line;
-			public Map(string text) {
-				this.table=new StringStrategy(text);
-				this.line=line;
+//			public Map(string text) {
+//				this.table=new StringStrategy(text);
+//			}
+			public Map(string text):this(new StringStrategy(text)) {
 			}
 			public Map(MapStrategy table) {
 				this.table=table;
-				this.line=line;
+				this.table.map=this;
 			}
-			public Map() {
-				this.table=new HybridDictionaryStrategy();
-				this.line=line;
+			public Map():this(new HybridDictionaryStrategy()) {
 			}
+//			public Map() {
+//				this.table=new HybridDictionaryStrategy();
+//				this.line=line;
+//			}
 			private IMap parent;
 			
 			private MapStrategy table;
@@ -1329,7 +1332,19 @@ namespace Meta {
 				}
 			}
 			public abstract class MapStrategy {
-				public abstract Map Clone();
+				public Map map;
+				public MapStrategy Clone() {
+					MapStrategy strategy=new HybridDictionaryStrategy();
+					//Map strategy=new Map(new HybridDictionaryStrategy(this.keys.Count));
+					foreach(object key in this.Keys) {
+						strategy[key]=this[key];
+					}
+					return strategy;	
+				}
+//				public MapStrategy(Map map) {
+//					this.map=map;
+//				}
+				public abstract Map CloneMap();
 				public abstract ArrayList IntKeyValues {
 					get;
 				}
@@ -1389,9 +1404,8 @@ namespace Meta {
 					}
 					return base.Equal(obj);
 				}
-				public override Map Clone() {
-					return new Map(new StringStrategy(this)); // das ist ok, vielleicht StringStrategy immutable machen
-																			// und zwischen verschiedenen Maps teilen?
+				public override Map CloneMap() {
+					return new Map(new StringStrategy(this));
 				}
 				public override ArrayList IntKeyValues {
 					get {
@@ -1442,7 +1456,8 @@ namespace Meta {
 						return null;
 					}
 					set {
-						int asdf=0;
+						map.table=this.Clone();
+						map.table[key]=value;
 						//table[key]=value;
 					}
 				}
@@ -1464,7 +1479,7 @@ namespace Meta {
 					this.keys=new ArrayList(count);
 					this.table=new HybridDictionary(count);
 				}
-				public override Map Clone() {
+				public override Map CloneMap() {
 					Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
 					foreach(object key in keys) {
 						clone[key]=table[key];
