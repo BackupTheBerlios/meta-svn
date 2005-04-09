@@ -41,7 +41,7 @@ namespace Meta.Parser
 		public const int LPAREN = 16;
 		public const int RPAREN = 17;
 		public const int POINT = 18;
-		public const int HASH = 19;
+		public const int STAR = 19;
 		public const int LITERAL_KEY = 20;
 		public const int LITERAL = 21;
 		public const int SPACES = 22;
@@ -122,8 +122,8 @@ namespace Meta.Parser
 		Map argument=new Map();
 		
 		
-		AST __t99 = _t;
-		AST tmp23_AST_in = _t;
+		AST __t98 = _t;
+		AST tmp20_AST_in = _t;
 		match(_t,CALL);
 		_t = _t.getFirstChild();
 		{
@@ -139,7 +139,7 @@ namespace Meta.Parser
 		call[Call.argumentString]=argument;
 		result[Call.callString]=call;
 		
-		_t = __t99;
+		_t = __t98;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return result;
@@ -156,8 +156,8 @@ namespace Meta.Parser
 		int counter=1;
 		
 		
-		AST __t94 = _t;
-		AST tmp24_AST_in = _t;
+		AST __t93 = _t;
+		AST tmp21_AST_in = _t;
 		match(_t,MAP);
 		_t = _t.getFirstChild();
 		{    // ( ... )*
@@ -171,8 +171,8 @@ namespace Meta.Parser
 					Map key=null;
 					Map val=null;
 					
-					AST __t96 = _t;
-					AST tmp25_AST_in = _t;
+					AST __t95 = _t;
+					AST tmp22_AST_in = _t;
 					match(_t,STATEMENT);
 					_t = _t.getFirstChild();
 					key=select(_t);
@@ -186,18 +186,18 @@ namespace Meta.Parser
 										statements[new Integer(counter)]=statement;
 										counter++;
 									
-					_t = __t96;
+					_t = __t95;
 					_t = _t.getNextSibling();
 				}
 				else
 				{
-					goto _loop97_breakloop;
+					goto _loop96_breakloop;
 				}
 				
 			}
-_loop97_breakloop:			;
+_loop96_breakloop:			;
 		}    // ( ... )*
-		_t = __t94;
+		_t = __t93;
 		_t = _t.getNextSibling();
 		
 		result[Program.programString]=statements;
@@ -218,13 +218,13 @@ _loop97_breakloop:			;
 		int counter=1;
 		
 		
-		AST __t103 = _t;
-		AST tmp26_AST_in = _t;
+		AST __t102 = _t;
+		AST tmp23_AST_in = _t;
 		match(_t,SELECT_KEY);
 		_t = _t.getFirstChild();
 		{
 			{ // ( ... )+
-			int _cnt106=0;
+			int _cnt105=0;
 			for (;;)
 			{
 				if (_t == null)
@@ -240,15 +240,15 @@ _loop97_breakloop:			;
 				}
 				else
 				{
-					if (_cnt106 >= 1) { goto _loop106_breakloop; } else { throw new NoViableAltException(_t);; }
+					if (_cnt105 >= 1) { goto _loop105_breakloop; } else { throw new NoViableAltException(_t);; }
 				}
 				
-				_cnt106++;
+				_cnt105++;
 			}
-_loop106_breakloop:			;
+_loop105_breakloop:			;
 			}    // ( ... )+
 		}
-		_t = __t103;
+		_t = __t102;
 		_t = _t.getNextSibling();
 		
 		result[Select.selectString]=selection;
@@ -287,13 +287,13 @@ _loop106_breakloop:			;
 		Map delayed;
 		
 		
-		AST __t109 = _t;
-		AST tmp27_AST_in = _t;
+		AST __t108 = _t;
+		AST tmp24_AST_in = _t;
 		match(_t,FUNCTION);
 		_t = _t.getFirstChild();
 		delayed=expression(_t);
 		_t = retTree_;
-		_t = __t109;
+		_t = __t108;
 		_t = _t.getNextSibling();
 		
 		result[Delayed.delayedString]=delayed;
@@ -323,7 +323,7 @@ _loop106_breakloop:			;
 		@"""'('""",
 		@"""')'""",
 		@"""'.'""",
-		@"""'#'""",
+		@"""'*'""",
 		@"""a key""",
 		@"""a literal""",
 		@"""whitespace""",

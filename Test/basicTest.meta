@@ -36,7 +36,7 @@ object:
     b:'
     SetA:=
         parent.parent.a:'c
-        #autoSearch:'changed
+        autoSearch*:'changed
     SetB:=
         caller.b.1:arg.value
         this:'changed
@@ -130,11 +130,11 @@ selectionFunctionResult:selectionFunction '
 bigInteger:'89383838383832839123497123047217340712340720347072304702340720347
 upperLevel:'unchanged
 ChangeUpperLevel:=
-    #upperLevel:'changed
+    upperLevel*:'changed
 ChangeUpperLevel'
 staticEventChanged:'false
 TestClass.staticEvent:=
-    #staticEventChanged:'true
+    staticEventChanged*:'true
     this:arg.1
 staticEvent:TestClass.staticEvent
 TestClass.TakeDelegate
@@ -144,7 +144,7 @@ staticEventResult:TestClass.staticEvent
     testClass
 instanceEventChanged:'false
 testClass.instanceEvent:=
-    #instanceEventChanged:'true
+    instanceEventChanged*:'true
     this:arg.1
 instanceEvent:testClass.instanceEvent
 instanceEventResult:testClass.instanceEvent
@@ -159,36 +159,36 @@ if
         '1
         one
     =
-        #firstIf:thenText
+        firstIf*:thenText
     =
-        #firstIf:'else
+        firstIf*:'else
 if
     equal
         '1
         two
     =
-        #secondIf:'then
+        secondIf*:'then
     =
-        #secondIf:'else
+        secondIf*:'else
 firstSwitch:'unchanged
 bigNumber:'50020202029029233344
 switch
     bigNumber
     cases:
         [bigNumber]:=
-            #firstSwitch:bigNumber
+            firstSwitch*:bigNumber
     default:=
-        #firstSwitch:'default
+        firstSwitch*:'default
 secondSwitch:'unchanged
 switch
     '3
     cases:
         1:=
-            #secondSwitch:'one
+            secondSwitch*:'one
         2:=
-            #secondSwitch:'two
+            secondSwitch*:'two
     default:=
-        #secondSwitch:'default
+        secondSwitch*:'default
 emptyMap:'
 emptyFunction:=
     x:'hello

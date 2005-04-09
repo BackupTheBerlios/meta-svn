@@ -48,7 +48,7 @@ namespace Meta.Parser
 		public const int LPAREN = 16;
 		public const int RPAREN = 17;
 		public const int POINT = 18;
-		public const int HASH = 19;
+		public const int STAR = 19;
 		public const int LITERAL_KEY = 20;
 		public const int LITERAL = 21;
 		public const int SPACES = 22;
@@ -138,9 +138,9 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
-						case '#':
+						case '*':
 						{
-							mHASH(true);
+							mSTAR(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -299,12 +299,12 @@ tryAgain:
 		returnToken_ = _token;
 	}
 	
-	public void mHASH(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+	public void mSTAR(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
-		_ttype = HASH;
+		_ttype = STAR;
 		
-		match('#');
+		match('*');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);
@@ -718,7 +718,7 @@ _loop39_breakloop:			;
 	private static long[] mk_tokenSet_0_()
 	{
 		long[] data = new long[2048];
-		data[0]=-2594288395723275784L;
+		data[0]=-2594292759410048520L;
 		data[1]=-671088641L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;

@@ -83,11 +83,11 @@ POINT
   }:
   '.';
   
-HASH
+STAR
   options {
-    paraphrase="'#'";
+    paraphrase="'*'";
   }:
-  '#';
+  '*';
 
 // fix the exact characters allowed
 // rename to LOOKUP_LITERAL
@@ -95,7 +95,7 @@ LITERAL_KEY
   options {
     paraphrase="a key";
   }:
-  ( ~ (' '|'\r'|'\n'|'='|'.'|'/'|'\''|'"'|'('|')'|'['|']'|'#'|':') )+;
+  ( ~ (' '|'\r'|'\n'|'='|'.'|'/'|'\''|'"'|'('|')'|'['|']'|'*'|':') )+;
     
 LITERAL
   options {
@@ -264,15 +264,20 @@ delayed:
     #delayed=#([FUNCTION], #delayed);
   };
   
-// rename HASH to something English
 select:
-  (HASH)=>
   (
-    HASH!
     lookup
     (
       POINT! lookup
     )*
+    STAR
+  )=>
+  (
+    lookup
+    (
+      POINT! lookup
+    )*
+    STAR!
     {
       Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 			Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);

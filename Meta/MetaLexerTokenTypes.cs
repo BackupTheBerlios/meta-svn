@@ -21,7 +21,7 @@ namespace Meta.Parser
 		public const int LPAREN = 16;
 		public const int RPAREN = 17;
 		public const int POINT = 18;
-		public const int HASH = 19;
+		public const int STAR = 19;
 		public const int LITERAL_KEY = 20;
 		public const int LITERAL = 21;
 		public const int SPACES = 22;
