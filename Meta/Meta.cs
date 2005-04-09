@@ -450,6 +450,17 @@ namespace Meta {
 					return conversion.Convert(obj);
 				}
 			}
+			public static object ConvertMetaToDotNet(object obj) {
+				if(obj is Integer) {
+					return ((Integer)obj).IntValue();
+				}
+				else if(obj is Map && ((Map)obj).IsString()) {
+					return ((Map)obj).GetDotNetString();
+				}
+				else {
+					return obj;
+				}
+			}
 			public static object ConvertMetaToDotNet(object obj,Type targetType) {
 				try {
 					MetaToDotNetConversion conversion=(MetaToDotNetConversion)((Hashtable)
@@ -580,7 +591,15 @@ namespace Meta {
 			public class LiteralRecognitions {
 				// Attention! order of classes matters here
 				public class RecognizeString:RecognizeLiteral {
+//					ArrayList escapeSequences;
+//					public RecognizeString() {
+//						this.escapeSequences=new ArrayList(
+//							new object[] {new DictionaryEntry("\\\"","\"")});
+//					}
 					public override object Recognize(string text) {
+//						foreach(DictionaryEntry entry in escapeSequences) {
+//							text=text.Replace((string)entry.Key,(string)entry.Value);
+//						}
 						return new Map(text);
 					}
 				}
@@ -1129,6 +1148,23 @@ namespace Meta {
 			public static Library library=new Library();
 			private Map cash=new Map();
 			public static string libraryPath="library"; 
+		}
+		public class MapAdapter {
+			Map map;
+			public MapAdapter(Map map) {
+				this.map=map;
+			}
+			public MapAdapter() {
+				this.map=new Map();
+			}
+			public object this[object key] {
+				get {
+					return Interpreter.ConvertMetaToDotNet(map[Interpreter.ConvertDotNetToMeta(key)]);
+				}
+				set {
+					this.map[Interpreter.ConvertDotNetToMeta(key)]=Interpreter.ConvertDotNetToMeta(value);
+				}
+			}
 		}
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
 			public bool IsString() {

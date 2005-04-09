@@ -8511,3 +8511,33 @@ Entry (DictionaryEntry)
                                 "literal"
                               Value (Map):
                                 "lookupKey"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "97"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "escapedAtText"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "literal"
+              Value (Map):
+                """

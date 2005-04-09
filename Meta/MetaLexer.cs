@@ -51,12 +51,13 @@ namespace Meta.Parser
 		public const int STAR = 19;
 		public const int LITERAL_KEY = 20;
 		public const int LITERAL = 21;
-		public const int SPACES = 22;
-		public const int LINE = 23;
-		public const int COMMENT = 24;
-		public const int SPACE = 25;
-		public const int NEWLINE = 26;
-		public const int SELECT_KEY = 27;
+		public const int LITERAL_END = 22;
+		public const int SPACES = 23;
+		public const int LINE = 24;
+		public const int COMMENT = 25;
+		public const int SPACE = 26;
+		public const int NEWLINE = 27;
+		public const int SELECT_KEY = 28;
 		
 		public MetaLexer(Stream ins) : this(new ByteBuffer(ins))
 		{
@@ -144,7 +145,7 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
-						case '"':  case '\'':
+						case '"':  case '\'':  case '@':
 						{
 							mLITERAL(true);
 							theRetToken = returnToken_;
@@ -354,55 +355,89 @@ _loop12_breakloop:		;
 		{
 		case '"':
 		{
-			int _saveIndex = 0;
-			_saveIndex = text.Length;
-			match("\"");
-			text.Length = _saveIndex;
-			{    // ( ... )*
-				for (;;)
-				{
-					if ((tokenSet_1_.member(LA(1))))
+			{
+				int _saveIndex = 0;
+				_saveIndex = text.Length;
+				match("\"");
+				text.Length = _saveIndex;
+				{    // ( ... )*
+					for (;;)
 					{
+						if ((tokenSet_1_.member(LA(1))))
 						{
-							match(tokenSet_1_);
+							{
+								match(tokenSet_1_);
+							}
 						}
+						else
+						{
+							goto _loop17_breakloop;
+						}
+						
 					}
-					else
-					{
-						goto _loop16_breakloop;
-					}
-					
-				}
-_loop16_breakloop:				;
-			}    // ( ... )*
-			_saveIndex = text.Length;
-			match("\"");
-			text.Length = _saveIndex;
+_loop17_breakloop:					;
+				}    // ( ... )*
+				_saveIndex = text.Length;
+				match("\"");
+				text.Length = _saveIndex;
+			}
 			break;
 		}
 		case '\'':
 		{
-			int _saveIndex = 0;
-			_saveIndex = text.Length;
-			match('\'');
-			text.Length = _saveIndex;
-			{    // ( ... )*
-				for (;;)
-				{
-					if ((tokenSet_2_.member(LA(1))))
+			{
+				int _saveIndex = 0;
+				_saveIndex = text.Length;
+				match('\'');
+				text.Length = _saveIndex;
+				{    // ( ... )*
+					for (;;)
 					{
+						if ((tokenSet_2_.member(LA(1))))
 						{
-							match(tokenSet_2_);
+							{
+								match(tokenSet_2_);
+							}
 						}
+						else
+						{
+							goto _loop21_breakloop;
+						}
+						
 					}
-					else
+_loop21_breakloop:					;
+				}    // ( ... )*
+			}
+			break;
+		}
+		case '@':
+		{
+			{
+				int _saveIndex = 0;
+				_saveIndex = text.Length;
+				match("@\"");
+				text.Length = _saveIndex;
+				{    // ( ... )*
+					for (;;)
 					{
-						goto _loop19_breakloop;
+						if (((tokenSet_3_.member(LA(1))))&&(LA(1)!='"'||LA(2)!='@'))
+						{
+							{
+								matchNot(EOF/*_CHAR*/);
+							}
+						}
+						else
+						{
+							goto _loop25_breakloop;
+						}
+						
 					}
-					
-				}
-_loop19_breakloop:				;
-			}    // ( ... )*
+_loop25_breakloop:					;
+				}    // ( ... )*
+				_saveIndex = text.Length;
+				match("\"@");
+				text.Length = _saveIndex;
+			}
 			break;
 		}
 		default:
@@ -418,13 +453,32 @@ _loop19_breakloop:				;
 		returnToken_ = _token;
 	}
 	
+	protected void mLITERAL_END(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; Token _token=null; int _begin=text.Length;
+		_ttype = LITERAL_END;
+		
+		if (!(LA(2)=='@'))
+		  throw new SemanticException("LA(2)=='@'");
+		int _saveIndex = 0;
+		_saveIndex = text.Length;
+		match("\"@");
+		text.Length = _saveIndex;
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+		{
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
+		}
+		returnToken_ = _token;
+	}
+	
 	public void mSPACES(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
 		_ttype = SPACES;
 		
 		{ // ( ... )+
-		int _cnt22=0;
+		int _cnt29=0;
 		for (;;)
 		{
 			if ((LA(1)==' '))
@@ -433,12 +487,12 @@ _loop19_breakloop:				;
 			}
 			else
 			{
-				if (_cnt22 >= 1) { goto _loop22_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
+				if (_cnt29 >= 1) { goto _loop29_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
 			}
 			
-			_cnt22++;
+			_cnt29++;
 		}
-_loop22_breakloop:		;
+_loop29_breakloop:		;
 		}    // ( ... )+
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -456,11 +510,11 @@ _loop22_breakloop:		;
 		const int endOfFileValue=65535;
 		
 		
-		bool synPredMatched29 = false;
+		bool synPredMatched36 = false;
 		if (((LA(1)=='\n'||LA(1)=='\r')))
 		{
-			int _m29 = mark();
-			synPredMatched29 = true;
+			int _m36 = mark();
+			synPredMatched36 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -474,11 +528,11 @@ _loop22_breakloop:		;
 							}
 							else
 							{
-								goto _loop26_breakloop;
+								goto _loop33_breakloop;
 							}
 							
 						}
-_loop26_breakloop:						;
+_loop33_breakloop:						;
 					}    // ( ... )*
 					{    // ( ... )*
 						for (;;)
@@ -489,11 +543,11 @@ _loop26_breakloop:						;
 							}
 							else
 							{
-								goto _loop28_breakloop;
+								goto _loop35_breakloop;
 							}
 							
 						}
-_loop28_breakloop:						;
+_loop35_breakloop:						;
 					}    // ( ... )*
 					if (!(LA(1)==endOfFileValue))
 					  throw new SemanticException("LA(1)==endOfFileValue");
@@ -501,12 +555,12 @@ _loop28_breakloop:						;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched29 = false;
+				synPredMatched36 = false;
 			}
-			rewind(_m29);
+			rewind(_m36);
 			inputState.guessing--;
 		}
-		if ( synPredMatched29 )
+		if ( synPredMatched36 )
 		{
 			mNEWLINE(false);
 			{    // ( ... )*
@@ -518,11 +572,11 @@ _loop28_breakloop:						;
 					}
 					else
 					{
-						goto _loop31_breakloop;
+						goto _loop38_breakloop;
 					}
 					
 				}
-_loop31_breakloop:				;
+_loop38_breakloop:				;
 			}    // ( ... )*
 			{    // ( ... )*
 				for (;;)
@@ -533,11 +587,11 @@ _loop31_breakloop:				;
 					}
 					else
 					{
-						goto _loop33_breakloop;
+						goto _loop40_breakloop;
 					}
 					
 				}
-_loop33_breakloop:				;
+_loop40_breakloop:				;
 			}    // ( ... )*
 			if (!(LA(1)==endOfFileValue))
 			  throw new SemanticException("LA(1)==endOfFileValue");
@@ -559,11 +613,11 @@ _loop33_breakloop:				;
 					}
 					else
 					{
-						goto _loop35_breakloop;
+						goto _loop42_breakloop;
 					}
 					
 				}
-_loop35_breakloop:				;
+_loop42_breakloop:				;
 			}    // ( ... )*
 			if (0==inputState.guessing)
 			{
@@ -660,19 +714,19 @@ _loop35_breakloop:				;
 		{    // ( ... )*
 			for (;;)
 			{
-				if ((tokenSet_3_.member(LA(1))))
+				if ((tokenSet_4_.member(LA(1))))
 				{
 					{
-						match(tokenSet_3_);
+						match(tokenSet_4_);
 					}
 				}
 				else
 				{
-					goto _loop39_breakloop;
+					goto _loop46_breakloop;
 				}
 				
 			}
-_loop39_breakloop:			;
+_loop46_breakloop:			;
 		}    // ( ... )*
 		{
 			switch ( LA(1) )
@@ -719,7 +773,7 @@ _loop39_breakloop:			;
 	{
 		long[] data = new long[2048];
 		data[0]=-2594292759410048520L;
-		data[1]=-671088641L;
+		data[1]=-671088642L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
 		for (int i = 1024; i<=2047; i++) { data[i]=0L; }
@@ -750,13 +804,23 @@ _loop39_breakloop:			;
 	private static long[] mk_tokenSet_3_()
 	{
 		long[] data = new long[2048];
-		data[0]=-65032L;
+		data[0]=-55816L;
 		for (int i = 1; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
 		for (int i = 1024; i<=2047; i++) { data[i]=0L; }
 		return data;
 	}
 	public static readonly BitSet tokenSet_3_ = new BitSet(mk_tokenSet_3_());
+	private static long[] mk_tokenSet_4_()
+	{
+		long[] data = new long[2048];
+		data[0]=-65032L;
+		for (int i = 1; i<=1022; i++) { data[i]=-1L; }
+		data[1023]=9223372036854775807L;
+		for (int i = 1024; i<=2047; i++) { data[i]=0L; }
+		return data;
+	}
+	public static readonly BitSet tokenSet_4_ = new BitSet(mk_tokenSet_4_());
 	
 }
 }

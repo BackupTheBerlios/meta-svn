@@ -3823,3 +3823,13 @@ statements (ArrayList):
                 "lookupKey"
           parents (ArrayList):
       parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "escapedAtText"
+      parents (ArrayList):
+    valueExpression (Literal):
+      literal (Map):
+        """

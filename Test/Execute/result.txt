@@ -2092,3 +2092,8 @@ Entry (DictionaryEntry)
     "lookupResult"
   Value (Map):
     "hello"
+Entry (DictionaryEntry)
+  Key (Map):
+    "escapedAtText"
+  Value (Map):
+    """
