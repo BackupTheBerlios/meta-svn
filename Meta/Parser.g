@@ -24,7 +24,7 @@ class MetaLexer extends Lexer;
 options 
 {
 	k=1;
-	charVocabulary='\u0003'..'\ufffe';
+	charVocabulary='\u0000'..'\uFFFE';
 	//charVocabulary='\u0003'..'\u0008'|'\u0010'..'\ufffe';
 }
 tokens

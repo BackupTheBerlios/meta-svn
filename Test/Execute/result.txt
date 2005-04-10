@@ -1,4 +1,9 @@
 Entry (DictionaryEntry)
+  Key (Map):
+    "unicodeText"
+  Value (Map):
+    "äaba"
+Entry (DictionaryEntry)
   Key (Integer):
     "1"
   Value (Map):

@@ -34,6 +34,7 @@ using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 using System.GAC;
+using System.Text;
 
 namespace Meta {
 	namespace Execution {
@@ -484,14 +485,23 @@ namespace Meta {
 //				}
 //			}
 			public static object Run(string fileName,IMap argument) {
-				StreamReader a=new StreamReader(fileName);
+				StreamReader a=new StreamReader(fileName,Encoding.Default);
 				string x=a.ReadToEnd();
 				a.Close();
-//				StreamReader reader=new StreamReader(fileName);
+				//				StreamReader reader=new StreamReader(fileName);
 				object result=Run(new StringReader(x),argument);
-//				reader.Close();
+				//				reader.Close();
 				return result;
 			}
+//			public static object Run(string fileName,IMap argument) {
+//				StreamReader a=new StreamReader(fileName);
+//				string x=a.ReadToEnd();
+//				a.Close();
+////				StreamReader reader=new StreamReader(fileName);
+//				object result=Run(new StringReader(x),argument);
+////				reader.Close();
+//				return result;
+//			}
 //			public static object Run(string fileName,IMap argument) {
 //				StreamReader a=new StreamReader(fileName);
 //				string x=a.ReadToEnd();
@@ -502,11 +512,17 @@ namespace Meta {
 //				return result;
 //			}
 			public static object RunWithoutLibrary(string fileName,IMap argument) {
-				StreamReader reader=new StreamReader(fileName);
+				StreamReader reader=new StreamReader(fileName,Encoding.Default);
 				Map program=CompileToMap(reader);
 				reader.Close();
 				return program.Call(argument);
 			}
+//			public static object RunWithoutLibrary(string fileName,IMap argument) {
+//				StreamReader reader=new StreamReader(fileName);
+//				Map program=CompileToMap(reader);
+//				reader.Close();
+//				return program.Call(argument);
+//			}
 //			public static object RunWithExisting(TextReader reader,IMap argument,IMap existing) {
 //				Map lastProgram=CompileToMap(reader);
 //				lastProgram.Parent=Library.library;
@@ -637,6 +653,9 @@ namespace Meta {
 //						foreach(DictionaryEntry entry in escapeSequences) {
 //							text=text.Replace((string)entry.Key,(string)entry.Value);
 //						}
+						if(text.Equals("aba")) {
+							int asdf=0;
+						}
 						return new Map(text);
 					}
 				}

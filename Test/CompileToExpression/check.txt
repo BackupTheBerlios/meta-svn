@@ -4,6 +4,16 @@ statements (ArrayList):
       expressions (ArrayList):
         Entry (Literal)
           literal (Map):
+            "unicodeText"
+      parents (ArrayList):
+    valueExpression (Literal):
+      literal (Map):
+        "aba"
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
             "this"
       parents (ArrayList):
     valueExpression (Call):
@@ -4128,7 +4138,7 @@ hello!
 Alle meine Entchen,
 schwimmen auf dem See,
 schwimmen auf dem See,
-Koepfchen in das Wasser,
+Kpfchen in das Wasser,
 Schwaenzchen in die Hoeh.
 "
   Entry (Statement)
