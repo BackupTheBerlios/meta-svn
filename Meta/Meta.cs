@@ -148,7 +148,7 @@ namespace Meta {
 				foreach(IExpression expression in expressions) {
 					keysToBeSelected.Add(expression.Evaluate(current));
 				}
-				if(keysToBeSelected.Count==1 && keysToBeSelected[0] is Map && ((Map)keysToBeSelected[0]).GetDotNetString().Equals("this")) {
+				if(keysToBeSelected.Count==1 && keysToBeSelected[0] is Map && ((Map)keysToBeSelected[0]).IsString && ((Map)keysToBeSelected[0]).GetDotNetString().Equals("this")) {
 					if(valueToBeAssigned is IMap) {
 						IMap parent=((IMap)Interpreter.Current).Parent;
 						Interpreter.Current=((IMap)valueToBeAssigned).Clone();
@@ -180,13 +180,13 @@ namespace Meta {
 				object selection=Interpreter.Current;
 				int i=0;
 
-				if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("this")) {
+				if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("this")) { // factor out IsString
 					i++;
 				}
-				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
+				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
 					int numCallers=0;
 					foreach(object key in keys) {
-						if(key is Map && ((Map)key).GetDotNetString().Equals("caller")) {
+						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("caller")) {
 							numCallers++;
 							if(numCallers>Interpreter.callers.Count) {
 								throw new ApplicationException(KeyErrorMessage(keys[i]));
@@ -212,9 +212,9 @@ namespace Meta {
 //					}
 //					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
 //				}
-				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("parent")) {
+				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("parent")) {
 					foreach(object key in keys) {
-						if(key is Map && ((Map)key).GetDotNetString().Equals("parent")) {
+						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("parent")) {
 							selection=((IMap)selection).Parent;
 							if(selection==null) {
 								throw new ApplicationException(KeyErrorMessage(keys[i]));
@@ -226,10 +226,10 @@ namespace Meta {
 						}
 					}
 				}
-				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("arg")) {
+				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("arg")) {
 					int numArgs=0;
 					foreach(object key in keys) {
-						if(key is Map && ((Map)key).GetDotNetString().Equals("arg")) {
+						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("arg")) {
 							numArgs++;
 							if(numArgs>Interpreter.arguments.Count) {
 								throw new ApplicationException(KeyErrorMessage(keys[i]));
@@ -242,8 +242,8 @@ namespace Meta {
 					}
 					selection=Interpreter.arguments[Interpreter.arguments.Count-numArgs];
 				}
-				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("search")||isRightSide) {
-					if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("search")) {
+				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("search")||isRightSide) {
+					if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("search")) { // IsString stupidly repeated
 						i++;
 					}
 					while(!((IKeyValue)selection).ContainsKey(keys[i])) {
@@ -300,7 +300,7 @@ namespace Meta {
 			}
 			public static string KeyErrorMessage(object key) {
 				string text="Key ";
-				if(key is Map) {
+				if(key is Map && ((Map)key).IsString) {
 					text+=((Map)key).GetDotNetString();
 				}
 				else {
@@ -329,7 +329,7 @@ namespace Meta {
 				if(meta is Map) {
 					string text="";
 					Map map=(Map)meta;
-					if(map.IsString()) {
+					if(map.IsString) {
 						text+="\""+(map).GetDotNetString()+"\"";
 					}
 					else if(map.Count==0) {
@@ -349,11 +349,11 @@ namespace Meta {
 						else {
 							foreach(DictionaryEntry entry in map) {
 								text+=indent+'['+MetaSerialize(entry.Key,indent,false)+']'+':';
-								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString()) {
+								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString) {
 									text+="\n";
 								}
 								text+=MetaSerialize(entry.Value,indent+'\t',true);
-								if(!(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString())) {
+								if(!(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString)) {
 									text+="\n";
 								}
 							}
@@ -373,7 +373,7 @@ namespace Meta {
 //				if(meta is Map) {
 //					string text="";
 //					Map map=(Map)meta;
-//					if(map.IsString()) {
+//					if(map.IsString) {
 //						text+="'"+(map).GetDotNetString()+"'";
 //					}
 //					else if(map.Count==0) {
@@ -393,11 +393,11 @@ namespace Meta {
 //						else {
 //							foreach(DictionaryEntry entry in map) {
 //								text+=indent+'['+MetaSerialize(entry.Key,indent,false)+']'+'=';
-//								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString()) {
+//								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString) {
 //									text+="\n";
 //								}
 //								text+=MetaSerialize(entry.Value,indent+"  ",true);
-//								if(!(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString())) {
+//								if(!(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString)) {
 //									text+="\n";
 //								}
 //							}
@@ -458,9 +458,9 @@ namespace Meta {
 			}
 			public static object ConvertMetaToDotNet(object obj) {
 				if(obj is Integer) {
-					return ((Integer)obj).IntValue();
+					return ((Integer)obj).Int;
 				}
-				else if(obj is Map && ((Map)obj).IsString()) {
+				else if(obj is Map && ((Map)obj).IsString) {
 					return ((Map)obj).GetDotNetString();
 				}
 				else {
@@ -553,7 +553,7 @@ namespace Meta {
 			public static object ConvertMetaToDotNet(object metaObject,Type targetType,out bool isConverted) {
 				if(targetType.IsSubclassOf(typeof(Enum)) && metaObject is Integer) { 
 					isConverted=true;
-					return Enum.ToObject(targetType,((Integer)metaObject).IntValue());
+					return Enum.ToObject(targetType,((Integer)metaObject).Int);
 				}
 				Hashtable toDotNet=(Hashtable)
 					Interpreter.netConversion[targetType];
@@ -1240,8 +1240,10 @@ namespace Meta {
 		}
 		//make IntKeyValues somehow separate, and add "Add" method to Map
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
-			public bool IsString() {
-				return table.IsString();
+			public bool IsString {
+				get {
+					return table.IsString; // Make this a property
+				}
 			}
 			public string GetDotNetString() {
 				return table.GetDotNetString();
@@ -1397,7 +1399,7 @@ namespace Meta {
 				if(this.Count==1) {
 					int asdf=0;
 				}
-				if(this.IsString()) {
+				if(this.IsString) {
 					return indent+"\""+this.GetDotNetString()+"\""+"\n";
 				}
 				else {
@@ -1421,7 +1423,10 @@ namespace Meta {
 				public abstract ArrayList IntKeyValues {
 					get;
 				}
-				public abstract bool IsString();
+				public abstract bool IsString {
+					get;
+				}// This really means something more abstract, more along the lines of,
+															// "is this a map that only has integers as children, and maybe also only integers as keys?"
 				public abstract string GetDotNetString();
 				public abstract ArrayList Keys {
 					get;
@@ -1489,8 +1494,10 @@ namespace Meta {
 					}
 				}
 
-				public override bool IsString() {
-					return true;
+				public override bool IsString {
+					get {
+						return true;
+					}
 				}
 				public override string GetDotNetString() {
 					return text;
@@ -1520,7 +1527,7 @@ namespace Meta {
 				public override object this[object key]  {
 					get {
 						if(key is Integer) {
-							int i=((Integer)key).IntValue();
+							int i=((Integer)key).Int;
 							if(i>0 && i<=this.Count) {
 								return new Integer(text[i-1]);
 							}
@@ -1568,30 +1575,66 @@ namespace Meta {
 						return list;
 					}
 				}
-				public override bool IsString() {
-					if(IntKeyValues.Count>0) {
-						try {
-							GetDotNetString();
-							return true;
+				public override bool IsString {
+					get {
+						if(IntKeyValues.Count>0) {
+							try {
+								GetDotNetString();// not very good solution
+								return true;
+							}
+							catch{
+							}
 						}
-						catch{
-						}
+						return false;
 					}
-					return false;
 				}
+//				public override bool IsString {
+//					if(IntKeyValues.Count>0) {
+//						try {
+//							GetDotNetString();
+//							return true;
+//						}
+//						catch{
+//						}
+//					}
+//					return false;
+//				}
 				public override string GetDotNetString() {
 					string text="";
-					for(Integer i=new Integer(1);;i++) {
-						object val=table[i];
-						if(val==null) {
-							break;
+					foreach(object key in this.Keys) {
+						if(key is Integer && this.table[key] is Integer) {
+							try {
+								text+=Convert.ToChar(((Integer)this.table[key]).Int);
+							}
+							catch {
+								throw new MapException(this.map,"Map is not a string");
+							}
 						}
 						else {
-							text+=System.Convert.ToChar(((Integer)val).LongValue());
+							throw new MapException(this.map,"Map is not a string");
 						}
 					}
 					return text;
 				}
+				public class MapException:ApplicationException {
+					Map map;
+					public MapException(Map map,string message):base(message) {
+						this.map=map;
+					}
+				}
+//				public override string GetDotNetString() {
+//					string text="";
+//					for(Integer i=new Integer(1);;i++) {
+//						object val=table[i];
+//						if(val==null) {
+//							break;
+//						}
+//						else {
+//							text+=System.Convert.ToChar(((Integer)val).LongValue());
+//						}
+//					}
+//					return text;
+//				}
 				public override ArrayList Keys {
 					get {
 						return keys;
@@ -1770,6 +1813,9 @@ namespace Meta {
 				// check this for every method:
 				// introduce own method info class?
 				if(isMetaLibraryMethod) {
+					if(name.Equals("if")) {
+						int asdf=0;
+					}
 					if(methods[0] is ConstructorInfo) {
 						// call methods without arguments, ugly and redundant
 						result=((ConstructorInfo)methods[0]).Invoke(new object[] {}); 
@@ -1955,7 +2001,7 @@ namespace Meta {
 		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial {
 			public bool ContainsKey(object key) {
 				if(key is Map) {
-					if(((Map)key).IsString()) {
+					if(((Map)key).IsString) {
 						string text=((Map)key).GetDotNetString();
 						if(type.GetMember((string)key,
 							BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
@@ -1997,7 +2043,7 @@ namespace Meta {
 			}
 			public virtual object this[object key]  {
 				get {
-					if(key is Map && ((Map)key).IsString()) {
+					if(key is Map && ((Map)key).IsString) {
 						string text=((Map)key).GetDotNetString();
 						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
@@ -2019,7 +2065,7 @@ namespace Meta {
 						}
 					}
 					if(this.obj!=null && key is Integer && this.type.IsArray) {
-						return Interpreter.ConvertDotNetToMeta(((Array)obj).GetValue(((Integer)key).IntValue()));
+						return Interpreter.ConvertDotNetToMeta(((Array)obj).GetValue(((Integer)key).Int));
 					}
 					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
 					Map arguments=new Map();
@@ -2032,7 +2078,7 @@ namespace Meta {
 					}
 				}
 				set {
-					if(key is Map && ((Map)key).IsString()) {
+					if(key is Map && ((Map)key).IsString) {
 						string text=((Map)key).GetDotNetString();
 //						if(text=="Controls") {
 //							int asdf=0;
@@ -2117,7 +2163,7 @@ namespace Meta {
 						bool isConverted; 
 						object converted=Interpreter.ConvertMetaToDotNet(value,type.GetElementType(),out isConverted);
 						if(isConverted) {
-							((Array)obj).SetValue(converted,((Integer)key).IntValue());
+							((Array)obj).SetValue(converted,((Integer)key).Int);
 							return;
 						}
 					}
@@ -2135,7 +2181,7 @@ namespace Meta {
 			}
 //			public virtual object this[object key]  {
 //				get {
-//					if(key is Map && ((Map)key).IsString()) {
+//					if(key is Map && ((Map)key).IsString) {
 //						string text=((Map)key).GetDotNetString();
 //						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 //						if(members.Length>0) {
@@ -2167,7 +2213,7 @@ namespace Meta {
 //					}
 //				}
 //				set {
-//					if(key is Map && ((Map)key).IsString()) {
+//					if(key is Map && ((Map)key).IsString) {
 //						string text=((Map)key).GetDotNetString();
 //						if(text=="Controls") {
 //							int asdf=0;
@@ -2262,7 +2308,7 @@ namespace Meta {
 //			}
 //			public virtual object this[object key]  {
 //				get {
-//					if(key is Map && ((Map)key).IsString()) {
+//					if(key is Map && ((Map)key).IsString) {
 //						string text=((Map)key).GetDotNetString();
 //						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 //						if(members.Length>0) {
@@ -2293,7 +2339,7 @@ namespace Meta {
 //					}
 //				}
 //				set {
-//					if(key is Map && ((Map)key).IsString()) {
+//					if(key is Map && ((Map)key).IsString) {
 //						string text=((Map)key).GetDotNetString();
 //						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 //						if(members.Length>0) {

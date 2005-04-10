@@ -118,6 +118,15 @@ Entry (DictionaryEntry)
         "Meta.Types.Map trimStart(Meta.Types.Map, System.Object)"
 Entry (DictionaryEntry)
   Key (Map):
+    "storage"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Map storage(Meta.Types.Map)"
+Entry (DictionaryEntry)
+  Key (Map):
     "countStart"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
@@ -145,13 +154,13 @@ Entry (DictionaryEntry)
         "Meta.Types.IKeyValue keys(Meta.Types.IKeyValue)"
 Entry (DictionaryEntry)
   Key (Map):
-    "storage"
+    "length"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map storage(Meta.Types.Map)"
+        "Int32 length(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "add"
@@ -215,6 +224,10 @@ Entry (DictionaryEntry)
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.Integer bitwiseOr(Meta.Types.Integer, Meta.Types.Integer)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "trimStartTest"
+  Value (Map):
 Entry (DictionaryEntry)
   Key (Map):
     "form"
@@ -2224,3 +2237,8 @@ Entry (DictionaryEntry)
   Value (Char):
     "
 "
+Entry (DictionaryEntry)
+  Key (Map):
+    "tabText"
+  Value (Map):
+    "		hello"

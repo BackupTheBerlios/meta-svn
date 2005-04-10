@@ -992,7 +992,7 @@ namespace Meta.Types
 			while(x>int.MaxValue) {
 				x=x%int.MaxValue;
 			}
-			return x.IntValue();
+			return x.Int;
 		}
 //		public override int GetHashCode() {
 //			uint hash=7;
@@ -2469,11 +2469,20 @@ namespace Meta.Types
 		//***********************************************************************
 		// Returns the lowest 4 bytes of the Integer as an int.
 		//***********************************************************************
-
-		public int IntValue()
-		{
-			return (int)data[0];
+		public int Int {
+			get {
+				return (int)data[0];
+			}
 		}
+		public char Char {
+			get {
+				return Convert.ToChar(Int);
+			}
+		}
+//		public int Int
+//		{
+//			return (int)data[0];
+//		}
 
 
 		//***********************************************************************

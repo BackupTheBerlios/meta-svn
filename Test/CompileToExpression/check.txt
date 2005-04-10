@@ -163,6 +163,48 @@ statements (ArrayList):
       expressions (ArrayList):
         Entry (Literal)
           literal (Map):
+            "trimStartTest"
+      parents (ArrayList):
+    valueExpression (Call):
+      argumentExpression (Program):
+        statements (ArrayList):
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "1"
+              parents (ArrayList):
+            valueExpression (Literal):
+              literal (Map):
+                "hello"
+          Entry (Statement)
+            keyExpression (Select):
+              expressions (ArrayList):
+                Entry (Literal)
+                  literal (Map):
+                    "this"
+                Entry (Literal)
+                  literal (Integer):
+                    "2"
+              parents (ArrayList):
+            valueExpression (Literal):
+              literal (Char):
+                "	"
+      callableExpression (Select):
+        expressions (ArrayList):
+          Entry (Literal)
+            literal (Map):
+              "trimStart"
+        parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
             "form"
       parents (ArrayList):
     valueExpression (Call):
@@ -4175,3 +4217,13 @@ Schwaenzchen in die Hoeh.
       literal (Char):
         "
 "
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "tabText"
+      parents (ArrayList):
+    valueExpression (Literal):
+      literal (Map):
+        "		hello"

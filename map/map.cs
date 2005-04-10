@@ -19,6 +19,9 @@ public class map {
 		string a="";
 		return map.ContainsKey(key);
 	}
+	public static int length(Map map) {
+		return map.Count;
+	}
 	public static Map trimStart(Map map,object obj) {
 		Map result=new Map();
 		int counter=1;
