@@ -2158,3 +2158,30 @@ Entry (DictionaryEntry)
     "arrayListResult"
   Value (Map):
     "hello"
+Entry (DictionaryEntry)
+  Key (Map):
+    "textBox"
+  Value (TextBox):
+Entry (DictionaryEntry)
+  Key (Map):
+    "lines"
+  Value (String[]):
+    Entry (String)
+      ""
+    Entry (String)
+      "Alle meine Entchen,"
+    Entry (String)
+      "schwimmen auf dem See,"
+    Entry (String)
+      "schwimmen auf dem See,"
+    Entry (String)
+      "bwuhahaha"
+    Entry (String)
+      "Schwaenzchen in die Hoeh."
+    Entry (String)
+      ""
+Entry (DictionaryEntry)
+  Key (Map):
+    "alleMeineText"
+  Value (Map):
+    "Alle meine Entchen,"

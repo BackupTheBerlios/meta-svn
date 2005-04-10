@@ -9181,3 +9181,263 @@ hello!
                         "literal"
                       Value (Map):
                         "0"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "107"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "textBox"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "call"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "function"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "select"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "System"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "2"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "Windows"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "3"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "Forms"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "4"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "TextBox"
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "argument"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        ""
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "108"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "textBox"
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "2"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "Text"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "literal"
+              Value (Map):
+                "
+Alle meine Entchen,
+schwimmen auf dem See,
+schwimmen auf dem See,
+Koepfchen in das Wasser,
+Schwaenzchen in die Hoeh.
+"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "109"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "lines"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "textBox"
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "2"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "Lines"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "110"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "alleMeineText"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "lines"
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "2"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "1"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "111"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "lines"
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "2"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "4"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "literal"
+              Value (Map):
+                "bwuhahaha"

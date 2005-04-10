@@ -4044,3 +4044,93 @@ hello!
           literal (Integer):
             "0"
       parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "textBox"
+      parents (ArrayList):
+    valueExpression (Call):
+      argumentExpression (Literal):
+        literal (Map):
+          ""
+      callableExpression (Select):
+        expressions (ArrayList):
+          Entry (Literal)
+            literal (Map):
+              "System"
+          Entry (Literal)
+            literal (Map):
+              "Windows"
+          Entry (Literal)
+            literal (Map):
+              "Forms"
+          Entry (Literal)
+            literal (Map):
+              "TextBox"
+        parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "textBox"
+        Entry (Literal)
+          literal (Map):
+            "Text"
+      parents (ArrayList):
+    valueExpression (Literal):
+      literal (Map):
+        "
+Alle meine Entchen,
+schwimmen auf dem See,
+schwimmen auf dem See,
+Koepfchen in das Wasser,
+Schwaenzchen in die Hoeh.
+"
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "lines"
+      parents (ArrayList):
+    valueExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "textBox"
+        Entry (Literal)
+          literal (Map):
+            "Lines"
+      parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "alleMeineText"
+      parents (ArrayList):
+    valueExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "lines"
+        Entry (Literal)
+          literal (Integer):
+            "1"
+      parents (ArrayList):
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "lines"
+        Entry (Literal)
+          literal (Integer):
+            "4"
+      parents (ArrayList):
+    valueExpression (Literal):
+      literal (Map):
+        "bwuhahaha"

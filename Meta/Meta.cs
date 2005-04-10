@@ -1965,6 +1965,9 @@ namespace Meta {
 							}
 						}
 					}
+					if(this.obj!=null && key is Integer && this.type.IsArray) {
+						return Interpreter.ConvertDotNetToMeta(((Array)obj).GetValue(((Integer)key).IntValue()));
+					}
 					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
 					Map arguments=new Map();
 					arguments[new Integer(1)]=key;
@@ -1978,9 +1981,9 @@ namespace Meta {
 				set {
 					if(key is Map && ((Map)key).IsString()) {
 						string text=((Map)key).GetDotNetString();
-						if(text=="Controls") {
-							int asdf=0;
-						}
+//						if(text=="Controls") {
+//							int asdf=0;
+//						}
 						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
@@ -2008,9 +2011,9 @@ namespace Meta {
 							else if(members[0] is PropertyInfo) {
 								PropertyInfo property=(PropertyInfo)members[0];
 								bool converted;
-//								if(key.Equals(new Map("ScrollBars"))) {
-//									int asdf=0;
-//								}
+								//								if(key.Equals(new Map("ScrollBars"))) {
+								//									int asdf=0;
+								//								}
 								//object oldValue=property.GetValue(obj,new object[]{});
 								object val=NetMethod.ConvertParameter(value,property.PropertyType,out converted);
 								if(converted) {
@@ -2025,36 +2028,44 @@ namespace Meta {
 									}
 								}
 								return;
-//								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
-//									property.SetValue(obj,value,null);
-//									return;
-//								}
-//								else {
-//									bool isConverted;
-//									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
-//									if(isConverted) {
-//										property.SetValue(obj,converted,null);
-//										return;
-//									}
-//								}
-//								PropertyInfo property=(PropertyInfo)members[0];
-//								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
-//									property.SetValue(obj,value,null);
-//									return;
-//								}
-//								else {
-//									bool isConverted;
-//									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
-//									if(isConverted) {
-//										property.SetValue(obj,converted,null);
-//										return;
-//									}
-//								}
+								//								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
+								//									property.SetValue(obj,value,null);
+								//									return;
+								//								}
+								//								else {
+								//									bool isConverted;
+								//									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
+								//									if(isConverted) {
+								//										property.SetValue(obj,converted,null);
+								//										return;
+								//									}
+								//								}
+								//								PropertyInfo property=(PropertyInfo)members[0];
+								//								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
+								//									property.SetValue(obj,value,null);
+								//									return;
+								//								}
+								//								else {
+								//									bool isConverted;
+								//									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
+								//									if(isConverted) {
+								//										property.SetValue(obj,converted,null);
+								//										return;
+								//									}
+								//								}
 							}
 							else if(members[0] is EventInfo) {
 								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(Map)value));
 								return;
 							}
+						}
+					}
+					if(obj!=null && key is Integer && type.IsArray) { // use .IsArray
+						bool isConverted; 
+						object converted=Interpreter.ConvertMetaToDotNet(value,type.GetElementType(),out isConverted);
+						if(isConverted) {
+							((Array)obj).SetValue(converted,((Integer)key).IntValue());
+							return;
 						}
 					}
 					NetMethod indexer=new NetMethod("set_Item",obj,type);
@@ -2069,6 +2080,133 @@ namespace Meta {
 					}
 				}
 			}
+//			public virtual object this[object key]  {
+//				get {
+//					if(key is Map && ((Map)key).IsString()) {
+//						string text=((Map)key).GetDotNetString();
+//						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
+//						if(members.Length>0) {
+//							if(members[0] is MethodBase) {
+//								return new NetMethod(text,obj,type);
+//							}
+//							if(members[0] is FieldInfo) {
+//								// convert arrays to maps here?
+//								return Interpreter.ConvertDotNetToMeta(type.GetField(text).GetValue(obj));
+//							}
+//							else if(members[0] is PropertyInfo) {
+//								return Interpreter.ConvertDotNetToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
+//							}
+//							else if(members[0] is EventInfo) {
+//								Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
+//									BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
+//								return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+//							}
+//						}
+//					}
+//					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
+//					Map arguments=new Map();
+//					arguments[new Integer(1)]=key;
+//					try {
+//						return indexerMethod.Call(arguments);
+//					}
+//					catch(Exception) {
+//						return null;
+//					}
+//				}
+//				set {
+//					if(key is Map && ((Map)key).IsString()) {
+//						string text=((Map)key).GetDotNetString();
+//						if(text=="Controls") {
+//							int asdf=0;
+//						}
+//						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
+//						if(members.Length>0) {
+//							if(members[0] is MethodBase) {
+//								throw new ApplicationException("Cannot set method "+key+".");
+//							}
+//							else if(members[0] is FieldInfo) {
+//								FieldInfo field=(FieldInfo)members[0];
+//								bool converted;
+//								object val;
+//								val=NetMethod.ConvertParameter(value,field.FieldType,out converted);
+//								if(converted) {
+//									field.SetValue(obj,val);
+//								}
+//								if(!converted) {
+//									if(value is Map) {
+//										val=NetMethod.DoModifiableCollectionAssignment((Map)value,field.GetValue(obj),out converted);
+//									}
+//								}
+//								if(!converted) {
+//									throw new ApplicationException("Field value could not be assigned because it cannot be converted.");
+//								}
+//								//refactor
+//								return;
+//							}
+//							else if(members[0] is PropertyInfo) {
+//								PropertyInfo property=(PropertyInfo)members[0];
+//								bool converted;
+////								if(key.Equals(new Map("ScrollBars"))) {
+////									int asdf=0;
+////								}
+//								//object oldValue=property.GetValue(obj,new object[]{});
+//								object val=NetMethod.ConvertParameter(value,property.PropertyType,out converted);
+//								if(converted) {
+//									property.SetValue(obj,val,new object[]{});
+//								}
+//								if(!converted) {
+//									if(value is Map) {
+//										NetMethod.DoModifiableCollectionAssignment((Map)value,property.GetValue(obj,new object[]{}),out converted);
+//									}
+//									if(!converted) {
+//										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.MetaSerialize(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
+//									}
+//								}
+//								return;
+////								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
+////									property.SetValue(obj,value,null);
+////									return;
+////								}
+////								else {
+////									bool isConverted;
+////									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
+////									if(isConverted) {
+////										property.SetValue(obj,converted,null);
+////										return;
+////									}
+////								}
+////								PropertyInfo property=(PropertyInfo)members[0];
+////								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
+////									property.SetValue(obj,value,null);
+////									return;
+////								}
+////								else {
+////									bool isConverted;
+////									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
+////									if(isConverted) {
+////										property.SetValue(obj,converted,null);
+////										return;
+////									}
+////								}
+//							}
+//							else if(members[0] is EventInfo) {
+//								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(Map)value));
+//								return;
+//							}
+//						}
+//					}
+//					NetMethod indexer=new NetMethod("set_Item",obj,type);
+//					Map arguments=new Map();
+//					arguments[new Integer(1)]=key;
+//					arguments[new Integer(2)]=value;//lazy
+//					try {
+//						indexer.Call(arguments);
+//					}
+//					catch(Exception) {
+//						throw new ApplicationException("Cannot set "+key.ToString()+".");
+//					}
+//				}
+//			}
 //			public virtual object this[object key]  {
 //				get {
 //					if(key is Map && ((Map)key).IsString()) {
@@ -2421,14 +2559,16 @@ namespace Meta {
 				foreach(MemberInfo member in members) {
 					if(member.Name!="Item") {
 						if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) {
-							object val=serialize.GetType().InvokeMember(member.Name,BindingFlags.Public
-								|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
-								|BindingFlags.InvokeMethod,null,serialize,null);
-							t+=indent+member.Name;
-							if(val!=null) {
-								t+=" ("+val.GetType().Name+")";
+							if(!serialize.GetType().Namespace.Equals("System.Windows.Forms")) {
+								object val=serialize.GetType().InvokeMember(member.Name,BindingFlags.Public
+									|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
+									|BindingFlags.InvokeMethod,null,serialize,null);
+								t+=indent+member.Name;
+								if(val!=null) {
+									t+=" ("+val.GetType().Name+")";
+								}
+								t+=":\n"+Serialize(val,indent+"  ",methods);
 							}
-							t+=":\n"+Serialize(val,indent+"  ",methods);
 						}
 					}
 				}
