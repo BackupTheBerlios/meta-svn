@@ -4134,3 +4134,44 @@ Schwaenzchen in die Hoeh.
     valueExpression (Literal):
       literal (Map):
         "bwuhahaha"
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "character"
+      parents (ArrayList):
+    valueExpression (Literal):
+      literal (Char):
+        "a"
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "tab"
+      parents (ArrayList):
+    valueExpression (Literal):
+      literal (Char):
+        "	"
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "backslash"
+      parents (ArrayList):
+    valueExpression (Literal):
+      literal (Char):
+        "\"
+  Entry (Statement)
+    keyExpression (Select):
+      expressions (ArrayList):
+        Entry (Literal)
+          literal (Map):
+            "endline"
+      parents (ArrayList):
+    valueExpression (Literal):
+      literal (Char):
+        "
+"

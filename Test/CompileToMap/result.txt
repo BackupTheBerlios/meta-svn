@@ -9441,3 +9441,123 @@ Schwaenzchen in die Hoeh.
                 "literal"
               Value (Map):
                 "bwuhahaha"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "112"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "character"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "literal"
+              Value (Map):
+                "\a"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "113"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "tab"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "literal"
+              Value (Map):
+                "\\t"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "114"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "backslash"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "literal"
+              Value (Map):
+                "\\\"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "115"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "endline"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "literal"
+              Value (Map):
+                "\\n"

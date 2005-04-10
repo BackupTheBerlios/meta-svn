@@ -234,3 +234,7 @@ textBox.Text:"
 lines:textBox.Lines
 alleMeineText:lines.1
 lines.4:'bwuhahaha
+character:'\a
+tab:'\\t
+backslash:'\\\
+endline:'\\n

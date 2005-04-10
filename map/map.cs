@@ -16,7 +16,34 @@ public class map {
 //		return Interpreter.Run(fileName,new Map());
 	}
 	public static bool contains(object key,Map map) {
+		string a="";
 		return map.ContainsKey(key);
+	}
+	public static Map trimStart(Map map,object obj) {
+		Map result=new Map();
+		int counter=1;
+		foreach(object o in map.IntKeyValues) {
+			if(obj.Equals(o)) {
+				result[new Integer(counter)]=o;
+				counter++;
+			}
+			else {
+				break;
+			}
+		}
+		return result;
+	}
+	public static int countStart(Map map,object obj) {
+		int count=0;
+		foreach(object o in map.IntKeyValues) {
+			if(obj.Equals(o)) {
+				count++;
+			}
+			else {
+				break;
+			}
+		}
+		return count;
 	}
 	public static IKeyValue keys(IKeyValue map) {
 		int i=1;

@@ -77,6 +77,20 @@ Entry (DictionaryEntry)
         "Boolean or()"
 Entry (DictionaryEntry)
   Key (Map):
+    "concat"
+  Value (Map):
+    "xyz"
+Entry (DictionaryEntry)
+  Key (Map):
+    "with"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "System.Object with(System.Object, Meta.Types.IMap)"
+Entry (DictionaryEntry)
+  Key (Map):
     "run"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
@@ -95,18 +109,22 @@ Entry (DictionaryEntry)
         "Boolean contains(System.Object, Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "keys"
+    "trimStart"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue keys(Meta.Types.IKeyValue)"
+        "Meta.Types.Map trimStart(Meta.Types.Map, System.Object)"
 Entry (DictionaryEntry)
   Key (Map):
-    "concat"
-  Value (Map):
-    "xyz"
+    "countStart"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Int32 countStart(Meta.Types.Map, System.Object)"
 Entry (DictionaryEntry)
   Key (Map):
     "merge"
@@ -118,13 +136,13 @@ Entry (DictionaryEntry)
         "Meta.Types.IKeyValue merge()"
 Entry (DictionaryEntry)
   Key (Map):
-    "with"
+    "keys"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "System.Object with(System.Object, Meta.Types.IMap)"
+        "Meta.Types.IKeyValue keys(Meta.Types.IKeyValue)"
 Entry (DictionaryEntry)
   Key (Map):
     "storage"
@@ -2185,3 +2203,24 @@ Entry (DictionaryEntry)
     "alleMeineText"
   Value (Map):
     "Alle meine Entchen,"
+Entry (DictionaryEntry)
+  Key (Map):
+    "character"
+  Value (Char):
+    "a"
+Entry (DictionaryEntry)
+  Key (Map):
+    "tab"
+  Value (Char):
+    "	"
+Entry (DictionaryEntry)
+  Key (Map):
+    "backslash"
+  Value (Char):
+    "\"
+Entry (DictionaryEntry)
+  Key (Map):
+    "endline"
+  Value (Char):
+    "
+"

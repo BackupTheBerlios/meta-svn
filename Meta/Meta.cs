@@ -614,13 +614,65 @@ namespace Meta {
 //					ArrayList escapeSequences;
 //					public RecognizeString() {
 //						this.escapeSequences=new ArrayList(
-//							new object[] {new DictionaryEntry("\\\"","\"")});
+//							new object[] {
+//												 new DictionaryEntry("\\\"","\"")});
 //					}
+//					C#:
+//					*  \' - single quote, needed for character literals
+//					* \" - double quote, needed for string literals
+//					* \\ - backslash
+//								 * \0 - Unicode character 0
+//					* \a - Alert (character 7)
+//					* \b - Backspace (character 8)
+//					* \f - Form feed (character 12)
+//					* \n - New line (character 10)
+//					* \r - Carriage return (character 13)
+//					* \t - Horizontal tab (character 9)
+//					* \v - Vertical quote (character 11)
+//					* \uxxxx - Unicode escape sequence for character with hex value xxxx
+//																											 * \xn[n][n][n] - Unicode escape sequence for character with hex value nnnn (variable length version of \uxxxx)
+//					* \Uxxxxxxxx - Unicode escape sequence for character with hex value xxxxxxxx (for generating surrogates)
+
 					public override object Recognize(string text) {
 //						foreach(DictionaryEntry entry in escapeSequences) {
 //							text=text.Replace((string)entry.Key,(string)entry.Value);
 //						}
 						return new Map(text);
+					}
+				}
+				// does everything get executed twice?
+				public class RecognizeCharacter: RecognizeLiteral {
+					public override object Recognize(string text) { // make this stuff ouput a bool, whether it was successful, so null can be created, too
+						if(text.StartsWith(@"\")) {
+							if(text.Length==2) {
+								return text[1]; // not unicode safe, write wrapper that takes care of this stuff
+							}
+							else if(text.Length==3) {
+								switch(text.Substring(1,2)) {
+									case @"\'":
+										return '\'';
+									case @"\\":
+										return '\\';
+									case @"\a":
+										return '\a';
+									case @"\b":
+										return '\b';
+									case @"\f":
+										return '\f';
+									case @"\n":
+										return '\n';
+									case @"\r":
+										return '\r';
+									case @"\t":
+										return '\t';
+									case @"\v":
+										return '\v';
+									default:
+										throw new ApplicationException("Unrecognized escape sequence "+text);
+								}
+							}
+						}
+						return null;
 					}
 				}
 				public class RecognizeInteger: RecognizeLiteral  {
@@ -1186,6 +1238,7 @@ namespace Meta {
 				}
 			}
 		}
+		//make IntKeyValues somehow separate, and add "Add" method to Map
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
 			public bool IsString() {
 				return table.IsString();
