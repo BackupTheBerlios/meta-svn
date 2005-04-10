@@ -119,7 +119,7 @@ SPACES
   options {
     paraphrase="whitespace";
   }:
-  ('\t'|' ')+ ;//{_ttype=Token.SKIP;}
+  (' ')+ ;//{_ttype=Token.SKIP;}
 
 LINE
   options {
@@ -148,7 +148,7 @@ COMMENT
 	;
     
 protected   
-SPACE:  // subrule because of ANTLR bug that results in uncompilable code
+SPACE:  // subrule because of ANTLR bug that results in uncompilable code, maybe remove?
   '\t'!;
 
 protected

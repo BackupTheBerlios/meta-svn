@@ -151,7 +151,7 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
-						case '\t':  case ' ':
+						case ' ':
 						{
 							mSPACES(true);
 							theRetToken = returnToken_;
@@ -481,23 +481,15 @@ _loop25_breakloop:					;
 		int _cnt29=0;
 		for (;;)
 		{
-			switch ( LA(1) )
-			{
-			case '\t':
-			{
-				match('\t');
-				break;
-			}
-			case ' ':
+			if ((LA(1)==' '))
 			{
 				match(' ');
-				break;
 			}
-			default:
+			else
 			{
 				if (_cnt29 >= 1) { goto _loop29_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
 			}
-			break; }
+			
 			_cnt29++;
 		}
 _loop29_breakloop:		;
