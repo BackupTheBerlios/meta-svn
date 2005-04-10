@@ -24,7 +24,8 @@ class MetaLexer extends Lexer;
 options 
 {
 	k=1;
-	charVocabulary='\u0003'..'\u0008'|'\u0010'..'\ufffe';
+	charVocabulary='\u0003'..'\ufffe';
+	//charVocabulary='\u0003'..'\u0008'|'\u0010'..'\ufffe';
 }
 tokens
 {
@@ -95,14 +96,14 @@ LITERAL_KEY
   options {
     paraphrase="a key";
   }:
-  ( ~ ('@'|' '|'\r'|'\n'|'='|'.'|'/'|'\''|'"'|'('|')'|'['|']'|'*'|':') )+;
+  ( ~ ('@'|' '|'\t'|'\r'|'\n'|'='|'.'|'/'|'\''|'"'|'('|')'|'['|']'|'*'|':') )+;
     
 LITERAL
   options {
     paraphrase="a literal";
   }:
   ("\""! ( ~ ('\"') )* "\""!)
-  |('\''! ( ~ (' '|'\r'|'\n'|'='|'.'|'\''|'"'|'('|')'|'['|']'|':') )*)
+  |('\''! ( ~ (' '|'\t'|'\r'|'\n'|'='|'.'|'\''|'"'|'('|')'|'['|']'|':') )*)
   // 
  // |("@\""! ({LA(0)!='"'||LA(1)!='@'}? (.) )* "\"")=>
 //  |("@\""! ( (.) )* LITERAL_END)
@@ -118,7 +119,7 @@ SPACES
   options {
     paraphrase="whitespace";
   }:
-  (' ')+ ;//{_ttype=Token.SKIP;}
+  ('\t'|' ')+ ;//{_ttype=Token.SKIP;}
 
 LINE
   options {
@@ -132,7 +133,7 @@ LINE
   {
     _ttype=Token.SKIP;
   }
-  |NEWLINE (' ')*
+  |NEWLINE ('\t')*
   {
     _ttype=MetaLexerTokenTypes.INDENTATION;
   };
@@ -148,7 +149,7 @@ COMMENT
     
 protected   
 SPACE:  // subrule because of ANTLR bug that results in uncompilable code
-  ' '!;
+  '\t'!;
 
 protected
 NEWLINE

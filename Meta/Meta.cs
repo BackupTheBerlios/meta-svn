@@ -2370,23 +2370,23 @@ namespace Meta {
 							AddIndentationTokensToGetToLevel(-1);
 							break;
 						case MetaLexerTokenTypes.INDENTATION:
-							AddIndentationTokensToGetToLevel(t.getText().Length/4);
+							AddIndentationTokensToGetToLevel(t.getText().Length);
 							break;
 						case MetaLexerTokenTypes.LITERAL: // move this into parser, for correct error handling?
 							string indentation="";
 							for(int i=0;i<presentIndentationLevel+1;i++) {
-								indentation+="    ";
+								indentation+='\t';
 							}
 							string text=t.getText();
 							text=text.Replace(Environment.NewLine,"\n");
 							string[] lines=text.Split('\n');
 							string result="";
-							if(lines[0].StartsWith(Environment.NewLine)) {
-								int asdf=0;
-							} 
+//							if(lines[0].StartsWith(Environment.NewLine)) {
+//								int asdf=0;
+//							} 
 							for(int k=0;k<lines.Length;k++) {
 								if(lines[k].StartsWith(indentation)) {
-									result+=lines[k].Remove(0,(presentIndentationLevel+1)*4);
+									result+=lines[k].Remove(0,presentIndentationLevel+1);
 								}
 								else {
 									result+=lines[k];
@@ -2395,15 +2395,15 @@ namespace Meta {
 									result+=Environment.NewLine;
 								}
 							}
-//							foreach(string line in lines) {
-//								if(line.StartsWith(indentation)) {
-//									result+=line.Remove(0,(presentIndentationLevel+1)*4);
-//								}
-//								else {
-//									result+=line;
-//								}
-//
-//							}
+							//							foreach(string line in lines) {
+							//								if(line.StartsWith(indentation)) {
+							//									result+=line.Remove(0,(presentIndentationLevel+1)*4);
+							//								}
+							//								else {
+							//									result+=line;
+							//								}
+							//
+							//							}
 							t.setText(result);
 							streamBuffer.Enqueue(t);
 							break;
@@ -2426,7 +2426,7 @@ namespace Meta {
 					for(int i=indentationDifference;i<0;i++) {
 						streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
 					}
-					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
+					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE)); // tiny bit unlogical? maybe create this in Parser?
 				}
 				else if(indentationDifference>1) {
 					throw new ApplicationException("Incorrect indentation.");
@@ -2437,6 +2437,86 @@ namespace Meta {
 			protected TokenStream originalStream;
 			protected int presentIndentationLevel=-1;
 		}
+//		public class IndentationParser: TokenStream {
+//			public IndentationParser(TokenStream originalStream)  {
+//				this.originalStream=originalStream;
+//				AddIndentationTokensToGetToLevel(0);
+//			}
+//			public Token nextToken()  {
+//				if(streamBuffer.Count==0)  {
+//					Token t=originalStream.nextToken();
+//					switch(t.Type) {
+//						case MetaLexerTokenTypes.EOF:
+//							AddIndentationTokensToGetToLevel(-1);
+//							break;
+//						case MetaLexerTokenTypes.INDENTATION:
+//							AddIndentationTokensToGetToLevel(t.getText().Length/4);
+//							break;
+//						case MetaLexerTokenTypes.LITERAL: // move this into parser, for correct error handling?
+//							string indentation="";
+//							for(int i=0;i<presentIndentationLevel+1;i++) {
+//								indentation+="    ";
+//							}
+//							string text=t.getText();
+//							text=text.Replace(Environment.NewLine,"\n");
+//							string[] lines=text.Split('\n');
+//							string result="";
+//							if(lines[0].StartsWith(Environment.NewLine)) {
+//								int asdf=0;
+//							} 
+//							for(int k=0;k<lines.Length;k++) {
+//								if(lines[k].StartsWith(indentation)) {
+//									result+=lines[k].Remove(0,(presentIndentationLevel+1)*4);
+//								}
+//								else {
+//									result+=lines[k];
+//								}
+//								if(k!=lines.Length-1) {
+//									result+=Environment.NewLine;
+//								}
+//							}
+////							foreach(string line in lines) {
+////								if(line.StartsWith(indentation)) {
+////									result+=line.Remove(0,(presentIndentationLevel+1)*4);
+////								}
+////								else {
+////									result+=line;
+////								}
+////
+////							}
+//							t.setText(result);
+//							streamBuffer.Enqueue(t);
+//							break;
+//						default:
+//							streamBuffer.Enqueue(t);
+//							break;
+//					}
+//				}
+//				return (Token)streamBuffer.Dequeue();
+//			}
+//			protected void AddIndentationTokensToGetToLevel(int newIndentationLevel)  {
+//				int indentationDifference=newIndentationLevel-presentIndentationLevel; 
+//				if(indentationDifference==0) {
+//					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
+//				}
+//				else if(indentationDifference==1) {
+//					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));
+//				}
+//				else if(indentationDifference<0) {
+//					for(int i=indentationDifference;i<0;i++) {
+//						streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
+//					}
+//					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
+//				}
+//				else if(indentationDifference>1) {
+//					throw new ApplicationException("Incorrect indentation.");
+//				}
+//				presentIndentationLevel=newIndentationLevel;
+//			}
+//			protected Queue streamBuffer=new Queue();
+//			protected TokenStream originalStream;
+//			protected int presentIndentationLevel=-1;
+//		}
 		public class LineNumberAST:CommonAST {
 			private int lineNumber;
 			public LineNumberAST() { }

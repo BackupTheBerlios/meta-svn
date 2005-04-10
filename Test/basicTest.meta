@@ -1,15 +1,15 @@
 this:map.merge
-    parent
-    :
-        'AssignedToCurrent
+	parent
+	:
+		'AssignedToCurrent
 this:map.merge
-    parent
-    programFlow
-    logic
-    map
-    math
+	parent
+	programFlow
+	logic
+	map
+	math
 form:System.Windows.Forms.Form
-    Text:'hello
+	Text:'hello
 'ImpliedAutokey
 :'Autokey
 gacTest:System.Collections
@@ -21,7 +21,7 @@ libraryAssemblyTest:testClasses
 //  still comment
 // some more comment
 aMap:
-    ['a]:'a
+	['a]:'a
 [aMap]:'Object
 ["normal symbol"]:'NormalSymbol
 lookupSymbol:'LookupSymbol
@@ -31,62 +31,62 @@ lookedUpNormalSymbol:["normal symbol"]
 lookedUpSymbol:lookupSymbol
 lookedUpLongSymbol:["long key symbol"]
 object:
-    a:'default
-    autoSearch:'default
-    b:'
-    SetA:=
-        parent.parent.a:'c
-        autoSearch*:'changed
-    SetB:=
-        caller.b.1:arg.value
-        this:'changed
-    x:
-        a:'b
-        c:'d
-    :=
-        this.a:'b
+	a:'default
+	autoSearch:'default
+	b:'
+	SetA:=
+		parent.parent.a:'c
+		autoSearch*:'changed
+	SetB:=
+		caller.b.1:arg.value
+		this:'changed
+	x:
+		a:'b
+		c:'d
+	:=
+		this.a:'b
 a:'default
 b:'
 aSet:object.SetA'
 bSet:object.SetB
-    value:
-        x:'7
-        z:'1
+	value:
+		x:'7
+		z:'1
 ReturnEverything:=
-    this:arg
+	this:arg
 everythingReturned:ReturnEverything
-    'a
-    'b
-    'c
+	'a
+	'b
+	'c
 variableAsArgument:ReturnEverything
-    'x
-    'y
-    'z
+	'x
+	'y
+	'z
 ReturnFunction:=
-    this:=
-        this:
-            '1
-            '2
-            '3
+	this:=
+		this:
+			'1
+			'2
+			'3
 SetCurrent:=
-    this:
-        arg:arg
-        x:arg.symbol
-    this:x
+	this:
+		arg:arg
+		x:arg.symbol
+	this:x
 thisSet:SetCurrent
-    symbol:'haha
+	symbol:'haha
 FirstLevel:=
-    SecondLevel
-        x:'y
+	SecondLevel
+		x:'y
 SecondLevel:=arg.arg
 argTest:FirstLevel
-    a:'z
+	a:'z
 concat:map.concat
-    'x
-    'yz
+	'x
+	'yz
 this:map.merge
-    parent
-    testClasses
+	parent
+	testClasses
 testClass:TestClass'
 memberTest:MemberTest'
 MemberTest.classField:'a
@@ -95,20 +95,20 @@ MemberTest.ClassProperty:memberTest.InstanceProperty
 memberTest.InstanceProperty:MemberTest.ClassProperty
 interceptedSymbol:'/hello/
 positionalNoConversion:PositionalNoConversion
-    'm
-    'n
-    'o
+	'm
+	'n
+	'o
 positionalNoConversionConcatenated:positionalNoConversion.Concatenate
-    'r
-    's
-    't
+	'r
+	's
+	't
 namedNoConversion:NamedNoConversion
-    :
-        'm
-        y:'n
+	:
+		'm
+		y:'n
 namedNoConversionConcatenated:namedNoConversion.Concatenate
-    c:'t
-    'r
+	c:'t
+	'r
 indexerNoConversion:IndexerNoConversion'
 indexerNoConversion.abc:'hihi
 indexerNoConversionIndexed:indexerNoConversion.abc
@@ -118,11 +118,11 @@ xyz:'w
 literalFunction:='5
 literalFunctionResult:literalFunction'
 function:=
-    this:"simple function this"
+	this:"simple function this"
 callFunction:=function
 callFunctionResult:callFunction '
 delayedFunction:==
-    x:'y
+	x:'y
 delayedFunctionResult:delayedFunction '
 value:'xyz
 selectionFunction:=value
@@ -130,80 +130,80 @@ selectionFunctionResult:selectionFunction '
 bigInteger:'89383838383832839123497123047217340712340720347072304702340720347
 upperLevel:'unchanged
 ChangeUpperLevel:=
-    upperLevel*:'changed
+	upperLevel*:'changed
 ChangeUpperLevel'
 staticEventChanged:'false
 TestClass.staticEvent:=
-    staticEventChanged*:'true
-    this:arg.1
+	staticEventChanged*:'true
+	this:arg.1
 staticEvent:TestClass.staticEvent
 TestClass.TakeDelegate
-    :='resultFromDelegate
+	:='resultFromDelegate
 resultFromDelegate:TestClass.GetResultFromDelegate'
 staticEventResult:TestClass.staticEvent
-    testClass
+	testClass
 instanceEventChanged:'false
 testClass.instanceEvent:=
-    instanceEventChanged*:'true
-    this:arg.1
+	instanceEventChanged*:'true
+	this:arg.1
 instanceEvent:testClass.instanceEvent
 instanceEventResult:testClass.instanceEvent
-    '5
+	'5
 one:'1
 two:'2
 firstIf:'unchanged
 secondIf:'unchanged
 thenText:'then
 if
-    equal
-        '1
-        one
-    =
-        firstIf*:thenText
-    =
-        firstIf*:'else
+	equal
+		'1
+		one
+	=
+		firstIf*:thenText
+	=
+		firstIf*:'else
 if
-    equal
-        '1
-        two
-    =
-        secondIf*:'then
-    =
-        secondIf*:'else
+	equal
+		'1
+		two
+	=
+		secondIf*:'then
+	=
+		secondIf*:'else
 firstSwitch:'unchanged
 bigNumber:'50020202029029233344
 switch
-    bigNumber
-    cases:
-        [bigNumber]:=
-            firstSwitch*:bigNumber
-    default:=
-        firstSwitch*:'default
+	bigNumber
+	cases:
+		[bigNumber]:=
+			firstSwitch*:bigNumber
+	default:=
+		firstSwitch*:'default
 secondSwitch:'unchanged
 switch
-    '3
-    cases:
-        1:=
-            secondSwitch*:'one
-        2:=
-            secondSwitch*:'two
-    default:=
-        secondSwitch*:'default
+	'3
+	cases:
+		1:=
+			secondSwitch*:'one
+		2:=
+			secondSwitch*:'two
+	default:=
+		secondSwitch*:'default
 emptyMap:'
 emptyFunction:=
-    x:'hello
+	x:'hello
 emptyFunctionResult:emptyFunction'
 font:System.Drawing.Font
-    "Courier New"
-    '10
+	"Courier New"
+	'10
 lookup:=
-    '10
-    arg.1
+	'10
+	arg.1
 lookupKey:
-    '10
-    '10
+	'10
+	'10
 [lookup
-    '10
+	'10
 ]:'hello
 lookupResult:[lookupKey]
 escapedAtText:@"""@
@@ -212,25 +212,25 @@ stringTest.6:stringTest.1
 helloh:'hi
 stringStrategyHashTest:[stringTest]
 x:
-    aLongText:"
-        hello word!
-        hello!
-        "
+	aLongText:"
+		hello word!
+		hello!
+		"
 ored:math.bitwiseOr
-    '20
-    System.Windows.Forms.Keys.Tab
+	'20
+	System.Windows.Forms.Keys.Tab
 arrayList:System.Collections.ArrayList'
 arrayList.Add
-    'hello
+	'hello
 arrayListResult:arrayList.0
 textBox:System.Windows.Forms.TextBox'
 textBox.Text:"
-    Alle meine Entchen,
-    schwimmen auf dem See,
-    schwimmen auf dem See,
-    Koepfchen in das Wasser,
-    Schwaenzchen in die Hoeh.
-    "
+	Alle meine Entchen,
+	schwimmen auf dem See,
+	schwimmen auf dem See,
+	Koepfchen in das Wasser,
+	Schwaenzchen in die Hoeh.
+	"
 lines:textBox.Lines
 alleMeineText:lines.1
 lines.4:'bwuhahaha
