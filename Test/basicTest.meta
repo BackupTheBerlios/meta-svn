@@ -10,7 +10,7 @@ this:map.merge
 	map
 	math
 trimStartTest:trimStart
-	"		hello"
+	"					hello"
 	'\\t
 form:System.Windows.Forms.Form
 	Text:'hello
@@ -85,7 +85,7 @@ FirstLevel:=
 SecondLevel:=arg.arg
 argTest:FirstLevel
 	a:'z
-concat:map.concat
+concatenate:map.concatenate
 	'x
 	'yz
 this:map.merge

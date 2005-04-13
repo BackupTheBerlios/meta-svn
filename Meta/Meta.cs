@@ -663,33 +663,47 @@ namespace Meta {
 				public class RecognizeCharacter: RecognizeLiteral {
 					public override object Recognize(string text) { // make this stuff ouput a bool, whether it was successful, so null can be created, too
 						if(text.StartsWith(@"\")) {
+							char result;
 							if(text.Length==2) {
-								return text[1]; // not unicode safe, write wrapper that takes care of this stuff
+								result=text[1]; // not unicode safe, write wrapper that takes care of this stuff
 							}
 							else if(text.Length==3) {
 								switch(text.Substring(1,2)) {
 									case @"\'":
-										return '\'';
+										result='\'';
+										break;
 									case @"\\":
-										return '\\';
+										result='\\';
+										break;
 									case @"\a":
-										return '\a';
+										result='\a';
+										break;
 									case @"\b":
-										return '\b';
+										result='\b';
+										break;
 									case @"\f":
-										return '\f';
+										result='\f';
+										break;
 									case @"\n":
-										return '\n';
+										result='\n';
+										break;
 									case @"\r":
-										return '\r';
+										result='\r';
+										break;
 									case @"\t":
-										return '\t';
+										result='\t';
+										break;
 									case @"\v":
-										return '\v';
+										result='\v';
+										break;
 									default:
 										throw new ApplicationException("Unrecognized escape sequence "+text);
 								}
 							}
+							else {
+								throw new ApplicationException("Unrecognized escape sequence "+text);// maybe not the right way to do it, there might be a normal text that starts with \
+							}
+							return new Integer(result);
 						}
 						return null;
 					}
@@ -2503,7 +2517,7 @@ namespace Meta {
 //								int asdf=0;
 //							} 
 							for(int k=0;k<lines.Length;k++) {
-								if(lines[k].StartsWith(indentation)) {
+								if(k!=0 && lines[k].StartsWith(indentation)) {
 									result+=lines[k].Remove(0,presentIndentationLevel+1);
 								}
 								else {

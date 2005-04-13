@@ -82,7 +82,7 @@ Entry (DictionaryEntry)
         "Boolean or()"
 Entry (DictionaryEntry)
   Key (Map):
-    "concat"
+    "concatenate"
   Value (Map):
     "xyz"
 Entry (DictionaryEntry)
@@ -117,10 +117,10 @@ Entry (DictionaryEntry)
     "trimStart"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
-      "False"
+      "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map trimStart(Meta.Types.Map, System.Object)"
+        "Meta.Types.Map trimStart()"
 Entry (DictionaryEntry)
   Key (Map):
     "storage"
@@ -233,6 +233,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "trimStartTest"
   Value (Map):
+    "					"
 Entry (DictionaryEntry)
   Key (Map):
     "form"
@@ -2224,26 +2225,25 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "character"
-  Value (Char):
-    "a"
+  Value (Integer):
+    "97"
 Entry (DictionaryEntry)
   Key (Map):
     "tab"
-  Value (Char):
-    "	"
+  Value (Integer):
+    "9"
 Entry (DictionaryEntry)
   Key (Map):
     "backslash"
-  Value (Char):
-    "\"
+  Value (Integer):
+    "92"
 Entry (DictionaryEntry)
   Key (Map):
     "endline"
-  Value (Char):
-    "
-"
+  Value (Integer):
+    "10"
 Entry (DictionaryEntry)
   Key (Map):
     "tabText"
   Value (Map):
-    "		hello"
+    "			hello"

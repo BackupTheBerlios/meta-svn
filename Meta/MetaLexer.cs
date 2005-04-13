@@ -59,6 +59,11 @@ namespace Meta.Parser
 		public const int NEWLINE = 27;
 		public const int SELECT_KEY = 28;
 		
+		
+	public override void tab() 
+	{
+		setColumn(getColumn()+1);
+	}
 		public MetaLexer(Stream ins) : this(new ByteBuffer(ins))
 		{
 		}

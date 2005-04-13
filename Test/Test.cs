@@ -32,7 +32,7 @@ namespace Test {
 		public static string path="";
 		[STAThread]
 		public static void Main(string[] args) {
-			//args=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
+			args=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
 			//args=new string[]{@"C:\Dokumente und Einstellungen\Christian\Desktop\editor.meta"};
 			//args=new string[]{@"..\..\basicTest.meta"};
 			try {
@@ -54,11 +54,15 @@ namespace Test {
 				}
 			}
 			catch(CharStreamException e) {// put this into "Run" ???, no don't, every caller can do this differently
-				Console.WriteLine(e.Message);
+				Console.WriteLine(e.Message); //put all this error printing into one method
 				Console.ReadLine();
 			}
 			catch(RecognitionException e) {
 				Console.WriteLine(e.Message+" line:"+e.line+", file:"+e.fileName+", column:"+e.column);
+				Console.ReadLine();
+			}
+			catch(TokenStreamRecognitionException e) {
+				Console.WriteLine(e.recog.Message+" line:"+e.recog.line+", file:"+e.recog.fileName+", column:"+e.recog.column);
 				Console.ReadLine();
 			}
 			catch(TokenStreamException e) {

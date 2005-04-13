@@ -41,7 +41,12 @@ tokens
   STATEMENT; 
   CALL;
 }
-
+{
+	public override void tab() 
+	{
+		setColumn(getColumn()+1);
+	}
+}
 COLON
   options {
     paraphrase="':'";

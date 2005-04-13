@@ -22,7 +22,11 @@ public class map {
 	public static int length(Map map) {
 		return map.Count;
 	}
-	public static Map trimStart(Map map,object obj) {
+	[MetaLibraryMethod]
+	public static Map trimStart() {
+		Map map=(Map)((Map)Interpreter.Arg)[new Integer(1)];
+		object obj=((Map)Interpreter.Arg)[new Integer(2)];
+
 		Map result=new Map();
 		int counter=1;
 		foreach(object o in map.IntKeyValues) {
@@ -58,7 +62,7 @@ public class map {
 		return keys;
 	}
 	[MetaLibraryMethod]
-	public static Map concat() {
+	public static Map concatenate() {
 		ArrayList maps=((Map)Interpreter.Arg).IntKeyValues;
 		int i=1;
 		Map combined=new Map();

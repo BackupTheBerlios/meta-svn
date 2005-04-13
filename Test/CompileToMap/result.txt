@@ -609,7 +609,7 @@ Entry (DictionaryEntry)
                                   Key (Map):
                                     "literal"
                                   Value (Map):
-                                    "hello"
+                                    "					hello"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
@@ -3381,7 +3381,7 @@ Entry (DictionaryEntry)
                       Key (Map):
                         "literal"
                       Value (Map):
-                        "concat"
+                        "concatenate"
         Entry (DictionaryEntry)
           Key (Map):
             "value"
@@ -3415,7 +3415,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "concat"
+                                "concatenate"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -9752,4 +9752,4 @@ Schwaenzchen in die Hoeh.
               Key (Map):
                 "literal"
               Value (Map):
-                "		hello"
+                "			hello"

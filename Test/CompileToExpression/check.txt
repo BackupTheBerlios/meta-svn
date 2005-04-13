@@ -190,7 +190,7 @@ statements (ArrayList):
               parents (ArrayList):
             valueExpression (Literal):
               literal (Map):
-                "hello"
+                "					hello"
           Entry (Statement)
             keyExpression (Select):
               expressions (ArrayList):
@@ -202,8 +202,8 @@ statements (ArrayList):
                     "2"
               parents (ArrayList):
             valueExpression (Literal):
-              literal (Char):
-                "	"
+              literal (Integer):
+                "9"
       callableExpression (Select):
         expressions (ArrayList):
           Entry (Literal)
@@ -1590,7 +1590,7 @@ statements (ArrayList):
       expressions (ArrayList):
         Entry (Literal)
           literal (Map):
-            "concat"
+            "concatenate"
       parents (ArrayList):
     valueExpression (Call):
       argumentExpression (Program):
@@ -1628,7 +1628,7 @@ statements (ArrayList):
               "map"
           Entry (Literal)
             literal (Map):
-              "concat"
+              "concatenate"
         parents (ArrayList):
   Entry (Statement)
     keyExpression (Select):
@@ -4194,8 +4194,8 @@ Schwaenzchen in die Hoeh.
             "character"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (Char):
-        "a"
+      literal (Integer):
+        "97"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
@@ -4204,8 +4204,8 @@ Schwaenzchen in die Hoeh.
             "tab"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (Char):
-        "	"
+      literal (Integer):
+        "9"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
@@ -4214,8 +4214,8 @@ Schwaenzchen in die Hoeh.
             "backslash"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (Char):
-        "\"
+      literal (Integer):
+        "92"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
@@ -4224,9 +4224,8 @@ Schwaenzchen in die Hoeh.
             "endline"
       parents (ArrayList):
     valueExpression (Literal):
-      literal (Char):
-        "
-"
+      literal (Integer):
+        "10"
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):
@@ -4236,4 +4235,4 @@ Schwaenzchen in die Hoeh.
       parents (ArrayList):
     valueExpression (Literal):
       literal (Map):
-        "		hello"
+        "			hello"
