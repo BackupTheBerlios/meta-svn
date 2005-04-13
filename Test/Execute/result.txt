@@ -16,7 +16,7 @@ Entry (DictionaryEntry)
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map for()"
+        "Meta.Types.Map for(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "foreach"
@@ -25,7 +25,7 @@ Entry (DictionaryEntry)
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map foreach()"
+        "Meta.Types.Map foreach(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "switch"
@@ -34,7 +34,7 @@ Entry (DictionaryEntry)
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Void switch()"
+        "Void switch(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "if"
@@ -43,7 +43,7 @@ Entry (DictionaryEntry)
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Void if()"
+        "Void if(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "equal"
@@ -70,7 +70,7 @@ Entry (DictionaryEntry)
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean and()"
+        "Boolean and(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "or"
@@ -79,7 +79,7 @@ Entry (DictionaryEntry)
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean or()"
+        "Boolean or(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "concatenate"
@@ -120,7 +120,7 @@ Entry (DictionaryEntry)
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map trimStart()"
+        "Meta.Types.Map trimStart(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "storage"
@@ -147,7 +147,7 @@ Entry (DictionaryEntry)
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue merge()"
+        "Meta.Types.IKeyValue merge(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "keys"

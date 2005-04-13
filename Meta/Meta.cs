@@ -1841,20 +1841,25 @@ namespace Meta {
 				if(this.name=="GetStructure") {
 					int asdf=0;
 				}
-				Interpreter.arguments.Add(argument);
+				//Interpreter.arguments.Add(argument);
 				object result=null;
 				// check this for every method:
 				// introduce own method info class?
 				if(isMetaLibraryMethod) {
-					if(name.Equals("if")) {
-						int asdf=0;
-					}
 					if(methods[0] is ConstructorInfo) {
 						// call methods without arguments, ugly and redundant
-						result=((ConstructorInfo)methods[0]).Invoke(new object[] {}); 
+						result=((ConstructorInfo)methods[0]).Invoke(new object[] {argument}); 
+
+						//						result=((ConstructorInfo)methods[0]).Invoke(new object[] {}); 
 					}
 					else {
-						result=methods[0].Invoke(target,new object[] {});
+						try {
+							result=methods[0].Invoke(target,new object[] {argument});
+						}
+						catch {
+							throw new ApplicationException("Could not invoke "+this.name+".");
+						}
+						//						result=methods[0].Invoke(target,new object[] {});
 					}
 				}
 				else {
@@ -1891,10 +1896,11 @@ namespace Meta {
 					// make this safe
 					if(!executed && methods[0] is ConstructorInfo) {
 						object o=new NetMethod(type).Call(new Map());
-						result=with(o,((Map)Interpreter.Arg));
+						result=with(o,((Map)argument));
+//						result=with(o,((Map)Interpreter.Arg));
 					}
 				}		
-				Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);// change to RemoveAt
+				//Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);// change to RemoveAt
 				return Interpreter.ConvertDotNetToMeta(result);
 			}
 			public static object with(object obj,IMap map) {

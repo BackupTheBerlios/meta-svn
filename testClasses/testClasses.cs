@@ -79,24 +79,43 @@ namespace testClasses
 			this.z=(string)((Map)arg[new Map("p2")]).GetDotNetString();
 		}
 		[MetaLibraryMethod]
-		public string Concatenate() {
-			Map arg=(Map)Interpreter.Arg;
+		public string Concatenate(Map arg) {
+			//Map arg=(Map)Interpreter.Arg;
 			Map def=new Map();
-//<<<<<<< .mine
+			//<<<<<<< .mine
 			def[new Integer(1)]=new Map("null");
 			def[new Map("b")]=new Map("null");
 			def[new Map("c")]=new Map("null");
-////=======
-//			def[new Integer(1)]=Interpreter.StringToMap("null");
-//			def[Interpreter.StringToMap("b")]=Interpreter.StringToMap("null");
-//			def[Interpreter.StringToMap("c")]=Interpreter.StringToMap("null");
-//>>>>>>> .r97
+			////=======
+			//			def[new Integer(1)]=Interpreter.StringToMap("null");
+			//			def[Interpreter.StringToMap("b")]=Interpreter.StringToMap("null");
+			//			def[Interpreter.StringToMap("c")]=Interpreter.StringToMap("null");
+			//>>>>>>> .r97
 			arg=(Map)Interpreter.Merge(def,arg);
 			return (string)((Map)arg[new Integer(1)]).GetDotNetString()+
 				(string)((Map)arg[new Map("b")]).GetDotNetString()+
 				(string)((Map)arg[new Map("c")]).GetDotNetString()+
 				this.x+this.y+this.z;
 		}
+//		[MetaLibraryMethod]
+//		public string Concatenate() {
+//			Map arg=(Map)Interpreter.Arg;
+//			Map def=new Map();
+////<<<<<<< .mine
+//			def[new Integer(1)]=new Map("null");
+//			def[new Map("b")]=new Map("null");
+//			def[new Map("c")]=new Map("null");
+//////=======
+////			def[new Integer(1)]=Interpreter.StringToMap("null");
+////			def[Interpreter.StringToMap("b")]=Interpreter.StringToMap("null");
+////			def[Interpreter.StringToMap("c")]=Interpreter.StringToMap("null");
+////>>>>>>> .r97
+//			arg=(Map)Interpreter.Merge(def,arg);
+//			return (string)((Map)arg[new Integer(1)]).GetDotNetString()+
+//				(string)((Map)arg[new Map("b")]).GetDotNetString()+
+//				(string)((Map)arg[new Map("c")]).GetDotNetString()+
+//				this.x+this.y+this.z;
+//		}
 		//		[MetaMethod("(1,b,c)")]
 //		public string Concatenate() {
 //			Map arg=(Map)Interpreter.Arg;

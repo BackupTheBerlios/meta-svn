@@ -23,9 +23,9 @@ public class map {
 		return map.Count;
 	}
 	[MetaLibraryMethod]
-	public static Map trimStart() {
-		Map map=(Map)((Map)Interpreter.Arg)[new Integer(1)];
-		object obj=((Map)Interpreter.Arg)[new Integer(2)];
+	public static Map trimStart(Map arg) {
+		Map map=(Map)arg[new Integer(1)];
+		object obj=arg[new Integer(2)];
 
 		Map result=new Map();
 		int counter=1;
@@ -40,6 +40,24 @@ public class map {
 		}
 		return result;
 	}
+//	[MetaLibraryMethod]
+//	public static Map trimStart() {
+//		Map map=(Map)arg[new Integer(1)];
+//		object obj=arg[new Integer(2)];
+//
+//		Map result=new Map();
+//		int counter=1;
+//		foreach(object o in map.IntKeyValues) {
+//			if(obj.Equals(o)) {
+//				result[new Integer(counter)]=o;
+//				counter++;
+//			}
+//			else {
+//				break;
+//			}
+//		}
+//		return result;
+//	}
 	public static int countStart(Map map,object obj) {
 		int count=0;
 		foreach(object o in map.IntKeyValues) {
@@ -62,8 +80,8 @@ public class map {
 		return keys;
 	}
 	[MetaLibraryMethod]
-	public static Map concatenate() {
-		ArrayList maps=((Map)Interpreter.Arg).IntKeyValues;
+	public static Map concatenate(Map arg) {
+		ArrayList maps=arg.IntKeyValues;
 		int i=1;
 		Map combined=new Map();
 		foreach(Map map in maps) {
@@ -75,8 +93,8 @@ public class map {
 		return combined;
 	}
 	[MetaLibraryMethod]
-	public static IKeyValue merge() {
-		return (Map)Interpreter.MergeCollection(((Map)Interpreter.Arg).IntKeyValues);
+	public static IKeyValue merge(Map arg) {
+		return (Map)Interpreter.MergeCollection(arg.IntKeyValues);
 	}
 	// integrate this into .NET constructor in NetClass, which is cleaner
 	// possibly remove completely, let's see how the editor turns out
@@ -168,7 +186,7 @@ public class map {
 //	}
 //	[MetaLibraryMethod]
 //	public static Map concat() {
-//		ArrayList maps=((Map)Interpreter.Arg).IntKeyValues;
+//		ArrayList maps=arg.IntKeyValues;
 //		int i=1;
 //		Map combined=new Map();
 //		foreach(Map map in maps) {
@@ -192,7 +210,7 @@ public class map {
 ////	}
 //	[MetaLibraryMethod]
 //	public static IKeyValue Merge() {
-//		return (Map)Interpreter.MergeCollection(((Map)Interpreter.Arg).IntKeyValues);
+//		return (Map)Interpreter.MergeCollection(arg.IntKeyValues);
 //	}
 //	public static object With(object obj,IMap map) {
 //		NetObject netObject=new NetObject(obj);
@@ -203,7 +221,7 @@ public class map {
 //	}
 //	[MetaLibraryMethod]
 //	public static Map GetStructure() {
-//		return GetTheStructure(((Map)Interpreter.Arg).IntKeyValues);
+//		return GetTheStructure(arg.IntKeyValues);
 ////		Map structure=new Map();
 ////		Hashtable keys=new Hashtable();
 ////		return structure;
