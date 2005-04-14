@@ -2247,3 +2247,9 @@ Entry (DictionaryEntry)
     "tabText"
   Value (Map):
     "			hello"
+Entry (DictionaryEntry)
+  Key (Map):
+    "escapedText"
+  Value (Map):
+    "'
+\	"

@@ -58,11 +58,11 @@ namespace Test {
 				Console.ReadLine();
 			}
 			catch(RecognitionException e) {
-				Console.WriteLine(e.Message+" line:"+e.line+", file:"+e.fileName+", column:"+e.column);
+				Console.WriteLine(e.Message+" line:"+e.line+"+ column:"+e.column);
 				Console.ReadLine();
 			}
 			catch(TokenStreamRecognitionException e) {
-				Console.WriteLine(e.recog.Message+" line:"+e.recog.line+", file:"+e.recog.fileName+", column:"+e.recog.column);
+				Console.WriteLine(e.recog.Message+" line:"+e.recog.line+" column:"+e.recog.column);
 				Console.ReadLine();
 			}
 			catch(TokenStreamException e) {

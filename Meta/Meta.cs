@@ -625,14 +625,24 @@ namespace Meta {
 				public abstract object Convert(object obj);
 			}
 			public class LiteralRecognitions {
-				// Attention! order of classes matters here
+				// Attention! order of RecognizeLiteral classes matters
 				public class RecognizeString:RecognizeLiteral {
-//					ArrayList escapeSequences;
-//					public RecognizeString() {
-//						this.escapeSequences=new ArrayList(
-//							new object[] {
-//												 new DictionaryEntry("\\\"","\"")});
-//					}
+					ArrayList escapeSequences;
+					public RecognizeString() {
+						this.escapeSequences=new ArrayList(
+							new object[] {
+												 new DictionaryEntry(@"\\","\\"),
+												 new DictionaryEntry(@"\'","\'"),
+												 new DictionaryEntry(@"\a","\a"),
+												 new DictionaryEntry(@"\b","\b"),
+												 new DictionaryEntry(@"\f","\f"),
+												 new DictionaryEntry(@"\n","\n"),
+												 new DictionaryEntry(@"\r","\r"),
+												 new DictionaryEntry(@"\t","\t"),
+												 new DictionaryEntry(@"\v","\v")
+											 });
+					}
+
 //					C#:
 //					*  \' - single quote, needed for character literals
 //					* \" - double quote, needed for string literals
@@ -650,13 +660,14 @@ namespace Meta {
 //					* \Uxxxxxxxx - Unicode escape sequence for character with hex value xxxxxxxx (for generating surrogates)
 
 					public override object Recognize(string text) {
-//						foreach(DictionaryEntry entry in escapeSequences) {
-//							text=text.Replace((string)entry.Key,(string)entry.Value);
-//						}
-						if(text.Equals("aba")) {
+						string escapedText=text;
+						if(text.Equals(@"\'\n\\\t")) {
 							int asdf=0;
 						}
-						return new Map(text);
+						foreach(DictionaryEntry entry in escapeSequences) {
+							escapedText=escapedText.Replace((string)entry.Key,(string)entry.Value);
+						}
+						return new Map(escapedText);
 					}
 				}
 				// does everything get executed twice?
@@ -701,7 +712,7 @@ namespace Meta {
 								}
 							}
 							else {
-								throw new ApplicationException("Unrecognized escape sequence "+text);// maybe not the right way to do it, there might be a normal text that starts with \
+								return null;
 							}
 							return new Integer(result);
 						}

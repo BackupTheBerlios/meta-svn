@@ -243,3 +243,4 @@ tab:'\\t
 backslash:'\\\
 endline:'\\n
 tabText:"			hello"
+escapedText:"\'\n\\\t"
