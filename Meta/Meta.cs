@@ -322,7 +322,7 @@ namespace Meta {
 		public delegate void BreakMethodDelegate(IKeyValue obj);
 		public class Interpreter  {
 			public static void SaveToFile(object meta,string fileName) {
-				StreamWriter writer=new StreamWriter(File.Create(fileName));
+				StreamWriter writer=new StreamWriter(fileName);
 				writer.Write(MetaSerialize(meta,"",true));
 				writer.Close();
 			}
@@ -485,7 +485,7 @@ namespace Meta {
 //				}
 //			}
 			public static object Run(string fileName,IMap argument) {
-				StreamReader a=new StreamReader(fileName,Encoding.Default);
+				StreamReader a=new StreamReader(fileName); //TODO: check this, is it right or wrong???ß
 				string x=a.ReadToEnd();
 				a.Close();
 				//				StreamReader reader=new StreamReader(fileName);
@@ -512,7 +512,7 @@ namespace Meta {
 //				return result;
 //			}
 			public static object RunWithoutLibrary(string fileName,IMap argument) {
-				StreamReader reader=new StreamReader(fileName,Encoding.Default);
+				StreamReader reader=new StreamReader(fileName);
 				Map program=CompileToMap(reader);
 				reader.Close();
 				return program.Call(argument);
@@ -627,21 +627,21 @@ namespace Meta {
 			public class LiteralRecognitions {
 				// Attention! order of RecognizeLiteral classes matters
 				public class RecognizeString:RecognizeLiteral {
-					ArrayList escapeSequences;
-					public RecognizeString() {
-						this.escapeSequences=new ArrayList(
-							new object[] {
-												 new DictionaryEntry(@"\\","\\"),
-												 new DictionaryEntry(@"\'","\'"),
-												 new DictionaryEntry(@"\a","\a"),
-												 new DictionaryEntry(@"\b","\b"),
-												 new DictionaryEntry(@"\f","\f"),
-												 new DictionaryEntry(@"\n","\n"),
-												 new DictionaryEntry(@"\r","\r"),
-												 new DictionaryEntry(@"\t","\t"),
-												 new DictionaryEntry(@"\v","\v")
-											 });
-					}
+//					ArrayList escapeSequences;
+//					public RecognizeString() {
+//						this.escapeSequences=new ArrayList(
+//							new object[] {
+//												 new DictionaryEntry(@"\\","\\"),
+//												 new DictionaryEntry(@"\'","\'"),
+//												 new DictionaryEntry(@"\a","\a"),
+//												 new DictionaryEntry(@"\b","\b"),
+//												 new DictionaryEntry(@"\f","\f"),
+//												 new DictionaryEntry(@"\n","\n"),
+//												 new DictionaryEntry(@"\r","\r"),
+//												 new DictionaryEntry(@"\t","\t"),
+//												 new DictionaryEntry(@"\v","\v")
+//											 });
+//					}
 
 //					C#:
 //					*  \' - single quote, needed for character literals
@@ -660,14 +660,14 @@ namespace Meta {
 //					* \Uxxxxxxxx - Unicode escape sequence for character with hex value xxxxxxxx (for generating surrogates)
 
 					public override object Recognize(string text) {
-						string escapedText=text;
-						if(text.Equals(@"\'\n\\\t")) {
-							int asdf=0;
-						}
-						foreach(DictionaryEntry entry in escapeSequences) {
-							escapedText=escapedText.Replace((string)entry.Key,(string)entry.Value);
-						}
-						return new Map(escapedText);
+//						string escapedText=text;
+////						if(text.Equals(@"\'\n\\\t")) {
+////							int asdf=0;
+////						}
+//						foreach(DictionaryEntry entry in escapeSequences) {
+//							escapedText=escapedText.Replace((string)entry.Key,(string)entry.Value);
+//						}
+						return new Map(text);
 					}
 				}
 				// does everything get executed twice?
@@ -679,7 +679,7 @@ namespace Meta {
 								result=text[1]; // not unicode safe, write wrapper that takes care of this stuff
 							}
 							else if(text.Length==3) {
-								switch(text.Substring(1,2)) {
+								switch(text.Substring(1,2))  { // TODO: remove this useless stuff
 									case @"\'":
 										result='\'';
 										break;
@@ -1166,13 +1166,18 @@ namespace Meta {
 			public Library() {
 				ArrayList assemblies=new ArrayList();
 				libraryPath=Path.Combine(Interpreter.metaInstallationPath,"library");
-				IAssemblyEnum e=AssemblyCache.CreateGACEnum();
+				IAssemblyEnum ae=AssemblyCache.CreateGACEnum();
 				IAssemblyName an; 
 				AssemblyName name;
 				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
-				while (AssemblyCache.GetNextAssembly(e, out an) == 0) {
-					name=GetAssemblyName(an);
-					assemblies.Add(Assembly.LoadWithPartialName(name.Name));
+				while (AssemblyCache.GetNextAssembly(ae, out an) == 0) {
+					try {
+						name=GetAssemblyName(an);
+						assemblies.Add(Assembly.LoadWithPartialName(name.Name));
+					}
+					catch(Exception e) {
+						Console.WriteLine("Could not load gac assembly :"+System.GAC.AssemblyCache.GetName(an));
+					}
 				}
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
 					assemblies.Add(Assembly.LoadFrom(fileName));
@@ -1559,7 +1564,7 @@ namespace Meta {
 				}
 				public StringStrategy(string text) {
 					this.text=text;
-					for(int i=1;i<=text.Length;i++) {
+					for(int i=1;i<=text.Length;i++) { // make this lazy? it won't work with unicode anymore then, though
 						keys.Add(new Integer(i));
 					}
 				}

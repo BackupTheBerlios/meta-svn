@@ -178,7 +178,7 @@ firstSwitch:'unchanged
 bigNumber:'50020202029029233344
 switch
 	bigNumber
-	cases:
+	case:
 		[bigNumber]:=
 			firstSwitch*:bigNumber
 	default:=
@@ -186,7 +186,7 @@ switch
 secondSwitch:'unchanged
 switch
 	'3
-	cases:
+	case:
 		1:=
 			secondSwitch*:'one
 		2:=

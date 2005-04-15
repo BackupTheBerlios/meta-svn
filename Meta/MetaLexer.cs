@@ -358,12 +358,12 @@ _loop12_breakloop:		;
 		
 		switch ( LA(1) )
 		{
-		case '"':
+		case '\'':
 		{
 			{
 				int _saveIndex = 0;
 				_saveIndex = text.Length;
-				match("\"");
+				match('\'');
 				text.Length = _saveIndex;
 				{    // ( ... )*
 					for (;;)
@@ -382,18 +382,15 @@ _loop12_breakloop:		;
 					}
 _loop17_breakloop:					;
 				}    // ( ... )*
-				_saveIndex = text.Length;
-				match("\"");
-				text.Length = _saveIndex;
 			}
 			break;
 		}
-		case '\'':
+		case '"':
 		{
 			{
 				int _saveIndex = 0;
 				_saveIndex = text.Length;
-				match('\'');
+				match("\"");
 				text.Length = _saveIndex;
 				{    // ( ... )*
 					for (;;)
@@ -412,6 +409,9 @@ _loop17_breakloop:					;
 					}
 _loop21_breakloop:					;
 				}    // ( ... )*
+				_saveIndex = text.Length;
+				match("\"");
+				text.Length = _saveIndex;
 			}
 			break;
 		}
@@ -788,8 +788,9 @@ _loop46_breakloop:			;
 	private static long[] mk_tokenSet_1_()
 	{
 		long[] data = new long[2048];
-		data[0]=-17179869185L;
-		for (int i = 1; i<=1022; i++) { data[i]=-1L; }
+		data[0]=-2594147623875126785L;
+		data[1]=-671088641L;
+		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
 		for (int i = 1024; i<=2047; i++) { data[i]=0L; }
 		return data;
@@ -798,9 +799,8 @@ _loop46_breakloop:			;
 	private static long[] mk_tokenSet_2_()
 	{
 		long[] data = new long[2048];
-		data[0]=-2594147623875126785L;
-		data[1]=-671088641L;
-		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
+		data[0]=-17179869185L;
+		for (int i = 1; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
 		for (int i = 1024; i<=2047; i++) { data[i]=0L; }
 		return data;

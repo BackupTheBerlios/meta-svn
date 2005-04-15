@@ -107,14 +107,9 @@ LITERAL
   options {
     paraphrase="a literal";
   }:
-  ("\""! ( ~ ('\"') )* "\""!)
-  |('\''! ( ~ (' '|'\t'|'\r'|'\n'|'='|'.'|'\''|'"'|'('|')'|'['|']'|':') )*)
-  // 
- // |("@\""! ({LA(0)!='"'||LA(1)!='@'}? (.) )* "\"")=>
-//  |("@\""! ( (.) )* LITERAL_END)
-  | ("@\""! ({LA(1)!='"'||LA(2)!='@'}? (.) )* "\"@"!) //quite a mess, generates nondeterminism warning, works thanks to semantic predicates
-//  | ("@\""! (options {greedy=false;} : (.) )* "\"@")
-;
+  ('\''! ( ~ (' '|'\t'|'\r'|'\n'|'='|'.'|'\''|'"'|'('|')'|'['|']'|':') )*)
+  |("\""! ( ~ ('\"') )* "\""!)
+  | ("@\""! ({LA(1)!='"'||LA(2)!='@'}? (.) )* "\"@"!);
   
 protected
 LITERAL_END:
@@ -191,14 +186,13 @@ expression:
     |delayed
     |LITERAL
   );
-//rename ENDLINE
 map:
   {
     Counters.autokey.Push(0);
   }
 	(
 	  INDENT!
-	  (statement)?
+	  statement
 	  (
 	    ENDLINE!
 	    statement
