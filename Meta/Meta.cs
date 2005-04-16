@@ -1176,7 +1176,7 @@ namespace Meta {
 						assemblies.Add(Assembly.LoadWithPartialName(name.Name));
 					}
 					catch(Exception e) {
-						Console.WriteLine("Could not load gac assembly :"+System.GAC.AssemblyCache.GetName(an));
+						//Console.WriteLine("Could not load gac assembly :"+System.GAC.AssemblyCache.GetName(an));
 					}
 				}
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
