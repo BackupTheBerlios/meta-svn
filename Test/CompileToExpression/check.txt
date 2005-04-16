@@ -3237,7 +3237,7 @@ statements (ArrayList):
               expressions (ArrayList):
                 Entry (Literal)
                   literal (Map):
-                    "cases"
+                    "case"
               parents (ArrayList):
             valueExpression (Program):
               statements (ArrayList):
@@ -3403,7 +3403,7 @@ statements (ArrayList):
               expressions (ArrayList):
                 Entry (Literal)
                   literal (Map):
-                    "cases"
+                    "case"
               parents (ArrayList):
             valueExpression (Program):
               statements (ArrayList):
@@ -4245,5 +4245,4 @@ Schwaenzchen in die Hoeh.
       parents (ArrayList):
     valueExpression (Literal):
       literal (Map):
-        "'
-\	"
+        "\'\n\\\t"

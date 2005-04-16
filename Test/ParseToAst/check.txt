@@ -6446,7 +6446,7 @@ getFirstChild (CommonAST):
                                                                                                                                                                                                 getNextSibling:
                                                                                                                                                                                                   null
                                                                                                                                                                                                 getText (String):
-                                                                                                                                                                                                  "cases"
+                                                                                                                                                                                                  "case"
                                                                                                                                                                                                 Type (Int32):
                                                                                                                                                                                                   "21"
                                                                                                                                                                                               getNextSibling (CommonAST):
@@ -6739,7 +6739,7 @@ getFirstChild (CommonAST):
                                                                                                                                                                                                     getNextSibling:
                                                                                                                                                                                                       null
                                                                                                                                                                                                     getText (String):
-                                                                                                                                                                                                      "cases"
+                                                                                                                                                                                                      "case"
                                                                                                                                                                                                     Type (Int32):
                                                                                                                                                                                                       "21"
                                                                                                                                                                                                   getNextSibling (CommonAST):

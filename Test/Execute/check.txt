@@ -2,7 +2,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "unicodeText"
   Value (Map):
-    "äaba"
+    "aba"
 Entry (DictionaryEntry)
   Key (Integer):
     "1"
@@ -2251,5 +2251,4 @@ Entry (DictionaryEntry)
   Key (Map):
     "escapedText"
   Value (Map):
-    "'
-\	"
+    "\'\n\\\t"

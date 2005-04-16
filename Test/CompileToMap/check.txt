@@ -7455,7 +7455,7 @@ Entry (DictionaryEntry)
                                           Key (Map):
                                             "literal"
                                           Value (Map):
-                                            "cases"
+                                            "case"
                             Entry (DictionaryEntry)
                               Key (Map):
                                 "value"
@@ -7776,7 +7776,7 @@ Entry (DictionaryEntry)
                                           Key (Map):
                                             "literal"
                                           Value (Map):
-                                            "cases"
+                                            "case"
                             Entry (DictionaryEntry)
                               Key (Map):
                                 "value"
