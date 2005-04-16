@@ -244,3 +244,12 @@ backslash:'\\\
 endline:'\\n
 tabText:"			hello"
 escapedText:"\'\n\\\t"
+whileCounter:'0
+while
+	=smaller
+		whileCounter
+		'10
+	=
+		whileCounter*:add
+			whileCounter
+			'1

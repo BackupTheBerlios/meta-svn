@@ -42,8 +42,8 @@ namespace Meta {
 			object Evaluate(IMap parent);
 		}
 		public class Statement {
-		public static readonly Map keyString=new Map("key");
-		public static readonly Map valueString=new Map("value");
+			public static readonly Map keyString=new Map("key");
+			public static readonly Map valueString=new Map("value");
 			public void Realize(IMap parent) {
 				keyExpression.Assign(parent,this.valueExpression.Evaluate(parent));
 			}
@@ -84,15 +84,15 @@ namespace Meta {
 			public object Evaluate(IMap parent) {
 				Map local=new Map();
 				return Evaluate(parent,local);
-//				local.Parent=parent;
-//				Interpreter.callers.Add(local);
-//				for(int i=0;i<statements.Count;i++) {
-//					local=(Map)Interpreter.Current;
-//					((Statement)statements[i]).Realize(local);
-//				}
-//				object result=Interpreter.Current;
-//				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-//				return result;
+				//				local.Parent=parent;
+				//				Interpreter.callers.Add(local);
+				//				for(int i=0;i<statements.Count;i++) {
+				//					local=(Map)Interpreter.Current;
+				//					((Statement)statements[i]).Realize(local);
+				//				}
+				//				object result=Interpreter.Current;
+				//				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+				//				return result;
 			}
 			public object Evaluate(IMap parent,IMap local) {
 				//Map local=new Map();
@@ -106,18 +106,18 @@ namespace Meta {
 				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 				return result;
 			}
-//			public object Evaluate(IMap parent) {
-//				Map local=new Map();
-//				local.Parent=parent;
-//				Interpreter.callers.Add(local);
-//				for(int i=0;i<statements.Count;i++) {
-//					local=(Map)Interpreter.Current;
-//					((Statement)statements[i]).Realize(local);
-//				}
-//				object result=Interpreter.Current;
-//				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-//				return result;
-//			}
+			//			public object Evaluate(IMap parent) {
+			//				Map local=new Map();
+			//				local.Parent=parent;
+			//				Interpreter.callers.Add(local);
+			//				for(int i=0;i<statements.Count;i++) {
+			//					local=(Map)Interpreter.Current;
+			//					((Statement)statements[i]).Realize(local);
+			//				}
+			//				object result=Interpreter.Current;
+			//				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+			//				return result;
+			//			}
 			public static readonly Map programString=new Map("program");
 			public Program(Map code) {
 				foreach(Map statement in ((Map)code[programString]).IntKeyValues) {
@@ -200,19 +200,19 @@ namespace Meta {
 					}
 					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
 				}
-//				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
-//					int numCallers=0;
-//					foreach(object key in keys) {
-//						if(key is Map && ((Map)key).GetDotNetString().Equals("caller")) {
-//							numCallers++;
-//							i++;
-//						}
-//						else {
-//							break;
-//						}
-//					}
-//					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
-//				}
+					//				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
+					//					int numCallers=0;
+					//					foreach(object key in keys) {
+					//						if(key is Map && ((Map)key).GetDotNetString().Equals("caller")) {
+					//							numCallers++;
+					//							i++;
+					//						}
+					//						else {
+					//							break;
+					//						}
+					//					}
+					//					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
+					//				}
 				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("parent")) {
 					foreach(object key in keys) {
 						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("parent")) {
@@ -253,40 +253,40 @@ namespace Meta {
 							throw new ApplicationException(KeyErrorMessage(keys[i]));
 						}
 					}
-						//						string text="Key ";
-						//						if(keys[i] is Map) {
-						//							text+=((Map)keys[i]).GetDotNetString();
-						//						}
-						//						else {
-						//							text+=keys[i];
-						//						}
-						//						text+=" not found.";
-						//						throw new ApplicationException(text);
-//					}
-//					while(selection!=null && !((IKeyValue)selection).ContainsKey(keys[i])) {
-//						selection=((IMap)selection).Parent;
-//					}
-//					if(selection==null) {
-//						throw new ApplicationException(KeyErrorMessage(keys[i]));
-////						string text="Key ";
-////						if(keys[i] is Map) {
-////							text+=((Map)keys[i]).GetDotNetString();
-////						}
-////						else {
-////							text+=keys[i];
-////						}
-////						text+=" not found.";
-////						throw new ApplicationException(text);
-//					}
+					//						string text="Key ";
+					//						if(keys[i] is Map) {
+					//							text+=((Map)keys[i]).GetDotNetString();
+					//						}
+					//						else {
+					//							text+=keys[i];
+					//						}
+					//						text+=" not found.";
+					//						throw new ApplicationException(text);
+					//					}
+					//					while(selection!=null && !((IKeyValue)selection).ContainsKey(keys[i])) {
+					//						selection=((IMap)selection).Parent;
+					//					}
+					//					if(selection==null) {
+					//						throw new ApplicationException(KeyErrorMessage(keys[i]));
+					////						string text="Key ";
+					////						if(keys[i] is Map) {
+					////							text+=((Map)keys[i]).GetDotNetString();
+					////						}
+					////						else {
+					////							text+=keys[i];
+					////						}
+					////						text+=" not found.";
+					////						throw new ApplicationException(text);
+					//					}
 				}
 				int lastKeySelect=0;
 				if(isSelectLastKey) {
 					lastKeySelect++;
 				}
 				for(;i<keys.Count-1+lastKeySelect;i++) {
-//					if(keys[i].Equals(new Map("Value"))) {
-//						int asdf=0;
-//					}
+					//					if(keys[i].Equals(new Map("Value"))) {
+					//						int asdf=0;
+					//					}
 					if(selection is IKeyValue) {
 						selection=((IKeyValue)selection)[keys[i]];
 					}
@@ -319,6 +319,287 @@ namespace Meta {
 			public readonly ArrayList expressions=new ArrayList();
 			public ArrayList parents=new ArrayList();
 		}
+//		public interface IExpression {
+//			object Evaluate(IMap parent);
+//		}
+//		public class Statement {
+//		public static readonly Map keyString=new Map("key");
+//		public static readonly Map valueString=new Map("value");
+//			public void Realize(IMap parent) {
+//				keyExpression.Assign(parent,this.valueExpression.Evaluate(parent));
+//			}
+//			public Statement(Map code) {
+//				this.keyExpression=(Select)((Map)code[keyString]).Compile();
+//				this.valueExpression=(IExpression)((Map)code[valueString]).Compile();
+//			}
+//			public Select keyExpression;
+//			public IExpression valueExpression;
+//		}
+//		public class Call: IExpression {
+//			public object Evaluate(IMap parent) {
+//				return ((ICallable)callableExpression.Evaluate(parent)).Call(
+//					(IMap)argumentExpression.Evaluate(parent));
+//			}
+//			public static readonly Map callString=new Map("call");
+//			public static readonly Map functionString=new Map("function");
+//			public static readonly Map argumentString=new Map("argument");
+//			public Call(Map obj) {
+//				Map expression=(Map)obj[callString];
+//				this.callableExpression=(IExpression)((Map)expression[functionString]).Compile();
+//				this.argumentExpression=(IExpression)((Map)expression[argumentString]).Compile();
+//			}
+//			public IExpression argumentExpression;
+//			public IExpression callableExpression;
+//		}
+//		public class Delayed: IExpression {
+//			public object Evaluate(IMap parent) {
+//				return delayed;
+//			}
+//			public static readonly Map delayedString=new Map("delayed");
+//			public Delayed(Map code) {
+//				this.delayed=(Map)code[delayedString];
+//			}
+//			public Map delayed;
+//		}
+//		public class Program: IExpression {
+//			public object Evaluate(IMap parent) {
+//				Map local=new Map();
+//				return Evaluate(parent,local);
+////				local.Parent=parent;
+////				Interpreter.callers.Add(local);
+////				for(int i=0;i<statements.Count;i++) {
+////					local=(Map)Interpreter.Current;
+////					((Statement)statements[i]).Realize(local);
+////				}
+////				object result=Interpreter.Current;
+////				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+////				return result;
+//			}
+//			public object Evaluate(IMap parent,IMap local) {
+//				//Map local=new Map();
+//				local.Parent=parent;
+//				Interpreter.callers.Add(local);
+//				for(int i=0;i<statements.Count;i++) {
+//					local=(Map)Interpreter.Current;
+//					((Statement)statements[i]).Realize(local);
+//				}
+//				object result=Interpreter.Current;
+//				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+//				return result;
+//			}
+////			public object Evaluate(IMap parent) {
+////				Map local=new Map();
+////				local.Parent=parent;
+////				Interpreter.callers.Add(local);
+////				for(int i=0;i<statements.Count;i++) {
+////					local=(Map)Interpreter.Current;
+////					((Statement)statements[i]).Realize(local);
+////				}
+////				object result=Interpreter.Current;
+////				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+////				return result;
+////			}
+//			public static readonly Map programString=new Map("program");
+//			public Program(Map code) {
+//				foreach(Map statement in ((Map)code[programString]).IntKeyValues) {
+//					this.statements.Add(statement.Compile()); // should we save the original maps instead of statements?
+//				}
+//			}
+//			public readonly ArrayList statements=new ArrayList();
+//		}
+//		public class Literal: IExpression {
+//			public object Evaluate(IMap parent) {
+//				return literal;
+//			}
+//			public static readonly Map literalString=new Map("literal");
+//			public Literal(Map code) {
+//				this.literal=Interpreter.RecognizeLiteralText((string)((Map)code[literalString]).GetDotNetString());
+//			}
+//			public object literal=null;
+//		}
+//		public class Select: IExpression { 
+//			public object Evaluate(IMap parent) {
+//				ArrayList keysToBeSelected=new ArrayList();
+//				foreach(IExpression expression in expressions) {
+//					keysToBeSelected.Add(expression.Evaluate(parent));
+//				}
+//				return SearchAndSelectKeysInCurrentMap(keysToBeSelected,true,true);
+//			}
+//			public void Assign(IMap current,object valueToBeAssigned) { 
+//				ArrayList keysToBeSelected=new ArrayList();
+//				foreach(IExpression expression in expressions) {
+//					keysToBeSelected.Add(expression.Evaluate(current));
+//				}
+//				if(keysToBeSelected.Count==1 && keysToBeSelected[0] is Map && ((Map)keysToBeSelected[0]).IsString && ((Map)keysToBeSelected[0]).GetDotNetString().Equals("this")) {
+//					if(valueToBeAssigned is IMap) {
+//						IMap parent=((IMap)Interpreter.Current).Parent;
+//						Interpreter.Current=((IMap)valueToBeAssigned).Clone();
+//						((IMap)Interpreter.Current).Parent=parent;
+//					}
+//					else {
+//						Interpreter.Current=valueToBeAssigned;
+//					}
+//				}
+//				else {
+//					object selectionOfAllKeysExceptLastOne=SearchAndSelectKeysInCurrentMap(keysToBeSelected,false,false);
+//					IKeyValue mapToAssignIn;
+//					if(selectionOfAllKeysExceptLastOne is IKeyValue) {
+//						mapToAssignIn=(IKeyValue)selectionOfAllKeysExceptLastOne;
+//					}
+//					else {
+//						mapToAssignIn=new NetObject(selectionOfAllKeysExceptLastOne);
+//					}
+//					mapToAssignIn[keysToBeSelected[keysToBeSelected.Count-1]]=valueToBeAssigned;
+//				}
+//			}
+//			public object SearchAndSelectKeysInCurrentMap(ArrayList keys,bool isRightSide,bool isSelectLastKey) {
+//				if(keys.Count==0) {
+//					int asdf=0;
+//				}
+//				if(keys[0].Equals(new Map("asdf"))) {
+//					int asdf=0;
+//				}
+//				object selection=Interpreter.Current;
+//				int i=0;
+//
+//				if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("this")) { // factor out IsString
+//					i++;
+//				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
+//					int numCallers=0;
+//					foreach(object key in keys) {
+//						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("caller")) {
+//							numCallers++;
+//							if(numCallers>Interpreter.callers.Count) {
+//								throw new ApplicationException(KeyErrorMessage(keys[i]));
+//							}
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
+//				}
+////				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
+////					int numCallers=0;
+////					foreach(object key in keys) {
+////						if(key is Map && ((Map)key).GetDotNetString().Equals("caller")) {
+////							numCallers++;
+////							i++;
+////						}
+////						else {
+////							break;
+////						}
+////					}
+////					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
+////				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("parent")) {
+//					foreach(object key in keys) {
+//						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("parent")) {
+//							selection=((IMap)selection).Parent;
+//							if(selection==null) {
+//								throw new ApplicationException(KeyErrorMessage(keys[i]));
+//							}
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("arg")) {
+//					int numArgs=0;
+//					foreach(object key in keys) {
+//						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("arg")) {
+//							numArgs++;
+//							if(numArgs>Interpreter.arguments.Count) {
+//								throw new ApplicationException(KeyErrorMessage(keys[i]));
+//							}
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//					selection=Interpreter.arguments[Interpreter.arguments.Count-numArgs];
+//				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("search")||isRightSide) {
+//					if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("search")) { // IsString stupidly repeated
+//						i++;
+//					}
+//					while(!((IKeyValue)selection).ContainsKey(keys[i])) {
+//						selection=((IMap)selection).Parent;
+//						if(selection==null) {
+//							throw new ApplicationException(KeyErrorMessage(keys[i]));
+//						}
+//					}
+//						//						string text="Key ";
+//						//						if(keys[i] is Map) {
+//						//							text+=((Map)keys[i]).GetDotNetString();
+//						//						}
+//						//						else {
+//						//							text+=keys[i];
+//						//						}
+//						//						text+=" not found.";
+//						//						throw new ApplicationException(text);
+////					}
+////					while(selection!=null && !((IKeyValue)selection).ContainsKey(keys[i])) {
+////						selection=((IMap)selection).Parent;
+////					}
+////					if(selection==null) {
+////						throw new ApplicationException(KeyErrorMessage(keys[i]));
+//////						string text="Key ";
+//////						if(keys[i] is Map) {
+//////							text+=((Map)keys[i]).GetDotNetString();
+//////						}
+//////						else {
+//////							text+=keys[i];
+//////						}
+//////						text+=" not found.";
+//////						throw new ApplicationException(text);
+////					}
+//				}
+//				int lastKeySelect=0;
+//				if(isSelectLastKey) {
+//					lastKeySelect++;
+//				}
+//				for(;i<keys.Count-1+lastKeySelect;i++) {
+////					if(keys[i].Equals(new Map("Value"))) {
+////						int asdf=0;
+////					}
+//					if(selection is IKeyValue) {
+//						selection=((IKeyValue)selection)[keys[i]];
+//					}
+//					else {
+//						selection=new NetObject(selection)[keys[i]];
+//					}
+//					if(selection==null) {
+//						throw new ApplicationException(KeyErrorMessage(keys[i]));
+//					}
+//				}
+//				return selection;
+//			}
+//			public static string KeyErrorMessage(object key) {
+//				string text="Key ";
+//				if(key is Map && ((Map)key).IsString) {
+//					text+=((Map)key).GetDotNetString();
+//				}
+//				else {
+//					text+=key;
+//				}
+//				text+=" not found.";
+//				return text;
+//			}
+//			public static readonly Map selectString=new Map("select");
+//			public Select(Map code) {
+//				foreach(Map expression in ((Map)code[selectString]).IntKeyValues) {
+//					this.expressions.Add(expression.Compile());
+//				}
+//			}
+//			public readonly ArrayList expressions=new ArrayList();
+//			public ArrayList parents=new ArrayList();
+//		}
 		public delegate void BreakMethodDelegate(IKeyValue obj);
 		public class Interpreter  {
 			public static void SaveToFile(object meta,string fileName) {

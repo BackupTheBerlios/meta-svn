@@ -19,6 +19,15 @@ Entry (DictionaryEntry)
         "Meta.Types.Map for(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
+    "while"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "True"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Void while(Meta.Types.Map)"
+Entry (DictionaryEntry)
+  Key (Map):
     "foreach"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
@@ -2252,3 +2261,8 @@ Entry (DictionaryEntry)
     "escapedText"
   Value (Map):
     "\'\n\\\t"
+Entry (DictionaryEntry)
+  Key (Map):
+    "whileCounter"
+  Value (Integer):
+    "10"
