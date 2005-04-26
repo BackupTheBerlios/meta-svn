@@ -27,10 +27,9 @@ namespace Meta.Parser
 		public const int LITERAL_END = 22;
 		public const int SPACES = 23;
 		public const int LINE = 24;
-		public const int COMMENT = 25;
-		public const int SPACE = 26;
-		public const int NEWLINE = 27;
-		public const int SELECT_KEY = 28;
+		public const int SPACE = 25;
+		public const int NEWLINE = 26;
+		public const int SELECT_KEY = 27;
 		
 	}
 }

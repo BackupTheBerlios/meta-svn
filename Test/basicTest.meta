@@ -1,3 +1,4 @@
+
 unicodeText:'äaba
 this:map.merge
 	parent
@@ -20,9 +21,9 @@ gacTest:System.Collections
 lazyGACTest:Microsoft.CSharp
 metaLibTest:metaLib
 commandLineArguments:arg
-libraryAssemblyTest:testClasses
+libraryAssemblyTest:testClasses		//	asdfasdf	fff
 //thisIsInAComment=
-//  still comment
+	//  still comment
 // some more comment
 aMap:
 	['a]:'a
@@ -34,6 +35,8 @@ lookedUpMap:[aMap]
 lookedUpNormalSymbol:["normal symbol"]
 lookedUpSymbol:lookupSymbol
 lookedUpLongSymbol:["long key symbol"]
+
+
 object:
 	a:'default
 	autoSearch:'default
@@ -200,16 +203,6 @@ emptyFunctionResult:emptyFunction'
 font:System.Drawing.Font
 	"Courier New"
 	'10
-lookup:=
-	'10
-	arg.1
-lookupKey:
-	'10
-	'10
-[lookup
-	'10
-]:'hello
-lookupResult:[lookupKey]
 escapedAtText:@"""@
 stringTest:'hello
 stringTest.6:stringTest.1
@@ -253,3 +246,6 @@ while
 		whileCounter*:add
 			whileCounter
 			'1
+			
+			
+			

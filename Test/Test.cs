@@ -33,6 +33,7 @@ namespace Test {
 		[STAThread]
 		public static void Main(string[] args) {
 			//args=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
+			//args=new string[]{@"C:\_ProjectSupportMaterial\Meta\library\function.meta"};
 			//args=new string[]{@"C:\Dokumente und Einstellungen\Christian\Desktop\editor.meta"};
 			//args=new string[]{@"..\..\basicTest.meta"};
 			try {
@@ -95,7 +96,7 @@ namespace Test {
 		public class ParseToAst:TestCase {
 			public override object RunTestCase() {
 				return Interpreter.ParseToAst(new StreamReader(Path.Combine(
-					Test.path,filename)));
+					Test.path,filename)).ReadToEnd());
 			}
 		}
 		public class CompileToMap:TestCase {

@@ -96,13 +96,13 @@ Entry (DictionaryEntry)
     "xyz"
 Entry (DictionaryEntry)
   Key (Map):
-    "with"
+    "hasKey"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "System.Object with(System.Object, Meta.Types.IMap)"
+        "Boolean hasKey(System.Object, Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "run"
@@ -166,6 +166,15 @@ Entry (DictionaryEntry)
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.IKeyValue keys(Meta.Types.IKeyValue)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "with"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "False"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "System.Object with(System.Object, Meta.Types.IMap)"
 Entry (DictionaryEntry)
   Key (Map):
     "length"
@@ -2029,128 +2038,6 @@ Entry (DictionaryEntry)
     "font"
   Value (Font):
     "[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]"
-Entry (DictionaryEntry)
-  Key (Map):
-    "lookup"
-  Value (Map):
-    Entry (DictionaryEntry)
-      Key (Map):
-        "program"
-      Value (Map):
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "1"
-          Value (Map):
-            Entry (DictionaryEntry)
-              Key (Map):
-                "key"
-              Value (Map):
-                Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
-                  Value (Map):
-                    Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "this"
-                    Entry (DictionaryEntry)
-                      Key (Integer):
-                        "2"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "1"
-            Entry (DictionaryEntry)
-              Key (Map):
-                "value"
-              Value (Map):
-                Entry (DictionaryEntry)
-                  Key (Map):
-                    "literal"
-                  Value (Map):
-                    "10"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "2"
-          Value (Map):
-            Entry (DictionaryEntry)
-              Key (Map):
-                "key"
-              Value (Map):
-                Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
-                  Value (Map):
-                    Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "this"
-                    Entry (DictionaryEntry)
-                      Key (Integer):
-                        "2"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "2"
-            Entry (DictionaryEntry)
-              Key (Map):
-                "value"
-              Value (Map):
-                Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
-                  Value (Map):
-                    Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "arg"
-                    Entry (DictionaryEntry)
-                      Key (Integer):
-                        "2"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "1"
-Entry (DictionaryEntry)
-  Key (Map):
-    "lookupKey"
-  Value (Map):
-    "
-
-"
-Entry (DictionaryEntry)
-  Key (Map):
-    "
-
-"
-  Value (Map):
-    "hello"
-Entry (DictionaryEntry)
-  Key (Map):
-    "lookupResult"
-  Value (Map):
-    "hello"
 Entry (DictionaryEntry)
   Key (Map):
     "escapedAtText"

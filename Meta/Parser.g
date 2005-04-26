@@ -120,7 +120,8 @@ SPACES
     paraphrase="whitespace";
   }:
   (' ')+ ;//{_ttype=Token.SKIP;}
-
+  
+  
 LINE
   options {
     paraphrase="a line";
@@ -133,22 +134,31 @@ LINE
   {
     _ttype=Token.SKIP;
   }
+  |(NEWLINE ('\t')* NEWLINE)=>
+  NEWLINE ('\t')*
+	{
+		_ttype=Token.SKIP;
+	}  
+	
+	|(NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE)=>
+	NEWLINE ('\t')* "//" (~('\n'|'\r'))*
+	{$setType(Token.SKIP); newline();}
+	
+	|(('\t')* "//" (~('\n'|'\r'))* NEWLINE)=>
+	('\t')* "//" (~('\n'|'\r'))*
+	{$setType(Token.SKIP);}
   |NEWLINE ('\t')*
   {
-    _ttype=MetaLexerTokenTypes.INDENTATION;
-  };
+	_ttype=MetaLexerTokenTypes.INDENTATION;
+  } 
 
-COMMENT
-  options {
-    paraphrase="a comment";
-  }:
-		"//"
-		(~('\n'|'\r'))* ('\n'|'\r'('\n')?)
-		{$setType(Token.SKIP); newline();}
-	;
-    
+	; 
+
+
+
+ 
 protected   
-SPACE:  // subrule because of ANTLR bug that results in uncompilable code, maybe remove?
+SPACE:  // subrule because of ANTLR bug that results in uncompilable code, maybe remove? TODO: remove
   '\t'!;
 
 protected
@@ -316,12 +326,10 @@ lookup:
     LBRACKET!  
     (SPACES!)?
     (
-      (call)=>call
       |map
       |LITERAL
       |delayed
       |select
-      
     )
     (SPACES!)?
     (ENDLINE!)?

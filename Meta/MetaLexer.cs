@@ -54,10 +54,9 @@ namespace Meta.Parser
 		public const int LITERAL_END = 22;
 		public const int SPACES = 23;
 		public const int LINE = 24;
-		public const int COMMENT = 25;
-		public const int SPACE = 26;
-		public const int NEWLINE = 27;
-		public const int SELECT_KEY = 28;
+		public const int SPACE = 25;
+		public const int NEWLINE = 26;
+		public const int SELECT_KEY = 27;
 		
 		
 	public override void tab() 
@@ -162,15 +161,9 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
-						case '\n':  case '\r':
+						case '\t':  case '\n':  case '\r':  case '/':
 						{
 							mLINE(true);
-							theRetToken = returnToken_;
-							break;
-						}
-						case '/':
-						{
-							mCOMMENT(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -607,43 +600,289 @@ _loop40_breakloop:				;
 				
 			}
 		}
-		else if ((LA(1)=='\n'||LA(1)=='\r')) {
-			mNEWLINE(false);
-			{    // ( ... )*
-				for (;;)
-				{
-					if ((LA(1)=='\t'))
+		else {
+			bool synPredMatched44 = false;
+			if (((LA(1)=='\n'||LA(1)=='\r')))
+			{
+				int _m44 = mark();
+				synPredMatched44 = true;
+				inputState.guessing++;
+				try {
 					{
-						match('\t');
+						mNEWLINE(false);
+						{    // ( ... )*
+							for (;;)
+							{
+								if ((LA(1)=='\t'))
+								{
+									match('\t');
+								}
+								else
+								{
+									goto _loop43_breakloop;
+								}
+								
+							}
+_loop43_breakloop:							;
+						}    // ( ... )*
+						mNEWLINE(false);
+					}
+				}
+				catch (RecognitionException)
+				{
+					synPredMatched44 = false;
+				}
+				rewind(_m44);
+				inputState.guessing--;
+			}
+			if ( synPredMatched44 )
+			{
+				mNEWLINE(false);
+				{    // ( ... )*
+					for (;;)
+					{
+						if ((LA(1)=='\t'))
+						{
+							match('\t');
+						}
+						else
+						{
+							goto _loop46_breakloop;
+						}
+						
+					}
+_loop46_breakloop:					;
+				}    // ( ... )*
+				if (0==inputState.guessing)
+				{
+					
+							_ttype=Token.SKIP;
+						
+				}
+			}
+			else {
+				bool synPredMatched53 = false;
+				if (((LA(1)=='\n'||LA(1)=='\r')))
+				{
+					int _m53 = mark();
+					synPredMatched53 = true;
+					inputState.guessing++;
+					try {
+						{
+							mNEWLINE(false);
+							{    // ( ... )*
+								for (;;)
+								{
+									if ((LA(1)=='\t'))
+									{
+										match('\t');
+									}
+									else
+									{
+										goto _loop49_breakloop;
+									}
+									
+								}
+_loop49_breakloop:								;
+							}    // ( ... )*
+							match("//");
+							{    // ( ... )*
+								for (;;)
+								{
+									if ((tokenSet_3_.member(LA(1))))
+									{
+										{
+											match(tokenSet_3_);
+										}
+									}
+									else
+									{
+										goto _loop52_breakloop;
+									}
+									
+								}
+_loop52_breakloop:								;
+							}    // ( ... )*
+							mNEWLINE(false);
+						}
+					}
+					catch (RecognitionException)
+					{
+						synPredMatched53 = false;
+					}
+					rewind(_m53);
+					inputState.guessing--;
+				}
+				if ( synPredMatched53 )
+				{
+					mNEWLINE(false);
+					{    // ( ... )*
+						for (;;)
+						{
+							if ((LA(1)=='\t'))
+							{
+								match('\t');
+							}
+							else
+							{
+								goto _loop55_breakloop;
+							}
+							
+						}
+_loop55_breakloop:						;
+					}    // ( ... )*
+					match("//");
+					{    // ( ... )*
+						for (;;)
+						{
+							if ((tokenSet_3_.member(LA(1))))
+							{
+								{
+									match(tokenSet_3_);
+								}
+							}
+							else
+							{
+								goto _loop58_breakloop;
+							}
+							
+						}
+_loop58_breakloop:						;
+					}    // ( ... )*
+					if (0==inputState.guessing)
+					{
+						_ttype = Token.SKIP; newline();
+					}
+				}
+				else {
+					bool synPredMatched65 = false;
+					if (((LA(1)=='\t'||LA(1)=='/')))
+					{
+						int _m65 = mark();
+						synPredMatched65 = true;
+						inputState.guessing++;
+						try {
+							{
+								{    // ( ... )*
+									for (;;)
+									{
+										if ((LA(1)=='\t'))
+										{
+											match('\t');
+										}
+										else
+										{
+											goto _loop61_breakloop;
+										}
+										
+									}
+_loop61_breakloop:									;
+								}    // ( ... )*
+								match("//");
+								{    // ( ... )*
+									for (;;)
+									{
+										if ((tokenSet_3_.member(LA(1))))
+										{
+											{
+												match(tokenSet_3_);
+											}
+										}
+										else
+										{
+											goto _loop64_breakloop;
+										}
+										
+									}
+_loop64_breakloop:									;
+								}    // ( ... )*
+								mNEWLINE(false);
+							}
+						}
+						catch (RecognitionException)
+						{
+							synPredMatched65 = false;
+						}
+						rewind(_m65);
+						inputState.guessing--;
+					}
+					if ( synPredMatched65 )
+					{
+						{    // ( ... )*
+							for (;;)
+							{
+								if ((LA(1)=='\t'))
+								{
+									match('\t');
+								}
+								else
+								{
+									goto _loop67_breakloop;
+								}
+								
+							}
+_loop67_breakloop:							;
+						}    // ( ... )*
+						match("//");
+						{    // ( ... )*
+							for (;;)
+							{
+								if ((tokenSet_3_.member(LA(1))))
+								{
+									{
+										match(tokenSet_3_);
+									}
+								}
+								else
+								{
+									goto _loop70_breakloop;
+								}
+								
+							}
+_loop70_breakloop:							;
+						}    // ( ... )*
+						if (0==inputState.guessing)
+						{
+							_ttype = Token.SKIP;
+						}
+					}
+					else if ((LA(1)=='\n'||LA(1)=='\r')) {
+						mNEWLINE(false);
+						{    // ( ... )*
+							for (;;)
+							{
+								if ((LA(1)=='\t'))
+								{
+									match('\t');
+								}
+								else
+								{
+									goto _loop72_breakloop;
+								}
+								
+							}
+_loop72_breakloop:							;
+						}    // ( ... )*
+						if (0==inputState.guessing)
+						{
+							
+								_ttype=MetaLexerTokenTypes.INDENTATION;
+							
+						}
 					}
 					else
 					{
-						goto _loop42_breakloop;
+						throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
 					}
-					
+					}}}
+					if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+					{
+						_token = makeToken(_ttype);
+						_token.setText(text.ToString(_begin, text.Length-_begin));
+					}
+					returnToken_ = _token;
 				}
-_loop42_breakloop:				;
-			}    // ( ... )*
-			if (0==inputState.guessing)
-			{
 				
-				_ttype=MetaLexerTokenTypes.INDENTATION;
-				
-			}
-		}
-		else
-		{
-			throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
-		}
-		
-		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
-		{
-			_token = makeToken(_ttype);
-			_token.setText(text.ToString(_begin, text.Length-_begin));
-		}
-		returnToken_ = _token;
-	}
-	
 	protected void mNEWLINE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
@@ -702,69 +941,6 @@ _loop42_breakloop:				;
 		_saveIndex = text.Length;
 		match('\t');
 		text.Length = _saveIndex;
-		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
-		{
-			_token = makeToken(_ttype);
-			_token.setText(text.ToString(_begin, text.Length-_begin));
-		}
-		returnToken_ = _token;
-	}
-	
-	public void mCOMMENT(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
-{
-		int _ttype; Token _token=null; int _begin=text.Length;
-		_ttype = COMMENT;
-		
-		match("//");
-		{    // ( ... )*
-			for (;;)
-			{
-				if ((tokenSet_3_.member(LA(1))))
-				{
-					{
-						match(tokenSet_3_);
-					}
-				}
-				else
-				{
-					goto _loop46_breakloop;
-				}
-				
-			}
-_loop46_breakloop:			;
-		}    // ( ... )*
-		{
-			switch ( LA(1) )
-			{
-			case '\n':
-			{
-				match('\n');
-				break;
-			}
-			case '\r':
-			{
-				match('\r');
-				{
-					if ((LA(1)=='\n'))
-					{
-						match('\n');
-					}
-					else {
-					}
-					
-				}
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
-			}
-			 }
-		}
-		if (0==inputState.guessing)
-		{
-			_ttype = Token.SKIP; newline();
-		}
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);

@@ -19,6 +19,10 @@ public class map {
 		string a="";
 		return map.ContainsKey(key);
 	}
+	public static bool hasKey(object key,Map map) {
+		string a="";
+		return map.ContainsKey(key);
+	}
 	public static int length(Map map) {
 		return map.Count;
 	}

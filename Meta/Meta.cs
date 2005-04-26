@@ -57,7 +57,7 @@ namespace Meta {
 		public class Call: IExpression {
 			public object Evaluate(IMap parent) {
 				return ((ICallable)callableExpression.Evaluate(parent)).Call(
-					(IMap)argumentExpression.Evaluate(parent));
+					((IMap)argumentExpression.Evaluate(parent)).Clone());
 			}
 			public static readonly Map callString=new Map("call");
 			public static readonly Map functionString=new Map("function");
@@ -172,12 +172,6 @@ namespace Meta {
 				}
 			}
 			public object SearchAndSelectKeysInCurrentMap(ArrayList keys,bool isRightSide,bool isSelectLastKey) {
-				if(keys.Count==0) {
-					int asdf=0;
-				}
-				if(keys[0].Equals(new Map("asdf"))) {
-					int asdf=0;
-				}
 				object selection=Interpreter.Current;
 				int i=0;
 
@@ -190,7 +184,7 @@ namespace Meta {
 						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("caller")) {
 							numCallers++;
 							if(numCallers>Interpreter.callers.Count) {
-								throw new ApplicationException(KeyErrorMessage(keys[i]));
+								throw new KeyDoesNotExistException(keys[i]);
 							}
 							i++;
 						}
@@ -200,25 +194,12 @@ namespace Meta {
 					}
 					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
 				}
-					//				else if(keys[0] is Map && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
-					//					int numCallers=0;
-					//					foreach(object key in keys) {
-					//						if(key is Map && ((Map)key).GetDotNetString().Equals("caller")) {
-					//							numCallers++;
-					//							i++;
-					//						}
-					//						else {
-					//							break;
-					//						}
-					//					}
-					//					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
-					//				}
 				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("parent")) {
 					foreach(object key in keys) {
 						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("parent")) {
 							selection=((IMap)selection).Parent;
 							if(selection==null) {
-								throw new ApplicationException(KeyErrorMessage(keys[i]));
+								throw new KeyDoesNotExistException(keys[i]);
 							}
 							i++;
 						}
@@ -233,7 +214,7 @@ namespace Meta {
 						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("arg")) {
 							numArgs++;
 							if(numArgs>Interpreter.arguments.Count) {
-								throw new ApplicationException(KeyErrorMessage(keys[i]));
+								throw new KeyDoesNotExistException(keys[i]);
 							}
 							i++;
 						}
@@ -250,43 +231,15 @@ namespace Meta {
 					while(!((IKeyValue)selection).ContainsKey(keys[i])) {
 						selection=((IMap)selection).Parent;
 						if(selection==null) {
-							throw new ApplicationException(KeyErrorMessage(keys[i]));
+							throw new KeyNotFoundException(keys[i]);
 						}
 					}
-					//						string text="Key ";
-					//						if(keys[i] is Map) {
-					//							text+=((Map)keys[i]).GetDotNetString();
-					//						}
-					//						else {
-					//							text+=keys[i];
-					//						}
-					//						text+=" not found.";
-					//						throw new ApplicationException(text);
-					//					}
-					//					while(selection!=null && !((IKeyValue)selection).ContainsKey(keys[i])) {
-					//						selection=((IMap)selection).Parent;
-					//					}
-					//					if(selection==null) {
-					//						throw new ApplicationException(KeyErrorMessage(keys[i]));
-					////						string text="Key ";
-					////						if(keys[i] is Map) {
-					////							text+=((Map)keys[i]).GetDotNetString();
-					////						}
-					////						else {
-					////							text+=keys[i];
-					////						}
-					////						text+=" not found.";
-					////						throw new ApplicationException(text);
-					//					}
 				}
 				int lastKeySelect=0;
 				if(isSelectLastKey) {
 					lastKeySelect++;
 				}
 				for(;i<keys.Count-1+lastKeySelect;i++) {
-					//					if(keys[i].Equals(new Map("Value"))) {
-					//						int asdf=0;
-					//					}
 					if(selection is IKeyValue) {
 						selection=((IKeyValue)selection)[keys[i]];
 					}
@@ -294,22 +247,12 @@ namespace Meta {
 						selection=new NetObject(selection)[keys[i]];
 					}
 					if(selection==null) {
-						throw new ApplicationException(KeyErrorMessage(keys[i]));
+						throw new KeyDoesNotExistException(keys[i]);
 					}
 				}
 				return selection;
 			}
-			public static string KeyErrorMessage(object key) {
-				string text="Key ";
-				if(key is Map && ((Map)key).IsString) {
-					text+=((Map)key).GetDotNetString();
-				}
-				else {
-					text+=key;
-				}
-				text+=" not found.";
-				return text;
-			}
+
 			public static readonly Map selectString=new Map("select");
 			public Select(Map code) {
 				foreach(Map expression in ((Map)code[selectString]).IntKeyValues) {
@@ -816,15 +759,23 @@ namespace Meta {
 				object result=lastProgram.Call(argument);
 				return result;
 			}
-			public static AST ParseToAst(TextReader stream)  {
+			public static AST ParseToAst(string text)  {
+				TextReader stream=new StringReader(Environment.NewLine+text+Environment.NewLine);
 				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser(
 					new IndentationParser(new MetaLexer(stream)));
 				//parser.getASTFactory().setASTNodeType("Meta.Parser.LineNumberAST");
 				parser.map();
 				return parser.getAST();
 			}
+//			public static AST ParseToAst(TextReader stream)  {
+//				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser(
+//					new IndentationParser(new MetaLexer(stream)));
+//				//parser.getASTFactory().setASTNodeType("Meta.Parser.LineNumberAST");
+//				parser.map();
+//				return parser.getAST();
+//			}
 			public static Map CompileToMap(TextReader input) {
-				return (new MetaTreeParser()).map(ParseToAst(input));
+				return (new MetaTreeParser()).map(ParseToAst(input.ReadToEnd()));
 			}
 			//Make this a map
 			public static object Arg {
@@ -1241,6 +1192,35 @@ namespace Meta {
 						return new Integer((UInt16)obj);
 					}
 				}
+			}
+		}
+		public abstract class MetaException:ApplicationException {
+			protected string text="";
+			public override string Message {
+				get {
+					return text;
+				}
+			}
+
+		}
+		public abstract class KeyException:MetaException {
+			public KeyException(object key) {
+				text="Key ";
+//				if(key is Map && ((Map)key).IsString) {
+//					text+=((Map)key).GetDotNetString();
+//				}
+//				else {
+					text+=key;
+//				}
+				text+=" not found.";
+			}
+		}
+		public class KeyNotFoundException:KeyException {
+			public KeyNotFoundException(object key):base(key) {
+			}
+		}
+		public class KeyDoesNotExistException:KeyException {
+			public KeyDoesNotExistException(object key):base(key) {
 			}
 		}
 	}
@@ -2795,7 +2775,7 @@ namespace Meta {
 		public class IndentationParser: TokenStream {
 			public IndentationParser(TokenStream originalStream)  {
 				this.originalStream=originalStream;
-				AddIndentationTokensToGetToLevel(0);
+				//AddIndentationTokensToGetToLevel(0);
 			}
 			public Token nextToken()  {
 				if(streamBuffer.Count==0)  {
