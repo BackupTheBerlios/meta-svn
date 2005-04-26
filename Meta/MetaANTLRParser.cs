@@ -127,11 +127,11 @@ namespace Meta.Parser
 				break;
 			}
 			default:
-				bool synPredMatched80 = false;
+				bool synPredMatched92 = false;
 				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 				{
-					int _m80 = mark();
-					synPredMatched80 = true;
+					int _m92 = mark();
+					synPredMatched92 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -140,12 +140,12 @@ namespace Meta.Parser
 					}
 					catch (RecognitionException)
 					{
-						synPredMatched80 = false;
+						synPredMatched92 = false;
 					}
-					rewind(_m80);
+					rewind(_m92);
 					inputState.guessing--;
 				}
-				if ( synPredMatched80 )
+				if ( synPredMatched92 )
 				{
 					call();
 					if (0 == inputState.guessing)
@@ -265,11 +265,11 @@ namespace Meta.Parser
 		ASTPair currentAST = new ASTPair();
 		AST select_AST = null;
 		
-		bool synPredMatched104 = false;
+		bool synPredMatched116 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m104 = mark();
-			synPredMatched104 = true;
+			int _m116 = mark();
+			synPredMatched116 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -284,23 +284,23 @@ namespace Meta.Parser
 							}
 							else
 							{
-								goto _loop103_breakloop;
+								goto _loop115_breakloop;
 							}
 							
 						}
-_loop103_breakloop:						;
+_loop115_breakloop:						;
 					}    // ( ... )*
 					match(STAR);
 				}
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched104 = false;
+				synPredMatched116 = false;
 			}
-			rewind(_m104);
+			rewind(_m116);
 			inputState.guessing--;
 		}
-		if ( synPredMatched104 )
+		if ( synPredMatched116 )
 		{
 			{
 				lookup();
@@ -322,11 +322,11 @@ _loop103_breakloop:						;
 						}
 						else
 						{
-							goto _loop107_breakloop;
+							goto _loop119_breakloop;
 						}
 						
 					}
-_loop107_breakloop:					;
+_loop119_breakloop:					;
 				}    // ( ... )*
 				match(STAR);
 				if (0==inputState.guessing)
@@ -375,11 +375,11 @@ _loop107_breakloop:					;
 						}
 						else
 						{
-							goto _loop110_breakloop;
+							goto _loop122_breakloop;
 						}
 						
 					}
-_loop110_breakloop:					;
+_loop122_breakloop:					;
 				}    // ( ... )*
 				if (0==inputState.guessing)
 				{
@@ -439,11 +439,11 @@ _loop110_breakloop:					;
 					}
 					else
 					{
-						goto _loop84_breakloop;
+						goto _loop96_breakloop;
 					}
 					
 				}
-_loop84_breakloop:				;
+_loop96_breakloop:				;
 			}    // ( ... )*
 			match(DEDENT);
 		}
@@ -502,11 +502,11 @@ _loop84_breakloop:				;
 		ASTPair currentAST = new ASTPair();
 		AST statement_AST = null;
 		
-		bool synPredMatched87 = false;
+		bool synPredMatched99 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m87 = mark();
-			synPredMatched87 = true;
+			int _m99 = mark();
+			synPredMatched99 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -516,12 +516,12 @@ _loop84_breakloop:				;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched87 = false;
+				synPredMatched99 = false;
 			}
-			rewind(_m87);
+			rewind(_m99);
 			inputState.guessing--;
 		}
-		if ( synPredMatched87 )
+		if ( synPredMatched99 )
 		{
 			{
 				select();

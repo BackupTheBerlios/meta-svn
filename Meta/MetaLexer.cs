@@ -601,15 +601,14 @@ _loop40_breakloop:				;
 			}
 		}
 		else {
-			bool synPredMatched44 = false;
-			if (((LA(1)=='\n'||LA(1)=='\r')))
+			bool synPredMatched46 = false;
+			if (((LA(1)=='\t'||LA(1)=='\n'||LA(1)=='\r')))
 			{
-				int _m44 = mark();
-				synPredMatched44 = true;
+				int _m46 = mark();
+				synPredMatched46 = true;
 				inputState.guessing++;
 				try {
 					{
-						mNEWLINE(false);
 						{    // ( ... )*
 							for (;;)
 							{
@@ -626,17 +625,48 @@ _loop40_breakloop:				;
 _loop43_breakloop:							;
 						}    // ( ... )*
 						mNEWLINE(false);
+						{    // ( ... )*
+							for (;;)
+							{
+								if ((LA(1)=='\t'))
+								{
+									match('\t');
+								}
+								else
+								{
+									goto _loop45_breakloop;
+								}
+								
+							}
+_loop45_breakloop:							;
+						}    // ( ... )*
+						mNEWLINE(false);
 					}
 				}
 				catch (RecognitionException)
 				{
-					synPredMatched44 = false;
+					synPredMatched46 = false;
 				}
-				rewind(_m44);
+				rewind(_m46);
 				inputState.guessing--;
 			}
-			if ( synPredMatched44 )
+			if ( synPredMatched46 )
 			{
+				{    // ( ... )*
+					for (;;)
+					{
+						if ((LA(1)=='\t'))
+						{
+							match('\t');
+						}
+						else
+						{
+							goto _loop48_breakloop;
+						}
+						
+					}
+_loop48_breakloop:					;
+				}    // ( ... )*
 				mNEWLINE(false);
 				{    // ( ... )*
 					for (;;)
@@ -647,11 +677,11 @@ _loop43_breakloop:							;
 						}
 						else
 						{
-							goto _loop46_breakloop;
+							goto _loop50_breakloop;
 						}
 						
 					}
-_loop46_breakloop:					;
+_loop50_breakloop:					;
 				}    // ( ... )*
 				if (0==inputState.guessing)
 				{
@@ -661,14 +691,29 @@ _loop46_breakloop:					;
 				}
 			}
 			else {
-				bool synPredMatched53 = false;
-				if (((LA(1)=='\n'||LA(1)=='\r')))
+				bool synPredMatched59 = false;
+				if (((LA(1)=='\t'||LA(1)=='\n'||LA(1)=='\r')))
 				{
-					int _m53 = mark();
-					synPredMatched53 = true;
+					int _m59 = mark();
+					synPredMatched59 = true;
 					inputState.guessing++;
 					try {
 						{
+							{    // ( ... )*
+								for (;;)
+								{
+									if ((LA(1)=='\t'))
+									{
+										match('\t');
+									}
+									else
+									{
+										goto _loop53_breakloop;
+									}
+									
+								}
+_loop53_breakloop:								;
+							}    // ( ... )*
 							mNEWLINE(false);
 							{    // ( ... )*
 								for (;;)
@@ -679,11 +724,11 @@ _loop46_breakloop:					;
 									}
 									else
 									{
-										goto _loop49_breakloop;
+										goto _loop55_breakloop;
 									}
 									
 								}
-_loop49_breakloop:								;
+_loop55_breakloop:								;
 							}    // ( ... )*
 							match("//");
 							{    // ( ... )*
@@ -697,24 +742,39 @@ _loop49_breakloop:								;
 									}
 									else
 									{
-										goto _loop52_breakloop;
+										goto _loop58_breakloop;
 									}
 									
 								}
-_loop52_breakloop:								;
+_loop58_breakloop:								;
 							}    // ( ... )*
 							mNEWLINE(false);
 						}
 					}
 					catch (RecognitionException)
 					{
-						synPredMatched53 = false;
+						synPredMatched59 = false;
 					}
-					rewind(_m53);
+					rewind(_m59);
 					inputState.guessing--;
 				}
-				if ( synPredMatched53 )
+				if ( synPredMatched59 )
 				{
+					{    // ( ... )*
+						for (;;)
+						{
+							if ((LA(1)=='\t'))
+							{
+								match('\t');
+							}
+							else
+							{
+								goto _loop61_breakloop;
+							}
+							
+						}
+_loop61_breakloop:						;
+					}    // ( ... )*
 					mNEWLINE(false);
 					{    // ( ... )*
 						for (;;)
@@ -725,11 +785,11 @@ _loop52_breakloop:								;
 							}
 							else
 							{
-								goto _loop55_breakloop;
+								goto _loop63_breakloop;
 							}
 							
 						}
-_loop55_breakloop:						;
+_loop63_breakloop:						;
 					}    // ( ... )*
 					match("//");
 					{    // ( ... )*
@@ -743,11 +803,11 @@ _loop55_breakloop:						;
 							}
 							else
 							{
-								goto _loop58_breakloop;
+								goto _loop66_breakloop;
 							}
 							
 						}
-_loop58_breakloop:						;
+_loop66_breakloop:						;
 					}    // ( ... )*
 					if (0==inputState.guessing)
 					{
@@ -755,29 +815,31 @@ _loop58_breakloop:						;
 					}
 				}
 				else {
-					bool synPredMatched65 = false;
+					bool synPredMatched74 = false;
 					if (((LA(1)=='\t'||LA(1)=='/')))
 					{
-						int _m65 = mark();
-						synPredMatched65 = true;
+						int _m74 = mark();
+						synPredMatched74 = true;
 						inputState.guessing++;
 						try {
 							{
-								{    // ( ... )*
-									for (;;)
-									{
-										if ((LA(1)=='\t'))
+								{
+									{    // ( ... )*
+										for (;;)
 										{
-											match('\t');
+											if ((LA(1)=='\t'))
+											{
+												match('\t');
+											}
+											else
+											{
+												goto _loop70_breakloop;
+											}
+											
 										}
-										else
-										{
-											goto _loop61_breakloop;
-										}
-										
-									}
-_loop61_breakloop:									;
-								}    // ( ... )*
+_loop70_breakloop:										;
+									}    // ( ... )*
+								}
 								match("//");
 								{    // ( ... )*
 									for (;;)
@@ -790,39 +852,41 @@ _loop61_breakloop:									;
 										}
 										else
 										{
-											goto _loop64_breakloop;
+											goto _loop73_breakloop;
 										}
 										
 									}
-_loop64_breakloop:									;
+_loop73_breakloop:									;
 								}    // ( ... )*
 								mNEWLINE(false);
 							}
 						}
 						catch (RecognitionException)
 						{
-							synPredMatched65 = false;
+							synPredMatched74 = false;
 						}
-						rewind(_m65);
+						rewind(_m74);
 						inputState.guessing--;
 					}
-					if ( synPredMatched65 )
+					if ( synPredMatched74 )
 					{
-						{    // ( ... )*
-							for (;;)
-							{
-								if ((LA(1)=='\t'))
+						{
+							{    // ( ... )*
+								for (;;)
 								{
-									match('\t');
+									if ((LA(1)=='\t'))
+									{
+										match('\t');
+									}
+									else
+									{
+										goto _loop77_breakloop;
+									}
+									
 								}
-								else
-								{
-									goto _loop67_breakloop;
-								}
-								
-							}
-_loop67_breakloop:							;
-						}    // ( ... )*
+_loop77_breakloop:								;
+							}    // ( ... )*
+						}
 						match("//");
 						{    // ( ... )*
 							for (;;)
@@ -835,18 +899,36 @@ _loop67_breakloop:							;
 								}
 								else
 								{
-									goto _loop70_breakloop;
+									goto _loop80_breakloop;
 								}
 								
 							}
-_loop70_breakloop:							;
+_loop80_breakloop:							;
 						}    // ( ... )*
 						if (0==inputState.guessing)
 						{
 							_ttype = Token.SKIP;
 						}
 					}
-					else if ((LA(1)=='\n'||LA(1)=='\r')) {
+					else if ((LA(1)=='\t'||LA(1)=='\n'||LA(1)=='\r')) {
+						{    // ( ... )*
+							for (;;)
+							{
+								if ((LA(1)=='\t'))
+								{
+									int _saveIndex = 0;
+									_saveIndex = text.Length;
+									match('\t');
+									text.Length = _saveIndex;
+								}
+								else
+								{
+									goto _loop82_breakloop;
+								}
+								
+							}
+_loop82_breakloop:							;
+						}    // ( ... )*
 						mNEWLINE(false);
 						{    // ( ... )*
 							for (;;)
@@ -857,17 +939,17 @@ _loop70_breakloop:							;
 								}
 								else
 								{
-									goto _loop72_breakloop;
+									goto _loop84_breakloop;
 								}
 								
 							}
-_loop72_breakloop:							;
+_loop84_breakloop:							;
 						}    // ( ... )*
 						if (0==inputState.guessing)
 						{
 							
-								_ttype=MetaLexerTokenTypes.INDENTATION;
-							
+									_ttype=MetaLexerTokenTypes.INDENTATION;
+								
 						}
 					}
 					else

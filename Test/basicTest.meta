@@ -17,9 +17,9 @@ form:System.Windows.Forms.Form
 	Text:'hello
 'ImpliedAutokey
 :'Autokey
-gacTest:System.Collections
-lazyGACTest:Microsoft.CSharp
-metaLibTest:metaLib
+gacTest:System.Collections			
+lazyGACTest:Microsoft.CSharp				
+metaLibTest:metaLib					
 commandLineArguments:arg
 libraryAssemblyTest:testClasses		//	asdfasdf	fff
 //thisIsInAComment=

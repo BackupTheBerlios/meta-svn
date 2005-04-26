@@ -129,32 +129,29 @@ LINE
   {
     const int endOfFileValue=65535;
   }:
-  (NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?) =>
+  (NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?) => // TODO: Get rid of endOfFile
    NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?
   {
     _ttype=Token.SKIP;
   }
-  |(NEWLINE ('\t')* NEWLINE)=>
-  NEWLINE ('\t')*
+  |(('\t')* NEWLINE ('\t')* NEWLINE)=>
+  ('\t')* NEWLINE ('\t')*
 	{
 		_ttype=Token.SKIP;
-	}  
-	
-	|(NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE)=>
-	NEWLINE ('\t')* "//" (~('\n'|'\r'))*
+	}
+
+	|(('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE)=>
+	('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))*
 	{$setType(Token.SKIP); newline();}
-	
-	|(('\t')* "//" (~('\n'|'\r'))* NEWLINE)=>
-	('\t')* "//" (~('\n'|'\r'))*
+												 // TODO: factor out common stuff
+	|((('\t')*)! "//" (~('\n'|'\r'))* NEWLINE)=> // TODO: ! ist unnecessary
+	(('\t')*)! "//" (~('\n'|'\r'))*
 	{$setType(Token.SKIP);}
-  |NEWLINE ('\t')*
-  {
-	_ttype=MetaLexerTokenTypes.INDENTATION;
-  } 
-
-	; 
-
-
+	
+	|('\t'!)* NEWLINE ('\t')*
+	{
+		_ttype=MetaLexerTokenTypes.INDENTATION;
+	}; 
 
  
 protected   
