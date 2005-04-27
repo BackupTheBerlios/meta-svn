@@ -43,7 +43,7 @@ object:
 	b:'
 	SetA:=
 		parent.parent.a:'c
-		autoSearch*:'changed
+		parent.parent.autoSearch:'changed
 	SetB:=
 		caller.b.1:arg.value
 		this:'changed
@@ -137,11 +137,11 @@ selectionFunctionResult:selectionFunction '
 bigInteger:'89383838383832839123497123047217340712340720347072304702340720347
 upperLevel:'unchanged
 ChangeUpperLevel:=
-	upperLevel*:'changed
+	parent.parent.upperLevel:'changed
 ChangeUpperLevel'
 staticEventChanged:'false
 TestClass.staticEvent:=
-	staticEventChanged*:'true
+	caller.staticEventChanged:'true
 	this:arg.1
 staticEvent:TestClass.staticEvent
 TestClass.TakeDelegate
@@ -151,7 +151,7 @@ staticEventResult:TestClass.staticEvent
 	testClass
 instanceEventChanged:'false
 testClass.instanceEvent:=
-	instanceEventChanged*:'true
+	parent.parent.instanceEventChanged:'true
 	this:arg.1
 instanceEvent:testClass.instanceEvent
 instanceEventResult:testClass.instanceEvent
@@ -166,36 +166,36 @@ if
 		'1
 		one
 	=
-		firstIf*:thenText
+		caller.firstIf:thenText
 	=
-		firstIf*:'else
+		caller.firstIf:'else
 if
 	equal
 		'1
 		two
 	=
-		secondIf*:'then
+		caller.secondIf:'then
 	=
-		secondIf*:'else
+		caller.secondIf:'else
 firstSwitch:'unchanged
 bigNumber:'50020202029029233344
 switch
 	bigNumber
 	case:
 		[bigNumber]:=
-			firstSwitch*:bigNumber
+			caller.firstSwitch:bigNumber
 	default:=
-		firstSwitch*:'default
+		caller.firstSwitch:'default
 secondSwitch:'unchanged
 switch
 	'3
 	case:
 		1:=
-			secondSwitch*:'one
+			caller.secondSwitch:'one
 		2:=
-			secondSwitch*:'two
+			caller.secondSwitch:'two
 	default:=
-		secondSwitch*:'default
+		caller.secondSwitch:'default
 emptyMap:'
 emptyFunction:=
 	x:'hello
@@ -240,10 +240,10 @@ escapedText:"\'\n\\\t"
 whileCounter:'0
 while
 	=smaller
-		whileCounter
+		caller.whileCounter
 		'10
 	=
-		whileCounter*:add
+		caller.whileCounter:add
 			whileCounter
 			'1
 			
