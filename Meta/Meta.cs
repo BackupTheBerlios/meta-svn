@@ -35,6 +35,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.GAC;
 using System.Text;
+using Meta.Parser;
 
 namespace Meta {
 	namespace Execution {
@@ -762,27 +763,19 @@ namespace Meta {
 			public static AST ParseToAst(string text)  {
 				TextReader stream=new StringReader(Environment.NewLine+text+Environment.NewLine);
 				MetaLexer lexer=new MetaLexer(stream);
-				lexer.setLine(0); // hack to compensate for the one newline added at the beginning in IndentationStream
-				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser( // rename MetaAntlrParser
-					new IndentationParser(lexer)); // rename IndentationParser zu TokenStream
+				lexer.setLine(0); // hack to compensate for the newline added in IndentationStream
+				Meta.Parser.MetaParser parser=new Meta.Parser.MetaParser( 
+					new IndentationStream(lexer));
 				//parser.getASTFactory().setASTNodeType("Meta.Parser.LineNumberAST");
 				parser.map();
 				return parser.getAST();
 			}
-//			public static AST ParseToAst(TextReader stream)  {
-//				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser(
-//					new IndentationParser(new MetaLexer(stream)));
-//				//parser.getASTFactory().setASTNodeType("Meta.Parser.LineNumberAST");
-//				parser.map();
-//				return parser.getAST();
-//			}
 			public static Map CompileToMap(TextReader input) {
 				return (new MetaTreeParser()).map(ParseToAst(input.ReadToEnd()));
 			}
-			//Make this a map
-			public static object Arg {
+			public static Map Arg {
 				get {
-					return arguments[arguments.Count-1];
+					return (Map)arguments[arguments.Count-1];
 				}
 			}
 			public static object Current {
@@ -796,10 +789,6 @@ namespace Meta {
 					callers[callers.Count-1]=value;
 				}
 			}
-//			public static object ConvertMetaToDotNet(object metaObject,Type targetType) { // fix the whole conversion mess
-//				bool isConverted;
-//				return ConvertMetaToDotNet(metaObject,targetType,out isConverted);
-//			}
 			public static object ConvertMetaToDotNet(object metaObject,Type targetType,out bool isConverted) {
 				if(targetType.IsSubclassOf(typeof(Enum)) && metaObject is Integer) { 
 					isConverted=true;
@@ -820,7 +809,6 @@ namespace Meta {
 			static Interpreter() {
 				Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
 				metaInstallationPath=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName; 
-//				metaInstallationPath=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName; 
 				foreach(Type type in typeof(LiteralRecognitions).GetNestedTypes()) {
 					literalRecognitions.Add((RecognizeLiteral)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
@@ -847,7 +835,7 @@ namespace Meta {
 			private static ArrayList literalRecognitions=new ArrayList();
 
 			public abstract class RecognizeLiteral {
-				public abstract object Recognize(string text);
+				public abstract object Recognize(string text); // Returns null if not recognized. Null cannot currently be created this way.
 			}
 			public abstract class MetaToDotNetConversion {
 				public Type source;
@@ -861,59 +849,20 @@ namespace Meta {
 			public class LiteralRecognitions {
 				// Attention! order of RecognizeLiteral classes matters
 				public class RecognizeString:RecognizeLiteral {
-//					ArrayList escapeSequences;
-//					public RecognizeString() {
-//						this.escapeSequences=new ArrayList(
-//							new object[] {
-//												 new DictionaryEntry(@"\\","\\"),
-//												 new DictionaryEntry(@"\'","\'"),
-//												 new DictionaryEntry(@"\a","\a"),
-//												 new DictionaryEntry(@"\b","\b"),
-//												 new DictionaryEntry(@"\f","\f"),
-//												 new DictionaryEntry(@"\n","\n"),
-//												 new DictionaryEntry(@"\r","\r"),
-//												 new DictionaryEntry(@"\t","\t"),
-//												 new DictionaryEntry(@"\v","\v")
-//											 });
-//					}
-
-//					C#:
-//					*  \' - single quote, needed for character literals
-//					* \" - double quote, needed for string literals
-//					* \\ - backslash
-//								 * \0 - Unicode character 0
-//					* \a - Alert (character 7)
-//					* \b - Backspace (character 8)
-//					* \f - Form feed (character 12)
-//					* \n - New line (character 10)
-//					* \r - Carriage return (character 13)
-//					* \t - Horizontal tab (character 9)
-//					* \v - Vertical quote (character 11)
-//					* \uxxxx - Unicode escape sequence for character with hex value xxxx
-//																											 * \xn[n][n][n] - Unicode escape sequence for character with hex value nnnn (variable length version of \uxxxx)
-//					* \Uxxxxxxxx - Unicode escape sequence for character with hex value xxxxxxxx (for generating surrogates)
-
 					public override object Recognize(string text) {
-//						string escapedText=text;
-////						if(text.Equals(@"\'\n\\\t")) {
-////							int asdf=0;
-////						}
-//						foreach(DictionaryEntry entry in escapeSequences) {
-//							escapedText=escapedText.Replace((string)entry.Key,(string)entry.Value);
-//						}
 						return new Map(text);
 					}
 				}
 				// does everything get executed twice?
 				public class RecognizeCharacter: RecognizeLiteral {
-					public override object Recognize(string text) { // make this stuff ouput a bool, whether it was successful, so null can be created, too
-						if(text.StartsWith(@"\")) {
+					public override object Recognize(string text) {
+						if(text.StartsWith(@"\")) { // TODO: Choose another character for starting a character
 							char result;
 							if(text.Length==2) {
 								result=text[1]; // not unicode safe, write wrapper that takes care of this stuff
 							}
 							else if(text.Length==3) {
-								switch(text.Substring(1,2))  { // TODO: remove this useless stuff
+								switch(text.Substring(1,2))  { // TODO: put this into Parser???
 									case @"\'":
 										result='\'';
 										break;
@@ -964,7 +913,7 @@ namespace Meta {
 							if(text[0]=='-') {
 								i++;
 							}
-							// the following is probably incorrect for multi-byte unicode
+							// TODO: the following is probably incorrect for multi-byte unicode
 							// use StringInfo in the future instead
 							for(;i<text.Length;i++) {
 								if(char.IsDigit(text[i])) {
@@ -995,6 +944,8 @@ namespace Meta {
 				}
 			}
 			private abstract class MetaToDotNetConversions {
+				/* These classes define the conversions that performed when a .NET method, field, or property
+				 * is called/assigned to from Meta. */
 				public class ConvertIntegerToByte: MetaToDotNetConversion {
 					public ConvertIntegerToByte() {
 						this.source=typeof(Integer);
@@ -1114,6 +1065,8 @@ namespace Meta {
 				}
 			}
 			private abstract class DotNetToMetaConversions {
+				/* These classes define the conversions that are performed on return values of .NET methods,
+				 * properties and fields that are called/accessed from Meta. */
 				public class ConvertStringToMap: DotNetToMetaConversion {
 					public ConvertStringToMap()   {
 						this.source=typeof(string);
@@ -1196,6 +1149,7 @@ namespace Meta {
 				}
 			}
 		}
+		/* Base class of all exceptions. */
 		public abstract class MetaException:ApplicationException {
 			protected string text="";
 			public override string Message {
@@ -1203,8 +1157,9 @@ namespace Meta {
 					return text;
 				}
 			}
-
 		}
+
+		/* Base class for key exceptions. */
 		public abstract class KeyException:MetaException {
 			public KeyException(object key) {
 				text="Key ";
@@ -1217,16 +1172,19 @@ namespace Meta {
 				text+=" not found.";
 			}
 		}
+		/* Thrown when a searched key was not found. */
 		public class KeyNotFoundException:KeyException {
 			public KeyNotFoundException(object key):base(key) {
 			}
 		}
+		/* Thrown when an accessed key does not exist. */
 		public class KeyDoesNotExistException:KeyException {
 			public KeyDoesNotExistException(object key):base(key) {
 			}
 		}
 	}
 	namespace Types  {
+		/* Everything implementing this interface can be used in a Call expression */
 		public interface ICallable {
 			object Call(IMap argument);
 		}
@@ -1240,6 +1198,7 @@ namespace Meta {
 			}
 			IMap Clone();
 		}
+		// TODO: Does the IKeyValue<->IMap distinction make sense?
 		public interface IKeyValue: IEnumerable {
 			object this[object key] {
 				get;
@@ -1253,22 +1212,23 @@ namespace Meta {
 			}
 			bool ContainsKey(object key);			
 		}		
-		public class MetaLibrary {
+		/* Represents a lazily evaluated "library" Meta file. */
+		public class MetaLibrary { // TODO: Put this into Library class, make base class for everything that gets loaded
 			public object Load() {
-				// StreamReader must be closed
-				return Interpreter.Run(new StreamReader(path),new Map());
+				StreamReader reader=new StreamReader(path); 
+				object result=Interpreter.Run(reader,new Map()); // TODO: Improve this interface, isn't read lazily anyway
+				reader.Close();
+				return result;
 			}
 			public MetaLibrary(string path) {
 				this.path=path;
 			}
 			string path;
 		}
-		public class LazyNamespace: IKeyValue {
+		/* Represents a lazily loaded .NET namespace. */
+		public class LazyNamespace: IKeyValue { // TODO: Put this into library, combine with MetaLibrary
 			public object this[object key] {
 				get {
-					if(key.Equals(new Map("Collections"))) {
-						int asdf=0;
-					}
 					if(cache==null) {
 						Load();
 					}
@@ -1323,7 +1283,8 @@ namespace Meta {
 				return cache.GetEnumerator();
 			}
 		}
-		public class CachedAssembly {
+		/* TODO: What's this for? */
+		public class CachedAssembly {  // TODO: Put this into Library class
 			private Assembly assembly;
 			public CachedAssembly(Assembly assembly) {
 				this.assembly=assembly;
@@ -1342,12 +1303,11 @@ namespace Meta {
 			}			
 			private Map map;
 		}
+		/* The library namespace, containing both Meta libraries as well as .NET libraries
+		 *  from the "library" path and the GAC. */
 		public class Library: IKeyValue,IMap {
 			public object this[object key] {
 				get {
-					if(key.Equals(new Map("map"))) {
-						int asdf=0;
-					}
 					if(cash.ContainsKey(key)) {
 						if(cash[key] is MetaLibrary) {
 							cash[key]=((MetaLibrary)cash[key]).Load();
@@ -1392,7 +1352,7 @@ namespace Meta {
 				}
 			}
 			public IEnumerator GetEnumerator() { 
-				foreach(DictionaryEntry entry in cash) { // create separate enumerator for efficiency?
+				foreach(DictionaryEntry entry in cash) { // TODO: create separate enumerator for efficiency?
 					object o=cash[entry.Key];				  // or remove IEnumerable from IMap (only needed for foreach)
 				}														// decide later
 				return cash.GetEnumerator();
@@ -1533,7 +1493,8 @@ namespace Meta {
 			private Map cash=new Map();
 			public static string libraryPath="library"; 
 		}
-		public class MapAdapter {
+		/* Adapts the Meta keys of a Map to their .NET counterparts, useful when writing libraries. */
+		public class MapAdapter { // TODO: Make this a whole IMap implementation?, if seems useful
 			Map map;
 			public MapAdapter(Map map) {
 				this.map=map;
@@ -1550,11 +1511,11 @@ namespace Meta {
 				}
 			}
 		}
-		//make IntKeyValues somehow separate, and add "Add" method to Map
+		//TODO: cache the IntKeyValues somewhere; put in an "Add" method
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
 			public bool IsString {
 				get {
-					return table.IsString; // Make this a property
+					return table.IsString;
 				}
 			}
 			public string GetDotNetString() {
@@ -1593,41 +1554,20 @@ namespace Meta {
 					}
 				}
 			}
-			public object Execute() {
+			public object Execute() { // TODO: Rename to evaluate
 				IExpression function=(IExpression)Compile();
 				object result;
-//				Interpreter.arguments.Add(argument);
 				result=function.Evaluate(this);
-//				Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);
-				//				Interpreter.arguments.Remove(argument);
 				return result;
 			}
-//			public object Call(IMap argument) {
-//				IExpression function=(IExpression)Compile();
-//				object result;
-//				Interpreter.arguments.Add(argument);
-//				result=function.Evaluate(this);
-//				Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);
-//				//				Interpreter.arguments.Remove(argument);
-//				return result;
-//			}
 			public object Call(IMap argument) {
 				IExpression function=(IExpression)Compile();
 				object result;
 				Interpreter.arguments.Add(argument);
 				result=function.Evaluate(this);
 				Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);
-//				Interpreter.arguments.Remove(argument);
 				return result;
 			}
-//			public object Call(IMap argument) {
-//				IExpression function=(IExpression)Compile();
-//				object result;
-//				Interpreter.arguments.Add(argument);
-//				result=function.Evaluate(this.Parent);
-//				Interpreter.arguments.Remove(argument);
-//				return result;
-//			}
 			public ArrayList Keys {
 				get {
 					return table.Keys;
@@ -1670,11 +1610,9 @@ namespace Meta {
 				}
 				return ((Map)obj).table.Equal(table);
 			}
-
 			public IEnumerator GetEnumerator() {
 				return new MapEnumerator(this);
 			}
-
 			public override int GetHashCode()  {
 				if(!isHashCashed) {
 					hash=this.table.GetHashCode();
@@ -1682,14 +1620,8 @@ namespace Meta {
 				}
 				return hash;
 			}
-
 			private bool isHashCashed=false;
 			private int hash;
-
-			int line;
-//			public Map(string text) {
-//				this.table=new StringStrategy(text);
-//			}
 			public Map(string text):this(new StringStrategy(text)) {
 			}
 			public Map(MapStrategy table) {
@@ -1698,19 +1630,10 @@ namespace Meta {
 			}
 			public Map():this(new HybridDictionaryStrategy()) {
 			}
-//			public Map() {
-//				this.table=new HybridDictionaryStrategy();
-//				this.line=line;
-//			}
 			private IMap parent;
-			
 			private MapStrategy table;
 			public object compiled;
-
 			public string Serialize(string indent,string[] functions) {
-				if(this.Count==1) {
-					int asdf=0;
-				}
 				if(this.IsString) {
 					return indent+"\""+this.GetDotNetString()+"\""+"\n";
 				}
@@ -1722,23 +1645,21 @@ namespace Meta {
 				public Map map;
 				public MapStrategy Clone() {
 					MapStrategy strategy=new HybridDictionaryStrategy();
-					//Map strategy=new Map(new HybridDictionaryStrategy(this.keys.Count));
 					foreach(object key in this.Keys) {
 						strategy[key]=this[key];
 					}
 					return strategy;	
 				}
-//				public MapStrategy(Map map) {
-//					this.map=map;
-//				}
 				public abstract Map CloneMap();
 				public abstract ArrayList IntKeyValues {
 					get;
 				}
 				public abstract bool IsString {
 					get;
-				}// This really means something more abstract, more along the lines of,
-															// "is this a map that only has integers as children, and maybe also only integers as keys?"
+				}
+				
+				// TODO: Rename. Reason: This really means something more abstract, more along the lines of,
+				// "is this a map that only has integers as children, and maybe also only integers as keys?"
 				public abstract string GetDotNetString();
 				public abstract ArrayList Keys {
 					get;
@@ -1752,6 +1673,7 @@ namespace Meta {
 				}
 
 				public abstract bool ContainsKey(object key);
+				/* Hashcodes must be exactly the same in all MapStrategies. */
 				public override int GetHashCode()  {
 					int h=0;
 					foreach(object key in this.Keys) {
@@ -1762,7 +1684,7 @@ namespace Meta {
 					return h;
 				}
 				public virtual bool Equal(MapStrategy obj) {
-					if(Object.ReferenceEquals(obj,this)) { // wenn geclont, wäre das möglich, jetzt noch nicht
+					if(Object.ReferenceEquals(obj,this)) { // check whether this is a clone of the other MapStrategy (not used yet)
 						return true;
 					}
 					if(obj.Count!=this.Count) {
@@ -1776,9 +1698,9 @@ namespace Meta {
 					return true;
 				}
 			}
-			// not unicode safe!:
+			// TODO: Make this unicode safe:
 			public class StringStrategy:MapStrategy {
-				// is this really identical?
+				// is this really identical with the other strategies? See Hashcode of Integer class to make sure
 				public override int GetHashCode() {
 					int hash=0;
 					for(int i=0;i<text.Length;i++) {//(char c in this.text) {
@@ -1787,11 +1709,12 @@ namespace Meta {
 					return hash;
 				}
 				public override bool Equal(MapStrategy obj) {
-					if(obj is StringStrategy) {
+					if(obj is StringStrategy) {	// TODO: Decide on single exit for methods, might be useful, especially here
 						return ((StringStrategy)obj).text.Equals(this.text);
-
 					}
-					return base.Equal(obj);
+					else {
+						return base.Equal(obj);
+					}
 				}
 				public override Map CloneMap() {
 					return new Map(new StringStrategy(this));
@@ -1805,7 +1728,6 @@ namespace Meta {
 						return list;
 					}
 				}
-
 				public override bool IsString {
 					get {
 						return true;
@@ -1828,7 +1750,7 @@ namespace Meta {
 				public StringStrategy(string text) {
 					this.text=text;
 					for(int i=1;i<=text.Length;i++) { // make this lazy? it won't work with unicode anymore then, though
-						keys.Add(new Integer(i));
+						keys.Add(new Integer(i));			// TODO: Make this unicode-safe in the first place!
 					}
 				}
 				public override int Count {
@@ -1847,9 +1769,10 @@ namespace Meta {
 						return null;
 					}
 					set {
+						/* StringStrategy gets changed. Fall back on standard strategy because we can't be sure
+						 * the map will still be a string afterwards. */
 						map.table=this.Clone();
 						map.table[key]=value;
-						//table[key]=value;
 					}
 				}
 				public override bool ContainsKey(object key)  {
@@ -1861,6 +1784,7 @@ namespace Meta {
 					}
 				}
 			}
+			/* The standard strategy for maps. */
 			public class HybridDictionaryStrategy:MapStrategy {
 				ArrayList keys;
 				private HybridDictionary table;
@@ -1877,7 +1801,6 @@ namespace Meta {
 					}
 					return clone;
 				}
-
 				public override ArrayList IntKeyValues {
 					get {
 						ArrayList list=new ArrayList();
@@ -1891,7 +1814,7 @@ namespace Meta {
 					get {
 						if(IntKeyValues.Count>0) {
 							try {
-								GetDotNetString();// not very good solution
+								GetDotNetString();// TODO: a bit of a hack
 								return true;
 							}
 							catch{
@@ -1900,18 +1823,7 @@ namespace Meta {
 						return false;
 					}
 				}
-//				public override bool IsString {
-//					if(IntKeyValues.Count>0) {
-//						try {
-//							GetDotNetString();
-//							return true;
-//						}
-//						catch{
-//						}
-//					}
-//					return false;
-//				}
-				public override string GetDotNetString() {
+				public override string GetDotNetString() { // TODO: looks too complicated
 					string text="";
 					foreach(object key in this.Keys) {
 						if(key is Integer && this.table[key] is Integer) {
@@ -1928,31 +1840,17 @@ namespace Meta {
 					}
 					return text;
 				}
-				public class MapException:ApplicationException {
+				public class MapException:ApplicationException { // TODO: Remove or make sense of this
 					Map map;
 					public MapException(Map map,string message):base(message) {
 						this.map=map;
 					}
 				}
-//				public override string GetDotNetString() {
-//					string text="";
-//					for(Integer i=new Integer(1);;i++) {
-//						object val=table[i];
-//						if(val==null) {
-//							break;
-//						}
-//						else {
-//							text+=System.Convert.ToChar(((Integer)val).LongValue());
-//						}
-//					}
-//					return text;
-//				}
 				public override ArrayList Keys {
 					get {
 						return keys;
 					}
 				}
-
 				public override int Count {
 					get {
 						return table.Count;
@@ -1998,9 +1896,7 @@ namespace Meta {
 		}
 		public class NetMethod: ICallable {
 			public bool isMetaLibraryMethod=false;
-			// Move this to "With" ?
-			// rename oldValue to obj
-			// move to NetContainer
+			// TODO: Move this to "With" ? Move this to NetContainer?
 			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
 
 				if(map.IntKeyValues.Count==0) {
@@ -2018,58 +1914,22 @@ namespace Meta {
 				else {
 					assigned=false;
 				}
-//				foreach(object val in map.IntKeyValues) {
-//				}
-				
-				// make more exact, move into its own method
-//				assigned=true;
 
 				return oldValue;
 			}
-//			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
-//									// make more exact, move into its own method
-//				assigned=true;
-//				Type type=oldValue.GetType();
-//				if(type.GetMethod("Add")!=null && type.GetConstructor(new Type[]{})!=null) {
-//					object obj=type.GetConstructor(new Type[]{}).Invoke(new object[]{});
-//					foreach(object val in map.IntKeyValues) { // combine this with Library function "Init"
-//						obj.GetType().GetMethod("Add").Invoke(obj,new object[]{val});
-//					}
-//					//					return obj;
-//				}
-//				else if(type.GetMethod("Add")!=null && oldValue!=null) {
-//					//object obj=parameter.GetConstructor(new Type[]{}).Invoke(new object[]{});
-//					foreach(object val in map.IntKeyValues) { // combine this with Library function "Init"
-//						oldValue.GetType().GetMethod("Add").Invoke(oldValue,new object[]{val});
-//					}
-//					//					return oldValue;
-//				}
-//				// old, rethink
-//				else if(type.GetMethod("set_Item")!=null && type.GetConstructor(new Type[]{})!=null) {
-//					NetObject obj=new NetObject(type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-//					foreach(DictionaryEntry entry in map) { // combine this with Library function "Init"
-//						obj[entry.Key]=entry.Value;
-//					}
-//					//					return obj.obj;
-//				}
-//				else {
-//					assigned=false;
-//				}
-//				return oldValue;
-//			}
-			public static object ConvertParameter(object meta,Type parameter,out bool converted) {//,object oldValue,
+			public static object ConvertParameter(object meta,Type parameter,out bool converted) {
 				converted=true;
 				if(parameter.IsAssignableFrom(meta.GetType())) {
 					return meta;
 				}
 				else if((parameter.IsSubclassOf(typeof(Delegate))
-					||parameter.Equals(typeof(Delegate))) && (meta is Map)) { // add check, that the map contains code
+					||parameter.Equals(typeof(Delegate))) && (meta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
 					MethodInfo m=parameter.GetMethod("Invoke",BindingFlags.Instance
 						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
 					Delegate del=CreateDelegate(parameter,m,(Map)meta);
 					return del;
 				}
-				else if(parameter.IsArray && meta is IMap && ((Map)meta).IntKeyValues.Count!=0) {// cheating, not very understandable
+				else if(parameter.IsArray && meta is IMap && ((Map)meta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
 					try {
 						Type arrayType=parameter.GetElementType();
 						Map map=((Map)meta);
@@ -2083,30 +1943,8 @@ namespace Meta {
 					catch {
 					}
 				}
-//					// make more exact, move into its own method
-//				else if(meta is Map && parameter.GetMethod("Add")!=null && parameter.GetConstructor(new Type[]{})!=null) {
-//					object obj=parameter.GetConstructor(new Type[]{}).Invoke(new object[]{});
-//					foreach(object val in ((Map)meta).IntKeyValues) { // combine this with Library function "Init"
-//						obj.GetType().GetMethod("Add").Invoke(obj,new object[]{val});
-//					}
-//					return obj;
-//				}
-//				else if(meta is Map && parameter.GetMethod("Add")!=null && oldValue!=null) {
-//					//object obj=parameter.GetConstructor(new Type[]{}).Invoke(new object[]{});
-//					foreach(object val in ((Map)meta).IntKeyValues) { // combine this with Library function "Init"
-//						oldValue.GetType().GetMethod("Add").Invoke(oldValue,new object[]{val});
-//					}
-//					return oldValue;
-//				}
-//				else if(meta is Map && parameter.GetMethod("set_Item")!=null && parameter.GetConstructor(new Type[]{})!=null) {
-//					NetObject obj=new NetObject(parameter.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-//					foreach(DictionaryEntry entry in (Map)meta) { // combine this with Library function "Init"
-//						obj[entry.Key]=entry.Value;
-//					}
-//					return obj.obj;
-//				}
 				else {
-					bool isConverted;//refactor with converted
+					bool isConverted; // TODO: refactor with converted
 					object result=Interpreter.ConvertMetaToDotNet(meta,
 						parameter,out isConverted);
 					if(isConverted) {
@@ -2117,16 +1955,14 @@ namespace Meta {
 				return null;
 			}
 			public object Call(IMap argument) {
-				if(this.name=="GetStructure") {
-					int asdf=0;
-				}
-				//Interpreter.arguments.Add(argument);
 				object result=null;
-				// check this for every method:
-				// introduce own method info class?
+				// TODO: check this for every method:
+				// introduce own methodinfo class? that does the calling, maybe??? dynamic cast might become a performance
+				// problem, but I doubt it, so what?
 				if(isMetaLibraryMethod) {
 					if(methods[0] is ConstructorInfo) {
-						// call methods without arguments, ugly and redundant
+						// TODO: Comment this properly: kcall methods without arguments, ugly and redundant, because Invoke is not compatible between
+						// constructor and normal method
 						result=((ConstructorInfo)methods[0]).Invoke(new object[] {argument}); 
 
 						//						result=((ConstructorInfo)methods[0]).Invoke(new object[] {}); 
@@ -2182,6 +2018,7 @@ namespace Meta {
 				//Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);// change to RemoveAt
 				return Interpreter.ConvertDotNetToMeta(result);
 			}
+			// TODO: Refactor, include 
 			public static object with(object obj,IMap map) {
 				NetObject netObject=new NetObject(obj);
 				foreach(DictionaryEntry entry in map) {
@@ -2189,7 +2026,8 @@ namespace Meta {
 				}
 				return obj;
 			}
-			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) {
+			/* Create a delegate of a certain type that calls a Meta function. */
+			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
 				code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 				ICodeCompiler compiler=codeProvider.CreateCompiler();
@@ -2263,6 +2101,10 @@ namespace Meta {
 									 // found out, it's for Console.WriteLine, where Console.WriteLine(object)
 									 // would otherwise come before Console.WriteLine(string)
 									 // not a good solution, though
+
+									// TODO: Get rid of this Reversion shit! Find a fix for this problem. Need to think about
+									// it. maybe restrict overloads, create preference list, all quite complicated
+									// research the number and nature of such methods as Console.WriteLine
 				methods=(MethodBase[])list.ToArray(typeof(MethodBase));
 				if(methods.Length==1 && methods[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
 					this.isMetaLibraryMethod=true;
@@ -2308,7 +2150,7 @@ namespace Meta {
 				return constructor.Call(argument);
 			}
 		}
-		// rename to DotNetObject ??
+		/* Representation of a .NET object. */
 		public class NetObject: NetContainer, IKeyValue {
 			public NetObject(object obj):base(obj,obj.GetType()) {
 			}
@@ -2316,6 +2158,7 @@ namespace Meta {
 				return obj.ToString();
 			}
 		}
+		/* Base class for NetObject and NetClass. */
 		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial {
 			public bool ContainsKey(object key) {
 				if(key is Map) {
@@ -2398,9 +2241,6 @@ namespace Meta {
 				set {
 					if(key is Map && ((Map)key).IsString) {
 						string text=((Map)key).GetDotNetString();
-//						if(text=="Controls") {
-//							int asdf=0;
-//						}
 						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
@@ -2422,16 +2262,12 @@ namespace Meta {
 								if(!converted) {
 									throw new ApplicationException("Field value could not be assigned because it cannot be converted.");
 								}
-								//refactor
+								//TODO: refactor
 								return;
 							}
 							else if(members[0] is PropertyInfo) {
 								PropertyInfo property=(PropertyInfo)members[0];
 								bool converted;
-								//								if(key.Equals(new Map("ScrollBars"))) {
-								//									int asdf=0;
-								//								}
-								//object oldValue=property.GetValue(obj,new object[]{});
 								object val=NetMethod.ConvertParameter(value,property.PropertyType,out converted);
 								if(converted) {
 									property.SetValue(obj,val,new object[]{});
@@ -2445,31 +2281,6 @@ namespace Meta {
 									}
 								}
 								return;
-								//								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
-								//									property.SetValue(obj,value,null);
-								//									return;
-								//								}
-								//								else {
-								//									bool isConverted;
-								//									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
-								//									if(isConverted) {
-								//										property.SetValue(obj,converted,null);
-								//										return;
-								//									}
-								//								}
-								//								PropertyInfo property=(PropertyInfo)members[0];
-								//								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
-								//									property.SetValue(obj,value,null);
-								//									return;
-								//								}
-								//								else {
-								//									bool isConverted;
-								//									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
-								//									if(isConverted) {
-								//										property.SetValue(obj,converted,null);
-								//										return;
-								//									}
-								//								}
 							}
 							else if(members[0] is EventInfo) {
 								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(Map)value));
@@ -2497,221 +2308,6 @@ namespace Meta {
 					}
 				}
 			}
-//			public virtual object this[object key]  {
-//				get {
-//					if(key is Map && ((Map)key).IsString) {
-//						string text=((Map)key).GetDotNetString();
-//						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
-//						if(members.Length>0) {
-//							if(members[0] is MethodBase) {
-//								return new NetMethod(text,obj,type);
-//							}
-//							if(members[0] is FieldInfo) {
-//								// convert arrays to maps here?
-//								return Interpreter.ConvertDotNetToMeta(type.GetField(text).GetValue(obj));
-//							}
-//							else if(members[0] is PropertyInfo) {
-//								return Interpreter.ConvertDotNetToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
-//							}
-//							else if(members[0] is EventInfo) {
-//								Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
-//									BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
-//								return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
-//							}
-//						}
-//					}
-//					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
-//					Map arguments=new Map();
-//					arguments[new Integer(1)]=key;
-//					try {
-//						return indexerMethod.Call(arguments);
-//					}
-//					catch(Exception) {
-//						return null;
-//					}
-//				}
-//				set {
-//					if(key is Map && ((Map)key).IsString) {
-//						string text=((Map)key).GetDotNetString();
-//						if(text=="Controls") {
-//							int asdf=0;
-//						}
-//						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
-//						if(members.Length>0) {
-//							if(members[0] is MethodBase) {
-//								throw new ApplicationException("Cannot set method "+key+".");
-//							}
-//							else if(members[0] is FieldInfo) {
-//								FieldInfo field=(FieldInfo)members[0];
-//								bool converted;
-//								object val;
-//								val=NetMethod.ConvertParameter(value,field.FieldType,out converted);
-//								if(converted) {
-//									field.SetValue(obj,val);
-//								}
-//								if(!converted) {
-//									if(value is Map) {
-//										val=NetMethod.DoModifiableCollectionAssignment((Map)value,field.GetValue(obj),out converted);
-//									}
-//								}
-//								if(!converted) {
-//									throw new ApplicationException("Field value could not be assigned because it cannot be converted.");
-//								}
-//								//refactor
-//								return;
-//							}
-//							else if(members[0] is PropertyInfo) {
-//								PropertyInfo property=(PropertyInfo)members[0];
-//								bool converted;
-////								if(key.Equals(new Map("ScrollBars"))) {
-////									int asdf=0;
-////								}
-//								//object oldValue=property.GetValue(obj,new object[]{});
-//								object val=NetMethod.ConvertParameter(value,property.PropertyType,out converted);
-//								if(converted) {
-//									property.SetValue(obj,val,new object[]{});
-//								}
-//								if(!converted) {
-//									if(value is Map) {
-//										NetMethod.DoModifiableCollectionAssignment((Map)value,property.GetValue(obj,new object[]{}),out converted);
-//									}
-//									if(!converted) {
-//										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.MetaSerialize(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
-//									}
-//								}
-//								return;
-////								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
-////									property.SetValue(obj,value,null);
-////									return;
-////								}
-////								else {
-////									bool isConverted;
-////									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
-////									if(isConverted) {
-////										property.SetValue(obj,converted,null);
-////										return;
-////									}
-////								}
-////								PropertyInfo property=(PropertyInfo)members[0];
-////								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
-////									property.SetValue(obj,value,null);
-////									return;
-////								}
-////								else {
-////									bool isConverted;
-////									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
-////									if(isConverted) {
-////										property.SetValue(obj,converted,null);
-////										return;
-////									}
-////								}
-//							}
-//							else if(members[0] is EventInfo) {
-//								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(Map)value));
-//								return;
-//							}
-//						}
-//					}
-//					NetMethod indexer=new NetMethod("set_Item",obj,type);
-//					Map arguments=new Map();
-//					arguments[new Integer(1)]=key;
-//					arguments[new Integer(2)]=value;//lazy
-//					try {
-//						indexer.Call(arguments);
-//					}
-//					catch(Exception) {
-//						throw new ApplicationException("Cannot set "+key.ToString()+".");
-//					}
-//				}
-//			}
-//			public virtual object this[object key]  {
-//				get {
-//					if(key is Map && ((Map)key).IsString) {
-//						string text=((Map)key).GetDotNetString();
-//						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
-//						if(members.Length>0) {
-//							if(members[0] is MethodBase) {
-//								return new NetMethod(text,obj,type);
-//							}
-//							if(members[0] is FieldInfo) {
-//								return Interpreter.ConvertDotNetToMeta(type.GetField(text).GetValue(obj));
-//							}
-//							else if(members[0] is PropertyInfo) {
-//								return Interpreter.ConvertDotNetToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
-//							}
-//							else if(members[0] is EventInfo) {
-//								Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
-//									BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
-//								return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
-//							}
-//						}
-//					}
-//					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
-//					Map arguments=new Map();
-//					arguments[new Integer(1)]=key;
-//					try {
-//						return indexerMethod.Call(arguments);
-//					}
-//					catch(Exception) {
-//						return null;
-//					}
-//				}
-//				set {
-//					if(key is Map && ((Map)key).IsString) {
-//						string text=((Map)key).GetDotNetString();
-//						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
-//						if(members.Length>0) {
-//							if(members[0] is MethodBase) {
-//								throw new ApplicationException("Cannot set method "+key+".");
-//							}
-//							else if(members[0] is FieldInfo) {
-//								FieldInfo field=(FieldInfo)members[0];
-//								if(field.FieldType.IsAssignableFrom(value.GetType())) {
-//									field.SetValue(obj,value);
-//									return;
-//								}
-//								else {
-//									bool isConverted;
-//									object converted=Interpreter.ConvertMetaToDotNet(value,field.FieldType,out isConverted);
-//									if(isConverted) {
-//										field.SetValue(obj,converted);
-//										return;
-//									}
-//								}
-//							}
-//							else if(members[0] is PropertyInfo) {
-//								PropertyInfo property=(PropertyInfo)members[0];
-//								if(property.PropertyType.IsAssignableFrom(value.GetType())) {
-//									property.SetValue(obj,value,null);
-//									return;
-//								}
-//								else {
-//									bool isConverted;
-//									object converted=Interpreter.ConvertMetaToDotNet(value,property.PropertyType,out isConverted);
-//									if(isConverted) {
-//										property.SetValue(obj,converted,null);
-//										return;
-//									}
-//								}
-//							}
-//							else if(members[0] is EventInfo) {
-//								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(Map)value));
-//								return;
-//							}
-//						}
-//					}
-//					NetMethod indexer=new NetMethod("set_Item",obj,type);
-//					Map arguments=new Map();
-//					arguments[new Integer(1)]=key;
-//					arguments[new Integer(2)]=value;
-//					try {
-//						indexer.Call(arguments);
-//					}
-//					catch(Exception) {
-//						throw new ApplicationException("Cannot set "+key.ToString()+".");
-//					}
-//				}
-//			}
 			public string Serialize(string indent,string[] functions) {
 				return indent;
 			}
@@ -2723,7 +2319,7 @@ namespace Meta {
 				Delegate del=NetMethod.CreateDelegate(eventInfo.EventHandlerType,method,code);
 				return del;
 			}
-			private IDictionary Table { // strange, what use is this
+			private IDictionary Table { // TODO: strange, what use is this
 				get {
 					HybridDictionary table=new HybridDictionary();
 					BindingFlags bindingFlags;
@@ -2774,14 +2370,13 @@ namespace Meta {
 		}
 	}
 	namespace Parser  {
-		public class IndentationParser: TokenStream {
-			public IndentationParser(TokenStream originalStream)  {
-				this.originalStream=originalStream;
-//				AddIndentationTokensToGetToLevel(0);
+		public class IndentationStream: TokenStream {
+			public IndentationStream(TokenStream stream)  {
+				this.stream=stream;
 			}
 			public Token nextToken()  {
 				if(streamBuffer.Count==0)  {
-					Token t=originalStream.nextToken();
+					Token t=stream.nextToken();
 					switch(t.Type) {
 						case MetaLexerTokenTypes.EOF:
 							AddIndentationTokensToGetToLevel(-1);
@@ -2798,9 +2393,6 @@ namespace Meta {
 							text=text.Replace(Environment.NewLine,"\n");
 							string[] lines=text.Split('\n');
 							string result="";
-//							if(lines[0].StartsWith(Environment.NewLine)) {
-//								int asdf=0;
-//							} 
 							for(int k=0;k<lines.Length;k++) {
 								if(k!=0 && lines[k].StartsWith(indentation)) {
 									result+=lines[k].Remove(0,presentIndentationLevel+1);
@@ -2812,15 +2404,6 @@ namespace Meta {
 									result+=Environment.NewLine;
 								}
 							}
-							//							foreach(string line in lines) {
-							//								if(line.StartsWith(indentation)) {
-							//									result+=line.Remove(0,(presentIndentationLevel+1)*4);
-							//								}
-							//								else {
-							//									result+=line;
-							//								}
-							//
-							//							}
 							t.setText(result);
 							streamBuffer.Enqueue(t);
 							break;
@@ -2843,7 +2426,7 @@ namespace Meta {
 					for(int i=indentationDifference;i<0;i++) {
 						streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
 					}
-					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE)); // tiny bit unlogical? maybe create this in Parser?
+					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE)); // TODO: tiny bit unlogical? maybe create this in Parser?
 				}
 				else if(indentationDifference>1) {
 					throw new ApplicationException("Incorrect indentation.");
@@ -2851,94 +2434,13 @@ namespace Meta {
 				presentIndentationLevel=newIndentationLevel;
 			}
 			protected Queue streamBuffer=new Queue();
-			protected TokenStream originalStream;
+			protected TokenStream stream;
 			protected int presentIndentationLevel=-1;
 		}
-//		public class IndentationParser: TokenStream {
-//			public IndentationParser(TokenStream originalStream)  {
-//				this.originalStream=originalStream;
-//				AddIndentationTokensToGetToLevel(0);
-//			}
-//			public Token nextToken()  {
-//				if(streamBuffer.Count==0)  {
-//					Token t=originalStream.nextToken();
-//					switch(t.Type) {
-//						case MetaLexerTokenTypes.EOF:
-//							AddIndentationTokensToGetToLevel(-1);
-//							break;
-//						case MetaLexerTokenTypes.INDENTATION:
-//							AddIndentationTokensToGetToLevel(t.getText().Length/4);
-//							break;
-//						case MetaLexerTokenTypes.LITERAL: // move this into parser, for correct error handling?
-//							string indentation="";
-//							for(int i=0;i<presentIndentationLevel+1;i++) {
-//								indentation+="    ";
-//							}
-//							string text=t.getText();
-//							text=text.Replace(Environment.NewLine,"\n");
-//							string[] lines=text.Split('\n');
-//							string result="";
-//							if(lines[0].StartsWith(Environment.NewLine)) {
-//								int asdf=0;
-//							} 
-//							for(int k=0;k<lines.Length;k++) {
-//								if(lines[k].StartsWith(indentation)) {
-//									result+=lines[k].Remove(0,(presentIndentationLevel+1)*4);
-//								}
-//								else {
-//									result+=lines[k];
-//								}
-//								if(k!=lines.Length-1) {
-//									result+=Environment.NewLine;
-//								}
-//							}
-////							foreach(string line in lines) {
-////								if(line.StartsWith(indentation)) {
-////									result+=line.Remove(0,(presentIndentationLevel+1)*4);
-////								}
-////								else {
-////									result+=line;
-////								}
-////
-////							}
-//							t.setText(result);
-//							streamBuffer.Enqueue(t);
-//							break;
-//						default:
-//							streamBuffer.Enqueue(t);
-//							break;
-//					}
-//				}
-//				return (Token)streamBuffer.Dequeue();
-//			}
-//			protected void AddIndentationTokensToGetToLevel(int newIndentationLevel)  {
-//				int indentationDifference=newIndentationLevel-presentIndentationLevel; 
-//				if(indentationDifference==0) {
-//					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
-//				}
-//				else if(indentationDifference==1) {
-//					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));
-//				}
-//				else if(indentationDifference<0) {
-//					for(int i=indentationDifference;i<0;i++) {
-//						streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
-//					}
-//					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
-//				}
-//				else if(indentationDifference>1) {
-//					throw new ApplicationException("Incorrect indentation.");
-//				}
-//				presentIndentationLevel=newIndentationLevel;
-//			}
-//			protected Queue streamBuffer=new Queue();
-//			protected TokenStream originalStream;
-//			protected int presentIndentationLevel=-1;
-//		}
 		public class LineNumberAST:CommonAST {
 			private int lineNumber;
 			public LineNumberAST() { }
 			public LineNumberAST(Token tok):base(tok){}
-			//		public LineNumberAST(Token tok) { super(tok); }
 			public override void initialize(AST t) {
 				base.initialize(t);
 				if (t.GetType().Name.Equals("LineNumberAST")) {
@@ -3017,8 +2519,10 @@ namespace Meta {
 				StreamWriter copyWriter=new StreamWriter(Path.Combine(path,"resultCopy.txt"));
 				copyWriter.Write(result);
 				copyWriter.Close();
-				// StreamReader must be closed
-				string check=new StreamReader(Path.Combine(path,"check.txt")).ReadToEnd();
+				// TODO: Introduce utility methods
+				StreamReader reader=new StreamReader(Path.Combine(path,"check.txt"));
+				string check=reader.ReadToEnd();
+				reader.Close();
 				return result.Equals(check);
 			}
 			public static string Serialize(object obj) {
@@ -3087,28 +2591,5 @@ namespace Meta {
 				this.names=names;
 			}
 		}
-		
-		//	public class LineNumberAST extends LineNumberAST {
-		//											private int lineNumber;
-		//
-		//		public LineNumberAST() { }
-		//		public LineNumberAST(Token tok) { super(tok); }
-		//		public void initialize(AST t) {
-		//			super.initialize(t);
-		//			if (t.getClass().getName().compareTo("LineNumberAST") == 0) {
-		//				LineNumberAST t2 = (LineNumberAST)t;
-		//				lineNumber = t2.lineNumber;
-		//			}
-		//		}
-		//		public void initialize(Token tok) {
-		//			super.initialize(tok);
-		//			lineNumber = tok.getLine(); /* store the line number from the token */
-		//		}
-		//
-		//		/* use this function in your tree walker to get the token's line number */
-		//		public int getLineNumber() {
-		//			return lineNumber;
-		//		}
-		//	}
 	}
 }

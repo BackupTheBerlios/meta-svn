@@ -47,11 +47,7 @@ namespace Test {
 						throw new ApplicationException("File "+args[0]+" not found.");
 					}
 					Interpreter.Run(args[0],new Map());
-					//					StreamReader reader=new StreamReader(args[0]);
-					//					string text=reader.ReadToEnd();
-					//					reader.Close();
-					//					Interpreter.Run(new StringReader(text),new Map());
-					// fix this to only show original error message
+					// TODO: fix this to only show original error message
 				}
 			}
 			catch(CharStreamException e) {// put this into "Run" ???, no don't, every caller can do this differently
@@ -91,7 +87,7 @@ namespace Test {
 	}
 	public class Tests {
 		private static string filename=@"basicTest.meta";
-		// make it possible to choose between different tests on command line
+		// TODO:make it possible to choose between different tests on command line, and whether to test at all
 		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
 		public class ParseToAst:TestCase {
 			public override object RunTestCase() {

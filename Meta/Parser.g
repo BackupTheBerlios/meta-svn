@@ -189,7 +189,7 @@ NEWLINE
     public static Stack autokey=new Stack();
   }
 }
-class MetaANTLRParser extends Parser;
+class MetaParser extends Parser;
 options {
 	buildAST = true;
 	k=1;

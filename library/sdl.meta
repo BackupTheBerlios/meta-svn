@@ -1,0 +1,50 @@
+this:map.merge
+	parent
+	programFlow
+	logic
+	map
+	math
+	SdlDotNet
+	System
+	System.Drawing
+	System.Threading
+playMusic:=
+	Mixer.Music.Load
+		arg.1
+	Mixer.Music.Play
+		'-1
+playSound:=
+	sound:Mixer.Sound
+		arg.1
+	sound.Play'
+window:=
+	screen:Video.SetVideoModeWindow
+		arg.size.1
+		arg.size.2
+		'true
+	Video.WindowCaption*:arg.caption
+	surf:screen.CreateCompatibleSurface
+		arg.size.1
+		arg.size.2
+		'true
+	draw:=
+		image:Surface
+			arg.1
+		screen.Blit
+			image
+			Rectangle
+				Point
+					'0
+					'0
+				image.Size
+	run:=
+		main:arg.main
+		loop:'true
+		while
+			=loop
+			=
+				while
+					=Events.Poll'
+					='
+				main'
+				screen.Flip'

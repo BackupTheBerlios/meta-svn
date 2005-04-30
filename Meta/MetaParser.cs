@@ -1,4 +1,4 @@
-// $ANTLR 2.7.3: "Parser.g" -> "MetaANTLRParser.cs"$
+// $ANTLR 2.7.3: "Parser.g" -> "MetaParser.cs"$
 
 namespace Meta.Parser
 {
@@ -30,7 +30,7 @@ namespace Meta.Parser
     public static Stack autokey=new Stack();
   }
 
-	public 	class MetaANTLRParser : antlr.LLkParser
+	public 	class MetaParser : antlr.LLkParser
 	{
 		public const int EOF = 1;
 		public const int NULL_TREE_LOOKAHEAD = 3;
@@ -67,25 +67,25 @@ namespace Meta.Parser
 		}
 		
 		
-		protected MetaANTLRParser(TokenBuffer tokenBuf, int k) : base(tokenBuf, k)
+		protected MetaParser(TokenBuffer tokenBuf, int k) : base(tokenBuf, k)
 		{
 			initialize();
 		}
 		
-		public MetaANTLRParser(TokenBuffer tokenBuf) : this(tokenBuf,1)
+		public MetaParser(TokenBuffer tokenBuf) : this(tokenBuf,1)
 		{
 		}
 		
-		protected MetaANTLRParser(TokenStream lexer, int k) : base(lexer,k)
+		protected MetaParser(TokenStream lexer, int k) : base(lexer,k)
 		{
 			initialize();
 		}
 		
-		public MetaANTLRParser(TokenStream lexer) : this(lexer,1)
+		public MetaParser(TokenStream lexer) : this(lexer,1)
 		{
 		}
 		
-		public MetaANTLRParser(ParserSharedInputState state) : base(state,1)
+		public MetaParser(ParserSharedInputState state) : base(state,1)
 		{
 			initialize();
 		}
