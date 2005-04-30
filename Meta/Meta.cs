@@ -786,7 +786,7 @@ namespace Meta {
 				// construct the special shared input state that is needed
 				// in order to annotate ExtentTokens properly
 				FileStream file=new FileStream(fileName,FileMode.Open);
-				ExtentLexerSharedInputState lsis = new ExtentLexerSharedInputState(file); 
+				ExtentLexerSharedInputState lsis = new ExtentLexerSharedInputState(file,fileName); 
 				// construct the lexer
 				MetaLexer lex = new MetaLexer(lsis);
 		

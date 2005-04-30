@@ -42,6 +42,20 @@ tokens
   CALL;
 }
 {
+    /**
+     * Construct a token of the given type, augmenting it with end position
+     * and file name information based on the shared input state of the
+     * instance.
+     *
+     * @param t the token type for the result
+     * @return non-null; the newly-constructed token 
+     */
+    protected override Token makeToken (int t)
+    {
+        ExtentToken tok = (ExtentToken) base.makeToken (t);
+        ((ExtentLexerSharedInputState) inputState).annotate (tok);
+        return tok;
+    }
 	public override void tab() 
 	{
 		setColumn(getColumn()+1);
