@@ -3723,7 +3723,7 @@ statements (ArrayList):
       parents (ArrayList):
     valueExpression (Literal):
       literal (Map):
-        """
+        "a"""""bc""
   Entry (Statement)
     keyExpression (Select):
       expressions (ArrayList):

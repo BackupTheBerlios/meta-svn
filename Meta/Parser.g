@@ -23,7 +23,7 @@ options
 class MetaLexer extends Lexer;
 options 
 {
-	k=1;
+	k=2;
 	charVocabulary='\u0000'..'\uFFFE';
 	//charVocabulary='\u0003'..'\u0008'|'\u0010'..'\ufffe';
 }
@@ -109,7 +109,17 @@ LITERAL
   }:
   ('\''! ( ~ (' '|'\t'|'\r'|'\n'|'='|'.'|'\''|'"'|'('|')'|'['|']'|':') )*)
   |("\""! ( ~ ('\"') )* "\""!)
-  | ("@\""! ({LA(1)!='"'||LA(2)!='@'}? (.) )* "\"@"!);
+  |(
+    "@\""!
+		(
+            options {
+                greedy=false;
+            }
+        :   .
+        )*
+        "\"@"!
+        )
+   ;
   
 protected
 LITERAL_END:
@@ -323,7 +333,7 @@ lookup:
     LBRACKET!  
     (SPACES!)?
     (
-      |map
+      map
       |LITERAL
       |delayed
       |select

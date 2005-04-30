@@ -203,7 +203,7 @@ emptyFunctionResult:emptyFunction'
 font:System.Drawing.Font
 	"Courier New"
 	'10
-escapedAtText:@"""@
+escapedAtText:@"a"""""bc""@
 stringTest:'hello
 stringTest.6:stringTest.1
 helloh:'hi

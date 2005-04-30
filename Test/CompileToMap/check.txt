@@ -8355,7 +8355,7 @@ Entry (DictionaryEntry)
               Key (Map):
                 "literal"
               Value (Map):
-                """
+                "a"""""bc""
     Entry (DictionaryEntry)
       Key (Integer):
         "96"

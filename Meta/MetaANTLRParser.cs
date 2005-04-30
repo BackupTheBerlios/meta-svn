@@ -127,11 +127,11 @@ namespace Meta.Parser
 				break;
 			}
 			default:
-				bool synPredMatched92 = false;
+				bool synPredMatched91 = false;
 				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 				{
-					int _m92 = mark();
-					synPredMatched92 = true;
+					int _m91 = mark();
+					synPredMatched91 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -140,12 +140,12 @@ namespace Meta.Parser
 					}
 					catch (RecognitionException)
 					{
-						synPredMatched92 = false;
+						synPredMatched91 = false;
 					}
-					rewind(_m92);
+					rewind(_m91);
 					inputState.guessing--;
 				}
-				if ( synPredMatched92 )
+				if ( synPredMatched91 )
 				{
 					call();
 					if (0 == inputState.guessing)
@@ -265,11 +265,11 @@ namespace Meta.Parser
 		ASTPair currentAST = new ASTPair();
 		AST select_AST = null;
 		
-		bool synPredMatched116 = false;
+		bool synPredMatched115 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m116 = mark();
-			synPredMatched116 = true;
+			int _m115 = mark();
+			synPredMatched115 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -284,23 +284,23 @@ namespace Meta.Parser
 							}
 							else
 							{
-								goto _loop115_breakloop;
+								goto _loop114_breakloop;
 							}
 							
 						}
-_loop115_breakloop:						;
+_loop114_breakloop:						;
 					}    // ( ... )*
 					match(STAR);
 				}
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched116 = false;
+				synPredMatched115 = false;
 			}
-			rewind(_m116);
+			rewind(_m115);
 			inputState.guessing--;
 		}
-		if ( synPredMatched116 )
+		if ( synPredMatched115 )
 		{
 			{
 				lookup();
@@ -322,11 +322,11 @@ _loop115_breakloop:						;
 						}
 						else
 						{
-							goto _loop119_breakloop;
+							goto _loop118_breakloop;
 						}
 						
 					}
-_loop119_breakloop:					;
+_loop118_breakloop:					;
 				}    // ( ... )*
 				match(STAR);
 				if (0==inputState.guessing)
@@ -375,11 +375,11 @@ _loop119_breakloop:					;
 						}
 						else
 						{
-							goto _loop122_breakloop;
+							goto _loop121_breakloop;
 						}
 						
 					}
-_loop122_breakloop:					;
+_loop121_breakloop:					;
 				}    // ( ... )*
 				if (0==inputState.guessing)
 				{
@@ -439,11 +439,11 @@ _loop122_breakloop:					;
 					}
 					else
 					{
-						goto _loop96_breakloop;
+						goto _loop95_breakloop;
 					}
 					
 				}
-_loop96_breakloop:				;
+_loop95_breakloop:				;
 			}    // ( ... )*
 			match(DEDENT);
 		}
@@ -502,11 +502,11 @@ _loop96_breakloop:				;
 		ASTPair currentAST = new ASTPair();
 		AST statement_AST = null;
 		
-		bool synPredMatched99 = false;
+		bool synPredMatched98 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m99 = mark();
-			synPredMatched99 = true;
+			int _m98 = mark();
+			synPredMatched98 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -516,12 +516,12 @@ _loop96_breakloop:				;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched99 = false;
+				synPredMatched98 = false;
 			}
-			rewind(_m99);
+			rewind(_m98);
 			inputState.guessing--;
 		}
-		if ( synPredMatched99 )
+		if ( synPredMatched98 )
 		{
 			{
 				select();
@@ -674,27 +674,30 @@ _loop96_breakloop:				;
 			{
 				match(LBRACKET);
 				{
-					if ((LA(1)==SPACES))
+					switch ( LA(1) )
+					{
+					case SPACES:
 					{
 						match(SPACES);
+						break;
 					}
-					else if ((tokenSet_1_.member(LA(1)))) {
+					case INDENT:
+					case EQUAL:
+					case LBRACKET:
+					case LITERAL_KEY:
+					case LITERAL:
+					{
+						break;
 					}
-					else
+					default:
 					{
 						throw new NoViableAltException(LT(1), getFilename());
 					}
-					
+					 }
 				}
 				{
 					switch ( LA(1) )
 					{
-					case ENDLINE:
-					case RBRACKET:
-					case SPACES:
-					{
-						break;
-					}
 					case INDENT:
 					{
 						map();
@@ -877,12 +880,6 @@ _loop96_breakloop:				;
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());
-	private static long[] mk_tokenSet_1_()
-	{
-		long[] data = { 11591776L, 0L};
-		return data;
-	}
-	public static readonly BitSet tokenSet_1_ = new BitSet(mk_tokenSet_1_());
 	
 }
 }

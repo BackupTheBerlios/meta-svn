@@ -7290,7 +7290,7 @@ getFirstChild (CommonAST):
                                                                                                                                                                                                   getNextSibling:
                                                                                                                                                                                                     null
                                                                                                                                                                                                   getText (String):
-                                                                                                                                                                                                    """
+                                                                                                                                                                                                    "a"""""bc""
                                                                                                                                                                                                   Type (Int32):
                                                                                                                                                                                                     "21"
                                                                                                                                                                                                 getText (String):
