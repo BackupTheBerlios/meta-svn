@@ -755,6 +755,7 @@ namespace Meta {
 			public static AST ParseToAst(string fileName)  {
 				StreamReader file=new StreamReader(fileName);
 				TextReader reader=new StringReader(Environment.NewLine+file.ReadToEnd()+Environment.NewLine);
+				file.Close();
 				MetaLexer lexer=new MetaLexer(reader);
 				lexer.setLine(0); // hack to compensate for the newline added above
 				Meta.Parser.MetaParser parser=new Meta.Parser.MetaParser( 
@@ -912,7 +913,7 @@ namespace Meta {
 										result='\v';
 										break;
 									default:
-										throw new ApplicationException("Unrecognized escape sequence "+text);
+										throw new RuntimeException("Unrecognized escape sequence "+text);
 								}
 							}
 							else {
@@ -1170,27 +1171,48 @@ namespace Meta {
 				}
 			}
 		}
-		/* Base class of all exceptions. */
+		/* Base class of exceptions in Meta. */
 		public abstract class MetaException:ApplicationException {
-			protected string text="";
+			protected string message="";
+			public MetaException() {
+			}
+			public MetaException(string message) {
+				this.message=message;
+			}
 			public override string Message {
 				get {
-					return text;
+					return message;
 				}
 			}
 		}
+		public class RuntimeException:MetaException {
+			public RuntimeException(string message):base(message) {
+			}
+		}
+//		public class RuntimeException:MetaException {
+//			string message;
+//			string fileName;
+//			int line;
+//			int column;
+//			public RuntimeException(string message,string fileName, int line,int column) {
+//				this.message=message;
+//				this.fileName=fileName;
+//				this.line=line;
+//				this.column=column;
+//			}
+//		}
 
 		/* Base class for key exceptions. */
 		public abstract class KeyException:MetaException {
 			public KeyException(object key) {
-				text="Key ";
+				message="Key ";
 //				if(key is Map && ((Map)key).IsString) {
 //					text+=((Map)key).GetDotNetString();
 //				}
 //				else {
-					text+=key;
+					message+=key;
 //				}
-				text+=" not found.";
+				message+=" not found.";
 			}
 		}
 		/* Thrown when a searched key was not found. */
@@ -1259,7 +1281,7 @@ namespace Meta {
 					return cache[key];
 				}
 				set {
-					throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
+					throw new RuntimeException("Cannot set key "+key.ToString()+" in .NET namespace.");
 				}
 			}
 			public ArrayList Keys {
@@ -1343,7 +1365,7 @@ namespace Meta {
 					}
 				}
 				set {
-					throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
+					throw new RuntimeException("Cannot set key "+key.ToString()+" in library.");
 				}
 			}
 			public ArrayList Keys {
@@ -1372,7 +1394,7 @@ namespace Meta {
 					return null;
 				}
 				set {
-					throw new ApplicationException("Cannot set parent of library.");
+					throw new RuntimeException("Cannot set parent of library.");
 				}
 			}
 			public IEnumerator GetEnumerator() { 
@@ -1618,7 +1640,7 @@ namespace Meta {
 					else if(this.ContainsKey(new Map("value")) && this.ContainsKey(new Map("key")))
 						compiled=new Statement(this);
 					else
-						throw new ApplicationException("Cannot compile non-code map.");
+						throw new RuntimeException("Cannot compile non-code map.");
 				}
 				return compiled;
 			}
@@ -1996,7 +2018,7 @@ namespace Meta {
 							result=methods[0].Invoke(target,new object[] {argument});
 						}
 						catch {
-							throw new ApplicationException("Could not invoke "+this.name+".");
+							throw new RuntimeException("Could not invoke "+this.name+".");
 						}
 						//						result=methods[0].Invoke(target,new object[] {});
 					}
@@ -2268,7 +2290,7 @@ namespace Meta {
 						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
-								throw new ApplicationException("Cannot set method "+key+".");
+								throw new RuntimeException("Cannot set method "+key+".");
 							}
 							else if(members[0] is FieldInfo) {
 								FieldInfo field=(FieldInfo)members[0];
@@ -2284,7 +2306,7 @@ namespace Meta {
 									}
 								}
 								if(!converted) {
-									throw new ApplicationException("Field value could not be assigned because it cannot be converted.");
+									throw new RuntimeException("Field value could not be assigned because it cannot be converted.");
 								}
 								//TODO: refactor
 								return;
@@ -2301,7 +2323,7 @@ namespace Meta {
 										NetMethod.DoModifiableCollectionAssignment((Map)value,property.GetValue(obj,new object[]{}),out converted);
 									}
 									if(!converted) {
-										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.MetaSerialize(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
+										throw new RuntimeException("Property "+this.type.Name+"."+Interpreter.MetaSerialize(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
 									}
 								}
 								return;
@@ -2328,7 +2350,7 @@ namespace Meta {
 						indexer.Call(arguments);
 					}
 					catch(Exception) {
-						throw new ApplicationException("Cannot set "+key.ToString()+".");
+						throw new RuntimeException("Cannot set "+key.ToString()+".");
 					}
 				}
 			}
@@ -2403,10 +2425,10 @@ namespace Meta {
 					Token t=stream.nextToken();
 					switch(t.Type) {
 						case MetaLexerTokenTypes.EOF:
-							AddIndentationTokensToGetToLevel(-1);
+							AddIndentationTokensToGetToLevel(-1,t);
 							break;
 						case MetaLexerTokenTypes.INDENTATION:
-							AddIndentationTokensToGetToLevel(t.getText().Length);
+							AddIndentationTokensToGetToLevel(t.getText().Length,t);
 							break;
 						case MetaLexerTokenTypes.LITERAL: // move this into parser, for correct error handling?
 							string indentation="";
@@ -2438,7 +2460,7 @@ namespace Meta {
 				}
 				return (Token)streamBuffer.Dequeue();
 			}
-			protected void AddIndentationTokensToGetToLevel(int newIndentationLevel)  {
+			protected void AddIndentationTokensToGetToLevel(int newIndentationLevel,Token token)  {
 				int indentationDifference=newIndentationLevel-presentIndentationLevel; 
 				if(indentationDifference==0) {
 					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
@@ -2453,7 +2475,10 @@ namespace Meta {
 					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE)); // TODO: tiny bit unlogical? maybe create this in Parser?
 				}
 				else if(indentationDifference>1) {
-					throw new ApplicationException("Incorrect indentation.");
+					// This doesn't get through properly because it is caught by ANTLR
+					// TODO: make extra exception later.
+					// I don't understand it and the lines are somehow off
+					throw new RecognitionException("Incorrect indentation.",token.getFilename(),token.getLine(),token.getColumn());
 				}
 				presentIndentationLevel=newIndentationLevel;
 			}
