@@ -703,43 +703,18 @@ namespace Meta {
 					return obj;
 				}
 			}
-//					return conversion.Convert(obj);
-//				}
-//				catch {
-//					return obj;
-//				}
+//			public static object Run(string fileName,IMap argument) {
+//				StreamReader a=new StreamReader(fileName); //TODO: check this, is it right or wrong???ß
+//				string x=a.ReadToEnd();
+//				a.Close();
+//				object result=Run(new StringReader(x),argument);
+//				return result;
 //			}
 			public static object Run(string fileName,IMap argument) {
-				StreamReader a=new StreamReader(fileName); //TODO: check this, is it right or wrong???ß
-				string x=a.ReadToEnd();
-				a.Close();
-				//				StreamReader reader=new StreamReader(fileName);
-				object result=Run(new StringReader(x),argument);
-				//				reader.Close();
-				return result;
-			}
-//			public static object Run(string fileName,IMap argument) {
-//				StreamReader a=new StreamReader(fileName);
-//				string x=a.ReadToEnd();
-//				a.Close();
-////				StreamReader reader=new StreamReader(fileName);
-//				object result=Run(new StringReader(x),argument);
-////				reader.Close();
-//				return result;
-//			}
-//			public static object Run(string fileName,IMap argument) {
-//				StreamReader a=new StreamReader(fileName);
-//				string x=a.ReadToEnd();
-//				a.Close();
 //				StreamReader reader=new StreamReader(fileName);
-//				object result=Run(reader,argument);
+				Map program=CompileToMap(fileName);
+				program.Parent=Library.library;
 //				reader.Close();
-//				return result;
-//			}
-			public static object RunWithoutLibrary(string fileName,IMap argument) {
-				StreamReader reader=new StreamReader(fileName);
-				Map program=CompileToMap(reader);
-				reader.Close();
 				return program.Call(argument);
 			}
 //			public static object RunWithoutLibrary(string fileName,IMap argument) {
@@ -748,31 +723,77 @@ namespace Meta {
 //				reader.Close();
 //				return program.Call(argument);
 //			}
-//			public static object RunWithExisting(TextReader reader,IMap argument,IMap existing) {
+			public static object RunWithoutLibrary(string fileName,IMap argument) { // TODO: refactor, combine with Run
+//				StreamReader reader=new StreamReader(fileName);
+				Map program=CompileToMap(fileName);
+//				reader.Close();
+				return program.Call(argument);
+			}
+			//			public static Map CompileToMap(TextReader input) {
+			//				return (new MetaTreeParser()).map(ParseToAst(input.ReadToEnd()));
+			//			}
+			public static Map CompileToMap(string fileName) {
+				return (new MetaTreeParser()).map(ParseToAst(fileName));
+			}
+//			public static object Run(TextReader reader,IMap argument) {
 //				Map lastProgram=CompileToMap(reader);
 //				lastProgram.Parent=Library.library;
 //				object result=lastProgram.Call(argument);
 //				return result;
 //			}
-			public static object Run(TextReader reader,IMap argument) {
-				Map lastProgram=CompileToMap(reader);
-				lastProgram.Parent=Library.library;
-				object result=lastProgram.Call(argument);
-				return result;
-			}
-			public static AST ParseToAst(string text)  {
-				TextReader stream=new StringReader(Environment.NewLine+text+Environment.NewLine);
-				MetaLexer lexer=new MetaLexer(stream);
-				lexer.setLine(0); // hack to compensate for the newline added in IndentationStream
+
+//			public static AST ParseToAst(string text)  {
+//				TextReader stream=new StringReader(Environment.NewLine+text+Environment.NewLine);
+//				MetaLexer lexer=new MetaLexer(stream);
+//				lexer.setLine(0); // hack to compensate for the newline added in IndentationStream
+//				Meta.Parser.MetaParser parser=new Meta.Parser.MetaParser( 
+//					new IndentationStream(lexer));
+//				//parser.getASTFactory().setASTNodeType("Meta.Parser.LineNumberAST");
+//				parser.map();
+//				return parser.getAST();
+//			}
+			public static AST ParseToAst(string fileName)  {
+				StreamReader file=new StreamReader(fileName);
+				TextReader reader=new StringReader(Environment.NewLine+file.ReadToEnd()+Environment.NewLine);
+				MetaLexer lexer=new MetaLexer(reader);
+				lexer.setLine(0); // hack to compensate for the newline added above
 				Meta.Parser.MetaParser parser=new Meta.Parser.MetaParser( 
 					new IndentationStream(lexer));
-				//parser.getASTFactory().setASTNodeType("Meta.Parser.LineNumberAST");
 				parser.map();
+//		// the name of the file to read
+//		System.String fileName = args[0];
+//		
+//		// construct the special shared input state that is needed
+//		// in order to annotate ExtentTokens properly
+//		ExtentLexerSharedInputState lsis = new ExtentLexerSharedInputState(fileName);
+//		
+//		// construct the lexer
+//		AddLexer lex = new AddLexer(lsis);
+//		
+//		// tell the lexer the token class that we want
+//		lex.setTokenObjectClass("ValueExtentToken");
+//		
+//		// construct the parser
+//		AddParser par = new AddParser(lex);
+//		
+//		// tell the parser the AST class that we want
+//		par.setASTNodeType("TokenAST");
+//		
+//		// construct the interpreter (which is a TreeParser)
+//		AddInterpreter aint = new AddInterpreter();
+//		
+//		// parse the file
+//		par.topLevel();
+//		
+//		// get the tree that resulted from parsing
+//		AST ast = par.getAST();
+//		
+//		// interpret the tree
+//		aint.topLevel(ast);
+
 				return parser.getAST();
 			}
-			public static Map CompileToMap(TextReader input) {
-				return (new MetaTreeParser()).map(ParseToAst(input.ReadToEnd()));
-			}
+
 			public static Map Arg {
 				get {
 					return (Map)arguments[arguments.Count-1];
@@ -1215,11 +1236,14 @@ namespace Meta {
 		/* Represents a lazily evaluated "library" Meta file. */
 		public class MetaLibrary { // TODO: Put this into Library class, make base class for everything that gets loaded
 			public object Load() {
-				StreamReader reader=new StreamReader(path); 
-				object result=Interpreter.Run(reader,new Map()); // TODO: Improve this interface, isn't read lazily anyway
-				reader.Close();
-				return result;
+				return Interpreter.Run(path,new Map()); // TODO: Improve this interface, isn't read lazily anyway
 			}
+//			public object Load() {
+//				StreamReader reader=new StreamReader(path); 
+//				object result=Interpreter.Run(reader,new Map()); // TODO: Improve this interface, isn't read lazily anyway
+//				reader.Close();
+//				return result;
+//			}
 			public MetaLibrary(string path) {
 				this.path=path;
 			}
@@ -1408,7 +1432,7 @@ namespace Meta {
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.exe")) {
 					assemblies.Add(Assembly.LoadFrom(fileName));
 				}
-				string infoFileName=Path.Combine(Interpreter.metaInstallationPath,"assemblyInfo.meta");
+				string infoFileName=Path.Combine(Interpreter.metaInstallationPath,"assemblyInfo.meta"); // TODO: Use another name that doesn't collide with C# meaning
 				if(File.Exists(infoFileName)) {
 					assemblyInfo=(Map)Interpreter.RunWithoutLibrary(infoFileName,new Map());
 				}
