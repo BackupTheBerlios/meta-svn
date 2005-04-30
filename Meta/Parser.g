@@ -154,7 +154,7 @@ LINE
 	('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))*
 	{$setType(Token.SKIP); newline();}
 												 // TODO: factor out common stuff
-	|((('\t')*)! "//" (~('\n'|'\r'))* NEWLINE)=> // TODO: ! ist unnecessary
+	|((('\t')*)! "//" (~('\n'|'\r'))* NEWLINE)=> // TODO: ! is unnecessary
 	(('\t')*)! "//" (~('\n'|'\r'))*
 	{$setType(Token.SKIP);}
 	

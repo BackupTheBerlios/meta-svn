@@ -761,8 +761,10 @@ namespace Meta {
 			}
 			public static AST ParseToAst(string text)  {
 				TextReader stream=new StringReader(Environment.NewLine+text+Environment.NewLine);
-				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser(
-					new IndentationParser(new MetaLexer(stream)));
+				MetaLexer lexer=new MetaLexer(stream);
+				lexer.setLine(0); // hack to compensate for the one newline added at the beginning in IndentationStream
+				MetaANTLRParser parser=new Meta.Parser.MetaANTLRParser( // rename MetaAntlrParser
+					new IndentationParser(lexer)); // rename IndentationParser zu TokenStream
 				//parser.getASTFactory().setASTNodeType("Meta.Parser.LineNumberAST");
 				parser.map();
 				return parser.getAST();
@@ -2775,7 +2777,7 @@ namespace Meta {
 		public class IndentationParser: TokenStream {
 			public IndentationParser(TokenStream originalStream)  {
 				this.originalStream=originalStream;
-				//AddIndentationTokensToGetToLevel(0);
+//				AddIndentationTokensToGetToLevel(0);
 			}
 			public Token nextToken()  {
 				if(streamBuffer.Count==0)  {
