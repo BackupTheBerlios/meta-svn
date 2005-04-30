@@ -13,7 +13,6 @@ public class map {
 		process.StartInfo.FileName=Application.ExecutablePath;
 		process.StartInfo.Arguments=fileName;
 		process.Start();
-//		return Interpreter.Run(fileName,new Map());
 	}
 	public static bool contains(object key,Map map) {
 		string a="";
@@ -44,24 +43,6 @@ public class map {
 		}
 		return result;
 	}
-//	[MetaLibraryMethod]
-//	public static Map trimStart() {
-//		Map map=(Map)arg[new Integer(1)];
-//		object obj=arg[new Integer(2)];
-//
-//		Map result=new Map();
-//		int counter=1;
-//		foreach(object o in map.IntKeyValues) {
-//			if(obj.Equals(o)) {
-//				result[new Integer(counter)]=o;
-//				counter++;
-//			}
-//			else {
-//				break;
-//			}
-//		}
-//		return result;
-//	}
 	public static int countStart(Map map,object obj) {
 		int count=0;
 		foreach(object o in map.IntKeyValues) {

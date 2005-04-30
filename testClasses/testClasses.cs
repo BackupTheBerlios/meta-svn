@@ -59,20 +59,11 @@ namespace testClasses
 		}
 	}
 	public class NamedNoConversion:TestClass { //refactor
-//		[MetaMethod("(1,y,2)")]
-		//[MetaLibraryMethod]
 		public NamedNoConversion(Map arg) {
-			//Map arg=(Map)Interpreter.Arg;
 			Map def=new Map();
-//<<<<<<< .mine
 			def[new Integer(1)]=new Map("null");
 			def[new Map("y")]=new Map("null");
 			def[new Map("p2")]=new Map("null");
-//=======
-//			def[new Integer(1)]=Interpreter.StringToMap("null");
-//			def[Interpreter.StringToMap("y")]=Interpreter.StringToMap("null");
-//			def[Interpreter.StringToMap("p2")]=Interpreter.StringToMap("null");
-//>>>>>>> .r97
 			arg=(Map)Interpreter.Merge(def,arg);
 			this.x=(string)((Map)arg[new Integer(1)]).GetDotNetString();
 			this.y=(string)((Map)arg[new Map("y")]).GetDotNetString();
@@ -80,71 +71,16 @@ namespace testClasses
 		}
 		[MetaLibraryMethod]
 		public string Concatenate(Map arg) {
-			//Map arg=(Map)Interpreter.Arg;
 			Map def=new Map();
-			//<<<<<<< .mine
 			def[new Integer(1)]=new Map("null");
 			def[new Map("b")]=new Map("null");
 			def[new Map("c")]=new Map("null");
-			////=======
-			//			def[new Integer(1)]=Interpreter.StringToMap("null");
-			//			def[Interpreter.StringToMap("b")]=Interpreter.StringToMap("null");
-			//			def[Interpreter.StringToMap("c")]=Interpreter.StringToMap("null");
-			//>>>>>>> .r97
 			arg=(Map)Interpreter.Merge(def,arg);
 			return (string)((Map)arg[new Integer(1)]).GetDotNetString()+
 				(string)((Map)arg[new Map("b")]).GetDotNetString()+
 				(string)((Map)arg[new Map("c")]).GetDotNetString()+
 				this.x+this.y+this.z;
 		}
-//		[MetaLibraryMethod]
-//		public string Concatenate() {
-//			Map arg=(Map)Interpreter.Arg;
-//			Map def=new Map();
-////<<<<<<< .mine
-//			def[new Integer(1)]=new Map("null");
-//			def[new Map("b")]=new Map("null");
-//			def[new Map("c")]=new Map("null");
-//////=======
-////			def[new Integer(1)]=Interpreter.StringToMap("null");
-////			def[Interpreter.StringToMap("b")]=Interpreter.StringToMap("null");
-////			def[Interpreter.StringToMap("c")]=Interpreter.StringToMap("null");
-////>>>>>>> .r97
-//			arg=(Map)Interpreter.Merge(def,arg);
-//			return (string)((Map)arg[new Integer(1)]).GetDotNetString()+
-//				(string)((Map)arg[new Map("b")]).GetDotNetString()+
-//				(string)((Map)arg[new Map("c")]).GetDotNetString()+
-//				this.x+this.y+this.z;
-//		}
-		//		[MetaMethod("(1,b,c)")]
-//		public string Concatenate() {
-//			Map arg=(Map)Interpreter.Arg;
-//			Map def=new Map();
-//			def[1]="null";
-//			def["b"]="null";
-//			def["c"]="null";
-//			arg=(Map)Interpreter.Merge(def,arg);
-//			return (string)arg[1]+(string)arg["b"]+(string)arg["c"]+this.x+this.y+this.z;
-//		}
-//		public NamedNoConversion(Map arg) {
-//			Map def=new Map();
-//			def[1]="null";
-//			def["y"]="null";
-//			def["p2"]="null";
-//			arg=(Map)Interpreter.MergeTwo(def,arg);
-//			this.x=(string)arg[1];
-//			this.y=(string)arg["y"];
-//			this.z=(string)arg["p2"];
-//		}
-////		[MetaMethod("(1,b,c)")]
-//		public string Concatenate(Map arg) {
-//			Map def=new Map();
-//			def[1]="null";
-//			def["b"]="null";
-//			def["c"]="null";
-//			arg=(Map)Interpreter.MergeTwo(def,arg);
-//			return (string)arg[1]+(string)arg["b"]+(string)arg["c"]+this.x+this.y+this.z;
-//		}
 	}
 	public class IndexerNoConversion:TestClass {
 		public string this[string a] {
