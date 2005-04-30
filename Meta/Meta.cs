@@ -35,7 +35,6 @@ using System.Threading;
 using System.Windows.Forms;
 using System.GAC;
 using System.Text;
-using Meta.Parser;
 
 namespace Meta {
 	namespace Execution {
@@ -753,22 +752,13 @@ namespace Meta {
 //				return parser.getAST();
 //			}
 			public static AST ParseToAst(string fileName)  {
-				StreamReader file=new StreamReader(fileName);
-				TextReader reader=new StringReader(Environment.NewLine+file.ReadToEnd()+Environment.NewLine);
-				file.Close();
-				MetaLexer lexer=new MetaLexer(reader);
-				lexer.setLine(0); // hack to compensate for the newline added above
-				Meta.Parser.MetaParser parser=new Meta.Parser.MetaParser( 
-					new IndentationStream(lexer));
-				parser.map();
-//		// the name of the file to read
-//		System.String fileName = args[0];
-//		
+////		// the name of the file to read
+////		System.String fileName = args[0];
+////		
 //		// construct the special shared input state that is needed
 //		// in order to annotate ExtentTokens properly
 //		ExtentLexerSharedInputState lsis = new ExtentLexerSharedInputState(fileName);
-//		
-//		// construct the lexer
+//	// construct the lexer
 //		AddLexer lex = new AddLexer(lsis);
 //		
 //		// tell the lexer the token class that we want
@@ -790,9 +780,57 @@ namespace Meta {
 //		AST ast = par.getAST();
 //		
 //		// interpret the tree
-//		aint.topLevel(ast);
+//		aint.topLevel(ast);	
 
-				return parser.getAST();
+				// TODO: Add the newlines here somewhere (or do this in IndentationStream?, somewhat easier and more logical maybe), but not possible, must be before lexer
+				// construct the special shared input state that is needed
+				// in order to annotate ExtentTokens properly
+				FileStream file=new FileStream(fileName,FileMode.Open);
+				ExtentLexerSharedInputState lsis = new ExtentLexerSharedInputState(file); 
+				// construct the lexer
+				MetaLexer lex = new MetaLexer(lsis);
+		
+				// tell the lexer the token class that we want
+				lex.setTokenObjectClass("ValueExtentToken");
+		
+				// construct the parser
+				MetaParser par = new MetaParser(new IndentationStream(lex));
+		
+				// tell the parser the AST class that we want
+				par.setASTNodeClass("TokenAST");//
+	//			par.getASTFactory().setASTNodeType("TokenAST");
+		
+//				// construct the interpreter (which is a TreeParser)
+//				AddInterpreter aint = new AddInterpreter();
+//		
+//				// parse the file
+//				par.topLevel();
+//		
+//				// get the tree that resulted from parsing
+//				AST ast = par.getAST();
+//		
+//				// interpret the tree
+//				aint.topLevel(ast);	
+
+////				lexer.setLine(0); // hack to compensate for the newline added above
+//				Meta.Parser.MetaParser parser=new Meta.Parser.MetaParser( 
+//					new IndentationStream(lex));
+				par.map();
+				AST ast=par.getAST();
+				file.Close();
+				return ast;
+//				StreamReader file=new StreamReader(fileName);
+//				TextReader reader=new StringReader(Environment.NewLine+file.ReadToEnd()+Environment.NewLine);
+//				file.Close();
+//				MetaLexer lexer=new MetaLexer(reader);
+//				lexer.setLine(0); // hack to compensate for the newline added above
+//				Meta.Parser.MetaParser parser=new Meta.Parser.MetaParser( 
+//					new IndentationStream(lexer));
+//				parser.map();
+//		
+//	
+//
+//				return parser.getAST();
 			}
 
 			public static Map Arg {
@@ -1206,12 +1244,12 @@ namespace Meta {
 		public abstract class KeyException:MetaException {
 			public KeyException(object key) {
 				message="Key ";
-//				if(key is Map && ((Map)key).IsString) {
-//					text+=((Map)key).GetDotNetString();
-//				}
-//				else {
+				if(key is Map && ((Map)key).IsString) {
+					message+=((Map)key).GetDotNetString();
+				}
+				else {
 					message+=key;
-//				}
+				}
 				message+=" not found.";
 			}
 		}
@@ -1668,6 +1706,15 @@ namespace Meta {
 			}
 			private bool isHashCashed=false;
 			private int hash;
+			int line=0;
+			public int Line {
+				get {
+					return line;
+				}
+				set {
+					line=value;
+				}
+			}
 			public Map(string text):this(new StringStrategy(text)) {
 			}
 			public Map(MapStrategy table) {
@@ -2419,6 +2466,7 @@ namespace Meta {
 		public class IndentationStream: TokenStream {
 			public IndentationStream(TokenStream stream)  {
 				this.stream=stream;
+				AddIndentationTokensToGetToLevel(0,new Token());
 			}
 			public Token nextToken()  {
 				if(streamBuffer.Count==0)  {
@@ -2486,38 +2534,38 @@ namespace Meta {
 			protected TokenStream stream;
 			protected int presentIndentationLevel=-1;
 		}
-		public class LineNumberAST:CommonAST {
-			private int lineNumber;
-			public LineNumberAST() { }
-			public LineNumberAST(Token tok):base(tok){}
-			public override void initialize(AST t) {
-				base.initialize(t);
-				if (t.GetType().Name.Equals("LineNumberAST")) {
-					LineNumberAST t2 = (LineNumberAST)t;
-					lineNumber = t2.lineNumber;
-				}
-			}
-			//		public void initialize(AST t) {
-			//			super.initialize(t);
-			//			if (t.getClass().getName().compareTo("LineNumberAST") == 0) {
-			//				LineNumberAST t2 = (LineNumberAST)t;
-			//				lineNumber = t2.lineNumber;
-			//			}
-			//		}
-			public override void initialize(Token tok) {
-				base.initialize(tok);
-				lineNumber = tok.getLine(); /* store the line number from the token */
-			}
-			//		public void initialize(Token tok) {
-			//			super.initialize(tok);
-			//			lineNumber = tok.getLine(); /* store the line number from the token */
-			//		}
-
-			/* use this function in your tree walker to get the token's line number */
-			public int getLineNumber() {
-				return lineNumber;
-			}
-		}
+//		public class LineNumberAST:CommonAST {
+//			private int lineNumber;
+//			public LineNumberAST() { }
+//			public LineNumberAST(Token tok):base(tok){}
+//			public override void initialize(AST t) {
+//				base.initialize(t);
+//				if (t.GetType().Name.Equals("LineNumberAST")) {
+//					LineNumberAST t2 = (LineNumberAST)t;
+//					lineNumber = t2.lineNumber;
+//				}
+//			}
+//			//		public void initialize(AST t) {
+//			//			super.initialize(t);
+//			//			if (t.getClass().getName().compareTo("LineNumberAST") == 0) {
+//			//				LineNumberAST t2 = (LineNumberAST)t;
+//			//				lineNumber = t2.lineNumber;
+//			//			}
+//			//		}
+//			public override void initialize(Token tok) {
+//				base.initialize(tok);
+//				lineNumber = tok.getLine(); /* store the line number from the token */
+//			}
+//			//		public void initialize(Token tok) {
+//			//			super.initialize(tok);
+//			//			lineNumber = tok.getLine(); /* store the line number from the token */
+//			//		}
+//
+//			/* use this function in your tree walker to get the token's line number */
+//			public int getLineNumber() {
+//				return lineNumber;
+//			}
+//		}
 	}
 	namespace TestingFramework {
 		public interface ISerializeSpecial {
@@ -2600,16 +2648,22 @@ namespace Meta {
 				}
 				string t="";
 				ArrayList members=new ArrayList();
+				if(serialize is ValueExtentToken) {
+					int asdf=0;
+				}
 				members.AddRange(serialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
 				members.AddRange(serialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
-				foreach(string method in methods) {
-					members.Add(serialize.GetType().GetMethod(method));
+				foreach(string methodName in methods) {
+					MethodInfo method=serialize.GetType().GetMethod(methodName,BindingFlags.Public|BindingFlags.Instance);
+					if(method!=null) { /* Only add method to members if it really exists, this isn't sure because methods are supplied per test not per class. */
+						members.Add(method);
+					}
 				}
 				members.Sort(new CompareMemberInfos());
 				foreach(MemberInfo member in members) {
 					if(member.Name!="Item") {
 						if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) {
-							if(!serialize.GetType().Namespace.Equals("System.Windows.Forms")) {
+							if(serialize.GetType().Namespace==null ||!serialize.GetType().Namespace.Equals("System.Windows.Forms")) { // ugly hack to avoid some srange behaviour of some classes in System.Windows.Forms
 								object val=serialize.GetType().InvokeMember(member.Name,BindingFlags.Public
 									|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
 									|BindingFlags.InvokeMethod,null,serialize,null);
@@ -2627,7 +2681,13 @@ namespace Meta {
 		}
 		internal class CompareMemberInfos:IComparer {
 			public int Compare(object first,object second) {
-				return ((MemberInfo)first).Name.CompareTo(((MemberInfo)second).Name);
+				if(first==null || second==null || ((MemberInfo)first).Name==null || ((MemberInfo)second).Name==null) {
+					int asdf=0;
+					return 0;
+				}
+				else {
+					return ((MemberInfo)first).Name.CompareTo(((MemberInfo)second).Name);
+				}
 			}
 		}
 		[AttributeUsage(AttributeTargets.Field|AttributeTargets.Property)]

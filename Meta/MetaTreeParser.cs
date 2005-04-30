@@ -60,7 +60,7 @@ namespace Meta.Parser
 {
 		Map result;
 		
-		AST expression_AST_in = (AST)_t;
+		TokenAST expression_AST_in = (TokenAST)_t;
 		
 		result=null;
 		
@@ -114,7 +114,7 @@ namespace Meta.Parser
 {
 		Map result;
 		
-		AST call_AST_in = (AST)_t;
+		TokenAST call_AST_in = (TokenAST)_t;
 		
 		result=new Map();
 		Map call=new Map();
@@ -123,8 +123,8 @@ namespace Meta.Parser
 		
 		
 		AST __t137 = _t;
-		AST tmp20_AST_in = _t;
-		match(_t,CALL);
+		TokenAST tmp20_AST_in = (_t==ASTNULL) ? null : (TokenAST)_t;
+		match((AST)_t,CALL);
 		_t = _t.getFirstChild();
 		{
 			delayed=expression(_t);
@@ -149,16 +149,17 @@ namespace Meta.Parser
 {
 		Map result;
 		
-		AST map_AST_in = (AST)_t;
+		TokenAST map_AST_in = (TokenAST)_t;
 		
 		result=new Map();//map_AST_in.getLineNumber());
 		Map statements=new Map();
 		int counter=1;
+		int x=((TokenAST)_t).Token.getLine();
 		
 		
 		AST __t132 = _t;
-		AST tmp21_AST_in = _t;
-		match(_t,MAP);
+		TokenAST tmp21_AST_in = (_t==ASTNULL) ? null : (TokenAST)_t;
+		match((AST)_t,MAP);
 		_t = _t.getFirstChild();
 		{    // ( ... )*
 			for (;;)
@@ -170,10 +171,11 @@ namespace Meta.Parser
 					
 					Map key=null;
 					Map val=null;
+					statements.Line=x;
 					
 					AST __t134 = _t;
-					AST tmp22_AST_in = _t;
-					match(_t,STATEMENT);
+					TokenAST tmp22_AST_in = (_t==ASTNULL) ? null : (TokenAST)_t;
+					match((AST)_t,STATEMENT);
 					_t = _t.getFirstChild();
 					key=select(_t);
 					_t = retTree_;
@@ -210,7 +212,7 @@ _loop135_breakloop:			;
 {
 		Map result;
 		
-		AST select_AST_in = (AST)_t;
+		TokenAST select_AST_in = (TokenAST)_t;
 		
 		result=new Map();
 		Map selection=new Map();
@@ -219,8 +221,8 @@ _loop135_breakloop:			;
 		
 		
 		AST __t141 = _t;
-		AST tmp23_AST_in = _t;
-		match(_t,SELECT_KEY);
+		TokenAST tmp23_AST_in = (_t==ASTNULL) ? null : (TokenAST)_t;
+		match((AST)_t,SELECT_KEY);
 		_t = _t.getFirstChild();
 		{
 			{ // ( ... )+
@@ -261,14 +263,14 @@ _loop144_breakloop:			;
 {
 		Map result;
 		
-		AST literal_AST_in = (AST)_t;
-		AST token = null;
+		TokenAST literal_AST_in = (TokenAST)_t;
+		TokenAST token = null;
 		
 		result=new Map();
 		
 		
-		token = _t;
-		match(_t,LITERAL);
+		token = (_t==ASTNULL) ? null : (TokenAST)_t;
+		match((AST)_t,LITERAL);
 		_t = _t.getNextSibling();
 		
 		result[Literal.literalString]=new Map(token.getText());
@@ -281,15 +283,15 @@ _loop144_breakloop:			;
 {
 		Map result;
 		
-		AST delayed_AST_in = (AST)_t;
+		TokenAST delayed_AST_in = (TokenAST)_t;
 		
 		result=new Map();
 		Map delayed;
 		
 		
 		AST __t147 = _t;
-		AST tmp24_AST_in = _t;
-		match(_t,FUNCTION);
+		TokenAST tmp24_AST_in = (_t==ASTNULL) ? null : (TokenAST)_t;
+		match((AST)_t,FUNCTION);
 		_t = _t.getFirstChild();
 		delayed=expression(_t);
 		_t = retTree_;
@@ -300,6 +302,11 @@ _loop144_breakloop:			;
 		
 		retTree_ = _t;
 		return result;
+	}
+	
+	public new TokenAST getAST()
+	{
+		return (TokenAST) returnAST;
 	}
 	
 	

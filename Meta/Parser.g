@@ -193,6 +193,8 @@ class MetaParser extends Parser;
 options {
 	buildAST = true;
 	k=1;
+	ASTLabelType = "TokenAST";
+
   defaultErrorHandler=false;
 }
 expression:
@@ -241,11 +243,11 @@ statement:
             //Counters.counter++;
             Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 			      Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
-				    CommonAST currentAst=new CommonAST(currentToken);
+				    TokenAST currentAst=new TokenAST(currentToken);
 				    currentAst.setText("this");
 
 				    Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
-				    CommonAST autokeyAst=new CommonAST(autokeyToken);
+				    TokenAST autokeyAst=new TokenAST(autokeyToken);
 				    autokeyAst.setText(Counters.autokey.Peek().ToString());
             #statement=#([STATEMENT],#([SELECT_KEY],currentAst,autokeyAst),#statement);
         }
@@ -256,11 +258,11 @@ statement:
         {
             Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 			      Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
-				    CommonAST currentAst=new CommonAST(currentToken);
+				    TokenAST currentAst=new TokenAST(currentToken);
 				    currentAst.setText("this");
 
 				    Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
-				    CommonAST autokeyAst=new CommonAST(autokeyToken);
+				    TokenAST autokeyAst=new TokenAST(autokeyToken);
 				    autokeyAst.setText(Counters.autokey.Peek().ToString());
             #statement=#([STATEMENT],#([SELECT_KEY],currentAst,autokeyAst),#statement);
         }
@@ -296,7 +298,7 @@ select:
     (
       POINT! lookup
     )*
-    STAR
+    STAR // TODO: remove STAR completely
   )=>
   (
     lookup
@@ -307,11 +309,11 @@ select:
     {
       Counters.autokey.Push((int)Counters.autokey.Pop()+1);
 			Token currentToken=new Token(MetaLexerTokenTypes.LITERAL);
-			CommonAST currentAst=new CommonAST(currentToken);
+			TokenAST currentAst=new TokenAST(currentToken);
 			currentAst.setText("search");
 
 			//Token autokeyToken=new Token(MetaLexerTokenTypes.LITERAL);
-			//CommonAST autokeyAst=new CommonAST(autokeyToken);
+			//TokenAST autokeyAst=new TokenAST(autokeyToken);
 			//autokeyAst.setText(Counters.autokey.Peek().ToString());
       #select=#([SELECT_KEY],currentAst,#select);
       //#select=#([SELECT_KEY],#select);
@@ -358,7 +360,7 @@ literalKey:
 class MetaTreeParser extends TreeParser;
 options {
     defaultErrorHandler=false;
-    //ASTLabelType = "CommonAST";
+    ASTLabelType = "TokenAST";
 }
 expression
   returns[Map result]
@@ -378,12 +380,14 @@ map
     result=new Map();//map_AST_in.getLineNumber());
     Map statements=new Map();
     int counter=1;
+    int x=((TokenAST)_t).Token.getLine();
   }:
   #(MAP
     (
       {
         Map key=null;
         Map val=null;
+        statements.Line=x;
       }
       #(STATEMENT 
           key=select

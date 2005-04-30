@@ -2,7 +2,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "unicodeText"
   Value (Map):
-    "aba"
+    "äaba"
 Entry (DictionaryEntry)
   Key (Integer):
     "1"
