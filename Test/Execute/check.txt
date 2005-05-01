@@ -1135,15 +1135,6 @@ Entry (DictionaryEntry)
                                                       Key (Map):
                                                         "literal"
                                                       Value (Map):
-                                                        "this"
-                                                Entry (DictionaryEntry)
-                                                  Key (Integer):
-                                                    "2"
-                                                  Value (Map):
-                                                    Entry (DictionaryEntry)
-                                                      Key (Map):
-                                                        "literal"
-                                                      Value (Map):
                                                         "1"
                                         Entry (DictionaryEntry)
                                           Key (Map):
@@ -1174,15 +1165,6 @@ Entry (DictionaryEntry)
                                                       Key (Map):
                                                         "literal"
                                                       Value (Map):
-                                                        "this"
-                                                Entry (DictionaryEntry)
-                                                  Key (Integer):
-                                                    "2"
-                                                  Value (Map):
-                                                    Entry (DictionaryEntry)
-                                                      Key (Map):
-                                                        "literal"
-                                                      Value (Map):
                                                         "2"
                                         Entry (DictionaryEntry)
                                           Key (Map):
@@ -1208,15 +1190,6 @@ Entry (DictionaryEntry)
                                                 Entry (DictionaryEntry)
                                                   Key (Integer):
                                                     "1"
-                                                  Value (Map):
-                                                    Entry (DictionaryEntry)
-                                                      Key (Map):
-                                                        "literal"
-                                                      Value (Map):
-                                                        "this"
-                                                Entry (DictionaryEntry)
-                                                  Key (Integer):
-                                                    "2"
                                                   Value (Map):
                                                     Entry (DictionaryEntry)
                                                       Key (Map):
@@ -1420,15 +1393,6 @@ Entry (DictionaryEntry)
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "this"
-                    Entry (DictionaryEntry)
-                      Key (Integer):
-                        "2"
                       Value (Map):
                         Entry (DictionaryEntry)
                           Key (Map):

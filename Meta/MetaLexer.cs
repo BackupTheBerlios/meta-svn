@@ -69,7 +69,7 @@ namespace Meta.Parser
      */
     protected override Token makeToken (int t)
     {
-        ExtentToken tok = (ExtentToken) base.makeToken (t);
+        MetaToken tok = (MetaToken) base.makeToken (t);
         ((ExtentLexerSharedInputState) inputState).annotate (tok);
         return tok;
     }

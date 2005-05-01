@@ -60,7 +60,7 @@ namespace Meta.Parser
 {
 		Map result;
 		
-		TokenAST expression_AST_in = (TokenAST)_t;
+		MetaAST expression_AST_in = (MetaAST)_t;
 		
 		result=null;
 		
@@ -114,16 +114,17 @@ namespace Meta.Parser
 {
 		Map result;
 		
-		TokenAST call_AST_in = (TokenAST)_t;
+		MetaAST call_AST_in = (MetaAST)_t;
 		
 		result=new Map();
+		result.Extent=call_AST_in.Extent;
 		Map call=new Map();
 		Map delayed=new Map();
 		Map argument=new Map();
 		
 		
 		AST __t137 = _t;
-		TokenAST tmp20_AST_in = (_t==ASTNULL) ? null : (TokenAST)_t;
+		MetaAST tmp20_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,CALL);
 		_t = _t.getFirstChild();
 		{
@@ -149,16 +150,16 @@ namespace Meta.Parser
 {
 		Map result;
 		
-		TokenAST map_AST_in = (TokenAST)_t;
+		MetaAST map_AST_in = (MetaAST)_t;
 		
 		result=new Map();//map_AST_in.getLineNumber());
+		result.Extent=map_AST_in.Extent;
 		Map statements=new Map();
 		int counter=1;
-		int x=((TokenAST)_t).Token.getLine();
 		
 		
 		AST __t132 = _t;
-		TokenAST tmp21_AST_in = (_t==ASTNULL) ? null : (TokenAST)_t;
+		MetaAST tmp21_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,MAP);
 		_t = _t.getFirstChild();
 		{    // ( ... )*
@@ -171,10 +172,9 @@ namespace Meta.Parser
 					
 					Map key=null;
 					Map val=null;
-					statements.Line=x;
 					
 					AST __t134 = _t;
-					TokenAST tmp22_AST_in = (_t==ASTNULL) ? null : (TokenAST)_t;
+					MetaAST tmp22_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 					match((AST)_t,STATEMENT);
 					_t = _t.getFirstChild();
 					key=select(_t);
@@ -183,6 +183,7 @@ namespace Meta.Parser
 					_t = retTree_;
 					
 					Map statement=new Map();
+												// TODO: Add Extent to statements, too?
 										statement[Statement.keyString]=key;
 										statement[Statement.valueString]=val;
 										statements[new Integer(counter)]=statement;
@@ -212,16 +213,17 @@ _loop135_breakloop:			;
 {
 		Map result;
 		
-		TokenAST select_AST_in = (TokenAST)_t;
+		MetaAST select_AST_in = (MetaAST)_t;
 		
 		result=new Map();
+		result.Extent=select_AST_in.Extent;
 		Map selection=new Map();
 		Map key=null;
 		int counter=1;
 		
 		
 		AST __t141 = _t;
-		TokenAST tmp23_AST_in = (_t==ASTNULL) ? null : (TokenAST)_t;
+		MetaAST tmp23_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SELECT_KEY);
 		_t = _t.getFirstChild();
 		{
@@ -263,13 +265,14 @@ _loop144_breakloop:			;
 {
 		Map result;
 		
-		TokenAST literal_AST_in = (TokenAST)_t;
-		TokenAST token = null;
+		MetaAST literal_AST_in = (MetaAST)_t;
+		MetaAST token = null;
 		
 		result=new Map();
+		result.Extent=literal_AST_in.Extent;
 		
 		
-		token = (_t==ASTNULL) ? null : (TokenAST)_t;
+		token = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,LITERAL);
 		_t = _t.getNextSibling();
 		
@@ -283,14 +286,15 @@ _loop144_breakloop:			;
 {
 		Map result;
 		
-		TokenAST delayed_AST_in = (TokenAST)_t;
+		MetaAST delayed_AST_in = (MetaAST)_t;
 		
 		result=new Map();
+		result.Extent=delayed_AST_in.Extent;
 		Map delayed;
 		
 		
 		AST __t147 = _t;
-		TokenAST tmp24_AST_in = (_t==ASTNULL) ? null : (TokenAST)_t;
+		MetaAST tmp24_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,FUNCTION);
 		_t = _t.getFirstChild();
 		delayed=expression(_t);
@@ -304,9 +308,9 @@ _loop144_breakloop:			;
 		return result;
 	}
 	
-	public new TokenAST getAST()
+	public new MetaAST getAST()
 	{
-		return (TokenAST) returnAST;
+		return (MetaAST) returnAST;
 	}
 	
 	

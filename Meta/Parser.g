@@ -52,7 +52,7 @@ tokens
      */
     protected override Token makeToken (int t)
     {
-        ExtentToken tok = (ExtentToken) base.makeToken (t);
+        MetaToken tok = (MetaToken) base.makeToken (t);
         ((ExtentLexerSharedInputState) inputState).annotate (tok);
         return tok;
     }
@@ -135,7 +135,7 @@ LITERAL
         )
    ;
   
-protected
+protected // TODO: Remove
 LITERAL_END:
   {LA(2)=='@'}? "\"@"!;
 
@@ -153,7 +153,7 @@ LINE
   {
     const int endOfFileValue=65535;
   }:
-  (NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?) => // TODO: Get rid of endOfFile
+  (NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?) => // TODO: Get rid of endOfFile, or remove the one newline?
    NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?
   {
     _ttype=Token.SKIP;
@@ -207,7 +207,7 @@ class MetaParser extends Parser;
 options {
 	buildAST = true;
 	k=1;
-	ASTLabelType = "TokenAST";
+	ASTLabelType = "MetaAST";
 
   defaultErrorHandler=false;
 }
@@ -255,15 +255,21 @@ statement:
         expression
         {
             //Counters.counter++;
-            Counters.autokey.Push((int)Counters.autokey.Pop()+1);
-			      Token currentToken=new ExtentToken(MetaLexerTokenTypes.LITERAL);
-				    TokenAST currentAst=new TokenAST(currentToken);
-				    currentAst.setText("this");
+            Counters.autokey.Push((int)Counters.autokey.Pop()+1); 
+			      /*Token currentToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
+				    MetaAST currentAst=new MetaAST(currentToken);
+				    currentAst.setText("this");*/ // Should be unnecessary now
 
-				    Token autokeyToken=new ExtentToken(MetaLexerTokenTypes.LITERAL);
-				    TokenAST autokeyAst=new TokenAST(autokeyToken);
+					// TODO: Simplify!!, use astFactory
+				    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
+				    autokeyToken.setLine(#statement.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+				    autokeyToken.setColumn(#statement.Extent.startColumn); 
+				    autokeyToken.FileName=#statement.Extent.fileName;
+				    autokeyToken.EndLine=#statement.Extent.endLine;
+				    autokeyToken.EndColumn=#statement.Extent.endColumn;
+				    MetaAST autokeyAst=new MetaAST(autokeyToken);
 				    autokeyAst.setText(Counters.autokey.Peek().ToString());
-            #statement=#([STATEMENT],#([SELECT_KEY],currentAst,autokeyAst),#statement);
+            #statement=#([STATEMENT],#([SELECT_KEY],autokeyAst),#statement);
         }
       )
       |
@@ -271,14 +277,19 @@ statement:
         expression
         {
             Counters.autokey.Push((int)Counters.autokey.Pop()+1);
-			      Token currentToken=new ExtentToken(MetaLexerTokenTypes.LITERAL);
-				    TokenAST currentAst=new TokenAST(currentToken);
-				    currentAst.setText("this");
+			      /*Token currentToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
+				    MetaAST currentAst=new MetaAST(currentToken);
+				    currentAst.setText("this");*/ // not necessary anymore
 
-				    Token autokeyToken=new ExtentToken(MetaLexerTokenTypes.LITERAL);
-				    TokenAST autokeyAst=new TokenAST(autokeyToken);
+				    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
+				    				    autokeyToken.setLine(#statement.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+				    autokeyToken.setColumn(#statement.Extent.startColumn);
+				    autokeyToken.FileName=#statement.Extent.fileName;
+				    autokeyToken.EndLine=#statement.Extent.endLine;
+				    autokeyToken.EndColumn=#statement.Extent.endColumn;
+				    MetaAST autokeyAst=new MetaAST(autokeyToken);
 				    autokeyAst.setText(Counters.autokey.Peek().ToString());
-            #statement=#([STATEMENT],#([SELECT_KEY],currentAst,autokeyAst),#statement);
+            #statement=#([STATEMENT],#([SELECT_KEY],autokeyAst),#statement);
         }
       )
      
@@ -322,14 +333,14 @@ select:
     STAR!
     {
       Counters.autokey.Push((int)Counters.autokey.Pop()+1);
-			Token currentToken=new ExtentToken(MetaLexerTokenTypes.LITERAL); // TODO: add extent information here, from another token or whatever, maybe it's actually not even needed?, or set some special extent values to show
+			Token currentToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: add extent information here, from another token or whatever, maybe it's actually not even needed?, or set some special extent values to show
 			// that this token has no real source code equivalent. Line info is still important, though, or
 			// at least useful out of implementation concerns
-			TokenAST currentAst=new TokenAST(currentToken);
+			MetaAST currentAst=new MetaAST(currentToken);
 			currentAst.setText("search");
 
-			//Token autokeyToken=new ExtentToken(MetaLexerTokenTypes.LITERAL);
-			//TokenAST autokeyAst=new TokenAST(autokeyToken);
+			//Token autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
+			//MetaAST autokeyAst=new MetaAST(autokeyToken);
 			//autokeyAst.setText(Counters.autokey.Peek().ToString());
       #select=#([SELECT_KEY],currentAst,#select);
       //#select=#([SELECT_KEY],#select);
@@ -366,7 +377,8 @@ lookup:
 literalKey:
   token:LITERAL_KEY
   {
-    #literalKey=#([LITERAL,token.getText()]);
+	token_AST.setType(LITERAL); // ugly hack
+    //#literalKey=#([LITERAL,token.getText()]);
   };
 
 {
@@ -376,7 +388,7 @@ literalKey:
 class MetaTreeParser extends TreeParser;
 options {
     defaultErrorHandler=false;
-    ASTLabelType = "TokenAST";
+    ASTLabelType = "MetaAST";
 }
 expression
   returns[Map result]
@@ -394,22 +406,22 @@ map
   returns[Map result]
   {
     result=new Map();//map_AST_in.getLineNumber());
+    result.Extent=#map.Extent;
     Map statements=new Map();
     int counter=1;
-    int x=((TokenAST)_t).Token.getLine();
   }:
   #(MAP
     (
       {
         Map key=null;
         Map val=null;
-        statements.Line=x;
       }
-      #(STATEMENT 
+      #(STATEMENT		// TODO: make statement ist own subrule????
           key=select
           val=expression
         {
           Map statement=new Map();
+							// TODO: Add Extent to statements, too?
 					statement[Statement.keyString]=key;
 					statement[Statement.valueString]=val;
 					statements[new Integer(counter)]=statement;
@@ -426,6 +438,7 @@ call
   returns [Map result]
   {
     result=new Map();
+    result.Extent=#call.Extent;
     Map call=new Map();
     Map delayed=new Map();
     Map argument=new Map();
@@ -448,6 +461,7 @@ select
   returns [Map result]
   {
     result=new Map();
+    result.Extent=#select.Extent;
     Map selection=new Map();
     Map key=null;
     int counter=1;
@@ -472,6 +486,7 @@ literal
   returns [Map result]
   {
     result=new Map();
+    result.Extent=#literal.Extent;
   }:
   token:LITERAL
   {
@@ -483,6 +498,7 @@ delayed
     returns[Map result]
     {
         result=new Map();
+        result.Extent=#delayed.Extent;
         Map delayed;
     }:
     #(FUNCTION delayed=expression)

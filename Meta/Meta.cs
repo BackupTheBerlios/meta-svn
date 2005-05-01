@@ -38,9 +38,21 @@ using System.Text;
 
 namespace Meta {
 	namespace Execution {
-		public interface IExpression {
-			object Evaluate(IMap parent);
+		public abstract class Expression {
+			public abstract object Evaluate(IMap parent);
+			Extent extent;
+			public Extent Extent {
+				get {
+					return extent;
+				}
+				set {
+					extent=value;
+				}
+			}
 		}
+//		public interface Expression {
+//			object Evaluate(IMap parent);
+//		}
 		public class Statement {
 			public static readonly Map keyString=new Map("key");
 			public static readonly Map valueString=new Map("value");
@@ -49,13 +61,13 @@ namespace Meta {
 			}
 			public Statement(Map code) {
 				this.keyExpression=(Select)((Map)code[keyString]).Compile();
-				this.valueExpression=(IExpression)((Map)code[valueString]).Compile();
+				this.valueExpression=(Expression)((Map)code[valueString]).Compile();
 			}
 			public Select keyExpression;
-			public IExpression valueExpression;
+			public Expression valueExpression;
 		}
-		public class Call: IExpression {
-			public object Evaluate(IMap parent) {
+		public class Call: Expression {
+			public override object Evaluate(IMap parent) {
 				return ((ICallable)callableExpression.Evaluate(parent)).Call(
 					((IMap)argumentExpression.Evaluate(parent)).Clone());
 			}
@@ -64,14 +76,14 @@ namespace Meta {
 			public static readonly Map argumentString=new Map("argument");
 			public Call(Map obj) {
 				Map expression=(Map)obj[callString];
-				this.callableExpression=(IExpression)((Map)expression[functionString]).Compile();
-				this.argumentExpression=(IExpression)((Map)expression[argumentString]).Compile();
+				this.callableExpression=(Expression)((Map)expression[functionString]).Compile();
+				this.argumentExpression=(Expression)((Map)expression[argumentString]).Compile();
 			}
-			public IExpression argumentExpression;
-			public IExpression callableExpression;
+			public Expression argumentExpression;
+			public Expression callableExpression;
 		}
-		public class Delayed: IExpression {
-			public object Evaluate(IMap parent) {
+		public class Delayed: Expression {
+			public override object Evaluate(IMap parent) {
 				return delayed;
 			}
 			public static readonly Map delayedString=new Map("delayed");
@@ -80,8 +92,8 @@ namespace Meta {
 			}
 			public Map delayed;
 		}
-		public class Program: IExpression {
-			public object Evaluate(IMap parent) {
+		public class Program: Expression {
+			public override object Evaluate(IMap parent) {
 				Map local=new Map();
 				return Evaluate(parent,local);
 				//				local.Parent=parent;
@@ -106,7 +118,7 @@ namespace Meta {
 				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 				return result;
 			}
-			//			public object Evaluate(IMap parent) {
+			//			public override object Evaluate(IMap parent) {
 			//				Map local=new Map();
 			//				local.Parent=parent;
 			//				Interpreter.callers.Add(local);
@@ -126,8 +138,8 @@ namespace Meta {
 			}
 			public readonly ArrayList statements=new ArrayList();
 		}
-		public class Literal: IExpression {
-			public object Evaluate(IMap parent) {
+		public class Literal: Expression {
+			public override object Evaluate(IMap parent) {
 				return literal;
 			}
 			public static readonly Map literalString=new Map("literal");
@@ -136,17 +148,17 @@ namespace Meta {
 			}
 			public object literal=null;
 		}
-		public class Select: IExpression { 
-			public object Evaluate(IMap parent) {
+		public class Select: Expression { 
+			public override object Evaluate(IMap parent) {
 				ArrayList keysToBeSelected=new ArrayList();
-				foreach(IExpression expression in expressions) {
+				foreach(Expression expression in expressions) {
 					keysToBeSelected.Add(expression.Evaluate(parent));
 				}
 				return SearchAndSelectKeysInCurrentMap(keysToBeSelected,true,true);
 			}
 			public void Assign(IMap current,object valueToBeAssigned) { 
 				ArrayList keysToBeSelected=new ArrayList();
-				foreach(IExpression expression in expressions) {
+				foreach(Expression expression in expressions) {
 					keysToBeSelected.Add(expression.Evaluate(current));
 				}
 				if(keysToBeSelected.Count==1 && keysToBeSelected[0] is Map && ((Map)keysToBeSelected[0]).IsString && ((Map)keysToBeSelected[0]).GetDotNetString().Equals("this")) {
@@ -262,7 +274,7 @@ namespace Meta {
 			public readonly ArrayList expressions=new ArrayList();
 			public ArrayList parents=new ArrayList();
 		}
-//		public interface IExpression {
+//		public interface Expression {
 //			object Evaluate(IMap parent);
 //		}
 //		public class Statement {
@@ -273,13 +285,13 @@ namespace Meta {
 //			}
 //			public Statement(Map code) {
 //				this.keyExpression=(Select)((Map)code[keyString]).Compile();
-//				this.valueExpression=(IExpression)((Map)code[valueString]).Compile();
+//				this.valueExpression=(Expression)((Map)code[valueString]).Compile();
 //			}
 //			public Select keyExpression;
-//			public IExpression valueExpression;
+//			public Expression valueExpression;
 //		}
-//		public class Call: IExpression {
-//			public object Evaluate(IMap parent) {
+//		public class Call: Expression {
+//			public override object Evaluate(IMap parent) {
 //				return ((ICallable)callableExpression.Evaluate(parent)).Call(
 //					(IMap)argumentExpression.Evaluate(parent));
 //			}
@@ -288,14 +300,14 @@ namespace Meta {
 //			public static readonly Map argumentString=new Map("argument");
 //			public Call(Map obj) {
 //				Map expression=(Map)obj[callString];
-//				this.callableExpression=(IExpression)((Map)expression[functionString]).Compile();
-//				this.argumentExpression=(IExpression)((Map)expression[argumentString]).Compile();
+//				this.callableExpression=(Expression)((Map)expression[functionString]).Compile();
+//				this.argumentExpression=(Expression)((Map)expression[argumentString]).Compile();
 //			}
-//			public IExpression argumentExpression;
-//			public IExpression callableExpression;
+//			public Expression argumentExpression;
+//			public Expression callableExpression;
 //		}
-//		public class Delayed: IExpression {
-//			public object Evaluate(IMap parent) {
+//		public class Delayed: Expression {
+//			public override object Evaluate(IMap parent) {
 //				return delayed;
 //			}
 //			public static readonly Map delayedString=new Map("delayed");
@@ -304,8 +316,8 @@ namespace Meta {
 //			}
 //			public Map delayed;
 //		}
-//		public class Program: IExpression {
-//			public object Evaluate(IMap parent) {
+//		public class Program: Expression {
+//			public override object Evaluate(IMap parent) {
 //				Map local=new Map();
 //				return Evaluate(parent,local);
 ////				local.Parent=parent;
@@ -318,7 +330,7 @@ namespace Meta {
 ////				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 ////				return result;
 //			}
-//			public object Evaluate(IMap parent,IMap local) {
+//			public override object Evaluate(IMap parent,IMap local) {
 //				//Map local=new Map();
 //				local.Parent=parent;
 //				Interpreter.callers.Add(local);
@@ -330,7 +342,7 @@ namespace Meta {
 //				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 //				return result;
 //			}
-////			public object Evaluate(IMap parent) {
+////			public override object Evaluate(IMap parent) {
 ////				Map local=new Map();
 ////				local.Parent=parent;
 ////				Interpreter.callers.Add(local);
@@ -350,8 +362,8 @@ namespace Meta {
 //			}
 //			public readonly ArrayList statements=new ArrayList();
 //		}
-//		public class Literal: IExpression {
-//			public object Evaluate(IMap parent) {
+//		public class Literal: Expression {
+//			public override object Evaluate(IMap parent) {
 //				return literal;
 //			}
 //			public static readonly Map literalString=new Map("literal");
@@ -360,17 +372,17 @@ namespace Meta {
 //			}
 //			public object literal=null;
 //		}
-//		public class Select: IExpression { 
-//			public object Evaluate(IMap parent) {
+//		public class Select: Expression { 
+//			public override object Evaluate(IMap parent) {
 //				ArrayList keysToBeSelected=new ArrayList();
-//				foreach(IExpression expression in expressions) {
+//				foreach(Expression expression in expressions) {
 //					keysToBeSelected.Add(expression.Evaluate(parent));
 //				}
 //				return SearchAndSelectKeysInCurrentMap(keysToBeSelected,true,true);
 //			}
 //			public void Assign(IMap current,object valueToBeAssigned) { 
 //				ArrayList keysToBeSelected=new ArrayList();
-//				foreach(IExpression expression in expressions) {
+//				foreach(Expression expression in expressions) {
 //					keysToBeSelected.Add(expression.Evaluate(current));
 //				}
 //				if(keysToBeSelected.Count==1 && keysToBeSelected[0] is Map && ((Map)keysToBeSelected[0]).IsString && ((Map)keysToBeSelected[0]).GetDotNetString().Equals("this")) {
@@ -756,19 +768,19 @@ namespace Meta {
 ////		System.String fileName = args[0];
 ////		
 //		// construct the special shared input state that is needed
-//		// in order to annotate ExtentTokens properly
+//		// in order to annotate MetaTokens properly
 //		ExtentLexerSharedInputState lsis = new ExtentLexerSharedInputState(fileName);
 //	// construct the lexer
 //		AddLexer lex = new AddLexer(lsis);
 //		
 //		// tell the lexer the token class that we want
-//		lex.setTokenObjectClass("ValueExtentToken");
+//		lex.setTokenObjectClass("ValueMetaToken");
 //		
 //		// construct the parser
 //		AddParser par = new AddParser(lex);
 //		
 //		// tell the parser the AST class that we want
-//		par.setASTNodeType("TokenAST");
+//		par.setASTNodeType("MetaAST");
 //		
 //		// construct the interpreter (which is a TreeParser)
 //		AddInterpreter aint = new AddInterpreter();
@@ -784,20 +796,20 @@ namespace Meta {
 
 				// TODO: Add the newlines here somewhere (or do this in IndentationStream?, somewhat easier and more logical maybe), but not possible, must be before lexer
 				// construct the special shared input state that is needed
-				// in order to annotate ExtentTokens properly
+				// in order to annotate MetaTokens properly
 				FileStream file=new FileStream(fileName,FileMode.Open);
 				ExtentLexerSharedInputState lsis = new ExtentLexerSharedInputState(file,fileName); 
 				// construct the lexer
 				MetaLexer lex = new MetaLexer(lsis);
 		
 				// tell the lexer the token class that we want
-				lex.setTokenObjectClass("ExtentToken");
+				lex.setTokenObjectClass("MetaToken");
 		
 				// construct the parser
 				MetaParser par = new MetaParser(new IndentationStream(lex));
 				// tell the parser the AST class that we want
-				par.setASTNodeClass("TokenAST");//
-	//			par.getASTFactory().setASTNodeType("TokenAST");
+				par.setASTNodeClass("MetaAST");//
+	//			par.getASTFactory().setASTNodeType("MetaAST");
 		
 //				// construct the interpreter (which is a TreeParser)
 //				AddInterpreter aint = new AddInterpreter();
@@ -1639,13 +1651,13 @@ namespace Meta {
 				}
 			}
 			public object Execute() { // TODO: Rename to evaluate
-				IExpression function=(IExpression)Compile();
+				Expression function=(Expression)Compile();
 				object result;
 				result=function.Evaluate(this);
 				return result;
 			}
 			public object Call(IMap argument) {
-				IExpression function=(IExpression)Compile();
+				Expression function=(Expression)Compile();
 				object result;
 				Interpreter.arguments.Add(argument);
 				result=function.Evaluate(this);
@@ -1661,9 +1673,11 @@ namespace Meta {
 				Map clone=table.CloneMap();
 				clone.Parent=Parent;
 				clone.compiled=compiled;
+				clone.Extent=Extent;
 				return clone;
 			}
-			public object Compile()  {
+			public object Compile()  { // TODO:Split this into CompileStatement and CompileExpression
+
 				if(compiled==null)  {
 					if(this.ContainsKey(new Map("call")))
 						compiled=new Call(this);
@@ -1679,6 +1693,12 @@ namespace Meta {
 						compiled=new Statement(this);
 					else
 						throw new RuntimeException("Cannot compile non-code map.");
+				}
+				if(this.Extent!=null) {
+					int asdf=0;
+				}		
+				if(compiled is Expression) {
+					((Expression)compiled).Extent=this.Extent;
 				}
 				return compiled;
 			}
@@ -1706,15 +1726,15 @@ namespace Meta {
 			}
 			private bool isHashCashed=false;
 			private int hash;
-			int line=0;
-			public int Line {
-				get {
-					return line;
-				}
-				set {
-					line=value;
-				}
-			}
+//			int line=0;
+//			public int Line {
+//				get {
+//					return line;
+//				}
+//				set {
+//					line=value;
+//				}
+//			}
 
 			Extent extent;
 			public Extent Extent {
@@ -1725,6 +1745,9 @@ namespace Meta {
 					extent=value;
 				}
 			}
+			/* TODO: Move some more logic into constructor instead of in Parser?
+			 * There is no clean separation then. But there isn't anyway. I could make 
+			 * it so that only the extent gets passed, that's probably best*/
 			public Map(string text):this(new StringStrategy(text)) {
 			}
 			public Map(MapStrategy table) {

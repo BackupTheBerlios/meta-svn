@@ -95,7 +95,7 @@ namespace Meta.Parser
 		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
-		TokenAST expression_AST = null;
+		MetaAST expression_AST = null;
 		
 		{
 			switch ( LA(1) )
@@ -120,8 +120,8 @@ namespace Meta.Parser
 			}
 			case LITERAL:
 			{
-				TokenAST tmp1_AST = null;
-				tmp1_AST = (TokenAST) astFactory.create(LT(1));
+				MetaAST tmp1_AST = null;
+				tmp1_AST = (MetaAST) astFactory.create(LT(1));
 				astFactory.addASTChild(currentAST, (AST)tmp1_AST);
 				match(LITERAL);
 				break;
@@ -166,7 +166,7 @@ namespace Meta.Parser
 			}
 			break; }
 		}
-		expression_AST = (TokenAST)currentAST.root;
+		expression_AST = (MetaAST)currentAST.root;
 		returnAST = expression_AST;
 	}
 	
@@ -175,7 +175,7 @@ namespace Meta.Parser
 		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
-		TokenAST call_AST = null;
+		MetaAST call_AST = null;
 		
 		{
 			select();
@@ -229,8 +229,8 @@ namespace Meta.Parser
 			}
 			case LITERAL:
 			{
-				TokenAST tmp3_AST = null;
-				tmp3_AST = (TokenAST) astFactory.create(LT(1));
+				MetaAST tmp3_AST = null;
+				tmp3_AST = (MetaAST) astFactory.create(LT(1));
 				astFactory.addASTChild(currentAST, (AST)tmp3_AST);
 				match(LITERAL);
 				break;
@@ -243,9 +243,9 @@ namespace Meta.Parser
 		}
 		if (0==inputState.guessing)
 		{
-			call_AST = (TokenAST)currentAST.root;
+			call_AST = (MetaAST)currentAST.root;
 			
-			call_AST=(TokenAST)astFactory.make( (new ASTArray(2)).add((AST)(TokenAST) astFactory.create(CALL)).add((AST)call_AST));
+			call_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(CALL)).add((AST)call_AST));
 			
 			currentAST.root = call_AST;
 			if ( (null != call_AST) && (null != call_AST.getFirstChild()) )
@@ -254,7 +254,7 @@ namespace Meta.Parser
 				currentAST.child = call_AST;
 			currentAST.advanceChildToEnd();
 		}
-		call_AST = (TokenAST)currentAST.root;
+		call_AST = (MetaAST)currentAST.root;
 		returnAST = call_AST;
 	}
 	
@@ -263,7 +263,7 @@ namespace Meta.Parser
 		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
-		TokenAST select_AST = null;
+		MetaAST select_AST = null;
 		
 		bool synPredMatched115 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
@@ -331,17 +331,19 @@ _loop118_breakloop:					;
 				match(STAR);
 				if (0==inputState.guessing)
 				{
-					select_AST = (TokenAST)currentAST.root;
+					select_AST = (MetaAST)currentAST.root;
 					
 					Counters.autokey.Push((int)Counters.autokey.Pop()+1);
-								Token currentToken=new ExtentToken(MetaLexerTokenTypes.LITERAL);
-								TokenAST currentAst=new TokenAST(currentToken);
+								Token currentToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: add extent information here, from another token or whatever, maybe it's actually not even needed?, or set some special extent values to show
+								// that this token has no real source code equivalent. Line info is still important, though, or
+								// at least useful out of implementation concerns
+								MetaAST currentAst=new MetaAST(currentToken);
 								currentAst.setText("search");
 					
-								//Token autokeyToken=new ExtentToken(MetaLexerTokenTypes.LITERAL);
-								//TokenAST autokeyAst=new TokenAST(autokeyToken);
+								//Token autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
+								//MetaAST autokeyAst=new MetaAST(autokeyToken);
 								//autokeyAst.setText(Counters.autokey.Peek().ToString());
-					select_AST=(TokenAST)astFactory.make( (new ASTArray(3)).add((AST)(TokenAST) astFactory.create(SELECT_KEY)).add((AST)currentAst).add((AST)select_AST));
+					select_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(SELECT_KEY)).add((AST)currentAst).add((AST)select_AST));
 					//#select=#([SELECT_KEY],#select);
 					
 					currentAST.root = select_AST;
@@ -352,7 +354,7 @@ _loop118_breakloop:					;
 					currentAST.advanceChildToEnd();
 				}
 			}
-			select_AST = (TokenAST)currentAST.root;
+			select_AST = (MetaAST)currentAST.root;
 		}
 		else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
 			{
@@ -383,9 +385,9 @@ _loop121_breakloop:					;
 				}    // ( ... )*
 				if (0==inputState.guessing)
 				{
-					select_AST = (TokenAST)currentAST.root;
+					select_AST = (MetaAST)currentAST.root;
 					
-					select_AST=(TokenAST)astFactory.make( (new ASTArray(2)).add((AST)(TokenAST) astFactory.create(SELECT_KEY)).add((AST)select_AST));
+					select_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(SELECT_KEY)).add((AST)select_AST));
 					
 					currentAST.root = select_AST;
 					if ( (null != select_AST) && (null != select_AST.getFirstChild()) )
@@ -395,7 +397,7 @@ _loop121_breakloop:					;
 					currentAST.advanceChildToEnd();
 				}
 			}
-			select_AST = (TokenAST)currentAST.root;
+			select_AST = (MetaAST)currentAST.root;
 		}
 		else
 		{
@@ -410,7 +412,7 @@ _loop121_breakloop:					;
 		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
-		TokenAST map_AST = null;
+		MetaAST map_AST = null;
 		
 		if (0==inputState.guessing)
 		{
@@ -449,10 +451,10 @@ _loop95_breakloop:				;
 		}
 		if (0==inputState.guessing)
 		{
-			map_AST = (TokenAST)currentAST.root;
+			map_AST = (MetaAST)currentAST.root;
 			
 				  Counters.autokey.Pop();
-				  map_AST=(TokenAST)astFactory.make( (new ASTArray(2)).add((AST)(TokenAST) astFactory.create(MAP)).add((AST)map_AST));
+				  map_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(MAP)).add((AST)map_AST));
 				
 			currentAST.root = map_AST;
 			if ( (null != map_AST) && (null != map_AST.getFirstChild()) )
@@ -461,7 +463,7 @@ _loop95_breakloop:				;
 				currentAST.child = map_AST;
 			currentAST.advanceChildToEnd();
 		}
-		map_AST = (TokenAST)currentAST.root;
+		map_AST = (MetaAST)currentAST.root;
 		returnAST = map_AST;
 	}
 	
@@ -470,7 +472,7 @@ _loop95_breakloop:				;
 		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
-		TokenAST delayed_AST = null;
+		MetaAST delayed_AST = null;
 		
 		match(EQUAL);
 		expression();
@@ -480,9 +482,9 @@ _loop95_breakloop:				;
 		}
 		if (0==inputState.guessing)
 		{
-			delayed_AST = (TokenAST)currentAST.root;
+			delayed_AST = (MetaAST)currentAST.root;
 			
-			delayed_AST=(TokenAST)astFactory.make( (new ASTArray(2)).add((AST)(TokenAST) astFactory.create(FUNCTION)).add((AST)delayed_AST));
+			delayed_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(FUNCTION)).add((AST)delayed_AST));
 			
 			currentAST.root = delayed_AST;
 			if ( (null != delayed_AST) && (null != delayed_AST.getFirstChild()) )
@@ -491,7 +493,7 @@ _loop95_breakloop:				;
 				currentAST.child = delayed_AST;
 			currentAST.advanceChildToEnd();
 		}
-		delayed_AST = (TokenAST)currentAST.root;
+		delayed_AST = (MetaAST)currentAST.root;
 		returnAST = delayed_AST;
 	}
 	
@@ -500,7 +502,7 @@ _loop95_breakloop:				;
 		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
-		TokenAST statement_AST = null;
+		MetaAST statement_AST = null;
 		
 		bool synPredMatched98 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
@@ -537,9 +539,9 @@ _loop95_breakloop:				;
 				}
 				if (0==inputState.guessing)
 				{
-					statement_AST = (TokenAST)currentAST.root;
+					statement_AST = (MetaAST)currentAST.root;
 					
-					statement_AST=(TokenAST)astFactory.make( (new ASTArray(2)).add((AST)(TokenAST) astFactory.create(STATEMENT)).add((AST)statement_AST));
+					statement_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)statement_AST));
 					
 					currentAST.root = statement_AST;
 					if ( (null != statement_AST) && (null != statement_AST.getFirstChild()) )
@@ -549,7 +551,7 @@ _loop95_breakloop:				;
 					currentAST.advanceChildToEnd();
 				}
 			}
-			statement_AST = (TokenAST)currentAST.root;
+			statement_AST = (MetaAST)currentAST.root;
 		}
 		else if ((tokenSet_0_.member(LA(1)))) {
 			{
@@ -566,18 +568,24 @@ _loop95_breakloop:				;
 						}
 						if (0==inputState.guessing)
 						{
-							statement_AST = (TokenAST)currentAST.root;
+							statement_AST = (MetaAST)currentAST.root;
 							
 							//Counters.counter++;
-							Counters.autokey.Push((int)Counters.autokey.Pop()+1);
-										      Token currentToken=new ExtentToken(MetaLexerTokenTypes.LITERAL);
-											    TokenAST currentAst=new TokenAST(currentToken);
-											    currentAst.setText("this");
+							Counters.autokey.Push((int)Counters.autokey.Pop()+1); 
+										      /*Token currentToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
+											    MetaAST currentAst=new MetaAST(currentToken);
+											    currentAst.setText("this");*/ // Should be unnecessary now
 							
-											    Token autokeyToken=new ExtentToken(MetaLexerTokenTypes.LITERAL);
-											    TokenAST autokeyAst=new TokenAST(autokeyToken);
+												// TODO: Simplify!!, use astFactory
+											    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
+											    autokeyToken.setLine(statement_AST.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+											    autokeyToken.setColumn(statement_AST.Extent.startColumn); 
+											    autokeyToken.FileName=statement_AST.Extent.fileName;
+											    autokeyToken.EndLine=statement_AST.Extent.endLine;
+											    autokeyToken.EndColumn=statement_AST.Extent.endColumn;
+											    MetaAST autokeyAst=new MetaAST(autokeyToken);
 											    autokeyAst.setText(Counters.autokey.Peek().ToString());
-							statement_AST=(TokenAST)astFactory.make( (new ASTArray(3)).add((AST)(TokenAST) astFactory.create(STATEMENT)).add((AST)(TokenAST)astFactory.make( (new ASTArray(3)).add((AST)(TokenAST) astFactory.create(SELECT_KEY)).add((AST)currentAst).add((AST)autokeyAst))).add((AST)statement_AST));
+							statement_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(SELECT_KEY)).add((AST)autokeyAst))).add((AST)statement_AST));
 							
 							currentAST.root = statement_AST;
 							if ( (null != statement_AST) && (null != statement_AST.getFirstChild()) )
@@ -603,17 +611,22 @@ _loop95_breakloop:				;
 						}
 						if (0==inputState.guessing)
 						{
-							statement_AST = (TokenAST)currentAST.root;
+							statement_AST = (MetaAST)currentAST.root;
 							
 							Counters.autokey.Push((int)Counters.autokey.Pop()+1);
-										      Token currentToken=new ExtentToken(MetaLexerTokenTypes.LITERAL);
-											    TokenAST currentAst=new TokenAST(currentToken);
-											    currentAst.setText("this");
+										      /*Token currentToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
+											    MetaAST currentAst=new MetaAST(currentToken);
+											    currentAst.setText("this");*/ // not necessary anymore
 							
-											    Token autokeyToken=new ExtentToken(MetaLexerTokenTypes.LITERAL);
-											    TokenAST autokeyAst=new TokenAST(autokeyToken);
+											    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
+											    				    autokeyToken.setLine(statement_AST.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+											    autokeyToken.setColumn(statement_AST.Extent.startColumn);
+											    autokeyToken.FileName=statement_AST.Extent.fileName;
+											    autokeyToken.EndLine=statement_AST.Extent.endLine;
+											    autokeyToken.EndColumn=statement_AST.Extent.endColumn;
+											    MetaAST autokeyAst=new MetaAST(autokeyToken);
 											    autokeyAst.setText(Counters.autokey.Peek().ToString());
-							statement_AST=(TokenAST)astFactory.make( (new ASTArray(3)).add((AST)(TokenAST) astFactory.create(STATEMENT)).add((AST)(TokenAST)astFactory.make( (new ASTArray(3)).add((AST)(TokenAST) astFactory.create(SELECT_KEY)).add((AST)currentAst).add((AST)autokeyAst))).add((AST)statement_AST));
+							statement_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(SELECT_KEY)).add((AST)autokeyAst))).add((AST)statement_AST));
 							
 							currentAST.root = statement_AST;
 							if ( (null != statement_AST) && (null != statement_AST.getFirstChild()) )
@@ -650,7 +663,7 @@ _loop95_breakloop:				;
 				}
 				 }
 			}
-			statement_AST = (TokenAST)currentAST.root;
+			statement_AST = (MetaAST)currentAST.root;
 		}
 		else
 		{
@@ -665,7 +678,7 @@ _loop95_breakloop:				;
 		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
-		TokenAST lookup_AST = null;
+		MetaAST lookup_AST = null;
 		
 		switch ( LA(1) )
 		{
@@ -709,8 +722,8 @@ _loop95_breakloop:				;
 					}
 					case LITERAL:
 					{
-						TokenAST tmp16_AST = null;
-						tmp16_AST = (TokenAST) astFactory.create(LT(1));
+						MetaAST tmp16_AST = null;
+						tmp16_AST = (MetaAST) astFactory.create(LT(1));
 						astFactory.addASTChild(currentAST, (AST)tmp16_AST);
 						match(LITERAL);
 						break;
@@ -779,7 +792,7 @@ _loop95_breakloop:				;
 				}
 				match(RBRACKET);
 			}
-			lookup_AST = (TokenAST)currentAST.root;
+			lookup_AST = (MetaAST)currentAST.root;
 			break;
 		}
 		case LITERAL_KEY:
@@ -789,7 +802,7 @@ _loop95_breakloop:				;
 			{
 				astFactory.addASTChild(currentAST, (AST)returnAST);
 			}
-			lookup_AST = (TokenAST)currentAST.root;
+			lookup_AST = (MetaAST)currentAST.root;
 			break;
 		}
 		default:
@@ -805,41 +818,35 @@ _loop95_breakloop:				;
 		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
-		TokenAST literalKey_AST = null;
+		MetaAST literalKey_AST = null;
 		Token  token = null;
-		TokenAST token_AST = null;
+		MetaAST token_AST = null;
 		
 		token = LT(1);
-		token_AST = (TokenAST) astFactory.create(token);
+		token_AST = (MetaAST) astFactory.create(token);
 		astFactory.addASTChild(currentAST, (AST)token_AST);
 		match(LITERAL_KEY);
 		if (0==inputState.guessing)
 		{
-			literalKey_AST = (TokenAST)currentAST.root;
 			
-			literalKey_AST=(TokenAST)astFactory.make( (new ASTArray(1)).add((AST)(TokenAST) astFactory.create(LITERAL,token.getText())));
+				token_AST.setType(LITERAL); // ugly hack
+			//#literalKey=#([LITERAL,token.getText()]);
 			
-			currentAST.root = literalKey_AST;
-			if ( (null != literalKey_AST) && (null != literalKey_AST.getFirstChild()) )
-				currentAST.child = literalKey_AST.getFirstChild();
-			else
-				currentAST.child = literalKey_AST;
-			currentAST.advanceChildToEnd();
 		}
-		literalKey_AST = (TokenAST)currentAST.root;
+		literalKey_AST = (MetaAST)currentAST.root;
 		returnAST = literalKey_AST;
 	}
 	
-	public new TokenAST getAST()
+	public new MetaAST getAST()
 	{
-		return (TokenAST) returnAST;
+		return (MetaAST) returnAST;
 	}
 	
 	private void initializeFactory()
 	{
 		if (astFactory == null)
 		{
-			astFactory = new ASTFactory("TokenAST");
+			astFactory = new ASTFactory("MetaAST");
 		}
 		initializeASTFactory( astFactory );
 	}
