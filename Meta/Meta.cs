@@ -791,11 +791,10 @@ namespace Meta {
 				MetaLexer lex = new MetaLexer(lsis);
 		
 				// tell the lexer the token class that we want
-				lex.setTokenObjectClass("ValueExtentToken");
+				lex.setTokenObjectClass("ExtentToken");
 		
 				// construct the parser
 				MetaParser par = new MetaParser(new IndentationStream(lex));
-		
 				// tell the parser the AST class that we want
 				par.setASTNodeClass("TokenAST");//
 	//			par.getASTFactory().setASTNodeType("TokenAST");
@@ -1595,6 +1594,7 @@ namespace Meta {
 				}
 			}
 		}
+
 		//TODO: cache the IntKeyValues somewhere; put in an "Add" method
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
 			public bool IsString {
@@ -1713,6 +1713,16 @@ namespace Meta {
 				}
 				set {
 					line=value;
+				}
+			}
+
+			Extent extent;
+			public Extent Extent {
+				get {
+					return extent;
+				}
+				set {
+					extent=value;
 				}
 			}
 			public Map(string text):this(new StringStrategy(text)) {
