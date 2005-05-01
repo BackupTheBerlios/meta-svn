@@ -2658,9 +2658,7 @@ namespace Meta {
 				}
 				string t="";
 				ArrayList members=new ArrayList();
-				if(serialize is ValueExtentToken) {
-					int asdf=0;
-				}
+
 				members.AddRange(serialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
 				members.AddRange(serialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
 				foreach(string methodName in methods) {
