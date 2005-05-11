@@ -312,35 +312,7 @@ delayed:
   };
   
 select:
-  (
-    lookup
-    (
-      POINT! lookup
-    )*
-    STAR // TODO: remove STAR completely
-  )=>
-  (
-    lookup
-    (
-      POINT! lookup
-    )*
-    STAR!
-    {
-      Counters.autokey.Push((int)Counters.autokey.Pop()+1);
-			Token currentToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: add extent information here, from another token or whatever, maybe it's actually not even needed?, or set some special extent values to show
-			// that this token has no real source code equivalent. Line info is still important, though, or
-			// at least useful out of implementation concerns
-			MetaAST currentAst=new MetaAST(currentToken);
-			currentAst.setText("search");
 
-			//Token autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
-			//MetaAST autokeyAst=new MetaAST(autokeyToken);
-			//autokeyAst.setText(Counters.autokey.Peek().ToString());
-      #select=#([SELECT_KEY],currentAst,#select);
-      //#select=#([SELECT_KEY],#select);
-    }
-  )
-  |
   (
     lookup
     (
@@ -349,7 +321,9 @@ select:
     {
       #select=#([SELECT_KEY],#select);
     }
-  );
+  )
+  
+  ;
 
 lookup:
   (

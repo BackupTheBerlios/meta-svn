@@ -265,145 +265,47 @@ namespace Meta.Parser
 		ASTPair currentAST = new ASTPair();
 		MetaAST select_AST = null;
 		
-		bool synPredMatched115 = false;
-		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m115 = mark();
-			synPredMatched115 = true;
-			inputState.guessing++;
-			try {
-				{
-					lookup();
-					{    // ( ... )*
-						for (;;)
-						{
-							if ((LA(1)==POINT))
-							{
-								match(POINT);
-								lookup();
-							}
-							else
-							{
-								goto _loop114_breakloop;
-							}
-							
-						}
-_loop114_breakloop:						;
-					}    // ( ... )*
-					match(STAR);
-				}
-			}
-			catch (RecognitionException)
+			lookup();
+			if (0 == inputState.guessing)
 			{
-				synPredMatched115 = false;
+				astFactory.addASTChild(currentAST, (AST)returnAST);
 			}
-			rewind(_m115);
-			inputState.guessing--;
-		}
-		if ( synPredMatched115 )
-		{
-			{
-				lookup();
-				if (0 == inputState.guessing)
+			{    // ( ... )*
+				for (;;)
 				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				{    // ( ... )*
-					for (;;)
+					if ((LA(1)==POINT))
 					{
-						if ((LA(1)==POINT))
+						match(POINT);
+						lookup();
+						if (0 == inputState.guessing)
 						{
-							match(POINT);
-							lookup();
-							if (0 == inputState.guessing)
-							{
-								astFactory.addASTChild(currentAST, (AST)returnAST);
-							}
+							astFactory.addASTChild(currentAST, (AST)returnAST);
 						}
-						else
-						{
-							goto _loop118_breakloop;
-						}
-						
 					}
-_loop118_breakloop:					;
-				}    // ( ... )*
-				match(STAR);
-				if (0==inputState.guessing)
-				{
-					select_AST = (MetaAST)currentAST.root;
-					
-					Counters.autokey.Push((int)Counters.autokey.Pop()+1);
-								Token currentToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: add extent information here, from another token or whatever, maybe it's actually not even needed?, or set some special extent values to show
-								// that this token has no real source code equivalent. Line info is still important, though, or
-								// at least useful out of implementation concerns
-								MetaAST currentAst=new MetaAST(currentToken);
-								currentAst.setText("search");
-					
-								//Token autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
-								//MetaAST autokeyAst=new MetaAST(autokeyToken);
-								//autokeyAst.setText(Counters.autokey.Peek().ToString());
-					select_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(SELECT_KEY)).add((AST)currentAst).add((AST)select_AST));
-					//#select=#([SELECT_KEY],#select);
-					
-					currentAST.root = select_AST;
-					if ( (null != select_AST) && (null != select_AST.getFirstChild()) )
-						currentAST.child = select_AST.getFirstChild();
 					else
-						currentAST.child = select_AST;
-					currentAST.advanceChildToEnd();
-				}
-			}
-			select_AST = (MetaAST)currentAST.root;
-		}
-		else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
-			{
-				lookup();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				{    // ( ... )*
-					for (;;)
 					{
-						if ((LA(1)==POINT))
-						{
-							match(POINT);
-							lookup();
-							if (0 == inputState.guessing)
-							{
-								astFactory.addASTChild(currentAST, (AST)returnAST);
-							}
-						}
-						else
-						{
-							goto _loop121_breakloop;
-						}
-						
+						goto _loop114_breakloop;
 					}
-_loop121_breakloop:					;
-				}    // ( ... )*
-				if (0==inputState.guessing)
-				{
-					select_AST = (MetaAST)currentAST.root;
 					
-					select_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(SELECT_KEY)).add((AST)select_AST));
-					
-					currentAST.root = select_AST;
-					if ( (null != select_AST) && (null != select_AST.getFirstChild()) )
-						currentAST.child = select_AST.getFirstChild();
-					else
-						currentAST.child = select_AST;
-					currentAST.advanceChildToEnd();
 				}
+_loop114_breakloop:				;
+			}    // ( ... )*
+			if (0==inputState.guessing)
+			{
+				select_AST = (MetaAST)currentAST.root;
+				
+				select_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(SELECT_KEY)).add((AST)select_AST));
+				
+				currentAST.root = select_AST;
+				if ( (null != select_AST) && (null != select_AST.getFirstChild()) )
+					currentAST.child = select_AST.getFirstChild();
+				else
+					currentAST.child = select_AST;
+				currentAST.advanceChildToEnd();
 			}
-			select_AST = (MetaAST)currentAST.root;
 		}
-		else
-		{
-			throw new NoViableAltException(LT(1), getFilename());
-		}
-		
+		select_AST = (MetaAST)currentAST.root;
 		returnAST = select_AST;
 	}
 	
@@ -716,9 +618,9 @@ _loop95_breakloop:				;
 					}
 					case LITERAL:
 					{
-						MetaAST tmp16_AST = null;
-						tmp16_AST = (MetaAST) astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, (AST)tmp16_AST);
+						MetaAST tmp14_AST = null;
+						tmp14_AST = (MetaAST) astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, (AST)tmp14_AST);
 						match(LITERAL);
 						break;
 					}
