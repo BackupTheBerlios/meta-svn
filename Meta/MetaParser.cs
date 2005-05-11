@@ -572,9 +572,6 @@ _loop95_breakloop:				;
 							
 							//Counters.counter++;
 							Counters.autokey.Push((int)Counters.autokey.Pop()+1); 
-										      /*Token currentToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
-											    MetaAST currentAst=new MetaAST(currentToken);
-											    currentAst.setText("this");*/ // Should be unnecessary now
 							
 												// TODO: Simplify!!, use astFactory
 											    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
@@ -614,9 +611,6 @@ _loop95_breakloop:				;
 							statement_AST = (MetaAST)currentAST.root;
 							
 							Counters.autokey.Push((int)Counters.autokey.Pop()+1);
-										      /*Token currentToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
-											    MetaAST currentAst=new MetaAST(currentToken);
-											    currentAst.setText("this");*/ // not necessary anymore
 							
 											    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
 											    				    autokeyToken.setLine(statement_AST.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
