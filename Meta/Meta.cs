@@ -270,6 +270,8 @@ namespace Meta {
 				foreach(Map expression in ((Map)code[selectString]).IntKeyValues) {
 					this.expressions.Add(expression.Compile());
 				}
+				// reverse because order of execution for subselect expressions has been reversed
+				this.expressions.Reverse(); 
 			}
 			public readonly ArrayList expressions=new ArrayList();
 			public ArrayList parents=new ArrayList();

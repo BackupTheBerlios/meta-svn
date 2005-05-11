@@ -1,9 +1,9 @@
 unicodeText:'äaba
-this:map.merge
+this:merge.map
 	parent
 	:
 		'AssignedToCurrent
-this:map.merge
+this:merge.map
 	parent
 	programFlow
 	logic
@@ -12,12 +12,12 @@ this:map.merge
 trimStartTest:trimStart
 	"					hello"
 	'\\t
-form:System.Windows.Forms.Form
+form:Form.Forms.Windows.System
 	Text:'hello
 'ImpliedAutokey
 :'Autokey
-gacTest:System.Collections
-lazyGACTest:Microsoft.CSharp				
+gacTest:Collections.System
+lazyGACTest:CSharp.Microsoft
 metaLibTest:metaLib					
 commandLineArguments:arg
 libraryAssemblyTest:testClasses		//	asdfasdf	fff
@@ -41,20 +41,20 @@ object:
 	autoSearch:'default
 	b:'
 	SetA:=
-		parent.parent.a:'c
-		parent.parent.autoSearch:'changed
+		a.parent.parent:'c
+		autoSearch.parent.parent:'changed
 	SetB:=
-		caller.b.1:arg.value
+		1.b.caller:value.arg
 		this:'changed
 	x:
 		a:'b
 		c:'d
 	:=
-		this.a:'b
+		a.this:'b
 a:'default
 b:'
-aSet:object.SetA'
-bSet:object.SetB
+aSet:SetA.object'
+bSet:SetB.object
 	value:
 		x:'7
 		z:'1
@@ -77,7 +77,7 @@ ReturnFunction:=
 SetCurrent:=
 	this:
 		arg:arg
-		x:arg.symbol
+		x:symbol.arg
 	this:x
 thisSet:SetCurrent
 	symbol:'haha
@@ -87,24 +87,24 @@ FirstLevel:=
 SecondLevel:=arg.arg
 argTest:FirstLevel
 	a:'z
-concatenate:map.concatenate
+concatenate:concatenate.map
 	'x
 	'yz
-this:map.merge
+this:merge.map
 	parent
 	testClasses
 testClass:TestClass'
 memberTest:MemberTest'
-MemberTest.classField:'a
-memberTest.instanceField:'b
-MemberTest.ClassProperty:memberTest.InstanceProperty
-memberTest.InstanceProperty:MemberTest.ClassProperty
+classField.MemberTest:'a
+instanceField.memberTest:'b
+ClassProperty.MemberTest:InstanceProperty.memberTest
+InstanceProperty.memberTest:ClassProperty.MemberTest
 interceptedSymbol:'/hello/
 positionalNoConversion:PositionalNoConversion
 	'm
 	'n
 	'o
-positionalNoConversionConcatenated:positionalNoConversion.Concatenate
+positionalNoConversionConcatenated:Concatenate.positionalNoConversion
 	'r
 	's
 	't
@@ -112,12 +112,12 @@ namedNoConversion:NamedNoConversion
 	:
 		'm
 		y:'n
-namedNoConversionConcatenated:namedNoConversion.Concatenate
+namedNoConversionConcatenated:Concatenate.namedNoConversion
 	c:'t
 	'r
 indexerNoConversion:IndexerNoConversion'
-indexerNoConversion.abc:'hihi
-indexerNoConversionIndexed:indexerNoConversion.abc
+abc.indexerNoConversion:'hihi
+indexerNoConversionIndexed:abc.indexerNoConversion
 interceptedSymbol2:'1
 k:'hello
 xyz:'w
@@ -136,24 +136,24 @@ selectionFunctionResult:selectionFunction '
 bigInteger:'89383838383832839123497123047217340712340720347072304702340720347
 upperLevel:'unchanged
 ChangeUpperLevel:=
-	parent.parent.upperLevel:'changed
+	upperLevel.parent.parent:'changed
 ChangeUpperLevel'
 staticEventChanged:'false
-TestClass.staticEvent:=
-	caller.staticEventChanged:'true
-	this:arg.1
-staticEvent:TestClass.staticEvent
-TestClass.TakeDelegate
+staticEvent.TestClass:=
+	staticEventChanged.caller:'true
+	this:1.arg
+staticEvent:staticEvent.TestClass
+TakeDelegate.TestClass
 	:='resultFromDelegate
-resultFromDelegate:TestClass.GetResultFromDelegate'
-staticEventResult:TestClass.staticEvent
+resultFromDelegate:GetResultFromDelegate.TestClass'
+staticEventResult:staticEvent.TestClass
 	testClass
 instanceEventChanged:'false
-testClass.instanceEvent:=
-	parent.parent.instanceEventChanged:'true
-	this:arg.1
-instanceEvent:testClass.instanceEvent
-instanceEventResult:testClass.instanceEvent
+instanceEvent.testClass:=
+	instanceEventChanged.parent.parent:'true
+	this:1.arg
+instanceEvent:instanceEvent.testClass
+instanceEventResult:instanceEvent.testClass
 	'5
 one:'1
 two:'2
@@ -165,17 +165,17 @@ if
 		'1
 		one
 	=
-		caller.firstIf:thenText
+		firstIf.caller:thenText
 	=
-		caller.firstIf:'else
+		firstIf.caller:'else
 if
 	equal
 		'1
 		two
 	=
-		caller.secondIf:'then
+		secondIf.caller:'then
 	=
-		caller.secondIf:'else
+		secondIf.caller:'else
 firstSwitch:'unchanged
 bigNumber:'50020202029029233344
 
@@ -184,29 +184,29 @@ switch
 	bigNumber
 	case:
 		[bigNumber]:=
-			caller.firstSwitch:bigNumber
+			firstSwitch.caller:bigNumber
 	default:=
-		caller.firstSwitch:'default
+		firstSwitch.caller:'default
 secondSwitch:'unchanged
 switch
 	'3
 	case:
 		1:=
-			caller.secondSwitch:'one
+			secondSwitch.caller:'one
 		2:=
-			caller.secondSwitch:'two
+			secondSwitch.caller:'two
 	default:=
-		caller.secondSwitch:'default
+		secondSwitch.caller:'default
 emptyMap:'
 emptyFunction:=
 	x:'hello
 emptyFunctionResult:emptyFunction'
-font:System.Drawing.Font
+font:Font.Drawing.System
 	"Courier New"
 	'10
 escapedAtText:@"a"""""bc""@
 stringTest:'hello
-stringTest.6:stringTest.1
+6.stringTest:1.stringTest
 helloh:'hi
 stringStrategyHashTest:[stringTest]
 x:
@@ -214,24 +214,24 @@ x:
 		hello word!
 		hello!
 		"
-ored:math.bitwiseOr
+ored:bitwiseOr.math
 	'20
-	System.Windows.Forms.Keys.Tab
-arrayList:System.Collections.ArrayList'
-arrayList.Add
+	Tab.Keys.Forms.Windows.System
+arrayList:ArrayList.Collections.System'
+Add.arrayList
 	'hello
-arrayListResult:arrayList.0
-textBox:System.Windows.Forms.TextBox'
-textBox.Text:"
+arrayListResult:0.arrayList
+textBox:TextBox.Forms.Windows.System'
+Text.textBox:"
 	Alle meine Entchen,
 	schwimmen auf dem See,
 	schwimmen auf dem See,
 	Köpfchen in das Wasser,
 	Schwaenzchen in die Hoeh.
 	"
-lines:textBox.Lines
-alleMeineText:lines.1
-lines.4:'bwuhahaha
+lines:Lines.textBox
+alleMeineText:1.lines
+4.lines:'bwuhahaha
 character:'\a
 tab:'\\t
 backslash:'\\\
@@ -241,10 +241,10 @@ escapedText:"\'\n\\\t"
 whileCounter:'0
 while
 	=smaller
-		caller.whileCounter
+		whileCounter.caller
 		'10
 	=
-		caller.whileCounter:add
+		whileCounter.caller:add
 			whileCounter
 			'1
 			
