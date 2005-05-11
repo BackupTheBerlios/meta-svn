@@ -265,45 +265,23 @@ namespace Meta.Parser
 		ASTPair currentAST = new ASTPair();
 		MetaAST select_AST = null;
 		
+		subselect();
+		if (0 == inputState.guessing)
 		{
-			lookup();
-			if (0 == inputState.guessing)
-			{
-				astFactory.addASTChild(currentAST, (AST)returnAST);
-			}
-			{    // ( ... )*
-				for (;;)
-				{
-					if ((LA(1)==POINT))
-					{
-						match(POINT);
-						lookup();
-						if (0 == inputState.guessing)
-						{
-							astFactory.addASTChild(currentAST, (AST)returnAST);
-						}
-					}
-					else
-					{
-						goto _loop114_breakloop;
-					}
-					
-				}
-_loop114_breakloop:				;
-			}    // ( ... )*
-			if (0==inputState.guessing)
-			{
-				select_AST = (MetaAST)currentAST.root;
+			astFactory.addASTChild(currentAST, (AST)returnAST);
+		}
+		if (0==inputState.guessing)
+		{
+			select_AST = (MetaAST)currentAST.root;
+			
+					select_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(SELECT_KEY)).add((AST)select_AST));
 				
-				select_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(SELECT_KEY)).add((AST)select_AST));
-				
-				currentAST.root = select_AST;
-				if ( (null != select_AST) && (null != select_AST.getFirstChild()) )
-					currentAST.child = select_AST.getFirstChild();
-				else
-					currentAST.child = select_AST;
-				currentAST.advanceChildToEnd();
-			}
+			currentAST.root = select_AST;
+			if ( (null != select_AST) && (null != select_AST.getFirstChild()) )
+				currentAST.child = select_AST.getFirstChild();
+			else
+				currentAST.child = select_AST;
+			currentAST.advanceChildToEnd();
 		}
 		select_AST = (MetaAST)currentAST.root;
 		returnAST = select_AST;
@@ -567,6 +545,63 @@ _loop95_breakloop:				;
 		}
 		
 		returnAST = statement_AST;
+	}
+	
+	public void subselect() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST subselect_AST = null;
+		
+		bool synPredMatched114 = false;
+		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
+		{
+			int _m114 = mark();
+			synPredMatched114 = true;
+			inputState.guessing++;
+			try {
+				{
+					lookup();
+					match(POINT);
+				}
+			}
+			catch (RecognitionException)
+			{
+				synPredMatched114 = false;
+			}
+			rewind(_m114);
+			inputState.guessing--;
+		}
+		if ( synPredMatched114 )
+		{
+			lookup();
+			if (0 == inputState.guessing)
+			{
+				astFactory.addASTChild(currentAST, (AST)returnAST);
+			}
+			match(POINT);
+			subselect();
+			if (0 == inputState.guessing)
+			{
+				astFactory.addASTChild(currentAST, (AST)returnAST);
+			}
+			subselect_AST = (MetaAST)currentAST.root;
+		}
+		else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
+			lookup();
+			if (0 == inputState.guessing)
+			{
+				astFactory.addASTChild(currentAST, (AST)returnAST);
+			}
+			subselect_AST = (MetaAST)currentAST.root;
+		}
+		else
+		{
+			throw new NoViableAltException(LT(1), getFilename());
+		}
+		
+		returnAST = subselect_AST;
 	}
 	
 	public void lookup() //throws RecognitionException, TokenStreamException

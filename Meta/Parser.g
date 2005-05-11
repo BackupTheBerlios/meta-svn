@@ -310,20 +310,41 @@ delayed:
   {
     #delayed=#([FUNCTION], #delayed);
   };
-  
-select:
 
-  (
-    lookup
-    (
-      POINT! lookup
-    )*
-    {
-      #select=#([SELECT_KEY],#select);
-    }
-  )
-  
-  ;
+select:
+	subselect
+	{
+		#select=#([SELECT_KEY],#select);
+	};
+subselect:
+	(lookup	POINT!)=>
+	lookup POINT! subselect
+	|lookup
+	;
+/*select:
+	lookup 
+	(POINT! lookup)* 
+	(POINT! (lookup|map))
+	{
+		#select=#([SELECT_KEY],#select);
+	};*/
+/*select:
+	(lookup POINT!)=>
+	(
+		lookup POINT!
+		(
+			 lookup POINT!
+		)*
+		(
+			map
+			|lookup
+		)
+	)
+	|
+	(lookup)
+	{
+		#select=#([SELECT_KEY],#select);
+	};*/
 
 lookup:
   (
