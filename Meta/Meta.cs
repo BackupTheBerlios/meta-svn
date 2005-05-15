@@ -170,6 +170,7 @@ namespace Meta {
 				}
 				return SearchAndSelectKeysInCurrentMap(keysToBeSelected,true,true);
 			}
+			// put this into Statement?
 			public void Assign(IMap current,object valueToBeAssigned) { 
 				ArrayList keysToBeSelected=new ArrayList();
 				foreach(Expression expression in expressions) {
@@ -592,7 +593,7 @@ namespace Meta {
 						if(!isRightSide) {
 							text+="(";
 							foreach(DictionaryEntry entry in map) {
-								text+='['+MetaSerialize(entry.Key,indent,true)+']'+':'+MetaSerialize(entry.Value,indent,true)+",";
+								text+='['+MetaSerialize(entry.Key,indent,true)+']'+'='+MetaSerialize(entry.Value,indent,true)+",";
 							}
 							if(map.Count!=0) {
 								text=text.Remove(text.Length-1,1);
@@ -601,7 +602,7 @@ namespace Meta {
 						}
 						else {
 							foreach(DictionaryEntry entry in map) {
-								text+=indent+'['+MetaSerialize(entry.Key,indent,false)+']'+':';
+								text+=indent+'['+MetaSerialize(entry.Key,indent,false)+']'+'=';
 								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString) {
 									text+="\n";
 								}
