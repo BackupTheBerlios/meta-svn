@@ -1,3 +1,3 @@
-x:"hello"
-y:"world"
-gacFromMetaLib:Collections.System
+x="hello"
+y="world"
+gacFromMetaLib=Collections.System

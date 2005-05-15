@@ -65,13 +65,13 @@ COLON
   options {
     paraphrase="':'";
   }:
-  ':';
+  '=';
   
 EQUAL
   options {
     paraphrase="'='";
   }:
-  '=';
+  ':';
 
 LBRACKET
   options {

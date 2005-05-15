@@ -107,30 +107,6 @@
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "Copy (2) of basicTest.meta"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "Copy (2) of doc.meta"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "Copy of basicTest.meta"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "Copy of doc.meta"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "doc.meta"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "experiment.meta"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "Test.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -1,4 +1,4 @@
-unicodeText:'äaba
+unicodeText='äaba
 //	Meta is a simple programming language.
 //	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
 //
@@ -15,255 +15,251 @@ unicodeText:'äaba
 //	You should have received a copy of the GNU General Public License
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-this:merge.map
+this=merge.map
 	parent
-	:
+	=
 		'AssignedToCurrent
-this:merge.map
+this=merge.map
 	parent
 	programFlow
 	logic
 	map
 	math
-trimStartTest:trimStart
+trimStartTest=trimStart
 	"					hello"
 	'\\t
-form:Form.Forms.Windows.System
-	Text:'hello
+form=Form.Forms.Windows.System
+	Text='hello
 'ImpliedAutokey
-:'Autokey
-gacTest:Collections.System
-lazyGACTest:CSharp.Microsoft
-metaLibTest:metaLib					
-commandLineArguments:arg
-libraryAssemblyTest:testClasses		//	asdfasdf	fff
-//thisIsInAComment=
+='Autokey
+gacTest=Collections.System
+lazyGACTest=CSharp.Microsoft
+metaLibTest=metaLib					
+commandLineArguments=arg
+libraryAssemblyTest=testClasses		//	asdfasdf	fff
+//thisIsInAComment:
 	//  still comment
 // some more comment
-aMap:
-	['a]:'a
-[aMap]:'Object
-["normal symbol"]:'NormalSymbol
-lookupSymbol:'LookupSymbol
-["long key symbol"]:'LookupExtendedSymbol
-lookedUpMap:[aMap]
-lookedUpNormalSymbol:["normal symbol"]
-lookedUpSymbol:lookupSymbol
-lookedUpLongSymbol:["long key symbol"]
+aMap=
+	['a]='a
+[aMap]='Object
+["normal symbol"]='NormalSymbol
+lookupSymbol='LookupSymbol
+["long key symbol"]='LookupExtendedSymbol
+lookedUpMap=[aMap]
+lookedUpNormalSymbol=["normal symbol"]
+lookedUpSymbol=lookupSymbol
+lookedUpLongSymbol=["long key symbol"]
 
 
-object:
-	a:'default
-	autoSearch:'default
-	b:'
-	SetA:=
-		a.parent.parent:'c
-		autoSearch.parent.parent:'changed
-	SetB:=
-		1.b.caller:value.arg
-		this:'changed
-	x:
-		a:'b
-		c:'d
-	:=
-		a.this:'b
-a:'default
-b:'
-aSet:SetA.object'
-bSet:SetB.object
-	value:
-		x:'7
-		z:'1
-ReturnEverything:=
-	this:arg
-everythingReturned:ReturnEverything
+object=
+	a='default
+	autoSearch='default
+	b='
+	SetA=:
+		a.parent.parent='c
+		autoSearch.parent.parent='changed
+	SetB=:
+		1.b.caller=value.arg
+		this='changed
+	x=
+		a='b
+		c='d
+	=:
+		a.this='b
+a='default
+b='
+aSet=SetA.object'
+bSet=SetB.object
+	value=
+		x='7
+		z='1
+ReturnEverything=:
+	this=arg
+everythingReturned=ReturnEverything
 	'a
 	'b
 	'c
-variableAsArgument:ReturnEverything
+variableAsArgument=ReturnEverything
 	'x
 	'y
 	'z
-ReturnFunction:=
-	this:=
-		this:
+ReturnFunction=:
+	this=:
+		this=
 			'1
 			'2
 			'3
-SetCurrent:=
-	this:
-		arg:arg
-		x:symbol.arg
-	this:x
-thisSet:SetCurrent
-	symbol:'haha
-FirstLevel:=
+SetCurrent=:
+	this=
+		arg=arg
+		x=symbol.arg
+	this=x
+thisSet=SetCurrent
+	symbol='haha
+FirstLevel=:
 	SecondLevel
-		x:'y
-SecondLevel:=arg.arg
-argTest:FirstLevel
-	a:'z
-concatenate:concatenate.map
+		x='y
+SecondLevel=:arg.arg
+argTest=FirstLevel
+	a='z
+concatenate=concatenate.map
 	'x
 	'yz
-this:merge.map
+this=merge.map
 	parent
 	testClasses
-testClass:TestClass'
-memberTest:MemberTest'
-classField.MemberTest:'a
-instanceField.memberTest:'b
-ClassProperty.MemberTest:InstanceProperty.memberTest
-InstanceProperty.memberTest:ClassProperty.MemberTest
-interceptedSymbol:'/hello/
-positionalNoConversion:PositionalNoConversion
+testClass=TestClass'
+memberTest=MemberTest'
+classField.MemberTest='a
+instanceField.memberTest='b
+ClassProperty.MemberTest=InstanceProperty.memberTest
+InstanceProperty.memberTest=ClassProperty.MemberTest
+interceptedSymbol='/hello/
+positionalNoConversion=PositionalNoConversion
 	'm
 	'n
 	'o
-positionalNoConversionConcatenated:Concatenate.positionalNoConversion
+positionalNoConversionConcatenated=Concatenate.positionalNoConversion
 	'r
 	's
 	't
-namedNoConversion:NamedNoConversion
-	:
+namedNoConversion=NamedNoConversion
+	=
 		'm
-		y:'n
-namedNoConversionConcatenated:Concatenate.namedNoConversion
-	c:'t
+		y='n
+namedNoConversionConcatenated=Concatenate.namedNoConversion
+	c='t
 	'r
-indexerNoConversion:IndexerNoConversion'
-abc.indexerNoConversion:'hihi
-indexerNoConversionIndexed:abc.indexerNoConversion
-interceptedSymbol2:'1
-k:'hello
-xyz:'w
-literalFunction:='5
-literalFunctionResult:literalFunction'
-function:=
-	this:"simple function this"
-callFunction:=function
-callFunctionResult:callFunction '
-delayedFunction:==
-	x:'y
-delayedFunctionResult:delayedFunction '
-value:'xyz
-selectionFunction:=value
-selectionFunctionResult:selectionFunction '
-bigInteger:'89383838383832839123497123047217340712340720347072304702340720347
-upperLevel:'unchanged
-ChangeUpperLevel:=
-	upperLevel.parent.parent:'changed
+indexerNoConversion=IndexerNoConversion'
+abc.indexerNoConversion='hihi
+indexerNoConversionIndexed=abc.indexerNoConversion
+interceptedSymbol2='1
+k='hello
+xyz='w
+literalFunction=:'5
+literalFunctionResult=literalFunction'
+function=:
+	this="simple function this"
+callFunction=:function
+callFunctionResult=callFunction '
+delayedFunction=::
+	x='y
+delayedFunctionResult=delayedFunction '
+value='xyz
+selectionFunction=:value
+selectionFunctionResult=selectionFunction '
+bigInteger='89383838383832839123497123047217340712340720347072304702340720347
+upperLevel='unchanged
+ChangeUpperLevel=:
+	upperLevel.parent.parent='changed
 ChangeUpperLevel'
-staticEventChanged:'false
-staticEvent.TestClass:=
-	staticEventChanged.caller:'true
-	this:1.arg
-staticEvent:staticEvent.TestClass
+staticEventChanged='false
+staticEvent.TestClass=:
+	staticEventChanged.caller='true
+	this=1.arg
+staticEvent=staticEvent.TestClass
 TakeDelegate.TestClass
-	:='resultFromDelegate
-resultFromDelegate:GetResultFromDelegate.TestClass'
-staticEventResult:staticEvent.TestClass
+	=:'resultFromDelegate
+resultFromDelegate=GetResultFromDelegate.TestClass'
+staticEventResult=staticEvent.TestClass
 	testClass
-instanceEventChanged:'false
-instanceEvent.testClass:=
-	instanceEventChanged.parent.parent:'true
-	this:1.arg
-instanceEvent:instanceEvent.testClass
-instanceEventResult:instanceEvent.testClass
+instanceEventChanged='false
+instanceEvent.testClass=:
+	instanceEventChanged.parent.parent='true
+	this=1.arg
+instanceEvent=instanceEvent.testClass
+instanceEventResult=instanceEvent.testClass
 	'5
-one:'1
-two:'2
-firstIf:'unchanged
-secondIf:'unchanged
-thenText:'then
+one='1
+two='2
+firstIf='unchanged
+secondIf='unchanged
+thenText='then
 if
 	equal
 		'1
 		one
-	=
-		firstIf.caller:thenText
-	=
-		firstIf.caller:'else
+	:
+		firstIf.caller=thenText
+	:
+		firstIf.caller='else
 if
 	equal
 		'1
 		two
-	=
-		secondIf.caller:'then
-	=
-		secondIf.caller:'else
-firstSwitch:'unchanged
-bigNumber:'50020202029029233344
+	:
+		secondIf.caller='then
+	:
+		secondIf.caller='else
+firstSwitch='unchanged
+bigNumber='50020202029029233344
 
 
 switch
 	bigNumber
-	case:
-		[bigNumber]:=
-			firstSwitch.caller:bigNumber
-	default:=
-		firstSwitch.caller:'default
-secondSwitch:'unchanged
+	case=
+		[bigNumber]=:
+			firstSwitch.caller=bigNumber
+	default=:
+		firstSwitch.caller='default
+secondSwitch='unchanged
 switch
 	'3
-	case:
-		1:=
-			secondSwitch.caller:'one
-		2:=
-			secondSwitch.caller:'two
-	default:=
-		secondSwitch.caller:'default
-emptyMap:'
-emptyFunction:=
-	x:'hello
-emptyFunctionResult:emptyFunction'
-font:Font.Drawing.System
+	case=
+		1=:
+			secondSwitch.caller='one
+		2=:
+			secondSwitch.caller='two
+	default=:
+		secondSwitch.caller='default
+emptyMap='
+emptyFunction=:
+	x='hello
+emptyFunctionResult=emptyFunction'
+font=Font.Drawing.System
 	"Courier New"
 	'10
-escapedAtText:@"a"""""bc""@
-stringTest:'hello
-6.stringTest:1.stringTest
-helloh:'hi
-stringStrategyHashTest:[stringTest]
-x:
-	aLongText:"
+escapedAtText=@"a"""""bc""@
+stringTest='hello
+6.stringTest=1.stringTest
+helloh='hi
+stringStrategyHashTest=[stringTest]
+x=
+	aLongText="
 		hello word!
 		hello!
 		"
-ored:bitwiseOr.math
+ored=bitwiseOr.math
 	'20
 	Tab.Keys.Forms.Windows.System
-arrayList:ArrayList.Collections.System'
+arrayList=ArrayList.Collections.System'
 Add.arrayList
 	'hello
-arrayListResult:0.arrayList
-textBox:TextBox.Forms.Windows.System'
-Text.textBox:"
+arrayListResult=0.arrayList
+textBox=TextBox.Forms.Windows.System'
+Text.textBox="
 	Alle meine Entchen,
 	schwimmen auf dem See,
 	schwimmen auf dem See,
 	Köpfchen in das Wasser,
 	Schwaenzchen in die Hoeh.
 	"
-lines:Lines.textBox
-alleMeineText:1.lines
-4.lines:'bwuhahaha
-character:'\a
-tab:'\\t
-backslash:'\\\
-endline:'\\n
-tabText:"			hello"
-escapedText:"\'\n\\\t"
-whileCounter:'0
+lines=Lines.textBox
+alleMeineText=1.lines
+4.lines='bwuhahaha
+character='\a
+tab='\\t
+backslash='\\\
+endline='\\n
+tabText="			hello"
+escapedText="\'\n\\\t"
+whileCounter='0
 while
-	=smaller
+	:smaller
 		whileCounter.caller
 		'10
-	=
-		whileCounter.caller:add
+	:
+		whileCounter.caller=add
 			whileCounter
 			'1
-			
-			
-			
-	

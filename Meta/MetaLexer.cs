@@ -73,7 +73,7 @@ namespace Meta.Parser
         ((ExtentLexerSharedInputState) inputState).annotate (tok);
         return tok;
     }
-	public override void tab() 
+	public override void tab()
 	{
 		setColumn(getColumn()+1);
 	}
@@ -115,13 +115,13 @@ tryAgain:
 					{
 						switch ( LA(1) )
 						{
-						case ':':
+						case '=':
 						{
 							mCOLON(true);
 							theRetToken = returnToken_;
 							break;
 						}
-						case '=':
+						case ':':
 						{
 							mEQUAL(true);
 							theRetToken = returnToken_;
@@ -219,7 +219,7 @@ tryAgain:
 		int _ttype; Token _token=null; int _begin=text.Length;
 		_ttype = COLON;
 		
-		match(':');
+		match('=');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);
@@ -233,7 +233,7 @@ tryAgain:
 		int _ttype; Token _token=null; int _begin=text.Length;
 		_ttype = EQUAL;
 		
-		match('=');
+		match(':');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);

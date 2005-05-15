@@ -150,6 +150,18 @@ namespace Meta {
 			}
 			public object literal=null;
 		}
+		public class Lookup: Expression {
+			public override object Evaluate(IMap parent) {
+				return null;
+			}
+		}
+		public class Search: Expression {
+			public override object Evaluate(IMap parent) {
+				return null;
+			}
+		}
+		public class Assign {
+		}
 		public class Select: Expression { 
 			public override object Evaluate(IMap parent) {
 				ArrayList keysToBeSelected=new ArrayList();
