@@ -104,6 +104,10 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "design.txt"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "GAC.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -581,7 +581,7 @@ _loop95_breakloop:				;
 				astFactory.addASTChild(currentAST, (AST)returnAST);
 			}
 			match(POINT);
-			subselect();
+			secondSubselect();
 			if (0 == inputState.guessing)
 			{
 				astFactory.addASTChild(currentAST, (AST)returnAST);
@@ -742,6 +742,71 @@ _loop95_breakloop:				;
 		}
 		 }
 		returnAST = lookup_AST;
+	}
+	
+	public void secondSubselect() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST secondSubselect_AST = null;
+		
+		bool synPredMatched117 = false;
+		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
+		{
+			int _m117 = mark();
+			synPredMatched117 = true;
+			inputState.guessing++;
+			try {
+				{
+					lookup();
+					match(POINT);
+				}
+			}
+			catch (RecognitionException)
+			{
+				synPredMatched117 = false;
+			}
+			rewind(_m117);
+			inputState.guessing--;
+		}
+		if ( synPredMatched117 )
+		{
+			lookup();
+			if (0 == inputState.guessing)
+			{
+				astFactory.addASTChild(currentAST, (AST)returnAST);
+			}
+			match(POINT);
+			secondSubselect();
+			if (0 == inputState.guessing)
+			{
+				astFactory.addASTChild(currentAST, (AST)returnAST);
+			}
+			secondSubselect_AST = (MetaAST)currentAST.root;
+		}
+		else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
+			lookup();
+			if (0 == inputState.guessing)
+			{
+				astFactory.addASTChild(currentAST, (AST)returnAST);
+			}
+			secondSubselect_AST = (MetaAST)currentAST.root;
+		}
+		else if ((LA(1)==INDENT)) {
+			map();
+			if (0 == inputState.guessing)
+			{
+				astFactory.addASTChild(currentAST, (AST)returnAST);
+			}
+			secondSubselect_AST = (MetaAST)currentAST.root;
+		}
+		else
+		{
+			throw new NoViableAltException(LT(1), getFilename());
+		}
+		
+		returnAST = secondSubselect_AST;
 	}
 	
 	public void literalKey() //throws RecognitionException, TokenStreamException
