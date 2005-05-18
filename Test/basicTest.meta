@@ -60,7 +60,7 @@ object=
 		a.parent.parent='c
 		autoSearch.parent.parent='changed
 	SetB=:
-		1.b.caller=value.arg
+		1.b.parent.parent.parent=value.arg
 		this='changed
 	x=
 		a='b
@@ -156,7 +156,7 @@ ChangeUpperLevel=:
 ChangeUpperLevel'
 staticEventChanged='false
 staticEvent.TestClass=:
-	staticEventChanged.caller='true
+	staticEventChanged.parent.parent='true
 	this=1.arg
 staticEvent=staticEvent.TestClass
 TakeDelegate.TestClass
@@ -181,17 +181,17 @@ if
 		'1
 		one
 	:
-		firstIf.caller=thenText
+		firstIf.parent.parent.parent=thenText
 	:
-		firstIf.caller='else
+		firstIf.parent.parent.parent='else
 if
 	equal
 		'1
 		two
 	:
-		secondIf.caller='then
+		secondIf.parent.parent.parent='then
 	:
-		secondIf.caller='else
+		secondIf.parent.parent.parent='else
 firstSwitch='unchanged
 bigNumber='50020202029029233344
 
@@ -200,19 +200,19 @@ switch
 	bigNumber
 	case=
 		[bigNumber]=:
-			firstSwitch.caller=bigNumber
+			firstSwitch.parent.parent.parent.parent=bigNumber
 	default=:
-		firstSwitch.caller='default
+		firstSwitch.parent.parent.parent.parent='default
 secondSwitch='unchanged
 switch
 	'3
 	case=
 		1=:
-			secondSwitch.caller='one
+			secondSwitch.parent.parent.parent.parent='one
 		2=:
-			secondSwitch.caller='two
+			secondSwitch.parent.parent.parent.parent='two
 	default=:
-		secondSwitch.caller='default
+		secondSwitch.parent.parent.parent='default
 emptyMap='
 emptyFunction=:
 	x='hello
@@ -257,9 +257,9 @@ escapedText="\'\n\\\t"
 whileCounter='0
 while
 	:smaller
-		whileCounter.caller
+		whileCounter.parent.parent.parent
 		'10
 	:
-		whileCounter.caller=add
+		whileCounter.parent.parent.parent=add
 			whileCounter
 			'1

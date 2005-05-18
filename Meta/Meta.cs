@@ -150,18 +150,112 @@ namespace Meta {
 			}
 			public object literal=null;
 		}
-		public class Lookup: Expression {
-			public override object Evaluate(IMap parent) {
-				return null;
-			}
-		}
-		public class Search: Expression {
-			public override object Evaluate(IMap parent) {
-				return null;
-			}
-		}
-		public class Assign {
-		}
+
+//		public class Assign {
+//		}
+//		public class Search: Expression {
+//			public readonly Map keyString=new Map("key");
+//			protected Expression key;
+//			public override object Evaluate(IMap parent) {
+//			}
+//			public Search(Map data) {
+//				key=(Expression)((Map)data[keyString]).Compile();
+//			}
+//		}
+//		public class Lookup: Expression {
+//			protected Expression preselection;
+//			protected Expression key;
+//			public readonly Map keyString=new Map("key");
+//			public override object Evaluate(IMap parent) {
+//				Map pre=(Map)preselection.Evaluate(parent);
+//				return pre[key.Evaluate(parent)];
+//			}
+//			public Lookup(Map data) {
+//				preselection=(Expression)data.Compile(); // TODO: Take Statement out of Compile, integrate statements into Program compilation, since it is clear that they are there and only there and always (almost) there
+//				key=(Expression)((Map)data[keyString]).Compile();
+//			}
+//			public object SearchAndSelectKeysInCurrentMap(ArrayList keys,bool isRightSide,bool isSelectLastKey) {
+//				object selection=Interpreter.Current;
+//				int i=0;
+//
+//				if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("this")) { // factor out IsString
+//					i++;
+//				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
+//					int numCallers=0;
+//					foreach(object key in keys) {
+//						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("caller")) {
+//							numCallers++;
+//							if(numCallers>Interpreter.callers.Count) {
+//								throw new KeyDoesNotExistException(keys[i]);
+//							}
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
+//				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("parent")) {
+//					foreach(object key in keys) {
+//						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("parent")) {
+//							selection=((IMap)selection).Parent;
+//							if(selection==null) {
+//								throw new KeyDoesNotExistException(keys[i]);
+//							}
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("arg")) {
+//					int numArgs=0;
+//					foreach(object key in keys) {
+//						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("arg")) {
+//							numArgs++;
+//							if(numArgs>Interpreter.arguments.Count) {
+//								throw new KeyDoesNotExistException(keys[i]);
+//							}
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//					selection=Interpreter.arguments[Interpreter.arguments.Count-numArgs];
+//				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("search")||isRightSide) {
+//					if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("search")) { // IsString stupidly repeated
+//						i++;
+//					}
+//					while(!((IKeyValue)selection).ContainsKey(keys[i])) {
+//						selection=((IMap)selection).Parent;
+//						if(selection==null) {
+//							throw new KeyNotFoundException(keys[i]);
+//						}
+//					}
+//				}
+//				int lastKeySelect=0;
+//				if(isSelectLastKey) {
+//					lastKeySelect++;
+//				}
+//				for(;i<keys.Count-1+lastKeySelect;i++) {
+//					if(selection is IKeyValue) {
+//						selection=((IKeyValue)selection)[keys[i]];
+//					}
+//					else {
+//						selection=new NetObject(selection)[keys[i]];
+//					}
+//					if(selection==null) {
+//						throw new KeyDoesNotExistException(keys[i]);
+//					}
+//				}
+//				return selection;
+//			}
+//		}
 		public class Select: Expression { 
 			public override object Evaluate(IMap parent) {
 				ArrayList keysToBeSelected=new ArrayList();
@@ -1626,6 +1720,24 @@ namespace Meta {
 
 		//TODO: cache the IntKeyValues somewhere; put in an "Add" method
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
+//			public Map Caller {
+//				get {
+//					return caller;
+//				}
+//				set {
+//					caller=value;
+//				}
+//			}
+//			Map caller=null;
+//			public Map Argument {
+//				get {
+//					return arg;
+//				}
+//				set { // TODO: Remove set, maybe?
+//					arg=caller;
+//				}
+//			}
+//			Map arg=null;
 			public bool IsString {
 				get {
 					return table.IsString;
