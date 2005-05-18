@@ -208,16 +208,6 @@ namespace Meta.Parser
 		{
 			switch ( LA(1) )
 			{
-			case LBRACKET:
-			case LITERAL_KEY:
-			{
-				call();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
 			case INDENT:
 			{
 				map();
@@ -236,10 +226,44 @@ namespace Meta.Parser
 				break;
 			}
 			default:
+				bool synPredMatched111 = false;
+				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
+				{
+					int _m111 = mark();
+					synPredMatched111 = true;
+					inputState.guessing++;
+					try {
+						{
+							call();
+						}
+					}
+					catch (RecognitionException)
+					{
+						synPredMatched111 = false;
+					}
+					rewind(_m111);
+					inputState.guessing--;
+				}
+				if ( synPredMatched111 )
+				{
+					call();
+					if (0 == inputState.guessing)
+					{
+						astFactory.addASTChild(currentAST, (AST)returnAST);
+					}
+				}
+				else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
+					select();
+					if (0 == inputState.guessing)
+					{
+						astFactory.addASTChild(currentAST, (AST)returnAST);
+					}
+				}
+			else
 			{
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-			 }
+			break; }
 		}
 		if (0==inputState.guessing)
 		{
@@ -554,11 +578,11 @@ _loop95_breakloop:				;
 		ASTPair currentAST = new ASTPair();
 		MetaAST subselect_AST = null;
 		
-		bool synPredMatched114 = false;
+		bool synPredMatched116 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m114 = mark();
-			synPredMatched114 = true;
+			int _m116 = mark();
+			synPredMatched116 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -568,12 +592,12 @@ _loop95_breakloop:				;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched114 = false;
+				synPredMatched116 = false;
 			}
-			rewind(_m114);
+			rewind(_m116);
 			inputState.guessing--;
 		}
-		if ( synPredMatched114 )
+		if ( synPredMatched116 )
 		{
 			lookup();
 			if (0 == inputState.guessing)
@@ -751,11 +775,11 @@ _loop95_breakloop:				;
 		ASTPair currentAST = new ASTPair();
 		MetaAST secondSubselect_AST = null;
 		
-		bool synPredMatched117 = false;
+		bool synPredMatched119 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m117 = mark();
-			synPredMatched117 = true;
+			int _m119 = mark();
+			synPredMatched119 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -765,12 +789,12 @@ _loop95_breakloop:				;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched117 = false;
+				synPredMatched119 = false;
 			}
-			rewind(_m117);
+			rewind(_m119);
 			inputState.guessing--;
 		}
-		if ( synPredMatched117 )
+		if ( synPredMatched119 )
 		{
 			lookup();
 			if (0 == inputState.guessing)

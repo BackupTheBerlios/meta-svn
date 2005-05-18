@@ -1448,7 +1448,7 @@ Entry (DictionaryEntry)
                       Value (Map):
                         Entry (DictionaryEntry)
                           Key (Map):
-                            "program"
+                            "select"
                           Value (Map):
                             Entry (DictionaryEntry)
                               Key (Integer):
@@ -1456,30 +1456,9 @@ Entry (DictionaryEntry)
                               Value (Map):
                                 Entry (DictionaryEntry)
                                   Key (Map):
-                                    "key"
+                                    "literal"
                                   Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "select"
-                                      Value (Map):
-                                        Entry (DictionaryEntry)
-                                          Key (Integer):
-                                            "1"
-                                          Value (Map):
-                                            Entry (DictionaryEntry)
-                                              Key (Map):
-                                                "literal"
-                                              Value (Map):
-                                                "x"
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "value"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
-                                        "y"
+                                    "arg"
 Entry (DictionaryEntry)
   Key (Map):
     "SecondLevel"
@@ -1491,15 +1470,6 @@ Entry (DictionaryEntry)
         Entry (DictionaryEntry)
           Key (Integer):
             "1"
-          Value (Map):
-            Entry (DictionaryEntry)
-              Key (Map):
-                "literal"
-              Value (Map):
-                "arg"
-        Entry (DictionaryEntry)
-          Key (Integer):
-            "2"
           Value (Map):
             Entry (DictionaryEntry)
               Key (Map):

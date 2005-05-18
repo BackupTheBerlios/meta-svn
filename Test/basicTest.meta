@@ -98,9 +98,8 @@ SetCurrent=:
 thisSet=SetCurrent
 	symbol='haha
 FirstLevel=:
-	SecondLevel
-		x='y
-SecondLevel=:arg.arg
+	SecondLevel arg
+SecondLevel=:arg
 argTest=FirstLevel
 	a='z
 concatenate=concatenate.map

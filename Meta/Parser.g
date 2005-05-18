@@ -296,8 +296,10 @@ call:
   )
   (SPACES!)?
   (
+		(call)=>
     call
     |map
+    |select
     |LITERAL
   )
   {
