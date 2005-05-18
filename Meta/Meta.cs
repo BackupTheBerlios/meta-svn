@@ -264,8 +264,7 @@ namespace Meta {
 				}
 				return SearchAndSelectKeysInCurrentMap(keysToBeSelected,true,true);
 			}
-			// put this into Statement?
-			public void Assign(IMap current,object valueToBeAssigned) { 
+			public void Assign(IMap current,object valueToBeAssigned) {  // TODO: Move somewhere else
 				ArrayList keysToBeSelected=new ArrayList();
 				foreach(Expression expression in expressions) {
 					keysToBeSelected.Add(expression.Evaluate(current));
@@ -299,22 +298,22 @@ namespace Meta {
 				if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("this")) { // factor out IsString
 					i++;
 				}
-				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
-					int numCallers=0;
-					foreach(object key in keys) {
-						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("caller")) {
-							numCallers++;
-							if(numCallers>Interpreter.callers.Count) {
-								throw new KeyDoesNotExistException(keys[i]);
-							}
-							i++;
-						}
-						else {
-							break;
-						}
-					}
-					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
-				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
+//					int numCallers=0;
+//					foreach(object key in keys) {
+//						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("caller")) {
+//							numCallers++;
+//							if(numCallers>Interpreter.callers.Count) {
+//								throw new KeyDoesNotExistException(keys[i]);
+//							}
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
+//				}
 				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("parent")) {
 					foreach(object key in keys) {
 						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("parent")) {
@@ -330,22 +329,24 @@ namespace Meta {
 					}
 				}
 				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("arg")) {
-					int numArgs=0;
-					foreach(object key in keys) {
-						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("arg")) {
-							numArgs++;
-							if(numArgs>Interpreter.arguments.Count) {
-								throw new KeyDoesNotExistException(keys[i]);
-							}
-							i++;
-						}
-						else {
-							break;
-						}
-					}
-					selection=Interpreter.arguments[Interpreter.arguments.Count-numArgs];
+//					int numArgs=0;
+//					foreach(object key in keys) {
+//						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("arg")) {
+//							numArgs++;
+//							if(numArgs>Interpreter.arguments.Count) {
+//								throw new KeyDoesNotExistException(keys[i]);
+//							}
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+					i++;
+					selection=Interpreter.arguments[Interpreter.arguments.Count-1];
 				}
-				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("search")||isRightSide) {
+					// TODO: remove isRightSide, move out
+				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("search")||isRightSide) { 
 					if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("search")) { // IsString stupidly repeated
 						i++;
 					}
@@ -385,6 +386,135 @@ namespace Meta {
 			public readonly ArrayList expressions=new ArrayList();
 			public ArrayList parents=new ArrayList();
 		}
+//		public class Select: Expression { 
+//			public override object Evaluate(IMap parent) {
+//				ArrayList keysToBeSelected=new ArrayList();
+//				foreach(Expression expression in expressions) {
+//					keysToBeSelected.Add(expression.Evaluate(parent));
+//				}
+//				return SearchAndSelectKeysInCurrentMap(keysToBeSelected,true,true);
+//			}
+//			// put this into Statement?
+//			public void Assign(IMap current,object valueToBeAssigned) { 
+//				ArrayList keysToBeSelected=new ArrayList();
+//				foreach(Expression expression in expressions) {
+//					keysToBeSelected.Add(expression.Evaluate(current));
+//				}
+//				if(keysToBeSelected.Count==1 && keysToBeSelected[0] is Map && ((Map)keysToBeSelected[0]).IsString && ((Map)keysToBeSelected[0]).GetDotNetString().Equals("this")) {
+//					if(valueToBeAssigned is IMap) {
+//						IMap parent=((IMap)Interpreter.Current).Parent;
+//						Interpreter.Current=((IMap)valueToBeAssigned).Clone();
+//						((IMap)Interpreter.Current).Parent=parent;
+//					}
+//					else {
+//						Interpreter.Current=valueToBeAssigned;
+//					}
+//				}
+//				else {
+//					object selectionOfAllKeysExceptLastOne=SearchAndSelectKeysInCurrentMap(keysToBeSelected,false,false);
+//					IKeyValue mapToAssignIn;
+//					if(selectionOfAllKeysExceptLastOne is IKeyValue) {
+//						mapToAssignIn=(IKeyValue)selectionOfAllKeysExceptLastOne;
+//					}
+//					else {
+//						mapToAssignIn=new NetObject(selectionOfAllKeysExceptLastOne);
+//					}
+//					mapToAssignIn[keysToBeSelected[keysToBeSelected.Count-1]]=valueToBeAssigned;
+//				}
+//			}
+//			public object SearchAndSelectKeysInCurrentMap(ArrayList keys,bool isRightSide,bool isSelectLastKey) {
+//				object selection=Interpreter.Current;
+//				int i=0;
+//
+//				if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("this")) { // factor out IsString
+//					i++;
+//				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("caller")) {
+//					int numCallers=0;
+//					foreach(object key in keys) {
+//						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("caller")) {
+//							numCallers++;
+//							if(numCallers>Interpreter.callers.Count) {
+//								throw new KeyDoesNotExistException(keys[i]);
+//							}
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//					selection=Interpreter.callers[Interpreter.callers.Count-numCallers-1];
+//				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("parent")) {
+//					foreach(object key in keys) {
+//						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("parent")) {
+//							selection=((IMap)selection).Parent;
+//							if(selection==null) {
+//								throw new KeyDoesNotExistException(keys[i]);
+//							}
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("arg")) {
+//					int numArgs=0;
+//					foreach(object key in keys) {
+//						if(key is Map && ((Map)key).IsString && ((Map)key).GetDotNetString().Equals("arg")) {
+//							numArgs++;
+//							if(numArgs>Interpreter.arguments.Count) {
+//								throw new KeyDoesNotExistException(keys[i]);
+//							}
+//							i++;
+//						}
+//						else {
+//							break;
+//						}
+//					}
+//					selection=Interpreter.arguments[Interpreter.arguments.Count-numArgs];
+//				}
+//				else if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("search")||isRightSide) {
+//					if(keys[0] is Map && ((Map)keys[0]).IsString && ((Map)keys[0]).GetDotNetString().Equals("search")) { // IsString stupidly repeated
+//						i++;
+//					}
+//					while(!((IKeyValue)selection).ContainsKey(keys[i])) {
+//						selection=((IMap)selection).Parent;
+//						if(selection==null) {
+//							throw new KeyNotFoundException(keys[i]);
+//						}
+//					}
+//				}
+//				int lastKeySelect=0;
+//				if(isSelectLastKey) {
+//					lastKeySelect++;
+//				}
+//				for(;i<keys.Count-1+lastKeySelect;i++) {
+//					if(selection is IKeyValue) {
+//						selection=((IKeyValue)selection)[keys[i]];
+//					}
+//					else {
+//						selection=new NetObject(selection)[keys[i]];
+//					}
+//					if(selection==null) {
+//						throw new KeyDoesNotExistException(keys[i]);
+//					}
+//				}
+//				return selection;
+//			}
+//
+//			public static readonly Map selectString=new Map("select");
+//			public Select(Map code) {
+//				foreach(Map expression in ((Map)code[selectString]).IntKeyValues) {
+//					this.expressions.Add(expression.Compile());
+//				}
+//				// reverse because order of execution for subselect expressions has been reversed
+//				this.expressions.Reverse(); 
+//			}
+//			public readonly ArrayList expressions=new ArrayList();
+//			public ArrayList parents=new ArrayList();
+//		}
 //		public interface Expression {
 //			object Evaluate(IMap parent);
 //		}
