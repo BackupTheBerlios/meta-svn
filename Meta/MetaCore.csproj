@@ -108,12 +108,27 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "ErrorFormatter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExtentLexerSharedInputState.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "GAC.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Meta.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MetaAST.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -133,6 +148,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MetaToken.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MetaTreeParser.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -140,6 +160,11 @@
                 <File
                     RelPath = "Parser.g"
                     BuildAction = "None"
+                />
+                <File
+                    RelPath = "ValueExtentToken.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
             </Include>
         </Files>

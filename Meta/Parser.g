@@ -40,6 +40,9 @@ tokens
   FUNCTION; 
   STATEMENT; 
   CALL;
+  SELECT;
+  SEARCH;
+  KEY;
 }
 {
     /**
@@ -61,6 +64,7 @@ tokens
 		setColumn(getColumn()+1);
 	}
 }
+// TODO: rename to reflect the switching of colon and equal sign
 COLON
   options {
     paraphrase="':'";
@@ -214,11 +218,14 @@ options {
 expression:
   (
     (call)=>call
-    |select
     |map
     |delayed
     |LITERAL
+    |(select)=>
+    select
+		|search
   );
+//TODO: rename map to program, or something like that
 map:
   {
     Counters.autokey.Push(0);
@@ -236,11 +243,16 @@ map:
 	  Counters.autokey.Pop();
 	  #map=#([MAP], #map);
 	};
-	
+key:
+	lookup (POINT! lookup)*
+	{
+		#key=#([KEY],#key);
+	}
+	;
 statement:
-    (select COLON)=>
+    (key COLON)=>
     (
-      select
+      key
       COLON! 
       expression
       {
@@ -249,9 +261,9 @@ statement:
     )
     |
     (
-      (COLON)=>
+			// TODO: remove one branch, should not be indeterminate
       (
-        COLON!
+        (COLON!)?
         expression
         {
             //Counters.counter++;
@@ -266,40 +278,25 @@ statement:
 				    autokeyToken.EndColumn=#statement.Extent.endColumn;
 				    MetaAST autokeyAst=new MetaAST(autokeyToken);
 				    autokeyAst.setText(Counters.autokey.Peek().ToString());
-            #statement=#([STATEMENT],#([SELECT_KEY],autokeyAst),#statement);
+            #statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
         }
       )
-      |
-      (
-        expression
-        {
-            Counters.autokey.Push((int)Counters.autokey.Pop()+1);
-
-				    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL);
-				    				    autokeyToken.setLine(#statement.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-				    autokeyToken.setColumn(#statement.Extent.startColumn);
-				    autokeyToken.FileName=#statement.Extent.fileName;
-				    autokeyToken.EndLine=#statement.Extent.endLine;
-				    autokeyToken.EndColumn=#statement.Extent.endColumn;
-				    MetaAST autokeyAst=new MetaAST(autokeyToken);
-				    autokeyAst.setText(Counters.autokey.Peek().ToString());
-            #statement=#([STATEMENT],#([SELECT_KEY],autokeyAst),#statement);
-        }
-      )
-     
     )
-    (SPACES!)?
     ;
+    
 call:
   (
-    select
+		(select)=>
+		select
+    |search // TODO: add map, literal, call
   )
   (SPACES!)?
   (
 		(call)=>
     call
     |map
-    |select
+    |(select)=>select
+    |search
     |LITERAL
   )
   {
@@ -312,71 +309,77 @@ delayed:
   {
     #delayed=#([FUNCTION], #delayed);
   };
+
+
+	
 select:
-	subselect 
-	{
-		#select=#([SELECT_KEY],#select);
-	};
-subselect:
-	(lookup	POINT!)=>
-	lookup POINT! secondSubselect
-	|lookup
-	;
-secondSubselect:
-	(lookup	POINT!)=>
-	lookup POINT! secondSubselect
-	|lookup
-	|map
-	;
-/*select:
-	lookup 
-	(POINT! lookup)* 
-	(POINT! (lookup|map))
-	{
-		#select=#([SELECT_KEY],#select);
-	};*/
-/*select:
-	(lookup POINT!)=>
+	subselect
 	(
-		lookup POINT!
-		(
-			 lookup POINT!
-		)*
-		(
-			map
-			|lookup
-		)
+		map
+		|search
+	)
+	{
+		#select=#([SELECT],#select);
+	}
+	;
+
+subselect: //TODO: left-factor lookup POINT!
+	(
+		lookup 
+		POINT! 
+		lookup
+		POINT!
+	)
+	=>
+	(	
+		lookup 
+		POINT! 
+		subselect
 	)
 	|
-	(lookup)
+	(
+		lookup
+		POINT!
+	)
+	;
+
+search:
+	lookup
 	{
-		#select=#([SELECT_KEY],#select);
-	};*/
+		#search=#([SEARCH],#search);
+	}
+	;
+	
+lookup: 
+	(
+		squareBracketLookup
+		|literalKey
+	)
+	;
 
-lookup:
-  (
-    LBRACKET!  
-    (SPACES!)?
-    (
-      map
-      |LITERAL
-      |delayed
-      |select
-    )
-    (SPACES!)?
-    (ENDLINE!)?
-    RBRACKET!
-  )
-  |
-  literalKey;
-
+// TODO: pull up subrule
 literalKey:
   token:LITERAL_KEY
   {
-	token_AST.setType(LITERAL); // ugly hack
+		token_AST.setType(LITERAL); // ugly hack, shouldn't there be a standard way to do this?
     //#literalKey=#([LITERAL,token.getText()]);
   };
 
+// TODO: pull up subrule
+squareBracketLookup:
+		LBRACKET!  
+		(SPACES!)?
+		(
+			map
+			|LITERAL
+			|delayed
+			|(select)=>select
+			|search
+		)
+		(SPACES!)?
+		(ENDLINE!)?
+		RBRACKET!
+	;
 {
   using Meta.Types;
   using Meta.Execution;
@@ -395,35 +398,61 @@ expression
     result=call
     |result=map
     |result=select
+    |result=search
     |result=literal
     |result=delayed
   );
+key
+	returns[Map result]
+	{
+		int counter=1;
+		result=new Map();
+		Map e=null;
+	}:
+	#(KEY
+		(
+			e=expression
+			{
+				result[new Integer(counter)]=e;
+				counter++;
+			}
+		)+
+	)
+	;
+statement
+	returns[Map statement]
+	{
+		statement=new Map();
+		//Map key=null;
+		Map val=null;
+		Map k=null;
+	}:
+	#(STATEMENT
+		k=key
+		val=expression
+		{
+			//Map statement=new Map();
+			statement[Statement.keyString]=k;
+			statement[Statement.valueString]=val;// TODO: Add Extent to statements, too?
+		}
+	)
+	;
 map
   returns[Map result]
   {
-    result=new Map();//map_AST_in.getLineNumber());
+    result=new Map();
     result.Extent=#map.Extent;
     Map statements=new Map();
+    Map s=null;
     int counter=1;
   }:
   #(MAP
     (
-      {
-        Map key=null;
-        Map val=null;
-      }
-      #(STATEMENT		// TODO: make statement ist own subrule????
-          key=select
-          val=expression
-        {
-          Map statement=new Map();
-							// TODO: Add Extent to statements, too?
-					statement[Statement.keyString]=key;
-					statement[Statement.valueString]=val;
-					statements[new Integer(counter)]=statement;
-					counter++;
-				}
-      )
+			s=statement
+			{
+				statements[new Integer(counter)]=s;					
+				counter++;
+			}
     )*
   )
   {
@@ -452,7 +481,7 @@ call
       result[Call.callString]=call;
     }
   );
-  
+
 select
   returns [Map result]
   {
@@ -462,7 +491,7 @@ select
     Map key=null;
     int counter=1;
   }: 
-  #(SELECT_KEY
+  #(SELECT
     (
       (
         key=expression
@@ -477,7 +506,23 @@ select
     result[Select.selectString]=selection;
   };
 
+
+search
+	returns [Map result]
+	{
+		result=new Map();
+		Map lookupResult=null;
+		result.Extent=#search.Extent;
+		Map e=null;
+	}:
+	#(SEARCH e=expression)
+	{
+		result[Search.searchString]=e;
+	}
+	;
  
+// TODO: somewhat unlogical that literal doesn't build a higher AST in the first place,
+// if there was also a parser rule for Literal, then we could match an AST instead of a token here
 literal
   returns [Map result]
   {

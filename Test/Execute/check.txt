@@ -1,13 +1,13 @@
 Entry (DictionaryEntry)
-  Key (Map):
-    "unicodeText"
-  Value (Map):
-    "äaba"
-Entry (DictionaryEntry)
   Key (Integer):
     "1"
   Value (Map):
     "ImpliedAutokey"
+Entry (DictionaryEntry)
+  Key (Map):
+    "unicodeText"
+  Value (Map):
+    "äaba"
 Entry (DictionaryEntry)
   Key (Map):
     "while"
@@ -678,36 +678,32 @@ Entry (DictionaryEntry)
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Map):
-                        "select"
+                      Key (Integer):
+                        "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "1"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "a"
+                            "a"
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "2"
+                      Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "2"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "parent"
+                            "parent"
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "3"
+                      Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "3"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "parent"
+                            "parent"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "value"
@@ -726,36 +722,32 @@ Entry (DictionaryEntry)
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Map):
-                        "select"
+                      Key (Integer):
+                        "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "1"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "autoSearch"
+                            "autoSearch"
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "2"
+                      Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "2"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "parent"
+                            "parent"
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "3"
+                      Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "3"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "parent"
+                            "parent"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "value"
@@ -782,54 +774,50 @@ Entry (DictionaryEntry)
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Map):
-                        "select"
+                      Key (Integer):
+                        "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (Map):
+                            "literal"
+                          Value (Map):
                             "1"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "1"
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "2"
+                      Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "2"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "b"
+                            "b"
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "3"
+                      Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "3"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "parent"
+                            "parent"
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "4"
+                      Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "4"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "parent"
+                            "parent"
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "5"
+                      Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "5"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "parent"
+                            "parent"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "value"
@@ -853,9 +841,13 @@ Entry (DictionaryEntry)
                           Value (Map):
                             Entry (DictionaryEntry)
                               Key (Map):
-                                "literal"
+                                "search"
                               Value (Map):
-                                "arg"
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "arg"
             Entry (DictionaryEntry)
               Key (Integer):
                 "2"
@@ -865,18 +857,14 @@ Entry (DictionaryEntry)
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Map):
-                        "select"
+                      Key (Integer):
+                        "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "1"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "this"
+                            "this"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "value"
@@ -917,27 +905,23 @@ Entry (DictionaryEntry)
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Map):
-                        "select"
+                      Key (Integer):
+                        "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "1"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "a"
+                            "a"
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "2"
+                      Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "2"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "this"
+                            "this"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "value"
@@ -996,35 +980,27 @@ Entry (DictionaryEntry)
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
+                  Key (Integer):
+                    "1"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "this"
+                        "this"
             Entry (DictionaryEntry)
               Key (Map):
                 "value"
               Value (Map):
                 Entry (DictionaryEntry)
                   Key (Map):
-                    "select"
+                    "search"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "arg"
+                        "arg"
 Entry (DictionaryEntry)
   Key (Map):
     "everythingReturned"
@@ -1080,18 +1056,14 @@ Entry (DictionaryEntry)
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
+                  Key (Integer):
+                    "1"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "this"
+                        "this"
             Entry (DictionaryEntry)
               Key (Map):
                 "value"
@@ -1113,18 +1085,14 @@ Entry (DictionaryEntry)
                                 "key"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "select"
+                                  Key (Integer):
+                                    "1"
                                   Value (Map):
                                     Entry (DictionaryEntry)
-                                      Key (Integer):
-                                        "1"
+                                      Key (Map):
+                                        "literal"
                                       Value (Map):
-                                        Entry (DictionaryEntry)
-                                          Key (Map):
-                                            "literal"
-                                          Value (Map):
-                                            "this"
+                                        "this"
                             Entry (DictionaryEntry)
                               Key (Map):
                                 "value"
@@ -1142,18 +1110,14 @@ Entry (DictionaryEntry)
                                             "key"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (Map):
-                                                "select"
+                                              Key (Integer):
+                                                "1"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (Integer):
-                                                    "1"
+                                                  Key (Map):
+                                                    "literal"
                                                   Value (Map):
-                                                    Entry (DictionaryEntry)
-                                                      Key (Map):
-                                                        "literal"
-                                                      Value (Map):
-                                                        "1"
+                                                    "1"
                                         Entry (DictionaryEntry)
                                           Key (Map):
                                             "value"
@@ -1172,18 +1136,14 @@ Entry (DictionaryEntry)
                                             "key"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (Map):
-                                                "select"
+                                              Key (Integer):
+                                                "1"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (Integer):
-                                                    "1"
+                                                  Key (Map):
+                                                    "literal"
                                                   Value (Map):
-                                                    Entry (DictionaryEntry)
-                                                      Key (Map):
-                                                        "literal"
-                                                      Value (Map):
-                                                        "2"
+                                                    "2"
                                         Entry (DictionaryEntry)
                                           Key (Map):
                                             "value"
@@ -1202,18 +1162,14 @@ Entry (DictionaryEntry)
                                             "key"
                                           Value (Map):
                                             Entry (DictionaryEntry)
-                                              Key (Map):
-                                                "select"
+                                              Key (Integer):
+                                                "1"
                                               Value (Map):
                                                 Entry (DictionaryEntry)
-                                                  Key (Integer):
-                                                    "1"
+                                                  Key (Map):
+                                                    "literal"
                                                   Value (Map):
-                                                    Entry (DictionaryEntry)
-                                                      Key (Map):
-                                                        "literal"
-                                                      Value (Map):
-                                                        "3"
+                                                    "3"
                                         Entry (DictionaryEntry)
                                           Key (Map):
                                             "value"
@@ -1240,18 +1196,14 @@ Entry (DictionaryEntry)
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
+                  Key (Integer):
+                    "1"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "this"
+                        "this"
             Entry (DictionaryEntry)
               Key (Map):
                 "value"
@@ -1269,35 +1221,27 @@ Entry (DictionaryEntry)
                             "key"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (Map):
-                                "select"
+                              Key (Integer):
+                                "1"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
-                                    "1"
+                                  Key (Map):
+                                    "literal"
                                   Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
-                                        "arg"
+                                    "arg"
                         Entry (DictionaryEntry)
                           Key (Map):
                             "value"
                           Value (Map):
                             Entry (DictionaryEntry)
                               Key (Map):
-                                "select"
+                                "search"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
-                                    "1"
+                                  Key (Map):
+                                    "literal"
                                   Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
-                                        "arg"
+                                    "arg"
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "2"
@@ -1307,18 +1251,14 @@ Entry (DictionaryEntry)
                             "key"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (Map):
-                                "select"
+                              Key (Integer):
+                                "1"
                               Value (Map):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
-                                    "1"
+                                  Key (Map):
+                                    "literal"
                                   Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
-                                        "x"
+                                    "x"
                         Entry (DictionaryEntry)
                           Key (Map):
                             "value"
@@ -1342,9 +1282,13 @@ Entry (DictionaryEntry)
                                   Value (Map):
                                     Entry (DictionaryEntry)
                                       Key (Map):
-                                        "literal"
+                                        "search"
                                       Value (Map):
-                                        "arg"
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "literal"
+                                          Value (Map):
+                                            "arg"
         Entry (DictionaryEntry)
           Key (Integer):
             "2"
@@ -1354,35 +1298,27 @@ Entry (DictionaryEntry)
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
+                  Key (Integer):
+                    "1"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "this"
+                        "this"
             Entry (DictionaryEntry)
               Key (Map):
                 "value"
               Value (Map):
                 Entry (DictionaryEntry)
                   Key (Map):
-                    "select"
+                    "search"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "x"
+                        "x"
 Entry (DictionaryEntry)
   Key (Map):
     "thisSet"
@@ -1405,18 +1341,14 @@ Entry (DictionaryEntry)
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
+                  Key (Integer):
+                    "1"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "1"
+                        "1"
             Entry (DictionaryEntry)
               Key (Map):
                 "value"
@@ -1431,51 +1363,39 @@ Entry (DictionaryEntry)
                       Value (Map):
                         Entry (DictionaryEntry)
                           Key (Map):
-                            "select"
+                            "search"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (Integer):
-                                "1"
+                              Key (Map):
+                                "literal"
                               Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "SecondLevel"
+                                "SecondLevel"
                     Entry (DictionaryEntry)
                       Key (Map):
                         "argument"
                       Value (Map):
                         Entry (DictionaryEntry)
                           Key (Map):
-                            "select"
+                            "search"
                           Value (Map):
                             Entry (DictionaryEntry)
-                              Key (Integer):
-                                "1"
+                              Key (Map):
+                                "literal"
                               Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "arg"
+                                "arg"
 Entry (DictionaryEntry)
   Key (Map):
     "SecondLevel"
   Value (Map):
     Entry (DictionaryEntry)
       Key (Map):
-        "select"
+        "search"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
-            "1"
+          Key (Map):
+            "literal"
           Value (Map):
-            Entry (DictionaryEntry)
-              Key (Map):
-                "literal"
-              Value (Map):
-                "arg"
+            "arg"
 Entry (DictionaryEntry)
   Key (Map):
     "argTest"
@@ -1607,18 +1527,14 @@ Entry (DictionaryEntry)
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
+                  Key (Integer):
+                    "1"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "this"
+                        "this"
             Entry (DictionaryEntry)
               Key (Map):
                 "value"
@@ -1634,17 +1550,13 @@ Entry (DictionaryEntry)
   Value (Map):
     Entry (DictionaryEntry)
       Key (Map):
-        "select"
+        "search"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
-            "1"
+          Key (Map):
+            "literal"
           Value (Map):
-            Entry (DictionaryEntry)
-              Key (Map):
-                "literal"
-              Value (Map):
-                "function"
+            "function"
 Entry (DictionaryEntry)
   Key (Map):
     "callFunctionResult"
@@ -1662,18 +1574,14 @@ Entry (DictionaryEntry)
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
+                  Key (Integer):
+                    "1"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "this"
+                        "this"
             Entry (DictionaryEntry)
               Key (Map):
                 "value"
@@ -1704,18 +1612,14 @@ Entry (DictionaryEntry)
                     "key"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Map):
-                        "select"
+                      Key (Integer):
+                        "1"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "1"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "x"
+                            "x"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "value"
@@ -1742,18 +1646,14 @@ Entry (DictionaryEntry)
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
+                  Key (Integer):
+                    "1"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "x"
+                        "x"
             Entry (DictionaryEntry)
               Key (Map):
                 "value"
@@ -1774,17 +1674,13 @@ Entry (DictionaryEntry)
   Value (Map):
     Entry (DictionaryEntry)
       Key (Map):
-        "select"
+        "search"
       Value (Map):
         Entry (DictionaryEntry)
-          Key (Integer):
-            "1"
+          Key (Map):
+            "literal"
           Value (Map):
-            Entry (DictionaryEntry)
-              Key (Map):
-                "literal"
-              Value (Map):
-                "value"
+            "value"
 Entry (DictionaryEntry)
   Key (Map):
     "selectionFunctionResult"
@@ -1817,36 +1713,32 @@ Entry (DictionaryEntry)
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
+                  Key (Integer):
+                    "1"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "upperLevel"
+                        "upperLevel"
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "2"
+                  Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "2"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "parent"
+                        "parent"
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "3"
+                  Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "3"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "parent"
+                        "parent"
             Entry (DictionaryEntry)
               Key (Map):
                 "value"
@@ -1964,18 +1856,14 @@ Entry (DictionaryEntry)
                 "key"
               Value (Map):
                 Entry (DictionaryEntry)
-                  Key (Map):
-                    "select"
+                  Key (Integer):
+                    "1"
                   Value (Map):
                     Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
+                      Key (Map):
+                        "literal"
                       Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "x"
+                        "x"
             Entry (DictionaryEntry)
               Key (Map):
                 "value"
