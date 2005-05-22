@@ -847,18 +847,18 @@ namespace Meta {
 						}
 					}
 				}
-				public class RecognizeBoolean:RecognizeLiteral {
-					public override object Recognize(string text) {
-						switch(text) {
-							case "true":
-								return true;
-							case "false":
-								return false;
-							default:
-								return null;
-						}
-					}
-				}
+//				public class RecognizeBoolean:RecognizeLiteral {
+//					public override object Recognize(string text) {
+//						switch(text) {
+//							case "true":
+//								return true;
+//							case "false":
+//								return false;
+//							default:
+//								return null;
+//						}
+//					}
+//				}
 			}
 			private abstract class MetaToDotNetConversions {
 				/* These classes define the conversions that performed when a .NET method, field, or property
@@ -871,6 +871,16 @@ namespace Meta {
 					public override object Convert(object obj) {
 						return System.Convert.ToByte(((Integer)obj).LongValue());
 					}
+				}
+				public class ConvertIntegerToBool: MetaToDotNetConversion {
+					public ConvertIntegerToBool() {
+						this.source=typeof(Integer);
+						this.target=typeof(bool);
+					}
+					public override object Convert(object obj) {
+						return null;
+					}
+
 				}
 				public class ConvertIntegerToSByte: MetaToDotNetConversion {
 					public ConvertIntegerToSByte() {

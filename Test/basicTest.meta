@@ -190,24 +190,13 @@ secondIf=[equal
 firstSwitch='unchanged
 bigNumber='50020202029029233344
 
-
-switch
-	bigNumber
-	case=
-		[bigNumber]=:
-			firstSwitch.parent.parent.parent.parent=bigNumber
-	default=:
-		firstSwitch.parent.parent.parent.parent='default
+firstSwitch=[bigNumber].
+	[bigNumber]=bigNumber
 secondSwitch='unchanged
-switch
-	'3
-	case=
-		1=:
-			secondSwitch.parent.parent.parent.parent='one
-		2=:
-			secondSwitch.parent.parent.parent.parent='two
-	default=:
-		secondSwitch.parent.parent.parent='default
+secondSwitch=3.
+	1='one
+	2='two
+	3='three
 emptyMap='
 emptyFunction=:
 	x='hello

@@ -1833,7 +1833,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "secondSwitch"
   Value (Map):
-    "default"
+    "three"
 Entry (DictionaryEntry)
   Key (Map):
     "emptyMap"
@@ -1932,7 +1932,7 @@ Entry (DictionaryEntry)
       "hello"
 Entry (DictionaryEntry)
   Key (Integer):
-    "7"
+    "5"
   Value (Integer):
     "0"
 Entry (DictionaryEntry)

@@ -2,7 +2,7 @@ Extent (Extent):
   endColumn (Int32):
     "33"
   endLine (Int32):
-    "276"
+    "265"
   fileName (String):
     "basicTest.meta"
   startColumn (Int32):
@@ -7448,345 +7448,123 @@ statements (ArrayList):
       Entry (Literal)
         Extent (Extent):
           endColumn (Int32):
-            "51"
+            "12"
           endLine (Int32):
-            "219"
+            "212"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "213"
-        literal (Integer):
-          "5"
-    val (Call):
-      argumentExpression (Program):
-        Extent (Extent):
-          endColumn (Int32):
-            "51"
-          endLine (Int32):
-            "219"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "2"
-          startLine (Int32):
-            "214"
-        statements (ArrayList):
-          Entry (Statement)
-            keys (ArrayList):
-              Entry (Literal)
-                Extent (Extent):
-                  endColumn (Int32):
-                    "11"
-                  endLine (Int32):
-                    "214"
-                  fileName (String):
-                    "basicTest.meta"
-                  startColumn (Int32):
-                    "2"
-                  startLine (Int32):
-                    "214"
-                literal (Integer):
-                  "1"
-            val (Search):
-              Extent (Extent):
-                endColumn (Int32):
-                  "11"
-                endLine (Int32):
-                  "214"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "2"
-                startLine (Int32):
-                  "214"
-              key (Literal):
-                Extent (Extent):
-                  endColumn (Int32):
-                    "11"
-                  endLine (Int32):
-                    "214"
-                  fileName (String):
-                    "basicTest.meta"
-                  startColumn (Int32):
-                    "2"
-                  startLine (Int32):
-                    "214"
-                literal (Map):
-                  "bigNumber"
-          Entry (Statement)
-            keys (ArrayList):
-              Entry (Literal)
-                Extent (Extent):
-                  endColumn (Int32):
-                    "6"
-                  endLine (Int32):
-                    "215"
-                  fileName (String):
-                    "basicTest.meta"
-                  startColumn (Int32):
-                    "2"
-                  startLine (Int32):
-                    "215"
-                literal (Map):
-                  "case"
-            val (Program):
-              Extent (Extent):
-                endColumn (Int32):
-                  "53"
-                endLine (Int32):
-                  "217"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "4"
-                startLine (Int32):
-                  "216"
-              statements (ArrayList):
-                Entry (Statement)
-                  keys (ArrayList):
-                    Entry (Search)
-                      Extent (Extent):
-                        endColumn (Int32):
-                          "13"
-                        endLine (Int32):
-                          "216"
-                        fileName (String):
-                          "basicTest.meta"
-                        startColumn (Int32):
-                          "4"
-                        startLine (Int32):
-                          "216"
-                      key (Literal):
-                        Extent (Extent):
-                          endColumn (Int32):
-                            "13"
-                          endLine (Int32):
-                            "216"
-                          fileName (String):
-                            "basicTest.meta"
-                          startColumn (Int32):
-                            "4"
-                          startLine (Int32):
-                            "216"
-                        literal (Map):
-                          "bigNumber"
-                  val (Delayed):
-                    delayed (Map):
-                      Entry (DictionaryEntry)
-                        Key (Map):
-                          "program"
-                        Value (Map):
-                          Entry (DictionaryEntry)
-                            Key (Integer):
-                              "1"
-                            Value (Map):
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "key"
-                                Value (Map):
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "1"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "firstSwitch"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "2"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "parent"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "3"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "parent"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "4"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "parent"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "5"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "parent"
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "value"
-                                Value (Map):
-                                  Entry (DictionaryEntry)
-                                    Key (Map):
-                                      "search"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "bigNumber"
-                    Extent (Extent):
-                      endColumn (Int32):
-                        "53"
-                      endLine (Int32):
-                        "217"
-                      fileName (String):
-                        "basicTest.meta"
-                      startColumn (Int32):
-                        "4"
-                      startLine (Int32):
-                        "217"
-          Entry (Statement)
-            keys (ArrayList):
-              Entry (Literal)
-                Extent (Extent):
-                  endColumn (Int32):
-                    "9"
-                  endLine (Int32):
-                    "218"
-                  fileName (String):
-                    "basicTest.meta"
-                  startColumn (Int32):
-                    "2"
-                  startLine (Int32):
-                    "218"
-                literal (Map):
-                  "default"
-            val (Delayed):
-              delayed (Map):
-                Entry (DictionaryEntry)
-                  Key (Map):
-                    "program"
-                  Value (Map):
-                    Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "key"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Integer):
-                                "1"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "firstSwitch"
-                            Entry (DictionaryEntry)
-                              Key (Integer):
-                                "2"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "parent"
-                            Entry (DictionaryEntry)
-                              Key (Integer):
-                                "3"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "parent"
-                            Entry (DictionaryEntry)
-                              Key (Integer):
-                                "4"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "parent"
-                            Entry (DictionaryEntry)
-                              Key (Integer):
-                                "5"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "parent"
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "value"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "default"
-              Extent (Extent):
-                endColumn (Int32):
-                  "51"
-                endLine (Int32):
-                  "219"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "3"
-                startLine (Int32):
-                  "219"
-      callableExpression (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "7"
-          endLine (Int32):
-            "213"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "213"
-        key (Literal):
-          Extent (Extent):
-            endColumn (Int32):
-              "7"
-            endLine (Int32):
-              "213"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "1"
-            startLine (Int32):
-              "213"
-          literal (Map):
-            "switch"
+            "212"
+        literal (Map):
+          "firstSwitch"
+    val (Select):
       Extent (Extent):
         endColumn (Int32):
-          "51"
+          "23"
         endLine (Int32):
-          "219"
+          "213"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
-          "1"
+          "14"
         startLine (Int32):
-          "213"
+          "212"
+      first (Program):
+        Extent (Extent):
+          endColumn (Int32):
+            "23"
+          endLine (Int32):
+            "213"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "3"
+          startLine (Int32):
+            "213"
+        statements (ArrayList):
+          Entry (Statement)
+            keys (ArrayList):
+              Entry (Search)
+                Extent (Extent):
+                  endColumn (Int32):
+                    "12"
+                  endLine (Int32):
+                    "213"
+                  fileName (String):
+                    "basicTest.meta"
+                  startColumn (Int32):
+                    "3"
+                  startLine (Int32):
+                    "213"
+                key (Literal):
+                  Extent (Extent):
+                    endColumn (Int32):
+                      "12"
+                    endLine (Int32):
+                      "213"
+                    fileName (String):
+                      "basicTest.meta"
+                    startColumn (Int32):
+                      "3"
+                    startLine (Int32):
+                      "213"
+                  literal (Map):
+                    "bigNumber"
+            val (Search):
+              Extent (Extent):
+                endColumn (Int32):
+                  "23"
+                endLine (Int32):
+                  "213"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "14"
+                startLine (Int32):
+                  "213"
+              key (Literal):
+                Extent (Extent):
+                  endColumn (Int32):
+                    "23"
+                  endLine (Int32):
+                    "213"
+                  fileName (String):
+                    "basicTest.meta"
+                  startColumn (Int32):
+                    "14"
+                  startLine (Int32):
+                    "213"
+                literal (Map):
+                  "bigNumber"
+      keys (ArrayList):
+        Entry (Search)
+          Extent (Extent):
+            endColumn (Int32):
+              "23"
+            endLine (Int32):
+              "212"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "14"
+            startLine (Int32):
+              "212"
+          key (Literal):
+            Extent (Extent):
+              endColumn (Int32):
+                "23"
+              endLine (Int32):
+                "212"
+              fileName (String):
+                "basicTest.meta"
+              startColumn (Int32):
+                "14"
+              startLine (Int32):
+                "212"
+            literal (Map):
+              "bigNumber"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -7794,13 +7572,13 @@ statements (ArrayList):
           endColumn (Int32):
             "13"
           endLine (Int32):
-            "220"
+            "214"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "220"
+            "214"
         literal (Map):
           "secondSwitch"
     val (Literal):
@@ -7808,13 +7586,13 @@ statements (ArrayList):
         endColumn (Int32):
           "24"
         endLine (Int32):
-          "220"
+          "214"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "14"
         startLine (Int32):
-          "220"
+          "214"
       literal (Map):
         "unchanged"
   Entry (Statement)
@@ -7822,403 +7600,147 @@ statements (ArrayList):
       Entry (Literal)
         Extent (Extent):
           endColumn (Int32):
-            "45"
+            "13"
           endLine (Int32):
-            "229"
+            "215"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "221"
-        literal (Integer):
-          "6"
-    val (Call):
-      argumentExpression (Program):
+            "215"
+        literal (Map):
+          "secondSwitch"
+    val (Select):
+      Extent (Extent):
+        endColumn (Int32):
+          "10"
+        endLine (Int32):
+          "218"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "14"
+        startLine (Int32):
+          "215"
+      first (Program):
         Extent (Extent):
           endColumn (Int32):
-            "45"
+            "10"
           endLine (Int32):
-            "229"
+            "218"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "2"
           startLine (Int32):
-            "222"
+            "216"
         statements (ArrayList):
           Entry (Statement)
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
                   endColumn (Int32):
-                    "4"
+                    "3"
                   endLine (Int32):
-                    "222"
+                    "216"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "2"
                   startLine (Int32):
-                    "222"
+                    "216"
                 literal (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
                 endColumn (Int32):
+                  "8"
+                endLine (Int32):
+                  "216"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
                   "4"
-                endLine (Int32):
-                  "222"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
+                startLine (Int32):
+                  "216"
+              literal (Map):
+                "one"
+          Entry (Statement)
+            keys (ArrayList):
+              Entry (Literal)
+                Extent (Extent):
+                  endColumn (Int32):
+                    "3"
+                  endLine (Int32):
+                    "217"
+                  fileName (String):
+                    "basicTest.meta"
+                  startColumn (Int32):
+                    "2"
+                  startLine (Int32):
+                    "217"
+                literal (Integer):
                   "2"
+            val (Literal):
+              Extent (Extent):
+                endColumn (Int32):
+                  "8"
+                endLine (Int32):
+                  "217"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "4"
                 startLine (Int32):
-                  "222"
-              literal (Integer):
-                "3"
+                  "217"
+              literal (Map):
+                "two"
           Entry (Statement)
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
                   endColumn (Int32):
-                    "6"
+                    "3"
                   endLine (Int32):
-                    "223"
+                    "218"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "2"
                   startLine (Int32):
-                    "223"
-                literal (Map):
-                  "case"
-            val (Program):
+                    "218"
+                literal (Integer):
+                  "3"
+            val (Literal):
               Extent (Extent):
                 endColumn (Int32):
-                  "49"
+                  "10"
                 endLine (Int32):
-                  "227"
+                  "218"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
-                  "3"
+                  "4"
                 startLine (Int32):
-                  "224"
-              statements (ArrayList):
-                Entry (Statement)
-                  keys (ArrayList):
-                    Entry (Literal)
-                      Extent (Extent):
-                        endColumn (Int32):
-                          "4"
-                        endLine (Int32):
-                          "224"
-                        fileName (String):
-                          "basicTest.meta"
-                        startColumn (Int32):
-                          "3"
-                        startLine (Int32):
-                          "224"
-                      literal (Integer):
-                        "1"
-                  val (Delayed):
-                    delayed (Map):
-                      Entry (DictionaryEntry)
-                        Key (Map):
-                          "program"
-                        Value (Map):
-                          Entry (DictionaryEntry)
-                            Key (Integer):
-                              "1"
-                            Value (Map):
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "key"
-                                Value (Map):
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "1"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "secondSwitch"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "2"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "parent"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "3"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "parent"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "4"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "parent"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "5"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "parent"
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "value"
-                                Value (Map):
-                                  Entry (DictionaryEntry)
-                                    Key (Map):
-                                      "literal"
-                                    Value (Map):
-                                      "one"
-                    Extent (Extent):
-                      endColumn (Int32):
-                        "49"
-                      endLine (Int32):
-                        "225"
-                      fileName (String):
-                        "basicTest.meta"
-                      startColumn (Int32):
-                        "4"
-                      startLine (Int32):
-                        "225"
-                Entry (Statement)
-                  keys (ArrayList):
-                    Entry (Literal)
-                      Extent (Extent):
-                        endColumn (Int32):
-                          "4"
-                        endLine (Int32):
-                          "226"
-                        fileName (String):
-                          "basicTest.meta"
-                        startColumn (Int32):
-                          "3"
-                        startLine (Int32):
-                          "226"
-                      literal (Integer):
-                        "2"
-                  val (Delayed):
-                    delayed (Map):
-                      Entry (DictionaryEntry)
-                        Key (Map):
-                          "program"
-                        Value (Map):
-                          Entry (DictionaryEntry)
-                            Key (Integer):
-                              "1"
-                            Value (Map):
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "key"
-                                Value (Map):
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "1"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "secondSwitch"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "2"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "parent"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "3"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "parent"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "4"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "parent"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "5"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "literal"
-                                        Value (Map):
-                                          "parent"
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "value"
-                                Value (Map):
-                                  Entry (DictionaryEntry)
-                                    Key (Map):
-                                      "literal"
-                                    Value (Map):
-                                      "two"
-                    Extent (Extent):
-                      endColumn (Int32):
-                        "49"
-                      endLine (Int32):
-                        "227"
-                      fileName (String):
-                        "basicTest.meta"
-                      startColumn (Int32):
-                        "4"
-                      startLine (Int32):
-                        "227"
-          Entry (Statement)
-            keys (ArrayList):
-              Entry (Literal)
-                Extent (Extent):
-                  endColumn (Int32):
-                    "9"
-                  endLine (Int32):
-                    "228"
-                  fileName (String):
-                    "basicTest.meta"
-                  startColumn (Int32):
-                    "2"
-                  startLine (Int32):
-                    "228"
-                literal (Map):
-                  "default"
-            val (Delayed):
-              delayed (Map):
-                Entry (DictionaryEntry)
-                  Key (Map):
-                    "program"
-                  Value (Map):
-                    Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "key"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Integer):
-                                "1"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "secondSwitch"
-                            Entry (DictionaryEntry)
-                              Key (Integer):
-                                "2"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "parent"
-                            Entry (DictionaryEntry)
-                              Key (Integer):
-                                "3"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "parent"
-                            Entry (DictionaryEntry)
-                              Key (Integer):
-                                "4"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "parent"
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "value"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "default"
-              Extent (Extent):
-                endColumn (Int32):
-                  "45"
-                endLine (Int32):
-                  "229"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "3"
-                startLine (Int32):
-                  "229"
-      callableExpression (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "7"
-          endLine (Int32):
-            "221"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "221"
-        key (Literal):
+                  "218"
+              literal (Map):
+                "three"
+      keys (ArrayList):
+        Entry (Literal)
           Extent (Extent):
             endColumn (Int32):
-              "7"
+              "15"
             endLine (Int32):
-              "221"
+              "215"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
-              "1"
+              "14"
             startLine (Int32):
-              "221"
-          literal (Map):
-            "switch"
-      Extent (Extent):
-        endColumn (Int32):
-          "45"
-        endLine (Int32):
-          "229"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "1"
-        startLine (Int32):
-          "221"
+              "215"
+          literal (Integer):
+            "3"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -8226,13 +7748,13 @@ statements (ArrayList):
           endColumn (Int32):
             "9"
           endLine (Int32):
-            "230"
+            "219"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "230"
+            "219"
         literal (Map):
           "emptyMap"
     val (Literal):
@@ -8240,13 +7762,13 @@ statements (ArrayList):
         endColumn (Int32):
           "11"
         endLine (Int32):
-          "230"
+          "219"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "10"
         startLine (Int32):
-          "230"
+          "219"
       literal (Map):
         ""
   Entry (Statement)
@@ -8256,13 +7778,13 @@ statements (ArrayList):
           endColumn (Int32):
             "14"
           endLine (Int32):
-            "231"
+            "220"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "231"
+            "220"
         literal (Map):
           "emptyFunction"
     val (Delayed):
@@ -8301,13 +7823,13 @@ statements (ArrayList):
         endColumn (Int32):
           "10"
         endLine (Int32):
-          "232"
+          "221"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "2"
         startLine (Int32):
-          "232"
+          "221"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -8315,13 +7837,13 @@ statements (ArrayList):
           endColumn (Int32):
             "20"
           endLine (Int32):
-            "233"
+            "222"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "233"
+            "222"
         literal (Map):
           "emptyFunctionResult"
     val (Call):
@@ -8330,13 +7852,13 @@ statements (ArrayList):
           endColumn (Int32):
             "35"
           endLine (Int32):
-            "233"
+            "222"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "34"
           startLine (Int32):
-            "233"
+            "222"
         literal (Map):
           ""
       callableExpression (Search):
@@ -8344,38 +7866,38 @@ statements (ArrayList):
           endColumn (Int32):
             "34"
           endLine (Int32):
-            "233"
+            "222"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "21"
           startLine (Int32):
-            "233"
+            "222"
         key (Literal):
           Extent (Extent):
             endColumn (Int32):
               "34"
             endLine (Int32):
-              "233"
+              "222"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "21"
             startLine (Int32):
-              "233"
+              "222"
           literal (Map):
             "emptyFunction"
       Extent (Extent):
         endColumn (Int32):
           "35"
         endLine (Int32):
-          "233"
+          "222"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "21"
         startLine (Int32):
-          "233"
+          "222"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -8383,13 +7905,13 @@ statements (ArrayList):
           endColumn (Int32):
             "5"
           endLine (Int32):
-            "234"
+            "223"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "234"
+            "223"
         literal (Map):
           "font"
     val (Call):
@@ -8398,13 +7920,13 @@ statements (ArrayList):
           endColumn (Int32):
             "5"
           endLine (Int32):
-            "236"
+            "225"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "2"
           startLine (Int32):
-            "235"
+            "224"
         statements (ArrayList):
           Entry (Statement)
             keys (ArrayList):
@@ -8413,13 +7935,13 @@ statements (ArrayList):
                   endColumn (Int32):
                     "15"
                   endLine (Int32):
-                    "235"
+                    "224"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "2"
                   startLine (Int32):
-                    "235"
+                    "224"
                 literal (Integer):
                   "1"
             val (Literal):
@@ -8427,13 +7949,13 @@ statements (ArrayList):
                 endColumn (Int32):
                   "15"
                 endLine (Int32):
-                  "235"
+                  "224"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "2"
                 startLine (Int32):
-                  "235"
+                  "224"
               literal (Map):
                 "Courier New"
           Entry (Statement)
@@ -8443,13 +7965,13 @@ statements (ArrayList):
                   endColumn (Int32):
                     "5"
                   endLine (Int32):
-                    "236"
+                    "225"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "2"
                   startLine (Int32):
-                    "236"
+                    "225"
                 literal (Integer):
                   "2"
             val (Literal):
@@ -8457,13 +7979,13 @@ statements (ArrayList):
                 endColumn (Int32):
                   "5"
                 endLine (Int32):
-                  "236"
+                  "225"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "2"
                 startLine (Int32):
-                  "236"
+                  "225"
               literal (Integer):
                 "10"
       callableExpression (Select):
@@ -8471,37 +7993,37 @@ statements (ArrayList):
           endColumn (Int32):
             "25"
           endLine (Int32):
-            "234"
+            "223"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "6"
           startLine (Int32):
-            "234"
+            "223"
         first (Search):
           Extent (Extent):
             endColumn (Int32):
               "25"
             endLine (Int32):
-              "234"
+              "223"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "19"
             startLine (Int32):
-              "234"
+              "223"
           key (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "25"
               endLine (Int32):
-                "234"
+                "223"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "19"
               startLine (Int32):
-                "234"
+                "223"
             literal (Map):
               "System"
         keys (ArrayList):
@@ -8510,13 +8032,13 @@ statements (ArrayList):
               endColumn (Int32):
                 "18"
               endLine (Int32):
-                "234"
+                "223"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "11"
               startLine (Int32):
-                "234"
+                "223"
             literal (Map):
               "Drawing"
           Entry (Literal)
@@ -8524,26 +8046,26 @@ statements (ArrayList):
               endColumn (Int32):
                 "10"
               endLine (Int32):
-                "234"
+                "223"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "6"
               startLine (Int32):
-                "234"
+                "223"
             literal (Map):
               "Font"
       Extent (Extent):
         endColumn (Int32):
           "5"
         endLine (Int32):
-          "236"
+          "225"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "6"
         startLine (Int32):
-          "234"
+          "223"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -8551,13 +8073,13 @@ statements (ArrayList):
           endColumn (Int32):
             "14"
           endLine (Int32):
-            "237"
+            "226"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "237"
+            "226"
         literal (Map):
           "escapedAtText"
     val (Literal):
@@ -8565,13 +8087,13 @@ statements (ArrayList):
         endColumn (Int32):
           "28"
         endLine (Int32):
-          "237"
+          "226"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "15"
         startLine (Int32):
-          "237"
+          "226"
       literal (Map):
         "a"""""bc""
   Entry (Statement)
@@ -8581,13 +8103,13 @@ statements (ArrayList):
           endColumn (Int32):
             "11"
           endLine (Int32):
-            "238"
+            "227"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "238"
+            "227"
         literal (Map):
           "stringTest"
     val (Literal):
@@ -8595,13 +8117,13 @@ statements (ArrayList):
         endColumn (Int32):
           "18"
         endLine (Int32):
-          "238"
+          "227"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "12"
         startLine (Int32):
-          "238"
+          "227"
       literal (Map):
         "hello"
   Entry (Statement)
@@ -8611,13 +8133,13 @@ statements (ArrayList):
           endColumn (Int32):
             "13"
           endLine (Int32):
-            "239"
+            "228"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "3"
           startLine (Int32):
-            "239"
+            "228"
         literal (Map):
           "stringTest"
       Entry (Literal)
@@ -8625,13 +8147,13 @@ statements (ArrayList):
           endColumn (Int32):
             "2"
           endLine (Int32):
-            "239"
+            "228"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "239"
+            "228"
         literal (Integer):
           "6"
     val (Select):
@@ -8639,37 +8161,37 @@ statements (ArrayList):
         endColumn (Int32):
           "26"
         endLine (Int32):
-          "239"
+          "228"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "14"
         startLine (Int32):
-          "239"
+          "228"
       first (Search):
         Extent (Extent):
           endColumn (Int32):
             "26"
           endLine (Int32):
-            "239"
+            "228"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "16"
           startLine (Int32):
-            "239"
+            "228"
         key (Literal):
           Extent (Extent):
             endColumn (Int32):
               "26"
             endLine (Int32):
-              "239"
+              "228"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "16"
             startLine (Int32):
-              "239"
+              "228"
           literal (Map):
             "stringTest"
       keys (ArrayList):
@@ -8678,13 +8200,13 @@ statements (ArrayList):
             endColumn (Int32):
               "15"
             endLine (Int32):
-              "239"
+              "228"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "14"
             startLine (Int32):
-              "239"
+              "228"
           literal (Integer):
             "1"
   Entry (Statement)
@@ -8694,13 +8216,13 @@ statements (ArrayList):
           endColumn (Int32):
             "7"
           endLine (Int32):
-            "240"
+            "229"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "240"
+            "229"
         literal (Map):
           "helloh"
     val (Literal):
@@ -8708,13 +8230,13 @@ statements (ArrayList):
         endColumn (Int32):
           "11"
         endLine (Int32):
-          "240"
+          "229"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "8"
         startLine (Int32):
-          "240"
+          "229"
       literal (Map):
         "hi"
   Entry (Statement)
@@ -8724,13 +8246,13 @@ statements (ArrayList):
           endColumn (Int32):
             "23"
           endLine (Int32):
-            "241"
+            "230"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "241"
+            "230"
         literal (Map):
           "stringStrategyHashTest"
     val (Search):
@@ -8738,37 +8260,37 @@ statements (ArrayList):
         endColumn (Int32):
           "35"
         endLine (Int32):
-          "241"
+          "230"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "25"
         startLine (Int32):
-          "241"
+          "230"
       key (Search):
         Extent (Extent):
           endColumn (Int32):
             "35"
           endLine (Int32):
-            "241"
+            "230"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "25"
           startLine (Int32):
-            "241"
+            "230"
         key (Literal):
           Extent (Extent):
             endColumn (Int32):
               "35"
             endLine (Int32):
-              "241"
+              "230"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "25"
             startLine (Int32):
-              "241"
+              "230"
           literal (Map):
             "stringTest"
   Entry (Statement)
@@ -8778,13 +8300,13 @@ statements (ArrayList):
           endColumn (Int32):
             "2"
           endLine (Int32):
-            "242"
+            "231"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "242"
+            "231"
         literal (Map):
           "x"
     val (Program):
@@ -8792,13 +8314,13 @@ statements (ArrayList):
         endColumn (Int32):
           "43"
         endLine (Int32):
-          "243"
+          "232"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "2"
         startLine (Int32):
-          "243"
+          "232"
       statements (ArrayList):
         Entry (Statement)
           keys (ArrayList):
@@ -8807,13 +8329,13 @@ statements (ArrayList):
                 endColumn (Int32):
                   "11"
                 endLine (Int32):
-                  "243"
+                  "232"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "2"
                 startLine (Int32):
-                  "243"
+                  "232"
               literal (Map):
                 "aLongText"
           val (Literal):
@@ -8821,13 +8343,13 @@ statements (ArrayList):
               endColumn (Int32):
                 "43"
               endLine (Int32):
-                "243"
+                "232"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "12"
               startLine (Int32):
-                "243"
+                "232"
             literal (Map):
               "
 hello word!
@@ -8840,13 +8362,13 @@ hello!
           endColumn (Int32):
             "5"
           endLine (Int32):
-            "244"
+            "233"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "244"
+            "233"
         literal (Map):
           "ored"
     val (Call):
@@ -8855,13 +8377,13 @@ hello!
           endColumn (Int32):
             "31"
           endLine (Int32):
-            "246"
+            "235"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "2"
           startLine (Int32):
-            "245"
+            "234"
         statements (ArrayList):
           Entry (Statement)
             keys (ArrayList):
@@ -8870,13 +8392,13 @@ hello!
                   endColumn (Int32):
                     "5"
                   endLine (Int32):
-                    "245"
+                    "234"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "2"
                   startLine (Int32):
-                    "245"
+                    "234"
                 literal (Integer):
                   "1"
             val (Literal):
@@ -8884,13 +8406,13 @@ hello!
                 endColumn (Int32):
                   "5"
                 endLine (Int32):
-                  "245"
+                  "234"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "2"
                 startLine (Int32):
-                  "245"
+                  "234"
               literal (Integer):
                 "20"
           Entry (Statement)
@@ -8900,13 +8422,13 @@ hello!
                   endColumn (Int32):
                     "31"
                   endLine (Int32):
-                    "246"
+                    "235"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "2"
                   startLine (Int32):
-                    "246"
+                    "235"
                 literal (Integer):
                   "2"
             val (Select):
@@ -8914,37 +8436,37 @@ hello!
                 endColumn (Int32):
                   "31"
                 endLine (Int32):
-                  "246"
+                  "235"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "2"
                 startLine (Int32):
-                  "246"
+                  "235"
               first (Search):
                 Extent (Extent):
                   endColumn (Int32):
                     "31"
                   endLine (Int32):
-                    "246"
+                    "235"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "25"
                   startLine (Int32):
-                    "246"
+                    "235"
                 key (Literal):
                   Extent (Extent):
                     endColumn (Int32):
                       "31"
                     endLine (Int32):
-                      "246"
+                      "235"
                     fileName (String):
                       "basicTest.meta"
                     startColumn (Int32):
                       "25"
                     startLine (Int32):
-                      "246"
+                      "235"
                   literal (Map):
                     "System"
               keys (ArrayList):
@@ -8953,13 +8475,13 @@ hello!
                     endColumn (Int32):
                       "24"
                     endLine (Int32):
-                      "246"
+                      "235"
                     fileName (String):
                       "basicTest.meta"
                     startColumn (Int32):
                       "17"
                     startLine (Int32):
-                      "246"
+                      "235"
                   literal (Map):
                     "Windows"
                 Entry (Literal)
@@ -8967,13 +8489,13 @@ hello!
                     endColumn (Int32):
                       "16"
                     endLine (Int32):
-                      "246"
+                      "235"
                     fileName (String):
                       "basicTest.meta"
                     startColumn (Int32):
                       "11"
                     startLine (Int32):
-                      "246"
+                      "235"
                   literal (Map):
                     "Forms"
                 Entry (Literal)
@@ -8981,13 +8503,13 @@ hello!
                     endColumn (Int32):
                       "10"
                     endLine (Int32):
-                      "246"
+                      "235"
                     fileName (String):
                       "basicTest.meta"
                     startColumn (Int32):
                       "6"
                     startLine (Int32):
-                      "246"
+                      "235"
                   literal (Map):
                     "Keys"
                 Entry (Literal)
@@ -8995,13 +8517,13 @@ hello!
                     endColumn (Int32):
                       "5"
                     endLine (Int32):
-                      "246"
+                      "235"
                     fileName (String):
                       "basicTest.meta"
                     startColumn (Int32):
                       "2"
                     startLine (Int32):
-                      "246"
+                      "235"
                   literal (Map):
                     "Tab"
       callableExpression (Select):
@@ -9009,37 +8531,37 @@ hello!
           endColumn (Int32):
             "20"
           endLine (Int32):
-            "244"
+            "233"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "6"
           startLine (Int32):
-            "244"
+            "233"
         first (Search):
           Extent (Extent):
             endColumn (Int32):
               "20"
             endLine (Int32):
-              "244"
+              "233"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "16"
             startLine (Int32):
-              "244"
+              "233"
           key (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "20"
               endLine (Int32):
-                "244"
+                "233"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "16"
               startLine (Int32):
-                "244"
+                "233"
             literal (Map):
               "math"
         keys (ArrayList):
@@ -9048,26 +8570,26 @@ hello!
               endColumn (Int32):
                 "15"
               endLine (Int32):
-                "244"
+                "233"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "6"
               startLine (Int32):
-                "244"
+                "233"
             literal (Map):
               "bitwiseOr"
       Extent (Extent):
         endColumn (Int32):
           "31"
         endLine (Int32):
-          "246"
+          "235"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "6"
         startLine (Int32):
-          "244"
+          "233"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -9075,13 +8597,13 @@ hello!
           endColumn (Int32):
             "10"
           endLine (Int32):
-            "247"
+            "236"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "247"
+            "236"
         literal (Map):
           "arrayList"
     val (Call):
@@ -9090,13 +8612,13 @@ hello!
           endColumn (Int32):
             "40"
           endLine (Int32):
-            "247"
+            "236"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "39"
           startLine (Int32):
-            "247"
+            "236"
         literal (Map):
           ""
       callableExpression (Select):
@@ -9104,37 +8626,37 @@ hello!
           endColumn (Int32):
             "39"
           endLine (Int32):
-            "247"
+            "236"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "11"
           startLine (Int32):
-            "247"
+            "236"
         first (Search):
           Extent (Extent):
             endColumn (Int32):
               "39"
             endLine (Int32):
-              "247"
+              "236"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "33"
             startLine (Int32):
-              "247"
+              "236"
           key (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "39"
               endLine (Int32):
-                "247"
+                "236"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "33"
               startLine (Int32):
-                "247"
+                "236"
             literal (Map):
               "System"
         keys (ArrayList):
@@ -9143,13 +8665,13 @@ hello!
               endColumn (Int32):
                 "32"
               endLine (Int32):
-                "247"
+                "236"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "21"
               startLine (Int32):
-                "247"
+                "236"
             literal (Map):
               "Collections"
           Entry (Literal)
@@ -9157,26 +8679,26 @@ hello!
               endColumn (Int32):
                 "20"
               endLine (Int32):
-                "247"
+                "236"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "11"
               startLine (Int32):
-                "247"
+                "236"
             literal (Map):
               "ArrayList"
       Extent (Extent):
         endColumn (Int32):
           "40"
         endLine (Int32):
-          "247"
+          "236"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "11"
         startLine (Int32):
-          "247"
+          "236"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -9184,28 +8706,28 @@ hello!
           endColumn (Int32):
             "8"
           endLine (Int32):
-            "249"
+            "238"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "248"
+            "237"
         literal (Integer):
-          "7"
+          "5"
     val (Call):
       argumentExpression (Program):
         Extent (Extent):
           endColumn (Int32):
             "8"
           endLine (Int32):
-            "249"
+            "238"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "2"
           startLine (Int32):
-            "249"
+            "238"
         statements (ArrayList):
           Entry (Statement)
             keys (ArrayList):
@@ -9214,13 +8736,13 @@ hello!
                   endColumn (Int32):
                     "8"
                   endLine (Int32):
-                    "249"
+                    "238"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "2"
                   startLine (Int32):
-                    "249"
+                    "238"
                 literal (Integer):
                   "1"
             val (Literal):
@@ -9228,13 +8750,13 @@ hello!
                 endColumn (Int32):
                   "8"
                 endLine (Int32):
-                  "249"
+                  "238"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "2"
                 startLine (Int32):
-                  "249"
+                  "238"
               literal (Map):
                 "hello"
       callableExpression (Select):
@@ -9242,37 +8764,37 @@ hello!
           endColumn (Int32):
             "14"
           endLine (Int32):
-            "248"
+            "237"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "248"
+            "237"
         first (Search):
           Extent (Extent):
             endColumn (Int32):
               "14"
             endLine (Int32):
-              "248"
+              "237"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "5"
             startLine (Int32):
-              "248"
+              "237"
           key (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "14"
               endLine (Int32):
-                "248"
+                "237"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "5"
               startLine (Int32):
-                "248"
+                "237"
             literal (Map):
               "arrayList"
         keys (ArrayList):
@@ -9281,26 +8803,26 @@ hello!
               endColumn (Int32):
                 "4"
               endLine (Int32):
-                "248"
+                "237"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "1"
               startLine (Int32):
-                "248"
+                "237"
             literal (Map):
               "Add"
       Extent (Extent):
         endColumn (Int32):
           "8"
         endLine (Int32):
-          "249"
+          "238"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "1"
         startLine (Int32):
-          "248"
+          "237"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -9308,13 +8830,13 @@ hello!
           endColumn (Int32):
             "16"
           endLine (Int32):
-            "250"
+            "239"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "250"
+            "239"
         literal (Map):
           "arrayListResult"
     val (Select):
@@ -9322,37 +8844,37 @@ hello!
         endColumn (Int32):
           "28"
         endLine (Int32):
-          "250"
+          "239"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "17"
         startLine (Int32):
-          "250"
+          "239"
       first (Search):
         Extent (Extent):
           endColumn (Int32):
             "28"
           endLine (Int32):
-            "250"
+            "239"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "19"
           startLine (Int32):
-            "250"
+            "239"
         key (Literal):
           Extent (Extent):
             endColumn (Int32):
               "28"
             endLine (Int32):
-              "250"
+              "239"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "19"
             startLine (Int32):
-              "250"
+              "239"
           literal (Map):
             "arrayList"
       keys (ArrayList):
@@ -9361,13 +8883,13 @@ hello!
             endColumn (Int32):
               "18"
             endLine (Int32):
-              "250"
+              "239"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "17"
             startLine (Int32):
-              "250"
+              "239"
           literal (Integer):
             "0"
   Entry (Statement)
@@ -9377,13 +8899,13 @@ hello!
           endColumn (Int32):
             "8"
           endLine (Int32):
-            "251"
+            "240"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "251"
+            "240"
         literal (Map):
           "textBox"
     val (Call):
@@ -9392,13 +8914,13 @@ hello!
           endColumn (Int32):
             "38"
           endLine (Int32):
-            "251"
+            "240"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "37"
           startLine (Int32):
-            "251"
+            "240"
         literal (Map):
           ""
       callableExpression (Select):
@@ -9406,37 +8928,37 @@ hello!
           endColumn (Int32):
             "37"
           endLine (Int32):
-            "251"
+            "240"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "9"
           startLine (Int32):
-            "251"
+            "240"
         first (Search):
           Extent (Extent):
             endColumn (Int32):
               "37"
             endLine (Int32):
-              "251"
+              "240"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "31"
             startLine (Int32):
-              "251"
+              "240"
           key (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "37"
               endLine (Int32):
-                "251"
+                "240"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "31"
               startLine (Int32):
-                "251"
+                "240"
             literal (Map):
               "System"
         keys (ArrayList):
@@ -9445,13 +8967,13 @@ hello!
               endColumn (Int32):
                 "30"
               endLine (Int32):
-                "251"
+                "240"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "23"
               startLine (Int32):
-                "251"
+                "240"
             literal (Map):
               "Windows"
           Entry (Literal)
@@ -9459,13 +8981,13 @@ hello!
               endColumn (Int32):
                 "22"
               endLine (Int32):
-                "251"
+                "240"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "17"
               startLine (Int32):
-                "251"
+                "240"
             literal (Map):
               "Forms"
           Entry (Literal)
@@ -9473,26 +8995,26 @@ hello!
               endColumn (Int32):
                 "16"
               endLine (Int32):
-                "251"
+                "240"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "9"
               startLine (Int32):
-                "251"
+                "240"
             literal (Map):
               "TextBox"
       Extent (Extent):
         endColumn (Int32):
           "38"
         endLine (Int32):
-          "251"
+          "240"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "9"
         startLine (Int32):
-          "251"
+          "240"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -9500,13 +9022,13 @@ hello!
           endColumn (Int32):
             "13"
           endLine (Int32):
-            "252"
+            "241"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "6"
           startLine (Int32):
-            "252"
+            "241"
         literal (Map):
           "textBox"
       Entry (Literal)
@@ -9514,13 +9036,13 @@ hello!
           endColumn (Int32):
             "5"
           endLine (Int32):
-            "252"
+            "241"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "252"
+            "241"
         literal (Map):
           "Text"
     val (Literal):
@@ -9528,13 +9050,13 @@ hello!
         endColumn (Int32):
           "145"
         endLine (Int32):
-          "252"
+          "241"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "14"
         startLine (Int32):
-          "252"
+          "241"
       literal (Map):
         "
 Alle meine Entchen,
@@ -9550,13 +9072,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "6"
           endLine (Int32):
-            "253"
+            "242"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "253"
+            "242"
         literal (Map):
           "lines"
     val (Select):
@@ -9564,37 +9086,37 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "20"
         endLine (Int32):
-          "253"
+          "242"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "7"
         startLine (Int32):
-          "253"
+          "242"
       first (Search):
         Extent (Extent):
           endColumn (Int32):
             "20"
           endLine (Int32):
-            "253"
+            "242"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "13"
           startLine (Int32):
-            "253"
+            "242"
         key (Literal):
           Extent (Extent):
             endColumn (Int32):
               "20"
             endLine (Int32):
-              "253"
+              "242"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "13"
             startLine (Int32):
-              "253"
+              "242"
           literal (Map):
             "textBox"
       keys (ArrayList):
@@ -9603,13 +9125,13 @@ Schwaenzchen in die Hoeh.
             endColumn (Int32):
               "12"
             endLine (Int32):
-              "253"
+              "242"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "7"
             startLine (Int32):
-              "253"
+              "242"
           literal (Map):
             "Lines"
   Entry (Statement)
@@ -9619,13 +9141,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "14"
           endLine (Int32):
-            "254"
+            "243"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "254"
+            "243"
         literal (Map):
           "alleMeineText"
     val (Select):
@@ -9633,37 +9155,37 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "22"
         endLine (Int32):
-          "254"
+          "243"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "15"
         startLine (Int32):
-          "254"
+          "243"
       first (Search):
         Extent (Extent):
           endColumn (Int32):
             "22"
           endLine (Int32):
-            "254"
+            "243"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "17"
           startLine (Int32):
-            "254"
+            "243"
         key (Literal):
           Extent (Extent):
             endColumn (Int32):
               "22"
             endLine (Int32):
-              "254"
+              "243"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "17"
             startLine (Int32):
-              "254"
+              "243"
           literal (Map):
             "lines"
       keys (ArrayList):
@@ -9672,13 +9194,13 @@ Schwaenzchen in die Hoeh.
             endColumn (Int32):
               "16"
             endLine (Int32):
-              "254"
+              "243"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "15"
             startLine (Int32):
-              "254"
+              "243"
           literal (Integer):
             "1"
   Entry (Statement)
@@ -9688,13 +9210,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "8"
           endLine (Int32):
-            "255"
+            "244"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "3"
           startLine (Int32):
-            "255"
+            "244"
         literal (Map):
           "lines"
       Entry (Literal)
@@ -9702,13 +9224,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "2"
           endLine (Int32):
-            "255"
+            "244"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "255"
+            "244"
         literal (Integer):
           "4"
     val (Literal):
@@ -9716,13 +9238,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "19"
         endLine (Int32):
-          "255"
+          "244"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "9"
         startLine (Int32):
-          "255"
+          "244"
       literal (Map):
         "bwuhahaha"
   Entry (Statement)
@@ -9732,13 +9254,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "10"
           endLine (Int32):
-            "256"
+            "245"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "256"
+            "245"
         literal (Map):
           "character"
     val (Literal):
@@ -9746,13 +9268,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "14"
         endLine (Int32):
-          "256"
+          "245"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "11"
         startLine (Int32):
-          "256"
+          "245"
       literal (Integer):
         "97"
   Entry (Statement)
@@ -9762,13 +9284,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "4"
           endLine (Int32):
-            "257"
+            "246"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "257"
+            "246"
         literal (Map):
           "tab"
     val (Literal):
@@ -9776,13 +9298,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "9"
         endLine (Int32):
-          "257"
+          "246"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "5"
         startLine (Int32):
-          "257"
+          "246"
       literal (Integer):
         "9"
   Entry (Statement)
@@ -9792,13 +9314,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "10"
           endLine (Int32):
-            "258"
+            "247"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "258"
+            "247"
         literal (Map):
           "backslash"
     val (Literal):
@@ -9806,13 +9328,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "15"
         endLine (Int32):
-          "258"
+          "247"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "11"
         startLine (Int32):
-          "258"
+          "247"
       literal (Integer):
         "92"
   Entry (Statement)
@@ -9822,13 +9344,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "8"
           endLine (Int32):
-            "259"
+            "248"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "259"
+            "248"
         literal (Map):
           "endline"
     val (Literal):
@@ -9836,13 +9358,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "13"
         endLine (Int32):
-          "259"
+          "248"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "9"
         startLine (Int32):
-          "259"
+          "248"
       literal (Integer):
         "10"
   Entry (Statement)
@@ -9852,13 +9374,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "8"
           endLine (Int32):
-            "260"
+            "249"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "260"
+            "249"
         literal (Map):
           "tabText"
     val (Literal):
@@ -9866,13 +9388,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "19"
         endLine (Int32):
-          "260"
+          "249"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "9"
         startLine (Int32):
-          "260"
+          "249"
       literal (Map):
         "			hello"
   Entry (Statement)
@@ -9882,13 +9404,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "12"
           endLine (Int32):
-            "261"
+            "250"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "261"
+            "250"
         literal (Map):
           "escapedText"
     val (Literal):
@@ -9896,13 +9418,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "23"
         endLine (Int32):
-          "261"
+          "250"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "13"
         startLine (Int32):
-          "261"
+          "250"
       literal (Map):
         "\'\n\\\t"
   Entry (Statement)
@@ -9912,13 +9434,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "13"
           endLine (Int32):
-            "262"
+            "251"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "262"
+            "251"
         literal (Map):
           "whileCounter"
     val (Literal):
@@ -9926,13 +9448,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "16"
         endLine (Int32):
-          "262"
+          "251"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "14"
         startLine (Int32):
-          "262"
+          "251"
       literal (Integer):
         "0"
   Entry (Statement)
@@ -9942,28 +9464,28 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "6"
           endLine (Int32):
-            "270"
+            "259"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "263"
+            "252"
         literal (Integer):
-          "8"
+          "6"
     val (Call):
       argumentExpression (Program):
         Extent (Extent):
           endColumn (Int32):
             "6"
           endLine (Int32):
-            "270"
+            "259"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "3"
           startLine (Int32):
-            "264"
+            "253"
         statements (ArrayList):
           Entry (Statement)
             keys (ArrayList):
@@ -9972,13 +9494,13 @@ Schwaenzchen in die Hoeh.
                   endColumn (Int32):
                     "6"
                   endLine (Int32):
-                    "266"
+                    "255"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "3"
                   startLine (Int32):
-                    "264"
+                    "253"
                 literal (Integer):
                   "1"
             val (Delayed):
@@ -10103,13 +9625,13 @@ Schwaenzchen in die Hoeh.
                 endColumn (Int32):
                   "6"
                 endLine (Int32):
-                  "266"
+                  "255"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "3"
                 startLine (Int32):
-                  "264"
+                  "253"
           Entry (Statement)
             keys (ArrayList):
               Entry (Literal)
@@ -10117,13 +9639,13 @@ Schwaenzchen in die Hoeh.
                   endColumn (Int32):
                     "6"
                   endLine (Int32):
-                    "270"
+                    "259"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "3"
                   startLine (Int32):
-                    "268"
+                    "257"
                 literal (Integer):
                   "2"
             val (Delayed):
@@ -10265,50 +9787,50 @@ Schwaenzchen in die Hoeh.
                 endColumn (Int32):
                   "6"
                 endLine (Int32):
-                  "270"
+                  "259"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "3"
                 startLine (Int32):
-                  "268"
+                  "257"
       callableExpression (Search):
         Extent (Extent):
           endColumn (Int32):
             "6"
           endLine (Int32):
-            "263"
+            "252"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "263"
+            "252"
         key (Literal):
           Extent (Extent):
             endColumn (Int32):
               "6"
             endLine (Int32):
-              "263"
+              "252"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "1"
             startLine (Int32):
-              "263"
+              "252"
           literal (Map):
             "while"
       Extent (Extent):
         endColumn (Int32):
           "6"
         endLine (Int32):
-          "270"
+          "259"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "1"
         startLine (Int32):
-          "263"
+          "252"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -10316,13 +9838,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "10"
           endLine (Int32):
-            "271"
+            "260"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "271"
+            "260"
         literal (Map):
           "mapSelect"
     val (Select):
@@ -10330,25 +9852,25 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "10"
         endLine (Int32):
-          "273"
+          "262"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "11"
         startLine (Int32):
-          "271"
+          "260"
       first (Program):
         Extent (Extent):
           endColumn (Int32):
             "10"
           endLine (Int32):
-            "273"
+            "262"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "2"
           startLine (Int32):
-            "272"
+            "261"
         statements (ArrayList):
           Entry (Statement)
             keys (ArrayList):
@@ -10357,13 +9879,13 @@ Schwaenzchen in die Hoeh.
                   endColumn (Int32):
                     "3"
                   endLine (Int32):
-                    "272"
+                    "261"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "2"
                   startLine (Int32):
-                    "272"
+                    "261"
                 literal (Map):
                   "x"
             val (Literal):
@@ -10371,13 +9893,13 @@ Schwaenzchen in die Hoeh.
                 endColumn (Int32):
                   "12"
                 endLine (Int32):
-                  "272"
+                  "261"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "4"
                 startLine (Int32):
-                  "272"
+                  "261"
               literal (Map):
                 "success"
           Entry (Statement)
@@ -10387,13 +9909,13 @@ Schwaenzchen in die Hoeh.
                   endColumn (Int32):
                     "3"
                   endLine (Int32):
-                    "273"
+                    "262"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "2"
                   startLine (Int32):
-                    "273"
+                    "262"
                 literal (Map):
                   "y"
             val (Literal):
@@ -10401,13 +9923,13 @@ Schwaenzchen in die Hoeh.
                 endColumn (Int32):
                   "10"
                 endLine (Int32):
-                  "273"
+                  "262"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "4"
                 startLine (Int32):
-                  "273"
+                  "262"
               literal (Map):
                 "hello"
       keys (ArrayList):
@@ -10416,13 +9938,13 @@ Schwaenzchen in die Hoeh.
             endColumn (Int32):
               "12"
             endLine (Int32):
-              "271"
+              "260"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "11"
             startLine (Int32):
-              "271"
+              "260"
           literal (Map):
             "x"
   Entry (Statement)
@@ -10432,13 +9954,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "12"
           endLine (Int32):
-            "274"
+            "263"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "274"
+            "263"
         literal (Map):
           "returnInMap"
     val (Delayed):
@@ -10481,13 +10003,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "12"
         endLine (Int32):
-          "275"
+          "264"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "2"
         startLine (Int32):
-          "275"
+          "264"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -10495,13 +10017,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "18"
           endLine (Int32):
-            "276"
+            "265"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "276"
+            "265"
         literal (Map):
           "literalAsArgument"
     val (Call):
@@ -10510,13 +10032,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "33"
           endLine (Int32):
-            "276"
+            "265"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "31"
           startLine (Int32):
-            "276"
+            "265"
         literal (Integer):
           "1"
       callableExpression (Search):
@@ -10524,35 +10046,35 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "30"
           endLine (Int32):
-            "276"
+            "265"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "19"
           startLine (Int32):
-            "276"
+            "265"
         key (Literal):
           Extent (Extent):
             endColumn (Int32):
               "30"
             endLine (Int32):
-              "276"
+              "265"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "19"
             startLine (Int32):
-              "276"
+              "265"
           literal (Map):
             "returnInMap"
       Extent (Extent):
         endColumn (Int32):
           "33"
         endLine (Int32):
-          "276"
+          "265"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "19"
         startLine (Int32):
-          "276"
+          "265"
