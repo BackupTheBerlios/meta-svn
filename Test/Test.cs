@@ -87,42 +87,42 @@ namespace Test {
 	}
 	public class Tests {
 		private static string filename=@"basicTest.meta";
-//		// TODO:make it possible to choose between different tests on command line, and whether to test at all
-//		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-//		public class ParseToAst:TestCase {
+		// TODO:make it possible to choose between different tests on command line, and whether to test at all
+		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
+		public class ParseToAst:TestCase {
+			public override object RunTestCase() {
+				return Interpreter.ParseToAst(Path.Combine(
+					Test.path,filename));
+			}
 //			public override object RunTestCase() {
-//				return Interpreter.ParseToAst(Path.Combine(
-//					Test.path,filename));
+//				return Interpreter.ParseToAst(new StreamReader(Path.Combine(
+//					Test.path,filename)).ReadToEnd());
 //			}
-////			public override object RunTestCase() {
-////				return Interpreter.ParseToAst(new StreamReader(Path.Combine(
-////					Test.path,filename)).ReadToEnd());
-////			}
-//		}
-//		public class CompileToMap:TestCase {
+		}
+		public class CompileToMap:TestCase {
+			public static Map map;
+			public override object RunTestCase() {
+				map=Interpreter.CompileToMap(Path.Combine(
+					Test.path,filename));
+				return map;
+			}
 //			public static Map map;
 //			public override object RunTestCase() {
-//				map=Interpreter.CompileToMap(Path.Combine(
-//					Test.path,filename));
+//				map=Interpreter.CompileToMap(new StreamReader(Path.Combine(
+//					Test.path,filename)));
 //				return map;
 //			}
-////			public static Map map;
-////			public override object RunTestCase() {
-////				map=Interpreter.CompileToMap(new StreamReader(Path.Combine(
-////					Test.path,filename)));
-////				return map;
-////			}
-//		}
-//		public class CompileToExpression:TestCase {
+		}
+		public class CompileToExpression:TestCase {
+			public override object RunTestCase() {
+				return Interpreter.CompileToMap(Path.Combine(
+					Test.path,filename)).Compile();
+			}
 //			public override object RunTestCase() {
-//				return Interpreter.CompileToMap(Path.Combine(
-//					Test.path,filename)).Compile();
+//				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
+//					Test.path,filename))).Compile();
 //			}
-////			public override object RunTestCase() {
-////				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
-////					Test.path,filename))).Compile();
-////			}
-//		}
+		}
 		public class Execute:TestCase {
 			public override object RunTestCase() {
 				Map argument=new Map();

@@ -71,8 +71,12 @@ namespace Meta {
 //		}
 		public class Call: Expression {
 			public override object Evaluate(IMap parent) {
+				object arg=argumentExpression.Evaluate(parent);
+				if(arg is IMap) {
+					arg=((IMap)arg).Clone();
+				}
 				return ((ICallable)callableExpression.Evaluate(parent)).Call(
-					((IMap)argumentExpression.Evaluate(parent)).Clone());
+					arg);
 			}
 			public static readonly Map callString=new Map("call");
 			public static readonly Map functionString=new Map("function");
@@ -1120,7 +1124,7 @@ namespace Meta {
 	namespace Types  {
 		/* Everything implementing this interface can be used in a Call expression */
 		public interface ICallable {
-			object Call(IMap argument);
+			object Call(object argument);
 		}
 		public interface IMap: IKeyValue {
 			IMap Parent {
@@ -1466,7 +1470,7 @@ namespace Meta {
 //				}
 //			}
 //			Map caller=null;
-			public IMap Argument {
+			public object Argument {
 				get {
 					return arg;
 				}
@@ -1474,7 +1478,7 @@ namespace Meta {
 					arg=value;
 				}
 			}
-			IMap arg=null;
+			object arg=null;
 			public bool IsString {
 				get {
 					return table.IsString;
@@ -1549,7 +1553,7 @@ namespace Meta {
 				result=function.Evaluate(this);
 				return result;
 			}
-			public object Call(IMap argument) {
+			public object Call(object argument) {
 				this.Argument=argument;
 				Expression function=(Expression)Compile();
 				object result;
@@ -2018,7 +2022,7 @@ namespace Meta {
 				converted=false;
 				return null;
 			}
-			public object Call(IMap argument) {
+			public object Call(object argument) {
 				object result=null;
 				// TODO: check this for every method:
 				// introduce own methodinfo class? that does the calling, maybe??? dynamic cast might become a performance
@@ -2042,12 +2046,12 @@ namespace Meta {
 					}
 				}
 				else {
-					ArrayList argumentList=argument.IntKeyValues;
+					ArrayList argumentList=((IMap)argument).IntKeyValues;
 					object returnValue=null;
 					ArrayList sameLengthMethods=new ArrayList();
 					foreach(MethodBase method in methods) {
 						if(argumentList.Count==method.GetParameters().Length) { // don't match if different parameter list length
-							if(argumentList.Count==argument.Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
+							if(argumentList.Count==((IMap)argument).Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
 								sameLengthMethods.Add(method);
 							}
 						}
@@ -2213,7 +2217,7 @@ namespace Meta {
 			public NetClass(Type type):base(null,type) {
 				this.constructor=new NetMethod(this.type);
 			}
-			public object Call(IMap argument) {
+			public object Call(object argument) {
 				return constructor.Call(argument);
 			}
 		}

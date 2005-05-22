@@ -262,3 +262,9 @@ while
 		whileCounter.parent.parent.parent=add
 			whileCounter
 			'1
+mapSelect=x.
+	x='success
+	y='hello
+returnInMap=:
+	result=arg
+literalAsArgument=returnInMap '1

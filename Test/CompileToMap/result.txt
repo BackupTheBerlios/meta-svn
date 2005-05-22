@@ -8455,3 +8455,203 @@ Schwaenzchen in die Hoeh.
                                                                         "literal"
                                                                       Value (Map):
                                                                         "1"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "118"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "literal"
+                  Value (Map):
+                    "mapSelect"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "x"
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "2"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "program"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "key"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "literal"
+                                      Value (Map):
+                                        "x"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "value"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "success"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "2"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "key"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "literal"
+                                      Value (Map):
+                                        "y"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "value"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "hello"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "119"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "literal"
+                  Value (Map):
+                    "returnInMap"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "delayed"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "program"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "1"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "key"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Integer):
+                                "1"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "result"
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "value"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "search"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "arg"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "120"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "literal"
+                  Value (Map):
+                    "literalAsArgument"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "call"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "function"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "search"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "literal"
+                          Value (Map):
+                            "returnInMap"
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "argument"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "1"
