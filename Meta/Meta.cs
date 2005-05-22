@@ -878,7 +878,16 @@ namespace Meta {
 						this.target=typeof(bool);
 					}
 					public override object Convert(object obj) {
-						return null;
+						int i=((Integer)obj).Int;
+						if(i==0) {
+							return false;
+						}
+						else if(i==1) {
+							return true;
+						}
+						else {
+							throw new ApplicationException("Integer could not be converted to bool because it is neither 0 nor 1.");
+						}
 					}
 
 				}
@@ -992,8 +1001,8 @@ namespace Meta {
 				}
 			}
 			private abstract class DotNetToMetaConversions {
-				/* These classes define the conversions that are performed on return values of .NET methods,
-				 * properties and fields that are called/accessed from Meta. */
+				/* These classes define the conversions that take place when .NET methods,
+				 * properties and fields return. */
 				public class ConvertStringToMap: DotNetToMetaConversion {
 					public ConvertStringToMap()   {
 						this.source=typeof(string);
@@ -1001,6 +1010,15 @@ namespace Meta {
 					public override object Convert(object obj) {
 						return new Map((string)obj);
 					}
+				}
+				public class ConvertBoolToInteger: DotNetToMetaConversion {
+					public ConvertBoolToInteger() {
+						this.source=typeof(bool);
+					}
+					public override object Convert(object obj) {
+						return (bool)obj? new Integer(1): new Integer(0);
+					}
+
 				}
 				public class ConvertByteToInteger: DotNetToMetaConversion {
 					public ConvertByteToInteger() {
@@ -2047,6 +2065,9 @@ namespace Meta {
 					}
 					else {
 						try {
+							if(this.name=="while") {
+								int asdf=0;
+							}
 							result=methods[0].Invoke(target,new object[] {argument});
 						}
 						catch {

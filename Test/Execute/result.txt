@@ -10,15 +10,6 @@ Entry (DictionaryEntry)
     "äaba"
 Entry (DictionaryEntry)
   Key (Map):
-    "while"
-  Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
-      "True"
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Void while(Meta.Types.Map)"
-Entry (DictionaryEntry)
-  Key (Map):
     "foreach"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
@@ -35,15 +26,6 @@ Entry (DictionaryEntry)
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Void switch(Meta.Types.Map)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "if"
-  Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
-      "True"
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Void if(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "equal"
@@ -1443,6 +1425,11 @@ Entry (DictionaryEntry)
   Value (TestClass):
 Entry (DictionaryEntry)
   Key (Map):
+    "boolTest"
+  Value (Integer):
+    "1"
+Entry (DictionaryEntry)
+  Key (Map):
     "memberTest"
   Value (MemberTest):
     instanceField (String):
@@ -1755,8 +1742,8 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "staticEventChanged"
-  Value (Boolean):
-    "True"
+  Value (Integer):
+    "1"
 Entry (DictionaryEntry)
   Key (Map):
     "staticEvent"
@@ -1778,8 +1765,8 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "instanceEventChanged"
-  Value (Boolean):
-    "True"
+  Value (Integer):
+    "1"
 Entry (DictionaryEntry)
   Key (Map):
     "instanceEvent"
@@ -2001,7 +1988,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "whileCounter"
   Value (Integer):
-    "10"
+    "0"
 Entry (DictionaryEntry)
   Key (Map):
     "mapSelect"

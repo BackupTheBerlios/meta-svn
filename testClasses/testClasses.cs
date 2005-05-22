@@ -54,6 +54,8 @@ namespace testClasses
 		protected string y="unchangedY";
 		protected string z="unchangedZ";
 
+		public static bool boolTest=false;
+
 		public static object TestClass_staticEvent(object sender) {
 			MethodBase[] m=typeof(TestClass).GetMethods();
 			return null;

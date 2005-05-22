@@ -109,6 +109,8 @@ this=merge.map
 	parent
 	testClasses
 testClass=TestClass'
+boolTest.TestClass='1
+boolTest=boolTest.TestClass
 memberTest=MemberTest'
 classField.MemberTest='a
 instanceField.memberTest='b
@@ -153,9 +155,9 @@ upperLevel='unchanged
 ChangeUpperLevel=:
 	upperLevel.parent.parent='changed
 ChangeUpperLevel'
-staticEventChanged='false
+staticEventChanged='0
 staticEvent.TestClass=:
-	staticEventChanged.parent.parent='true
+	staticEventChanged.parent.parent='1
 	this=1.arg
 staticEvent=staticEvent.TestClass
 TakeDelegate.TestClass
@@ -163,9 +165,9 @@ TakeDelegate.TestClass
 resultFromDelegate=GetResultFromDelegate.TestClass'
 staticEventResult=staticEvent.TestClass
 	testClass
-instanceEventChanged='false
+instanceEventChanged='0
 instanceEvent.testClass=:
-	instanceEventChanged.parent.parent='true
+	instanceEventChanged.parent.parent='1
 	this=1.arg
 instanceEvent=instanceEvent.testClass
 instanceEventResult=instanceEvent.testClass
@@ -179,14 +181,14 @@ firstIf=[equal
 	'1
 	one
 ].
-	true='then
-	false='else
+	1='then
+	0='else
 secondIf=[equal
 	'1
 	two
 ].
-	true='then
-	false='else
+	1='then
+	0='else
 firstSwitch='unchanged
 bigNumber='50020202029029233344
 
@@ -239,14 +241,14 @@ endline='\\n
 tabText="			hello"
 escapedText="\'\n\\\t"
 whileCounter='0
-while
-	:smaller
-		whileCounter.parent.parent.parent
-		'10
-	:
-		whileCounter.parent.parent.parent=add
-			whileCounter
-			'1
+//while
+//	:smaller
+//		whileCounter.parent.parent.parent
+//		'10
+//	:
+//		whileCounter.parent.parent.parent=add
+//			whileCounter
+//			'1
 mapSelect=x.
 	x='success
 	y='hello
