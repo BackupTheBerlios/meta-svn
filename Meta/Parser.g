@@ -373,6 +373,7 @@ squareBracketLookup:
 			map
 			|LITERAL
 			|delayed
+			|(call)=>call
 			|(select)=>select
 			|search
 		)

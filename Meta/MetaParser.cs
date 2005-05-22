@@ -889,7 +889,7 @@ _loop100_breakloop:			;
 					inputState.guessing++;
 					try {
 						{
-							select();
+							call();
 						}
 					}
 					catch (RecognitionException)
@@ -901,67 +901,94 @@ _loop100_breakloop:			;
 				}
 				if ( synPredMatched134 )
 				{
-					select();
+					call();
 					if (0 == inputState.guessing)
 					{
 						astFactory.addASTChild(currentAST, (AST)returnAST);
 					}
 				}
-				else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
-					search();
-					if (0 == inputState.guessing)
+				else {
+					bool synPredMatched136 = false;
+					if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 					{
-						astFactory.addASTChild(currentAST, (AST)returnAST);
+						int _m136 = mark();
+						synPredMatched136 = true;
+						inputState.guessing++;
+						try {
+							{
+								select();
+							}
+						}
+						catch (RecognitionException)
+						{
+							synPredMatched136 = false;
+						}
+						rewind(_m136);
+						inputState.guessing--;
 					}
+					if ( synPredMatched136 )
+					{
+						select();
+						if (0 == inputState.guessing)
+						{
+							astFactory.addASTChild(currentAST, (AST)returnAST);
+						}
+					}
+					else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
+						search();
+						if (0 == inputState.guessing)
+						{
+							astFactory.addASTChild(currentAST, (AST)returnAST);
+						}
+					}
+				else
+				{
+					throw new NoViableAltException(LT(1), getFilename());
 				}
-			else
-			{
-				throw new NoViableAltException(LT(1), getFilename());
+				}break; }
 			}
-			break; }
+			{
+				switch ( LA(1) )
+				{
+				case SPACES:
+				{
+					match(SPACES);
+					break;
+				}
+				case ENDLINE:
+				case RBRACKET:
+				{
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				 }
+			}
+			{
+				switch ( LA(1) )
+				{
+				case ENDLINE:
+				{
+					match(ENDLINE);
+					break;
+				}
+				case RBRACKET:
+				{
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				 }
+			}
+			match(RBRACKET);
+			squareBracketLookup_AST = (MetaAST)currentAST.root;
+			returnAST = squareBracketLookup_AST;
 		}
-		{
-			switch ( LA(1) )
-			{
-			case SPACES:
-			{
-				match(SPACES);
-				break;
-			}
-			case ENDLINE:
-			case RBRACKET:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			 }
-		}
-		{
-			switch ( LA(1) )
-			{
-			case ENDLINE:
-			{
-				match(ENDLINE);
-				break;
-			}
-			case RBRACKET:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			 }
-		}
-		match(RBRACKET);
-		squareBracketLookup_AST = (MetaAST)currentAST.root;
-		returnAST = squareBracketLookup_AST;
-	}
-	
+		
 	public void literalKey() //throws RecognitionException, TokenStreamException
 {
 		

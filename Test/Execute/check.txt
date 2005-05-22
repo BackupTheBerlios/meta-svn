@@ -1932,7 +1932,7 @@ Entry (DictionaryEntry)
       "hello"
 Entry (DictionaryEntry)
   Key (Integer):
-    "9"
+    "7"
   Value (Integer):
     "0"
 Entry (DictionaryEntry)

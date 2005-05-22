@@ -175,22 +175,18 @@ two='2
 firstIf='unchanged
 secondIf='unchanged
 thenText='then
-if
-	equal
-		'1
-		one
-	:
-		firstIf.parent.parent.parent=thenText
-	:
-		firstIf.parent.parent.parent='else
-if
-	equal
-		'1
-		two
-	:
-		secondIf.parent.parent.parent='then
-	:
-		secondIf.parent.parent.parent='else
+firstIf=[equal
+	'1
+	one
+].
+	true='then
+	false='else
+secondIf=[equal
+	'1
+	two
+].
+	true='then
+	false='else
 firstSwitch='unchanged
 bigNumber='50020202029029233344
 
