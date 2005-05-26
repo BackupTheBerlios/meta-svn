@@ -72,15 +72,15 @@ namespace Meta {
 			public Expression argumentExpression;
 			public Expression callableExpression;
 		}
-		public class Delayed: Expression {
+		public class Function: Expression {
 			public override object Evaluate(IMap parent) {
-				return delayed;
+				return function;
 			}
 			public static readonly Map runString=new Map("run");
-			public Delayed(Map code) {
-				this.delayed=(Map)code[runString];
+			public Function(Map code) {
+				this.function=(Map)code[runString];
 			}
-			public Map delayed;
+			public Map function;
 		}
 		public class Program: Expression {
 			public override object Evaluate(IMap parent) {
@@ -1247,8 +1247,8 @@ namespace Meta {
 					if(this.ContainsKey(Meta.Execution.Call.callString)) {
 						compiled=new Call(this);
 					}
-					else if(this.ContainsKey(Delayed.runString)) { // TODO: could be optimized, but compilation happens seldom
-						compiled=new Delayed(this);
+					else if(this.ContainsKey(Function.runString)) { // TODO: could be optimized, but compilation happens seldom
+						compiled=new Function(this);
 					}
 					else if(this.ContainsKey(Program.programString)) {
 						compiled=new Program(this);

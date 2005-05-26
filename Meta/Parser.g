@@ -43,6 +43,7 @@ tokens
   SELECT;
   SEARCH;
   KEY;
+  DELAYED;
 }
 {
     /**
@@ -70,7 +71,9 @@ COLON
     paraphrase="':'";
   }:
   '=';
-  
+HASH:
+	'#';
+
 EQUAL
   options {
     paraphrase="'='";
@@ -119,7 +122,7 @@ LITERAL_KEY
   options {
     paraphrase="a key";
   }:
-  ( ~ ('@'|' '|'\t'|'\r'|'\n'|'='|'.'|'/'|'\''|'"'|'('|')'|'['|']'|'*'|':') )+;
+  ( ~ ('@'|' '|'\t'|'\r'|'\n'|'='|'.'|'/'|'\''|'"'|'('|')'|'['|']'|'*'|':'|'#') )+;
     
 LITERAL
   options {
@@ -220,6 +223,7 @@ expression:
     (call)=>call
     |map
     |delayed
+    |function
     |LITERAL
     |(select)=>
     select
@@ -301,13 +305,22 @@ call:
   )
   {
     #call=#([CALL],#call);
-  };  
-	
+  };
+    
 delayed:
+  HASH!
+  expression
+  {
+    #delayed=#([DELAYED], #delayed);
+  };
+
+
+
+function:
   EQUAL!
   expression
   {
-    #delayed=#([FUNCTION], #delayed);
+    #function=#([FUNCTION], #function);
   };
 
 
@@ -372,6 +385,7 @@ squareBracketLookup:
 		(
 			map
 			|LITERAL
+			|function
 			|delayed
 			|(call)=>call
 			|(select)=>select
@@ -401,6 +415,7 @@ expression
     |result=select
     |result=search
     |result=literal
+    |result=function
     |result=delayed
   );
 key
@@ -466,18 +481,18 @@ call
     result=new Map();
     result.Extent=#call.Extent;
     Map call=new Map();
-    Map delayed=new Map();
+    Map function=new Map();
     Map argument=new Map();
   }:
   #(CALL
     (
-      delayed=expression
+      function=expression
     )
     (
       argument=expression
     )
     {
-      call[Call.functionString]=delayed;
+      call[Call.functionString]=function;
       call[Call.argumentString]=argument;
       result[Call.callString]=call;
     }
@@ -536,14 +551,26 @@ literal
   };
 
 
-delayed
+function
     returns[Map result]
     {
         result=new Map();
-        result.Extent=#delayed.Extent;
-        Map delayed;
+        result.Extent=#function.Extent;
+        Map function;
     }:
-    #(FUNCTION delayed=expression)
+    #(FUNCTION function=expression)
     {
-        result[Delayed.runString]=delayed;
+        result[Function.runString]=function;
+    };
+
+delayed
+    returns[Map result]
+    {
+        result=null;//new Map();
+        Map delayed; // TODO: remove
+    }:
+    #(DELAYED delayed=expression)
+    {
+        result=delayed;
+        result.Extent=#delayed.Extent;
     };
