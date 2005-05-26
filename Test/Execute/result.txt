@@ -2041,3 +2041,72 @@ Entry (DictionaryEntry)
         "result"
       Value (Integer):
         "1"
+Entry (DictionaryEntry)
+  Key (Map):
+    "returnFunction"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Map):
+        "delayed"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "literal"
+          Value (Map):
+            "functionResult"
+Entry (DictionaryEntry)
+  Key (Map):
+    "returnArg"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Map):
+        "search"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "literal"
+          Value (Map):
+            "arg"
+Entry (DictionaryEntry)
+  Key (Map):
+    "myArg"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Map):
+        "program"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "1"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "key"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "hello"
+            Entry (DictionaryEntry)
+              Key (Map):
+                "value"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "literal"
+                  Value (Map):
+                    "world"
+Entry (DictionaryEntry)
+  Key (Map):
+    "funcReturnTest"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Map):
+        "hello"
+      Value (Map):
+        "world"

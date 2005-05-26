@@ -50,8 +50,6 @@ lookedUpMap=[aMap]
 lookedUpNormalSymbol=["normal symbol"]
 lookedUpSymbol=lookupSymbol
 lookedUpLongSymbol=["long key symbol"]
-
-
 object=
 	a='default
 	autoSearch='default
@@ -191,7 +189,6 @@ secondIf=[equal
 	0='else
 firstSwitch='unchanged
 bigNumber='50020202029029233344
-
 firstSwitch=[bigNumber].
 	[bigNumber]=bigNumber
 secondSwitch='unchanged
@@ -255,3 +252,8 @@ mapSelect=x.
 returnInMap=:
 	result=arg
 literalAsArgument=returnInMap '1
+returnFunction=::'functionResult
+returnArg=:arg
+myArg=:
+	hello='world
+funcReturnTest=returnArg myArg'
