@@ -65,7 +65,7 @@ tokens
 		setColumn(getColumn()+1);
 	}
 }
-// TODO: rename to reflect the switching of colon and equal sign
+
 EQUAL
   options {
     paraphrase="':'";
@@ -153,33 +153,37 @@ SPACES
   }:
   (' ')+ ;//{_ttype=Token.SKIP;}
   
+ 
   
-LINE
+LINE		// everything in one rule because of indeterminisms
   options {
     paraphrase="a line";
   }
   {
     const int endOfFileValue=65535;
   }:
-  (NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?) => // TODO: Get rid of endOfFile, or remove the one newline?
-   NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?
+  /*(NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?) => // TODO: Get rid of endOfFile, or remove the one newline?
+   NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}? // Hmmmmhh, not sure about this anymore
   {
     _ttype=Token.SKIP;
-  }
-  |(('\t')* NEWLINE ('\t')* NEWLINE)=>
+  }*/
+  /*|(('\t')* NEWLINE ('\t')* NEWLINE)=>
   ('\t')* NEWLINE ('\t')*
 	{
 		_ttype=Token.SKIP;
-	}
+	}*/
 
-	|(('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE)=>
+	// comments
+	(('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE)=>
 	('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))*
 	{$setType(Token.SKIP); newline();}
-												 // TODO: factor out common stuff
+												 
 	|((('\t')*)! "//" (~('\n'|'\r'))* NEWLINE)=> // TODO: ! is unnecessary
-	(('\t')*)! "//" (~('\n'|'\r'))*
+	(('\t')*)! "//" (~('\n'|'\r'))*		// TODO: factor out common stuff
 	{$setType(Token.SKIP);}
 	
+	
+	// indentation
 	|('\t'!)* NEWLINE ('\t')*
 	{
 		_ttype=MetaLexerTokenTypes.INDENTATION;

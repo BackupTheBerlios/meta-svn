@@ -250,7 +250,7 @@ namespace Meta {
 		public class Interpreter  {
 			public static void SaveToFile(object meta,string fileName) {
 				StreamWriter writer=new StreamWriter(fileName);
-				writer.Write(MetaSerialize(meta,"",true));
+				writer.Write(MetaSerialize(meta,"",true).TrimEnd(new char[]{'\n'}));
 				writer.Close();
 			}
 			public static string MetaSerialize(object meta,string indent,bool isRightSide) {
@@ -372,8 +372,10 @@ namespace Meta {
 //				return program.Call(argument);
 //			}
 			public static object Run(string fileName,IMap argument) {
-				Map program=CompileToMap(fileName);
-//				program.Parent=Library.library;
+//				Map program=CompileToMap(fileName);
+				//				program.Parent=Library.library;
+				Map program=Interpreter.CompileToMap(fileName);
+
 				return CallProgram(program,argument,Library.library);
 			}
 
@@ -2124,7 +2126,7 @@ namespace Meta {
 		public class IndentationStream: TokenStream {
 			public IndentationStream(TokenStream stream)  {
 				this.stream=stream;
-				AddIndentationTokensToGetToLevel(0,new Token());
+				AddIndentationTokensToGetToLevel(0,new Token()); // TODO: remove "new Token" ?
 			}
 			public Token nextToken()  {
 				if(streamBuffer.Count==0)  {
@@ -2142,7 +2144,7 @@ namespace Meta {
 								indentation+='\t';
 							}
 							string text=t.getText();
-							text=text.Replace(Environment.NewLine,"\n");
+							text=text.Replace(Environment.NewLine,"\n"); // replace so we can use Split, which only works with characters
 							string[] lines=text.Split('\n');
 							string result="";
 							for(int k=0;k<lines.Length;k++) {
