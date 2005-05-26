@@ -71,6 +71,7 @@ EQUAL
     paraphrase="':'";
   }:
   '=';
+
 HASH:
 	'#';
 
@@ -568,14 +569,27 @@ delayed
         result[Delayed.delayedString]=mRun;
     };
 
+/*delayedExpressionOnly
+    returns[Map result]
+    {
+        result=new Map();
+        result.Extent=#delayedExpressionOnly.Extent;
+        Map mExpression;
+        Map mRun=new Map();
+    }:
+    #(DELAYED_EXPRESSION_ONLY mExpression=expression)
+    {
+				mRun[Expression.runString]=mExpression;
+        result[Delayed.delayedString]=mRun;
+    };*/
 delayedExpressionOnly
     returns[Map result]
     {
-        result=null;
+        result=new Map();
         Map mExpression=null;
     }:
     #(DELAYED_EXPRESSION_ONLY mExpression=expression)
     {
-			//result[Delayed.delayedString]=mExpression;
+			result[Delayed.delayedString]=mExpression;
 			//result.Extent=#delayedExpressionOnly.Extent;
     };

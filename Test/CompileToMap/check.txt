@@ -7943,3 +7943,131 @@ Schwaenzchen in die Hoeh.
                                 "literal"
                               Value (Map):
                                 ""
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "126"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "literal"
+                  Value (Map):
+                    "documentedFunction"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "program"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "key"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "doc"
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "value"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "literal"
+                          Value (Map):
+                            "This function returns 'hello ."
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "2"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "key"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "run"
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "value"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "delayed"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "hello"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "127"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "literal"
+                  Value (Map):
+                    "docFunctionResult"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "call"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "function"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "search"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "literal"
+                          Value (Map):
+                            "documentedFunction"
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "argument"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        ""

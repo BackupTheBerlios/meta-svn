@@ -344,7 +344,7 @@ _loop161_breakloop:			;
 		
 		MetaAST delayedExpressionOnly_AST_in = (MetaAST)_t;
 		
-		result=null;
+		result=new Map();
 		Map mExpression=null;
 		
 		
@@ -357,7 +357,7 @@ _loop161_breakloop:			;
 		_t = __t168;
 		_t = _t.getNextSibling();
 		
-					//result[Delayed.delayedString]=mExpression;
+					result[Delayed.delayedString]=mExpression;
 					//result.Extent=#delayedExpressionOnly.Extent;
 		
 		retTree_ = _t;

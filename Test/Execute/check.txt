@@ -2206,3 +2206,26 @@ Entry (DictionaryEntry)
         "hello"
       Value (Map):
         "world"
+Entry (DictionaryEntry)
+  Key (Map):
+    "documentedFunction"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Map):
+        "doc"
+      Value (Map):
+        "This function returns 'hello ."
+    Entry (DictionaryEntry)
+      Key (Map):
+        "run"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "literal"
+          Value (Map):
+            "hello"
+Entry (DictionaryEntry)
+  Key (Map):
+    "docFunctionResult"
+  Value (Map):
+    "hello"

@@ -1,8 +1,8 @@
 Extent (Extent):
   endColumn (Int32):
-    "32"
+    "38"
   endLine (Int32):
-    "277"
+    "281"
   fileName (String):
     "basicTest.meta"
   startColumn (Int32):
@@ -10158,3 +10158,155 @@ Schwaenzchen in die Hoeh.
           "16"
         startLine (Int32):
           "277"
+  Entry (Statement)
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          endColumn (Int32):
+            "19"
+          endLine (Int32):
+            "278"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "1"
+          startLine (Int32):
+            "278"
+        literal (Map):
+          "documentedFunction"
+    val (Program):
+      Extent (Extent):
+        endColumn (Int32):
+          "13"
+        endLine (Int32):
+          "280"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "2"
+        startLine (Int32):
+          "279"
+      statements (ArrayList):
+        Entry (Statement)
+          keys (ArrayList):
+            Entry (Literal)
+              Extent (Extent):
+                endColumn (Int32):
+                  "5"
+                endLine (Int32):
+                  "279"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "2"
+                startLine (Int32):
+                  "279"
+              literal (Map):
+                "doc"
+          val (Literal):
+            Extent (Extent):
+              endColumn (Int32):
+                "38"
+              endLine (Int32):
+                "279"
+              fileName (String):
+                "basicTest.meta"
+              startColumn (Int32):
+                "6"
+              startLine (Int32):
+                "279"
+            literal (Map):
+              "This function returns 'hello ."
+        Entry (Statement)
+          keys (ArrayList):
+            Entry (Literal)
+              Extent (Extent):
+                endColumn (Int32):
+                  "5"
+                endLine (Int32):
+                  "280"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "2"
+                startLine (Int32):
+                  "280"
+              literal (Map):
+                "run"
+          val (Delayed):
+            delayed (Map):
+              Entry (DictionaryEntry)
+                Key (Map):
+                  "literal"
+                Value (Map):
+                  "hello"
+            Extent:
+              null
+  Entry (Statement)
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          endColumn (Int32):
+            "18"
+          endLine (Int32):
+            "281"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "1"
+          startLine (Int32):
+            "281"
+        literal (Map):
+          "docFunctionResult"
+    val (Call):
+      argumentExpression (Literal):
+        Extent (Extent):
+          endColumn (Int32):
+            "38"
+          endLine (Int32):
+            "281"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "37"
+          startLine (Int32):
+            "281"
+        literal (Map):
+          ""
+      callableExpression (Search):
+        Extent (Extent):
+          endColumn (Int32):
+            "37"
+          endLine (Int32):
+            "281"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "19"
+          startLine (Int32):
+            "281"
+        key (Literal):
+          Extent (Extent):
+            endColumn (Int32):
+              "37"
+            endLine (Int32):
+              "281"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "19"
+            startLine (Int32):
+              "281"
+          literal (Map):
+            "documentedFunction"
+      Extent (Extent):
+        endColumn (Int32):
+          "38"
+        endLine (Int32):
+          "281"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "19"
+        startLine (Int32):
+          "281"
