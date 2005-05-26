@@ -52,23 +52,6 @@ namespace Meta {
 				}
 			}
 		}
-//		public interface Expression {
-//			object Evaluate(IMap parent);
-//		}
-
-//		public class Statement {
-//			public static readonly Map keyString=new Map("key");
-//			public static readonly Map valueString=new Map("value");
-//			public void Realize(IMap parent) {
-//				keyExpression.Assign(parent,this.valueExpression.Evaluate(parent));
-//			}
-//			public Statement(Map code) {
-//				this.keyExpression=(Select)((Map)code[keyString]).Compile();
-//				this.valueExpression=(Expression)((Map)code[valueString]).Compile();
-//			}
-//			public Select keyExpression;
-//			public Expression valueExpression;
-//		}
 		public class Call: Expression {
 			public override object Evaluate(IMap parent) {
 				object arg=argumentExpression.Evaluate(parent);
@@ -103,21 +86,10 @@ namespace Meta {
 			public override object Evaluate(IMap parent) {
 				Map local=new Map();
 				return Evaluate(parent,local);
-				//				local.Parent=parent;
-				//				Interpreter.callers.Add(local);
-				//				for(int i=0;i<statements.Count;i++) {
-				//					local=(Map)Interpreter.Current;
-				//					((Statement)statements[i]).Realize(local);
-				//				}
-				//				object result=Interpreter.Current;
-				//				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-				//				return result;
 			}
 			public object Evaluate(IMap parent,IMap local) {
-				//Map local=new Map();
 				local.Parent=parent;
 				Interpreter.callers.Add(local);
-//				object lLocal=local;
 				for(int i=0;i<statements.Count;i++) {
 					local=(Map)Interpreter.Current;
 					((Statement)statements[i]).Realize(local);
@@ -126,31 +98,6 @@ namespace Meta {
 				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
 				return result;
 			}
-//			public object Evaluate(IMap parent,IMap local) {
-//				//Map local=new Map();
-//				local.Parent=parent;
-//				Interpreter.callers.Add(local);
-//				object lLocal=local;
-//				for(int i=0;i<statements.Count;i++) {
-//					local=(Map)Interpreter.Current;
-//					((Statement)statements[i]).Realize(ref lLocal);
-//				}
-//				object result=Interpreter.Current;
-//				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-//				return result;
-//			}
-			//			public override object Evaluate(IMap parent) {
-			//				Map local=new Map();
-			//				local.Parent=parent;
-			//				Interpreter.callers.Add(local);
-			//				for(int i=0;i<statements.Count;i++) {
-			//					local=(Map)Interpreter.Current;
-			//					((Statement)statements[i]).Realize(local);
-			//				}
-			//				object result=Interpreter.Current;
-			//				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-			//				return result;
-			//			}
 			public static readonly Map programString=new Map("program");
 			public Program(Map code) {
 				foreach(Map statement in ((Map)code[programString]).IntKeyValues) {
@@ -231,12 +178,11 @@ namespace Meta {
 			public void Realize(IMap parent) {
 				object selected=parent;
 				object k;
-				//				object lParent=parent;
 				for(int i=0;i<keys.Count-1;i++) {
 					k=((Expression)keys[i]).Evaluate((IMap)parent);
-					if(k.Equals(new Map("TestClass"))) {
-						int asdf=0;
-					}
+//					if(k.Equals(new Map("TestClass"))) {
+//						int asdf=0;
+//					}
 					selected=((IKeyValue)selected)[k];
 					if(!(selected is IKeyValue)) {
 						selected=new NetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
@@ -251,7 +197,6 @@ namespace Meta {
 					else {
 						int asdf=0;
 					}
-					//parent=v;
 					Interpreter.Current=v;
 
 				}
@@ -259,43 +204,12 @@ namespace Meta {
 					((IKeyValue)selected)[lastKey]=v;
 				}
 			}
-//			public void Realize(ref object parent) {
-//				object selected=parent;
-//				object k;
-////				object lParent=parent;
-//				for(int i=0;i<keys.Count-1;i++) {
-//					k=((Expression)keys[i]).Evaluate((IMap)parent);
-//					if(k.Equals(new Map("TestClass"))) {
-//						int asdf=0;
-//					}
-//					selected=((IKeyValue)selected)[k];
-//					if(!(selected is IKeyValue)) {
-//						selected=new NetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
-//					}
-//				}
-//				object lastKey=((Expression)keys[keys.Count-1]).Evaluate((IMap)parent);
-//				object v=val.Evaluate((IMap)parent);
-//				if(lastKey.Equals(Map.thisString)) {
-//					if(v is Map) {
-//						((Map)v).Parent=((Map)parent).Parent;
-//					}
-//					else {
-//						int asdf=0;
-//					}
-//					parent=v;
-//
-//				}
-//				else {
-//					((IKeyValue)selected)[lastKey]=v;
-//				}
-//			}
 			public Statement(Map code) {
 				ArrayList intKeys=((Map)code[keyString]).IntKeyValues;
 				intKeys.Reverse();
 				foreach(Map key in intKeys) {
 					keys.Add(key.Compile());
 				}
-//				this.keyExpression=(Assign)((Map)code[keyString]).Compile();
 				this.val=(Expression)((Map)code[valueString]).Compile();
 			}
 			public ArrayList keys=new ArrayList();
@@ -306,101 +220,7 @@ namespace Meta {
 			public static readonly Map valueString=new Map("value");
 		}
 
-		// combine this into some sort of Statement, Assign is always in a statement right now, which is pointless
-//		public class Assign: LookupBase {
-//			public static readonly Map assignString=new Map("assign");
-//			public void Execute(IMap parent,object val) {
-//				IKeyValue p=preselection!=null?(IMap)preselection.Evaluate(parent):parent;
-//				p[key.Evaluate(parent)]=val;
-//			}
-//			public override object Evaluate(IMap parent) {
-//				return null;
-//			}
-//
-//			public Assign(Map data):base((Map)data[assignString]) {
-//			}
-//		}
-
-
-
-// // combine this into some sort of Statement, Assign is always in a statement right now, which is pointless
-//		public class Assign: LookupBase {
-//			public static readonly Map assignString=new Map("assign");
-//			public void Execute(IMap parent,object val) {
-//				IKeyValue p=preselection!=null?(IMap)preselection.Evaluate(parent):parent;
-//				p[key.Evaluate(parent)]=val;
-//			}
-//			public override object Evaluate(IMap parent) {
-//				return null;
-//			}
-//
-//			public Assign(Map data):base((Map)data[assignString]) {
-//			}
-//		}
-//		public class Statement {
-//			public void Realize(IMap parent) {
-//				keyExpression.Execute(parent,this.valueExpression.Evaluate(parent));
-//			}
-//			public Statement(Map code) {
-//				this.keyExpression=(Assign)((Map)code[keyString]).Compile();
-//				this.valueExpression=(Expression)((Map)code[valueString]).Compile();
-//			}
-//			public Assign keyExpression;
-//			public Expression valueExpression;
-//
-//
-//			public static readonly Map keyString=new Map("key");
-//			public static readonly Map valueString=new Map("value");
-//		}
-		
-		
-		// search never has a preselection, not really a LookupBase, change one of them, or just don't use it
-//		public class Search: LookupBase {
-//			public static readonly Map searchString=new Map("search");
-//			public override object Evaluate(IMap parent) {
-//				IMap pre=parent;
-//				object k=key.Evaluate(parent);
-//				while(!pre.ContainsKey(k)) {
-//					pre=pre.Parent;
-//					if(pre==null) {
-//						throw new KeyNotFoundException(k);
-//					}
-//				}
-//				return pre[k];
-//			}
-//			public Search(Map data):base((Map)data[searchString]) {
-//			}
-//		}
-//
-//		public class Lookup: LookupBase {
-//			public override object Evaluate(IMap parent) {
-//				IKeyValue p=(IKeyValue)preselection.Evaluate(parent);
-//				object k=key.Evaluate(parent);
-//				object r=p[k];
-//				if(r==null) {
-//					throw new KeyDoesNotExistException(k);
-//				}
-//				return r;
-//			}
-//			public Lookup(Map data):base(data) {
-//			}
-//		}
-//		public abstract class LookupBase: Expression {
-//			public static readonly Map lookupString=new Map("lookup");
-//			public static readonly Map keyString=new Map("key"); // rename, cause it collides with statement "key"
-//			public static readonly Map previousString=new Map("previous");
-//			protected Expression preselection;
-//			protected Expression key;
-//			public LookupBase(Map data) {
-//				Map lookup=(Map)data[lookupString];
-//				key=(Expression)((Map)lookup[keyString]).Compile();
-//				Map prev=(Map)lookup[previousString];
-//				if(prev!=null) {
-//					preselection=(Expression)prev.Compile();
-//				}
-//			}
-//		}
-
+	
 
 		public class Interpreter  {
 			public static void SaveToFile(object meta,string fileName) {
@@ -452,50 +272,6 @@ namespace Meta {
 					throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
 				}
 			}
-//			public static string MetaSerialize(object meta,string indent,bool isRightSide) {
-//				if(meta is Map) {
-//					string text="";
-//					Map map=(Map)meta;
-//					if(map.IsString) {
-//						text+="'"+(map).GetDotNetString()+"'";
-//					}
-//					else if(map.Count==0) {
-//						text+="()";
-//					}
-//					else {
-//						if(!isRightSide) {
-//							text+="(";
-//							foreach(DictionaryEntry entry in map) {
-//								text+='['+MetaSerialize(entry.Key,indent,true)+']'+'='+MetaSerialize(entry.Value,indent,true)+",";
-//							}
-//							if(map.Count!=0) {
-//								text=text.Remove(text.Length-1,1);
-//							}
-//							text+=")";
-//						}
-//						else {
-//							foreach(DictionaryEntry entry in map) {
-//								text+=indent+'['+MetaSerialize(entry.Key,indent,false)+']'+'=';
-//								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString) {
-//									text+="\n";
-//								}
-//								text+=MetaSerialize(entry.Value,indent+"  ",true);
-//								if(!(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString)) {
-//									text+="\n";
-//								}
-//							}
-//						}
-//					}
-//					return text;
-//				}
-//				else if(meta is Integer) {
-//					Integer integer=(Integer)meta;
-//					return "'"+integer.ToString()+"'";
-//				}
-//				else {
-//					throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
-//				}
-//			}
 			public static IKeyValue Merge(params IKeyValue[] maps) {
 				return MergeCollection(maps);
 			}
@@ -560,85 +336,20 @@ namespace Meta {
 					return obj;
 				}
 			}
-//			public static object Run(string fileName,IMap argument) {
-//				StreamReader a=new StreamReader(fileName); //TODO: check this, is it right or wrong???ß
-//				string x=a.ReadToEnd();
-//				a.Close();
-//				object result=Run(new StringReader(x),argument);
-//				return result;
-//			}
 			public static object Run(string fileName,IMap argument) {
-//				StreamReader reader=new StreamReader(fileName);
 				Map program=CompileToMap(fileName);
 				program.Parent=Library.library;
-//				reader.Close();
 				return program.Call(argument);
 			}
-//			public static object RunWithoutLibrary(string fileName,IMap argument) {
-//				StreamReader reader=new StreamReader(fileName);
-//				Map program=CompileToMap(reader);
-//				reader.Close();
-//				return program.Call(argument);
-//			}
+
 			public static object RunWithoutLibrary(string fileName,IMap argument) { // TODO: refactor, combine with Run
-//				StreamReader reader=new StreamReader(fileName);
 				Map program=CompileToMap(fileName);
-//				reader.Close();
 				return program.Call(argument);
 			}
-			//			public static Map CompileToMap(TextReader input) {
-			//				return (new MetaTreeParser()).map(ParseToAst(input.ReadToEnd()));
-			//			}
 			public static Map CompileToMap(string fileName) {
 				return (new MetaTreeParser()).map(ParseToAst(fileName));
 			}
-//			public static object Run(TextReader reader,IMap argument) {
-//				Map lastProgram=CompileToMap(reader);
-//				lastProgram.Parent=Library.library;
-//				object result=lastProgram.Call(argument);
-//				return result;
-//			}
-
-//			public static AST ParseToAst(string text)  {
-//				TextReader stream=new StringReader(Environment.NewLine+text+Environment.NewLine);
-//				MetaLexer lexer=new MetaLexer(stream);
-//				lexer.setLine(0); // hack to compensate for the newline added in IndentationStream
-//				Meta.Parser.MetaParser parser=new Meta.Parser.MetaParser( 
-//					new IndentationStream(lexer));
-//				//parser.getASTFactory().setASTNodeType("Meta.Parser.LineNumberAST");
-//				parser.map();
-//				return parser.getAST();
-//			}
 			public static AST ParseToAst(string fileName)  {
-////		// the name of the file to read
-////		System.String fileName = args[0];
-////		
-//		// construct the special shared input state that is needed
-//		// in order to annotate MetaTokens properly
-//		ExtentLexerSharedInputState lsis = new ExtentLexerSharedInputState(fileName);
-//	// construct the lexer
-//		AddLexer lex = new AddLexer(lsis);
-//		
-//		// tell the lexer the token class that we want
-//		lex.setTokenObjectClass("ValueMetaToken");
-//		
-//		// construct the parser
-//		AddParser par = new AddParser(lex);
-//		
-//		// tell the parser the AST class that we want
-//		par.setASTNodeType("MetaAST");
-//		
-//		// construct the interpreter (which is a TreeParser)
-//		AddInterpreter aint = new AddInterpreter();
-//		
-//		// parse the file
-//		par.topLevel();
-//		
-//		// get the tree that resulted from parsing
-//		AST ast = par.getAST();
-//		
-//		// interpret the tree
-//		aint.topLevel(ast);	
 
 				// TODO: Add the newlines here somewhere (or do this in IndentationStream?, somewhat easier and more logical maybe), but not possible, must be before lexer
 				// construct the special shared input state that is needed
@@ -655,39 +366,10 @@ namespace Meta {
 				MetaParser par = new MetaParser(new IndentationStream(lex));
 				// tell the parser the AST class that we want
 				par.setASTNodeClass("MetaAST");//
-	//			par.getASTFactory().setASTNodeType("MetaAST");
-		
-//				// construct the interpreter (which is a TreeParser)
-//				AddInterpreter aint = new AddInterpreter();
-//		
-//				// parse the file
-//				par.topLevel();
-//		
-//				// get the tree that resulted from parsing
-//				AST ast = par.getAST();
-//		
-//				// interpret the tree
-//				aint.topLevel(ast);	
-
-////				lexer.setLine(0); // hack to compensate for the newline added above
-//				Meta.Parser.MetaParser parser=new Meta.Parser.MetaParser( 
-//					new IndentationStream(lex));
 				par.map();
 				AST ast=par.getAST();
 				file.Close();
 				return ast;
-//				StreamReader file=new StreamReader(fileName);
-//				TextReader reader=new StringReader(Environment.NewLine+file.ReadToEnd()+Environment.NewLine);
-//				file.Close();
-//				MetaLexer lexer=new MetaLexer(reader);
-//				lexer.setLine(0); // hack to compensate for the newline added above
-//				Meta.Parser.MetaParser parser=new Meta.Parser.MetaParser( 
-//					new IndentationStream(lexer));
-//				parser.map();
-//		
-//	
-//
-//				return parser.getAST();
 			}
 
 			public static Map Arg {
@@ -847,18 +529,7 @@ namespace Meta {
 						}
 					}
 				}
-//				public class RecognizeBoolean:RecognizeLiteral {
-//					public override object Recognize(string text) {
-//						switch(text) {
-//							case "true":
-//								return true;
-//							case "false":
-//								return false;
-//							default:
-//								return null;
-//						}
-//					}
-//				}
+
 			}
 			private abstract class MetaToDotNetConversions {
 				/* These classes define the conversions that performed when a .NET method, field, or property
@@ -1112,18 +783,7 @@ namespace Meta {
 			public RuntimeException(string message):base(message) {
 			}
 		}
-//		public class RuntimeException:MetaException {
-//			string message;
-//			string fileName;
-//			int line;
-//			int column;
-//			public RuntimeException(string message,string fileName, int line,int column) {
-//				this.message=message;
-//				this.fileName=fileName;
-//				this.line=line;
-//				this.column=column;
-//			}
-//		}
+
 
 		/* Base class for key exceptions. */
 		public abstract class KeyException:MetaException {
@@ -1183,12 +843,6 @@ namespace Meta {
 			public object Load() {
 				return Interpreter.Run(path,new Map()); // TODO: Improve this interface, isn't read lazily anyway
 			}
-//			public object Load() {
-//				StreamReader reader=new StreamReader(path); 
-//				object result=Interpreter.Run(reader,new Map()); // TODO: Improve this interface, isn't read lazily anyway
-//				reader.Close();
-//				return result;
-//			}
 			public MetaLibrary(string path) {
 				this.path=path;
 			}
@@ -1489,15 +1143,6 @@ namespace Meta {
 			public static readonly Map parentString=new Map("parent");
 			public static readonly Map argString=new Map("arg");
 			public static readonly Map thisString=new Map("this");
-//			public Map Calkler {
-//				get {
-//					return caller;
-//				}
-//				set {
-//					caller=value;
-//				}
-//			}
-//			Map caller=null;
 			public object Argument {
 				get {
 					return arg;
@@ -1547,20 +1192,10 @@ namespace Meta {
 					else {
 						object result=table[key];
 						return result;
-							// TODO: add IMetaType to combine this stuff
-//						if(!(result is IMap || result is Integer || result is NetClass || result is NetMethod)) {
-//							return new NetObject(result);
-//						}
-//						else {
-//							return result;
-//						}
 					}
 				}
 				set {
 					if(value!=null) {
-//						if(value is NetObject) { // make this !IMetaType (???)
-//							value=((NetObject)value).obj;
-//						}
 						isHashCashed=false;
 						if(key.Equals(thisString)) {
 							this.table=((Map)value).table.Clone();
@@ -1616,12 +1251,6 @@ namespace Meta {
 						compiled=new Search(this);
 					else if(this.ContainsKey(new Map("select")))
 						compiled=new Select(this);
-//					else if(this.ContainsKey(new Map("assign")))
-//						compiled=new Assign(this);
-//					else if(this.ContainsKey(new Map("lookup")))
-//						compiled=new Lookup(this);
-//					else if(this.ContainsKey(new Map("select")))
-//						compiled=new Select(this);
 					else if(this.ContainsKey(new Map("value")) && this.ContainsKey(new Map("key")))
 						compiled=new Statement(this);
 					else
@@ -1635,32 +1264,6 @@ namespace Meta {
 				}
 				return compiled;
 			}
-//			public object Compile()  { // TODO:Split this into CompileStatement and CompileExpression
-//
-//				if(compiled==null)  {
-//					if(this.ContainsKey(new Map("call")))
-//						compiled=new Call(this);
-//					else if(this.ContainsKey(new Map("delayed")))
-//						compiled=new Delayed(this);
-//					else if(this.ContainsKey(new Map("program")))
-//						compiled=new Program(this);
-//					else if(this.ContainsKey(new Map("literal")))
-//						compiled=new Literal(this);
-//					else if(this.ContainsKey(new Map("select")))
-//						compiled=new Select(this);
-//					else if(this.ContainsKey(new Map("value")) && this.ContainsKey(new Map("key")))
-//						compiled=new Statement(this);
-//					else
-//						throw new RuntimeException("Cannot compile non-code map.");
-//				}
-//				if(this.Extent!=null) {
-//					int asdf=0;
-//				}		
-//				if(compiled is Expression) {
-//					((Expression)compiled).Extent=this.Extent;
-//				}
-//				return compiled;
-//			}
 			public bool ContainsKey(object key)  {
 				if(key is Map) {
 					if(key.Equals(argString)) {
@@ -1696,15 +1299,6 @@ namespace Meta {
 			}
 			private bool isHashCashed=false;
 			private int hash;
-//			int line=0;
-//			public int Line {
-//				get {
-//					return line;
-//				}
-//				set {
-//					line=value;
-//				}
-//			}
 
 			Extent extent;
 			public Extent Extent {
@@ -2060,8 +1654,6 @@ namespace Meta {
 						// TODO: Comment this properly: kcall methods without arguments, ugly and redundant, because Invoke is not compatible between
 						// constructor and normal method
 						result=((ConstructorInfo)methods[0]).Invoke(new object[] {argument}); 
-
-						//						result=((ConstructorInfo)methods[0]).Invoke(new object[] {}); 
 					}
 					else {
 						try {
@@ -2073,7 +1665,6 @@ namespace Meta {
 						catch {
 							throw new RuntimeException("Could not invoke "+this.name+".");
 						}
-						//						result=methods[0].Invoke(target,new object[] {});
 					}
 				}
 				else {
@@ -2114,10 +1705,8 @@ namespace Meta {
 					if(!executed && methods[0] is ConstructorInfo) {
 						object o=new NetMethod(type).Call(new Map());
 						result=with(o,((Map)argument));
-//						result=with(o,((Map)Interpreter.Arg));
 					}
 				}		
-				//Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);// change to RemoveAt
 				return Interpreter.ConvertDotNetToMeta(result);
 			}
 			// TODO: Refactor, include 
@@ -2394,7 +1983,7 @@ namespace Meta {
 							}
 						}
 					}
-					if(obj!=null && key is Integer && type.IsArray) { // use .IsArray
+					if(obj!=null && key is Integer && type.IsArray) {
 						bool isConverted; 
 						object converted=Interpreter.ConvertMetaToDotNet(value,type.GetElementType(),out isConverted);
 						if(isConverted) {
@@ -2405,7 +1994,7 @@ namespace Meta {
 					NetMethod indexer=new NetMethod("set_Item",obj,type);
 					Map arguments=new Map();
 					arguments[new Integer(1)]=key;
-					arguments[new Integer(2)]=value;//lazy
+					arguments[new Integer(2)]=value;// do this more efficiently?
 					try {
 						indexer.Call(arguments);
 					}
@@ -2547,38 +2136,6 @@ namespace Meta {
 			protected TokenStream stream;
 			protected int presentIndentationLevel=-1;
 		}
-//		public class LineNumberAST:CommonAST {
-//			private int lineNumber;
-//			public LineNumberAST() { }
-//			public LineNumberAST(Token tok):base(tok){}
-//			public override void initialize(AST t) {
-//				base.initialize(t);
-//				if (t.GetType().Name.Equals("LineNumberAST")) {
-//					LineNumberAST t2 = (LineNumberAST)t;
-//					lineNumber = t2.lineNumber;
-//				}
-//			}
-//			//		public void initialize(AST t) {
-//			//			super.initialize(t);
-//			//			if (t.getClass().getName().compareTo("LineNumberAST") == 0) {
-//			//				LineNumberAST t2 = (LineNumberAST)t;
-//			//				lineNumber = t2.lineNumber;
-//			//			}
-//			//		}
-//			public override void initialize(Token tok) {
-//				base.initialize(tok);
-//				lineNumber = tok.getLine(); /* store the line number from the token */
-//			}
-//			//		public void initialize(Token tok) {
-//			//			super.initialize(tok);
-//			//			lineNumber = tok.getLine(); /* store the line number from the token */
-//			//		}
-//
-//			/* use this function in your tree walker to get the token's line number */
-//			public int getLineNumber() {
-//				return lineNumber;
-//			}
-//		}
 	}
 	namespace TestingFramework {
 		public interface ISerializeSpecial {
