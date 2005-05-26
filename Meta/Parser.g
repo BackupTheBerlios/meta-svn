@@ -545,5 +545,5 @@ delayed
     }:
     #(FUNCTION delayed=expression)
     {
-        result[Delayed.delayedString]=delayed;
+        result[Delayed.runString]=delayed;
     };

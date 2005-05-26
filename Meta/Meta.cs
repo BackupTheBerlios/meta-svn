@@ -76,9 +76,9 @@ namespace Meta {
 			public override object Evaluate(IMap parent) {
 				return delayed;
 			}
-			public static readonly Map delayedString=new Map("delayed");
+			public static readonly Map runString=new Map("run");
 			public Delayed(Map code) {
-				this.delayed=(Map)code[delayedString];
+				this.delayed=(Map)code[runString];
 			}
 			public Map delayed;
 		}
@@ -1244,22 +1244,22 @@ namespace Meta {
 			}
 			public Expression Compile()  { // compiled Statements are not cached, only expressions
 				if(compiled==null)  {
-					if(this.ContainsKey(new Map("call"))) {
+					if(this.ContainsKey(Meta.Execution.Call.callString)) {
 						compiled=new Call(this);
 					}
-					else if(this.ContainsKey(new Map("delayed"))) { // TODO: could be optimized, but compilation happens seldom
+					else if(this.ContainsKey(Delayed.runString)) { // TODO: could be optimized, but compilation happens seldom
 						compiled=new Delayed(this);
 					}
-					else if(this.ContainsKey(new Map("program"))) {
+					else if(this.ContainsKey(Program.programString)) {
 						compiled=new Program(this);
 					}
-					else if(this.ContainsKey(new Map("literal"))) {
+					else if(this.ContainsKey(Literal.literalString)) {
 						compiled=new Literal(this);
 					}
-					else if(this.ContainsKey(new Map("search"))) {// TODO: use static expression strings
+					else if(this.ContainsKey(Search.searchString)) {// TODO: use static expression strings
 						compiled=new Search(this);
 					}
-					else if(this.ContainsKey(new Map("select"))) {
+					else if(this.ContainsKey(Select.selectString)) {
 						compiled=new Select(this);
 					}
 					else {
