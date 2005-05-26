@@ -257,7 +257,3 @@ returnArg=:arg
 myArg=:
 	hello='world
 funcReturnTest=returnArg myArg'
-documentedFunction=
-	doc="This function returns 'hello ."
-	run=#'hello
-docFunctionResult=documentedFunction'

@@ -37,10 +37,10 @@ namespace Meta.Parser
 		public const int SELECT = 12;
 		public const int SEARCH = 13;
 		public const int KEY = 14;
-		public const int DELAYED = 15;
-		public const int COLON = 16;
+		public const int DELAYED_EXPRESSION_ONLY = 15;
+		public const int EQUAL = 16;
 		public const int HASH = 17;
-		public const int EQUAL = 18;
+		public const int COLON = 18;
 		public const int LBRACKET = 19;
 		public const int RBRACKET = 20;
 		public const int LPAREN = 21;
@@ -66,7 +66,7 @@ namespace Meta.Parser
 		
 		MetaAST expression_AST_in = (MetaAST)_t;
 		
-		result=null;
+		result=null;//new Map();
 		
 		
 		{
@@ -106,13 +106,13 @@ namespace Meta.Parser
 			}
 			case FUNCTION:
 			{
-				result=function(_t);
+				result=delayed(_t);
 				_t = retTree_;
 				break;
 			}
-			case DELAYED:
+			case DELAYED_EXPRESSION_ONLY:
 			{
-				result=delayed(_t);
+				result=delayedExpressionOnly(_t);
 				_t = retTree_;
 				break;
 			}
@@ -135,7 +135,7 @@ namespace Meta.Parser
 		result=new Map();
 		result.Extent=call_AST_in.Extent;
 		Map call=new Map();
-		Map function=new Map();
+		Map delayed=new Map();
 		Map argument=new Map();
 		
 		
@@ -144,7 +144,7 @@ namespace Meta.Parser
 		match((AST)_t,CALL);
 		_t = _t.getFirstChild();
 		{
-			function=expression(_t);
+			delayed=expression(_t);
 			_t = retTree_;
 		}
 		{
@@ -152,7 +152,7 @@ namespace Meta.Parser
 			_t = retTree_;
 		}
 		
-		call[Call.functionString]=function;
+		call[Call.functionString]=delayed;
 		call[Call.argumentString]=argument;
 		result[Call.callString]=call;
 		
@@ -310,53 +310,55 @@ _loop161_breakloop:			;
 		return result;
 	}
 	
-	public Map  function(AST _t) //throws RecognitionException
-{
-		Map result;
-		
-		MetaAST function_AST_in = (MetaAST)_t;
-		
-		result=new Map();
-		result.Extent=function_AST_in.Extent;
-		Map function;
-		
-		
-		AST __t166 = _t;
-		MetaAST tmp24_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
-		match((AST)_t,FUNCTION);
-		_t = _t.getFirstChild();
-		function=expression(_t);
-		_t = retTree_;
-		_t = __t166;
-		_t = _t.getNextSibling();
-		
-		result[Function.runString]=function;
-		
-		retTree_ = _t;
-		return result;
-	}
-	
 	public Map  delayed(AST _t) //throws RecognitionException
 {
 		Map result;
 		
 		MetaAST delayed_AST_in = (MetaAST)_t;
 		
-		result=null;//new Map();
-		Map delayed; // TODO: remove
+		result=new Map();
+		result.Extent=delayed_AST_in.Extent;
+		Map mExpression;
+		Map mRun=new Map();
+		
+		
+		AST __t166 = _t;
+		MetaAST tmp24_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
+		match((AST)_t,FUNCTION);
+		_t = _t.getFirstChild();
+		mExpression=expression(_t);
+		_t = retTree_;
+		_t = __t166;
+		_t = _t.getNextSibling();
+		
+						mRun[Expression.runString]=mExpression;
+		result[Delayed.delayedString]=mRun;
+		
+		retTree_ = _t;
+		return result;
+	}
+	
+	public Map  delayedExpressionOnly(AST _t) //throws RecognitionException
+{
+		Map result;
+		
+		MetaAST delayedExpressionOnly_AST_in = (MetaAST)_t;
+		
+		result=null;
+		Map mExpression=null;
 		
 		
 		AST __t168 = _t;
 		MetaAST tmp25_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
-		match((AST)_t,DELAYED);
+		match((AST)_t,DELAYED_EXPRESSION_ONLY);
 		_t = _t.getFirstChild();
-		delayed=expression(_t);
+		mExpression=expression(_t);
 		_t = retTree_;
 		_t = __t168;
 		_t = _t.getNextSibling();
 		
-		result=delayed;
-		result.Extent=delayed_AST_in.Extent;
+					//result[Delayed.delayedString]=mExpression;
+					//result.Extent=#delayedExpressionOnly.Extent;
 		
 		retTree_ = _t;
 		return result;
@@ -460,7 +462,7 @@ _loop146_breakloop:		;
 		@"""SELECT""",
 		@"""SEARCH""",
 		@"""KEY""",
-		@"""DELAYED""",
+		@"""DELAYED_EXPRESSION_ONLY""",
 		@"""':'""",
 		@"""HASH""",
 		@"""'='""",

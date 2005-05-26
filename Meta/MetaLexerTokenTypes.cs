@@ -17,10 +17,10 @@ namespace Meta.Parser
 		public const int SELECT = 12;
 		public const int SEARCH = 13;
 		public const int KEY = 14;
-		public const int DELAYED = 15;
-		public const int COLON = 16;
+		public const int DELAYED_EXPRESSION_ONLY = 15;
+		public const int EQUAL = 16;
 		public const int HASH = 17;
-		public const int EQUAL = 18;
+		public const int COLON = 18;
 		public const int LBRACKET = 19;
 		public const int RBRACKET = 20;
 		public const int LPAREN = 21;

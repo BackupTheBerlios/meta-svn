@@ -41,6 +41,7 @@ using System.Text;
 namespace Meta {
 	namespace Execution {
 		public abstract class Expression {
+			public static readonly Map runString=new Map("run"); // TODO: get rid of "String"-suffix, use Hungarian syntax, that is "s" prefix
 			public abstract object Evaluate(IMap parent);
 			Extent extent;
 			public Extent Extent {
@@ -72,16 +73,35 @@ namespace Meta {
 			public Expression argumentExpression;
 			public Expression callableExpression;
 		}
-		public class Function: Expression {
+
+
+
+
+
+		public class Delayed: Expression {
 			public override object Evaluate(IMap parent) {
-				return function;
+				return delayed;
 			}
-			public static readonly Map runString=new Map("run");
-			public Function(Map code) {
-				this.function=(Map)code[runString];
+			public static readonly Map delayedString=new Map("delayed");
+			public Delayed(Map code) {
+				this.delayed=(Map)code[delayedString];
 			}
-			public Map function;
+			public Map delayed;
 		}
+//
+//		public class DelayedExpresionOnly: Expression {
+//			public override object Evaluate(IMap parent) {
+//				return delayed;
+//			}
+//			public static readonly Map dealayedExpressionOnlyString=new Map("delayedExpressionOnly");
+//			public DelayedExpresionOnly(Map code) {
+//				this.delayed=(Map)code[dealayedExpressionOnlyString];
+//			}
+//			public Map delayed;
+//		}
+
+
+
 		public class Program: Expression {
 			public override object Evaluate(IMap parent) {
 				Map local=new Map();
@@ -341,16 +361,42 @@ namespace Meta {
 					return obj;
 				}
 			}
+//			public static object Run(string fileName,IMap argument) {
+//				Map program=CompileToMap(fileName);
+//				program.Parent=Library.library;
+//				return program.Call(argument);
+//			}
+//
+//			public static object RunWithoutLibrary(string fileName,IMap argument) { // TODO: refactor, combine with Run
+//				Map program=CompileToMap(fileName); // TODO: rename, is not really a program but a function
+//				return program.Call(argument);
+//			}
 			public static object Run(string fileName,IMap argument) {
 				Map program=CompileToMap(fileName);
-				program.Parent=Library.library;
-				return program.Call(argument);
+//				program.Parent=Library.library;
+				return CallProgram(program,argument,Library.library);
 			}
 
 			public static object RunWithoutLibrary(string fileName,IMap argument) { // TODO: refactor, combine with Run
-				Map program=CompileToMap(fileName);
-				return program.Call(argument);
+				Map program=CompileToMap(fileName); // TODO: rename, is not really a program but a function
+				return CallProgram(program,argument,null);
 			}
+			public static object CallProgram(Map program,IMap argument,IMap parent) {
+				Map mCallable=new Map();
+				mCallable[Expression.runString]=program;
+				mCallable.Parent=parent;
+				return mCallable.Call(argument);
+			}
+
+//			public static Map CompileToMap(string fileName,Map mArg) {
+//				Map mFunction=new Map();
+//				mFunction[Expression.runString]=(new MetaTreeParser()).map(ParseToAst(fileName));
+//				Map mArgument=new Map();
+//				Map mCall=new Map();
+//				mCall[Call.functionString]=mFunction;
+//				mCall[Call.argumentString]=mArgument;
+//				return mCall;
+//			}
 			public static Map CompileToMap(string fileName) {
 				return (new MetaTreeParser()).map(ParseToAst(fileName));
 			}
@@ -1124,7 +1170,7 @@ namespace Meta {
 			private Map cash=new Map();
 			public static string libraryPath="library"; 
 		}
-		/* Adapts the Meta keys of a Map to their .NET counterparts, useful when writing libraries. */
+		/* Automatically converts Meta keys of a Map to .NET counterparts. Useful when writing libraries. */
 		public class MapAdapter { // TODO: Make this a whole IMap implementation?, if seems useful
 			Map map;
 			public MapAdapter(Map map) {
@@ -1223,7 +1269,7 @@ namespace Meta {
 			}
 			public object Call(object argument) {
 				this.Argument=argument;
-				Expression function=(Expression)Compile();
+				Expression function=(Expression)((Map)this[Expression.runString]).Compile();
 				object result;
 				Interpreter.arguments.Add(argument);
 				result=function.Evaluate(this);
@@ -1247,8 +1293,8 @@ namespace Meta {
 					if(this.ContainsKey(Meta.Execution.Call.callString)) {
 						compiled=new Call(this);
 					}
-					else if(this.ContainsKey(Function.runString)) { // TODO: could be optimized, but compilation happens seldom
-						compiled=new Function(this);
+					else if(this.ContainsKey(Delayed.delayedString)) { // TODO: could be optimized, but compilation happens seldom
+						compiled=new Delayed(this);
 					}
 					else if(this.ContainsKey(Program.programString)) {
 						compiled=new Program(this);

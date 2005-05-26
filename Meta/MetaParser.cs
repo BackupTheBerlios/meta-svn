@@ -45,10 +45,10 @@ namespace Meta.Parser
 		public const int SELECT = 12;
 		public const int SEARCH = 13;
 		public const int KEY = 14;
-		public const int DELAYED = 15;
-		public const int COLON = 16;
+		public const int DELAYED_EXPRESSION_ONLY = 15;
+		public const int EQUAL = 16;
 		public const int HASH = 17;
-		public const int EQUAL = 18;
+		public const int COLON = 18;
 		public const int LBRACKET = 19;
 		public const int RBRACKET = 20;
 		public const int LPAREN = 21;
@@ -115,16 +115,16 @@ namespace Meta.Parser
 			}
 			case HASH:
 			{
-				delayed();
+				delayedExpressionOnly();
 				if (0 == inputState.guessing)
 				{
 					astFactory.addASTChild(currentAST, (AST)returnAST);
 				}
 				break;
 			}
-			case EQUAL:
+			case COLON:
 			{
-				function();
+				delayed();
 				if (0 == inputState.guessing)
 				{
 					astFactory.addASTChild(currentAST, (AST)returnAST);
@@ -266,6 +266,8 @@ namespace Meta.Parser
 				break;
 			}
 			case INDENT:
+			case HASH:
+			case COLON:
 			case LBRACKET:
 			case LITERAL_KEY:
 			case LITERAL:
@@ -296,6 +298,24 @@ namespace Meta.Parser
 				tmp3_AST = (MetaAST) astFactory.create(LT(1));
 				astFactory.addASTChild(currentAST, (AST)tmp3_AST);
 				match(LITERAL);
+				break;
+			}
+			case COLON:
+			{
+				delayed();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+				break;
+			}
+			case HASH:
+			{
+				delayedExpressionOnly();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
 				break;
 			}
 			default:
@@ -442,12 +462,12 @@ _loop98_breakloop:				;
 		returnAST = map_AST;
 	}
 	
-	public void delayed() //throws RecognitionException, TokenStreamException
+	public void delayedExpressionOnly() //throws RecognitionException, TokenStreamException
 {
 		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
-		MetaAST delayed_AST = null;
+		MetaAST delayedExpressionOnly_AST = null;
 		
 		match(HASH);
 		expression();
@@ -457,9 +477,39 @@ _loop98_breakloop:				;
 		}
 		if (0==inputState.guessing)
 		{
+			delayedExpressionOnly_AST = (MetaAST)currentAST.root;
+			
+			delayedExpressionOnly_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(DELAYED_EXPRESSION_ONLY)).add((AST)delayedExpressionOnly_AST));
+			
+			currentAST.root = delayedExpressionOnly_AST;
+			if ( (null != delayedExpressionOnly_AST) && (null != delayedExpressionOnly_AST.getFirstChild()) )
+				currentAST.child = delayedExpressionOnly_AST.getFirstChild();
+			else
+				currentAST.child = delayedExpressionOnly_AST;
+			currentAST.advanceChildToEnd();
+		}
+		delayedExpressionOnly_AST = (MetaAST)currentAST.root;
+		returnAST = delayedExpressionOnly_AST;
+	}
+	
+	public void delayed() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST delayed_AST = null;
+		
+		match(COLON);
+		expression();
+		if (0 == inputState.guessing)
+		{
+			astFactory.addASTChild(currentAST, (AST)returnAST);
+		}
+		if (0==inputState.guessing)
+		{
 			delayed_AST = (MetaAST)currentAST.root;
 			
-			delayed_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(DELAYED)).add((AST)delayed_AST));
+			delayed_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(FUNCTION)).add((AST)delayed_AST));
 			
 			currentAST.root = delayed_AST;
 			if ( (null != delayed_AST) && (null != delayed_AST.getFirstChild()) )
@@ -470,36 +520,6 @@ _loop98_breakloop:				;
 		}
 		delayed_AST = (MetaAST)currentAST.root;
 		returnAST = delayed_AST;
-	}
-	
-	public void function() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST function_AST = null;
-		
-		match(EQUAL);
-		expression();
-		if (0 == inputState.guessing)
-		{
-			astFactory.addASTChild(currentAST, (AST)returnAST);
-		}
-		if (0==inputState.guessing)
-		{
-			function_AST = (MetaAST)currentAST.root;
-			
-			function_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(FUNCTION)).add((AST)function_AST));
-			
-			currentAST.root = function_AST;
-			if ( (null != function_AST) && (null != function_AST.getFirstChild()) )
-				currentAST.child = function_AST.getFirstChild();
-			else
-				currentAST.child = function_AST;
-			currentAST.advanceChildToEnd();
-		}
-		function_AST = (MetaAST)currentAST.root;
-		returnAST = function_AST;
 	}
 	
 	public void select() //throws RecognitionException, TokenStreamException
@@ -604,7 +624,7 @@ _loop98_breakloop:				;
 			try {
 				{
 					key();
-					match(COLON);
+					match(EQUAL);
 				}
 			}
 			catch (RecognitionException)
@@ -622,7 +642,7 @@ _loop98_breakloop:				;
 				{
 					astFactory.addASTChild(currentAST, (AST)returnAST);
 				}
-				match(COLON);
+				match(EQUAL);
 				expression();
 				if (0 == inputState.guessing)
 				{
@@ -650,14 +670,14 @@ _loop98_breakloop:				;
 					{
 						switch ( LA(1) )
 						{
-						case COLON:
+						case EQUAL:
 						{
-							match(COLON);
+							match(EQUAL);
 							break;
 						}
 						case INDENT:
 						case HASH:
-						case EQUAL:
+						case COLON:
 						case LBRACKET:
 						case LITERAL_KEY:
 						case LITERAL:
@@ -881,7 +901,7 @@ _loop101_breakloop:			;
 			}
 			case INDENT:
 			case HASH:
-			case EQUAL:
+			case COLON:
 			case LBRACKET:
 			case LITERAL_KEY:
 			case LITERAL:
@@ -914,9 +934,9 @@ _loop101_breakloop:			;
 				match(LITERAL);
 				break;
 			}
-			case EQUAL:
+			case COLON:
 			{
-				function();
+				delayed();
 				if (0 == inputState.guessing)
 				{
 					astFactory.addASTChild(currentAST, (AST)returnAST);
@@ -925,7 +945,7 @@ _loop101_breakloop:			;
 			}
 			case HASH:
 			{
-				delayed();
+				delayedExpressionOnly();
 				if (0 == inputState.guessing)
 				{
 					astFactory.addASTChild(currentAST, (AST)returnAST);
@@ -1099,7 +1119,7 @@ _loop101_breakloop:			;
 		@"""SELECT""",
 		@"""SEARCH""",
 		@"""KEY""",
-		@"""DELAYED""",
+		@"""DELAYED_EXPRESSION_ONLY""",
 		@"""':'""",
 		@"""HASH""",
 		@"""'='""",

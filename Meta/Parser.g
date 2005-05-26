@@ -43,7 +43,7 @@ tokens
   SELECT;
   SEARCH;
   KEY;
-  DELAYED;
+  DELAYED_EXPRESSION_ONLY;
 }
 {
     /**
@@ -66,7 +66,7 @@ tokens
 	}
 }
 // TODO: rename to reflect the switching of colon and equal sign
-COLON
+EQUAL
   options {
     paraphrase="':'";
   }:
@@ -74,7 +74,7 @@ COLON
 HASH:
 	'#';
 
-EQUAL
+COLON
   options {
     paraphrase="'='";
   }:
@@ -222,8 +222,8 @@ expression:
   (
     (call)=>call
     |map
+    |delayedExpressionOnly
     |delayed
-    |function
     |LITERAL
     |(select)=>
     select
@@ -254,10 +254,10 @@ key:
 	}
 	;
 statement:
-    (key COLON)=>
+    (key EQUAL)=>
     (
       key
-      COLON! 
+      EQUAL! 
       expression
       {
         #statement=#([STATEMENT],#statement);
@@ -267,7 +267,7 @@ statement:
     (
 			// TODO: remove one branch, should not be indeterminate
       (
-        (COLON!)?
+        (EQUAL!)?
         expression
         {
             //Counters.counter++;
@@ -296,31 +296,33 @@ call:
   )
   (SPACES!)?
   (
-		(call)=>
+		(call)=> // TODO: replace with use expression
     call
     |map
     |(select)=>select
     |search
     |LITERAL
+    |delayed
+    |delayedExpressionOnly
   )
   {
     #call=#([CALL],#call);
   };
     
-delayed:
+delayedExpressionOnly:
   HASH!
   expression
   {
-    #delayed=#([DELAYED], #delayed);
+    #delayedExpressionOnly=#([DELAYED_EXPRESSION_ONLY], #delayedExpressionOnly);
   };
 
 
 
-function:
-  EQUAL!
+delayed:
+  COLON!
   expression
   {
-    #function=#([FUNCTION], #function);
+    #delayed=#([FUNCTION], #delayed);
   };
 
 
@@ -385,8 +387,8 @@ squareBracketLookup:
 		(
 			map
 			|LITERAL
-			|function
 			|delayed
+			|delayedExpressionOnly
 			|(call)=>call
 			|(select)=>select
 			|search
@@ -407,7 +409,7 @@ options {
 expression
   returns[Map result]
   {
-    result=null;
+    result=null;//new Map();
   }:
   (
     result=call
@@ -415,9 +417,10 @@ expression
     |result=select
     |result=search
     |result=literal
-    |result=function
     |result=delayed
-  );
+    |result=delayedExpressionOnly
+  )
+  ;
 key
 	returns[Map result]
 	{
@@ -481,18 +484,18 @@ call
     result=new Map();
     result.Extent=#call.Extent;
     Map call=new Map();
-    Map function=new Map();
+    Map delayed=new Map();
     Map argument=new Map();
   }:
   #(CALL
     (
-      function=expression
+      delayed=expression
     )
     (
       argument=expression
     )
     {
-      call[Call.functionString]=function;
+      call[Call.functionString]=delayed;
       call[Call.argumentString]=argument;
       result[Call.callString]=call;
     }
@@ -551,26 +554,28 @@ literal
   };
 
 
-function
-    returns[Map result]
-    {
-        result=new Map();
-        result.Extent=#function.Extent;
-        Map function;
-    }:
-    #(FUNCTION function=expression)
-    {
-        result[Function.runString]=function;
-    };
-
 delayed
     returns[Map result]
     {
-        result=null;//new Map();
-        Map delayed; // TODO: remove
-    }:
-    #(DELAYED delayed=expression)
-    {
-        result=delayed;
+        result=new Map();
         result.Extent=#delayed.Extent;
+        Map mExpression;
+        Map mRun=new Map();
+    }:
+    #(FUNCTION mExpression=expression)
+    {
+				mRun[Expression.runString]=mExpression;
+        result[Delayed.delayedString]=mRun;
+    };
+
+delayedExpressionOnly
+    returns[Map result]
+    {
+        result=null;
+        Map mExpression=null;
+    }:
+    #(DELAYED_EXPRESSION_ONLY mExpression=expression)
+    {
+			//result[Delayed.delayedString]=mExpression;
+			//result.Extent=#delayedExpressionOnly.Extent;
     };

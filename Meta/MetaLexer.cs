@@ -44,10 +44,10 @@ namespace Meta.Parser
 		public const int SELECT = 12;
 		public const int SEARCH = 13;
 		public const int KEY = 14;
-		public const int DELAYED = 15;
-		public const int COLON = 16;
+		public const int DELAYED_EXPRESSION_ONLY = 15;
+		public const int EQUAL = 16;
 		public const int HASH = 17;
-		public const int EQUAL = 18;
+		public const int COLON = 18;
 		public const int LBRACKET = 19;
 		public const int RBRACKET = 20;
 		public const int LPAREN = 21;
@@ -121,7 +121,7 @@ tryAgain:
 						{
 						case '=':
 						{
-							mCOLON(true);
+							mEQUAL(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -133,7 +133,7 @@ tryAgain:
 						}
 						case ':':
 						{
-							mEQUAL(true);
+							mCOLON(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -224,10 +224,10 @@ tryAgain:
 			}
 		}
 		
-	public void mCOLON(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+	public void mEQUAL(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
-		_ttype = COLON;
+		_ttype = EQUAL;
 		
 		match('=');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
@@ -252,10 +252,10 @@ tryAgain:
 		returnToken_ = _token;
 	}
 	
-	public void mEQUAL(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+	public void mCOLON(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
-		_ttype = EQUAL;
+		_ttype = COLON;
 		
 		match(':');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
