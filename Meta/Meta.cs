@@ -101,9 +101,14 @@ namespace Meta {
 			public static readonly Map programString=new Map("program");
 			public Program(Map code) {
 				foreach(Map statement in ((Map)code[programString]).IntKeyValues) {
-					this.statements.Add(statement.Compile()); // should we save the original maps instead of statements?
+					this.statements.Add(new Statement(statement)); // should we save the original maps instead of statements?
 				}
 			}
+//			public Program(Map code) {
+//				foreach(Map statement in ((Map)code[programString]).IntKeyValues) {
+//					this.statements.Add(statement.Compile()); // should we save the original maps instead of statements?
+//				}
+//			}
 			public readonly ArrayList statements=new ArrayList();
 		}
 		public class Literal: Expression {
@@ -1237,31 +1242,36 @@ namespace Meta {
 				clone.Extent=Extent;
 				return clone;
 			}
-			public object Compile()  { // TODO:Split this into CompileStatement and CompileExpression
+			public Expression Compile()  { // compiled Statements are not cached, only expressions
 				if(compiled==null)  {
-					if(this.ContainsKey(new Map("call")))
+					if(this.ContainsKey(new Map("call"))) {
 						compiled=new Call(this);
-					else if(this.ContainsKey(new Map("delayed"))) // TODO: could be optimized, but compilation happens seldom
+					}
+					else if(this.ContainsKey(new Map("delayed"))) { // TODO: could be optimized, but compilation happens seldom
 						compiled=new Delayed(this);
-					else if(this.ContainsKey(new Map("program")))
+					}
+					else if(this.ContainsKey(new Map("program"))) {
 						compiled=new Program(this);
-					else if(this.ContainsKey(new Map("literal")))
+					}
+					else if(this.ContainsKey(new Map("literal"))) {
 						compiled=new Literal(this);
-					else if(this.ContainsKey(new Map("search"))) // TODO: use static expression strings
+					}
+					else if(this.ContainsKey(new Map("search"))) {// TODO: use static expression strings
 						compiled=new Search(this);
-					else if(this.ContainsKey(new Map("select")))
+					}
+					else if(this.ContainsKey(new Map("select"))) {
 						compiled=new Select(this);
-					else if(this.ContainsKey(new Map("value")) && this.ContainsKey(new Map("key")))
-						compiled=new Statement(this);
-					else
+					}
+					else {
 						throw new RuntimeException("Cannot compile non-code map.");
+					}
 				}
-				if(this.Extent!=null) {
-					int asdf=0;
-				}		
-				if(compiled is Expression) {
+//				if(this.Extent!=null) {
+//					int asdf=0;
+//				}		
+//				if(compiled is Expression) {
 					((Expression)compiled).Extent=this.Extent;
-				}
+//				}
 				return compiled;
 			}
 			public bool ContainsKey(object key)  {
@@ -1322,7 +1332,7 @@ namespace Meta {
 			}
 			private IMap parent;
 			private MapStrategy table;
-			public object compiled;
+			public Expression compiled; // why have this at all, why not for statements? probably a question of performance.
 			public string Serialize(string indent,string[] functions) {
 				if(this.IsString) {
 					return indent+"\""+this.GetDotNetString()+"\""+"\n";
