@@ -176,7 +176,7 @@ LINE		// everything in one rule because of indeterminisms
 	// comments
 	(('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE)=>
 	('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))*
-	{$setType(Token.SKIP); newline();}
+	{$setType(Token.SKIP); /*newline()*/;}
 												 
 	|((('\t')*)! "//" (~('\n'|'\r'))* NEWLINE)=> // TODO: ! is unnecessary
 	(('\t')*)! "//" (~('\n'|'\r'))*		// TODO: factor out common stuff
@@ -294,22 +294,29 @@ statement:
     ;
     
 call:
-  (
-		(select)=>
-		select
-    |search // TODO: add map, literal, call
-  )
-  (SPACES!)?
-  (
-		(call)=> // TODO: replace with use expression
-    call
-    |map
-    |(select)=>select
-    |search
-    |LITERAL
-    |delayed
-    |delayedExpressionOnly
-  )
+	(
+		LPAREN!
+		(
+			(select)=>
+			select
+			|search // TODO: add map, literal, call
+		)
+		(SPACES!)?
+		(
+			(call)=> // TODO: replace with use expression
+			call
+			|(map
+					(SPACES!)?
+					(ENDLINE!)? // TODO: this is an ugly hack???
+				)
+			|(select)=>select
+			|search
+			|LITERAL
+			|delayed
+			|delayedExpressionOnly
+		)
+		RPAREN!
+	)
   {
     #call=#([CALL],#call);
   };
@@ -399,7 +406,7 @@ squareBracketLookup:
 			|search
 		)
 		(SPACES!)?
-		(ENDLINE!)?
+		(ENDLINE!)? // TODO: this is an ugly hack???, maybe not needed anymore, because implemented in call??
 		RBRACKET!
 	;
 {

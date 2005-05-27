@@ -1,7 +1,8 @@
-this=merge.map
+this=(merge.map
 	parent
 	=
 		'AssignedToCurrent
+)
 unicodeText='äaba
 //	Meta is a simple programming language.
 //	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
@@ -19,17 +20,20 @@ unicodeText='äaba
 //	You should have received a copy of the GNU General Public License
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-this=merge.map
+this=(merge.map
 	parent
 	programFlow
 	logic
 	map
 	math
-trimStartTest=trimStart
+)
+trimStartTest=(trimStart
 	"					hello"
 	'\\t
-form=Form.Forms.Windows.System
+)
+form=(Form.Forms.Windows.System
 	Text='hello
+)
 'ImpliedAutokey
 ='Autokey
 gacTest=Collections.System
@@ -67,21 +71,24 @@ object=
 		a.this='b
 a='default
 b='
-aSet=SetA.object'
-bSet=SetB.object
+aSet=(SetA.object')
+bSet=(SetB.object
 	value=
 		x='7
 		z='1
+)
 ReturnEverything=:
 	this=arg
-everythingReturned=ReturnEverything
+everythingReturned=(ReturnEverything
 	'a
 	'b
 	'c
-variableAsArgument=ReturnEverything
+)
+variableAsArgument=(ReturnEverything
 	'x
 	'y
 	'z
+)
 ReturnFunction=:
 	this=:
 		this=
@@ -93,98 +100,109 @@ SetCurrent=:
 		arg=arg
 		x=symbol.arg
 	this=x
-thisSet=SetCurrent
+thisSet=(SetCurrent
 	symbol='haha
+)
 FirstLevel=:
-	SecondLevel arg
+	(SecondLevel arg)
 SecondLevel=:arg
-argTest=FirstLevel
+argTest=(FirstLevel
 	a='z
-concatenate=concatenate.map
+)
+concatenate=(concatenate.map
 	'x
 	'yz
-this=merge.map
+)
+this=(merge.map
 	parent
 	testClasses
-testClass=TestClass'
+)
+testClass=(TestClass')
 boolTest.TestClass='1
 boolTest=boolTest.TestClass
-memberTest=MemberTest'
+memberTest=(MemberTest')
 classField.MemberTest='a
 instanceField.memberTest='b
 ClassProperty.MemberTest=InstanceProperty.memberTest
 InstanceProperty.memberTest=ClassProperty.MemberTest
 interceptedSymbol='/hello/
-positionalNoConversion=PositionalNoConversion
+positionalNoConversion=(PositionalNoConversion
 	'm
 	'n
 	'o
-positionalNoConversionConcatenated=Concatenate.positionalNoConversion
+)
+positionalNoConversionConcatenated=(Concatenate.positionalNoConversion
 	'r
 	's
 	't
-namedNoConversion=NamedNoConversion
+)
+namedNoConversion=(NamedNoConversion
 	=
 		'm
 		y='n
-namedNoConversionConcatenated=Concatenate.namedNoConversion
+)
+namedNoConversionConcatenated=(Concatenate.namedNoConversion
 	c='t
 	'r
-indexerNoConversion=IndexerNoConversion'
+)
+indexerNoConversion=(IndexerNoConversion')
 abc.indexerNoConversion='hihi
 indexerNoConversionIndexed=abc.indexerNoConversion
 interceptedSymbol2='1
 k='hello
 xyz='w
 literalFunction=:'5
-literalFunctionResult=literalFunction'
+literalFunctionResult=(literalFunction')
 function=:
 	this="simple function this"
 callFunction=:function
-callFunctionResult=callFunction '
+callFunctionResult=(callFunction')
 delayedFunction=::
 	x='y
-delayedFunctionResult=delayedFunction '
+delayedFunctionResult=(delayedFunction ')
 value='xyz
 selectionFunction=:value
-selectionFunctionResult=selectionFunction '
+selectionFunctionResult=(selectionFunction ')
 bigInteger='89383838383832839123497123047217340712340720347072304702340720347
 upperLevel='unchanged
 ChangeUpperLevel=:
 	upperLevel.parent.parent='changed
-ChangeUpperLevel'
+(ChangeUpperLevel')
 staticEventChanged='0
 staticEvent.TestClass=:
 	staticEventChanged.parent.parent='1
 	this=1.arg
 staticEvent=staticEvent.TestClass
-TakeDelegate.TestClass
+(TakeDelegate.TestClass
 	=:'resultFromDelegate
-resultFromDelegate=GetResultFromDelegate.TestClass'
-staticEventResult=staticEvent.TestClass
+)
+resultFromDelegate=(GetResultFromDelegate.TestClass')
+staticEventResult=(staticEvent.TestClass
 	testClass
+)
 instanceEventChanged='0
 instanceEvent.testClass=:
 	instanceEventChanged.parent.parent='1
 	this=1.arg
 instanceEvent=instanceEvent.testClass
-instanceEventResult=instanceEvent.testClass
+instanceEventResult=(instanceEvent.testClass
 	'5
+)
 one='1
 two='2
 firstIf='unchanged
 secondIf='unchanged
 thenText='then
-firstIf=[equal
+firstIf=[(equal
 	'1
 	one
-].
+)].
 	1='then
 	0='else
-secondIf=[equal
+secondIf=[(equal
 	'1
 	two
-].
+)].
 	1='then
 	0='else
 firstSwitch='unchanged
@@ -199,10 +217,11 @@ secondSwitch=3.
 emptyMap='
 emptyFunction=:
 	x='hello
-emptyFunctionResult=emptyFunction'
-font=Font.Drawing.System
+emptyFunctionResult=(emptyFunction')
+font=(Font.Drawing.System
 	"Courier New"
 	'10
+)
 escapedAtText=@"a"""""bc""@
 stringTest='hello
 6.stringTest=1.stringTest
@@ -213,14 +232,16 @@ x=
 		hello word!
 		hello!
 		"
-ored=bitwiseOr.math
+ored=(bitwiseOr.math
 	'20
 	Tab.Keys.Forms.Windows.System
-arrayList=ArrayList.Collections.System'
-Add.arrayList
+)
+arrayList=(ArrayList.Collections.System')
+(Add.arrayList
 	'hello
+)
 arrayListResult=0.arrayList
-textBox=TextBox.Forms.Windows.System'
+textBox=(TextBox.Forms.Windows.System')
 Text.textBox="
 	Alle meine Entchen,
 	schwimmen auf dem See,
@@ -251,13 +272,13 @@ mapSelect=x.
 	y='hello
 returnInMap=:
 	result=arg
-literalAsArgument=returnInMap '1
+literalAsArgument=(returnInMap '1)
 returnFunction=::'functionResult
 returnArg=:arg
 myArg=:
 	hello='world
-funcReturnTest=returnArg myArg'
+funcReturnTest=(returnArg (myArg'))
 documentedFunction=
 	doc="This function returns 'hello ."
 	run=#'hello
-docFunctionResult=documentedFunction'
+docFunctionResult=(documentedFunction')

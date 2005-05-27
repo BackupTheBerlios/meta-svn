@@ -666,7 +666,7 @@ _loop46_breakloop:				;
 			}    // ( ... )*
 			if (0==inputState.guessing)
 			{
-				_ttype = Token.SKIP; newline();
+				_ttype = Token.SKIP; /*newline()*/;
 			}
 		}
 		else {
