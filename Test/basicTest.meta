@@ -292,3 +292,8 @@ returnXY=:
 	x=
 		y='valueOfY
 selectFromCall=y.x.(returnXY')
+mapAndMapCall=(
+	run=#arg
+
+	x='y
+)

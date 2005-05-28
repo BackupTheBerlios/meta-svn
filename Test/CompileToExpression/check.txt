@@ -1,8 +1,8 @@
 Extent (Extent):
   endColumn (Int32):
-    "30"
+    "6"
   endLine (Int32):
-    "285"
+    "289"
   fileName (String):
     "basicTest.meta"
   startColumn (Int32):
@@ -10779,3 +10779,116 @@ Schwaenzchen in die Hoeh.
               "285"
           literal (Map):
             "y"
+  Entry (Statement)
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          endColumn (Int32):
+            "14"
+          endLine (Int32):
+            "286"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "1"
+          startLine (Int32):
+            "286"
+        literal (Map):
+          "mapAndMapCall"
+    val (Call):
+      argumentExpression (Program):
+        Extent (Extent):
+          endColumn (Int32):
+            "6"
+          endLine (Int32):
+            "289"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "2"
+          startLine (Int32):
+            "289"
+        statements (ArrayList):
+          Entry (Statement)
+            keys (ArrayList):
+              Entry (Literal)
+                Extent (Extent):
+                  endColumn (Int32):
+                    "3"
+                  endLine (Int32):
+                    "289"
+                  fileName (String):
+                    "basicTest.meta"
+                  startColumn (Int32):
+                    "2"
+                  startLine (Int32):
+                    "289"
+                literal (Map):
+                  "x"
+            val (Literal):
+              Extent (Extent):
+                endColumn (Int32):
+                  "6"
+                endLine (Int32):
+                  "289"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "4"
+                startLine (Int32):
+                  "289"
+              literal (Map):
+                "y"
+      callableExpression (Program):
+        Extent (Extent):
+          endColumn (Int32):
+            "10"
+          endLine (Int32):
+            "287"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "2"
+          startLine (Int32):
+            "287"
+        statements (ArrayList):
+          Entry (Statement)
+            keys (ArrayList):
+              Entry (Literal)
+                Extent (Extent):
+                  endColumn (Int32):
+                    "5"
+                  endLine (Int32):
+                    "287"
+                  fileName (String):
+                    "basicTest.meta"
+                  startColumn (Int32):
+                    "2"
+                  startLine (Int32):
+                    "287"
+                literal (Map):
+                  "run"
+            val (Delayed):
+              delayed (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "search"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "arg"
+              Extent:
+                null
+      Extent (Extent):
+        endColumn (Int32):
+          "6"
+        endLine (Int32):
+          "289"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "2"
+        startLine (Int32):
+          "287"

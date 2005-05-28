@@ -2312,3 +2312,12 @@ Entry (DictionaryEntry)
     "selectFromCall"
   Value (Map):
     "valueOfY"
+Entry (DictionaryEntry)
+  Key (Map):
+    "mapAndMapCall"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Map):
+        "x"
+      Value (Map):
+        "y"
