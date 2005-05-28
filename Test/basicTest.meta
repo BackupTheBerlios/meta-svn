@@ -288,3 +288,7 @@ mapAsFunctionResult=(
 	doc="returns 'hello"
 	run=#arg
 'hello)
+returnXY=:
+	x=
+		y='valueOfY
+selectFromCall=y.x.(returnXY')

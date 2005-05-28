@@ -2244,3 +2244,71 @@ Entry (DictionaryEntry)
     "mapAsFunctionResult"
   Value (Map):
     "hello"
+Entry (DictionaryEntry)
+  Key (Map):
+    "returnXY"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Map):
+        "run"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "program"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "key"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Integer):
+                        "1"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "literal"
+                          Value (Map):
+                            "x"
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "value"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "program"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "key"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "literal"
+                                      Value (Map):
+                                        "y"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "value"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "valueOfY"
+Entry (DictionaryEntry)
+  Key (Map):
+    "selectFromCall"
+  Value (Map):
+    "valueOfY"

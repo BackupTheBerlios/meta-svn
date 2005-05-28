@@ -295,10 +295,13 @@ statement:
       )
     )
     ;
-    
 call:
-(
+	(
 		(LPAREN!)=>
+		callInParens
+		|normalCall
+	);
+callInParens:
 		(
 			LPAREN!
 			(
@@ -327,7 +330,11 @@ call:
 			)
 			RPAREN!
 		)
-		|
+			
+  {
+    #callInParens=#([CALL],#callInParens);
+  };
+normalCall:
 		(
 			(
 				(select)=>
@@ -346,10 +353,9 @@ call:
 				|delayedExpressionOnly
 			)
 		)
-	)
 	
   {
-    #call=#([CALL],#call);
+    #normalCall=#([CALL],#normalCall);
   };
     
 delayedExpressionOnly:
@@ -374,6 +380,7 @@ select:
 	subselect
 	(
 		map
+		|(callInParens)=>callInParens
 		|search
 	)
 	{

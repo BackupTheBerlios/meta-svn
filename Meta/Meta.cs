@@ -192,6 +192,9 @@ namespace Meta {
 						int asdf=0;
 					}
 					selected=((IKeyValue)selected)[k];
+					if(selected==null) {
+						throw new KeyDoesNotExistException(keys[i]);
+					}
 				}
 				return selected;
 			}
@@ -839,11 +842,14 @@ namespace Meta {
 
 
 		/* Base class for key exceptions. */
-		public abstract class KeyException:MetaException {
+		public abstract class KeyException:MetaException { // TODO: Add proper formatting here, output strings as strings, for example, if possible, as well as integers
 			public KeyException(object key) {
 				message="Key ";
 				if(key is Map && ((Map)key).IsString) {
 					message+=((Map)key).GetDotNetString();
+				}
+				else if(key is Map) {
+					message+=Interpreter.MetaSerialize(key,"",true);
 				}
 				else {
 					message+=key;
