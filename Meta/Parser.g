@@ -112,11 +112,11 @@ POINT
   }:
   '.';
   
-STAR
+/*STAR
   options {
     paraphrase="'*'";
   }:
-  '*';
+  '*';*/
 
 // fix the exact characters allowed
 // rename to LOOKUP_LITERAL

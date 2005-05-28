@@ -26,15 +26,14 @@ namespace Meta.Parser
 		public const int LPAREN = 21;
 		public const int RPAREN = 22;
 		public const int POINT = 23;
-		public const int STAR = 24;
-		public const int LITERAL_KEY = 25;
-		public const int LITERAL = 26;
-		public const int LITERAL_END = 27;
-		public const int SPACES = 28;
-		public const int LINE = 29;
-		public const int SPACE = 30;
-		public const int NEWLINE = 31;
-		public const int NEWLINE_KEEP_TEXT = 32;
+		public const int LITERAL_KEY = 24;
+		public const int LITERAL = 25;
+		public const int LITERAL_END = 26;
+		public const int SPACES = 27;
+		public const int LINE = 28;
+		public const int SPACE = 29;
+		public const int NEWLINE = 30;
+		public const int NEWLINE_KEEP_TEXT = 31;
 		
 	}
 }
