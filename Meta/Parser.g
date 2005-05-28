@@ -131,7 +131,7 @@ LITERAL
     paraphrase="a literal";
   }:
   ('\''! ( ~ (' '|'\t'|'\r'|'\n'|'='|'.'|'\''|'"'|'('|')'|'['|']'|':') )*)
-  |("\""! ( ~ ('\"') )* "\""!)
+  |("\""! ( (~ ('\"'|'\n'|'\r'))|NEWLINE_KEEP_TEXT )* "\""!)
   |(
     "@\""!
 		(
@@ -203,8 +203,21 @@ NEWLINE
     paraphrase="a newline";
   }:
   (
-    '\n'!
-    |('\r'! '\n'!)
+    ('\r'! '\n'!)
+    |'\n'!
+  )
+  {
+    newline();
+  };
+
+protected
+NEWLINE_KEEP_TEXT
+  options {
+    paraphrase="a newline";
+  }:
+  (
+    ('\r' '\n')
+    |'\n'
   )
   {
     newline();

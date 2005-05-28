@@ -1984,7 +1984,7 @@ namespace Meta {
 						}
 					}
 					if(this.obj!=null && key is Integer && this.type.IsArray) {
-						return Interpreter.ConvertDotNetToMeta(((Array)obj).GetValue(((Integer)key).Int));
+						return Interpreter.ConvertDotNetToMeta(((Array)obj).GetValue(((Integer)key).Int)); // TODO: add error handling here
 					}
 					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
 					Map arguments=new Map();
