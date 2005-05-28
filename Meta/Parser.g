@@ -169,7 +169,7 @@ LINE		// everything in one rule because of indeterminisms
     _ttype=Token.SKIP;
   }*/
   
-  /*(('\t')* NEWLINE ('\t')* NEWLINE)=>
+  /*(('\t')* NEWLINE ('\t')* NEWLINE)=> // TODO: This should match both newlines, shouldn't it?
   ('\t')* NEWLINE ('\t')*
 	{
 		_ttype=MetaLexerTokenTypes.EMPTY_LINE;

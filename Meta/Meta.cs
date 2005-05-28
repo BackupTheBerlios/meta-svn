@@ -80,7 +80,9 @@ namespace Meta {
 
 		public class Delayed: Expression {
 			public override object Evaluate(IMap parent) {
-				return delayed;
+				Map clone=delayed;
+				clone.Parent=parent;
+				return clone;
 			}
 			public static readonly Map delayedString=new Map("delayed");
 			public Delayed(Map code) {

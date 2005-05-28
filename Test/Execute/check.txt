@@ -2064,7 +2064,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "whileCounter"
   Value (Integer):
-    "0"
+    "10"
 Entry (DictionaryEntry)
   Key (Map):
     "mapSelect"

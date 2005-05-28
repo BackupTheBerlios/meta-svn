@@ -258,14 +258,16 @@ endline='\\n
 tabText="			hello"
 escapedText="\'\n\\\t"
 whileCounter='0
-//while
-//	:smaller
-//		whileCounter.parent.parent.parent
-//		'10
-//	:
-//		whileCounter.parent.parent.parent=add
-//			whileCounter
-//			'1
+whileCounter=(:([smaller
+	arg
+	'10
+].
+	0=:arg
+	1=:parent.parent add
+		arg
+		'1
+arg)
+'3)
 mapSelect=x.
 	x='success
 	y='hello
