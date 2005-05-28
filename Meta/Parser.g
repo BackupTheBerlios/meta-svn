@@ -67,69 +67,36 @@ tokens
 	}
 }
 
-EQUAL
-  options {
-    paraphrase="':'";
-  }:
+EQUAL:
   '=';
 
 HASH:
 	'#';
 
-COLON
-  options {
-    paraphrase="'='";
-  }:
+COLON:
   ':';
 
-LBRACKET
-  options {
-    paraphrase="'['";
-  }:
+LBRACKET:
   '[';
 
-RBRACKET
-  options {
-    paraphrase="']'";
-  }:
+RBRACKET:
   ']';
 
-LPAREN
-  options {
-    paraphrase="'('";
-  }:
+LPAREN:
   '(';
 
-RPAREN
-  options {
-    paraphrase="')'";
-  }:
+RPAREN:
   ')';
 
-POINT
-  options {
-    paraphrase="'.'";
-  }:
+POINT:
   '.';
-  
-/*STAR
-  options {
-    paraphrase="'*'";
-  }:
-  '*';*/
 
 // fix the exact characters allowed
 // rename to LOOKUP_LITERAL
-LITERAL_KEY
-  options {
-    paraphrase="a key";
-  }:
+LITERAL_KEY:
   ( ~ ('@'|' '|'\t'|'\r'|'\n'|'='|'.'|'/'|'\''|'"'|'('|')'|'['|']'|'*'|':'|'#') )+;
     
-LITERAL
-  options {
-    paraphrase="a literal";
-  }:
+LITERAL:
   ('\''! ( ~ (' '|'\t'|'\r'|'\n'|'='|'.'|'\''|'"'|'('|')'|'['|']'|':') )*)
   |("\""! ( (~ ('\"'|'\n'|'\r'))|NEWLINE_KEEP_TEXT )* "\""!)
   |(
@@ -148,18 +115,12 @@ protected // TODO: Remove
 LITERAL_END:
   {LA(2)=='@'}? "\"@"!;
 
-SPACES
-  options {
-    paraphrase="whitespace";
-  }:
+SPACES:
   (' ')+ ;//{_ttype=Token.SKIP;}
   
  
   
 LINE		// everything in one rule because of indeterminisms
-  options {
-    paraphrase="a line";
-  }
   {
     const int endOfFileValue=65535;
   }:
@@ -198,10 +159,7 @@ SPACE:  // subrule because of ANTLR bug that results in uncompilable code, maybe
   '\t'!;
 
 protected
-NEWLINE
-  options {
-    paraphrase="a newline";
-  }:
+NEWLINE:
   (
     ('\r'! '\n'!)
     |'\n'!
@@ -211,10 +169,7 @@ NEWLINE
   };
 
 protected
-NEWLINE_KEEP_TEXT
-  options {
-    paraphrase="a newline";
-  }:
+NEWLINE_KEEP_TEXT:
   (
     ('\r' '\n')
     |'\n'
