@@ -232,10 +232,9 @@ x=
 		hello word!
 		hello!
 		"
-ored=(bitwiseOr.math
+ored=bitwiseOr.math
 	'20
 	Tab.Keys.Forms.Windows.System
-)
 arrayList=(ArrayList.Collections.System')
 (Add.arrayList
 	'hello
@@ -281,4 +280,11 @@ funcReturnTest=(returnArg (myArg'))
 documentedFunction=
 	doc="This function returns 'hello ."
 	run=#'hello
-docFunctionResult=(documentedFunction')
+docFunctionResult=documentedFunction'
+inlineDelayedResult=(:'hello
+')
+callAsFunctionResult=((returnFunction')')
+mapAsFunctionResult=(
+	doc="returns 'hello"
+	run=#arg
+'hello)

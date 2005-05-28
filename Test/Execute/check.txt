@@ -2229,3 +2229,18 @@ Entry (DictionaryEntry)
     "docFunctionResult"
   Value (Map):
     "hello"
+Entry (DictionaryEntry)
+  Key (Map):
+    "inlineDelayedResult"
+  Value (Map):
+    "hello"
+Entry (DictionaryEntry)
+  Key (Map):
+    "callAsFunctionResult"
+  Value (Map):
+    "functionResult"
+Entry (DictionaryEntry)
+  Key (Map):
+    "mapAsFunctionResult"
+  Value (Map):
+    "hello"

@@ -2135,6 +2135,10 @@ namespace Meta {
 						case MetaLexerTokenTypes.EOF:
 							AddIndentationTokensToGetToLevel(-1,t);
 							break;
+//						case MetaLexerTokenTypes.EMPTY_LINE:
+//							AddIndentationTokensToGetToLevel(presentIndentationLevel-1,t);
+//							AddIndentationTokensToGetToLevel(presentIndentationLevel+1,t);
+//							break;
 						case MetaLexerTokenTypes.INDENTATION:
 							AddIndentationTokensToGetToLevel(t.getText().Length,t);
 							break;

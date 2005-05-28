@@ -43,7 +43,8 @@ tokens
   SELECT;
   SEARCH;
   KEY;
-  DELAYED_EXPRESSION_ONLY;
+  DELAYED_EXPRESSION_ONLY; // TODO: rename
+  //EMPTY_LINE;  
 }
 {
     /**
@@ -167,17 +168,19 @@ LINE		// everything in one rule because of indeterminisms
   {
     _ttype=Token.SKIP;
   }*/
-  /*|(('\t')* NEWLINE ('\t')* NEWLINE)=>
+  
+  /*(('\t')* NEWLINE ('\t')* NEWLINE)=>
   ('\t')* NEWLINE ('\t')*
 	{
-		_ttype=Token.SKIP;
+		_ttype=MetaLexerTokenTypes.EMPTY_LINE;
 	}*/
 
 	// comments
 	(('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE)=>
 	('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))*
 	{$setType(Token.SKIP); /*newline()*/;}
-												 
+		
+	// comments										 
 	|((('\t')*)! "//" (~('\n'|'\r'))* NEWLINE)=> // TODO: ! is unnecessary
 	(('\t')*)! "//" (~('\n'|'\r'))*		// TODO: factor out common stuff
 	{$setType(Token.SKIP);}
@@ -294,29 +297,57 @@ statement:
     ;
     
 call:
-	(
-		LPAREN!
+(
+		(LPAREN!)=>
 		(
-			(select)=>
-			select
-			|search // TODO: add map, literal, call
+			LPAREN!
+			(
+				(select)=>
+				select
+				|(call expression)=>call
+				|search
+				|map
+				|LITERAL
+				|delayed// TODO: add map, literal, call
+			)
+			(SPACES!)?
+			(ENDLINE!)? // TODO: Think about why this is necessary and whether we really want it to work that way
+			(
+				(call)=> // TODO: replace with use expression
+				call
+				|(map
+						(SPACES!)?
+						(ENDLINE!)? // TODO: this is an ugly hack???
+					)
+				|(select)=>select
+				|search
+				|LITERAL
+				|delayed
+				|delayedExpressionOnly
+			)
+			RPAREN!
 		)
-		(SPACES!)?
+		|
 		(
-			(call)=> // TODO: replace with use expression
-			call
-			|(map
-					(SPACES!)?
-					(ENDLINE!)? // TODO: this is an ugly hack???
-				)
-			|(select)=>select
-			|search
-			|LITERAL
-			|delayed
-			|delayedExpressionOnly
+			(
+				(select)=>
+				select
+				|search // TODO: maybe add some more stuff like: map, literal, call, here, too, think about what is necessary for this to work and think about why to keep the separation between the two call versions
+			)
+			(SPACES!)?
+			(
+				(call)=> // TODO: replace with use expression
+				call
+				|map
+				|(select)=>select
+				|search
+				|LITERAL
+				|delayed
+				|delayedExpressionOnly
+			)
 		)
-		RPAREN!
 	)
+	
   {
     #call=#([CALL],#call);
   };
