@@ -80,7 +80,7 @@ getFirstChild (MetaAST):
           ""SELECT""
         Extent (Extent):
           endColumn (Int32):
-            "16"
+            "19"
           endLine (Int32):
             "1"
           fileName (String):
@@ -94,7 +94,7 @@ getFirstChild (MetaAST):
             ""LITERAL""
           Extent (Extent):
             endColumn (Int32):
-              "12"
+              "15"
             endLine (Int32):
               "1"
             fileName (String):
@@ -110,13 +110,13 @@ getFirstChild (MetaAST):
               ""SEARCH""
             Extent (Extent):
               endColumn (Int32):
-                "16"
+                "19"
               endLine (Int32):
                 "1"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
-                "13"
+                "16"
               startLine (Int32):
                 "1"
             getFirstChild (MetaAST):
@@ -124,13 +124,13 @@ getFirstChild (MetaAST):
                 ""LITERAL""
               Extent (Extent):
                 endColumn (Int32):
-                  "16"
+                  "19"
                 endLine (Int32):
                   "1"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
-                  "13"
+                  "16"
                 startLine (Int32):
                   "1"
               getFirstChild:
@@ -148,7 +148,7 @@ getFirstChild (MetaAST):
             Type (Int32):
               "13"
           getText (String):
-            "merge"
+            "mMergeAm"
           Type (Int32):
             "25"
         getNextSibling (MetaAST):
@@ -592,7 +592,7 @@ getFirstChild (MetaAST):
               ""SELECT""
             Extent (Extent):
               endColumn (Int32):
-                "16"
+                "19"
               endLine (Int32):
                 "23"
               fileName (String):
@@ -606,7 +606,7 @@ getFirstChild (MetaAST):
                 ""LITERAL""
               Extent (Extent):
                 endColumn (Int32):
-                  "12"
+                  "15"
                 endLine (Int32):
                   "23"
                 fileName (String):
@@ -622,13 +622,13 @@ getFirstChild (MetaAST):
                   ""SEARCH""
                 Extent (Extent):
                   endColumn (Int32):
-                    "16"
+                    "19"
                   endLine (Int32):
                     "23"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
-                    "13"
+                    "16"
                   startLine (Int32):
                     "23"
                 getFirstChild (MetaAST):
@@ -636,13 +636,13 @@ getFirstChild (MetaAST):
                     ""LITERAL""
                   Extent (Extent):
                     endColumn (Int32):
-                      "16"
+                      "19"
                     endLine (Int32):
                       "23"
                     fileName (String):
                       "basicTest.meta"
                     startColumn (Int32):
-                      "13"
+                      "16"
                     startLine (Int32):
                       "23"
                   getFirstChild:
@@ -660,7 +660,7 @@ getFirstChild (MetaAST):
                 Type (Int32):
                   "13"
               getText (String):
-                "merge"
+                "mMergeAm"
               Type (Int32):
                 "25"
             getNextSibling (MetaAST):
@@ -1268,7 +1268,7 @@ getFirstChild (MetaAST):
                 ""SEARCH""
               Extent (Extent):
                 endColumn (Int32):
-                  "25"
+                  "27"
                 endLine (Int32):
                   "30"
                 fileName (String):
@@ -1282,7 +1282,7 @@ getFirstChild (MetaAST):
                   ""LITERAL""
                 Extent (Extent):
                   endColumn (Int32):
-                    "25"
+                    "27"
                   endLine (Int32):
                     "30"
                   fileName (String):
@@ -1296,7 +1296,7 @@ getFirstChild (MetaAST):
                 getNextSibling:
                   null
                 getText (String):
-                  "trimStart"
+                  "sTrimStartS"
                 Type (Int32):
                   "25"
               getNextSibling (MetaAST):
@@ -8480,7 +8480,7 @@ getFirstChild (MetaAST):
                                                                                 ""SELECT""
                                                                               Extent (Extent):
                                                                                 endColumn (Int32):
-                                                                                  "29"
+                                                                                  "25"
                                                                                 endLine (Int32):
                                                                                   "112"
                                                                                 fileName (String):
@@ -8494,7 +8494,7 @@ getFirstChild (MetaAST):
                                                                                   ""LITERAL""
                                                                                 Extent (Extent):
                                                                                   endColumn (Int32):
-                                                                                    "25"
+                                                                                    "21"
                                                                                   endLine (Int32):
                                                                                     "112"
                                                                                   fileName (String):
@@ -8510,13 +8510,13 @@ getFirstChild (MetaAST):
                                                                                     ""SEARCH""
                                                                                   Extent (Extent):
                                                                                     endColumn (Int32):
-                                                                                      "29"
+                                                                                      "25"
                                                                                     endLine (Int32):
                                                                                       "112"
                                                                                     fileName (String):
                                                                                       "basicTest.meta"
                                                                                     startColumn (Int32):
-                                                                                      "26"
+                                                                                      "22"
                                                                                     startLine (Int32):
                                                                                       "112"
                                                                                   getFirstChild (MetaAST):
@@ -8524,13 +8524,13 @@ getFirstChild (MetaAST):
                                                                                       ""LITERAL""
                                                                                     Extent (Extent):
                                                                                       endColumn (Int32):
-                                                                                        "29"
+                                                                                        "25"
                                                                                       endLine (Int32):
                                                                                         "112"
                                                                                       fileName (String):
                                                                                         "basicTest.meta"
                                                                                       startColumn (Int32):
-                                                                                        "26"
+                                                                                        "22"
                                                                                       startLine (Int32):
                                                                                         "112"
                                                                                     getFirstChild:
@@ -8548,7 +8548,7 @@ getFirstChild (MetaAST):
                                                                                   Type (Int32):
                                                                                     "13"
                                                                                 getText (String):
-                                                                                  "concatenate"
+                                                                                  "aJoinAa"
                                                                                 Type (Int32):
                                                                                   "25"
                                                                               getNextSibling (MetaAST):
@@ -8816,7 +8816,7 @@ getFirstChild (MetaAST):
                                                                                   ""SELECT""
                                                                                 Extent (Extent):
                                                                                   endColumn (Int32):
-                                                                                    "16"
+                                                                                    "19"
                                                                                   endLine (Int32):
                                                                                     "116"
                                                                                   fileName (String):
@@ -8830,7 +8830,7 @@ getFirstChild (MetaAST):
                                                                                     ""LITERAL""
                                                                                   Extent (Extent):
                                                                                     endColumn (Int32):
-                                                                                      "12"
+                                                                                      "15"
                                                                                     endLine (Int32):
                                                                                       "116"
                                                                                     fileName (String):
@@ -8846,13 +8846,13 @@ getFirstChild (MetaAST):
                                                                                       ""SEARCH""
                                                                                     Extent (Extent):
                                                                                       endColumn (Int32):
-                                                                                        "16"
+                                                                                        "19"
                                                                                       endLine (Int32):
                                                                                         "116"
                                                                                       fileName (String):
                                                                                         "basicTest.meta"
                                                                                       startColumn (Int32):
-                                                                                        "13"
+                                                                                        "16"
                                                                                       startLine (Int32):
                                                                                         "116"
                                                                                     getFirstChild (MetaAST):
@@ -8860,13 +8860,13 @@ getFirstChild (MetaAST):
                                                                                         ""LITERAL""
                                                                                       Extent (Extent):
                                                                                         endColumn (Int32):
-                                                                                          "16"
+                                                                                          "19"
                                                                                         endLine (Int32):
                                                                                           "116"
                                                                                         fileName (String):
                                                                                           "basicTest.meta"
                                                                                         startColumn (Int32):
-                                                                                          "13"
+                                                                                          "16"
                                                                                         startLine (Int32):
                                                                                           "116"
                                                                                       getFirstChild:
@@ -8884,7 +8884,7 @@ getFirstChild (MetaAST):
                                                                                     Type (Int32):
                                                                                       "13"
                                                                                   getText (String):
-                                                                                    "merge"
+                                                                                    "mMergeAm"
                                                                                   Type (Int32):
                                                                                     "25"
                                                                                 getNextSibling (MetaAST):
@@ -20015,7 +20015,7 @@ hello!
                                                                                                                                                                                                                       ""SELECT""
                                                                                                                                                                                                                     Extent (Extent):
                                                                                                                                                                                                                       endColumn (Int32):
-                                                                                                                                                                                                                        "20"
+                                                                                                                                                                                                                        "16"
                                                                                                                                                                                                                       endLine (Int32):
                                                                                                                                                                                                                         "235"
                                                                                                                                                                                                                       fileName (String):
@@ -20029,7 +20029,7 @@ hello!
                                                                                                                                                                                                                         ""LITERAL""
                                                                                                                                                                                                                       Extent (Extent):
                                                                                                                                                                                                                         endColumn (Int32):
-                                                                                                                                                                                                                          "15"
+                                                                                                                                                                                                                          "11"
                                                                                                                                                                                                                         endLine (Int32):
                                                                                                                                                                                                                           "235"
                                                                                                                                                                                                                         fileName (String):
@@ -20045,13 +20045,13 @@ hello!
                                                                                                                                                                                                                           ""SEARCH""
                                                                                                                                                                                                                         Extent (Extent):
                                                                                                                                                                                                                           endColumn (Int32):
-                                                                                                                                                                                                                            "20"
+                                                                                                                                                                                                                            "16"
                                                                                                                                                                                                                           endLine (Int32):
                                                                                                                                                                                                                             "235"
                                                                                                                                                                                                                           fileName (String):
                                                                                                                                                                                                                             "basicTest.meta"
                                                                                                                                                                                                                           startColumn (Int32):
-                                                                                                                                                                                                                            "16"
+                                                                                                                                                                                                                            "12"
                                                                                                                                                                                                                           startLine (Int32):
                                                                                                                                                                                                                             "235"
                                                                                                                                                                                                                         getFirstChild (MetaAST):
@@ -20059,13 +20059,13 @@ hello!
                                                                                                                                                                                                                             ""LITERAL""
                                                                                                                                                                                                                           Extent (Extent):
                                                                                                                                                                                                                             endColumn (Int32):
-                                                                                                                                                                                                                              "20"
+                                                                                                                                                                                                                              "16"
                                                                                                                                                                                                                             endLine (Int32):
                                                                                                                                                                                                                               "235"
                                                                                                                                                                                                                             fileName (String):
                                                                                                                                                                                                                               "basicTest.meta"
                                                                                                                                                                                                                             startColumn (Int32):
-                                                                                                                                                                                                                              "16"
+                                                                                                                                                                                                                              "12"
                                                                                                                                                                                                                             startLine (Int32):
                                                                                                                                                                                                                               "235"
                                                                                                                                                                                                                           getFirstChild:
@@ -20083,7 +20083,7 @@ hello!
                                                                                                                                                                                                                         Type (Int32):
                                                                                                                                                                                                                           "13"
                                                                                                                                                                                                                       getText (String):
-                                                                                                                                                                                                                        "bitwiseOr"
+                                                                                                                                                                                                                        "bOrII"
                                                                                                                                                                                                                       Type (Int32):
                                                                                                                                                                                                                         "25"
                                                                                                                                                                                                                     getNextSibling (MetaAST):
@@ -22333,7 +22333,7 @@ Schwaenzchen in die Hoeh.
                                                                                                                                                                                                                                                               ""SEARCH""
                                                                                                                                                                                                                                                             Extent (Extent):
                                                                                                                                                                                                                                                               endColumn (Int32):
-                                                                                                                                                                                                                                                                "25"
+                                                                                                                                                                                                                                                                "28"
                                                                                                                                                                                                                                                               endLine (Int32):
                                                                                                                                                                                                                                                                 "261"
                                                                                                                                                                                                                                                               fileName (String):
@@ -22347,7 +22347,7 @@ Schwaenzchen in die Hoeh.
                                                                                                                                                                                                                                                                 ""LITERAL""
                                                                                                                                                                                                                                                               Extent (Extent):
                                                                                                                                                                                                                                                                 endColumn (Int32):
-                                                                                                                                                                                                                                                                  "25"
+                                                                                                                                                                                                                                                                  "28"
                                                                                                                                                                                                                                                                 endLine (Int32):
                                                                                                                                                                                                                                                                   "261"
                                                                                                                                                                                                                                                                 fileName (String):
@@ -22361,7 +22361,7 @@ Schwaenzchen in die Hoeh.
                                                                                                                                                                                                                                                               getNextSibling:
                                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                                               getText (String):
-                                                                                                                                                                                                                                                                "smaller"
+                                                                                                                                                                                                                                                                "bSmallerII"
                                                                                                                                                                                                                                                               Type (Int32):
                                                                                                                                                                                                                                                                 "25"
                                                                                                                                                                                                                                                             getNextSibling (MetaAST):
@@ -22873,7 +22873,7 @@ Schwaenzchen in die Hoeh.
                                                                                                                                                                                                                                                                               ""SEARCH""
                                                                                                                                                                                                                                                                             Extent (Extent):
                                                                                                                                                                                                                                                                               endColumn (Int32):
-                                                                                                                                                                                                                                                                                "22"
+                                                                                                                                                                                                                                                                                "25"
                                                                                                                                                                                                                                                                               endLine (Int32):
                                                                                                                                                                                                                                                                                 "266"
                                                                                                                                                                                                                                                                               fileName (String):
@@ -22887,7 +22887,7 @@ Schwaenzchen in die Hoeh.
                                                                                                                                                                                                                                                                                 ""LITERAL""
                                                                                                                                                                                                                                                                               Extent (Extent):
                                                                                                                                                                                                                                                                                 endColumn (Int32):
-                                                                                                                                                                                                                                                                                  "22"
+                                                                                                                                                                                                                                                                                  "25"
                                                                                                                                                                                                                                                                                 endLine (Int32):
                                                                                                                                                                                                                                                                                   "266"
                                                                                                                                                                                                                                                                                 fileName (String):
@@ -22901,7 +22901,7 @@ Schwaenzchen in die Hoeh.
                                                                                                                                                                                                                                                                               getNextSibling:
                                                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                                                               getText (String):
-                                                                                                                                                                                                                                                                                "add"
+                                                                                                                                                                                                                                                                                "iAddII"
                                                                                                                                                                                                                                                                               Type (Int32):
                                                                                                                                                                                                                                                                                 "25"
                                                                                                                                                                                                                                                                             getNextSibling (MetaAST):

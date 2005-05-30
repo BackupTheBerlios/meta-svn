@@ -195,7 +195,7 @@ namespace Meta {
 					}
 					selected=((IKeyValue)selected)[k];
 					if(selected==null) {
-						throw new KeyDoesNotExistException(keys[i]);
+						throw new KeyDoesNotExistException(k);
 					}
 				}
 				return selected;

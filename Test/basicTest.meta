@@ -1,4 +1,4 @@
-this=(merge.map
+this=(mMergeAm.map
 	parent
 	=
 		'AssignedToCurrent
@@ -20,14 +20,14 @@ unicodeText='äaba
 //	You should have received a copy of the GNU General Public License
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-this=(merge.map
+this=(mMergeAm.map
 	parent
 	programFlow
 	logic
 	map
 	math
 )
-trimStartTest=(trimStart
+trimStartTest=(sTrimStartS
 	"					hello"
 	'\\t
 )
@@ -109,11 +109,11 @@ SecondLevel=:arg
 argTest=(FirstLevel
 	a='z
 )
-concatenate=(concatenate.map
+concatenate=(aJoinAa.map
 	'x
 	'yz
 )
-this=(merge.map
+this=(mMergeAm.map
 	parent
 	testClasses
 )
@@ -232,7 +232,7 @@ x=
 		hello word!
 		hello!
 		"
-ored=bitwiseOr.math
+ored=bOrII.math
 	'20
 	Tab.Keys.Forms.Windows.System
 arrayList=(ArrayList.Collections.System')
@@ -258,12 +258,12 @@ endline='\\n
 tabText="			hello"
 escapedText="\'\n\\\t"
 whileCounter='0
-whileCounter=(:([smaller
+whileCounter=(:([bSmallerII
 	arg
 	'10
 ].
 	0=:arg
-	1=:parent.parent add
+	1=:parent.parent iAddII
 		arg
 		'1
 arg)

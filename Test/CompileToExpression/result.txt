@@ -144,7 +144,7 @@ statements (ArrayList):
       callableExpression (Select):
         Extent (Extent):
           endColumn (Int32):
-            "16"
+            "19"
           endLine (Int32):
             "1"
           fileName (String):
@@ -156,25 +156,25 @@ statements (ArrayList):
         first (Search):
           Extent (Extent):
             endColumn (Int32):
-              "16"
+              "19"
             endLine (Int32):
               "1"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
-              "13"
+              "16"
             startLine (Int32):
               "1"
           key (Literal):
             Extent (Extent):
               endColumn (Int32):
-                "16"
+                "19"
               endLine (Int32):
                 "1"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
-                "13"
+                "16"
               startLine (Int32):
                 "1"
             literal (Map):
@@ -183,7 +183,7 @@ statements (ArrayList):
           Entry (Literal)
             Extent (Extent):
               endColumn (Int32):
-                "12"
+                "15"
               endLine (Int32):
                 "1"
               fileName (String):
@@ -193,7 +193,7 @@ statements (ArrayList):
               startLine (Int32):
                 "1"
             literal (Map):
-              "merge"
+              "mMergeAm"
       Extent (Extent):
         endColumn (Int32):
           "21"
@@ -478,7 +478,7 @@ statements (ArrayList):
       callableExpression (Select):
         Extent (Extent):
           endColumn (Int32):
-            "16"
+            "19"
           endLine (Int32):
             "23"
           fileName (String):
@@ -490,25 +490,25 @@ statements (ArrayList):
         first (Search):
           Extent (Extent):
             endColumn (Int32):
-              "16"
+              "19"
             endLine (Int32):
               "23"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
-              "13"
+              "16"
             startLine (Int32):
               "23"
           key (Literal):
             Extent (Extent):
               endColumn (Int32):
-                "16"
+                "19"
               endLine (Int32):
                 "23"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
-                "13"
+                "16"
               startLine (Int32):
                 "23"
             literal (Map):
@@ -517,7 +517,7 @@ statements (ArrayList):
           Entry (Literal)
             Extent (Extent):
               endColumn (Int32):
-                "12"
+                "15"
               endLine (Int32):
                 "23"
               fileName (String):
@@ -527,7 +527,7 @@ statements (ArrayList):
               startLine (Int32):
                 "23"
             literal (Map):
-              "merge"
+              "mMergeAm"
       Extent (Extent):
         endColumn (Int32):
           "6"
@@ -632,7 +632,7 @@ statements (ArrayList):
       callableExpression (Search):
         Extent (Extent):
           endColumn (Int32):
-            "25"
+            "27"
           endLine (Int32):
             "30"
           fileName (String):
@@ -644,7 +644,7 @@ statements (ArrayList):
         key (Literal):
           Extent (Extent):
             endColumn (Int32):
-              "25"
+              "27"
             endLine (Int32):
               "30"
             fileName (String):
@@ -654,7 +654,7 @@ statements (ArrayList):
             startLine (Int32):
               "30"
           literal (Map):
-            "trimStart"
+            "sTrimStartS"
       Extent (Extent):
         endColumn (Int32):
           "6"
@@ -3542,7 +3542,7 @@ statements (ArrayList):
       callableExpression (Select):
         Extent (Extent):
           endColumn (Int32):
-            "29"
+            "25"
           endLine (Int32):
             "112"
           fileName (String):
@@ -3554,25 +3554,25 @@ statements (ArrayList):
         first (Search):
           Extent (Extent):
             endColumn (Int32):
-              "29"
+              "25"
             endLine (Int32):
               "112"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
-              "26"
+              "22"
             startLine (Int32):
               "112"
           key (Literal):
             Extent (Extent):
               endColumn (Int32):
-                "29"
+                "25"
               endLine (Int32):
                 "112"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
-                "26"
+                "22"
               startLine (Int32):
                 "112"
             literal (Map):
@@ -3581,7 +3581,7 @@ statements (ArrayList):
           Entry (Literal)
             Extent (Extent):
               endColumn (Int32):
-                "25"
+                "21"
               endLine (Int32):
                 "112"
               fileName (String):
@@ -3591,7 +3591,7 @@ statements (ArrayList):
               startLine (Int32):
                 "112"
             literal (Map):
-              "concatenate"
+              "aJoinAa"
       Extent (Extent):
         endColumn (Int32):
           "5"
@@ -3720,7 +3720,7 @@ statements (ArrayList):
       callableExpression (Select):
         Extent (Extent):
           endColumn (Int32):
-            "16"
+            "19"
           endLine (Int32):
             "116"
           fileName (String):
@@ -3732,25 +3732,25 @@ statements (ArrayList):
         first (Search):
           Extent (Extent):
             endColumn (Int32):
-              "16"
+              "19"
             endLine (Int32):
               "116"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
-              "13"
+              "16"
             startLine (Int32):
               "116"
           key (Literal):
             Extent (Extent):
               endColumn (Int32):
-                "16"
+                "19"
               endLine (Int32):
                 "116"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
-                "13"
+                "16"
               startLine (Int32):
                 "116"
             literal (Map):
@@ -3759,7 +3759,7 @@ statements (ArrayList):
           Entry (Literal)
             Extent (Extent):
               endColumn (Int32):
-                "12"
+                "15"
               endLine (Int32):
                 "116"
               fileName (String):
@@ -3769,7 +3769,7 @@ statements (ArrayList):
               startLine (Int32):
                 "116"
             literal (Map):
-              "merge"
+              "mMergeAm"
       Extent (Extent):
         endColumn (Int32):
           "13"
@@ -8722,7 +8722,7 @@ hello!
       callableExpression (Select):
         Extent (Extent):
           endColumn (Int32):
-            "20"
+            "16"
           endLine (Int32):
             "235"
           fileName (String):
@@ -8734,25 +8734,25 @@ hello!
         first (Search):
           Extent (Extent):
             endColumn (Int32):
-              "20"
+              "16"
             endLine (Int32):
               "235"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
-              "16"
+              "12"
             startLine (Int32):
               "235"
           key (Literal):
             Extent (Extent):
               endColumn (Int32):
-                "20"
+                "16"
               endLine (Int32):
                 "235"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
-                "16"
+                "12"
               startLine (Int32):
                 "235"
             literal (Map):
@@ -8761,7 +8761,7 @@ hello!
           Entry (Literal)
             Extent (Extent):
               endColumn (Int32):
-                "15"
+                "11"
               endLine (Int32):
                 "235"
               fileName (String):
@@ -8771,7 +8771,7 @@ hello!
               startLine (Int32):
                 "235"
             literal (Map):
-              "bitwiseOr"
+              "bOrII"
       Extent (Extent):
         endColumn (Int32):
           "31"
@@ -9719,7 +9719,7 @@ Schwaenzchen in die Hoeh.
                                             Key (Map):
                                               "literal"
                                             Value (Map):
-                                              "smaller"
+                                              "bSmallerII"
                                   Entry (DictionaryEntry)
                                     Key (Map):
                                       "argument"
@@ -9913,7 +9913,7 @@ Schwaenzchen in die Hoeh.
                                                                         Key (Map):
                                                                           "literal"
                                                                         Value (Map):
-                                                                          "add"
+                                                                          "iAddII"
                                                               Entry (DictionaryEntry)
                                                                 Key (Map):
                                                                   "argument"

@@ -26,25 +26,29 @@ using System.Diagnostics;
 using System.Windows.Forms;
 
 public class map {
-	public static void run(string fileName) {
+	public static void oRunS(string fileName) { // TODO: not a good name, takes a file name, not a string after all, 
+		// adding a character "f" for files doesn't make sense, though
+		// After all, the file system will be integrated anyway.
+		// Once the file system is integrated, one can simpley select the file one
+		// wants to run and call it. This function won't be needed anymore then.
 		Process process=new Process();
 		process.StartInfo.FileName=Application.ExecutablePath;
 		process.StartInfo.Arguments=fileName;
 		process.Start();
 	}
-	public static bool contains(object key,Map map) {
+//	public static bool bContainsOM(object key,Map map) {
+//		string a="";
+//		return map.ContainsKey(key);
+//	}
+	public static bool bHasKeyMO(Map map,object key) {
 		string a="";
 		return map.ContainsKey(key);
 	}
-	public static bool hasKey(object key,Map map) {
-		string a="";
-		return map.ContainsKey(key);
-	}
-	public static int length(Map map) {
+	public static int iCountM(Map map) {
 		return map.Count;
 	}
 	[MetaLibraryMethod]
-	public static Map trimStart(Map arg) {
+	public static Map sTrimStartS(Map arg) {
 		Map map=(Map)arg[new Integer(1)];
 		object obj=arg[new Integer(2)];
 
@@ -61,7 +65,7 @@ public class map {
 		}
 		return result;
 	}
-	public static int countStart(Map map,object obj) {
+	public static int iCountStartMO(Map map,object obj) {
 		int count=0;
 		foreach(object o in map.IntKeyValues) {
 			if(obj.Equals(o)) {
@@ -73,7 +77,7 @@ public class map {
 		}
 		return count;
 	}
-	public static IKeyValue keys(IKeyValue map) {
+	public static IKeyValue aKeysM(IKeyValue map) {
 		int i=1;
 		Map keys=new Map();
 		foreach(DictionaryEntry entry in map) {
@@ -83,11 +87,11 @@ public class map {
 		return keys;
 	}
 	[MetaLibraryMethod]
-	public static Map concatenate(Map arg) {
+	public static Map aJoinAa(Map arg) {
 		ArrayList maps=arg.IntKeyValues;
 		int i=1;
 		Map combined=new Map();
-		foreach(Map map in maps) {
+		foreach(Map map in maps) { // TODO: eigentlich nur die Arrays verwenden
 			foreach(object val in map.IntKeyValues) {
 				combined[new Integer(i)]=val;
 				i++;
@@ -96,45 +100,51 @@ public class map {
 		return combined;
 	}
 	[MetaLibraryMethod]
-	public static IKeyValue merge(Map arg) {
+	public static IKeyValue mMergeAm(Map arg) {
 		return (Map)Interpreter.MergeCollection(arg.IntKeyValues);
 	}
 	// integrate this into .NET constructor in NetClass, which is cleaner
 	// possibly remove completely, let's see how the editor turns out
-	public static object with(object obj,IMap map) {
-		NetObject netObject=new NetObject(obj);
-		foreach(DictionaryEntry entry in map) {
-			netObject[entry.Key]=entry.Value;
-		}
-		return obj;
-	}
-	public static Map storage(Map location) {
-		string path="";
-		foreach(Map loc in location.IntKeyValues) {
-			path=Path.Combine(path,((Map)loc).GetDotNetString());
-		}
-		return new Storage(path);
-	}
-	public class Storage:Map {
-		string path;
-		public Storage(string path){
-			this.path=path;
-		}
-	}
-	public class StorageMap:Map {
-		Storage storage;
-		public StorageMap(Storage storage) {
-			this.storage=storage;
-		}
-		public override object this[object key] {
-			get {
-				return base[key];
-			}
-			set {
-				base[key]=value;
-			}
-		}
-	}
+//	public static object with(object obj,IMap map) {
+//		NetObject netObject=new NetObject(obj);
+//		foreach(DictionaryEntry entry in map) {
+//			netObject[entry.Key]=entry.Value;
+//		}
+//		return obj;
+//	}
+
+
+	// TODO: remove the "storage" stuff, storage will be integrated into the Meta namespace
+//	public static Map storage(Map location) {
+//		string path="";
+//		foreach(Map loc in location.IntKeyValues) {
+//			path=Path.Combine(path,((Map)loc).GetDotNetString());
+//		}
+//		return new Storage(path);
+//	}
+//	public class Storage:Map {
+//		string path;
+//		public Storage(string path){
+//			this.path=path;
+//		}
+//	}
+//	public class StorageMap:Map {
+//		Storage storage;
+//		public StorageMap(Storage storage) {
+//			this.storage=storage;
+//		}
+//		public override object this[object key] {
+//			get {
+//				return base[key];
+//			}
+//			set {
+//				base[key]=value;
+//			}
+//		}
+//	}
+
+
+
 //	public static Map storage(string path) {
 //		new Storage(path);
 //	}

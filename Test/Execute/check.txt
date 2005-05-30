@@ -10,24 +10,6 @@ Entry (DictionaryEntry)
     "äaba"
 Entry (DictionaryEntry)
   Key (Map):
-    "foreach"
-  Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
-      "True"
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Map foreach(Meta.Types.Map)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "switch"
-  Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
-      "True"
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Void switch(Meta.Types.Map)"
-Entry (DictionaryEntry)
-  Key (Map):
     "equal"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
@@ -64,162 +46,139 @@ Entry (DictionaryEntry)
         "Boolean or(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "concatenate"
-  Value (Map):
-    "xyz"
-Entry (DictionaryEntry)
-  Key (Map):
-    "hasKey"
+    "oRunS"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean hasKey(System.Object, Meta.Types.Map)"
+        "Void oRunS(System.String)"
 Entry (DictionaryEntry)
   Key (Map):
-    "run"
+    "bHasKeyMO"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Void run(System.String)"
+        "Boolean bHasKeyMO(Meta.Types.Map, System.Object)"
 Entry (DictionaryEntry)
   Key (Map):
-    "contains"
+    "iCountM"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean contains(System.Object, Meta.Types.Map)"
+        "Int32 iCountM(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "trimStart"
+    "sTrimStartS"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map trimStart(Meta.Types.Map)"
+        "Meta.Types.Map sTrimStartS(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "storage"
+    "iCountStartMO"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map storage(Meta.Types.Map)"
+        "Int32 iCountStartMO(Meta.Types.Map, System.Object)"
 Entry (DictionaryEntry)
   Key (Map):
-    "countStart"
+    "aKeysM"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Int32 countStart(Meta.Types.Map, System.Object)"
+        "Meta.Types.IKeyValue aKeysM(Meta.Types.IKeyValue)"
 Entry (DictionaryEntry)
   Key (Map):
-    "merge"
+    "aJoinAa"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue merge(Meta.Types.Map)"
+        "Meta.Types.Map aJoinAa(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "keys"
+    "mMergeAm"
+  Value (NetMethod):
+    isMetaLibraryMethod (Boolean):
+      "True"
+    methods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.IKeyValue mMergeAm(Meta.Types.Map)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "iAddII"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue keys(Meta.Types.IKeyValue)"
+        "Meta.Types.Integer iAddII(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "with"
+    "iSubtractII"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "System.Object with(System.Object, Meta.Types.IMap)"
+        "Meta.Types.Integer iSubtractII(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "length"
+    "iMultiplyII"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Int32 length(Meta.Types.Map)"
+        "Meta.Types.Integer iMultiplyII(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "add"
+    "iDivideII"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer add(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Integer iDivideII(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "subtract"
+    "bSmallerII"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer subtract(Meta.Types.Integer, Meta.Types.Integer)"
+        "Boolean bSmallerII(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "multiply"
+    "bGreaterII"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer multiply(Meta.Types.Integer, Meta.Types.Integer)"
+        "Boolean bGreaterII(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "divide"
+    "bOrII"
   Value (NetMethod):
     isMetaLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer divide(Meta.Types.Integer, Meta.Types.Integer)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "smaller"
-  Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
-      "False"
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean smaller(Meta.Types.Integer, Meta.Types.Integer)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "greater"
-  Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
-      "False"
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean greater(Meta.Types.Integer, Meta.Types.Integer)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "bitwiseOr"
-  Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
-      "False"
-    methods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer bitwiseOr(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Integer bOrII(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "trimStartTest"
@@ -1427,6 +1386,11 @@ Entry (DictionaryEntry)
             "a"
           Value (Map):
             "z"
+Entry (DictionaryEntry)
+  Key (Map):
+    "concatenate"
+  Value (Map):
+    "xyz"
 Entry (DictionaryEntry)
   Key (Map):
     "MemberTest"
