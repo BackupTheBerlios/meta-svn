@@ -196,13 +196,14 @@ options {
 }
 expression:
   (
-    (call)=>call
+  	//(callInParens (ENDLINE!)? POINT!)=> select
+    (call)=>call  // TODO: this isn't quite correct yet
+    |(select)=>
+    select
     |map
     |delayedExpressionOnly
     |delayed
     |LITERAL
-    |(select)=>
-    select
 		|search
   );
 //TODO: rename map to program, or something like that
@@ -286,11 +287,11 @@ callInParens:
 			(
 				(call)=> // TODO: replace with use expression
 				call
+				|(select)=>select
 				|(map
 						(SPACES!)?
 						(ENDLINE!)? // TODO: this is an ugly hack???
 					)
-				|(select)=>select
 				|search
 				|LITERAL
 				|delayed
@@ -313,8 +314,8 @@ normalCall:
 			(
 				(call)=> // TODO: replace with use expression
 				call
-				|map
 				|(select)=>select
+				|map
 				|search
 				|LITERAL
 				|delayed
@@ -345,12 +346,13 @@ delayed:
 
 	
 select:
-	subselect
 	(
 		map
 		|(callInParens)=>callInParens
 		|search
 	)
+	(ENDLINE!)?
+	(POINT! lookup)+
 	{
 		#select=#([SELECT],#select);
 	}
@@ -403,12 +405,12 @@ squareBracketLookup:
 		LBRACKET!  
 		(SPACES!)?
 		(
-			map
+			(call)=>call
+			|(select)=>select
+			|map
 			|LITERAL
 			|delayed
 			|delayedExpressionOnly
-			|(call)=>call
-			|(select)=>select
 			|search
 		)
 		(SPACES!)?

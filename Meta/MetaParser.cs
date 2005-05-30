@@ -104,15 +104,6 @@ namespace Meta.Parser
 		{
 			switch ( LA(1) )
 			{
-			case INDENT:
-			{
-				map();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
 			case HASH:
 			{
 				delayedExpressionOnly();
@@ -141,7 +132,7 @@ namespace Meta.Parser
 			}
 			default:
 				bool synPredMatched75 = false;
-				if (((LA(1)==LBRACKET||LA(1)==LPAREN||LA(1)==LITERAL_KEY)))
+				if (((tokenSet_0_.member(LA(1)))))
 				{
 					int _m75 = mark();
 					synPredMatched75 = true;
@@ -168,7 +159,7 @@ namespace Meta.Parser
 				}
 				else {
 					bool synPredMatched77 = false;
-					if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
+					if (((tokenSet_0_.member(LA(1)))))
 					{
 						int _m77 = mark();
 						synPredMatched77 = true;
@@ -188,6 +179,13 @@ namespace Meta.Parser
 					if ( synPredMatched77 )
 					{
 						select();
+						if (0 == inputState.guessing)
+						{
+							astFactory.addASTChild(currentAST, (AST)returnAST);
+						}
+					}
+					else if ((LA(1)==INDENT)) {
+						map();
 						if (0 == inputState.guessing)
 						{
 							astFactory.addASTChild(currentAST, (AST)returnAST);
@@ -218,8 +216,68 @@ namespace Meta.Parser
 		MetaAST call_AST = null;
 		
 		{
+			bool synPredMatched95 = false;
+			if (((LA(1)==LPAREN)))
+			{
+				int _m95 = mark();
+				synPredMatched95 = true;
+				inputState.guessing++;
+				try {
+					{
+						match(LPAREN);
+					}
+				}
+				catch (RecognitionException)
+				{
+					synPredMatched95 = false;
+				}
+				rewind(_m95);
+				inputState.guessing--;
+			}
+			if ( synPredMatched95 )
+			{
+				callInParens();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+			}
+			else if ((tokenSet_0_.member(LA(1)))) {
+				normalCall();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+			}
+			else
+			{
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			
+		}
+		call_AST = (MetaAST)currentAST.root;
+		returnAST = call_AST;
+	}
+	
+	public void select() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST select_AST = null;
+		
+		{
 			switch ( LA(1) )
 			{
+			case INDENT:
+			{
+				map();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+				break;
+			}
 			case LPAREN:
 			{
 				callInParens();
@@ -232,7 +290,7 @@ namespace Meta.Parser
 			case LBRACKET:
 			case LITERAL_KEY:
 			{
-				normalCall();
+				search();
 				if (0 == inputState.guessing)
 				{
 					astFactory.addASTChild(currentAST, (AST)returnAST);
@@ -245,8 +303,61 @@ namespace Meta.Parser
 			}
 			 }
 		}
-		call_AST = (MetaAST)currentAST.root;
-		returnAST = call_AST;
+		{
+			switch ( LA(1) )
+			{
+			case ENDLINE:
+			{
+				match(ENDLINE);
+				break;
+			}
+			case POINT:
+			{
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			 }
+		}
+		{ // ( ... )+
+		int _cnt132=0;
+		for (;;)
+		{
+			if ((LA(1)==POINT))
+			{
+				match(POINT);
+				lookup();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+			}
+			else
+			{
+				if (_cnt132 >= 1) { goto _loop132_breakloop; } else { throw new NoViableAltException(LT(1), getFilename());; }
+			}
+			
+			_cnt132++;
+		}
+_loop132_breakloop:		;
+		}    // ( ... )+
+		if (0==inputState.guessing)
+		{
+			select_AST = (MetaAST)currentAST.root;
+			
+					select_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(SELECT)).add((AST)select_AST));
+				
+			currentAST.root = select_AST;
+			if ( (null != select_AST) && (null != select_AST.getFirstChild()) )
+				currentAST.child = select_AST.getFirstChild();
+			else
+				currentAST.child = select_AST;
+			currentAST.advanceChildToEnd();
+		}
+		select_AST = (MetaAST)currentAST.root;
+		returnAST = select_AST;
 	}
 	
 	public void map() //throws RecognitionException, TokenStreamException
@@ -369,72 +480,6 @@ _loop81_breakloop:				;
 		returnAST = delayed_AST;
 	}
 	
-	public void select() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST select_AST = null;
-		
-		subselect();
-		if (0 == inputState.guessing)
-		{
-			astFactory.addASTChild(currentAST, (AST)returnAST);
-		}
-		{
-			switch ( LA(1) )
-			{
-			case INDENT:
-			{
-				map();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
-			case LPAREN:
-			{
-				callInParens();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
-			case LBRACKET:
-			case LITERAL_KEY:
-			{
-				search();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			 }
-		}
-		if (0==inputState.guessing)
-		{
-			select_AST = (MetaAST)currentAST.root;
-			
-					select_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(SELECT)).add((AST)select_AST));
-				
-			currentAST.root = select_AST;
-			if ( (null != select_AST) && (null != select_AST.getFirstChild()) )
-				currentAST.child = select_AST.getFirstChild();
-			else
-				currentAST.child = select_AST;
-			currentAST.advanceChildToEnd();
-		}
-		select_AST = (MetaAST)currentAST.root;
-		returnAST = select_AST;
-	}
-	
 	public void search() //throws RecognitionException, TokenStreamException
 {
 		
@@ -520,7 +565,7 @@ _loop81_breakloop:				;
 			}
 			statement_AST = (MetaAST)currentAST.root;
 		}
-		else if ((tokenSet_0_.member(LA(1)))) {
+		else if ((tokenSet_1_.member(LA(1)))) {
 			{
 				{
 					{
@@ -688,20 +733,11 @@ _loop84_breakloop:			;
 			{
 				switch ( LA(1) )
 				{
-				case INDENT:
-				{
-					map();
-					if (0 == inputState.guessing)
-					{
-						astFactory.addASTChild(currentAST, (AST)returnAST);
-					}
-					break;
-				}
 				case LITERAL:
 				{
-					MetaAST tmp11_AST = null;
-					tmp11_AST = (MetaAST) astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, (AST)tmp11_AST);
+					MetaAST tmp13_AST = null;
+					tmp13_AST = (MetaAST) astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, (AST)tmp13_AST);
 					match(LITERAL);
 					break;
 				}
@@ -716,7 +752,7 @@ _loop84_breakloop:			;
 				}
 				default:
 					bool synPredMatched100 = false;
-					if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
+					if (((tokenSet_0_.member(LA(1)))))
 					{
 						int _m100 = mark();
 						synPredMatched100 = true;
@@ -743,7 +779,7 @@ _loop84_breakloop:			;
 					}
 					else {
 						bool synPredMatched102 = false;
-						if (((LA(1)==LBRACKET||LA(1)==LPAREN||LA(1)==LITERAL_KEY)))
+						if (((tokenSet_0_.member(LA(1)))))
 						{
 							int _m102 = mark();
 							synPredMatched102 = true;
@@ -771,6 +807,13 @@ _loop84_breakloop:			;
 						}
 						else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
 							search();
+							if (0 == inputState.guessing)
+							{
+								astFactory.addASTChild(currentAST, (AST)returnAST);
+							}
+						}
+						else if ((LA(1)==INDENT)) {
+							map();
 							if (0 == inputState.guessing)
 							{
 								astFactory.addASTChild(currentAST, (AST)returnAST);
@@ -834,54 +877,6 @@ _loop84_breakloop:			;
 				{
 					switch ( LA(1) )
 					{
-					case INDENT:
-					{
-						{
-							map();
-							if (0 == inputState.guessing)
-							{
-								astFactory.addASTChild(currentAST, (AST)returnAST);
-							}
-							{
-								switch ( LA(1) )
-								{
-								case SPACES:
-								{
-									match(SPACES);
-									break;
-								}
-								case ENDLINE:
-								case RPAREN:
-								{
-									break;
-								}
-								default:
-								{
-									throw new NoViableAltException(LT(1), getFilename());
-								}
-								 }
-							}
-							{
-								switch ( LA(1) )
-								{
-								case ENDLINE:
-								{
-									match(ENDLINE);
-									break;
-								}
-								case RPAREN:
-								{
-									break;
-								}
-								default:
-								{
-									throw new NoViableAltException(LT(1), getFilename());
-								}
-								 }
-							}
-						}
-						break;
-					}
 					case LITERAL:
 					{
 						MetaAST tmp16_AST = null;
@@ -910,7 +905,7 @@ _loop84_breakloop:			;
 					}
 					default:
 						bool synPredMatched107 = false;
-						if (((LA(1)==LBRACKET||LA(1)==LPAREN||LA(1)==LITERAL_KEY)))
+						if (((tokenSet_0_.member(LA(1)))))
 						{
 							int _m107 = mark();
 							synPredMatched107 = true;
@@ -936,11 +931,11 @@ _loop84_breakloop:			;
 							}
 						}
 						else {
-							bool synPredMatched112 = false;
-							if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
+							bool synPredMatched109 = false;
+							if (((tokenSet_0_.member(LA(1)))))
 							{
-								int _m112 = mark();
-								synPredMatched112 = true;
+								int _m109 = mark();
+								synPredMatched109 = true;
 								inputState.guessing++;
 								try {
 									{
@@ -949,17 +944,63 @@ _loop84_breakloop:			;
 								}
 								catch (RecognitionException)
 								{
-									synPredMatched112 = false;
+									synPredMatched109 = false;
 								}
-								rewind(_m112);
+								rewind(_m109);
 								inputState.guessing--;
 							}
-							if ( synPredMatched112 )
+							if ( synPredMatched109 )
 							{
 								select();
 								if (0 == inputState.guessing)
 								{
 									astFactory.addASTChild(currentAST, (AST)returnAST);
+								}
+							}
+							else if ((LA(1)==INDENT)) {
+								{
+									map();
+									if (0 == inputState.guessing)
+									{
+										astFactory.addASTChild(currentAST, (AST)returnAST);
+									}
+									{
+										switch ( LA(1) )
+										{
+										case SPACES:
+										{
+											match(SPACES);
+											break;
+										}
+										case ENDLINE:
+										case RPAREN:
+										{
+											break;
+										}
+										default:
+										{
+											throw new NoViableAltException(LT(1), getFilename());
+										}
+										 }
+									}
+									{
+										switch ( LA(1) )
+										{
+										case ENDLINE:
+										{
+											match(ENDLINE);
+											break;
+										}
+										case RPAREN:
+										{
+											break;
+										}
+										default:
+										{
+											throw new NoViableAltException(LT(1), getFilename());
+										}
+										 }
+									}
 								}
 							}
 							else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
@@ -1004,7 +1045,7 @@ _loop84_breakloop:			;
 		{
 			{
 				bool synPredMatched117 = false;
-				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
+				if (((tokenSet_0_.member(LA(1)))))
 				{
 					int _m117 = mark();
 					synPredMatched117 = true;
@@ -1069,20 +1110,11 @@ _loop84_breakloop:			;
 			{
 				switch ( LA(1) )
 				{
-				case INDENT:
-				{
-					map();
-					if (0 == inputState.guessing)
-					{
-						astFactory.addASTChild(currentAST, (AST)returnAST);
-					}
-					break;
-				}
 				case LITERAL:
 				{
-					MetaAST tmp19_AST = null;
-					tmp19_AST = (MetaAST) astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, (AST)tmp19_AST);
+					MetaAST tmp21_AST = null;
+					tmp21_AST = (MetaAST) astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, (AST)tmp21_AST);
 					match(LITERAL);
 					break;
 				}
@@ -1106,7 +1138,7 @@ _loop84_breakloop:			;
 				}
 				default:
 					bool synPredMatched121 = false;
-					if (((LA(1)==LBRACKET||LA(1)==LPAREN||LA(1)==LITERAL_KEY)))
+					if (((tokenSet_0_.member(LA(1)))))
 					{
 						int _m121 = mark();
 						synPredMatched121 = true;
@@ -1133,7 +1165,7 @@ _loop84_breakloop:			;
 					}
 					else {
 						bool synPredMatched123 = false;
-						if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
+						if (((tokenSet_0_.member(LA(1)))))
 						{
 							int _m123 = mark();
 							synPredMatched123 = true;
@@ -1153,6 +1185,13 @@ _loop84_breakloop:			;
 						if ( synPredMatched123 )
 						{
 							select();
+							if (0 == inputState.guessing)
+							{
+								astFactory.addASTChild(currentAST, (AST)returnAST);
+							}
+						}
+						else if ((LA(1)==INDENT)) {
+							map();
 							if (0 == inputState.guessing)
 							{
 								astFactory.addASTChild(currentAST, (AST)returnAST);
@@ -1196,11 +1235,11 @@ _loop84_breakloop:			;
 		ASTPair currentAST = new ASTPair();
 		MetaAST subselect_AST = null;
 		
-		bool synPredMatched132 = false;
+		bool synPredMatched135 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m132 = mark();
-			synPredMatched132 = true;
+			int _m135 = mark();
+			synPredMatched135 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -1212,12 +1251,12 @@ _loop84_breakloop:			;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched132 = false;
+				synPredMatched135 = false;
 			}
-			rewind(_m132);
+			rewind(_m135);
 			inputState.guessing--;
 		}
-		if ( synPredMatched132 )
+		if ( synPredMatched135 )
 		{
 			{
 				lookup();
@@ -1288,20 +1327,11 @@ _loop84_breakloop:			;
 		{
 			switch ( LA(1) )
 			{
-			case INDENT:
-			{
-				map();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
 			case LITERAL:
 			{
-				MetaAST tmp24_AST = null;
-				tmp24_AST = (MetaAST) astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, (AST)tmp24_AST);
+				MetaAST tmp26_AST = null;
+				tmp26_AST = (MetaAST) astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, (AST)tmp26_AST);
 				match(LITERAL);
 				break;
 			}
@@ -1324,11 +1354,11 @@ _loop84_breakloop:			;
 				break;
 			}
 			default:
-				bool synPredMatched143 = false;
-				if (((LA(1)==LBRACKET||LA(1)==LPAREN||LA(1)==LITERAL_KEY)))
+				bool synPredMatched146 = false;
+				if (((tokenSet_0_.member(LA(1)))))
 				{
-					int _m143 = mark();
-					synPredMatched143 = true;
+					int _m146 = mark();
+					synPredMatched146 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -1337,12 +1367,12 @@ _loop84_breakloop:			;
 					}
 					catch (RecognitionException)
 					{
-						synPredMatched143 = false;
+						synPredMatched146 = false;
 					}
-					rewind(_m143);
+					rewind(_m146);
 					inputState.guessing--;
 				}
-				if ( synPredMatched143 )
+				if ( synPredMatched146 )
 				{
 					call();
 					if (0 == inputState.guessing)
@@ -1351,11 +1381,11 @@ _loop84_breakloop:			;
 					}
 				}
 				else {
-					bool synPredMatched145 = false;
-					if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
+					bool synPredMatched148 = false;
+					if (((tokenSet_0_.member(LA(1)))))
 					{
-						int _m145 = mark();
-						synPredMatched145 = true;
+						int _m148 = mark();
+						synPredMatched148 = true;
 						inputState.guessing++;
 						try {
 							{
@@ -1364,14 +1394,21 @@ _loop84_breakloop:			;
 						}
 						catch (RecognitionException)
 						{
-							synPredMatched145 = false;
+							synPredMatched148 = false;
 						}
-						rewind(_m145);
+						rewind(_m148);
 						inputState.guessing--;
 					}
-					if ( synPredMatched145 )
+					if ( synPredMatched148 )
 					{
 						select();
+						if (0 == inputState.guessing)
+						{
+							astFactory.addASTChild(currentAST, (AST)returnAST);
+						}
+					}
+					else if ((LA(1)==INDENT)) {
+						map();
 						if (0 == inputState.guessing)
 						{
 							astFactory.addASTChild(currentAST, (AST)returnAST);
@@ -1511,10 +1548,16 @@ _loop84_breakloop:			;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 53411872L, 0L};
+		long[] data = { 19398688L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());
+	private static long[] mk_tokenSet_1_()
+	{
+		long[] data = { 53411872L, 0L};
+		return data;
+	}
+	public static readonly BitSet tokenSet_1_ = new BitSet(mk_tokenSet_1_());
 	
 }
 }

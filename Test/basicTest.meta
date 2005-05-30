@@ -1,4 +1,4 @@
-this=(mMergeAm.map
+this=(map.mMergeAm
 	parent
 	=
 		'AssignedToCurrent
@@ -20,7 +20,7 @@ unicodeText='äaba
 //	You should have received a copy of the GNU General Public License
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-this=(mMergeAm.map
+this=(map.mMergeAm
 	parent
 	programFlow
 	logic
@@ -31,13 +31,13 @@ trimStartTest=(sTrimStartS
 	"					hello"
 	'\\t
 )
-form=(Form.Forms.Windows.System
+form=(System.Windows.Forms.Form
 	Text='hello
 )
 'ImpliedAutokey
 ='Autokey
-gacTest=Collections.System
-lazyGACTest=CSharp.Microsoft
+gacTest=System.Collections
+lazyGACTest=Microsoft.CSharp
 metaLibTest=metaLib					
 commandLineArguments=arg
 libraryAssemblyTest=testClasses		//	asdfasdf	fff
@@ -59,20 +59,20 @@ object=
 	autoSearch='default
 	b='
 	SetA=:
-		a.parent.parent='c
-		autoSearch.parent.parent='changed
+		parent.parent.a='c
+		parent.parent.autoSearch='changed
 	SetB=:
-		1.b.parent.parent.parent=value.arg
+		parent.parent.parent.b.1=arg.value
 		this='changed
 	x=
 		a='b
 		c='d
 	=:
-		a.this='b
+		this.a='b
 a='default
 b='
-aSet=(SetA.object')
-bSet=(SetB.object
+aSet=(object.SetA')
+bSet=(object.SetB
 	value=
 		x='7
 		z='1
@@ -98,7 +98,7 @@ ReturnFunction=:
 SetCurrent=:
 	this=
 		arg=arg
-		x=symbol.arg
+		x=arg.symbol
 	this=x
 thisSet=(SetCurrent
 	symbol='haha
@@ -109,29 +109,29 @@ SecondLevel=:arg
 argTest=(FirstLevel
 	a='z
 )
-concatenate=(aJoinAa.map
+concatenate=(map.aJoinAa
 	'x
 	'yz
 )
-this=(mMergeAm.map
+this=(map.mMergeAm
 	parent
 	testClasses
 )
 testClass=(TestClass')
-boolTest.TestClass='1
-boolTest=boolTest.TestClass
+TestClass.boolTest='1
+boolTest=TestClass.boolTest
 memberTest=(MemberTest')
-classField.MemberTest='a
-instanceField.memberTest='b
-ClassProperty.MemberTest=InstanceProperty.memberTest
-InstanceProperty.memberTest=ClassProperty.MemberTest
+MemberTest.classField='a
+memberTest.instanceField='b
+MemberTest.ClassProperty=memberTest.InstanceProperty
+memberTest.InstanceProperty=MemberTest.ClassProperty
 interceptedSymbol='/hello/
 positionalNoConversion=(PositionalNoConversion
 	'm
 	'n
 	'o
 )
-positionalNoConversionConcatenated=(Concatenate.positionalNoConversion
+positionalNoConversionConcatenated=(positionalNoConversion.Concatenate
 	'r
 	's
 	't
@@ -141,13 +141,13 @@ namedNoConversion=(NamedNoConversion
 		'm
 		y='n
 )
-namedNoConversionConcatenated=(Concatenate.namedNoConversion
+namedNoConversionConcatenated=(namedNoConversion.Concatenate
 	c='t
 	'r
 )
 indexerNoConversion=(IndexerNoConversion')
-abc.indexerNoConversion='hihi
-indexerNoConversionIndexed=abc.indexerNoConversion
+indexerNoConversion.abc='hihi
+indexerNoConversionIndexed=indexerNoConversion.abc
 interceptedSymbol2='1
 k='hello
 xyz='w
@@ -166,26 +166,26 @@ selectionFunctionResult=(selectionFunction ')
 bigInteger='89383838383832839123497123047217340712340720347072304702340720347
 upperLevel='unchanged
 ChangeUpperLevel=:
-	upperLevel.parent.parent='changed
+	parent.parent.upperLevel='changed
 (ChangeUpperLevel')
 staticEventChanged='0
-staticEvent.TestClass=:
-	staticEventChanged.parent.parent='1
-	this=1.arg
-staticEvent=staticEvent.TestClass
-(TakeDelegate.TestClass
+TestClass.staticEvent=:
+	parent.parent.staticEventChanged='1
+	this=arg.1
+staticEvent=TestClass.staticEvent
+(TestClass.TakeDelegate
 	=:'resultFromDelegate
 )
-resultFromDelegate=(GetResultFromDelegate.TestClass')
-staticEventResult=(staticEvent.TestClass
+resultFromDelegate=(TestClass.GetResultFromDelegate')
+staticEventResult=(TestClass.staticEvent
 	testClass
 )
 instanceEventChanged='0
-instanceEvent.testClass=:
-	instanceEventChanged.parent.parent='1
-	this=1.arg
-instanceEvent=instanceEvent.testClass
-instanceEventResult=(instanceEvent.testClass
+testClass.instanceEvent=:
+	parent.parent.instanceEventChanged='1
+	this=arg.1
+instanceEvent=testClass.instanceEvent
+instanceEventResult=(testClass.instanceEvent
 	'5
 )
 one='1
@@ -193,38 +193,42 @@ two='2
 firstIf='unchanged
 secondIf='unchanged
 thenText='then
-firstIf=[(equal
+firstIf=
+	1='then
+	0='else
+.[(equal
 	'1
 	one
-)].
+)]
+secondIf=
 	1='then
 	0='else
-secondIf=[(equal
+.[(equal
 	'1
 	two
-)].
-	1='then
-	0='else
+)]
 firstSwitch='unchanged
 bigNumber='50020202029029233344
-firstSwitch=[bigNumber].
+firstSwitch=
 	[bigNumber]=bigNumber
+.[bigNumber]
 secondSwitch='unchanged
-secondSwitch=3.
+secondSwitch=
 	1='one
 	2='two
 	3='three
+.3
 emptyMap='
 emptyFunction=:
 	x='hello
 emptyFunctionResult=(emptyFunction')
-font=(Font.Drawing.System
+font=(System.Drawing.Font
 	"Courier New"
 	'10
 )
 escapedAtText=@"a"""""bc""@
 stringTest='hello
-6.stringTest=1.stringTest
+stringTest.6=stringTest.1
 helloh='hi
 stringStrategyHashTest=[stringTest]
 x=
@@ -232,25 +236,25 @@ x=
 		hello word!
 		hello!
 		"
-ored=bOrII.math
+ored=math.bOrII
 	'20
-	Tab.Keys.Forms.Windows.System
-arrayList=(ArrayList.Collections.System')
-(Add.arrayList
+	System.Windows.Forms.Keys.Tab
+arrayList=(System.Collections.ArrayList')
+(arrayList.Add
 	'hello
 )
-arrayListResult=0.arrayList
-textBox=(TextBox.Forms.Windows.System')
-Text.textBox="
+arrayListResult=arrayList.0
+textBox=(System.Windows.Forms.TextBox')
+textBox.Text="
 	Alle meine Entchen,
 	schwimmen auf dem See,
 	schwimmen auf dem See,
 	Köpfchen in das Wasser,
 	Schwaenzchen in die Hoeh.
 	"
-lines=Lines.textBox
-alleMeineText=1.lines
-4.lines='bwuhahaha
+lines=textBox.Lines
+alleMeineText=lines.1
+lines.4='bwuhahaha
 character='\a
 tab='\\t
 backslash='\\\
@@ -258,19 +262,21 @@ endline='\\n
 tabText="			hello"
 escapedText="\'\n\\\t"
 whileCounter='0
-whileCounter=(:([bSmallerII
-	arg
-	'10
-].
+whileCounter=(:(
 	0=:arg
 	1=:parent.parent iAddII
 		arg
 		'1
+.[bSmallerII
+	arg
+	'10
+]
 arg)
 '3)
-mapSelect=x.
+mapSelect=
 	x='success
 	y='hello
+.x
 returnInMap=:
 	result=arg
 literalAsArgument=(returnInMap '1)
@@ -293,7 +299,6 @@ mapAsFunctionResult=(
 returnXY=:
 	x=
 		y='valueOfY
-selectFromCall=y.x.(returnXY')
 mapAndMapCall=(
 	run=#arg
 

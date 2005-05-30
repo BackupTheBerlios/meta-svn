@@ -42,10 +42,19 @@ namespace Meta {
 	namespace Execution {
 		public abstract class Expression {
 			public static readonly Map runString=new Map("run"); // TODO: get rid of "String"-suffix, use Hungarian syntax, that is "s" prefix
-			public abstract object Evaluate(IMap parent);
+			public object Evaluate(IMap parent) {
+//				try {
+					return EvaluateImplementation(parent);
+//				}
+//				catch(Exception e) {
+//					throw new MetaException(e,this.extent);
+//				}
+			}
+			public abstract object EvaluateImplementation(IMap parent);
 			Extent extent;
 			public Extent Extent {
 				get {
+
 					return extent;
 				}
 				set {
@@ -54,7 +63,7 @@ namespace Meta {
 			}
 		}
 		public class Call: Expression {
-			public override object Evaluate(IMap parent) {
+			public override object EvaluateImplementation(IMap parent) {
 				object arg=argumentExpression.Evaluate(parent);
 				if(arg is IMap) {
 					arg=((IMap)arg).Clone();
@@ -79,7 +88,7 @@ namespace Meta {
 
 
 		public class Delayed: Expression {
-			public override object Evaluate(IMap parent) {
+			public override object EvaluateImplementation(IMap parent) {
 				Map clone=delayed;
 				clone.Parent=parent;
 				return clone;
@@ -92,7 +101,7 @@ namespace Meta {
 		}
 //
 //		public class DelayedExpresionOnly: Expression {
-//			public override object Evaluate(IMap parent) {
+//			public override object EvaluateImplementation(IMap parent) {
 //				return delayed;
 //			}
 //			public static readonly Map dealayedExpressionOnlyString=new Map("delayedExpressionOnly");
@@ -105,7 +114,7 @@ namespace Meta {
 
 
 		public class Program: Expression {
-			public override object Evaluate(IMap parent) {
+			public override object EvaluateImplementation(IMap parent) {
 				Map local=new Map();
 				return Evaluate(parent,local);
 			}
@@ -134,7 +143,7 @@ namespace Meta {
 			public readonly ArrayList statements=new ArrayList();
 		}
 		public class Literal: Expression {
-			public override object Evaluate(IMap parent) {
+			public override object EvaluateImplementation(IMap parent) {
 				if(literal.Equals(new Map("staticEvent"))) {
 					int asdf=0;
 				}
@@ -156,13 +165,13 @@ namespace Meta {
 			}
 			public Expression key;
 			public static readonly Map keyString=new Map("key");
-			public override object Evaluate(IMap parent) {
+			public override object EvaluateImplementation(IMap parent) {
 				object k=key.Evaluate(parent);
 				IMap selected=parent;
 				while(!selected.ContainsKey(k)) {
 					selected=selected.Parent;
 					if(selected==null) {
-						throw new KeyNotFoundException(k);
+						throw new KeyNotFoundException(k,this.Extent);
 					}
 				}
 				return selected[k];
@@ -177,13 +186,16 @@ namespace Meta {
 			public Expression first;
 			public Select(Map code) {
 				ArrayList list=((Map)code[selectString]).IntKeyValues;
-				list.Reverse();
+//				list.Reverse(); // do things the right way around again
 				first=(Expression)((Map)list[0]).Compile();
+				if(list[0].Equals(new Map("Collections"))) {
+					int asdf=0;
+				}
 				for(int i=1;i<list.Count;i++) {
 					keys.Add(((Map)list[i]).Compile());
 				}
 			}
-			public override object Evaluate(IMap parent) {
+			public override object EvaluateImplementation(IMap parent) {
 				object selected=first.Evaluate(parent);
 				for(int i=0;i<keys.Count;i++) {
 					if(!(selected is IKeyValue)) {
@@ -195,7 +207,7 @@ namespace Meta {
 					}
 					selected=((IKeyValue)selected)[k];
 					if(selected==null) {
-						throw new KeyDoesNotExistException(k);
+						throw new KeyDoesNotExistException(k,this.Extent);
 					}
 				}
 				return selected;
@@ -214,6 +226,9 @@ namespace Meta {
 //						int asdf=0;
 //					}
 					selected=((IKeyValue)selected)[k];
+					if(selected==null) {
+						throw new KeyDoesNotExistException(k,((Expression)keys[i]).Extent);
+					}
 					if(!(selected is IKeyValue)) {
 						selected=new NetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
@@ -236,7 +251,7 @@ namespace Meta {
 			}
 			public Statement(Map code) {
 				ArrayList intKeys=((Map)code[keyString]).IntKeyValues;
-				intKeys.Reverse();
+//				intKeys.Reverse();
 				foreach(Map key in intKeys) {
 					keys.Add(key.Compile());
 				}
@@ -548,7 +563,7 @@ namespace Meta {
 										result='\v';
 										break;
 									default:
-										throw new RuntimeException("Unrecognized escape sequence "+text);
+										throw new ApplicationException("Unrecognized escape sequence "+text);
 								}
 							}
 							else {
@@ -824,28 +839,33 @@ namespace Meta {
 			}
 		}
 		/* Base class of exceptions in Meta. */
-		public abstract class MetaException:ApplicationException {
+		public class MetaException:ApplicationException {
 			protected string message="";
-			public MetaException() {
+			public MetaException(Extent extent) {
+				this.extent=extent;
 			}
-			public MetaException(string message) {
-				this.message=message;
+			public MetaException(Exception exception,Extent extent):base(exception.Message,exception) { // not really all that logical, but so what
+				this.extent=extent;
 			}
+			Extent extent;
+//			public MetaException(string message) {
+//				this.message=message;
+//			}
 			public override string Message {
 				get {
-					return message;
+					return message+" In file "+extent.fileName+", line: "+extent.startLine+", column: "+extent.startColumn+".";
 				}
 			}
 		}
-		public class RuntimeException:MetaException {
-			public RuntimeException(string message):base(message) {
-			}
-		}
+//		public class ApplicationException:MetaException {
+//			public ApplicationException(string message):base(message) {
+//			}
+//		}
 
 
 		/* Base class for key exceptions. */
 		public abstract class KeyException:MetaException { // TODO: Add proper formatting here, output strings as strings, for example, if possible, as well as integers
-			public KeyException(object key) {
+			public KeyException(object key,Extent extent):base(extent) {
 				message="Key ";
 				if(key is Map && ((Map)key).IsString) {
 					message+=((Map)key).GetDotNetString();
@@ -861,12 +881,12 @@ namespace Meta {
 		}
 		/* Thrown when a searched key was not found. */
 		public class KeyNotFoundException:KeyException {
-			public KeyNotFoundException(object key):base(key) {
+			public KeyNotFoundException(object key,Extent extent):base(key,extent) {
 			}
 		}
 		/* Thrown when an accessed key does not exist. */
 		public class KeyDoesNotExistException:KeyException {
-			public KeyDoesNotExistException(object key):base(key) {
+			public KeyDoesNotExistException(object key,Extent extent):base(key,extent) {
 			}
 		}
 	}
@@ -919,7 +939,7 @@ namespace Meta {
 					return cache[key];
 				}
 				set {
-					throw new RuntimeException("Cannot set key "+key.ToString()+" in .NET namespace.");
+					throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
 				}
 			}
 			public ArrayList Keys {
@@ -1006,7 +1026,7 @@ namespace Meta {
 					}
 				}
 				set {
-					throw new RuntimeException("Cannot set key "+key.ToString()+" in library.");
+					throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
 				}
 			}
 			public ArrayList Keys {
@@ -1035,7 +1055,7 @@ namespace Meta {
 					return null;
 				}
 				set {
-					throw new RuntimeException("Cannot set parent of library.");
+					throw new ApplicationException("Cannot set parent of library.");
 				}
 			}
 			public IEnumerator GetEnumerator() { 
@@ -1319,7 +1339,7 @@ namespace Meta {
 						compiled=new Select(this);
 					}
 					else {
-						throw new RuntimeException("Cannot compile non-code map.");
+						throw new ApplicationException("Cannot compile non-code map.");
 					}
 				}
 //				if(this.Extent!=null) {
@@ -1729,7 +1749,7 @@ namespace Meta {
 							result=methods[0].Invoke(target,new object[] {argument});
 						}
 						catch {
-							throw new RuntimeException("Could not invoke "+this.name+".");
+							throw new ApplicationException("Could not invoke "+this.name+".");
 						}
 					}
 				}
@@ -2005,7 +2025,7 @@ namespace Meta {
 						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
-								throw new RuntimeException("Cannot set method "+key+".");
+								throw new ApplicationException("Cannot set method "+key+".");
 							}
 							else if(members[0] is FieldInfo) {
 								FieldInfo field=(FieldInfo)members[0];
@@ -2021,7 +2041,7 @@ namespace Meta {
 									}
 								}
 								if(!converted) {
-									throw new RuntimeException("Field value could not be assigned because it cannot be converted.");
+									throw new ApplicationException("Field value could not be assigned because it cannot be converted.");
 								}
 								//TODO: refactor
 								return;
@@ -2038,7 +2058,7 @@ namespace Meta {
 										NetMethod.DoModifiableCollectionAssignment((Map)value,property.GetValue(obj,new object[]{}),out converted);
 									}
 									if(!converted) {
-										throw new RuntimeException("Property "+this.type.Name+"."+Interpreter.MetaSerialize(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
+										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.MetaSerialize(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
 									}
 								}
 								return;
@@ -2065,7 +2085,7 @@ namespace Meta {
 						indexer.Call(arguments);
 					}
 					catch(Exception) {
-						throw new RuntimeException("Cannot set "+key.ToString()+".");
+						throw new ApplicationException("Cannot set "+key.ToString()+".");
 					}
 				}
 			}
