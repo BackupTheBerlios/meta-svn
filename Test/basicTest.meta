@@ -299,6 +299,7 @@ mapAsFunctionResult=(
 returnXY=:
 	x=
 		y='valueOfY
+selectFromCall=(returnXY').x.y
 mapAndMapCall=(
 	run=#arg
 

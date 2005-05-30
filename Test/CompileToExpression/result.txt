@@ -2,7 +2,7 @@ Extent (Extent):
   endColumn (Int32):
     "6"
   endLine (Int32):
-    "305"
+    "306"
   fileName (String):
     "basicTest.meta"
   startColumn (Int32):
@@ -11038,7 +11038,7 @@ Schwaenzchen in die Hoeh.
       Entry (Literal)
         Extent (Extent):
           endColumn (Int32):
-            "14"
+            "15"
           endLine (Int32):
             "302"
           fileName (String):
@@ -11048,6 +11048,115 @@ Schwaenzchen in die Hoeh.
           startLine (Int32):
             "302"
         literal (Map):
+          "selectFromCall"
+    val (Select):
+      Extent (Extent):
+        endColumn (Int32):
+          "31"
+        endLine (Int32):
+          "302"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "17"
+        startLine (Int32):
+          "302"
+      first (Call):
+        argumentExpression (Literal):
+          Extent (Extent):
+            endColumn (Int32):
+              "26"
+            endLine (Int32):
+              "302"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "25"
+            startLine (Int32):
+              "302"
+          literal (Map):
+            ""
+        callableExpression (Search):
+          Extent (Extent):
+            endColumn (Int32):
+              "25"
+            endLine (Int32):
+              "302"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "17"
+            startLine (Int32):
+              "302"
+          key (Literal):
+            Extent (Extent):
+              endColumn (Int32):
+                "25"
+              endLine (Int32):
+                "302"
+              fileName (String):
+                "basicTest.meta"
+              startColumn (Int32):
+                "17"
+              startLine (Int32):
+                "302"
+            literal (Map):
+              "returnXY"
+        Extent (Extent):
+          endColumn (Int32):
+            "26"
+          endLine (Int32):
+            "302"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "17"
+          startLine (Int32):
+            "302"
+      keys (ArrayList):
+        Entry (Literal)
+          Extent (Extent):
+            endColumn (Int32):
+              "29"
+            endLine (Int32):
+              "302"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "28"
+            startLine (Int32):
+              "302"
+          literal (Map):
+            "x"
+        Entry (Literal)
+          Extent (Extent):
+            endColumn (Int32):
+              "31"
+            endLine (Int32):
+              "302"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "30"
+            startLine (Int32):
+              "302"
+          literal (Map):
+            "y"
+  Entry (Statement)
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          endColumn (Int32):
+            "14"
+          endLine (Int32):
+            "303"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "1"
+          startLine (Int32):
+            "303"
+        literal (Map):
           "mapAndMapCall"
     val (Call):
       argumentExpression (Program):
@@ -11055,13 +11164,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "6"
           endLine (Int32):
-            "305"
+            "306"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "2"
           startLine (Int32):
-            "305"
+            "306"
         statements (ArrayList):
           Entry (Statement)
             keys (ArrayList):
@@ -11070,13 +11179,13 @@ Schwaenzchen in die Hoeh.
                   endColumn (Int32):
                     "3"
                   endLine (Int32):
-                    "305"
+                    "306"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "2"
                   startLine (Int32):
-                    "305"
+                    "306"
                 literal (Map):
                   "x"
             val (Literal):
@@ -11084,13 +11193,13 @@ Schwaenzchen in die Hoeh.
                 endColumn (Int32):
                   "6"
                 endLine (Int32):
-                  "305"
+                  "306"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "4"
                 startLine (Int32):
-                  "305"
+                  "306"
               literal (Map):
                 "y"
       callableExpression (Program):
@@ -11098,13 +11207,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "10"
           endLine (Int32):
-            "303"
+            "304"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "2"
           startLine (Int32):
-            "303"
+            "304"
         statements (ArrayList):
           Entry (Statement)
             keys (ArrayList):
@@ -11113,13 +11222,13 @@ Schwaenzchen in die Hoeh.
                   endColumn (Int32):
                     "5"
                   endLine (Int32):
-                    "303"
+                    "304"
                   fileName (String):
                     "basicTest.meta"
                   startColumn (Int32):
                     "2"
                   startLine (Int32):
-                    "303"
+                    "304"
                 literal (Map):
                   "run"
             val (Delayed):
@@ -11139,10 +11248,10 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "6"
         endLine (Int32):
-          "305"
+          "306"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "2"
         startLine (Int32):
-          "303"
+          "304"

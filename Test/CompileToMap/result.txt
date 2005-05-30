@@ -8738,6 +8738,79 @@ Schwaenzchen in die Hoeh.
                   Key (Map):
                     "literal"
                   Value (Map):
+                    "selectFromCall"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "select"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "call"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "function"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "search"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "returnXY"
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "argument"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                ""
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "2"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "x"
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "3"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "y"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "134"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "literal"
+                  Value (Map):
                     "mapAndMapCall"
         Entry (DictionaryEntry)
           Key (Map):

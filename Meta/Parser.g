@@ -196,8 +196,8 @@ options {
 }
 expression:
   (
-  	//(callInParens (ENDLINE!)? POINT!)=> select
-    (call)=>call  // TODO: this isn't quite correct yet
+  	(callInParens (ENDLINE!)? POINT!)=> select
+    |(call)=>call  // TODO: this sucks, is slow, and complicated
     |(select)=>
     select
     |map
