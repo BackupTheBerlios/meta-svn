@@ -212,6 +212,7 @@ LINE		// everything in one rule because of indeterminisms
 				|'\r'
 			)
 		)*		// TODO: factor out common stuff
+		NEWLINE
 		//
 	)
 	{
@@ -220,9 +221,9 @@ LINE		// everything in one rule because of indeterminisms
 	// indentation
 	|
 	(
-		('\t'!)*
+		('\t'!)* // throw away tabs at the end of prior line
 		NEWLINE
-		('\t')*
+		('\t')* // keep tabs at the beginning of the new line
 	)
 	{
 		_ttype=MetaLexerTokenTypes.INDENTATION;

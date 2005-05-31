@@ -1,3 +1,4 @@
+//hello
 this=(map.mMergeAm
 	parent
 	=
@@ -40,7 +41,8 @@ gacTest=System.Collections
 lazyGACTest=Microsoft.CSharp
 metaLibTest=metaLib					
 commandLineArguments=arg
-libraryAssemblyTest=testClasses		//	asdfasdf	fff
+libraryAssemblyTest=testClasses
+	//	asdfasdf	fff
 //thisIsInAComment:
 	//  still comment
 // some more comment

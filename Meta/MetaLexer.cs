@@ -737,6 +737,7 @@ _loop53_breakloop:						;
 						}
 _loop56_breakloop:						;
 					}    // ( ... )*
+					mNEWLINE(false);
 				}
 				if (0==inputState.guessing)
 				{
