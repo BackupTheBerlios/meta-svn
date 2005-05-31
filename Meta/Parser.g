@@ -44,7 +44,7 @@ tokens
   SEARCH;
   KEY;
   DELAYED_EXPRESSION_ONLY; // TODO: rename
-  //EMPTY_LINE;  
+  //EMPTY_LINE; // TODO: reintroduce, as delimiter between two maps
 }
 {
     /**
@@ -206,6 +206,8 @@ expression:
     |LITERAL
 		|search
   );
+  
+  
 //TODO: rename map to program, or something like that
 map:
   {
@@ -312,14 +314,15 @@ normalCall:
 			)
 			(SPACES!)?
 			(
-				(call)=> // TODO: replace with use expression
+				/*(call)=> // TODO: replace with use expression
 				call
 				|(select)=>select
 				|map
 				|search
 				|LITERAL
 				|delayed
-				|delayedExpressionOnly
+				|delayedExpressionOnly*/
+				expression
 			)
 		)
 	
