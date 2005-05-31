@@ -191,11 +191,35 @@ LINE		// everything in one rule because of indeterminisms
 	}
 		
 	// comments										 
-	|((('\t')*)! "//" (~('\n'|'\r'))* NEWLINE)=> // TODO: ! is unnecessary
-	(('\t')*)! "//" (~('\n'|'\r'))*		// TODO: factor out common stuff
-	{$setType(Token.SKIP);}
-	
-	
+	|
+	(
+		(
+			('\t')*
+		)!
+		"//"
+		(
+			~(
+				'\n'
+				|'\r'
+			)
+		)*
+		NEWLINE
+	)=> // TODO: ! is unnecessary
+	(
+		(
+			('\t')*
+		)!
+		"//"
+		(
+			~(
+				'\n'
+				|'\r'
+			)
+		)*		// TODO: factor out common stuff
+	)
+	{
+		$setType(Token.SKIP);
+	}
 	// indentation
 	|('\t'!)* NEWLINE ('\t')*
 	{

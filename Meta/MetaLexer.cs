@@ -706,43 +706,47 @@ _loop50_breakloop:							;
 			if ( synPredMatched51 )
 			{
 				{
+					{
+						{    // ( ... )*
+							for (;;)
+							{
+								if ((LA(1)=='\t'))
+								{
+									match('\t');
+								}
+								else
+								{
+									goto _loop55_breakloop;
+								}
+								
+							}
+_loop55_breakloop:							;
+						}    // ( ... )*
+					}
+					match("//");
 					{    // ( ... )*
 						for (;;)
 						{
-							if ((LA(1)=='\t'))
+							if ((tokenSet_4_.member(LA(1))))
 							{
-								match('\t');
+								{
+									match(tokenSet_4_);
+								}
 							}
 							else
 							{
-								goto _loop54_breakloop;
+								goto _loop58_breakloop;
 							}
 							
 						}
-_loop54_breakloop:						;
+_loop58_breakloop:						;
 					}    // ( ... )*
 				}
-				match("//");
-				{    // ( ... )*
-					for (;;)
-					{
-						if ((tokenSet_4_.member(LA(1))))
-						{
-							{
-								match(tokenSet_4_);
-							}
-						}
-						else
-						{
-							goto _loop57_breakloop;
-						}
-						
-					}
-_loop57_breakloop:					;
-				}    // ( ... )*
 				if (0==inputState.guessing)
 				{
-					_ttype = Token.SKIP;
+					
+							_ttype = Token.SKIP;
+						
 				}
 			}
 			else if ((LA(1)=='\t'||LA(1)=='\n'||LA(1)=='\r') && (true)) {
@@ -758,11 +762,11 @@ _loop57_breakloop:					;
 						}
 						else
 						{
-							goto _loop59_breakloop;
+							goto _loop60_breakloop;
 						}
 						
 					}
-_loop59_breakloop:					;
+_loop60_breakloop:					;
 				}    // ( ... )*
 				mNEWLINE(false);
 				{    // ( ... )*
@@ -774,11 +778,11 @@ _loop59_breakloop:					;
 						}
 						else
 						{
-							goto _loop61_breakloop;
+							goto _loop62_breakloop;
 						}
 						
 					}
-_loop61_breakloop:					;
+_loop62_breakloop:					;
 				}    // ( ... )*
 				if (0==inputState.guessing)
 				{
