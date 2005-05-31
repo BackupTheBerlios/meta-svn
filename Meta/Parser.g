@@ -193,9 +193,7 @@ LINE		// everything in one rule because of indeterminisms
 	// comments										 
 	|
 	(
-		(
-			('\t')*
-		)!
+		('\t')*
 		"//"
 		(
 			~(
@@ -206,9 +204,7 @@ LINE		// everything in one rule because of indeterminisms
 		NEWLINE
 	)=> // TODO: ! is unnecessary
 	(
-		(
-			('\t')*
-		)!
+		('\t')*
 		"//"
 		(
 			~(
@@ -216,12 +212,18 @@ LINE		// everything in one rule because of indeterminisms
 				|'\r'
 			)
 		)*		// TODO: factor out common stuff
+		//
 	)
 	{
 		$setType(Token.SKIP);
 	}
 	// indentation
-	|('\t'!)* NEWLINE ('\t')*
+	|
+	(
+		('\t'!)*
+		NEWLINE
+		('\t')*
+	)
 	{
 		_ttype=MetaLexerTokenTypes.INDENTATION;
 	}; 
