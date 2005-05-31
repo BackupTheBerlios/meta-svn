@@ -153,23 +153,8 @@ LITERAL:
 		)*
 		"\""!
 	)
-  /*|
-  (// TODO: remove this, use variable number of """ instead, if anything
-    "@\""!
-		(
-            options {
-                greedy=false;
-            }
-        :   .
-        )*
-        "\"@"!
-        )*/
-   ;
+  ;
   
-protected // TODO: Remove
-LITERAL_END:
-  {LA(2)=='@'}? "\"@"!;
-
 SPACES:
   (' ')+ ;//{_ttype=Token.SKIP;}
   
@@ -179,12 +164,6 @@ LINE		// everything in one rule because of indeterminisms
   {
     const int endOfFileValue=65535;
   }:
-  /*(NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}?) => // TODO: Get rid of endOfFile, or remove the one newline?
-   NEWLINE (SPACE)* (NEWLINE)* {LA(1)==endOfFileValue}? // Hmmmmhh, not sure about this anymore
-  {
-    _ttype=Token.SKIP;
-  }*/
-  
   /*(('\t')* NEWLINE ('\t')* NEWLINE)=> // TODO: This should match both newlines, shouldn't it?
   ('\t')* NEWLINE ('\t')*
 	{
@@ -192,9 +171,24 @@ LINE		// everything in one rule because of indeterminisms
 	}*/
 
 	// comments
-	(('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE)=>
-	('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))*
-	{$setType(Token.SKIP);}
+	(
+		('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE
+	)=>
+	(
+		('\t')*
+		NEWLINE
+		('\t')*
+		"//"
+		(
+			~(
+				'\n'
+				|'\r'
+			)
+		)*
+	)
+	{
+		$setType(Token.SKIP);
+	}
 		
 	// comments										 
 	|((('\t')*)! "//" (~('\n'|'\r'))* NEWLINE)=> // TODO: ! is unnecessary
