@@ -153,7 +153,7 @@ LITERAL:
 		)*
 		"\""!
 	)
-  |
+  /*|
   (// TODO: remove this, use variable number of """ instead, if anything
     "@\""!
 		(
@@ -163,7 +163,7 @@ LITERAL:
         :   .
         )*
         "\"@"!
-        )
+        )*/
    ;
   
 protected // TODO: Remove

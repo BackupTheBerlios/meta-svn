@@ -1916,11 +1916,6 @@ Entry (DictionaryEntry)
     "[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]"
 Entry (DictionaryEntry)
   Key (Map):
-    "escapedAtText"
-  Value (Map):
-    "a"""""bc""
-Entry (DictionaryEntry)
-  Key (Map):
     "stringTest"
   Value (Map):
     "helloh"
