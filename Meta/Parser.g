@@ -139,7 +139,7 @@ LINE		// everything in one rule because of indeterminisms
 	// comments
 	(('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE)=>
 	('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))*
-	{$setType(Token.SKIP); /*newline()*/;}
+	{$setType(Token.SKIP);}
 		
 	// comments										 
 	|((('\t')*)! "//" (~('\n'|'\r'))* NEWLINE)=> // TODO: ! is unnecessary
@@ -313,14 +313,6 @@ normalCall:
 			)
 			(SPACES!)?
 			(
-				/*(call)=> // TODO: replace with use expression
-				call
-				|(select)=>select
-				|map
-				|search
-				|LITERAL
-				|delayed
-				|delayedExpressionOnly*/
 				expression
 			)
 		)
@@ -360,26 +352,6 @@ select:
 	}
 	;
 
-/*subselect: //TODO: left-factor lookup POINT!
-	(
-		lookup 
-		POINT! 
-		lookup
-		POINT!
-	)
-	=>
-	(	
-		lookup 
-		POINT! 
-		subselect
-	)
-	|
-	(
-		lookup
-		POINT!
-	)
-	;*/
-
 search:
 	lookup
 	{
@@ -407,13 +379,6 @@ squareBracketLookup:
 		LBRACKET!  
 		(SPACES!)?
 		(
-			/*(call)=>call
-			|(select)=>select
-			|map
-			|LITERAL
-			|delayed
-			|delayedExpressionOnly
-			|search*/
 			expression
 		)
 		(SPACES!)?
