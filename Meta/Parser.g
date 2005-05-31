@@ -207,7 +207,6 @@ expression:
 		|search
   );
   
-  
 //TODO: rename map to program, or something like that
 map:
   {
@@ -351,7 +350,7 @@ delayed:
 select:
 	(
 		map
-		|(callInParens)=>callInParens
+		|(callInParens)=>callInParens // TODO: is callInParens needed here?
 		|search
 	)
 	(ENDLINE!)?
@@ -361,7 +360,7 @@ select:
 	}
 	;
 
-subselect: //TODO: left-factor lookup POINT!
+/*subselect: //TODO: left-factor lookup POINT!
 	(
 		lookup 
 		POINT! 
@@ -379,7 +378,7 @@ subselect: //TODO: left-factor lookup POINT!
 		lookup
 		POINT!
 	)
-	;
+	;*/
 
 search:
 	lookup
@@ -408,18 +407,20 @@ squareBracketLookup:
 		LBRACKET!  
 		(SPACES!)?
 		(
-			(call)=>call
+			/*(call)=>call
 			|(select)=>select
 			|map
 			|LITERAL
 			|delayed
 			|delayedExpressionOnly
-			|search
+			|search*/
+			expression
 		)
 		(SPACES!)?
 		(ENDLINE!)? // TODO: this is an ugly hack???, maybe not needed anymore, because implemented in call??
 		RBRACKET!
 	;
+
 {
   using Meta.Types;
   using Meta.Execution;
@@ -591,19 +592,6 @@ delayed
         result[Delayed.delayedString]=mRun;
     };
 
-/*delayedExpressionOnly
-    returns[Map result]
-    {
-        result=new Map();
-        result.Extent=#delayedExpressionOnly.Extent;
-        Map mExpression;
-        Map mRun=new Map();
-    }:
-    #(DELAYED_EXPRESSION_ONLY mExpression=expression)
-    {
-				mRun[Expression.runString]=mExpression;
-        result[Delayed.delayedString]=mRun;
-    };*/
 delayedExpressionOnly
     returns[Map result]
     {

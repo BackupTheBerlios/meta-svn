@@ -1178,70 +1178,6 @@ _loop87_breakloop:			;
 		returnAST = normalCall_AST;
 	}
 	
-	public void subselect() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST subselect_AST = null;
-		
-		bool synPredMatched134 = false;
-		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
-		{
-			int _m134 = mark();
-			synPredMatched134 = true;
-			inputState.guessing++;
-			try {
-				{
-					lookup();
-					match(POINT);
-					lookup();
-					match(POINT);
-				}
-			}
-			catch (RecognitionException)
-			{
-				synPredMatched134 = false;
-			}
-			rewind(_m134);
-			inputState.guessing--;
-		}
-		if ( synPredMatched134 )
-		{
-			{
-				lookup();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				match(POINT);
-				subselect();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-			}
-			subselect_AST = (MetaAST)currentAST.root;
-		}
-		else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
-			{
-				lookup();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				match(POINT);
-			}
-			subselect_AST = (MetaAST)currentAST.root;
-		}
-		else
-		{
-			throw new NoViableAltException(LT(1), getFilename());
-		}
-		
-		returnAST = subselect_AST;
-	}
-	
 	public void squareBracketLookup() //throws RecognitionException, TokenStreamException
 {
 		
@@ -1275,150 +1211,54 @@ _loop87_breakloop:			;
 			 }
 		}
 		{
+			expression();
+			if (0 == inputState.guessing)
+			{
+				astFactory.addASTChild(currentAST, (AST)returnAST);
+			}
+		}
+		{
 			switch ( LA(1) )
 			{
-			case LITERAL:
+			case SPACES:
 			{
-				MetaAST tmp25_AST = null;
-				tmp25_AST = (MetaAST) astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, (AST)tmp25_AST);
-				match(LITERAL);
+				match(SPACES);
 				break;
 			}
-			case COLON:
+			case ENDLINE:
+			case RBRACKET:
 			{
-				delayed();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
-			case HASH:
-			{
-				delayedExpressionOnly();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
 				break;
 			}
 			default:
-				bool synPredMatched145 = false;
-				if (((tokenSet_0_.member(LA(1)))))
-				{
-					int _m145 = mark();
-					synPredMatched145 = true;
-					inputState.guessing++;
-					try {
-						{
-							call();
-						}
-					}
-					catch (RecognitionException)
-					{
-						synPredMatched145 = false;
-					}
-					rewind(_m145);
-					inputState.guessing--;
-				}
-				if ( synPredMatched145 )
-				{
-					call();
-					if (0 == inputState.guessing)
-					{
-						astFactory.addASTChild(currentAST, (AST)returnAST);
-					}
-				}
-				else {
-					bool synPredMatched147 = false;
-					if (((tokenSet_0_.member(LA(1)))))
-					{
-						int _m147 = mark();
-						synPredMatched147 = true;
-						inputState.guessing++;
-						try {
-							{
-								select();
-							}
-						}
-						catch (RecognitionException)
-						{
-							synPredMatched147 = false;
-						}
-						rewind(_m147);
-						inputState.guessing--;
-					}
-					if ( synPredMatched147 )
-					{
-						select();
-						if (0 == inputState.guessing)
-						{
-							astFactory.addASTChild(currentAST, (AST)returnAST);
-						}
-					}
-					else if ((LA(1)==INDENT)) {
-						map();
-						if (0 == inputState.guessing)
-						{
-							astFactory.addASTChild(currentAST, (AST)returnAST);
-						}
-					}
-					else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
-						search();
-						if (0 == inputState.guessing)
-						{
-							astFactory.addASTChild(currentAST, (AST)returnAST);
-						}
-					}
-				else
-				{
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				}break; }
-			}
 			{
-				switch ( LA(1) )
-				{
-				case SPACES:
-				{
-					match(SPACES);
-					break;
-				}
-				case ENDLINE:
-				case RBRACKET:
-				{
-					break;
-				}
-				default:
-				{
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				 }
+				throw new NoViableAltException(LT(1), getFilename());
 			}
-			{
-				switch ( LA(1) )
-				{
-				case ENDLINE:
-				{
-					match(ENDLINE);
-					break;
-				}
-				case RBRACKET:
-				{
-					break;
-				}
-				default:
-				{
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				 }
-			}
-			match(RBRACKET);
-			squareBracketLookup_AST = (MetaAST)currentAST.root;
-			returnAST = squareBracketLookup_AST;
+			 }
 		}
-		
+		{
+			switch ( LA(1) )
+			{
+			case ENDLINE:
+			{
+				match(ENDLINE);
+				break;
+			}
+			case RBRACKET:
+			{
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			 }
+		}
+		match(RBRACKET);
+		squareBracketLookup_AST = (MetaAST)currentAST.root;
+		returnAST = squareBracketLookup_AST;
+	}
+	
 	public void literalKey() //throws RecognitionException, TokenStreamException
 {
 		
