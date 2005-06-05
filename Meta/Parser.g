@@ -83,12 +83,6 @@ LBRACKET:
 RBRACKET:
   ']';
 
-/*LPAREN:
-  '(';
-
-RPAREN:
-  ')';*/
-
 POINT:
   '.';
 
@@ -165,12 +159,6 @@ LINE		// everything in one rule because of indeterminisms
   {
     const int endOfFileValue=65535;
   }:
-  /*(('\t')* NEWLINE ('\t')* NEWLINE)=> // TODO: This should match both newlines, shouldn't it?
-  ('\t')* NEWLINE ('\t')*
-	{
-		_ttype=MetaLexerTokenTypes.EMPTY_LINE;
-	}*/
-
 	// comments
 	(
 		('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE  // TODO: get away from the NEWLINE stuff here, then rename newline to SAME_INDENT
@@ -273,8 +261,7 @@ options {
 }
 expression:
   (
-  	/*(callInParens (ENDLINE!)? POINT!)=> select
-    |*/(call)=>call  // TODO: this sucks, is slow, and complicated
+		(call)=>call  // TODO: this sucks, is slow, and complicated
     |(select)=>
     select
     |map
@@ -342,45 +329,6 @@ statement:
       )
     )
     ;
-/*call:
-	(
-		(LPAREN!)=>
-		callInParens
-		|normalCall
-	);*/
-/*callInParens:
-		(
-			LPAREN!
-			(
-				(select)=>
-				select
-				|(call expression)=>call
-				|search
-				|map
-				|LITERAL
-				|delayed// TODO: add map, literal, call
-			)
-			(SPACES!)?
-			(ENDLINE!)? // TODO: Think about why this is necessary and whether we really want it to work that way
-			(
-				(call)=> // TODO: replace with use expression
-				call
-				|(select)=>select
-				|(map
-						(SPACES!)?
-						(ENDLINE!)? // TODO: this is an ugly hack???
-					)
-				|search
-				|LITERAL
-				|delayed
-				|delayedExpressionOnly
-			)
-			RPAREN!
-		)
-			
-  {
-    #callInParens=#([CALL],#callInParens);
-  };*/
 call:
 		(
 			(
@@ -418,9 +366,7 @@ delayed:
 	
 select:
 	(
-		/*map
-		|(callInParens)=>callInParens // TODO: is callInParens needed here?
-		|*/search
+		search
 	)
 	(ENDLINE!)?
 	(POINT! lookup)+
