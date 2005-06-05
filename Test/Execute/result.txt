@@ -1831,12 +1831,12 @@ Entry (DictionaryEntry)
   Key (Map):
     "firstIf"
   Value (Map):
-    "then"
+    "unchanged"
 Entry (DictionaryEntry)
   Key (Map):
     "secondIf"
   Value (Map):
-    "else"
+    "unchanged"
 Entry (DictionaryEntry)
   Key (Map):
     "thenText"

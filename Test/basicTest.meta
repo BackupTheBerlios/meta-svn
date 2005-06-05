@@ -1,9 +1,8 @@
 //hello
-this=(map.mMergeAm
+this=map.mMergeAm
 	parent
 	=
 		'AssignedToCurrent
-)
 unicodeText='äaba
 //	Meta is a simple programming language.
 //	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
@@ -11,7 +10,7 @@ unicodeText='äaba
 //	This program is free software; you can redistribute it and/or
 //	modify it under the terms of the GNU General Public License
 //	as published by the Free Software Foundation; either version 2
-//	of the License, or (at your option) any later version.
+//	of the License, or at your option) any later version.
 //
 //	This program is distributed in the hope that it will be useful,
 //	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,20 +20,17 @@ unicodeText='äaba
 //	You should have received a copy of the GNU General Public License
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-this=(map.mMergeAm
+this=map.mMergeAm
 	parent
 	programFlow
 	logic
 	map
 	math
-)
-trimStartTest=(sTrimStartS
+trimStartTest=sTrimStartS
 	"					hello"
 	'\\t
-)
-form=(System.Windows.Forms.Form
+form=System.Windows.Forms.Form
 	Text='hello
-)
 'ImpliedAutokey
 ='Autokey
 gacTest=System.Collections
@@ -73,24 +69,21 @@ object=
 		this.a='b
 a='default
 b='
-aSet=(object.SetA')
-bSet=(object.SetB
+aSet=object.SetA'
+bSet=object.SetB
 	value=
 		x='7
 		z='1
-)
 ReturnEverything=:
 	this=arg
-everythingReturned=(ReturnEverything
+everythingReturned=ReturnEverything
 	'a
 	'b
 	'c
-)
-variableAsArgument=(ReturnEverything
+variableAsArgument=ReturnEverything
 	'x
 	'y
 	'z
-)
 ReturnFunction=:
 	this=:
 		this=
@@ -102,113 +95,102 @@ SetCurrent=:
 		arg=arg
 		x=arg.symbol
 	this=x
-thisSet=(SetCurrent
+thisSet=SetCurrent
 	symbol='haha
-)
 FirstLevel=:
-	(SecondLevel arg)
+	SecondLevel arg
 SecondLevel=:arg
-argTest=(FirstLevel
+argTest=FirstLevel
 	a='z
-)
-concatenate=(map.aJoinAa
+concatenate=map.aJoinAa
 	'x
 	'yz
-)
-this=(map.mMergeAm
+this=map.mMergeAm
 	parent
 	testClasses
-)
-testClass=(TestClass')
+testClass=TestClass'
 TestClass.boolTest='1
 boolTest=TestClass.boolTest
-memberTest=(MemberTest')
+memberTest=MemberTest'
 MemberTest.classField='a
 memberTest.instanceField='b
 MemberTest.ClassProperty=memberTest.InstanceProperty
 memberTest.InstanceProperty=MemberTest.ClassProperty
 interceptedSymbol='/hello/
-positionalNoConversion=(PositionalNoConversion
+positionalNoConversion=PositionalNoConversion
 	'm
 	'n
 	'o
-)
-positionalNoConversionConcatenated=(positionalNoConversion.Concatenate
+positionalNoConversionConcatenated=positionalNoConversion.Concatenate
 	'r
 	's
 	't
-)
-namedNoConversion=(NamedNoConversion
+namedNoConversion=NamedNoConversion
 	=
 		'm
 		y='n
-)
-namedNoConversionConcatenated=(namedNoConversion.Concatenate
+namedNoConversionConcatenated=namedNoConversion.Concatenate
 	c='t
 	'r
-)
-indexerNoConversion=(IndexerNoConversion')
+indexerNoConversion=IndexerNoConversion'
 indexerNoConversion.abc='hihi
 indexerNoConversionIndexed=indexerNoConversion.abc
 interceptedSymbol2='1
 k='hello
 xyz='w
 literalFunction=:'5
-literalFunctionResult=(literalFunction')
+literalFunctionResult=literalFunction'
 function=:
 	this="simple function this"
 callFunction=:function
-callFunctionResult=(callFunction')
+callFunctionResult=callFunction'
 delayedFunction=::
 	x='y
-delayedFunctionResult=(delayedFunction ')
+delayedFunctionResult=delayedFunction '
 value='xyz
 selectionFunction=:value
-selectionFunctionResult=(selectionFunction ')
+selectionFunctionResult=selectionFunction '
 bigInteger='89383838383832839123497123047217340712340720347072304702340720347
 upperLevel='unchanged
 ChangeUpperLevel=:
 	parent.parent.upperLevel='changed
-(ChangeUpperLevel')
+ChangeUpperLevel'
 staticEventChanged='0
 TestClass.staticEvent=:
 	parent.parent.staticEventChanged='1
 	this=arg.1
 staticEvent=TestClass.staticEvent
-(TestClass.TakeDelegate
+TestClass.TakeDelegate
 	=:'resultFromDelegate
-)
-resultFromDelegate=(TestClass.GetResultFromDelegate')
-staticEventResult=(TestClass.staticEvent
+resultFromDelegate=TestClass.GetResultFromDelegate'
+staticEventResult=TestClass.staticEvent
 	testClass
-)
 instanceEventChanged='0
 testClass.instanceEvent=:
 	parent.parent.instanceEventChanged='1
 	this=arg.1
 instanceEvent=testClass.instanceEvent
-instanceEventResult=(testClass.instanceEvent
+instanceEventResult=testClass.instanceEvent
 	'5
-)
 one='1
 two='2
 firstIf='unchanged
 secondIf='unchanged
 thenText='then
-firstIf=
-	1='then
-	0='else
-.[(equal
-	'1
-	one
-)]
-secondIf=
-	1='then
-	0='else
-.[(equal
-	'1
-	two
-)]
+//firstIf=
+//	1='then
+//	0='else
+//.[equal
+//	'1
+//	one
+//]
+//secondIf=
+//	1='then
+//	0='else
+//.[equal
+//	'1
+//	two
+//]
 firstSwitch='unchanged
 bigNumber='50020202029029233344
 firstSwitch=
@@ -223,11 +205,10 @@ secondSwitch=
 emptyMap='
 emptyFunction=:
 	x='hello
-emptyFunctionResult=(emptyFunction')
-font=(System.Drawing.Font
+emptyFunctionResult=emptyFunction'
+font=System.Drawing.Font
 	"Courier New"
 	'10
-)
 stringTest='hello
 stringTest.6=stringTest.1
 helloh='hi
@@ -240,12 +221,11 @@ x=
 ored=math.bOrII
 	'20
 	System.Windows.Forms.Keys.Tab
-arrayList=(System.Collections.ArrayList')
-(arrayList.Add
+arrayList=System.Collections.ArrayList'
+arrayList.Add
 	'hello
-)
 arrayListResult=arrayList.0
-textBox=(System.Windows.Forms.TextBox')
+textBox=System.Windows.Forms.TextBox'
 textBox.Text="
 	Alle meine Entchen,
 	schwimmen auf dem See,
@@ -263,7 +243,7 @@ endline='\\n
 tabText="			hello"
 escapedText="\'\n\\\t"
 whileCounter='0
-//whileCounter=(:(
+//whileCounter=:
 //	0=:arg
 //	1=:parent.parent iAddII
 //		arg
@@ -272,16 +252,16 @@ whileCounter='0
 //	arg
 //	'10
 //]
-//arg)
-//'3)
+//arg
+//'3
 returnInMap=:
 	result=arg
-literalAsArgument=(returnInMap '1)
+literalAsArgument=returnInMap '1
 returnFunction=::'functionResult
 returnArg=:arg
 myArg=:
 	hello='world
-funcReturnTest=(returnArg (myArg'))
+funcReturnTest=returnArg myArg'
 documentedFunction=
 	doc="This function returns 'hello ."
 	run=#'hello
