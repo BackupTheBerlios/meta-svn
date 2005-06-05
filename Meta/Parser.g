@@ -44,6 +44,7 @@ tokens
   SEARCH;
   KEY;
   DELAYED_EXPRESSION_ONLY; // TODO: rename
+  SAME_INDENT;
   //EMPTY_LINE; // TODO: reintroduce, as delimiter between two maps
 }
 {
@@ -172,7 +173,7 @@ LINE		// everything in one rule because of indeterminisms
 
 	// comments
 	(
-		('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE
+		('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE  // TODO: get away from the NEWLINE stuff here, then rename newline to SAME_INDENT
 	)=>
 	(
 		('\t')*

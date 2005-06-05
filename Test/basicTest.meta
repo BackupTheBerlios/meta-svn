@@ -263,21 +263,17 @@ endline='\\n
 tabText="			hello"
 escapedText="\'\n\\\t"
 whileCounter='0
-whileCounter=(:(
-	0=:arg
-	1=:parent.parent iAddII
-		arg
-		'1
-.[bSmallerII
-	arg
-	'10
-]
-arg)
-'3)
-mapSelect=
-	x='success
-	y='hello
-.x
+//whileCounter=(:(
+//	0=:arg
+//	1=:parent.parent iAddII
+//		arg
+//		'1
+//.[bSmallerII
+//	arg
+//	'10
+//]
+//arg)
+//'3)
 returnInMap=:
 	result=arg
 literalAsArgument=(returnInMap '1)
@@ -290,19 +286,3 @@ documentedFunction=
 	doc="This function returns 'hello ."
 	run=#'hello
 docFunctionResult=documentedFunction'
-inlineDelayedResult=(:'hello
-')
-callAsFunctionResult=((returnFunction')')
-mapAsFunctionResult=(
-	doc="returns 'hello"
-	run=#arg
-'hello)
-returnXY=:
-	x=
-		y='valueOfY
-selectFromCall=(returnXY').x.y
-mapAndMapCall=(
-	run=#arg
-
-	x='y
-)

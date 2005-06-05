@@ -2203,7 +2203,7 @@ namespace Meta {
 			protected void AddIndentationTokensToGetToLevel(int newIndentationLevel,Token token)  {
 				int indentationDifference=newIndentationLevel-presentIndentationLevel; 
 				if(indentationDifference==0) {
-					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
+					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));//TODO: use something else here
 				}
 				else if(indentationDifference==1) {
 					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));

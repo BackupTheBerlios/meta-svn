@@ -2023,12 +2023,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "whileCounter"
   Value (Integer):
-    "10"
-Entry (DictionaryEntry)
-  Key (Map):
-    "mapSelect"
-  Value (Map):
-    "success"
+    "0"
 Entry (DictionaryEntry)
   Key (Map):
     "returnInMap"
@@ -2188,95 +2183,3 @@ Entry (DictionaryEntry)
     "docFunctionResult"
   Value (Map):
     "hello"
-Entry (DictionaryEntry)
-  Key (Map):
-    "inlineDelayedResult"
-  Value (Map):
-    "hello"
-Entry (DictionaryEntry)
-  Key (Map):
-    "callAsFunctionResult"
-  Value (Map):
-    "functionResult"
-Entry (DictionaryEntry)
-  Key (Map):
-    "mapAsFunctionResult"
-  Value (Map):
-    "hello"
-Entry (DictionaryEntry)
-  Key (Map):
-    "returnXY"
-  Value (Map):
-    Entry (DictionaryEntry)
-      Key (Map):
-        "run"
-      Value (Map):
-        Entry (DictionaryEntry)
-          Key (Map):
-            "program"
-          Value (Map):
-            Entry (DictionaryEntry)
-              Key (Integer):
-                "1"
-              Value (Map):
-                Entry (DictionaryEntry)
-                  Key (Map):
-                    "key"
-                  Value (Map):
-                    Entry (DictionaryEntry)
-                      Key (Integer):
-                        "1"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "x"
-                Entry (DictionaryEntry)
-                  Key (Map):
-                    "value"
-                  Value (Map):
-                    Entry (DictionaryEntry)
-                      Key (Map):
-                        "program"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Integer):
-                            "1"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "key"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
-                                        "y"
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "value"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "valueOfY"
-Entry (DictionaryEntry)
-  Key (Map):
-    "selectFromCall"
-  Value (Map):
-    "valueOfY"
-Entry (DictionaryEntry)
-  Key (Map):
-    "mapAndMapCall"
-  Value (Map):
-    Entry (DictionaryEntry)
-      Key (Map):
-        "x"
-      Value (Map):
-        "y"

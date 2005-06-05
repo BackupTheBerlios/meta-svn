@@ -1,8 +1,8 @@
 Extent (Extent):
   endColumn (Int32):
-    "6"
+    "38"
   endLine (Int32):
-    "307"
+    "288"
   fileName (String):
     "basicTest.meta"
   startColumn (Int32):
@@ -9625,494 +9625,15 @@ Schwaenzchen in die Hoeh.
       Entry (Literal)
         Extent (Extent):
           endColumn (Int32):
-            "13"
-          endLine (Int32):
-            "266"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "266"
-        literal (Map):
-          "whileCounter"
-    val (Call):
-      argumentExpression (Literal):
-        Extent (Extent):
-          endColumn (Int32):
-            "3"
-          endLine (Int32):
-            "276"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "276"
-        literal (Integer):
-          "3"
-      callableExpression (Delayed):
-        delayed (Map):
-          Entry (DictionaryEntry)
-            Key (Map):
-              "run"
-            Value (Map):
-              Entry (DictionaryEntry)
-                Key (Map):
-                  "call"
-                Value (Map):
-                  Entry (DictionaryEntry)
-                    Key (Map):
-                      "function"
-                    Value (Map):
-                      Entry (DictionaryEntry)
-                        Key (Map):
-                          "select"
-                        Value (Map):
-                          Entry (DictionaryEntry)
-                            Key (Integer):
-                              "1"
-                            Value (Map):
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "program"
-                                Value (Map):
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "1"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "key"
-                                        Value (Map):
-                                          Entry (DictionaryEntry)
-                                            Key (Integer):
-                                              "1"
-                                            Value (Map):
-                                              Entry (DictionaryEntry)
-                                                Key (Map):
-                                                  "literal"
-                                                Value (Map):
-                                                  "0"
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "value"
-                                        Value (Map):
-                                          Entry (DictionaryEntry)
-                                            Key (Map):
-                                              "delayed"
-                                            Value (Map):
-                                              Entry (DictionaryEntry)
-                                                Key (Map):
-                                                  "run"
-                                                Value (Map):
-                                                  Entry (DictionaryEntry)
-                                                    Key (Map):
-                                                      "search"
-                                                    Value (Map):
-                                                      Entry (DictionaryEntry)
-                                                        Key (Map):
-                                                          "literal"
-                                                        Value (Map):
-                                                          "arg"
-                                  Entry (DictionaryEntry)
-                                    Key (Integer):
-                                      "2"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "key"
-                                        Value (Map):
-                                          Entry (DictionaryEntry)
-                                            Key (Integer):
-                                              "1"
-                                            Value (Map):
-                                              Entry (DictionaryEntry)
-                                                Key (Map):
-                                                  "literal"
-                                                Value (Map):
-                                                  "1"
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "value"
-                                        Value (Map):
-                                          Entry (DictionaryEntry)
-                                            Key (Map):
-                                              "delayed"
-                                            Value (Map):
-                                              Entry (DictionaryEntry)
-                                                Key (Map):
-                                                  "run"
-                                                Value (Map):
-                                                  Entry (DictionaryEntry)
-                                                    Key (Map):
-                                                      "call"
-                                                    Value (Map):
-                                                      Entry (DictionaryEntry)
-                                                        Key (Map):
-                                                          "function"
-                                                        Value (Map):
-                                                          Entry (DictionaryEntry)
-                                                            Key (Map):
-                                                              "select"
-                                                            Value (Map):
-                                                              Entry (DictionaryEntry)
-                                                                Key (Integer):
-                                                                  "1"
-                                                                Value (Map):
-                                                                  Entry (DictionaryEntry)
-                                                                    Key (Map):
-                                                                      "search"
-                                                                    Value (Map):
-                                                                      Entry (DictionaryEntry)
-                                                                        Key (Map):
-                                                                          "literal"
-                                                                        Value (Map):
-                                                                          "parent"
-                                                              Entry (DictionaryEntry)
-                                                                Key (Integer):
-                                                                  "2"
-                                                                Value (Map):
-                                                                  Entry (DictionaryEntry)
-                                                                    Key (Map):
-                                                                      "literal"
-                                                                    Value (Map):
-                                                                      "parent"
-                                                      Entry (DictionaryEntry)
-                                                        Key (Map):
-                                                          "argument"
-                                                        Value (Map):
-                                                          Entry (DictionaryEntry)
-                                                            Key (Map):
-                                                              "call"
-                                                            Value (Map):
-                                                              Entry (DictionaryEntry)
-                                                                Key (Map):
-                                                                  "function"
-                                                                Value (Map):
-                                                                  Entry (DictionaryEntry)
-                                                                    Key (Map):
-                                                                      "search"
-                                                                    Value (Map):
-                                                                      Entry (DictionaryEntry)
-                                                                        Key (Map):
-                                                                          "literal"
-                                                                        Value (Map):
-                                                                          "iAddII"
-                                                              Entry (DictionaryEntry)
-                                                                Key (Map):
-                                                                  "argument"
-                                                                Value (Map):
-                                                                  Entry (DictionaryEntry)
-                                                                    Key (Map):
-                                                                      "program"
-                                                                    Value (Map):
-                                                                      Entry (DictionaryEntry)
-                                                                        Key (Integer):
-                                                                          "1"
-                                                                        Value (Map):
-                                                                          Entry (DictionaryEntry)
-                                                                            Key (Map):
-                                                                              "key"
-                                                                            Value (Map):
-                                                                              Entry (DictionaryEntry)
-                                                                                Key (Integer):
-                                                                                  "1"
-                                                                                Value (Map):
-                                                                                  Entry (DictionaryEntry)
-                                                                                    Key (Map):
-                                                                                      "literal"
-                                                                                    Value (Map):
-                                                                                      "1"
-                                                                          Entry (DictionaryEntry)
-                                                                            Key (Map):
-                                                                              "value"
-                                                                            Value (Map):
-                                                                              Entry (DictionaryEntry)
-                                                                                Key (Map):
-                                                                                  "search"
-                                                                                Value (Map):
-                                                                                  Entry (DictionaryEntry)
-                                                                                    Key (Map):
-                                                                                      "literal"
-                                                                                    Value (Map):
-                                                                                      "arg"
-                                                                      Entry (DictionaryEntry)
-                                                                        Key (Integer):
-                                                                          "2"
-                                                                        Value (Map):
-                                                                          Entry (DictionaryEntry)
-                                                                            Key (Map):
-                                                                              "key"
-                                                                            Value (Map):
-                                                                              Entry (DictionaryEntry)
-                                                                                Key (Integer):
-                                                                                  "1"
-                                                                                Value (Map):
-                                                                                  Entry (DictionaryEntry)
-                                                                                    Key (Map):
-                                                                                      "literal"
-                                                                                    Value (Map):
-                                                                                      "2"
-                                                                          Entry (DictionaryEntry)
-                                                                            Key (Map):
-                                                                              "value"
-                                                                            Value (Map):
-                                                                              Entry (DictionaryEntry)
-                                                                                Key (Map):
-                                                                                  "literal"
-                                                                                Value (Map):
-                                                                                  "1"
-                          Entry (DictionaryEntry)
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "call"
-                                Value (Map):
-                                  Entry (DictionaryEntry)
-                                    Key (Map):
-                                      "function"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "search"
-                                        Value (Map):
-                                          Entry (DictionaryEntry)
-                                            Key (Map):
-                                              "literal"
-                                            Value (Map):
-                                              "bSmallerII"
-                                  Entry (DictionaryEntry)
-                                    Key (Map):
-                                      "argument"
-                                    Value (Map):
-                                      Entry (DictionaryEntry)
-                                        Key (Map):
-                                          "program"
-                                        Value (Map):
-                                          Entry (DictionaryEntry)
-                                            Key (Integer):
-                                              "1"
-                                            Value (Map):
-                                              Entry (DictionaryEntry)
-                                                Key (Map):
-                                                  "key"
-                                                Value (Map):
-                                                  Entry (DictionaryEntry)
-                                                    Key (Integer):
-                                                      "1"
-                                                    Value (Map):
-                                                      Entry (DictionaryEntry)
-                                                        Key (Map):
-                                                          "literal"
-                                                        Value (Map):
-                                                          "1"
-                                              Entry (DictionaryEntry)
-                                                Key (Map):
-                                                  "value"
-                                                Value (Map):
-                                                  Entry (DictionaryEntry)
-                                                    Key (Map):
-                                                      "search"
-                                                    Value (Map):
-                                                      Entry (DictionaryEntry)
-                                                        Key (Map):
-                                                          "literal"
-                                                        Value (Map):
-                                                          "arg"
-                                          Entry (DictionaryEntry)
-                                            Key (Integer):
-                                              "2"
-                                            Value (Map):
-                                              Entry (DictionaryEntry)
-                                                Key (Map):
-                                                  "key"
-                                                Value (Map):
-                                                  Entry (DictionaryEntry)
-                                                    Key (Integer):
-                                                      "1"
-                                                    Value (Map):
-                                                      Entry (DictionaryEntry)
-                                                        Key (Map):
-                                                          "literal"
-                                                        Value (Map):
-                                                          "2"
-                                              Entry (DictionaryEntry)
-                                                Key (Map):
-                                                  "value"
-                                                Value (Map):
-                                                  Entry (DictionaryEntry)
-                                                    Key (Map):
-                                                      "literal"
-                                                    Value (Map):
-                                                      "10"
-                  Entry (DictionaryEntry)
-                    Key (Map):
-                      "argument"
-                    Value (Map):
-                      Entry (DictionaryEntry)
-                        Key (Map):
-                          "search"
-                        Value (Map):
-                          Entry (DictionaryEntry)
-                            Key (Map):
-                              "literal"
-                            Value (Map):
-                              "arg"
-        Extent (Extent):
-          endColumn (Int32):
-            "4"
-          endLine (Int32):
-            "275"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "2"
-          startLine (Int32):
-            "267"
-      Extent (Extent):
-        endColumn (Int32):
-          "3"
-        endLine (Int32):
-          "276"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "2"
-        startLine (Int32):
-          "267"
-  Entry (Statement)
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          endColumn (Int32):
-            "10"
-          endLine (Int32):
-            "277"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "277"
-        literal (Map):
-          "mapSelect"
-    val (Select):
-      Extent (Extent):
-        endColumn (Int32):
-          "3"
-        endLine (Int32):
-          "280"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "2"
-        startLine (Int32):
-          "278"
-      first (Program):
-        Extent (Extent):
-          endColumn (Int32):
-            "10"
-          endLine (Int32):
-            "279"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "2"
-          startLine (Int32):
-            "278"
-        statements (ArrayList):
-          Entry (Statement)
-            keys (ArrayList):
-              Entry (Literal)
-                Extent (Extent):
-                  endColumn (Int32):
-                    "3"
-                  endLine (Int32):
-                    "278"
-                  fileName (String):
-                    "basicTest.meta"
-                  startColumn (Int32):
-                    "2"
-                  startLine (Int32):
-                    "278"
-                literal (Map):
-                  "x"
-            val (Literal):
-              Extent (Extent):
-                endColumn (Int32):
-                  "12"
-                endLine (Int32):
-                  "278"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "4"
-                startLine (Int32):
-                  "278"
-              literal (Map):
-                "success"
-          Entry (Statement)
-            keys (ArrayList):
-              Entry (Literal)
-                Extent (Extent):
-                  endColumn (Int32):
-                    "3"
-                  endLine (Int32):
-                    "279"
-                  fileName (String):
-                    "basicTest.meta"
-                  startColumn (Int32):
-                    "2"
-                  startLine (Int32):
-                    "279"
-                literal (Map):
-                  "y"
-            val (Literal):
-              Extent (Extent):
-                endColumn (Int32):
-                  "10"
-                endLine (Int32):
-                  "279"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "4"
-                startLine (Int32):
-                  "279"
-              literal (Map):
-                "hello"
-      keys (ArrayList):
-        Entry (Literal)
-          Extent (Extent):
-            endColumn (Int32):
-              "3"
-            endLine (Int32):
-              "280"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "2"
-            startLine (Int32):
-              "280"
-          literal (Map):
-            "x"
-  Entry (Statement)
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          endColumn (Int32):
             "12"
           endLine (Int32):
-            "281"
+            "277"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "281"
+            "277"
         literal (Map):
           "returnInMap"
     val (Delayed):
@@ -10159,13 +9680,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "12"
         endLine (Int32):
-          "282"
+          "278"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "2"
         startLine (Int32):
-          "282"
+          "278"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -10173,13 +9694,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "18"
           endLine (Int32):
-            "283"
+            "279"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "283"
+            "279"
         literal (Map):
           "literalAsArgument"
     val (Call):
@@ -10188,13 +9709,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "34"
           endLine (Int32):
-            "283"
+            "279"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "32"
           startLine (Int32):
-            "283"
+            "279"
         literal (Integer):
           "1"
       callableExpression (Search):
@@ -10202,38 +9723,38 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "31"
           endLine (Int32):
-            "283"
+            "279"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "20"
           startLine (Int32):
-            "283"
+            "279"
         key (Literal):
           Extent (Extent):
             endColumn (Int32):
               "31"
             endLine (Int32):
-              "283"
+              "279"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "20"
             startLine (Int32):
-              "283"
+              "279"
           literal (Map):
             "returnInMap"
       Extent (Extent):
         endColumn (Int32):
           "34"
         endLine (Int32):
-          "283"
+          "279"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "20"
         startLine (Int32):
-          "283"
+          "279"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -10241,13 +9762,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "15"
           endLine (Int32):
-            "284"
+            "280"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "284"
+            "280"
         literal (Map):
           "returnFunction"
     val (Delayed):
@@ -10273,13 +9794,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "33"
         endLine (Int32):
-          "284"
+          "280"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "18"
         startLine (Int32):
-          "284"
+          "280"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -10287,13 +9808,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "10"
           endLine (Int32):
-            "285"
+            "281"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "285"
+            "281"
         literal (Map):
           "returnArg"
     val (Delayed):
@@ -10315,13 +9836,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "15"
         endLine (Int32):
-          "285"
+          "281"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "12"
         startLine (Int32):
-          "285"
+          "281"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -10329,13 +9850,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "6"
           endLine (Int32):
-            "286"
+            "282"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "286"
+            "282"
         literal (Map):
           "myArg"
     val (Delayed):
@@ -10378,13 +9899,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "14"
         endLine (Int32):
-          "287"
+          "283"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "2"
         startLine (Int32):
-          "287"
+          "283"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -10392,13 +9913,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "15"
           endLine (Int32):
-            "288"
+            "284"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "288"
+            "284"
         literal (Map):
           "funcReturnTest"
     val (Call):
@@ -10408,13 +9929,13 @@ Schwaenzchen in die Hoeh.
             endColumn (Int32):
               "34"
             endLine (Int32):
-              "288"
+              "284"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "33"
             startLine (Int32):
-              "288"
+              "284"
           literal (Map):
             ""
         callableExpression (Search):
@@ -10422,75 +9943,75 @@ Schwaenzchen in die Hoeh.
             endColumn (Int32):
               "33"
             endLine (Int32):
-              "288"
+              "284"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "28"
             startLine (Int32):
-              "288"
+              "284"
           key (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "33"
               endLine (Int32):
-                "288"
+                "284"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "28"
               startLine (Int32):
-                "288"
+                "284"
             literal (Map):
               "myArg"
         Extent (Extent):
           endColumn (Int32):
             "34"
           endLine (Int32):
-            "288"
+            "284"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "28"
           startLine (Int32):
-            "288"
+            "284"
       callableExpression (Search):
         Extent (Extent):
           endColumn (Int32):
             "26"
           endLine (Int32):
-            "288"
+            "284"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "17"
           startLine (Int32):
-            "288"
+            "284"
         key (Literal):
           Extent (Extent):
             endColumn (Int32):
               "26"
             endLine (Int32):
-              "288"
+              "284"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "17"
             startLine (Int32):
-              "288"
+              "284"
           literal (Map):
             "returnArg"
       Extent (Extent):
         endColumn (Int32):
           "34"
         endLine (Int32):
-          "288"
+          "284"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "17"
         startLine (Int32):
-          "288"
+          "284"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -10498,13 +10019,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "19"
           endLine (Int32):
-            "289"
+            "285"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "289"
+            "285"
         literal (Map):
           "documentedFunction"
     val (Program):
@@ -10512,13 +10033,13 @@ Schwaenzchen in die Hoeh.
         endColumn (Int32):
           "13"
         endLine (Int32):
-          "291"
+          "287"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "2"
         startLine (Int32):
-          "290"
+          "286"
       statements (ArrayList):
         Entry (Statement)
           keys (ArrayList):
@@ -10527,13 +10048,13 @@ Schwaenzchen in die Hoeh.
                 endColumn (Int32):
                   "5"
                 endLine (Int32):
-                  "290"
+                  "286"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "2"
                 startLine (Int32):
-                  "290"
+                  "286"
               literal (Map):
                 "doc"
           val (Literal):
@@ -10541,13 +10062,13 @@ Schwaenzchen in die Hoeh.
               endColumn (Int32):
                 "38"
               endLine (Int32):
-                "290"
+                "286"
               fileName (String):
                 "basicTest.meta"
               startColumn (Int32):
                 "6"
               startLine (Int32):
-                "290"
+                "286"
             literal (Map):
               "This function returns 'hello ."
         Entry (Statement)
@@ -10557,13 +10078,13 @@ Schwaenzchen in die Hoeh.
                 endColumn (Int32):
                   "5"
                 endLine (Int32):
-                  "291"
+                  "287"
                 fileName (String):
                   "basicTest.meta"
                 startColumn (Int32):
                   "2"
                 startLine (Int32):
-                  "291"
+                  "287"
               literal (Map):
                 "run"
           val (Delayed):
@@ -10582,13 +10103,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "18"
           endLine (Int32):
-            "292"
+            "288"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "1"
           startLine (Int32):
-            "292"
+            "288"
         literal (Map):
           "docFunctionResult"
     val (Call):
@@ -10597,13 +10118,13 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "38"
           endLine (Int32):
-            "292"
+            "288"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "37"
           startLine (Int32):
-            "292"
+            "288"
         literal (Map):
           ""
       callableExpression (Search):
@@ -10611,617 +10132,35 @@ Schwaenzchen in die Hoeh.
           endColumn (Int32):
             "37"
           endLine (Int32):
-            "292"
+            "288"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
             "19"
           startLine (Int32):
-            "292"
+            "288"
         key (Literal):
           Extent (Extent):
             endColumn (Int32):
               "37"
             endLine (Int32):
-              "292"
+              "288"
             fileName (String):
               "basicTest.meta"
             startColumn (Int32):
               "19"
             startLine (Int32):
-              "292"
+              "288"
           literal (Map):
             "documentedFunction"
       Extent (Extent):
         endColumn (Int32):
           "38"
         endLine (Int32):
-          "292"
+          "288"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
           "19"
         startLine (Int32):
-          "292"
-  Entry (Statement)
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          endColumn (Int32):
-            "20"
-          endLine (Int32):
-            "293"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "293"
-        literal (Map):
-          "inlineDelayedResult"
-    val (Call):
-      argumentExpression (Literal):
-        Extent (Extent):
-          endColumn (Int32):
-            "2"
-          endLine (Int32):
-            "294"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "294"
-        literal (Map):
-          ""
-      callableExpression (Delayed):
-        delayed (Map):
-          Entry (DictionaryEntry)
-            Key (Map):
-              "run"
-            Value (Map):
-              Entry (DictionaryEntry)
-                Key (Map):
-                  "literal"
-                Value (Map):
-                  "hello"
-        Extent (Extent):
-          endColumn (Int32):
-            "29"
-          endLine (Int32):
-            "293"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "23"
-          startLine (Int32):
-            "293"
-      Extent (Extent):
-        endColumn (Int32):
-          "2"
-        endLine (Int32):
-          "294"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "23"
-        startLine (Int32):
-          "293"
-  Entry (Statement)
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          endColumn (Int32):
-            "21"
-          endLine (Int32):
-            "295"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "295"
-        literal (Map):
-          "callAsFunctionResult"
-    val (Call):
-      argumentExpression (Literal):
-        Extent (Extent):
-          endColumn (Int32):
-            "41"
-          endLine (Int32):
-            "295"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "40"
-          startLine (Int32):
-            "295"
-        literal (Map):
-          ""
-      callableExpression (Call):
-        argumentExpression (Literal):
-          Extent (Extent):
-            endColumn (Int32):
-              "39"
-            endLine (Int32):
-              "295"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "38"
-            startLine (Int32):
-              "295"
-          literal (Map):
-            ""
-        callableExpression (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "38"
-            endLine (Int32):
-              "295"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "24"
-            startLine (Int32):
-              "295"
-          key (Literal):
-            Extent (Extent):
-              endColumn (Int32):
-                "38"
-              endLine (Int32):
-                "295"
-              fileName (String):
-                "basicTest.meta"
-              startColumn (Int32):
-                "24"
-              startLine (Int32):
-                "295"
-            literal (Map):
-              "returnFunction"
-        Extent (Extent):
-          endColumn (Int32):
-            "39"
-          endLine (Int32):
-            "295"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "24"
-          startLine (Int32):
-            "295"
-      Extent (Extent):
-        endColumn (Int32):
-          "41"
-        endLine (Int32):
-          "295"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "24"
-        startLine (Int32):
-          "295"
-  Entry (Statement)
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          endColumn (Int32):
-            "20"
-          endLine (Int32):
-            "296"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "296"
-        literal (Map):
-          "mapAsFunctionResult"
-    val (Call):
-      argumentExpression (Literal):
-        Extent (Extent):
-          endColumn (Int32):
-            "7"
-          endLine (Int32):
-            "299"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "299"
-        literal (Map):
-          "hello"
-      callableExpression (Program):
-        Extent (Extent):
-          endColumn (Int32):
-            "10"
-          endLine (Int32):
-            "298"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "2"
-          startLine (Int32):
-            "297"
-        statements (ArrayList):
-          Entry (Statement)
-            keys (ArrayList):
-              Entry (Literal)
-                Extent (Extent):
-                  endColumn (Int32):
-                    "5"
-                  endLine (Int32):
-                    "297"
-                  fileName (String):
-                    "basicTest.meta"
-                  startColumn (Int32):
-                    "2"
-                  startLine (Int32):
-                    "297"
-                literal (Map):
-                  "doc"
-            val (Literal):
-              Extent (Extent):
-                endColumn (Int32):
-                  "22"
-                endLine (Int32):
-                  "297"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "6"
-                startLine (Int32):
-                  "297"
-              literal (Map):
-                "returns 'hello"
-          Entry (Statement)
-            keys (ArrayList):
-              Entry (Literal)
-                Extent (Extent):
-                  endColumn (Int32):
-                    "5"
-                  endLine (Int32):
-                    "298"
-                  fileName (String):
-                    "basicTest.meta"
-                  startColumn (Int32):
-                    "2"
-                  startLine (Int32):
-                    "298"
-                literal (Map):
-                  "run"
-            val (Delayed):
-              delayed (Map):
-                Entry (DictionaryEntry)
-                  Key (Map):
-                    "search"
-                  Value (Map):
-                    Entry (DictionaryEntry)
-                      Key (Map):
-                        "literal"
-                      Value (Map):
-                        "arg"
-              Extent:
-                null
-      Extent (Extent):
-        endColumn (Int32):
-          "7"
-        endLine (Int32):
-          "299"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "2"
-        startLine (Int32):
-          "297"
-  Entry (Statement)
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          endColumn (Int32):
-            "9"
-          endLine (Int32):
-            "300"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "300"
-        literal (Map):
-          "returnXY"
-    val (Delayed):
-      delayed (Map):
-        Entry (DictionaryEntry)
-          Key (Map):
-            "run"
-          Value (Map):
-            Entry (DictionaryEntry)
-              Key (Map):
-                "program"
-              Value (Map):
-                Entry (DictionaryEntry)
-                  Key (Integer):
-                    "1"
-                  Value (Map):
-                    Entry (DictionaryEntry)
-                      Key (Map):
-                        "key"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Integer):
-                            "1"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "x"
-                    Entry (DictionaryEntry)
-                      Key (Map):
-                        "value"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "program"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Integer):
-                                "1"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "key"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Integer):
-                                        "1"
-                                      Value (Map):
-                                        Entry (DictionaryEntry)
-                                          Key (Map):
-                                            "literal"
-                                          Value (Map):
-                                            "y"
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "value"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
-                                        "valueOfY"
-      Extent (Extent):
-        endColumn (Int32):
-          "14"
-        endLine (Int32):
-          "302"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "2"
-        startLine (Int32):
-          "301"
-  Entry (Statement)
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          endColumn (Int32):
-            "15"
-          endLine (Int32):
-            "303"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "303"
-        literal (Map):
-          "selectFromCall"
-    val (Select):
-      Extent (Extent):
-        endColumn (Int32):
-          "31"
-        endLine (Int32):
-          "303"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "17"
-        startLine (Int32):
-          "303"
-      first (Call):
-        argumentExpression (Literal):
-          Extent (Extent):
-            endColumn (Int32):
-              "26"
-            endLine (Int32):
-              "303"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "25"
-            startLine (Int32):
-              "303"
-          literal (Map):
-            ""
-        callableExpression (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "25"
-            endLine (Int32):
-              "303"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "17"
-            startLine (Int32):
-              "303"
-          key (Literal):
-            Extent (Extent):
-              endColumn (Int32):
-                "25"
-              endLine (Int32):
-                "303"
-              fileName (String):
-                "basicTest.meta"
-              startColumn (Int32):
-                "17"
-              startLine (Int32):
-                "303"
-            literal (Map):
-              "returnXY"
-        Extent (Extent):
-          endColumn (Int32):
-            "26"
-          endLine (Int32):
-            "303"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "17"
-          startLine (Int32):
-            "303"
-      keys (ArrayList):
-        Entry (Literal)
-          Extent (Extent):
-            endColumn (Int32):
-              "29"
-            endLine (Int32):
-              "303"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "28"
-            startLine (Int32):
-              "303"
-          literal (Map):
-            "x"
-        Entry (Literal)
-          Extent (Extent):
-            endColumn (Int32):
-              "31"
-            endLine (Int32):
-              "303"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "30"
-            startLine (Int32):
-              "303"
-          literal (Map):
-            "y"
-  Entry (Statement)
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          endColumn (Int32):
-            "14"
-          endLine (Int32):
-            "304"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "304"
-        literal (Map):
-          "mapAndMapCall"
-    val (Call):
-      argumentExpression (Program):
-        Extent (Extent):
-          endColumn (Int32):
-            "6"
-          endLine (Int32):
-            "307"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "2"
-          startLine (Int32):
-            "307"
-        statements (ArrayList):
-          Entry (Statement)
-            keys (ArrayList):
-              Entry (Literal)
-                Extent (Extent):
-                  endColumn (Int32):
-                    "3"
-                  endLine (Int32):
-                    "307"
-                  fileName (String):
-                    "basicTest.meta"
-                  startColumn (Int32):
-                    "2"
-                  startLine (Int32):
-                    "307"
-                literal (Map):
-                  "x"
-            val (Literal):
-              Extent (Extent):
-                endColumn (Int32):
-                  "6"
-                endLine (Int32):
-                  "307"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "4"
-                startLine (Int32):
-                  "307"
-              literal (Map):
-                "y"
-      callableExpression (Program):
-        Extent (Extent):
-          endColumn (Int32):
-            "10"
-          endLine (Int32):
-            "305"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "2"
-          startLine (Int32):
-            "305"
-        statements (ArrayList):
-          Entry (Statement)
-            keys (ArrayList):
-              Entry (Literal)
-                Extent (Extent):
-                  endColumn (Int32):
-                    "5"
-                  endLine (Int32):
-                    "305"
-                  fileName (String):
-                    "basicTest.meta"
-                  startColumn (Int32):
-                    "2"
-                  startLine (Int32):
-                    "305"
-                literal (Map):
-                  "run"
-            val (Delayed):
-              delayed (Map):
-                Entry (DictionaryEntry)
-                  Key (Map):
-                    "search"
-                  Value (Map):
-                    Entry (DictionaryEntry)
-                      Key (Map):
-                        "literal"
-                      Value (Map):
-                        "arg"
-              Extent:
-                null
-      Extent (Extent):
-        endColumn (Int32):
-          "6"
-        endLine (Int32):
-          "307"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "2"
-        startLine (Int32):
-          "305"
+          "288"

@@ -46,21 +46,22 @@ namespace Meta.Parser
 		public const int SEARCH = 13;
 		public const int KEY = 14;
 		public const int DELAYED_EXPRESSION_ONLY = 15;
-		public const int EQUAL = 16;
-		public const int HASH = 17;
-		public const int COLON = 18;
-		public const int LBRACKET = 19;
-		public const int RBRACKET = 20;
-		public const int LPAREN = 21;
-		public const int RPAREN = 22;
-		public const int POINT = 23;
-		public const int LITERAL_KEY = 24;
-		public const int LITERAL = 25;
-		public const int SPACES = 26;
-		public const int LINE = 27;
-		public const int SPACE = 28;
-		public const int NEWLINE = 29;
-		public const int NEWLINE_KEEP_TEXT = 30;
+		public const int SAME_INDENT = 16;
+		public const int EQUAL = 17;
+		public const int HASH = 18;
+		public const int COLON = 19;
+		public const int LBRACKET = 20;
+		public const int RBRACKET = 21;
+		public const int LPAREN = 22;
+		public const int RPAREN = 23;
+		public const int POINT = 24;
+		public const int LITERAL_KEY = 25;
+		public const int LITERAL = 26;
+		public const int SPACES = 27;
+		public const int LINE = 28;
+		public const int SPACE = 29;
+		public const int NEWLINE = 30;
+		public const int NEWLINE_KEEP_TEXT = 31;
 		
 		
 		protected void initialize()
@@ -1297,7 +1298,7 @@ _loop84_breakloop:			;
 	}
 	static public void initializeASTFactory( ASTFactory factory )
 	{
-		factory.setMaxNodeType(30);
+		factory.setMaxNodeType(31);
 	}
 	
 	public static readonly string[] tokenNames_ = new string[] {
@@ -1317,6 +1318,7 @@ _loop84_breakloop:			;
 		@"""SEARCH""",
 		@"""KEY""",
 		@"""DELAYED_EXPRESSION_ONLY""",
+		@"""SAME_INDENT""",
 		@"""EQUAL""",
 		@"""HASH""",
 		@"""COLON""",
@@ -1336,13 +1338,13 @@ _loop84_breakloop:			;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 19398688L, 0L};
+		long[] data = { 38797344L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());
 	private static long[] mk_tokenSet_1_()
 	{
-		long[] data = { 53411872L, 0L};
+		long[] data = { 106823712L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_1_ = new BitSet(mk_tokenSet_1_());
