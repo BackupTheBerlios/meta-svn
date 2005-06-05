@@ -7165,10 +7165,458 @@ Schwaenzchen in die Hoeh.
               Key (Map):
                 "literal"
               Value (Map):
-                "0"
+                ""
     Entry (DictionaryEntry)
       Key (Integer):
         "116"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "literal"
+                  Value (Map):
+                    "loop"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "delayed"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "run"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "program"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "key"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "literal"
+                                      Value (Map):
+                                        "whileDecision"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "value"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "call"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "function"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "search"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (Map):
+                                                "literal"
+                                              Value (Map):
+                                                "bSmallerII"
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "argument"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "program"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (Integer):
+                                                "1"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (Map):
+                                                    "key"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (Integer):
+                                                        "1"
+                                                      Value (Map):
+                                                        Entry (DictionaryEntry)
+                                                          Key (Map):
+                                                            "literal"
+                                                          Value (Map):
+                                                            "1"
+                                                Entry (DictionaryEntry)
+                                                  Key (Map):
+                                                    "value"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (Map):
+                                                        "search"
+                                                      Value (Map):
+                                                        Entry (DictionaryEntry)
+                                                          Key (Map):
+                                                            "literal"
+                                                          Value (Map):
+                                                            "arg"
+                                            Entry (DictionaryEntry)
+                                              Key (Integer):
+                                                "2"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (Map):
+                                                    "key"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (Integer):
+                                                        "1"
+                                                      Value (Map):
+                                                        Entry (DictionaryEntry)
+                                                          Key (Map):
+                                                            "literal"
+                                                          Value (Map):
+                                                            "2"
+                                                Entry (DictionaryEntry)
+                                                  Key (Map):
+                                                    "value"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (Map):
+                                                        "literal"
+                                                      Value (Map):
+                                                        "10"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "2"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "key"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "literal"
+                                      Value (Map):
+                                        "whileBranches"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "value"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "program"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Integer):
+                                        "1"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "key"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (Integer):
+                                                "1"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (Map):
+                                                    "literal"
+                                                  Value (Map):
+                                                    "1"
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "value"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (Map):
+                                                "delayed"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (Map):
+                                                    "run"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (Map):
+                                                        "call"
+                                                      Value (Map):
+                                                        Entry (DictionaryEntry)
+                                                          Key (Map):
+                                                            "function"
+                                                          Value (Map):
+                                                            Entry (DictionaryEntry)
+                                                              Key (Map):
+                                                                "search"
+                                                              Value (Map):
+                                                                Entry (DictionaryEntry)
+                                                                  Key (Map):
+                                                                    "literal"
+                                                                  Value (Map):
+                                                                    "loop"
+                                                        Entry (DictionaryEntry)
+                                                          Key (Map):
+                                                            "argument"
+                                                          Value (Map):
+                                                            Entry (DictionaryEntry)
+                                                              Key (Map):
+                                                                "call"
+                                                              Value (Map):
+                                                                Entry (DictionaryEntry)
+                                                                  Key (Map):
+                                                                    "function"
+                                                                  Value (Map):
+                                                                    Entry (DictionaryEntry)
+                                                                      Key (Map):
+                                                                        "search"
+                                                                      Value (Map):
+                                                                        Entry (DictionaryEntry)
+                                                                          Key (Map):
+                                                                            "literal"
+                                                                          Value (Map):
+                                                                            "iAddII"
+                                                                Entry (DictionaryEntry)
+                                                                  Key (Map):
+                                                                    "argument"
+                                                                  Value (Map):
+                                                                    Entry (DictionaryEntry)
+                                                                      Key (Map):
+                                                                        "program"
+                                                                      Value (Map):
+                                                                        Entry (DictionaryEntry)
+                                                                          Key (Integer):
+                                                                            "1"
+                                                                          Value (Map):
+                                                                            Entry (DictionaryEntry)
+                                                                              Key (Map):
+                                                                                "key"
+                                                                              Value (Map):
+                                                                                Entry (DictionaryEntry)
+                                                                                  Key (Integer):
+                                                                                    "1"
+                                                                                  Value (Map):
+                                                                                    Entry (DictionaryEntry)
+                                                                                      Key (Map):
+                                                                                        "literal"
+                                                                                      Value (Map):
+                                                                                        "1"
+                                                                            Entry (DictionaryEntry)
+                                                                              Key (Map):
+                                                                                "value"
+                                                                              Value (Map):
+                                                                                Entry (DictionaryEntry)
+                                                                                  Key (Map):
+                                                                                    "search"
+                                                                                  Value (Map):
+                                                                                    Entry (DictionaryEntry)
+                                                                                      Key (Map):
+                                                                                        "literal"
+                                                                                      Value (Map):
+                                                                                        "arg"
+                                                                        Entry (DictionaryEntry)
+                                                                          Key (Integer):
+                                                                            "2"
+                                                                          Value (Map):
+                                                                            Entry (DictionaryEntry)
+                                                                              Key (Map):
+                                                                                "key"
+                                                                              Value (Map):
+                                                                                Entry (DictionaryEntry)
+                                                                                  Key (Integer):
+                                                                                    "1"
+                                                                                  Value (Map):
+                                                                                    Entry (DictionaryEntry)
+                                                                                      Key (Map):
+                                                                                        "literal"
+                                                                                      Value (Map):
+                                                                                        "2"
+                                                                            Entry (DictionaryEntry)
+                                                                              Key (Map):
+                                                                                "value"
+                                                                              Value (Map):
+                                                                                Entry (DictionaryEntry)
+                                                                                  Key (Map):
+                                                                                    "literal"
+                                                                                  Value (Map):
+                                                                                    "1"
+                                    Entry (DictionaryEntry)
+                                      Key (Integer):
+                                        "2"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "key"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (Integer):
+                                                "1"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (Map):
+                                                    "literal"
+                                                  Value (Map):
+                                                    "0"
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "value"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (Map):
+                                                "delayed"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (Map):
+                                                    "run"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (Map):
+                                                        "search"
+                                                      Value (Map):
+                                                        Entry (DictionaryEntry)
+                                                          Key (Map):
+                                                            "literal"
+                                                          Value (Map):
+                                                            "arg"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "3"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "key"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "literal"
+                                      Value (Map):
+                                        "this"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "value"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "call"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "function"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "select"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (Integer):
+                                                "1"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (Map):
+                                                    "search"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (Map):
+                                                        "literal"
+                                                      Value (Map):
+                                                        "whileBranches"
+                                            Entry (DictionaryEntry)
+                                              Key (Integer):
+                                                "2"
+                                              Value (Map):
+                                                Entry (DictionaryEntry)
+                                                  Key (Map):
+                                                    "search"
+                                                  Value (Map):
+                                                    Entry (DictionaryEntry)
+                                                      Key (Map):
+                                                        "literal"
+                                                      Value (Map):
+                                                        "whileDecision"
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "argument"
+                                      Value (Map):
+                                        Entry (DictionaryEntry)
+                                          Key (Map):
+                                            "search"
+                                          Value (Map):
+                                            Entry (DictionaryEntry)
+                                              Key (Map):
+                                                "literal"
+                                              Value (Map):
+                                                "arg"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "117"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "literal"
+                  Value (Map):
+                    "whileCounter"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "call"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "function"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "search"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "literal"
+                          Value (Map):
+                            "loop"
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "argument"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        "3"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "118"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7231,7 +7679,7 @@ Schwaenzchen in die Hoeh.
                                         "arg"
     Entry (DictionaryEntry)
       Key (Integer):
-        "117"
+        "119"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7278,7 +7726,7 @@ Schwaenzchen in die Hoeh.
                         "1"
     Entry (DictionaryEntry)
       Key (Integer):
-        "118"
+        "120"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7320,7 +7768,7 @@ Schwaenzchen in die Hoeh.
                                 "functionResult"
     Entry (DictionaryEntry)
       Key (Integer):
-        "119"
+        "121"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7358,7 +7806,7 @@ Schwaenzchen in die Hoeh.
                             "arg"
     Entry (DictionaryEntry)
       Key (Integer):
-        "120"
+        "122"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7417,7 +7865,7 @@ Schwaenzchen in die Hoeh.
                                     "world"
     Entry (DictionaryEntry)
       Key (Integer):
-        "121"
+        "123"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7485,7 +7933,7 @@ Schwaenzchen in die Hoeh.
                                 ""
     Entry (DictionaryEntry)
       Key (Integer):
-        "122"
+        "124"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7566,7 +8014,7 @@ Schwaenzchen in die Hoeh.
                                 "hello"
     Entry (DictionaryEntry)
       Key (Integer):
-        "123"
+        "125"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):

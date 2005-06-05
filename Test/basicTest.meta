@@ -242,18 +242,18 @@ backslash='\\\
 endline='\\n
 tabText="			hello"
 escapedText="\'\n\\\t"
-whileCounter='0
-//whileCounter=:
-//	0=:arg
-//	1=:parent.parent iAddII
-//		arg
-//		'1
-//.[bSmallerII
-//	arg
-//	'10
-//]
-//arg
-//'3
+whileCounter='
+loop=:
+	whileDecision=bSmallerII
+		arg
+		'10
+	whileBranches=
+		1=:loop iAddII
+			arg
+			'1
+		0=:arg
+	this=whileBranches.[whileDecision] arg
+whileCounter=loop '3
 returnInMap=:
 	result=arg
 literalAsArgument=returnInMap '1
