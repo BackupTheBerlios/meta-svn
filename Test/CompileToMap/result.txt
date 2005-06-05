@@ -5620,19 +5620,256 @@ Entry (DictionaryEntry)
                   Key (Map):
                     "literal"
                   Value (Map):
-                    "thenText"
+                    "firstIfCondition"
         Entry (DictionaryEntry)
           Key (Map):
             "value"
           Value (Map):
             Entry (DictionaryEntry)
               Key (Map):
-                "literal"
+                "call"
               Value (Map):
-                "then"
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "function"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "search"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "literal"
+                          Value (Map):
+                            "equal"
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "argument"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "program"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "key"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "literal"
+                                      Value (Map):
+                                        "1"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "value"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "1"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "2"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "key"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Integer):
+                                    "1"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "literal"
+                                      Value (Map):
+                                        "2"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "value"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "search"
+                                  Value (Map):
+                                    Entry (DictionaryEntry)
+                                      Key (Map):
+                                        "literal"
+                                      Value (Map):
+                                        "one"
     Entry (DictionaryEntry)
       Key (Integer):
         "86"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "literal"
+                  Value (Map):
+                    "firstIfBranches"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "program"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "1"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "key"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "1"
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "value"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "delayed"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "run"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "then"
+                Entry (DictionaryEntry)
+                  Key (Integer):
+                    "2"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "key"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "literal"
+                              Value (Map):
+                                "0"
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "value"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Map):
+                            "delayed"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "run"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "else"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "87"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "key"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Integer):
+                "1"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "literal"
+                  Value (Map):
+                    "firstIf"
+        Entry (DictionaryEntry)
+          Key (Map):
+            "value"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "call"
+              Value (Map):
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "function"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "select"
+                      Value (Map):
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "1"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "search"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "firstIfBranches"
+                        Entry (DictionaryEntry)
+                          Key (Integer):
+                            "2"
+                          Value (Map):
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "search"
+                              Value (Map):
+                                Entry (DictionaryEntry)
+                                  Key (Map):
+                                    "literal"
+                                  Value (Map):
+                                    "firstIfCondition"
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "argument"
+                  Value (Map):
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "literal"
+                      Value (Map):
+                        ""
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "88"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -5658,7 +5895,7 @@ Entry (DictionaryEntry)
                 "unchanged"
     Entry (DictionaryEntry)
       Key (Integer):
-        "87"
+        "89"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -5684,7 +5921,7 @@ Entry (DictionaryEntry)
                 "50020202029029233344"
     Entry (DictionaryEntry)
       Key (Integer):
-        "88"
+        "90"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -5764,7 +6001,7 @@ Entry (DictionaryEntry)
                             "bigNumber"
     Entry (DictionaryEntry)
       Key (Integer):
-        "89"
+        "91"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -5790,7 +6027,7 @@ Entry (DictionaryEntry)
                 "unchanged"
     Entry (DictionaryEntry)
       Key (Integer):
-        "90"
+        "92"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -5910,7 +6147,7 @@ Entry (DictionaryEntry)
                         "3"
     Entry (DictionaryEntry)
       Key (Integer):
-        "91"
+        "93"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -5936,7 +6173,7 @@ Entry (DictionaryEntry)
                 ""
     Entry (DictionaryEntry)
       Key (Integer):
-        "92"
+        "94"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -5995,7 +6232,7 @@ Entry (DictionaryEntry)
                                     "hello"
     Entry (DictionaryEntry)
       Key (Integer):
-        "93"
+        "95"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6042,7 +6279,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (Integer):
-        "94"
+        "96"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6166,7 +6403,7 @@ Entry (DictionaryEntry)
                                     "10"
     Entry (DictionaryEntry)
       Key (Integer):
-        "95"
+        "97"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6192,7 +6429,7 @@ Entry (DictionaryEntry)
                 "hello"
     Entry (DictionaryEntry)
       Key (Integer):
-        "96"
+        "98"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6248,7 +6485,7 @@ Entry (DictionaryEntry)
                         "1"
     Entry (DictionaryEntry)
       Key (Integer):
-        "97"
+        "99"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6274,7 +6511,7 @@ Entry (DictionaryEntry)
                 "hi"
     Entry (DictionaryEntry)
       Key (Integer):
-        "98"
+        "100"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6308,7 +6545,7 @@ Entry (DictionaryEntry)
                         "stringTest"
     Entry (DictionaryEntry)
       Key (Integer):
-        "99"
+        "101"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6362,7 +6599,7 @@ hello!
 "
     Entry (DictionaryEntry)
       Key (Integer):
-        "100"
+        "102"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6525,7 +6762,7 @@ hello!
                                             "Tab"
     Entry (DictionaryEntry)
       Key (Integer):
-        "101"
+        "103"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6598,7 +6835,7 @@ hello!
                         ""
     Entry (DictionaryEntry)
       Key (Integer):
-        "102"
+        "104"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6687,7 +6924,7 @@ hello!
                                     "hello"
     Entry (DictionaryEntry)
       Key (Integer):
-        "103"
+        "105"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6734,7 +6971,7 @@ hello!
                         "0"
     Entry (DictionaryEntry)
       Key (Integer):
-        "104"
+        "106"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6816,7 +7053,7 @@ hello!
                         ""
     Entry (DictionaryEntry)
       Key (Integer):
-        "105"
+        "107"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6857,7 +7094,7 @@ Schwaenzchen in die Hoeh.
 "
     Entry (DictionaryEntry)
       Key (Integer):
-        "106"
+        "108"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6904,7 +7141,7 @@ Schwaenzchen in die Hoeh.
                         "Lines"
     Entry (DictionaryEntry)
       Key (Integer):
-        "107"
+        "109"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6951,7 +7188,7 @@ Schwaenzchen in die Hoeh.
                         "1"
     Entry (DictionaryEntry)
       Key (Integer):
-        "108"
+        "110"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -6986,7 +7223,7 @@ Schwaenzchen in die Hoeh.
                 "bwuhahaha"
     Entry (DictionaryEntry)
       Key (Integer):
-        "109"
+        "111"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7012,7 +7249,7 @@ Schwaenzchen in die Hoeh.
                 "\a"
     Entry (DictionaryEntry)
       Key (Integer):
-        "110"
+        "112"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7038,7 +7275,7 @@ Schwaenzchen in die Hoeh.
                 "\\t"
     Entry (DictionaryEntry)
       Key (Integer):
-        "111"
+        "113"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7064,7 +7301,7 @@ Schwaenzchen in die Hoeh.
                 "\\\"
     Entry (DictionaryEntry)
       Key (Integer):
-        "112"
+        "114"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7090,7 +7327,7 @@ Schwaenzchen in die Hoeh.
                 "\\n"
     Entry (DictionaryEntry)
       Key (Integer):
-        "113"
+        "115"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7116,7 +7353,7 @@ Schwaenzchen in die Hoeh.
                 "			hello"
     Entry (DictionaryEntry)
       Key (Integer):
-        "114"
+        "116"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7142,7 +7379,7 @@ Schwaenzchen in die Hoeh.
                 "\'\n\\\t"
     Entry (DictionaryEntry)
       Key (Integer):
-        "115"
+        "117"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7168,7 +7405,7 @@ Schwaenzchen in die Hoeh.
                 ""
     Entry (DictionaryEntry)
       Key (Integer):
-        "116"
+        "118"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7569,7 +7806,7 @@ Schwaenzchen in die Hoeh.
                                                 "arg"
     Entry (DictionaryEntry)
       Key (Integer):
-        "117"
+        "119"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7616,7 +7853,7 @@ Schwaenzchen in die Hoeh.
                         "3"
     Entry (DictionaryEntry)
       Key (Integer):
-        "118"
+        "120"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7679,7 +7916,7 @@ Schwaenzchen in die Hoeh.
                                         "arg"
     Entry (DictionaryEntry)
       Key (Integer):
-        "119"
+        "121"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7726,7 +7963,7 @@ Schwaenzchen in die Hoeh.
                         "1"
     Entry (DictionaryEntry)
       Key (Integer):
-        "120"
+        "122"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7768,7 +8005,7 @@ Schwaenzchen in die Hoeh.
                                 "functionResult"
     Entry (DictionaryEntry)
       Key (Integer):
-        "121"
+        "123"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7806,7 +8043,7 @@ Schwaenzchen in die Hoeh.
                             "arg"
     Entry (DictionaryEntry)
       Key (Integer):
-        "122"
+        "124"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7865,7 +8102,7 @@ Schwaenzchen in die Hoeh.
                                     "world"
     Entry (DictionaryEntry)
       Key (Integer):
-        "123"
+        "125"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -7933,7 +8170,7 @@ Schwaenzchen in die Hoeh.
                                 ""
     Entry (DictionaryEntry)
       Key (Integer):
-        "124"
+        "126"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):
@@ -8014,7 +8251,7 @@ Schwaenzchen in die Hoeh.
                                 "hello"
     Entry (DictionaryEntry)
       Key (Integer):
-        "125"
+        "127"
       Value (Map):
         Entry (DictionaryEntry)
           Key (Map):

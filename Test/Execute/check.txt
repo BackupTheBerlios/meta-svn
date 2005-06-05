@@ -1831,7 +1831,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "firstIf"
   Value (Map):
-    "unchanged"
+    "then"
 Entry (DictionaryEntry)
   Key (Map):
     "secondIf"
@@ -1839,9 +1839,39 @@ Entry (DictionaryEntry)
     "unchanged"
 Entry (DictionaryEntry)
   Key (Map):
-    "thenText"
+    "firstIfCondition"
+  Value (Integer):
+    "1"
+Entry (DictionaryEntry)
+  Key (Map):
+    "firstIfBranches"
   Value (Map):
-    "then"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "run"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "literal"
+              Value (Map):
+                "then"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "0"
+      Value (Map):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "run"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "literal"
+              Value (Map):
+                "else"
 Entry (DictionaryEntry)
   Key (Map):
     "firstSwitch"

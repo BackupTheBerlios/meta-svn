@@ -176,21 +176,13 @@ one='1
 two='2
 firstIf='unchanged
 secondIf='unchanged
-thenText='then
-//firstIf=
-//	1='then
-//	0='else
-//.[equal
-//	'1
-//	one
-//]
-//secondIf=
-//	1='then
-//	0='else
-//.[equal
-//	'1
-//	two
-//]
+firstIfCondition=equal
+	'1
+	one
+firstIfBranches=
+	1=:'then
+	0=:'else
+firstIf=firstIfBranches.[firstIfCondition]'
 firstSwitch='unchanged
 bigNumber='50020202029029233344
 firstSwitch=
