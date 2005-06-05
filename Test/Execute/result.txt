@@ -1874,11 +1874,6 @@ Entry (DictionaryEntry)
                 "else"
 Entry (DictionaryEntry)
   Key (Map):
-    "firstSwitch"
-  Value (Integer):
-    "50020202029029233344"
-Entry (DictionaryEntry)
-  Key (Map):
     "bigNumber"
   Value (Integer):
     "50020202029029233344"
@@ -1887,6 +1882,25 @@ Entry (DictionaryEntry)
     "secondSwitch"
   Value (Map):
     "three"
+Entry (DictionaryEntry)
+  Key (Map):
+    "secondSwitchCases"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (Map):
+        "one"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "2"
+      Value (Map):
+        "two"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "3"
+      Value (Map):
+        "three"
 Entry (DictionaryEntry)
   Key (Map):
     "emptyMap"

@@ -183,17 +183,13 @@ firstIfBranches=
 	1=:'then
 	0=:'else
 firstIf=firstIfBranches.[firstIfCondition]'
-firstSwitch='unchanged
 bigNumber='50020202029029233344
-firstSwitch=
-	[bigNumber]=bigNumber
-.[bigNumber]
 secondSwitch='unchanged
-secondSwitch=
+secondSwitchCases=
 	1='one
 	2='two
 	3='three
-.3
+secondSwitch=secondSwitchCases.3
 emptyMap='
 emptyFunction=:
 	x='hello
