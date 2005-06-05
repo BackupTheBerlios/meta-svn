@@ -24,16 +24,14 @@ namespace Meta.Parser
 		public const int COLON = 19;
 		public const int LBRACKET = 20;
 		public const int RBRACKET = 21;
-		public const int LPAREN = 22;
-		public const int RPAREN = 23;
-		public const int POINT = 24;
-		public const int LITERAL_KEY = 25;
-		public const int LITERAL = 26;
-		public const int SPACES = 27;
-		public const int LINE = 28;
-		public const int SPACE = 29;
-		public const int NEWLINE = 30;
-		public const int NEWLINE_KEEP_TEXT = 31;
+		public const int POINT = 22;
+		public const int LITERAL_KEY = 23;
+		public const int LITERAL = 24;
+		public const int SPACES = 25;
+		public const int LINE = 26;
+		public const int SPACE = 27;
+		public const int NEWLINE = 28;
+		public const int NEWLINE_KEEP_TEXT = 29;
 		
 	}
 }

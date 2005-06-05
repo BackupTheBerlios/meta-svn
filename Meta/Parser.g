@@ -83,11 +83,11 @@ LBRACKET:
 RBRACKET:
   ']';
 
-LPAREN:
+/*LPAREN:
   '(';
 
 RPAREN:
-  ')';
+  ')';*/
 
 POINT:
   '.';
@@ -273,8 +273,8 @@ options {
 }
 expression:
   (
-  	(callInParens (ENDLINE!)? POINT!)=> select
-    |(call)=>call  // TODO: this sucks, is slow, and complicated
+  	/*(callInParens (ENDLINE!)? POINT!)=> select
+    |*/(call)=>call  // TODO: this sucks, is slow, and complicated
     |(select)=>
     select
     |map
@@ -342,13 +342,13 @@ statement:
       )
     )
     ;
-call:
+/*call:
 	(
 		(LPAREN!)=>
 		callInParens
 		|normalCall
-	);
-callInParens:
+	);*/
+/*callInParens:
 		(
 			LPAREN!
 			(
@@ -380,8 +380,8 @@ callInParens:
 			
   {
     #callInParens=#([CALL],#callInParens);
-  };
-normalCall:
+  };*/
+call:
 		(
 			(
 				(select)=>
@@ -395,7 +395,7 @@ normalCall:
 		)
 	
   {
-    #normalCall=#([CALL],#normalCall);
+    #call=#([CALL],#call);
   };
     
 delayedExpressionOnly:
@@ -418,9 +418,9 @@ delayed:
 	
 select:
 	(
-		map
+		/*map
 		|(callInParens)=>callInParens // TODO: is callInParens needed here?
-		|search
+		|*/search
 	)
 	(ENDLINE!)?
 	(POINT! lookup)+
