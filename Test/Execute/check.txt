@@ -1423,6 +1423,12 @@ Entry (DictionaryEntry)
   Key (Map):
     "testClass"
   Value (TestClass):
+    decimalValue (Decimal):
+      "0.3333333333333333333333333333"
+    doubleValue (Double):
+      "0.333333333333333"
+    floatValue (Single):
+      "0.3333333"
 Entry (DictionaryEntry)
   Key (Map):
     "boolTest"
@@ -1445,6 +1451,12 @@ Entry (DictionaryEntry)
   Key (Map):
     "positionalNoConversion"
   Value (PositionalNoConversion):
+    decimalValue (Decimal):
+      "0"
+    doubleValue (Double):
+      "0"
+    floatValue (Single):
+      "0"
 Entry (DictionaryEntry)
   Key (Map):
     "positionalNoConversionConcatenated"
@@ -1454,6 +1466,12 @@ Entry (DictionaryEntry)
   Key (Map):
     "namedNoConversion"
   Value (NamedNoConversion):
+    decimalValue (Decimal):
+      "0"
+    doubleValue (Double):
+      "0"
+    floatValue (Single):
+      "0"
 Entry (DictionaryEntry)
   Key (Map):
     "namedNoConversionConcatenated"
@@ -1463,6 +1481,12 @@ Entry (DictionaryEntry)
   Key (Map):
     "indexerNoConversion"
   Value (IndexerNoConversion):
+    decimalValue (Decimal):
+      "0"
+    doubleValue (Double):
+      "0"
+    floatValue (Single):
+      "0"
 Entry (DictionaryEntry)
   Key (Map):
     "indexerNoConversionIndexed"
@@ -1798,6 +1822,12 @@ Entry (DictionaryEntry)
   Key (Map):
     "staticEventResult"
   Value (TestClass):
+    decimalValue (Decimal):
+      "0.3333333333333333333333333333"
+    doubleValue (Double):
+      "0.333333333333333"
+    floatValue (Single):
+      "0.3333333"
 Entry (DictionaryEntry)
   Key (Map):
     "instanceEventChanged"

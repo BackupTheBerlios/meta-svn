@@ -66,6 +66,9 @@ namespace testClasses
 		public static object GetResultFromDelegate() {
 			return del.GetType().GetMethod("Invoke").Invoke(del,new object[]{});
 		}
+		public double doubleValue=0.0;
+		public float floatValue=0.0F;
+		public decimal decimalValue=0.0M;
 	}
 	public class PositionalNoConversion:TestClass {
 		public PositionalNoConversion(string p1,string b,string p2) {

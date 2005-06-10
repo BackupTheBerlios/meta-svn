@@ -606,6 +606,54 @@ namespace Meta {
 			private abstract class MetaToDotNetConversions {
 				/* These classes define the conversions that performed when a .NET method, field, or property
 				 * is called/assigned to from Meta. */
+
+				public class ConvertFractionToDecimal: MetaToDotNetConversion {
+					public ConvertFractionToDecimal() {
+							// maybe make this more flexible, make it a function that determines applicability
+							// also add the possibility to disamibuate several conversion; problem when calling
+							// overloaded, similar methods
+						this.source=typeof(Map); 
+						this.target=typeof(decimal); 
+					}
+					public override object Convert(object obj) {
+						Map m=(Map)obj;
+						//						if(m.ContainsKey(new Map("iNumerator")) && m.ContainsKey(new Map("iDenominator")))
+						if(m[new Map("iNumerator")] is Integer && m[new Map("iDenominator")] is Integer) {
+							return ((decimal)((Integer)m[new Map("iNumerator")]).LongValue())/((decimal)((Integer)m[new Map("iDenominator")]).LongValue());
+						}
+						return null;
+					}
+
+				}
+				public class ConvertFractionToDouble: MetaToDotNetConversion {
+					public ConvertFractionToDouble() {
+						this.source=typeof(Map);
+						this.target=typeof(double);
+					}
+					public override object Convert(object obj) {
+						Map m=(Map)obj;
+//						if(m.ContainsKey(new Map("iNumerator")) && m.ContainsKey(new Map("iDenominator")))
+						if(m[new Map("iNumerator")] is Integer && m[new Map("iDenominator")] is Integer) {
+							return ((double)((Integer)m[new Map("iNumerator")]).LongValue())/((double)((Integer)m[new Map("iDenominator")]).LongValue());
+						}
+						return null;
+					}
+
+				}
+				public class ConvertFractionToFloat: MetaToDotNetConversion {
+					public ConvertFractionToFloat() {
+						this.source=typeof(Map);
+						this.target=typeof(float);
+					}
+					public override object Convert(object obj) {
+						Map m=(Map)obj;
+						//						if(m.ContainsKey(new Map("iNumerator")) && m.ContainsKey(new Map("iDenominator")))
+						if(m[new Map("iNumerator")] is Integer && m[new Map("iDenominator")] is Integer) {
+							return ((float)((Integer)m[new Map("iNumerator")]).LongValue())/((float)((Integer)m[new Map("iDenominator")]).LongValue());
+						}
+						return null;
+					}
+				}
 				public class ConvertIntegerToByte: MetaToDotNetConversion {
 					public ConvertIntegerToByte() {
 						this.source=typeof(Integer);
@@ -2040,7 +2088,7 @@ namespace Meta {
 									}
 								}
 								if(!converted) {
-									throw new ApplicationException("Field value could not be assigned because it cannot be converted.");
+									throw new ApplicationException("Field "+field.Name+"could not be assigned because it cannot be converted.");
 								}
 								//TODO: refactor
 								return;
