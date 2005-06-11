@@ -344,14 +344,14 @@ namespace Meta {
 				}
 				return null;
 			}
-			public static object ConvertDotNetToMeta(object obj) { 
+			public static object ConvertDotNetTojMeta(object obj) { 
 				if(obj==null) {
 					return null;
 				}
 				else if(obj.GetType().IsSubclassOf(typeof(Enum))) {
 					return new Integer((int)Convert.ToInt32((Enum)obj));
 				}
-				DotNetToMetaConversion conversion=(DotNetToMetaConversion)metaConversion[obj.GetType()];
+				DotNetTojMetaConversion conversion=(DotNetTojMetaConversion)metaConversion[obj.GetType()];
 				if(conversion==null) {
 					return obj;
 				}
@@ -501,8 +501,8 @@ namespace Meta {
 				foreach(Type type in typeof(LiteralRecognitions).GetNestedTypes()) {
 					literalRecognitions.Add((RecognizeLiteral)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
-				foreach(Type type in typeof(DotNetToMetaConversions).GetNestedTypes()) {
-					DotNetToMetaConversion conversion=((DotNetToMetaConversion)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+				foreach(Type type in typeof(DotNetTojMetaConversions).GetNestedTypes()) {
+					DotNetTojMetaConversion conversion=((DotNetTojMetaConversion)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 					metaConversion[conversion.source]=conversion;
 				}
 				foreach(Type type in typeof(MetaToDotNetConversions).GetNestedTypes()) {
@@ -531,7 +531,7 @@ namespace Meta {
 				public Type target;
 				public abstract object Convert(object obj,out bool converted);
 			}
-			public abstract class DotNetToMetaConversion {
+			public abstract class DotNetTojMetaConversion {
 				public Type source;
 				public abstract object Convert(object obj);
 			}
@@ -1026,10 +1026,10 @@ namespace Meta {
 //					}
 //				}
 //			}
-			private abstract class DotNetToMetaConversions {
+			private abstract class DotNetTojMetaConversions {
 				/* These classes define the conversions that take place when .NET methods,
 				 * properties and fields return. */
-				public class ConvertStringToMap: DotNetToMetaConversion {
+				public class ConvertStringToMap: DotNetTojMetaConversion {
 					public ConvertStringToMap()   {
 						this.source=typeof(string);
 					}
@@ -1037,7 +1037,7 @@ namespace Meta {
 						return new Map((string)obj);
 					}
 				}
-				public class ConvertBoolToInteger: DotNetToMetaConversion {
+				public class ConvertBoolToInteger: DotNetTojMetaConversion {
 					public ConvertBoolToInteger() {
 						this.source=typeof(bool);
 					}
@@ -1046,7 +1046,7 @@ namespace Meta {
 					}
 
 				}
-				public class ConvertByteToInteger: DotNetToMetaConversion {
+				public class ConvertByteToInteger: DotNetTojMetaConversion {
 					public ConvertByteToInteger() {
 						this.source=typeof(Byte);
 					}
@@ -1054,7 +1054,7 @@ namespace Meta {
 						return new Integer((Byte)obj);
 					}
 				}
-				public class ConvertSByteToInteger: DotNetToMetaConversion {
+				public class ConvertSByteToInteger: DotNetTojMetaConversion {
 					public ConvertSByteToInteger() {
 						this.source=typeof(SByte);
 					}
@@ -1062,7 +1062,7 @@ namespace Meta {
 						return new Integer((SByte)obj);
 					}
 				}
-				public class ConvertCharToInteger: DotNetToMetaConversion {
+				public class ConvertCharToInteger: DotNetTojMetaConversion {
 					public ConvertCharToInteger() {
 						this.source=typeof(Char);
 					}
@@ -1070,7 +1070,7 @@ namespace Meta {
 						return new Integer((Char)obj);
 					}
 				}
-				public class ConvertInt32ToInteger: DotNetToMetaConversion {
+				public class ConvertInt32ToInteger: DotNetTojMetaConversion {
 					public ConvertInt32ToInteger() {
 						this.source=typeof(Int32);
 					}
@@ -1078,7 +1078,7 @@ namespace Meta {
 						return new Integer((Int32)obj);
 					}
 				}
-				public class ConvertUInt32ToInteger: DotNetToMetaConversion {
+				public class ConvertUInt32ToInteger: DotNetTojMetaConversion {
 					public ConvertUInt32ToInteger() {
 						this.source=typeof(UInt32);
 					}
@@ -1086,7 +1086,7 @@ namespace Meta {
 						return new Integer((UInt32)obj);
 					}
 				}
-				public class ConvertInt64ToInteger: DotNetToMetaConversion {
+				public class ConvertInt64ToInteger: DotNetTojMetaConversion {
 					public ConvertInt64ToInteger() {
 						this.source=typeof(Int64);
 					}
@@ -1094,7 +1094,7 @@ namespace Meta {
 						return new Integer((Int64)obj);
 					}
 				}
-				public class ConvertUInt64ToInteger: DotNetToMetaConversion {
+				public class ConvertUInt64ToInteger: DotNetTojMetaConversion {
 					public ConvertUInt64ToInteger() {
 						this.source=typeof(UInt64);
 					}
@@ -1102,7 +1102,7 @@ namespace Meta {
 						return new Integer((Int64)(UInt64)obj);
 					}
 				}
-				public class ConvertInt16ToInteger: DotNetToMetaConversion {
+				public class ConvertInt16ToInteger: DotNetTojMetaConversion {
 					public ConvertInt16ToInteger() {
 						this.source=typeof(Int16);
 					}
@@ -1110,7 +1110,7 @@ namespace Meta {
 						return new Integer((Int16)obj);
 					}
 				}
-				public class ConvertUInt16ToInteger: DotNetToMetaConversion {
+				public class ConvertUInt16ToInteger: DotNetTojMetaConversion {
 					public ConvertUInt16ToInteger() {
 						this.source=typeof(UInt16);
 					}
@@ -1493,10 +1493,10 @@ namespace Meta {
 			}
 			public object this[object key] {
 				get {
-					return Interpreter.ConvertMetaToDotNet(map[Interpreter.ConvertDotNetToMeta(key)]);
+					return Interpreter.ConvertMetaToDotNet(map[Interpreter.ConvertDotNetTojMeta(key)]);
 				}
 				set {
-					this.map[Interpreter.ConvertDotNetToMeta(key)]=Interpreter.ConvertDotNetToMeta(value);
+					this.map[Interpreter.ConvertDotNetTojMeta(key)]=Interpreter.ConvertDotNetTojMeta(value);
 				}
 			}
 		}
@@ -1955,24 +1955,24 @@ namespace Meta {
 		public class NetMethod: ICallable {
 			public bool bLibraryMethod=false; // TODO: is this even needen anymore?
 			// TODO: Move this to "With" ? Move this to NetContainer?
-			public static object oAssignCollectionOMRb(Map m,object o,out bool bSuccess) { // TODO: is bSuccess needed?
-				if(m.IntKeyValues.Count==0) {
-					bSuccess=false;
+			public static object ojAssignCollectionMOjOutbla(Map mCollection,object ojCollection,out bool blaSuccess) { // TODO: is blaSuccess needed?
+				if(mCollection.IntKeyValues.Count==0) {
+					blaSuccess=false;
 					return null;
 				}
-				Type tTarget=o.GetType();
-				MethodInfo meiAdd=tTarget.GetMethod("Add",new Type[]{m.IntKeyValues[0].GetType()});
-				if(meiAdd!=null) {
-					foreach(object val in m.IntKeyValues) { // combine this with Library function "Init"
-						meiAdd.Invoke(o,new object[]{val});//  call meiAdd from above!
+				Type tTarget=ojCollection.GetType();
+				MethodInfo mtifAdding=tTarget.GetMethod("Add",new Type[]{mCollection.IntKeyValues[0].GetType()});
+				if(mtifAdding!=null) {
+					foreach(object oEntry in mCollection.IntKeyValues) { // combine this with Library function "Init"
+						mtifAdding.Invoke(ojCollection,new object[]{oEntry});//  call mtifAdding from above!
 					}
-					bSuccess=true;
+					blaSuccess=true;
 				}
 				else {
-					bSuccess=false;
+					blaSuccess=false;
 				}
 
-				return o;
+				return ojCollection;
 			}
 //			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
 //
@@ -1996,22 +1996,22 @@ namespace Meta {
 //			}
 			// TODO: finally invent a Meta tTarget??? Would be useful here for prefix to Meta,
 			// it isn't, after all just any object
-			public static object oConvertParameterOTypOutB(object oMeta,Type typParameter,out bool outBConverted) {
-				outBConverted=true;
-				if(typParameter.IsAssignableFrom(oMeta.GetType())) {
-					return oMeta;
+			public static object ojConvertParameterOjTOutbla(object ojMeta,Type typParameter,out bool outblaConverted) {
+				outblaConverted=true;
+				if(typParameter.IsAssignableFrom(ojMeta.GetType())) {
+					return ojMeta;
 				}
 				else if((typParameter.IsSubclassOf(typeof(Delegate))
-					||typParameter.Equals(typeof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the m contains code, not necessarily, think this conversion stuff through completely
+					||typParameter.Equals(typeof(Delegate))) && (ojMeta is Map)) { // TODO: add check, that the m contains code, not necessarily, think this conversion stuff through completely
 					MethodInfo m=typParameter.GetMethod("Invoke",BindingFlags.Instance
 						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-					Delegate delFunction=delFromF(typParameter,m,(Map)oMeta);
+					Delegate delFunction=delFromF(typParameter,m,(Map)ojMeta);
 					return delFunction;
 				}
-				else if(typParameter.IsArray && oMeta is IMap && ((Map)oMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
+				else if(typParameter.IsArray && ojMeta is IMap && ((Map)ojMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
 					try {
 						Type typArrayElements=typParameter.GetElementType();
-						Map m=((Map)oMeta);
+						Map m=((Map)ojMeta);
 						ArrayList altValues=m.IntKeyValues;
 						Array arr=Array.CreateInstance(typArrayElements,altValues.Count);
 						for(int i=0;i<altValues.Count;i++) {
@@ -2023,33 +2023,33 @@ namespace Meta {
 					}
 				}
 				else {
-					bool outBParamConverted; // TODO: refactor with outBConverted
-					object result=Interpreter.ConvertMetaToDotNet(oMeta,typParameter,out outBParamConverted);
+					bool outBParamConverted; // TODO: refactor with outblaConverted
+					object result=Interpreter.ConvertMetaToDotNet(ojMeta,typParameter,out outBParamConverted);
 					if(outBParamConverted) {
 						return result;
 					}
 				}
-				outBConverted=false;
+				outblaConverted=false;
 				return null;
 			}
 //			// TODO: finally invent a Meta tTarget??? Would be useful here for prefix to Meta,
 //			// it isn't, after all just any object
-//			public static object oConvertParameterOTypOutb(object oMeta,Type typParameter,out bool outBConverted) {
-//				outBConverted=true;
-//				if(typParameter.IsAssignableFrom(oMeta.GetType())) {
-//					return oMeta;
+//			public static object oConvertParameterOTypOutb(object ojMeta,Type typParameter,out bool outblaConverted) {
+//				outblaConverted=true;
+//				if(typParameter.IsAssignableFrom(ojMeta.GetType())) {
+//					return ojMeta;
 //				}
 //				else if((typParameter.IsSubclassOf(tTargetof(Delegate))
-//					||typParameter.Equals(tTargetof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
+//					||typParameter.Equals(tTargetof(Delegate))) && (ojMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
 //					MethodInfo m=typParameter.GetMethod("Invoke",BindingFlags.Instance
 //						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-//					Delegate delFunction=delFromF(typParameter,m,(Map)oMeta);
+//					Delegate delFunction=delFromF(typParameter,m,(Map)ojMeta);
 //					return delFunction;
 //				}
-//				else if(typParameter.IsArray && oMeta is IMap && ((Map)oMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
+//				else if(typParameter.IsArray && ojMeta is IMap && ((Map)ojMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
 //					try {
 //						Type arrayType=typParameter.GetElementType();
-//						Map map=((Map)oMeta);
+//						Map map=((Map)ojMeta);
 //						ArrayList mapValues=map.IntKeyValues;
 //						Array array=Array.CreateInstance(arrayType,mapValues.Count);
 //						for(int i=0;i<mapValues.Count;i++) {
@@ -2061,31 +2061,31 @@ namespace Meta {
 //					}
 //				}
 //				else {
-//					bool isConverted; // TODO: refactor with outBConverted
-//					object result=Interpreter.ConvertMetaToDotNet(oMeta,typParameter,out isConverted);
+//					bool isConverted; // TODO: refactor with outblaConverted
+//					object result=Interpreter.ConvertMetaToDotNet(ojMeta,typParameter,out isConverted);
 //					if(isConverted) {
 //						return result;
 //					}
 //				}
-//				outBConverted=false;
+//				outblaConverted=false;
 //				return null;
 //			}
-//			public static object oConvertParameterOTypOutb(object oMeta,Type parameter,out bool outBConverted) {
-//				outBConverted=true;
-//				if(parameter.IsAssignableFrom(oMeta.GetType())) {
-//					return oMeta;
+//			public static object oConvertParameterOTypOutb(object ojMeta,Type parameter,out bool outblaConverted) {
+//				outblaConverted=true;
+//				if(parameter.IsAssignableFrom(ojMeta.GetType())) {
+//					return ojMeta;
 //				}
 //				else if((parameter.IsSubclassOf(tTargetof(Delegate))
-//					||parameter.Equals(tTargetof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
+//					||parameter.Equals(tTargetof(Delegate))) && (ojMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
 //					MethodInfo m=parameter.GetMethod("Invoke",BindingFlags.Instance
 //						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-//					Delegate del=delFromF(parameter,m,(Map)oMeta);
+//					Delegate del=delFromF(parameter,m,(Map)ojMeta);
 //					return del;
 //				}
-//				else if(parameter.IsArray && oMeta is IMap && ((Map)oMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
+//				else if(parameter.IsArray && ojMeta is IMap && ((Map)ojMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
 //					try {
 //						Type arrayType=parameter.GetElementType();
-//						Map map=((Map)oMeta);
+//						Map map=((Map)ojMeta);
 //						ArrayList mapValues=map.IntKeyValues;
 //						Array array=Array.CreateInstance(arrayType,mapValues.Count);
 //						for(int i=0;i<mapValues.Count;i++) {
@@ -2097,13 +2097,13 @@ namespace Meta {
 //					}
 //				}
 //				else {
-//					bool isConverted; // TODO: refactor with outBConverted
-//					object result=Interpreter.ConvertMetaToDotNet(oMeta,parameter,out isConverted);
+//					bool isConverted; // TODO: refactor with outblaConverted
+//					object result=Interpreter.ConvertMetaToDotNet(ojMeta,parameter,out isConverted);
 //					if(isConverted) {
 //						return result;
 //					}
 //				}
-//				outBConverted=false;
+//				outblaConverted=false;
 //				return null;
 //			}
 			public object oCallO(object oArgument) {
@@ -2143,7 +2143,7 @@ namespace Meta {
 						bool bArgumentsMatched=true;
 						ParameterInfo[] parameters=mtbs.GetParameters();
 						for(int i=0;bArgumentsMatched && i<parameters.Length;i++) {
-							alstArguments.Add(oConvertParameterOTypOutB(arlOArguments[i],parameters[i].ParameterType,out bArgumentsMatched));
+							alstArguments.Add(ojConvertParameterOjTOutbla(arlOArguments[i],parameters[i].ParameterType,out bArgumentsMatched));
 						}
 						if(bArgumentsMatched) {
 							if(mtbs is ConstructorInfo) {
@@ -2164,7 +2164,7 @@ namespace Meta {
 						oResult=with(o,((Map)oArgument));
 					}
 				}		
-				return Interpreter.ConvertDotNetToMeta(oResult);
+				return Interpreter.ConvertDotNetTojMeta(oResult);
 			}
 //			public object oCallO(object argument) {
 //				if(this.sName=="Write") {
@@ -2209,7 +2209,7 @@ namespace Meta {
 //						bool argumentsMatched=true;
 //						ParameterInfo[] parameters=method.GetParameters();
 //						for(int i=0;argumentsMatched && i<parameters.Length;i++) {
-//							args.Add(oConvertParameterOTypOutB(argumentList[i],parameters[i].ParameterType,out argumentsMatched));
+//							args.Add(ojConvertParameterOjTOutbla(argumentList[i],parameters[i].ParameterType,out argumentsMatched));
 //						}
 //						if(argumentsMatched) {
 //							if(method is ConstructorInfo) {
@@ -2232,7 +2232,7 @@ namespace Meta {
 //						result=with(o,((Map)argument));
 //					}
 //				}		
-//				return Interpreter.ConvertDotNetToMeta(result);
+//				return Interpreter.ConvertDotNetTojMeta(result);
 //			}
 			// TODO: Refactor, include 
 			public static object with(object obj,IMap map) {
@@ -2283,7 +2283,7 @@ namespace Meta {
 				if(method!=null) {
 					if(!method.ReturnType.Equals(typeof(void))) {
 						source+="return ("+returnTypeName+")";
-						source+="Interpreter.ConvertMetaToDotNet(result,typeof("+returnTypeName+"));"; // does conversion even make sense here? Must be outBConverted back anyway.
+						source+="Interpreter.ConvertMetaToDotNet(result,typeof("+returnTypeName+"));"; // does conversion even make sense here? Must be outblaConverted back anyway.
 					}
 				}
 				else {
@@ -2293,8 +2293,8 @@ namespace Meta {
 				source+="}";
 				source+="private Map callable;";
 				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-				string oMetaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
-				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",oMetaDllLocation});
+				string ojMetaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
+				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",ojMetaDllLocation});
 				assemblyNames.AddRange(Interpreter.loadedAssemblies);
 				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
@@ -2342,7 +2342,7 @@ namespace Meta {
 //				if(method!=null) {
 //					if(!method.ReturnType.Equals(tTargetof(void))) {
 //						source+="return ("+returnTypeName+")";
-//						source+="Interpreter.ConvertMetaToDotNet(result,tTargetof("+returnTypeName+"));"; // does conversion even make sense here? Must be outBConverted back anyway.
+//						source+="Interpreter.ConvertMetaToDotNet(result,tTargetof("+returnTypeName+"));"; // does conversion even make sense here? Must be outblaConverted back anyway.
 //					}
 //				}
 //				else {
@@ -2352,8 +2352,8 @@ namespace Meta {
 //				source+="}";
 //				source+="private Map callable;";
 //				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-//				string oMetaDllLocation=Assembly.GetAssembly(tTargetof(Map)).Location;
-//				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",oMetaDllLocation});
+//				string ojMetaDllLocation=Assembly.GetAssembly(tTargetof(Map)).Location;
+//				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",ojMetaDllLocation});
 //				assemblyNames.AddRange(Interpreter.loadedAssemblies);
 //				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(tTargetof(string)));
 //				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
@@ -2606,7 +2606,7 @@ namespace Meta {
 //						result=with(o,((Map)argument));
 //					}
 //				}		
-//				return Interpreter.ConvertDotNetToMeta(result);
+//				return Interpreter.ConvertDotNetTojMeta(result);
 //			}
 //			// TODO: Refactor, include 
 //			public static object with(object obj,IMap map) {
@@ -2804,10 +2804,10 @@ namespace Meta {
 							}
 							if(members[0] is FieldInfo) {
 								// convert arrays to maps here?
-								return Interpreter.ConvertDotNetToMeta(type.GetField(text).GetValue(obj));
+								return Interpreter.ConvertDotNetTojMeta(type.GetField(text).GetValue(obj));
 							}
 							else if(members[0] is PropertyInfo) {
-								return Interpreter.ConvertDotNetToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
+								return Interpreter.ConvertDotNetTojMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
 							}
 							else if(members[0] is EventInfo) {
 								Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
@@ -2817,7 +2817,7 @@ namespace Meta {
 						}
 					}
 					if(this.obj!=null && key is Integer && this.type.IsArray) {
-						return Interpreter.ConvertDotNetToMeta(((Array)obj).GetValue(((Integer)key).Int)); // TODO: add error handling here
+						return Interpreter.ConvertDotNetTojMeta(((Array)obj).GetValue(((Integer)key).Int)); // TODO: add error handling here
 					}
 					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
 					Map arguments=new Map();
@@ -2844,13 +2844,13 @@ namespace Meta {
 								FieldInfo field=(FieldInfo)members[0];
 								bool converted;
 								object val;
-								val=NetMethod.oConvertParameterOTypOutB(value,field.FieldType,out converted);
+								val=NetMethod.ojConvertParameterOjTOutbla(value,field.FieldType,out converted);
 								if(converted) {
 									field.SetValue(obj,val);
 								}
 								if(!converted) {
 									if(value is Map) {
-										val=NetMethod.oAssignCollectionOMRb((Map)value,field.GetValue(obj),out converted);
+										val=NetMethod.ojAssignCollectionMOjOutbla((Map)value,field.GetValue(obj),out converted);
 									}
 								}
 								if(!converted) {
@@ -2862,13 +2862,13 @@ namespace Meta {
 							else if(members[0] is PropertyInfo) {
 								PropertyInfo property=(PropertyInfo)members[0];
 								bool converted;
-								object val=NetMethod.oConvertParameterOTypOutB(value,property.PropertyType,out converted);
+								object val=NetMethod.ojConvertParameterOjTOutbla(value,property.PropertyType,out converted);
 								if(converted) {
 									property.SetValue(obj,val,new object[]{});
 								}
 								if(!converted) {
 									if(value is Map) {
-										NetMethod.oAssignCollectionOMRb((Map)value,property.GetValue(obj,new object[]{}),out converted);
+										NetMethod.ojAssignCollectionMOjOutbla((Map)value,property.GetValue(obj,new object[]{}),out converted);
 									}
 									if(!converted) {
 										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.MetaSerialize(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
@@ -2943,7 +2943,7 @@ namespace Meta {
 					if(obj!=null && obj is IEnumerable && !(obj is String)) { // is this useful?
 						foreach(object entry in (IEnumerable)obj) {
 							if(entry is DictionaryEntry) {
-								table[Interpreter.ConvertDotNetToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+								table[Interpreter.ConvertDotNetTojMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
 							}
 							else {
 								table[new Integer(counter)]=entry;
