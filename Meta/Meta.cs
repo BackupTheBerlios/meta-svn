@@ -2005,7 +2005,7 @@ namespace Meta {
 					||typParameter.Equals(typeof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the m contains code, not necessarily, think this conversion stuff through completely
 					MethodInfo m=typParameter.GetMethod("Invoke",BindingFlags.Instance
 						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-					Delegate delFunction=CreateDelegate(typParameter,m,(Map)oMeta);
+					Delegate delFunction=delFromF(typParameter,m,(Map)oMeta);
 					return delFunction;
 				}
 				else if(typParameter.IsArray && oMeta is IMap && ((Map)oMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
@@ -2043,7 +2043,7 @@ namespace Meta {
 //					||typParameter.Equals(typeof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
 //					MethodInfo m=typParameter.GetMethod("Invoke",BindingFlags.Instance
 //						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-//					Delegate delFunction=CreateDelegate(typParameter,m,(Map)oMeta);
+//					Delegate delFunction=delFromF(typParameter,m,(Map)oMeta);
 //					return delFunction;
 //				}
 //				else if(typParameter.IsArray && oMeta is IMap && ((Map)oMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
@@ -2079,7 +2079,7 @@ namespace Meta {
 //					||parameter.Equals(typeof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
 //					MethodInfo m=parameter.GetMethod("Invoke",BindingFlags.Instance
 //						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-//					Delegate del=CreateDelegate(parameter,m,(Map)oMeta);
+//					Delegate del=delFromF(parameter,m,(Map)oMeta);
 //					return del;
 //				}
 //				else if(parameter.IsArray && oMeta is IMap && ((Map)oMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
@@ -2174,6 +2174,74 @@ namespace Meta {
 				}		
 				return Interpreter.ConvertDotNetToMeta(result);
 			}
+//			public object oCallO(object argument) {
+//				if(this.name=="Write") {
+//					int asdf=0;
+//				}
+//				object result=null;
+//				// TODO: check this for every method:
+//				// introduce own methodinfo class? that does the calling, maybe??? dynamic cast might become a performance
+//				// problem, but I doubt it, so what?
+//				if(bLibraryMethod) {
+//					if(methods[0] is ConstructorInfo) {
+//						// TODO: Comment this properly: kcall methods without arguments, ugly and redundant, because Invoke is not compatible between
+//						// constructor and normal method
+//						result=((ConstructorInfo)methods[0]).Invoke(new object[] {argument}); 
+//					}
+//					else {
+//						try {
+//							if(this.name=="while") {
+//								int asdf=0;
+//							}
+//							result=methods[0].Invoke(target,new object[] {argument});
+//						}
+//						catch {
+//							throw new ApplicationException("Could not invoke "+this.name+".");
+//						}
+//					}
+//				}
+//				else {
+//					ArrayList argumentList=((IMap)argument).IntKeyValues;
+//					object returnValue=null;
+//					ArrayList sameLengthMethods=new ArrayList();
+//					foreach(MethodBase method in methods) {
+//						if(argumentList.Count==method.GetParameters().Length) { // don't match if different parameter list length
+//							if(argumentList.Count==((IMap)argument).Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
+//								sameLengthMethods.Add(method);
+//							}
+//						}
+//					}
+//					bool executed=false;
+//					foreach(MethodBase method in sameLengthMethods) {
+//						ArrayList args=new ArrayList();
+//						bool argumentsMatched=true;
+//						ParameterInfo[] parameters=method.GetParameters();
+//						for(int i=0;argumentsMatched && i<parameters.Length;i++) {
+//							args.Add(oConvertParameterOTypOutB(argumentList[i],parameters[i].ParameterType,out argumentsMatched));
+//						}
+//						if(argumentsMatched) {
+//							if(method is ConstructorInfo) {
+//								returnValue=((ConstructorInfo)method).Invoke(args.ToArray());
+//							}
+//							else {
+//								if(method.Name.Equals("Invoke")) {
+//									int asdf=0;
+//								}
+//								returnValue=method.Invoke(target,args.ToArray());
+//							}
+//							executed=true;// remove, use argumentsMatched instead
+//							break;
+//						}
+//					}
+//					result=returnValue; // mess, why is this here? put in else after the next if
+//					// make this safe
+//					if(!executed && methods[0] is ConstructorInfo) {
+//						object o=new NetMethod(type).oCallO(new Map());
+//						result=with(o,((Map)argument));
+//					}
+//				}		
+//				return Interpreter.ConvertDotNetToMeta(result);
+//			}
 			// TODO: Refactor, include 
 			public static object with(object obj,IMap map) {
 				NetObject netObject=new NetObject(obj);
@@ -2182,8 +2250,15 @@ namespace Meta {
 				}
 				return obj;
 			}
+//			public static object with(object obj,IMap map) {
+//				NetObject netObject=new NetObject(obj);
+//				foreach(DictionaryEntry entry in map) {
+//					netObject[entry.Key]=entry.Value;
+//				}
+//				return obj;
+//			}
 			/* Create a delegate of a certain type that calls a Meta function. */
-			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
+			public static Delegate delFromF(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
 				code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 				ICodeCompiler compiler=codeProvider.CreateCompiler();
@@ -2242,6 +2317,65 @@ namespace Meta {
 					container,"EventHandlerMethod");
 				return del;
 			}
+//			public static Delegate delFromF(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
+//				code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
+//				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
+//				ICodeCompiler compiler=codeProvider.CreateCompiler();
+//				string returnTypeName;
+//				if(method==null) {
+//					returnTypeName="object";
+//				}
+//				else {
+//					returnTypeName=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
+//				}
+//				string source="using System;using Meta.Types;using Meta.Execution;";
+//				source+="public class EventHandlerContainer{public "+returnTypeName+" EventHandlerMethod";
+//				int counter=1;
+//				string argumentList="(";
+//				string argumentAdding="Map arg=new Map();";
+//				if(method!=null) {
+//					foreach(ParameterInfo parameter in method.GetParameters()) {
+//						argumentList+=parameter.ParameterType.FullName+" arg"+counter;
+//						argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";
+//						if(counter<method.GetParameters().Length) {
+//							argumentList+=",";
+//						}
+//						counter++;
+//					}
+//				}
+//				argumentList+=")";
+//				source+=argumentList+"{";
+//				source+=argumentAdding;
+//				source+="object result=callable.oCallO(arg);";
+//				if(method!=null) {
+//					if(!method.ReturnType.Equals(typeof(void))) {
+//						source+="return ("+returnTypeName+")";
+//						source+="Interpreter.ConvertMetaToDotNet(result,typeof("+returnTypeName+"));"; // does conversion even make sense here? Must be outBConverted back anyway.
+//					}
+//				}
+//				else {
+//					source+="return";
+//					source+=" result;";
+//				}
+//				source+="}";
+//				source+="private Map callable;";
+//				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
+//				string oMetaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
+//				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",oMetaDllLocation});
+//				assemblyNames.AddRange(Interpreter.loadedAssemblies);
+//				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
+//				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
+//				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
+//				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
+//																																			  code});
+//				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
+//				if(method==null) {
+//					delegateType=typeof(DelegateCreatedForGenericDelegates);
+//				}
+//				Delegate del=Delegate.delFromF(delegateType,
+//					container,"EventHandlerMethod");
+//				return del;
+//			}
 			private void Initialize(string name,object target,Type type) {
 				this.name=name;
 				this.target=target;
@@ -2266,12 +2400,42 @@ namespace Meta {
 					this.bLibraryMethod=true;
 				}
 			}
+//			private void Initialize(string name,object target,Type type) {
+//				this.name=name;
+//				this.target=target;
+//				this.type=type;
+//				ArrayList list;
+//				if(name==".ctor") {
+//					list=new ArrayList(type.GetConstructors());
+//				}
+//				else {
+//					list=new ArrayList(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+//				}
+//				list.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
+//				// found out, it's for Console.WriteLine, where Console.WriteLine(object)
+//				// would otherwise come before Console.WriteLine(string)
+//				// not a good solution, though
+//
+//				// TODO: Get rid of this Reversion shit! Find a fix for this problem. Need to think about
+//				// it. maybe restrict overloads, create preference list, all quite complicated
+//				// research the number and nature of such methods as Console.WriteLine
+//				methods=(MethodBase[])list.ToArray(typeof(MethodBase));
+//				if(methods.Length==1 && methods[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
+//					this.bLibraryMethod=true;
+//				}
+//			}
 			public NetMethod(string name,object target,Type type) {
 				this.Initialize(name,target,type);
 			}
+//			public NetMethod(string name,object target,Type type) {
+//				this.Initialize(name,target,type);
+//			}
 			public NetMethod(Type type) {
 				this.Initialize(".ctor",null,type);
 			}
+//			public NetMethod(Type type) {
+//				this.Initialize(".ctor",null,type);
+//			}
 			public override bool Equals(object obj) {
 				if(obj is NetMethod) {
 					NetMethod method=(NetMethod)obj;
@@ -2281,6 +2445,15 @@ namespace Meta {
 				}
 				return false;
 			}
+//			public override bool Equals(object obj) {
+//				if(obj is NetMethod) {
+//					NetMethod method=(NetMethod)obj;
+//					if(method.target==target && method.name.Equals(name) && method.type.Equals(type)) {
+//						return true;
+//					}
+//				}
+//				return false;
+//			}
 			public override int GetHashCode() {
 				unchecked {
 					int hash=name.GetHashCode()*type.GetHashCode();
@@ -2290,10 +2463,24 @@ namespace Meta {
 					return hash;
 				}
 			}
+//			public override int GetHashCode() {
+//				unchecked {
+//					int hash=name.GetHashCode()*type.GetHashCode();
+//					if(target!=null) {
+//						hash=hash*target.GetHashCode();
+//					}
+//					return hash;
+//				}
+//			}
 			private string name;
 			protected object target;
 			protected Type type;
 			public MethodBase[] methods;
+
+//			private string name;
+//			protected object target;
+//			protected Type type;
+//			public MethodBase[] methods;
 
 		}
 //		public class NetMethod: ICallable {
@@ -2725,7 +2912,7 @@ namespace Meta {
 															 BindingFlags.Static|BindingFlags.Instance);
 				MethodInfo method=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
 																						 |BindingFlags.Public|BindingFlags.NonPublic);
-				Delegate del=NetMethod.CreateDelegate(eventInfo.EventHandlerType,method,code);
+				Delegate del=NetMethod.delFromF(eventInfo.EventHandlerType,method,code);
 				return del;
 			}
 			private IDictionary Table { // TODO: strange, what use is this
