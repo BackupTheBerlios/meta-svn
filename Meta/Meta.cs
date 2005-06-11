@@ -41,15 +41,15 @@ namespace Meta {
 	namespace Execution {
 		public abstract class Expression {
 			public static readonly Map sRun=new Map("run"); // TODO: get rid of "String"-suffix, use Hungarian syntax, that is "s" prefix
-			public object ojEvaluateM(IMap parent) {
-//				try {
-					return EvaluateImplementation(parent);
-//				}
-//				catch(Exception e) {
-//					throw new MetaException(e,this.extent);
-//				}
-			}
-			public abstract object EvaluateImplementation(IMap parent);
+//			public object ojEvaluateM(IMap parent) {
+////				try {
+//					return ojEvaluateM(parent);
+////				}
+////				catch(Exception e) {
+////					throw new MetaException(e,this.extent);
+////				}
+//			}
+			public abstract object ojEvaluateM(IMap parent);
 			Extent extent;
 			public Extent Extent {
 				get {
@@ -62,7 +62,7 @@ namespace Meta {
 			}
 		}
 		public class Call: Expression {
-			public override object EvaluateImplementation(IMap parent) {
+			public override object ojEvaluateM(IMap parent) {
 				object arg=argumentExpression.ojEvaluateM(parent);
 				if(arg is IMap) {
 					arg=((IMap)arg).Clone();
@@ -87,7 +87,7 @@ namespace Meta {
 
 
 		public class Delayed: Expression {
-			public override object EvaluateImplementation(IMap parent) {
+			public override object ojEvaluateM(IMap parent) {
 				Map clone=delayed;
 				clone.mParent=parent;
 				return clone;
@@ -100,7 +100,7 @@ namespace Meta {
 		}
 //
 //		public class DelayedExpresionOnly: Expression {
-//			public override object EvaluateImplementation(IMap parent) {
+//			public override object ojEvaluateM(IMap parent) {
 //				return delayed;
 //			}
 //			public static readonly Map dealayedExpressionOnlyString=new Map("delayedExpressionOnly");
@@ -113,7 +113,7 @@ namespace Meta {
 
 
 		public class Program: Expression {
-			public override object EvaluateImplementation(IMap parent) {
+			public override object ojEvaluateM(IMap parent) {
 				Map local=new Map();
 				return ojEvaluateM(parent,local);
 			}
@@ -142,7 +142,7 @@ namespace Meta {
 			public readonly ArrayList statements=new ArrayList();
 		}
 		public class Literal: Expression {
-			public override object EvaluateImplementation(IMap parent) {
+			public override object ojEvaluateM(IMap parent) {
 //				if(literal.Equals(new Map("staticEvent"))) {
 //					int asdf=0;
 //				}
@@ -164,7 +164,7 @@ namespace Meta {
 			}
 			public Expression key;
 			public static readonly Map keyString=new Map("key");
-			public override object EvaluateImplementation(IMap parent) {
+			public override object ojEvaluateM(IMap parent) {
 				object k=key.ojEvaluateM(parent);
 				IMap selected=parent;
 				while(!selected.ContainsKey(k)) {
@@ -194,7 +194,7 @@ namespace Meta {
 					keys.Add(((Map)list[i]).Compile());
 				}
 			}
-			public override object EvaluateImplementation(IMap parent) {
+			public override object ojEvaluateM(IMap parent) {
 				object selected=first.ojEvaluateM(parent);
 				for(int i=0;i<keys.Count;i++) {
 					if(!(selected is IKeyValue)) {
