@@ -414,7 +414,7 @@ _loop116_breakloop:		;
 		
 					//Map statement=new Map();
 					statement[Statement.sKey]=k;
-					statement[Statement.valueString]=val;// TODO: Add Extent to statements, too?
+					statement[Statement.sValue]=val;// TODO: Add Extent to statements, too?
 				
 		_t = __t118;
 		_t = _t.getNextSibling();

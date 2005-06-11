@@ -117,12 +117,12 @@ namespace Meta {
 			}
 			public static readonly Map sProgram=new Map("program");
 			public Program(Map mProgram) { // TODO: special Type for  callable maps?
-				foreach(Map mStatement in ((Map)mProgram[sProgram]).ArlOjIntegerKeyValues) {
+				foreach(Map mStatement in ((Map)mProgram[sProgram]).ArlojIntegerKeyValues) {
 					this.arlSmStatements.Add(new Statement(mStatement)); // should we save the original maps instead of arlSmStatements?
 				}
 			}
 //			public Program(Map code) {
-//				foreach(Map statement in ((Map)code[sProgram]).ArlOjIntegerKeyValues) {
+//				foreach(Map statement in ((Map)code[sProgram]).ArlojIntegerKeyValues) {
 //					this.arlSmStatements.Add(statement.EpsCompileV()); // should we save the original maps instead of arlSmStatements?
 //				}
 //			}
@@ -168,7 +168,7 @@ namespace Meta {
 			public ArrayList arlEpsKeys=new ArrayList();
 			public Expression epsFirst;// TODO: maybe rename to srFirst -> it's a Search
 			public Select(Map code) {
-				ArrayList arlMKeyExpressions=((Map)code[sSelect]).ArlOjIntegerKeyValues;
+				ArrayList arlMKeyExpressions=((Map)code[sSelect]).ArlojIntegerKeyValues;
 				epsFirst=(Expression)((Map)arlMKeyExpressions[0]).EpsCompileV();
 				for(int i=1;i<arlMKeyExpressions.Count;i++) {
 					arlEpsKeys.Add(((Map)arlMKeyExpressions[i]).EpsCompileV());
@@ -224,17 +224,17 @@ namespace Meta {
 			public Statement(Map mStatement) {
 //				ArrayList intKeys=;
 //				intKeys.Reverse();
-				foreach(Map key in ((Map)mStatement[sKey]).ArlOjIntegerKeyValues) {
+				foreach(Map key in ((Map)mStatement[sKey]).ArlojIntegerKeyValues) {
 					arlEpsKeys.Add(key.EpsCompileV());
 				}
-				this.epsValue=(Expression)((Map)mStatement[valueString]).EpsCompileV();
+				this.epsValue=(Expression)((Map)mStatement[sValue]).EpsCompileV();
 			}
 			public ArrayList arlEpsKeys=new ArrayList();
 			public Expression epsValue;
 
 
 			public static readonly Map sKey=new Map("key");
-			public static readonly Map valueString=new Map("value");
+			public static readonly Map sValue=new Map("value");
 		}
 
 	
@@ -1162,7 +1162,7 @@ namespace Meta {
 				get;
 				set;
 			}
-			ArrayList ArlOjIntegerKeyValues {
+			ArrayList ArlojIntegerKeyValues {
 				get;
 			}
 			IMap mCloneV();
@@ -1307,7 +1307,7 @@ namespace Meta {
 			public bool blaHasKeyOj(object key) {
 				return cash.blaHasKeyOj(key);
 			}
-			public ArrayList ArlOjIntegerKeyValues {
+			public ArrayList ArlojIntegerKeyValues {
 				get {
 					return new ArrayList();
 				}
@@ -1481,7 +1481,7 @@ namespace Meta {
 			}
 		}
 
-		//TODO: cache the ArlOjIntegerKeyValues somewhere; put in an "Add" method
+		//TODO: cache the ArlojIntegerKeyValues somewhere; put in an "Add" method
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
 			public static readonly Map parentString=new Map("parent");
 			public static readonly Map argString=new Map("arg");
@@ -1516,9 +1516,9 @@ namespace Meta {
 					return table.Count;
 				}
 			}
-			public ArrayList ArlOjIntegerKeyValues {
+			public ArrayList ArlojIntegerKeyValues {
 				get {
-					return table.ArlOjIntegerKeyValues;
+					return table.ArlojIntegerKeyValues;
 				}
 			}
 			public virtual object this[object key]  {
@@ -1689,7 +1689,7 @@ namespace Meta {
 					return strategy;	
 				}
 				public abstract Map CloneMap();
-				public abstract ArrayList ArlOjIntegerKeyValues {
+				public abstract ArrayList ArlojIntegerKeyValues {
 					get;
 				}
 				public abstract bool IsString {
@@ -1757,7 +1757,7 @@ namespace Meta {
 				public override Map CloneMap() {
 					return new Map(new StringStrategy(this));
 				}
-				public override ArrayList ArlOjIntegerKeyValues {
+				public override ArrayList ArlojIntegerKeyValues {
 					get {
 						ArrayList list=new ArrayList();
 						foreach(char c in text) {
@@ -1839,7 +1839,7 @@ namespace Meta {
 					}
 					return clone;
 				}
-				public override ArrayList ArlOjIntegerKeyValues {
+				public override ArrayList ArlojIntegerKeyValues {
 					get {
 						ArrayList list=new ArrayList();
 						for(Integer i=new Integer(1);ContainsKey(i);i++) {
@@ -1850,7 +1850,7 @@ namespace Meta {
 				}
 				public override bool IsString {
 					get {
-						if(ArlOjIntegerKeyValues.Count>0) {
+						if(ArlojIntegerKeyValues.Count>0) {
 							try {
 								SDotNetStringV();// TODO: a bit of a hack
 								return true;
@@ -1936,14 +1936,14 @@ namespace Meta {
 //			public bool blaLibraryMethod=false; // TODO: is this even needen anymore?
 			// TODO: Move this to "With" ? Move this to NetContainer?
 			public static object ojAssignCollectionMOjOutbla(Map mCollection,object ojCollection,out bool blaSuccess) { // TODO: is blaSuccess needed?
-				if(mCollection.ArlOjIntegerKeyValues.Count==0) {
+				if(mCollection.ArlojIntegerKeyValues.Count==0) {
 					blaSuccess=false;
 					return null;
 				}
 				Type tTarget=ojCollection.GetType();
-				MethodInfo mtifAdding=tTarget.GetMethod("Add",new Type[]{mCollection.ArlOjIntegerKeyValues[0].GetType()});
+				MethodInfo mtifAdding=tTarget.GetMethod("Add",new Type[]{mCollection.ArlojIntegerKeyValues[0].GetType()});
 				if(mtifAdding!=null) {
-					foreach(object oEntry in mCollection.ArlOjIntegerKeyValues) { // combine this with Library function "Init"
+					foreach(object oEntry in mCollection.ArlojIntegerKeyValues) { // combine this with Library function "Init"
 						mtifAdding.Invoke(ojCollection,new object[]{oEntry});//  call mtifAdding from above!
 					}
 					blaSuccess=true;
@@ -1956,14 +1956,14 @@ namespace Meta {
 			}
 //			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
 //
-//				if(map.ArlOjIntegerKeyValues.Count==0) {
+//				if(map.ArlojIntegerKeyValues.Count==0) {
 //					assigned=false;
 //					return null;
 //				}
 //				Type tTarget=oldValue.GetType();
-//				MethodInfo method=tTarget.GetMethod("Add",new Type[]{map.ArlOjIntegerKeyValues[0].GetType()});
+//				MethodInfo method=tTarget.GetMethod("Add",new Type[]{map.ArlojIntegerKeyValues[0].GetType()});
 //				if(method!=null) {
-//					foreach(object val in map.ArlOjIntegerKeyValues) { // combine this with Library function "Init"
+//					foreach(object val in map.ArlojIntegerKeyValues) { // combine this with Library function "Init"
 //						method.Invoke(oldValue,new object[]{val});//  call method from above!
 //					}
 //					assigned=true;
@@ -1988,11 +1988,11 @@ namespace Meta {
 					Delegate dlgFunction=delFromF(tParameter,mtifInvoke,(Map)ojMeta);
 					return dlgFunction;
 				}
-				else if(tParameter.IsArray && ojMeta is IMap && ((Map)ojMeta).ArlOjIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
+				else if(tParameter.IsArray && ojMeta is IMap && ((Map)ojMeta).ArlojIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
 					try {
 						Type tElements=tParameter.GetElementType();
 						Map mArgument=((Map)ojMeta);
-						ArrayList arlArgument=mArgument.ArlOjIntegerKeyValues;
+						ArrayList arlArgument=mArgument.ArlojIntegerKeyValues;
 						Array arArgument=Array.CreateInstance(tElements,arlArgument.Count);
 						for(int i=0;i<arlArgument.Count;i++) {
 							arArgument.SetValue(arlArgument[i],i);
@@ -2026,11 +2026,11 @@ namespace Meta {
 //					Delegate dlgFunction=delFromF(tParameter,m,(Map)ojMeta);
 //					return dlgFunction;
 //				}
-//				else if(tParameter.IsArray && ojMeta is IMap && ((Map)ojMeta).ArlOjIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
+//				else if(tParameter.IsArray && ojMeta is IMap && ((Map)ojMeta).ArlojIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
 //					try {
 //						Type arrayType=tParameter.GetElementType();
 //						Map map=((Map)ojMeta);
-//						ArrayList mapValues=map.ArlOjIntegerKeyValues;
+//						ArrayList mapValues=map.ArlojIntegerKeyValues;
 //						Array array=Array.CreateInstance(arrayType,mapValues.Count);
 //						for(int i=0;i<mapValues.Count;i++) {
 //							array.SetValue(mapValues[i],i);
@@ -2062,11 +2062,11 @@ namespace Meta {
 //					Delegate del=delFromF(parameter,m,(Map)ojMeta);
 //					return del;
 //				}
-//				else if(parameter.IsArray && ojMeta is IMap && ((Map)ojMeta).ArlOjIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
+//				else if(parameter.IsArray && ojMeta is IMap && ((Map)ojMeta).ArlojIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
 //					try {
 //						Type arrayType=parameter.GetElementType();
 //						Map map=((Map)ojMeta);
-//						ArrayList mapValues=map.ArlOjIntegerKeyValues;
+//						ArrayList mapValues=map.ArlojIntegerKeyValues;
 //						Array array=Array.CreateInstance(arrayType,mapValues.Count);
 //						for(int i=0;i<mapValues.Count;i++) {
 //							array.SetValue(mapValues[i],i);
@@ -2181,7 +2181,7 @@ namespace Meta {
 				//				}
 				//				else {
 				if(!blaExecuted) {
-					ArrayList arlOArguments=((IMap)ojArgument).ArlOjIntegerKeyValues;
+					ArrayList arlOArguments=((IMap)ojArgument).ArlojIntegerKeyValues;
 					ArrayList arlMtifRightNumberArguments=new ArrayList();
 					foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
 						if(arlOArguments.Count==mtbCurrent.GetParameters().Length) { // don't match if different parameter list length
@@ -2252,7 +2252,7 @@ namespace Meta {
 ////					}
 ////				}
 ////				else {
-//					ArrayList arlOArguments=((IMap)ojArgument).ArlOjIntegerKeyValues;
+//					ArrayList arlOArguments=((IMap)ojArgument).ArlojIntegerKeyValues;
 //					object ojReturn=null;
 //					ArrayList arlMtifRightNumberArguments=new ArrayList();
 //					foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
@@ -2328,7 +2328,7 @@ namespace Meta {
 //					}
 //				}
 //				else {
-//					ArrayList argumentList=((IMap)argument).ArlOjIntegerKeyValues;
+//					ArrayList argumentList=((IMap)argument).ArlojIntegerKeyValues;
 //					object returnValue=null;
 //					ArrayList sameLengthMethods=new ArrayList();
 //					foreach(MethodBase method in arMtbOverloadedMethods) {
@@ -2621,14 +2621,14 @@ namespace Meta {
 //			// TODO: Move this to "With" ? Move this to NetContainer?
 //			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
 //
-//				if(map.ArlOjIntegerKeyValues.Count==0) {
+//				if(map.ArlojIntegerKeyValues.Count==0) {
 //					assigned=false;
 //					return null;
 //				}
 //				Type type=oldValue.GetType();
-//				MethodInfo method=type.GetMethod("Add",new Type[]{map.ArlOjIntegerKeyValues[0].GetType()});
+//				MethodInfo method=type.GetMethod("Add",new Type[]{map.ArlojIntegerKeyValues[0].GetType()});
 //				if(method!=null) {
-//					foreach(object val in map.ArlOjIntegerKeyValues) { // combine this with Library function "Init"
+//					foreach(object val in map.ArlojIntegerKeyValues) { // combine this with Library function "Init"
 //						method.Invoke(oldValue,new object[]{val});//  call method from above!
 //					}
 //					assigned=true;
@@ -2651,11 +2651,11 @@ namespace Meta {
 //					Delegate del=CreateDelegate(parameter,m,(Map)meta);
 //					return del;
 //				}
-//				else if(parameter.IsArray && meta is IMap && ((Map)meta).ArlOjIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
+//				else if(parameter.IsArray && meta is IMap && ((Map)meta).ArlojIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
 //					try {
 //						Type arrayType=parameter.GetElementType();
 //						Map map=((Map)meta);
-//						ArrayList mapValues=map.ArlOjIntegerKeyValues;
+//						ArrayList mapValues=map.ArlojIntegerKeyValues;
 //						Array array=Array.CreateInstance(arrayType,mapValues.Count);
 //						for(int i=0;i<mapValues.Count;i++) {
 //							array.SetValue(mapValues[i],i);
@@ -2702,7 +2702,7 @@ namespace Meta {
 //					}
 //				}
 //				else {
-//					ArrayList argumentList=((IMap)argument).ArlOjIntegerKeyValues;
+//					ArrayList argumentList=((IMap)argument).ArlojIntegerKeyValues;
 //					object returnValue=null;
 //					ArrayList sameLengthMethods=new ArrayList();
 //					foreach(MethodBase method in methods) {
