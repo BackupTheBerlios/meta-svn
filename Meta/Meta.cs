@@ -40,8 +40,8 @@ using System.Text;
 namespace Meta {
 	namespace Execution {
 		public abstract class Expression {
-			public static readonly Map runString=new Map("run"); // TODO: get rid of "String"-suffix, use Hungarian syntax, that is "s" prefix
-			public object Evaluate(IMap parent) {
+			public static readonly Map sRun=new Map("run"); // TODO: get rid of "String"-suffix, use Hungarian syntax, that is "s" prefix
+			public object ojEvaluateM(IMap parent) {
 //				try {
 					return EvaluateImplementation(parent);
 //				}
@@ -63,11 +63,11 @@ namespace Meta {
 		}
 		public class Call: Expression {
 			public override object EvaluateImplementation(IMap parent) {
-				object arg=argumentExpression.Evaluate(parent);
+				object arg=argumentExpression.ojEvaluateM(parent);
 				if(arg is IMap) {
 					arg=((IMap)arg).Clone();
 				}
-				return ((ICallable)callableExpression.Evaluate(parent)).ojCallOj(
+				return ((ICallable)callableExpression.ojEvaluateM(parent)).ojCallOj(
 					arg);
 			}
 			public static readonly Map callString=new Map("call");
@@ -89,7 +89,7 @@ namespace Meta {
 		public class Delayed: Expression {
 			public override object EvaluateImplementation(IMap parent) {
 				Map clone=delayed;
-				clone.Parent=parent;
+				clone.mParent=parent;
 				return clone;
 			}
 			public static readonly Map delayedString=new Map("delayed");
@@ -115,10 +115,10 @@ namespace Meta {
 		public class Program: Expression {
 			public override object EvaluateImplementation(IMap parent) {
 				Map local=new Map();
-				return Evaluate(parent,local);
+				return ojEvaluateM(parent,local);
 			}
-			public object Evaluate(IMap parent,IMap local) {
-				local.Parent=parent;
+			public object ojEvaluateM(IMap parent,IMap local) {
+				local.mParent=parent;
 				Interpreter.callers.Add(local);
 				for(int i=0;i<statements.Count;i++) {
 					local=(Map)Interpreter.Current;
@@ -165,10 +165,10 @@ namespace Meta {
 			public Expression key;
 			public static readonly Map keyString=new Map("key");
 			public override object EvaluateImplementation(IMap parent) {
-				object k=key.Evaluate(parent);
+				object k=key.ojEvaluateM(parent);
 				IMap selected=parent;
 				while(!selected.ContainsKey(k)) {
-					selected=selected.Parent;
+					selected=selected.mParent;
 					if(selected==null) {
 						throw new KeyNotFoundException(k,this.Extent);
 					}
@@ -195,12 +195,12 @@ namespace Meta {
 				}
 			}
 			public override object EvaluateImplementation(IMap parent) {
-				object selected=first.Evaluate(parent);
+				object selected=first.ojEvaluateM(parent);
 				for(int i=0;i<keys.Count;i++) {
 					if(!(selected is IKeyValue)) {
 						selected=new NetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
-					object k=((Expression)keys[i]).Evaluate(parent);
+					object k=((Expression)keys[i]).ojEvaluateM(parent);
 //					if(k.Equals(new Map("staticEvent"))) {
 //						int asdf=0;
 //					}
@@ -220,7 +220,7 @@ namespace Meta {
 				object selected=parent;
 				object k;
 				for(int i=0;i<keys.Count-1;i++) {
-					k=((Expression)keys[i]).Evaluate((IMap)parent);
+					k=((Expression)keys[i]).ojEvaluateM((IMap)parent);
 //					if(k.Equals(new Map("TestClass"))) {
 //						int asdf=0;
 //					}
@@ -232,11 +232,11 @@ namespace Meta {
 						selected=new NetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
 				}
-				object lastKey=((Expression)keys[keys.Count-1]).Evaluate((IMap)parent);
-				object v=val.Evaluate((IMap)parent);
+				object lastKey=((Expression)keys[keys.Count-1]).ojEvaluateM((IMap)parent);
+				object v=val.ojEvaluateM((IMap)parent);
 				if(lastKey.Equals(Map.thisString)) {
 					if(v is Map) {
-						((Map)v).Parent=((Map)parent).Parent;
+						((Map)v).mParent=((Map)parent).mParent;
 					}
 					else {
 						int asdf=0;
@@ -383,7 +383,7 @@ namespace Meta {
 			}
 //			public static object Run(string fileName,IMap argument) {
 //				Map program=CompileToMap(fileName);
-//				program.Parent=Library.library;
+//				program.mParent=Library.library;
 //				return program.Call(argument);
 //			}
 //
@@ -393,7 +393,7 @@ namespace Meta {
 //			}
 			public static object Run(string fileName,IMap argument) {
 //				Map program=CompileToMap(fileName);
-				//				program.Parent=Library.library;
+				//				program.mParent=Library.library;
 				Map program=Interpreter.CompileToMap(fileName);
 
 				return CallProgram(program,argument,Library.library);
@@ -405,14 +405,14 @@ namespace Meta {
 			}
 			public static object CallProgram(Map program,IMap argument,IMap parent) {
 				Map mCallable=new Map();
-				mCallable[Expression.runString]=program;
-				mCallable.Parent=parent;
+				mCallable[Expression.sRun]=program;
+				mCallable.mParent=parent;
 				return mCallable.ojCallOj(argument);
 			}
 
 //			public static Map CompileToMap(string fileName,Map mArg) {
 //				Map mFunction=new Map();
-//				mFunction[Expression.runString]=(new MetaTreeParser()).map(ParseToAst(fileName));
+//				mFunction[Expression.sRun]=(new MetaTreeParser()).map(ParseToAst(fileName));
 //				Map mArgument=new Map();
 //				Map mCall=new Map();
 //				mCall[Call.functionString]=mFunction;
@@ -1184,7 +1184,7 @@ namespace Meta {
 			object ojCallOj(object argument);
 		}
 		public interface IMap: IKeyValue {
-			IMap Parent {
+			IMap mParent {
 				get;
 				set;
 			}
@@ -1338,7 +1338,7 @@ namespace Meta {
 					return new ArrayList();
 				}
 			}
-			public IMap Parent {
+			public IMap mParent {
 				get {
 					return null;
 				}
@@ -1529,7 +1529,7 @@ namespace Meta {
 			public string GetDotNetString() {
 				return table.GetDotNetString();
 			}
-			public IMap Parent {
+			public IMap mParent {
 				get {
 					return parent;
 				}
@@ -1550,7 +1550,7 @@ namespace Meta {
 			public virtual object this[object key]  {
 				get {
 					if(key.Equals(parentString)) {
-						return Parent;
+						return mParent;
 					}
 					else if(key.Equals(argString)) {
 						return Argument;
@@ -1572,7 +1572,7 @@ namespace Meta {
 						else {
 							object val=value is IMap? ((IMap)value).Clone(): value; // TODO: combine with next line
 							if(value is IMap) {
-								((IMap)val).Parent=this;
+								((IMap)val).mParent=this;
 							}
 							table[key]=val;
 						}
@@ -1582,15 +1582,15 @@ namespace Meta {
 			public object Execute() { // TODO: Rename to evaluate
 				Expression function=(Expression)Compile();
 				object result;
-				result=function.Evaluate(this);
+				result=function.ojEvaluateM(this);
 				return result;
 			}
 			public object ojCallOj(object argument) {
 				this.Argument=argument;
-				Expression function=(Expression)((Map)this[Expression.runString]).Compile();
+				Expression function=(Expression)((Map)this[Expression.sRun]).Compile();
 				object result;
 				Interpreter.arguments.Add(argument);
-				result=function.Evaluate(this);
+				result=function.ojEvaluateM(this);
 				Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);
 				return result;
 			}
@@ -1601,7 +1601,7 @@ namespace Meta {
 			}
 			public IMap Clone() {
 				Map clone=table.CloneMap();
-				clone.Parent=Parent;
+				clone.mParent=mParent;
 				clone.compiled=compiled;
 				clone.Extent=Extent;
 				return clone;
@@ -1644,7 +1644,7 @@ namespace Meta {
 						return this.Argument!=null;
 					}
 					else if(key.Equals(parentString)) {
-						return this.Parent!=null;
+						return this.mParent!=null;
 					}
 					else if(key.Equals(thisString)) {
 						return true;
@@ -2412,7 +2412,7 @@ namespace Meta {
 //			}
 			/* Create a delegate of a certain tTarget that calls a Meta function. */
 			public static Delegate delFromF(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
-				code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
+				code.mParent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 				ICodeCompiler compiler=codeProvider.CreateCompiler();
 				string returnTypeName;
@@ -2471,7 +2471,7 @@ namespace Meta {
 				return del;
 			}
 //			public static Delegate delFromF(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
-//				code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
+//				code.mParent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
 //				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 //				ICodeCompiler compiler=codeProvider.CreateCompiler();
 //				string returnTypeName;
@@ -2779,7 +2779,7 @@ namespace Meta {
 //			}
 //			/* Create a delegate of a certain type that calls a Meta function. */
 //			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
-//				code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
+//				code.mParent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
 //				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 //				ICodeCompiler compiler=codeProvider.CreateCompiler();
 //				string returnTypeName;
