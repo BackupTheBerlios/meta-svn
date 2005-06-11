@@ -1994,46 +1994,83 @@ namespace Meta {
 //
 //				return oldValue;
 //			}
-
 			// TODO: finally invent a Meta type??? Would be useful here for prefix to Meta,
 			// it isn't, after all just any object
-			public static object oConvertParameterOTypRb(object oMeta,Type typParameter,out bool outBConverted) {
+			public static object oConvertParameterOTypOutB(object oMeta,Type typParameter,out bool outBConverted) {
 				outBConverted=true;
 				if(typParameter.IsAssignableFrom(oMeta.GetType())) {
 					return oMeta;
 				}
 				else if((typParameter.IsSubclassOf(typeof(Delegate))
-					||typParameter.Equals(typeof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
+					||typParameter.Equals(typeof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the m contains code, not necessarily, think this conversion stuff through completely
 					MethodInfo m=typParameter.GetMethod("Invoke",BindingFlags.Instance
 						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-					Delegate del=CreateDelegate(typParameter,m,(Map)oMeta);
-					return del;
+					Delegate delFunction=CreateDelegate(typParameter,m,(Map)oMeta);
+					return delFunction;
 				}
 				else if(typParameter.IsArray && oMeta is IMap && ((Map)oMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
 					try {
-						Type arrayType=typParameter.GetElementType();
-						Map map=((Map)oMeta);
-						ArrayList mapValues=map.IntKeyValues;
-						Array array=Array.CreateInstance(arrayType,mapValues.Count);
-						for(int i=0;i<mapValues.Count;i++) {
-							array.SetValue(mapValues[i],i);
+						Type typArrayElements=typParameter.GetElementType();
+						Map m=((Map)oMeta);
+						ArrayList altValues=m.IntKeyValues;
+						Array arr=Array.CreateInstance(typArrayElements,altValues.Count);
+						for(int i=0;i<altValues.Count;i++) {
+							arr.SetValue(altValues[i],i);
 						}
-						return array;
+						return arr;
 					}
 					catch {
 					}
 				}
 				else {
-					bool isConverted; // TODO: refactor with outBConverted
-					object result=Interpreter.ConvertMetaToDotNet(oMeta,typParameter,out isConverted);
-					if(isConverted) {
+					bool outBParamConverted; // TODO: refactor with outBConverted
+					object result=Interpreter.ConvertMetaToDotNet(oMeta,typParameter,out outBParamConverted);
+					if(outBParamConverted) {
 						return result;
 					}
 				}
 				outBConverted=false;
 				return null;
 			}
-//			public static object oConvertParameterOTypRb(object oMeta,Type parameter,out bool outBConverted) {
+//			// TODO: finally invent a Meta type??? Would be useful here for prefix to Meta,
+//			// it isn't, after all just any object
+//			public static object oConvertParameterOTypOutb(object oMeta,Type typParameter,out bool outBConverted) {
+//				outBConverted=true;
+//				if(typParameter.IsAssignableFrom(oMeta.GetType())) {
+//					return oMeta;
+//				}
+//				else if((typParameter.IsSubclassOf(typeof(Delegate))
+//					||typParameter.Equals(typeof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
+//					MethodInfo m=typParameter.GetMethod("Invoke",BindingFlags.Instance
+//						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+//					Delegate delFunction=CreateDelegate(typParameter,m,(Map)oMeta);
+//					return delFunction;
+//				}
+//				else if(typParameter.IsArray && oMeta is IMap && ((Map)oMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
+//					try {
+//						Type arrayType=typParameter.GetElementType();
+//						Map map=((Map)oMeta);
+//						ArrayList mapValues=map.IntKeyValues;
+//						Array array=Array.CreateInstance(arrayType,mapValues.Count);
+//						for(int i=0;i<mapValues.Count;i++) {
+//							array.SetValue(mapValues[i],i);
+//						}
+//						return array;
+//					}
+//					catch {
+//					}
+//				}
+//				else {
+//					bool isConverted; // TODO: refactor with outBConverted
+//					object result=Interpreter.ConvertMetaToDotNet(oMeta,typParameter,out isConverted);
+//					if(isConverted) {
+//						return result;
+//					}
+//				}
+//				outBConverted=false;
+//				return null;
+//			}
+//			public static object oConvertParameterOTypOutb(object oMeta,Type parameter,out bool outBConverted) {
 //				outBConverted=true;
 //				if(parameter.IsAssignableFrom(oMeta.GetType())) {
 //					return oMeta;
@@ -2112,7 +2149,7 @@ namespace Meta {
 						bool argumentsMatched=true;
 						ParameterInfo[] parameters=method.GetParameters();
 						for(int i=0;argumentsMatched && i<parameters.Length;i++) {
-							args.Add(oConvertParameterOTypRb(argumentList[i],parameters[i].ParameterType,out argumentsMatched));
+							args.Add(oConvertParameterOTypOutB(argumentList[i],parameters[i].ParameterType,out argumentsMatched));
 						}
 						if(argumentsMatched) {
 							if(method is ConstructorInfo) {
@@ -2622,7 +2659,7 @@ namespace Meta {
 								FieldInfo field=(FieldInfo)members[0];
 								bool converted;
 								object val;
-								val=NetMethod.oConvertParameterOTypRb(value,field.FieldType,out converted);
+								val=NetMethod.oConvertParameterOTypOutB(value,field.FieldType,out converted);
 								if(converted) {
 									field.SetValue(obj,val);
 								}
@@ -2640,7 +2677,7 @@ namespace Meta {
 							else if(members[0] is PropertyInfo) {
 								PropertyInfo property=(PropertyInfo)members[0];
 								bool converted;
-								object val=NetMethod.oConvertParameterOTypRb(value,property.PropertyType,out converted);
+								object val=NetMethod.oConvertParameterOTypOutB(value,property.PropertyType,out converted);
 								if(converted) {
 									property.SetValue(obj,val,new object[]{});
 								}
