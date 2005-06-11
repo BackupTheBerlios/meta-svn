@@ -91,7 +91,7 @@ namespace testClasses
 			this.y=(string)((Map)arg[new Map("y")]).GetDotNetString();
 			this.z=(string)((Map)arg[new Map("p2")]).GetDotNetString();
 		}
-		[MetaLibraryMethod]
+//		[MetaLibraryMethod]
 		public string Concatenate(Map arg) {
 			Map def=new Map();
 			def[new Integer(1)]=new Map("null");

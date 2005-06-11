@@ -143,12 +143,12 @@ namespace Meta {
 		}
 		public class Literal: Expression {
 			public override object EvaluateImplementation(IMap parent) {
-				if(literal.Equals(new Map("staticEvent"))) {
-					int asdf=0;
-				}
-				if(literal.Equals(new Map("TestClass"))) {
-					int asdf=0;
-				}
+//				if(literal.Equals(new Map("staticEvent"))) {
+//					int asdf=0;
+//				}
+//				if(literal.Equals(new Map("TestClass"))) {
+//					int asdf=0;
+//				}
 				return literal;
 			}
 			public static readonly Map literalString=new Map("literal");
@@ -187,9 +187,9 @@ namespace Meta {
 				ArrayList list=((Map)code[selectString]).IntKeyValues;
 //				list.Reverse(); // do things the right way around again
 				first=(Expression)((Map)list[0]).Compile();
-				if(list[0].Equals(new Map("Collections"))) {
-					int asdf=0;
-				}
+//				if(list[0].Equals(new Map("Collections"))) {
+//					int asdf=0;
+//				}
 				for(int i=1;i<list.Count;i++) {
 					keys.Add(((Map)list[i]).Compile());
 				}
@@ -201,9 +201,9 @@ namespace Meta {
 						selected=new NetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
 					object k=((Expression)keys[i]).Evaluate(parent);
-					if(k.Equals(new Map("staticEvent"))) {
-						int asdf=0;
-					}
+//					if(k.Equals(new Map("staticEvent"))) {
+//						int asdf=0;
+//					}
 					selected=((IKeyValue)selected)[k];
 					if(selected==null) {
 						throw new KeyDoesNotExistException(k,this.Extent);
@@ -775,8 +775,14 @@ namespace Meta {
 						this.target=typeof(string);
 					}
 					public override object Convert(object obj, out bool converted) {
-						converted=true;
-						return ((Map)obj).GetDotNetString();
+						if(((Map)obj).IsString) {
+							converted=true;
+							return ((Map)obj).GetDotNetString();
+						}
+						else {
+							converted=false;
+							return null;
+						}
 					}
 				}
 				public class ConvertFractionToDecimal: MetaToDotNetConversion {
@@ -1294,9 +1300,9 @@ namespace Meta {
 		public class Library: IKeyValue,IMap {
 			public object this[object key] {
 				get {
-					if(key.Equals(new Map("map"))) {
-						int asdf=0;
-					}
+//					if(key.Equals(new Map("map"))) {
+//						int asdf=0;
+//					}
 					if(cash.ContainsKey(key)) {
 						if(cash[key] is MetaLibrary) {
 							cash[key]=((MetaLibrary)cash[key]).Load();
@@ -1949,11 +1955,11 @@ namespace Meta {
 			private int index=-1;
 		}
 		public delegate object DelegateCreatedForGenericDelegates();
-		[AttributeUsage(AttributeTargets.Method)]
-		public class MetaLibraryMethodAttribute:Attribute {
-		}
+//		[AttributeUsage(AttributeTargets.Method)]
+//		public class MetaLibraryMethodAttribute:Attribute {
+//		}
 		public class NetMethod: ICallable {
-			public bool blaLibraryMethod=false; // TODO: is this even needen anymore?
+//			public bool blaLibraryMethod=false; // TODO: is this even needen anymore?
 			// TODO: Move this to "With" ? Move this to NetContainer?
 			public static object ojAssignCollectionMOjOutbla(Map mCollection,object ojCollection,out bool blaSuccess) { // TODO: is blaSuccess needed?
 				if(mCollection.IntKeyValues.Count==0) {
@@ -2106,28 +2112,29 @@ namespace Meta {
 //				outblaConverted=false;
 //				return null;
 //			}
-			public object ojCallSingleArgumentOjOutbla(object ojArgument,out bool outblaCalled) {
-				outblaCalled=true;
-				try {
-					Map mArgument=new Map();
-					mArgument[new Integer(1)]=ojArgument;
-					return ojCallMultiArgumentOj(mArgument);
-				}
-				catch {
-					outblaCalled=false;
-					return null;
-				}
-			}
-			public object ojCallOj(object ojArgument) {
-				bool outblaCalled=false;
-				object ojResult;
+			// TODO: This should really be put into just one method!!!!!!!
+//			public object ojCallSingleArgumentOjOutbla(object ojArgument,out bool outblaCalled) {
+//				outblaCalled=true;
+//				try {
+//					Map mArgument=new Map();
+//					mArgument[new Integer(1)]=ojArgument;
+//					return ojCallMultiArgumentOj(mArgument);
+//				}
+//				catch {
+//					outblaCalled=false;
+//					return null;
+//				}
+//			}
+//			public object ojCallOj(object ojArgument) {
+//				bool outblaCalled=false;
+//				object ojResult;
 //				ojResult=ojCallSingleArgumentOjOutbla(ojArgument,out outblaCalled);
 //				if(!outblaCalled) {
-					ojResult=ojCallMultiArgumentOj(ojArgument);
+//					ojResult=ojCallMultiArgumentOj(ojArgument);
 //				}
-				//ojResult=ojCallMultiArgumentOj(ojArgument);
-				return ojResult;
-			}
+//				ojResult=ojCallMultiArgumentOj(ojArgument);
+//				return ojResult;
+//			}
 //			public object ojCallOj(object ojArgument) {
 //				bool outblaCalled=false;
 //				object ojResult;
@@ -2137,31 +2144,70 @@ namespace Meta {
 //				}
 //				return ojResult;
 //			}
-			public object ojCallMultiArgumentOj(object ojArgument) {
-				if(tTarget.Name.EndsWith("PositionalNoConversion")) {
+			public object ojCallOj(object ojArgument) {
+				//				if(tTarget.Name.EndsWith("PositionalNoConversion")) {
+				//					int asdf=0;
+				//				}
+				if(this.tTarget.Name.EndsWith("IndexerNoConversion") && this.sName.StartsWith("GetResultFromDelegate")) {
 					int asdf=0;
 				}
+				object ojReturn=null;
 				object ojResult=null;
+				// TODO: this will have to be refactored, but later, after feature creep
+
+				// try to call with just one argument:
+				ArrayList arlOneArgumentMethods=new ArrayList();
+				foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
+					if(mtbCurrent.GetParameters().Length==1) { // don't match if different parameter list length
+						arlOneArgumentMethods.Add(mtbCurrent);
+					}
+				}
+				bool blaExecuted=false;
+				foreach(MethodBase mtbCurrent in arlOneArgumentMethods) {
+//					ArrayList arlArguments=new ArrayList();
+//					bool blaArgumentsMatched=true;
+//					ParameterInfo[] arPrmtifParameters=mtbCurrent.GetParameters();
+//					for(int i=0;blaArgumentsMatched && i<arPrmtifParameters.Length;i++) {
+//						arlArguments.Add(ojConvertParameterOjTOutbla(arlOArguments[i],arPrmtifParameters[i].ParameterType,out blaArgumentsMatched));
+//					}
+					bool blaConverted;
+					object ojParameter=ojConvertParameterOjTOutbla(ojArgument,mtbCurrent.GetParameters()[0].ParameterType,out blaConverted);
+					if(blaConverted) {
+						if(mtbCurrent is ConstructorInfo) {
+							ojReturn=((ConstructorInfo)mtbCurrent).Invoke(new object[] {ojParameter});
+						}
+						else {
+							ojReturn=mtbCurrent.Invoke(ojTarget,new object[] {ojParameter});
+						}
+						blaExecuted=true;// remove, use blaArgumentsMatched instead
+						break;
+					}
+				}
+
+
+
+
+
 				// TODO: check this for every meb:
 				// introduce own mebinfo class? that does the calling, maybe??? dynamic cast might become a performance
 				// problem, but I doubt it, so what?
-				if(blaLibraryMethod) {
-					if(arMtbOverloadedMethods[0] is ConstructorInfo) {
-						// TODO: remove this
-						ojResult=((ConstructorInfo)arMtbOverloadedMethods[0]).Invoke(new object[] {ojArgument}); 
-					}
-					else {
-						try {
-							ojResult=arMtbOverloadedMethods[0].Invoke(ojTarget,new object[] {ojArgument});
-						}
-						catch {
-							throw new ApplicationException("Could not invoke "+sName+".");
-						}
-					}
-				}
-				else {
+				//				if(blaLibraryMethod) {
+				//					if(arMtbOverloadedMethods[0] is ConstructorInfo) {
+				//						// TODO: remove this
+				//						ojResult=((ConstructorInfo)arMtbOverloadedMethods[0]).Invoke(new object[] {ojArgument}); 
+				//					}
+				//					else {
+				//						try {
+				//							ojResult=arMtbOverloadedMethods[0].Invoke(ojTarget,new object[] {ojArgument});
+				//						}
+				//						catch {
+				//							throw new ApplicationException("Could not invoke "+sName+".");
+				//						}
+				//					}
+				//				}
+				//				else {
+				if(!blaExecuted) {
 					ArrayList arlOArguments=((IMap)ojArgument).IntKeyValues;
-					object ojReturn=null;
 					ArrayList arlMtifRightNumberArguments=new ArrayList();
 					foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
 						if(arlOArguments.Count==mtbCurrent.GetParameters().Length) { // don't match if different parameter list length
@@ -2173,7 +2219,6 @@ namespace Meta {
 					if(arlMtifRightNumberArguments.Count==0) {
 						int asdf=0;//throw new ApplicationException("No methods with the right number of arguments.");// TODO: Just a quickfix, really
 					}
-					bool blaExecuted=false;
 					foreach(MethodBase mtbCurrent in arlMtifRightNumberArguments) {
 						ArrayList arlArguments=new ArrayList();
 						bool blaArgumentsMatched=true;
@@ -2192,20 +2237,96 @@ namespace Meta {
 							break;
 						}
 					}
-					// TODO: ojResult / ojReturn is duplication
-					ojResult=ojReturn; // mess, why is this here? put in else after the next if
-					// make this safe
-//					if(!blaExecuted && arMtbOverloadedMethods[0] is ConstructorInfo) { // TODO: why is this needed, can't constructors be called normally? Ah, now I get it, this is for automatical initializing of new classes. This is, however, very confusing, and should, in my opinion be remove, if possible into a library. .NET stuff will not be used directly as often as I first thought, I think, so this stuff isn't so important
-//						object ojToBeInitialized=new NetMethod(tTarget).ojCallMultiArgumentOj(new Map());
-//						//						object ojToBeInitialized=new NetMethod(tTarget).ojCallOj(new Map());
-//						ojResult=with(ojToBeInitialized,((Map)ojArgument));
-//					}// TODO: somehow determine if no method has been called at all and throw an exception then
-//					else if(arlMtifRightNumberArguments.Count==0) {
-//						throw new ApplicationException("Method "+sName+" could not be invoked.");
-//					}
-				}		
+				}
+				// TODO: ojResult / ojReturn is duplication
+				ojResult=ojReturn; // mess, why is this here? put in else after the next if
+				// make this safe
+				//					if(!blaExecuted && arMtbOverloadedMethods[0] is ConstructorInfo) { // TODO: why is this needed, can't constructors be called normally? Ah, now I get it, this is for automatical initializing of new classes. This is, however, very confusing, and should, in my opinion be remove, if possible into a library. .NET stuff will not be used directly as often as I first thought, I think, so this stuff isn't so important
+				//						object ojToBeInitialized=new NetMethod(tTarget).ojCallMultiArgumentOj(new Map());
+				//						//						object ojToBeInitialized=new NetMethod(tTarget).ojCallOj(new Map());
+				//						ojResult=with(ojToBeInitialized,((Map)ojArgument));
+				//					}// TODO: somehow determine if no method has been called at all and throw an exception then
+				//					else if(arlMtifRightNumberArguments.Count==0) {
+				//						throw new ApplicationException("Method "+sName+" could not be invoked.");
+				//					}
+				//				}		
+				if(ojResult==null) {
+					int asdf=0;
+				}
 				return Interpreter.ConvertDotNetToMeta(ojResult);
 			}
+//			public object ojCallOj(object ojArgument) {
+////				if(tTarget.Name.EndsWith("PositionalNoConversion")) {
+////					int asdf=0;
+////				}
+//				object ojResult=null;
+//				// TODO: check this for every meb:
+//				// introduce own mebinfo class? that does the calling, maybe??? dynamic cast might become a performance
+//				// problem, but I doubt it, so what?
+////				if(blaLibraryMethod) {
+////					if(arMtbOverloadedMethods[0] is ConstructorInfo) {
+////						// TODO: remove this
+////						ojResult=((ConstructorInfo)arMtbOverloadedMethods[0]).Invoke(new object[] {ojArgument}); 
+////					}
+////					else {
+////						try {
+////							ojResult=arMtbOverloadedMethods[0].Invoke(ojTarget,new object[] {ojArgument});
+////						}
+////						catch {
+////							throw new ApplicationException("Could not invoke "+sName+".");
+////						}
+////					}
+////				}
+////				else {
+//					ArrayList arlOArguments=((IMap)ojArgument).IntKeyValues;
+//					object ojReturn=null;
+//					ArrayList arlMtifRightNumberArguments=new ArrayList();
+//					foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
+//						if(arlOArguments.Count==mtbCurrent.GetParameters().Length) { // don't match if different parameter list length
+//							if(arlOArguments.Count==((IMap)ojArgument).Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
+//								arlMtifRightNumberArguments.Add(mtbCurrent);
+//							}
+//						}
+//					}
+//					if(arlMtifRightNumberArguments.Count==0) {
+//						int asdf=0;//throw new ApplicationException("No methods with the right number of arguments.");// TODO: Just a quickfix, really
+//					}
+//					bool blaExecuted=false;
+//					foreach(MethodBase mtbCurrent in arlMtifRightNumberArguments) {
+//						ArrayList arlArguments=new ArrayList();
+//						bool blaArgumentsMatched=true;
+//						ParameterInfo[] arPrmtifParameters=mtbCurrent.GetParameters();
+//						for(int i=0;blaArgumentsMatched && i<arPrmtifParameters.Length;i++) {
+//							arlArguments.Add(ojConvertParameterOjTOutbla(arlOArguments[i],arPrmtifParameters[i].ParameterType,out blaArgumentsMatched));
+//						}
+//						if(blaArgumentsMatched) {
+//							if(mtbCurrent is ConstructorInfo) {
+//								ojReturn=((ConstructorInfo)mtbCurrent).Invoke(arlArguments.ToArray());
+//							}
+//							else {
+//								ojReturn=mtbCurrent.Invoke(ojTarget,arlArguments.ToArray());
+//							}
+//							blaExecuted=true;// remove, use blaArgumentsMatched instead
+//							break;
+//						}
+//					}
+//					// TODO: ojResult / ojReturn is duplication
+//					ojResult=ojReturn; // mess, why is this here? put in else after the next if
+//					// make this safe
+////					if(!blaExecuted && arMtbOverloadedMethods[0] is ConstructorInfo) { // TODO: why is this needed, can't constructors be called normally? Ah, now I get it, this is for automatical initializing of new classes. This is, however, very confusing, and should, in my opinion be remove, if possible into a library. .NET stuff will not be used directly as often as I first thought, I think, so this stuff isn't so important
+////						object ojToBeInitialized=new NetMethod(tTarget).ojCallMultiArgumentOj(new Map());
+////						//						object ojToBeInitialized=new NetMethod(tTarget).ojCallOj(new Map());
+////						ojResult=with(ojToBeInitialized,((Map)ojArgument));
+////					}// TODO: somehow determine if no method has been called at all and throw an exception then
+////					else if(arlMtifRightNumberArguments.Count==0) {
+////						throw new ApplicationException("Method "+sName+" could not be invoked.");
+////					}
+////				}		
+//				if(ojResult==null) {
+//					int asdf=0;
+//				}
+//				return Interpreter.ConvertDotNetToMeta(ojResult);
+//			}
 //			public object ojCallOj(object argument) {
 //				if(this.sName=="Write") {
 //					int asdf=0;
@@ -2428,9 +2549,9 @@ namespace Meta {
 				// it. maybe restrict overloads, create preference arlMtbMethods, all quite complicated
 				// research the number and nature of such arMtbOverloadedMethods as Console.WriteLine
 				arMtbOverloadedMethods=(MethodBase[])arlMtbMethods.ToArray(typeof(MethodBase));
-				if(arMtbOverloadedMethods.Length==1 && arMtbOverloadedMethods[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
-					this.blaLibraryMethod=true;
-				}
+//				if(arMtbOverloadedMethods.Length==1 && arMtbOverloadedMethods[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
+//					this.blaLibraryMethod=true;
+//				}
 			}
 //			private void Initialize(string name,object ojTarget,Type tTarget) {
 //				this.sName=name;
@@ -2865,7 +2986,7 @@ namespace Meta {
 					try {
 						return indexerMethod.ojCallOj(arguments);
 					}
-					catch(Exception) {
+					catch(Exception e) {
 						return null;
 					}
 				}

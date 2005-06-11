@@ -46,7 +46,7 @@ public class map {
 	public static int iCountM(Map map) {
 		return map.Count;
 	}
-	[MetaLibraryMethod]
+//	[MetaLibraryMethod]
 	public static Map sTrimStartS(Map arg) {
 		Map map=(Map)arg[new Integer(1)];
 		object obj=arg[new Integer(2)];
@@ -85,7 +85,7 @@ public class map {
 		}
 		return keys;
 	}
-	[MetaLibraryMethod]
+//	[MetaLibraryMethod]
 	public static Map aJoinAa(Map arg) {
 		ArrayList maps=arg.IntKeyValues;
 		int i=1;
@@ -98,7 +98,7 @@ public class map {
 		}
 		return combined;
 	}
-	[MetaLibraryMethod]
+//	[MetaLibraryMethod]
 	public static IKeyValue mMergeAm(Map arg) {
 		return (Map)Interpreter.MergeCollection(arg.IntKeyValues);
 	}
