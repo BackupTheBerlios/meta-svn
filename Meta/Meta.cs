@@ -97,48 +97,36 @@ namespace Meta {
 			}
 			public Map mDelayed;
 		}
-//
-//		public class DelayedExpresionOnly: Expression {
-//			public override object OjEvaluateM(IMap parent) {
-//				return delayed;
-//			}
-//			public static readonly Map dealayedExpressionOnlyString=new Map("delayedExpressionOnly");
-//			public DelayedExpresionOnly(Map code) {
-//				this.delayed=(Map)code[dealayedExpressionOnlyString];
-//			}
-//			public Map delayed;
-//		}
-
 
 
 		public class Program: Expression {
-			public override object OjEvaluateM(IMap parent) {
-				Map local=new Map();
-				return OjEvaluateM(parent,local);
+			public override object OjEvaluateM(IMap mParent) {
+				Map mLocal=new Map();
+				return OjEvaluateM(mParent,mLocal);
 			}
-			public object OjEvaluateM(IMap parent,IMap local) {
-				local.mParent=parent;
-				Interpreter.callers.Add(local);
-				for(int i=0;i<statements.Count;i++) {
-					local=(Map)Interpreter.Current;
-					((Statement)statements[i]).Realize(local);
+			public object OjEvaluateM(IMap mParent,IMap mLocal) {
+				mLocal.mParent=mParent;
+				Interpreter.arlMCallers.Add(mLocal);
+				for(int i=0;i<arlSmStatements.Count;i++) {
+					mLocal=(Map)Interpreter.OjCurrent;
+					((Statement)arlSmStatements[i]).VRealizeM(mLocal);
 				}
-				object result=Interpreter.Current;
-				Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-				return result;
+				object ojResult=Interpreter.OjCurrent;
+				Interpreter.arlMCallers.RemoveAt(Interpreter.arlMCallers.Count-1);
+				return ojResult;
 			}
-			public static readonly Map programString=new Map("program");
-			public Program(Map code) {
-				foreach(Map statement in ((Map)code[programString]).IntKeyValues) {
-					this.statements.Add(new Statement(statement)); // should we save the original maps instead of statements?
+			public static readonly Map sProgram=new Map("program");
+			public Program(Map mProgram) { // TODO: special Type for  callable maps?
+				foreach(Map mStatement in ((Map)mProgram[sProgram]).IntKeyValues) {
+					this.arlSmStatements.Add(new Statement(mStatement)); // should we save the original maps instead of arlSmStatements?
 				}
 			}
 //			public Program(Map code) {
-//				foreach(Map statement in ((Map)code[programString]).IntKeyValues) {
-//					this.statements.Add(statement.Compile()); // should we save the original maps instead of statements?
+//				foreach(Map statement in ((Map)code[sProgram]).IntKeyValues) {
+//					this.arlSmStatements.Add(statement.Compile()); // should we save the original maps instead of arlSmStatements?
 //				}
 //			}
-			public readonly ArrayList statements=new ArrayList();
+			public readonly ArrayList arlSmStatements=new ArrayList();
 		}
 		public class Literal: Expression {
 			public override object OjEvaluateM(IMap parent) {
@@ -215,7 +203,7 @@ namespace Meta {
 		}
 
 		public class Statement {
-			public void Realize(IMap parent) {
+			public void VRealizeM(IMap parent) {
 				object selected=parent;
 				object k;
 				for(int i=0;i<keys.Count-1;i++) {
@@ -240,7 +228,7 @@ namespace Meta {
 					else {
 						int asdf=0;
 					}
-					Interpreter.Current=v;
+					Interpreter.OjCurrent=v;
 
 				}
 				else {
@@ -449,15 +437,15 @@ namespace Meta {
 					return (Map)arguments[arguments.Count-1];
 				}
 			}
-			public static object Current {
+			public static object OjCurrent {
 				get {
-					if(callers.Count==0) {
+					if(arlMCallers.Count==0) {
 						return null;
 					}
-					return callers[callers.Count-1];
+					return arlMCallers[arlMCallers.Count-1];
 				}
 				set {
-					callers[callers.Count-1]=value;
+					arlMCallers[arlMCallers.Count-1]=value;
 				}
 			}
 			public static object ConvertMetaToDotNet(object metaObject,Type targetType,out bool isConverted) {
@@ -513,7 +501,7 @@ namespace Meta {
 				}
 			}
 			public static string metaInstallationPath;
-			public static ArrayList callers=new ArrayList();
+			public static ArrayList arlMCallers=new ArrayList();
 			public static ArrayList arguments=new ArrayList();
 			public static Hashtable netConversion=new Hashtable();
 			public static Hashtable metaConversion=new Hashtable();
@@ -1614,7 +1602,7 @@ namespace Meta {
 					else if(this.ContainsKey(Delayed.sDelayed)) { // TODO: could be optimized, but compilation happens seldom
 						compiled=new Delayed(this);
 					}
-					else if(this.ContainsKey(Program.programString)) {
+					else if(this.ContainsKey(Program.sProgram)) {
 						compiled=new Program(this);
 					}
 					else if(this.ContainsKey(Literal.literalString)) {
@@ -2412,7 +2400,7 @@ namespace Meta {
 //			}
 			/* Create a delegate of a certain tTarget that calls a Meta function. */
 			public static Delegate delFromF(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
-				code.mParent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
+				code.mParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 				ICodeCompiler compiler=codeProvider.CreateCompiler();
 				string returnTypeName;
@@ -2471,7 +2459,7 @@ namespace Meta {
 				return del;
 			}
 //			public static Delegate delFromF(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
-//				code.mParent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
+//				code.mParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
 //				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 //				ICodeCompiler compiler=codeProvider.CreateCompiler();
 //				string returnTypeName;
@@ -2779,7 +2767,7 @@ namespace Meta {
 //			}
 //			/* Create a delegate of a certain type that calls a Meta function. */
 //			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
-//				code.mParent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
+//				code.mParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
 //				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 //				ICodeCompiler compiler=codeProvider.CreateCompiler();
 //				string returnTypeName;

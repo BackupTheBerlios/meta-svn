@@ -210,7 +210,7 @@ _loop122_breakloop:			;
 		_t = __t120;
 		_t = _t.getNextSibling();
 		
-		result[Program.programString]=statements;
+		result[Program.sProgram]=statements;
 		
 		retTree_ = _t;
 		return result;

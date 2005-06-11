@@ -551,7 +551,7 @@ map
     )*
   )
   {
-    result[Program.programString]=statements;
+    result[Program.sProgram]=statements;
   };
 
 call
