@@ -598,7 +598,7 @@ select
     )
   )
   {
-    result[Select.selectString]=selection;
+    result[Select.sSelect]=selection;
   };
 
 

@@ -29,7 +29,7 @@ public class logic
 	}
 //	[MetaLibraryMethod]
 	public static bool and(Map arg) {
-		foreach(bool val in arg.IntKeyValues) {
+		foreach(bool val in arg.arlOjIntegerKeyValues) {
 			if(!val) {
 				return false;
 			}
@@ -38,7 +38,7 @@ public class logic
 	}
 //	[MetaLibraryMethod]
 	public static bool or(Map arg) {
-		foreach(bool val in arg.IntKeyValues) {
+		foreach(bool val in arg.arlOjIntegerKeyValues) {
 			if(val) {
 				return true;
 			}

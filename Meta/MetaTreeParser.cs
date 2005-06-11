@@ -262,7 +262,7 @@ _loop131_breakloop:			;
 		_t = __t128;
 		_t = _t.getNextSibling();
 		
-		result[Select.selectString]=selection;
+		result[Select.sSelect]=selection;
 		
 		retTree_ = _t;
 		return result;
