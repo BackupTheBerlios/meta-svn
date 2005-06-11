@@ -1953,28 +1953,47 @@ namespace Meta {
 		public class MetaLibraryMethodAttribute:Attribute {
 		}
 		public class NetMethod: ICallable {
-			public bool isMetaLibraryMethod=false;
+			public bool isMetaLibraryMethod=false; // TODO: is this even needen anymore?
 			// TODO: Move this to "With" ? Move this to NetContainer?
-			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
-
-				if(map.IntKeyValues.Count==0) {
-					assigned=false;
+			public static object oAssignCollectionOMRb(Map m,object o,out bool bSuccess) { // TODO: is bSuccess needed?
+				if(m.IntKeyValues.Count==0) {
+					bSuccess=false;
 					return null;
 				}
-				Type type=oldValue.GetType();
-				MethodInfo method=type.GetMethod("Add",new Type[]{map.IntKeyValues[0].GetType()});
-				if(method!=null) {
-					foreach(object val in map.IntKeyValues) { // combine this with Library function "Init"
-						method.Invoke(oldValue,new object[]{val});//  call method from above!
+				Type type=o.GetType();
+				MethodInfo meiAdd=type.GetMethod("Add",new Type[]{m.IntKeyValues[0].GetType()});
+				if(meiAdd!=null) {
+					foreach(object val in m.IntKeyValues) { // combine this with Library function "Init"
+						meiAdd.Invoke(o,new object[]{val});//  call meiAdd from above!
 					}
-					assigned=true;
+					bSuccess=true;
 				}
 				else {
-					assigned=false;
+					bSuccess=false;
 				}
 
-				return oldValue;
+				return o;
 			}
+//			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
+//
+//				if(map.IntKeyValues.Count==0) {
+//					assigned=false;
+//					return null;
+//				}
+//				Type type=oldValue.GetType();
+//				MethodInfo method=type.GetMethod("Add",new Type[]{map.IntKeyValues[0].GetType()});
+//				if(method!=null) {
+//					foreach(object val in map.IntKeyValues) { // combine this with Library function "Init"
+//						method.Invoke(oldValue,new object[]{val});//  call method from above!
+//					}
+//					assigned=true;
+//				}
+//				else {
+//					assigned=false;
+//				}
+//
+//				return oldValue;
+//			}
 			public static object ConvertParameter(object meta,Type parameter,out bool converted) {
 				converted=true;
 				if(parameter.IsAssignableFrom(meta.GetType())) {
@@ -2570,7 +2589,7 @@ namespace Meta {
 								}
 								if(!converted) {
 									if(value is Map) {
-										val=NetMethod.DoModifiableCollectionAssignment((Map)value,field.GetValue(obj),out converted);
+										val=NetMethod.oAssignCollectionOMRb((Map)value,field.GetValue(obj),out converted);
 									}
 								}
 								if(!converted) {
@@ -2588,7 +2607,7 @@ namespace Meta {
 								}
 								if(!converted) {
 									if(value is Map) {
-										NetMethod.DoModifiableCollectionAssignment((Map)value,property.GetValue(obj,new object[]{}),out converted);
+										NetMethod.oAssignCollectionOMRb((Map)value,property.GetValue(obj,new object[]{}),out converted);
 									}
 									if(!converted) {
 										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.MetaSerialize(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
