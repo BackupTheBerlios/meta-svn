@@ -1960,8 +1960,8 @@ namespace Meta {
 					bSuccess=false;
 					return null;
 				}
-				Type typTarget=o.GetType();
-				MethodInfo meiAdd=typTarget.GetMethod("Add",new Type[]{m.IntKeyValues[0].GetType()});
+				Type tTarget=o.GetType();
+				MethodInfo meiAdd=tTarget.GetMethod("Add",new Type[]{m.IntKeyValues[0].GetType()});
 				if(meiAdd!=null) {
 					foreach(object val in m.IntKeyValues) { // combine this with Library function "Init"
 						meiAdd.Invoke(o,new object[]{val});//  call meiAdd from above!
@@ -1980,8 +1980,8 @@ namespace Meta {
 //					assigned=false;
 //					return null;
 //				}
-//				Type typTarget=oldValue.GetType();
-//				MethodInfo method=typTarget.GetMethod("Add",new Type[]{map.IntKeyValues[0].GetType()});
+//				Type tTarget=oldValue.GetType();
+//				MethodInfo method=tTarget.GetMethod("Add",new Type[]{map.IntKeyValues[0].GetType()});
 //				if(method!=null) {
 //					foreach(object val in map.IntKeyValues) { // combine this with Library function "Init"
 //						method.Invoke(oldValue,new object[]{val});//  call method from above!
@@ -1994,7 +1994,7 @@ namespace Meta {
 //
 //				return oldValue;
 //			}
-			// TODO: finally invent a Meta typTarget??? Would be useful here for prefix to Meta,
+			// TODO: finally invent a Meta tTarget??? Would be useful here for prefix to Meta,
 			// it isn't, after all just any object
 			public static object oConvertParameterOTypOutB(object oMeta,Type typParameter,out bool outBConverted) {
 				outBConverted=true;
@@ -2032,15 +2032,15 @@ namespace Meta {
 				outBConverted=false;
 				return null;
 			}
-//			// TODO: finally invent a Meta typTarget??? Would be useful here for prefix to Meta,
+//			// TODO: finally invent a Meta tTarget??? Would be useful here for prefix to Meta,
 //			// it isn't, after all just any object
 //			public static object oConvertParameterOTypOutb(object oMeta,Type typParameter,out bool outBConverted) {
 //				outBConverted=true;
 //				if(typParameter.IsAssignableFrom(oMeta.GetType())) {
 //					return oMeta;
 //				}
-//				else if((typParameter.IsSubclassOf(typTargetof(Delegate))
-//					||typParameter.Equals(typTargetof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
+//				else if((typParameter.IsSubclassOf(tTargetof(Delegate))
+//					||typParameter.Equals(tTargetof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
 //					MethodInfo m=typParameter.GetMethod("Invoke",BindingFlags.Instance
 //						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
 //					Delegate delFunction=delFromF(typParameter,m,(Map)oMeta);
@@ -2075,8 +2075,8 @@ namespace Meta {
 //				if(parameter.IsAssignableFrom(oMeta.GetType())) {
 //					return oMeta;
 //				}
-//				else if((parameter.IsSubclassOf(typTargetof(Delegate))
-//					||parameter.Equals(typTargetof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
+//				else if((parameter.IsSubclassOf(tTargetof(Delegate))
+//					||parameter.Equals(tTargetof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
 //					MethodInfo m=parameter.GetMethod("Invoke",BindingFlags.Instance
 //						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
 //					Delegate del=delFromF(parameter,m,(Map)oMeta);
@@ -2108,64 +2108,59 @@ namespace Meta {
 //			}
 			public object oCallO(object oArgument) {
 				object oResult=null;
-				// TODO: check this for every method:
-				// introduce own methodinfo class? that does the calling, maybe??? dynamic cast might become a performance
+				// TODO: check this for every meb:
+				// introduce own mebinfo class? that does the calling, maybe??? dynamic cast might become a performance
 				// problem, but I doubt it, so what?
 				if(bLibraryMethod) {
-					if(arrMeb[0] is ConstructorInfo) {
-						// TODO: Comment this properly: kcall arrMeb without oArguments, ugly and redundant, because Invoke is not compatible between
-						// constructor and normal method
-						oResult=((ConstructorInfo)arrMeb[0]).Invoke(new object[] {oArgument}); 
+					if(arMtbOverloadedMethods[0] is ConstructorInfo) {
+						// TODO: Comment this properly: kcall arMtbOverloadedMethods without oArguments, ugly and redundant, because Invoke is not compatible between
+						// constructor and normal meb
+						oResult=((ConstructorInfo)arMtbOverloadedMethods[0]).Invoke(new object[] {oArgument}); 
 					}
 					else {
 						try {
-							if(this.sName=="while") {
-								int asdf=0;
-							}
-							oResult=arrMeb[0].Invoke(oTarget,new object[] {oArgument});
+							oResult=arMtbOverloadedMethods[0].Invoke(ojTarget,new object[] {oArgument});
 						}
 						catch {
-							throw new ApplicationException("Could not invoke "+this.sName+".");
+							throw new ApplicationException("Could not invoke "+sName+".");
 						}
 					}
 				}
 				else {
-					ArrayList oArgumentList=((IMap)oArgument).IntKeyValues;
-					object returnValue=null;
-					ArrayList sameLengthMethods=new ArrayList();
-					foreach(MethodBase method in arrMeb) {
-						if(oArgumentList.Count==method.GetParameters().Length) { // don't match if different parameter list length
-							if(oArgumentList.Count==((IMap)oArgument).Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
-								sameLengthMethods.Add(method);
+					ArrayList arlOArguments=((IMap)oArgument).IntKeyValues;
+					object oReturn=null;
+					ArrayList arlMtifRightNumberArguments=new ArrayList();
+					foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
+						if(arlOArguments.Count==mtbCurrent.GetParameters().Length) { // don't match if different parameter list length
+							if(arlOArguments.Count==((IMap)oArgument).Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
+								arlMtifRightNumberArguments.Add(mtbCurrent);
 							}
 						}
 					}
-					bool executed=false;
-					foreach(MethodBase method in sameLengthMethods) {
-						ArrayList args=new ArrayList();
-						bool oArgumentsMatched=true;
-						ParameterInfo[] parameters=method.GetParameters();
-						for(int i=0;oArgumentsMatched && i<parameters.Length;i++) {
-							args.Add(oConvertParameterOTypOutB(oArgumentList[i],parameters[i].ParameterType,out oArgumentsMatched));
+					bool bExecuted=false;
+					foreach(MethodBase mtbs in arlMtifRightNumberArguments) {
+						ArrayList alstArguments=new ArrayList();
+						bool bArgumentsMatched=true;
+						ParameterInfo[] parameters=mtbs.GetParameters();
+						for(int i=0;bArgumentsMatched && i<parameters.Length;i++) {
+							alstArguments.Add(oConvertParameterOTypOutB(arlOArguments[i],parameters[i].ParameterType,out bArgumentsMatched));
 						}
-						if(oArgumentsMatched) {
-							if(method is ConstructorInfo) {
-								returnValue=((ConstructorInfo)method).Invoke(args.ToArray());
+						if(bArgumentsMatched) {
+							if(mtbs is ConstructorInfo) {
+								oReturn=((ConstructorInfo)mtbs).Invoke(alstArguments.ToArray());
 							}
 							else {
-								if(method.Name.Equals("Invoke")) {
-									int asdf=0;
-								}
-								returnValue=method.Invoke(oTarget,args.ToArray());
+								oReturn=mtbs.Invoke(ojTarget,alstArguments.ToArray());
 							}
-							executed=true;// remove, use oArgumentsMatched instead
+							bExecuted=true;// remove, use bArgumentsMatched instead
 							break;
 						}
 					}
-					oResult=returnValue; // mess, why is this here? put in else after the next if
+					// TODO: oResult / oReturn is duplication
+					oResult=oReturn; // mess, why is this here? put in else after the next if
 					// make this safe
-					if(!executed && arrMeb[0] is ConstructorInfo) {
-						object o=new NetMethod(typTarget).oCallO(new Map());
+					if(!bExecuted && arMtbOverloadedMethods[0] is ConstructorInfo) {
+						object o=new NetMethod(tTarget).oCallO(new Map());
 						oResult=with(o,((Map)oArgument));
 					}
 				}		
@@ -2180,17 +2175,17 @@ namespace Meta {
 //				// introduce own methodinfo class? that does the calling, maybe??? dynamic cast might become a performance
 //				// problem, but I doubt it, so what?
 //				if(bLibraryMethod) {
-//					if(arrMeb[0] is ConstructorInfo) {
-//						// TODO: Comment this properly: kcall arrMeb without arguments, ugly and redundant, because Invoke is not compatible between
+//					if(arMtbOverloadedMethods[0] is ConstructorInfo) {
+//						// TODO: Comment this properly: kcall arMtbOverloadedMethods without arguments, ugly and redundant, because Invoke is not compatible between
 //						// constructor and normal method
-//						result=((ConstructorInfo)arrMeb[0]).Invoke(new object[] {argument}); 
+//						result=((ConstructorInfo)arMtbOverloadedMethods[0]).Invoke(new object[] {argument}); 
 //					}
 //					else {
 //						try {
 //							if(this.sName=="while") {
 //								int asdf=0;
 //							}
-//							result=arrMeb[0].Invoke(oTarget,new object[] {argument});
+//							result=arMtbOverloadedMethods[0].Invoke(ojTarget,new object[] {argument});
 //						}
 //						catch {
 //							throw new ApplicationException("Could not invoke "+this.sName+".");
@@ -2201,7 +2196,7 @@ namespace Meta {
 //					ArrayList argumentList=((IMap)argument).IntKeyValues;
 //					object returnValue=null;
 //					ArrayList sameLengthMethods=new ArrayList();
-//					foreach(MethodBase method in arrMeb) {
+//					foreach(MethodBase method in arMtbOverloadedMethods) {
 //						if(argumentList.Count==method.GetParameters().Length) { // don't match if different parameter list length
 //							if(argumentList.Count==((IMap)argument).Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
 //								sameLengthMethods.Add(method);
@@ -2224,7 +2219,7 @@ namespace Meta {
 //								if(method.sName.Equals("Invoke")) {
 //									int asdf=0;
 //								}
-//								returnValue=method.Invoke(oTarget,args.ToArray());
+//								returnValue=method.Invoke(ojTarget,args.ToArray());
 //							}
 //							executed=true;// remove, use argumentsMatched instead
 //							break;
@@ -2232,8 +2227,8 @@ namespace Meta {
 //					}
 //					result=returnValue; // mess, why is this here? put in else after the next if
 //					// make this safe
-//					if(!executed && arrMeb[0] is ConstructorInfo) {
-//						object o=new NetMethod(typTarget).oCallO(new Map());
+//					if(!executed && arMtbOverloadedMethods[0] is ConstructorInfo) {
+//						object o=new NetMethod(tTarget).oCallO(new Map());
 //						result=with(o,((Map)argument));
 //					}
 //				}		
@@ -2254,7 +2249,7 @@ namespace Meta {
 //				}
 //				return obj;
 //			}
-			/* Create a delegate of a certain typTarget that calls a Meta function. */
+			/* Create a delegate of a certain tTarget that calls a Meta function. */
 			public static Delegate delFromF(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
 				code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
@@ -2323,7 +2318,7 @@ namespace Meta {
 //					returnTypeName="object";
 //				}
 //				else {
-//					returnTypeName=method.ReturnType.Equals(typTargetof(void)) ? "void":method.ReturnType.FullName;
+//					returnTypeName=method.ReturnType.Equals(tTargetof(void)) ? "void":method.ReturnType.FullName;
 //				}
 //				string source="using System;using Meta.Types;using Meta.Execution;";
 //				source+="public class EventHandlerContainer{public "+returnTypeName+" EventHandlerMethod";
@@ -2345,9 +2340,9 @@ namespace Meta {
 //				source+=argumentAdding;
 //				source+="object result=callable.oCallO(arg);";
 //				if(method!=null) {
-//					if(!method.ReturnType.Equals(typTargetof(void))) {
+//					if(!method.ReturnType.Equals(tTargetof(void))) {
 //						source+="return ("+returnTypeName+")";
-//						source+="Interpreter.ConvertMetaToDotNet(result,typTargetof("+returnTypeName+"));"; // does conversion even make sense here? Must be outBConverted back anyway.
+//						source+="Interpreter.ConvertMetaToDotNet(result,tTargetof("+returnTypeName+"));"; // does conversion even make sense here? Must be outBConverted back anyway.
 //					}
 //				}
 //				else {
@@ -2357,56 +2352,56 @@ namespace Meta {
 //				source+="}";
 //				source+="private Map callable;";
 //				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-//				string oMetaDllLocation=Assembly.GetAssembly(typTargetof(Map)).Location;
+//				string oMetaDllLocation=Assembly.GetAssembly(tTargetof(Map)).Location;
 //				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",oMetaDllLocation});
 //				assemblyNames.AddRange(Interpreter.loadedAssemblies);
-//				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typTargetof(string)));
+//				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(tTargetof(string)));
 //				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
 //				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
-//				object container=containerClass.GetConstructor(new Type[]{typTargetof(Map)}).Invoke(new object[] {
+//				object container=containerClass.GetConstructor(new Type[]{tTargetof(Map)}).Invoke(new object[] {
 //																																			  code});
 //				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
 //				if(method==null) {
-//					delegateType=typTargetof(DelegateCreatedForGenericDelegates);
+//					delegateType=tTargetof(DelegateCreatedForGenericDelegates);
 //				}
 //				Delegate del=Delegate.delFromF(delegateType,
 //					container,"EventHandlerMethod");
 //				return del;
 //			}
-			private void Initialize(string sName,object oTarget,Type typTarget) {
+			private void nInitializeSOjT(string sName,object ojTarget,Type tTarget) {
 				this.sName=sName;
-				this.oTarget=oTarget;
-				this.typTarget=typTarget;
-				ArrayList list;
+				this.ojTarget=ojTarget;
+				this.tTarget=tTarget;
+				ArrayList arlMtbMethods;
 				if(sName==".ctor") {
-					list=new ArrayList(typTarget.GetConstructors());
+					arlMtbMethods=new ArrayList(tTarget.GetConstructors());
 				}
 				else {
-					list=new ArrayList(typTarget.GetMember(sName,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+					arlMtbMethods=new ArrayList(tTarget.GetMember(sName,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
 				}
-				list.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
+				arlMtbMethods.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
 				// found out, it's for Console.WriteLine, where Console.WriteLine(object)
 				// would otherwise come before Console.WriteLine(string)
 				// not a good solution, though
 
 				// TODO: Get rid of this Reversion shit! Find a fix for this problem. Need to think about
-				// it. maybe restrict overloads, create preference list, all quite complicated
-				// research the number and nature of such arrMeb as Console.WriteLine
-				arrMeb=(MethodBase[])list.ToArray(typeof(MethodBase));
-				if(arrMeb.Length==1 && arrMeb[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
+				// it. maybe restrict overloads, create preference arlMtbMethods, all quite complicated
+				// research the number and nature of such arMtbOverloadedMethods as Console.WriteLine
+				arMtbOverloadedMethods=(MethodBase[])arlMtbMethods.ToArray(typeof(MethodBase));
+				if(arMtbOverloadedMethods.Length==1 && arMtbOverloadedMethods[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
 					this.bLibraryMethod=true;
 				}
 			}
-//			private void Initialize(string name,object oTarget,Type typTarget) {
+//			private void Initialize(string name,object ojTarget,Type tTarget) {
 //				this.sName=name;
-//				this.oTarget=oTarget;
-//				this.typTarget=typTarget;
+//				this.ojTarget=ojTarget;
+//				this.tTarget=tTarget;
 //				ArrayList list;
 //				if(name==".ctor") {
-//					list=new ArrayList(typTarget.GetConstructors());
+//					list=new ArrayList(tTarget.GetConstructors());
 //				}
 //				else {
-//					list=new ArrayList(typTarget.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+//					list=new ArrayList(tTarget.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
 //				}
 //				list.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
 //				// found out, it's for Console.WriteLine, where Console.WriteLine(object)
@@ -2415,37 +2410,42 @@ namespace Meta {
 //
 //				// TODO: Get rid of this Reversion shit! Find a fix for this problem. Need to think about
 //				// it. maybe restrict overloads, create preference list, all quite complicated
-//				// research the number and nature of such arrMeb as Console.WriteLine
-//				arrMeb=(MethodBase[])list.ToArray(typTargetof(MethodBase));
-//				if(arrMeb.Length==1 && arrMeb[0].GetCustomAttributes(typTargetof(MetaLibraryMethodAttribute),false).Length!=0) {
+//				// research the number and nature of such arMtbOverloadedMethods as Console.WriteLine
+//				arMtbOverloadedMethods=(MethodBase[])list.ToArray(tTargetof(MethodBase));
+//				if(arMtbOverloadedMethods.Length==1 && arMtbOverloadedMethods[0].GetCustomAttributes(tTargetof(MetaLibraryMethodAttribute),false).Length!=0) {
 //					this.bLibraryMethod=true;
 //				}
 //			}
-			public NetMethod(string name,object oTarget,Type typTarget) {
-				this.Initialize(name,oTarget,typTarget);
+			public NetMethod(string name,object ojTarget,Type tTarget) {
+				this.nInitializeSOjT(name,ojTarget,tTarget);
 			}
-//			public NetMethod(string name,object oTarget,Type typTarget) {
-//				this.Initialize(name,oTarget,typTarget);
+//			public NetMethod(string name,object ojTarget,Type tTarget) {
+//				this.Initialize(name,ojTarget,tTarget);
 //			}
-			public NetMethod(Type typTarget) {
-				this.Initialize(".ctor",null,typTarget);
+			public NetMethod(Type tTarget) {
+				this.nInitializeSOjT(".ctor",null,tTarget);
 			}
-//			public NetMethod(Type typTarget) {
-//				this.Initialize(".ctor",null,typTarget);
+//			public NetMethod(Type tTarget) {
+//				this.Initialize(".ctor",null,tTarget);
 //			}
-			public override bool Equals(object obj) {
-				if(obj is NetMethod) {
-					NetMethod method=(NetMethod)obj;
-					if(method.oTarget==oTarget && method.sName.Equals(sName) && method.typTarget.Equals(typTarget)) {
+			public override bool Equals(object ojToCompare) {
+				if(ojToCompare is NetMethod) {
+					NetMethod nmtToCompare=(NetMethod)ojToCompare;
+					if(nmtToCompare.ojTarget==ojTarget && nmtToCompare.sName.Equals(sName) && nmtToCompare.tTarget.Equals(tTarget)) {
 						return true;
 					}
+					else {
+						return false;
+					}
 				}
-				return false;
+				else {
+					return false;
+				}
 			}
 //			public override bool Equals(object obj) {
 //				if(obj is NetMethod) {
 //					NetMethod method=(NetMethod)obj;
-//					if(method.oTarget==oTarget && method.sName.Equals(name) && method.typTarget.Equals(typTarget)) {
+//					if(method.ojTarget==ojTarget && method.sName.Equals(name) && method.tTarget.Equals(tTarget)) {
 //						return true;
 //					}
 //				}
@@ -2453,31 +2453,32 @@ namespace Meta {
 //			}
 			public override int GetHashCode() {
 				unchecked {
-					int hash=sName.GetHashCode()*typTarget.GetHashCode();
-					if(oTarget!=null) {
-						hash=hash*oTarget.GetHashCode();
+					int itgHash=sName.GetHashCode()*tTarget.GetHashCode();
+					if(ojTarget!=null) {
+						itgHash=itgHash*ojTarget.GetHashCode();
 					}
-					return hash;
+					return itgHash;
 				}
 			}
 //			public override int GetHashCode() {
 //				unchecked {
-//					int hash=name.GetHashCode()*typTarget.GetHashCode();
-//					if(oTarget!=null) {
-//						hash=hash*oTarget.GetHashCode();
+//					int hash=name.GetHashCode()*tTarget.GetHashCode();
+//					if(ojTarget!=null) {
+//						hash=hash*ojTarget.GetHashCode();
 //					}
 //					return hash;
 //				}
 //			}
 			private string sName;
-			protected object oTarget;
-			protected Type typTarget;
-			public MethodBase[] arrMeb;
+			protected object ojTarget;
+			protected Type tTarget;
+
+			public MethodBase[] arMtbOverloadedMethods;
 
 //			private string name;
-//			protected object oTarget;
-//			protected Type typTarget;
-//			public MethodBase[] arrMeb;
+//			protected object ojTarget;
+//			protected Type tTarget;
+//			public MethodBase[] arMtbOverloadedMethods;
 
 		}
 //		public class NetMethod: ICallable {
