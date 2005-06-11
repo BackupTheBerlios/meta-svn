@@ -605,11 +605,11 @@ _loop78_breakloop:				;
 						
 											// TODO: Simplify!!, use astFactory
 										    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
-										    autokeyToken.setLine(statement_AST.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-										    autokeyToken.setColumn(statement_AST.Extent.startColumn); 
-										    autokeyToken.FileName=statement_AST.Extent.fileName;
-										    autokeyToken.EndLine=statement_AST.Extent.endLine;
-										    autokeyToken.EndColumn=statement_AST.Extent.endColumn;
+										    autokeyToken.setLine(statement_AST.EtExtent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+										    autokeyToken.setColumn(statement_AST.EtExtent.startColumn); 
+										    autokeyToken.FileName=statement_AST.EtExtent.fileName;
+										    autokeyToken.EndLine=statement_AST.EtExtent.endLine;
+										    autokeyToken.EndColumn=statement_AST.EtExtent.endColumn;
 										    MetaAST autokeyAst=new MetaAST(autokeyToken);
 										    autokeyAst.setText(Counters.autokey.Peek().ToString());
 						statement_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(KEY)).add((AST)autokeyAst))).add((AST)statement_AST));
@@ -654,11 +654,11 @@ _loop78_breakloop:				;
 					// TODO: Simplify this, factor this out into a method? Add some functionality for this stuff? Maybe to MetAST?
 					MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
 					
-					runToken.setLine(delayed_AST.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-					runToken.setColumn(delayed_AST.Extent.startColumn); 
-					runToken.FileName=delayed_AST.Extent.fileName;
-					runToken.EndLine=delayed_AST.Extent.endLine;
-					runToken.EndColumn=delayed_AST.Extent.endColumn;
+					runToken.setLine(delayed_AST.EtExtent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+					runToken.setColumn(delayed_AST.EtExtent.startColumn); 
+					runToken.FileName=delayed_AST.EtExtent.fileName;
+					runToken.EndLine=delayed_AST.EtExtent.endLine;
+					runToken.EndColumn=delayed_AST.EtExtent.endColumn;
 					
 					
 					MetaAST runAst=new MetaAST(runToken);

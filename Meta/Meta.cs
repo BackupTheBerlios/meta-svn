@@ -51,7 +51,7 @@ namespace Meta {
 //			}
 			public abstract object OjEvaluateM(IMap parent);
 			Extent extent;
-			public Extent Extent {
+			public Extent EtExtent{
 				get {
 
 					return extent;
@@ -146,22 +146,22 @@ namespace Meta {
 		}
 		public class Search: Expression {
 			public Search(Map mSearch) {
-				this.epsKey=(Expression)((Map)mSearch[searchString]).EpsCompileV();
+				this.epsKey=(Expression)((Map)mSearch[sSearch]).EpsCompileV();
 			}
 			public Expression epsKey;
 			public static readonly Map sKey=new Map("key");
-			public override object OjEvaluateM(IMap parent) {
-				object k=epsKey.OjEvaluateM(parent);
-				IMap selected=parent;
-				while(!selected.ContainsKey(k)) {
-					selected=selected.mParent;
-					if(selected==null) {
-						throw new KeyNotFoundException(k,this.Extent);
+			public override object OjEvaluateM(IMap mParent) {
+				object ojKey=epsKey.OjEvaluateM(mParent);
+				IMap mSelected=mParent;
+				while(!mSelected.blaHasKeyOj(ojKey)) {
+					mSelected=mSelected.mParent;
+					if(mSelected==null) {
+						throw new KeyNotFoundException(ojKey,this.EtExtent);
 					}
 				}
-				return selected[k];
+				return mSelected[ojKey];
 			}
-			public static readonly Map searchString=new Map("search");
+			public static readonly Map sSearch=new Map("search");
 		}
 
 		// right-side selection, which is more flexible than that on the left
@@ -192,7 +192,7 @@ namespace Meta {
 //					}
 					selected=((IKeyValue)selected)[k];
 					if(selected==null) {
-						throw new KeyDoesNotExistException(k,this.Extent);
+						throw new KeyDoesNotExistException(k,this.EtExtent);
 					}
 				}
 				return selected;
@@ -212,7 +212,7 @@ namespace Meta {
 //					}
 					selected=((IKeyValue)selected)[k];
 					if(selected==null) {
-						throw new KeyDoesNotExistException(k,((Expression)keys[i]).Extent);
+						throw new KeyDoesNotExistException(k,((Expression)keys[i]).EtExtent);
 					}
 					if(!(selected is IKeyValue)) {
 						selected=new NetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
@@ -310,7 +310,7 @@ namespace Meta {
 				Map result=new Map();//use clone here?
 				foreach(IKeyValue map in maps) {
 					foreach(DictionaryEntry entry in (IKeyValue)map) {
-						if(entry.Value is IKeyValue && !(entry.Value is NetClass)&& result.ContainsKey(entry.Key) 
+						if(entry.Value is IKeyValue && !(entry.Value is NetClass)&& result.blaHasKeyOj(entry.Key) 
 							&& result[entry.Key] is IKeyValue && !(result[entry.Key] is NetClass)) {
 							result[entry.Key]=Merge((IKeyValue)result[entry.Key],(IKeyValue)entry.Value);
 						}
@@ -1192,7 +1192,7 @@ namespace Meta {
 			int Count {
 				get;
 			}
-			bool ContainsKey(object key);			
+			bool blaHasKeyOj(object key);			
 		}		
 		/* Represents a lazily evaluated "library" Meta file. */
 		public class MetaLibrary { // TODO: Put this into Library class, make base class for everything that gets loaded
@@ -1249,11 +1249,11 @@ namespace Meta {
 				}
 			}
 			public Map cache;
-			public bool ContainsKey(object key) {
+			public bool blaHasKeyOj(object key) {
 				if(cache==null) {
 					Load();
 				}
-				return cache.ContainsKey(key);
+				return cache.blaHasKeyOj(key);
 			}
 			public IEnumerator GetEnumerator() {
 				if(cache==null) {
@@ -1290,7 +1290,7 @@ namespace Meta {
 //					if(key.Equals(new Map("map"))) {
 //						int asdf=0;
 //					}
-					if(cash.ContainsKey(key)) {
+					if(cash.blaHasKeyOj(key)) {
 						if(cash[key] is MetaLibrary) {
 							cash[key]=((MetaLibrary)cash[key]).Load();
 						}
@@ -1317,8 +1317,8 @@ namespace Meta {
 					return cash.Count;
 				}
 			}
-			public bool ContainsKey(object key) {
-				return cash.ContainsKey(key);
+			public bool blaHasKeyOj(object key) {
+				return cash.blaHasKeyOj(key);
 			}
 			public ArrayList IntKeyValues {
 				get {
@@ -1348,7 +1348,7 @@ namespace Meta {
 							ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
 							subPaths.RemoveAt(subPaths.Count-1);
 							foreach(string subPath in subPaths)  {
-								if(!position.ContainsKey(new Map(subPath)))  {
+								if(!position.blaHasKeyOj(new Map(subPath)))  {
 									position[new Map(subPath)]=new Map();
 								}
 								position=(Map)position[new Map(subPath)];
@@ -1404,7 +1404,7 @@ namespace Meta {
 			private Map assemblyInfo=new Map();
 			public ArrayList GetNamespaces(Assembly assembly) { //refactor, integrate into LoadNamespaces???
 				ArrayList namespaces=new ArrayList();
-				if(assemblyInfo.ContainsKey(new Map(assembly.Location))) {
+				if(assemblyInfo.blaHasKeyOj(new Map(assembly.Location))) {
 					Map info=(Map)assemblyInfo[new Map(assembly.Location)];
 					string timestamp=((Map)info[new Map("timestamp")]).SDotNetStringV();
 					if(timestamp.Equals(File.GetCreationTime(assembly.Location).ToString())) {
@@ -1590,42 +1590,42 @@ namespace Meta {
 				Map clone=table.CloneMap();
 				clone.mParent=mParent;
 				clone.compiled=compiled;
-				clone.Extent=Extent;
+				clone.EtExtent=EtExtent;
 				return clone;
 			}
 			public Expression EpsCompileV()  { // compiled Statements are not cached, only expressions
 				if(compiled==null)  {
-					if(this.ContainsKey(Meta.Execution.Call.sCall)) {
+					if(this.blaHasKeyOj(Meta.Execution.Call.sCall)) {
 						compiled=new Call(this);
 					}
-					else if(this.ContainsKey(Delayed.sDelayed)) { // TODO: could be optimized, but compilation happens seldom
+					else if(this.blaHasKeyOj(Delayed.sDelayed)) { // TODO: could be optimized, but compilation happens seldom
 						compiled=new Delayed(this);
 					}
-					else if(this.ContainsKey(Program.sProgram)) {
+					else if(this.blaHasKeyOj(Program.sProgram)) {
 						compiled=new Program(this);
 					}
-					else if(this.ContainsKey(Literal.sLiteral)) {
+					else if(this.blaHasKeyOj(Literal.sLiteral)) {
 						compiled=new Literal(this);
 					}
-					else if(this.ContainsKey(Search.searchString)) {// TODO: use static expression strings
+					else if(this.blaHasKeyOj(Search.sSearch)) {// TODO: use static expression strings
 						compiled=new Search(this);
 					}
-					else if(this.ContainsKey(Select.selectString)) {
+					else if(this.blaHasKeyOj(Select.selectString)) {
 						compiled=new Select(this);
 					}
 					else {
 						throw new ApplicationException("Cannot compile non-code map.");
 					}
 				}
-//				if(this.Extent!=null) {
+//				if(this.EtExtent!=null) {
 //					int asdf=0;
 //				}		
 //				if(compiled is Expression) {
-					((Expression)compiled).Extent=this.Extent;
+					((Expression)compiled).EtExtent=this.EtExtent;
 //				}
 				return compiled;
 			}
-			public bool ContainsKey(object key)  {
+			public bool blaHasKeyOj(object key)  {
 				if(key is Map) {
 					if(key.Equals(argString)) {
 						return this.Argument!=null;
@@ -1662,7 +1662,7 @@ namespace Meta {
 			private int hash;
 
 			Extent extent;
-			public Extent Extent {
+			public Extent EtExtent {
 				get {
 					return extent;
 				}
@@ -2898,7 +2898,7 @@ namespace Meta {
 		}
 		/* Base class for NetObject and NetClass. */
 		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial {
-			public bool ContainsKey(object key) {
+			public bool blaHasKeyOj(object key) {
 				if(key is Map) {
 					if(((Map)key).IsString) {
 						string text=((Map)key).SDotNetStringV();

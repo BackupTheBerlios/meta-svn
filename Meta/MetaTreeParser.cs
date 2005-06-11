@@ -139,7 +139,7 @@ namespace Meta.Parser
 		MetaAST call_AST_in = (MetaAST)_t;
 		
 		result=new Map();
-		result.Extent=call_AST_in.Extent;
+		result.EtExtent=call_AST_in.EtExtent;
 		Map call=new Map();
 		Map delayed=new Map();
 		Map argument=new Map();
@@ -175,7 +175,7 @@ namespace Meta.Parser
 		MetaAST map_AST_in = (MetaAST)_t;
 		
 		result=new Map();
-		result.Extent=map_AST_in.Extent;
+		result.EtExtent=map_AST_in.EtExtent;
 		Map statements=new Map();
 		Map s=null;
 		int counter=1;
@@ -223,7 +223,7 @@ _loop122_breakloop:			;
 		MetaAST select_AST_in = (MetaAST)_t;
 		
 		result=new Map();
-		result.Extent=select_AST_in.Extent;
+		result.EtExtent=select_AST_in.EtExtent;
 		Map selection=new Map();
 		Map key=null;
 		int counter=1;
@@ -276,7 +276,7 @@ _loop131_breakloop:			;
 		
 				result=new Map();
 				Map lookupResult=null;
-				result.Extent=search_AST_in.Extent;
+				result.EtExtent=search_AST_in.EtExtent;
 				Map e=null;
 			
 		
@@ -289,7 +289,7 @@ _loop131_breakloop:			;
 		_t = __t133;
 		_t = _t.getNextSibling();
 		
-				result[Search.searchString]=e;
+				result[Search.sSearch]=e;
 			
 		retTree_ = _t;
 		return result;
@@ -303,7 +303,7 @@ _loop131_breakloop:			;
 		MetaAST token = null;
 		
 		result=new Map();
-		result.Extent=literal_AST_in.Extent;
+		result.EtExtent=literal_AST_in.EtExtent;
 		
 		
 		token = (_t==ASTNULL) ? null : (MetaAST)_t;
@@ -323,7 +323,7 @@ _loop131_breakloop:			;
 		MetaAST delayed_AST_in = (MetaAST)_t;
 		
 		result=new Map();
-		result.Extent=delayed_AST_in.Extent;
+		result.EtExtent=delayed_AST_in.EtExtent;
 		Map mExpression;
 		Map mRun=new Map();
 		

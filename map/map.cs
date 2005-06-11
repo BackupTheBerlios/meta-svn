@@ -41,7 +41,7 @@ public class map {
 //	}
 	public static bool bHasKeyMO(Map map,object key) {
 		string a="";
-		return map.ContainsKey(key);
+		return map.blaHasKeyOj(key);
 	}
 	public static int iCountM(Map map) {
 		return map.Count;
