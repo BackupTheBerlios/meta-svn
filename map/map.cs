@@ -102,6 +102,13 @@ public class map {
 	public static IKeyValue mMergeAm(Map arg) {
 		return (Map)Interpreter.MergeCollection(arg.IntKeyValues);
 	}
+	public static object oWithOM(object obj,IMap map) {
+		NetObject netObject=new NetObject(obj);
+		foreach(DictionaryEntry entry in map) {
+			netObject[entry.Key]=entry.Value;
+		}
+		return obj;
+	}
 	// integrate this into .NET constructor in NetClass, which is cleaner
 	// possibly remove completely, let's see how the editor turns out
 //	public static object with(object obj,IMap map) {

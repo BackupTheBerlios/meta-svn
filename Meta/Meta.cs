@@ -344,7 +344,7 @@ namespace Meta {
 				}
 				return null;
 			}
-			public static object ConvertDotNetTojMeta(object obj) { 
+			public static object ConvertDotNetToMeta(object obj) { 
 				if(obj==null) {
 					return null;
 				}
@@ -1493,10 +1493,10 @@ namespace Meta {
 			}
 			public object this[object key] {
 				get {
-					return Interpreter.ConvertMetaToDotNet(map[Interpreter.ConvertDotNetTojMeta(key)]);
+					return Interpreter.ConvertMetaToDotNet(map[Interpreter.ConvertDotNetToMeta(key)]);
 				}
 				set {
-					this.map[Interpreter.ConvertDotNetTojMeta(key)]=Interpreter.ConvertDotNetTojMeta(value);
+					this.map[Interpreter.ConvertDotNetToMeta(key)]=Interpreter.ConvertDotNetToMeta(value);
 				}
 			}
 		}
@@ -2106,15 +2106,48 @@ namespace Meta {
 //				outblaConverted=false;
 //				return null;
 //			}
+			public object ojCallSingleArgumentOjOutbla(object ojArgument,out bool outblaCalled) {
+				outblaCalled=true;
+				try {
+					Map mArgument=new Map();
+					mArgument[new Integer(1)]=ojArgument;
+					return ojCallMultiArgumentOj(mArgument);
+				}
+				catch {
+					outblaCalled=false;
+					return null;
+				}
+			}
 			public object ojCallOj(object ojArgument) {
+				bool outblaCalled=false;
+				object ojResult;
+//				ojResult=ojCallSingleArgumentOjOutbla(ojArgument,out outblaCalled);
+//				if(!outblaCalled) {
+					ojResult=ojCallMultiArgumentOj(ojArgument);
+//				}
+				//ojResult=ojCallMultiArgumentOj(ojArgument);
+				return ojResult;
+			}
+//			public object ojCallOj(object ojArgument) {
+//				bool outblaCalled=false;
+//				object ojResult;
+//				ojResult=ojCallSingleArgumentOjOutbla(ojArgument,out outblaCalled);
+//				if(!outblaCalled) {
+//					ojResult=ojCallMultiArgumentOj(ojArgument);
+//				}
+//				return ojResult;
+//			}
+			public object ojCallMultiArgumentOj(object ojArgument) {
+				if(tTarget.Name.EndsWith("PositionalNoConversion")) {
+					int asdf=0;
+				}
 				object ojResult=null;
 				// TODO: check this for every meb:
 				// introduce own mebinfo class? that does the calling, maybe??? dynamic cast might become a performance
 				// problem, but I doubt it, so what?
 				if(blaLibraryMethod) {
 					if(arMtbOverloadedMethods[0] is ConstructorInfo) {
-						// TODO: Comment this properly: kcall arMtbOverloadedMethods without ojArguments, ugly and redundant, because Invoke is not compatible between
-						// constructor and normal meb
+						// TODO: remove this
 						ojResult=((ConstructorInfo)arMtbOverloadedMethods[0]).Invoke(new object[] {ojArgument}); 
 					}
 					else {
@@ -2136,6 +2169,9 @@ namespace Meta {
 								arlMtifRightNumberArguments.Add(mtbCurrent);
 							}
 						}
+					}
+					if(arlMtifRightNumberArguments.Count==0) {
+						int asdf=0;//throw new ApplicationException("No methods with the right number of arguments.");// TODO: Just a quickfix, really
 					}
 					bool blaExecuted=false;
 					foreach(MethodBase mtbCurrent in arlMtifRightNumberArguments) {
@@ -2159,12 +2195,16 @@ namespace Meta {
 					// TODO: ojResult / ojReturn is duplication
 					ojResult=ojReturn; // mess, why is this here? put in else after the next if
 					// make this safe
-					if(!blaExecuted && arMtbOverloadedMethods[0] is ConstructorInfo) {
-						object ojToBeInitialized=new NetMethod(tTarget).ojCallOj(new Map());
-						ojResult=with(ojToBeInitialized,((Map)ojArgument));
-					}
+//					if(!blaExecuted && arMtbOverloadedMethods[0] is ConstructorInfo) { // TODO: why is this needed, can't constructors be called normally? Ah, now I get it, this is for automatical initializing of new classes. This is, however, very confusing, and should, in my opinion be remove, if possible into a library. .NET stuff will not be used directly as often as I first thought, I think, so this stuff isn't so important
+//						object ojToBeInitialized=new NetMethod(tTarget).ojCallMultiArgumentOj(new Map());
+//						//						object ojToBeInitialized=new NetMethod(tTarget).ojCallOj(new Map());
+//						ojResult=with(ojToBeInitialized,((Map)ojArgument));
+//					}// TODO: somehow determine if no method has been called at all and throw an exception then
+//					else if(arlMtifRightNumberArguments.Count==0) {
+//						throw new ApplicationException("Method "+sName+" could not be invoked.");
+//					}
 				}		
-				return Interpreter.ConvertDotNetTojMeta(ojResult);
+				return Interpreter.ConvertDotNetToMeta(ojResult);
 			}
 //			public object ojCallOj(object argument) {
 //				if(this.sName=="Write") {
@@ -2232,16 +2272,16 @@ namespace Meta {
 //						result=with(o,((Map)argument));
 //					}
 //				}		
-//				return Interpreter.ConvertDotNetTojMeta(result);
+//				return Interpreter.ConvertDotNetToMeta(result);
 //			}
 			// TODO: Refactor, include 
-			public static object with(object obj,IMap map) {
-				NetObject netObject=new NetObject(obj);
-				foreach(DictionaryEntry entry in map) {
-					netObject[entry.Key]=entry.Value;
-				}
-				return obj;
-			}
+//			public static object with(object obj,IMap map) {
+//				NetObject netObject=new NetObject(obj);
+//				foreach(DictionaryEntry entry in map) {
+//					netObject[entry.Key]=entry.Value;
+//				}
+//				return obj;
+//			}
 //			public static object with(object obj,IMap map) {
 //				NetObject netObject=new NetObject(obj);
 //				foreach(DictionaryEntry entry in map) {
@@ -2606,7 +2646,7 @@ namespace Meta {
 //						result=with(o,((Map)argument));
 //					}
 //				}		
-//				return Interpreter.ConvertDotNetTojMeta(result);
+//				return Interpreter.ConvertDotNetToMeta(result);
 //			}
 //			// TODO: Refactor, include 
 //			public static object with(object obj,IMap map) {
@@ -2804,10 +2844,10 @@ namespace Meta {
 							}
 							if(members[0] is FieldInfo) {
 								// convert arrays to maps here?
-								return Interpreter.ConvertDotNetTojMeta(type.GetField(text).GetValue(obj));
+								return Interpreter.ConvertDotNetToMeta(type.GetField(text).GetValue(obj));
 							}
 							else if(members[0] is PropertyInfo) {
-								return Interpreter.ConvertDotNetTojMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
+								return Interpreter.ConvertDotNetToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
 							}
 							else if(members[0] is EventInfo) {
 								Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
@@ -2817,7 +2857,7 @@ namespace Meta {
 						}
 					}
 					if(this.obj!=null && key is Integer && this.type.IsArray) {
-						return Interpreter.ConvertDotNetTojMeta(((Array)obj).GetValue(((Integer)key).Int)); // TODO: add error handling here
+						return Interpreter.ConvertDotNetToMeta(((Array)obj).GetValue(((Integer)key).Int)); // TODO: add error handling here
 					}
 					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
 					Map arguments=new Map();
@@ -2897,7 +2937,7 @@ namespace Meta {
 					try {
 						indexer.ojCallOj(arguments);
 					}
-					catch(Exception) {
+					catch(Exception e) {
 						throw new ApplicationException("Cannot set "+key.ToString()+".");
 					}
 				}
@@ -2943,7 +2983,7 @@ namespace Meta {
 					if(obj!=null && obj is IEnumerable && !(obj is String)) { // is this useful?
 						foreach(object entry in (IEnumerable)obj) {
 							if(entry is DictionaryEntry) {
-								table[Interpreter.ConvertDotNetTojMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+								table[Interpreter.ConvertDotNetToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
 							}
 							else {
 								table[new Integer(counter)]=entry;

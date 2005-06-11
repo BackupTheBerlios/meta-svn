@@ -27,8 +27,10 @@ this=map.mMergeAm
 trimStartTest=sTrimStartS
 	"					hello"
 	'\\t
-form=System.Windows.Forms.Form
-	Text='hello
+form=oWithOM
+	System.Windows.Forms.Form'
+	=
+		Text='hello
 'ImpliedAutokey
 ='Autokey
 gacTest=System.Collections
