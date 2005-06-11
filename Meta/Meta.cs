@@ -1953,7 +1953,7 @@ namespace Meta {
 		public class MetaLibraryMethodAttribute:Attribute {
 		}
 		public class NetMethod: ICallable {
-			public bool isMetaLibraryMethod=false; // TODO: is this even needen anymore?
+			public bool bLibraryMethod=false; // TODO: is this even needen anymore?
 			// TODO: Move this to "With" ? Move this to NetContainer?
 			public static object oAssignCollectionOMRb(Map m,object o,out bool bSuccess) { // TODO: is bSuccess needed?
 				if(m.IntKeyValues.Count==0) {
@@ -1994,22 +1994,25 @@ namespace Meta {
 //
 //				return oldValue;
 //			}
-			public static object ConvertParameter(object meta,Type parameter,out bool converted) {
-				converted=true;
-				if(parameter.IsAssignableFrom(meta.GetType())) {
-					return meta;
+
+			// TODO: finally invent a Meta type??? Would be useful here for prefix to Meta,
+			// it isn't, after all just any object
+			public static object oConvertParameterOTypRb(object oMeta,Type typParameter,out bool outBConverted) {
+				outBConverted=true;
+				if(typParameter.IsAssignableFrom(oMeta.GetType())) {
+					return oMeta;
 				}
-				else if((parameter.IsSubclassOf(typeof(Delegate))
-					||parameter.Equals(typeof(Delegate))) && (meta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
-					MethodInfo m=parameter.GetMethod("Invoke",BindingFlags.Instance
+				else if((typParameter.IsSubclassOf(typeof(Delegate))
+					||typParameter.Equals(typeof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
+					MethodInfo m=typParameter.GetMethod("Invoke",BindingFlags.Instance
 						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-					Delegate del=CreateDelegate(parameter,m,(Map)meta);
+					Delegate del=CreateDelegate(typParameter,m,(Map)oMeta);
 					return del;
 				}
-				else if(parameter.IsArray && meta is IMap && ((Map)meta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
+				else if(typParameter.IsArray && oMeta is IMap && ((Map)oMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
 					try {
-						Type arrayType=parameter.GetElementType();
-						Map map=((Map)meta);
+						Type arrayType=typParameter.GetElementType();
+						Map map=((Map)oMeta);
 						ArrayList mapValues=map.IntKeyValues;
 						Array array=Array.CreateInstance(arrayType,mapValues.Count);
 						for(int i=0;i<mapValues.Count;i++) {
@@ -2021,15 +2024,51 @@ namespace Meta {
 					}
 				}
 				else {
-					bool isConverted; // TODO: refactor with converted
-					object result=Interpreter.ConvertMetaToDotNet(meta,parameter,out isConverted);
+					bool isConverted; // TODO: refactor with outBConverted
+					object result=Interpreter.ConvertMetaToDotNet(oMeta,typParameter,out isConverted);
 					if(isConverted) {
 						return result;
 					}
 				}
-				converted=false;
+				outBConverted=false;
 				return null;
 			}
+//			public static object oConvertParameterOTypRb(object oMeta,Type parameter,out bool outBConverted) {
+//				outBConverted=true;
+//				if(parameter.IsAssignableFrom(oMeta.GetType())) {
+//					return oMeta;
+//				}
+//				else if((parameter.IsSubclassOf(typeof(Delegate))
+//					||parameter.Equals(typeof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
+//					MethodInfo m=parameter.GetMethod("Invoke",BindingFlags.Instance
+//						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+//					Delegate del=CreateDelegate(parameter,m,(Map)oMeta);
+//					return del;
+//				}
+//				else if(parameter.IsArray && oMeta is IMap && ((Map)oMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
+//					try {
+//						Type arrayType=parameter.GetElementType();
+//						Map map=((Map)oMeta);
+//						ArrayList mapValues=map.IntKeyValues;
+//						Array array=Array.CreateInstance(arrayType,mapValues.Count);
+//						for(int i=0;i<mapValues.Count;i++) {
+//							array.SetValue(mapValues[i],i);
+//						}
+//						return array;
+//					}
+//					catch {
+//					}
+//				}
+//				else {
+//					bool isConverted; // TODO: refactor with outBConverted
+//					object result=Interpreter.ConvertMetaToDotNet(oMeta,parameter,out isConverted);
+//					if(isConverted) {
+//						return result;
+//					}
+//				}
+//				outBConverted=false;
+//				return null;
+//			}
 			public object oCallO(object argument) {
 				if(this.name=="Write") {
 					int asdf=0;
@@ -2038,7 +2077,7 @@ namespace Meta {
 				// TODO: check this for every method:
 				// introduce own methodinfo class? that does the calling, maybe??? dynamic cast might become a performance
 				// problem, but I doubt it, so what?
-				if(isMetaLibraryMethod) {
+				if(bLibraryMethod) {
 					if(methods[0] is ConstructorInfo) {
 						// TODO: Comment this properly: kcall methods without arguments, ugly and redundant, because Invoke is not compatible between
 						// constructor and normal method
@@ -2073,7 +2112,7 @@ namespace Meta {
 						bool argumentsMatched=true;
 						ParameterInfo[] parameters=method.GetParameters();
 						for(int i=0;argumentsMatched && i<parameters.Length;i++) {
-							args.Add(ConvertParameter(argumentList[i],parameters[i].ParameterType,out argumentsMatched));
+							args.Add(oConvertParameterOTypRb(argumentList[i],parameters[i].ParameterType,out argumentsMatched));
 						}
 						if(argumentsMatched) {
 							if(method is ConstructorInfo) {
@@ -2140,7 +2179,7 @@ namespace Meta {
 				if(method!=null) {
 					if(!method.ReturnType.Equals(typeof(void))) {
 						source+="return ("+returnTypeName+")";
-						source+="Interpreter.ConvertMetaToDotNet(result,typeof("+returnTypeName+"));"; // does conversion even make sense here? Must be converted back anyway.
+						source+="Interpreter.ConvertMetaToDotNet(result,typeof("+returnTypeName+"));"; // does conversion even make sense here? Must be outBConverted back anyway.
 					}
 				}
 				else {
@@ -2150,8 +2189,8 @@ namespace Meta {
 				source+="}";
 				source+="private Map callable;";
 				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-				string metaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
-				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
+				string oMetaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
+				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",oMetaDllLocation});
 				assemblyNames.AddRange(Interpreter.loadedAssemblies);
 				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
@@ -2187,7 +2226,7 @@ namespace Meta {
 				// research the number and nature of such methods as Console.WriteLine
 				methods=(MethodBase[])list.ToArray(typeof(MethodBase));
 				if(methods.Length==1 && methods[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
-					this.isMetaLibraryMethod=true;
+					this.bLibraryMethod=true;
 				}
 			}
 			public NetMethod(string name,object target,Type type) {
@@ -2221,7 +2260,7 @@ namespace Meta {
 
 		}
 //		public class NetMethod: ICallable {
-//			public bool isMetaLibraryMethod=false;
+//			public bool bLibraryMethod=false;
 //			// TODO: Move this to "With" ? Move this to NetContainer?
 //			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
 //
@@ -2243,7 +2282,7 @@ namespace Meta {
 //
 //				return oldValue;
 //			}
-//			public static object ConvertParameter(object meta,Type parameter,out bool converted) {
+//			public static object oConvertParameterOTypRb(object meta,Type parameter,out bool converted) {
 //				converted=true;
 //				if(parameter.IsAssignableFrom(meta.GetType())) {
 //					return meta;
@@ -2287,7 +2326,7 @@ namespace Meta {
 //				// TODO: check this for every method:
 //				// introduce own methodinfo class? that does the calling, maybe??? dynamic cast might become a performance
 //				// problem, but I doubt it, so what?
-//				if(isMetaLibraryMethod) {
+//				if(bLibraryMethod) {
 //					if(methods[0] is ConstructorInfo) {
 //						// TODO: Comment this properly: kcall methods without arguments, ugly and redundant, because Invoke is not compatible between
 //						// constructor and normal method
@@ -2322,7 +2361,7 @@ namespace Meta {
 //						bool argumentsMatched=true;
 //						ParameterInfo[] parameters=method.GetParameters();
 //						for(int i=0;argumentsMatched && i<parameters.Length;i++) {
-//							args.Add(ConvertParameter(argumentList[i],parameters[i].ParameterType,out argumentsMatched));
+//							args.Add(oConvertParameterOTypRb(argumentList[i],parameters[i].ParameterType,out argumentsMatched));
 //						}
 //						if(argumentsMatched) {
 //							if(method is ConstructorInfo) {
@@ -2436,7 +2475,7 @@ namespace Meta {
 //									// research the number and nature of such methods as Console.WriteLine
 //				methods=(MethodBase[])list.ToArray(typeof(MethodBase));
 //				if(methods.Length==1 && methods[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
-//					this.isMetaLibraryMethod=true;
+//					this.bLibraryMethod=true;
 //				}
 //			}
 //			public NetMethod(string name,object target,Type type) {
@@ -2583,7 +2622,7 @@ namespace Meta {
 								FieldInfo field=(FieldInfo)members[0];
 								bool converted;
 								object val;
-								val=NetMethod.ConvertParameter(value,field.FieldType,out converted);
+								val=NetMethod.oConvertParameterOTypRb(value,field.FieldType,out converted);
 								if(converted) {
 									field.SetValue(obj,val);
 								}
@@ -2601,7 +2640,7 @@ namespace Meta {
 							else if(members[0] is PropertyInfo) {
 								PropertyInfo property=(PropertyInfo)members[0];
 								bool converted;
-								object val=NetMethod.ConvertParameter(value,property.PropertyType,out converted);
+								object val=NetMethod.oConvertParameterOTypRb(value,property.PropertyType,out converted);
 								if(converted) {
 									property.SetValue(obj,val,new object[]{});
 								}

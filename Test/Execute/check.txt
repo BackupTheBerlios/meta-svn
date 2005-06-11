@@ -12,7 +12,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "equal"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -21,7 +21,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "not"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -30,7 +30,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "and"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -39,7 +39,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "or"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -48,7 +48,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "oRunS"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -57,7 +57,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "bHasKeyMO"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -66,7 +66,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "iCountM"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -75,7 +75,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "sTrimStartS"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -84,7 +84,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "iCountStartMO"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -93,7 +93,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "aKeysM"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -102,7 +102,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "aJoinAa"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -111,7 +111,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "mMergeAm"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "True"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -120,7 +120,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "iAddII"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -129,7 +129,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "iSubtractII"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -138,7 +138,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "iMultiplyII"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -147,7 +147,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "iDivideII"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -156,7 +156,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "bSmallerII"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -165,7 +165,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "bGreaterII"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -174,7 +174,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "bOrII"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -1850,7 +1850,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "staticEvent"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
@@ -1879,7 +1879,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "instanceEvent"
   Value (NetMethod):
-    isMetaLibraryMethod (Boolean):
+    bLibraryMethod (Boolean):
       "False"
     methods (MethodBase[]):
       Entry (RuntimeMethodInfo)
