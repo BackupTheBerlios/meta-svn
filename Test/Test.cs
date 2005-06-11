@@ -101,7 +101,7 @@ namespace Test {
 		public class CompileToMap:TestCase {
 			public static Map map;
 			public override object RunTestCase() {
-				map=Interpreter.CompileToMap(Path.Combine(
+				map=Interpreter.mCompileS(Path.Combine(
 					Test.path,filename));
 				return map;
 			}
@@ -114,8 +114,8 @@ namespace Test {
 		}
 		public class CompileToExpression:TestCase {
 			public override object RunTestCase() {
-				return Interpreter.CompileToMap(Path.Combine(
-					Test.path,filename)).Compile();
+				return Interpreter.mCompileS(Path.Combine(
+					Test.path,filename)).EpsCompileV();
 			}
 //			public override object RunTestCase() {
 //				return Interpreter.CompileToMap(new StreamReader(Path.Combine(

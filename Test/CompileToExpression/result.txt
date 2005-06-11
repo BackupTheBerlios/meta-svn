@@ -35,18 +35,7 @@ arlSmStatements (ArrayList):
                 ojLiteral (Integer):
                   "1"
             val (Search):
-              Extent (Extent):
-                endColumn (Int32):
-                  "8"
-                endLine (Int32):
-                  "17"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "2"
-                startLine (Int32):
-                  "17"
-              key (Literal):
+              epsKey (Literal):
                 Extent (Extent):
                   endColumn (Int32):
                     "8"
@@ -60,6 +49,17 @@ arlSmStatements (ArrayList):
                     "17"
                 ojLiteral (Map):
                   "parent"
+              Extent (Extent):
+                endColumn (Int32):
+                  "8"
+                endLine (Int32):
+                  "17"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "2"
+                startLine (Int32):
+                  "17"
           Entry (Statement)
             keys (ArrayList):
               Entry (Literal)
@@ -143,18 +143,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "16"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "9"
-            endLine (Int32):
-              "16"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "6"
-            startLine (Int32):
-              "16"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "9"
@@ -168,6 +157,17 @@ arlSmStatements (ArrayList):
                 "16"
             ojLiteral (Map):
               "map"
+          Extent (Extent):
+            endColumn (Int32):
+              "9"
+            endLine (Int32):
+              "16"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "6"
+            startLine (Int32):
+              "16"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -260,18 +260,7 @@ arlSmStatements (ArrayList):
                 ojLiteral (Integer):
                   "1"
             val (Search):
-              Extent (Extent):
-                endColumn (Int32):
-                  "8"
-                endLine (Int32):
-                  "22"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "2"
-                startLine (Int32):
-                  "22"
-              key (Literal):
+              epsKey (Literal):
                 Extent (Extent):
                   endColumn (Int32):
                     "8"
@@ -285,6 +274,17 @@ arlSmStatements (ArrayList):
                     "22"
                 ojLiteral (Map):
                   "parent"
+              Extent (Extent):
+                endColumn (Int32):
+                  "8"
+                endLine (Int32):
+                  "22"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "2"
+                startLine (Int32):
+                  "22"
           Entry (Statement)
             keys (ArrayList):
               Entry (Literal)
@@ -302,18 +302,7 @@ arlSmStatements (ArrayList):
                 ojLiteral (Integer):
                   "2"
             val (Search):
-              Extent (Extent):
-                endColumn (Int32):
-                  "13"
-                endLine (Int32):
-                  "23"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "2"
-                startLine (Int32):
-                  "23"
-              key (Literal):
+              epsKey (Literal):
                 Extent (Extent):
                   endColumn (Int32):
                     "13"
@@ -327,6 +316,17 @@ arlSmStatements (ArrayList):
                     "23"
                 ojLiteral (Map):
                   "programFlow"
+              Extent (Extent):
+                endColumn (Int32):
+                  "13"
+                endLine (Int32):
+                  "23"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "2"
+                startLine (Int32):
+                  "23"
           Entry (Statement)
             keys (ArrayList):
               Entry (Literal)
@@ -344,18 +344,7 @@ arlSmStatements (ArrayList):
                 ojLiteral (Integer):
                   "3"
             val (Search):
-              Extent (Extent):
-                endColumn (Int32):
-                  "7"
-                endLine (Int32):
-                  "24"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "2"
-                startLine (Int32):
-                  "24"
-              key (Literal):
+              epsKey (Literal):
                 Extent (Extent):
                   endColumn (Int32):
                     "7"
@@ -369,6 +358,17 @@ arlSmStatements (ArrayList):
                     "24"
                 ojLiteral (Map):
                   "logic"
+              Extent (Extent):
+                endColumn (Int32):
+                  "7"
+                endLine (Int32):
+                  "24"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "2"
+                startLine (Int32):
+                  "24"
           Entry (Statement)
             keys (ArrayList):
               Entry (Literal)
@@ -386,18 +386,7 @@ arlSmStatements (ArrayList):
                 ojLiteral (Integer):
                   "4"
             val (Search):
-              Extent (Extent):
-                endColumn (Int32):
-                  "5"
-                endLine (Int32):
-                  "25"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "2"
-                startLine (Int32):
-                  "25"
-              key (Literal):
+              epsKey (Literal):
                 Extent (Extent):
                   endColumn (Int32):
                     "5"
@@ -411,6 +400,17 @@ arlSmStatements (ArrayList):
                     "25"
                 ojLiteral (Map):
                   "map"
+              Extent (Extent):
+                endColumn (Int32):
+                  "5"
+                endLine (Int32):
+                  "25"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "2"
+                startLine (Int32):
+                  "25"
           Entry (Statement)
             keys (ArrayList):
               Entry (Literal)
@@ -428,18 +428,7 @@ arlSmStatements (ArrayList):
                 ojLiteral (Integer):
                   "5"
             val (Search):
-              Extent (Extent):
-                endColumn (Int32):
-                  "6"
-                endLine (Int32):
-                  "26"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "2"
-                startLine (Int32):
-                  "26"
-              key (Literal):
+              epsKey (Literal):
                 Extent (Extent):
                   endColumn (Int32):
                     "6"
@@ -453,6 +442,17 @@ arlSmStatements (ArrayList):
                     "26"
                 ojLiteral (Map):
                   "math"
+              Extent (Extent):
+                endColumn (Int32):
+                  "6"
+                endLine (Int32):
+                  "26"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "2"
+                startLine (Int32):
+                  "26"
         Extent (Extent):
           endColumn (Int32):
             "6"
@@ -477,18 +477,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "21"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "9"
-            endLine (Int32):
-              "21"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "6"
-            startLine (Int32):
-              "21"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "9"
@@ -502,6 +491,17 @@ arlSmStatements (ArrayList):
                 "21"
             ojLiteral (Map):
               "map"
+          Extent (Extent):
+            endColumn (Int32):
+              "9"
+            endLine (Int32):
+              "21"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "6"
+            startLine (Int32):
+              "21"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -619,18 +619,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "28"
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "26"
-          endLine (Int32):
-            "27"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "15"
-          startLine (Int32):
-            "27"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "26"
@@ -644,6 +633,17 @@ arlSmStatements (ArrayList):
               "27"
           ojLiteral (Map):
             "sTrimStartS"
+        Extent (Extent):
+          endColumn (Int32):
+            "26"
+          endLine (Int32):
+            "27"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "15"
+          startLine (Int32):
+            "27"
       Extent (Extent):
         endColumn (Int32):
           "6"
@@ -718,18 +718,7 @@ arlSmStatements (ArrayList):
                   startLine (Int32):
                     "31"
                 first (Search):
-                  Extent (Extent):
-                    endColumn (Int32):
-                      "8"
-                    endLine (Int32):
-                      "31"
-                    fileName (String):
-                      "basicTest.meta"
-                    startColumn (Int32):
-                      "2"
-                    startLine (Int32):
-                      "31"
-                  key (Literal):
+                  epsKey (Literal):
                     Extent (Extent):
                       endColumn (Int32):
                         "8"
@@ -743,6 +732,17 @@ arlSmStatements (ArrayList):
                         "31"
                     ojLiteral (Map):
                       "System"
+                  Extent (Extent):
+                    endColumn (Int32):
+                      "8"
+                    endLine (Int32):
+                      "31"
+                    fileName (String):
+                      "basicTest.meta"
+                    startColumn (Int32):
+                      "2"
+                    startLine (Int32):
+                      "31"
                 keys (ArrayList):
                   Entry (Literal)
                     Extent (Extent):
@@ -868,18 +868,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "31"
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "13"
-          endLine (Int32):
-            "30"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "6"
-          startLine (Int32):
-            "30"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "13"
@@ -893,6 +882,17 @@ arlSmStatements (ArrayList):
               "30"
           ojLiteral (Map):
             "oWithOM"
+        Extent (Extent):
+          endColumn (Int32):
+            "13"
+          endLine (Int32):
+            "30"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "6"
+          startLine (Int32):
+            "30"
       Extent (Extent):
         endColumn (Int32):
           "14"
@@ -993,18 +993,7 @@ arlSmStatements (ArrayList):
         startLine (Int32):
           "36"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "15"
-          endLine (Int32):
-            "36"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "9"
-          startLine (Int32):
-            "36"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "15"
@@ -1018,6 +1007,17 @@ arlSmStatements (ArrayList):
               "36"
           ojLiteral (Map):
             "System"
+        Extent (Extent):
+          endColumn (Int32):
+            "15"
+          endLine (Int32):
+            "36"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "9"
+          startLine (Int32):
+            "36"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -1062,18 +1062,7 @@ arlSmStatements (ArrayList):
         startLine (Int32):
           "37"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "22"
-          endLine (Int32):
-            "37"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "13"
-          startLine (Int32):
-            "37"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "22"
@@ -1087,6 +1076,17 @@ arlSmStatements (ArrayList):
               "37"
           ojLiteral (Map):
             "Microsoft"
+        Extent (Extent):
+          endColumn (Int32):
+            "22"
+          endLine (Int32):
+            "37"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "13"
+          startLine (Int32):
+            "37"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -1119,18 +1119,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           "metaLibTest"
     val (Search):
-      Extent (Extent):
-        endColumn (Int32):
-          "20"
-        endLine (Int32):
-          "38"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "13"
-        startLine (Int32):
-          "38"
-      key (Literal):
+      epsKey (Literal):
         Extent (Extent):
           endColumn (Int32):
             "20"
@@ -1144,6 +1133,17 @@ arlSmStatements (ArrayList):
             "38"
         ojLiteral (Map):
           "metaLib"
+      Extent (Extent):
+        endColumn (Int32):
+          "20"
+        endLine (Int32):
+          "38"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "13"
+        startLine (Int32):
+          "38"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -1161,18 +1161,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           "commandLineArguments"
     val (Search):
-      Extent (Extent):
-        endColumn (Int32):
-          "25"
-        endLine (Int32):
-          "39"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "22"
-        startLine (Int32):
-          "39"
-      key (Literal):
+      epsKey (Literal):
         Extent (Extent):
           endColumn (Int32):
             "25"
@@ -1186,6 +1175,17 @@ arlSmStatements (ArrayList):
             "39"
         ojLiteral (Map):
           "arg"
+      Extent (Extent):
+        endColumn (Int32):
+          "25"
+        endLine (Int32):
+          "39"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "22"
+        startLine (Int32):
+          "39"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -1203,18 +1203,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           "libraryAssemblyTest"
     val (Search):
-      Extent (Extent):
-        endColumn (Int32):
-          "32"
-        endLine (Int32):
-          "40"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "21"
-        startLine (Int32):
-          "40"
-      key (Literal):
+      epsKey (Literal):
         Extent (Extent):
           endColumn (Int32):
             "32"
@@ -1228,6 +1217,17 @@ arlSmStatements (ArrayList):
             "40"
         ojLiteral (Map):
           "testClasses"
+      Extent (Extent):
+        endColumn (Int32):
+          "32"
+        endLine (Int32):
+          "40"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "21"
+        startLine (Int32):
+          "40"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -1290,18 +1290,7 @@ arlSmStatements (ArrayList):
   Entry (Statement)
     keys (ArrayList):
       Entry (Search)
-        Extent (Extent):
-          endColumn (Int32):
-            "6"
-          endLine (Int32):
-            "47"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "2"
-          startLine (Int32):
-            "47"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "6"
@@ -1315,6 +1304,17 @@ arlSmStatements (ArrayList):
               "47"
           ojLiteral (Map):
             "aMap"
+        Extent (Extent):
+          endColumn (Int32):
+            "6"
+          endLine (Int32):
+            "47"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "2"
+          startLine (Int32):
+            "47"
     val (Literal):
       Extent (Extent):
         endColumn (Int32):
@@ -1436,30 +1436,8 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           "lookedUpMap"
     val (Search):
-      Extent (Extent):
-        endColumn (Int32):
-          "18"
-        endLine (Int32):
-          "51"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "14"
-        startLine (Int32):
-          "51"
-      key (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "18"
-          endLine (Int32):
-            "51"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "14"
-          startLine (Int32):
-            "51"
-        key (Literal):
+      epsKey (Search):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "18"
@@ -1473,6 +1451,28 @@ arlSmStatements (ArrayList):
               "51"
           ojLiteral (Map):
             "aMap"
+        Extent (Extent):
+          endColumn (Int32):
+            "18"
+          endLine (Int32):
+            "51"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "14"
+          startLine (Int32):
+            "51"
+      Extent (Extent):
+        endColumn (Int32):
+          "18"
+        endLine (Int32):
+          "51"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "14"
+        startLine (Int32):
+          "51"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -1490,18 +1490,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           "lookedUpNormalSymbol"
     val (Search):
-      Extent (Extent):
-        endColumn (Int32):
-          "38"
-        endLine (Int32):
-          "52"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "23"
-        startLine (Int32):
-          "52"
-      key (Literal):
+      epsKey (Literal):
         Extent (Extent):
           endColumn (Int32):
             "38"
@@ -1515,6 +1504,17 @@ arlSmStatements (ArrayList):
             "52"
         ojLiteral (Map):
           "normal symbol"
+      Extent (Extent):
+        endColumn (Int32):
+          "38"
+        endLine (Int32):
+          "52"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "23"
+        startLine (Int32):
+          "52"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -1532,18 +1532,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           "lookedUpSymbol"
     val (Search):
-      Extent (Extent):
-        endColumn (Int32):
-          "28"
-        endLine (Int32):
-          "53"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "16"
-        startLine (Int32):
-          "53"
-      key (Literal):
+      epsKey (Literal):
         Extent (Extent):
           endColumn (Int32):
             "28"
@@ -1557,6 +1546,17 @@ arlSmStatements (ArrayList):
             "53"
         ojLiteral (Map):
           "lookupSymbol"
+      Extent (Extent):
+        endColumn (Int32):
+          "28"
+        endLine (Int32):
+          "53"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "16"
+        startLine (Int32):
+          "53"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -1574,18 +1574,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           "lookedUpLongSymbol"
     val (Search):
-      Extent (Extent):
-        endColumn (Int32):
-          "38"
-        endLine (Int32):
-          "54"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "21"
-        startLine (Int32):
-          "54"
-      key (Literal):
+      epsKey (Literal):
         Extent (Extent):
           endColumn (Int32):
             "38"
@@ -1599,6 +1588,17 @@ arlSmStatements (ArrayList):
             "54"
         ojLiteral (Map):
           "long key symbol"
+      Extent (Extent):
+        endColumn (Int32):
+          "38"
+        endLine (Int32):
+          "54"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "21"
+        startLine (Int32):
+          "54"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -2329,18 +2329,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "75"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "12"
-            endLine (Int32):
-              "75"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "6"
-            startLine (Int32):
-              "75"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "12"
@@ -2354,6 +2343,17 @@ arlSmStatements (ArrayList):
                 "75"
             ojLiteral (Map):
               "object"
+          Extent (Extent):
+            endColumn (Int32):
+              "12"
+            endLine (Int32):
+              "75"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "6"
+            startLine (Int32):
+              "75"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -2512,18 +2512,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "76"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "12"
-            endLine (Int32):
-              "76"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "6"
-            startLine (Int32):
-              "76"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "12"
@@ -2537,6 +2526,17 @@ arlSmStatements (ArrayList):
                 "76"
             ojLiteral (Map):
               "object"
+          Extent (Extent):
+            endColumn (Int32):
+              "12"
+            endLine (Int32):
+              "76"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "6"
+            startLine (Int32):
+              "76"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -2776,18 +2776,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "84"
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "36"
-          endLine (Int32):
-            "83"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "20"
-          startLine (Int32):
-            "83"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "36"
@@ -2801,6 +2790,17 @@ arlSmStatements (ArrayList):
               "83"
           ojLiteral (Map):
             "ReturnEverything"
+        Extent (Extent):
+          endColumn (Int32):
+            "36"
+          endLine (Int32):
+            "83"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "20"
+          startLine (Int32):
+            "83"
       Extent (Extent):
         endColumn (Int32):
           "4"
@@ -2933,18 +2933,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "88"
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "36"
-          endLine (Int32):
-            "87"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "20"
-          startLine (Int32):
-            "87"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "36"
@@ -2958,6 +2947,17 @@ arlSmStatements (ArrayList):
               "87"
           ojLiteral (Map):
             "ReturnEverything"
+        Extent (Extent):
+          endColumn (Int32):
+            "36"
+          endLine (Int32):
+            "87"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "20"
+          startLine (Int32):
+            "87"
       Extent (Extent):
         endColumn (Int32):
           "4"
@@ -3443,18 +3443,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "106"
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "19"
-          endLine (Int32):
-            "105"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "9"
-          startLine (Int32):
-            "105"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "19"
@@ -3468,6 +3457,17 @@ arlSmStatements (ArrayList):
               "105"
           ojLiteral (Map):
             "SetCurrent"
+        Extent (Extent):
+          endColumn (Int32):
+            "19"
+          endLine (Int32):
+            "105"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "9"
+          startLine (Int32):
+            "105"
       Extent (Extent):
         endColumn (Int32):
           "14"
@@ -3720,18 +3720,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "113"
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "19"
-          endLine (Int32):
-            "112"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "9"
-          startLine (Int32):
-            "112"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "19"
@@ -3745,6 +3734,17 @@ arlSmStatements (ArrayList):
               "112"
           ojLiteral (Map):
             "FirstLevel"
+        Extent (Extent):
+          endColumn (Int32):
+            "19"
+          endLine (Int32):
+            "112"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "9"
+          startLine (Int32):
+            "112"
       Extent (Extent):
         endColumn (Int32):
           "6"
@@ -3859,18 +3859,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "114"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "16"
-            endLine (Int32):
-              "114"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "13"
-            startLine (Int32):
-              "114"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "16"
@@ -3884,6 +3873,17 @@ arlSmStatements (ArrayList):
                 "114"
             ojLiteral (Map):
               "map"
+          Extent (Extent):
+            endColumn (Int32):
+              "16"
+            endLine (Int32):
+              "114"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "13"
+            startLine (Int32):
+              "114"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -3946,18 +3946,7 @@ arlSmStatements (ArrayList):
                 ojLiteral (Integer):
                   "1"
             val (Search):
-              Extent (Extent):
-                endColumn (Int32):
-                  "8"
-                endLine (Int32):
-                  "118"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "2"
-                startLine (Int32):
-                  "118"
-              key (Literal):
+              epsKey (Literal):
                 Extent (Extent):
                   endColumn (Int32):
                     "8"
@@ -3971,6 +3960,17 @@ arlSmStatements (ArrayList):
                     "118"
                 ojLiteral (Map):
                   "parent"
+              Extent (Extent):
+                endColumn (Int32):
+                  "8"
+                endLine (Int32):
+                  "118"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "2"
+                startLine (Int32):
+                  "118"
           Entry (Statement)
             keys (ArrayList):
               Entry (Literal)
@@ -3988,18 +3988,7 @@ arlSmStatements (ArrayList):
                 ojLiteral (Integer):
                   "2"
             val (Search):
-              Extent (Extent):
-                endColumn (Int32):
-                  "13"
-                endLine (Int32):
-                  "119"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "2"
-                startLine (Int32):
-                  "119"
-              key (Literal):
+              epsKey (Literal):
                 Extent (Extent):
                   endColumn (Int32):
                     "13"
@@ -4013,6 +4002,17 @@ arlSmStatements (ArrayList):
                     "119"
                 ojLiteral (Map):
                   "testClasses"
+              Extent (Extent):
+                endColumn (Int32):
+                  "13"
+                endLine (Int32):
+                  "119"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "2"
+                startLine (Int32):
+                  "119"
         Extent (Extent):
           endColumn (Int32):
             "13"
@@ -4037,18 +4037,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "117"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "9"
-            endLine (Int32):
-              "117"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "6"
-            startLine (Int32):
-              "117"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "9"
@@ -4062,6 +4051,17 @@ arlSmStatements (ArrayList):
                 "117"
             ojLiteral (Map):
               "map"
+          Extent (Extent):
+            endColumn (Int32):
+              "9"
+            endLine (Int32):
+              "117"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "6"
+            startLine (Int32):
+              "117"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -4120,18 +4120,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           ""
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "20"
-          endLine (Int32):
-            "120"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "11"
-          startLine (Int32):
-            "120"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "20"
@@ -4145,6 +4134,17 @@ arlSmStatements (ArrayList):
               "120"
           ojLiteral (Map):
             "TestClass"
+        Extent (Extent):
+          endColumn (Int32):
+            "20"
+          endLine (Int32):
+            "120"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "11"
+          startLine (Int32):
+            "120"
       Extent (Extent):
         endColumn (Int32):
           "21"
@@ -4538,18 +4538,7 @@ arlSmStatements (ArrayList):
         startLine (Int32):
           "131"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "19"
-          endLine (Int32):
-            "131"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "10"
-          startLine (Int32):
-            "131"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "19"
@@ -4563,6 +4552,17 @@ arlSmStatements (ArrayList):
               "131"
           ojLiteral (Map):
             "TestClass"
+        Extent (Extent):
+          endColumn (Int32):
+            "19"
+          endLine (Int32):
+            "131"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "10"
+          startLine (Int32):
+            "131"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -4610,18 +4610,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           ""
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "22"
-          endLine (Int32):
-            "132"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "12"
-          startLine (Int32):
-            "132"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "22"
@@ -4635,6 +4624,17 @@ arlSmStatements (ArrayList):
               "132"
           ojLiteral (Map):
             "MemberTest"
+        Extent (Extent):
+          endColumn (Int32):
+            "22"
+          endLine (Int32):
+            "132"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "12"
+          startLine (Int32):
+            "132"
       Extent (Extent):
         endColumn (Int32):
           "23"
@@ -4777,18 +4777,7 @@ arlSmStatements (ArrayList):
         startLine (Int32):
           "135"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "36"
-          endLine (Int32):
-            "135"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "26"
-          startLine (Int32):
-            "135"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "36"
@@ -4802,6 +4791,17 @@ arlSmStatements (ArrayList):
               "135"
           ojLiteral (Map):
             "memberTest"
+        Extent (Extent):
+          endColumn (Int32):
+            "36"
+          endLine (Int32):
+            "135"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "26"
+          startLine (Int32):
+            "135"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -4860,18 +4860,7 @@ arlSmStatements (ArrayList):
         startLine (Int32):
           "136"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "39"
-          endLine (Int32):
-            "136"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "29"
-          startLine (Int32):
-            "136"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "39"
@@ -4885,6 +4874,17 @@ arlSmStatements (ArrayList):
               "136"
           ojLiteral (Map):
             "MemberTest"
+        Extent (Extent):
+          endColumn (Int32):
+            "39"
+          endLine (Int32):
+            "136"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "29"
+          startLine (Int32):
+            "136"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -5051,18 +5051,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "139"
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "46"
-          endLine (Int32):
-            "138"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "24"
-          startLine (Int32):
-            "138"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "46"
@@ -5076,6 +5065,17 @@ arlSmStatements (ArrayList):
               "138"
           ojLiteral (Map):
             "PositionalNoConversion"
+        Extent (Extent):
+          endColumn (Int32):
+            "46"
+          endLine (Int32):
+            "138"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "24"
+          startLine (Int32):
+            "138"
       Extent (Extent):
         endColumn (Int32):
           "4"
@@ -5220,18 +5220,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "142"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "58"
-            endLine (Int32):
-              "142"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "36"
-            startLine (Int32):
-              "142"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "58"
@@ -5245,6 +5234,17 @@ arlSmStatements (ArrayList):
                 "142"
             ojLiteral (Map):
               "positionalNoConversion"
+          Extent (Extent):
+            endColumn (Int32):
+              "58"
+            endLine (Int32):
+              "142"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "36"
+            startLine (Int32):
+              "142"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -5362,18 +5362,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "147"
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "36"
-          endLine (Int32):
-            "146"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "19"
-          startLine (Int32):
-            "146"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "36"
@@ -5387,6 +5376,17 @@ arlSmStatements (ArrayList):
               "146"
           ojLiteral (Map):
             "NamedNoConversion"
+        Extent (Extent):
+          endColumn (Int32):
+            "36"
+          endLine (Int32):
+            "146"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "19"
+          startLine (Int32):
+            "146"
       Extent (Extent):
         endColumn (Int32):
           "6"
@@ -5501,18 +5501,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "149"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "48"
-            endLine (Int32):
-              "149"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "31"
-            startLine (Int32):
-              "149"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "48"
@@ -5526,6 +5515,17 @@ arlSmStatements (ArrayList):
                 "149"
             ojLiteral (Map):
               "namedNoConversion"
+          Extent (Extent):
+            endColumn (Int32):
+              "48"
+            endLine (Int32):
+              "149"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "31"
+            startLine (Int32):
+              "149"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -5584,18 +5584,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           ""
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "40"
-          endLine (Int32):
-            "152"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "21"
-          startLine (Int32):
-            "152"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "40"
@@ -5609,6 +5598,17 @@ arlSmStatements (ArrayList):
               "152"
           ojLiteral (Map):
             "IndexerNoConversion"
+        Extent (Extent):
+          endColumn (Int32):
+            "40"
+          endLine (Int32):
+            "152"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "21"
+          startLine (Int32):
+            "152"
       Extent (Extent):
         endColumn (Int32):
           "41"
@@ -5693,18 +5693,7 @@ arlSmStatements (ArrayList):
         startLine (Int32):
           "154"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "47"
-          endLine (Int32):
-            "154"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "28"
-          startLine (Int32):
-            "154"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "47"
@@ -5718,6 +5707,17 @@ arlSmStatements (ArrayList):
               "154"
           ojLiteral (Map):
             "indexerNoConversion"
+        Extent (Extent):
+          endColumn (Int32):
+            "47"
+          endLine (Int32):
+            "154"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "28"
+          startLine (Int32):
+            "154"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -5918,18 +5918,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           ""
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "38"
-          endLine (Int32):
-            "160"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "23"
-          startLine (Int32):
-            "160"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "38"
@@ -5943,6 +5932,17 @@ arlSmStatements (ArrayList):
               "160"
           ojLiteral (Map):
             "literalFunction"
+        Extent (Extent):
+          endColumn (Int32):
+            "38"
+          endLine (Int32):
+            "160"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "23"
+          startLine (Int32):
+            "160"
       Extent (Extent):
         endColumn (Int32):
           "39"
@@ -6141,18 +6141,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           ""
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "32"
-          endLine (Int32):
-            "166"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "20"
-          startLine (Int32):
-            "166"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "32"
@@ -6166,6 +6155,17 @@ arlSmStatements (ArrayList):
               "166"
           ojLiteral (Map):
             "callFunction"
+        Extent (Extent):
+          endColumn (Int32):
+            "32"
+          endLine (Int32):
+            "166"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "20"
+          startLine (Int32):
+            "166"
       Extent (Extent):
         endColumn (Int32):
           "33"
@@ -6326,18 +6326,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           ""
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "38"
-          endLine (Int32):
-            "171"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "23"
-          startLine (Int32):
-            "171"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "38"
@@ -6351,6 +6340,17 @@ arlSmStatements (ArrayList):
               "171"
           ojLiteral (Map):
             "delayedFunction"
+        Extent (Extent):
+          endColumn (Int32):
+            "38"
+          endLine (Int32):
+            "171"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "23"
+          startLine (Int32):
+            "171"
       Extent (Extent):
         endColumn (Int32):
           "40"
@@ -6491,18 +6491,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           ""
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "42"
-          endLine (Int32):
-            "175"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "25"
-          startLine (Int32):
-            "175"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "42"
@@ -6516,6 +6505,17 @@ arlSmStatements (ArrayList):
               "175"
           ojLiteral (Map):
             "selectionFunction"
+        Extent (Extent):
+          endColumn (Int32):
+            "42"
+          endLine (Int32):
+            "175"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "25"
+          startLine (Int32):
+            "175"
       Extent (Extent):
         endColumn (Int32):
           "44"
@@ -6725,18 +6725,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           ""
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "17"
-          endLine (Int32):
-            "181"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "1"
-          startLine (Int32):
-            "181"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "17"
@@ -6750,6 +6739,17 @@ arlSmStatements (ArrayList):
               "181"
           ojLiteral (Map):
             "ChangeUpperLevel"
+        Extent (Extent):
+          endColumn (Int32):
+            "17"
+          endLine (Int32):
+            "181"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "1"
+          startLine (Int32):
+            "181"
       Extent (Extent):
         endColumn (Int32):
           "18"
@@ -6987,18 +6987,7 @@ arlSmStatements (ArrayList):
         startLine (Int32):
           "187"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "22"
-          endLine (Int32):
-            "187"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "13"
-          startLine (Int32):
-            "187"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "22"
@@ -7012,6 +7001,17 @@ arlSmStatements (ArrayList):
               "187"
           ojLiteral (Map):
             "TestClass"
+        Extent (Extent):
+          endColumn (Int32):
+            "22"
+          endLine (Int32):
+            "187"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "13"
+          startLine (Int32):
+            "187"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -7104,18 +7104,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "188"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "10"
-            endLine (Int32):
-              "188"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "1"
-            startLine (Int32):
-              "188"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "10"
@@ -7129,6 +7118,17 @@ arlSmStatements (ArrayList):
                 "188"
             ojLiteral (Map):
               "TestClass"
+          Extent (Extent):
+            endColumn (Int32):
+              "10"
+            endLine (Int32):
+              "188"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "1"
+            startLine (Int32):
+              "188"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -7199,18 +7199,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "190"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "29"
-            endLine (Int32):
-              "190"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "20"
-            startLine (Int32):
-              "190"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "29"
@@ -7224,6 +7213,17 @@ arlSmStatements (ArrayList):
                 "190"
             ojLiteral (Map):
               "TestClass"
+          Extent (Extent):
+            endColumn (Int32):
+              "29"
+            endLine (Int32):
+              "190"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "20"
+            startLine (Int32):
+              "190"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -7268,18 +7268,7 @@ arlSmStatements (ArrayList):
           "staticEventResult"
     val (Call):
       epsArgument (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "50"
-          endLine (Int32):
-            "191"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "41"
-          startLine (Int32):
-            "191"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "50"
@@ -7293,6 +7282,17 @@ arlSmStatements (ArrayList):
               "191"
           ojLiteral (Map):
             "testClass"
+        Extent (Extent):
+          endColumn (Int32):
+            "50"
+          endLine (Int32):
+            "191"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "41"
+          startLine (Int32):
+            "191"
       epsCallable (Select):
         Extent (Extent):
           endColumn (Int32):
@@ -7306,18 +7306,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "191"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "28"
-            endLine (Int32):
-              "191"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "19"
-            startLine (Int32):
-              "191"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "28"
@@ -7331,6 +7320,17 @@ arlSmStatements (ArrayList):
                 "191"
             ojLiteral (Map):
               "TestClass"
+          Extent (Extent):
+            endColumn (Int32):
+              "28"
+            endLine (Int32):
+              "191"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "19"
+            startLine (Int32):
+              "191"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -7583,18 +7583,7 @@ arlSmStatements (ArrayList):
         startLine (Int32):
           "197"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "24"
-          endLine (Int32):
-            "197"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "15"
-          startLine (Int32):
-            "197"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "24"
@@ -7608,6 +7597,17 @@ arlSmStatements (ArrayList):
               "197"
           ojLiteral (Map):
             "testClass"
+        Extent (Extent):
+          endColumn (Int32):
+            "24"
+          endLine (Int32):
+            "197"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "15"
+          startLine (Int32):
+            "197"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -7696,18 +7696,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "198"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "30"
-            endLine (Int32):
-              "198"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "21"
-            startLine (Int32):
-              "198"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "30"
@@ -7721,6 +7710,17 @@ arlSmStatements (ArrayList):
                 "198"
             ojLiteral (Map):
               "testClass"
+          Extent (Extent):
+            endColumn (Int32):
+              "30"
+            endLine (Int32):
+              "198"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "21"
+            startLine (Int32):
+              "198"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -7933,18 +7933,7 @@ arlSmStatements (ArrayList):
                 ojLiteral (Integer):
                   "2"
             val (Search):
-              Extent (Extent):
-                endColumn (Int32):
-                  "5"
-                endLine (Int32):
-                  "206"
-                fileName (String):
-                  "basicTest.meta"
-                startColumn (Int32):
-                  "2"
-                startLine (Int32):
-                  "206"
-              key (Literal):
+              epsKey (Literal):
                 Extent (Extent):
                   endColumn (Int32):
                     "5"
@@ -7958,6 +7947,17 @@ arlSmStatements (ArrayList):
                     "206"
                 ojLiteral (Map):
                   "one"
+              Extent (Extent):
+                endColumn (Int32):
+                  "5"
+                endLine (Int32):
+                  "206"
+                fileName (String):
+                  "basicTest.meta"
+                startColumn (Int32):
+                  "2"
+                startLine (Int32):
+                  "206"
         Extent (Extent):
           endColumn (Int32):
             "5"
@@ -7970,18 +7970,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "205"
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "23"
-          endLine (Int32):
-            "204"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "18"
-          startLine (Int32):
-            "204"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "23"
@@ -7995,6 +7984,17 @@ arlSmStatements (ArrayList):
               "204"
           ojLiteral (Map):
             "equal"
+        Extent (Extent):
+          endColumn (Int32):
+            "23"
+          endLine (Int32):
+            "204"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "18"
+          startLine (Int32):
+            "204"
       Extent (Extent):
         endColumn (Int32):
           "5"
@@ -8205,18 +8205,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "212"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "24"
-            endLine (Int32):
-              "212"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "9"
-            startLine (Int32):
-              "212"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "24"
@@ -8230,20 +8219,20 @@ arlSmStatements (ArrayList):
                 "212"
             ojLiteral (Map):
               "firstIfBranches"
+          Extent (Extent):
+            endColumn (Int32):
+              "24"
+            endLine (Int32):
+              "212"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "9"
+            startLine (Int32):
+              "212"
         keys (ArrayList):
           Entry (Search)
-            Extent (Extent):
-              endColumn (Int32):
-                "42"
-              endLine (Int32):
-                "212"
-              fileName (String):
-                "basicTest.meta"
-              startColumn (Int32):
-                "26"
-              startLine (Int32):
-                "212"
-            key (Literal):
+            epsKey (Literal):
               Extent (Extent):
                 endColumn (Int32):
                   "42"
@@ -8257,6 +8246,17 @@ arlSmStatements (ArrayList):
                   "212"
               ojLiteral (Map):
                 "firstIfCondition"
+            Extent (Extent):
+              endColumn (Int32):
+                "42"
+              endLine (Int32):
+                "212"
+              fileName (String):
+                "basicTest.meta"
+              startColumn (Int32):
+                "26"
+              startLine (Int32):
+                "212"
       Extent (Extent):
         endColumn (Int32):
           "44"
@@ -8476,18 +8476,7 @@ arlSmStatements (ArrayList):
         startLine (Int32):
           "219"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "31"
-          endLine (Int32):
-            "219"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "14"
-          startLine (Int32):
-            "219"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "31"
@@ -8501,6 +8490,17 @@ arlSmStatements (ArrayList):
               "219"
           ojLiteral (Map):
             "secondSwitchCases"
+        Extent (Extent):
+          endColumn (Int32):
+            "31"
+          endLine (Int32):
+            "219"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "14"
+          startLine (Int32):
+            "219"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -8666,18 +8666,7 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           ""
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "34"
-          endLine (Int32):
-            "224"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "21"
-          startLine (Int32):
-            "224"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "34"
@@ -8691,6 +8680,17 @@ arlSmStatements (ArrayList):
               "224"
           ojLiteral (Map):
             "emptyFunction"
+        Extent (Extent):
+          endColumn (Int32):
+            "34"
+          endLine (Int32):
+            "224"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "21"
+          startLine (Int32):
+            "224"
       Extent (Extent):
         endColumn (Int32):
           "35"
@@ -8805,18 +8805,7 @@ arlSmStatements (ArrayList):
           startLine (Int32):
             "225"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "12"
-            endLine (Int32):
-              "225"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "6"
-            startLine (Int32):
-              "225"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "12"
@@ -8830,6 +8819,17 @@ arlSmStatements (ArrayList):
                 "225"
             ojLiteral (Map):
               "System"
+          Extent (Extent):
+            endColumn (Int32):
+              "12"
+            endLine (Int32):
+              "225"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "6"
+            startLine (Int32):
+              "225"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -8943,18 +8943,7 @@ arlSmStatements (ArrayList):
         startLine (Int32):
           "229"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "24"
-          endLine (Int32):
-            "229"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "14"
-          startLine (Int32):
-            "229"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "24"
@@ -8968,6 +8957,17 @@ arlSmStatements (ArrayList):
               "229"
           ojLiteral (Map):
             "stringTest"
+        Extent (Extent):
+          endColumn (Int32):
+            "24"
+          endLine (Int32):
+            "229"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "14"
+          startLine (Int32):
+            "229"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -9030,30 +9030,8 @@ arlSmStatements (ArrayList):
         ojLiteral (Map):
           "stringStrategyHashTest"
     val (Search):
-      Extent (Extent):
-        endColumn (Int32):
-          "35"
-        endLine (Int32):
-          "231"
-        fileName (String):
-          "basicTest.meta"
-        startColumn (Int32):
-          "25"
-        startLine (Int32):
-          "231"
-      key (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "35"
-          endLine (Int32):
-            "231"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "25"
-          startLine (Int32):
-            "231"
-        key (Literal):
+      epsKey (Search):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "35"
@@ -9067,6 +9045,28 @@ arlSmStatements (ArrayList):
               "231"
           ojLiteral (Map):
             "stringTest"
+        Extent (Extent):
+          endColumn (Int32):
+            "35"
+          endLine (Int32):
+            "231"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "25"
+          startLine (Int32):
+            "231"
+      Extent (Extent):
+        endColumn (Int32):
+          "35"
+        endLine (Int32):
+          "231"
+        fileName (String):
+          "basicTest.meta"
+        startColumn (Int32):
+          "25"
+        startLine (Int32):
+          "231"
   Entry (Statement)
     keys (ArrayList):
       Entry (Literal)
@@ -9207,18 +9207,7 @@ hello!
                 startLine (Int32):
                   "239"
               first (Search):
-                Extent (Extent):
-                  endColumn (Int32):
-                    "8"
-                  endLine (Int32):
-                    "239"
-                  fileName (String):
-                    "basicTest.meta"
-                  startColumn (Int32):
-                    "2"
-                  startLine (Int32):
-                    "239"
-                key (Literal):
+                epsKey (Literal):
                   Extent (Extent):
                     endColumn (Int32):
                       "8"
@@ -9232,6 +9221,17 @@ hello!
                       "239"
                   ojLiteral (Map):
                     "System"
+                Extent (Extent):
+                  endColumn (Int32):
+                    "8"
+                  endLine (Int32):
+                    "239"
+                  fileName (String):
+                    "basicTest.meta"
+                  startColumn (Int32):
+                    "2"
+                  startLine (Int32):
+                    "239"
               keys (ArrayList):
                 Entry (Literal)
                   Extent (Extent):
@@ -9313,18 +9313,7 @@ hello!
           startLine (Int32):
             "237"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "10"
-            endLine (Int32):
-              "237"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "6"
-            startLine (Int32):
-              "237"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "10"
@@ -9338,6 +9327,17 @@ hello!
                 "237"
             ojLiteral (Map):
               "math"
+          Extent (Extent):
+            endColumn (Int32):
+              "10"
+            endLine (Int32):
+              "237"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "6"
+            startLine (Int32):
+              "237"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -9408,18 +9408,7 @@ hello!
           startLine (Int32):
             "240"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "17"
-            endLine (Int32):
-              "240"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "11"
-            startLine (Int32):
-              "240"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "17"
@@ -9433,6 +9422,17 @@ hello!
                 "240"
             ojLiteral (Map):
               "System"
+          Extent (Extent):
+            endColumn (Int32):
+              "17"
+            endLine (Int32):
+              "240"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "11"
+            startLine (Int32):
+              "240"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -9517,18 +9517,7 @@ hello!
           startLine (Int32):
             "241"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "10"
-            endLine (Int32):
-              "241"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "1"
-            startLine (Int32):
-              "241"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "10"
@@ -9542,6 +9531,17 @@ hello!
                 "241"
             ojLiteral (Map):
               "arrayList"
+          Extent (Extent):
+            endColumn (Int32):
+              "10"
+            endLine (Int32):
+              "241"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "1"
+            startLine (Int32):
+              "241"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -9597,18 +9597,7 @@ hello!
         startLine (Int32):
           "242"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "26"
-          endLine (Int32):
-            "242"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "17"
-          startLine (Int32):
-            "242"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "26"
@@ -9622,6 +9611,17 @@ hello!
               "242"
           ojLiteral (Map):
             "arrayList"
+        Extent (Extent):
+          endColumn (Int32):
+            "26"
+          endLine (Int32):
+            "242"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "17"
+          startLine (Int32):
+            "242"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -9681,18 +9681,7 @@ hello!
           startLine (Int32):
             "243"
         first (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "15"
-            endLine (Int32):
-              "243"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "9"
-            startLine (Int32):
-              "243"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "15"
@@ -9706,6 +9695,17 @@ hello!
                 "243"
             ojLiteral (Map):
               "System"
+          Extent (Extent):
+            endColumn (Int32):
+              "15"
+            endLine (Int32):
+              "243"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "9"
+            startLine (Int32):
+              "243"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -9839,18 +9839,7 @@ Schwaenzchen in die Hoeh.
         startLine (Int32):
           "251"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "14"
-          endLine (Int32):
-            "251"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "7"
-          startLine (Int32):
-            "251"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "14"
@@ -9864,6 +9853,17 @@ Schwaenzchen in die Hoeh.
               "251"
           ojLiteral (Map):
             "textBox"
+        Extent (Extent):
+          endColumn (Int32):
+            "14"
+          endLine (Int32):
+            "251"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "7"
+          startLine (Int32):
+            "251"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -9908,18 +9908,7 @@ Schwaenzchen in die Hoeh.
         startLine (Int32):
           "252"
       first (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "20"
-          endLine (Int32):
-            "252"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "15"
-          startLine (Int32):
-            "252"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "20"
@@ -9933,6 +9922,17 @@ Schwaenzchen in die Hoeh.
               "252"
           ojLiteral (Map):
             "lines"
+        Extent (Extent):
+          endColumn (Int32):
+            "20"
+          endLine (Int32):
+            "252"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "15"
+          startLine (Int32):
+            "252"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -10706,18 +10706,7 @@ Schwaenzchen in die Hoeh.
         ojLiteral (Integer):
           "3"
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "18"
-          endLine (Int32):
-            "274"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "14"
-          startLine (Int32):
-            "274"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "18"
@@ -10731,6 +10720,17 @@ Schwaenzchen in die Hoeh.
               "274"
           ojLiteral (Map):
             "loop"
+        Extent (Extent):
+          endColumn (Int32):
+            "18"
+          endLine (Int32):
+            "274"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "14"
+          startLine (Int32):
+            "274"
       Extent (Extent):
         endColumn (Int32):
           "21"
@@ -10866,18 +10866,7 @@ Schwaenzchen in die Hoeh.
         ojLiteral (Integer):
           "1"
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "30"
-          endLine (Int32):
-            "278"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "19"
-          startLine (Int32):
-            "278"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "30"
@@ -10891,6 +10880,17 @@ Schwaenzchen in die Hoeh.
               "278"
           ojLiteral (Map):
             "returnInMap"
+        Extent (Extent):
+          endColumn (Int32):
+            "30"
+          endLine (Int32):
+            "278"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "19"
+          startLine (Int32):
+            "278"
       Extent (Extent):
         endColumn (Int32):
           "33"
@@ -11182,18 +11182,7 @@ Schwaenzchen in die Hoeh.
           ojLiteral (Map):
             ""
         epsCallable (Search):
-          Extent (Extent):
-            endColumn (Int32):
-              "31"
-            endLine (Int32):
-              "287"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "26"
-            startLine (Int32):
-              "287"
-          key (Literal):
+          epsKey (Literal):
             Extent (Extent):
               endColumn (Int32):
                 "31"
@@ -11207,6 +11196,17 @@ Schwaenzchen in die Hoeh.
                 "287"
             ojLiteral (Map):
               "myArg"
+          Extent (Extent):
+            endColumn (Int32):
+              "31"
+            endLine (Int32):
+              "287"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "26"
+            startLine (Int32):
+              "287"
         Extent (Extent):
           endColumn (Int32):
             "32"
@@ -11219,18 +11219,7 @@ Schwaenzchen in die Hoeh.
           startLine (Int32):
             "287"
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "25"
-          endLine (Int32):
-            "287"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "16"
-          startLine (Int32):
-            "287"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "25"
@@ -11244,6 +11233,17 @@ Schwaenzchen in die Hoeh.
               "287"
           ojLiteral (Map):
             "returnArg"
+        Extent (Extent):
+          endColumn (Int32):
+            "25"
+          endLine (Int32):
+            "287"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "16"
+          startLine (Int32):
+            "287"
       Extent (Extent):
         endColumn (Int32):
           "32"
@@ -11380,18 +11380,7 @@ Schwaenzchen in die Hoeh.
         ojLiteral (Map):
           ""
       epsCallable (Search):
-        Extent (Extent):
-          endColumn (Int32):
-            "37"
-          endLine (Int32):
-            "291"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "19"
-          startLine (Int32):
-            "291"
-        key (Literal):
+        epsKey (Literal):
           Extent (Extent):
             endColumn (Int32):
               "37"
@@ -11405,6 +11394,17 @@ Schwaenzchen in die Hoeh.
               "291"
           ojLiteral (Map):
             "documentedFunction"
+        Extent (Extent):
+          endColumn (Int32):
+            "37"
+          endLine (Int32):
+            "291"
+          fileName (String):
+            "basicTest.meta"
+          startColumn (Int32):
+            "19"
+          startLine (Int32):
+            "291"
       Extent (Extent):
         endColumn (Int32):
           "38"

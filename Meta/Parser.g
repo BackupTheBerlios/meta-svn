@@ -527,7 +527,7 @@ statement
 		val=expression
 		{
 			//Map statement=new Map();
-			statement[Statement.keyString]=k;
+			statement[Statement.sKey]=k;
 			statement[Statement.valueString]=val;// TODO: Add Extent to statements, too?
 		}
 	)

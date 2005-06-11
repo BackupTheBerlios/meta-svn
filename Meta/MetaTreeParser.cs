@@ -413,7 +413,7 @@ _loop116_breakloop:		;
 		_t = retTree_;
 		
 					//Map statement=new Map();
-					statement[Statement.keyString]=k;
+					statement[Statement.sKey]=k;
 					statement[Statement.valueString]=val;// TODO: Add Extent to statements, too?
 				
 		_t = __t118;

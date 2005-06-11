@@ -74,8 +74,8 @@ namespace Meta {
 			public static readonly Map sArgument=new Map("argument");
 			public Call(Map obj) {
 				Map mCall=(Map)obj[sCall];
-				this.epsCallable=(Expression)((Map)mCall[sFunction]).Compile();
-				this.epsArgument=(Expression)((Map)mCall[sArgument]).Compile();
+				this.epsCallable=(Expression)((Map)mCall[sFunction]).EpsCompileV();
+				this.epsArgument=(Expression)((Map)mCall[sArgument]).EpsCompileV();
 			}
 			public Expression epsArgument;
 			public Expression epsCallable;
@@ -123,7 +123,7 @@ namespace Meta {
 			}
 //			public Program(Map code) {
 //				foreach(Map statement in ((Map)code[sProgram]).IntKeyValues) {
-//					this.arlSmStatements.Add(statement.Compile()); // should we save the original maps instead of arlSmStatements?
+//					this.arlSmStatements.Add(statement.EpsCompileV()); // should we save the original maps instead of arlSmStatements?
 //				}
 //			}
 			public readonly ArrayList arlSmStatements=new ArrayList();
@@ -140,19 +140,18 @@ namespace Meta {
 			}
 			public static readonly Map sLiteral=new Map("literal");
 			public Literal(Map code) {
-				this.ojLiteral=Interpreter.RecognizeLiteralText((string)((Map)code[sLiteral]).GetDotNetString());
+				this.ojLiteral=Interpreter.OjRecognizeLiteralS((string)((Map)code[sLiteral]).SDotNetStringV());
 			}
 			public object ojLiteral=null;
 		}
-		// this is a normal expression that can appear anywhere an expression can
 		public class Search: Expression {
-			public Search(Map code) {
-				this.key=(Expression)((Map)code[searchString]).Compile();
+			public Search(Map mSearch) {
+				this.epsKey=(Expression)((Map)mSearch[searchString]).EpsCompileV();
 			}
-			public Expression key;
-			public static readonly Map keyString=new Map("key");
+			public Expression epsKey;
+			public static readonly Map sKey=new Map("key");
 			public override object OjEvaluateM(IMap parent) {
-				object k=key.OjEvaluateM(parent);
+				object k=epsKey.OjEvaluateM(parent);
 				IMap selected=parent;
 				while(!selected.ContainsKey(k)) {
 					selected=selected.mParent;
@@ -173,12 +172,12 @@ namespace Meta {
 			public Select(Map code) {
 				ArrayList list=((Map)code[selectString]).IntKeyValues;
 //				list.Reverse(); // do things the right way around again
-				first=(Expression)((Map)list[0]).Compile();
+				first=(Expression)((Map)list[0]).EpsCompileV();
 //				if(list[0].Equals(new Map("Collections"))) {
 //					int asdf=0;
 //				}
 				for(int i=1;i<list.Count;i++) {
-					keys.Add(((Map)list[i]).Compile());
+					keys.Add(((Map)list[i]).EpsCompileV());
 				}
 			}
 			public override object OjEvaluateM(IMap parent) {
@@ -236,18 +235,18 @@ namespace Meta {
 				}
 			}
 			public Statement(Map code) {
-				ArrayList intKeys=((Map)code[keyString]).IntKeyValues;
+				ArrayList intKeys=((Map)code[sKey]).IntKeyValues;
 //				intKeys.Reverse();
 				foreach(Map key in intKeys) {
-					keys.Add(key.Compile());
+					keys.Add(key.EpsCompileV());
 				}
-				this.val=(Expression)((Map)code[valueString]).Compile();
+				this.val=(Expression)((Map)code[valueString]).EpsCompileV();
 			}
 			public ArrayList keys=new ArrayList();
 			public Expression val;
 
 
-			public static readonly Map keyString=new Map("key");
+			public static readonly Map sKey=new Map("key");
 			public static readonly Map valueString=new Map("value");
 		}
 
@@ -264,7 +263,7 @@ namespace Meta {
 					string text="";
 					Map map=(Map)meta;
 					if(map.IsString) {
-						text+="\""+(map).GetDotNetString()+"\"";
+						text+="\""+(map).SDotNetStringV()+"\"";
 					}
 					else if(map.Count==0) {
 						text+="()";
@@ -322,7 +321,7 @@ namespace Meta {
 				}
 				return result;
 			}	
-			public static object RecognizeLiteralText(string text) {
+			public static object OjRecognizeLiteralS(string text) {
 				for(int i=literalRecognitions.Count-1;i>=0;i--) {
 					object recognized=((RecognizeLiteral)literalRecognitions[i]).Recognize(text);
 					if(recognized!=null) {
@@ -351,7 +350,7 @@ namespace Meta {
 					return ((Integer)obj).Int;
 				}
 				else if(obj is Map && ((Map)obj).IsString) {
-					return ((Map)obj).GetDotNetString();
+					return ((Map)obj).SDotNetStringV();
 				}
 				else {
 					return obj;
@@ -369,25 +368,25 @@ namespace Meta {
 				}
 			}
 //			public static object Run(string fileName,IMap argument) {
-//				Map program=CompileToMap(fileName);
+//				Map program=mCompileS(fileName);
 //				program.mParent=Library.library;
 //				return program.Call(argument);
 //			}
 //
 //			public static object RunWithoutLibrary(string fileName,IMap argument) { // TODO: refactor, combine with Run
-//				Map program=CompileToMap(fileName); // TODO: rename, is not really a program but a function
+//				Map program=mCompileS(fileName); // TODO: rename, is not really a program but a function
 //				return program.Call(argument);
 //			}
 			public static object Run(string fileName,IMap argument) {
-//				Map program=CompileToMap(fileName);
+//				Map program=mCompileS(fileName);
 				//				program.mParent=Library.library;
-				Map program=Interpreter.CompileToMap(fileName);
+				Map program=Interpreter.mCompileS(fileName);
 
 				return CallProgram(program,argument,Library.library);
 			}
 
 			public static object RunWithoutLibrary(string fileName,IMap argument) { // TODO: refactor, combine with Run
-				Map program=CompileToMap(fileName); // TODO: rename, is not really a program but a function
+				Map program=mCompileS(fileName); // TODO: rename, is not really a program but a function
 				return CallProgram(program,argument,null);
 			}
 			public static object CallProgram(Map program,IMap argument,IMap parent) {
@@ -397,7 +396,7 @@ namespace Meta {
 				return mCallable.ojCallOj(argument);
 			}
 
-//			public static Map CompileToMap(string fileName,Map mArg) {
+//			public static Map mCompileS(string fileName,Map mArg) {
 //				Map mFunction=new Map();
 //				mFunction[Expression.sRun]=(new MetaTreeParser()).map(ParseToAst(fileName));
 //				Map mArgument=new Map();
@@ -406,7 +405,7 @@ namespace Meta {
 //				mCall[Call.sArgument]=mArgument;
 //				return mCall;
 //			}
-			public static Map CompileToMap(string fileName) {
+			public static Map mCompileS(string fileName) {
 				return (new MetaTreeParser()).map(ParseToAst(fileName));
 			}
 			public static AST ParseToAst(string fileName)  {
@@ -764,7 +763,7 @@ namespace Meta {
 					public override object Convert(object obj, out bool converted) {
 						if(((Map)obj).IsString) {
 							converted=true;
-							return ((Map)obj).GetDotNetString();
+							return ((Map)obj).SDotNetStringV();
 						}
 						else {
 							converted=false;
@@ -968,7 +967,7 @@ namespace Meta {
 //						this.target=typeof(string);
 //					}
 //					public override object Convert(object obj) {
-//						return ((Map)obj).GetDotNetString();
+//						return ((Map)obj).SDotNetStringV();
 //					}
 //				}
 //				public class ConvertFractionToDecimal: MetaToDotNetConversion {
@@ -1143,7 +1142,7 @@ namespace Meta {
 			public KeyException(object key,Extent extent):base(extent) {
 				message="Key ";
 				if(key is Map && ((Map)key).IsString) {
-					message+=((Map)key).GetDotNetString();
+					message+=((Map)key).SDotNetStringV();
 				}
 				else if(key is Map) {
 					message+=Interpreter.MetaSerialize(key,"",true);
@@ -1407,11 +1406,11 @@ namespace Meta {
 				ArrayList namespaces=new ArrayList();
 				if(assemblyInfo.ContainsKey(new Map(assembly.Location))) {
 					Map info=(Map)assemblyInfo[new Map(assembly.Location)];
-					string timestamp=((Map)info[new Map("timestamp")]).GetDotNetString();
+					string timestamp=((Map)info[new Map("timestamp")]).SDotNetStringV();
 					if(timestamp.Equals(File.GetCreationTime(assembly.Location).ToString())) {
 						Map names=(Map)info[new Map("namespaces")];
 						foreach(DictionaryEntry entry in names) {
-							string text=((Map)entry.Value).GetDotNetString();
+							string text=((Map)entry.Value).SDotNetStringV();
 							namespaces.Add(text);
 						}
 						return namespaces;
@@ -1514,8 +1513,8 @@ namespace Meta {
 					return table.IsString;
 				}
 			}
-			public string GetDotNetString() {
-				return table.GetDotNetString();
+			public string SDotNetStringV() { // Refactoring: has a stupid name, Make property
+				return table.SDotNetStringV();
 			}
 			public IMap mParent {
 				get {
@@ -1568,14 +1567,14 @@ namespace Meta {
 				}
 			}
 			public object Execute() { // TODO: Rename to evaluate
-				Expression function=(Expression)Compile();
+				Expression function=(Expression)EpsCompileV();
 				object result;
 				result=function.OjEvaluateM(this);
 				return result;
 			}
 			public object ojCallOj(object argument) {
 				this.Argument=argument;
-				Expression function=(Expression)((Map)this[Expression.sRun]).Compile();
+				Expression function=(Expression)((Map)this[Expression.sRun]).EpsCompileV();
 				object result;
 				Interpreter.arguments.Add(argument);
 				result=function.OjEvaluateM(this);
@@ -1594,7 +1593,7 @@ namespace Meta {
 				clone.Extent=Extent;
 				return clone;
 			}
-			public Expression Compile()  { // compiled Statements are not cached, only expressions
+			public Expression EpsCompileV()  { // compiled Statements are not cached, only expressions
 				if(compiled==null)  {
 					if(this.ContainsKey(Meta.Execution.Call.sCall)) {
 						compiled=new Call(this);
@@ -1687,7 +1686,7 @@ namespace Meta {
 			public Expression compiled; // why have this at all, why not for statements? probably a question of performance.
 			public string Serialize(string indent,string[] functions) {
 				if(this.IsString) {
-					return indent+"\""+this.GetDotNetString()+"\""+"\n";
+					return indent+"\""+this.SDotNetStringV()+"\""+"\n";
 				}
 				else {
 					return null;
@@ -1712,7 +1711,7 @@ namespace Meta {
 				
 				// TODO: Rename. Reason: This really means something more abstract, more along the lines of,
 				// "is this a map that only has integers as children, and maybe also only integers as keys?"
-				public abstract string GetDotNetString();
+				public abstract string SDotNetStringV();
 				public abstract ArrayList Keys {
 					get;
 				}
@@ -1785,7 +1784,7 @@ namespace Meta {
 						return true;
 					}
 				}
-				public override string GetDotNetString() {
+				public override string SDotNetStringV() {
 					return text;
 				}
 				public override ArrayList Keys {
@@ -1866,7 +1865,7 @@ namespace Meta {
 					get {
 						if(IntKeyValues.Count>0) {
 							try {
-								GetDotNetString();// TODO: a bit of a hack
+								SDotNetStringV();// TODO: a bit of a hack
 								return true;
 							}
 							catch{
@@ -1875,7 +1874,7 @@ namespace Meta {
 						return false;
 					}
 				}
-				public override string GetDotNetString() { // TODO: looks too complicated
+				public override string SDotNetStringV() { // TODO: looks too complicated
 					string text="";
 					foreach(object key in this.Keys) {
 						if(key is Integer && this.table[key] is Integer) {
@@ -2445,7 +2444,7 @@ namespace Meta {
 				string ojMetaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
 				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",ojMetaDllLocation});
 				assemblyNames.AddRange(Interpreter.loadedAssemblies);
-				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
+				CompilerParameters  options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
 				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
 				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
@@ -2461,7 +2460,7 @@ namespace Meta {
 //			public static Delegate delFromF(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
 //				code.mParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
 //				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
-//				ICodeCompiler compiler=codeProvider.CreateCompiler();
+//				ICodeEpsCompileVr compiler=codeProvider.CreateEpsCompileVr();
 //				string returnTypeName;
 //				if(method==null) {
 //					returnTypeName="object";
@@ -2504,9 +2503,9 @@ namespace Meta {
 //				string ojMetaDllLocation=Assembly.GetAssembly(tTargetof(Map)).Location;
 //				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",ojMetaDllLocation});
 //				assemblyNames.AddRange(Interpreter.loadedAssemblies);
-//				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(tTargetof(string)));
-//				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
-//				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
+//				EpsCompileVrParameters options=new EpsCompileVrParameters((string[])assemblyNames.ToArray(tTargetof(string)));
+//				EpsCompileVrResults results=compiler.EpsCompileVAssemblyFromSource(options,source);
+//				Type containerClass=results.EpsCompileVdAssembly.GetType("EventHandlerContainer",true);
 //				object container=containerClass.GetConstructor(new Type[]{tTargetof(Map)}).Invoke(new object[] {
 //																																			  code});
 //				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
@@ -2769,7 +2768,7 @@ namespace Meta {
 //			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
 //				code.mParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
 //				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
-//				ICodeCompiler compiler=codeProvider.CreateCompiler();
+//				ICodeEpsCompileVr compiler=codeProvider.CreateEpsCompileVr();
 //				string returnTypeName;
 //				if(method==null) {
 //					returnTypeName="object";
@@ -2812,9 +2811,9 @@ namespace Meta {
 //				string metaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
 //				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
 //				assemblyNames.AddRange(Interpreter.loadedAssemblies);
-//				CompilerParameters options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
-//				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
-//				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
+//				EpsCompileVrParameters options=new EpsCompileVrParameters((string[])assemblyNames.ToArray(typeof(string)));
+//				EpsCompileVrResults results=compiler.EpsCompileVAssemblyFromSource(options,source);
+//				Type containerClass=results.EpsCompileVdAssembly.GetType("EventHandlerContainer",true);
 //				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
 //																																			  code});
 //				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
@@ -2902,7 +2901,7 @@ namespace Meta {
 			public bool ContainsKey(object key) {
 				if(key is Map) {
 					if(((Map)key).IsString) {
-						string text=((Map)key).GetDotNetString();
+						string text=((Map)key).SDotNetStringV();
 						if(type.GetMember((string)key,
 							BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
 							return true;
@@ -2945,7 +2944,7 @@ namespace Meta {
 			public virtual object this[object key]  {
 				get {
 					if(key is Map && ((Map)key).IsString) {
-						string text=((Map)key).GetDotNetString();
+						string text=((Map)key).SDotNetStringV();
 						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
@@ -2980,7 +2979,7 @@ namespace Meta {
 				}
 				set {
 					if(key is Map && ((Map)key).IsString) {
-						string text=((Map)key).GetDotNetString();
+						string text=((Map)key).SDotNetStringV();
 						if(text.Equals("staticEvent")) {
 							int asdf=0;
 						}
