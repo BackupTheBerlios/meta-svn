@@ -67,7 +67,7 @@ namespace Meta {
 				if(arg is IMap) {
 					arg=((IMap)arg).Clone();
 				}
-				return ((ICallable)callableExpression.Evaluate(parent)).oCallO(
+				return ((ICallable)callableExpression.Evaluate(parent)).ojCallOj(
 					arg);
 			}
 			public static readonly Map callString=new Map("call");
@@ -407,7 +407,7 @@ namespace Meta {
 				Map mCallable=new Map();
 				mCallable[Expression.runString]=program;
 				mCallable.Parent=parent;
-				return mCallable.oCallO(argument);
+				return mCallable.ojCallOj(argument);
 			}
 
 //			public static Map CompileToMap(string fileName,Map mArg) {
@@ -1175,7 +1175,7 @@ namespace Meta {
 	namespace Types  {
 		/* Everything implementing this interface can be used in a Call expression */
 		public interface ICallable {
-			object oCallO(object argument);
+			object ojCallOj(object argument);
 		}
 		public interface IMap: IKeyValue {
 			IMap Parent {
@@ -1579,7 +1579,7 @@ namespace Meta {
 				result=function.Evaluate(this);
 				return result;
 			}
-			public object oCallO(object argument) {
+			public object ojCallOj(object argument) {
 				this.Argument=argument;
 				Expression function=(Expression)((Map)this[Expression.runString]).Compile();
 				object result;
@@ -1953,7 +1953,7 @@ namespace Meta {
 		public class MetaLibraryMethodAttribute:Attribute {
 		}
 		public class NetMethod: ICallable {
-			public bool bLibraryMethod=false; // TODO: is this even needen anymore?
+			public bool blaLibraryMethod=false; // TODO: is this even needen anymore?
 			// TODO: Move this to "With" ? Move this to NetContainer?
 			public static object ojAssignCollectionMOjOutbla(Map mCollection,object ojCollection,out bool blaSuccess) { // TODO: is blaSuccess needed?
 				if(mCollection.IntKeyValues.Count==0) {
@@ -1996,36 +1996,36 @@ namespace Meta {
 //			}
 			// TODO: finally invent a Meta tTarget??? Would be useful here for prefix to Meta,
 			// it isn't, after all just any object
-			public static object ojConvertParameterOjTOutbla(object ojMeta,Type typParameter,out bool outblaConverted) {
+			public static object ojConvertParameterOjTOutbla(object ojMeta,Type tParameter,out bool outblaConverted) {
 				outblaConverted=true;
-				if(typParameter.IsAssignableFrom(ojMeta.GetType())) {
+				if(tParameter.IsAssignableFrom(ojMeta.GetType())) {
 					return ojMeta;
 				}
-				else if((typParameter.IsSubclassOf(typeof(Delegate))
-					||typParameter.Equals(typeof(Delegate))) && (ojMeta is Map)) { // TODO: add check, that the m contains code, not necessarily, think this conversion stuff through completely
-					MethodInfo m=typParameter.GetMethod("Invoke",BindingFlags.Instance
+				else if((tParameter.IsSubclassOf(typeof(Delegate))
+					||tParameter.Equals(typeof(Delegate))) && (ojMeta is Map)) { // TODO: add check, that the m contains code, not necessarily, think this conversion stuff through completely
+					MethodInfo mtifInvoke=tParameter.GetMethod("Invoke",BindingFlags.Instance
 						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-					Delegate delFunction=delFromF(typParameter,m,(Map)ojMeta);
-					return delFunction;
+					Delegate dlgFunction=delFromF(tParameter,mtifInvoke,(Map)ojMeta);
+					return dlgFunction;
 				}
-				else if(typParameter.IsArray && ojMeta is IMap && ((Map)ojMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
+				else if(tParameter.IsArray && ojMeta is IMap && ((Map)ojMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
 					try {
-						Type typArrayElements=typParameter.GetElementType();
-						Map m=((Map)ojMeta);
-						ArrayList altValues=m.IntKeyValues;
-						Array arr=Array.CreateInstance(typArrayElements,altValues.Count);
-						for(int i=0;i<altValues.Count;i++) {
-							arr.SetValue(altValues[i],i);
+						Type tElements=tParameter.GetElementType();
+						Map mArgument=((Map)ojMeta);
+						ArrayList arlArgument=mArgument.IntKeyValues;
+						Array arArgument=Array.CreateInstance(tElements,arlArgument.Count);
+						for(int i=0;i<arlArgument.Count;i++) {
+							arArgument.SetValue(arlArgument[i],i);
 						}
-						return arr;
+						return arArgument;
 					}
 					catch {
 					}
 				}
 				else {
-					bool outBParamConverted; // TODO: refactor with outblaConverted
-					object result=Interpreter.ConvertMetaToDotNet(ojMeta,typParameter,out outBParamConverted);
-					if(outBParamConverted) {
+					bool outblaParamConverted; // TODO: refactor with outblaConverted
+					object result=Interpreter.ConvertMetaToDotNet(ojMeta,tParameter,out outblaParamConverted);
+					if(outblaParamConverted) {
 						return result;
 					}
 				}
@@ -2034,21 +2034,21 @@ namespace Meta {
 			}
 //			// TODO: finally invent a Meta tTarget??? Would be useful here for prefix to Meta,
 //			// it isn't, after all just any object
-//			public static object oConvertParameterOTypOutb(object ojMeta,Type typParameter,out bool outblaConverted) {
+//			public static object oConvertParameterOTypOutb(object ojMeta,Type tParameter,out bool outblaConverted) {
 //				outblaConverted=true;
-//				if(typParameter.IsAssignableFrom(ojMeta.GetType())) {
+//				if(tParameter.IsAssignableFrom(ojMeta.GetType())) {
 //					return ojMeta;
 //				}
-//				else if((typParameter.IsSubclassOf(tTargetof(Delegate))
-//					||typParameter.Equals(tTargetof(Delegate))) && (ojMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
-//					MethodInfo m=typParameter.GetMethod("Invoke",BindingFlags.Instance
+//				else if((tParameter.IsSubclassOf(tTargetof(Delegate))
+//					||tParameter.Equals(tTargetof(Delegate))) && (ojMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
+//					MethodInfo m=tParameter.GetMethod("Invoke",BindingFlags.Instance
 //						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-//					Delegate delFunction=delFromF(typParameter,m,(Map)ojMeta);
-//					return delFunction;
+//					Delegate dlgFunction=delFromF(tParameter,m,(Map)ojMeta);
+//					return dlgFunction;
 //				}
-//				else if(typParameter.IsArray && ojMeta is IMap && ((Map)ojMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
+//				else if(tParameter.IsArray && ojMeta is IMap && ((Map)ojMeta).IntKeyValues.Count!=0) {// TODO: cheating, not very understandable
 //					try {
-//						Type arrayType=typParameter.GetElementType();
+//						Type arrayType=tParameter.GetElementType();
 //						Map map=((Map)ojMeta);
 //						ArrayList mapValues=map.IntKeyValues;
 //						Array array=Array.CreateInstance(arrayType,mapValues.Count);
@@ -2062,7 +2062,7 @@ namespace Meta {
 //				}
 //				else {
 //					bool isConverted; // TODO: refactor with outblaConverted
-//					object result=Interpreter.ConvertMetaToDotNet(ojMeta,typParameter,out isConverted);
+//					object result=Interpreter.ConvertMetaToDotNet(ojMeta,tParameter,out isConverted);
 //					if(isConverted) {
 //						return result;
 //					}
@@ -2106,20 +2106,20 @@ namespace Meta {
 //				outblaConverted=false;
 //				return null;
 //			}
-			public object oCallO(object oArgument) {
-				object oResult=null;
+			public object ojCallOj(object ojArgument) {
+				object ojResult=null;
 				// TODO: check this for every meb:
 				// introduce own mebinfo class? that does the calling, maybe??? dynamic cast might become a performance
 				// problem, but I doubt it, so what?
-				if(bLibraryMethod) {
+				if(blaLibraryMethod) {
 					if(arMtbOverloadedMethods[0] is ConstructorInfo) {
-						// TODO: Comment this properly: kcall arMtbOverloadedMethods without oArguments, ugly and redundant, because Invoke is not compatible between
+						// TODO: Comment this properly: kcall arMtbOverloadedMethods without ojArguments, ugly and redundant, because Invoke is not compatible between
 						// constructor and normal meb
-						oResult=((ConstructorInfo)arMtbOverloadedMethods[0]).Invoke(new object[] {oArgument}); 
+						ojResult=((ConstructorInfo)arMtbOverloadedMethods[0]).Invoke(new object[] {ojArgument}); 
 					}
 					else {
 						try {
-							oResult=arMtbOverloadedMethods[0].Invoke(ojTarget,new object[] {oArgument});
+							ojResult=arMtbOverloadedMethods[0].Invoke(ojTarget,new object[] {ojArgument});
 						}
 						catch {
 							throw new ApplicationException("Could not invoke "+sName+".");
@@ -2127,46 +2127,46 @@ namespace Meta {
 					}
 				}
 				else {
-					ArrayList arlOArguments=((IMap)oArgument).IntKeyValues;
-					object oReturn=null;
+					ArrayList arlOArguments=((IMap)ojArgument).IntKeyValues;
+					object ojReturn=null;
 					ArrayList arlMtifRightNumberArguments=new ArrayList();
 					foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
 						if(arlOArguments.Count==mtbCurrent.GetParameters().Length) { // don't match if different parameter list length
-							if(arlOArguments.Count==((IMap)oArgument).Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
+							if(arlOArguments.Count==((IMap)ojArgument).Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
 								arlMtifRightNumberArguments.Add(mtbCurrent);
 							}
 						}
 					}
-					bool bExecuted=false;
-					foreach(MethodBase mtbs in arlMtifRightNumberArguments) {
-						ArrayList alstArguments=new ArrayList();
-						bool bArgumentsMatched=true;
-						ParameterInfo[] parameters=mtbs.GetParameters();
-						for(int i=0;bArgumentsMatched && i<parameters.Length;i++) {
-							alstArguments.Add(ojConvertParameterOjTOutbla(arlOArguments[i],parameters[i].ParameterType,out bArgumentsMatched));
+					bool blaExecuted=false;
+					foreach(MethodBase mtbCurrent in arlMtifRightNumberArguments) {
+						ArrayList arlArguments=new ArrayList();
+						bool blaArgumentsMatched=true;
+						ParameterInfo[] arPrmtifParameters=mtbCurrent.GetParameters();
+						for(int i=0;blaArgumentsMatched && i<arPrmtifParameters.Length;i++) {
+							arlArguments.Add(ojConvertParameterOjTOutbla(arlOArguments[i],arPrmtifParameters[i].ParameterType,out blaArgumentsMatched));
 						}
-						if(bArgumentsMatched) {
-							if(mtbs is ConstructorInfo) {
-								oReturn=((ConstructorInfo)mtbs).Invoke(alstArguments.ToArray());
+						if(blaArgumentsMatched) {
+							if(mtbCurrent is ConstructorInfo) {
+								ojReturn=((ConstructorInfo)mtbCurrent).Invoke(arlArguments.ToArray());
 							}
 							else {
-								oReturn=mtbs.Invoke(ojTarget,alstArguments.ToArray());
+								ojReturn=mtbCurrent.Invoke(ojTarget,arlArguments.ToArray());
 							}
-							bExecuted=true;// remove, use bArgumentsMatched instead
+							blaExecuted=true;// remove, use blaArgumentsMatched instead
 							break;
 						}
 					}
-					// TODO: oResult / oReturn is duplication
-					oResult=oReturn; // mess, why is this here? put in else after the next if
+					// TODO: ojResult / ojReturn is duplication
+					ojResult=ojReturn; // mess, why is this here? put in else after the next if
 					// make this safe
-					if(!bExecuted && arMtbOverloadedMethods[0] is ConstructorInfo) {
-						object o=new NetMethod(tTarget).oCallO(new Map());
-						oResult=with(o,((Map)oArgument));
+					if(!blaExecuted && arMtbOverloadedMethods[0] is ConstructorInfo) {
+						object ojToBeInitialized=new NetMethod(tTarget).ojCallOj(new Map());
+						ojResult=with(ojToBeInitialized,((Map)ojArgument));
 					}
 				}		
-				return Interpreter.ConvertDotNetTojMeta(oResult);
+				return Interpreter.ConvertDotNetTojMeta(ojResult);
 			}
-//			public object oCallO(object argument) {
+//			public object ojCallOj(object argument) {
 //				if(this.sName=="Write") {
 //					int asdf=0;
 //				}
@@ -2174,7 +2174,7 @@ namespace Meta {
 //				// TODO: check this for every method:
 //				// introduce own methodinfo class? that does the calling, maybe??? dynamic cast might become a performance
 //				// problem, but I doubt it, so what?
-//				if(bLibraryMethod) {
+//				if(blaLibraryMethod) {
 //					if(arMtbOverloadedMethods[0] is ConstructorInfo) {
 //						// TODO: Comment this properly: kcall arMtbOverloadedMethods without arguments, ugly and redundant, because Invoke is not compatible between
 //						// constructor and normal method
@@ -2228,7 +2228,7 @@ namespace Meta {
 //					result=returnValue; // mess, why is this here? put in else after the next if
 //					// make this safe
 //					if(!executed && arMtbOverloadedMethods[0] is ConstructorInfo) {
-//						object o=new NetMethod(tTarget).oCallO(new Map());
+//						object o=new NetMethod(tTarget).ojCallOj(new Map());
 //						result=with(o,((Map)argument));
 //					}
 //				}		
@@ -2279,7 +2279,7 @@ namespace Meta {
 				argumentList+=")";
 				source+=argumentList+"{";
 				source+=argumentAdding;
-				source+="object result=callable.oCallO(arg);";
+				source+="object result=callable.ojCallOj(arg);";
 				if(method!=null) {
 					if(!method.ReturnType.Equals(typeof(void))) {
 						source+="return ("+returnTypeName+")";
@@ -2338,7 +2338,7 @@ namespace Meta {
 //				argumentList+=")";
 //				source+=argumentList+"{";
 //				source+=argumentAdding;
-//				source+="object result=callable.oCallO(arg);";
+//				source+="object result=callable.ojCallOj(arg);";
 //				if(method!=null) {
 //					if(!method.ReturnType.Equals(tTargetof(void))) {
 //						source+="return ("+returnTypeName+")";
@@ -2389,7 +2389,7 @@ namespace Meta {
 				// research the number and nature of such arMtbOverloadedMethods as Console.WriteLine
 				arMtbOverloadedMethods=(MethodBase[])arlMtbMethods.ToArray(typeof(MethodBase));
 				if(arMtbOverloadedMethods.Length==1 && arMtbOverloadedMethods[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
-					this.bLibraryMethod=true;
+					this.blaLibraryMethod=true;
 				}
 			}
 //			private void Initialize(string name,object ojTarget,Type tTarget) {
@@ -2413,7 +2413,7 @@ namespace Meta {
 //				// research the number and nature of such arMtbOverloadedMethods as Console.WriteLine
 //				arMtbOverloadedMethods=(MethodBase[])list.ToArray(tTargetof(MethodBase));
 //				if(arMtbOverloadedMethods.Length==1 && arMtbOverloadedMethods[0].GetCustomAttributes(tTargetof(MetaLibraryMethodAttribute),false).Length!=0) {
-//					this.bLibraryMethod=true;
+//					this.blaLibraryMethod=true;
 //				}
 //			}
 			public NetMethod(string name,object ojTarget,Type tTarget) {
@@ -2482,7 +2482,7 @@ namespace Meta {
 
 		}
 //		public class NetMethod: ICallable {
-//			public bool bLibraryMethod=false;
+//			public bool blaLibraryMethod=false;
 //			// TODO: Move this to "With" ? Move this to NetContainer?
 //			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
 //
@@ -2548,7 +2548,7 @@ namespace Meta {
 //				// TODO: check this for every method:
 //				// introduce own methodinfo class? that does the calling, maybe??? dynamic cast might become a performance
 //				// problem, but I doubt it, so what?
-//				if(bLibraryMethod) {
+//				if(blaLibraryMethod) {
 //					if(methods[0] is ConstructorInfo) {
 //						// TODO: Comment this properly: kcall methods without arguments, ugly and redundant, because Invoke is not compatible between
 //						// constructor and normal method
@@ -2697,7 +2697,7 @@ namespace Meta {
 //									// research the number and nature of such methods as Console.WriteLine
 //				methods=(MethodBase[])list.ToArray(typeof(MethodBase));
 //				if(methods.Length==1 && methods[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
-//					this.bLibraryMethod=true;
+//					this.blaLibraryMethod=true;
 //				}
 //			}
 //			public NetMethod(string name,object target,Type type) {
@@ -2736,8 +2736,8 @@ namespace Meta {
 			public NetClass(Type type):base(null,type) {
 				this.constructor=new NetMethod(this.type);
 			}
-			public object oCallO(object argument) {
-				return constructor.oCallO(argument);
+			public object ojCallOj(object argument) {
+				return constructor.ojCallOj(argument);
 			}
 		}
 		/* Representation of a .NET object. */
@@ -2764,7 +2764,7 @@ namespace Meta {
 				Map arguments=new Map();
 				arguments[new Integer(1)]=key;
 				try {
-					indexerMethod.oCallO(arguments);
+					indexerMethod.ojCallOj(arguments);
 					return true;
 				}
 				catch(Exception) {
@@ -2823,7 +2823,7 @@ namespace Meta {
 					Map arguments=new Map();
 					arguments[new Integer(1)]=key;
 					try {
-						return indexerMethod.oCallO(arguments);
+						return indexerMethod.ojCallOj(arguments);
 					}
 					catch(Exception) {
 						return null;
@@ -2895,7 +2895,7 @@ namespace Meta {
 					arguments[new Integer(1)]=key;
 					arguments[new Integer(2)]=value;// do this more efficiently?
 					try {
-						indexer.oCallO(arguments);
+						indexer.ojCallOj(arguments);
 					}
 					catch(Exception) {
 						throw new ApplicationException("Cannot set "+key.ToString()+".");
