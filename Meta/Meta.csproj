@@ -89,26 +89,12 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "Adder.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "BigInteger.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "design.txt"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "ErrorFormatter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -160,11 +146,6 @@
                 <File
                     RelPath = "Parser.g"
                     BuildAction = "None"
-                />
-                <File
-                    RelPath = "ValueExtentToken.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
                 />
             </Include>
         </Files>

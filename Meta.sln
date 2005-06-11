@@ -19,10 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "function", "function\functi
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdderTutorial", "Meta\antlr-tutorial-1.3\AdderTutorial.NET\AdderTutorial.csproj", "{E2214554-DB91-4E99-8AE8-C5EAA3F9C0F1}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "logic", "logic\logic.csproj", "{8D3FEEEF-F7AC-4BCA-90B6-7923DAB85856}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -79,14 +75,6 @@ Global
 		{871AACBF-7043-4EC7-8778-5C5BA3AEEB01}.Release.Build.0 = Release|.NET
 		{871AACBF-7043-4EC7-8778-5C5BA3AEEB01}.Test.ActiveCfg = Release|.NET
 		{871AACBF-7043-4EC7-8778-5C5BA3AEEB01}.Test.Build.0 = Release|.NET
-		{E2214554-DB91-4E99-8AE8-C5EAA3F9C0F1}.Debug.ActiveCfg = Debug|.NET
-		{E2214554-DB91-4E99-8AE8-C5EAA3F9C0F1}.Debug.Build.0 = Debug|.NET
-		{E2214554-DB91-4E99-8AE8-C5EAA3F9C0F1}.Interactive.ActiveCfg = Release|.NET
-		{E2214554-DB91-4E99-8AE8-C5EAA3F9C0F1}.Interactive.Build.0 = Release|.NET
-		{E2214554-DB91-4E99-8AE8-C5EAA3F9C0F1}.Release.ActiveCfg = Release|.NET
-		{E2214554-DB91-4E99-8AE8-C5EAA3F9C0F1}.Release.Build.0 = Release|.NET
-		{E2214554-DB91-4E99-8AE8-C5EAA3F9C0F1}.Test.ActiveCfg = Release|.NET
-		{E2214554-DB91-4E99-8AE8-C5EAA3F9C0F1}.Test.Build.0 = Release|.NET
 		{8D3FEEEF-F7AC-4BCA-90B6-7923DAB85856}.Debug.ActiveCfg = Debug|.NET
 		{8D3FEEEF-F7AC-4BCA-90B6-7923DAB85856}.Debug.Build.0 = Debug|.NET
 		{8D3FEEEF-F7AC-4BCA-90B6-7923DAB85856}.Interactive.ActiveCfg = Release|.NET

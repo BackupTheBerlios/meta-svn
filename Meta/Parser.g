@@ -61,7 +61,7 @@ tokens
   SELECT;
   SEARCH;
   KEY;
-  DELAYED_EXPRESSION_ONLY; // TODO: rename
+  //DELAYED_EXPRESSION_ONLY; // TODO: rename
   SAME_INDENT;
   //EMPTY_LINE; // TODO: reintroduce, as delimiter between two maps
 }
@@ -262,21 +262,21 @@ NEWLINE_KEEP_TEXT:
   };
 
 {
-	//	Meta is a programming language.
-	//	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
-	//
-	//	This program is free software; you can redistribute it and/or
-	//	modify it under the terms of the GNU General Public License version 2
-	//	as published by the Free Software Foundation.
-	//
-	//	This program is distributed in the hope that it will be useful,
-	//	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	//	GNU General Public License for more details.
-	//
-	//	You should have received a copy of the GNU General Public License
-	//	along with this program; if not, write to the Free Software
-	//	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+//	Meta is a programming language.
+//	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
+//
+//	This program is free software; you can redistribute it and/or
+//	modify it under the terms of the GNU General Public License version 2
+//	as published by the Free Software Foundation.
+//
+//	This program is distributed in the hope that it will be useful,
+//	but WITHOUT ANY WARRANTY; without even the implied warranty of
+//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//	GNU General Public License for more details.
+//
+//	You should have received a copy of the GNU General Public License
+//	along with this program; if not, write to the Free Software
+//	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
   using antlr;
   using System.Collections;
@@ -299,8 +299,8 @@ expression:
     |(select)=>
     select
     |map
-    |delayedExpressionOnly
-    |delayed
+    //|delayedExpressionOnly
+    //|delayed
     |LITERAL
 		|search
   );
@@ -312,10 +312,10 @@ map:
   }
 	(
 	  INDENT!
-	  statement
+	  (statement|delayed) // TODO: maybe put delayed into statement??? Would make sense, I think, since it's essentially the same
 	  (
 	    ENDLINE!
-	    statement
+	    (delayed|statement)
 	  )*
 	  DEDENT!
 	)
@@ -380,20 +380,35 @@ call:
     #call=#([CALL],#call);
   };
     
-delayedExpressionOnly:
+/*delayedExpressionOnly:
   HASH!
   expression
   {
     #delayedExpressionOnly=#([DELAYED_EXPRESSION_ONLY], #delayedExpressionOnly);
-  };
+  };*/
 
 
-
+// TODO: rename to better reflect the new function
 delayed:
   COLON!
   expression
   {
-    #delayed=#([FUNCTION], #delayed);
+  
+		// TODO: Simplify this, factor this out into a method? Add some functionality for this stuff? Maybe to MetAST?
+		MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
+		
+		runToken.setLine(#delayed.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+		runToken.setColumn(#delayed.Extent.startColumn); 
+		runToken.FileName=#delayed.Extent.fileName;
+		runToken.EndLine=#delayed.Extent.endLine;
+		runToken.EndColumn=#delayed.Extent.endColumn;
+		
+		
+		MetaAST runAst=new MetaAST(runToken);
+		runAst.setText("run");
+    //#statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
+		#delayed=#([STATEMENT],#([KEY],runAst),#([FUNCTION], #delayed));
+    //#delayed=#([FUNCTION], #delayed);
   };
 
 
@@ -444,21 +459,21 @@ squareBracketLookup:
 	;
 
 {
-	//	Meta is a programming language.
-	//	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
-	//
-	//	This program is free software; you can redistribute it and/or
-	//	modify it under the terms of the GNU General Public License version 2
-	//	as published by the Free Software Foundation.
-	//
-	//	This program is distributed in the hope that it will be useful,
-	//	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	//	GNU General Public License for more details.
-	//
-	//	You should have received a copy of the GNU General Public License
-	//	along with this program; if not, write to the Free Software
-	//	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+//	Meta is a programming language.
+//	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
+//
+//	This program is free software; you can redistribute it and/or
+//	modify it under the terms of the GNU General Public License version 2
+//	as published by the Free Software Foundation.
+//
+//	This program is distributed in the hope that it will be useful,
+//	but WITHOUT ANY WARRANTY; without even the implied warranty of
+//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//	GNU General Public License for more details.
+//
+//	You should have received a copy of the GNU General Public License
+//	along with this program; if not, write to the Free Software
+//	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   using Meta.Types;
   using Meta.Execution;
 }      
@@ -479,7 +494,7 @@ expression
     |result=search
     |result=literal
     |result=delayed
-    |result=delayedExpressionOnly
+    //|result=delayedExpressionOnly
   )
   ;
 key
@@ -614,7 +629,7 @@ literal
     result[Literal.literalString]=new Map(token.getText());
   };
 
-
+//TODO: is this even needed anymore?
 delayed
     returns[Map result]
     {
@@ -625,11 +640,13 @@ delayed
     }:
     #(FUNCTION mExpression=expression)
     {
-				mRun[Expression.runString]=mExpression;
-        result[Delayed.delayedString]=mRun;
+				//mRun[Expression.runString]=mExpression;
+        result[Delayed.delayedString]=mExpression;
+//				mRun[Expression.runString]=mExpression;
+//        result[Delayed.delayedString]=mRun;
     };
 
-delayedExpressionOnly
+/*delayedExpressionOnly
     returns[Map result]
     {
         result=new Map();
@@ -639,4 +656,4 @@ delayedExpressionOnly
     {
 			result[Delayed.delayedString]=mExpression;
 			//result.Extent=#delayedExpressionOnly.Extent;
-    };
+    };*/

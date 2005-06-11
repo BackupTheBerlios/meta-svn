@@ -18,21 +18,21 @@ namespace Meta.Parser
 	using ASTFactory               = antlr.ASTFactory;
 	using ASTArray                 = antlr.collections.impl.ASTArray;
 	
-	//	Meta is a programming language.
-	//	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
-	//
-	//	This program is free software; you can redistribute it and/or
-	//	modify it under the terms of the GNU General Public License version 2
-	//	as published by the Free Software Foundation.
-	//
-	//	This program is distributed in the hope that it will be useful,
-	//	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	//	GNU General Public License for more details.
-	//
-	//	You should have received a copy of the GNU General Public License
-	//	along with this program; if not, write to the Free Software
-	//	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+//	Meta is a programming language.
+//	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
+//
+//	This program is free software; you can redistribute it and/or
+//	modify it under the terms of the GNU General Public License version 2
+//	as published by the Free Software Foundation.
+//
+//	This program is distributed in the hope that it will be useful,
+//	but WITHOUT ANY WARRANTY; without even the implied warranty of
+//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//	GNU General Public License for more details.
+//
+//	You should have received a copy of the GNU General Public License
+//	along with this program; if not, write to the Free Software
+//	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   using Meta.Types;
   using Meta.Execution;
 
@@ -52,21 +52,20 @@ namespace Meta.Parser
 		public const int SELECT = 12;
 		public const int SEARCH = 13;
 		public const int KEY = 14;
-		public const int DELAYED_EXPRESSION_ONLY = 15;
-		public const int SAME_INDENT = 16;
-		public const int EQUAL = 17;
-		public const int HASH = 18;
-		public const int COLON = 19;
-		public const int LBRACKET = 20;
-		public const int RBRACKET = 21;
-		public const int POINT = 22;
-		public const int LITERAL_KEY = 23;
-		public const int LITERAL = 24;
-		public const int SPACES = 25;
-		public const int LINE = 26;
-		public const int SPACE = 27;
-		public const int NEWLINE = 28;
-		public const int NEWLINE_KEEP_TEXT = 29;
+		public const int SAME_INDENT = 15;
+		public const int EQUAL = 16;
+		public const int HASH = 17;
+		public const int COLON = 18;
+		public const int LBRACKET = 19;
+		public const int RBRACKET = 20;
+		public const int POINT = 21;
+		public const int LITERAL_KEY = 22;
+		public const int LITERAL = 23;
+		public const int SPACES = 24;
+		public const int LINE = 25;
+		public const int SPACE = 26;
+		public const int NEWLINE = 27;
+		public const int NEWLINE_KEEP_TEXT = 28;
 		
 		public MetaTreeParser()
 		{
@@ -123,12 +122,6 @@ namespace Meta.Parser
 				_t = retTree_;
 				break;
 			}
-			case DELAYED_EXPRESSION_ONLY:
-			{
-				result=delayedExpressionOnly(_t);
-				_t = retTree_;
-				break;
-			}
 			default:
 			{
 				throw new NoViableAltException(_t);
@@ -152,8 +145,8 @@ namespace Meta.Parser
 		Map argument=new Map();
 		
 		
-		AST __t123 = _t;
-		MetaAST tmp18_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
+		AST __t124 = _t;
+		MetaAST tmp17_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,CALL);
 		_t = _t.getFirstChild();
 		{
@@ -169,7 +162,7 @@ namespace Meta.Parser
 		call[Call.argumentString]=argument;
 		result[Call.callString]=call;
 		
-		_t = __t123;
+		_t = __t124;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return result;
@@ -188,8 +181,8 @@ namespace Meta.Parser
 		int counter=1;
 		
 		
-		AST __t119 = _t;
-		MetaAST tmp19_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
+		AST __t120 = _t;
+		MetaAST tmp18_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,MAP);
 		_t = _t.getFirstChild();
 		{    // ( ... )*
@@ -208,13 +201,13 @@ namespace Meta.Parser
 				}
 				else
 				{
-					goto _loop121_breakloop;
+					goto _loop122_breakloop;
 				}
 				
 			}
-_loop121_breakloop:			;
+_loop122_breakloop:			;
 		}    // ( ... )*
-		_t = __t119;
+		_t = __t120;
 		_t = _t.getNextSibling();
 		
 		result[Program.programString]=statements;
@@ -236,13 +229,13 @@ _loop121_breakloop:			;
 		int counter=1;
 		
 		
-		AST __t127 = _t;
-		MetaAST tmp20_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
+		AST __t128 = _t;
+		MetaAST tmp19_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SELECT);
 		_t = _t.getFirstChild();
 		{
 			{ // ( ... )+
-			int _cnt130=0;
+			int _cnt131=0;
 			for (;;)
 			{
 				if (_t == null)
@@ -258,15 +251,15 @@ _loop121_breakloop:			;
 				}
 				else
 				{
-					if (_cnt130 >= 1) { goto _loop130_breakloop; } else { throw new NoViableAltException(_t);; }
+					if (_cnt131 >= 1) { goto _loop131_breakloop; } else { throw new NoViableAltException(_t);; }
 				}
 				
-				_cnt130++;
+				_cnt131++;
 			}
-_loop130_breakloop:			;
+_loop131_breakloop:			;
 			}    // ( ... )+
 		}
-		_t = __t127;
+		_t = __t128;
 		_t = _t.getNextSibling();
 		
 		result[Select.selectString]=selection;
@@ -287,13 +280,13 @@ _loop130_breakloop:			;
 				Map e=null;
 			
 		
-		AST __t132 = _t;
-		MetaAST tmp21_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
+		AST __t133 = _t;
+		MetaAST tmp20_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SEARCH);
 		_t = _t.getFirstChild();
 		e=expression(_t);
 		_t = retTree_;
-		_t = __t132;
+		_t = __t133;
 		_t = _t.getNextSibling();
 		
 				result[Search.searchString]=e;
@@ -335,43 +328,19 @@ _loop130_breakloop:			;
 		Map mRun=new Map();
 		
 		
-		AST __t135 = _t;
-		MetaAST tmp22_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
+		AST __t136 = _t;
+		MetaAST tmp21_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,FUNCTION);
 		_t = _t.getFirstChild();
 		mExpression=expression(_t);
 		_t = retTree_;
-		_t = __t135;
+		_t = __t136;
 		_t = _t.getNextSibling();
 		
-						mRun[Expression.runString]=mExpression;
-		result[Delayed.delayedString]=mRun;
-		
-		retTree_ = _t;
-		return result;
-	}
-	
-	public Map  delayedExpressionOnly(AST _t) //throws RecognitionException
-{
-		Map result;
-		
-		MetaAST delayedExpressionOnly_AST_in = (MetaAST)_t;
-		
-		result=new Map();
-		Map mExpression=null;
-		
-		
-		AST __t137 = _t;
-		MetaAST tmp23_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
-		match((AST)_t,DELAYED_EXPRESSION_ONLY);
-		_t = _t.getFirstChild();
-		mExpression=expression(_t);
-		_t = retTree_;
-		_t = __t137;
-		_t = _t.getNextSibling();
-		
-					result[Delayed.delayedString]=mExpression;
-					//result.Extent=#delayedExpressionOnly.Extent;
+						//mRun[Expression.runString]=mExpression;
+		result[Delayed.delayedString]=mExpression;
+		//				mRun[Expression.runString]=mExpression;
+		//        result[Delayed.delayedString]=mRun;
 		
 		retTree_ = _t;
 		return result;
@@ -388,12 +357,12 @@ _loop130_breakloop:			;
 				Map e=null;
 			
 		
-		AST __t113 = _t;
-		MetaAST tmp24_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
+		AST __t114 = _t;
+		MetaAST tmp22_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,KEY);
 		_t = _t.getFirstChild();
 		{ // ( ... )+
-		int _cnt115=0;
+		int _cnt116=0;
 		for (;;)
 		{
 			if (_t == null)
@@ -409,14 +378,14 @@ _loop130_breakloop:			;
 			}
 			else
 			{
-				if (_cnt115 >= 1) { goto _loop115_breakloop; } else { throw new NoViableAltException(_t);; }
+				if (_cnt116 >= 1) { goto _loop116_breakloop; } else { throw new NoViableAltException(_t);; }
 			}
 			
-			_cnt115++;
+			_cnt116++;
 		}
-_loop115_breakloop:		;
+_loop116_breakloop:		;
 		}    // ( ... )+
-		_t = __t113;
+		_t = __t114;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return result;
@@ -434,8 +403,8 @@ _loop115_breakloop:		;
 				Map k=null;
 			
 		
-		AST __t117 = _t;
-		MetaAST tmp25_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
+		AST __t118 = _t;
+		MetaAST tmp23_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,STATEMENT);
 		_t = _t.getFirstChild();
 		k=key(_t);
@@ -447,7 +416,7 @@ _loop115_breakloop:		;
 					statement[Statement.keyString]=k;
 					statement[Statement.valueString]=val;// TODO: Add Extent to statements, too?
 				
-		_t = __t117;
+		_t = __t118;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return statement;
@@ -475,7 +444,6 @@ _loop115_breakloop:		;
 		@"""SELECT""",
 		@"""SEARCH""",
 		@"""KEY""",
-		@"""DELAYED_EXPRESSION_ONLY""",
 		@"""SAME_INDENT""",
 		@"""EQUAL""",
 		@"""HASH""",
@@ -494,7 +462,7 @@ _loop115_breakloop:		;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 16825088L, 0L};
+		long[] data = { 8403712L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());

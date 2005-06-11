@@ -23,21 +23,21 @@ namespace Meta.Parser
 	using ASTFactory               = antlr.ASTFactory;
 	using ASTArray                 = antlr.collections.impl.ASTArray;
 	
-	//	Meta is a programming language.
-	//	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
-	//
-	//	This program is free software; you can redistribute it and/or
-	//	modify it under the terms of the GNU General Public License version 2
-	//	as published by the Free Software Foundation.
-	//
-	//	This program is distributed in the hope that it will be useful,
-	//	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	//	GNU General Public License for more details.
-	//
-	//	You should have received a copy of the GNU General Public License
-	//	along with this program; if not, write to the Free Software
-	//	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+//	Meta is a programming language.
+//	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
+//
+//	This program is free software; you can redistribute it and/or
+//	modify it under the terms of the GNU General Public License version 2
+//	as published by the Free Software Foundation.
+//
+//	This program is distributed in the hope that it will be useful,
+//	but WITHOUT ANY WARRANTY; without even the implied warranty of
+//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//	GNU General Public License for more details.
+//
+//	You should have received a copy of the GNU General Public License
+//	along with this program; if not, write to the Free Software
+//	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
   using antlr;
   using System.Collections;
@@ -61,21 +61,20 @@ namespace Meta.Parser
 		public const int SELECT = 12;
 		public const int SEARCH = 13;
 		public const int KEY = 14;
-		public const int DELAYED_EXPRESSION_ONLY = 15;
-		public const int SAME_INDENT = 16;
-		public const int EQUAL = 17;
-		public const int HASH = 18;
-		public const int COLON = 19;
-		public const int LBRACKET = 20;
-		public const int RBRACKET = 21;
-		public const int POINT = 22;
-		public const int LITERAL_KEY = 23;
-		public const int LITERAL = 24;
-		public const int SPACES = 25;
-		public const int LINE = 26;
-		public const int SPACE = 27;
-		public const int NEWLINE = 28;
-		public const int NEWLINE_KEEP_TEXT = 29;
+		public const int SAME_INDENT = 15;
+		public const int EQUAL = 16;
+		public const int HASH = 17;
+		public const int COLON = 18;
+		public const int LBRACKET = 19;
+		public const int RBRACKET = 20;
+		public const int POINT = 21;
+		public const int LITERAL_KEY = 22;
+		public const int LITERAL = 23;
+		public const int SPACES = 24;
+		public const int LINE = 25;
+		public const int SPACE = 26;
+		public const int NEWLINE = 27;
+		public const int NEWLINE_KEEP_TEXT = 28;
 		
 		
 		protected void initialize()
@@ -121,24 +120,6 @@ namespace Meta.Parser
 			case INDENT:
 			{
 				map();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
-			case HASH:
-			{
-				delayedExpressionOnly();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
-			case COLON:
-			{
-				delayed();
 				if (0 == inputState.guessing)
 				{
 					astFactory.addASTChild(currentAST, (AST)returnAST);
@@ -233,11 +214,11 @@ namespace Meta.Parser
 		
 		{
 			{
-				bool synPredMatched91 = false;
+				bool synPredMatched93 = false;
 				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 				{
-					int _m91 = mark();
-					synPredMatched91 = true;
+					int _m93 = mark();
+					synPredMatched93 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -246,12 +227,12 @@ namespace Meta.Parser
 					}
 					catch (RecognitionException)
 					{
-						synPredMatched91 = false;
+						synPredMatched93 = false;
 					}
-					rewind(_m91);
+					rewind(_m93);
 					inputState.guessing--;
 				}
-				if ( synPredMatched91 )
+				if ( synPredMatched93 )
 				{
 					select();
 					if (0 == inputState.guessing)
@@ -281,8 +262,6 @@ namespace Meta.Parser
 					break;
 				}
 				case INDENT:
-				case HASH:
-				case COLON:
 				case LBRACKET:
 				case LITERAL_KEY:
 				case LITERAL:
@@ -353,7 +332,7 @@ namespace Meta.Parser
 			 }
 		}
 		{ // ( ... )+
-		int _cnt100=0;
+		int _cnt101=0;
 		for (;;)
 		{
 			if ((LA(1)==POINT))
@@ -367,12 +346,12 @@ namespace Meta.Parser
 			}
 			else
 			{
-				if (_cnt100 >= 1) { goto _loop100_breakloop; } else { throw new NoViableAltException(LT(1), getFilename());; }
+				if (_cnt101 >= 1) { goto _loop101_breakloop; } else { throw new NoViableAltException(LT(1), getFilename());; }
 			}
 			
-			_cnt100++;
+			_cnt101++;
 		}
-_loop100_breakloop:		;
+_loop101_breakloop:		;
 		}    // ( ... )+
 		if (0==inputState.guessing)
 		{
@@ -406,10 +385,36 @@ _loop100_breakloop:		;
 		}
 		{
 			match(INDENT);
-			statement();
-			if (0 == inputState.guessing)
 			{
-				astFactory.addASTChild(currentAST, (AST)returnAST);
+				switch ( LA(1) )
+				{
+				case INDENT:
+				case EQUAL:
+				case LBRACKET:
+				case LITERAL_KEY:
+				case LITERAL:
+				{
+					statement();
+					if (0 == inputState.guessing)
+					{
+						astFactory.addASTChild(currentAST, (AST)returnAST);
+					}
+					break;
+				}
+				case COLON:
+				{
+					delayed();
+					if (0 == inputState.guessing)
+					{
+						astFactory.addASTChild(currentAST, (AST)returnAST);
+					}
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				 }
 			}
 			{    // ( ... )*
 				for (;;)
@@ -417,19 +422,45 @@ _loop100_breakloop:		;
 					if ((LA(1)==ENDLINE))
 					{
 						match(ENDLINE);
-						statement();
-						if (0 == inputState.guessing)
 						{
-							astFactory.addASTChild(currentAST, (AST)returnAST);
+							switch ( LA(1) )
+							{
+							case COLON:
+							{
+								delayed();
+								if (0 == inputState.guessing)
+								{
+									astFactory.addASTChild(currentAST, (AST)returnAST);
+								}
+								break;
+							}
+							case INDENT:
+							case EQUAL:
+							case LBRACKET:
+							case LITERAL_KEY:
+							case LITERAL:
+							{
+								statement();
+								if (0 == inputState.guessing)
+								{
+									astFactory.addASTChild(currentAST, (AST)returnAST);
+								}
+								break;
+							}
+							default:
+							{
+								throw new NoViableAltException(LT(1), getFilename());
+							}
+							 }
 						}
 					}
 					else
 					{
-						goto _loop76_breakloop;
+						goto _loop78_breakloop;
 					}
 					
 				}
-_loop76_breakloop:				;
+_loop78_breakloop:				;
 			}    // ( ... )*
 			match(DEDENT);
 		}
@@ -449,66 +480,6 @@ _loop76_breakloop:				;
 		}
 		map_AST = (MetaAST)currentAST.root;
 		returnAST = map_AST;
-	}
-	
-	public void delayedExpressionOnly() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST delayedExpressionOnly_AST = null;
-		
-		match(HASH);
-		expression();
-		if (0 == inputState.guessing)
-		{
-			astFactory.addASTChild(currentAST, (AST)returnAST);
-		}
-		if (0==inputState.guessing)
-		{
-			delayedExpressionOnly_AST = (MetaAST)currentAST.root;
-			
-			delayedExpressionOnly_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(DELAYED_EXPRESSION_ONLY)).add((AST)delayedExpressionOnly_AST));
-			
-			currentAST.root = delayedExpressionOnly_AST;
-			if ( (null != delayedExpressionOnly_AST) && (null != delayedExpressionOnly_AST.getFirstChild()) )
-				currentAST.child = delayedExpressionOnly_AST.getFirstChild();
-			else
-				currentAST.child = delayedExpressionOnly_AST;
-			currentAST.advanceChildToEnd();
-		}
-		delayedExpressionOnly_AST = (MetaAST)currentAST.root;
-		returnAST = delayedExpressionOnly_AST;
-	}
-	
-	public void delayed() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST delayed_AST = null;
-		
-		match(COLON);
-		expression();
-		if (0 == inputState.guessing)
-		{
-			astFactory.addASTChild(currentAST, (AST)returnAST);
-		}
-		if (0==inputState.guessing)
-		{
-			delayed_AST = (MetaAST)currentAST.root;
-			
-			delayed_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(FUNCTION)).add((AST)delayed_AST));
-			
-			currentAST.root = delayed_AST;
-			if ( (null != delayed_AST) && (null != delayed_AST.getFirstChild()) )
-				currentAST.child = delayed_AST.getFirstChild();
-			else
-				currentAST.child = delayed_AST;
-			currentAST.advanceChildToEnd();
-		}
-		delayed_AST = (MetaAST)currentAST.root;
-		returnAST = delayed_AST;
 	}
 	
 	public void search() //throws RecognitionException, TokenStreamException
@@ -547,11 +518,11 @@ _loop76_breakloop:				;
 		ASTPair currentAST = new ASTPair();
 		MetaAST statement_AST = null;
 		
-		bool synPredMatched82 = false;
+		bool synPredMatched84 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m82 = mark();
-			synPredMatched82 = true;
+			int _m84 = mark();
+			synPredMatched84 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -561,12 +532,12 @@ _loop76_breakloop:				;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched82 = false;
+				synPredMatched84 = false;
 			}
-			rewind(_m82);
+			rewind(_m84);
 			inputState.guessing--;
 		}
-		if ( synPredMatched82 )
+		if ( synPredMatched84 )
 		{
 			{
 				key();
@@ -608,8 +579,6 @@ _loop76_breakloop:				;
 							break;
 						}
 						case INDENT:
-						case HASH:
-						case COLON:
 						case LBRACKET:
 						case LITERAL_KEY:
 						case LITERAL:
@@ -664,6 +633,51 @@ _loop76_breakloop:				;
 		returnAST = statement_AST;
 	}
 	
+	public void delayed() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST delayed_AST = null;
+		
+		match(COLON);
+		expression();
+		if (0 == inputState.guessing)
+		{
+			astFactory.addASTChild(currentAST, (AST)returnAST);
+		}
+		if (0==inputState.guessing)
+		{
+			delayed_AST = (MetaAST)currentAST.root;
+			
+			
+					// TODO: Simplify this, factor this out into a method? Add some functionality for this stuff? Maybe to MetAST?
+					MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
+					
+					runToken.setLine(delayed_AST.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+					runToken.setColumn(delayed_AST.Extent.startColumn); 
+					runToken.FileName=delayed_AST.Extent.fileName;
+					runToken.EndLine=delayed_AST.Extent.endLine;
+					runToken.EndColumn=delayed_AST.Extent.endColumn;
+					
+					
+					MetaAST runAst=new MetaAST(runToken);
+					runAst.setText("run");
+			//#statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
+					delayed_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(KEY)).add((AST)runAst))).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(FUNCTION)).add((AST)delayed_AST))));
+			//#delayed=#([FUNCTION], #delayed);
+			
+			currentAST.root = delayed_AST;
+			if ( (null != delayed_AST) && (null != delayed_AST.getFirstChild()) )
+				currentAST.child = delayed_AST.getFirstChild();
+			else
+				currentAST.child = delayed_AST;
+			currentAST.advanceChildToEnd();
+		}
+		delayed_AST = (MetaAST)currentAST.root;
+		returnAST = delayed_AST;
+	}
+	
 	public void key() //throws RecognitionException, TokenStreamException
 {
 		
@@ -690,11 +704,11 @@ _loop76_breakloop:				;
 				}
 				else
 				{
-					goto _loop79_breakloop;
+					goto _loop81_breakloop;
 				}
 				
 			}
-_loop79_breakloop:			;
+_loop81_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -768,8 +782,6 @@ _loop79_breakloop:			;
 				break;
 			}
 			case INDENT:
-			case HASH:
-			case COLON:
 			case LBRACKET:
 			case LITERAL_KEY:
 			case LITERAL:
@@ -870,7 +882,7 @@ _loop79_breakloop:			;
 	}
 	static public void initializeASTFactory( ASTFactory factory )
 	{
-		factory.setMaxNodeType(29);
+		factory.setMaxNodeType(28);
 	}
 	
 	public static readonly string[] tokenNames_ = new string[] {
@@ -889,7 +901,6 @@ _loop79_breakloop:			;
 		@"""SELECT""",
 		@"""SEARCH""",
 		@"""KEY""",
-		@"""DELAYED_EXPRESSION_ONLY""",
 		@"""SAME_INDENT""",
 		@"""EQUAL""",
 		@"""HASH""",
@@ -908,7 +919,7 @@ _loop79_breakloop:			;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 27131936L, 0L};
+		long[] data = { 13172768L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());

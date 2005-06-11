@@ -60,21 +60,20 @@ namespace Meta.Parser
 		public const int SELECT = 12;
 		public const int SEARCH = 13;
 		public const int KEY = 14;
-		public const int DELAYED_EXPRESSION_ONLY = 15;
-		public const int SAME_INDENT = 16;
-		public const int EQUAL = 17;
-		public const int HASH = 18;
-		public const int COLON = 19;
-		public const int LBRACKET = 20;
-		public const int RBRACKET = 21;
-		public const int POINT = 22;
-		public const int LITERAL_KEY = 23;
-		public const int LITERAL = 24;
-		public const int SPACES = 25;
-		public const int LINE = 26;
-		public const int SPACE = 27;
-		public const int NEWLINE = 28;
-		public const int NEWLINE_KEEP_TEXT = 29;
+		public const int SAME_INDENT = 15;
+		public const int EQUAL = 16;
+		public const int HASH = 17;
+		public const int COLON = 18;
+		public const int LBRACKET = 19;
+		public const int RBRACKET = 20;
+		public const int POINT = 21;
+		public const int LITERAL_KEY = 22;
+		public const int LITERAL = 23;
+		public const int SPACES = 24;
+		public const int LINE = 25;
+		public const int SPACE = 26;
+		public const int NEWLINE = 27;
+		public const int NEWLINE_KEEP_TEXT = 28;
 		
 		
     /**
