@@ -571,9 +571,9 @@ call
       argument=expression
     )
     {
-      call[Call.functionString]=delayed;
-      call[Call.argumentString]=argument;
-      result[Call.callString]=call;
+      call[Call.sFunction]=delayed;
+      call[Call.sArgument]=argument;
+      result[Call.sCall]=call;
     }
   );
 
@@ -641,9 +641,9 @@ delayed
     #(FUNCTION mExpression=expression)
     {
 				//mRun[Expression.sRun]=mExpression;
-        result[Delayed.delayedString]=mExpression;
+        result[Delayed.sDelayed]=mExpression;
 //				mRun[Expression.sRun]=mExpression;
-//        result[Delayed.delayedString]=mRun;
+//        result[Delayed.sDelayed]=mRun;
     };
 
 /*delayedExpressionOnly
@@ -654,6 +654,6 @@ delayed
     }:
     #(DELAYED_EXPRESSION_ONLY mExpression=expression)
     {
-			result[Delayed.delayedString]=mExpression;
+			result[Delayed.sDelayed]=mExpression;
 			//result.Extent=#delayedExpressionOnly.Extent;
     };*/

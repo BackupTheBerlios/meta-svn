@@ -41,15 +41,15 @@ namespace Meta {
 	namespace Execution {
 		public abstract class Expression {
 			public static readonly Map sRun=new Map("run"); // TODO: get rid of "String"-suffix, use Hungarian syntax, that is "s" prefix
-//			public object ojEvaluateM(IMap parent) {
+//			public object OjEvaluateM(IMap parent) {
 ////				try {
-//					return ojEvaluateM(parent);
+//					return OjEvaluateM(parent);
 ////				}
 ////				catch(Exception e) {
 ////					throw new MetaException(e,this.extent);
 ////				}
 //			}
-			public abstract object ojEvaluateM(IMap parent);
+			public abstract object OjEvaluateM(IMap parent);
 			Extent extent;
 			public Extent Extent {
 				get {
@@ -62,24 +62,23 @@ namespace Meta {
 			}
 		}
 		public class Call: Expression {
-			public override object ojEvaluateM(IMap parent) {
-				object arg=argumentExpression.ojEvaluateM(parent);
-				if(arg is IMap) {
-					arg=((IMap)arg).Clone();
+			public override object OjEvaluateM(IMap parent) {
+				object ojArgument=epsArgument.OjEvaluateM(parent);
+				if(ojArgument is IMap) {
+					ojArgument=((IMap)ojArgument).mCloneV();
 				}
-				return ((ICallable)callableExpression.ojEvaluateM(parent)).ojCallOj(
-					arg);
+				return ((ICallable)epsCallable.OjEvaluateM(parent)).ojCallOj(ojArgument);
 			}
-			public static readonly Map callString=new Map("call");
-			public static readonly Map functionString=new Map("function");
-			public static readonly Map argumentString=new Map("argument");
+			public static readonly Map sCall=new Map("call");
+			public static readonly Map sFunction=new Map("function");
+			public static readonly Map sArgument=new Map("argument");
 			public Call(Map obj) {
-				Map expression=(Map)obj[callString];
-				this.callableExpression=(Expression)((Map)expression[functionString]).Compile();
-				this.argumentExpression=(Expression)((Map)expression[argumentString]).Compile();
+				Map mCall=(Map)obj[sCall];
+				this.epsCallable=(Expression)((Map)mCall[sFunction]).Compile();
+				this.epsArgument=(Expression)((Map)mCall[sArgument]).Compile();
 			}
-			public Expression argumentExpression;
-			public Expression callableExpression;
+			public Expression epsArgument;
+			public Expression epsCallable;
 		}
 
 
@@ -87,20 +86,20 @@ namespace Meta {
 
 
 		public class Delayed: Expression {
-			public override object ojEvaluateM(IMap parent) {
-				Map clone=delayed;
-				clone.mParent=parent;
-				return clone;
+			public override object OjEvaluateM(IMap mParent) {
+				Map mClone=mDelayed;
+				mClone.mParent=mParent;
+				return mClone;
 			}
-			public static readonly Map delayedString=new Map("delayed");
+			public static readonly Map sDelayed=new Map("delayed"); // TODO: maybe define my own type for this stuff?
 			public Delayed(Map code) {
-				this.delayed=(Map)code[delayedString];
+				this.mDelayed=(Map)code[sDelayed];
 			}
-			public Map delayed;
+			public Map mDelayed;
 		}
 //
 //		public class DelayedExpresionOnly: Expression {
-//			public override object ojEvaluateM(IMap parent) {
+//			public override object OjEvaluateM(IMap parent) {
 //				return delayed;
 //			}
 //			public static readonly Map dealayedExpressionOnlyString=new Map("delayedExpressionOnly");
@@ -113,11 +112,11 @@ namespace Meta {
 
 
 		public class Program: Expression {
-			public override object ojEvaluateM(IMap parent) {
+			public override object OjEvaluateM(IMap parent) {
 				Map local=new Map();
-				return ojEvaluateM(parent,local);
+				return OjEvaluateM(parent,local);
 			}
-			public object ojEvaluateM(IMap parent,IMap local) {
+			public object OjEvaluateM(IMap parent,IMap local) {
 				local.mParent=parent;
 				Interpreter.callers.Add(local);
 				for(int i=0;i<statements.Count;i++) {
@@ -142,7 +141,7 @@ namespace Meta {
 			public readonly ArrayList statements=new ArrayList();
 		}
 		public class Literal: Expression {
-			public override object ojEvaluateM(IMap parent) {
+			public override object OjEvaluateM(IMap parent) {
 //				if(literal.Equals(new Map("staticEvent"))) {
 //					int asdf=0;
 //				}
@@ -164,8 +163,8 @@ namespace Meta {
 			}
 			public Expression key;
 			public static readonly Map keyString=new Map("key");
-			public override object ojEvaluateM(IMap parent) {
-				object k=key.ojEvaluateM(parent);
+			public override object OjEvaluateM(IMap parent) {
+				object k=key.OjEvaluateM(parent);
 				IMap selected=parent;
 				while(!selected.ContainsKey(k)) {
 					selected=selected.mParent;
@@ -194,13 +193,13 @@ namespace Meta {
 					keys.Add(((Map)list[i]).Compile());
 				}
 			}
-			public override object ojEvaluateM(IMap parent) {
-				object selected=first.ojEvaluateM(parent);
+			public override object OjEvaluateM(IMap parent) {
+				object selected=first.OjEvaluateM(parent);
 				for(int i=0;i<keys.Count;i++) {
 					if(!(selected is IKeyValue)) {
 						selected=new NetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
-					object k=((Expression)keys[i]).ojEvaluateM(parent);
+					object k=((Expression)keys[i]).OjEvaluateM(parent);
 //					if(k.Equals(new Map("staticEvent"))) {
 //						int asdf=0;
 //					}
@@ -220,7 +219,7 @@ namespace Meta {
 				object selected=parent;
 				object k;
 				for(int i=0;i<keys.Count-1;i++) {
-					k=((Expression)keys[i]).ojEvaluateM((IMap)parent);
+					k=((Expression)keys[i]).OjEvaluateM((IMap)parent);
 //					if(k.Equals(new Map("TestClass"))) {
 //						int asdf=0;
 //					}
@@ -232,8 +231,8 @@ namespace Meta {
 						selected=new NetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
 				}
-				object lastKey=((Expression)keys[keys.Count-1]).ojEvaluateM((IMap)parent);
-				object v=val.ojEvaluateM((IMap)parent);
+				object lastKey=((Expression)keys[keys.Count-1]).OjEvaluateM((IMap)parent);
+				object v=val.OjEvaluateM((IMap)parent);
 				if(lastKey.Equals(Map.thisString)) {
 					if(v is Map) {
 						((Map)v).mParent=((Map)parent).mParent;
@@ -415,8 +414,8 @@ namespace Meta {
 //				mFunction[Expression.sRun]=(new MetaTreeParser()).map(ParseToAst(fileName));
 //				Map mArgument=new Map();
 //				Map mCall=new Map();
-//				mCall[Call.functionString]=mFunction;
-//				mCall[Call.argumentString]=mArgument;
+//				mCall[Call.sFunction]=mFunction;
+//				mCall[Call.sArgument]=mArgument;
 //				return mCall;
 //			}
 			public static Map CompileToMap(string fileName) {
@@ -1183,6 +1182,7 @@ namespace Meta {
 		public interface ICallable {
 			object ojCallOj(object argument);
 		}
+		// TODO: Rename this eventually
 		public interface IMap: IKeyValue {
 			IMap mParent {
 				get;
@@ -1191,7 +1191,7 @@ namespace Meta {
 			ArrayList IntKeyValues {
 				get;
 			}
-			IMap Clone();
+			IMap mCloneV();
 		}
 		// TODO: Does the IKeyValue<->IMap distinction make sense?
 		public interface IKeyValue: IEnumerable {
@@ -1322,7 +1322,7 @@ namespace Meta {
 					return cash.Keys;
 				}
 			}
-			public IMap Clone() {
+			public IMap mCloneV() {
 				return this;
 			}
 			public int Count {
@@ -1570,7 +1570,7 @@ namespace Meta {
 							this.table=((Map)value).table.Clone();
 						}
 						else {
-							object val=value is IMap? ((IMap)value).Clone(): value; // TODO: combine with next line
+							object val=value is IMap? ((IMap)value).mCloneV(): value; // TODO: combine with next line
 							if(value is IMap) {
 								((IMap)val).mParent=this;
 							}
@@ -1582,7 +1582,7 @@ namespace Meta {
 			public object Execute() { // TODO: Rename to evaluate
 				Expression function=(Expression)Compile();
 				object result;
-				result=function.ojEvaluateM(this);
+				result=function.OjEvaluateM(this);
 				return result;
 			}
 			public object ojCallOj(object argument) {
@@ -1590,7 +1590,7 @@ namespace Meta {
 				Expression function=(Expression)((Map)this[Expression.sRun]).Compile();
 				object result;
 				Interpreter.arguments.Add(argument);
-				result=function.ojEvaluateM(this);
+				result=function.OjEvaluateM(this);
 				Interpreter.arguments.RemoveAt(Interpreter.arguments.Count-1);
 				return result;
 			}
@@ -1599,7 +1599,7 @@ namespace Meta {
 					return table.Keys;
 				}
 			}
-			public IMap Clone() {
+			public IMap mCloneV() {
 				Map clone=table.CloneMap();
 				clone.mParent=mParent;
 				clone.compiled=compiled;
@@ -1608,10 +1608,10 @@ namespace Meta {
 			}
 			public Expression Compile()  { // compiled Statements are not cached, only expressions
 				if(compiled==null)  {
-					if(this.ContainsKey(Meta.Execution.Call.callString)) {
+					if(this.ContainsKey(Meta.Execution.Call.sCall)) {
 						compiled=new Call(this);
 					}
-					else if(this.ContainsKey(Delayed.delayedString)) { // TODO: could be optimized, but compilation happens seldom
+					else if(this.ContainsKey(Delayed.sDelayed)) { // TODO: could be optimized, but compilation happens seldom
 						compiled=new Delayed(this);
 					}
 					else if(this.ContainsKey(Program.programString)) {

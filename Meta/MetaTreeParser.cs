@@ -158,9 +158,9 @@ namespace Meta.Parser
 			_t = retTree_;
 		}
 		
-		call[Call.functionString]=delayed;
-		call[Call.argumentString]=argument;
-		result[Call.callString]=call;
+		call[Call.sFunction]=delayed;
+		call[Call.sArgument]=argument;
+		result[Call.sCall]=call;
 		
 		_t = __t124;
 		_t = _t.getNextSibling();
@@ -338,9 +338,9 @@ _loop131_breakloop:			;
 		_t = _t.getNextSibling();
 		
 						//mRun[Expression.sRun]=mExpression;
-		result[Delayed.delayedString]=mExpression;
+		result[Delayed.sDelayed]=mExpression;
 		//				mRun[Expression.sRun]=mExpression;
-		//        result[Delayed.delayedString]=mRun;
+		//        result[Delayed.sDelayed]=mRun;
 		
 		retTree_ = _t;
 		return result;
