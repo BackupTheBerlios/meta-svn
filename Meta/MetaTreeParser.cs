@@ -310,7 +310,7 @@ _loop131_breakloop:			;
 		match((AST)_t,LITERAL);
 		_t = _t.getNextSibling();
 		
-		result[Literal.literalString]=new Map(token.getText());
+		result[Literal.sLiteral]=new Map(token.getText());
 		
 		retTree_ = _t;
 		return result;

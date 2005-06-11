@@ -13,7 +13,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "16"
-        literal (Map):
+        ojLiteral (Map):
           "this"
     val (Call):
       epsArgument (Program):
@@ -32,7 +32,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "17"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Search):
               Extent (Extent):
@@ -58,7 +58,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "17"
-                literal (Map):
+                ojLiteral (Map):
                   "parent"
           Entry (Statement)
             keys (ArrayList):
@@ -74,7 +74,7 @@ arlSmStatements (ArrayList):
                     "3"
                   startLine (Int32):
                     "19"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Program):
               arlSmStatements (ArrayList):
@@ -92,7 +92,7 @@ arlSmStatements (ArrayList):
                           "3"
                         startLine (Int32):
                           "19"
-                      literal (Integer):
+                      ojLiteral (Integer):
                         "1"
                   val (Literal):
                     Extent (Extent):
@@ -106,7 +106,7 @@ arlSmStatements (ArrayList):
                         "3"
                       startLine (Int32):
                         "19"
-                    literal (Map):
+                    ojLiteral (Map):
                       "AssignedToCurrent"
               Extent (Extent):
                 endColumn (Int32):
@@ -166,7 +166,7 @@ arlSmStatements (ArrayList):
                 "6"
               startLine (Int32):
                 "16"
-            literal (Map):
+            ojLiteral (Map):
               "map"
         keys (ArrayList):
           Entry (Literal)
@@ -181,7 +181,7 @@ arlSmStatements (ArrayList):
                 "10"
               startLine (Int32):
                 "16"
-            literal (Map):
+            ojLiteral (Map):
               "mMergeAm"
       Extent (Extent):
         endColumn (Int32):
@@ -208,7 +208,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "20"
-        literal (Map):
+        ojLiteral (Map):
           "unicodeText"
     val (Literal):
       Extent (Extent):
@@ -222,7 +222,7 @@ arlSmStatements (ArrayList):
           "13"
         startLine (Int32):
           "20"
-      literal (Map):
+      ojLiteral (Map):
         "äaba"
   Entry (Statement)
     keys (ArrayList):
@@ -238,7 +238,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "21"
-        literal (Map):
+        ojLiteral (Map):
           "this"
     val (Call):
       epsArgument (Program):
@@ -257,7 +257,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "22"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Search):
               Extent (Extent):
@@ -283,7 +283,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "22"
-                literal (Map):
+                ojLiteral (Map):
                   "parent"
           Entry (Statement)
             keys (ArrayList):
@@ -299,7 +299,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "23"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Search):
               Extent (Extent):
@@ -325,7 +325,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "23"
-                literal (Map):
+                ojLiteral (Map):
                   "programFlow"
           Entry (Statement)
             keys (ArrayList):
@@ -341,7 +341,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "24"
-                literal (Integer):
+                ojLiteral (Integer):
                   "3"
             val (Search):
               Extent (Extent):
@@ -367,7 +367,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "24"
-                literal (Map):
+                ojLiteral (Map):
                   "logic"
           Entry (Statement)
             keys (ArrayList):
@@ -383,7 +383,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "25"
-                literal (Integer):
+                ojLiteral (Integer):
                   "4"
             val (Search):
               Extent (Extent):
@@ -409,7 +409,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "25"
-                literal (Map):
+                ojLiteral (Map):
                   "map"
           Entry (Statement)
             keys (ArrayList):
@@ -425,7 +425,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "26"
-                literal (Integer):
+                ojLiteral (Integer):
                   "5"
             val (Search):
               Extent (Extent):
@@ -451,7 +451,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "26"
-                literal (Map):
+                ojLiteral (Map):
                   "math"
         Extent (Extent):
           endColumn (Int32):
@@ -500,7 +500,7 @@ arlSmStatements (ArrayList):
                 "6"
               startLine (Int32):
                 "21"
-            literal (Map):
+            ojLiteral (Map):
               "map"
         keys (ArrayList):
           Entry (Literal)
@@ -515,7 +515,7 @@ arlSmStatements (ArrayList):
                 "10"
               startLine (Int32):
                 "21"
-            literal (Map):
+            ojLiteral (Map):
               "mMergeAm"
       Extent (Extent):
         endColumn (Int32):
@@ -542,7 +542,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "27"
-        literal (Map):
+        ojLiteral (Map):
           "trimStartTest"
     val (Call):
       epsArgument (Program):
@@ -561,7 +561,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "28"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
@@ -575,7 +575,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "28"
-              literal (Map):
+              ojLiteral (Map):
                 "					hello"
           Entry (Statement)
             keys (ArrayList):
@@ -591,7 +591,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "29"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Literal):
               Extent (Extent):
@@ -605,7 +605,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "29"
-              literal (Integer):
+              ojLiteral (Integer):
                 "9"
         Extent (Extent):
           endColumn (Int32):
@@ -642,7 +642,7 @@ arlSmStatements (ArrayList):
               "15"
             startLine (Int32):
               "27"
-          literal (Map):
+          ojLiteral (Map):
             "sTrimStartS"
       Extent (Extent):
         endColumn (Int32):
@@ -669,7 +669,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "30"
-        literal (Map):
+        ojLiteral (Map):
           "form"
     val (Call):
       epsArgument (Program):
@@ -688,7 +688,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "31"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Call):
               epsArgument (Literal):
@@ -703,7 +703,7 @@ arlSmStatements (ArrayList):
                     "27"
                   startLine (Int32):
                     "31"
-                literal (Map):
+                ojLiteral (Map):
                   ""
               epsCallable (Select):
                 Extent (Extent):
@@ -741,7 +741,7 @@ arlSmStatements (ArrayList):
                         "2"
                       startLine (Int32):
                         "31"
-                    literal (Map):
+                    ojLiteral (Map):
                       "System"
                 keys (ArrayList):
                   Entry (Literal)
@@ -756,7 +756,7 @@ arlSmStatements (ArrayList):
                         "9"
                       startLine (Int32):
                         "31"
-                    literal (Map):
+                    ojLiteral (Map):
                       "Windows"
                   Entry (Literal)
                     Extent (Extent):
@@ -770,7 +770,7 @@ arlSmStatements (ArrayList):
                         "17"
                       startLine (Int32):
                         "31"
-                    literal (Map):
+                    ojLiteral (Map):
                       "Forms"
                   Entry (Literal)
                     Extent (Extent):
@@ -784,7 +784,7 @@ arlSmStatements (ArrayList):
                         "23"
                       startLine (Int32):
                         "31"
-                    literal (Map):
+                    ojLiteral (Map):
                       "Form"
               Extent (Extent):
                 endColumn (Int32):
@@ -811,7 +811,7 @@ arlSmStatements (ArrayList):
                     "3"
                   startLine (Int32):
                     "33"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Program):
               arlSmStatements (ArrayList):
@@ -829,7 +829,7 @@ arlSmStatements (ArrayList):
                           "3"
                         startLine (Int32):
                           "33"
-                      literal (Map):
+                      ojLiteral (Map):
                         "Text"
                   val (Literal):
                     Extent (Extent):
@@ -843,7 +843,7 @@ arlSmStatements (ArrayList):
                         "8"
                       startLine (Int32):
                         "33"
-                    literal (Map):
+                    ojLiteral (Map):
                       "hello"
               Extent (Extent):
                 endColumn (Int32):
@@ -891,7 +891,7 @@ arlSmStatements (ArrayList):
               "6"
             startLine (Int32):
               "30"
-          literal (Map):
+          ojLiteral (Map):
             "oWithOM"
       Extent (Extent):
         endColumn (Int32):
@@ -918,7 +918,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "34"
-        literal (Integer):
+        ojLiteral (Integer):
           "1"
     val (Literal):
       Extent (Extent):
@@ -932,7 +932,7 @@ arlSmStatements (ArrayList):
           "1"
         startLine (Int32):
           "34"
-      literal (Map):
+      ojLiteral (Map):
         "ImpliedAutokey"
   Entry (Statement)
     keys (ArrayList):
@@ -948,7 +948,7 @@ arlSmStatements (ArrayList):
             "2"
           startLine (Int32):
             "35"
-        literal (Integer):
+        ojLiteral (Integer):
           "2"
     val (Literal):
       Extent (Extent):
@@ -962,7 +962,7 @@ arlSmStatements (ArrayList):
           "2"
         startLine (Int32):
           "35"
-      literal (Map):
+      ojLiteral (Map):
         "Autokey"
   Entry (Statement)
     keys (ArrayList):
@@ -978,7 +978,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "36"
-        literal (Map):
+        ojLiteral (Map):
           "gacTest"
     val (Select):
       Extent (Extent):
@@ -1016,7 +1016,7 @@ arlSmStatements (ArrayList):
               "9"
             startLine (Int32):
               "36"
-          literal (Map):
+          ojLiteral (Map):
             "System"
       keys (ArrayList):
         Entry (Literal)
@@ -1031,7 +1031,7 @@ arlSmStatements (ArrayList):
               "16"
             startLine (Int32):
               "36"
-          literal (Map):
+          ojLiteral (Map):
             "Collections"
   Entry (Statement)
     keys (ArrayList):
@@ -1047,7 +1047,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "37"
-        literal (Map):
+        ojLiteral (Map):
           "lazyGACTest"
     val (Select):
       Extent (Extent):
@@ -1085,7 +1085,7 @@ arlSmStatements (ArrayList):
               "13"
             startLine (Int32):
               "37"
-          literal (Map):
+          ojLiteral (Map):
             "Microsoft"
       keys (ArrayList):
         Entry (Literal)
@@ -1100,7 +1100,7 @@ arlSmStatements (ArrayList):
               "23"
             startLine (Int32):
               "37"
-          literal (Map):
+          ojLiteral (Map):
             "CSharp"
   Entry (Statement)
     keys (ArrayList):
@@ -1116,7 +1116,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "38"
-        literal (Map):
+        ojLiteral (Map):
           "metaLibTest"
     val (Search):
       Extent (Extent):
@@ -1142,7 +1142,7 @@ arlSmStatements (ArrayList):
             "13"
           startLine (Int32):
             "38"
-        literal (Map):
+        ojLiteral (Map):
           "metaLib"
   Entry (Statement)
     keys (ArrayList):
@@ -1158,7 +1158,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "39"
-        literal (Map):
+        ojLiteral (Map):
           "commandLineArguments"
     val (Search):
       Extent (Extent):
@@ -1184,7 +1184,7 @@ arlSmStatements (ArrayList):
             "22"
           startLine (Int32):
             "39"
-        literal (Map):
+        ojLiteral (Map):
           "arg"
   Entry (Statement)
     keys (ArrayList):
@@ -1200,7 +1200,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "40"
-        literal (Map):
+        ojLiteral (Map):
           "libraryAssemblyTest"
     val (Search):
       Extent (Extent):
@@ -1226,7 +1226,7 @@ arlSmStatements (ArrayList):
             "21"
           startLine (Int32):
             "40"
-        literal (Map):
+        ojLiteral (Map):
           "testClasses"
   Entry (Statement)
     keys (ArrayList):
@@ -1242,7 +1242,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "45"
-        literal (Map):
+        ojLiteral (Map):
           "aMap"
     val (Program):
       arlSmStatements (ArrayList):
@@ -1260,7 +1260,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "46"
-              literal (Map):
+              ojLiteral (Map):
                 "a"
           val (Literal):
             Extent (Extent):
@@ -1274,7 +1274,7 @@ arlSmStatements (ArrayList):
                 "7"
               startLine (Int32):
                 "46"
-            literal (Map):
+            ojLiteral (Map):
               "a"
       Extent (Extent):
         endColumn (Int32):
@@ -1313,7 +1313,7 @@ arlSmStatements (ArrayList):
               "2"
             startLine (Int32):
               "47"
-          literal (Map):
+          ojLiteral (Map):
             "aMap"
     val (Literal):
       Extent (Extent):
@@ -1327,7 +1327,7 @@ arlSmStatements (ArrayList):
           "8"
         startLine (Int32):
           "47"
-      literal (Map):
+      ojLiteral (Map):
         "Object"
   Entry (Statement)
     keys (ArrayList):
@@ -1343,7 +1343,7 @@ arlSmStatements (ArrayList):
             "2"
           startLine (Int32):
             "48"
-        literal (Map):
+        ojLiteral (Map):
           "normal symbol"
     val (Literal):
       Extent (Extent):
@@ -1357,7 +1357,7 @@ arlSmStatements (ArrayList):
           "19"
         startLine (Int32):
           "48"
-      literal (Map):
+      ojLiteral (Map):
         "NormalSymbol"
   Entry (Statement)
     keys (ArrayList):
@@ -1373,7 +1373,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "49"
-        literal (Map):
+        ojLiteral (Map):
           "lookupSymbol"
     val (Literal):
       Extent (Extent):
@@ -1387,7 +1387,7 @@ arlSmStatements (ArrayList):
           "14"
         startLine (Int32):
           "49"
-      literal (Map):
+      ojLiteral (Map):
         "LookupSymbol"
   Entry (Statement)
     keys (ArrayList):
@@ -1403,7 +1403,7 @@ arlSmStatements (ArrayList):
             "2"
           startLine (Int32):
             "50"
-        literal (Map):
+        ojLiteral (Map):
           "long key symbol"
     val (Literal):
       Extent (Extent):
@@ -1417,7 +1417,7 @@ arlSmStatements (ArrayList):
           "21"
         startLine (Int32):
           "50"
-      literal (Map):
+      ojLiteral (Map):
         "LookupExtendedSymbol"
   Entry (Statement)
     keys (ArrayList):
@@ -1433,7 +1433,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "51"
-        literal (Map):
+        ojLiteral (Map):
           "lookedUpMap"
     val (Search):
       Extent (Extent):
@@ -1471,7 +1471,7 @@ arlSmStatements (ArrayList):
               "14"
             startLine (Int32):
               "51"
-          literal (Map):
+          ojLiteral (Map):
             "aMap"
   Entry (Statement)
     keys (ArrayList):
@@ -1487,7 +1487,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "52"
-        literal (Map):
+        ojLiteral (Map):
           "lookedUpNormalSymbol"
     val (Search):
       Extent (Extent):
@@ -1513,7 +1513,7 @@ arlSmStatements (ArrayList):
             "23"
           startLine (Int32):
             "52"
-        literal (Map):
+        ojLiteral (Map):
           "normal symbol"
   Entry (Statement)
     keys (ArrayList):
@@ -1529,7 +1529,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "53"
-        literal (Map):
+        ojLiteral (Map):
           "lookedUpSymbol"
     val (Search):
       Extent (Extent):
@@ -1555,7 +1555,7 @@ arlSmStatements (ArrayList):
             "16"
           startLine (Int32):
             "53"
-        literal (Map):
+        ojLiteral (Map):
           "lookupSymbol"
   Entry (Statement)
     keys (ArrayList):
@@ -1571,7 +1571,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "54"
-        literal (Map):
+        ojLiteral (Map):
           "lookedUpLongSymbol"
     val (Search):
       Extent (Extent):
@@ -1597,7 +1597,7 @@ arlSmStatements (ArrayList):
             "21"
           startLine (Int32):
             "54"
-        literal (Map):
+        ojLiteral (Map):
           "long key symbol"
   Entry (Statement)
     keys (ArrayList):
@@ -1613,7 +1613,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "55"
-        literal (Map):
+        ojLiteral (Map):
           "object"
     val (Program):
       arlSmStatements (ArrayList):
@@ -1631,7 +1631,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "56"
-              literal (Map):
+              ojLiteral (Map):
                 "a"
           val (Literal):
             Extent (Extent):
@@ -1645,7 +1645,7 @@ arlSmStatements (ArrayList):
                 "4"
               startLine (Int32):
                 "56"
-            literal (Map):
+            ojLiteral (Map):
               "default"
         Entry (Statement)
           keys (ArrayList):
@@ -1661,7 +1661,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "57"
-              literal (Map):
+              ojLiteral (Map):
                 "autoSearch"
           val (Literal):
             Extent (Extent):
@@ -1675,7 +1675,7 @@ arlSmStatements (ArrayList):
                 "13"
               startLine (Int32):
                 "57"
-            literal (Map):
+            ojLiteral (Map):
               "default"
         Entry (Statement)
           keys (ArrayList):
@@ -1691,7 +1691,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "58"
-              literal (Map):
+              ojLiteral (Map):
                 "b"
           val (Literal):
             Extent (Extent):
@@ -1705,7 +1705,7 @@ arlSmStatements (ArrayList):
                 "4"
               startLine (Int32):
                 "58"
-            literal (Map):
+            ojLiteral (Map):
               ""
         Entry (Statement)
           keys (ArrayList):
@@ -1721,7 +1721,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "59"
-              literal (Map):
+              ojLiteral (Map):
                 "SetA"
           val (Program):
             arlSmStatements (ArrayList):
@@ -1739,7 +1739,7 @@ arlSmStatements (ArrayList):
                         "4"
                       startLine (Int32):
                         "61"
-                    literal (Map):
+                    ojLiteral (Map):
                       "run"
                 val (Delayed):
                   Extent (Extent):
@@ -1871,7 +1871,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "63"
-              literal (Map):
+              ojLiteral (Map):
                 "SetB"
           val (Program):
             arlSmStatements (ArrayList):
@@ -1889,7 +1889,7 @@ arlSmStatements (ArrayList):
                         "4"
                       startLine (Int32):
                         "65"
-                    literal (Map):
+                    ojLiteral (Map):
                       "run"
                 val (Delayed):
                   Extent (Extent):
@@ -2042,7 +2042,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "67"
-              literal (Map):
+              ojLiteral (Map):
                 "x"
           val (Program):
             arlSmStatements (ArrayList):
@@ -2060,7 +2060,7 @@ arlSmStatements (ArrayList):
                         "3"
                       startLine (Int32):
                         "68"
-                    literal (Map):
+                    ojLiteral (Map):
                       "a"
                 val (Literal):
                   Extent (Extent):
@@ -2074,7 +2074,7 @@ arlSmStatements (ArrayList):
                       "5"
                     startLine (Int32):
                       "68"
-                  literal (Map):
+                  ojLiteral (Map):
                     "b"
               Entry (Statement)
                 keys (ArrayList):
@@ -2090,7 +2090,7 @@ arlSmStatements (ArrayList):
                         "3"
                       startLine (Int32):
                         "69"
-                    literal (Map):
+                    ojLiteral (Map):
                       "c"
                 val (Literal):
                   Extent (Extent):
@@ -2104,7 +2104,7 @@ arlSmStatements (ArrayList):
                       "5"
                     startLine (Int32):
                       "69"
-                  literal (Map):
+                  ojLiteral (Map):
                     "d"
             Extent (Extent):
               endColumn (Int32):
@@ -2131,7 +2131,7 @@ arlSmStatements (ArrayList):
                   "4"
                 startLine (Int32):
                   "72"
-              literal (Integer):
+              ojLiteral (Integer):
                 "1"
           val (Program):
             arlSmStatements (ArrayList):
@@ -2149,7 +2149,7 @@ arlSmStatements (ArrayList):
                         "4"
                       startLine (Int32):
                         "72"
-                    literal (Map):
+                    ojLiteral (Map):
                       "run"
                 val (Delayed):
                   Extent (Extent):
@@ -2239,7 +2239,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "73"
-        literal (Map):
+        ojLiteral (Map):
           "a"
     val (Literal):
       Extent (Extent):
@@ -2253,7 +2253,7 @@ arlSmStatements (ArrayList):
           "3"
         startLine (Int32):
           "73"
-      literal (Map):
+      ojLiteral (Map):
         "default"
   Entry (Statement)
     keys (ArrayList):
@@ -2269,7 +2269,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "74"
-        literal (Map):
+        ojLiteral (Map):
           "b"
     val (Literal):
       Extent (Extent):
@@ -2283,7 +2283,7 @@ arlSmStatements (ArrayList):
           "3"
         startLine (Int32):
           "74"
-      literal (Map):
+      ojLiteral (Map):
         ""
   Entry (Statement)
     keys (ArrayList):
@@ -2299,7 +2299,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "75"
-        literal (Map):
+        ojLiteral (Map):
           "aSet"
     val (Call):
       epsArgument (Literal):
@@ -2314,7 +2314,7 @@ arlSmStatements (ArrayList):
             "17"
           startLine (Int32):
             "75"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Select):
         Extent (Extent):
@@ -2352,7 +2352,7 @@ arlSmStatements (ArrayList):
                 "6"
               startLine (Int32):
                 "75"
-            literal (Map):
+            ojLiteral (Map):
               "object"
         keys (ArrayList):
           Entry (Literal)
@@ -2367,7 +2367,7 @@ arlSmStatements (ArrayList):
                 "13"
               startLine (Int32):
                 "75"
-            literal (Map):
+            ojLiteral (Map):
               "SetA"
       Extent (Extent):
         endColumn (Int32):
@@ -2394,7 +2394,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "76"
-        literal (Map):
+        ojLiteral (Map):
           "bSet"
     val (Call):
       epsArgument (Program):
@@ -2413,7 +2413,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "77"
-                literal (Map):
+                ojLiteral (Map):
                   "value"
             val (Program):
               arlSmStatements (ArrayList):
@@ -2431,7 +2431,7 @@ arlSmStatements (ArrayList):
                           "3"
                         startLine (Int32):
                           "78"
-                      literal (Map):
+                      ojLiteral (Map):
                         "x"
                   val (Literal):
                     Extent (Extent):
@@ -2445,7 +2445,7 @@ arlSmStatements (ArrayList):
                         "5"
                       startLine (Int32):
                         "78"
-                    literal (Integer):
+                    ojLiteral (Integer):
                       "7"
                 Entry (Statement)
                   keys (ArrayList):
@@ -2461,7 +2461,7 @@ arlSmStatements (ArrayList):
                           "3"
                         startLine (Int32):
                           "79"
-                      literal (Map):
+                      ojLiteral (Map):
                         "z"
                   val (Literal):
                     Extent (Extent):
@@ -2475,7 +2475,7 @@ arlSmStatements (ArrayList):
                         "5"
                       startLine (Int32):
                         "79"
-                    literal (Integer):
+                    ojLiteral (Integer):
                       "1"
               Extent (Extent):
                 endColumn (Int32):
@@ -2535,7 +2535,7 @@ arlSmStatements (ArrayList):
                 "6"
               startLine (Int32):
                 "76"
-            literal (Map):
+            ojLiteral (Map):
               "object"
         keys (ArrayList):
           Entry (Literal)
@@ -2550,7 +2550,7 @@ arlSmStatements (ArrayList):
                 "13"
               startLine (Int32):
                 "76"
-            literal (Map):
+            ojLiteral (Map):
               "SetB"
       Extent (Extent):
         endColumn (Int32):
@@ -2577,7 +2577,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "80"
-        literal (Map):
+        ojLiteral (Map):
           "ReturnEverything"
     val (Program):
       arlSmStatements (ArrayList):
@@ -2595,7 +2595,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "82"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -2669,7 +2669,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "83"
-        literal (Map):
+        ojLiteral (Map):
           "everythingReturned"
     val (Call):
       epsArgument (Program):
@@ -2688,7 +2688,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "84"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
@@ -2702,7 +2702,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "84"
-              literal (Map):
+              ojLiteral (Map):
                 "a"
           Entry (Statement)
             keys (ArrayList):
@@ -2718,7 +2718,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "85"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Literal):
               Extent (Extent):
@@ -2732,7 +2732,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "85"
-              literal (Map):
+              ojLiteral (Map):
                 "b"
           Entry (Statement)
             keys (ArrayList):
@@ -2748,7 +2748,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "86"
-                literal (Integer):
+                ojLiteral (Integer):
                   "3"
             val (Literal):
               Extent (Extent):
@@ -2762,7 +2762,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "86"
-              literal (Map):
+              ojLiteral (Map):
                 "c"
         Extent (Extent):
           endColumn (Int32):
@@ -2799,7 +2799,7 @@ arlSmStatements (ArrayList):
               "20"
             startLine (Int32):
               "83"
-          literal (Map):
+          ojLiteral (Map):
             "ReturnEverything"
       Extent (Extent):
         endColumn (Int32):
@@ -2826,7 +2826,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "87"
-        literal (Map):
+        ojLiteral (Map):
           "variableAsArgument"
     val (Call):
       epsArgument (Program):
@@ -2845,7 +2845,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "88"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
@@ -2859,7 +2859,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "88"
-              literal (Map):
+              ojLiteral (Map):
                 "x"
           Entry (Statement)
             keys (ArrayList):
@@ -2875,7 +2875,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "89"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Literal):
               Extent (Extent):
@@ -2889,7 +2889,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "89"
-              literal (Map):
+              ojLiteral (Map):
                 "y"
           Entry (Statement)
             keys (ArrayList):
@@ -2905,7 +2905,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "90"
-                literal (Integer):
+                ojLiteral (Integer):
                   "3"
             val (Literal):
               Extent (Extent):
@@ -2919,7 +2919,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "90"
-              literal (Map):
+              ojLiteral (Map):
                 "z"
         Extent (Extent):
           endColumn (Int32):
@@ -2956,7 +2956,7 @@ arlSmStatements (ArrayList):
               "20"
             startLine (Int32):
               "87"
-          literal (Map):
+          ojLiteral (Map):
             "ReturnEverything"
       Extent (Extent):
         endColumn (Int32):
@@ -2983,7 +2983,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "91"
-        literal (Map):
+        ojLiteral (Map):
           "ReturnFunction"
     val (Program):
       arlSmStatements (ArrayList):
@@ -3001,7 +3001,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "93"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -3202,7 +3202,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "99"
-        literal (Map):
+        ojLiteral (Map):
           "SetCurrent"
     val (Program):
       arlSmStatements (ArrayList):
@@ -3220,7 +3220,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "101"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -3396,7 +3396,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "105"
-        literal (Map):
+        ojLiteral (Map):
           "thisSet"
     val (Call):
       epsArgument (Program):
@@ -3415,7 +3415,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "106"
-                literal (Map):
+                ojLiteral (Map):
                   "symbol"
             val (Literal):
               Extent (Extent):
@@ -3429,7 +3429,7 @@ arlSmStatements (ArrayList):
                   "9"
                 startLine (Int32):
                   "106"
-              literal (Map):
+              ojLiteral (Map):
                 "haha"
         Extent (Extent):
           endColumn (Int32):
@@ -3466,7 +3466,7 @@ arlSmStatements (ArrayList):
               "9"
             startLine (Int32):
               "105"
-          literal (Map):
+          ojLiteral (Map):
             "SetCurrent"
       Extent (Extent):
         endColumn (Int32):
@@ -3493,7 +3493,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "107"
-        literal (Map):
+        ojLiteral (Map):
           "FirstLevel"
     val (Program):
       arlSmStatements (ArrayList):
@@ -3511,7 +3511,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "109"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -3606,7 +3606,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "110"
-        literal (Map):
+        ojLiteral (Map):
           "SecondLevel"
     val (Program):
       arlSmStatements (ArrayList):
@@ -3624,7 +3624,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "111"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -3673,7 +3673,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "112"
-        literal (Map):
+        ojLiteral (Map):
           "argTest"
     val (Call):
       epsArgument (Program):
@@ -3692,7 +3692,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "113"
-                literal (Map):
+                ojLiteral (Map):
                   "a"
             val (Literal):
               Extent (Extent):
@@ -3706,7 +3706,7 @@ arlSmStatements (ArrayList):
                   "4"
                 startLine (Int32):
                   "113"
-              literal (Map):
+              ojLiteral (Map):
                 "z"
         Extent (Extent):
           endColumn (Int32):
@@ -3743,7 +3743,7 @@ arlSmStatements (ArrayList):
               "9"
             startLine (Int32):
               "112"
-          literal (Map):
+          ojLiteral (Map):
             "FirstLevel"
       Extent (Extent):
         endColumn (Int32):
@@ -3770,7 +3770,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "114"
-        literal (Map):
+        ojLiteral (Map):
           "concatenate"
     val (Call):
       epsArgument (Program):
@@ -3789,7 +3789,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "115"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
@@ -3803,7 +3803,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "115"
-              literal (Map):
+              ojLiteral (Map):
                 "x"
           Entry (Statement)
             keys (ArrayList):
@@ -3819,7 +3819,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "116"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Literal):
               Extent (Extent):
@@ -3833,7 +3833,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "116"
-              literal (Map):
+              ojLiteral (Map):
                 "yz"
         Extent (Extent):
           endColumn (Int32):
@@ -3882,7 +3882,7 @@ arlSmStatements (ArrayList):
                 "13"
               startLine (Int32):
                 "114"
-            literal (Map):
+            ojLiteral (Map):
               "map"
         keys (ArrayList):
           Entry (Literal)
@@ -3897,7 +3897,7 @@ arlSmStatements (ArrayList):
                 "17"
               startLine (Int32):
                 "114"
-            literal (Map):
+            ojLiteral (Map):
               "aJoinAa"
       Extent (Extent):
         endColumn (Int32):
@@ -3924,7 +3924,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "117"
-        literal (Map):
+        ojLiteral (Map):
           "this"
     val (Call):
       epsArgument (Program):
@@ -3943,7 +3943,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "118"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Search):
               Extent (Extent):
@@ -3969,7 +3969,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "118"
-                literal (Map):
+                ojLiteral (Map):
                   "parent"
           Entry (Statement)
             keys (ArrayList):
@@ -3985,7 +3985,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "119"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Search):
               Extent (Extent):
@@ -4011,7 +4011,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "119"
-                literal (Map):
+                ojLiteral (Map):
                   "testClasses"
         Extent (Extent):
           endColumn (Int32):
@@ -4060,7 +4060,7 @@ arlSmStatements (ArrayList):
                 "6"
               startLine (Int32):
                 "117"
-            literal (Map):
+            ojLiteral (Map):
               "map"
         keys (ArrayList):
           Entry (Literal)
@@ -4075,7 +4075,7 @@ arlSmStatements (ArrayList):
                 "10"
               startLine (Int32):
                 "117"
-            literal (Map):
+            ojLiteral (Map):
               "mMergeAm"
       Extent (Extent):
         endColumn (Int32):
@@ -4102,7 +4102,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "120"
-        literal (Map):
+        ojLiteral (Map):
           "testClass"
     val (Call):
       epsArgument (Literal):
@@ -4117,7 +4117,7 @@ arlSmStatements (ArrayList):
             "20"
           startLine (Int32):
             "120"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Search):
         Extent (Extent):
@@ -4143,7 +4143,7 @@ arlSmStatements (ArrayList):
               "11"
             startLine (Int32):
               "120"
-          literal (Map):
+          ojLiteral (Map):
             "TestClass"
       Extent (Extent):
         endColumn (Int32):
@@ -4170,7 +4170,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "121"
-        literal (Map):
+        ojLiteral (Map):
           "testClass"
       Entry (Literal)
         Extent (Extent):
@@ -4184,7 +4184,7 @@ arlSmStatements (ArrayList):
             "11"
           startLine (Int32):
             "121"
-        literal (Map):
+        ojLiteral (Map):
           "floatValue"
     val (Program):
       arlSmStatements (ArrayList):
@@ -4202,7 +4202,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "122"
-              literal (Map):
+              ojLiteral (Map):
                 "iNumerator"
           val (Literal):
             Extent (Extent):
@@ -4216,7 +4216,7 @@ arlSmStatements (ArrayList):
                 "13"
               startLine (Int32):
                 "122"
-            literal (Integer):
+            ojLiteral (Integer):
               "1"
         Entry (Statement)
           keys (ArrayList):
@@ -4232,7 +4232,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "123"
-              literal (Map):
+              ojLiteral (Map):
                 "iDenominator"
           val (Literal):
             Extent (Extent):
@@ -4246,7 +4246,7 @@ arlSmStatements (ArrayList):
                 "15"
               startLine (Int32):
                 "123"
-            literal (Integer):
+            ojLiteral (Integer):
               "3"
       Extent (Extent):
         endColumn (Int32):
@@ -4273,7 +4273,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "124"
-        literal (Map):
+        ojLiteral (Map):
           "testClass"
       Entry (Literal)
         Extent (Extent):
@@ -4287,7 +4287,7 @@ arlSmStatements (ArrayList):
             "11"
           startLine (Int32):
             "124"
-        literal (Map):
+        ojLiteral (Map):
           "doubleValue"
     val (Program):
       arlSmStatements (ArrayList):
@@ -4305,7 +4305,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "125"
-              literal (Map):
+              ojLiteral (Map):
                 "iNumerator"
           val (Literal):
             Extent (Extent):
@@ -4319,7 +4319,7 @@ arlSmStatements (ArrayList):
                 "13"
               startLine (Int32):
                 "125"
-            literal (Integer):
+            ojLiteral (Integer):
               "1"
         Entry (Statement)
           keys (ArrayList):
@@ -4335,7 +4335,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "126"
-              literal (Map):
+              ojLiteral (Map):
                 "iDenominator"
           val (Literal):
             Extent (Extent):
@@ -4349,7 +4349,7 @@ arlSmStatements (ArrayList):
                 "15"
               startLine (Int32):
                 "126"
-            literal (Integer):
+            ojLiteral (Integer):
               "3"
       Extent (Extent):
         endColumn (Int32):
@@ -4376,7 +4376,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "127"
-        literal (Map):
+        ojLiteral (Map):
           "testClass"
       Entry (Literal)
         Extent (Extent):
@@ -4390,7 +4390,7 @@ arlSmStatements (ArrayList):
             "11"
           startLine (Int32):
             "127"
-        literal (Map):
+        ojLiteral (Map):
           "decimalValue"
     val (Program):
       arlSmStatements (ArrayList):
@@ -4408,7 +4408,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "128"
-              literal (Map):
+              ojLiteral (Map):
                 "iNumerator"
           val (Literal):
             Extent (Extent):
@@ -4422,7 +4422,7 @@ arlSmStatements (ArrayList):
                 "13"
               startLine (Int32):
                 "128"
-            literal (Integer):
+            ojLiteral (Integer):
               "1"
         Entry (Statement)
           keys (ArrayList):
@@ -4438,7 +4438,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "129"
-              literal (Map):
+              ojLiteral (Map):
                 "iDenominator"
           val (Literal):
             Extent (Extent):
@@ -4452,7 +4452,7 @@ arlSmStatements (ArrayList):
                 "15"
               startLine (Int32):
                 "129"
-            literal (Integer):
+            ojLiteral (Integer):
               "3"
       Extent (Extent):
         endColumn (Int32):
@@ -4479,7 +4479,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "130"
-        literal (Map):
+        ojLiteral (Map):
           "TestClass"
       Entry (Literal)
         Extent (Extent):
@@ -4493,7 +4493,7 @@ arlSmStatements (ArrayList):
             "11"
           startLine (Int32):
             "130"
-        literal (Map):
+        ojLiteral (Map):
           "boolTest"
     val (Literal):
       Extent (Extent):
@@ -4507,7 +4507,7 @@ arlSmStatements (ArrayList):
           "20"
         startLine (Int32):
           "130"
-      literal (Integer):
+      ojLiteral (Integer):
         "1"
   Entry (Statement)
     keys (ArrayList):
@@ -4523,7 +4523,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "131"
-        literal (Map):
+        ojLiteral (Map):
           "boolTest"
     val (Select):
       Extent (Extent):
@@ -4561,7 +4561,7 @@ arlSmStatements (ArrayList):
               "10"
             startLine (Int32):
               "131"
-          literal (Map):
+          ojLiteral (Map):
             "TestClass"
       keys (ArrayList):
         Entry (Literal)
@@ -4576,7 +4576,7 @@ arlSmStatements (ArrayList):
               "20"
             startLine (Int32):
               "131"
-          literal (Map):
+          ojLiteral (Map):
             "boolTest"
   Entry (Statement)
     keys (ArrayList):
@@ -4592,7 +4592,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "132"
-        literal (Map):
+        ojLiteral (Map):
           "memberTest"
     val (Call):
       epsArgument (Literal):
@@ -4607,7 +4607,7 @@ arlSmStatements (ArrayList):
             "22"
           startLine (Int32):
             "132"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Search):
         Extent (Extent):
@@ -4633,7 +4633,7 @@ arlSmStatements (ArrayList):
               "12"
             startLine (Int32):
               "132"
-          literal (Map):
+          ojLiteral (Map):
             "MemberTest"
       Extent (Extent):
         endColumn (Int32):
@@ -4660,7 +4660,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "133"
-        literal (Map):
+        ojLiteral (Map):
           "MemberTest"
       Entry (Literal)
         Extent (Extent):
@@ -4674,7 +4674,7 @@ arlSmStatements (ArrayList):
             "12"
           startLine (Int32):
             "133"
-        literal (Map):
+        ojLiteral (Map):
           "classField"
     val (Literal):
       Extent (Extent):
@@ -4688,7 +4688,7 @@ arlSmStatements (ArrayList):
           "23"
         startLine (Int32):
           "133"
-      literal (Map):
+      ojLiteral (Map):
         "a"
   Entry (Statement)
     keys (ArrayList):
@@ -4704,7 +4704,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "134"
-        literal (Map):
+        ojLiteral (Map):
           "memberTest"
       Entry (Literal)
         Extent (Extent):
@@ -4718,7 +4718,7 @@ arlSmStatements (ArrayList):
             "12"
           startLine (Int32):
             "134"
-        literal (Map):
+        ojLiteral (Map):
           "instanceField"
     val (Literal):
       Extent (Extent):
@@ -4732,7 +4732,7 @@ arlSmStatements (ArrayList):
           "26"
         startLine (Int32):
           "134"
-      literal (Map):
+      ojLiteral (Map):
         "b"
   Entry (Statement)
     keys (ArrayList):
@@ -4748,7 +4748,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "135"
-        literal (Map):
+        ojLiteral (Map):
           "MemberTest"
       Entry (Literal)
         Extent (Extent):
@@ -4762,7 +4762,7 @@ arlSmStatements (ArrayList):
             "12"
           startLine (Int32):
             "135"
-        literal (Map):
+        ojLiteral (Map):
           "ClassProperty"
     val (Select):
       Extent (Extent):
@@ -4800,7 +4800,7 @@ arlSmStatements (ArrayList):
               "26"
             startLine (Int32):
               "135"
-          literal (Map):
+          ojLiteral (Map):
             "memberTest"
       keys (ArrayList):
         Entry (Literal)
@@ -4815,7 +4815,7 @@ arlSmStatements (ArrayList):
               "37"
             startLine (Int32):
               "135"
-          literal (Map):
+          ojLiteral (Map):
             "InstanceProperty"
   Entry (Statement)
     keys (ArrayList):
@@ -4831,7 +4831,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "136"
-        literal (Map):
+        ojLiteral (Map):
           "memberTest"
       Entry (Literal)
         Extent (Extent):
@@ -4845,7 +4845,7 @@ arlSmStatements (ArrayList):
             "12"
           startLine (Int32):
             "136"
-        literal (Map):
+        ojLiteral (Map):
           "InstanceProperty"
     val (Select):
       Extent (Extent):
@@ -4883,7 +4883,7 @@ arlSmStatements (ArrayList):
               "29"
             startLine (Int32):
               "136"
-          literal (Map):
+          ojLiteral (Map):
             "MemberTest"
       keys (ArrayList):
         Entry (Literal)
@@ -4898,7 +4898,7 @@ arlSmStatements (ArrayList):
               "40"
             startLine (Int32):
               "136"
-          literal (Map):
+          ojLiteral (Map):
             "ClassProperty"
   Entry (Statement)
     keys (ArrayList):
@@ -4914,7 +4914,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "137"
-        literal (Map):
+        ojLiteral (Map):
           "interceptedSymbol"
     val (Literal):
       Extent (Extent):
@@ -4928,7 +4928,7 @@ arlSmStatements (ArrayList):
           "19"
         startLine (Int32):
           "137"
-      literal (Map):
+      ojLiteral (Map):
         "/hello/"
   Entry (Statement)
     keys (ArrayList):
@@ -4944,7 +4944,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "138"
-        literal (Map):
+        ojLiteral (Map):
           "positionalNoConversion"
     val (Call):
       epsArgument (Program):
@@ -4963,7 +4963,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "139"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
@@ -4977,7 +4977,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "139"
-              literal (Map):
+              ojLiteral (Map):
                 "m"
           Entry (Statement)
             keys (ArrayList):
@@ -4993,7 +4993,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "140"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Literal):
               Extent (Extent):
@@ -5007,7 +5007,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "140"
-              literal (Map):
+              ojLiteral (Map):
                 "n"
           Entry (Statement)
             keys (ArrayList):
@@ -5023,7 +5023,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "141"
-                literal (Integer):
+                ojLiteral (Integer):
                   "3"
             val (Literal):
               Extent (Extent):
@@ -5037,7 +5037,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "141"
-              literal (Map):
+              ojLiteral (Map):
                 "o"
         Extent (Extent):
           endColumn (Int32):
@@ -5074,7 +5074,7 @@ arlSmStatements (ArrayList):
               "24"
             startLine (Int32):
               "138"
-          literal (Map):
+          ojLiteral (Map):
             "PositionalNoConversion"
       Extent (Extent):
         endColumn (Int32):
@@ -5101,7 +5101,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "142"
-        literal (Map):
+        ojLiteral (Map):
           "positionalNoConversionConcatenated"
     val (Call):
       epsArgument (Program):
@@ -5120,7 +5120,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "143"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
@@ -5134,7 +5134,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "143"
-              literal (Map):
+              ojLiteral (Map):
                 "r"
           Entry (Statement)
             keys (ArrayList):
@@ -5150,7 +5150,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "144"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Literal):
               Extent (Extent):
@@ -5164,7 +5164,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "144"
-              literal (Map):
+              ojLiteral (Map):
                 "s"
           Entry (Statement)
             keys (ArrayList):
@@ -5180,7 +5180,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "145"
-                literal (Integer):
+                ojLiteral (Integer):
                   "3"
             val (Literal):
               Extent (Extent):
@@ -5194,7 +5194,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "145"
-              literal (Map):
+              ojLiteral (Map):
                 "t"
         Extent (Extent):
           endColumn (Int32):
@@ -5243,7 +5243,7 @@ arlSmStatements (ArrayList):
                 "36"
               startLine (Int32):
                 "142"
-            literal (Map):
+            ojLiteral (Map):
               "positionalNoConversion"
         keys (ArrayList):
           Entry (Literal)
@@ -5258,7 +5258,7 @@ arlSmStatements (ArrayList):
                 "59"
               startLine (Int32):
                 "142"
-            literal (Map):
+            ojLiteral (Map):
               "Concatenate"
       Extent (Extent):
         endColumn (Int32):
@@ -5285,7 +5285,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "146"
-        literal (Map):
+        ojLiteral (Map):
           "namedNoConversion"
     val (Call):
       epsArgument (Program):
@@ -5304,7 +5304,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "147"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
@@ -5318,7 +5318,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "147"
-              literal (Map):
+              ojLiteral (Map):
                 "m"
           Entry (Statement)
             keys (ArrayList):
@@ -5334,7 +5334,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "148"
-                literal (Map):
+                ojLiteral (Map):
                   "y"
             val (Literal):
               Extent (Extent):
@@ -5348,7 +5348,7 @@ arlSmStatements (ArrayList):
                   "4"
                 startLine (Int32):
                   "148"
-              literal (Map):
+              ojLiteral (Map):
                 "n"
         Extent (Extent):
           endColumn (Int32):
@@ -5385,7 +5385,7 @@ arlSmStatements (ArrayList):
               "19"
             startLine (Int32):
               "146"
-          literal (Map):
+          ojLiteral (Map):
             "NamedNoConversion"
       Extent (Extent):
         endColumn (Int32):
@@ -5412,7 +5412,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "149"
-        literal (Map):
+        ojLiteral (Map):
           "namedNoConversionConcatenated"
     val (Call):
       epsArgument (Program):
@@ -5431,7 +5431,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "150"
-                literal (Map):
+                ojLiteral (Map):
                   "c"
             val (Literal):
               Extent (Extent):
@@ -5445,7 +5445,7 @@ arlSmStatements (ArrayList):
                   "4"
                 startLine (Int32):
                   "150"
-              literal (Map):
+              ojLiteral (Map):
                 "t"
           Entry (Statement)
             keys (ArrayList):
@@ -5461,7 +5461,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "151"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
@@ -5475,7 +5475,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "151"
-              literal (Map):
+              ojLiteral (Map):
                 "r"
         Extent (Extent):
           endColumn (Int32):
@@ -5524,7 +5524,7 @@ arlSmStatements (ArrayList):
                 "31"
               startLine (Int32):
                 "149"
-            literal (Map):
+            ojLiteral (Map):
               "namedNoConversion"
         keys (ArrayList):
           Entry (Literal)
@@ -5539,7 +5539,7 @@ arlSmStatements (ArrayList):
                 "49"
               startLine (Int32):
                 "149"
-            literal (Map):
+            ojLiteral (Map):
               "Concatenate"
       Extent (Extent):
         endColumn (Int32):
@@ -5566,7 +5566,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "152"
-        literal (Map):
+        ojLiteral (Map):
           "indexerNoConversion"
     val (Call):
       epsArgument (Literal):
@@ -5581,7 +5581,7 @@ arlSmStatements (ArrayList):
             "40"
           startLine (Int32):
             "152"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Search):
         Extent (Extent):
@@ -5607,7 +5607,7 @@ arlSmStatements (ArrayList):
               "21"
             startLine (Int32):
               "152"
-          literal (Map):
+          ojLiteral (Map):
             "IndexerNoConversion"
       Extent (Extent):
         endColumn (Int32):
@@ -5634,7 +5634,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "153"
-        literal (Map):
+        ojLiteral (Map):
           "indexerNoConversion"
       Entry (Literal)
         Extent (Extent):
@@ -5648,7 +5648,7 @@ arlSmStatements (ArrayList):
             "21"
           startLine (Int32):
             "153"
-        literal (Map):
+        ojLiteral (Map):
           "abc"
     val (Literal):
       Extent (Extent):
@@ -5662,7 +5662,7 @@ arlSmStatements (ArrayList):
           "25"
         startLine (Int32):
           "153"
-      literal (Map):
+      ojLiteral (Map):
         "hihi"
   Entry (Statement)
     keys (ArrayList):
@@ -5678,7 +5678,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "154"
-        literal (Map):
+        ojLiteral (Map):
           "indexerNoConversionIndexed"
     val (Select):
       Extent (Extent):
@@ -5716,7 +5716,7 @@ arlSmStatements (ArrayList):
               "28"
             startLine (Int32):
               "154"
-          literal (Map):
+          ojLiteral (Map):
             "indexerNoConversion"
       keys (ArrayList):
         Entry (Literal)
@@ -5731,7 +5731,7 @@ arlSmStatements (ArrayList):
               "48"
             startLine (Int32):
               "154"
-          literal (Map):
+          ojLiteral (Map):
             "abc"
   Entry (Statement)
     keys (ArrayList):
@@ -5747,7 +5747,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "155"
-        literal (Map):
+        ojLiteral (Map):
           "interceptedSymbol2"
     val (Literal):
       Extent (Extent):
@@ -5761,7 +5761,7 @@ arlSmStatements (ArrayList):
           "20"
         startLine (Int32):
           "155"
-      literal (Integer):
+      ojLiteral (Integer):
         "1"
   Entry (Statement)
     keys (ArrayList):
@@ -5777,7 +5777,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "156"
-        literal (Map):
+        ojLiteral (Map):
           "k"
     val (Literal):
       Extent (Extent):
@@ -5791,7 +5791,7 @@ arlSmStatements (ArrayList):
           "3"
         startLine (Int32):
           "156"
-      literal (Map):
+      ojLiteral (Map):
         "hello"
   Entry (Statement)
     keys (ArrayList):
@@ -5807,7 +5807,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "157"
-        literal (Map):
+        ojLiteral (Map):
           "xyz"
     val (Literal):
       Extent (Extent):
@@ -5821,7 +5821,7 @@ arlSmStatements (ArrayList):
           "5"
         startLine (Int32):
           "157"
-      literal (Map):
+      ojLiteral (Map):
         "w"
   Entry (Statement)
     keys (ArrayList):
@@ -5837,7 +5837,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "158"
-        literal (Map):
+        ojLiteral (Map):
           "literalFunction"
     val (Program):
       arlSmStatements (ArrayList):
@@ -5855,7 +5855,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "159"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -5900,7 +5900,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "160"
-        literal (Map):
+        ojLiteral (Map):
           "literalFunctionResult"
     val (Call):
       epsArgument (Literal):
@@ -5915,7 +5915,7 @@ arlSmStatements (ArrayList):
             "38"
           startLine (Int32):
             "160"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Search):
         Extent (Extent):
@@ -5941,7 +5941,7 @@ arlSmStatements (ArrayList):
               "23"
             startLine (Int32):
               "160"
-          literal (Map):
+          ojLiteral (Map):
             "literalFunction"
       Extent (Extent):
         endColumn (Int32):
@@ -5968,7 +5968,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "161"
-        literal (Map):
+        ojLiteral (Map):
           "function"
     val (Program):
       arlSmStatements (ArrayList):
@@ -5986,7 +5986,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "163"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -6056,7 +6056,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "164"
-        literal (Map):
+        ojLiteral (Map):
           "callFunction"
     val (Program):
       arlSmStatements (ArrayList):
@@ -6074,7 +6074,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "165"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -6123,7 +6123,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "166"
-        literal (Map):
+        ojLiteral (Map):
           "callFunctionResult"
     val (Call):
       epsArgument (Literal):
@@ -6138,7 +6138,7 @@ arlSmStatements (ArrayList):
             "32"
           startLine (Int32):
             "166"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Search):
         Extent (Extent):
@@ -6164,7 +6164,7 @@ arlSmStatements (ArrayList):
               "20"
             startLine (Int32):
               "166"
-          literal (Map):
+          ojLiteral (Map):
             "callFunction"
       Extent (Extent):
         endColumn (Int32):
@@ -6191,7 +6191,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "167"
-        literal (Map):
+        ojLiteral (Map):
           "delayedFunction"
     val (Program):
       arlSmStatements (ArrayList):
@@ -6209,7 +6209,7 @@ arlSmStatements (ArrayList):
                   "4"
                 startLine (Int32):
                   "170"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -6308,7 +6308,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "171"
-        literal (Map):
+        ojLiteral (Map):
           "delayedFunctionResult"
     val (Call):
       epsArgument (Literal):
@@ -6323,7 +6323,7 @@ arlSmStatements (ArrayList):
             "39"
           startLine (Int32):
             "171"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Search):
         Extent (Extent):
@@ -6349,7 +6349,7 @@ arlSmStatements (ArrayList):
               "23"
             startLine (Int32):
               "171"
-          literal (Map):
+          ojLiteral (Map):
             "delayedFunction"
       Extent (Extent):
         endColumn (Int32):
@@ -6376,7 +6376,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "172"
-        literal (Map):
+        ojLiteral (Map):
           "value"
     val (Literal):
       Extent (Extent):
@@ -6390,7 +6390,7 @@ arlSmStatements (ArrayList):
           "7"
         startLine (Int32):
           "172"
-      literal (Map):
+      ojLiteral (Map):
         "xyz"
   Entry (Statement)
     keys (ArrayList):
@@ -6406,7 +6406,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "173"
-        literal (Map):
+        ojLiteral (Map):
           "selectionFunction"
     val (Program):
       arlSmStatements (ArrayList):
@@ -6424,7 +6424,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "174"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -6473,7 +6473,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "175"
-        literal (Map):
+        ojLiteral (Map):
           "selectionFunctionResult"
     val (Call):
       epsArgument (Literal):
@@ -6488,7 +6488,7 @@ arlSmStatements (ArrayList):
             "43"
           startLine (Int32):
             "175"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Search):
         Extent (Extent):
@@ -6514,7 +6514,7 @@ arlSmStatements (ArrayList):
               "25"
             startLine (Int32):
               "175"
-          literal (Map):
+          ojLiteral (Map):
             "selectionFunction"
       Extent (Extent):
         endColumn (Int32):
@@ -6541,7 +6541,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "176"
-        literal (Map):
+        ojLiteral (Map):
           "bigInteger"
     val (Literal):
       Extent (Extent):
@@ -6555,7 +6555,7 @@ arlSmStatements (ArrayList):
           "12"
         startLine (Int32):
           "176"
-      literal (Integer):
+      ojLiteral (Integer):
         "89383838383832839123497123047217340712340720347072304702340720347"
   Entry (Statement)
     keys (ArrayList):
@@ -6571,7 +6571,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "177"
-        literal (Map):
+        ojLiteral (Map):
           "upperLevel"
     val (Literal):
       Extent (Extent):
@@ -6585,7 +6585,7 @@ arlSmStatements (ArrayList):
           "12"
         startLine (Int32):
           "177"
-      literal (Map):
+      ojLiteral (Map):
         "unchanged"
   Entry (Statement)
     keys (ArrayList):
@@ -6601,7 +6601,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "178"
-        literal (Map):
+        ojLiteral (Map):
           "ChangeUpperLevel"
     val (Program):
       arlSmStatements (ArrayList):
@@ -6619,7 +6619,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "180"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -6707,7 +6707,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "181"
-        literal (Integer):
+        ojLiteral (Integer):
           "3"
     val (Call):
       epsArgument (Literal):
@@ -6722,7 +6722,7 @@ arlSmStatements (ArrayList):
             "17"
           startLine (Int32):
             "181"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Search):
         Extent (Extent):
@@ -6748,7 +6748,7 @@ arlSmStatements (ArrayList):
               "1"
             startLine (Int32):
               "181"
-          literal (Map):
+          ojLiteral (Map):
             "ChangeUpperLevel"
       Extent (Extent):
         endColumn (Int32):
@@ -6775,7 +6775,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "182"
-        literal (Map):
+        ojLiteral (Map):
           "staticEventChanged"
     val (Literal):
       Extent (Extent):
@@ -6789,7 +6789,7 @@ arlSmStatements (ArrayList):
           "20"
         startLine (Int32):
           "182"
-      literal (Integer):
+      ojLiteral (Integer):
         "0"
   Entry (Statement)
     keys (ArrayList):
@@ -6805,7 +6805,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "183"
-        literal (Map):
+        ojLiteral (Map):
           "TestClass"
       Entry (Literal)
         Extent (Extent):
@@ -6819,7 +6819,7 @@ arlSmStatements (ArrayList):
             "11"
           startLine (Int32):
             "183"
-        literal (Map):
+        ojLiteral (Map):
           "staticEvent"
     val (Program):
       arlSmStatements (ArrayList):
@@ -6837,7 +6837,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "185"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -6972,7 +6972,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "187"
-        literal (Map):
+        ojLiteral (Map):
           "staticEvent"
     val (Select):
       Extent (Extent):
@@ -7010,7 +7010,7 @@ arlSmStatements (ArrayList):
               "13"
             startLine (Int32):
               "187"
-          literal (Map):
+          ojLiteral (Map):
             "TestClass"
       keys (ArrayList):
         Entry (Literal)
@@ -7025,7 +7025,7 @@ arlSmStatements (ArrayList):
               "23"
             startLine (Int32):
               "187"
-          literal (Map):
+          ojLiteral (Map):
             "staticEvent"
   Entry (Statement)
     keys (ArrayList):
@@ -7041,7 +7041,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "188"
-        literal (Integer):
+        ojLiteral (Integer):
           "4"
     val (Call):
       epsArgument (Program):
@@ -7060,7 +7060,7 @@ arlSmStatements (ArrayList):
                     "3"
                   startLine (Int32):
                     "189"
-                literal (Map):
+                ojLiteral (Map):
                   "run"
             val (Delayed):
               Extent (Extent):
@@ -7127,7 +7127,7 @@ arlSmStatements (ArrayList):
                 "1"
               startLine (Int32):
                 "188"
-            literal (Map):
+            ojLiteral (Map):
               "TestClass"
         keys (ArrayList):
           Entry (Literal)
@@ -7142,7 +7142,7 @@ arlSmStatements (ArrayList):
                 "11"
               startLine (Int32):
                 "188"
-            literal (Map):
+            ojLiteral (Map):
               "TakeDelegate"
       Extent (Extent):
         endColumn (Int32):
@@ -7169,7 +7169,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "190"
-        literal (Map):
+        ojLiteral (Map):
           "resultFromDelegate"
     val (Call):
       epsArgument (Literal):
@@ -7184,7 +7184,7 @@ arlSmStatements (ArrayList):
             "51"
           startLine (Int32):
             "190"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Select):
         Extent (Extent):
@@ -7222,7 +7222,7 @@ arlSmStatements (ArrayList):
                 "20"
               startLine (Int32):
                 "190"
-            literal (Map):
+            ojLiteral (Map):
               "TestClass"
         keys (ArrayList):
           Entry (Literal)
@@ -7237,7 +7237,7 @@ arlSmStatements (ArrayList):
                 "30"
               startLine (Int32):
                 "190"
-            literal (Map):
+            ojLiteral (Map):
               "GetResultFromDelegate"
       Extent (Extent):
         endColumn (Int32):
@@ -7264,7 +7264,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "191"
-        literal (Map):
+        ojLiteral (Map):
           "staticEventResult"
     val (Call):
       epsArgument (Search):
@@ -7291,7 +7291,7 @@ arlSmStatements (ArrayList):
               "41"
             startLine (Int32):
               "191"
-          literal (Map):
+          ojLiteral (Map):
             "testClass"
       epsCallable (Select):
         Extent (Extent):
@@ -7329,7 +7329,7 @@ arlSmStatements (ArrayList):
                 "19"
               startLine (Int32):
                 "191"
-            literal (Map):
+            ojLiteral (Map):
               "TestClass"
         keys (ArrayList):
           Entry (Literal)
@@ -7344,7 +7344,7 @@ arlSmStatements (ArrayList):
                 "29"
               startLine (Int32):
                 "191"
-            literal (Map):
+            ojLiteral (Map):
               "staticEvent"
       Extent (Extent):
         endColumn (Int32):
@@ -7371,7 +7371,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "192"
-        literal (Map):
+        ojLiteral (Map):
           "instanceEventChanged"
     val (Literal):
       Extent (Extent):
@@ -7385,7 +7385,7 @@ arlSmStatements (ArrayList):
           "22"
         startLine (Int32):
           "192"
-      literal (Integer):
+      ojLiteral (Integer):
         "0"
   Entry (Statement)
     keys (ArrayList):
@@ -7401,7 +7401,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "193"
-        literal (Map):
+        ojLiteral (Map):
           "testClass"
       Entry (Literal)
         Extent (Extent):
@@ -7415,7 +7415,7 @@ arlSmStatements (ArrayList):
             "11"
           startLine (Int32):
             "193"
-        literal (Map):
+        ojLiteral (Map):
           "instanceEvent"
     val (Program):
       arlSmStatements (ArrayList):
@@ -7433,7 +7433,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "195"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -7568,7 +7568,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "197"
-        literal (Map):
+        ojLiteral (Map):
           "instanceEvent"
     val (Select):
       Extent (Extent):
@@ -7606,7 +7606,7 @@ arlSmStatements (ArrayList):
               "15"
             startLine (Int32):
               "197"
-          literal (Map):
+          ojLiteral (Map):
             "testClass"
       keys (ArrayList):
         Entry (Literal)
@@ -7621,7 +7621,7 @@ arlSmStatements (ArrayList):
               "25"
             startLine (Int32):
               "197"
-          literal (Map):
+          ojLiteral (Map):
             "instanceEvent"
   Entry (Statement)
     keys (ArrayList):
@@ -7637,7 +7637,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "198"
-        literal (Map):
+        ojLiteral (Map):
           "instanceEventResult"
     val (Call):
       epsArgument (Program):
@@ -7656,7 +7656,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "199"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
@@ -7670,7 +7670,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "199"
-              literal (Integer):
+              ojLiteral (Integer):
                 "5"
         Extent (Extent):
           endColumn (Int32):
@@ -7719,7 +7719,7 @@ arlSmStatements (ArrayList):
                 "21"
               startLine (Int32):
                 "198"
-            literal (Map):
+            ojLiteral (Map):
               "testClass"
         keys (ArrayList):
           Entry (Literal)
@@ -7734,7 +7734,7 @@ arlSmStatements (ArrayList):
                 "31"
               startLine (Int32):
                 "198"
-            literal (Map):
+            ojLiteral (Map):
               "instanceEvent"
       Extent (Extent):
         endColumn (Int32):
@@ -7761,7 +7761,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "200"
-        literal (Map):
+        ojLiteral (Map):
           "one"
     val (Literal):
       Extent (Extent):
@@ -7775,7 +7775,7 @@ arlSmStatements (ArrayList):
           "5"
         startLine (Int32):
           "200"
-      literal (Integer):
+      ojLiteral (Integer):
         "1"
   Entry (Statement)
     keys (ArrayList):
@@ -7791,7 +7791,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "201"
-        literal (Map):
+        ojLiteral (Map):
           "two"
     val (Literal):
       Extent (Extent):
@@ -7805,7 +7805,7 @@ arlSmStatements (ArrayList):
           "5"
         startLine (Int32):
           "201"
-      literal (Integer):
+      ojLiteral (Integer):
         "2"
   Entry (Statement)
     keys (ArrayList):
@@ -7821,7 +7821,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "202"
-        literal (Map):
+        ojLiteral (Map):
           "firstIf"
     val (Literal):
       Extent (Extent):
@@ -7835,7 +7835,7 @@ arlSmStatements (ArrayList):
           "9"
         startLine (Int32):
           "202"
-      literal (Map):
+      ojLiteral (Map):
         "unchanged"
   Entry (Statement)
     keys (ArrayList):
@@ -7851,7 +7851,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "203"
-        literal (Map):
+        ojLiteral (Map):
           "secondIf"
     val (Literal):
       Extent (Extent):
@@ -7865,7 +7865,7 @@ arlSmStatements (ArrayList):
           "10"
         startLine (Int32):
           "203"
-      literal (Map):
+      ojLiteral (Map):
         "unchanged"
   Entry (Statement)
     keys (ArrayList):
@@ -7881,7 +7881,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "204"
-        literal (Map):
+        ojLiteral (Map):
           "firstIfCondition"
     val (Call):
       epsArgument (Program):
@@ -7900,7 +7900,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "205"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
@@ -7914,7 +7914,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "205"
-              literal (Integer):
+              ojLiteral (Integer):
                 "1"
           Entry (Statement)
             keys (ArrayList):
@@ -7930,7 +7930,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "206"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Search):
               Extent (Extent):
@@ -7956,7 +7956,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "206"
-                literal (Map):
+                ojLiteral (Map):
                   "one"
         Extent (Extent):
           endColumn (Int32):
@@ -7993,7 +7993,7 @@ arlSmStatements (ArrayList):
               "18"
             startLine (Int32):
               "204"
-          literal (Map):
+          ojLiteral (Map):
             "equal"
       Extent (Extent):
         endColumn (Int32):
@@ -8020,7 +8020,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "207"
-        literal (Map):
+        ojLiteral (Map):
           "firstIfBranches"
     val (Program):
       arlSmStatements (ArrayList):
@@ -8038,7 +8038,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "208"
-              literal (Integer):
+              ojLiteral (Integer):
                 "1"
           val (Program):
             arlSmStatements (ArrayList):
@@ -8056,7 +8056,7 @@ arlSmStatements (ArrayList):
                         "4"
                       startLine (Int32):
                         "209"
-                    literal (Map):
+                    ojLiteral (Map):
                       "run"
                 val (Delayed):
                   Extent (Extent):
@@ -8101,7 +8101,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "210"
-              literal (Integer):
+              ojLiteral (Integer):
                 "0"
           val (Program):
             arlSmStatements (ArrayList):
@@ -8119,7 +8119,7 @@ arlSmStatements (ArrayList):
                         "4"
                       startLine (Int32):
                         "211"
-                    literal (Map):
+                    ojLiteral (Map):
                       "run"
                 val (Delayed):
                   Extent (Extent):
@@ -8175,7 +8175,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "212"
-        literal (Map):
+        ojLiteral (Map):
           "firstIf"
     val (Call):
       epsArgument (Literal):
@@ -8190,7 +8190,7 @@ arlSmStatements (ArrayList):
             "43"
           startLine (Int32):
             "212"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Select):
         Extent (Extent):
@@ -8228,7 +8228,7 @@ arlSmStatements (ArrayList):
                 "9"
               startLine (Int32):
                 "212"
-            literal (Map):
+            ojLiteral (Map):
               "firstIfBranches"
         keys (ArrayList):
           Entry (Search)
@@ -8255,7 +8255,7 @@ arlSmStatements (ArrayList):
                   "26"
                 startLine (Int32):
                   "212"
-              literal (Map):
+              ojLiteral (Map):
                 "firstIfCondition"
       Extent (Extent):
         endColumn (Int32):
@@ -8282,7 +8282,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "213"
-        literal (Map):
+        ojLiteral (Map):
           "bigNumber"
     val (Literal):
       Extent (Extent):
@@ -8296,7 +8296,7 @@ arlSmStatements (ArrayList):
           "11"
         startLine (Int32):
           "213"
-      literal (Integer):
+      ojLiteral (Integer):
         "50020202029029233344"
   Entry (Statement)
     keys (ArrayList):
@@ -8312,7 +8312,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "214"
-        literal (Map):
+        ojLiteral (Map):
           "secondSwitch"
     val (Literal):
       Extent (Extent):
@@ -8326,7 +8326,7 @@ arlSmStatements (ArrayList):
           "14"
         startLine (Int32):
           "214"
-      literal (Map):
+      ojLiteral (Map):
         "unchanged"
   Entry (Statement)
     keys (ArrayList):
@@ -8342,7 +8342,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "215"
-        literal (Map):
+        ojLiteral (Map):
           "secondSwitchCases"
     val (Program):
       arlSmStatements (ArrayList):
@@ -8360,7 +8360,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "216"
-              literal (Integer):
+              ojLiteral (Integer):
                 "1"
           val (Literal):
             Extent (Extent):
@@ -8374,7 +8374,7 @@ arlSmStatements (ArrayList):
                 "4"
               startLine (Int32):
                 "216"
-            literal (Map):
+            ojLiteral (Map):
               "one"
         Entry (Statement)
           keys (ArrayList):
@@ -8390,7 +8390,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "217"
-              literal (Integer):
+              ojLiteral (Integer):
                 "2"
           val (Literal):
             Extent (Extent):
@@ -8404,7 +8404,7 @@ arlSmStatements (ArrayList):
                 "4"
               startLine (Int32):
                 "217"
-            literal (Map):
+            ojLiteral (Map):
               "two"
         Entry (Statement)
           keys (ArrayList):
@@ -8420,7 +8420,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "218"
-              literal (Integer):
+              ojLiteral (Integer):
                 "3"
           val (Literal):
             Extent (Extent):
@@ -8434,7 +8434,7 @@ arlSmStatements (ArrayList):
                 "4"
               startLine (Int32):
                 "218"
-            literal (Map):
+            ojLiteral (Map):
               "three"
       Extent (Extent):
         endColumn (Int32):
@@ -8461,7 +8461,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "219"
-        literal (Map):
+        ojLiteral (Map):
           "secondSwitch"
     val (Select):
       Extent (Extent):
@@ -8499,7 +8499,7 @@ arlSmStatements (ArrayList):
               "14"
             startLine (Int32):
               "219"
-          literal (Map):
+          ojLiteral (Map):
             "secondSwitchCases"
       keys (ArrayList):
         Entry (Literal)
@@ -8514,7 +8514,7 @@ arlSmStatements (ArrayList):
               "32"
             startLine (Int32):
               "219"
-          literal (Integer):
+          ojLiteral (Integer):
             "3"
   Entry (Statement)
     keys (ArrayList):
@@ -8530,7 +8530,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "220"
-        literal (Map):
+        ojLiteral (Map):
           "emptyMap"
     val (Literal):
       Extent (Extent):
@@ -8544,7 +8544,7 @@ arlSmStatements (ArrayList):
           "10"
         startLine (Int32):
           "220"
-      literal (Map):
+      ojLiteral (Map):
         ""
   Entry (Statement)
     keys (ArrayList):
@@ -8560,7 +8560,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "221"
-        literal (Map):
+        ojLiteral (Map):
           "emptyFunction"
     val (Program):
       arlSmStatements (ArrayList):
@@ -8578,7 +8578,7 @@ arlSmStatements (ArrayList):
                   "3"
                 startLine (Int32):
                   "223"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -8648,7 +8648,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "224"
-        literal (Map):
+        ojLiteral (Map):
           "emptyFunctionResult"
     val (Call):
       epsArgument (Literal):
@@ -8663,7 +8663,7 @@ arlSmStatements (ArrayList):
             "34"
           startLine (Int32):
             "224"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Search):
         Extent (Extent):
@@ -8689,7 +8689,7 @@ arlSmStatements (ArrayList):
               "21"
             startLine (Int32):
               "224"
-          literal (Map):
+          ojLiteral (Map):
             "emptyFunction"
       Extent (Extent):
         endColumn (Int32):
@@ -8716,7 +8716,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "225"
-        literal (Map):
+        ojLiteral (Map):
           "font"
     val (Call):
       epsArgument (Program):
@@ -8735,7 +8735,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "226"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
@@ -8749,7 +8749,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "226"
-              literal (Map):
+              ojLiteral (Map):
                 "Courier New"
           Entry (Statement)
             keys (ArrayList):
@@ -8765,7 +8765,7 @@ arlSmStatements (ArrayList):
                     "2"
                   startLine (Int32):
                     "227"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Literal):
               Extent (Extent):
@@ -8779,7 +8779,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "227"
-              literal (Integer):
+              ojLiteral (Integer):
                 "10"
         Extent (Extent):
           endColumn (Int32):
@@ -8828,7 +8828,7 @@ arlSmStatements (ArrayList):
                 "6"
               startLine (Int32):
                 "225"
-            literal (Map):
+            ojLiteral (Map):
               "System"
         keys (ArrayList):
           Entry (Literal)
@@ -8843,7 +8843,7 @@ arlSmStatements (ArrayList):
                 "13"
               startLine (Int32):
                 "225"
-            literal (Map):
+            ojLiteral (Map):
               "Drawing"
           Entry (Literal)
             Extent (Extent):
@@ -8857,7 +8857,7 @@ arlSmStatements (ArrayList):
                 "21"
               startLine (Int32):
                 "225"
-            literal (Map):
+            ojLiteral (Map):
               "Font"
       Extent (Extent):
         endColumn (Int32):
@@ -8884,7 +8884,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "228"
-        literal (Map):
+        ojLiteral (Map):
           "stringTest"
     val (Literal):
       Extent (Extent):
@@ -8898,7 +8898,7 @@ arlSmStatements (ArrayList):
           "12"
         startLine (Int32):
           "228"
-      literal (Map):
+      ojLiteral (Map):
         "hello"
   Entry (Statement)
     keys (ArrayList):
@@ -8914,7 +8914,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "229"
-        literal (Map):
+        ojLiteral (Map):
           "stringTest"
       Entry (Literal)
         Extent (Extent):
@@ -8928,7 +8928,7 @@ arlSmStatements (ArrayList):
             "12"
           startLine (Int32):
             "229"
-        literal (Integer):
+        ojLiteral (Integer):
           "6"
     val (Select):
       Extent (Extent):
@@ -8966,7 +8966,7 @@ arlSmStatements (ArrayList):
               "14"
             startLine (Int32):
               "229"
-          literal (Map):
+          ojLiteral (Map):
             "stringTest"
       keys (ArrayList):
         Entry (Literal)
@@ -8981,7 +8981,7 @@ arlSmStatements (ArrayList):
               "25"
             startLine (Int32):
               "229"
-          literal (Integer):
+          ojLiteral (Integer):
             "1"
   Entry (Statement)
     keys (ArrayList):
@@ -8997,7 +8997,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "230"
-        literal (Map):
+        ojLiteral (Map):
           "helloh"
     val (Literal):
       Extent (Extent):
@@ -9011,7 +9011,7 @@ arlSmStatements (ArrayList):
           "8"
         startLine (Int32):
           "230"
-      literal (Map):
+      ojLiteral (Map):
         "hi"
   Entry (Statement)
     keys (ArrayList):
@@ -9027,7 +9027,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "231"
-        literal (Map):
+        ojLiteral (Map):
           "stringStrategyHashTest"
     val (Search):
       Extent (Extent):
@@ -9065,7 +9065,7 @@ arlSmStatements (ArrayList):
               "25"
             startLine (Int32):
               "231"
-          literal (Map):
+          ojLiteral (Map):
             "stringTest"
   Entry (Statement)
     keys (ArrayList):
@@ -9081,7 +9081,7 @@ arlSmStatements (ArrayList):
             "1"
           startLine (Int32):
             "232"
-        literal (Map):
+        ojLiteral (Map):
           "x"
     val (Program):
       arlSmStatements (ArrayList):
@@ -9099,7 +9099,7 @@ arlSmStatements (ArrayList):
                   "2"
                 startLine (Int32):
                   "233"
-              literal (Map):
+              ojLiteral (Map):
                 "aLongText"
           val (Literal):
             Extent (Extent):
@@ -9113,7 +9113,7 @@ arlSmStatements (ArrayList):
                 "12"
               startLine (Int32):
                 "233"
-            literal (Map):
+            ojLiteral (Map):
               "
 hello word!
 hello!
@@ -9143,7 +9143,7 @@ hello!
             "1"
           startLine (Int32):
             "237"
-        literal (Map):
+        ojLiteral (Map):
           "ored"
     val (Call):
       epsArgument (Program):
@@ -9162,7 +9162,7 @@ hello!
                     "2"
                   startLine (Int32):
                     "238"
-                literal (Integer):
+                ojLiteral (Integer):
                   "1"
             val (Literal):
               Extent (Extent):
@@ -9176,7 +9176,7 @@ hello!
                   "2"
                 startLine (Int32):
                   "238"
-              literal (Integer):
+              ojLiteral (Integer):
                 "20"
           Entry (Statement)
             keys (ArrayList):
@@ -9192,7 +9192,7 @@ hello!
                     "2"
                   startLine (Int32):
                     "239"
-                literal (Integer):
+                ojLiteral (Integer):
                   "2"
             val (Select):
               Extent (Extent):
@@ -9230,7 +9230,7 @@ hello!
                       "2"
                     startLine (Int32):
                       "239"
-                  literal (Map):
+                  ojLiteral (Map):
                     "System"
               keys (ArrayList):
                 Entry (Literal)
@@ -9245,7 +9245,7 @@ hello!
                       "9"
                     startLine (Int32):
                       "239"
-                  literal (Map):
+                  ojLiteral (Map):
                     "Windows"
                 Entry (Literal)
                   Extent (Extent):
@@ -9259,7 +9259,7 @@ hello!
                       "17"
                     startLine (Int32):
                       "239"
-                  literal (Map):
+                  ojLiteral (Map):
                     "Forms"
                 Entry (Literal)
                   Extent (Extent):
@@ -9273,7 +9273,7 @@ hello!
                       "23"
                     startLine (Int32):
                       "239"
-                  literal (Map):
+                  ojLiteral (Map):
                     "Keys"
                 Entry (Literal)
                   Extent (Extent):
@@ -9287,7 +9287,7 @@ hello!
                       "28"
                     startLine (Int32):
                       "239"
-                  literal (Map):
+                  ojLiteral (Map):
                     "Tab"
         Extent (Extent):
           endColumn (Int32):
@@ -9336,7 +9336,7 @@ hello!
                 "6"
               startLine (Int32):
                 "237"
-            literal (Map):
+            ojLiteral (Map):
               "math"
         keys (ArrayList):
           Entry (Literal)
@@ -9351,7 +9351,7 @@ hello!
                 "11"
               startLine (Int32):
                 "237"
-            literal (Map):
+            ojLiteral (Map):
               "bOrII"
       Extent (Extent):
         endColumn (Int32):
@@ -9378,7 +9378,7 @@ hello!
             "1"
           startLine (Int32):
             "240"
-        literal (Map):
+        ojLiteral (Map):
           "arrayList"
     val (Call):
       epsArgument (Literal):
@@ -9393,7 +9393,7 @@ hello!
             "39"
           startLine (Int32):
             "240"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Select):
         Extent (Extent):
@@ -9431,7 +9431,7 @@ hello!
                 "11"
               startLine (Int32):
                 "240"
-            literal (Map):
+            ojLiteral (Map):
               "System"
         keys (ArrayList):
           Entry (Literal)
@@ -9446,7 +9446,7 @@ hello!
                 "18"
               startLine (Int32):
                 "240"
-            literal (Map):
+            ojLiteral (Map):
               "Collections"
           Entry (Literal)
             Extent (Extent):
@@ -9460,7 +9460,7 @@ hello!
                 "30"
               startLine (Int32):
                 "240"
-            literal (Map):
+            ojLiteral (Map):
               "ArrayList"
       Extent (Extent):
         endColumn (Int32):
@@ -9487,7 +9487,7 @@ hello!
             "1"
           startLine (Int32):
             "241"
-        literal (Integer):
+        ojLiteral (Integer):
           "5"
     val (Call):
       epsArgument (Literal):
@@ -9502,7 +9502,7 @@ hello!
             "15"
           startLine (Int32):
             "241"
-        literal (Map):
+        ojLiteral (Map):
           "hello"
       epsCallable (Select):
         Extent (Extent):
@@ -9540,7 +9540,7 @@ hello!
                 "1"
               startLine (Int32):
                 "241"
-            literal (Map):
+            ojLiteral (Map):
               "arrayList"
         keys (ArrayList):
           Entry (Literal)
@@ -9555,7 +9555,7 @@ hello!
                 "11"
               startLine (Int32):
                 "241"
-            literal (Map):
+            ojLiteral (Map):
               "Add"
       Extent (Extent):
         endColumn (Int32):
@@ -9582,7 +9582,7 @@ hello!
             "1"
           startLine (Int32):
             "242"
-        literal (Map):
+        ojLiteral (Map):
           "arrayListResult"
     val (Select):
       Extent (Extent):
@@ -9620,7 +9620,7 @@ hello!
               "17"
             startLine (Int32):
               "242"
-          literal (Map):
+          ojLiteral (Map):
             "arrayList"
       keys (ArrayList):
         Entry (Literal)
@@ -9635,7 +9635,7 @@ hello!
               "27"
             startLine (Int32):
               "242"
-          literal (Integer):
+          ojLiteral (Integer):
             "0"
   Entry (Statement)
     keys (ArrayList):
@@ -9651,7 +9651,7 @@ hello!
             "1"
           startLine (Int32):
             "243"
-        literal (Map):
+        ojLiteral (Map):
           "textBox"
     val (Call):
       epsArgument (Literal):
@@ -9666,7 +9666,7 @@ hello!
             "37"
           startLine (Int32):
             "243"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Select):
         Extent (Extent):
@@ -9704,7 +9704,7 @@ hello!
                 "9"
               startLine (Int32):
                 "243"
-            literal (Map):
+            ojLiteral (Map):
               "System"
         keys (ArrayList):
           Entry (Literal)
@@ -9719,7 +9719,7 @@ hello!
                 "16"
               startLine (Int32):
                 "243"
-            literal (Map):
+            ojLiteral (Map):
               "Windows"
           Entry (Literal)
             Extent (Extent):
@@ -9733,7 +9733,7 @@ hello!
                 "24"
               startLine (Int32):
                 "243"
-            literal (Map):
+            ojLiteral (Map):
               "Forms"
           Entry (Literal)
             Extent (Extent):
@@ -9747,7 +9747,7 @@ hello!
                 "30"
               startLine (Int32):
                 "243"
-            literal (Map):
+            ojLiteral (Map):
               "TextBox"
       Extent (Extent):
         endColumn (Int32):
@@ -9774,7 +9774,7 @@ hello!
             "1"
           startLine (Int32):
             "244"
-        literal (Map):
+        ojLiteral (Map):
           "textBox"
       Entry (Literal)
         Extent (Extent):
@@ -9788,7 +9788,7 @@ hello!
             "9"
           startLine (Int32):
             "244"
-        literal (Map):
+        ojLiteral (Map):
           "Text"
     val (Literal):
       Extent (Extent):
@@ -9802,7 +9802,7 @@ hello!
           "14"
         startLine (Int32):
           "244"
-      literal (Map):
+      ojLiteral (Map):
         "
 Alle meine Entchen,
 schwimmen auf dem See,
@@ -9824,7 +9824,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "251"
-        literal (Map):
+        ojLiteral (Map):
           "lines"
     val (Select):
       Extent (Extent):
@@ -9862,7 +9862,7 @@ Schwaenzchen in die Hoeh.
               "7"
             startLine (Int32):
               "251"
-          literal (Map):
+          ojLiteral (Map):
             "textBox"
       keys (ArrayList):
         Entry (Literal)
@@ -9877,7 +9877,7 @@ Schwaenzchen in die Hoeh.
               "15"
             startLine (Int32):
               "251"
-          literal (Map):
+          ojLiteral (Map):
             "Lines"
   Entry (Statement)
     keys (ArrayList):
@@ -9893,7 +9893,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "252"
-        literal (Map):
+        ojLiteral (Map):
           "alleMeineText"
     val (Select):
       Extent (Extent):
@@ -9931,7 +9931,7 @@ Schwaenzchen in die Hoeh.
               "15"
             startLine (Int32):
               "252"
-          literal (Map):
+          ojLiteral (Map):
             "lines"
       keys (ArrayList):
         Entry (Literal)
@@ -9946,7 +9946,7 @@ Schwaenzchen in die Hoeh.
               "21"
             startLine (Int32):
               "252"
-          literal (Integer):
+          ojLiteral (Integer):
             "1"
   Entry (Statement)
     keys (ArrayList):
@@ -9962,7 +9962,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "253"
-        literal (Map):
+        ojLiteral (Map):
           "lines"
       Entry (Literal)
         Extent (Extent):
@@ -9976,7 +9976,7 @@ Schwaenzchen in die Hoeh.
             "7"
           startLine (Int32):
             "253"
-        literal (Integer):
+        ojLiteral (Integer):
           "4"
     val (Literal):
       Extent (Extent):
@@ -9990,7 +9990,7 @@ Schwaenzchen in die Hoeh.
           "9"
         startLine (Int32):
           "253"
-      literal (Map):
+      ojLiteral (Map):
         "bwuhahaha"
   Entry (Statement)
     keys (ArrayList):
@@ -10006,7 +10006,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "254"
-        literal (Map):
+        ojLiteral (Map):
           "character"
     val (Literal):
       Extent (Extent):
@@ -10020,7 +10020,7 @@ Schwaenzchen in die Hoeh.
           "11"
         startLine (Int32):
           "254"
-      literal (Integer):
+      ojLiteral (Integer):
         "97"
   Entry (Statement)
     keys (ArrayList):
@@ -10036,7 +10036,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "255"
-        literal (Map):
+        ojLiteral (Map):
           "tab"
     val (Literal):
       Extent (Extent):
@@ -10050,7 +10050,7 @@ Schwaenzchen in die Hoeh.
           "5"
         startLine (Int32):
           "255"
-      literal (Integer):
+      ojLiteral (Integer):
         "9"
   Entry (Statement)
     keys (ArrayList):
@@ -10066,7 +10066,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "256"
-        literal (Map):
+        ojLiteral (Map):
           "backslash"
     val (Literal):
       Extent (Extent):
@@ -10080,7 +10080,7 @@ Schwaenzchen in die Hoeh.
           "11"
         startLine (Int32):
           "256"
-      literal (Integer):
+      ojLiteral (Integer):
         "92"
   Entry (Statement)
     keys (ArrayList):
@@ -10096,7 +10096,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "257"
-        literal (Map):
+        ojLiteral (Map):
           "endline"
     val (Literal):
       Extent (Extent):
@@ -10110,7 +10110,7 @@ Schwaenzchen in die Hoeh.
           "9"
         startLine (Int32):
           "257"
-      literal (Integer):
+      ojLiteral (Integer):
         "10"
   Entry (Statement)
     keys (ArrayList):
@@ -10126,7 +10126,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "258"
-        literal (Map):
+        ojLiteral (Map):
           "tabText"
     val (Literal):
       Extent (Extent):
@@ -10140,7 +10140,7 @@ Schwaenzchen in die Hoeh.
           "9"
         startLine (Int32):
           "258"
-      literal (Map):
+      ojLiteral (Map):
         "			hello"
   Entry (Statement)
     keys (ArrayList):
@@ -10156,7 +10156,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "259"
-        literal (Map):
+        ojLiteral (Map):
           "escapedText"
     val (Literal):
       Extent (Extent):
@@ -10170,7 +10170,7 @@ Schwaenzchen in die Hoeh.
           "13"
         startLine (Int32):
           "259"
-      literal (Map):
+      ojLiteral (Map):
         "\'\n\\\t"
   Entry (Statement)
     keys (ArrayList):
@@ -10186,7 +10186,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "260"
-        literal (Map):
+        ojLiteral (Map):
           "whileCounter"
     val (Literal):
       Extent (Extent):
@@ -10200,7 +10200,7 @@ Schwaenzchen in die Hoeh.
           "14"
         startLine (Int32):
           "260"
-      literal (Map):
+      ojLiteral (Map):
         ""
   Entry (Statement)
     keys (ArrayList):
@@ -10216,7 +10216,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "261"
-        literal (Map):
+        ojLiteral (Map):
           "loop"
     val (Program):
       arlSmStatements (ArrayList):
@@ -10234,7 +10234,7 @@ Schwaenzchen in die Hoeh.
                   "3"
                 startLine (Int32):
                   "263"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -10688,7 +10688,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "274"
-        literal (Map):
+        ojLiteral (Map):
           "whileCounter"
     val (Call):
       epsArgument (Literal):
@@ -10703,7 +10703,7 @@ Schwaenzchen in die Hoeh.
             "19"
           startLine (Int32):
             "274"
-        literal (Integer):
+        ojLiteral (Integer):
           "3"
       epsCallable (Search):
         Extent (Extent):
@@ -10729,7 +10729,7 @@ Schwaenzchen in die Hoeh.
               "14"
             startLine (Int32):
               "274"
-          literal (Map):
+          ojLiteral (Map):
             "loop"
       Extent (Extent):
         endColumn (Int32):
@@ -10756,7 +10756,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "275"
-        literal (Map):
+        ojLiteral (Map):
           "returnInMap"
     val (Program):
       arlSmStatements (ArrayList):
@@ -10774,7 +10774,7 @@ Schwaenzchen in die Hoeh.
                   "3"
                 startLine (Int32):
                   "277"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -10848,7 +10848,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "278"
-        literal (Map):
+        ojLiteral (Map):
           "literalAsArgument"
     val (Call):
       epsArgument (Literal):
@@ -10863,7 +10863,7 @@ Schwaenzchen in die Hoeh.
             "31"
           startLine (Int32):
             "278"
-        literal (Integer):
+        ojLiteral (Integer):
           "1"
       epsCallable (Search):
         Extent (Extent):
@@ -10889,7 +10889,7 @@ Schwaenzchen in die Hoeh.
               "19"
             startLine (Int32):
               "278"
-          literal (Map):
+          ojLiteral (Map):
             "returnInMap"
       Extent (Extent):
         endColumn (Int32):
@@ -10916,7 +10916,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "279"
-        literal (Map):
+        ojLiteral (Map):
           "returnFunction"
     val (Program):
       arlSmStatements (ArrayList):
@@ -10934,7 +10934,7 @@ Schwaenzchen in die Hoeh.
                   "4"
                 startLine (Int32):
                   "281"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -11008,7 +11008,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "282"
-        literal (Map):
+        ojLiteral (Map):
           "returnArg"
     val (Program):
       arlSmStatements (ArrayList):
@@ -11026,7 +11026,7 @@ Schwaenzchen in die Hoeh.
                   "3"
                 startLine (Int32):
                   "283"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -11075,7 +11075,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "284"
-        literal (Map):
+        ojLiteral (Map):
           "myArg"
     val (Program):
       arlSmStatements (ArrayList):
@@ -11093,7 +11093,7 @@ Schwaenzchen in die Hoeh.
                   "3"
                 startLine (Int32):
                   "286"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -11163,7 +11163,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "287"
-        literal (Map):
+        ojLiteral (Map):
           "funcReturnTest"
     val (Call):
       epsArgument (Call):
@@ -11179,7 +11179,7 @@ Schwaenzchen in die Hoeh.
               "31"
             startLine (Int32):
               "287"
-          literal (Map):
+          ojLiteral (Map):
             ""
         epsCallable (Search):
           Extent (Extent):
@@ -11205,7 +11205,7 @@ Schwaenzchen in die Hoeh.
                 "26"
               startLine (Int32):
                 "287"
-            literal (Map):
+            ojLiteral (Map):
               "myArg"
         Extent (Extent):
           endColumn (Int32):
@@ -11242,7 +11242,7 @@ Schwaenzchen in die Hoeh.
               "16"
             startLine (Int32):
               "287"
-          literal (Map):
+          ojLiteral (Map):
             "returnArg"
       Extent (Extent):
         endColumn (Int32):
@@ -11269,7 +11269,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "288"
-        literal (Map):
+        ojLiteral (Map):
           "documentedFunction"
     val (Program):
       arlSmStatements (ArrayList):
@@ -11287,7 +11287,7 @@ Schwaenzchen in die Hoeh.
                   "2"
                 startLine (Int32):
                   "289"
-              literal (Map):
+              ojLiteral (Map):
                 "doc"
           val (Literal):
             Extent (Extent):
@@ -11301,7 +11301,7 @@ Schwaenzchen in die Hoeh.
                 "6"
               startLine (Int32):
                 "289"
-            literal (Map):
+            ojLiteral (Map):
               "This function returns 'hello ."
         Entry (Statement)
           keys (ArrayList):
@@ -11317,7 +11317,7 @@ Schwaenzchen in die Hoeh.
                   "3"
                 startLine (Int32):
                   "290"
-              literal (Map):
+              ojLiteral (Map):
                 "run"
           val (Delayed):
             Extent (Extent):
@@ -11362,7 +11362,7 @@ Schwaenzchen in die Hoeh.
             "1"
           startLine (Int32):
             "291"
-        literal (Map):
+        ojLiteral (Map):
           "docFunctionResult"
     val (Call):
       epsArgument (Literal):
@@ -11377,7 +11377,7 @@ Schwaenzchen in die Hoeh.
             "37"
           startLine (Int32):
             "291"
-        literal (Map):
+        ojLiteral (Map):
           ""
       epsCallable (Search):
         Extent (Extent):
@@ -11403,7 +11403,7 @@ Schwaenzchen in die Hoeh.
               "19"
             startLine (Int32):
               "291"
-          literal (Map):
+          ojLiteral (Map):
             "documentedFunction"
       Extent (Extent):
         endColumn (Int32):

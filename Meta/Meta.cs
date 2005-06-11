@@ -129,20 +129,20 @@ namespace Meta {
 			public readonly ArrayList arlSmStatements=new ArrayList();
 		}
 		public class Literal: Expression {
-			public override object OjEvaluateM(IMap parent) {
-//				if(literal.Equals(new Map("staticEvent"))) {
+			public override object OjEvaluateM(IMap mParent) {
+//				if(ojLiteral.Equals(new Map("staticEvent"))) {
 //					int asdf=0;
 //				}
-//				if(literal.Equals(new Map("TestClass"))) {
+//				if(ojLiteral.Equals(new Map("TestClass"))) {
 //					int asdf=0;
 //				}
-				return literal;
+				return ojLiteral;
 			}
-			public static readonly Map literalString=new Map("literal");
+			public static readonly Map sLiteral=new Map("literal");
 			public Literal(Map code) {
-				this.literal=Interpreter.RecognizeLiteralText((string)((Map)code[literalString]).GetDotNetString());
+				this.ojLiteral=Interpreter.RecognizeLiteralText((string)((Map)code[sLiteral]).GetDotNetString());
 			}
-			public object literal=null;
+			public object ojLiteral=null;
 		}
 		// this is a normal expression that can appear anywhere an expression can
 		public class Search: Expression {
@@ -1605,7 +1605,7 @@ namespace Meta {
 					else if(this.ContainsKey(Program.sProgram)) {
 						compiled=new Program(this);
 					}
-					else if(this.ContainsKey(Literal.literalString)) {
+					else if(this.ContainsKey(Literal.sLiteral)) {
 						compiled=new Literal(this);
 					}
 					else if(this.ContainsKey(Search.searchString)) {// TODO: use static expression strings

@@ -626,7 +626,7 @@ literal
   }:
   token:LITERAL
   {
-    result[Literal.literalString]=new Map(token.getText());
+    result[Literal.sLiteral]=new Map(token.getText());
   };
 
 //TODO: is this even needed anymore?
