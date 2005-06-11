@@ -53,7 +53,7 @@ public class map {
 
 		Map result=new Map();
 		int counter=1;
-		foreach(object o in map.arlOjIntegerKeyValues) {
+		foreach(object o in map.ArlOjIntegerKeyValues) {
 			if(obj.Equals(o)) {
 				result[new Integer(counter)]=o;
 				counter++;
@@ -66,7 +66,7 @@ public class map {
 	}
 	public static int iCountStartMO(Map map,object obj) {
 		int count=0;
-		foreach(object o in map.arlOjIntegerKeyValues) {
+		foreach(object o in map.ArlOjIntegerKeyValues) {
 			if(obj.Equals(o)) {
 				count++;
 			}
@@ -87,11 +87,11 @@ public class map {
 	}
 //	[MetaLibraryMethod]
 	public static Map aJoinAa(Map arg) {
-		ArrayList maps=arg.arlOjIntegerKeyValues;
+		ArrayList maps=arg.ArlOjIntegerKeyValues;
 		int i=1;
 		Map combined=new Map();
 		foreach(Map map in maps) { // TODO: eigentlich nur die Arrays verwenden
-			foreach(object val in map.arlOjIntegerKeyValues) {
+			foreach(object val in map.ArlOjIntegerKeyValues) {
 				combined[new Integer(i)]=val;
 				i++;
 			}
@@ -100,7 +100,7 @@ public class map {
 	}
 //	[MetaLibraryMethod]
 	public static IKeyValue mMergeAm(Map arg) {
-		return (Map)Interpreter.MergeCollection(arg.arlOjIntegerKeyValues);
+		return (Map)Interpreter.MergeCollection(arg.ArlOjIntegerKeyValues);
 	}
 	public static object oWithOM(object obj,IMap map) {
 		NetObject netObject=new NetObject(obj);
@@ -123,7 +123,7 @@ public class map {
 	// TODO: remove the "storage" stuff, storage will be integrated into the Meta namespace
 //	public static Map storage(Map location) {
 //		string path="";
-//		foreach(Map loc in location.arlOjIntegerKeyValues) {
+//		foreach(Map loc in location.ArlOjIntegerKeyValues) {
 //			path=Path.Combine(path,((Map)loc).GetDotNetString());
 //		}
 //		return new Storage(path);
@@ -205,11 +205,11 @@ public class map {
 //	}
 //	[MetaLibraryMethod]
 //	public static Map concat() {
-//		ArrayList maps=arg.arlOjIntegerKeyValues;
+//		ArrayList maps=arg.ArlOjIntegerKeyValues;
 //		int i=1;
 //		Map combined=new Map();
 //		foreach(Map map in maps) {
-//			foreach(object val in map.arlOjIntegerKeyValues) {
+//			foreach(object val in map.ArlOjIntegerKeyValues) {
 //				combined[new Integer(i)]=val;
 //				i++;
 //			}
@@ -220,7 +220,7 @@ public class map {
 ////		int i=1;
 ////		Map combined=new Map();
 ////		foreach(Map map in maps) {
-////			foreach(object val in map.arlOjIntegerKeyValues) {
+////			foreach(object val in map.ArlOjIntegerKeyValues) {
 ////				combined[new Integer(i)]=val;
 ////				i++;
 ////			}
@@ -229,7 +229,7 @@ public class map {
 ////	}
 //	[MetaLibraryMethod]
 //	public static IKeyValue Merge() {
-//		return (Map)Interpreter.MergeCollection(arg.arlOjIntegerKeyValues);
+//		return (Map)Interpreter.MergeCollection(arg.ArlOjIntegerKeyValues);
 //	}
 //	public static object With(object obj,IMap map) {
 //		NetObject netObject=new NetObject(obj);
@@ -240,7 +240,7 @@ public class map {
 //	}
 //	[MetaLibraryMethod]
 //	public static Map GetStructure() {
-//		return GetTheStructure(arg.arlOjIntegerKeyValues);
+//		return GetTheStructure(arg.ArlOjIntegerKeyValues);
 ////		Map structure=new Map();
 ////		Hashtable keys=new Hashtable();
 ////		return structure;
@@ -255,8 +255,8 @@ public class map {
 //
 //	}
 //	public static Map FixStructure(Map map) {
-//		if(map.arlOjIntegerKeyValues.Count>0) {
-//			return GetTheStructure(map.arlOjIntegerKeyValues);
+//		if(map.ArlOjIntegerKeyValues.Count>0) {
+//			return GetTheStructure(map.ArlOjIntegerKeyValues);
 //		}
 //		else {
 //			foreach(DictionaryEntry entry in map) {
@@ -275,10 +275,10 @@ public class map {
 //		}
 //		return false;
 //	}
-////	private Map MergearlOjIntegerKeyValues(Map map) {
-////		ArrayList intKeyValues=map.arlOjIntegerKeyValues;
+////	private Map MergeArlOjIntegerKeyValues(Map map) {
+////		ArrayList intKeyValues=map.ArlOjIntegerKeyValues;
 ////		if(intKeyValues.Count>0) {
-////			foreach(object key in map.arlOjIntegerKeyValues) {
+////			foreach(object key in map.ArlOjIntegerKeyValues) {
 ////
 ////			}
 ////		}
@@ -297,12 +297,12 @@ public class map {
 ////		if(!hasChildren) {
 ////			return result;
 ////		}
-////		else if(result.arlOjIntegerKeyValues.Count>0)
-////			ArrayList intKeyValues=result.arlOjIntegerKeyValues;
+////		else if(result.ArlOjIntegerKeyValues.Count>0)
+////			ArrayList intKeyValues=result.ArlOjIntegerKeyValues;
 ////			for(int i=0;i<intKeyValues.Count;i++) {
 ////
 ////			}
-////			if(result.arlOjIntegerKeyValues.Count>0) {
+////			if(result.ArlOjIntegerKeyValues.Count>0) {
 ////			}
 ////		}
 ////	}
