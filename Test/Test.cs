@@ -93,10 +93,6 @@ namespace Test {
 				return Interpreter.ParseToAst(Path.Combine(
 					Test.path,filename));
 			}
-//			public override object RunTestCase() {
-//				return Interpreter.ParseToAst(new StreamReader(Path.Combine(
-//					Test.path,filename)).ReadToEnd());
-//			}
 		}
 		public class CompileToMap:TestCase {
 			public static Map map;
@@ -105,22 +101,12 @@ namespace Test {
 					Test.path,filename));
 				return map;
 			}
-//			public static Map map;
-//			public override object RunTestCase() {
-//				map=Interpreter.CompileToMap(new StreamReader(Path.Combine(
-//					Test.path,filename)));
-//				return map;
-//			}
 		}
 		public class CompileToExpression:TestCase {
 			public override object RunTestCase() {
 				return Interpreter.mCompileS(Path.Combine(
 					Test.path,filename)).EpsCompileV();
 			}
-//			public override object RunTestCase() {
-//				return Interpreter.CompileToMap(new StreamReader(Path.Combine(
-//					Test.path,filename))).Compile();
-//			}
 		}
 		public class Execute:TestCase {
 			public override object RunTestCase() {

@@ -27,7 +27,6 @@ public class logic
 	public static bool not(bool a) {
 		return !a;
 	}
-//	[MetaLibraryMethod]
 	public static bool and(Map arg) {
 		foreach(bool val in arg.AoIntegerKeyValues) {
 			if(!val) {
@@ -36,7 +35,6 @@ public class logic
 		}
 		return true;
 	}
-//	[MetaLibraryMethod]
 	public static bool or(Map arg) {
 		foreach(bool val in arg.AoIntegerKeyValues) {
 			if(val) {
