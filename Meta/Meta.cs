@@ -1265,7 +1265,7 @@ namespace Meta {
 					if(value!=null) {
 						bHashCached=false;
 						if(oKey.Equals(sThis)) {
-							this.mstgTable=((Map)value).mstgTable.Clone();
+							this.mstgTable=((Map)value).mstgTable.MstgClone();
 						}
 						else {
 							object val=value is IMap? ((IMap)value).MClone(): value; // TODO: combine with next line
@@ -1296,7 +1296,7 @@ namespace Meta {
 				}
 			}
 			public IMap MClone() {
-				Map mClone=mstgTable.CloneMap();
+				Map mClone=mstgTable.MClone();
 				mClone.MParent=MParent;
 				mClone.eCompiled=eCompiled;
 				mClone.EtExtent=EtExtent;
@@ -1341,7 +1341,7 @@ namespace Meta {
 						return true;
 					}
 				}
-				return mstgTable.ContainsKey(oKey);
+				return mstgTable.BContainsO(oKey);
 			}
 			public override bool Equals(object oToCompare) {
 				if(Object.ReferenceEquals(oToCompare,this)) {
@@ -1350,7 +1350,7 @@ namespace Meta {
 				if(!(oToCompare is Map)) {
 					return false;
 				}
-				return ((Map)oToCompare).mstgTable.Equal(mstgTable);
+				return ((Map)oToCompare).mstgTable.BEqualMstg(mstgTable);
 			}
 			public IEnumerator GetEnumerator() {
 				return new MapEnumerator(this);
@@ -1398,14 +1398,14 @@ namespace Meta {
 			}
 			public abstract class MapStrategy { // TODO: Call this differently, hungarian-compatible
 				public Map mMap;
-				public MapStrategy Clone() {
+				public MapStrategy MstgClone() {
 					MapStrategy mstgStrategy=new HybridDictionaryStrategy();
 					foreach(object oKey in this.AoKeys) {
 						mstgStrategy[oKey]=this[oKey];
 					}
 					return mstgStrategy;	
 				}
-				public abstract Map CloneMap();
+				public abstract Map MClone();
 				public abstract ArrayList AoIntegerKeyValues {
 					get;
 				}
@@ -1429,7 +1429,7 @@ namespace Meta {
 					set;
 				}
 
-				public abstract bool ContainsKey(object key);
+				public abstract bool BContainsO(object key);
 				/* Hashcodes must be exactly the same in all MapStrategies. */
 				public override int GetHashCode()  {
 					int iHash=0;
@@ -1440,15 +1440,15 @@ namespace Meta {
 					}
 					return iHash;
 				}
-				public virtual bool Equal(MapStrategy mstgToCompare) {
+				public virtual bool BEqualMstg(MapStrategy mstgToCompare) {
 					if(Object.ReferenceEquals(mstgToCompare,this)) { // check whether this is a clone of the other MapStrategy (not used yet)
 						return true;
 					}
 					if(mstgToCompare.ICount!=this.ICount) {
 						return false;
 					}
-					foreach(object key in this.AoKeys)  {
-						if(!mstgToCompare.ContainsKey(key)||!mstgToCompare[key].Equals(this[key])) {
+					foreach(object oKey in this.AoKeys)  {
+						if(!mstgToCompare.BContainsO(oKey)||!mstgToCompare[oKey].Equals(this[oKey])) {
 							return false;
 						}
 					}
@@ -1465,15 +1465,15 @@ namespace Meta {
 					}
 					return iHash;
 				}
-				public override bool Equal(MapStrategy mstgToCompare) {
+				public override bool BEqualMstg(MapStrategy mstgToCompare) {
 					if(mstgToCompare is StringStrategy) {	// TODO: Decide on single exit for methods, might be useful, especially here
 						return ((StringStrategy)mstgToCompare).sText.Equals(this.sText);
 					}
 					else {
-						return base.Equal(mstgToCompare);
+						return base.BEqualMstg(mstgToCompare);
 					}
 				}
-				public override Map CloneMap() {
+				public override Map MClone() {
 					return new Map(new StringStrategy(this));
 				}
 				public override ArrayList AoIntegerKeyValues {
@@ -1530,11 +1530,11 @@ namespace Meta {
 					set {
 						/* StringStrategy gets changed. Fall back on standard strategy because we can't be sure
 						 * the mMap will still be a string afterwards. */
-						mMap.mstgTable=this.Clone();
+						mMap.mstgTable=this.MstgClone();
 						mMap.mstgTable[oKey]=value;
 					}
 				}
-				public override bool ContainsKey(object oKey)  {
+				public override bool BContainsO(object oKey)  {
 					if(oKey is Integer) {
 						return ((Integer)oKey)>0 && ((Integer)oKey)<=this.ICount;
 					}
@@ -1552,7 +1552,7 @@ namespace Meta {
 					this.aoKeys=new ArrayList(iCount);
 					this.mstgTable=new HybridDictionary(iCount);
 				}
-				public override Map CloneMap() {
+				public override Map MClone() {
 					Map mClone=new Map(new HybridDictionaryStrategy(this.aoKeys.Count));
 					foreach(object oKey in aoKeys) {
 						mClone[oKey]=mstgTable[oKey];
@@ -1562,7 +1562,7 @@ namespace Meta {
 				public override ArrayList AoIntegerKeyValues {
 					get {
 						ArrayList aList=new ArrayList();
-						for(Integer iInteger=new Integer(1);ContainsKey(iInteger);iInteger++) {
+						for(Integer iInteger=new Integer(1);BContainsO(iInteger);iInteger++) {
 							aList.Add(this[iInteger]);
 						}
 						return aList;
@@ -1621,13 +1621,13 @@ namespace Meta {
 						return mstgTable[oKey];
 					}
 					set {
-						if(!this.ContainsKey(oKey)) {
+						if(!this.BContainsO(oKey)) {
 							aoKeys.Add(oKey);
 						}
 						mstgTable[oKey]=value;
 					}
 				}
-				public override bool ContainsKey(object oKey)  {
+				public override bool BContainsO(object oKey)  {
 					return mstgTable.Contains(oKey);
 				}
 			}
