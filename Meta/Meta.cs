@@ -98,22 +98,22 @@ namespace Meta {
 			}
 			public object OEvaluateM(IMap mParent,IMap mLocal) {
 				mLocal.MParent=mParent;
-				Interpreter.arlMCallers.Add(mLocal);
-				for(int i=0;i<arlSmStatements.Count;i++) {
+				Interpreter.aMCallers.Add(mLocal);
+				for(int i=0;i<aSmStatements.Count;i++) {
 					mLocal=(Map)Interpreter.OCurrent;
-					((Statement)arlSmStatements[i]).VRealizeM(mLocal);
+					((Statement)aSmStatements[i]).VRealizeM(mLocal);
 				}
 				object oResult=Interpreter.OCurrent;
-				Interpreter.arlMCallers.RemoveAt(Interpreter.arlMCallers.Count-1);
+				Interpreter.aMCallers.RemoveAt(Interpreter.aMCallers.Count-1);
 				return oResult;
 			}
 			public static readonly Map sProgram=new Map("program");
 			public Program(Map mProgram) { // TODO: special Type for  callable maps?
-				foreach(Map mStatement in ((Map)mProgram[sProgram]).ArloIntegerKeyValues) {
-					this.arlSmStatements.Add(new Statement(mStatement)); // should we save the original maps instead of arlSmStatements?
+				foreach(Map mStatement in ((Map)mProgram[sProgram]).AoIntegerKeyValues) {
+					this.aSmStatements.Add(new Statement(mStatement)); // should we save the original maps instead of aSmStatements?
 				}
 			}
-			public readonly ArrayList arlSmStatements=new ArrayList();
+			public readonly ArrayList aSmStatements=new ArrayList();
 		}
 		public class Literal: Expression {
 			public override object OEvaluateM(IMap mParent) {
@@ -146,22 +146,22 @@ namespace Meta {
 		}
 
 		public class Select: Expression {
-			public ArrayList arlEpsKeys=new ArrayList();
+			public ArrayList aEpsKeys=new ArrayList();
 			public Expression epsFirst;// TODO: maybe rename to srFirst -> it's a Search
 			public Select(Map code) {
-				ArrayList arlMKeyExpressions=((Map)code[sSelect]).ArloIntegerKeyValues;
-				epsFirst=(Expression)((Map)arlMKeyExpressions[0]).EpsCompileV();
-				for(int i=1;i<arlMKeyExpressions.Count;i++) {
-					arlEpsKeys.Add(((Map)arlMKeyExpressions[i]).EpsCompileV());
+				ArrayList aMKeyExpressions=((Map)code[sSelect]).AoIntegerKeyValues;
+				epsFirst=(Expression)((Map)aMKeyExpressions[0]).EpsCompileV();
+				for(int i=1;i<aMKeyExpressions.Count;i++) {
+					aEpsKeys.Add(((Map)aMKeyExpressions[i]).EpsCompileV());
 				}
 			}
 			public override object OEvaluateM(IMap parent) {
 				object oSelected=epsFirst.OEvaluateM(parent);
-				for(int i=0;i<arlEpsKeys.Count;i++) {
+				for(int i=0;i<aEpsKeys.Count;i++) {
 					if(!(oSelected is IKeyValue)) {
 						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
-					object k=((Expression)arlEpsKeys[i]).OEvaluateM(parent);
+					object k=((Expression)aEpsKeys[i]).OEvaluateM(parent);
 					oSelected=((IKeyValue)oSelected)[k];
 					if(oSelected==null) {
 						throw new KeyDoesNotExistException(k,this.EtExtent);
@@ -176,17 +176,17 @@ namespace Meta {
 			public void VRealizeM(IMap mParent) {
 				object oSelected=mParent;
 				object oKey;
-				for(int i=0;i<arlEpsKeys.Count-1;i++) {
-					oKey=((Expression)arlEpsKeys[i]).OEvaluateM((IMap)mParent);
+				for(int i=0;i<aEpsKeys.Count-1;i++) {
+					oKey=((Expression)aEpsKeys[i]).OEvaluateM((IMap)mParent);
 					oSelected=((IKeyValue)oSelected)[oKey];
 					if(oSelected==null) {
-						throw new KeyDoesNotExistException(oKey,((Expression)arlEpsKeys[i]).EtExtent);
+						throw new KeyDoesNotExistException(oKey,((Expression)aEpsKeys[i]).EtExtent);
 					}
 					if(!(oSelected is IKeyValue)) {
 						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
 				}
-				object oLastKey=((Expression)arlEpsKeys[arlEpsKeys.Count-1]).OEvaluateM((IMap)mParent);
+				object oLastKey=((Expression)aEpsKeys[aEpsKeys.Count-1]).OEvaluateM((IMap)mParent);
 				object oValue=epsValue.OEvaluateM((IMap)mParent);
 				if(oLastKey.Equals(Map.sThis)) {
 					if(oValue is Map) {
@@ -203,12 +203,12 @@ namespace Meta {
 				}
 			}
 			public Statement(Map mStatement) {
-				foreach(Map key in ((Map)mStatement[sKey]).ArloIntegerKeyValues) {
-					arlEpsKeys.Add(key.EpsCompileV());
+				foreach(Map key in ((Map)mStatement[sKey]).AoIntegerKeyValues) {
+					aEpsKeys.Add(key.EpsCompileV());
 				}
 				this.epsValue=(Expression)((Map)mStatement[sValue]).EpsCompileV();
 			}
-			public ArrayList arlEpsKeys=new ArrayList();
+			public ArrayList aEpsKeys=new ArrayList();
 			public Expression epsValue;
 
 
@@ -288,7 +288,7 @@ namespace Meta {
 				return mResult;
 			}	
 			public static object ORecognizeLiteralS(string text) {
-				foreach(RecognizeLiteral rcnltrCurrent in arlrcnltrLiteralRecognitions) {
+				foreach(RecognizeLiteral rcnltrCurrent in arcnltrLiteralRecognitions) {
 					object recognized=rcnltrCurrent.Recognize(text);
 					if(recognized!=null) {
 						return recognized;
@@ -376,13 +376,13 @@ namespace Meta {
 			}
 			public static object OCurrent {
 				get {
-					if(arlMCallers.Count==0) {
+					if(aMCallers.Count==0) {
 						return null;
 					}
-					return arlMCallers[arlMCallers.Count-1];
+					return aMCallers[aMCallers.Count-1];
 				}
 				set {
-					arlMCallers[arlMCallers.Count-1]=value;
+					aMCallers[aMCallers.Count-1]=value;
 				}
 			}
 			public static object ConvertMetaToDotNet(object objMeta,Type tTarget,out bool outblaConverted) {
@@ -405,9 +405,9 @@ namespace Meta {
 				Assembly asbMetaAssembly=Assembly.GetAssembly(typeof(Map));
 				sInstallationPath=Directory.GetParent(asbMetaAssembly.Location).Parent.Parent.Parent.FullName; 
 				foreach(Type tRecognition in typeof(LiteralRecognitions).GetNestedTypes()) {
-					arlrcnltrLiteralRecognitions.Add((RecognizeLiteral)tRecognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+					arcnltrLiteralRecognitions.Add((RecognizeLiteral)tRecognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
-				arlrcnltrLiteralRecognitions.Reverse();
+				arcnltrLiteralRecognitions.Reverse();
 				foreach(Type tToMetaConversion in typeof(DotNetToMetaConversions).GetNestedTypes()) {
 					DotNetToMetaConversion dttmtcvsConversion=((DotNetToMetaConversion)tToMetaConversion.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 					htdntmtcvsToMetaConversions[dttmtcvsConversion.tSource]=dttmtcvsConversion;
@@ -421,12 +421,12 @@ namespace Meta {
 				}
 			}
 			public static string sInstallationPath;
-			public static ArrayList arlMCallers=new ArrayList();
+			public static ArrayList aMCallers=new ArrayList();
 			public static Hashtable htmttdncvsToDotNetConversion=new Hashtable();
 			public static Hashtable htdntmtcvsToMetaConversions=new Hashtable();
-			public static ArrayList arlsLoadedAssemblies=new ArrayList();
+			public static ArrayList asLoadedAssemblies=new ArrayList();
 
-			private static ArrayList arlrcnltrLiteralRecognitions=new ArrayList();
+			private static ArrayList arcnltrLiteralRecognitions=new ArrayList();
 
 			public abstract class RecognizeLiteral {
 				public abstract object Recognize(string text); // Returns null if not recognized. Null cannot currently be created this way.
@@ -894,7 +894,7 @@ namespace Meta {
 				get;
 				set;
 			}
-			ArrayList ArloIntegerKeyValues {
+			ArrayList AoIntegerKeyValues {
 				get;
 			}
 			IMap MClone();
@@ -905,7 +905,7 @@ namespace Meta {
 				get;
 				set;
 			}
-			ArrayList ArloKeys {
+			ArrayList AoKeys {
 				get;
 			}
 			int ItgCount {
@@ -935,12 +935,12 @@ namespace Meta {
 					throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
 				}
 			}
-			public ArrayList ArloKeys {
+			public ArrayList AoKeys {
 				get {
 					if(mCache==null) {
 						Load();
 					}
-					return mCache.ArloKeys;
+					return mCache.AoKeys;
 				}
 			}
 			public int ItgCount {
@@ -1019,9 +1019,9 @@ namespace Meta {
 					throw new ApplicationException("Cannot set oKey "+oKey.ToString()+" in library.");
 				}
 			}
-			public ArrayList ArloKeys {
+			public ArrayList AoKeys {
 				get {
-					return mCache.ArloKeys;
+					return mCache.AoKeys;
 				}
 			}
 			public IMap MClone() {
@@ -1035,7 +1035,7 @@ namespace Meta {
 			public bool BlaHasKeyO(object oKey) {
 				return mCache.BlaHasKeyO(oKey);
 			}
-			public ArrayList ArloIntegerKeyValues {
+			public ArrayList AoIntegerKeyValues {
 				get {
 					return new ArrayList();
 				}
@@ -1060,9 +1060,9 @@ namespace Meta {
 					foreach(Type tCurrent in asbCurrent.GetExportedTypes())  {
 						if(tCurrent.DeclaringType==null)  {
 							Map mPosition=mRoot;
-							ArrayList arlsSubPaths=new ArrayList(tCurrent.FullName.Split('.'));
-							arlsSubPaths.RemoveAt(arlsSubPaths.Count-1);
-							foreach(string sSubPath in arlsSubPaths)  {
+							ArrayList asSubPaths=new ArrayList(tCurrent.FullName.Split('.'));
+							asSubPaths.RemoveAt(asSubPaths.Count-1);
+							foreach(string sSubPath in asSubPaths)  {
 								if(!mPosition.BlaHasKeyO(new Map(sSubPath)))  {
 									mPosition[new Map(sSubPath)]=new Map();
 								}
@@ -1071,7 +1071,7 @@ namespace Meta {
 							mPosition[new Map(tCurrent.Name)]=new NetClass(tCurrent);
 						}
 					}
-					Interpreter.arlsLoadedAssemblies.Add(asbCurrent.Location);
+					Interpreter.asLoadedAssemblies.Add(asbCurrent.Location);
 				}
 				return mRoot;
 			}
@@ -1084,33 +1084,33 @@ namespace Meta {
 				return asbnName;
 			}
 			public Library() {
-				ArrayList arlasbAssemblies=new ArrayList();
+				ArrayList aasbAssemblies=new ArrayList();
 				sLibraryPath=Path.Combine(Interpreter.sInstallationPath,"library");
 				IAssemblyEnum iasbenAssemblyEnum=AssemblyCache.CreateGACEnum();
 				IAssemblyName iasbnName; 
 				AssemblyName asbnName;
-				arlasbAssemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
+				aasbAssemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
 				while (AssemblyCache.GetNextAssembly(iasbenAssemblyEnum, out iasbnName) == 0) {
 					try {
 						asbnName=GetAssemblyName(iasbnName);
-						arlasbAssemblies.Add(Assembly.LoadWithPartialName(asbnName.Name));
+						aasbAssemblies.Add(Assembly.LoadWithPartialName(asbnName.Name));
 					}
 					catch(Exception e) {
 						//Console.WriteLine("Could not load gac assembly :"+System.GAC.AssemblyCache.GetName(an));
 					}
 				}
 				foreach(string fnCurrentDll in Directory.GetFiles(sLibraryPath,"*.dll")) {
-					arlasbAssemblies.Add(Assembly.LoadFrom(fnCurrentDll));
+					aasbAssemblies.Add(Assembly.LoadFrom(fnCurrentDll));
 				}
 				foreach(string fnCurrentExe in Directory.GetFiles(sLibraryPath,"*.exe")) {
-					arlasbAssemblies.Add(Assembly.LoadFrom(fnCurrentExe));
+					aasbAssemblies.Add(Assembly.LoadFrom(fnCurrentExe));
 				}
 				string fnCachedAssemblyInfo=Path.Combine(Interpreter.sInstallationPath,"mCachedAssemblyInfo.meta"); // TODO: Use another asbnName that doesn't collide with C# meaning
 				if(File.Exists(fnCachedAssemblyInfo)) {
 					mCachedAssemblyInfo=(Map)Interpreter.RunWithoutLibrary(fnCachedAssemblyInfo,new Map());
 				}
 				
-				mCache=LoadNamespaces(arlasbAssemblies);
+				mCache=LoadNamespaces(aasbAssemblies);
 				Interpreter.SaveToFileOS(mCachedAssemblyInfo,fnCachedAssemblyInfo);
 				foreach(string fnCurrentMeta in Directory.GetFiles(sLibraryPath,"*.meta")) {
 					mCache[new Map(Path.GetFileNameWithoutExtension(fnCurrentMeta))]=new MetaLibrary(fnCurrentMeta);
@@ -1118,7 +1118,7 @@ namespace Meta {
 			}
 			private Map mCachedAssemblyInfo=new Map();
 			public ArrayList GetNamespaces(Assembly asbAssembly) { //refactor, integrate into LoadNamespaces???
-				ArrayList arlsNamespaces=new ArrayList();
+				ArrayList asNamespaces=new ArrayList();
 				if(mCachedAssemblyInfo.BlaHasKeyO(new Map(asbAssembly.Location))) {
 					Map info=(Map)mCachedAssemblyInfo[new Map(asbAssembly.Location)];
 					string sTimeStamp=((Map)info[new Map("timestamp")]).SDotNetString();
@@ -1126,41 +1126,41 @@ namespace Meta {
 						Map mNamespaces=(Map)info[new Map("namespaces")];
 						foreach(DictionaryEntry dtretEntry in mNamespaces) {
 							string text=((Map)dtretEntry.Value).SDotNetString();
-							arlsNamespaces.Add(text);
+							asNamespaces.Add(text);
 						}
-						return arlsNamespaces;
+						return asNamespaces;
 					}
 				}
 				foreach(Type tType in asbAssembly.GetExportedTypes()) {
-					if(!arlsNamespaces.Contains(tType.Namespace)) {
+					if(!asNamespaces.Contains(tType.Namespace)) {
 						if(tType.Namespace==null) {
-							if(!arlsNamespaces.Contains("")) {
-								arlsNamespaces.Add("");
+							if(!asNamespaces.Contains("")) {
+								asNamespaces.Add("");
 							}
 						}
 						else {
-							arlsNamespaces.Add(tType.Namespace);
+							asNamespaces.Add(tType.Namespace);
 						}
 					}
 				}
 				Map mCachedAssemblyInfoMap=new Map();
 				Map mNamespace=new Map();
 				Integer counter=new Integer(0);
-				foreach(string na in arlsNamespaces) {
+				foreach(string na in asNamespaces) {
 					mNamespace[counter]=new Map(na);
 					counter++;
 				}
 				mCachedAssemblyInfoMap[new Map("namespaces")]=mNamespace;
 				mCachedAssemblyInfoMap[new Map("timestamp")]=new Map(File.GetCreationTime(asbAssembly.Location).ToString());
 				mCachedAssemblyInfo[new Map(asbAssembly.Location)]=mCachedAssemblyInfoMap;
-				return arlsNamespaces;
+				return asNamespaces;
 			}
-			public Map LoadNamespaces(ArrayList arlasbAssemblies) {
+			public Map LoadNamespaces(ArrayList aasbAssemblies) {
 				LazyNamespace lznsRoot=new LazyNamespace("");
-				foreach(Assembly assembly in arlasbAssemblies) {
-					ArrayList arlsNamespaces=GetNamespaces(assembly);
+				foreach(Assembly assembly in aasbAssemblies) {
+					ArrayList asNamespaces=GetNamespaces(assembly);
 					CachedAssembly casbCachedAssembly=new CachedAssembly(assembly);
-					foreach(string sNamespace in arlsNamespaces) {
+					foreach(string sNamespace in asNamespaces) {
 						LazyNamespace lznsSelected=lznsRoot;
 						if(sNamespace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.sInstallationPath,"library"))) {
 							continue;
@@ -1208,7 +1208,7 @@ namespace Meta {
 			}
 		}
 
-		//TODO: cache the ArloIntegerKeyValues somewhere; put in an "Add" method
+		//TODO: cache the AoIntegerKeyValues somewhere; put in an "Add" method
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
 			public static readonly Map sParent=new Map("parent");
 			public static readonly Map sArg=new Map("arg");
@@ -1243,9 +1243,9 @@ namespace Meta {
 					return mstgTable.ItgCount;
 				}
 			}
-			public ArrayList ArloIntegerKeyValues {
+			public ArrayList AoIntegerKeyValues {
 				get {
-					return mstgTable.ArloIntegerKeyValues;
+					return mstgTable.AoIntegerKeyValues;
 				}
 			}
 			public virtual object this[object oKey]  {
@@ -1293,9 +1293,9 @@ namespace Meta {
 				oResult=eFunction.OEvaluateM(this);
 				return oResult;
 			}
-			public ArrayList ArloKeys {
+			public ArrayList AoKeys {
 				get {
-					return mstgTable.ArloKeys;
+					return mstgTable.AoKeys;
 				}
 			}
 			public IMap MClone() {
@@ -1403,13 +1403,13 @@ namespace Meta {
 				public Map mMap;
 				public MapStrategy Clone() {
 					MapStrategy mstgStrategy=new HybridDictionaryStrategy();
-					foreach(object oKey in this.ArloKeys) {
+					foreach(object oKey in this.AoKeys) {
 						mstgStrategy[oKey]=this[oKey];
 					}
 					return mstgStrategy;	
 				}
 				public abstract Map CloneMap();
-				public abstract ArrayList ArloIntegerKeyValues {
+				public abstract ArrayList AoIntegerKeyValues {
 					get;
 				}
 				public abstract bool IsString {
@@ -1419,7 +1419,7 @@ namespace Meta {
 				// TODO: Rename. Reason: This really means something more abstract, more along the lines of,
 				// "is this a mMap that only has integers as children, and maybe also only integers as keys?"
 				public abstract string SDotNetString();
-				public abstract ArrayList ArloKeys {
+				public abstract ArrayList AoKeys {
 					get;
 				}
 				public abstract int ItgCount {
@@ -1434,7 +1434,7 @@ namespace Meta {
 				/* Hashcodes must be exactly the same in all MapStrategies. */
 				public override int GetHashCode()  {
 					int iHash=0;
-					foreach(object oKey in this.ArloKeys) {
+					foreach(object oKey in this.AoKeys) {
 						unchecked {
 							iHash+=oKey.GetHashCode()*this[oKey].GetHashCode();
 						}
@@ -1448,7 +1448,7 @@ namespace Meta {
 					if(mstgToCompare.ItgCount!=this.ItgCount) {
 						return false;
 					}
-					foreach(object key in this.ArloKeys)  {
+					foreach(object key in this.AoKeys)  {
 						if(!mstgToCompare.ContainsKey(key)||!mstgToCompare[key].Equals(this[key])) {
 							return false;
 						}
@@ -1477,13 +1477,13 @@ namespace Meta {
 				public override Map CloneMap() {
 					return new Map(new StringStrategy(this));
 				}
-				public override ArrayList ArloIntegerKeyValues {
+				public override ArrayList AoIntegerKeyValues {
 					get {
-						ArrayList arlList=new ArrayList();
+						ArrayList aList=new ArrayList();
 						foreach(char iChar in sText) {
-							arlList.Add(new Integer(iChar));
+							aList.Add(new Integer(iChar));
 						}
-						return arlList;
+						return aList;
 					}
 				}
 				public override bool IsString {
@@ -1494,7 +1494,7 @@ namespace Meta {
 				public override string SDotNetString() {
 					return sText;
 				}
-				public override ArrayList ArloKeys {
+				public override ArrayList AoKeys {
 					get {
 						return aiKeys;
 					}
@@ -1558,7 +1558,7 @@ namespace Meta {
 					}
 					return mClone;
 				}
-				public override ArrayList ArloIntegerKeyValues {
+				public override ArrayList AoIntegerKeyValues {
 					get {
 						ArrayList aList=new ArrayList();
 						for(Integer itgInteger=new Integer(1);ContainsKey(itgInteger);itgInteger++) {
@@ -1569,7 +1569,7 @@ namespace Meta {
 				}
 				public override bool IsString {
 					get {
-						if(ArloIntegerKeyValues.Count>0) {
+						if(AoIntegerKeyValues.Count>0) {
 							try {
 								SDotNetString();// TODO: a bit of a hack
 								return true;
@@ -1582,7 +1582,7 @@ namespace Meta {
 				}
 				public override string SDotNetString() { // TODO: looks too complicated
 					string sText="";
-					foreach(object oKey in this.ArloKeys) {
+					foreach(object oKey in this.AoKeys) {
 						if(oKey is Integer && this.mstgTable[oKey] is Integer) {
 							try {
 								sText+=Convert.ToChar(((Integer)this.mstgTable[oKey]).Int);
@@ -1603,7 +1603,7 @@ namespace Meta {
 						this.mMap=mMap;
 					}
 				}
-				public override ArrayList ArloKeys {
+				public override ArrayList AoKeys {
 					get {
 						return aoKeys;
 					}
@@ -1635,7 +1635,7 @@ namespace Meta {
 			}
 			public object Current {
 				get {
-					return new DictionaryEntry(mMap.ArloKeys[iCurrent],mMap[mMap.ArloKeys[iCurrent]]);
+					return new DictionaryEntry(mMap.AoKeys[iCurrent],mMap[mMap.AoKeys[iCurrent]]);
 				}
 			}
 			public bool MoveNext() {
@@ -1651,14 +1651,14 @@ namespace Meta {
 		public class NetMethod: ICallable {
 			// TODO: Move this to "With" ? Move this to NetContainer?
 			public static object oAssignCollectionMOOutbla(Map mCollection,object oCollection,out bool blaSuccess) { // TODO: is blaSuccess needed?
-				if(mCollection.ArloIntegerKeyValues.Count==0) {
+				if(mCollection.AoIntegerKeyValues.Count==0) {
 					blaSuccess=false;
 					return null;
 				}
 				Type tTarget=oCollection.GetType();
-				MethodInfo mtifAdding=tTarget.GetMethod("Add",new Type[]{mCollection.ArloIntegerKeyValues[0].GetType()});
+				MethodInfo mtifAdding=tTarget.GetMethod("Add",new Type[]{mCollection.AoIntegerKeyValues[0].GetType()});
 				if(mtifAdding!=null) {
-					foreach(object oEntry in mCollection.ArloIntegerKeyValues) { // combine this with Library function "Init"
+					foreach(object oEntry in mCollection.AoIntegerKeyValues) { // combine this with Library function "Init"
 						mtifAdding.Invoke(oCollection,new object[]{oEntry});//  call mtifAdding from above!
 					}
 					blaSuccess=true;
@@ -1683,14 +1683,14 @@ namespace Meta {
 					Delegate dlgFunction=delFromF(tParameter,mtifInvoke,(Map)oMeta);
 					return dlgFunction;
 				}
-				else if(tParameter.IsArray && oMeta is IMap && ((Map)oMeta).ArloIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
+				else if(tParameter.IsArray && oMeta is IMap && ((Map)oMeta).AoIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
 					try {
 						Type tElements=tParameter.GetElementType();
 						Map mArgument=((Map)oMeta);
-						ArrayList arlArgument=mArgument.ArloIntegerKeyValues;
-						Array arArgument=Array.CreateInstance(tElements,arlArgument.Count);
-						for(int i=0;i<arlArgument.Count;i++) {
-							arArgument.SetValue(arlArgument[i],i);
+						ArrayList aArgument=mArgument.AoIntegerKeyValues;
+						Array arArgument=Array.CreateInstance(tElements,aArgument.Count);
+						for(int i=0;i<aArgument.Count;i++) {
+							arArgument.SetValue(aArgument[i],i);
 						}
 						return arArgument;
 					}
@@ -1716,14 +1716,14 @@ namespace Meta {
 				// TODO: this will have to be refactored, but later, after feature creep
 
 				// try to call with just one argument:
-				ArrayList arlOneArgumentMethods=new ArrayList();
+				ArrayList aOneArgumentMethods=new ArrayList();
 				foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
 					if(mtbCurrent.GetParameters().Length==1) { // don't match if different parameter list length
-						arlOneArgumentMethods.Add(mtbCurrent);
+						aOneArgumentMethods.Add(mtbCurrent);
 					}
 				}
 				bool blaExecuted=false;
-				foreach(MethodBase mtbCurrent in arlOneArgumentMethods) {
+				foreach(MethodBase mtbCurrent in aOneArgumentMethods) {
 					bool blaConverted;
 					object oParameter=oConvertParameterOTOutbla(oArgument,mtbCurrent.GetParameters()[0].ParameterType,out blaConverted);
 					if(blaConverted) {
@@ -1738,31 +1738,31 @@ namespace Meta {
 					}
 				}
 				if(!blaExecuted) {
-					ArrayList arlOArguments=((IMap)oArgument).ArloIntegerKeyValues;
-					ArrayList arlMtifRightNumberArguments=new ArrayList();
+					ArrayList aOArguments=((IMap)oArgument).AoIntegerKeyValues;
+					ArrayList aMtifRightNumberArguments=new ArrayList();
 					foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
-						if(arlOArguments.Count==mtbCurrent.GetParameters().Length) { // don't match if different parameter list length
-							if(arlOArguments.Count==((IMap)oArgument).ArloKeys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
-								arlMtifRightNumberArguments.Add(mtbCurrent);
+						if(aOArguments.Count==mtbCurrent.GetParameters().Length) { // don't match if different parameter list length
+							if(aOArguments.Count==((IMap)oArgument).AoKeys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
+								aMtifRightNumberArguments.Add(mtbCurrent);
 							}
 						}
 					}
-					if(arlMtifRightNumberArguments.Count==0) {
+					if(aMtifRightNumberArguments.Count==0) {
 						int asdf=0;//throw new ApplicationException("No methods with the right number of arguments.");// TODO: Just a quickfix, really
 					}
-					foreach(MethodBase mtbCurrent in arlMtifRightNumberArguments) {
-						ArrayList arlArguments=new ArrayList();
+					foreach(MethodBase mtbCurrent in aMtifRightNumberArguments) {
+						ArrayList aArguments=new ArrayList();
 						bool blaArgumentsMatched=true;
 						ParameterInfo[] arPrmtifParameters=mtbCurrent.GetParameters();
 						for(int i=0;blaArgumentsMatched && i<arPrmtifParameters.Length;i++) {
-							arlArguments.Add(oConvertParameterOTOutbla(arlOArguments[i],arPrmtifParameters[i].ParameterType,out blaArgumentsMatched));
+							aArguments.Add(oConvertParameterOTOutbla(aOArguments[i],arPrmtifParameters[i].ParameterType,out blaArgumentsMatched));
 						}
 						if(blaArgumentsMatched) {
 							if(mtbCurrent is ConstructorInfo) {
-								oReturn=((ConstructorInfo)mtbCurrent).Invoke(arlArguments.ToArray());
+								oReturn=((ConstructorInfo)mtbCurrent).Invoke(aArguments.ToArray());
 							}
 							else {
-								oReturn=mtbCurrent.Invoke(oTarget,arlArguments.ToArray());
+								oReturn=mtbCurrent.Invoke(oTarget,aArguments.ToArray());
 							}
 							blaExecuted=true;// remove, use blaArgumentsMatched instead
 							break;
@@ -1778,7 +1778,7 @@ namespace Meta {
 			}
 			/* Create a delegate of a certain tTarget that calls a Meta function. */
 			public static Delegate delFromF(Type tDelegate,MethodInfo mtifMethod,Map mCode) { // TODO: tDelegate, mtifMethode, redundant?
-				mCode.MParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
+				mCode.MParent=(IMap)Interpreter.aMCallers[Interpreter.aMCallers.Count-1];
 				CSharpCodeProvider mCodeProvider=new CSharpCodeProvider();
 				ICodeCompiler iCodeCompiler=mCodeProvider.CreateCompiler();
 				string sReturnType;
@@ -1822,7 +1822,7 @@ namespace Meta {
 				sSource+="public EventHandlerContainer(Map mCallable) {this.mCallable=mCallable;}}";
 				string oMetaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
 				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",oMetaDllLocation});
-				assemblyNames.AddRange(Interpreter.arlsLoadedAssemblies);
+				assemblyNames.AddRange(Interpreter.asLoadedAssemblies);
 				CompilerParameters  compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 				CompilerResults compilerResults=iCodeCompiler.CompileAssemblyFromSource(compilerParameters,sSource);
 				Type tContainer=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
@@ -1839,22 +1839,22 @@ namespace Meta {
 				this.sName=sName;
 				this.oTarget=oTarget;
 				this.tTarget=tTarget;
-				ArrayList arlMtbMethods;
+				ArrayList aMtbMethods;
 				if(sName==".ctor") {
-					arlMtbMethods=new ArrayList(tTarget.GetConstructors());
+					aMtbMethods=new ArrayList(tTarget.GetConstructors());
 				}
 				else {
-					arlMtbMethods=new ArrayList(tTarget.GetMember(sName,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+					aMtbMethods=new ArrayList(tTarget.GetMember(sName,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
 				}
-				arlMtbMethods.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
+				aMtbMethods.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
 				// found out, it's for Console.WriteLine, where Console.WriteLine(object)
 				// would otherwise come before Console.WriteLine(string)
 				// not a good solution, though
 
 				// TODO: Get rid of this Reversion shit! Find a fix for this problem. Need to think about
-				// it. maybe restrict overloads, create preference arlMtbMethods, all quite complicated
+				// it. maybe restrict overloads, create preference aMtbMethods, all quite complicated
 				// research the number and nature of such arMtbOverloadedMethods as Console.WriteLine
-				arMtbOverloadedMethods=(MethodBase[])arlMtbMethods.ToArray(typeof(MethodBase));
+				arMtbOverloadedMethods=(MethodBase[])aMtbMethods.ToArray(typeof(MethodBase));
 			}
 			public NetMethod(string name,object oTarget,Type tTarget) {
 				this.nInitializeSOT(name,oTarget,tTarget);
@@ -1943,7 +1943,7 @@ namespace Meta {
 					kvlParent=value;
 				}
 			}
-			public ArrayList ArloKeys {
+			public ArrayList AoKeys {
 				get {
 					return new ArrayList(Table.Keys);
 				}
