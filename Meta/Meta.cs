@@ -1892,124 +1892,65 @@ namespace Meta {
 				return Interpreter.ConvertDotNetToMeta(ojResult);
 			}
 			/* Create a delegate of a certain tTarget that calls a Meta function. */
-			public static Delegate delFromF(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
-				code.MParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
-				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
-				ICodeCompiler compiler=codeProvider.CreateCompiler();
-				string returnTypeName;
-				if(method==null) {
-					returnTypeName="object";
+			public static Delegate delFromF(Type tDelegate,MethodInfo mtifMethod,Map mCode) { // TODO: tDelegate, mtifMethode, redundant?
+				mCode.MParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
+				CSharpCodeProvider mCodeProvider=new CSharpCodeProvider();
+				ICodeCompiler iCodeCompiler=mCodeProvider.CreateCompiler();
+				string sReturnType;
+				if(mtifMethod==null) {
+					sReturnType="object";
 				}
 				else {
-					returnTypeName=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
+					sReturnType=mtifMethod.ReturnType.Equals(typeof(void)) ? "void":mtifMethod.ReturnType.FullName;
 				}
-				string source="using System;using Meta.Types;using Meta.Execution;";
-				source+="public class EventHandlerContainer{public "+returnTypeName+" EventHandlerMethod";
-				int counter=1;
-				string argumentList="(";
-				string argumentAdding="Map arg=new Map();";
-				if(method!=null) {
-					foreach(ParameterInfo parameter in method.GetParameters()) {
-						argumentList+=parameter.ParameterType.FullName+" arg"+counter;
-						argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";
-						if(counter<method.GetParameters().Length) {
-							argumentList+=",";
+				string sSource="using System;using Meta.Types;using Meta.Execution;";
+				sSource+="public class EventHandlerContainer{public "+sReturnType+" EventHandlerMethod";
+				int iCounter=1;
+				string sArgumentList="(";
+				string sArgumentAdding="Map mArg=new Map();";
+				if(mtifMethod!=null) {
+					foreach(ParameterInfo prmifParameter in mtifMethod.GetParameters()) {
+						sArgumentList+=prmifParameter.ParameterType.FullName+" mArg"+iCounter;
+						sArgumentAdding+="mArg[new Integer("+iCounter+")]=mArg"+iCounter+";";
+						if(iCounter<mtifMethod.GetParameters().Length) {
+							sArgumentList+=",";
 						}
-						counter++;
+						iCounter++;
 					}
 				}
-				argumentList+=")";
-				source+=argumentList+"{";
-				source+=argumentAdding;
-				source+="object result=callable.ojCallOj(arg);";
-				if(method!=null) {
-					if(!method.ReturnType.Equals(typeof(void))) {
-						source+="return ("+returnTypeName+")";
-						source+="Interpreter.ConvertMetaToDotNet(result,typeof("+returnTypeName+"));"; // does conversion even make sense here? Must be outblaConverted back anyway.
+				sArgumentList+=")";
+				sSource+=sArgumentList+"{";
+				sSource+=sArgumentAdding;
+				sSource+="object oResult=mCallable.ojCallOj(mArg);";
+				if(mtifMethod!=null) {
+					if(!mtifMethod.ReturnType.Equals(typeof(void))) {
+						sSource+="return ("+sReturnType+")";
+						sSource+="Interpreter.ConvertMetaToDotNet(oResult,typeof("+sReturnType+"));"; // does conversion even make sense here? Must be outblaConverted back anyway.
 					}
 				}
 				else {
-					source+="return";
-					source+=" result;";
+					sSource+="return";
+					sSource+=" oResult;";
 				}
-				source+="}";
-				source+="private Map callable;";
-				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
+				sSource+="}";
+				sSource+="private Map mCallable;";
+				sSource+="public EventHandlerContainer(Map mCallable) {this.mCallable=mCallable;}}";
 				string ojMetaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
 				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",ojMetaDllLocation});
 				assemblyNames.AddRange(Interpreter.arlsLoadedAssemblies);
-				CompilerParameters  options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
-				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
-				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
-				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
-																																			  code});
-				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
-				if(method==null) {
-					delegateType=typeof(DelegateCreatedForGenericDelegates);
+				CompilerParameters  compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
+				CompilerResults compilerResults=iCodeCompiler.CompileAssemblyFromSource(compilerParameters,sSource);
+				Type tContainer=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
+				object oContainer=oContainerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
+																																			  mCode});
+//				MethodInfo mtifEventHandler=oContainer.GetType().GetMethod("EventHandlerMethod");
+				if(mtifMethod==null) {
+					tDelegate=typeof(DelegateCreatedForGenericDelegates);
 				}
-				Delegate del=Delegate.CreateDelegate(delegateType,
-					container,"EventHandlerMethod");
-				return del;
+				Delegate dlgResult=Delegate.CreateDelegate(tDelegate,
+					oContainer,"EventHandlerMethod");
+				return dlgResult;
 			}
-//			public static Delegate delFromF(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
-//				code.mParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
-//				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
-//				ICodeEpsCompileVr compiler=codeProvider.CreateEpsCompileVr();
-//				string returnTypeName;
-//				if(method==null) {
-//					returnTypeName="object";
-//				}
-//				else {
-//					returnTypeName=method.ReturnType.Equals(tTargetof(void)) ? "void":method.ReturnType.FullName;
-//				}
-//				string source="using System;using Meta.Types;using Meta.Execution;";
-//				source+="public class EventHandlerContainer{public "+returnTypeName+" EventHandlerMethod";
-//				int counter=1;
-//				string argumentList="(";
-//				string argumentAdding="Map arg=new Map();";
-//				if(method!=null) {
-//					foreach(ParameterInfo parameter in method.GetParameters()) {
-//						argumentList+=parameter.ParameterType.FullName+" arg"+counter;
-//						argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";
-//						if(counter<method.GetParameters().Length) {
-//							argumentList+=",";
-//						}
-//						counter++;
-//					}
-//				}
-//				argumentList+=")";
-//				source+=argumentList+"{";
-//				source+=argumentAdding;
-//				source+="object result=callable.ojCallOj(arg);";
-//				if(method!=null) {
-//					if(!method.ReturnType.Equals(tTargetof(void))) {
-//						source+="return ("+returnTypeName+")";
-//						source+="Interpreter.ConvertMetaToDotNet(result,tTargetof("+returnTypeName+"));"; // does conversion even make sense here? Must be outblaConverted back anyway.
-//					}
-//				}
-//				else {
-//					source+="return";
-//					source+=" result;";
-//				}
-//				source+="}";
-//				source+="private Map callable;";
-//				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-//				string ojMetaDllLocation=Assembly.GetAssembly(tTargetof(Map)).Location;
-//				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",ojMetaDllLocation});
-//				assemblyNames.AddRange(Interpreter.arlsLoadedAssemblies);
-//				EpsCompileVrParameters options=new EpsCompileVrParameters((string[])assemblyNames.ToArray(tTargetof(string)));
-//				EpsCompileVrResults results=compiler.EpsCompileVAssemblyFromSource(options,source);
-//				Type containerClass=results.EpsCompileVdAssembly.GetType("EventHandlerContainer",true);
-//				object container=containerClass.GetConstructor(new Type[]{tTargetof(Map)}).Invoke(new object[] {
-//																																			  code});
-//				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
-//				if(method==null) {
-//					delegateType=tTargetof(DelegateCreatedForGenericDelegates);
-//				}
-//				Delegate del=Delegate.delFromF(delegateType,
-//					container,"EventHandlerMethod");
-//				return del;
-//			}
 			private void nInitializeSOjT(string sName,object ojTarget,Type tTarget) {
 				this.sName=sName;
 				this.ojTarget=ojTarget;
