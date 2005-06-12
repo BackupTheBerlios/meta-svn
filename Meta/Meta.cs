@@ -41,7 +41,7 @@ namespace Meta {
 	namespace Execution {
 		public abstract class Expression {
 			public static readonly Map sRun=new Map("run"); // TODO: get rid of "String"-suffix, use Hungarian syntax, that is "s" prefix
-			public abstract object OjEvaluateM(IMap parent);
+			public abstract object OEvaluateM(IMap parent);
 			Extent extent;
 			public Extent EtExtent{
 				get {
@@ -54,12 +54,12 @@ namespace Meta {
 			}
 		}
 		public class Call: Expression {
-			public override object OjEvaluateM(IMap parent) {
-				object ojArgument=epsArgument.OjEvaluateM(parent);
-				if(ojArgument is IMap) {
-					ojArgument=((IMap)ojArgument).MClone();
+			public override object OEvaluateM(IMap parent) {
+				object oArgument=epsArgument.OEvaluateM(parent);
+				if(oArgument is IMap) {
+					oArgument=((IMap)oArgument).MClone();
 				}
-				return ((ICallable)epsCallable.OjEvaluateM(parent)).ojCallOj(ojArgument);
+				return ((ICallable)epsCallable.OEvaluateM(parent)).oCallO(oArgument);
 			}
 			public static readonly Map sCall=new Map("call");
 			public static readonly Map sFunction=new Map("function");
@@ -78,7 +78,7 @@ namespace Meta {
 
 
 		public class Delayed: Expression {
-			public override object OjEvaluateM(IMap mParent) {
+			public override object OEvaluateM(IMap mParent) {
 				Map mClone=mDelayed;
 				mClone.MParent=mParent;
 				return mClone;
@@ -92,38 +92,38 @@ namespace Meta {
 
 
 		public class Program: Expression {
-			public override object OjEvaluateM(IMap mParent) {
+			public override object OEvaluateM(IMap mParent) {
 				Map mLocal=new Map();
-				return OjEvaluateM(mParent,mLocal);
+				return OEvaluateM(mParent,mLocal);
 			}
-			public object OjEvaluateM(IMap mParent,IMap mLocal) {
+			public object OEvaluateM(IMap mParent,IMap mLocal) {
 				mLocal.MParent=mParent;
 				Interpreter.arlMCallers.Add(mLocal);
 				for(int i=0;i<arlSmStatements.Count;i++) {
-					mLocal=(Map)Interpreter.OjCurrent;
+					mLocal=(Map)Interpreter.OCurrent;
 					((Statement)arlSmStatements[i]).VRealizeM(mLocal);
 				}
-				object ojResult=Interpreter.OjCurrent;
+				object oResult=Interpreter.OCurrent;
 				Interpreter.arlMCallers.RemoveAt(Interpreter.arlMCallers.Count-1);
-				return ojResult;
+				return oResult;
 			}
 			public static readonly Map sProgram=new Map("program");
 			public Program(Map mProgram) { // TODO: special Type for  callable maps?
-				foreach(Map mStatement in ((Map)mProgram[sProgram]).ArlojIntegerKeyValues) {
+				foreach(Map mStatement in ((Map)mProgram[sProgram]).ArloIntegerKeyValues) {
 					this.arlSmStatements.Add(new Statement(mStatement)); // should we save the original maps instead of arlSmStatements?
 				}
 			}
 			public readonly ArrayList arlSmStatements=new ArrayList();
 		}
 		public class Literal: Expression {
-			public override object OjEvaluateM(IMap mParent) {
-				return ojLiteral;
+			public override object OEvaluateM(IMap mParent) {
+				return oLiteral;
 			}
 			public static readonly Map sLiteral=new Map("literal");
 			public Literal(Map code) {
-				this.ojLiteral=Interpreter.OjRecognizeLiteralS((string)((Map)code[sLiteral]).SDotNetString());
+				this.oLiteral=Interpreter.ORecognizeLiteralS((string)((Map)code[sLiteral]).SDotNetString());
 			}
-			public object ojLiteral=null;
+			public object oLiteral=null;
 		}
 		public class Search: Expression {
 			public Search(Map mSearch) {
@@ -131,16 +131,16 @@ namespace Meta {
 			}
 			public Expression epsKey;
 			public static readonly Map sKey=new Map("key");
-			public override object OjEvaluateM(IMap mParent) {
-				object ojKey=epsKey.OjEvaluateM(mParent);
+			public override object OEvaluateM(IMap mParent) {
+				object oKey=epsKey.OEvaluateM(mParent);
 				IMap mSelected=mParent;
-				while(!mSelected.BlaHasKeyOj(ojKey)) {
+				while(!mSelected.BlaHasKeyO(oKey)) {
 					mSelected=mSelected.MParent;
 					if(mSelected==null) {
-						throw new KeyNotFoundException(ojKey,this.EtExtent);
+						throw new KeyNotFoundException(oKey,this.EtExtent);
 					}
 				}
-				return mSelected[ojKey];
+				return mSelected[oKey];
 			}
 			public static readonly Map sSearch=new Map("search");
 		}
@@ -149,61 +149,61 @@ namespace Meta {
 			public ArrayList arlEpsKeys=new ArrayList();
 			public Expression epsFirst;// TODO: maybe rename to srFirst -> it's a Search
 			public Select(Map code) {
-				ArrayList arlMKeyExpressions=((Map)code[sSelect]).ArlojIntegerKeyValues;
+				ArrayList arlMKeyExpressions=((Map)code[sSelect]).ArloIntegerKeyValues;
 				epsFirst=(Expression)((Map)arlMKeyExpressions[0]).EpsCompileV();
 				for(int i=1;i<arlMKeyExpressions.Count;i++) {
 					arlEpsKeys.Add(((Map)arlMKeyExpressions[i]).EpsCompileV());
 				}
 			}
-			public override object OjEvaluateM(IMap parent) {
-				object ojSelected=epsFirst.OjEvaluateM(parent);
+			public override object OEvaluateM(IMap parent) {
+				object oSelected=epsFirst.OEvaluateM(parent);
 				for(int i=0;i<arlEpsKeys.Count;i++) {
-					if(!(ojSelected is IKeyValue)) {
-						ojSelected=new NetObject(ojSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
+					if(!(oSelected is IKeyValue)) {
+						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
-					object k=((Expression)arlEpsKeys[i]).OjEvaluateM(parent);
-					ojSelected=((IKeyValue)ojSelected)[k];
-					if(ojSelected==null) {
+					object k=((Expression)arlEpsKeys[i]).OEvaluateM(parent);
+					oSelected=((IKeyValue)oSelected)[k];
+					if(oSelected==null) {
 						throw new KeyDoesNotExistException(k,this.EtExtent);
 					}
 				}
-				return ojSelected;
+				return oSelected;
 			}
 			public static readonly Map sSelect=new Map("select");
 		}
 
 		public class Statement {
 			public void VRealizeM(IMap mParent) {
-				object ojSelected=mParent;
-				object ojKey;
+				object oSelected=mParent;
+				object oKey;
 				for(int i=0;i<arlEpsKeys.Count-1;i++) {
-					ojKey=((Expression)arlEpsKeys[i]).OjEvaluateM((IMap)mParent);
-					ojSelected=((IKeyValue)ojSelected)[ojKey];
-					if(ojSelected==null) {
-						throw new KeyDoesNotExistException(ojKey,((Expression)arlEpsKeys[i]).EtExtent);
+					oKey=((Expression)arlEpsKeys[i]).OEvaluateM((IMap)mParent);
+					oSelected=((IKeyValue)oSelected)[oKey];
+					if(oSelected==null) {
+						throw new KeyDoesNotExistException(oKey,((Expression)arlEpsKeys[i]).EtExtent);
 					}
-					if(!(ojSelected is IKeyValue)) {
-						ojSelected=new NetObject(ojSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
+					if(!(oSelected is IKeyValue)) {
+						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
 				}
-				object ojLastKey=((Expression)arlEpsKeys[arlEpsKeys.Count-1]).OjEvaluateM((IMap)mParent);
-				object ojValue=epsValue.OjEvaluateM((IMap)mParent);
-				if(ojLastKey.Equals(Map.sThis)) {
-					if(ojValue is Map) {
-						((Map)ojValue).MParent=((Map)mParent).MParent;
+				object oLastKey=((Expression)arlEpsKeys[arlEpsKeys.Count-1]).OEvaluateM((IMap)mParent);
+				object oValue=epsValue.OEvaluateM((IMap)mParent);
+				if(oLastKey.Equals(Map.sThis)) {
+					if(oValue is Map) {
+						((Map)oValue).MParent=((Map)mParent).MParent;
 					}
 					else {
 						int asdf=0;
 					}
-					Interpreter.OjCurrent=ojValue;
+					Interpreter.OCurrent=oValue;
 
 				}
 				else {
-					((IKeyValue)ojSelected)[ojLastKey]=ojValue;
+					((IKeyValue)oSelected)[oLastKey]=oValue;
 				}
 			}
 			public Statement(Map mStatement) {
-				foreach(Map key in ((Map)mStatement[sKey]).ArlojIntegerKeyValues) {
+				foreach(Map key in ((Map)mStatement[sKey]).ArloIntegerKeyValues) {
 					arlEpsKeys.Add(key.EpsCompileV());
 				}
 				this.epsValue=(Expression)((Map)mStatement[sValue]).EpsCompileV();
@@ -219,15 +219,15 @@ namespace Meta {
 	
 
 		public class Interpreter  {
-			public static void SaveToFileOjS(object meta,string fileName) {
+			public static void SaveToFileOS(object meta,string fileName) {
 				StreamWriter writer=new StreamWriter(fileName);
-				writer.Write(SaveToFileOjS(meta,"",true).TrimEnd(new char[]{'\n'}));
+				writer.Write(SaveToFileOS(meta,"",true).TrimEnd(new char[]{'\n'}));
 				writer.Close();
 			}
-			public static string SaveToFileOjS(object ojMeta,string sIndent,bool blaRightSide) {
-				if(ojMeta is Map) {
+			public static string SaveToFileOS(object oMeta,string sIndent,bool blaRightSide) {
+				if(oMeta is Map) {
 					string sText="";
-					Map mMap=(Map)ojMeta;
+					Map mMap=(Map)oMeta;
 					if(mMap.IsString) {
 						sText+="\""+(mMap).SDotNetString()+"\"";
 					}
@@ -238,7 +238,7 @@ namespace Meta {
 						if(!blaRightSide) {
 							sText+="(";
 							foreach(DictionaryEntry dtnretEntry in mMap) {
-								sText+='['+SaveToFileOjS(dtnretEntry.Key,sIndent,true)+']'+'='+SaveToFileOjS(dtnretEntry.Value,sIndent,true)+",";
+								sText+='['+SaveToFileOS(dtnretEntry.Key,sIndent,true)+']'+'='+SaveToFileOS(dtnretEntry.Value,sIndent,true)+",";
 							}
 							if(mMap.ItgCount!=0) {
 								sText=sText.Remove(sText.Length-1,1);
@@ -247,11 +247,11 @@ namespace Meta {
 						}
 						else {
 							foreach(DictionaryEntry dtnretEntry in mMap) {
-								sText+=sIndent+'['+SaveToFileOjS(dtnretEntry.Key,sIndent,false)+']'+'=';
+								sText+=sIndent+'['+SaveToFileOS(dtnretEntry.Key,sIndent,false)+']'+'=';
 								if(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ItgCount!=0 && !((Map)dtnretEntry.Value).IsString) {
 									sText+="\n";
 								}
-								sText+=SaveToFileOjS(dtnretEntry.Value,sIndent+'\t',true);
+								sText+=SaveToFileOS(dtnretEntry.Value,sIndent+'\t',true);
 								if(!(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ItgCount!=0 && !((Map)dtnretEntry.Value).IsString)) {
 									sText+="\n";
 								}
@@ -260,12 +260,12 @@ namespace Meta {
 					}
 					return sText;
 				}
-				else if(ojMeta is Integer) {
-					Integer integer=(Integer)ojMeta;
+				else if(oMeta is Integer) {
+					Integer integer=(Integer)oMeta;
 					return "\""+integer.ToString()+"\"";
 				}
 				else {
-					throw new ApplicationException("Serialization not implemented for type "+ojMeta.GetType().ToString()+".");
+					throw new ApplicationException("Serialization not implemented for type "+oMeta.GetType().ToString()+".");
 				}
 			}
 			public static IKeyValue Merge(params IKeyValue[] arkvlToMerge) {
@@ -276,7 +276,7 @@ namespace Meta {
 				Map mResult=new Map();//use clone here?
 				foreach(IKeyValue kvlCurrent in cltkvlToMerge) {
 					foreach(DictionaryEntry dtnetEntry in (IKeyValue)kvlCurrent) {
-						if(dtnetEntry.Value is IKeyValue && !(dtnetEntry.Value is NetClass)&& mResult.BlaHasKeyOj(dtnetEntry.Key) 
+						if(dtnetEntry.Value is IKeyValue && !(dtnetEntry.Value is NetClass)&& mResult.BlaHasKeyO(dtnetEntry.Key) 
 							&& mResult[dtnetEntry.Key] is IKeyValue && !(mResult[dtnetEntry.Key] is NetClass)) {
 							mResult[dtnetEntry.Key]=Merge((IKeyValue)mResult[dtnetEntry.Key],(IKeyValue)dtnetEntry.Value);
 						}
@@ -287,7 +287,7 @@ namespace Meta {
 				}
 				return mResult;
 			}	
-			public static object OjRecognizeLiteralS(string text) {
+			public static object ORecognizeLiteralS(string text) {
 				foreach(RecognizeLiteral rcnltrCurrent in arlrcnltrLiteralRecognitions) {
 					object recognized=rcnltrCurrent.Recognize(text);
 					if(recognized!=null) {
@@ -296,41 +296,41 @@ namespace Meta {
 				}
 				return null;
 			}
-			public static object ConvertDotNetToMeta(object ojDotNet) { 
-				if(ojDotNet==null) {
+			public static object ConvertDotNetToMeta(object oDotNet) { 
+				if(oDotNet==null) {
 					return null;
 				}
-				else if(ojDotNet.GetType().IsSubclassOf(typeof(Enum))) {
-					return new Integer((int)Convert.ToInt32((Enum)ojDotNet));
+				else if(oDotNet.GetType().IsSubclassOf(typeof(Enum))) {
+					return new Integer((int)Convert.ToInt32((Enum)oDotNet));
 				}
-				DotNetToMetaConversion dttmecvsConversion=(DotNetToMetaConversion)htdntmtcvsToMetaConversions[ojDotNet.GetType()];
+				DotNetToMetaConversion dttmecvsConversion=(DotNetToMetaConversion)htdntmtcvsToMetaConversions[oDotNet.GetType()];
 				if(dttmecvsConversion==null) {
-					return ojDotNet;
+					return oDotNet;
 				}
 				else {
-					return dttmecvsConversion.Convert(ojDotNet);
+					return dttmecvsConversion.Convert(oDotNet);
 				}
 			}
-			public static object ConvertMetaToDotNet(object ojMeta) {
-				if(ojMeta is Integer) {
-					return ((Integer)ojMeta).Int;
+			public static object ConvertMetaToDotNet(object oMeta) {
+				if(oMeta is Integer) {
+					return ((Integer)oMeta).Int;
 				}
-				else if(ojMeta is Map && ((Map)ojMeta).IsString) {
-					return ((Map)ojMeta).SDotNetString();
+				else if(oMeta is Map && ((Map)oMeta).IsString) {
+					return ((Map)oMeta).SDotNetString();
 				}
 				else {
-					return ojMeta;
+					return oMeta;
 				}
 			}
-			public static object ConvertMetaToDotNet(object ojMeta,Type tTarget) {
+			public static object ConvertMetaToDotNet(object oMeta,Type tTarget) {
 				try {
 					MetaToDotNetConversion mttdncvsConversion=(MetaToDotNetConversion)((Hashtable)
-						Interpreter.htmttdncvsToDotNetConversion[ojMeta.GetType()])[tTarget];
+						Interpreter.htmttdncvsToDotNetConversion[oMeta.GetType()])[tTarget];
 					bool converted;
-					return mttdncvsConversion.Convert(ojMeta,out converted); // TODO: Why ignore converted here?, Should really loop through all the possibilities -> no not necessary here, type determines mttdncvsConversion
+					return mttdncvsConversion.Convert(oMeta,out converted); // TODO: Why ignore converted here?, Should really loop through all the possibilities -> no not necessary here, type determines mttdncvsConversion
 				}
 				catch {
-					return ojMeta;
+					return oMeta;
 				}
 			}
 			public static object Run(string sFileName,IMap mArgument) {
@@ -346,7 +346,7 @@ namespace Meta {
 				Map mCallable=new Map();
 				mCallable[Expression.sRun]=mProgram;
 				mCallable.MParent=mParent;
-				return mCallable.ojCallOj(mArgument);
+				return mCallable.oCallO(mArgument);
 			}
 
 			public static Map mCompileS(string sFileName) {
@@ -374,7 +374,7 @@ namespace Meta {
 				fsFile.Close();
 				return aAst;
 			}
-			public static object OjCurrent {
+			public static object OCurrent {
 				get {
 					if(arlMCallers.Count==0) {
 						return null;
@@ -537,9 +537,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Byte);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						return System.Convert.ToByte(((Integer)ojToConvert).LongValue());
+						return System.Convert.ToByte(((Integer)oToConvert).LongValue());
 					}
 				}
 				public class ConvertIntegerToBool: MetaToDotNetConversion {
@@ -547,9 +547,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(bool);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						int i=((Integer)ojToConvert).Int;
+						int i=((Integer)oToConvert).Int;
 						if(i==0) {
 							return false;
 						}
@@ -568,9 +568,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(SByte);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						return System.Convert.ToSByte(((Integer)ojToConvert).LongValue());
+						return System.Convert.ToSByte(((Integer)oToConvert).LongValue());
 					}
 				}
 				public class ConvertIntegerToChar: MetaToDotNetConversion {
@@ -578,9 +578,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Char);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						return System.Convert.ToChar(((Integer)ojToConvert).LongValue());
+						return System.Convert.ToChar(((Integer)oToConvert).LongValue());
 					}
 				}
 				public class ConvertIntegerToInt32: MetaToDotNetConversion {
@@ -588,9 +588,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Int32);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						return System.Convert.ToInt32(((Integer)ojToConvert).LongValue());
+						return System.Convert.ToInt32(((Integer)oToConvert).LongValue());
 					}
 				}
 				public class ConvertIntegerToUInt32: MetaToDotNetConversion {
@@ -598,9 +598,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(UInt32);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						return System.Convert.ToUInt32(((Integer)ojToConvert).LongValue());
+						return System.Convert.ToUInt32(((Integer)oToConvert).LongValue());
 					}
 				}
 				public class ConvertIntegerToInt64: MetaToDotNetConversion {
@@ -608,9 +608,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Int64);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						return System.Convert.ToInt64(((Integer)ojToConvert).LongValue());
+						return System.Convert.ToInt64(((Integer)oToConvert).LongValue());
 					}
 				}
 				public class ConvertIntegerToUInt64: MetaToDotNetConversion {
@@ -618,9 +618,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(UInt64);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						return System.Convert.ToUInt64(((Integer)ojToConvert).LongValue());
+						return System.Convert.ToUInt64(((Integer)oToConvert).LongValue());
 					}
 				}
 				public class ConvertIntegerToInt16: MetaToDotNetConversion {
@@ -628,9 +628,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Int16);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						return System.Convert.ToInt16(((Integer)ojToConvert).LongValue());
+						return System.Convert.ToInt16(((Integer)oToConvert).LongValue());
 					}
 				}
 				public class ConvertIntegerToUInt16: MetaToDotNetConversion {
@@ -638,9 +638,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(UInt16);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						return System.Convert.ToUInt16(((Integer)ojToConvert).LongValue());
+						return System.Convert.ToUInt16(((Integer)oToConvert).LongValue());
 					}
 				}
 				public class ConvertIntegerToDecimal: MetaToDotNetConversion {
@@ -648,9 +648,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(decimal);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						return (decimal)(((Integer)ojToConvert).LongValue());
+						return (decimal)(((Integer)oToConvert).LongValue());
 					}
 				}
 				public class ConvertIntegerToDouble: MetaToDotNetConversion {
@@ -658,9 +658,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(double);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						return (double)(((Integer)ojToConvert).LongValue());
+						return (double)(((Integer)oToConvert).LongValue());
 					}
 				}
 				public class ConvertIntegerToFloat: MetaToDotNetConversion {
@@ -668,9 +668,9 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(float);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
 						outblaConverted=true;
-						return (float)(((Integer)ojToConvert).LongValue());
+						return (float)(((Integer)oToConvert).LongValue());
 					}
 				}
 				public class ConvertMapToString: MetaToDotNetConversion {
@@ -678,10 +678,10 @@ namespace Meta {
 						this.tSource=typeof(Map);
 						this.tTarget=typeof(string);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
-						if(((Map)ojToConvert).IsString) {
+					public override object Convert(object oToConvert, out bool outblaConverted) {
+						if(((Map)oToConvert).IsString) {
 							outblaConverted=true;
-							return ((Map)ojToConvert).SDotNetString();
+							return ((Map)oToConvert).SDotNetString();
 						}
 						else {
 							outblaConverted=false;
@@ -697,8 +697,8 @@ namespace Meta {
 						this.tSource=typeof(Map); 
 						this.tTarget=typeof(decimal); 
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
-						Map mMap=(Map)ojToConvert;
+					public override object Convert(object oToConvert, out bool outblaConverted) {
+						Map mMap=(Map)oToConvert;
 						if(mMap[new Map("iNumerator")] is Integer && mMap[new Map("iDenominator")] is Integer) {
 							outblaConverted=true;
 							return ((decimal)((Integer)mMap[new Map("iNumerator")]).LongValue())/((decimal)((Integer)mMap[new Map("iDenominator")]).LongValue());
@@ -715,8 +715,8 @@ namespace Meta {
 						this.tSource=typeof(Map);
 						this.tTarget=typeof(double);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
-						Map mMap=(Map)ojToConvert;
+					public override object Convert(object oToConvert, out bool outblaConverted) {
+						Map mMap=(Map)oToConvert;
 						if(mMap[new Map("iNumerator")] is Integer && mMap[new Map("iDenominator")] is Integer) {
 							outblaConverted=true;
 							return ((double)((Integer)mMap[new Map("iNumerator")]).LongValue())/((double)((Integer)mMap[new Map("iDenominator")]).LongValue());
@@ -733,8 +733,8 @@ namespace Meta {
 						this.tSource=typeof(Map);
 						this.tTarget=typeof(float);
 					}
-					public override object Convert(object ojToConvert, out bool outblaConverted) {
-						Map mMap=(Map)ojToConvert;
+					public override object Convert(object oToConvert, out bool outblaConverted) {
+						Map mMap=(Map)oToConvert;
 						if(mMap[new Map("iNumerator")] is Integer && mMap[new Map("iDenominator")] is Integer) {
 							outblaConverted=true;
 							return ((float)((Integer)mMap[new Map("iNumerator")]).LongValue())/((float)((Integer)mMap[new Map("iDenominator")]).LongValue());
@@ -753,16 +753,16 @@ namespace Meta {
 					public ConvertStringToMap()   {
 						this.tSource=typeof(string);
 					}
-					public override object Convert(object ojToConvert) {
-						return new Map((string)ojToConvert);
+					public override object Convert(object oToConvert) {
+						return new Map((string)oToConvert);
 					}
 				}
 				public class ConvertBoolToInteger: DotNetToMetaConversion {
 					public ConvertBoolToInteger() {
 						this.tSource=typeof(bool);
 					}
-					public override object Convert(object ojToConvert) {
-						return (bool)ojToConvert? new Integer(1): new Integer(0);
+					public override object Convert(object oToConvert) {
+						return (bool)oToConvert? new Integer(1): new Integer(0);
 					}
 
 				}
@@ -770,72 +770,72 @@ namespace Meta {
 					public ConvertByteToInteger() {
 						this.tSource=typeof(Byte);
 					}
-					public override object Convert(object ojToConvert) {
-						return new Integer((Byte)ojToConvert);
+					public override object Convert(object oToConvert) {
+						return new Integer((Byte)oToConvert);
 					}
 				}
 				public class ConvertSByteToInteger: DotNetToMetaConversion {
 					public ConvertSByteToInteger() {
 						this.tSource=typeof(SByte);
 					}
-					public override object Convert(object ojToConvert) {
-						return new Integer((SByte)ojToConvert);
+					public override object Convert(object oToConvert) {
+						return new Integer((SByte)oToConvert);
 					}
 				}
 				public class ConvertCharToInteger: DotNetToMetaConversion {
 					public ConvertCharToInteger() {
 						this.tSource=typeof(Char);
 					}
-					public override object Convert(object ojToConvert) {
-						return new Integer((Char)ojToConvert);
+					public override object Convert(object oToConvert) {
+						return new Integer((Char)oToConvert);
 					}
 				}
 				public class ConvertInt32ToInteger: DotNetToMetaConversion {
 					public ConvertInt32ToInteger() {
 						this.tSource=typeof(Int32);
 					}
-					public override object Convert(object ojToConvert) {
-						return new Integer((Int32)ojToConvert);
+					public override object Convert(object oToConvert) {
+						return new Integer((Int32)oToConvert);
 					}
 				}
 				public class ConvertUInt32ToInteger: DotNetToMetaConversion {
 					public ConvertUInt32ToInteger() {
 						this.tSource=typeof(UInt32);
 					}
-					public override object Convert(object ojToConvert) {
-						return new Integer((UInt32)ojToConvert);
+					public override object Convert(object oToConvert) {
+						return new Integer((UInt32)oToConvert);
 					}
 				}
 				public class ConvertInt64ToInteger: DotNetToMetaConversion {
 					public ConvertInt64ToInteger() {
 						this.tSource=typeof(Int64);
 					}
-					public override object Convert(object ojToConvert) {
-						return new Integer((Int64)ojToConvert);
+					public override object Convert(object oToConvert) {
+						return new Integer((Int64)oToConvert);
 					}
 				}
 				public class ConvertUInt64ToInteger: DotNetToMetaConversion {
 					public ConvertUInt64ToInteger() {
 						this.tSource=typeof(UInt64);
 					}
-					public override object Convert(object ojToConvert) {
-						return new Integer((Int64)(UInt64)ojToConvert);
+					public override object Convert(object oToConvert) {
+						return new Integer((Int64)(UInt64)oToConvert);
 					}
 				}
 				public class ConvertInt16ToInteger: DotNetToMetaConversion {
 					public ConvertInt16ToInteger() {
 						this.tSource=typeof(Int16);
 					}
-					public override object Convert(object ojToConvert) {
-						return new Integer((Int16)ojToConvert);
+					public override object Convert(object oToConvert) {
+						return new Integer((Int16)oToConvert);
 					}
 				}
 				public class ConvertUInt16ToInteger: DotNetToMetaConversion {
 					public ConvertUInt16ToInteger() {
 						this.tSource=typeof(UInt16);
 					}
-					public override object Convert(object ojToConvert) {
-						return new Integer((UInt16)ojToConvert);
+					public override object Convert(object oToConvert) {
+						return new Integer((UInt16)oToConvert);
 					}
 				}
 			}
@@ -864,7 +864,7 @@ namespace Meta {
 					sMessage+=((Map)key).SDotNetString();
 				}
 				else if(key is Map) {
-					sMessage+=Interpreter.SaveToFileOjS(key,"",true);
+					sMessage+=Interpreter.SaveToFileOS(key,"",true);
 				}
 				else {
 					sMessage+=key;
@@ -872,21 +872,21 @@ namespace Meta {
 				sMessage+=" not found.";
 			}
 		}
-		/* Thrown when a searched ojKey was not found. */
+		/* Thrown when a searched oKey was not found. */
 		public class KeyNotFoundException:KeyException {
-			public KeyNotFoundException(object ojKey,Extent etExtent):base(ojKey,etExtent) {
+			public KeyNotFoundException(object oKey,Extent etExtent):base(oKey,etExtent) {
 			}
 		}
-		/* Thrown when an accessed ojKey does not exist. */
+		/* Thrown when an accessed oKey does not exist. */
 		public class KeyDoesNotExistException:KeyException {
-			public KeyDoesNotExistException(object ojKey,Extent etExtent):base(ojKey,etExtent) {
+			public KeyDoesNotExistException(object oKey,Extent etExtent):base(oKey,etExtent) {
 			}
 		}
 	}
 	namespace Types  {
 		/* Everything implementing this interface can be used in a Call expression */
 		public interface ICallable {
-			object ojCallOj(object ojArgument);
+			object oCallO(object oArgument);
 		}
 		// TODO: Rename this eventually
 		public interface IMap: IKeyValue {
@@ -894,7 +894,7 @@ namespace Meta {
 				get;
 				set;
 			}
-			ArrayList ArlojIntegerKeyValues {
+			ArrayList ArloIntegerKeyValues {
 				get;
 			}
 			IMap MClone();
@@ -905,17 +905,17 @@ namespace Meta {
 				get;
 				set;
 			}
-			ArrayList ArlojKeys {
+			ArrayList ArloKeys {
 				get;
 			}
 			int ItgCount {
 				get;
 			}
-			bool BlaHasKeyOj(object key);			
+			bool BlaHasKeyO(object key);			
 		}		
 		/* Represents a lazily evaluated "library" Meta file. */
 		public class MetaLibrary { // TODO: Put this into Library class, make base class for everything that gets loaded
-			public object OjLoad() {
+			public object OLoad() {
 				return Interpreter.Run(sPath,new Map()); // TODO: Improve this interface, isn't read lazily anyway
 			}
 			public MetaLibrary(string sPath) {
@@ -935,12 +935,12 @@ namespace Meta {
 					throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
 				}
 			}
-			public ArrayList ArlojKeys {
+			public ArrayList ArloKeys {
 				get {
 					if(mCache==null) {
 						Load();
 					}
-					return mCache.ArlojKeys;
+					return mCache.ArloKeys;
 				}
 			}
 			public int ItgCount {
@@ -967,11 +967,11 @@ namespace Meta {
 				}
 			}
 			public Map mCache;
-			public bool BlaHasKeyOj(object key) {
+			public bool BlaHasKeyO(object key) {
 				if(mCache==null) {
 					Load();
 				}
-				return mCache.BlaHasKeyOj(key);
+				return mCache.BlaHasKeyO(key);
 			}
 			public IEnumerator GetEnumerator() {
 				if(mCache==null) {
@@ -1003,25 +1003,25 @@ namespace Meta {
 		/* The library namespace, containing both Meta libraries as well as .NET libraries
 		 *  from the "library" path and the GAC. */
 		public class Library: IKeyValue,IMap {
-			public object this[object ojKey] {
+			public object this[object oKey] {
 				get {
-					if(mCache.BlaHasKeyOj(ojKey)) {
-						if(mCache[ojKey] is MetaLibrary) {
-							mCache[ojKey]=((MetaLibrary)mCache[ojKey]).OjLoad();
+					if(mCache.BlaHasKeyO(oKey)) {
+						if(mCache[oKey] is MetaLibrary) {
+							mCache[oKey]=((MetaLibrary)mCache[oKey]).OLoad();
 						}
-						return mCache[ojKey];
+						return mCache[oKey];
 					}
 					else {
 						return null;
 					}
 				}
 				set {
-					throw new ApplicationException("Cannot set ojKey "+ojKey.ToString()+" in library.");
+					throw new ApplicationException("Cannot set oKey "+oKey.ToString()+" in library.");
 				}
 			}
-			public ArrayList ArlojKeys {
+			public ArrayList ArloKeys {
 				get {
-					return mCache.ArlojKeys;
+					return mCache.ArloKeys;
 				}
 			}
 			public IMap MClone() {
@@ -1032,10 +1032,10 @@ namespace Meta {
 					return mCache.ItgCount;
 				}
 			}
-			public bool BlaHasKeyOj(object ojKey) {
-				return mCache.BlaHasKeyOj(ojKey);
+			public bool BlaHasKeyO(object oKey) {
+				return mCache.BlaHasKeyO(oKey);
 			}
-			public ArrayList ArlojIntegerKeyValues {
+			public ArrayList ArloIntegerKeyValues {
 				get {
 					return new ArrayList();
 				}
@@ -1050,7 +1050,7 @@ namespace Meta {
 			}
 			public IEnumerator GetEnumerator() { 
 				foreach(DictionaryEntry dtretEntry in mCache) { // TODO: create separate enumerator for efficiency?
-					object ojTemporary=mCache[dtretEntry.Key];				  // or remove IEnumerable from IMap (only needed for foreach)
+					object oTemporary=mCache[dtretEntry.Key];				  // or remove IEnumerable from IMap (only needed for foreach)
 				}														// decide later
 				return mCache.GetEnumerator();
 			}
@@ -1063,7 +1063,7 @@ namespace Meta {
 							ArrayList arlsSubPaths=new ArrayList(tCurrent.FullName.Split('.'));
 							arlsSubPaths.RemoveAt(arlsSubPaths.Count-1);
 							foreach(string sSubPath in arlsSubPaths)  {
-								if(!mPosition.BlaHasKeyOj(new Map(sSubPath)))  {
+								if(!mPosition.BlaHasKeyO(new Map(sSubPath)))  {
 									mPosition[new Map(sSubPath)]=new Map();
 								}
 								mPosition=(Map)mPosition[new Map(sSubPath)];
@@ -1111,7 +1111,7 @@ namespace Meta {
 				}
 				
 				mCache=LoadNamespaces(arlasbAssemblies);
-				Interpreter.SaveToFileOjS(mCachedAssemblyInfo,fnCachedAssemblyInfo);
+				Interpreter.SaveToFileOS(mCachedAssemblyInfo,fnCachedAssemblyInfo);
 				foreach(string fnCurrentMeta in Directory.GetFiles(sLibraryPath,"*.meta")) {
 					mCache[new Map(Path.GetFileNameWithoutExtension(fnCurrentMeta))]=new MetaLibrary(fnCurrentMeta);
 				}
@@ -1119,7 +1119,7 @@ namespace Meta {
 			private Map mCachedAssemblyInfo=new Map();
 			public ArrayList GetNamespaces(Assembly asbAssembly) { //refactor, integrate into LoadNamespaces???
 				ArrayList arlsNamespaces=new ArrayList();
-				if(mCachedAssemblyInfo.BlaHasKeyOj(new Map(asbAssembly.Location))) {
+				if(mCachedAssemblyInfo.BlaHasKeyO(new Map(asbAssembly.Location))) {
 					Map info=(Map)mCachedAssemblyInfo[new Map(asbAssembly.Location)];
 					string sTimeStamp=((Map)info[new Map("timestamp")]).SDotNetString();
 					if(sTimeStamp.Equals(File.GetCreationTime(asbAssembly.Location).ToString())) {
@@ -1208,7 +1208,7 @@ namespace Meta {
 			}
 		}
 
-		//TODO: cache the ArlojIntegerKeyValues somewhere; put in an "Add" method
+		//TODO: cache the ArloIntegerKeyValues somewhere; put in an "Add" method
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
 			public static readonly Map sParent=new Map("parent");
 			public static readonly Map sArg=new Map("arg");
@@ -1243,9 +1243,9 @@ namespace Meta {
 					return mstgTable.ItgCount;
 				}
 			}
-			public ArrayList ArlojIntegerKeyValues {
+			public ArrayList ArloIntegerKeyValues {
 				get {
-					return mstgTable.ArlojIntegerKeyValues;
+					return mstgTable.ArloIntegerKeyValues;
 				}
 			}
 			public virtual object this[object oKey]  {
@@ -1283,19 +1283,19 @@ namespace Meta {
 			public object Execute() { // TODO: Rename to evaluate
 				Expression eFunction=(Expression)EpsCompileV();
 				object oResult;
-				oResult=eFunction.OjEvaluateM(this);
+				oResult=eFunction.OEvaluateM(this);
 				return oResult;
 			}
-			public object ojCallOj(object ojArgument) {
-				this.Argument=ojArgument;
+			public object oCallO(object oArgument) {
+				this.Argument=oArgument;
 				Expression eFunction=(Expression)((Map)this[Expression.sRun]).EpsCompileV();
 				object oResult;
-				oResult=eFunction.OjEvaluateM(this);
+				oResult=eFunction.OEvaluateM(this);
 				return oResult;
 			}
-			public ArrayList ArlojKeys {
+			public ArrayList ArloKeys {
 				get {
-					return mstgTable.ArlojKeys;
+					return mstgTable.ArloKeys;
 				}
 			}
 			public IMap MClone() {
@@ -1307,22 +1307,22 @@ namespace Meta {
 			}
 			public Expression EpsCompileV()  { // eCompiled Statements are not cached, only expressions
 				if(eCompiled==null)  {
-					if(this.BlaHasKeyOj(Meta.Execution.Call.sCall)) {
+					if(this.BlaHasKeyO(Meta.Execution.Call.sCall)) {
 						eCompiled=new Call(this);
 					}
-					else if(this.BlaHasKeyOj(Delayed.sDelayed)) { // TODO: could be optimized, but compilation happens seldom
+					else if(this.BlaHasKeyO(Delayed.sDelayed)) { // TODO: could be optimized, but compilation happens seldom
 						eCompiled=new Delayed(this);
 					}
-					else if(this.BlaHasKeyOj(Program.sProgram)) {
+					else if(this.BlaHasKeyO(Program.sProgram)) {
 						eCompiled=new Program(this);
 					}
-					else if(this.BlaHasKeyOj(Literal.sLiteral)) {
+					else if(this.BlaHasKeyO(Literal.sLiteral)) {
 						eCompiled=new Literal(this);
 					}
-					else if(this.BlaHasKeyOj(Search.sSearch)) {// TODO: use static expression strings
+					else if(this.BlaHasKeyO(Search.sSearch)) {// TODO: use static expression strings
 						eCompiled=new Search(this);
 					}
-					else if(this.BlaHasKeyOj(Select.sSelect)) {
+					else if(this.BlaHasKeyO(Select.sSelect)) {
 						eCompiled=new Select(this);
 					}
 					else {
@@ -1332,7 +1332,7 @@ namespace Meta {
 					((Expression)eCompiled).EtExtent=this.EtExtent;
 				return eCompiled;
 			}
-			public bool BlaHasKeyOj(object oKey)  {
+			public bool BlaHasKeyO(object oKey)  {
 				if(oKey is Map) {
 					if(oKey.Equals(sArg)) {
 						return this.Argument!=null;
@@ -1403,13 +1403,13 @@ namespace Meta {
 				public Map mMap;
 				public MapStrategy Clone() {
 					MapStrategy mstgStrategy=new HybridDictionaryStrategy();
-					foreach(object oKey in this.ArlojKeys) {
+					foreach(object oKey in this.ArloKeys) {
 						mstgStrategy[oKey]=this[oKey];
 					}
 					return mstgStrategy;	
 				}
 				public abstract Map CloneMap();
-				public abstract ArrayList ArlojIntegerKeyValues {
+				public abstract ArrayList ArloIntegerKeyValues {
 					get;
 				}
 				public abstract bool IsString {
@@ -1419,7 +1419,7 @@ namespace Meta {
 				// TODO: Rename. Reason: This really means something more abstract, more along the lines of,
 				// "is this a mMap that only has integers as children, and maybe also only integers as keys?"
 				public abstract string SDotNetString();
-				public abstract ArrayList ArlojKeys {
+				public abstract ArrayList ArloKeys {
 					get;
 				}
 				public abstract int ItgCount {
@@ -1434,7 +1434,7 @@ namespace Meta {
 				/* Hashcodes must be exactly the same in all MapStrategies. */
 				public override int GetHashCode()  {
 					int iHash=0;
-					foreach(object oKey in this.ArlojKeys) {
+					foreach(object oKey in this.ArloKeys) {
 						unchecked {
 							iHash+=oKey.GetHashCode()*this[oKey].GetHashCode();
 						}
@@ -1448,7 +1448,7 @@ namespace Meta {
 					if(mstgToCompare.ItgCount!=this.ItgCount) {
 						return false;
 					}
-					foreach(object key in this.ArlojKeys)  {
+					foreach(object key in this.ArloKeys)  {
 						if(!mstgToCompare.ContainsKey(key)||!mstgToCompare[key].Equals(this[key])) {
 							return false;
 						}
@@ -1477,7 +1477,7 @@ namespace Meta {
 				public override Map CloneMap() {
 					return new Map(new StringStrategy(this));
 				}
-				public override ArrayList ArlojIntegerKeyValues {
+				public override ArrayList ArloIntegerKeyValues {
 					get {
 						ArrayList arlList=new ArrayList();
 						foreach(char iChar in sText) {
@@ -1494,7 +1494,7 @@ namespace Meta {
 				public override string SDotNetString() {
 					return sText;
 				}
-				public override ArrayList ArlojKeys {
+				public override ArrayList ArloKeys {
 					get {
 						return aiKeys;
 					}
@@ -1558,7 +1558,7 @@ namespace Meta {
 					}
 					return mClone;
 				}
-				public override ArrayList ArlojIntegerKeyValues {
+				public override ArrayList ArloIntegerKeyValues {
 					get {
 						ArrayList aList=new ArrayList();
 						for(Integer itgInteger=new Integer(1);ContainsKey(itgInteger);itgInteger++) {
@@ -1569,7 +1569,7 @@ namespace Meta {
 				}
 				public override bool IsString {
 					get {
-						if(ArlojIntegerKeyValues.Count>0) {
+						if(ArloIntegerKeyValues.Count>0) {
 							try {
 								SDotNetString();// TODO: a bit of a hack
 								return true;
@@ -1582,7 +1582,7 @@ namespace Meta {
 				}
 				public override string SDotNetString() { // TODO: looks too complicated
 					string sText="";
-					foreach(object oKey in this.ArlojKeys) {
+					foreach(object oKey in this.ArloKeys) {
 						if(oKey is Integer && this.mstgTable[oKey] is Integer) {
 							try {
 								sText+=Convert.ToChar(((Integer)this.mstgTable[oKey]).Int);
@@ -1603,7 +1603,7 @@ namespace Meta {
 						this.mMap=mMap;
 					}
 				}
-				public override ArrayList ArlojKeys {
+				public override ArrayList ArloKeys {
 					get {
 						return aoKeys;
 					}
@@ -1635,7 +1635,7 @@ namespace Meta {
 			}
 			public object Current {
 				get {
-					return new DictionaryEntry(mMap.ArlojKeys[iCurrent],mMap[mMap.ArlojKeys[iCurrent]]);
+					return new DictionaryEntry(mMap.ArloKeys[iCurrent],mMap[mMap.ArloKeys[iCurrent]]);
 				}
 			}
 			public bool MoveNext() {
@@ -1650,16 +1650,16 @@ namespace Meta {
 		public delegate object DelegateCreatedForGenericDelegates(); // TODO: rename?
 		public class NetMethod: ICallable {
 			// TODO: Move this to "With" ? Move this to NetContainer?
-			public static object ojAssignCollectionMOjOutbla(Map mCollection,object ojCollection,out bool blaSuccess) { // TODO: is blaSuccess needed?
-				if(mCollection.ArlojIntegerKeyValues.Count==0) {
+			public static object oAssignCollectionMOOutbla(Map mCollection,object oCollection,out bool blaSuccess) { // TODO: is blaSuccess needed?
+				if(mCollection.ArloIntegerKeyValues.Count==0) {
 					blaSuccess=false;
 					return null;
 				}
-				Type tTarget=ojCollection.GetType();
-				MethodInfo mtifAdding=tTarget.GetMethod("Add",new Type[]{mCollection.ArlojIntegerKeyValues[0].GetType()});
+				Type tTarget=oCollection.GetType();
+				MethodInfo mtifAdding=tTarget.GetMethod("Add",new Type[]{mCollection.ArloIntegerKeyValues[0].GetType()});
 				if(mtifAdding!=null) {
-					foreach(object oEntry in mCollection.ArlojIntegerKeyValues) { // combine this with Library function "Init"
-						mtifAdding.Invoke(ojCollection,new object[]{oEntry});//  call mtifAdding from above!
+					foreach(object oEntry in mCollection.ArloIntegerKeyValues) { // combine this with Library function "Init"
+						mtifAdding.Invoke(oCollection,new object[]{oEntry});//  call mtifAdding from above!
 					}
 					blaSuccess=true;
 				}
@@ -1667,27 +1667,27 @@ namespace Meta {
 					blaSuccess=false;
 				}
 
-				return ojCollection;
+				return oCollection;
 			}
 			// TODO: finally invent a Meta tTarget??? Would be useful here for prefix to Meta,
 			// it isn't, after all just any object
-			public static object ojConvertParameterOjTOutbla(object ojMeta,Type tParameter,out bool outblaConverted) {
+			public static object oConvertParameterOTOutbla(object oMeta,Type tParameter,out bool outblaConverted) {
 				outblaConverted=true;
-				if(tParameter.IsAssignableFrom(ojMeta.GetType())) {
-					return ojMeta;
+				if(tParameter.IsAssignableFrom(oMeta.GetType())) {
+					return oMeta;
 				}
 				else if((tParameter.IsSubclassOf(typeof(Delegate))
-					||tParameter.Equals(typeof(Delegate))) && (ojMeta is Map)) { // TODO: add check, that the m contains code, not necessarily, think this conversion stuff through completely
+					||tParameter.Equals(typeof(Delegate))) && (oMeta is Map)) { // TODO: add check, that the m contains code, not necessarily, think this conversion stuff through completely
 					MethodInfo mtifInvoke=tParameter.GetMethod("Invoke",BindingFlags.Instance
 						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-					Delegate dlgFunction=delFromF(tParameter,mtifInvoke,(Map)ojMeta);
+					Delegate dlgFunction=delFromF(tParameter,mtifInvoke,(Map)oMeta);
 					return dlgFunction;
 				}
-				else if(tParameter.IsArray && ojMeta is IMap && ((Map)ojMeta).ArlojIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
+				else if(tParameter.IsArray && oMeta is IMap && ((Map)oMeta).ArloIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
 					try {
 						Type tElements=tParameter.GetElementType();
-						Map mArgument=((Map)ojMeta);
-						ArrayList arlArgument=mArgument.ArlojIntegerKeyValues;
+						Map mArgument=((Map)oMeta);
+						ArrayList arlArgument=mArgument.ArloIntegerKeyValues;
 						Array arArgument=Array.CreateInstance(tElements,arlArgument.Count);
 						for(int i=0;i<arlArgument.Count;i++) {
 							arArgument.SetValue(arlArgument[i],i);
@@ -1699,7 +1699,7 @@ namespace Meta {
 				}
 				else {
 					bool outblaParamConverted; // TODO: refactor with outblaConverted
-					object oResult=Interpreter.ConvertMetaToDotNet(ojMeta,tParameter,out outblaParamConverted);
+					object oResult=Interpreter.ConvertMetaToDotNet(oMeta,tParameter,out outblaParamConverted);
 					if(outblaParamConverted) {
 						return oResult;
 					}
@@ -1707,12 +1707,12 @@ namespace Meta {
 				outblaConverted=false;
 				return null;
 			}
-			public object ojCallOj(object ojArgument) {
+			public object oCallO(object oArgument) {
 				if(this.tTarget.Name.EndsWith("IndexerNoConversion") && this.sName.StartsWith("GetResultFromDelegate")) {
 					int asdf=0;
 				}
-				object ojReturn=null;
-				object ojResult=null;
+				object oReturn=null;
+				object oResult=null;
 				// TODO: this will have to be refactored, but later, after feature creep
 
 				// try to call with just one argument:
@@ -1725,24 +1725,24 @@ namespace Meta {
 				bool blaExecuted=false;
 				foreach(MethodBase mtbCurrent in arlOneArgumentMethods) {
 					bool blaConverted;
-					object ojParameter=ojConvertParameterOjTOutbla(ojArgument,mtbCurrent.GetParameters()[0].ParameterType,out blaConverted);
+					object oParameter=oConvertParameterOTOutbla(oArgument,mtbCurrent.GetParameters()[0].ParameterType,out blaConverted);
 					if(blaConverted) {
 						if(mtbCurrent is ConstructorInfo) {
-							ojReturn=((ConstructorInfo)mtbCurrent).Invoke(new object[] {ojParameter});
+							oReturn=((ConstructorInfo)mtbCurrent).Invoke(new object[] {oParameter});
 						}
 						else {
-							ojReturn=mtbCurrent.Invoke(ojTarget,new object[] {ojParameter});
+							oReturn=mtbCurrent.Invoke(oTarget,new object[] {oParameter});
 						}
 						blaExecuted=true;// remove, use blaArgumentsMatched instead
 						break;
 					}
 				}
 				if(!blaExecuted) {
-					ArrayList arlOArguments=((IMap)ojArgument).ArlojIntegerKeyValues;
+					ArrayList arlOArguments=((IMap)oArgument).ArloIntegerKeyValues;
 					ArrayList arlMtifRightNumberArguments=new ArrayList();
 					foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
 						if(arlOArguments.Count==mtbCurrent.GetParameters().Length) { // don't match if different parameter list length
-							if(arlOArguments.Count==((IMap)ojArgument).ArlojKeys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
+							if(arlOArguments.Count==((IMap)oArgument).ArloKeys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
 								arlMtifRightNumberArguments.Add(mtbCurrent);
 							}
 						}
@@ -1755,26 +1755,26 @@ namespace Meta {
 						bool blaArgumentsMatched=true;
 						ParameterInfo[] arPrmtifParameters=mtbCurrent.GetParameters();
 						for(int i=0;blaArgumentsMatched && i<arPrmtifParameters.Length;i++) {
-							arlArguments.Add(ojConvertParameterOjTOutbla(arlOArguments[i],arPrmtifParameters[i].ParameterType,out blaArgumentsMatched));
+							arlArguments.Add(oConvertParameterOTOutbla(arlOArguments[i],arPrmtifParameters[i].ParameterType,out blaArgumentsMatched));
 						}
 						if(blaArgumentsMatched) {
 							if(mtbCurrent is ConstructorInfo) {
-								ojReturn=((ConstructorInfo)mtbCurrent).Invoke(arlArguments.ToArray());
+								oReturn=((ConstructorInfo)mtbCurrent).Invoke(arlArguments.ToArray());
 							}
 							else {
-								ojReturn=mtbCurrent.Invoke(ojTarget,arlArguments.ToArray());
+								oReturn=mtbCurrent.Invoke(oTarget,arlArguments.ToArray());
 							}
 							blaExecuted=true;// remove, use blaArgumentsMatched instead
 							break;
 						}
 					}
 				}
-				// TODO: ojResult / ojReturn is duplication
-				ojResult=ojReturn; // mess, why is this here? put in else after the next if
-				if(ojResult==null) {
+				// TODO: oResult / oReturn is duplication
+				oResult=oReturn; // mess, why is this here? put in else after the next if
+				if(oResult==null) {
 					int asdf=0;
 				}
-				return Interpreter.ConvertDotNetToMeta(ojResult);
+				return Interpreter.ConvertDotNetToMeta(oResult);
 			}
 			/* Create a delegate of a certain tTarget that calls a Meta function. */
 			public static Delegate delFromF(Type tDelegate,MethodInfo mtifMethod,Map mCode) { // TODO: tDelegate, mtifMethode, redundant?
@@ -1806,7 +1806,7 @@ namespace Meta {
 				sArgumentList+=")";
 				sSource+=sArgumentList+"{";
 				sSource+=sArgumentAdding;
-				sSource+="object oResult=mCallable.ojCallOj(mArg);";
+				sSource+="object oResult=mCallable.oCallO(mArg);";
 				if(mtifMethod!=null) {
 					if(!mtifMethod.ReturnType.Equals(typeof(void))) {
 						sSource+="return ("+sReturnType+")";
@@ -1820,8 +1820,8 @@ namespace Meta {
 				sSource+="}";
 				sSource+="private Map mCallable;";
 				sSource+="public EventHandlerContainer(Map mCallable) {this.mCallable=mCallable;}}";
-				string ojMetaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
-				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",ojMetaDllLocation});
+				string oMetaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
+				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",oMetaDllLocation});
 				assemblyNames.AddRange(Interpreter.arlsLoadedAssemblies);
 				CompilerParameters  compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 				CompilerResults compilerResults=iCodeCompiler.CompileAssemblyFromSource(compilerParameters,sSource);
@@ -1835,9 +1835,9 @@ namespace Meta {
 					oContainer,"EventHandlerMethod");
 				return dlgResult;
 			}
-			private void nInitializeSOjT(string sName,object ojTarget,Type tTarget) {
+			private void nInitializeSOT(string sName,object oTarget,Type tTarget) {
 				this.sName=sName;
-				this.ojTarget=ojTarget;
+				this.oTarget=oTarget;
 				this.tTarget=tTarget;
 				ArrayList arlMtbMethods;
 				if(sName==".ctor") {
@@ -1856,16 +1856,16 @@ namespace Meta {
 				// research the number and nature of such arMtbOverloadedMethods as Console.WriteLine
 				arMtbOverloadedMethods=(MethodBase[])arlMtbMethods.ToArray(typeof(MethodBase));
 			}
-			public NetMethod(string name,object ojTarget,Type tTarget) {
-				this.nInitializeSOjT(name,ojTarget,tTarget);
+			public NetMethod(string name,object oTarget,Type tTarget) {
+				this.nInitializeSOT(name,oTarget,tTarget);
 			}
 			public NetMethod(Type tTarget) {
-				this.nInitializeSOjT(".ctor",null,tTarget);
+				this.nInitializeSOT(".ctor",null,tTarget);
 			}
-			public override bool Equals(object ojToCompare) {
-				if(ojToCompare is NetMethod) {
-					NetMethod nmtToCompare=(NetMethod)ojToCompare;
-					if(nmtToCompare.ojTarget==ojTarget && nmtToCompare.sName.Equals(sName) && nmtToCompare.tTarget.Equals(tTarget)) {
+			public override bool Equals(object oToCompare) {
+				if(oToCompare is NetMethod) {
+					NetMethod nmtToCompare=(NetMethod)oToCompare;
+					if(nmtToCompare.oTarget==oTarget && nmtToCompare.sName.Equals(sName) && nmtToCompare.tTarget.Equals(tTarget)) {
 						return true;
 					}
 					else {
@@ -1879,14 +1879,14 @@ namespace Meta {
 			public override int GetHashCode() {
 				unchecked {
 					int itgHash=sName.GetHashCode()*tTarget.GetHashCode();
-					if(ojTarget!=null) {
-						itgHash=itgHash*ojTarget.GetHashCode();
+					if(oTarget!=null) {
+						itgHash=itgHash*oTarget.GetHashCode();
 					}
 					return itgHash;
 				}
 			}
 			private string sName;
-			protected object ojTarget;
+			protected object oTarget;
 			protected Type tTarget;
 
 			public MethodBase[] arMtbOverloadedMethods;
@@ -1896,8 +1896,8 @@ namespace Meta {
 			public NetClass(Type type):base(null,type) {
 				this.nmtConstructor=new NetMethod(this.tType);
 			}
-			public object ojCallOj(object ojArgument) {
-				return nmtConstructor.ojCallOj(ojArgument);
+			public object oCallO(object oArgument) {
+				return nmtConstructor.oCallO(oArgument);
 			}
 		}
 		/* Representation of a .NET object. */
@@ -1910,7 +1910,7 @@ namespace Meta {
 		}
 		/* Base class for NetObject and NetClass. */
 		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial {
-			public bool BlaHasKeyOj(object oKey) {
+			public bool BlaHasKeyO(object oKey) {
 				if(oKey is Map) {
 					if(((Map)oKey).IsString) {
 						string sText=((Map)oKey).SDotNetString();
@@ -1924,7 +1924,7 @@ namespace Meta {
 				Map mArgument=new Map();
 				mArgument[new Integer(1)]=oKey;
 				try {
-					nmtIndexer.ojCallOj(mArgument);
+					nmtIndexer.oCallO(mArgument);
 					return true;
 				}
 				catch(Exception) {
@@ -1943,7 +1943,7 @@ namespace Meta {
 					kvlParent=value;
 				}
 			}
-			public ArrayList ArlojKeys {
+			public ArrayList ArloKeys {
 				get {
 					return new ArrayList(Table.Keys);
 				}
@@ -1983,7 +1983,7 @@ namespace Meta {
 					Map mArgument=new Map();
 					mArgument[new Integer(1)]=oKey;
 					try {
-						return nmtIndexer.ojCallOj(mArgument);
+						return nmtIndexer.oCallO(mArgument);
 					}
 					catch(Exception e) {
 						return null;
@@ -2001,13 +2001,13 @@ namespace Meta {
 								FieldInfo fifField=(FieldInfo)ambifMembers[0];
 								bool oConverted;
 								object oValue;
-								oValue=NetMethod.ojConvertParameterOjTOutbla(value,fifField.FieldType,out oConverted);
+								oValue=NetMethod.oConvertParameterOTOutbla(value,fifField.FieldType,out oConverted);
 								if(oConverted) {
 									fifField.SetValue(oObject,oValue);
 								}
 								if(!oConverted) {
 									if(value is Map) {
-										oValue=NetMethod.ojAssignCollectionMOjOutbla((Map)value,fifField.GetValue(oObject),out oConverted);
+										oValue=NetMethod.oAssignCollectionMOOutbla((Map)value,fifField.GetValue(oObject),out oConverted);
 									}
 								}
 								if(!oConverted) {
@@ -2019,16 +2019,16 @@ namespace Meta {
 							else if(ambifMembers[0] is PropertyInfo) {
 								PropertyInfo pptifProperty=(PropertyInfo)ambifMembers[0];
 								bool oConverted;
-								object oValue=NetMethod.ojConvertParameterOjTOutbla(value,pptifProperty.PropertyType,out oConverted);
+								object oValue=NetMethod.oConvertParameterOTOutbla(value,pptifProperty.PropertyType,out oConverted);
 								if(oConverted) {
 									pptifProperty.SetValue(oObject,oValue,new object[]{});
 								}
 								if(!oConverted) {
 									if(value is Map) {
-										NetMethod.ojAssignCollectionMOjOutbla((Map)value,pptifProperty.GetValue(oObject,new object[]{}),out oConverted);
+										NetMethod.oAssignCollectionMOOutbla((Map)value,pptifProperty.GetValue(oObject,new object[]{}),out oConverted);
 									}
 									if(!oConverted) {
-										throw new ApplicationException("Property "+this.tType.Name+"."+Interpreter.SaveToFileOjS(oKey,"",false)+" could not be set to "+value.ToString()+". The value can not be oConverted.");
+										throw new ApplicationException("Property "+this.tType.Name+"."+Interpreter.SaveToFileOS(oKey,"",false)+" could not be set to "+value.ToString()+". The value can not be oConverted.");
 									}
 								}
 								return;
@@ -2052,7 +2052,7 @@ namespace Meta {
 					mArgument[new Integer(1)]=oKey;
 					mArgument[new Integer(2)]=value;// do this more efficiently?
 					try {
-						nmtIndexer.ojCallOj(mArgument);
+						nmtIndexer.oCallO(mArgument);
 					}
 					catch(Exception e) {
 						throw new ApplicationException("Cannot set "+oKey.ToString()+".");

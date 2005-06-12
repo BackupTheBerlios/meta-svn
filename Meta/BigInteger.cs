@@ -51,7 +51,7 @@
 // to be caused, directly or indirectly, by the use of this Integer class.
 //
 // Comments, bugs and suggestions to
-// (http://www.codeproject.com/csharp/biginteger.asp)
+// (http://www.codeproect.com/csharp/biginteger.asp)
 //
 //
 // Overloaded Operators +, -, *, /, %, >>, <<, ==, !=, >, <, >=, <=, &, |, ^, ++, --, ~

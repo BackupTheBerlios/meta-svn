@@ -41,7 +41,7 @@ public class map {
 //	}
 	public static bool bHasKeyMO(Map map,object key) {
 		string a="";
-		return map.BlaHasKeyOj(key);
+		return map.BlaHasKeyO(key);
 	}
 	public static int iCountM(Map map) {
 		return map.ItgCount;
@@ -53,7 +53,7 @@ public class map {
 
 		Map result=new Map();
 		int counter=1;
-		foreach(object o in map.ArlojIntegerKeyValues) {
+		foreach(object o in map.ArloIntegerKeyValues) {
 			if(obj.Equals(o)) {
 				result[new Integer(counter)]=o;
 				counter++;
@@ -66,7 +66,7 @@ public class map {
 	}
 	public static int iCountStartMO(Map map,object obj) {
 		int count=0;
-		foreach(object o in map.ArlojIntegerKeyValues) {
+		foreach(object o in map.ArloIntegerKeyValues) {
 			if(obj.Equals(o)) {
 				count++;
 			}
@@ -87,11 +87,11 @@ public class map {
 	}
 //	[MetaLibraryMethod]
 	public static Map aJoinAa(Map arg) {
-		ArrayList maps=arg.ArlojIntegerKeyValues;
+		ArrayList maps=arg.ArloIntegerKeyValues;
 		int i=1;
 		Map combined=new Map();
 		foreach(Map map in maps) { // TODO: eigentlich nur die Arrays verwenden
-			foreach(object val in map.ArlojIntegerKeyValues) {
+			foreach(object val in map.ArloIntegerKeyValues) {
 				combined[new Integer(i)]=val;
 				i++;
 			}
@@ -100,7 +100,7 @@ public class map {
 	}
 //	[MetaLibraryMethod]
 	public static IKeyValue mMergeAm(Map arg) {
-		return (Map)Interpreter.MergeCollection(arg.ArlojIntegerKeyValues);
+		return (Map)Interpreter.MergeCollection(arg.ArloIntegerKeyValues);
 	}
 	public static object oWithOM(object obj,IMap map) {
 		NetObject netObject=new NetObject(obj);
@@ -123,7 +123,7 @@ public class map {
 	// TODO: remove the "storage" stuff, storage will be integrated into the Meta namespace
 //	public static Map storage(Map location) {
 //		string path="";
-//		foreach(Map loc in location.ArlojIntegerKeyValues) {
+//		foreach(Map loc in location.ArloIntegerKeyValues) {
 //			path=Path.Combine(path,((Map)loc).GetDotNetString());
 //		}
 //		return new Storage(path);
@@ -205,11 +205,11 @@ public class map {
 //	}
 //	[MetaLibraryMethod]
 //	public static Map concat() {
-//		ArrayList maps=arg.ArlojIntegerKeyValues;
+//		ArrayList maps=arg.ArloIntegerKeyValues;
 //		int i=1;
 //		Map combined=new Map();
 //		foreach(Map map in maps) {
-//			foreach(object val in map.ArlojIntegerKeyValues) {
+//			foreach(object val in map.ArloIntegerKeyValues) {
 //				combined[new Integer(i)]=val;
 //				i++;
 //			}
@@ -220,7 +220,7 @@ public class map {
 ////		int i=1;
 ////		Map combined=new Map();
 ////		foreach(Map map in maps) {
-////			foreach(object val in map.ArlojIntegerKeyValues) {
+////			foreach(object val in map.ArloIntegerKeyValues) {
 ////				combined[new Integer(i)]=val;
 ////				i++;
 ////			}
@@ -229,7 +229,7 @@ public class map {
 ////	}
 //	[MetaLibraryMethod]
 //	public static IKeyValue Merge() {
-//		return (Map)Interpreter.MergeCollection(arg.ArlojIntegerKeyValues);
+//		return (Map)Interpreter.MergeCollection(arg.ArloIntegerKeyValues);
 //	}
 //	public static object With(object obj,IMap map) {
 //		NetObject netObject=new NetObject(obj);
@@ -240,7 +240,7 @@ public class map {
 //	}
 //	[MetaLibraryMethod]
 //	public static Map GetStructure() {
-//		return GetTheStructure(arg.ArlojIntegerKeyValues);
+//		return GetTheStructure(arg.ArloIntegerKeyValues);
 ////		Map structure=new Map();
 ////		Hashtable keys=new Hashtable();
 ////		return structure;
@@ -255,8 +255,8 @@ public class map {
 //
 //	}
 //	public static Map FixStructure(Map map) {
-//		if(map.ArlojIntegerKeyValues.Count>0) {
-//			return GetTheStructure(map.ArlojIntegerKeyValues);
+//		if(map.ArloIntegerKeyValues.Count>0) {
+//			return GetTheStructure(map.ArloIntegerKeyValues);
 //		}
 //		else {
 //			foreach(DictionaryEntry entry in map) {
@@ -275,10 +275,10 @@ public class map {
 //		}
 //		return false;
 //	}
-////	private Map MergeArlojIntegerKeyValues(Map map) {
-////		ArrayList intKeyValues=map.ArlojIntegerKeyValues;
+////	private Map MergeArloIntegerKeyValues(Map map) {
+////		ArrayList intKeyValues=map.ArloIntegerKeyValues;
 ////		if(intKeyValues.Count>0) {
-////			foreach(object key in map.ArlojIntegerKeyValues) {
+////			foreach(object key in map.ArloIntegerKeyValues) {
 ////
 ////			}
 ////		}
@@ -297,12 +297,12 @@ public class map {
 ////		if(!hasChildren) {
 ////			return result;
 ////		}
-////		else if(result.ArlojIntegerKeyValues.Count>0)
-////			ArrayList intKeyValues=result.ArlojIntegerKeyValues;
+////		else if(result.ArloIntegerKeyValues.Count>0)
+////			ArrayList intKeyValues=result.ArloIntegerKeyValues;
 ////			for(int i=0;i<intKeyValues.Count;i++) {
 ////
 ////			}
-////			if(result.ArlojIntegerKeyValues.Count>0) {
+////			if(result.ArloIntegerKeyValues.Count>0) {
 ////			}
 ////		}
 ////	}

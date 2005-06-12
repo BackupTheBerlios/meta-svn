@@ -31,8 +31,8 @@ namespace Test {
 		public static string path="";
 		[STAThread]
 		public static void Main(string[] args) {
-			//args=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
-			//args=new string[]{@"C:\_ProjectSupportMaterial\Meta\library\function.meta"};
+			//args=new string[]{@"C:\_ProectSupportMaterial\Editor\editor.meta"};
+			//args=new string[]{@"C:\_ProectSupportMaterial\Meta\library\function.meta"};
 			//args=new string[]{@"C:\Dokumente und Einstellungen\Christian\Desktop\editor.meta"};
 			//args=new string[]{@"..\..\basicTest.meta"};
 //			try {

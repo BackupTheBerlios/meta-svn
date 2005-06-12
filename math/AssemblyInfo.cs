@@ -63,9 +63,9 @@ using System.Runtime.CompilerServices;
 //           in the KeyFile is installed into the CSP and used.
 //   (*) In order to create a KeyFile, you can use the sn.exe (Strong Name) utility.
 //       When specifying the KeyFile, the location of the KeyFile should be
-//       relative to the project output directory which is
-//       %Project Directory%\obj\<configuration>. For example, if your KeyFile is
-//       located in the project directory, you would specify the AssemblyKeyFile 
+//       relative to the proect output directory which is
+//       %Proect Directory%\obj\<configuration>. For example, if your KeyFile is
+//       located in the proect directory, you would specify the AssemblyKeyFile 
 //       attribute as [assembly: AssemblyKeyFile("..\\..\\mykey.snk")]
 //   (*) Delay Signing is an advanced option - see the Microsoft .NET Framework
 //       documentation for more information on this.
