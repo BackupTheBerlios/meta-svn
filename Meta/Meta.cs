@@ -1739,11 +1739,7 @@ namespace Meta {
 			private int iCurrent=-1;
 		}
 		public delegate object DelegateCreatedForGenericDelegates(); // TODO: rename?
-//		[AttributeUsage(AttributeTargets.Method)]
-//		public class MetaLibraryMethodAttribute:Attribute {
-//		}
 		public class NetMethod: ICallable {
-//			public bool blaLibraryMethod=false; // TODO: is this even needen anymore?
 			// TODO: Move this to "With" ? Move this to NetContainer?
 			public static object ojAssignCollectionMOjOutbla(Map mCollection,object ojCollection,out bool blaSuccess) { // TODO: is blaSuccess needed?
 				if(mCollection.ArlojIntegerKeyValues.Count==0) {
@@ -1764,26 +1760,6 @@ namespace Meta {
 
 				return ojCollection;
 			}
-//			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
-//
-//				if(map.ArlojIntegerKeyValues.Count==0) {
-//					assigned=false;
-//					return null;
-//				}
-//				Type tTarget=oldValue.GetType();
-//				MethodInfo method=tTarget.GetMethod("Add",new Type[]{map.ArlojIntegerKeyValues[0].GetType()});
-//				if(method!=null) {
-//					foreach(object val in map.ArlojIntegerKeyValues) { // combine this with Library function "Init"
-//						method.Invoke(oldValue,new object[]{val});//  call method from above!
-//					}
-//					assigned=true;
-//				}
-//				else {
-//					assigned=false;
-//				}
-//
-//				return oldValue;
-//			}
 			// TODO: finally invent a Meta tTarget??? Would be useful here for prefix to Meta,
 			// it isn't, after all just any object
 			public static object ojConvertParameterOjTOutbla(object ojMeta,Type tParameter,out bool outblaConverted) {
@@ -1941,9 +1917,8 @@ namespace Meta {
 				CompilerParameters  compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 				CompilerResults compilerResults=iCodeCompiler.CompileAssemblyFromSource(compilerParameters,sSource);
 				Type tContainer=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
-				object oContainer=oContainerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
+				object oContainer=tContainer.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
 																																			  mCode});
-//				MethodInfo mtifEventHandler=oContainer.GetType().GetMethod("EventHandlerMethod");
 				if(mtifMethod==null) {
 					tDelegate=typeof(DelegateCreatedForGenericDelegates);
 				}
@@ -1971,46 +1946,13 @@ namespace Meta {
 				// it. maybe restrict overloads, create preference arlMtbMethods, all quite complicated
 				// research the number and nature of such arMtbOverloadedMethods as Console.WriteLine
 				arMtbOverloadedMethods=(MethodBase[])arlMtbMethods.ToArray(typeof(MethodBase));
-//				if(arMtbOverloadedMethods.Length==1 && arMtbOverloadedMethods[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
-//					this.blaLibraryMethod=true;
-//				}
 			}
-//			private void Initialize(string name,object ojTarget,Type tTarget) {
-//				this.sName=name;
-//				this.ojTarget=ojTarget;
-//				this.tTarget=tTarget;
-//				ArrayList list;
-//				if(name==".ctor") {
-//					list=new ArrayList(tTarget.GetConstructors());
-//				}
-//				else {
-//					list=new ArrayList(tTarget.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
-//				}
-//				list.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
-//				// found out, it's for Console.WriteLine, where Console.WriteLine(object)
-//				// would otherwise come before Console.WriteLine(string)
-//				// not a good solution, though
-//
-//				// TODO: Get rid of this Reversion shit! Find a fix for this problem. Need to think about
-//				// it. maybe restrict overloads, create preference list, all quite complicated
-//				// research the number and nature of such arMtbOverloadedMethods as Console.WriteLine
-//				arMtbOverloadedMethods=(MethodBase[])list.ToArray(tTargetof(MethodBase));
-//				if(arMtbOverloadedMethods.Length==1 && arMtbOverloadedMethods[0].GetCustomAttributes(tTargetof(MetaLibraryMethodAttribute),false).Length!=0) {
-//					this.blaLibraryMethod=true;
-//				}
-//			}
 			public NetMethod(string name,object ojTarget,Type tTarget) {
 				this.nInitializeSOjT(name,ojTarget,tTarget);
 			}
-//			public NetMethod(string name,object ojTarget,Type tTarget) {
-//				this.Initialize(name,ojTarget,tTarget);
-//			}
 			public NetMethod(Type tTarget) {
 				this.nInitializeSOjT(".ctor",null,tTarget);
 			}
-//			public NetMethod(Type tTarget) {
-//				this.Initialize(".ctor",null,tTarget);
-//			}
 			public override bool Equals(object ojToCompare) {
 				if(ojToCompare is NetMethod) {
 					NetMethod nmtToCompare=(NetMethod)ojToCompare;
@@ -2025,15 +1967,6 @@ namespace Meta {
 					return false;
 				}
 			}
-//			public override bool Equals(object obj) {
-//				if(obj is NetMethod) {
-//					NetMethod method=(NetMethod)obj;
-//					if(method.ojTarget==ojTarget && method.sName.Equals(name) && method.tTarget.Equals(tTarget)) {
-//						return true;
-//					}
-//				}
-//				return false;
-//			}
 			public override int GetHashCode() {
 				unchecked {
 					int itgHash=sName.GetHashCode()*tTarget.GetHashCode();
@@ -2043,311 +1976,47 @@ namespace Meta {
 					return itgHash;
 				}
 			}
-//			public override int GetHashCode() {
-//				unchecked {
-//					int hash=name.GetHashCode()*tTarget.GetHashCode();
-//					if(ojTarget!=null) {
-//						hash=hash*ojTarget.GetHashCode();
-//					}
-//					return hash;
-//				}
-//			}
 			private string sName;
 			protected object ojTarget;
 			protected Type tTarget;
 
 			public MethodBase[] arMtbOverloadedMethods;
-
-//			private string name;
-//			protected object ojTarget;
-//			protected Type tTarget;
-//			public MethodBase[] arMtbOverloadedMethods;
-
 		}
-//		public class NetMethod: ICallable {
-//			public bool blaLibraryMethod=false;
-//			// TODO: Move this to "With" ? Move this to NetContainer?
-//			public static object DoModifiableCollectionAssignment(Map map,object oldValue,out bool assigned) {
-//
-//				if(map.ArlojIntegerKeyValues.Count==0) {
-//					assigned=false;
-//					return null;
-//				}
-//				Type type=oldValue.GetType();
-//				MethodInfo method=type.GetMethod("Add",new Type[]{map.ArlojIntegerKeyValues[0].GetType()});
-//				if(method!=null) {
-//					foreach(object val in map.ArlojIntegerKeyValues) { // combine this with Library function "Init"
-//						method.Invoke(oldValue,new object[]{val});//  call method from above!
-//					}
-//					assigned=true;
-//				}
-//				else {
-//					assigned=false;
-//				}
-//
-//				return oldValue;
-//			}
-//			public static object oConvertParameterOTypRb(object meta,Type parameter,out bool converted) {
-//				converted=true;
-//				if(parameter.IsAssignableFrom(meta.GetType())) {
-//					return meta;
-//				}
-//				else if((parameter.IsSubclassOf(typeof(Delegate))
-//					||parameter.Equals(typeof(Delegate))) && (meta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
-//					MethodInfo m=parameter.GetMethod("Invoke",BindingFlags.Instance
-//						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-//					Delegate del=CreateDelegate(parameter,m,(Map)meta);
-//					return del;
-//				}
-//				else if(parameter.IsArray && meta is IMap && ((Map)meta).ArlojIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
-//					try {
-//						Type arrayType=parameter.GetElementType();
-//						Map map=((Map)meta);
-//						ArrayList mapValues=map.ArlojIntegerKeyValues;
-//						Array array=Array.CreateInstance(arrayType,mapValues.Count);
-//						for(int i=0;i<mapValues.Count;i++) {
-//							array.SetValue(mapValues[i],i);
-//						}
-//						return array;
-//					}
-//					catch {
-//					}
-//				}
-//				else {
-//					bool isConverted; // TODO: refactor with converted
-//					object result=Interpreter.ConvertMetaToDotNet(meta,parameter,out isConverted);
-//					if(isConverted) {
-//						return result;
-//					}
-//				}
-//				converted=false;
-//				return null;
-//			}
-//			public object Call(object ojArgument) {
-//				if(this.name=="Write") {
-//					int asdf=0;
-//				}
-//				object result=null;
-//				// TODO: check this for every method:
-//				// introduce own methodinfo class? that does the calling, maybe??? dynamic cast might become a performance
-//				// problem, but I doubt it, so what?
-//				if(blaLibraryMethod) {
-//					if(methods[0] is ConstructorInfo) {
-//						// TODO: Comment this properly: kcall methods without arguments, ugly and redundant, because Invoke is not compatible between
-//						// constructor and normal method
-//						result=((ConstructorInfo)methods[0]).Invoke(new object[] {argument}); 
-//					}
-//					else {
-//						try {
-//							if(this.name=="while") {
-//								int asdf=0;
-//							}
-//							result=methods[0].Invoke(target,new object[] {argument});
-//						}
-//						catch {
-//							throw new ApplicationException("Could not invoke "+this.name+".");
-//						}
-//					}
-//				}
-//				else {
-//					ArrayList argumentList=((IMap)argument).ArlojIntegerKeyValues;
-//					object returnValue=null;
-//					ArrayList sameLengthMethods=new ArrayList();
-//					foreach(MethodBase method in methods) {
-//						if(argumentList.Count==method.GetParameters().Length) { // don't match if different parameter list length
-//							if(argumentList.Count==((IMap)argument).Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
-//								sameLengthMethods.Add(method);
-//							}
-//						}
-//					}
-//					bool executed=false;
-//					foreach(MethodBase method in sameLengthMethods) {
-//						ArrayList args=new ArrayList();
-//						bool argumentsMatched=true;
-//						ParameterInfo[] parameters=method.GetParameters();
-//						for(int i=0;argumentsMatched && i<parameters.Length;i++) {
-//							args.Add(oConvertParameterOTypRb(argumentList[i],parameters[i].ParameterType,out argumentsMatched));
-//						}
-//						if(argumentsMatched) {
-//							if(method is ConstructorInfo) {
-//								returnValue=((ConstructorInfo)method).Invoke(args.ToArray());
-//							}
-//							else {
-//								if(method.Name.Equals("Invoke")) {
-//									int asdf=0;
-//								}
-//								returnValue=method.Invoke(target,args.ToArray());
-//							}
-//							executed=true;// remove, use argumentsMatched instead
-//							break;
-//						}
-//					}
-//					result=returnValue; // mess, why is this here? put in else after the next if
-//					// make this safe
-//					if(!executed && methods[0] is ConstructorInfo) {
-//						object o=new NetMethod(type).Call(new Map());
-//						result=with(o,((Map)argument));
-//					}
-//				}		
-//				return Interpreter.ConvertDotNetToMeta(result);
-//			}
-//			// TODO: Refactor, include 
-//			public static object with(object obj,IMap map) {
-//				NetObject netObject=new NetObject(obj);
-//				foreach(DictionaryEntry entry in map) {
-//					netObject[entry.Key]=entry.Value;
-//				}
-//				return obj;
-//			}
-//			/* Create a delegate of a certain type that calls a Meta function. */
-//			public static Delegate CreateDelegate(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
-//				code.mParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
-//				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
-//				ICodeEpsCompileVr compiler=codeProvider.CreateEpsCompileVr();
-//				string returnTypeName;
-//				if(method==null) {
-//					returnTypeName="object";
-//				}
-//				else {
-//					returnTypeName=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
-//				}
-//				string source="using System;using Meta.Types;using Meta.Execution;";
-//				source+="public class EventHandlerContainer{public "+returnTypeName+" EventHandlerMethod";
-//				int counter=1;
-//				string argumentList="(";
-//				string argumentAdding="Map arg=new Map();";
-//				if(method!=null) {
-//					foreach(ParameterInfo parameter in method.GetParameters()) {
-//						argumentList+=parameter.ParameterType.FullName+" arg"+counter;
-//						argumentAdding+="arg[new Integer("+counter+")]=arg"+counter+";";
-//						if(counter<method.GetParameters().Length) {
-//							argumentList+=",";
-//						}
-//						counter++;
-//					}
-//				}
-//				argumentList+=")";
-//				source+=argumentList+"{";
-//				source+=argumentAdding;
-//				source+="object result=callable.Call(arg);";
-//				if(method!=null) {
-//					if(!method.ReturnType.Equals(typeof(void))) {
-//						source+="return ("+returnTypeName+")";
-//						source+="Interpreter.ConvertMetaToDotNet(result,typeof("+returnTypeName+"));"; // does conversion even make sense here? Must be converted back anyway.
-//					}
-//				}
-//				else {
-//					source+="return";
-//					source+=" result;";
-//				}
-//				source+="}";
-//				source+="private Map callable;";
-//				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-//				string metaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
-//				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
-//				assemblyNames.AddRange(Interpreter.arlsLoadedAssemblies);
-//				EpsCompileVrParameters options=new EpsCompileVrParameters((string[])assemblyNames.ToArray(typeof(string)));
-//				EpsCompileVrResults results=compiler.EpsCompileVAssemblyFromSource(options,source);
-//				Type containerClass=results.EpsCompileVdAssembly.GetType("EventHandlerContainer",true);
-//				object container=containerClass.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {
-//																																			  code});
-//				MethodInfo m=container.GetType().GetMethod("EventHandlerMethod");
-//				if(method==null) {
-//					delegateType=typeof(DelegateCreatedForGenericDelegates);
-//				}
-//				Delegate del=Delegate.CreateDelegate(delegateType,
-//				container,"EventHandlerMethod");
-//				return del;
-//			}
-//			private void Initialize(string name,object target,Type type) {
-//				this.name=name;
-//				this.target=target;
-//				this.type=type;
-//				ArrayList list;
-//				if(name==".ctor") {
-//					list=new ArrayList(type.GetConstructors());
-//				}
-//				else {
-//					list=new ArrayList(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
-//				}
-//				list.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
-//									 // found out, it's for Console.WriteLine, where Console.WriteLine(object)
-//									 // would otherwise come before Console.WriteLine(string)
-//									 // not a good solution, though
-//
-//									// TODO: Get rid of this Reversion shit! Find a fix for this problem. Need to think about
-//									// it. maybe restrict overloads, create preference list, all quite complicated
-//									// research the number and nature of such methods as Console.WriteLine
-//				methods=(MethodBase[])list.ToArray(typeof(MethodBase));
-//				if(methods.Length==1 && methods[0].GetCustomAttributes(typeof(MetaLibraryMethodAttribute),false).Length!=0) {
-//					this.blaLibraryMethod=true;
-//				}
-//			}
-//			public NetMethod(string name,object target,Type type) {
-//				this.Initialize(name,target,type);
-//			}
-//			public NetMethod(Type type) {
-//				this.Initialize(".ctor",null,type);
-//			}
-//			public override bool Equals(object obj) {
-//				if(obj is NetMethod) {
-//					NetMethod method=(NetMethod)obj;
-//					if(method.target==target && method.name.Equals(name) && method.type.Equals(type)) {
-//						return true;
-//					}
-//				}
-//				return false;
-//			}
-//			public override int GetHashCode() {
-//				unchecked {
-//					int hash=name.GetHashCode()*type.GetHashCode();
-//					if(target!=null) {
-//						hash=hash*target.GetHashCode();
-//					}
-//					return hash;
-//				}
-//			}
-//			private string name;
-//			protected object target;
-//			protected Type type;
-//			public MethodBase[] methods;
-//
-//		}
 		public class NetClass: NetContainer, IKeyValue,ICallable {
-			[DontSerializeFieldOrProperty]
-			public NetMethod constructor;
+			//[DontSerializeFieldOrProperty]
+			protected NetMethod nmtConstructor; // TODO: Why is this a NetMethod? Not really that good, I think. Might be better to separate the constructor stuff out from NetMethod.
 			public NetClass(Type type):base(null,type) {
-				this.constructor=new NetMethod(this.type);
+				this.nmtConstructor=new NetMethod(this.tType);
 			}
 			public object ojCallOj(object ojArgument) {
-				return constructor.ojCallOj(ojArgument);
+				return nmtConstructor.ojCallOj(ojArgument);
 			}
 		}
 		/* Representation of a .NET object. */
 		public class NetObject: NetContainer, IKeyValue {
-			public NetObject(object obj):base(obj,obj.GetType()) {
+			public NetObject(object oObject):base(oObject,oObject.GetType()) {
 			}
 			public override string ToString() {
-				return obj.ToString();
+				return oObject.ToString();
 			}
 		}
 		/* Base class for NetObject and NetClass. */
 		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial {
-			public bool BlaHasKeyOj(object key) {
-				if(key is Map) {
-					if(((Map)key).IsString) {
-						string text=((Map)key).SDotNetString();
-						if(type.GetMember((string)key,
+			public bool BlaHasKeyOj(object oKey) {
+				if(oKey is Map) {
+					if(((Map)oKey).IsString) {
+						string sText=((Map)oKey).SDotNetString();
+						if(tType.GetMember((string)oKey,
 							BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
 							return true;
 						}
 					}
 				}
-				NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
-				Map arguments=new Map();
-				arguments[new Integer(1)]=key;
+				NetMethod nmtIndexer=new NetMethod("get_Item",oObject,tType);
+				Map mArgument=new Map();
+				mArgument[new Integer(1)]=oKey;
 				try {
-					indexerMethod.ojCallOj(arguments);
+					nmtIndexer.ojCallOj(mArgument);
 					return true;
 				}
 				catch(Exception) {
@@ -2357,13 +2026,13 @@ namespace Meta {
 			public IEnumerator GetEnumerator() {
 				return Table.GetEnumerator();
 			}
-			// TODO: why does NetContainer have a parent when it isn't ever used?
+			// TODO: why does NetContainer have a kvlParent when it isn't ever used?
 			public IKeyValue Parent {
 				get {
-					return parent;
+					return kvlParent;
 				}
 				set {
-					parent=value;
+					kvlParent=value;
 				}
 			}
 			public ArrayList ArlojKeys {
@@ -2376,174 +2045,171 @@ namespace Meta {
 					return Table.Count;
 				}
 			}
-			public virtual object this[object key]  {
+			public virtual object this[object oKey]  {
 				get {
-					if(key is Map && ((Map)key).IsString) {
-						string text=((Map)key).SDotNetString();
-						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
-						if(members.Length>0) {
-							if(members[0] is MethodBase) {
-								return new NetMethod(text,obj,type);
+					if(oKey is Map && ((Map)oKey).IsString) {
+						string sText=((Map)oKey).SDotNetString();
+						MemberInfo[] ambifMembers=tType.GetMember(sText,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
+						if(ambifMembers.Length>0) {
+							if(ambifMembers[0] is MethodBase) {
+								return new NetMethod(sText,oObject,tType);
 							}
-							if(members[0] is FieldInfo) {
+							if(ambifMembers[0] is FieldInfo) {
 								// convert arrays to maps here?
-								return Interpreter.ConvertDotNetToMeta(type.GetField(text).GetValue(obj));
+								return Interpreter.ConvertDotNetToMeta(tType.GetField(sText).GetValue(oObject));
 							}
-							else if(members[0] is PropertyInfo) {
-								return Interpreter.ConvertDotNetToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
+							else if(ambifMembers[0] is PropertyInfo) {
+								return Interpreter.ConvertDotNetToMeta(tType.GetProperty(sText).GetValue(oObject,new object[]{}));
 							}
-							else if(members[0] is EventInfo) {
-								Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
-									BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
-								return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+							else if(ambifMembers[0] is EventInfo) {
+								Delegate dlgEvent=(Delegate)tType.GetField(sText,BindingFlags.Public|
+									BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(oObject);
+								return new NetMethod("Invoke",dlgEvent,dlgEvent.GetType());
 							}
 						}
 					}
-					if(this.obj!=null && key is Integer && this.type.IsArray) {
-						return Interpreter.ConvertDotNetToMeta(((Array)obj).GetValue(((Integer)key).Int)); // TODO: add error handling here
+					if(this.oObject!=null && oKey is Integer && this.tType.IsArray) {
+						return Interpreter.ConvertDotNetToMeta(((Array)oObject).GetValue(((Integer)oKey).Int)); // TODO: add error handling here
 					}
-					NetMethod indexerMethod=new NetMethod("get_Item",obj,type);
-					Map arguments=new Map();
-					arguments[new Integer(1)]=key;
+					NetMethod nmtIndexer=new NetMethod("get_Item",oObject,tType);
+					Map mArgument=new Map();
+					mArgument[new Integer(1)]=oKey;
 					try {
-						return indexerMethod.ojCallOj(arguments);
+						return nmtIndexer.ojCallOj(mArgument);
 					}
 					catch(Exception e) {
 						return null;
 					}
 				}
 				set {
-					if(key is Map && ((Map)key).IsString) {
-						string text=((Map)key).SDotNetString();
-						if(text.Equals("staticEvent")) {
-							int asdf=0;
-						}
-						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
-						if(members.Length>0) {
-							if(members[0] is MethodBase) {
-								throw new ApplicationException("Cannot set method "+key+".");
+					if(oKey is Map && ((Map)oKey).IsString) {
+						string sText=((Map)oKey).SDotNetString();
+						MemberInfo[] ambifMembers=tType.GetMember(sText,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
+						if(ambifMembers.Length>0) {
+							if(ambifMembers[0] is MethodBase) {
+								throw new ApplicationException("Cannot set mtifInvoke "+oKey+".");
 							}
-							else if(members[0] is FieldInfo) {
-								FieldInfo field=(FieldInfo)members[0];
-								bool converted;
-								object val;
-								val=NetMethod.ojConvertParameterOjTOutbla(value,field.FieldType,out converted);
-								if(converted) {
-									field.SetValue(obj,val);
+							else if(ambifMembers[0] is FieldInfo) {
+								FieldInfo fifField=(FieldInfo)ambifMembers[0];
+								bool oConverted;
+								object oValue;
+								oValue=NetMethod.ojConvertParameterOjTOutbla(value,fifField.FieldType,out oConverted);
+								if(oConverted) {
+									fifField.SetValue(oObject,oValue);
 								}
-								if(!converted) {
+								if(!oConverted) {
 									if(value is Map) {
-										val=NetMethod.ojAssignCollectionMOjOutbla((Map)value,field.GetValue(obj),out converted);
+										oValue=NetMethod.ojAssignCollectionMOjOutbla((Map)value,fifField.GetValue(oObject),out oConverted);
 									}
 								}
-								if(!converted) {
-									throw new ApplicationException("Field "+field.Name+"could not be assigned because it cannot be converted.");
+								if(!oConverted) {
+									throw new ApplicationException("Field "+fifField.Name+"could not be assigned because it cannot be oConverted.");
 								}
 								//TODO: refactor
 								return;
 							}
-							else if(members[0] is PropertyInfo) {
-								PropertyInfo property=(PropertyInfo)members[0];
-								bool converted;
-								object val=NetMethod.ojConvertParameterOjTOutbla(value,property.PropertyType,out converted);
-								if(converted) {
-									property.SetValue(obj,val,new object[]{});
+							else if(ambifMembers[0] is PropertyInfo) {
+								PropertyInfo pptifProperty=(PropertyInfo)ambifMembers[0];
+								bool oConverted;
+								object oValue=NetMethod.ojConvertParameterOjTOutbla(value,pptifProperty.PropertyType,out oConverted);
+								if(oConverted) {
+									pptifProperty.SetValue(oObject,oValue,new object[]{});
 								}
-								if(!converted) {
+								if(!oConverted) {
 									if(value is Map) {
-										NetMethod.ojAssignCollectionMOjOutbla((Map)value,property.GetValue(obj,new object[]{}),out converted);
+										NetMethod.ojAssignCollectionMOjOutbla((Map)value,pptifProperty.GetValue(oObject,new object[]{}),out oConverted);
 									}
-									if(!converted) {
-										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.SaveToFileOjS(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
+									if(!oConverted) {
+										throw new ApplicationException("Property "+this.tType.Name+"."+Interpreter.SaveToFileOjS(oKey,"",false)+" could not be set to "+value.ToString()+". The value can not be oConverted.");
 									}
 								}
 								return;
 							}
-							else if(members[0] is EventInfo) {
-								((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(Map)value));
+							else if(ambifMembers[0] is EventInfo) {
+								((EventInfo)ambifMembers[0]).AddEventHandler(oObject,CreateEvent(sText,(Map)value));
 								return;
 							}
 						}
 					}
-					if(obj!=null && key is Integer && type.IsArray) {
-						bool isConverted; 
-						object converted=Interpreter.ConvertMetaToDotNet(value,type.GetElementType(),out isConverted);
-						if(isConverted) {
-							((Array)obj).SetValue(converted,((Integer)key).Int);
+					if(oObject!=null && oKey is Integer && tType.IsArray) {
+						bool bConverted; 
+						object oConverted=Interpreter.ConvertMetaToDotNet(value,tType.GetElementType(),out bConverted);
+						if(bConverted) {
+							((Array)oObject).SetValue(oConverted,((Integer)oKey).Int);
 							return;
 						}
 					}
-					NetMethod indexer=new NetMethod("set_Item",obj,type);
-					Map arguments=new Map();
-					arguments[new Integer(1)]=key;
-					arguments[new Integer(2)]=value;// do this more efficiently?
+					NetMethod nmtIndexer=new NetMethod("set_Item",oObject,tType);
+					Map mArgument=new Map();
+					mArgument[new Integer(1)]=oKey;
+					mArgument[new Integer(2)]=value;// do this more efficiently?
 					try {
-						indexer.ojCallOj(arguments);
+						nmtIndexer.ojCallOj(mArgument);
 					}
 					catch(Exception e) {
-						throw new ApplicationException("Cannot set "+key.ToString()+".");
+						throw new ApplicationException("Cannot set "+oKey.ToString()+".");
 					}
 				}
 			}
-			public string Serialize(string indent,string[] functions) {
-				return indent;
+			public string Serialize(string sIndent,string[] functions) {
+				return sIndent;
 			}
-			public Delegate CreateEvent(string name,Map code) {
-				EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
+			public Delegate CreateEvent(string sName,Map mCode) {
+				EventInfo evifEvent=tType.GetEvent(sName,BindingFlags.Public|BindingFlags.NonPublic|
 															 BindingFlags.Static|BindingFlags.Instance);
-				MethodInfo method=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
+				MethodInfo mtifInvoke=evifEvent.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
 																						 |BindingFlags.Public|BindingFlags.NonPublic);
-				Delegate del=NetMethod.delFromF(eventInfo.EventHandlerType,method,code);
-				return del;
+				Delegate dlgEvent=NetMethod.delFromF(evifEvent.EventHandlerType,mtifInvoke,mCode);
+				return dlgEvent;
 			}
 			private IDictionary Table { // TODO: strange, what use is this
 				get {
-					HybridDictionary table=new HybridDictionary();
-					BindingFlags bindingFlags;
-					if(obj==null)  {
-						bindingFlags=BindingFlags.Public|BindingFlags.Static;
+					HybridDictionary hbdtrTable=new HybridDictionary();
+					BindingFlags bdfBinding;
+					if(oObject==null)  {
+						bdfBinding=BindingFlags.Public|BindingFlags.Static;
 					}
 					else  {
-						bindingFlags=BindingFlags.Public|BindingFlags.Instance;
+						bdfBinding=BindingFlags.Public|BindingFlags.Instance;
 					}
-					foreach(FieldInfo field in type.GetFields(bindingFlags)) {
-						table[new Map(field.Name)]=field.GetValue(obj);
+					foreach(FieldInfo fifField in tType.GetFields(bdfBinding)) {
+						hbdtrTable[new Map(fifField.Name)]=fifField.GetValue(oObject);
 					}
-					foreach(MethodInfo method in type.GetMethods(bindingFlags))  {
-						if(!method.IsSpecialName) {
-							table[new Map(method.Name)]=new NetMethod(method.Name,obj,type);
+					foreach(MethodInfo mtifInvoke in tType.GetMethods(bdfBinding))  {
+						if(!mtifInvoke.IsSpecialName) {
+							hbdtrTable[new Map(mtifInvoke.Name)]=new NetMethod(mtifInvoke.Name,oObject,tType);
 						}
 					}
-					foreach(PropertyInfo property in type.GetProperties(bindingFlags)) {
-						if(property.Name!="Item" && property.Name!="Chars") {
-							table[new Map(property.Name)]=property.GetValue(obj,new object[]{});
+					foreach(PropertyInfo pptifProperty in tType.GetProperties(bdfBinding)) {
+						if(pptifProperty.Name!="Item" && pptifProperty.Name!="Chars") {
+							hbdtrTable[new Map(pptifProperty.Name)]=pptifProperty.GetValue(oObject,new object[]{});
 						}
 					}
-					foreach(EventInfo eventInfo in type.GetEvents(bindingFlags)) {
-						table[new Map(eventInfo.Name)]=new NetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
+					foreach(EventInfo evifEvent in tType.GetEvents(bdfBinding)) {
+						hbdtrTable[new Map(evifEvent.Name)]=new NetMethod(evifEvent.GetAddMethod().Name,this.oObject,this.tType);
 					}
-					int counter=1;
-					if(obj!=null && obj is IEnumerable && !(obj is String)) { // is this useful?
-						foreach(object entry in (IEnumerable)obj) {
-							if(entry is DictionaryEntry) {
-								table[Interpreter.ConvertDotNetToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+					int iCounter=1;
+					if(oObject!=null && oObject is IEnumerable && !(oObject is String)) { // is this useful?
+						foreach(object oEntry in (IEnumerable)oObject) {
+							if(oEntry is DictionaryEntry) {
+								hbdtrTable[Interpreter.ConvertDotNetToMeta(((DictionaryEntry)oEntry).Key)]=((DictionaryEntry)oEntry).Value;
 							}
 							else {
-								table[new Integer(counter)]=entry;
-								counter++;
+								hbdtrTable[new Integer(iCounter)]=oEntry;
+								iCounter++;
 							}
 						}
 					}
-					return table;
+					return hbdtrTable;
 				}
 			}
-			public NetContainer(object obj,Type type) {
-				this.obj=obj;
-				this.type=type;
+			public NetContainer(object oObject,Type tType) {
+				this.oObject=oObject;
+				this.tType=tType;
 			}
-			private IKeyValue parent;
-			public object obj;
-			public Type type;
+			private IKeyValue kvlParent;
+			public object oObject;
+			public Type tType;
 		}
 	}
 	namespace Parser  {
