@@ -15,10 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "map", "map\map.csproj", "{F
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "function", "function\function.csproj", "{871AACBF-7043-4EC7-8778-5C5BA3AEEB01}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "logic", "logic\logic.csproj", "{8D3FEEEF-F7AC-4BCA-90B6-7923DAB85856}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -67,14 +63,6 @@ Global
 		{F11A192E-328D-471B-81A9-CADA027D31AD}.Release.Build.0 = Release|.NET
 		{F11A192E-328D-471B-81A9-CADA027D31AD}.Test.ActiveCfg = Release|.NET
 		{F11A192E-328D-471B-81A9-CADA027D31AD}.Test.Build.0 = Release|.NET
-		{871AACBF-7043-4EC7-8778-5C5BA3AEEB01}.Debug.ActiveCfg = Debug|.NET
-		{871AACBF-7043-4EC7-8778-5C5BA3AEEB01}.Debug.Build.0 = Debug|.NET
-		{871AACBF-7043-4EC7-8778-5C5BA3AEEB01}.Interactive.ActiveCfg = Release|.NET
-		{871AACBF-7043-4EC7-8778-5C5BA3AEEB01}.Interactive.Build.0 = Release|.NET
-		{871AACBF-7043-4EC7-8778-5C5BA3AEEB01}.Release.ActiveCfg = Release|.NET
-		{871AACBF-7043-4EC7-8778-5C5BA3AEEB01}.Release.Build.0 = Release|.NET
-		{871AACBF-7043-4EC7-8778-5C5BA3AEEB01}.Test.ActiveCfg = Release|.NET
-		{871AACBF-7043-4EC7-8778-5C5BA3AEEB01}.Test.Build.0 = Release|.NET
 		{8D3FEEEF-F7AC-4BCA-90B6-7923DAB85856}.Debug.ActiveCfg = Debug|.NET
 		{8D3FEEEF-F7AC-4BCA-90B6-7923DAB85856}.Debug.Build.0 = Debug|.NET
 		{8D3FEEEF-F7AC-4BCA-90B6-7923DAB85856}.Interactive.ActiveCfg = Release|.NET

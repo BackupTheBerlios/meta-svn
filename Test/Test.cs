@@ -105,7 +105,7 @@ namespace Test {
 		public class CompileToExpression:TestCase {
 			public override object RunTestCase() {
 				return Interpreter.mCompileS(Path.Combine(
-					Test.path,filename)).EpsCompileV();
+					Test.path,filename)).ECompile();
 			}
 		}
 		public class Execute:TestCase {

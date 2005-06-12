@@ -59,7 +59,7 @@ public class map {
 		}
 		return result;
 	}
-	public static int iCountStartMO(Map map,object obj) {
+	public static int iCountStartMO(Map map,object obj) { // TODO: dumb name
 		int count=0;
 		foreach(object o in map.AoIntegerKeyValues) {
 			if(obj.Equals(o)) {

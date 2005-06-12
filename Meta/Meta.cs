@@ -55,28 +55,23 @@ namespace Meta {
 		}
 		public class Call: Expression {
 			public override object OEvaluateM(IMap parent) {
-				object oArgument=epsArgument.OEvaluateM(parent);
+				object oArgument=eArgument.OEvaluateM(parent);
 				if(oArgument is IMap) {
 					oArgument=((IMap)oArgument).MClone();
 				}
-				return ((ICallable)epsCallable.OEvaluateM(parent)).oCallO(oArgument);
+				return ((ICallable)eCallable.OEvaluateM(parent)).oCallO(oArgument);
 			}
 			public static readonly Map sCall=new Map("call");
 			public static readonly Map sFunction=new Map("function");
 			public static readonly Map sArgument=new Map("argument");
-			public Call(Map obj) {
-				Map mCall=(Map)obj[sCall];
-				this.epsCallable=(Expression)((Map)mCall[sFunction]).EpsCompileV();
-				this.epsArgument=(Expression)((Map)mCall[sArgument]).EpsCompileV();
+			public Call(Map mCode) {
+				Map mCall=(Map)mCode[sCall];
+				this.eCallable=(Expression)((Map)mCall[sFunction]).ECompile();
+				this.eArgument=(Expression)((Map)mCall[sArgument]).ECompile();
 			}
-			public Expression epsArgument;
-			public Expression epsCallable;
+			public Expression eArgument;
+			public Expression eCallable;
 		}
-
-
-
-
-
 		public class Delayed: Expression {
 			public override object OEvaluateM(IMap mParent) {
 				Map mClone=mDelayed;
@@ -84,8 +79,8 @@ namespace Meta {
 				return mClone;
 			}
 			public static readonly Map sDelayed=new Map("delayed"); // TODO: maybe define my own type for this stuff?
-			public Delayed(Map code) {
-				this.mDelayed=(Map)code[sDelayed];
+			public Delayed(Map mCode) {
+				this.mDelayed=(Map)mCode[sDelayed];
 			}
 			public Map mDelayed;
 		}
@@ -98,22 +93,22 @@ namespace Meta {
 			}
 			public object OEvaluateM(IMap mParent,IMap mLocal) {
 				mLocal.MParent=mParent;
-				Interpreter.aMCallers.Add(mLocal);
-				for(int i=0;i<aSmStatements.Count;i++) {
+				Interpreter.amCallers.Add(mLocal);
+				for(int i=0;i<asmStatements.Count;i++) {
 					mLocal=(Map)Interpreter.OCurrent;
-					((Statement)aSmStatements[i]).VRealizeM(mLocal);
+					((Statement)asmStatements[i]).RealizeM(mLocal);
 				}
 				object oResult=Interpreter.OCurrent;
-				Interpreter.aMCallers.RemoveAt(Interpreter.aMCallers.Count-1);
+				Interpreter.amCallers.RemoveAt(Interpreter.amCallers.Count-1);
 				return oResult;
 			}
 			public static readonly Map sProgram=new Map("program");
 			public Program(Map mProgram) { // TODO: special Type for  callable maps?
 				foreach(Map mStatement in ((Map)mProgram[sProgram]).AoIntegerKeyValues) {
-					this.aSmStatements.Add(new Statement(mStatement)); // should we save the original maps instead of aSmStatements?
+					this.asmStatements.Add(new Statement(mStatement)); // should we save the original maps instead of asmStatements?
 				}
 			}
-			public readonly ArrayList aSmStatements=new ArrayList();
+			public readonly ArrayList asmStatements=new ArrayList();
 		}
 		public class Literal: Expression {
 			public override object OEvaluateM(IMap mParent) {
@@ -127,12 +122,12 @@ namespace Meta {
 		}
 		public class Search: Expression {
 			public Search(Map mSearch) {
-				this.epsKey=(Expression)((Map)mSearch[sSearch]).EpsCompileV();
+				this.eKey=(Expression)((Map)mSearch[sSearch]).ECompile();
 			}
-			public Expression epsKey;
+			public Expression eKey;
 			public static readonly Map sKey=new Map("key");
 			public override object OEvaluateM(IMap mParent) {
-				object oKey=epsKey.OEvaluateM(mParent);
+				object oKey=eKey.OEvaluateM(mParent);
 				IMap mSelected=mParent;
 				while(!mSelected.BlaHasKeyO(oKey)) {
 					mSelected=mSelected.MParent;
@@ -146,25 +141,25 @@ namespace Meta {
 		}
 
 		public class Select: Expression {
-			public ArrayList aEpsKeys=new ArrayList();
-			public Expression epsFirst;// TODO: maybe rename to srFirst -> it's a Search
+			public ArrayList aeKeys=new ArrayList();
+			public Expression eFirst;// TODO: maybe rename to srFirst -> it's a Search
 			public Select(Map code) {
-				ArrayList aMKeyExpressions=((Map)code[sSelect]).AoIntegerKeyValues;
-				epsFirst=(Expression)((Map)aMKeyExpressions[0]).EpsCompileV();
-				for(int i=1;i<aMKeyExpressions.Count;i++) {
-					aEpsKeys.Add(((Map)aMKeyExpressions[i]).EpsCompileV());
+				ArrayList amKeys=((Map)code[sSelect]).AoIntegerKeyValues;
+				eFirst=(Expression)((Map)amKeys[0]).ECompile();
+				for(int i=1;i<amKeys.Count;i++) {
+					aeKeys.Add(((Map)amKeys[i]).ECompile());
 				}
 			}
-			public override object OEvaluateM(IMap parent) {
-				object oSelected=epsFirst.OEvaluateM(parent);
-				for(int i=0;i<aEpsKeys.Count;i++) {
+			public override object OEvaluateM(IMap mParent) {
+				object oSelected=eFirst.OEvaluateM(mParent);
+				for(int iCurrent=0;iCurrent<aeKeys.Count;iCurrent++) {
 					if(!(oSelected is IKeyValue)) {
 						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
-					object k=((Expression)aEpsKeys[i]).OEvaluateM(parent);
-					oSelected=((IKeyValue)oSelected)[k];
+					object oKey=((Expression)aeKeys[iCurrent]).OEvaluateM(mParent);
+					oSelected=((IKeyValue)oSelected)[oKey];
 					if(oSelected==null) {
-						throw new KeyDoesNotExistException(k,this.EtExtent);
+						throw new KeyDoesNotExistException(oKey,this.EtExtent);
 					}
 				}
 				return oSelected;
@@ -173,21 +168,21 @@ namespace Meta {
 		}
 
 		public class Statement {
-			public void VRealizeM(IMap mParent) {
+			public void RealizeM(IMap mParent) {
 				object oSelected=mParent;
 				object oKey;
-				for(int i=0;i<aEpsKeys.Count-1;i++) {
-					oKey=((Expression)aEpsKeys[i]).OEvaluateM((IMap)mParent);
+				for(int i=0;i<aeKeys.Count-1;i++) {
+					oKey=((Expression)aeKeys[i]).OEvaluateM((IMap)mParent);
 					oSelected=((IKeyValue)oSelected)[oKey];
 					if(oSelected==null) {
-						throw new KeyDoesNotExistException(oKey,((Expression)aEpsKeys[i]).EtExtent);
+						throw new KeyDoesNotExistException(oKey,((Expression)aeKeys[i]).EtExtent);
 					}
 					if(!(oSelected is IKeyValue)) {
 						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
 				}
-				object oLastKey=((Expression)aEpsKeys[aEpsKeys.Count-1]).OEvaluateM((IMap)mParent);
-				object oValue=epsValue.OEvaluateM((IMap)mParent);
+				object oLastKey=((Expression)aeKeys[aeKeys.Count-1]).OEvaluateM((IMap)mParent);
+				object oValue=eValue.OEvaluateM((IMap)mParent);
 				if(oLastKey.Equals(Map.sThis)) {
 					if(oValue is Map) {
 						((Map)oValue).MParent=((Map)mParent).MParent;
@@ -204,12 +199,12 @@ namespace Meta {
 			}
 			public Statement(Map mStatement) {
 				foreach(Map key in ((Map)mStatement[sKey]).AoIntegerKeyValues) {
-					aEpsKeys.Add(key.EpsCompileV());
+					aeKeys.Add(key.ECompile());
 				}
-				this.epsValue=(Expression)((Map)mStatement[sValue]).EpsCompileV();
+				this.eValue=(Expression)((Map)mStatement[sValue]).ECompile();
 			}
-			public ArrayList aEpsKeys=new ArrayList();
-			public Expression epsValue;
+			public ArrayList aeKeys=new ArrayList();
+			public Expression eValue;
 
 
 			public static readonly Map sKey=new Map("key");
@@ -219,12 +214,12 @@ namespace Meta {
 	
 
 		public class Interpreter  {
-			public static void SaveToFileOS(object meta,string fileName) {
-				StreamWriter writer=new StreamWriter(fileName);
-				writer.Write(SaveToFileOS(meta,"",true).TrimEnd(new char[]{'\n'}));
-				writer.Close();
+			public static void SaveToFileOFn(object oMeta,string fnFile) {
+				StreamWriter swFile=new StreamWriter(fnFile);
+				swFile.Write(SaveToFileOFn(oMeta,"",true).TrimEnd(new char[]{'\n'}));
+				swFile.Close();
 			}
-			public static string SaveToFileOS(object oMeta,string sIndent,bool blaRightSide) {
+			public static string SaveToFileOFn(object oMeta,string sIndent,bool blaRightSide) {
 				if(oMeta is Map) {
 					string sText="";
 					Map mMap=(Map)oMeta;
@@ -238,7 +233,7 @@ namespace Meta {
 						if(!blaRightSide) {
 							sText+="(";
 							foreach(DictionaryEntry dtnretEntry in mMap) {
-								sText+='['+SaveToFileOS(dtnretEntry.Key,sIndent,true)+']'+'='+SaveToFileOS(dtnretEntry.Value,sIndent,true)+",";
+								sText+='['+SaveToFileOFn(dtnretEntry.Key,sIndent,true)+']'+'='+SaveToFileOFn(dtnretEntry.Value,sIndent,true)+",";
 							}
 							if(mMap.ItgCount!=0) {
 								sText=sText.Remove(sText.Length-1,1);
@@ -247,11 +242,11 @@ namespace Meta {
 						}
 						else {
 							foreach(DictionaryEntry dtnretEntry in mMap) {
-								sText+=sIndent+'['+SaveToFileOS(dtnretEntry.Key,sIndent,false)+']'+'=';
+								sText+=sIndent+'['+SaveToFileOFn(dtnretEntry.Key,sIndent,false)+']'+'=';
 								if(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ItgCount!=0 && !((Map)dtnretEntry.Value).IsString) {
 									sText+="\n";
 								}
-								sText+=SaveToFileOS(dtnretEntry.Value,sIndent+'\t',true);
+								sText+=SaveToFileOFn(dtnretEntry.Value,sIndent+'\t',true);
 								if(!(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ItgCount!=0 && !((Map)dtnretEntry.Value).IsString)) {
 									sText+="\n";
 								}
@@ -376,13 +371,13 @@ namespace Meta {
 			}
 			public static object OCurrent {
 				get {
-					if(aMCallers.Count==0) {
+					if(amCallers.Count==0) {
 						return null;
 					}
-					return aMCallers[aMCallers.Count-1];
+					return amCallers[amCallers.Count-1];
 				}
 				set {
-					aMCallers[aMCallers.Count-1]=value;
+					amCallers[amCallers.Count-1]=value;
 				}
 			}
 			public static object ConvertMetaToDotNet(object objMeta,Type tTarget,out bool outblaConverted) {
@@ -421,7 +416,7 @@ namespace Meta {
 				}
 			}
 			public static string sInstallationPath;
-			public static ArrayList aMCallers=new ArrayList();
+			public static ArrayList amCallers=new ArrayList();
 			public static Hashtable htmttdncvsToDotNetConversion=new Hashtable();
 			public static Hashtable htdntmtcvsToMetaConversions=new Hashtable();
 			public static ArrayList asLoadedAssemblies=new ArrayList();
@@ -864,7 +859,7 @@ namespace Meta {
 					sMessage+=((Map)key).SDotNetString();
 				}
 				else if(key is Map) {
-					sMessage+=Interpreter.SaveToFileOS(key,"",true);
+					sMessage+=Interpreter.SaveToFileOFn(key,"",true);
 				}
 				else {
 					sMessage+=key;
@@ -1111,7 +1106,7 @@ namespace Meta {
 				}
 				
 				mCache=LoadNamespaces(aasbAssemblies);
-				Interpreter.SaveToFileOS(mCachedAssemblyInfo,fnCachedAssemblyInfo);
+				Interpreter.SaveToFileOFn(mCachedAssemblyInfo,fnCachedAssemblyInfo);
 				foreach(string fnCurrentMeta in Directory.GetFiles(sLibraryPath,"*.meta")) {
 					mCache[new Map(Path.GetFileNameWithoutExtension(fnCurrentMeta))]=new MetaLibrary(fnCurrentMeta);
 				}
@@ -1281,14 +1276,14 @@ namespace Meta {
 				}
 			}
 			public object Execute() { // TODO: Rename to evaluate
-				Expression eFunction=(Expression)EpsCompileV();
+				Expression eFunction=(Expression)ECompile();
 				object oResult;
 				oResult=eFunction.OEvaluateM(this);
 				return oResult;
 			}
 			public object oCallO(object oArgument) {
 				this.Argument=oArgument;
-				Expression eFunction=(Expression)((Map)this[Expression.sRun]).EpsCompileV();
+				Expression eFunction=(Expression)((Map)this[Expression.sRun]).ECompile();
 				object oResult;
 				oResult=eFunction.OEvaluateM(this);
 				return oResult;
@@ -1305,7 +1300,7 @@ namespace Meta {
 				mClone.EtExtent=EtExtent;
 				return mClone;
 			}
-			public Expression EpsCompileV()  { // eCompiled Statements are not cached, only expressions
+			public Expression ECompile()  { // eCompiled Statements are not cached, only expressions
 				if(eCompiled==null)  {
 					if(this.BlaHasKeyO(Meta.Execution.Call.sCall)) {
 						eCompiled=new Call(this);
@@ -1778,7 +1773,7 @@ namespace Meta {
 			}
 			/* Create a delegate of a certain tTarget that calls a Meta function. */
 			public static Delegate delFromF(Type tDelegate,MethodInfo mtifMethod,Map mCode) { // TODO: tDelegate, mtifMethode, redundant?
-				mCode.MParent=(IMap)Interpreter.aMCallers[Interpreter.aMCallers.Count-1];
+				mCode.MParent=(IMap)Interpreter.amCallers[Interpreter.amCallers.Count-1];
 				CSharpCodeProvider mCodeProvider=new CSharpCodeProvider();
 				ICodeCompiler iCodeCompiler=mCodeProvider.CreateCompiler();
 				string sReturnType;
@@ -2028,7 +2023,7 @@ namespace Meta {
 										NetMethod.oAssignCollectionMOOutbla((Map)value,pptifProperty.GetValue(oObject,new object[]{}),out oConverted);
 									}
 									if(!oConverted) {
-										throw new ApplicationException("Property "+this.tType.Name+"."+Interpreter.SaveToFileOS(oKey,"",false)+" could not be set to "+value.ToString()+". The value can not be oConverted.");
+										throw new ApplicationException("Property "+this.tType.Name+"."+Interpreter.SaveToFileOFn(oKey,"",false)+" could not be set to "+value.ToString()+". The value can not be oConverted.");
 									}
 								}
 								return;
