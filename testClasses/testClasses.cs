@@ -87,9 +87,9 @@ namespace testClasses
 			def[new Map("y")]=new Map("null");
 			def[new Map("p2")]=new Map("null");
 			arg=(Map)Interpreter.Merge(def,arg);
-			this.x=(string)((Map)arg[new Integer(1)]).SDotNetStringV();
-			this.y=(string)((Map)arg[new Map("y")]).SDotNetStringV();
-			this.z=(string)((Map)arg[new Map("p2")]).SDotNetStringV();
+			this.x=(string)((Map)arg[new Integer(1)]).SDotNetString();
+			this.y=(string)((Map)arg[new Map("y")]).SDotNetString();
+			this.z=(string)((Map)arg[new Map("p2")]).SDotNetString();
 		}
 //		[MetaLibraryMethod]
 		public string Concatenate(Map arg) {
@@ -98,9 +98,9 @@ namespace testClasses
 			def[new Map("b")]=new Map("null");
 			def[new Map("c")]=new Map("null");
 			arg=(Map)Interpreter.Merge(def,arg);
-			return (string)((Map)arg[new Integer(1)]).SDotNetStringV()+
-				(string)((Map)arg[new Map("b")]).SDotNetStringV()+
-				(string)((Map)arg[new Map("c")]).SDotNetStringV()+
+			return (string)((Map)arg[new Integer(1)]).SDotNetString()+
+				(string)((Map)arg[new Map("b")]).SDotNetString()+
+				(string)((Map)arg[new Map("c")]).SDotNetString()+
 				this.x+this.y+this.z;
 		}
 	}

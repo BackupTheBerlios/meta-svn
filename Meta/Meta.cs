@@ -140,7 +140,7 @@ namespace Meta {
 			}
 			public static readonly Map sLiteral=new Map("literal");
 			public Literal(Map code) {
-				this.ojLiteral=Interpreter.OjRecognizeLiteralS((string)((Map)code[sLiteral]).SDotNetStringV());
+				this.ojLiteral=Interpreter.OjRecognizeLiteralS((string)((Map)code[sLiteral]).SDotNetString());
 			}
 			public object ojLiteral=null;
 		}
@@ -240,17 +240,17 @@ namespace Meta {
 	
 
 		public class Interpreter  {
-			public static void VSaveToFileOjS(object meta,string fileName) {
+			public static void SaveToFileOjS(object meta,string fileName) {
 				StreamWriter writer=new StreamWriter(fileName);
-				writer.Write(VSaveToFileOjS(meta,"",true).TrimEnd(new char[]{'\n'}));
+				writer.Write(SaveToFileOjS(meta,"",true).TrimEnd(new char[]{'\n'}));
 				writer.Close();
 			}
-			public static string VSaveToFileOjS(object ojMeta,string sIndent,bool blaRightSide) {
+			public static string SaveToFileOjS(object ojMeta,string sIndent,bool blaRightSide) {
 				if(ojMeta is Map) {
 					string sText="";
 					Map mMap=(Map)ojMeta;
 					if(mMap.IsString) {
-						sText+="\""+(mMap).SDotNetStringV()+"\"";
+						sText+="\""+(mMap).SDotNetString()+"\"";
 					}
 					else if(mMap.ItgCount==0) {
 						sText+="()";
@@ -259,7 +259,7 @@ namespace Meta {
 						if(!blaRightSide) {
 							sText+="(";
 							foreach(DictionaryEntry dtnretEntry in mMap) {
-								sText+='['+VSaveToFileOjS(dtnretEntry.Key,sIndent,true)+']'+'='+VSaveToFileOjS(dtnretEntry.Value,sIndent,true)+",";
+								sText+='['+SaveToFileOjS(dtnretEntry.Key,sIndent,true)+']'+'='+SaveToFileOjS(dtnretEntry.Value,sIndent,true)+",";
 							}
 							if(mMap.ItgCount!=0) {
 								sText=sText.Remove(sText.Length-1,1);
@@ -268,11 +268,11 @@ namespace Meta {
 						}
 						else {
 							foreach(DictionaryEntry dtnretEntry in mMap) {
-								sText+=sIndent+'['+VSaveToFileOjS(dtnretEntry.Key,sIndent,false)+']'+'=';
+								sText+=sIndent+'['+SaveToFileOjS(dtnretEntry.Key,sIndent,false)+']'+'=';
 								if(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ItgCount!=0 && !((Map)dtnretEntry.Value).IsString) {
 									sText+="\n";
 								}
-								sText+=VSaveToFileOjS(dtnretEntry.Value,sIndent+'\t',true);
+								sText+=SaveToFileOjS(dtnretEntry.Value,sIndent+'\t',true);
 								if(!(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ItgCount!=0 && !((Map)dtnretEntry.Value).IsString)) {
 									sText+="\n";
 								}
@@ -337,7 +337,7 @@ namespace Meta {
 					return ((Integer)ojMeta).Int;
 				}
 				else if(ojMeta is Map && ((Map)ojMeta).IsString) {
-					return ((Map)ojMeta).SDotNetStringV();
+					return ((Map)ojMeta).SDotNetString();
 				}
 				else {
 					return ojMeta;
@@ -369,7 +369,7 @@ namespace Meta {
 				//				mProgram.mParent=Library.library;
 				Map mProgram=Interpreter.mCompileS(sFileName);
 
-				return CallProgram(mProgram,mArgument,Library.library);
+				return CallProgram(mProgram,mArgument,Library.lbrLibrary);
 			}
 
 			public static object RunWithoutLibrary(string sFileName,IMap mArgument) { // TODO: refactor, combine with Run
@@ -492,7 +492,7 @@ namespace Meta {
 			public static Hashtable htmttdncvsToDotNetConversion=new Hashtable();
 			public static Hashtable htdntmtcvsToMetaConversions=new Hashtable();
 //			public static ArrayList compiledMaps=new ArrayList(); 
-			public static ArrayList arlasbLoadedAssemblies=new ArrayList();
+			public static ArrayList arlsLoadedAssemblies=new ArrayList();
 
 			private static ArrayList arlrcnltrLiteralRecognitions=new ArrayList();
 
@@ -750,7 +750,7 @@ namespace Meta {
 					public override object Convert(object ojToConvert, out bool outblaConverted) {
 						if(((Map)ojToConvert).IsString) {
 							outblaConverted=true;
-							return ((Map)ojToConvert).SDotNetStringV();
+							return ((Map)ojToConvert).SDotNetString();
 						}
 						else {
 							outblaConverted=false;
@@ -942,10 +942,10 @@ namespace Meta {
 			public KeyException(object key,Extent extent):base(extent) {
 				sMessage="Key ";
 				if(key is Map && ((Map)key).IsString) {
-					sMessage+=((Map)key).SDotNetStringV();
+					sMessage+=((Map)key).SDotNetString();
 				}
 				else if(key is Map) {
-					sMessage+=Interpreter.VSaveToFileOjS(key,"",true);
+					sMessage+=Interpreter.SaveToFileOjS(key,"",true);
 				}
 				else {
 					sMessage+=key;
@@ -1084,28 +1084,28 @@ namespace Meta {
 		/* The library namespace, containing both Meta libraries as well as .NET libraries
 		 *  from the "library" path and the GAC. */
 		public class Library: IKeyValue,IMap {
-			public object this[object key] {
+			public object this[object ojKey] {
 				get {
-//					if(key.Equals(new Map("map"))) {
+//					if(ojKey.Equals(new Map("map"))) {
 //						int asdf=0;
 //					}
-					if(cash.BlaHasKeyOj(key)) {
-						if(cash[key] is MetaLibrary) {
-							cash[key]=((MetaLibrary)cash[key]).OjLoad();
+					if(mCache.BlaHasKeyOj(ojKey)) {
+						if(mCache[ojKey] is MetaLibrary) {
+							mCache[ojKey]=((MetaLibrary)mCache[ojKey]).OjLoad();
 						}
-						return cash[key];
+						return mCache[ojKey];
 					}
 					else {
 						return null;
 					}
 				}
 				set {
-					throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
+					throw new ApplicationException("Cannot set ojKey "+ojKey.ToString()+" in library.");
 				}
 			}
 			public ArrayList ArlojKeys {
 				get {
-					return cash.ArlojKeys;
+					return mCache.ArlojKeys;
 				}
 			}
 			public IMap MClone() {
@@ -1113,11 +1113,11 @@ namespace Meta {
 			}
 			public int ItgCount {
 				get {
-					return cash.ItgCount;
+					return mCache.ItgCount;
 				}
 			}
-			public bool BlaHasKeyOj(object key) {
-				return cash.BlaHasKeyOj(key);
+			public bool BlaHasKeyOj(object ojKey) {
+				return mCache.BlaHasKeyOj(ojKey);
 			}
 			public ArrayList ArlojIntegerKeyValues {
 				get {
@@ -1133,146 +1133,145 @@ namespace Meta {
 				}
 			}
 			public IEnumerator GetEnumerator() { 
-				foreach(DictionaryEntry entry in cash) { // TODO: create separate enumerator for efficiency?
-					object o=cash[entry.Key];				  // or remove IEnumerable from IMap (only needed for foreach)
+				foreach(DictionaryEntry dtretEntry in mCache) { // TODO: create separate enumerator for efficiency?
+					object ojTemporary=mCache[dtretEntry.Key];				  // or remove IEnumerable from IMap (only needed for foreach)
 				}														// decide later
-				return cash.GetEnumerator();
+				return mCache.GetEnumerator();
 			}
-			public static Map LoadAssemblies(IEnumerable assemblies) {
-				Map root=new Map();
-				foreach(Assembly assembly in assemblies) {
-					foreach(Type type in assembly.GetExportedTypes())  {
-						if(type.DeclaringType==null)  {
-							Map position=root;
-							ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
-							subPaths.RemoveAt(subPaths.Count-1);
-							foreach(string subPath in subPaths)  {
-								if(!position.BlaHasKeyOj(new Map(subPath)))  {
-									position[new Map(subPath)]=new Map();
+			public static Map LoadAssemblies(IEnumerable enmrbasbAssmblies) {
+				Map mRoot=new Map();
+				foreach(Assembly asbCurrent in enmrbasbAssmblies) {
+					foreach(Type tCurrent in asbCurrent.GetExportedTypes())  {
+						if(tCurrent.DeclaringType==null)  {
+							Map mPosition=mRoot;
+							ArrayList arlsSubPaths=new ArrayList(tCurrent.FullName.Split('.'));
+							arlsSubPaths.RemoveAt(arlsSubPaths.Count-1);
+							foreach(string sSubPath in arlsSubPaths)  {
+								if(!mPosition.BlaHasKeyOj(new Map(sSubPath)))  {
+									mPosition[new Map(sSubPath)]=new Map();
 								}
-								position=(Map)position[new Map(subPath)];
+								mPosition=(Map)mPosition[new Map(sSubPath)];
 							}
-							position[new Map(type.Name)]=new NetClass(type);
+							mPosition[new Map(tCurrent.Name)]=new NetClass(tCurrent);
 						}
 					}
-					Interpreter.arlasbLoadedAssemblies.Add(assembly.Location);
+					Interpreter.arlsLoadedAssemblies.Add(asbCurrent.Location);
 				}
-				return root;
+				return mRoot;
 			}
-			private static AssemblyName GetAssemblyName(IAssemblyName nameRef) {
-				AssemblyName name = new AssemblyName();
-				name.Name = AssemblyCache.GetName(nameRef);
-				name.Version = AssemblyCache.GetVersion(nameRef);
-				name.CultureInfo = AssemblyCache.GetCulture(nameRef);
-				name.SetPublicKeyToken(AssemblyCache.GetPublicKeyToken(nameRef));
-				return name;
+			private static AssemblyName GetAssemblyName(IAssemblyName iasbnName) {
+				AssemblyName asbnName = new AssemblyName();
+				asbnName.Name = AssemblyCache.GetName(iasbnName);
+				asbnName.Version = AssemblyCache.GetVersion(iasbnName);
+				asbnName.CultureInfo = AssemblyCache.GetCulture(iasbnName);
+				asbnName.SetPublicKeyToken(AssemblyCache.GetPublicKeyToken(iasbnName));
+				return asbnName;
 			}
 			public Library() {
-				ArrayList assemblies=new ArrayList();
-				libraryPath=Path.Combine(Interpreter.sInstallationPath,"library");
-				IAssemblyEnum ae=AssemblyCache.CreateGACEnum();
-				IAssemblyName an; 
-				AssemblyName name;
-				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
-				while (AssemblyCache.GetNextAssembly(ae, out an) == 0) {
+				ArrayList arlasbAssemblies=new ArrayList();
+				sLibraryPath=Path.Combine(Interpreter.sInstallationPath,"library");
+				IAssemblyEnum iasbenAssemblyEnum=AssemblyCache.CreateGACEnum();
+				IAssemblyName iasbnName; 
+				AssemblyName asbnName;
+				arlasbAssemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
+				while (AssemblyCache.GetNextAssembly(iasbenAssemblyEnum, out iasbnName) == 0) {
 					try {
-						name=GetAssemblyName(an);
-						assemblies.Add(Assembly.LoadWithPartialName(name.Name));
+						asbnName=GetAssemblyName(iasbnName);
+						arlasbAssemblies.Add(Assembly.LoadWithPartialName(asbnName.Name));
 					}
 					catch(Exception e) {
 						//Console.WriteLine("Could not load gac assembly :"+System.GAC.AssemblyCache.GetName(an));
 					}
 				}
-				foreach(string fileName in Directory.GetFiles(libraryPath,"*.dll")) {
-					assemblies.Add(Assembly.LoadFrom(fileName));
+				foreach(string fnCurrentDll in Directory.GetFiles(sLibraryPath,"*.dll")) {
+					arlasbAssemblies.Add(Assembly.LoadFrom(fnCurrentDll));
 				}
-				foreach(string fileName in Directory.GetFiles(libraryPath,"*.exe")) {
-					assemblies.Add(Assembly.LoadFrom(fileName));
+				foreach(string fnCurrentExe in Directory.GetFiles(sLibraryPath,"*.exe")) {
+					arlasbAssemblies.Add(Assembly.LoadFrom(fnCurrentExe));
 				}
-				string infoFileName=Path.Combine(Interpreter.sInstallationPath,"assemblyInfo.meta"); // TODO: Use another name that doesn't collide with C# meaning
-				if(File.Exists(infoFileName)) {
-					assemblyInfo=(Map)Interpreter.RunWithoutLibrary(infoFileName,new Map());
+				string fnCachedAssemblyInfo=Path.Combine(Interpreter.sInstallationPath,"mCachedAssemblyInfo.meta"); // TODO: Use another asbnName that doesn't collide with C# meaning
+				if(File.Exists(fnCachedAssemblyInfo)) {
+					mCachedAssemblyInfo=(Map)Interpreter.RunWithoutLibrary(fnCachedAssemblyInfo,new Map());
 				}
 				
-				cash=LoadNamespaces(assemblies);
-				Interpreter.VSaveToFileOjS(assemblyInfo,infoFileName);
-				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
-					cash[new Map(Path.GetFileNameWithoutExtension(fileName))]=new MetaLibrary(fileName);
+				mCache=LoadNamespaces(arlasbAssemblies);
+				Interpreter.SaveToFileOjS(mCachedAssemblyInfo,fnCachedAssemblyInfo);
+				foreach(string fnCurrentMeta in Directory.GetFiles(sLibraryPath,"*.meta")) {
+					mCache[new Map(Path.GetFileNameWithoutExtension(fnCurrentMeta))]=new MetaLibrary(fnCurrentMeta);
 				}
 			}
-			private Map assemblyInfo=new Map();
-			public ArrayList GetNamespaces(Assembly assembly) { //refactor, integrate into LoadNamespaces???
-				ArrayList namespaces=new ArrayList();
-				if(assemblyInfo.BlaHasKeyOj(new Map(assembly.Location))) {
-					Map info=(Map)assemblyInfo[new Map(assembly.Location)];
-					string timestamp=((Map)info[new Map("timestamp")]).SDotNetStringV();
-					if(timestamp.Equals(File.GetCreationTime(assembly.Location).ToString())) {
-						Map names=(Map)info[new Map("namespaces")];
-						foreach(DictionaryEntry entry in names) {
-							string text=((Map)entry.Value).SDotNetStringV();
-							namespaces.Add(text);
+			private Map mCachedAssemblyInfo=new Map();
+			public ArrayList GetNamespaces(Assembly asbAssembly) { //refactor, integrate into LoadNamespaces???
+				ArrayList arlsNamespaces=new ArrayList();
+				if(mCachedAssemblyInfo.BlaHasKeyOj(new Map(asbAssembly.Location))) {
+					Map info=(Map)mCachedAssemblyInfo[new Map(asbAssembly.Location)];
+					string sTimeStamp=((Map)info[new Map("timestamp")]).SDotNetString();
+					if(sTimeStamp.Equals(File.GetCreationTime(asbAssembly.Location).ToString())) {
+						Map mNamespaces=(Map)info[new Map("namespaces")];
+						foreach(DictionaryEntry dtretEntry in mNamespaces) {
+							string text=((Map)dtretEntry.Value).SDotNetString();
+							arlsNamespaces.Add(text);
 						}
-						return namespaces;
+						return arlsNamespaces;
 					}
 				}
-				foreach(Type type in assembly.GetExportedTypes()) {
-					if(!namespaces.Contains(type.Namespace)) {
-						if(type.Namespace==null) {
-							if(!namespaces.Contains("")) {
-								namespaces.Add("");
+				foreach(Type tType in asbAssembly.GetExportedTypes()) {
+					if(!arlsNamespaces.Contains(tType.Namespace)) {
+						if(tType.Namespace==null) {
+							if(!arlsNamespaces.Contains("")) {
+								arlsNamespaces.Add("");
 							}
 						}
 						else {
-							namespaces.Add(type.Namespace);
+							arlsNamespaces.Add(tType.Namespace);
 						}
 					}
 				}
-				Map assemblyInfoMap=new Map();
-				Map nameSpaceMap=new Map();
+				Map mCachedAssemblyInfoMap=new Map();
+				Map mNamespace=new Map();
 				Integer counter=new Integer(0);
-				foreach(string na in namespaces) {
-					nameSpaceMap[counter]=new Map(na);
+				foreach(string na in arlsNamespaces) {
+					mNamespace[counter]=new Map(na);
 					counter++;
 				}
-				assemblyInfoMap[new Map("namespaces")]=nameSpaceMap;
-				assemblyInfoMap[new Map("timestamp")]=new Map(
-					File.GetCreationTime(assembly.Location).ToString());
-				assemblyInfo[new Map(assembly.Location)]=assemblyInfoMap;
-				return namespaces;
+				mCachedAssemblyInfoMap[new Map("namespaces")]=mNamespace;
+				mCachedAssemblyInfoMap[new Map("timestamp")]=new Map(File.GetCreationTime(asbAssembly.Location).ToString());
+				mCachedAssemblyInfo[new Map(asbAssembly.Location)]=mCachedAssemblyInfoMap;
+				return arlsNamespaces;
 			}
-			public Map LoadNamespaces(ArrayList assemblies) {
-				LazyNamespace root=new LazyNamespace("");
-				foreach(Assembly assembly in assemblies) {
-					ArrayList names=GetNamespaces(assembly);
-					CachedAssembly cachedAssembly=new CachedAssembly(assembly);
-					foreach(string name in names) {
-						LazyNamespace selected=root;
-						if(name=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.sInstallationPath,"library"))) {
+			public Map LoadNamespaces(ArrayList arlasbAssemblies) {
+				LazyNamespace lznsRoot=new LazyNamespace("");
+				foreach(Assembly assembly in arlasbAssemblies) {
+					ArrayList arlsNamespaces=GetNamespaces(assembly);
+					CachedAssembly casbCachedAssembly=new CachedAssembly(assembly);
+					foreach(string sNamespace in arlsNamespaces) {
+						LazyNamespace lznsSelected=lznsRoot;
+						if(sNamespace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.sInstallationPath,"library"))) {
 							continue;
 						}
-						if(name!="") {
-							foreach(string subpath in name.Split('.')) {
-								if(!selected.htsNamespaces.ContainsKey(subpath)) {
-									string fullName=selected.sFullName;
+						if(sNamespace!="") {
+							foreach(string sSubString in sNamespace.Split('.')) {
+								if(!lznsSelected.htsNamespaces.ContainsKey(sSubString)) {
+									string fullName=lznsSelected.sFullName;
 									if(fullName!="") {
 										fullName+=".";
 									}
-									fullName+=subpath;
-									selected.htsNamespaces[subpath]=new LazyNamespace(fullName);
+									fullName+=sSubString;
+									lznsSelected.htsNamespaces[sSubString]=new LazyNamespace(fullName);
 								}
-								selected=(LazyNamespace)selected.htsNamespaces[subpath];
+								lznsSelected=(LazyNamespace)lznsSelected.htsNamespaces[sSubString];
 							}
 						}
-						selected.mCachedAssemblies.Add(cachedAssembly);
+						lznsSelected.mCachedAssemblies.Add(casbCachedAssembly);
 					}
 				}
 				
-				root.Load();
-				return root.mCache;
+				lznsRoot.Load();
+				return lznsRoot.mCache;
 			}
-			public static Library library=new Library();
-			private Map cash=new Map();
-			public static string libraryPath="library"; 
+			public static Library lbrLibrary=new Library();
+			private Map mCache=new Map();
+			public static string sLibraryPath="library"; 
 		}
 		/* Automatically converts Meta keys of a Map to .NET counterparts. Useful when writing libraries. */
 		public class MapAdapter { // TODO: Make this a whole IMap implementation?, if seems useful
@@ -1312,8 +1311,8 @@ namespace Meta {
 					return table.IsString;
 				}
 			}
-			public string SDotNetStringV() { // Refactoring: has a stupid name, Make property
-				return table.SDotNetStringV();
+			public string SDotNetString() { // Refactoring: has a stupid name, Make property
+				return table.SDotNetString();
 			}
 			public IMap MParent {
 				get {
@@ -1485,7 +1484,7 @@ namespace Meta {
 			public Expression compiled; // why have this at all, why not for statements? probably a question of performance.
 			public string Serialize(string indent,string[] functions) {
 				if(this.IsString) {
-					return indent+"\""+this.SDotNetStringV()+"\""+"\n";
+					return indent+"\""+this.SDotNetString()+"\""+"\n";
 				}
 				else {
 					return null;
@@ -1510,7 +1509,7 @@ namespace Meta {
 				
 				// TODO: Rename. Reason: This really means something more abstract, more along the lines of,
 				// "is this a map that only has integers as children, and maybe also only integers as keys?"
-				public abstract string SDotNetStringV();
+				public abstract string SDotNetString();
 				public abstract ArrayList ArlojKeys {
 					get;
 				}
@@ -1583,7 +1582,7 @@ namespace Meta {
 						return true;
 					}
 				}
-				public override string SDotNetStringV() {
+				public override string SDotNetString() {
 					return text;
 				}
 				public override ArrayList ArlojKeys {
@@ -1664,7 +1663,7 @@ namespace Meta {
 					get {
 						if(ArlojIntegerKeyValues.Count>0) {
 							try {
-								SDotNetStringV();// TODO: a bit of a hack
+								SDotNetString();// TODO: a bit of a hack
 								return true;
 							}
 							catch{
@@ -1673,7 +1672,7 @@ namespace Meta {
 						return false;
 					}
 				}
-				public override string SDotNetStringV() { // TODO: looks too complicated
+				public override string SDotNetString() { // TODO: looks too complicated
 					string text="";
 					foreach(object key in this.ArlojKeys) {
 						if(key is Integer && this.table[key] is Integer) {
@@ -2242,7 +2241,7 @@ namespace Meta {
 				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
 				string ojMetaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
 				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",ojMetaDllLocation});
-				assemblyNames.AddRange(Interpreter.arlasbLoadedAssemblies);
+				assemblyNames.AddRange(Interpreter.arlsLoadedAssemblies);
 				CompilerParameters  options=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 				CompilerResults results=compiler.CompileAssemblyFromSource(options,source);
 				Type containerClass=results.CompiledAssembly.GetType("EventHandlerContainer",true);
@@ -2301,7 +2300,7 @@ namespace Meta {
 //				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
 //				string ojMetaDllLocation=Assembly.GetAssembly(tTargetof(Map)).Location;
 //				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",ojMetaDllLocation});
-//				assemblyNames.AddRange(Interpreter.arlasbLoadedAssemblies);
+//				assemblyNames.AddRange(Interpreter.arlsLoadedAssemblies);
 //				EpsCompileVrParameters options=new EpsCompileVrParameters((string[])assemblyNames.ToArray(tTargetof(string)));
 //				EpsCompileVrResults results=compiler.EpsCompileVAssemblyFromSource(options,source);
 //				Type containerClass=results.EpsCompileVdAssembly.GetType("EventHandlerContainer",true);
@@ -2609,7 +2608,7 @@ namespace Meta {
 //				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
 //				string metaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
 //				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
-//				assemblyNames.AddRange(Interpreter.arlasbLoadedAssemblies);
+//				assemblyNames.AddRange(Interpreter.arlsLoadedAssemblies);
 //				EpsCompileVrParameters options=new EpsCompileVrParameters((string[])assemblyNames.ToArray(typeof(string)));
 //				EpsCompileVrResults results=compiler.EpsCompileVAssemblyFromSource(options,source);
 //				Type containerClass=results.EpsCompileVdAssembly.GetType("EventHandlerContainer",true);
@@ -2700,7 +2699,7 @@ namespace Meta {
 			public bool BlaHasKeyOj(object key) {
 				if(key is Map) {
 					if(((Map)key).IsString) {
-						string text=((Map)key).SDotNetStringV();
+						string text=((Map)key).SDotNetString();
 						if(type.GetMember((string)key,
 							BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
 							return true;
@@ -2743,7 +2742,7 @@ namespace Meta {
 			public virtual object this[object key]  {
 				get {
 					if(key is Map && ((Map)key).IsString) {
-						string text=((Map)key).SDotNetStringV();
+						string text=((Map)key).SDotNetString();
 						MemberInfo[] members=type.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(members.Length>0) {
 							if(members[0] is MethodBase) {
@@ -2778,7 +2777,7 @@ namespace Meta {
 				}
 				set {
 					if(key is Map && ((Map)key).IsString) {
-						string text=((Map)key).SDotNetStringV();
+						string text=((Map)key).SDotNetString();
 						if(text.Equals("staticEvent")) {
 							int asdf=0;
 						}
@@ -2818,7 +2817,7 @@ namespace Meta {
 										NetMethod.ojAssignCollectionMOjOutbla((Map)value,property.GetValue(obj,new object[]{}),out converted);
 									}
 									if(!converted) {
-										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.VSaveToFileOjS(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
+										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.SaveToFileOjS(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
 									}
 								}
 								return;
