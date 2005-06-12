@@ -1459,7 +1459,7 @@ namespace Meta {
 			private bool bHashCached=false;
 			private int iHash;
 
-			Extent etExtent;
+			Extent etExtent; // TODO: get rid of extent completely, put boatloads of integers here
 			public Extent EtExtent {
 				get {
 					return etExtent;
@@ -1475,7 +1475,7 @@ namespace Meta {
 			}
 			public Map(MapStrategy mstgTable) {
 				this.mstgTable=mstgTable;
-				this.mstgTable.map=this;
+				this.mstgTable.mMap=this;
 			}
 			public Map():this(new HybridDictionaryStrategy()) {
 			}
@@ -1490,14 +1490,14 @@ namespace Meta {
 					return null;
 				}
 			}
-			public abstract class MapStrategy {
-				public Map map;
+			public abstract class MapStrategy { // TODO: Call this differently, hungarian-compatible
+				public Map mMap;
 				public MapStrategy Clone() {
-					MapStrategy strategy=new HybridDictionaryStrategy();
-					foreach(object key in this.ArlojKeys) {
-						strategy[key]=this[key];
+					MapStrategy mstgStrategy=new HybridDictionaryStrategy();
+					foreach(object oKey in this.ArlojKeys) {
+						mstgStrategy[oKey]=this[oKey];
 					}
-					return strategy;	
+					return mstgStrategy;	
 				}
 				public abstract Map CloneMap();
 				public abstract ArrayList ArlojIntegerKeyValues {
@@ -1508,7 +1508,7 @@ namespace Meta {
 				}
 				
 				// TODO: Rename. Reason: This really means something more abstract, more along the lines of,
-				// "is this a map that only has integers as children, and maybe also only integers as keys?"
+				// "is this a mMap that only has integers as children, and maybe also only integers as keys?"
 				public abstract string SDotNetString();
 				public abstract ArrayList ArlojKeys {
 					get;
@@ -1524,23 +1524,23 @@ namespace Meta {
 				public abstract bool ContainsKey(object key);
 				/* Hashcodes must be exactly the same in all MapStrategies. */
 				public override int GetHashCode()  {
-					int h=0;
-					foreach(object key in this.ArlojKeys) {
+					int iHash=0;
+					foreach(object oKey in this.ArlojKeys) {
 						unchecked {
-							h+=key.GetHashCode()*this[key].GetHashCode();
+							iHash+=oKey.GetHashCode()*this[oKey].GetHashCode();
 						}
 					}
-					return h;
+					return iHash;
 				}
-				public virtual bool Equal(MapStrategy obj) {
-					if(Object.ReferenceEquals(obj,this)) { // check whether this is a clone of the other MapStrategy (not used yet)
+				public virtual bool Equal(MapStrategy mstgToCompare) {
+					if(Object.ReferenceEquals(mstgToCompare,this)) { // check whether this is a clone of the other MapStrategy (not used yet)
 						return true;
 					}
-					if(obj.ItgCount!=this.ItgCount) {
+					if(mstgToCompare.ItgCount!=this.ItgCount) {
 						return false;
 					}
 					foreach(object key in this.ArlojKeys)  {
-						if(!obj.ContainsKey(key)||!obj[key].Equals(this[key])) {
+						if(!mstgToCompare.ContainsKey(key)||!mstgToCompare[key].Equals(this[key])) {
 							return false;
 						}
 					}
@@ -1619,9 +1619,9 @@ namespace Meta {
 					}
 					set {
 						/* StringStrategy gets changed. Fall back on standard strategy because we can't be sure
-						 * the map will still be a string afterwards. */
-						map.mstgTable=this.Clone();
-						map.mstgTable[key]=value;
+						 * the mMap will still be a string afterwards. */
+						mMap.mstgTable=this.Clone();
+						mMap.mstgTable[key]=value;
 					}
 				}
 				public override bool ContainsKey(object key)  {
@@ -1633,7 +1633,7 @@ namespace Meta {
 					}
 				}
 			}
-			/* The standard strategy for maps. */
+			/* The standard strategy for mMaps. */
 			public class HybridDictionaryStrategy:MapStrategy {
 				ArrayList keys;
 				private HybridDictionary mstgTable;
@@ -1680,19 +1680,19 @@ namespace Meta {
 								sText+=Convert.ToChar(((Integer)this.mstgTable[key]).Int);
 							}
 							catch {
-								throw new MapException(this.map,"Map is not a string");
+								throw new MapException(this.mMap,"Map is not a string");
 							}
 						}
 						else {
-							throw new MapException(this.map,"Map is not a string");
+							throw new MapException(this.mMap,"Map is not a string");
 						}
 					}
 					return sText;
 				}
 				public class MapException:ApplicationException { // TODO: Remove or make sense of this
-					Map map;
-					public MapException(Map map,string message):base(message) {
-						this.map=map;
+					Map mMap;
+					public MapException(Map mMap,string message):base(message) {
+						this.mMap=mMap;
 					}
 				}
 				public override ArrayList ArlojKeys {
