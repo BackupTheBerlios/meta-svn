@@ -2293,55 +2293,55 @@ namespace Meta {
 			public abstract object RunTestCase();
 		}
 		public class ExecuteTests {	
-			public ExecuteTests(Type classThatContainsTests,string pathToSerializeResultsTo) { // refactor -maybe, looks quite ok
-				bool waitAtEndOfTestRun=false;
-				Type[] testCases=classThatContainsTests.GetNestedTypes();
-				foreach(Type testCase in testCases) {
-					object[] customSerializationAttributes=testCase.GetCustomAttributes(typeof(SerializeMethodsAttribute),false);
-					string[] methodNames=new string[0];
-					if(customSerializationAttributes.Length!=0) {
-						methodNames=((SerializeMethodsAttribute)customSerializationAttributes[0]).names;
+			public ExecuteTests(Type tTestContainer,string fnResults) { // refactor -maybe, looks quite ok
+				bool bWaitAtEnd=false;
+				Type[] atTests=tTestContainer.GetNestedTypes();
+				foreach(Type tTest in atTests) {
+					object[] aoCustomAttributes=tTest.GetCustomAttributes(typeof(SerializeMethodsAttribute),false);
+					string[] asMethodNames=new string[0];
+					if(aoCustomAttributes.Length!=0) {
+						asMethodNames=((SerializeMethodsAttribute)aoCustomAttributes[0]).names;
 					}
-					Console.Write(testCase.Name + "...");
-					DateTime timeStarted=DateTime.Now;
-					string textToPrint="";
-					object result=((TestCase)testCase.GetConstructors()[0].Invoke(new object[]{})).RunTestCase();
-					TimeSpan timeSpentInTestCase=DateTime.Now-timeStarted;
-					bool testCaseSuccessful=CompareResults(Path.Combine(pathToSerializeResultsTo,testCase.Name),result,methodNames);
-					if(!testCaseSuccessful) {
-						textToPrint=textToPrint + " failed";
-						waitAtEndOfTestRun=true;
+					Console.Write(tTest.Name + "...");
+					DateTime dtStarted=DateTime.Now;
+					string sOutput="";
+					object oResutl=((TestCase)tTest.GetConstructors()[0].Invoke(new object[]{})).RunTestCase();
+					TimeSpan tsTestCase=DateTime.Now-dtStarted;
+					bool bSuccessful=CompareResults(Path.Combine(fnResults,tTest.Name),oResutl,asMethodNames);
+					if(!bSuccessful) {
+						sOutput=sOutput + " failed";
+						bWaitAtEnd=true;
 					}
 					else {
-						textToPrint+=" succeeded";
+						sOutput+=" succeeded";
 					}
-					textToPrint=textToPrint + "  " + timeSpentInTestCase.TotalSeconds.ToString() + " s";
-					Console.WriteLine(textToPrint);
+					sOutput=sOutput + "  " + tsTestCase.TotalSeconds.ToString() + " s";
+					Console.WriteLine(sOutput);
 				}
-				if(waitAtEndOfTestRun) {
+				if(bWaitAtEnd) {
 					Console.ReadLine();
 				}
 			}
-			private bool CompareResults(string path,object obj,string[] functions) {
-				Directory.CreateDirectory(path);
-				if(!File.Exists(Path.Combine(path,"check.txt"))) {
-					File.Create(Path.Combine(path,"check.txt")).Close();
+			private bool CompareResults(string sPath,object oObject,string[] asFunctions) {
+				Directory.CreateDirectory(sPath);
+				if(!File.Exists(Path.Combine(sPath,"sCheck.txt"))) {
+					File.Create(Path.Combine(sPath,"sCheck.txt")).Close();
 				}
-				string result=Serialize(obj,"",functions);
-				StreamWriter writer=new StreamWriter(Path.Combine(path,"result.txt"));
-				writer.Write(result);
-				writer.Close();
-				StreamWriter copyWriter=new StreamWriter(Path.Combine(path,"resultCopy.txt"));
-				copyWriter.Write(result);
-				copyWriter.Close();
+				string sResult=Serialize(oObject,"",asFunctions);
+				StreamWriter swResult=new StreamWriter(Path.Combine(sPath,"result.txt"));
+				swResult.Write(sResult);
+				swResult.Close();
+				StreamWriter swCopyResult=new StreamWriter(Path.Combine(sPath,"resultCopy.txt"));
+				swCopyResult.Write(sResult);
+				swCopyResult.Close();
 				// TODO: Introduce utility methods
-				StreamReader reader=new StreamReader(Path.Combine(path,"check.txt"));
-				string check=reader.ReadToEnd();
-				reader.Close();
-				return result.Equals(check);
+				StreamReader srCheck=new StreamReader(Path.Combine(sPath,"check.txt"));
+				string sCheck=srCheck.ReadToEnd();
+				srCheck.Close();
+				return sResult.Equals(sCheck);
 			}
-			public static string Serialize(object obj) {
-				return Serialize(obj,"",new string[]{});
+			public static string Serialize(object oObject) {
+				return Serialize(oObject,"",new string[]{});
 			}
 			public static string Serialize(object serialize,string indent,string[] methods) {
 				if(serialize==null) {
