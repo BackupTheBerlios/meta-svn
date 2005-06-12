@@ -89,27 +89,27 @@ namespace Test {
 		// TODO:make it possible to choose between different tests on command line, and whether to test at all
 		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
 		public class ParseToAst:TestCase {
-			public override object RunTestCase() {
+			public override object ORun() {
 				return Interpreter.ParseToAst(Path.Combine(
 					Test.path,filename));
 			}
 		}
 		public class CompileToMap:TestCase {
 			public static Map map;
-			public override object RunTestCase() {
+			public override object ORun() {
 				map=Interpreter.mCompileS(Path.Combine(
 					Test.path,filename));
 				return map;
 			}
 		}
 		public class CompileToExpression:TestCase {
-			public override object RunTestCase() {
+			public override object ORun() {
 				return Interpreter.mCompileS(Path.Combine(
 					Test.path,filename)).ECompile();
 			}
 		}
 		public class Execute:TestCase {
-			public override object RunTestCase() {
+			public override object ORun() {
 				Map argument=new Map();
 				argument[new Integer(1)]="first arg";
 				argument[new Integer(2)]="second=arg";

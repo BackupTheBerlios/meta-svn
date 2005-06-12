@@ -1935,7 +1935,7 @@ namespace Meta {
 				}
 			}
 			public IEnumerator GetEnumerator() {
-				return Table.GetEnumerator();
+				return MTable.GetEnumerator();
 			}
 			// TODO: why does NetContainer have a kvlParent when it isn't ever used?
 			public IKeyValue Parent {
@@ -1948,12 +1948,12 @@ namespace Meta {
 			}
 			public ArrayList AoKeys {
 				get {
-					return new ArrayList(Table.Keys);
+					return new ArrayList(MTable.Keys);
 				}
 			}
 			public int ICount  {
 				get {
-					return Table.Count;
+					return MTable.Count;
 				}
 			}
 			public virtual object this[object oKey]  {
@@ -2073,7 +2073,7 @@ namespace Meta {
 				Delegate dlgEvent=NetMethod.DlgFromM(evifEvent.EventHandlerType,mtifInvoke,mCode);
 				return dlgEvent;
 			}
-			private IDictionary Table { // TODO: strange, what use is this
+			private IDictionary MTable { // TODO: strange, what use is this
 				get {
 					HybridDictionary hbdtrTable=new HybridDictionary();
 					BindingFlags bdfBinding;
@@ -2127,17 +2127,17 @@ namespace Meta {
 		public class IndentationStream: TokenStream {
 			public IndentationStream(TokenStream tksStream)  {
 				this.tksStream=tksStream;
-				AddIndentationTokensToGetToLevel(0,new Token()); // TODO: remove "new Token" ?
+				IndentITk(0,new Token()); // TODO: remove "new Token" ?
 			}
 			public Token nextToken()  {
 				if(qBuffer.Count==0)  {
 					Token tkToken=tksStream.nextToken();
 					switch(tkToken.Type) {
 						case MetaLexerTokenTypes.EOF:
-							AddIndentationTokensToGetToLevel(-1,tkToken);
+							IndentITk(-1,tkToken);
 							break;
 						case MetaLexerTokenTypes.INDENTATION:
-							AddIndentationTokensToGetToLevel(tkToken.getText().Length,tkToken);
+							IndentITk(tkToken.getText().Length,tkToken);
 							break;
 						case MetaLexerTokenTypes.LITERAL: // move this into parser, for correct error handling?
 							string sIndentation="";
@@ -2169,7 +2169,7 @@ namespace Meta {
 				}
 				return (Token)qBuffer.Dequeue();
 			}
-			protected void AddIndentationTokensToGetToLevel(int iNewIndentation,Token tkToken)  { // TODO: use Extent instead of Token, or just the line we're in
+			protected void IndentITk(int iNewIndentation,Token tkToken)  { // TODO: use Extent instead of Token, or just the line we're in
 				int iDifference=iNewIndentation-iIndentation; 
 				if(iDifference==0) {
 					qBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));//TODO: use something else here
@@ -2201,7 +2201,7 @@ namespace Meta {
 			string SSerializeSAs(string indent,string[] functions);
 		}
 		public abstract class TestCase {
-			public abstract object RunTestCase();
+			public abstract object ORun();
 		}
 		public class ExecuteTests {	
 			public ExecuteTests(Type tTestContainer,string fnResults) { // refactor -maybe, looks quite ok
@@ -2216,9 +2216,9 @@ namespace Meta {
 					Console.Write(tTest.Name + "...");
 					DateTime dtStarted=DateTime.Now;
 					string sOutput="";
-					object oResutl=((TestCase)tTest.GetConstructors()[0].Invoke(new object[]{})).RunTestCase();
+					object oResutl=((TestCase)tTest.GetConstructors()[0].Invoke(new object[]{})).ORun();
 					TimeSpan tsTestCase=DateTime.Now-dtStarted;
-					bool bSuccessful=CompareResults(Path.Combine(fnResults,tTest.Name),oResutl,asMethodNames);
+					bool bSuccessful=BCompareResult(Path.Combine(fnResults,tTest.Name),oResutl,asMethodNames);
 					if(!bSuccessful) {
 						sOutput=sOutput + " failed";
 						bWaitAtEnd=true;
@@ -2233,12 +2233,12 @@ namespace Meta {
 					Console.ReadLine();
 				}
 			}
-			private bool CompareResults(string sPath,object oObject,string[] asFunctions) {
+			private bool BCompareResult(string sPath,object oObject,string[] asFunctions) {
 				Directory.CreateDirectory(sPath);
 				if(!File.Exists(Path.Combine(sPath,"sCheck.txt"))) {
 					File.Create(Path.Combine(sPath,"sCheck.txt")).Close();
 				}
-				string sResult=Serialize(oObject,"",asFunctions);
+				string sResult=SSerializeO(oObject,"",asFunctions);
 				StreamWriter swResult=new StreamWriter(Path.Combine(sPath,"result.txt"));
 				swResult.Write(sResult);
 				swResult.Close();
@@ -2251,10 +2251,10 @@ namespace Meta {
 				srCheck.Close();
 				return sResult.Equals(sCheck);
 			}
-			public static string Serialize(object oObject) {
-				return Serialize(oObject,"",new string[]{});
+			public static string SSerializeO(object oObject) {
+				return SSerializeO(oObject,"",new string[]{});
 			}
-			public static string Serialize(object oSerialize,string sIndent,string[] asMethods) {
+			public static string SSerializeO(object oSerialize,string sIndent,string[] asMethods) {
 				if(oSerialize==null) {
 					return sIndent+"null\n";
 				}
@@ -2271,7 +2271,7 @@ namespace Meta {
 				if(oSerialize is IEnumerable) {
 					string sText="";
 					foreach(object oEntry in (IEnumerable)oSerialize) {
-						sText+=sIndent+"Entry ("+oEntry.GetType().Name+")\n"+Serialize(oEntry,sIndent+"  ",asMethods);
+						sText+=sIndent+"Entry ("+oEntry.GetType().Name+")\n"+SSerializeO(oEntry,sIndent+"  ",asMethods);
 					}
 					return sText;
 				}
@@ -2298,7 +2298,7 @@ namespace Meta {
 								if(oValue!=null) {
 									sT+=" ("+oValue.GetType().Name+")";
 								}
-								sT+=":\n"+Serialize(oValue,sIndent+"  ",asMethods);
+								sT+=":\n"+SSerializeO(oValue,sIndent+"  ",asMethods);
 							}
 						}
 					}
