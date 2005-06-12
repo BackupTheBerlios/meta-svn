@@ -1063,23 +1063,23 @@ namespace Meta {
 		}
 		/* TODO: What's this for? */
 		public class CachedAssembly {  // TODO: Put this into Library class
-			private Assembly assembly;
-			public CachedAssembly(Assembly assembly) {
-				this.assembly=assembly;
+			private Assembly asbAssembly;
+			public CachedAssembly(Assembly asbAssembly) {
+				this.asbAssembly=asbAssembly;
 			}
-			public Map GetNamespaceContents(string fullName) {
-				if(map==null) {
-					map=Library.LoadAssemblies(new object[] {assembly});
+			public Map GetNamespaceContents(string sNamespace) {
+				if(mAssemblyContent==null) {
+					mAssemblyContent=Library.LoadAssemblies(new object[] {asbAssembly});
 				}
-				Map selected=map;
-				if(fullName!="") {
-					foreach(string name in fullName.Split('.')) {
-						selected=(Map)selected[new Map(name)];
+				Map mSelected=mAssemblyContent;
+				if(sNamespace!="") {
+					foreach(string sSubString in sNamespace.Split('.')) {
+						mSelected=(Map)mSelected[new Map(sSubString)];
 					}
 				}
-				return selected;
+				return mSelected;
 			}			
-			private Map map;
+			private Map mAssemblyContent;
 		}
 		/* The library namespace, containing both Meta libraries as well as .NET libraries
 		 *  from the "library" path and the GAC. */
