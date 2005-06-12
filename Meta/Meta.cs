@@ -2235,8 +2235,8 @@ namespace Meta {
 			}
 			private bool BCompareResult(string sPath,object oObject,string[] asFunctions) {
 				Directory.CreateDirectory(sPath);
-				if(!File.Exists(Path.Combine(sPath,"sCheck.txt"))) {
-					File.Create(Path.Combine(sPath,"sCheck.txt")).Close();
+				if(!File.Exists(Path.Combine(sPath,"check.txt"))) {
+					File.Create(Path.Combine(sPath,"check.txt")).Close();
 				}
 				string sResult=SSerializeO(oObject,"",asFunctions);
 				StreamWriter swResult=new StreamWriter(Path.Combine(sPath,"result.txt"));

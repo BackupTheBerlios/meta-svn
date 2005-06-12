@@ -24,6 +24,16 @@ this=map.mMergeAm
 	logic
 	map
 	math
+applyMethod=
+	:iAddII
+		arg.value
+		'1
+applyTest=AoApplyFM
+	applyMethod
+	=
+		'1
+		'2
+		'3
 trimStartTest=sTrimStartS
 	"					hello"
 	'\\t

@@ -102,4 +102,25 @@ public class map {
 		}
 		return obj;
 	}
+//	public static Map AApplyFA(Map mFunction,Map mArray) {
+//		Map mResult=new Map();
+//		int counter=1;
+//		foreach(object oArgument in mArray.AoIntegerKeyValues) {
+//			mResult[new Integer(counter)]=mFunction.OCallO(oArgument);
+//			counter++;
+//		}
+//		return mResult;
+//	}
+	public static Map AoApplyFM(Map mFunction,Map mArray) {
+		Map mResult=new Map();
+		int counter=1;
+		foreach(object oKey in mArray.AoKeys) {
+			Map mArgument=new Map();
+			mArgument[new Map("key")]=oKey;
+			mArgument[new Map("value")]=mArray[oKey];
+			mResult[new Integer(counter)]=mFunction.OCallO(mArgument);
+			counter++;
+		}
+		return mResult;
+	}
 }
