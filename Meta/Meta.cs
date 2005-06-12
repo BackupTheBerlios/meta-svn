@@ -1557,12 +1557,12 @@ namespace Meta {
 					}
 					return iHash;
 				}
-				public override bool Equal(MapStrategy obj) {
-					if(obj is StringStrategy) {	// TODO: Decide on single exit for methods, might be useful, especially here
-						return ((StringStrategy)obj).sText.Equals(this.sText);
+				public override bool Equal(MapStrategy mstgToCompare) {
+					if(mstgToCompare is StringStrategy) {	// TODO: Decide on single exit for methods, might be useful, especially here
+						return ((StringStrategy)mstgToCompare).sText.Equals(this.sText);
 					}
 					else {
-						return base.Equal(obj);
+						return base.Equal(mstgToCompare);
 					}
 				}
 				public override Map CloneMap() {
@@ -1570,11 +1570,11 @@ namespace Meta {
 				}
 				public override ArrayList ArlojIntegerKeyValues {
 					get {
-						ArrayList list=new ArrayList();
-						foreach(char c in sText) {
-							list.Add(new Integer(c));
+						ArrayList arlList=new ArrayList();
+						foreach(char iChar in sText) {
+							arlList.Add(new Integer(iChar));
 						}
-						return list;
+						return arlList;
 					}
 				}
 				public override bool IsString {
@@ -1587,19 +1587,19 @@ namespace Meta {
 				}
 				public override ArrayList ArlojKeys {
 					get {
-						return keys;
+						return aiKeys;
 					}
 				}
-				private ArrayList keys=new ArrayList();
+				private ArrayList aiKeys=new ArrayList();
 				private string sText;
 				public StringStrategy(StringStrategy clone) {
 					this.sText=clone.sText;
-					this.keys=(ArrayList)clone.keys.Clone();
+					this.aiKeys=(ArrayList)clone.aiKeys.Clone();
 				}
 				public StringStrategy(string sText) {
 					this.sText=sText;
 					for(int i=1;i<=sText.Length;i++) { // make this lazy? it won't work with unicode anymore then, though
-						keys.Add(new Integer(i));			// TODO: Make this unicode-safe in the first place!
+						aiKeys.Add(new Integer(i));			// TODO: Make this unicode-safe in the first place!
 					}
 				}
 				public override int ItgCount {
@@ -1607,12 +1607,12 @@ namespace Meta {
 						return sText.Length;
 					}
 				}
-				public override object this[object key]  {
+				public override object this[object oKey]  {
 					get {
-						if(key is Integer) {
-							int i=((Integer)key).Int;
-							if(i>0 && i<=this.ItgCount) {
-								return new Integer(sText[i-1]);
+						if(oKey is Integer) {
+							int itgInteger=((Integer)oKey).Int;
+							if(itgInteger>0 && itgInteger<=this.ItgCount) {
+								return new Integer(sText[itgInteger-1]);
 							}
 						}
 						return null;
@@ -1621,42 +1621,41 @@ namespace Meta {
 						/* StringStrategy gets changed. Fall back on standard strategy because we can't be sure
 						 * the mMap will still be a string afterwards. */
 						mMap.mstgTable=this.Clone();
-						mMap.mstgTable[key]=value;
+						mMap.mstgTable[oKey]=value;
 					}
 				}
-				public override bool ContainsKey(object key)  {
-					if(key is Integer) {
-						return ((Integer)key)>0 && ((Integer)key)<=this.ItgCount;
+				public override bool ContainsKey(object oKey)  {
+					if(oKey is Integer) {
+						return ((Integer)oKey)>0 && ((Integer)oKey)<=this.ItgCount;
 					}
 					else {
 						return false;
 					}
 				}
 			}
-			/* The standard strategy for mMaps. */
 			public class HybridDictionaryStrategy:MapStrategy {
-				ArrayList keys;
+				ArrayList aoKeys;
 				private HybridDictionary mstgTable;
 				public HybridDictionaryStrategy():this(2) {
 				}
-				public HybridDictionaryStrategy(int count) {
-					this.keys=new ArrayList(count);
-					this.mstgTable=new HybridDictionary(count);
+				public HybridDictionaryStrategy(int iCount) {
+					this.aoKeys=new ArrayList(iCount);
+					this.mstgTable=new HybridDictionary(iCount);
 				}
 				public override Map CloneMap() {
-					Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
-					foreach(object key in keys) {
-						clone[key]=mstgTable[key];
+					Map mClone=new Map(new HybridDictionaryStrategy(this.aoKeys.Count));
+					foreach(object oKey in aoKeys) {
+						mClone[oKey]=mstgTable[oKey];
 					}
-					return clone;
+					return mClone;
 				}
 				public override ArrayList ArlojIntegerKeyValues {
 					get {
-						ArrayList list=new ArrayList();
-						for(Integer i=new Integer(1);ContainsKey(i);i++) {
-							list.Add(this[i]);
+						ArrayList aList=new ArrayList();
+						for(Integer itgInteger=new Integer(1);ContainsKey(itgInteger);itgInteger++) {
+							aList.Add(this[itgInteger]);
 						}
-						return list;
+						return aList;
 					}
 				}
 				public override bool IsString {
@@ -1674,10 +1673,10 @@ namespace Meta {
 				}
 				public override string SDotNetString() { // TODO: looks too complicated
 					string sText="";
-					foreach(object key in this.ArlojKeys) {
-						if(key is Integer && this.mstgTable[key] is Integer) {
+					foreach(object oKey in this.ArlojKeys) {
+						if(oKey is Integer && this.mstgTable[oKey] is Integer) {
 							try {
-								sText+=Convert.ToChar(((Integer)this.mstgTable[key]).Int);
+								sText+=Convert.ToChar(((Integer)this.mstgTable[oKey]).Int);
 							}
 							catch {
 								throw new MapException(this.mMap,"Map is not a string");
@@ -1691,13 +1690,13 @@ namespace Meta {
 				}
 				public class MapException:ApplicationException { // TODO: Remove or make sense of this
 					Map mMap;
-					public MapException(Map mMap,string message):base(message) {
+					public MapException(Map mMap,string sMessage):base(sMessage) {
 						this.mMap=mMap;
 					}
 				}
 				public override ArrayList ArlojKeys {
 					get {
-						return keys;
+						return aoKeys;
 					}
 				}
 				public override int ItgCount {
@@ -1705,41 +1704,41 @@ namespace Meta {
 						return mstgTable.Count;
 					}
 				}
-				public override object this[object key]  {
+				public override object this[object oKey]  {
 					get {
-						return mstgTable[key];
+						return mstgTable[oKey];
 					}
 					set {
-						if(!this.ContainsKey(key)) {
-							keys.Add(key);
+						if(!this.ContainsKey(oKey)) {
+							aoKeys.Add(oKey);
 						}
-						mstgTable[key]=value;
+						mstgTable[oKey]=value;
 					}
 				}
-				public override bool ContainsKey(object key)  {
-					return mstgTable.Contains(key);
+				public override bool ContainsKey(object oKey)  {
+					return mstgTable.Contains(oKey);
 				}
 			}
 		}
 		public class MapEnumerator: IEnumerator {
-			private Map map; public MapEnumerator(Map map) {
-				this.map=map;
+			private Map mMap; public MapEnumerator(Map mMap) {
+				this.mMap=mMap;
 			}
 			public object Current {
 				get {
-					return new DictionaryEntry(map.ArlojKeys[index],map[map.ArlojKeys[index]]);
+					return new DictionaryEntry(mMap.ArlojKeys[iCurrent],mMap[mMap.ArlojKeys[iCurrent]]);
 				}
 			}
 			public bool MoveNext() {
-				index++;
-				return index<map.ItgCount;
+				iCurrent++;
+				return iCurrent<mMap.ItgCount;
 			}
 			public void Reset() {
-				index=-1;
+				iCurrent=-1;
 			}
-			private int index=-1;
+			private int iCurrent=-1;
 		}
-		public delegate object DelegateCreatedForGenericDelegates();
+		public delegate object DelegateCreatedForGenericDelegates(); // TODO: rename?
 //		[AttributeUsage(AttributeTargets.Method)]
 //		public class MetaLibraryMethodAttribute:Attribute {
 //		}
@@ -1815,124 +1814,15 @@ namespace Meta {
 				}
 				else {
 					bool outblaParamConverted; // TODO: refactor with outblaConverted
-					object result=Interpreter.ConvertMetaToDotNet(ojMeta,tParameter,out outblaParamConverted);
+					object oResult=Interpreter.ConvertMetaToDotNet(ojMeta,tParameter,out outblaParamConverted);
 					if(outblaParamConverted) {
-						return result;
+						return oResult;
 					}
 				}
 				outblaConverted=false;
 				return null;
 			}
-//			// TODO: finally invent a Meta tTarget??? Would be useful here for prefix to Meta,
-//			// it isn't, after all just any object
-//			public static object oConvertParameterOTypOutb(object ojMeta,Type tParameter,out bool outblaConverted) {
-//				outblaConverted=true;
-//				if(tParameter.IsAssignableFrom(ojMeta.GetType())) {
-//					return ojMeta;
-//				}
-//				else if((tParameter.IsSubclassOf(tTargetof(Delegate))
-//					||tParameter.Equals(tTargetof(Delegate))) && (ojMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
-//					MethodInfo m=tParameter.GetMethod("Invoke",BindingFlags.Instance
-//						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-//					Delegate dlgFunction=delFromF(tParameter,m,(Map)ojMeta);
-//					return dlgFunction;
-//				}
-//				else if(tParameter.IsArray && ojMeta is IMap && ((Map)ojMeta).ArlojIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
-//					try {
-//						Type arrayType=tParameter.GetElementType();
-//						Map map=((Map)ojMeta);
-//						ArrayList mapValues=map.ArlojIntegerKeyValues;
-//						Array array=Array.CreateInstance(arrayType,mapValues.Count);
-//						for(int i=0;i<mapValues.Count;i++) {
-//							array.SetValue(mapValues[i],i);
-//						}
-//						return array;
-//					}
-//					catch {
-//					}
-//				}
-//				else {
-//					bool isConverted; // TODO: refactor with outblaConverted
-//					object result=Interpreter.ConvertMetaToDotNet(ojMeta,tParameter,out isConverted);
-//					if(isConverted) {
-//						return result;
-//					}
-//				}
-//				outblaConverted=false;
-//				return null;
-//			}
-//			public static object oConvertParameterOTypOutb(object ojMeta,Type parameter,out bool outblaConverted) {
-//				outblaConverted=true;
-//				if(parameter.IsAssignableFrom(ojMeta.GetType())) {
-//					return ojMeta;
-//				}
-//				else if((parameter.IsSubclassOf(tTargetof(Delegate))
-//					||parameter.Equals(tTargetof(Delegate))) && (ojMeta is Map)) { // TODO: add check, that the map contains code, not necessarily, think this conversion stuff through completely
-//					MethodInfo m=parameter.GetMethod("Invoke",BindingFlags.Instance
-//						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-//					Delegate del=delFromF(parameter,m,(Map)ojMeta);
-//					return del;
-//				}
-//				else if(parameter.IsArray && ojMeta is IMap && ((Map)ojMeta).ArlojIntegerKeyValues.Count!=0) {// TODO: cheating, not very understandable
-//					try {
-//						Type arrayType=parameter.GetElementType();
-//						Map map=((Map)ojMeta);
-//						ArrayList mapValues=map.ArlojIntegerKeyValues;
-//						Array array=Array.CreateInstance(arrayType,mapValues.Count);
-//						for(int i=0;i<mapValues.Count;i++) {
-//							array.SetValue(mapValues[i],i);
-//						}
-//						return array;
-//					}
-//					catch {
-//					}
-//				}
-//				else {
-//					bool isConverted; // TODO: refactor with outblaConverted
-//					object result=Interpreter.ConvertMetaToDotNet(ojMeta,parameter,out isConverted);
-//					if(isConverted) {
-//						return result;
-//					}
-//				}
-//				outblaConverted=false;
-//				return null;
-//			}
-			// TODO: This should really be put into just one method!!!!!!!
-//			public object ojCallSingleArgumentOjOutbla(object ojArgument,out bool outblaCalled) {
-//				outblaCalled=true;
-//				try {
-//					Map mArgument=new Map();
-//					mArgument[new Integer(1)]=ojArgument;
-//					return ojCallMultiArgumentOj(mArgument);
-//				}
-//				catch {
-//					outblaCalled=false;
-//					return null;
-//				}
-//			}
-//			public object ojCallOj(object ojArgument) {
-//				bool outblaCalled=false;
-//				object ojResult;
-//				ojResult=ojCallSingleArgumentOjOutbla(ojArgument,out outblaCalled);
-//				if(!outblaCalled) {
-//					ojResult=ojCallMultiArgumentOj(ojArgument);
-//				}
-//				ojResult=ojCallMultiArgumentOj(ojArgument);
-//				return ojResult;
-//			}
-//			public object ojCallOj(object ojArgument) {
-//				bool outblaCalled=false;
-//				object ojResult;
-//				ojResult=ojCallSingleArgumentOjOutbla(ojArgument,out outblaCalled);
-//				if(!outblaCalled) {
-//					ojResult=ojCallMultiArgumentOj(ojArgument);
-//				}
-//				return ojResult;
-//			}
 			public object ojCallOj(object ojArgument) {
-				//				if(tTarget.Name.EndsWith("PositionalNoConversion")) {
-				//					int asdf=0;
-				//				}
 				if(this.tTarget.Name.EndsWith("IndexerNoConversion") && this.sName.StartsWith("GetResultFromDelegate")) {
 					int asdf=0;
 				}
@@ -1949,12 +1839,6 @@ namespace Meta {
 				}
 				bool blaExecuted=false;
 				foreach(MethodBase mtbCurrent in arlOneArgumentMethods) {
-//					ArrayList arlArguments=new ArrayList();
-//					bool blaArgumentsMatched=true;
-//					ParameterInfo[] arPrmtifParameters=mtbCurrent.GetParameters();
-//					for(int i=0;blaArgumentsMatched && i<arPrmtifParameters.Length;i++) {
-//						arlArguments.Add(ojConvertParameterOjTOutbla(arlOArguments[i],arPrmtifParameters[i].ParameterType,out blaArgumentsMatched));
-//					}
 					bool blaConverted;
 					object ojParameter=ojConvertParameterOjTOutbla(ojArgument,mtbCurrent.GetParameters()[0].ParameterType,out blaConverted);
 					if(blaConverted) {
@@ -1968,29 +1852,6 @@ namespace Meta {
 						break;
 					}
 				}
-
-
-
-
-
-				// TODO: check this for every meb:
-				// introduce own mebinfo class? that does the calling, maybe??? dynamic cast might become a performance
-				// problem, but I doubt it, so what?
-				//				if(blaLibraryMethod) {
-				//					if(arMtbOverloadedMethods[0] is ConstructorInfo) {
-				//						// TODO: remove this
-				//						ojResult=((ConstructorInfo)arMtbOverloadedMethods[0]).Invoke(new object[] {ojArgument}); 
-				//					}
-				//					else {
-				//						try {
-				//							ojResult=arMtbOverloadedMethods[0].Invoke(ojTarget,new object[] {ojArgument});
-				//						}
-				//						catch {
-				//							throw new ApplicationException("Could not invoke "+sName+".");
-				//						}
-				//					}
-				//				}
-				//				else {
 				if(!blaExecuted) {
 					ArrayList arlOArguments=((IMap)ojArgument).ArlojIntegerKeyValues;
 					ArrayList arlMtifRightNumberArguments=new ArrayList();
@@ -2025,176 +1886,11 @@ namespace Meta {
 				}
 				// TODO: ojResult / ojReturn is duplication
 				ojResult=ojReturn; // mess, why is this here? put in else after the next if
-				// make this safe
-				//					if(!blaExecuted && arMtbOverloadedMethods[0] is ConstructorInfo) { // TODO: why is this needed, can't constructors be called normally? Ah, now I get it, this is for automatical initializing of new classes. This is, however, very confusing, and should, in my opinion be remove, if possible into a library. .NET stuff will not be used directly as often as I first thought, I think, so this stuff isn't so important
-				//						object ojToBeInitialized=new NetMethod(tTarget).ojCallMultiArgumentOj(new Map());
-				//						//						object ojToBeInitialized=new NetMethod(tTarget).ojCallOj(new Map());
-				//						ojResult=with(ojToBeInitialized,((Map)ojArgument));
-				//					}// TODO: somehow determine if no method has been called at all and throw an exception then
-				//					else if(arlMtifRightNumberArguments.Count==0) {
-				//						throw new ApplicationException("Method "+sName+" could not be invoked.");
-				//					}
-				//				}		
 				if(ojResult==null) {
 					int asdf=0;
 				}
 				return Interpreter.ConvertDotNetToMeta(ojResult);
 			}
-//			public object ojCallOj(object ojArgument) {
-////				if(tTarget.Name.EndsWith("PositionalNoConversion")) {
-////					int asdf=0;
-////				}
-//				object ojResult=null;
-//				// TODO: check this for every meb:
-//				// introduce own mebinfo class? that does the calling, maybe??? dynamic cast might become a performance
-//				// problem, but I doubt it, so what?
-////				if(blaLibraryMethod) {
-////					if(arMtbOverloadedMethods[0] is ConstructorInfo) {
-////						// TODO: remove this
-////						ojResult=((ConstructorInfo)arMtbOverloadedMethods[0]).Invoke(new object[] {ojArgument}); 
-////					}
-////					else {
-////						try {
-////							ojResult=arMtbOverloadedMethods[0].Invoke(ojTarget,new object[] {ojArgument});
-////						}
-////						catch {
-////							throw new ApplicationException("Could not invoke "+sName+".");
-////						}
-////					}
-////				}
-////				else {
-//					ArrayList arlOArguments=((IMap)ojArgument).ArlojIntegerKeyValues;
-//					object ojReturn=null;
-//					ArrayList arlMtifRightNumberArguments=new ArrayList();
-//					foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
-//						if(arlOArguments.Count==mtbCurrent.GetParameters().Length) { // don't match if different parameter list length
-//							if(arlOArguments.Count==((IMap)ojArgument).Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
-//								arlMtifRightNumberArguments.Add(mtbCurrent);
-//							}
-//						}
-//					}
-//					if(arlMtifRightNumberArguments.Count==0) {
-//						int asdf=0;//throw new ApplicationException("No methods with the right number of arguments.");// TODO: Just a quickfix, really
-//					}
-//					bool blaExecuted=false;
-//					foreach(MethodBase mtbCurrent in arlMtifRightNumberArguments) {
-//						ArrayList arlArguments=new ArrayList();
-//						bool blaArgumentsMatched=true;
-//						ParameterInfo[] arPrmtifParameters=mtbCurrent.GetParameters();
-//						for(int i=0;blaArgumentsMatched && i<arPrmtifParameters.Length;i++) {
-//							arlArguments.Add(ojConvertParameterOjTOutbla(arlOArguments[i],arPrmtifParameters[i].ParameterType,out blaArgumentsMatched));
-//						}
-//						if(blaArgumentsMatched) {
-//							if(mtbCurrent is ConstructorInfo) {
-//								ojReturn=((ConstructorInfo)mtbCurrent).Invoke(arlArguments.ToArray());
-//							}
-//							else {
-//								ojReturn=mtbCurrent.Invoke(ojTarget,arlArguments.ToArray());
-//							}
-//							blaExecuted=true;// remove, use blaArgumentsMatched instead
-//							break;
-//						}
-//					}
-//					// TODO: ojResult / ojReturn is duplication
-//					ojResult=ojReturn; // mess, why is this here? put in else after the next if
-//					// make this safe
-////					if(!blaExecuted && arMtbOverloadedMethods[0] is ConstructorInfo) { // TODO: why is this needed, can't constructors be called normally? Ah, now I get it, this is for automatical initializing of new classes. This is, however, very confusing, and should, in my opinion be remove, if possible into a library. .NET stuff will not be used directly as often as I first thought, I think, so this stuff isn't so important
-////						object ojToBeInitialized=new NetMethod(tTarget).ojCallMultiArgumentOj(new Map());
-////						//						object ojToBeInitialized=new NetMethod(tTarget).ojCallOj(new Map());
-////						ojResult=with(ojToBeInitialized,((Map)ojArgument));
-////					}// TODO: somehow determine if no method has been called at all and throw an exception then
-////					else if(arlMtifRightNumberArguments.Count==0) {
-////						throw new ApplicationException("Method "+sName+" could not be invoked.");
-////					}
-////				}		
-//				if(ojResult==null) {
-//					int asdf=0;
-//				}
-//				return Interpreter.ConvertDotNetToMeta(ojResult);
-//			}
-//			public object ojCallOj(object ojArgument) {
-//				if(this.sName=="Write") {
-//					int asdf=0;
-//				}
-//				object result=null;
-//				// TODO: check this for every method:
-//				// introduce own methodinfo class? that does the calling, maybe??? dynamic cast might become a performance
-//				// problem, but I doubt it, so what?
-//				if(blaLibraryMethod) {
-//					if(arMtbOverloadedMethods[0] is ConstructorInfo) {
-//						// TODO: Comment this properly: kcall arMtbOverloadedMethods without arguments, ugly and redundant, because Invoke is not compatible between
-//						// constructor and normal method
-//						result=((ConstructorInfo)arMtbOverloadedMethods[0]).Invoke(new object[] {argument}); 
-//					}
-//					else {
-//						try {
-//							if(this.sName=="while") {
-//								int asdf=0;
-//							}
-//							result=arMtbOverloadedMethods[0].Invoke(ojTarget,new object[] {argument});
-//						}
-//						catch {
-//							throw new ApplicationException("Could not invoke "+this.sName+".");
-//						}
-//					}
-//				}
-//				else {
-//					ArrayList argumentList=((IMap)argument).ArlojIntegerKeyValues;
-//					object returnValue=null;
-//					ArrayList sameLengthMethods=new ArrayList();
-//					foreach(MethodBase method in arMtbOverloadedMethods) {
-//						if(argumentList.Count==method.GetParameters().Length) { // don't match if different parameter list length
-//							if(argumentList.Count==((IMap)argument).Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
-//								sameLengthMethods.Add(method);
-//							}
-//						}
-//					}
-//					bool executed=false;
-//					foreach(MethodBase method in sameLengthMethods) {
-//						ArrayList args=new ArrayList();
-//						bool argumentsMatched=true;
-//						ParameterInfo[] parameters=method.GetParameters();
-//						for(int i=0;argumentsMatched && i<parameters.Length;i++) {
-//							args.Add(ojConvertParameterOjTOutbla(argumentList[i],parameters[i].ParameterType,out argumentsMatched));
-//						}
-//						if(argumentsMatched) {
-//							if(method is ConstructorInfo) {
-//								returnValue=((ConstructorInfo)method).Invoke(args.ToArray());
-//							}
-//							else {
-//								if(method.sName.Equals("Invoke")) {
-//									int asdf=0;
-//								}
-//								returnValue=method.Invoke(ojTarget,args.ToArray());
-//							}
-//							executed=true;// remove, use argumentsMatched instead
-//							break;
-//						}
-//					}
-//					result=returnValue; // mess, why is this here? put in else after the next if
-//					// make this safe
-//					if(!executed && arMtbOverloadedMethods[0] is ConstructorInfo) {
-//						object o=new NetMethod(tTarget).ojCallOj(new Map());
-//						result=with(o,((Map)argument));
-//					}
-//				}		
-//				return Interpreter.ConvertDotNetToMeta(result);
-//			}
-			// TODO: Refactor, include 
-//			public static object with(object obj,IMap map) {
-//				NetObject netObject=new NetObject(obj);
-//				foreach(DictionaryEntry entry in map) {
-//					netObject[entry.Key]=entry.Value;
-//				}
-//				return obj;
-//			}
-//			public static object with(object obj,IMap map) {
-//				NetObject netObject=new NetObject(obj);
-//				foreach(DictionaryEntry entry in map) {
-//					netObject[entry.Key]=entry.Value;
-//				}
-//				return obj;
-//			}
 			/* Create a delegate of a certain tTarget that calls a Meta function. */
 			public static Delegate delFromF(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
 				code.MParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
