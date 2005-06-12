@@ -2300,7 +2300,7 @@ namespace Meta {
 					object[] aoCustomAttributes=tTest.GetCustomAttributes(typeof(SerializeMethodsAttribute),false);
 					string[] asMethodNames=new string[0];
 					if(aoCustomAttributes.Length!=0) {
-						asMethodNames=((SerializeMethodsAttribute)aoCustomAttributes[0]).names;
+						asMethodNames=((SerializeMethodsAttribute)aoCustomAttributes[0]).asMethods;
 					}
 					Console.Write(tTest.Name + "...");
 					DateTime dtStarted=DateTime.Now;
@@ -2343,66 +2343,65 @@ namespace Meta {
 			public static string Serialize(object oObject) {
 				return Serialize(oObject,"",new string[]{});
 			}
-			public static string Serialize(object serialize,string indent,string[] methods) {
-				if(serialize==null) {
-					return indent+"null\n";
+			public static string Serialize(object oSerialize,string sIndent,string[] asMethods) {
+				if(oSerialize==null) {
+					return sIndent+"null\n";
 				}
-				if(serialize is ISerializeSpecial) {
-					string text=((ISerializeSpecial)serialize).Serialize(indent,methods);
-					if(text!=null) {
-						return text;
+				if(oSerialize is ISerializeSpecial) {
+					string sText=((ISerializeSpecial)oSerialize).Serialize(sIndent,asMethods);
+					if(sText!=null) {
+						return sText;
 					}
 				}
-				if(serialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
+				if(oSerialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
 					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) {
-					return indent+"\""+serialize.ToString()+"\""+"\n";
+					return sIndent+"\""+oSerialize.ToString()+"\""+"\n";
 				}
-				if(serialize is IEnumerable) {
-					string text="";
-					foreach(object entry in (IEnumerable)serialize) {
-						text+=indent+"Entry ("+entry.GetType().Name+")\n"+Serialize(entry,indent+"  ",methods);
+				if(oSerialize is IEnumerable) {
+					string sText="";
+					foreach(object oEntry in (IEnumerable)oSerialize) {
+						sText+=sIndent+"Entry ("+oEntry.GetType().Name+")\n"+Serialize(oEntry,sIndent+"  ",asMethods);
 					}
-					return text;
+					return sText;
 				}
-				string t="";
-				ArrayList members=new ArrayList();
+				string sT=""; // TODO: maybe refactor this to all use the same variable
+				ArrayList ambifMembers=new ArrayList();
 
-				members.AddRange(serialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
-				members.AddRange(serialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
-				foreach(string methodName in methods) {
-					MethodInfo method=serialize.GetType().GetMethod(methodName,BindingFlags.Public|BindingFlags.Instance);
-					if(method!=null) { /* Only add method to members if it really exists, this isn't sure because methods are supplied per test not per class. */
-						members.Add(method);
+				ambifMembers.AddRange(oSerialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
+				ambifMembers.AddRange(oSerialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
+				foreach(string sMethod in asMethods) {
+					MethodInfo mtifCurrent=oSerialize.GetType().GetMethod(sMethod,BindingFlags.Public|BindingFlags.Instance);
+					if(mtifCurrent!=null) { /* Only add mtifCurrent to ambifMembers if it really exists, this isn't sure because asMethods are supplied per test not per class. */
+						ambifMembers.Add(mtifCurrent);
 					}
 				}
-				members.Sort(new CompareMemberInfos());
-				foreach(MemberInfo member in members) {
-					if(member.Name!="Item") {
-						if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) {
-							if(serialize.GetType().Namespace==null ||!serialize.GetType().Namespace.Equals("System.Windows.Forms")) { // ugly hack to avoid some srange behaviour of some classes in System.Windows.Forms
-								object val=serialize.GetType().InvokeMember(member.Name,BindingFlags.Public
+				ambifMembers.Sort(new CompareMemberInfos());
+				foreach(MemberInfo mbifMember in ambifMembers) {
+					if(mbifMember.Name!="Item") {
+						if(mbifMember.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) {
+							if(oSerialize.GetType().Namespace==null ||!oSerialize.GetType().Namespace.Equals("System.Windows.Forms")) { // ugly hack to avoid some srange behaviour of some classes in System.Windows.Forms
+								object oValue=oSerialize.GetType().InvokeMember(mbifMember.Name,BindingFlags.Public
 									|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
-									|BindingFlags.InvokeMethod,null,serialize,null);
-								t+=indent+member.Name;
-								if(val!=null) {
-									t+=" ("+val.GetType().Name+")";
+									|BindingFlags.InvokeMethod,null,oSerialize,null);
+								sT+=sIndent+mbifMember.Name;
+								if(oValue!=null) {
+									sT+=" ("+oValue.GetType().Name+")";
 								}
-								t+=":\n"+Serialize(val,indent+"  ",methods);
+								sT+=":\n"+Serialize(oValue,sIndent+"  ",asMethods);
 							}
 						}
 					}
 				}
-				return t;
+				return sT;
 			}
 		}
-		internal class CompareMemberInfos:IComparer {
-			public int Compare(object first,object second) {
-				if(first==null || second==null || ((MemberInfo)first).Name==null || ((MemberInfo)second).Name==null) {
-					int asdf=0;
+		class CompareMemberInfos:IComparer {
+			public int Compare(object oFirst,object oSecond) {
+				if(oFirst==null || oSecond==null || ((MemberInfo)oFirst).Name==null || ((MemberInfo)oSecond).Name==null) {
 					return 0;
 				}
 				else {
-					return ((MemberInfo)first).Name.CompareTo(((MemberInfo)second).Name);
+					return ((MemberInfo)oFirst).Name.CompareTo(((MemberInfo)oSecond).Name);
 				}
 			}
 		}
@@ -2411,9 +2410,9 @@ namespace Meta {
 		}
 		[AttributeUsage(AttributeTargets.Class)]
 		public class SerializeMethodsAttribute:Attribute {
-			public string[] names;
-			public SerializeMethodsAttribute(string[] names) {
-				this.names=names;
+			public string[] asMethods;
+			public SerializeMethodsAttribute(string[] asMethods) {
+				this.asMethods=asMethods;
 			}
 		}
 	}
