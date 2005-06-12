@@ -37,7 +37,7 @@ public class map {
 	}
 	public static bool bHasKeyMO(Map map,object key) {
 		string a="";
-		return map.BlaHasKeyO(key);
+		return map.BHasKeyO(key);
 	}
 	public static int iCountM(Map map) {
 		return map.ItgCount;

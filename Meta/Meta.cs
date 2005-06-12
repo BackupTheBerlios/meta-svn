@@ -129,7 +129,7 @@ namespace Meta {
 			public override object OEvaluateM(IMap mParent) {
 				object oKey=eKey.OEvaluateM(mParent);
 				IMap mSelected=mParent;
-				while(!mSelected.BlaHasKeyO(oKey)) {
+				while(!mSelected.BHasKeyO(oKey)) {
 					mSelected=mSelected.MParent;
 					if(mSelected==null) {
 						throw new KeyNotFoundException(oKey,this.EtExtent);
@@ -219,7 +219,7 @@ namespace Meta {
 				swFile.Write(SaveToFileOFn(oMeta,"",true).TrimEnd(new char[]{'\n'}));
 				swFile.Close();
 			}
-			public static string SaveToFileOFn(object oMeta,string sIndent,bool blaRightSide) {
+			public static string SaveToFileOFn(object oMeta,string sIndent,bool bRightSide) {
 				if(oMeta is Map) {
 					string sText="";
 					Map mMap=(Map)oMeta;
@@ -230,7 +230,7 @@ namespace Meta {
 						sText+="()";
 					}
 					else {
-						if(!blaRightSide) {
+						if(!bRightSide) {
 							sText+="(";
 							foreach(DictionaryEntry dtnretEntry in mMap) {
 								sText+='['+SaveToFileOFn(dtnretEntry.Key,sIndent,true)+']'+'='+SaveToFileOFn(dtnretEntry.Value,sIndent,true)+",";
@@ -271,7 +271,7 @@ namespace Meta {
 				Map mResult=new Map();//use clone here?
 				foreach(IKeyValue kvlCurrent in cltkvlToMerge) {
 					foreach(DictionaryEntry dtnetEntry in (IKeyValue)kvlCurrent) {
-						if(dtnetEntry.Value is IKeyValue && !(dtnetEntry.Value is NetClass)&& mResult.BlaHasKeyO(dtnetEntry.Key) 
+						if(dtnetEntry.Value is IKeyValue && !(dtnetEntry.Value is NetClass)&& mResult.BHasKeyO(dtnetEntry.Key) 
 							&& mResult[dtnetEntry.Key] is IKeyValue && !(mResult[dtnetEntry.Key] is NetClass)) {
 							mResult[dtnetEntry.Key]=Merge((IKeyValue)mResult[dtnetEntry.Key],(IKeyValue)dtnetEntry.Value);
 						}
@@ -380,9 +380,9 @@ namespace Meta {
 					amCallers[amCallers.Count-1]=value;
 				}
 			}
-			public static object ConvertMetaToDotNet(object objMeta,Type tTarget,out bool outblaConverted) {
+			public static object ConvertMetaToDotNet(object objMeta,Type tTarget,out bool outbConverted) {
 				if(tTarget.IsSubclassOf(typeof(Enum)) && objMeta is Integer) { 
-					outblaConverted=true;
+					outbConverted=true;
 					return Enum.ToObject(tTarget,((Integer)objMeta).Int);
 				}
 				Hashtable htcvsToDotNet=(Hashtable)
@@ -390,10 +390,10 @@ namespace Meta {
 				if(htcvsToDotNet!=null) {
 					MetaToDotNetConversion mttdncvsConversion=(MetaToDotNetConversion)htcvsToDotNet[objMeta.GetType()];
 					if(mttdncvsConversion!=null) {
-						return mttdncvsConversion.Convert(objMeta,out outblaConverted);
+						return mttdncvsConversion.Convert(objMeta,out outbConverted);
 					}
 				}
-				outblaConverted=false;
+				outbConverted=false;
 				return null;
 			}
 			static Interpreter() {
@@ -526,14 +526,14 @@ namespace Meta {
 				 * is called/assigned to from Meta. */
 
 
-				// TODO: Handle "outblaConverted" correctly
+				// TODO: Handle "outbConverted" correctly
 				public class ConvertIntegerToByte: MetaToDotNetConversion {
 					public ConvertIntegerToByte() {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Byte);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						return System.Convert.ToByte(((Integer)oToConvert).LongValue());
 					}
 				}
@@ -542,8 +542,8 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(bool);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						int i=((Integer)oToConvert).Int;
 						if(i==0) {
 							return false;
@@ -552,7 +552,7 @@ namespace Meta {
 							return true;
 						}
 						else {
-							outblaConverted=false; // TODO
+							outbConverted=false; // TODO
 							return null;
 						}
 					}
@@ -563,8 +563,8 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(SByte);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						return System.Convert.ToSByte(((Integer)oToConvert).LongValue());
 					}
 				}
@@ -573,8 +573,8 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Char);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						return System.Convert.ToChar(((Integer)oToConvert).LongValue());
 					}
 				}
@@ -583,8 +583,8 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Int32);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						return System.Convert.ToInt32(((Integer)oToConvert).LongValue());
 					}
 				}
@@ -593,8 +593,8 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(UInt32);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						return System.Convert.ToUInt32(((Integer)oToConvert).LongValue());
 					}
 				}
@@ -603,8 +603,8 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Int64);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						return System.Convert.ToInt64(((Integer)oToConvert).LongValue());
 					}
 				}
@@ -613,8 +613,8 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(UInt64);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						return System.Convert.ToUInt64(((Integer)oToConvert).LongValue());
 					}
 				}
@@ -623,8 +623,8 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Int16);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						return System.Convert.ToInt16(((Integer)oToConvert).LongValue());
 					}
 				}
@@ -633,8 +633,8 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(UInt16);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						return System.Convert.ToUInt16(((Integer)oToConvert).LongValue());
 					}
 				}
@@ -643,8 +643,8 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(decimal);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						return (decimal)(((Integer)oToConvert).LongValue());
 					}
 				}
@@ -653,8 +653,8 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(double);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						return (double)(((Integer)oToConvert).LongValue());
 					}
 				}
@@ -663,8 +663,8 @@ namespace Meta {
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(float);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
-						outblaConverted=true;
+					public override object Convert(object oToConvert, out bool outbConverted) {
+						outbConverted=true;
 						return (float)(((Integer)oToConvert).LongValue());
 					}
 				}
@@ -673,13 +673,13 @@ namespace Meta {
 						this.tSource=typeof(Map);
 						this.tTarget=typeof(string);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outbConverted) {
 						if(((Map)oToConvert).IsString) {
-							outblaConverted=true;
+							outbConverted=true;
 							return ((Map)oToConvert).SDotNetString();
 						}
 						else {
-							outblaConverted=false;
+							outbConverted=false;
 							return null;
 						}
 					}
@@ -692,14 +692,14 @@ namespace Meta {
 						this.tSource=typeof(Map); 
 						this.tTarget=typeof(decimal); 
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outbConverted) {
 						Map mMap=(Map)oToConvert;
 						if(mMap[new Map("iNumerator")] is Integer && mMap[new Map("iDenominator")] is Integer) {
-							outblaConverted=true;
+							outbConverted=true;
 							return ((decimal)((Integer)mMap[new Map("iNumerator")]).LongValue())/((decimal)((Integer)mMap[new Map("iDenominator")]).LongValue());
 						}
 						else {
-							outblaConverted=false;
+							outbConverted=false;
 							return null;
 						}
 					}
@@ -710,14 +710,14 @@ namespace Meta {
 						this.tSource=typeof(Map);
 						this.tTarget=typeof(double);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outbConverted) {
 						Map mMap=(Map)oToConvert;
 						if(mMap[new Map("iNumerator")] is Integer && mMap[new Map("iDenominator")] is Integer) {
-							outblaConverted=true;
+							outbConverted=true;
 							return ((double)((Integer)mMap[new Map("iNumerator")]).LongValue())/((double)((Integer)mMap[new Map("iDenominator")]).LongValue());
 						}
 						else {
-							outblaConverted=false;
+							outbConverted=false;
 							return null;
 						}
 					}
@@ -728,14 +728,14 @@ namespace Meta {
 						this.tSource=typeof(Map);
 						this.tTarget=typeof(float);
 					}
-					public override object Convert(object oToConvert, out bool outblaConverted) {
+					public override object Convert(object oToConvert, out bool outbConverted) {
 						Map mMap=(Map)oToConvert;
 						if(mMap[new Map("iNumerator")] is Integer && mMap[new Map("iDenominator")] is Integer) {
-							outblaConverted=true;
+							outbConverted=true;
 							return ((float)((Integer)mMap[new Map("iNumerator")]).LongValue())/((float)((Integer)mMap[new Map("iDenominator")]).LongValue());
 						}
 						else {
-							outblaConverted=false;
+							outbConverted=false;
 							return null;
 						}
 					}
@@ -906,7 +906,7 @@ namespace Meta {
 			int ItgCount {
 				get;
 			}
-			bool BlaHasKeyO(object key);			
+			bool BHasKeyO(object key);			
 		}		
 		/* Represents a lazily evaluated "library" Meta file. */
 		public class MetaLibrary { // TODO: Put this into Library class, make base class for everything that gets loaded
@@ -962,11 +962,11 @@ namespace Meta {
 				}
 			}
 			public Map mCache;
-			public bool BlaHasKeyO(object key) {
+			public bool BHasKeyO(object key) {
 				if(mCache==null) {
 					Load();
 				}
-				return mCache.BlaHasKeyO(key);
+				return mCache.BHasKeyO(key);
 			}
 			public IEnumerator GetEnumerator() {
 				if(mCache==null) {
@@ -1000,7 +1000,7 @@ namespace Meta {
 		public class Library: IKeyValue,IMap {
 			public object this[object oKey] {
 				get {
-					if(mCache.BlaHasKeyO(oKey)) {
+					if(mCache.BHasKeyO(oKey)) {
 						if(mCache[oKey] is MetaLibrary) {
 							mCache[oKey]=((MetaLibrary)mCache[oKey]).OLoad();
 						}
@@ -1027,8 +1027,8 @@ namespace Meta {
 					return mCache.ItgCount;
 				}
 			}
-			public bool BlaHasKeyO(object oKey) {
-				return mCache.BlaHasKeyO(oKey);
+			public bool BHasKeyO(object oKey) {
+				return mCache.BHasKeyO(oKey);
 			}
 			public ArrayList AoIntegerKeyValues {
 				get {
@@ -1058,7 +1058,7 @@ namespace Meta {
 							ArrayList asSubPaths=new ArrayList(tCurrent.FullName.Split('.'));
 							asSubPaths.RemoveAt(asSubPaths.Count-1);
 							foreach(string sSubPath in asSubPaths)  {
-								if(!mPosition.BlaHasKeyO(new Map(sSubPath)))  {
+								if(!mPosition.BHasKeyO(new Map(sSubPath)))  {
 									mPosition[new Map(sSubPath)]=new Map();
 								}
 								mPosition=(Map)mPosition[new Map(sSubPath)];
@@ -1114,7 +1114,7 @@ namespace Meta {
 			private Map mCachedAssemblyInfo=new Map();
 			public ArrayList GetNamespaces(Assembly asbAssembly) { //refactor, integrate into LoadNamespaces???
 				ArrayList asNamespaces=new ArrayList();
-				if(mCachedAssemblyInfo.BlaHasKeyO(new Map(asbAssembly.Location))) {
+				if(mCachedAssemblyInfo.BHasKeyO(new Map(asbAssembly.Location))) {
 					Map info=(Map)mCachedAssemblyInfo[new Map(asbAssembly.Location)];
 					string sTimeStamp=((Map)info[new Map("timestamp")]).SDotNetString();
 					if(sTimeStamp.Equals(File.GetCreationTime(asbAssembly.Location).ToString())) {
@@ -1302,22 +1302,22 @@ namespace Meta {
 			}
 			public Expression ECompile()  { // eCompiled Statements are not cached, only expressions
 				if(eCompiled==null)  {
-					if(this.BlaHasKeyO(Meta.Execution.Call.sCall)) {
+					if(this.BHasKeyO(Meta.Execution.Call.sCall)) {
 						eCompiled=new Call(this);
 					}
-					else if(this.BlaHasKeyO(Delayed.sDelayed)) { // TODO: could be optimized, but compilation happens seldom
+					else if(this.BHasKeyO(Delayed.sDelayed)) { // TODO: could be optimized, but compilation happens seldom
 						eCompiled=new Delayed(this);
 					}
-					else if(this.BlaHasKeyO(Program.sProgram)) {
+					else if(this.BHasKeyO(Program.sProgram)) {
 						eCompiled=new Program(this);
 					}
-					else if(this.BlaHasKeyO(Literal.sLiteral)) {
+					else if(this.BHasKeyO(Literal.sLiteral)) {
 						eCompiled=new Literal(this);
 					}
-					else if(this.BlaHasKeyO(Search.sSearch)) {// TODO: use static expression strings
+					else if(this.BHasKeyO(Search.sSearch)) {// TODO: use static expression strings
 						eCompiled=new Search(this);
 					}
-					else if(this.BlaHasKeyO(Select.sSelect)) {
+					else if(this.BHasKeyO(Select.sSelect)) {
 						eCompiled=new Select(this);
 					}
 					else {
@@ -1327,7 +1327,7 @@ namespace Meta {
 					((Expression)eCompiled).EtExtent=this.EtExtent;
 				return eCompiled;
 			}
-			public bool BlaHasKeyO(object oKey)  {
+			public bool BHasKeyO(object oKey)  {
 				if(oKey is Map) {
 					if(oKey.Equals(sArg)) {
 						return this.Argument!=null;
@@ -1645,9 +1645,9 @@ namespace Meta {
 		public delegate object DelegateCreatedForGenericDelegates(); // TODO: rename?
 		public class NetMethod: ICallable {
 			// TODO: Move this to "With" ? Move this to NetContainer?
-			public static object oAssignCollectionMOOutbla(Map mCollection,object oCollection,out bool blaSuccess) { // TODO: is blaSuccess needed?
+			public static object oAssignCollectionMOOutb(Map mCollection,object oCollection,out bool bSuccess) { // TODO: is bSuccess needed?
 				if(mCollection.AoIntegerKeyValues.Count==0) {
-					blaSuccess=false;
+					bSuccess=false;
 					return null;
 				}
 				Type tTarget=oCollection.GetType();
@@ -1656,18 +1656,18 @@ namespace Meta {
 					foreach(object oEntry in mCollection.AoIntegerKeyValues) { // combine this with Library function "Init"
 						mtifAdding.Invoke(oCollection,new object[]{oEntry});//  call mtifAdding from above!
 					}
-					blaSuccess=true;
+					bSuccess=true;
 				}
 				else {
-					blaSuccess=false;
+					bSuccess=false;
 				}
 
 				return oCollection;
 			}
 			// TODO: finally invent a Meta tTarget??? Would be useful here for prefix to Meta,
 			// it isn't, after all just any object
-			public static object oConvertParameterOTOutbla(object oMeta,Type tParameter,out bool outblaConverted) {
-				outblaConverted=true;
+			public static object oConvertParameterOTOutb(object oMeta,Type tParameter,out bool outbConverted) {
+				outbConverted=true;
 				if(tParameter.IsAssignableFrom(oMeta.GetType())) {
 					return oMeta;
 				}
@@ -1693,13 +1693,13 @@ namespace Meta {
 					}
 				}
 				else {
-					bool outblaParamConverted; // TODO: refactor with outblaConverted
-					object oResult=Interpreter.ConvertMetaToDotNet(oMeta,tParameter,out outblaParamConverted);
-					if(outblaParamConverted) {
+					bool outbParamConverted; // TODO: refactor with outbConverted
+					object oResult=Interpreter.ConvertMetaToDotNet(oMeta,tParameter,out outbParamConverted);
+					if(outbParamConverted) {
 						return oResult;
 					}
 				}
-				outblaConverted=false;
+				outbConverted=false;
 				return null;
 			}
 			public object oCallO(object oArgument) {
@@ -1717,22 +1717,22 @@ namespace Meta {
 						aOneArgumentMethods.Add(mtbCurrent);
 					}
 				}
-				bool blaExecuted=false;
+				bool bExecuted=false;
 				foreach(MethodBase mtbCurrent in aOneArgumentMethods) {
-					bool blaConverted;
-					object oParameter=oConvertParameterOTOutbla(oArgument,mtbCurrent.GetParameters()[0].ParameterType,out blaConverted);
-					if(blaConverted) {
+					bool bConverted;
+					object oParameter=oConvertParameterOTOutb(oArgument,mtbCurrent.GetParameters()[0].ParameterType,out bConverted);
+					if(bConverted) {
 						if(mtbCurrent is ConstructorInfo) {
 							oReturn=((ConstructorInfo)mtbCurrent).Invoke(new object[] {oParameter});
 						}
 						else {
 							oReturn=mtbCurrent.Invoke(oTarget,new object[] {oParameter});
 						}
-						blaExecuted=true;// remove, use blaArgumentsMatched instead
+						bExecuted=true;// remove, use bArgumentsMatched instead
 						break;
 					}
 				}
-				if(!blaExecuted) {
+				if(!bExecuted) {
 					ArrayList aOArguments=((IMap)oArgument).AoIntegerKeyValues;
 					ArrayList aMtifRightNumberArguments=new ArrayList();
 					foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
@@ -1747,19 +1747,19 @@ namespace Meta {
 					}
 					foreach(MethodBase mtbCurrent in aMtifRightNumberArguments) {
 						ArrayList aArguments=new ArrayList();
-						bool blaArgumentsMatched=true;
+						bool bArgumentsMatched=true;
 						ParameterInfo[] arPrmtifParameters=mtbCurrent.GetParameters();
-						for(int i=0;blaArgumentsMatched && i<arPrmtifParameters.Length;i++) {
-							aArguments.Add(oConvertParameterOTOutbla(aOArguments[i],arPrmtifParameters[i].ParameterType,out blaArgumentsMatched));
+						for(int i=0;bArgumentsMatched && i<arPrmtifParameters.Length;i++) {
+							aArguments.Add(oConvertParameterOTOutb(aOArguments[i],arPrmtifParameters[i].ParameterType,out bArgumentsMatched));
 						}
-						if(blaArgumentsMatched) {
+						if(bArgumentsMatched) {
 							if(mtbCurrent is ConstructorInfo) {
 								oReturn=((ConstructorInfo)mtbCurrent).Invoke(aArguments.ToArray());
 							}
 							else {
 								oReturn=mtbCurrent.Invoke(oTarget,aArguments.ToArray());
 							}
-							blaExecuted=true;// remove, use blaArgumentsMatched instead
+							bExecuted=true;// remove, use bArgumentsMatched instead
 							break;
 						}
 					}
@@ -1805,7 +1805,7 @@ namespace Meta {
 				if(mtifMethod!=null) {
 					if(!mtifMethod.ReturnType.Equals(typeof(void))) {
 						sSource+="return ("+sReturnType+")";
-						sSource+="Interpreter.ConvertMetaToDotNet(oResult,typeof("+sReturnType+"));"; // does conversion even make sense here? Must be outblaConverted back anyway.
+						sSource+="Interpreter.ConvertMetaToDotNet(oResult,typeof("+sReturnType+"));"; // does conversion even make sense here? Must be outbConverted back anyway.
 					}
 				}
 				else {
@@ -1905,7 +1905,7 @@ namespace Meta {
 		}
 		/* Base class for NetObject and NetClass. */
 		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial {
-			public bool BlaHasKeyO(object oKey) {
+			public bool BHasKeyO(object oKey) {
 				if(oKey is Map) {
 					if(((Map)oKey).IsString) {
 						string sText=((Map)oKey).SDotNetString();
@@ -1996,13 +1996,13 @@ namespace Meta {
 								FieldInfo fifField=(FieldInfo)ambifMembers[0];
 								bool oConverted;
 								object oValue;
-								oValue=NetMethod.oConvertParameterOTOutbla(value,fifField.FieldType,out oConverted);
+								oValue=NetMethod.oConvertParameterOTOutb(value,fifField.FieldType,out oConverted);
 								if(oConverted) {
 									fifField.SetValue(oObject,oValue);
 								}
 								if(!oConverted) {
 									if(value is Map) {
-										oValue=NetMethod.oAssignCollectionMOOutbla((Map)value,fifField.GetValue(oObject),out oConverted);
+										oValue=NetMethod.oAssignCollectionMOOutb((Map)value,fifField.GetValue(oObject),out oConverted);
 									}
 								}
 								if(!oConverted) {
@@ -2014,13 +2014,13 @@ namespace Meta {
 							else if(ambifMembers[0] is PropertyInfo) {
 								PropertyInfo pptifProperty=(PropertyInfo)ambifMembers[0];
 								bool oConverted;
-								object oValue=NetMethod.oConvertParameterOTOutbla(value,pptifProperty.PropertyType,out oConverted);
+								object oValue=NetMethod.oConvertParameterOTOutb(value,pptifProperty.PropertyType,out oConverted);
 								if(oConverted) {
 									pptifProperty.SetValue(oObject,oValue,new object[]{});
 								}
 								if(!oConverted) {
 									if(value is Map) {
-										NetMethod.oAssignCollectionMOOutbla((Map)value,pptifProperty.GetValue(oObject,new object[]{}),out oConverted);
+										NetMethod.oAssignCollectionMOOutb((Map)value,pptifProperty.GetValue(oObject,new object[]{}),out oConverted);
 									}
 									if(!oConverted) {
 										throw new ApplicationException("Property "+this.tType.Name+"."+Interpreter.SaveToFileOFn(oKey,"",false)+" could not be set to "+value.ToString()+". The value can not be oConverted.");
