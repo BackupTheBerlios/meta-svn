@@ -38,13 +38,6 @@ Entry (DictionaryEntry)
         "Boolean or(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "oWithOM"
-  Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "System.Object oWithOM(System.Object, Meta.Types.IMap)"
-Entry (DictionaryEntry)
-  Key (Map):
     "mMergeAm"
   Value (NetMethod):
     arMtbOverloadedMethods (MethodBase[]):
@@ -78,6 +71,13 @@ Entry (DictionaryEntry)
     arMtbOverloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.Map sTrimStartS(Meta.Types.Map)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "oInitOM"
+  Value (NetMethod):
+    arMtbOverloadedMethods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "System.Object oInitOM(System.Object, Meta.Types.IMap)"
 Entry (DictionaryEntry)
   Key (Map):
     "oRunS"

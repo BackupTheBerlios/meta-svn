@@ -881,7 +881,7 @@ asmStatements (ArrayList):
             startLine (Int32):
               "30"
           oLiteral (Map):
-            "oWithOM"
+            "oInitOM"
         EtExtent (Extent):
           endColumn (Int32):
             "13"

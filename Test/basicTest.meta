@@ -27,7 +27,7 @@ this=map.mMergeAm
 trimStartTest=sTrimStartS
 	"					hello"
 	'\\t
-form=oWithOM
+form=oInitOM
 	System.Windows.Forms.Form'
 	=
 		Text='hello

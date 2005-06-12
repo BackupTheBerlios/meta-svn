@@ -95,7 +95,7 @@ public class map {
 	public static IKeyValue mMergeAm(Map arg) {
 		return (Map)Interpreter.MergeCollection(arg.AoIntegerKeyValues);
 	}
-	public static object oWithOM(object obj,IMap map) {
+	public static object oInitOM(object obj,IMap map) {
 		NetObject netObject=new NetObject(obj);
 		foreach(DictionaryEntry entry in map) {
 			netObject[entry.Key]=entry.Value;

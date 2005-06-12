@@ -1592,7 +1592,7 @@ getFirstChild (MetaAST):
                   getNextSibling:
                     null
                   getText (String):
-                    "oWithOM"
+                    "oInitOM"
                   Type (Int32):
                     "23"
                 getNextSibling (MetaAST):

@@ -520,7 +520,7 @@ Entry (DictionaryEntry)
                           Key (Map):
                             "literal"
                           Value (Map):
-                            "oWithOM"
+                            "oInitOM"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
