@@ -116,7 +116,7 @@ namespace Meta {
 			}
 			public static readonly Map sLiteral=new Map("literal");
 			public Literal(Map code) {
-				this.oLiteral=Interpreter.ORecognizeLiteralS((string)((Map)code[sLiteral]).SDotNetString());
+				this.oLiteral=Interpreter.ORecognizeLiteralS((string)((Map)code[sLiteral]).SString);
 			}
 			public object oLiteral=null;
 		}
@@ -223,8 +223,8 @@ namespace Meta {
 				if(oMeta is Map) {
 					string sText="";
 					Map mMap=(Map)oMeta;
-					if(mMap.IsString) {
-						sText+="\""+(mMap).SDotNetString()+"\"";
+					if(mMap.BIsString) {
+						sText+="\""+(mMap).SString+"\"";
 					}
 					else if(mMap.ICount==0) {
 						sText+="()";
@@ -243,11 +243,11 @@ namespace Meta {
 						else {
 							foreach(DictionaryEntry dtnretEntry in mMap) {
 								sText+=sIndent+'['+SaveToFileOFn(dtnretEntry.Key,sIndent,false)+']'+'=';
-								if(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ICount!=0 && !((Map)dtnretEntry.Value).IsString) {
+								if(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ICount!=0 && !((Map)dtnretEntry.Value).BIsString) {
 									sText+="\n";
 								}
 								sText+=SaveToFileOFn(dtnretEntry.Value,sIndent+'\t',true);
-								if(!(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ICount!=0 && !((Map)dtnretEntry.Value).IsString)) {
+								if(!(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ICount!=0 && !((Map)dtnretEntry.Value).BIsString)) {
 									sText+="\n";
 								}
 							}
@@ -310,8 +310,8 @@ namespace Meta {
 				if(oMeta is Integer) {
 					return ((Integer)oMeta).Int;
 				}
-				else if(oMeta is Map && ((Map)oMeta).IsString) {
-					return ((Map)oMeta).SDotNetString();
+				else if(oMeta is Map && ((Map)oMeta).BIsString) {
+					return ((Map)oMeta).SString;
 				}
 				else {
 					return oMeta;
@@ -674,9 +674,9 @@ namespace Meta {
 						this.tTarget=typeof(string);
 					}
 					public override object Convert(object oToConvert, out bool outbConverted) {
-						if(((Map)oToConvert).IsString) {
+						if(((Map)oToConvert).BIsString) {
 							outbConverted=true;
-							return ((Map)oToConvert).SDotNetString();
+							return ((Map)oToConvert).SString;
 						}
 						else {
 							outbConverted=false;
@@ -855,8 +855,8 @@ namespace Meta {
 		public abstract class KeyException:MetaException { // TODO: Add proper formatting here, output strings as strings, for example, if possible, as well as integers
 			public KeyException(object key,Extent extent):base(extent) {
 				sMessage="Key ";
-				if(key is Map && ((Map)key).IsString) {
-					sMessage+=((Map)key).SDotNetString();
+				if(key is Map && ((Map)key).BIsString) {
+					sMessage+=((Map)key).SString;
 				}
 				else if(key is Map) {
 					sMessage+=Interpreter.SaveToFileOFn(key,"",true);
@@ -1116,11 +1116,11 @@ namespace Meta {
 				ArrayList asNamespaces=new ArrayList();
 				if(mCachedAssemblyInfo.BContainsO(new Map(asbAssembly.Location))) {
 					Map info=(Map)mCachedAssemblyInfo[new Map(asbAssembly.Location)];
-					string sTimeStamp=((Map)info[new Map("timestamp")]).SDotNetString();
+					string sTimeStamp=((Map)info[new Map("timestamp")]).SString;
 					if(sTimeStamp.Equals(File.GetCreationTime(asbAssembly.Location).ToString())) {
 						Map mNamespaces=(Map)info[new Map("namespaces")];
 						foreach(DictionaryEntry dtretEntry in mNamespaces) {
-							string text=((Map)dtretEntry.Value).SDotNetString();
+							string text=((Map)dtretEntry.Value).SString;
 							asNamespaces.Add(text);
 						}
 						return asNamespaces;
@@ -1208,22 +1208,24 @@ namespace Meta {
 			public static readonly Map sParent=new Map("parent");
 			public static readonly Map sArg=new Map("arg");
 			public static readonly Map sThis=new Map("this");
-			public object Argument {
+			public object OArgument {
 				get {
-					return arg;
+					return oArg;
 				}
 				set { // TODO: Remove set, maybe?
-					arg=value;
+					oArg=value;
 				}
 			}
-			object arg=null;
-			public bool IsString {
+			object oArg=null;
+			public bool BIsString {
 				get {
-					return mstgTable.IsString;
+					return mstgTable.BIsString;
 				}
 			}
-			public string SDotNetString() { // Refactoring: has a stupid name, Make property
-				return mstgTable.SDotNetString();
+			public string SString {
+				get {// Refactoring: has a stupid name, Make property
+						 return mstgTable.SString;
+					 }
 			}
 			public IMap MParent {
 				get {
@@ -1238,7 +1240,7 @@ namespace Meta {
 					return mstgTable.ICount;
 				}
 			}
-			public ArrayList AoIntegerKeyValues {
+			public ArrayList AoIntegerKeyValues { 
 				get {
 					return mstgTable.AoIntegerKeyValues;
 				}
@@ -1249,7 +1251,7 @@ namespace Meta {
 						return MParent;
 					}
 					else if(oKey.Equals(sArg)) {
-						return Argument;
+						return OArgument;
 					}
 					else if(oKey.Equals(sThis)) {
 						return this;
@@ -1275,14 +1277,14 @@ namespace Meta {
 					}
 				}
 			}
-			public object Execute() { // TODO: Rename to evaluate
-				Expression eFunction=(Expression)ECompile();
-				object oResult;
-				oResult=eFunction.OEvaluateM(this);
-				return oResult;
-			}
+//			public object OExecute() { // TODO: Rename to evaluate
+//				Expression eFunction=(Expression)ECompile();
+//				object oResult;
+//				oResult=eFunction.OEvaluateM(this);
+//				return oResult;
+//			}
 			public object oCallO(object oArgument) {
-				this.Argument=oArgument;
+				this.OArgument=oArgument;
 				Expression eFunction=(Expression)((Map)this[Expression.sRun]).ECompile();
 				object oResult;
 				oResult=eFunction.OEvaluateM(this);
@@ -1330,7 +1332,7 @@ namespace Meta {
 			public bool BContainsO(object oKey)  {
 				if(oKey is Map) {
 					if(oKey.Equals(sArg)) {
-						return this.Argument!=null;
+						return this.OArgument!=null;
 					}
 					else if(oKey.Equals(sParent)) {
 						return this.MParent!=null;
@@ -1386,9 +1388,9 @@ namespace Meta {
 			private IMap mParent;
 			private MapStrategy mstgTable;
 			public Expression eCompiled; // why have this at all, why not for statements? probably a question of performance.
-			public string Serialize(string sIndentation,string[] asFunctions) {
-				if(this.IsString) {
-					return sIndentation+"\""+this.SDotNetString()+"\""+"\n";
+			public string SSerializeSAs(string sIndentation,string[] asFunctions) {
+				if(this.BIsString) {
+					return sIndentation+"\""+this.SString+"\""+"\n";
 				}
 				else {
 					return null;
@@ -1407,13 +1409,15 @@ namespace Meta {
 				public abstract ArrayList AoIntegerKeyValues {
 					get;
 				}
-				public abstract bool IsString {
+				public abstract bool BIsString {
 					get;
 				}
 				
 				// TODO: Rename. Reason: This really means something more abstract, more along the lines of,
 				// "is this a mMap that only has integers as children, and maybe also only integers as keys?"
-				public abstract string SDotNetString();
+				public abstract string SString {
+					get;
+				}
 				public abstract ArrayList AoKeys {
 					get;
 				}
@@ -1481,13 +1485,15 @@ namespace Meta {
 						return aList;
 					}
 				}
-				public override bool IsString {
+				public override bool BIsString {
 					get {
 						return true;
 					}
 				}
-				public override string SDotNetString() {
-					return sText;
+				public override string SString {
+					get {
+						return sText;
+					}
 				}
 				public override ArrayList AoKeys {
 					get {
@@ -1562,11 +1568,11 @@ namespace Meta {
 						return aList;
 					}
 				}
-				public override bool IsString {
+				public override bool BIsString {
 					get {
 						if(AoIntegerKeyValues.Count>0) {
 							try {
-								SDotNetString();// TODO: a bit of a hack
+								object o=SString;// TODO: a bit of a hack
 								return true;
 							}
 							catch{
@@ -1575,22 +1581,24 @@ namespace Meta {
 						return false;
 					}
 				}
-				public override string SDotNetString() { // TODO: looks too complicated
-					string sText="";
-					foreach(object oKey in this.AoKeys) {
-						if(oKey is Integer && this.mstgTable[oKey] is Integer) {
-							try {
-								sText+=Convert.ToChar(((Integer)this.mstgTable[oKey]).Int);
+				public override string SString { // TODO: looks too complicated
+					get {
+						string sText="";
+						foreach(object oKey in this.AoKeys) {
+							if(oKey is Integer && this.mstgTable[oKey] is Integer) {
+								try {
+									sText+=Convert.ToChar(((Integer)this.mstgTable[oKey]).Int);
+								}
+								catch {
+									throw new MapException(this.mMap,"Map is not a string");
+								}
 							}
-							catch {
+							else {
 								throw new MapException(this.mMap,"Map is not a string");
 							}
 						}
-						else {
-							throw new MapException(this.mMap,"Map is not a string");
-						}
+						return sText;
 					}
-					return sText;
 				}
 				public class MapException:ApplicationException { // TODO: Remove or make sense of this
 					Map mMap;
@@ -1907,8 +1915,8 @@ namespace Meta {
 		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial {
 			public bool BContainsO(object oKey) {
 				if(oKey is Map) {
-					if(((Map)oKey).IsString) {
-						string sText=((Map)oKey).SDotNetString();
+					if(((Map)oKey).BIsString) {
+						string sText=((Map)oKey).SString;
 						if(tType.GetMember((string)oKey,
 							BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0) {
 							return true;
@@ -1950,8 +1958,8 @@ namespace Meta {
 			}
 			public virtual object this[object oKey]  {
 				get {
-					if(oKey is Map && ((Map)oKey).IsString) {
-						string sText=((Map)oKey).SDotNetString();
+					if(oKey is Map && ((Map)oKey).BIsString) {
+						string sText=((Map)oKey).SString;
 						MemberInfo[] ambifMembers=tType.GetMember(sText,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(ambifMembers.Length>0) {
 							if(ambifMembers[0] is MethodBase) {
@@ -1985,8 +1993,8 @@ namespace Meta {
 					}
 				}
 				set {
-					if(oKey is Map && ((Map)oKey).IsString) {
-						string sText=((Map)oKey).SDotNetString();
+					if(oKey is Map && ((Map)oKey).BIsString) {
+						string sText=((Map)oKey).SString;
 						MemberInfo[] ambifMembers=tType.GetMember(sText,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(ambifMembers.Length>0) {
 							if(ambifMembers[0] is MethodBase) {
@@ -2054,7 +2062,7 @@ namespace Meta {
 					}
 				}
 			}
-			public string Serialize(string sIndent,string[] functions) {
+			public string SSerializeSAs(string sIndent,string[] functions) {
 				return sIndent;
 			}
 			public Delegate CreateEvent(string sName,Map mCode) {
@@ -2190,7 +2198,7 @@ namespace Meta {
 	}
 	namespace TestingFramework {
 		public interface ISerializeSpecial {
-			string Serialize(string indent,string[] functions);
+			string SSerializeSAs(string indent,string[] functions);
 		}
 		public abstract class TestCase {
 			public abstract object RunTestCase();
@@ -2251,7 +2259,7 @@ namespace Meta {
 					return sIndent+"null\n";
 				}
 				if(oSerialize is ISerializeSpecial) {
-					string sText=((ISerializeSpecial)oSerialize).Serialize(sIndent,asMethods);
+					string sText=((ISerializeSpecial)oSerialize).SSerializeSAs(sIndent,asMethods);
 					if(sText!=null) {
 						return sText;
 					}

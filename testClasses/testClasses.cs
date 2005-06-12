@@ -87,9 +87,9 @@ namespace testClasses
 			def[new Map("y")]=new Map("null");
 			def[new Map("p2")]=new Map("null");
 			arg=(Map)Interpreter.KvMergeAkv(def,arg);
-			this.x=(string)((Map)arg[new Integer(1)]).SDotNetString();
-			this.y=(string)((Map)arg[new Map("y")]).SDotNetString();
-			this.z=(string)((Map)arg[new Map("p2")]).SDotNetString();
+			this.x=(string)((Map)arg[new Integer(1)]).SString;
+			this.y=(string)((Map)arg[new Map("y")]).SString;
+			this.z=(string)((Map)arg[new Map("p2")]).SString;
 		}
 		public string Concatenate(Map arg) {
 			Map def=new Map();
@@ -97,9 +97,9 @@ namespace testClasses
 			def[new Map("b")]=new Map("null");
 			def[new Map("c")]=new Map("null");
 			arg=(Map)Interpreter.KvMergeAkv(def,arg);
-			return (string)((Map)arg[new Integer(1)]).SDotNetString()+
-				(string)((Map)arg[new Map("b")]).SDotNetString()+
-				(string)((Map)arg[new Map("c")]).SDotNetString()+
+			return (string)((Map)arg[new Integer(1)]).SString+
+				(string)((Map)arg[new Map("b")]).SString+
+				(string)((Map)arg[new Map("c")]).SString+
 				this.x+this.y+this.z;
 		}
 	}
