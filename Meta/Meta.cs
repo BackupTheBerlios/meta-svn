@@ -1004,14 +1004,13 @@ namespace Meta {
 			}
 			string sPath;
 		}
-		/* Represents a lazily loaded .NET namespace. */
 		public class LazyNamespace: IKeyValue { // TODO: Put this into library, combine with MetaLibrary
 			public object this[object key] {
 				get {
-					if(cache==null) {
+					if(mCache==null) {
 						Load();
 					}
-					return cache[key];
+					return mCache[key];
 				}
 				set {
 					throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
@@ -1019,47 +1018,47 @@ namespace Meta {
 			}
 			public ArrayList ArlojKeys {
 				get {
-					if(cache==null) {
+					if(mCache==null) {
 						Load();
 					}
-					return cache.ArlojKeys;
+					return mCache.ArlojKeys;
 				}
 			}
 			public int ItgCount {
 				get {
-					if(cache==null) {
+					if(mCache==null) {
 						Load();
 					}
-					return cache.ItgCount;
+					return mCache.ItgCount;
 				}
 			}
-			public string fullName;
-			public ArrayList cachedAssemblies=new ArrayList();
-			public Hashtable namespaces=new Hashtable();
-			public LazyNamespace(string fullName) {
-				this.fullName=fullName;
+			public string sFullName;
+			public ArrayList mCachedAssemblies=new ArrayList();
+			public Hashtable htsNamespaces=new Hashtable();
+			public LazyNamespace(string sFullName) {
+				this.sFullName=sFullName;
 			}
 			public void Load() {
-				cache=new Map();
-				foreach(CachedAssembly cachedAssembly in cachedAssemblies) {
-					cache=(Map)Interpreter.Merge(cache,cachedAssembly.GetNamespaceContents(fullName));
+				mCache=new Map();
+				foreach(CachedAssembly mCachedAssembly in mCachedAssemblies) {
+					mCache=(Map)Interpreter.Merge(mCache,mCachedAssembly.GetNamespaceContents(sFullName));
 				}
-				foreach(DictionaryEntry entry in namespaces) {
-					cache[new Map((string)entry.Key)]=entry.Value;
+				foreach(DictionaryEntry dtretEntry in htsNamespaces) {
+					mCache[new Map((string)dtretEntry.Key)]=dtretEntry.Value;
 				}
 			}
-			public Map cache;
+			public Map mCache;
 			public bool BlaHasKeyOj(object key) {
-				if(cache==null) {
+				if(mCache==null) {
 					Load();
 				}
-				return cache.BlaHasKeyOj(key);
+				return mCache.BlaHasKeyOj(key);
 			}
 			public IEnumerator GetEnumerator() {
-				if(cache==null) {
+				if(mCache==null) {
 					Load();
 				}
-				return cache.GetEnumerator();
+				return mCache.GetEnumerator();
 			}
 		}
 		/* TODO: What's this for? */
@@ -1253,23 +1252,23 @@ namespace Meta {
 						}
 						if(name!="") {
 							foreach(string subpath in name.Split('.')) {
-								if(!selected.namespaces.ContainsKey(subpath)) {
-									string fullName=selected.fullName;
+								if(!selected.htsNamespaces.ContainsKey(subpath)) {
+									string fullName=selected.sFullName;
 									if(fullName!="") {
 										fullName+=".";
 									}
 									fullName+=subpath;
-									selected.namespaces[subpath]=new LazyNamespace(fullName);
+									selected.htsNamespaces[subpath]=new LazyNamespace(fullName);
 								}
-								selected=(LazyNamespace)selected.namespaces[subpath];
+								selected=(LazyNamespace)selected.htsNamespaces[subpath];
 							}
 						}
-						selected.cachedAssemblies.Add(cachedAssembly);
+						selected.mCachedAssemblies.Add(cachedAssembly);
 					}
 				}
 				
 				root.Load();
-				return root.cache;
+				return root.mCache;
 			}
 			public static Library library=new Library();
 			private Map cash=new Map();
