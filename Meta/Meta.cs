@@ -1273,29 +1273,29 @@ namespace Meta {
 			private Map mCache=new Map();
 			public static string sLibraryPath="library"; 
 		}
-		/* Automatically converts Meta keys of a Map to .NET counterparts. Useful when writing libraries. */
+		/* Automatically converts Meta oKeys of a Map to .NET counterparts. Useful when writing libraries. */
 		public class MapAdapter { // TODO: Make this a whole IMap implementation?, if seems useful
-			Map map;
-			public MapAdapter(Map map) {
-				this.map=map;
+			Map mMap;
+			public MapAdapter(Map mMap) {
+				this.mMap=mMap;
 			}
 			public MapAdapter() {
-				this.map=new Map();
+				this.mMap=new Map();
 			}
-			public object this[object key] {
+			public object this[object oKey] {
 				get {
-					return Interpreter.ConvertMetaToDotNet(map[Interpreter.ConvertDotNetToMeta(key)]);
+					return Interpreter.ConvertMetaToDotNet(mMap[Interpreter.ConvertDotNetToMeta(oKey)]);
 				}
 				set {
-					this.map[Interpreter.ConvertDotNetToMeta(key)]=Interpreter.ConvertDotNetToMeta(value);
+					this.mMap[Interpreter.ConvertDotNetToMeta(oKey)]=Interpreter.ConvertDotNetToMeta(value);
 				}
 			}
 		}
 
 		//TODO: cache the ArlojIntegerKeyValues somewhere; put in an "Add" method
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial {
-			public static readonly Map parentString=new Map("parent");
-			public static readonly Map argString=new Map("arg");
+			public static readonly Map sParent=new Map("parent");
+			public static readonly Map sArg=new Map("arg");
 			public static readonly Map sThis=new Map("this");
 			public object Argument {
 				get {
@@ -1308,108 +1308,108 @@ namespace Meta {
 			object arg=null;
 			public bool IsString {
 				get {
-					return table.IsString;
+					return mstgTable.IsString;
 				}
 			}
 			public string SDotNetString() { // Refactoring: has a stupid name, Make property
-				return table.SDotNetString();
+				return mstgTable.SDotNetString();
 			}
 			public IMap MParent {
 				get {
-					return parent;
+					return mParent;
 				}
 				set {
-					parent=value;
+					mParent=value;
 				}
 			}
 			public int ItgCount {
 				get {
-					return table.ItgCount;
+					return mstgTable.ItgCount;
 				}
 			}
 			public ArrayList ArlojIntegerKeyValues {
 				get {
-					return table.ArlojIntegerKeyValues;
+					return mstgTable.ArlojIntegerKeyValues;
 				}
 			}
-			public virtual object this[object key]  {
+			public virtual object this[object oKey]  {
 				get {
-					if(key.Equals(parentString)) {
+					if(oKey.Equals(sParent)) {
 						return MParent;
 					}
-					else if(key.Equals(argString)) {
+					else if(oKey.Equals(sArg)) {
 						return Argument;
 					}
-					else if(key.Equals(sThis)) {
+					else if(oKey.Equals(sThis)) {
 						return this;
 					}
 					else {
-						object result=table[key];
+						object result=mstgTable[oKey];
 						return result;
 					}
 				}
 				set {
 					if(value!=null) {
-						isHashCashed=false;
-						if(key.Equals(sThis)) {
-							this.table=((Map)value).table.Clone();
+						bHashCached=false;
+						if(oKey.Equals(sThis)) {
+							this.mstgTable=((Map)value).mstgTable.Clone();
 						}
 						else {
 							object val=value is IMap? ((IMap)value).MClone(): value; // TODO: combine with next line
 							if(value is IMap) {
 								((IMap)val).MParent=this;
 							}
-							table[key]=val;
+							mstgTable[oKey]=val;
 						}
 					}
 				}
 			}
 			public object Execute() { // TODO: Rename to evaluate
-				Expression function=(Expression)EpsCompileV();
-				object result;
-				result=function.OjEvaluateM(this);
-				return result;
+				Expression eFunction=(Expression)EpsCompileV();
+				object oResult;
+				oResult=eFunction.OjEvaluateM(this);
+				return oResult;
 			}
 			public object ojCallOj(object ojArgument) {
 				this.Argument=ojArgument;
-				Expression function=(Expression)((Map)this[Expression.sRun]).EpsCompileV();
-				object result;
+				Expression eFunction=(Expression)((Map)this[Expression.sRun]).EpsCompileV();
+				object oResult;
 //				Interpreter.arlojArguments.Add(argument);
-				result=function.OjEvaluateM(this);
+				oResult=eFunction.OjEvaluateM(this);
 //				Interpreter.arlojArguments.RemoveAt(Interpreter.arlojArguments.Count-1);
-				return result;
+				return oResult;
 			}
 			public ArrayList ArlojKeys {
 				get {
-					return table.ArlojKeys;
+					return mstgTable.ArlojKeys;
 				}
 			}
 			public IMap MClone() {
-				Map clone=table.CloneMap();
-				clone.MParent=MParent;
-				clone.compiled=compiled;
-				clone.EtExtent=EtExtent;
-				return clone;
+				Map mClone=mstgTable.CloneMap();
+				mClone.MParent=MParent;
+				mClone.eCompiled=eCompiled;
+				mClone.EtExtent=EtExtent;
+				return mClone;
 			}
-			public Expression EpsCompileV()  { // compiled Statements are not cached, only expressions
-				if(compiled==null)  {
+			public Expression EpsCompileV()  { // eCompiled Statements are not cached, only expressions
+				if(eCompiled==null)  {
 					if(this.BlaHasKeyOj(Meta.Execution.Call.sCall)) {
-						compiled=new Call(this);
+						eCompiled=new Call(this);
 					}
 					else if(this.BlaHasKeyOj(Delayed.sDelayed)) { // TODO: could be optimized, but compilation happens seldom
-						compiled=new Delayed(this);
+						eCompiled=new Delayed(this);
 					}
 					else if(this.BlaHasKeyOj(Program.sProgram)) {
-						compiled=new Program(this);
+						eCompiled=new Program(this);
 					}
 					else if(this.BlaHasKeyOj(Literal.sLiteral)) {
-						compiled=new Literal(this);
+						eCompiled=new Literal(this);
 					}
 					else if(this.BlaHasKeyOj(Search.sSearch)) {// TODO: use static expression strings
-						compiled=new Search(this);
+						eCompiled=new Search(this);
 					}
 					else if(this.BlaHasKeyOj(Select.sSelect)) {
-						compiled=new Select(this);
+						eCompiled=new Select(this);
 					}
 					else {
 						throw new ApplicationException("Cannot compile non-code map.");
@@ -1418,73 +1418,73 @@ namespace Meta {
 //				if(this.EtExtent!=null) {
 //					int asdf=0;
 //				}		
-//				if(compiled is Expression) {
-					((Expression)compiled).EtExtent=this.EtExtent;
+//				if(eCompiled is Expression) {
+					((Expression)eCompiled).EtExtent=this.EtExtent;
 //				}
-				return compiled;
+				return eCompiled;
 			}
-			public bool BlaHasKeyOj(object key)  {
-				if(key is Map) {
-					if(key.Equals(argString)) {
+			public bool BlaHasKeyOj(object oKey)  {
+				if(oKey is Map) {
+					if(oKey.Equals(sArg)) {
 						return this.Argument!=null;
 					}
-					else if(key.Equals(parentString)) {
+					else if(oKey.Equals(sParent)) {
 						return this.MParent!=null;
 					}
-					else if(key.Equals(sThis)) {
+					else if(oKey.Equals(sThis)) {
 						return true;
 					}
 				}
-				return table.ContainsKey(key);
+				return mstgTable.ContainsKey(oKey);
 			}
-			public override bool Equals(object obj) {
-				if(Object.ReferenceEquals(obj,this)) {
+			public override bool Equals(object oToCompare) {
+				if(Object.ReferenceEquals(oToCompare,this)) {
 					return true;
 				}
-				if(!(obj is Map)) {
+				if(!(oToCompare is Map)) {
 					return false;
 				}
-				return ((Map)obj).table.Equal(table);
+				return ((Map)oToCompare).mstgTable.Equal(mstgTable);
 			}
 			public IEnumerator GetEnumerator() {
 				return new MapEnumerator(this);
 			}
 			public override int GetHashCode()  {
-				if(!isHashCashed) {
-					hash=this.table.GetHashCode();
-					isHashCashed=true;
+				if(!bHashCached) {
+					iHash=this.mstgTable.GetHashCode();
+					bHashCached=true;
 				}
-				return hash;
+				return iHash;
 			}
-			private bool isHashCashed=false;
-			private int hash;
+			private bool bHashCached=false;
+			private int iHash;
 
-			Extent extent;
+			Extent etExtent;
 			public Extent EtExtent {
 				get {
-					return extent;
+					return etExtent;
 				}
 				set {
-					extent=value;
+					etExtent=value;
 				}
 			}
 			/* TODO: Move some more logic into constructor instead of in Parser?
 			 * There is no clean separation then. But there isn't anyway. I could make 
-			 * it so that only the extent gets passed, that's probably best*/
-			public Map(string text):this(new StringStrategy(text)) {
+			 * it so that only the etExtent gets passed, that's probably best*/
+			public Map(string sText):this(new StringStrategy(sText)) {
 			}
-			public Map(MapStrategy table) {
-				this.table=table;
-				this.table.map=this;
+			public Map(MapStrategy mstgTable) {
+				this.mstgTable=mstgTable;
+				this.mstgTable.map=this;
 			}
 			public Map():this(new HybridDictionaryStrategy()) {
 			}
-			private IMap parent;
-			private MapStrategy table;
-			public Expression compiled; // why have this at all, why not for statements? probably a question of performance.
-			public string Serialize(string indent,string[] functions) {
+			private IMap mParent;
+			private MapStrategy mstgTable;
+			public Expression eCompiled; // why have this at all, why not for statements? probably a question of performance.
+			public string Serialize(string sIndentation,string[] asFunctions) {
 				if(this.IsString) {
-					return indent+"\""+this.SDotNetString()+"\""+"\n";
+					return sIndentation+"\""+this.SDotNetString()+"\""+"\n";
 				}
 				else {
 					return null;
@@ -1551,15 +1551,15 @@ namespace Meta {
 			public class StringStrategy:MapStrategy {
 				// is this really identical with the other strategies? See Hashcode of Integer class to make sure
 				public override int GetHashCode() {
-					int hash=0;
-					for(int i=0;i<text.Length;i++) {//(char c in this.text) {
-						hash+=(i+1)*text[i];
+					int iHash=0;
+					for(int i=0;i<sText.Length;i++) {//(char c in this.sText) {
+						iHash+=(i+1)*sText[i];
 					}
-					return hash;
+					return iHash;
 				}
 				public override bool Equal(MapStrategy obj) {
 					if(obj is StringStrategy) {	// TODO: Decide on single exit for methods, might be useful, especially here
-						return ((StringStrategy)obj).text.Equals(this.text);
+						return ((StringStrategy)obj).sText.Equals(this.sText);
 					}
 					else {
 						return base.Equal(obj);
@@ -1571,7 +1571,7 @@ namespace Meta {
 				public override ArrayList ArlojIntegerKeyValues {
 					get {
 						ArrayList list=new ArrayList();
-						foreach(char c in text) {
+						foreach(char c in sText) {
 							list.Add(new Integer(c));
 						}
 						return list;
@@ -1583,7 +1583,7 @@ namespace Meta {
 					}
 				}
 				public override string SDotNetString() {
-					return text;
+					return sText;
 				}
 				public override ArrayList ArlojKeys {
 					get {
@@ -1591,20 +1591,20 @@ namespace Meta {
 					}
 				}
 				private ArrayList keys=new ArrayList();
-				private string text;
+				private string sText;
 				public StringStrategy(StringStrategy clone) {
-					this.text=clone.text;
+					this.sText=clone.sText;
 					this.keys=(ArrayList)clone.keys.Clone();
 				}
-				public StringStrategy(string text) {
-					this.text=text;
-					for(int i=1;i<=text.Length;i++) { // make this lazy? it won't work with unicode anymore then, though
+				public StringStrategy(string sText) {
+					this.sText=sText;
+					for(int i=1;i<=sText.Length;i++) { // make this lazy? it won't work with unicode anymore then, though
 						keys.Add(new Integer(i));			// TODO: Make this unicode-safe in the first place!
 					}
 				}
 				public override int ItgCount {
 					get {
-						return text.Length;
+						return sText.Length;
 					}
 				}
 				public override object this[object key]  {
@@ -1612,7 +1612,7 @@ namespace Meta {
 						if(key is Integer) {
 							int i=((Integer)key).Int;
 							if(i>0 && i<=this.ItgCount) {
-								return new Integer(text[i-1]);
+								return new Integer(sText[i-1]);
 							}
 						}
 						return null;
@@ -1620,8 +1620,8 @@ namespace Meta {
 					set {
 						/* StringStrategy gets changed. Fall back on standard strategy because we can't be sure
 						 * the map will still be a string afterwards. */
-						map.table=this.Clone();
-						map.table[key]=value;
+						map.mstgTable=this.Clone();
+						map.mstgTable[key]=value;
 					}
 				}
 				public override bool ContainsKey(object key)  {
@@ -1636,17 +1636,17 @@ namespace Meta {
 			/* The standard strategy for maps. */
 			public class HybridDictionaryStrategy:MapStrategy {
 				ArrayList keys;
-				private HybridDictionary table;
+				private HybridDictionary mstgTable;
 				public HybridDictionaryStrategy():this(2) {
 				}
 				public HybridDictionaryStrategy(int count) {
 					this.keys=new ArrayList(count);
-					this.table=new HybridDictionary(count);
+					this.mstgTable=new HybridDictionary(count);
 				}
 				public override Map CloneMap() {
 					Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
 					foreach(object key in keys) {
-						clone[key]=table[key];
+						clone[key]=mstgTable[key];
 					}
 					return clone;
 				}
@@ -1673,11 +1673,11 @@ namespace Meta {
 					}
 				}
 				public override string SDotNetString() { // TODO: looks too complicated
-					string text="";
+					string sText="";
 					foreach(object key in this.ArlojKeys) {
-						if(key is Integer && this.table[key] is Integer) {
+						if(key is Integer && this.mstgTable[key] is Integer) {
 							try {
-								text+=Convert.ToChar(((Integer)this.table[key]).Int);
+								sText+=Convert.ToChar(((Integer)this.mstgTable[key]).Int);
 							}
 							catch {
 								throw new MapException(this.map,"Map is not a string");
@@ -1687,7 +1687,7 @@ namespace Meta {
 							throw new MapException(this.map,"Map is not a string");
 						}
 					}
-					return text;
+					return sText;
 				}
 				public class MapException:ApplicationException { // TODO: Remove or make sense of this
 					Map map;
@@ -1702,22 +1702,22 @@ namespace Meta {
 				}
 				public override int ItgCount {
 					get {
-						return table.Count;
+						return mstgTable.Count;
 					}
 				}
 				public override object this[object key]  {
 					get {
-						return table[key];
+						return mstgTable[key];
 					}
 					set {
 						if(!this.ContainsKey(key)) {
 							keys.Add(key);
 						}
-						table[key]=value;
+						mstgTable[key]=value;
 					}
 				}
 				public override bool ContainsKey(object key)  {
-					return table.Contains(key);
+					return mstgTable.Contains(key);
 				}
 			}
 		}
