@@ -41,10 +41,10 @@ public class map {
 //	}
 	public static bool bHasKeyMO(Map map,object key) {
 		string a="";
-		return map.blaHasKeyOj(key);
+		return map.BlaHasKeyOj(key);
 	}
 	public static int iCountM(Map map) {
-		return map.Count;
+		return map.ItgCount;
 	}
 //	[MetaLibraryMethod]
 	public static Map sTrimStartS(Map arg) {

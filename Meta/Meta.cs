@@ -65,7 +65,7 @@ namespace Meta {
 			public override object OjEvaluateM(IMap parent) {
 				object ojArgument=epsArgument.OjEvaluateM(parent);
 				if(ojArgument is IMap) {
-					ojArgument=((IMap)ojArgument).mCloneV();
+					ojArgument=((IMap)ojArgument).MClone();
 				}
 				return ((ICallable)epsCallable.OjEvaluateM(parent)).ojCallOj(ojArgument);
 			}
@@ -88,7 +88,7 @@ namespace Meta {
 		public class Delayed: Expression {
 			public override object OjEvaluateM(IMap mParent) {
 				Map mClone=mDelayed;
-				mClone.mParent=mParent;
+				mClone.MParent=mParent;
 				return mClone;
 			}
 			public static readonly Map sDelayed=new Map("delayed"); // TODO: maybe define my own type for this stuff?
@@ -105,7 +105,7 @@ namespace Meta {
 				return OjEvaluateM(mParent,mLocal);
 			}
 			public object OjEvaluateM(IMap mParent,IMap mLocal) {
-				mLocal.mParent=mParent;
+				mLocal.MParent=mParent;
 				Interpreter.arlMCallers.Add(mLocal);
 				for(int i=0;i<arlSmStatements.Count;i++) {
 					mLocal=(Map)Interpreter.OjCurrent;
@@ -153,8 +153,8 @@ namespace Meta {
 			public override object OjEvaluateM(IMap mParent) {
 				object ojKey=epsKey.OjEvaluateM(mParent);
 				IMap mSelected=mParent;
-				while(!mSelected.blaHasKeyOj(ojKey)) {
-					mSelected=mSelected.mParent;
+				while(!mSelected.BlaHasKeyOj(ojKey)) {
+					mSelected=mSelected.MParent;
 					if(mSelected==null) {
 						throw new KeyNotFoundException(ojKey,this.EtExtent);
 					}
@@ -209,7 +209,7 @@ namespace Meta {
 				object ojValue=epsValue.OjEvaluateM((IMap)mParent);
 				if(ojLastKey.Equals(Map.sThis)) {
 					if(ojValue is Map) {
-						((Map)ojValue).mParent=((Map)mParent).mParent;
+						((Map)ojValue).MParent=((Map)mParent).MParent;
 					}
 					else {
 						int asdf=0;
@@ -252,7 +252,7 @@ namespace Meta {
 					if(mMap.IsString) {
 						sText+="\""+(mMap).SDotNetStringV()+"\"";
 					}
-					else if(mMap.Count==0) {
+					else if(mMap.ItgCount==0) {
 						sText+="()";
 					}
 					else {
@@ -261,7 +261,7 @@ namespace Meta {
 							foreach(DictionaryEntry dtnretEntry in mMap) {
 								sText+='['+VSaveToFileOjS(dtnretEntry.Key,sIndent,true)+']'+'='+VSaveToFileOjS(dtnretEntry.Value,sIndent,true)+",";
 							}
-							if(mMap.Count!=0) {
+							if(mMap.ItgCount!=0) {
 								sText=sText.Remove(sText.Length-1,1);
 							}
 							sText+=")";
@@ -269,11 +269,11 @@ namespace Meta {
 						else {
 							foreach(DictionaryEntry dtnretEntry in mMap) {
 								sText+=sIndent+'['+VSaveToFileOjS(dtnretEntry.Key,sIndent,false)+']'+'=';
-								if(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).Count!=0 && !((Map)dtnretEntry.Value).IsString) {
+								if(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ItgCount!=0 && !((Map)dtnretEntry.Value).IsString) {
 									sText+="\n";
 								}
 								sText+=VSaveToFileOjS(dtnretEntry.Value,sIndent+'\t',true);
-								if(!(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).Count!=0 && !((Map)dtnretEntry.Value).IsString)) {
+								if(!(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ItgCount!=0 && !((Map)dtnretEntry.Value).IsString)) {
 									sText+="\n";
 								}
 							}
@@ -297,7 +297,7 @@ namespace Meta {
 				Map mResult=new Map();//use clone here?
 				foreach(IKeyValue kvlCurrent in cltkvlToMerge) {
 					foreach(DictionaryEntry dtnetEntry in (IKeyValue)kvlCurrent) {
-						if(dtnetEntry.Value is IKeyValue && !(dtnetEntry.Value is NetClass)&& mResult.blaHasKeyOj(dtnetEntry.Key) 
+						if(dtnetEntry.Value is IKeyValue && !(dtnetEntry.Value is NetClass)&& mResult.BlaHasKeyOj(dtnetEntry.Key) 
 							&& mResult[dtnetEntry.Key] is IKeyValue && !(mResult[dtnetEntry.Key] is NetClass)) {
 							mResult[dtnetEntry.Key]=Merge((IKeyValue)mResult[dtnetEntry.Key],(IKeyValue)dtnetEntry.Value);
 						}
@@ -379,7 +379,7 @@ namespace Meta {
 			public static object CallProgram(Map mProgram,IMap mArgument,IMap mParent) {
 				Map mCallable=new Map();
 				mCallable[Expression.sRun]=mProgram;
-				mCallable.mParent=mParent;
+				mCallable.MParent=mParent;
 				return mCallable.ojCallOj(mArgument);
 			}
 
@@ -967,18 +967,18 @@ namespace Meta {
 	namespace Types  {
 		/* Everything implementing this interface can be used in a Call expression */
 		public interface ICallable {
-			object ojCallOj(object argument);
+			object ojCallOj(object ojArgument);
 		}
 		// TODO: Rename this eventually
 		public interface IMap: IKeyValue {
-			IMap mParent {
+			IMap MParent {
 				get;
 				set;
 			}
 			ArrayList ArlojIntegerKeyValues {
 				get;
 			}
-			IMap mCloneV();
+			IMap MClone();
 		}
 		// TODO: Does the IKeyValue<->IMap distinction make sense?
 		public interface IKeyValue: IEnumerable {
@@ -986,23 +986,23 @@ namespace Meta {
 				get;
 				set;
 			}
-			ArrayList Keys {
+			ArrayList ArlojKeys {
 				get;
 			}
-			int Count {
+			int ItgCount {
 				get;
 			}
-			bool blaHasKeyOj(object key);			
+			bool BlaHasKeyOj(object key);			
 		}		
 		/* Represents a lazily evaluated "library" Meta file. */
 		public class MetaLibrary { // TODO: Put this into Library class, make base class for everything that gets loaded
-			public object Load() {
-				return Interpreter.Run(path,new Map()); // TODO: Improve this interface, isn't read lazily anyway
+			public object OjLoad() {
+				return Interpreter.Run(sPath,new Map()); // TODO: Improve this interface, isn't read lazily anyway
 			}
-			public MetaLibrary(string path) {
-				this.path=path;
+			public MetaLibrary(string sPath) {
+				this.sPath=sPath;
 			}
-			string path;
+			string sPath;
 		}
 		/* Represents a lazily loaded .NET namespace. */
 		public class LazyNamespace: IKeyValue { // TODO: Put this into library, combine with MetaLibrary
@@ -1017,20 +1017,20 @@ namespace Meta {
 					throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
 				}
 			}
-			public ArrayList Keys {
+			public ArrayList ArlojKeys {
 				get {
 					if(cache==null) {
 						Load();
 					}
-					return cache.Keys;
+					return cache.ArlojKeys;
 				}
 			}
-			public int Count {
+			public int ItgCount {
 				get {
 					if(cache==null) {
 						Load();
 					}
-					return cache.Count;
+					return cache.ItgCount;
 				}
 			}
 			public string fullName;
@@ -1049,11 +1049,11 @@ namespace Meta {
 				}
 			}
 			public Map cache;
-			public bool blaHasKeyOj(object key) {
+			public bool BlaHasKeyOj(object key) {
 				if(cache==null) {
 					Load();
 				}
-				return cache.blaHasKeyOj(key);
+				return cache.BlaHasKeyOj(key);
 			}
 			public IEnumerator GetEnumerator() {
 				if(cache==null) {
@@ -1090,9 +1090,9 @@ namespace Meta {
 //					if(key.Equals(new Map("map"))) {
 //						int asdf=0;
 //					}
-					if(cash.blaHasKeyOj(key)) {
+					if(cash.BlaHasKeyOj(key)) {
 						if(cash[key] is MetaLibrary) {
-							cash[key]=((MetaLibrary)cash[key]).Load();
+							cash[key]=((MetaLibrary)cash[key]).OjLoad();
 						}
 						return cash[key];
 					}
@@ -1104,28 +1104,28 @@ namespace Meta {
 					throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
 				}
 			}
-			public ArrayList Keys {
+			public ArrayList ArlojKeys {
 				get {
-					return cash.Keys;
+					return cash.ArlojKeys;
 				}
 			}
-			public IMap mCloneV() {
+			public IMap MClone() {
 				return this;
 			}
-			public int Count {
+			public int ItgCount {
 				get {
-					return cash.Count;
+					return cash.ItgCount;
 				}
 			}
-			public bool blaHasKeyOj(object key) {
-				return cash.blaHasKeyOj(key);
+			public bool BlaHasKeyOj(object key) {
+				return cash.BlaHasKeyOj(key);
 			}
 			public ArrayList ArlojIntegerKeyValues {
 				get {
 					return new ArrayList();
 				}
 			}
-			public IMap mParent {
+			public IMap MParent {
 				get {
 					return null;
 				}
@@ -1148,7 +1148,7 @@ namespace Meta {
 							ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
 							subPaths.RemoveAt(subPaths.Count-1);
 							foreach(string subPath in subPaths)  {
-								if(!position.blaHasKeyOj(new Map(subPath)))  {
+								if(!position.BlaHasKeyOj(new Map(subPath)))  {
 									position[new Map(subPath)]=new Map();
 								}
 								position=(Map)position[new Map(subPath)];
@@ -1204,7 +1204,7 @@ namespace Meta {
 			private Map assemblyInfo=new Map();
 			public ArrayList GetNamespaces(Assembly assembly) { //refactor, integrate into LoadNamespaces???
 				ArrayList namespaces=new ArrayList();
-				if(assemblyInfo.blaHasKeyOj(new Map(assembly.Location))) {
+				if(assemblyInfo.BlaHasKeyOj(new Map(assembly.Location))) {
 					Map info=(Map)assemblyInfo[new Map(assembly.Location)];
 					string timestamp=((Map)info[new Map("timestamp")]).SDotNetStringV();
 					if(timestamp.Equals(File.GetCreationTime(assembly.Location).ToString())) {
@@ -1316,7 +1316,7 @@ namespace Meta {
 			public string SDotNetStringV() { // Refactoring: has a stupid name, Make property
 				return table.SDotNetStringV();
 			}
-			public IMap mParent {
+			public IMap MParent {
 				get {
 					return parent;
 				}
@@ -1324,9 +1324,9 @@ namespace Meta {
 					parent=value;
 				}
 			}
-			public int Count {
+			public int ItgCount {
 				get {
-					return table.Count;
+					return table.ItgCount;
 				}
 			}
 			public ArrayList ArlojIntegerKeyValues {
@@ -1337,7 +1337,7 @@ namespace Meta {
 			public virtual object this[object key]  {
 				get {
 					if(key.Equals(parentString)) {
-						return mParent;
+						return MParent;
 					}
 					else if(key.Equals(argString)) {
 						return Argument;
@@ -1357,9 +1357,9 @@ namespace Meta {
 							this.table=((Map)value).table.Clone();
 						}
 						else {
-							object val=value is IMap? ((IMap)value).mCloneV(): value; // TODO: combine with next line
+							object val=value is IMap? ((IMap)value).MClone(): value; // TODO: combine with next line
 							if(value is IMap) {
-								((IMap)val).mParent=this;
+								((IMap)val).MParent=this;
 							}
 							table[key]=val;
 						}
@@ -1372,8 +1372,8 @@ namespace Meta {
 				result=function.OjEvaluateM(this);
 				return result;
 			}
-			public object ojCallOj(object argument) {
-				this.Argument=argument;
+			public object ojCallOj(object ojArgument) {
+				this.Argument=ojArgument;
 				Expression function=(Expression)((Map)this[Expression.sRun]).EpsCompileV();
 				object result;
 //				Interpreter.arlojArguments.Add(argument);
@@ -1381,36 +1381,36 @@ namespace Meta {
 //				Interpreter.arlojArguments.RemoveAt(Interpreter.arlojArguments.Count-1);
 				return result;
 			}
-			public ArrayList Keys {
+			public ArrayList ArlojKeys {
 				get {
-					return table.Keys;
+					return table.ArlojKeys;
 				}
 			}
-			public IMap mCloneV() {
+			public IMap MClone() {
 				Map clone=table.CloneMap();
-				clone.mParent=mParent;
+				clone.MParent=MParent;
 				clone.compiled=compiled;
 				clone.EtExtent=EtExtent;
 				return clone;
 			}
 			public Expression EpsCompileV()  { // compiled Statements are not cached, only expressions
 				if(compiled==null)  {
-					if(this.blaHasKeyOj(Meta.Execution.Call.sCall)) {
+					if(this.BlaHasKeyOj(Meta.Execution.Call.sCall)) {
 						compiled=new Call(this);
 					}
-					else if(this.blaHasKeyOj(Delayed.sDelayed)) { // TODO: could be optimized, but compilation happens seldom
+					else if(this.BlaHasKeyOj(Delayed.sDelayed)) { // TODO: could be optimized, but compilation happens seldom
 						compiled=new Delayed(this);
 					}
-					else if(this.blaHasKeyOj(Program.sProgram)) {
+					else if(this.BlaHasKeyOj(Program.sProgram)) {
 						compiled=new Program(this);
 					}
-					else if(this.blaHasKeyOj(Literal.sLiteral)) {
+					else if(this.BlaHasKeyOj(Literal.sLiteral)) {
 						compiled=new Literal(this);
 					}
-					else if(this.blaHasKeyOj(Search.sSearch)) {// TODO: use static expression strings
+					else if(this.BlaHasKeyOj(Search.sSearch)) {// TODO: use static expression strings
 						compiled=new Search(this);
 					}
-					else if(this.blaHasKeyOj(Select.sSelect)) {
+					else if(this.BlaHasKeyOj(Select.sSelect)) {
 						compiled=new Select(this);
 					}
 					else {
@@ -1425,13 +1425,13 @@ namespace Meta {
 //				}
 				return compiled;
 			}
-			public bool blaHasKeyOj(object key)  {
+			public bool BlaHasKeyOj(object key)  {
 				if(key is Map) {
 					if(key.Equals(argString)) {
 						return this.Argument!=null;
 					}
 					else if(key.Equals(parentString)) {
-						return this.mParent!=null;
+						return this.MParent!=null;
 					}
 					else if(key.Equals(sThis)) {
 						return true;
@@ -1496,7 +1496,7 @@ namespace Meta {
 				public Map map;
 				public MapStrategy Clone() {
 					MapStrategy strategy=new HybridDictionaryStrategy();
-					foreach(object key in this.Keys) {
+					foreach(object key in this.ArlojKeys) {
 						strategy[key]=this[key];
 					}
 					return strategy;	
@@ -1512,10 +1512,10 @@ namespace Meta {
 				// TODO: Rename. Reason: This really means something more abstract, more along the lines of,
 				// "is this a map that only has integers as children, and maybe also only integers as keys?"
 				public abstract string SDotNetStringV();
-				public abstract ArrayList Keys {
+				public abstract ArrayList ArlojKeys {
 					get;
 				}
-				public abstract int Count {
+				public abstract int ItgCount {
 					get;
 				}
 				public abstract object this[object key]  {
@@ -1527,7 +1527,7 @@ namespace Meta {
 				/* Hashcodes must be exactly the same in all MapStrategies. */
 				public override int GetHashCode()  {
 					int h=0;
-					foreach(object key in this.Keys) {
+					foreach(object key in this.ArlojKeys) {
 						unchecked {
 							h+=key.GetHashCode()*this[key].GetHashCode();
 						}
@@ -1538,10 +1538,10 @@ namespace Meta {
 					if(Object.ReferenceEquals(obj,this)) { // check whether this is a clone of the other MapStrategy (not used yet)
 						return true;
 					}
-					if(obj.Count!=this.Count) {
+					if(obj.ItgCount!=this.ItgCount) {
 						return false;
 					}
-					foreach(object key in this.Keys)  {
+					foreach(object key in this.ArlojKeys)  {
 						if(!obj.ContainsKey(key)||!obj[key].Equals(this[key])) {
 							return false;
 						}
@@ -1587,7 +1587,7 @@ namespace Meta {
 				public override string SDotNetStringV() {
 					return text;
 				}
-				public override ArrayList Keys {
+				public override ArrayList ArlojKeys {
 					get {
 						return keys;
 					}
@@ -1604,7 +1604,7 @@ namespace Meta {
 						keys.Add(new Integer(i));			// TODO: Make this unicode-safe in the first place!
 					}
 				}
-				public override int Count {
+				public override int ItgCount {
 					get {
 						return text.Length;
 					}
@@ -1613,7 +1613,7 @@ namespace Meta {
 					get {
 						if(key is Integer) {
 							int i=((Integer)key).Int;
-							if(i>0 && i<=this.Count) {
+							if(i>0 && i<=this.ItgCount) {
 								return new Integer(text[i-1]);
 							}
 						}
@@ -1628,7 +1628,7 @@ namespace Meta {
 				}
 				public override bool ContainsKey(object key)  {
 					if(key is Integer) {
-						return ((Integer)key)>0 && ((Integer)key)<=this.Count;
+						return ((Integer)key)>0 && ((Integer)key)<=this.ItgCount;
 					}
 					else {
 						return false;
@@ -1676,7 +1676,7 @@ namespace Meta {
 				}
 				public override string SDotNetStringV() { // TODO: looks too complicated
 					string text="";
-					foreach(object key in this.Keys) {
+					foreach(object key in this.ArlojKeys) {
 						if(key is Integer && this.table[key] is Integer) {
 							try {
 								text+=Convert.ToChar(((Integer)this.table[key]).Int);
@@ -1697,12 +1697,12 @@ namespace Meta {
 						this.map=map;
 					}
 				}
-				public override ArrayList Keys {
+				public override ArrayList ArlojKeys {
 					get {
 						return keys;
 					}
 				}
-				public override int Count {
+				public override int ItgCount {
 					get {
 						return table.Count;
 					}
@@ -1729,12 +1729,12 @@ namespace Meta {
 			}
 			public object Current {
 				get {
-					return new DictionaryEntry(map.Keys[index],map[map.Keys[index]]);
+					return new DictionaryEntry(map.ArlojKeys[index],map[map.ArlojKeys[index]]);
 				}
 			}
 			public bool MoveNext() {
 				index++;
-				return index<map.Count;
+				return index<map.ItgCount;
 			}
 			public void Reset() {
 				index=-1;
@@ -1998,7 +1998,7 @@ namespace Meta {
 					ArrayList arlMtifRightNumberArguments=new ArrayList();
 					foreach(MethodBase mtbCurrent in arMtbOverloadedMethods) {
 						if(arlOArguments.Count==mtbCurrent.GetParameters().Length) { // don't match if different parameter list length
-							if(arlOArguments.Count==((IMap)ojArgument).Keys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
+							if(arlOArguments.Count==((IMap)ojArgument).ArlojKeys.Count) { // only call if there are no non-integer keys ( move this somewhere else)
 								arlMtifRightNumberArguments.Add(mtbCurrent);
 							}
 						}
@@ -2114,7 +2114,7 @@ namespace Meta {
 //				}
 //				return Interpreter.ConvertDotNetToMeta(ojResult);
 //			}
-//			public object ojCallOj(object argument) {
+//			public object ojCallOj(object ojArgument) {
 //				if(this.sName=="Write") {
 //					int asdf=0;
 //				}
@@ -2199,7 +2199,7 @@ namespace Meta {
 //			}
 			/* Create a delegate of a certain tTarget that calls a Meta function. */
 			public static Delegate delFromF(Type delegateType,MethodInfo method,Map code) { // TODO: delegateType, methode, redundant?
-				code.mParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
+				code.MParent=(IMap)Interpreter.arlMCallers[Interpreter.arlMCallers.Count-1];
 				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 				ICodeCompiler compiler=codeProvider.CreateCompiler();
 				string returnTypeName;
@@ -2488,7 +2488,7 @@ namespace Meta {
 //				converted=false;
 //				return null;
 //			}
-//			public object Call(object argument) {
+//			public object Call(object ojArgument) {
 //				if(this.name=="Write") {
 //					int asdf=0;
 //				}
@@ -2684,8 +2684,8 @@ namespace Meta {
 			public NetClass(Type type):base(null,type) {
 				this.constructor=new NetMethod(this.type);
 			}
-			public object ojCallOj(object argument) {
-				return constructor.ojCallOj(argument);
+			public object ojCallOj(object ojArgument) {
+				return constructor.ojCallOj(ojArgument);
 			}
 		}
 		/* Representation of a .NET object. */
@@ -2698,7 +2698,7 @@ namespace Meta {
 		}
 		/* Base class for NetObject and NetClass. */
 		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial {
-			public bool blaHasKeyOj(object key) {
+			public bool BlaHasKeyOj(object key) {
 				if(key is Map) {
 					if(((Map)key).IsString) {
 						string text=((Map)key).SDotNetStringV();
@@ -2731,12 +2731,12 @@ namespace Meta {
 					parent=value;
 				}
 			}
-			public ArrayList Keys {
+			public ArrayList ArlojKeys {
 				get {
 					return new ArrayList(Table.Keys);
 				}
 			}
-			public int Count  {
+			public int ItgCount  {
 				get {
 					return Table.Count;
 				}
