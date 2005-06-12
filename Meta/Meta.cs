@@ -41,14 +41,6 @@ namespace Meta {
 	namespace Execution {
 		public abstract class Expression {
 			public static readonly Map sRun=new Map("run"); // TODO: get rid of "String"-suffix, use Hungarian syntax, that is "s" prefix
-//			public object OjEvaluateM(IMap parent) {
-////				try {
-//					return OjEvaluateM(parent);
-////				}
-////				catch(Exception e) {
-////					throw new MetaException(e,this.extent);
-////				}
-//			}
 			public abstract object OjEvaluateM(IMap parent);
 			Extent extent;
 			public Extent EtExtent{
@@ -121,21 +113,10 @@ namespace Meta {
 					this.arlSmStatements.Add(new Statement(mStatement)); // should we save the original maps instead of arlSmStatements?
 				}
 			}
-//			public Program(Map code) {
-//				foreach(Map statement in ((Map)code[sProgram]).ArlojIntegerKeyValues) {
-//					this.arlSmStatements.Add(statement.EpsCompileV()); // should we save the original maps instead of arlSmStatements?
-//				}
-//			}
 			public readonly ArrayList arlSmStatements=new ArrayList();
 		}
 		public class Literal: Expression {
 			public override object OjEvaluateM(IMap mParent) {
-//				if(ojLiteral.Equals(new Map("staticEvent"))) {
-//					int asdf=0;
-//				}
-//				if(ojLiteral.Equals(new Map("TestClass"))) {
-//					int asdf=0;
-//				}
 				return ojLiteral;
 			}
 			public static readonly Map sLiteral=new Map("literal");
@@ -222,8 +203,6 @@ namespace Meta {
 				}
 			}
 			public Statement(Map mStatement) {
-//				ArrayList intKeys=;
-//				intKeys.Reverse();
 				foreach(Map key in ((Map)mStatement[sKey]).ArlojIntegerKeyValues) {
 					arlEpsKeys.Add(key.EpsCompileV());
 				}
@@ -354,21 +333,8 @@ namespace Meta {
 					return ojMeta;
 				}
 			}
-//			public static object Run(string fileName,IMap argument) {
-//				Map program=mCompileS(fileName);
-//				program.mParent=Library.library;
-//				return program.Call(argument);
-//			}
-//
-//			public static object RunWithoutLibrary(string fileName,IMap argument) { // TODO: refactor, combine with Run
-//				Map program=mCompileS(fileName); // TODO: rename, is not really a program but a function
-//				return program.Call(argument);
-//			}
 			public static object Run(string sFileName,IMap mArgument) {
-//				Map mProgram=mCompileS(sFileName);
-				//				mProgram.mParent=Library.library;
 				Map mProgram=Interpreter.mCompileS(sFileName);
-
 				return CallProgram(mProgram,mArgument,Library.lbrLibrary);
 			}
 
@@ -383,15 +349,6 @@ namespace Meta {
 				return mCallable.ojCallOj(mArgument);
 			}
 
-//			public static Map mCompileS(string fileName,Map mArg) {
-//				Map mFunction=new Map();
-//				mFunction[Expression.sRun]=(new MetaTreeParser()).map(ParseToAst(fileName));
-//				Map mArgument=new Map();
-//				Map mCall=new Map();
-//				mCall[Call.sFunction]=mFunction;
-//				mCall[Call.sArgument]=mArgument;
-//				return mCall;
-//			}
 			public static Map mCompileS(string sFileName) {
 				return (new MetaTreeParser()).map(ParseToAst(sFileName));
 			}
@@ -417,12 +374,6 @@ namespace Meta {
 				fsFile.Close();
 				return aAst;
 			}
-
-//			public static Map Arg { // TODO: is this still needed?
-//				get {
-//					return (Map)arlojArguments[arlojArguments.Count-1];
-//				}
-//			}
 			public static object OjCurrent {
 				get {
 					if(arlMCallers.Count==0) {
@@ -450,23 +401,6 @@ namespace Meta {
 				outblaConverted=false;
 				return null;
 			}
-//			public static object ConvertMetaToDotNet(object metaObject,Type targetType,out bool isConverted) {
-//				if(targetType.IsSubclassOf(typeof(Enum)) && metaObject is Integer) { 
-//					isConverted=true;
-//					return Enum.ToObject(targetType,((Integer)metaObject).Int);
-//				}
-//				Hashtable toDotNet=(Hashtable)
-//					Interpreter.htmttdncvsToDotNetConversion[targetType];
-//				if(toDotNet!=null) {
-//					MetaToDotNetConversion conversion=(MetaToDotNetConversion)toDotNet[metaObject.GetType()];
-//					if(conversion!=null) {
-//						isConverted=true;
-//						return conversion.Convert(metaObject);
-//					}
-//				}
-//				isConverted=false;
-//				return null;
-//			}
 			static Interpreter() {
 				Assembly asbMetaAssembly=Assembly.GetAssembly(typeof(Map));
 				sInstallationPath=Directory.GetParent(asbMetaAssembly.Location).Parent.Parent.Parent.FullName; 
@@ -488,10 +422,8 @@ namespace Meta {
 			}
 			public static string sInstallationPath;
 			public static ArrayList arlMCallers=new ArrayList();
-//			public static ArrayList arlojArguments=new ArrayList();
 			public static Hashtable htmttdncvsToDotNetConversion=new Hashtable();
 			public static Hashtable htdntmtcvsToMetaConversions=new Hashtable();
-//			public static ArrayList compiledMaps=new ArrayList(); 
 			public static ArrayList arlsLoadedAssemblies=new ArrayList();
 
 			private static ArrayList arlrcnltrLiteralRecognitions=new ArrayList();
@@ -627,7 +559,6 @@ namespace Meta {
 						else {
 							outblaConverted=false; // TODO
 							return null;
-//							throw new ApplicationException("Integer could not be outblaConverted to bool because it is neither 0 nor 1.");
 						}
 					}
 
@@ -768,7 +699,6 @@ namespace Meta {
 					}
 					public override object Convert(object ojToConvert, out bool outblaConverted) {
 						Map mMap=(Map)ojToConvert;
-						//						if(m.ContainsKey(new Map("iNumerator")) && m.ContainsKey(new Map("iDenominator")))
 						if(mMap[new Map("iNumerator")] is Integer && mMap[new Map("iDenominator")] is Integer) {
 							outblaConverted=true;
 							return ((decimal)((Integer)mMap[new Map("iNumerator")]).LongValue())/((decimal)((Integer)mMap[new Map("iDenominator")]).LongValue());
@@ -787,7 +717,6 @@ namespace Meta {
 					}
 					public override object Convert(object ojToConvert, out bool outblaConverted) {
 						Map mMap=(Map)ojToConvert;
-						//						if(m.ContainsKey(new Map("iNumerator")) && m.ContainsKey(new Map("iDenominator")))
 						if(mMap[new Map("iNumerator")] is Integer && mMap[new Map("iDenominator")] is Integer) {
 							outblaConverted=true;
 							return ((double)((Integer)mMap[new Map("iNumerator")]).LongValue())/((double)((Integer)mMap[new Map("iDenominator")]).LongValue());
@@ -806,7 +735,6 @@ namespace Meta {
 					}
 					public override object Convert(object ojToConvert, out bool outblaConverted) {
 						Map mMap=(Map)ojToConvert;
-						//						if(m.ContainsKey(new Map("iNumerator")) && m.ContainsKey(new Map("iDenominator")))
 						if(mMap[new Map("iNumerator")] is Integer && mMap[new Map("iDenominator")] is Integer) {
 							outblaConverted=true;
 							return ((float)((Integer)mMap[new Map("iNumerator")]).LongValue())/((float)((Integer)mMap[new Map("iDenominator")]).LongValue());
@@ -922,21 +850,12 @@ namespace Meta {
 				this.etExtent=etExtent;
 			}
 			Extent etExtent;
-//			public MetaException(string sMessage) {
-//				this.sMessage=sMessage;
-//			}
 			public override string Message {
 				get {
 					return sMessage+" In file "+etExtent.fileName+", line: "+etExtent.startLine+", column: "+etExtent.startColumn+".";
 				}
 			}
 		}
-//		public class ApplicationException:MetaException {
-//			public ApplicationException(string message):base(message) {
-//			}
-//		}
-
-
 		/* Base class for key exceptions. */
 		public abstract class KeyException:MetaException { // TODO: Add proper formatting here, output strings as strings, for example, if possible, as well as integers
 			public KeyException(object key,Extent extent):base(extent) {
@@ -1086,9 +1005,6 @@ namespace Meta {
 		public class Library: IKeyValue,IMap {
 			public object this[object ojKey] {
 				get {
-//					if(ojKey.Equals(new Map("map"))) {
-//						int asdf=0;
-//					}
 					if(mCache.BlaHasKeyOj(ojKey)) {
 						if(mCache[ojKey] is MetaLibrary) {
 							mCache[ojKey]=((MetaLibrary)mCache[ojKey]).OjLoad();
@@ -1374,9 +1290,7 @@ namespace Meta {
 				this.Argument=ojArgument;
 				Expression eFunction=(Expression)((Map)this[Expression.sRun]).EpsCompileV();
 				object oResult;
-//				Interpreter.arlojArguments.Add(argument);
 				oResult=eFunction.OjEvaluateM(this);
-//				Interpreter.arlojArguments.RemoveAt(Interpreter.arlojArguments.Count-1);
 				return oResult;
 			}
 			public ArrayList ArlojKeys {
@@ -1415,12 +1329,7 @@ namespace Meta {
 						throw new ApplicationException("Cannot compile non-code map.");
 					}
 				}
-//				if(this.EtExtent!=null) {
-//					int asdf=0;
-//				}		
-//				if(eCompiled is Expression) {
 					((Expression)eCompiled).EtExtent=this.EtExtent;
-//				}
 				return eCompiled;
 			}
 			public bool BlaHasKeyOj(object oKey)  {
@@ -1983,7 +1892,6 @@ namespace Meta {
 			public MethodBase[] arMtbOverloadedMethods;
 		}
 		public class NetClass: NetContainer, IKeyValue,ICallable {
-			//[DontSerializeFieldOrProperty]
 			protected NetMethod nmtConstructor; // TODO: Why is this a NetMethod? Not really that good, I think. Might be better to separate the constructor stuff out from NetMethod.
 			public NetClass(Type type):base(null,type) {
 				this.nmtConstructor=new NetMethod(this.tType);
