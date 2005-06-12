@@ -240,77 +240,77 @@ namespace Meta {
 	
 
 		public class Interpreter  {
-			public static void SaveToFile(object meta,string fileName) {
+			public static void vSaveToFileOjS(object meta,string fileName) {
 				StreamWriter writer=new StreamWriter(fileName);
-				writer.Write(MetaSerialize(meta,"",true).TrimEnd(new char[]{'\n'}));
+				writer.Write(vSaveToFileOjS(meta,"",true).TrimEnd(new char[]{'\n'}));
 				writer.Close();
 			}
-			public static string MetaSerialize(object meta,string indent,bool isRightSide) {
-				if(meta is Map) {
-					string text="";
-					Map map=(Map)meta;
-					if(map.IsString) {
-						text+="\""+(map).SDotNetStringV()+"\"";
+			public static string vSaveToFileOjS(object ojMeta,string sIndent,bool blaRightSide) {
+				if(ojMeta is Map) {
+					string sText="";
+					Map mMap=(Map)ojMeta;
+					if(mMap.IsString) {
+						sText+="\""+(mMap).SDotNetStringV()+"\"";
 					}
-					else if(map.Count==0) {
-						text+="()";
+					else if(mMap.Count==0) {
+						sText+="()";
 					}
 					else {
-						if(!isRightSide) {
-							text+="(";
-							foreach(DictionaryEntry entry in map) {
-								text+='['+MetaSerialize(entry.Key,indent,true)+']'+'='+MetaSerialize(entry.Value,indent,true)+",";
+						if(!blaRightSide) {
+							sText+="(";
+							foreach(DictionaryEntry dtnretEntry in mMap) {
+								sText+='['+vSaveToFileOjS(dtnretEntry.Key,sIndent,true)+']'+'='+vSaveToFileOjS(dtnretEntry.Value,sIndent,true)+",";
 							}
-							if(map.Count!=0) {
-								text=text.Remove(text.Length-1,1);
+							if(mMap.Count!=0) {
+								sText=sText.Remove(sText.Length-1,1);
 							}
-							text+=")";
+							sText+=")";
 						}
 						else {
-							foreach(DictionaryEntry entry in map) {
-								text+=indent+'['+MetaSerialize(entry.Key,indent,false)+']'+'=';
-								if(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString) {
-									text+="\n";
+							foreach(DictionaryEntry dtnretEntry in mMap) {
+								sText+=sIndent+'['+vSaveToFileOjS(dtnretEntry.Key,sIndent,false)+']'+'=';
+								if(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).Count!=0 && !((Map)dtnretEntry.Value).IsString) {
+									sText+="\n";
 								}
-								text+=MetaSerialize(entry.Value,indent+'\t',true);
-								if(!(entry.Value is Map && ((Map)entry.Value).Count!=0 && !((Map)entry.Value).IsString)) {
-									text+="\n";
+								sText+=vSaveToFileOjS(dtnretEntry.Value,sIndent+'\t',true);
+								if(!(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).Count!=0 && !((Map)dtnretEntry.Value).IsString)) {
+									sText+="\n";
 								}
 							}
 						}
 					}
-					return text;
+					return sText;
 				}
-				else if(meta is Integer) {
-					Integer integer=(Integer)meta;
+				else if(ojMeta is Integer) {
+					Integer integer=(Integer)ojMeta;
 					return "\""+integer.ToString()+"\"";
 				}
 				else {
-					throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
+					throw new ApplicationException("Serialization not implemented for type "+ojMeta.GetType().ToString()+".");
 				}
 			}
-			public static IKeyValue Merge(params IKeyValue[] maps) {
-				return MergeCollection(maps);
+			public static IKeyValue Merge(params IKeyValue[] arkvlToMerge) {
+				return MergeCollection(arkvlToMerge);
 			}
 			// really use IKeyValue?
-			public static IKeyValue MergeCollection(ICollection maps) {
-				Map result=new Map();//use clone here?
-				foreach(IKeyValue map in maps) {
-					foreach(DictionaryEntry entry in (IKeyValue)map) {
-						if(entry.Value is IKeyValue && !(entry.Value is NetClass)&& result.blaHasKeyOj(entry.Key) 
-							&& result[entry.Key] is IKeyValue && !(result[entry.Key] is NetClass)) {
-							result[entry.Key]=Merge((IKeyValue)result[entry.Key],(IKeyValue)entry.Value);
+			public static IKeyValue MergeCollection(ICollection cltkvlToMerge) {
+				Map mResult=new Map();//use clone here?
+				foreach(IKeyValue kvlCurrent in cltkvlToMerge) {
+					foreach(DictionaryEntry dtnetEntry in (IKeyValue)kvlCurrent) {
+						if(dtnetEntry.Value is IKeyValue && !(dtnetEntry.Value is NetClass)&& mResult.blaHasKeyOj(dtnetEntry.Key) 
+							&& mResult[dtnetEntry.Key] is IKeyValue && !(mResult[dtnetEntry.Key] is NetClass)) {
+							mResult[dtnetEntry.Key]=Merge((IKeyValue)mResult[dtnetEntry.Key],(IKeyValue)dtnetEntry.Value);
 						}
 						else {
-							result[entry.Key]=entry.Value;
+							mResult[dtnetEntry.Key]=dtnetEntry.Value;
 						}
 					}
 				}
-				return result;
+				return mResult;
 			}	
 			public static object OjRecognizeLiteralS(string text) {
-				for(int i=literalRecognitions.Count-1;i>=0;i--) {
-					object recognized=((RecognizeLiteral)literalRecognitions[i]).Recognize(text);
+				foreach(RecognizeLiteral rcnltrCurrent in literalRecognitions) {
+					object recognized=rcnltrCurrent.Recognize(text);
 					if(recognized!=null) {
 						return recognized;
 					}
@@ -324,7 +324,7 @@ namespace Meta {
 				else if(obj.GetType().IsSubclassOf(typeof(Enum))) {
 					return new Integer((int)Convert.ToInt32((Enum)obj));
 				}
-				DotNetTojMetaConversion conversion=(DotNetTojMetaConversion)metaConversion[obj.GetType()];
+				DotNetToMetaConversion conversion=(DotNetToMetaConversion)metaConversion[obj.GetType()];
 				if(conversion==null) {
 					return obj;
 				}
@@ -474,8 +474,9 @@ namespace Meta {
 				foreach(Type type in typeof(LiteralRecognitions).GetNestedTypes()) {
 					literalRecognitions.Add((RecognizeLiteral)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
-				foreach(Type type in typeof(DotNetTojMetaConversions).GetNestedTypes()) {
-					DotNetTojMetaConversion conversion=((DotNetTojMetaConversion)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+				literalRecognitions.Reverse();
+				foreach(Type type in typeof(DotNetToMetaConversions).GetNestedTypes()) {
+					DotNetToMetaConversion conversion=((DotNetToMetaConversion)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 					metaConversion[conversion.source]=conversion;
 				}
 				foreach(Type type in typeof(MetaToDotNetConversions).GetNestedTypes()) {
@@ -504,7 +505,7 @@ namespace Meta {
 				public Type target;
 				public abstract object Convert(object obj,out bool converted);
 			}
-			public abstract class DotNetTojMetaConversion {
+			public abstract class DotNetToMetaConversion {
 				public Type source;
 				public abstract object Convert(object obj);
 			}
@@ -1005,10 +1006,10 @@ namespace Meta {
 //					}
 //				}
 //			}
-			private abstract class DotNetTojMetaConversions {
+			private abstract class DotNetToMetaConversions {
 				/* These classes define the conversions that take place when .NET methods,
 				 * properties and fields return. */
-				public class ConvertStringToMap: DotNetTojMetaConversion {
+				public class ConvertStringToMap: DotNetToMetaConversion {
 					public ConvertStringToMap()   {
 						this.source=typeof(string);
 					}
@@ -1016,7 +1017,7 @@ namespace Meta {
 						return new Map((string)obj);
 					}
 				}
-				public class ConvertBoolToInteger: DotNetTojMetaConversion {
+				public class ConvertBoolToInteger: DotNetToMetaConversion {
 					public ConvertBoolToInteger() {
 						this.source=typeof(bool);
 					}
@@ -1025,7 +1026,7 @@ namespace Meta {
 					}
 
 				}
-				public class ConvertByteToInteger: DotNetTojMetaConversion {
+				public class ConvertByteToInteger: DotNetToMetaConversion {
 					public ConvertByteToInteger() {
 						this.source=typeof(Byte);
 					}
@@ -1033,7 +1034,7 @@ namespace Meta {
 						return new Integer((Byte)obj);
 					}
 				}
-				public class ConvertSByteToInteger: DotNetTojMetaConversion {
+				public class ConvertSByteToInteger: DotNetToMetaConversion {
 					public ConvertSByteToInteger() {
 						this.source=typeof(SByte);
 					}
@@ -1041,7 +1042,7 @@ namespace Meta {
 						return new Integer((SByte)obj);
 					}
 				}
-				public class ConvertCharToInteger: DotNetTojMetaConversion {
+				public class ConvertCharToInteger: DotNetToMetaConversion {
 					public ConvertCharToInteger() {
 						this.source=typeof(Char);
 					}
@@ -1049,7 +1050,7 @@ namespace Meta {
 						return new Integer((Char)obj);
 					}
 				}
-				public class ConvertInt32ToInteger: DotNetTojMetaConversion {
+				public class ConvertInt32ToInteger: DotNetToMetaConversion {
 					public ConvertInt32ToInteger() {
 						this.source=typeof(Int32);
 					}
@@ -1057,7 +1058,7 @@ namespace Meta {
 						return new Integer((Int32)obj);
 					}
 				}
-				public class ConvertUInt32ToInteger: DotNetTojMetaConversion {
+				public class ConvertUInt32ToInteger: DotNetToMetaConversion {
 					public ConvertUInt32ToInteger() {
 						this.source=typeof(UInt32);
 					}
@@ -1065,7 +1066,7 @@ namespace Meta {
 						return new Integer((UInt32)obj);
 					}
 				}
-				public class ConvertInt64ToInteger: DotNetTojMetaConversion {
+				public class ConvertInt64ToInteger: DotNetToMetaConversion {
 					public ConvertInt64ToInteger() {
 						this.source=typeof(Int64);
 					}
@@ -1073,7 +1074,7 @@ namespace Meta {
 						return new Integer((Int64)obj);
 					}
 				}
-				public class ConvertUInt64ToInteger: DotNetTojMetaConversion {
+				public class ConvertUInt64ToInteger: DotNetToMetaConversion {
 					public ConvertUInt64ToInteger() {
 						this.source=typeof(UInt64);
 					}
@@ -1081,7 +1082,7 @@ namespace Meta {
 						return new Integer((Int64)(UInt64)obj);
 					}
 				}
-				public class ConvertInt16ToInteger: DotNetTojMetaConversion {
+				public class ConvertInt16ToInteger: DotNetToMetaConversion {
 					public ConvertInt16ToInteger() {
 						this.source=typeof(Int16);
 					}
@@ -1089,7 +1090,7 @@ namespace Meta {
 						return new Integer((Int16)obj);
 					}
 				}
-				public class ConvertUInt16ToInteger: DotNetTojMetaConversion {
+				public class ConvertUInt16ToInteger: DotNetToMetaConversion {
 					public ConvertUInt16ToInteger() {
 						this.source=typeof(UInt16);
 					}
@@ -1132,7 +1133,7 @@ namespace Meta {
 					message+=((Map)key).SDotNetStringV();
 				}
 				else if(key is Map) {
-					message+=Interpreter.MetaSerialize(key,"",true);
+					message+=Interpreter.vSaveToFileOjS(key,"",true);
 				}
 				else {
 					message+=key;
@@ -1383,7 +1384,7 @@ namespace Meta {
 				}
 				
 				cash=LoadNamespaces(assemblies);
-				Interpreter.SaveToFile(assemblyInfo,infoFileName);
+				Interpreter.vSaveToFileOjS(assemblyInfo,infoFileName);
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
 					cash[new Map(Path.GetFileNameWithoutExtension(fileName))]=new MetaLibrary(fileName);
 				}
@@ -3006,7 +3007,7 @@ namespace Meta {
 										NetMethod.ojAssignCollectionMOjOutbla((Map)value,property.GetValue(obj,new object[]{}),out converted);
 									}
 									if(!converted) {
-										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.MetaSerialize(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
+										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.vSaveToFileOjS(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
 									}
 								}
 								return;
