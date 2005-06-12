@@ -86,7 +86,7 @@ namespace testClasses
 			def[new Integer(1)]=new Map("null");
 			def[new Map("y")]=new Map("null");
 			def[new Map("p2")]=new Map("null");
-			arg=(Map)Interpreter.Merge(def,arg);
+			arg=(Map)Interpreter.KvMergeAkv(def,arg);
 			this.x=(string)((Map)arg[new Integer(1)]).SDotNetString();
 			this.y=(string)((Map)arg[new Map("y")]).SDotNetString();
 			this.z=(string)((Map)arg[new Map("p2")]).SDotNetString();
@@ -96,7 +96,7 @@ namespace testClasses
 			def[new Integer(1)]=new Map("null");
 			def[new Map("b")]=new Map("null");
 			def[new Map("c")]=new Map("null");
-			arg=(Map)Interpreter.Merge(def,arg);
+			arg=(Map)Interpreter.KvMergeAkv(def,arg);
 			return (string)((Map)arg[new Integer(1)]).SDotNetString()+
 				(string)((Map)arg[new Map("b")]).SDotNetString()+
 				(string)((Map)arg[new Map("c")]).SDotNetString()+

@@ -37,10 +37,10 @@ public class map {
 	}
 	public static bool bHasKeyMO(Map map,object key) {
 		string a="";
-		return map.BHasKeyO(key);
+		return map.BContainsO(key);
 	}
 	public static int iCountM(Map map) {
-		return map.ItgCount;
+		return map.ICount;
 	}
 	public static Map sTrimStartS(Map arg) {
 		Map map=(Map)arg[new Integer(1)];

@@ -45,7 +45,7 @@ namespace Test {
 					if(!File.Exists(args[0])) {
 						throw new ApplicationException("File "+args[0]+" not found.");
 					}
-					Interpreter.Run(args[0],new Map());
+					Interpreter.ORunFnM(args[0],new Map());
 					// TODO: fix this to only show original error message
 				}
 //			}
@@ -113,7 +113,7 @@ namespace Test {
 				Map argument=new Map();
 				argument[new Integer(1)]="first arg";
 				argument[new Integer(2)]="second=arg";
-				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
+				return Interpreter.ORunFnM(Path.Combine(Test.path,filename),argument);
 			}
 		}
 	}
