@@ -240,12 +240,12 @@ namespace Meta {
 	
 
 		public class Interpreter  {
-			public static void vSaveToFileOjS(object meta,string fileName) {
+			public static void VSaveToFileOjS(object meta,string fileName) {
 				StreamWriter writer=new StreamWriter(fileName);
-				writer.Write(vSaveToFileOjS(meta,"",true).TrimEnd(new char[]{'\n'}));
+				writer.Write(VSaveToFileOjS(meta,"",true).TrimEnd(new char[]{'\n'}));
 				writer.Close();
 			}
-			public static string vSaveToFileOjS(object ojMeta,string sIndent,bool blaRightSide) {
+			public static string VSaveToFileOjS(object ojMeta,string sIndent,bool blaRightSide) {
 				if(ojMeta is Map) {
 					string sText="";
 					Map mMap=(Map)ojMeta;
@@ -259,7 +259,7 @@ namespace Meta {
 						if(!blaRightSide) {
 							sText+="(";
 							foreach(DictionaryEntry dtnretEntry in mMap) {
-								sText+='['+vSaveToFileOjS(dtnretEntry.Key,sIndent,true)+']'+'='+vSaveToFileOjS(dtnretEntry.Value,sIndent,true)+",";
+								sText+='['+VSaveToFileOjS(dtnretEntry.Key,sIndent,true)+']'+'='+VSaveToFileOjS(dtnretEntry.Value,sIndent,true)+",";
 							}
 							if(mMap.Count!=0) {
 								sText=sText.Remove(sText.Length-1,1);
@@ -268,11 +268,11 @@ namespace Meta {
 						}
 						else {
 							foreach(DictionaryEntry dtnretEntry in mMap) {
-								sText+=sIndent+'['+vSaveToFileOjS(dtnretEntry.Key,sIndent,false)+']'+'=';
+								sText+=sIndent+'['+VSaveToFileOjS(dtnretEntry.Key,sIndent,false)+']'+'=';
 								if(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).Count!=0 && !((Map)dtnretEntry.Value).IsString) {
 									sText+="\n";
 								}
-								sText+=vSaveToFileOjS(dtnretEntry.Value,sIndent+'\t',true);
+								sText+=VSaveToFileOjS(dtnretEntry.Value,sIndent+'\t',true);
 								if(!(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).Count!=0 && !((Map)dtnretEntry.Value).IsString)) {
 									sText+="\n";
 								}
@@ -317,41 +317,41 @@ namespace Meta {
 				}
 				return null;
 			}
-			public static object ConvertDotNetToMeta(object obj) { 
-				if(obj==null) {
+			public static object ConvertDotNetToMeta(object ojDotNet) { 
+				if(ojDotNet==null) {
 					return null;
 				}
-				else if(obj.GetType().IsSubclassOf(typeof(Enum))) {
-					return new Integer((int)Convert.ToInt32((Enum)obj));
+				else if(ojDotNet.GetType().IsSubclassOf(typeof(Enum))) {
+					return new Integer((int)Convert.ToInt32((Enum)ojDotNet));
 				}
-				DotNetToMetaConversion conversion=(DotNetToMetaConversion)metaConversion[obj.GetType()];
-				if(conversion==null) {
-					return obj;
-				}
-				else {
-					return conversion.Convert(obj);
-				}
-			}
-			public static object ConvertMetaToDotNet(object obj) {
-				if(obj is Integer) {
-					return ((Integer)obj).Int;
-				}
-				else if(obj is Map && ((Map)obj).IsString) {
-					return ((Map)obj).SDotNetStringV();
+				DotNetToMetaConversion dttmecvsConversion=(DotNetToMetaConversion)metaConversion[ojDotNet.GetType()];
+				if(dttmecvsConversion==null) {
+					return ojDotNet;
 				}
 				else {
-					return obj;
+					return dttmecvsConversion.Convert(ojDotNet);
 				}
 			}
-			public static object ConvertMetaToDotNet(object obj,Type targetType) {
+			public static object ConvertMetaToDotNet(object ojMeta) {
+				if(ojMeta is Integer) {
+					return ((Integer)ojMeta).Int;
+				}
+				else if(ojMeta is Map && ((Map)ojMeta).IsString) {
+					return ((Map)ojMeta).SDotNetStringV();
+				}
+				else {
+					return ojMeta;
+				}
+			}
+			public static object ConvertMetaToDotNet(object ojMeta,Type tTarget) {
 				try {
-					MetaToDotNetConversion conversion=(MetaToDotNetConversion)((Hashtable)
-						Interpreter.netConversion[obj.GetType()])[targetType];
+					MetaToDotNetConversion mttdncvsConversion=(MetaToDotNetConversion)((Hashtable)
+						Interpreter.netConversion[ojMeta.GetType()])[tTarget];
 					bool converted;
-					return conversion.Convert(obj,out converted); // TODO: Why ignore converted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
+					return mttdncvsConversion.Convert(ojMeta,out converted); // TODO: Why ignore converted here?, Should really loop through all the possibilities -> no not necessary here, type determines mttdncvsConversion
 				}
 				catch {
-					return obj;
+					return ojMeta;
 				}
 			}
 //			public static object Run(string fileName,IMap argument) {
@@ -364,23 +364,23 @@ namespace Meta {
 //				Map program=mCompileS(fileName); // TODO: rename, is not really a program but a function
 //				return program.Call(argument);
 //			}
-			public static object Run(string fileName,IMap argument) {
-//				Map program=mCompileS(fileName);
-				//				program.mParent=Library.library;
-				Map program=Interpreter.mCompileS(fileName);
+			public static object Run(string sFileName,IMap mArgument) {
+//				Map mProgram=mCompileS(sFileName);
+				//				mProgram.mParent=Library.library;
+				Map mProgram=Interpreter.mCompileS(sFileName);
 
-				return CallProgram(program,argument,Library.library);
+				return CallProgram(mProgram,mArgument,Library.library);
 			}
 
-			public static object RunWithoutLibrary(string fileName,IMap argument) { // TODO: refactor, combine with Run
-				Map program=mCompileS(fileName); // TODO: rename, is not really a program but a function
-				return CallProgram(program,argument,null);
+			public static object RunWithoutLibrary(string sFileName,IMap mArgument) { // TODO: refactor, combine with Run
+				Map mProgram=mCompileS(sFileName); // TODO: rename, is not really a mProgram but a function
+				return CallProgram(mProgram,mArgument,null);
 			}
-			public static object CallProgram(Map program,IMap argument,IMap parent) {
+			public static object CallProgram(Map mProgram,IMap mArgument,IMap mParent) {
 				Map mCallable=new Map();
-				mCallable[Expression.sRun]=program;
-				mCallable.mParent=parent;
-				return mCallable.ojCallOj(argument);
+				mCallable[Expression.sRun]=mProgram;
+				mCallable.mParent=mParent;
+				return mCallable.ojCallOj(mArgument);
 			}
 
 //			public static Map mCompileS(string fileName,Map mArg) {
@@ -392,30 +392,30 @@ namespace Meta {
 //				mCall[Call.sArgument]=mArgument;
 //				return mCall;
 //			}
-			public static Map mCompileS(string fileName) {
-				return (new MetaTreeParser()).map(ParseToAst(fileName));
+			public static Map mCompileS(string sFileName) {
+				return (new MetaTreeParser()).map(ParseToAst(sFileName));
 			}
-			public static AST ParseToAst(string fileName)  {
+			public static AST ParseToAst(string sFileName)  {
 
-				// TODO: Add the newlines here somewhere (or do this in IndentationStream?, somewhat easier and more logical maybe), but not possible, must be before lexer
+				// TODO: Add the newlines here somewhere (or do this in IndentationStream?, somewhat easier and more logical maybe), but not possible, must be before mtlxLexerer
 				// construct the special shared input state that is needed
 				// in order to annotate MetaTokens properly
-				FileStream file=new FileStream(fileName,FileMode.Open);
-				ExtentLexerSharedInputState lsis = new ExtentLexerSharedInputState(file,fileName); 
-				// construct the lexer
-				MetaLexer lex = new MetaLexer(lsis);
+				FileStream fsFile=new FileStream(sFileName,FileMode.Open);
+				ExtentLexerSharedInputState etlxsipsSharedInput = new ExtentLexerSharedInputState(fsFile,sFileName); 
+				// construct the mtlxLexerer
+				MetaLexer mtlxLexer = new MetaLexer(etlxsipsSharedInput);
 		
-				// tell the lexer the token class that we want
-				lex.setTokenObjectClass("MetaToken");
+				// tell the mtlxLexerer the token class that we want
+				mtlxLexer.setTokenObjectClass("MetaToken");
 		
-				// construct the parser
-				MetaParser par = new MetaParser(new IndentationStream(lex));
-				// tell the parser the AST class that we want
-				par.setASTNodeClass("MetaAST");//
-				par.map();
-				AST ast=par.getAST();
-				file.Close();
-				return ast;
+				// construct the mtpsParserser
+				MetaParser mtpsParser = new MetaParser(new IndentationStream(mtlxLexer));
+				// tell the mtpsParserser the AST class that we want
+				mtpsParser.setASTNodeClass("MetaAST");//
+				mtpsParser.map();
+				AST aAst=mtpsParser.getAST();
+				fsFile.Close();
+				return aAst;
 			}
 
 			public static Map Arg {
@@ -434,21 +434,20 @@ namespace Meta {
 					arlMCallers[arlMCallers.Count-1]=value;
 				}
 			}
-			public static object ConvertMetaToDotNet(object metaObject,Type targetType,out bool isConverted) {
-				if(targetType.IsSubclassOf(typeof(Enum)) && metaObject is Integer) { 
-					isConverted=true;
-					return Enum.ToObject(targetType,((Integer)metaObject).Int);
+			public static object ConvertMetaToDotNet(object objMeta,Type tTarget,out bool outblaConverted) {
+				if(tTarget.IsSubclassOf(typeof(Enum)) && objMeta is Integer) { 
+					outblaConverted=true;
+					return Enum.ToObject(tTarget,((Integer)objMeta).Int);
 				}
-				Hashtable toDotNet=(Hashtable)
-					Interpreter.netConversion[targetType];
-				if(toDotNet!=null) {
-					MetaToDotNetConversion conversion=(MetaToDotNetConversion)toDotNet[metaObject.GetType()];
-					if(conversion!=null) {
-						isConverted=true;
-						return conversion.Convert(metaObject,out isConverted);
+				Hashtable htcvsToDotNet=(Hashtable)
+					Interpreter.netConversion[tTarget];
+				if(htcvsToDotNet!=null) {
+					MetaToDotNetConversion mttdncvsConversion=(MetaToDotNetConversion)htcvsToDotNet[objMeta.GetType()];
+					if(mttdncvsConversion!=null) {
+						return mttdncvsConversion.Convert(objMeta,out outblaConverted);
 					}
 				}
-				isConverted=false;
+				outblaConverted=false;
 				return null;
 			}
 //			public static object ConvertMetaToDotNet(object metaObject,Type targetType,out bool isConverted) {
@@ -469,22 +468,22 @@ namespace Meta {
 //				return null;
 //			}
 			static Interpreter() {
-				Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
-				metaInstallationPath=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName; 
-				foreach(Type type in typeof(LiteralRecognitions).GetNestedTypes()) {
-					literalRecognitions.Add((RecognizeLiteral)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+				Assembly asbMetaAssembly=Assembly.GetAssembly(typeof(Map));
+				metaInstallationPath=Directory.GetParent(asbMetaAssembly.Location).Parent.Parent.Parent.FullName; 
+				foreach(Type tRecognition in typeof(LiteralRecognitions).GetNestedTypes()) {
+					literalRecognitions.Add((RecognizeLiteral)tRecognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
 				literalRecognitions.Reverse();
-				foreach(Type type in typeof(DotNetToMetaConversions).GetNestedTypes()) {
-					DotNetToMetaConversion conversion=((DotNetToMetaConversion)type.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-					metaConversion[conversion.source]=conversion;
+				foreach(Type tToMetaConversion in typeof(DotNetToMetaConversions).GetNestedTypes()) {
+					DotNetToMetaConversion dttmtcvsConversion=((DotNetToMetaConversion)tToMetaConversion.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+					metaConversion[dttmtcvsConversion.source]=dttmtcvsConversion;
 				}
-				foreach(Type type in typeof(MetaToDotNetConversions).GetNestedTypes()) {
-					MetaToDotNetConversion conversion=(MetaToDotNetConversion)type.GetConstructor(new Type[]{}).Invoke(new object[]{});
-					if(!netConversion.ContainsKey(conversion.target)) {
-						netConversion[conversion.target]=new Hashtable();
+				foreach(Type tToDotNetConversion in typeof(MetaToDotNetConversions).GetNestedTypes()) {
+					MetaToDotNetConversion mttdtcvsConversion=(MetaToDotNetConversion)tToDotNetConversion.GetConstructor(new Type[]{}).Invoke(new object[]{});
+					if(!netConversion.ContainsKey(mttdtcvsConversion.target)) {
+						netConversion[mttdtcvsConversion.target]=new Hashtable();
 					}
-					((Hashtable)netConversion[conversion.target])[conversion.source]=conversion;
+					((Hashtable)netConversion[mttdtcvsConversion.target])[mttdtcvsConversion.source]=mttdtcvsConversion;
 				}
 			}
 			public static string metaInstallationPath;
@@ -1133,7 +1132,7 @@ namespace Meta {
 					message+=((Map)key).SDotNetStringV();
 				}
 				else if(key is Map) {
-					message+=Interpreter.vSaveToFileOjS(key,"",true);
+					message+=Interpreter.VSaveToFileOjS(key,"",true);
 				}
 				else {
 					message+=key;
@@ -1384,7 +1383,7 @@ namespace Meta {
 				}
 				
 				cash=LoadNamespaces(assemblies);
-				Interpreter.vSaveToFileOjS(assemblyInfo,infoFileName);
+				Interpreter.VSaveToFileOjS(assemblyInfo,infoFileName);
 				foreach(string fileName in Directory.GetFiles(libraryPath,"*.meta")) {
 					cash[new Map(Path.GetFileNameWithoutExtension(fileName))]=new MetaLibrary(fileName);
 				}
@@ -3007,7 +3006,7 @@ namespace Meta {
 										NetMethod.ojAssignCollectionMOjOutbla((Map)value,property.GetValue(obj,new object[]{}),out converted);
 									}
 									if(!converted) {
-										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.vSaveToFileOjS(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
+										throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.VSaveToFileOjS(key,"",false)+" could not be set to "+value.ToString()+". The value can not be converted.");
 									}
 								}
 								return;
