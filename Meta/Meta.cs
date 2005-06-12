@@ -983,7 +983,7 @@ namespace Meta {
 			}
 			public Map MNamespaceContentsS(string sNamespace) {
 				if(mAssemblyContent==null) {
-					mAssemblyContent=Library.LoadAssemblies(new object[] {asbAssembly});
+					mAssemblyContent=Library.MLoadAssembliesAs(new object[] {asbAssembly});
 				}
 				Map mSelected=mAssemblyContent;
 				if(sNamespace!="") {
@@ -1049,7 +1049,7 @@ namespace Meta {
 				}														// decide later
 				return mCache.GetEnumerator();
 			}
-			public static Map LoadAssemblies(IEnumerable enmrbasbAssmblies) {
+			public static Map MLoadAssembliesAs(IEnumerable enmrbasbAssmblies) {
 				Map mRoot=new Map();
 				foreach(Assembly asbCurrent in enmrbasbAssmblies) {
 					foreach(Type tCurrent in asbCurrent.GetExportedTypes())  {
@@ -1070,25 +1070,25 @@ namespace Meta {
 				}
 				return mRoot;
 			}
-			private static AssemblyName GetAssemblyName(IAssemblyName iasbnName) {
+			private static string SAssemblyNameAsbn(IAssemblyName iasbnName) { // TODO: make this return a string??
 				AssemblyName asbnName = new AssemblyName();
 				asbnName.Name = AssemblyCache.GetName(iasbnName);
 				asbnName.Version = AssemblyCache.GetVersion(iasbnName);
 				asbnName.CultureInfo = AssemblyCache.GetCulture(iasbnName);
 				asbnName.SetPublicKeyToken(AssemblyCache.GetPublicKeyToken(iasbnName));
-				return asbnName;
+				return asbnName.Name;
 			}
 			public Library() {
 				ArrayList aasbAssemblies=new ArrayList();
 				sLibraryPath=Path.Combine(Interpreter.sInstallationPath,"library");
 				IAssemblyEnum iasbenAssemblyEnum=AssemblyCache.CreateGACEnum();
 				IAssemblyName iasbnName; 
-				AssemblyName asbnName;
+//				AssemblyName asbnName;
 				aasbAssemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
 				while (AssemblyCache.GetNextAssembly(iasbenAssemblyEnum, out iasbnName) == 0) {
 					try {
-						asbnName=GetAssemblyName(iasbnName);
-						aasbAssemblies.Add(Assembly.LoadWithPartialName(asbnName.Name));
+						string sAssemblyName=SAssemblyNameAsbn(iasbnName);
+						aasbAssemblies.Add(Assembly.LoadWithPartialName(sAssemblyName));
 					}
 					catch(Exception e) {
 						//Console.WriteLine("Could not load gac assembly :"+System.GAC.AssemblyCache.GetName(an));
@@ -1105,14 +1105,14 @@ namespace Meta {
 					mCachedAssemblyInfo=(Map)Interpreter.RunWithoutLibrary(fnCachedAssemblyInfo,new Map());
 				}
 				
-				mCache=LoadNamespaces(aasbAssemblies);
+				mCache=MLoadNamespacesAasb(aasbAssemblies);
 				Interpreter.SaveToFileOFn(mCachedAssemblyInfo,fnCachedAssemblyInfo);
 				foreach(string fnCurrentMeta in Directory.GetFiles(sLibraryPath,"*.meta")) {
 					mCache[new Map(Path.GetFileNameWithoutExtension(fnCurrentMeta))]=new MetaLibrary(fnCurrentMeta);
 				}
 			}
 			private Map mCachedAssemblyInfo=new Map();
-			public ArrayList GetNamespaces(Assembly asbAssembly) { //refactor, integrate into LoadNamespaces???
+			public ArrayList AsNamespacesAsb(Assembly asbAssembly) { //refactor, integrate into MLoadNamespacesAasb???
 				ArrayList asNamespaces=new ArrayList();
 				if(mCachedAssemblyInfo.BContainsO(new Map(asbAssembly.Location))) {
 					Map info=(Map)mCachedAssemblyInfo[new Map(asbAssembly.Location)];
@@ -1150,10 +1150,10 @@ namespace Meta {
 				mCachedAssemblyInfo[new Map(asbAssembly.Location)]=mCachedAssemblyInfoMap;
 				return asNamespaces;
 			}
-			public Map LoadNamespaces(ArrayList aasbAssemblies) {
+			public Map MLoadNamespacesAasb(ArrayList aasbAssemblies) {
 				LazyNamespace lznsRoot=new LazyNamespace("");
 				foreach(Assembly assembly in aasbAssemblies) {
-					ArrayList asNamespaces=GetNamespaces(assembly);
+					ArrayList asNamespaces=AsNamespacesAsb(assembly);
 					CachedAssembly casbCachedAssembly=new CachedAssembly(assembly);
 					foreach(string sNamespace in asNamespaces) {
 						LazyNamespace lznsSelected=lznsRoot;
