@@ -2214,79 +2214,75 @@ namespace Meta {
 	}
 	namespace Parser  {
 		public class IndentationStream: TokenStream {
-			public IndentationStream(TokenStream stream)  {
-				this.stream=stream;
+			public IndentationStream(TokenStream tksStream)  {
+				this.tksStream=tksStream;
 				AddIndentationTokensToGetToLevel(0,new Token()); // TODO: remove "new Token" ?
 			}
 			public Token nextToken()  {
-				if(streamBuffer.Count==0)  {
-					Token t=stream.nextToken();
-					switch(t.Type) {
+				if(qBuffer.Count==0)  {
+					Token tkToken=tksStream.nextToken();
+					switch(tkToken.Type) {
 						case MetaLexerTokenTypes.EOF:
-							AddIndentationTokensToGetToLevel(-1,t);
+							AddIndentationTokensToGetToLevel(-1,tkToken);
 							break;
-//						case MetaLexerTokenTypes.EMPTY_LINE:
-//							AddIndentationTokensToGetToLevel(presentIndentationLevel-1,t);
-//							AddIndentationTokensToGetToLevel(presentIndentationLevel+1,t);
-//							break;
 						case MetaLexerTokenTypes.INDENTATION:
-							AddIndentationTokensToGetToLevel(t.getText().Length,t);
+							AddIndentationTokensToGetToLevel(tkToken.getText().Length,tkToken);
 							break;
 						case MetaLexerTokenTypes.LITERAL: // move this into parser, for correct error handling?
-							string indentation="";
-							for(int i=0;i<presentIndentationLevel+1;i++) {
-								indentation+='\t';
+							string sIndentation="";
+							for(int iIndex=0;iIndex<iIndentation+1;iIndex++) {
+								sIndentation+='\t';
 							}
-							string text=t.getText();
-							text=text.Replace(Environment.NewLine,"\n"); // replace so we can use Split, which only works with characters
-							string[] lines=text.Split('\n');
-							string result="";
-							for(int k=0;k<lines.Length;k++) {
-								if(k!=0 && lines[k].StartsWith(indentation)) {
-									result+=lines[k].Remove(0,presentIndentationLevel+1);
+							string sText=tkToken.getText();
+							sText=sText.Replace(Environment.NewLine,"\n"); // replace so we can use Split, which only works with characters
+							string[] asLines=sText.Split('\n');
+							string sResult="";
+							for(int iIndex=0;iIndex<asLines.Length;iIndex++) {
+								if(iIndex!=0 && asLines[iIndex].StartsWith(sIndentation)) {
+									sResult+=asLines[iIndex].Remove(0,iIndentation+1);
 								}
 								else {
-									result+=lines[k];
+									sResult+=asLines[iIndex];
 								}
-								if(k!=lines.Length-1) {
-									result+=Environment.NewLine;
+								if(iIndex!=asLines.Length-1) {
+									sResult+=Environment.NewLine;
 								}
 							}
-							t.setText(result);
-							streamBuffer.Enqueue(t);
+							tkToken.setText(sResult);
+							qBuffer.Enqueue(tkToken);
 							break;
 						default:
-							streamBuffer.Enqueue(t);
+							qBuffer.Enqueue(tkToken);
 							break;
 					}
 				}
-				return (Token)streamBuffer.Dequeue();
+				return (Token)qBuffer.Dequeue();
 			}
-			protected void AddIndentationTokensToGetToLevel(int newIndentationLevel,Token token)  {
-				int indentationDifference=newIndentationLevel-presentIndentationLevel; 
-				if(indentationDifference==0) {
-					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));//TODO: use something else here
+			protected void AddIndentationTokensToGetToLevel(int iNewIndentation,Token tkToken)  { // TODO: use Extent instead of Token, or just the line we're in
+				int iDifference=iNewIndentation-iIndentation; 
+				if(iDifference==0) {
+					qBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));//TODO: use something else here
 				}
-				else if(indentationDifference==1) {
-					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));
+				else if(iDifference==1) {
+					qBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));
 				}
-				else if(indentationDifference<0) {
-					for(int i=indentationDifference;i<0;i++) {
-						streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
+				else if(iDifference<0) {
+					for(int i=iDifference;i<0;i++) {
+						qBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
 					}
-					streamBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE)); // TODO: tiny bit unlogical? maybe create this in Parser?
+					qBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE)); // TODO: tiny bit unlogical? maybe create this in Parser?
 				}
-				else if(indentationDifference>1) {
+				else if(iDifference>1) {
 					// This doesn't get through properly because it is caught by ANTLR
 					// TODO: make extra exception later.
 					// I don't understand it and the lines are somehow off
-					throw new RecognitionException("Incorrect indentation.",token.getFilename(),token.getLine(),token.getColumn());
+					throw new RecognitionException("Incorrect indentation.",tkToken.getFilename(),tkToken.getLine(),tkToken.getColumn());
 				}
-				presentIndentationLevel=newIndentationLevel;
+				iIndentation=iNewIndentation;
 			}
-			protected Queue streamBuffer=new Queue();
-			protected TokenStream stream;
-			protected int presentIndentationLevel=-1;
+			protected Queue qBuffer=new Queue();
+			protected TokenStream tksStream;
+			protected int iIndentation=-1;
 		}
 	}
 	namespace TestingFramework {
