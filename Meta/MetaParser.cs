@@ -64,17 +64,18 @@ namespace Meta.Parser
 		public const int SAME_INDENT = 15;
 		public const int EQUAL = 16;
 		public const int HASH = 17;
-		public const int COLON = 18;
-		public const int LBRACKET = 19;
-		public const int RBRACKET = 20;
-		public const int POINT = 21;
-		public const int LITERAL_KEY = 22;
-		public const int LITERAL = 23;
-		public const int SPACES = 24;
-		public const int LINE = 25;
-		public const int SPACE = 26;
-		public const int NEWLINE = 27;
-		public const int NEWLINE_KEEP_TEXT = 28;
+		public const int EXCLAMATION_MARK = 18;
+		public const int COLON = 19;
+		public const int LBRACKET = 20;
+		public const int RBRACKET = 21;
+		public const int POINT = 22;
+		public const int LITERAL_KEY = 23;
+		public const int LITERAL = 24;
+		public const int SPACES = 25;
+		public const int LINE = 26;
+		public const int SPACE = 27;
+		public const int NEWLINE = 28;
+		public const int NEWLINE_KEEP_TEXT = 29;
 		
 		
 		protected void initialize()
@@ -126,6 +127,15 @@ namespace Meta.Parser
 				}
 				break;
 			}
+			case EXCLAMATION_MARK:
+			{
+				fullDelayed();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+				break;
+			}
 			case LITERAL:
 			{
 				MetaAST tmp1_AST = null;
@@ -135,11 +145,11 @@ namespace Meta.Parser
 				break;
 			}
 			default:
-				bool synPredMatched70 = false;
+				bool synPredMatched71 = false;
 				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 				{
-					int _m70 = mark();
-					synPredMatched70 = true;
+					int _m71 = mark();
+					synPredMatched71 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -148,12 +158,12 @@ namespace Meta.Parser
 					}
 					catch (RecognitionException)
 					{
-						synPredMatched70 = false;
+						synPredMatched71 = false;
 					}
-					rewind(_m70);
+					rewind(_m71);
 					inputState.guessing--;
 				}
-				if ( synPredMatched70 )
+				if ( synPredMatched71 )
 				{
 					call();
 					if (0 == inputState.guessing)
@@ -162,11 +172,11 @@ namespace Meta.Parser
 					}
 				}
 				else {
-					bool synPredMatched72 = false;
+					bool synPredMatched73 = false;
 					if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 					{
-						int _m72 = mark();
-						synPredMatched72 = true;
+						int _m73 = mark();
+						synPredMatched73 = true;
 						inputState.guessing++;
 						try {
 							{
@@ -175,12 +185,12 @@ namespace Meta.Parser
 						}
 						catch (RecognitionException)
 						{
-							synPredMatched72 = false;
+							synPredMatched73 = false;
 						}
-						rewind(_m72);
+						rewind(_m73);
 						inputState.guessing--;
 					}
-					if ( synPredMatched72 )
+					if ( synPredMatched73 )
 					{
 						select();
 						if (0 == inputState.guessing)
@@ -214,11 +224,11 @@ namespace Meta.Parser
 		
 		{
 			{
-				bool synPredMatched93 = false;
+				bool synPredMatched94 = false;
 				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 				{
-					int _m93 = mark();
-					synPredMatched93 = true;
+					int _m94 = mark();
+					synPredMatched94 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -227,12 +237,12 @@ namespace Meta.Parser
 					}
 					catch (RecognitionException)
 					{
-						synPredMatched93 = false;
+						synPredMatched94 = false;
 					}
-					rewind(_m93);
+					rewind(_m94);
 					inputState.guessing--;
 				}
-				if ( synPredMatched93 )
+				if ( synPredMatched94 )
 				{
 					select();
 					if (0 == inputState.guessing)
@@ -262,6 +272,7 @@ namespace Meta.Parser
 					break;
 				}
 				case INDENT:
+				case EXCLAMATION_MARK:
 				case LBRACKET:
 				case LITERAL_KEY:
 				case LITERAL:
@@ -332,7 +343,7 @@ namespace Meta.Parser
 			 }
 		}
 		{ // ( ... )+
-		int _cnt101=0;
+		int _cnt104=0;
 		for (;;)
 		{
 			if ((LA(1)==POINT))
@@ -346,12 +357,12 @@ namespace Meta.Parser
 			}
 			else
 			{
-				if (_cnt101 >= 1) { goto _loop101_breakloop; } else { throw new NoViableAltException(LT(1), getFilename());; }
+				if (_cnt104 >= 1) { goto _loop104_breakloop; } else { throw new NoViableAltException(LT(1), getFilename());; }
 			}
 			
-			_cnt101++;
+			_cnt104++;
 		}
-_loop101_breakloop:		;
+_loop104_breakloop:		;
 		}    // ( ... )+
 		if (0==inputState.guessing)
 		{
@@ -390,6 +401,7 @@ _loop101_breakloop:		;
 				{
 				case INDENT:
 				case EQUAL:
+				case EXCLAMATION_MARK:
 				case LBRACKET:
 				case LITERAL_KEY:
 				case LITERAL:
@@ -401,7 +413,7 @@ _loop101_breakloop:		;
 					}
 					break;
 				}
-				case COLON:
+				case HASH:
 				{
 					delayed();
 					if (0 == inputState.guessing)
@@ -425,7 +437,7 @@ _loop101_breakloop:		;
 						{
 							switch ( LA(1) )
 							{
-							case COLON:
+							case HASH:
 							{
 								delayed();
 								if (0 == inputState.guessing)
@@ -436,6 +448,7 @@ _loop101_breakloop:		;
 							}
 							case INDENT:
 							case EQUAL:
+							case EXCLAMATION_MARK:
 							case LBRACKET:
 							case LITERAL_KEY:
 							case LITERAL:
@@ -456,11 +469,11 @@ _loop101_breakloop:		;
 					}
 					else
 					{
-						goto _loop78_breakloop;
+						goto _loop79_breakloop;
 					}
 					
 				}
-_loop78_breakloop:				;
+_loop79_breakloop:				;
 			}    // ( ... )*
 			match(DEDENT);
 		}
@@ -480,6 +493,36 @@ _loop78_breakloop:				;
 		}
 		map_AST = (MetaAST)currentAST.root;
 		returnAST = map_AST;
+	}
+	
+	public void fullDelayed() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST fullDelayed_AST = null;
+		
+		match(EXCLAMATION_MARK);
+		delayedImplementation();
+		if (0 == inputState.guessing)
+		{
+			astFactory.addASTChild(currentAST, (AST)returnAST);
+		}
+		if (0==inputState.guessing)
+		{
+			fullDelayed_AST = (MetaAST)currentAST.root;
+			
+					fullDelayed_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(MAP)).add((AST)fullDelayed_AST));
+				
+			currentAST.root = fullDelayed_AST;
+			if ( (null != fullDelayed_AST) && (null != fullDelayed_AST.getFirstChild()) )
+				currentAST.child = fullDelayed_AST.getFirstChild();
+			else
+				currentAST.child = fullDelayed_AST;
+			currentAST.advanceChildToEnd();
+		}
+		fullDelayed_AST = (MetaAST)currentAST.root;
+		returnAST = fullDelayed_AST;
 	}
 	
 	public void search() //throws RecognitionException, TokenStreamException
@@ -518,11 +561,11 @@ _loop78_breakloop:				;
 		ASTPair currentAST = new ASTPair();
 		MetaAST statement_AST = null;
 		
-		bool synPredMatched84 = false;
+		bool synPredMatched85 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m84 = mark();
-			synPredMatched84 = true;
+			int _m85 = mark();
+			synPredMatched85 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -532,12 +575,12 @@ _loop78_breakloop:				;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched84 = false;
+				synPredMatched85 = false;
 			}
-			rewind(_m84);
+			rewind(_m85);
 			inputState.guessing--;
 		}
-		if ( synPredMatched84 )
+		if ( synPredMatched85 )
 		{
 			{
 				key();
@@ -579,6 +622,7 @@ _loop78_breakloop:				;
 							break;
 						}
 						case INDENT:
+						case EXCLAMATION_MARK:
 						case LBRACKET:
 						case LITERAL_KEY:
 						case LITERAL:
@@ -640,39 +684,11 @@ _loop78_breakloop:				;
 		ASTPair currentAST = new ASTPair();
 		MetaAST delayed_AST = null;
 		
-		match(COLON);
-		expression();
+		match(HASH);
+		delayedImplementation();
 		if (0 == inputState.guessing)
 		{
 			astFactory.addASTChild(currentAST, (AST)returnAST);
-		}
-		if (0==inputState.guessing)
-		{
-			delayed_AST = (MetaAST)currentAST.root;
-			
-			
-					// TODO: Simplify this, factor this out into a method? Add some functionality for this stuff? Maybe to MetAST?
-					MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
-					
-					runToken.setLine(delayed_AST.EtExtent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-					runToken.setColumn(delayed_AST.EtExtent.startColumn); 
-					runToken.FileName=delayed_AST.EtExtent.fileName;
-					runToken.EndLine=delayed_AST.EtExtent.endLine;
-					runToken.EndColumn=delayed_AST.EtExtent.endColumn;
-					
-					
-					MetaAST runAst=new MetaAST(runToken);
-					runAst.setText("run");
-			//#statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
-					delayed_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(KEY)).add((AST)runAst))).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(FUNCTION)).add((AST)delayed_AST))));
-			//#delayed=#([FUNCTION], #delayed);
-			
-			currentAST.root = delayed_AST;
-			if ( (null != delayed_AST) && (null != delayed_AST.getFirstChild()) )
-				currentAST.child = delayed_AST.getFirstChild();
-			else
-				currentAST.child = delayed_AST;
-			currentAST.advanceChildToEnd();
 		}
 		delayed_AST = (MetaAST)currentAST.root;
 		returnAST = delayed_AST;
@@ -704,11 +720,11 @@ _loop78_breakloop:				;
 				}
 				else
 				{
-					goto _loop81_breakloop;
+					goto _loop82_breakloop;
 				}
 				
 			}
-_loop81_breakloop:			;
+_loop82_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -765,6 +781,50 @@ _loop81_breakloop:			;
 		returnAST = lookup_AST;
 	}
 	
+	public void delayedImplementation() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST delayedImplementation_AST = null;
+		
+		expression();
+		if (0 == inputState.guessing)
+		{
+			astFactory.addASTChild(currentAST, (AST)returnAST);
+		}
+		if (0==inputState.guessing)
+		{
+			delayedImplementation_AST = (MetaAST)currentAST.root;
+			
+			
+					// TODO: Simplify this, factor this out into a method? Add some functionality for this stuff? Maybe to MetAST?
+					MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
+					
+					runToken.setLine(delayedImplementation_AST.EtExtent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+					runToken.setColumn(delayedImplementation_AST.EtExtent.startColumn); 
+					runToken.FileName=delayedImplementation_AST.EtExtent.fileName;
+					runToken.EndLine=delayedImplementation_AST.EtExtent.endLine;
+					runToken.EndColumn=delayedImplementation_AST.EtExtent.endColumn;
+					
+					
+					MetaAST runAst=new MetaAST(runToken);
+					runAst.setText("run");
+			//#statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
+					delayedImplementation_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(KEY)).add((AST)runAst))).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(FUNCTION)).add((AST)delayedImplementation_AST))));
+			//#delayedImplementation=#([FUNCTION], #delayedImplementation);
+			
+			currentAST.root = delayedImplementation_AST;
+			if ( (null != delayedImplementation_AST) && (null != delayedImplementation_AST.getFirstChild()) )
+				currentAST.child = delayedImplementation_AST.getFirstChild();
+			else
+				currentAST.child = delayedImplementation_AST;
+			currentAST.advanceChildToEnd();
+		}
+		delayedImplementation_AST = (MetaAST)currentAST.root;
+		returnAST = delayedImplementation_AST;
+	}
+	
 	public void squareBracketLookup() //throws RecognitionException, TokenStreamException
 {
 		
@@ -782,6 +842,7 @@ _loop81_breakloop:			;
 				break;
 			}
 			case INDENT:
+			case EXCLAMATION_MARK:
 			case LBRACKET:
 			case LITERAL_KEY:
 			case LITERAL:
@@ -882,7 +943,7 @@ _loop81_breakloop:			;
 	}
 	static public void initializeASTFactory( ASTFactory factory )
 	{
-		factory.setMaxNodeType(28);
+		factory.setMaxNodeType(29);
 	}
 	
 	public static readonly string[] tokenNames_ = new string[] {
@@ -904,6 +965,7 @@ _loop81_breakloop:			;
 		@"""SAME_INDENT""",
 		@"""EQUAL""",
 		@"""HASH""",
+		@"""EXCLAMATION_MARK""",
 		@"""COLON""",
 		@"""LBRACKET""",
 		@"""RBRACKET""",
@@ -919,7 +981,7 @@ _loop81_breakloop:			;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 13172768L, 0L};
+		long[] data = { 26542112L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());

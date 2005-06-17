@@ -54,7 +54,7 @@ tokens
   ENDLINE;            
   DEDENT;
   // created by Parser:              
-  MAP;          
+  MAP; // should really be called PROGRAM
   FUNCTION; 
   STATEMENT; 
   CALL;
@@ -91,6 +91,9 @@ EQUAL:
 
 HASH:
 	'#';
+	
+EXCLAMATION_MARK:
+	'!';
 
 COLON:
   ':';
@@ -126,6 +129,7 @@ LITERAL_KEY:
 			|'*'
 			|':'
 			|'#'
+			|'!'
 		)
 	)+
 	;
@@ -299,6 +303,7 @@ expression:
     |(select)=>
     select
     |map
+    |fullDelayed
     //|delayedExpressionOnly
     //|delayed
     |LITERAL
@@ -386,29 +391,37 @@ call:
   {
     #delayedExpressionOnly=#([DELAYED_EXPRESSION_ONLY], #delayedExpressionOnly);
   };*/
-
-
-// TODO: rename to better reflect the new function
+fullDelayed:
+	EXCLAMATION_MARK!
+	delayedImplementation
+	{
+		#fullDelayed=#([MAP],#fullDelayed);
+	}
+	;
 delayed:
-  COLON!
+  HASH!
+	delayedImplementation
+	;
+// TODO: rename to better reflect the new function
+delayedImplementation:
   expression
   {
   
 		// TODO: Simplify this, factor this out into a method? Add some functionality for this stuff? Maybe to MetAST?
 		MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
 		
-		runToken.setLine(#delayed.EtExtent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-		runToken.setColumn(#delayed.EtExtent.startColumn); 
-		runToken.FileName=#delayed.EtExtent.fileName;
-		runToken.EndLine=#delayed.EtExtent.endLine;
-		runToken.EndColumn=#delayed.EtExtent.endColumn;
+		runToken.setLine(#delayedImplementation.EtExtent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+		runToken.setColumn(#delayedImplementation.EtExtent.startColumn); 
+		runToken.FileName=#delayedImplementation.EtExtent.fileName;
+		runToken.EndLine=#delayedImplementation.EtExtent.endLine;
+		runToken.EndColumn=#delayedImplementation.EtExtent.endColumn;
 		
 		
 		MetaAST runAst=new MetaAST(runToken);
 		runAst.setText("run");
     //#statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
-		#delayed=#([STATEMENT],#([KEY],runAst),#([FUNCTION], #delayed));
-    //#delayed=#([FUNCTION], #delayed);
+		#delayedImplementation=#([STATEMENT],#([KEY],runAst),#([FUNCTION], #delayedImplementation));
+    //#delayedImplementation=#([FUNCTION], #delayedImplementation);
   };
 
 

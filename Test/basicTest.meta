@@ -24,10 +24,9 @@ this=map.mMergeAm
 	logic
 	map
 	math
-applyMethod=
-	:iAddII
-		arg.value
-		'1
+applyMethod=!iAddII
+	arg.value
+	'1
 applyTest=AoApplyFM
 	applyMethod
 	=
@@ -39,9 +38,9 @@ ifTest=if
 		'1
 		'1
 	=
-		:"it is true"
+		#"it is true"
 	=
-		:"it is false"
+		#"it is false"
 trimStartTest=sTrimStartS
 	"					hello"
 	'\\t
@@ -57,7 +56,7 @@ metaLibTest=metaLib
 commandLineArguments=arg
 libraryAssemblyTest=testClasses
 	//	asdfasdf	fff
-//thisIsInAComment:
+//thisIsInAComment#
 	//  still comment
 // some more comment
 aMap=
@@ -74,19 +73,18 @@ object=
 	a='default
 	autoSearch='default
 	b='
-	SetA=
-		:
-			parent.parent.a='c
-			parent.parent.autoSearch='changed
+	SetA=!
+		parent.parent.a='c
+		parent.parent.autoSearch='changed
 	SetB=
-		:
+		#
 			parent.parent.parent.b.1=arg.value
 			this='changed
 	x=
 		a='b
 		c='d
 	=
-		:
+		#
 			this.a='b
 a='default
 b='
@@ -96,7 +94,7 @@ bSet=object.SetB
 		x='7
 		z='1
 ReturnEverything=
-	:
+	#
 		this=arg
 everythingReturned=ReturnEverything
 	'a
@@ -107,15 +105,15 @@ variableAsArgument=ReturnEverything
 	'y
 	'z
 ReturnFunction=
-	:
+	#
 		this=
-			:
+			#
 				this=
 					'1
 					'2
 					'3
 SetCurrent=
-	:
+	#
 		this=
 			arg=arg
 			x=arg.symbol
@@ -123,10 +121,10 @@ SetCurrent=
 thisSet=SetCurrent
 	symbol='haha
 FirstLevel=
-	:
+	#
 		SecondLevel arg
 SecondLevel=
-	:arg
+	#arg
 argTest=FirstLevel
 	a='z
 concatenate=map.aJoinAa
@@ -174,42 +172,42 @@ interceptedSymbol2='1
 k='hello
 xyz='w
 literalFunction=
-	:'5
+	#'5
 literalFunctionResult=literalFunction'
 function=
-	:
+	#
 		this="simple function this"
 callFunction=
-	:function
+	#function
 callFunctionResult=callFunction'
 delayedFunction=
-	:
-		:
+	#
+		#
 			x='y
 delayedFunctionResult=delayedFunction '
 value='xyz
 selectionFunction=
-	:value
+	#value
 selectionFunctionResult=selectionFunction '
 bigInteger='89383838383832839123497123047217340712340720347072304702340720347
 upperLevel='unchanged
 ChangeUpperLevel=
-	:
+	#
 		parent.parent.upperLevel='changed
 ChangeUpperLevel'
 staticEventChanged='0
 TestClass.staticEvent=
-	:
+	#
 		parent.parent.staticEventChanged='1
 		this=arg.1
 staticEvent=TestClass.staticEvent
 TestClass.TakeDelegate
-	:'resultFromDelegate
+	#'resultFromDelegate
 resultFromDelegate=TestClass.GetResultFromDelegate'
 staticEventResult=TestClass.staticEvent testClass
 instanceEventChanged='0
 testClass.instanceEvent=
-	:
+	#
 		parent.parent.instanceEventChanged='1
 		this=arg.1
 instanceEvent=testClass.instanceEvent
@@ -224,9 +222,9 @@ firstIfCondition=equal
 	one
 firstIfBranches=
 	1=
-		:'then
+		#'then
 	0=
-		:'else
+		#'else
 firstIf=firstIfBranches.[firstIfCondition]'
 bigNumber='50020202029029233344
 secondSwitch='unchanged
@@ -237,7 +235,7 @@ secondSwitchCases=
 secondSwitch=secondSwitchCases.3
 emptyMap='
 emptyFunction=
-	:
+	#
 		x='hello
 emptyFunctionResult=emptyFunction'
 font=System.Drawing.Font
@@ -277,33 +275,33 @@ tabText="			hello"
 escapedText="\'\n\\\t"
 whileCounter='
 loop=
-	:
+	#
 		whileDecision=bSmallerII
 			arg
 			'10
 		whileBranches=
 			1=
-				:loop iAddII
+				#loop iAddII
 					arg
 					'1
 			0=
-				:arg
+				#arg
 		this=whileBranches.[whileDecision] arg
 whileCounter=loop '3
 returnInMap=
-	:
+	#
 		result=arg
 literalAsArgument=returnInMap '1
 returnFunction=
-	:
-		:'functionResult
+	#
+		#'functionResult
 returnArg=
-	:arg
+	#arg
 myArg=
-	:
+	#
 		hello='world
 funcReturnTest=returnArg myArg'
 documentedFunction=
 	doc="This function returns 'hello ."
-	:'hello
+	#'hello
 docFunctionResult=documentedFunction'
