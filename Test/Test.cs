@@ -35,7 +35,7 @@ namespace Test {
 			//args=new string[]{@"C:\_ProectSupportMaterial\Meta\library\function.meta"};
 			//args=new string[]{@"C:\Dokumente und Einstellungen\Christian\Desktop\editor.meta"};
 			//args=new string[]{@"..\..\basicTest.meta"};
-			try {
+//			try {
 				if(args.Length==0) {
 					Directory.SetCurrentDirectory(
 						".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
@@ -48,33 +48,33 @@ namespace Test {
 					Interpreter.ORunFnM(args[0],new Map());
 					// TODO: fix this to only show original error message
 				}
-			}
-			catch(CharStreamException e) {// put this into "Run" ???, no don't, every caller can do this differently
-				Console.WriteLine(e.Message); //put all this error printing into one method
-				Console.ReadLine();
-			}
-			catch(RecognitionException e) {
-				Console.WriteLine(e.Message+" line:"+e.line+"+ column:"+e.column);
-				Console.ReadLine();
-			}
-			catch(TokenStreamRecognitionException e) {
-				Console.WriteLine(e.recog.Message+" line:"+e.recog.line+" column:"+e.recog.column);
-				Console.ReadLine();
-			}
-			catch(TokenStreamException e) {
-				Console.WriteLine(e.Message);
-				Console.ReadLine();
-			}
-			catch(Exception e) {
-				string text="";
-				do {
-					text+=e.Message+"\n"+e.TargetSite+"\n";
-					e=e.InnerException;
-				} 
-				while(e!=null);
-				Console.WriteLine(text);
-				Console.ReadLine();
-			}
+//			}
+//			catch(CharStreamException e) {// put this into "Run" ???, no don't, every caller can do this differently
+//				Console.WriteLine(e.Message); //put all this error printing into one method
+//				Console.ReadLine();
+//			}
+//			catch(RecognitionException e) {
+//				Console.WriteLine(e.Message+" line:"+e.line+"+ column:"+e.column);
+//				Console.ReadLine();
+//			}
+//			catch(TokenStreamRecognitionException e) {
+//				Console.WriteLine(e.recog.Message+" line:"+e.recog.line+" column:"+e.recog.column);
+//				Console.ReadLine();
+//			}
+//			catch(TokenStreamException e) {
+//				Console.WriteLine(e.Message);
+//				Console.ReadLine();
+//			}
+//			catch(Exception e) {
+//				string text="";
+//				do {
+//					text+=e.Message+"\n"+e.TargetSite+"\n";
+//					e=e.InnerException;
+//				} 
+//				while(e!=null);
+//				Console.WriteLine(text);
+//				Console.ReadLine();
+//			}
 //			DateTime start=DateTime.Now;
 //			string file=@"C:\Dokumente und Einstellungen\Christian\Desktop\performance.meta";
 //			Interpreter.Run(new StreamReader(file),new Map());
@@ -86,7 +86,7 @@ namespace Test {
 	}
 	public class Tests {
 		private static string filename=@"basicTest.meta";
-		// TODO:make it possible to choose between different tests on command line, and whether to test at all
+//		// TODO:make it possible to choose between different tests on command line, and whether to test at all
 		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
 		public class ParseToAst:TestCase {
 			public override object ORun() {

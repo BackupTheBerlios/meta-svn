@@ -123,4 +123,15 @@ public class map {
 		}
 		return mResult;
 	}
+	public static object @if(bool bCondition,Map mThen,Map mElse) {
+		if(bCondition) {
+			return mThen.OCallO(new Map());
+		}
+		else if(mElse!=null) {
+			return mElse.OCallO(new Map());
+		}
+		else {
+			return new Map();
+		}		
+	}
 }

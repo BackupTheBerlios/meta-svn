@@ -80,6 +80,13 @@ Entry (DictionaryEntry)
         "System.Object oInitOM(System.Object, Meta.Types.IMap)"
 Entry (DictionaryEntry)
   Key (Map):
+    "if"
+  Value (NetMethod):
+    arMtbOverloadedMethods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "System.Object if(Boolean, Meta.Types.Map, Meta.Types.Map)"
+Entry (DictionaryEntry)
+  Key (Map):
     "oRunS"
   Value (NetMethod):
     arMtbOverloadedMethods (MethodBase[]):
@@ -266,6 +273,11 @@ Entry (DictionaryEntry)
     "applyTest"
   Value (Map):
     ""
+Entry (DictionaryEntry)
+  Key (Map):
+    "ifTest"
+  Value (Map):
+    "it is true"
 Entry (DictionaryEntry)
   Key (Map):
     "trimStartTest"
