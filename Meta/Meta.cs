@@ -166,11 +166,69 @@ namespace Meta {
 			}
 			public static readonly Map sSelect=new Map("select");
 		}
-
 		public class Statement {
+//			public void RealizeM(IMap mParent) {
+//				object oSelected=mParent;
+//				object oKey;
+//				object oFirstKey=((Expression)aeKeys[0]).OEvaluateM(mParent); 
+//				if(bSearchFirstKey) { 
+//					while(!((Map)oSelected).BContainsO(oFirstKey)) {
+//						if(oSelected==null) {
+//							throw new KeyNotFoundException(oFirstKey,((Expression)aeKeys[0]).EtExtent);
+//						}
+//						oSelected=((Map)oSelected)[oFirstKey];
+//					}
+//				}
+//// first key is only needed for search, for lookup, this could simply be ignored, be "null", would make code a bit simpler, bSearchFirstKey would not be needed anymore
+//				else { /// remove this, if possible
+//					oKey=((Expression)aeKeys[0]).OEvaluateM(mParent);
+//					oSelected=((IKeyValue)oSelected)[oKey];
+//					if(oSelected==null) {
+//						throw new KeyDoesNotExistException(oKey,((Expression)aeKeys[0]).EtExtent);
+//					}
+//					if(!(oSelected is IKeyValue)) {
+//						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
+//					}
+//				}
+//				for(int i=1;i<aeKeys.Count-1;i++) {
+//					oKey=((Expression)aeKeys[i]).OEvaluateM((IMap)mParent);
+//					oSelected=((IKeyValue)oSelected)[oKey];
+//					if(oSelected==null) {
+//						throw new KeyDoesNotExistException(oKey,((Expression)aeKeys[i]).EtExtent);
+//					}
+//					if(!(oSelected is IKeyValue)) {
+//						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
+//					}
+//				}
+//				object oLastKey=((Expression)aeKeys[aeKeys.Count-1]).OEvaluateM((IMap)mParent);
+//				object oValue=eValue.OEvaluateM((IMap)mParent);
+//				if(oLastKey.Equals(Map.sThis)) {
+//					if(oValue is Map) {
+//						((Map)oValue).MParent=((Map)mParent).MParent;
+//					}
+//					else {
+//						int asdf=0;
+//					}
+//					Interpreter.OCurrent=oValue;
+//
+//				}
+//				else {
+//					((IKeyValue)oSelected)[oLastKey]=oValue;
+//				}
+//			}
 			public void RealizeM(IMap mParent) {
 				object oSelected=mParent;
 				object oKey;
+				
+				if(bSearchFirstKey) {
+					object oFirstKey=((Expression)aeKeys[0]).OEvaluateM(mParent); 
+					while(!((Map)oSelected).BContainsO(oFirstKey)) {
+						oSelected=((Map)oSelected).MParent;
+						if(oSelected==null) {
+							throw new KeyNotFoundException(oFirstKey,((Expression)aeKeys[0]).EtExtent);
+						}
+					}
+				}
 				for(int i=0;i<aeKeys.Count-1;i++) {
 					oKey=((Expression)aeKeys[i]).OEvaluateM((IMap)mParent);
 					oSelected=((IKeyValue)oSelected)[oKey];
@@ -197,7 +255,30 @@ namespace Meta {
 					((IKeyValue)oSelected)[oLastKey]=oValue;
 				}
 			}
+//			public Statement(Map mStatement) {
+//				Map mKeyCode=(Map)mStatement[sKey];
+//				ArrayList aIntKeys=mKeyCode.AoIntegerKeyValues;
+//				Map mFirstKeyCode=(Map)mKeyCode[new Integer(1)];
+//				if(mFirstKeyCode.BContainsO(mSearch)) {
+//					aeKeys.Add(((Map)mFirstKeyCode[mSearch]).ECompile());
+//					bSearchFirstKey=true;
+//				}
+//				else if(mFirstKeyCode.BContainsO(mLookup)) {
+//					aeKeys.Add(((Map)mFirstKeyCode[mLookup]).ECompile());
+//					//bSearchFirstKey=false;
+//				}
+//				else {
+//					throw new ApplicationException("No keyword for first key in statement.");
+//				}
+//				foreach(Map key in aIntKeys.GetRange(1,aIntKeys.Count-1)) {
+//					aeKeys.Add(key.ECompile());
+//				}
+//				this.eValue=(Expression)((Map)mStatement[sValue]).ECompile();
+//			}
 			public Statement(Map mStatement) {
+				if(mStatement.BContainsO(mSearch)) {
+					bSearchFirstKey=true;
+				}
 				foreach(Map key in ((Map)mStatement[sKey]).AoIntegerKeyValues) {
 					aeKeys.Add(key.ECompile());
 				}
@@ -205,11 +286,56 @@ namespace Meta {
 			}
 			public ArrayList aeKeys=new ArrayList();
 			public Expression eValue;
-
-
-			public static readonly Map sKey=new Map("key");
+			
+			bool bSearchFirstKey=false;
+			public static readonly Map mSearch=new Map("search");
+			public static readonly Map mLookup=new Map("lookup");
+			public static readonly Map sKey=new Map("key"); // s isn't really logical here!
 			public static readonly Map sValue=new Map("value");
 		}
+//		public class Statement {
+//			public void RealizeM(IMap mParent) {
+//				object oSelected=mParent;
+//				object oKey;
+//				for(int i=0;i<aeKeys.Count-1;i++) {
+//					oKey=((Expression)aeKeys[i]).OEvaluateM((IMap)mParent);
+//					oSelected=((IKeyValue)oSelected)[oKey];
+//					if(oSelected==null) {
+//						throw new KeyDoesNotExistException(oKey,((Expression)aeKeys[i]).EtExtent);
+//					}
+//					if(!(oSelected is IKeyValue)) {
+//						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
+//					}
+//				}
+//				object oLastKey=((Expression)aeKeys[aeKeys.Count-1]).OEvaluateM((IMap)mParent);
+//				object oValue=eValue.OEvaluateM((IMap)mParent);
+//				if(oLastKey.Equals(Map.sThis)) {
+//					if(oValue is Map) {
+//						((Map)oValue).MParent=((Map)mParent).MParent;
+//					}
+//					else {
+//						int asdf=0;
+//					}
+//					Interpreter.OCurrent=oValue;
+//
+//				}
+//				else {
+//					((IKeyValue)oSelected)[oLastKey]=oValue;
+//				}
+//			}
+//			public Statement(Map mStatement) {
+//				foreach(Map key in ((Map)mStatement[sKey]).AoIntegerKeyValues) {
+//					aeKeys.Add(key.ECompile());
+//				}
+//				this.eValue=(Expression)((Map)mStatement[sValue]).ECompile();
+//			}
+//			public ArrayList aeKeys=new ArrayList();
+//			public Expression eValue;
+//
+//
+//			public static readonly Map sKey=new Map("key");
+//			public static readonly Map sValue=new Map("value");
+//		}
 
 	
 

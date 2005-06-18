@@ -64,6 +64,7 @@ tokens
   //DELAYED_EXPRESSION_ONLY; // TODO: rename
   SAME_INDENT;
   //EMPTY_LINE; // TODO: reintroduce, as delimiter between two maps
+  STATEMENT_SEARCH;
 }
 {
     /**
@@ -338,10 +339,20 @@ statement:
     (key EQUAL)=>
     (
       key
-      EQUAL! 
+      EQUAL!
       expression
       {
-        #statement=#([STATEMENT],#statement);
+					#statement=#([STATEMENT],#statement);
+      }
+    )
+    |
+    (key COLON)=>
+    (
+      key
+      COLON!
+      expression
+      {
+					#statement=#([STATEMENT_SEARCH],#statement);
       }
     )
     |
@@ -545,6 +556,27 @@ statement
 		}
 	)
 	;
+statementSearch // maybe somehow combine this with "statement", if possible, not sure if tree has lookahead at all, didn't seem to work in one rule
+	returns[Map statement]
+	{
+		statement=new Map();
+		//Map key=null;
+		Map val=null;
+		Map k=null;
+	}:
+	#(STATEMENT_SEARCH
+		k=key
+		val=expression
+		{
+			//Map statement=new Map();
+			statement[Statement.sKey]=k;
+			statement[Statement.sValue]=val;// TODO: Add Extent to statements, too?
+		}
+	)
+	{
+		statement[Statement.mSearch]=new Integer(1);
+	}
+	;
 map
   returns[Map result]
   {
@@ -556,7 +588,7 @@ map
   }:
   #(MAP
     (
-			s=statement
+			(s=statement|s=statementSearch)
 			{
 				statements[new Integer(counter)]=s;					
 				counter++;

@@ -700,7 +700,20 @@ Entry (DictionaryEntry)
       Key (Map):
         "b"
       Value (Map):
-        ""
+        Entry (DictionaryEntry)
+          Key (Integer):
+            "1"
+          Value (Map):
+            Entry (DictionaryEntry)
+              Key (Map):
+                "x"
+              Value (Integer):
+                "7"
+            Entry (DictionaryEntry)
+              Key (Map):
+                "z"
+              Value (Integer):
+                "1"
     Entry (DictionaryEntry)
       Key (Map):
         "SetA"
@@ -729,24 +742,6 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "parent"
-                        Entry (DictionaryEntry)
-                          Key (Integer):
-                            "2"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "parent"
-                        Entry (DictionaryEntry)
-                          Key (Integer):
-                            "3"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
                                 "a"
                     Entry (DictionaryEntry)
                       Key (Map):
@@ -757,6 +752,11 @@ Entry (DictionaryEntry)
                             "literal"
                           Value (Map):
                             "c"
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "search"
+                      Value (Integer):
+                        "1"
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "2"
@@ -773,24 +773,6 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "parent"
-                        Entry (DictionaryEntry)
-                          Key (Integer):
-                            "2"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "parent"
-                        Entry (DictionaryEntry)
-                          Key (Integer):
-                            "3"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
                                 "autoSearch"
                     Entry (DictionaryEntry)
                       Key (Map):
@@ -801,6 +783,11 @@ Entry (DictionaryEntry)
                             "literal"
                           Value (Map):
                             "changed"
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "search"
+                      Value (Integer):
+                        "1"
     Entry (DictionaryEntry)
       Key (Map):
         "SetB"
@@ -829,37 +816,10 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "parent"
-                        Entry (DictionaryEntry)
-                          Key (Integer):
-                            "2"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "parent"
-                        Entry (DictionaryEntry)
-                          Key (Integer):
-                            "3"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "parent"
-                        Entry (DictionaryEntry)
-                          Key (Integer):
-                            "4"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
                                 "b"
                         Entry (DictionaryEntry)
                           Key (Integer):
-                            "5"
+                            "2"
                           Value (Map):
                             Entry (DictionaryEntry)
                               Key (Map):
@@ -896,6 +856,11 @@ Entry (DictionaryEntry)
                                     "literal"
                                   Value (Map):
                                     "value"
+                    Entry (DictionaryEntry)
+                      Key (Map):
+                        "search"
+                      Value (Integer):
+                        "1"
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "2"
@@ -992,20 +957,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "b"
   Value (Map):
-    Entry (DictionaryEntry)
-      Key (Integer):
-        "1"
-      Value (Map):
-        Entry (DictionaryEntry)
-          Key (Map):
-            "x"
-          Value (Integer):
-            "7"
-        Entry (DictionaryEntry)
-          Key (Map):
-            "z"
-          Value (Integer):
-            "1"
+    ""
 Entry (DictionaryEntry)
   Key (Map):
     "aSet"
@@ -1908,24 +1860,6 @@ Entry (DictionaryEntry)
                           Key (Map):
                             "literal"
                           Value (Map):
-                            "parent"
-                    Entry (DictionaryEntry)
-                      Key (Integer):
-                        "2"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
-                            "parent"
-                    Entry (DictionaryEntry)
-                      Key (Integer):
-                        "3"
-                      Value (Map):
-                        Entry (DictionaryEntry)
-                          Key (Map):
-                            "literal"
-                          Value (Map):
                             "upperLevel"
                 Entry (DictionaryEntry)
                   Key (Map):
@@ -1936,6 +1870,11 @@ Entry (DictionaryEntry)
                         "literal"
                       Value (Map):
                         "changed"
+                Entry (DictionaryEntry)
+                  Key (Map):
+                    "search"
+                  Value (Integer):
+                    "1"
 Entry (DictionaryEntry)
   Key (Integer):
     "3"

@@ -2434,7 +2434,7 @@ asmStatements (ArrayList):
                   Entry (Literal)
                     EtExtent (Extent):
                       endColumn (Int32):
-                        "36"
+                        "22"
                       endLine (Int32):
                         "78"
                       fileName (String):
@@ -2448,7 +2448,7 @@ asmStatements (ArrayList):
                 eValue (Delayed):
                   EtExtent (Extent):
                     endColumn (Int32):
-                      "36"
+                      "22"
                     endLine (Int32):
                       "78"
                     fileName (String):
@@ -2478,24 +2478,6 @@ asmStatements (ArrayList):
                                       Key (Map):
                                         "literal"
                                       Value (Map):
-                                        "parent"
-                                Entry (DictionaryEntry)
-                                  Key (Integer):
-                                    "2"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
-                                        "parent"
-                                Entry (DictionaryEntry)
-                                  Key (Integer):
-                                    "3"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
                                         "a"
                             Entry (DictionaryEntry)
                               Key (Map):
@@ -2506,6 +2488,11 @@ asmStatements (ArrayList):
                                     "literal"
                                   Value (Map):
                                     "c"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "search"
+                              Value (Integer):
+                                "1"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
@@ -2522,24 +2509,6 @@ asmStatements (ArrayList):
                                       Key (Map):
                                         "literal"
                                       Value (Map):
-                                        "parent"
-                                Entry (DictionaryEntry)
-                                  Key (Integer):
-                                    "2"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
-                                        "parent"
-                                Entry (DictionaryEntry)
-                                  Key (Integer):
-                                    "3"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
                                         "autoSearch"
                             Entry (DictionaryEntry)
                               Key (Map):
@@ -2550,9 +2519,14 @@ asmStatements (ArrayList):
                                     "literal"
                                   Value (Map):
                                     "changed"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "search"
+                              Value (Integer):
+                                "1"
             EtExtent (Extent):
               endColumn (Int32):
-                "36"
+                "22"
               endLine (Int32):
                 "78"
               fileName (String):
@@ -2628,37 +2602,10 @@ asmStatements (ArrayList):
                                       Key (Map):
                                         "literal"
                                       Value (Map):
-                                        "parent"
-                                Entry (DictionaryEntry)
-                                  Key (Integer):
-                                    "2"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
-                                        "parent"
-                                Entry (DictionaryEntry)
-                                  Key (Integer):
-                                    "3"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
-                                        "parent"
-                                Entry (DictionaryEntry)
-                                  Key (Integer):
-                                    "4"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
                                         "b"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
-                                    "5"
+                                    "2"
                                   Value (Map):
                                     Entry (DictionaryEntry)
                                       Key (Map):
@@ -2695,6 +2642,11 @@ asmStatements (ArrayList):
                                             "literal"
                                           Value (Map):
                                             "value"
+                            Entry (DictionaryEntry)
+                              Key (Map):
+                                "search"
+                              Value (Integer):
+                                "1"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
@@ -7314,7 +7266,7 @@ asmStatements (ArrayList):
             Entry (Literal)
               EtExtent (Extent):
                 endColumn (Int32):
-                  "36"
+                  "22"
                 endLine (Int32):
                   "196"
                 fileName (String):
@@ -7328,7 +7280,7 @@ asmStatements (ArrayList):
           eValue (Delayed):
             EtExtent (Extent):
               endColumn (Int32):
-                "36"
+                "22"
               endLine (Int32):
                 "196"
               fileName (String):
@@ -7358,24 +7310,6 @@ asmStatements (ArrayList):
                                 Key (Map):
                                   "literal"
                                 Value (Map):
-                                  "parent"
-                          Entry (DictionaryEntry)
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "literal"
-                                Value (Map):
-                                  "parent"
-                          Entry (DictionaryEntry)
-                            Key (Integer):
-                              "3"
-                            Value (Map):
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "literal"
-                                Value (Map):
                                   "upperLevel"
                       Entry (DictionaryEntry)
                         Key (Map):
@@ -7386,9 +7320,14 @@ asmStatements (ArrayList):
                               "literal"
                             Value (Map):
                               "changed"
+                      Entry (DictionaryEntry)
+                        Key (Map):
+                          "search"
+                        Value (Integer):
+                          "1"
       EtExtent (Extent):
         endColumn (Int32):
-          "36"
+          "22"
         endLine (Int32):
           "196"
         fileName (String):
@@ -7576,24 +7515,6 @@ asmStatements (ArrayList):
                                 Key (Map):
                                   "literal"
                                 Value (Map):
-                                  "parent"
-                          Entry (DictionaryEntry)
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "literal"
-                                Value (Map):
-                                  "parent"
-                          Entry (DictionaryEntry)
-                            Key (Integer):
-                              "3"
-                            Value (Map):
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "literal"
-                                Value (Map):
                                   "staticEventChanged"
                       Entry (DictionaryEntry)
                         Key (Map):
@@ -7604,6 +7525,11 @@ asmStatements (ArrayList):
                               "literal"
                             Value (Map):
                               "1"
+                      Entry (DictionaryEntry)
+                        Key (Map):
+                          "search"
+                        Value (Integer):
+                          "1"
                   Entry (DictionaryEntry)
                     Key (Integer):
                       "2"
@@ -8172,24 +8098,6 @@ asmStatements (ArrayList):
                                 Key (Map):
                                   "literal"
                                 Value (Map):
-                                  "parent"
-                          Entry (DictionaryEntry)
-                            Key (Integer):
-                              "2"
-                            Value (Map):
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "literal"
-                                Value (Map):
-                                  "parent"
-                          Entry (DictionaryEntry)
-                            Key (Integer):
-                              "3"
-                            Value (Map):
-                              Entry (DictionaryEntry)
-                                Key (Map):
-                                  "literal"
-                                Value (Map):
                                   "instanceEventChanged"
                       Entry (DictionaryEntry)
                         Key (Map):
@@ -8200,6 +8108,11 @@ asmStatements (ArrayList):
                               "literal"
                             Value (Map):
                               "1"
+                      Entry (DictionaryEntry)
+                        Key (Map):
+                          "search"
+                        Value (Integer):
+                          "1"
                   Entry (DictionaryEntry)
                     Key (Integer):
                       "2"
