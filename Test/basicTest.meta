@@ -13,12 +13,12 @@
 //	You should have received a copy of the GNU General Public License
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-this=map.mMergeAm
+this=map.merge
 	parent
 	=
 		'AssignedToCurrent
 unicodeText='äaba
-this=map.mMergeAm
+this=map.merge
 	parent
 	programFlow
 	logic
@@ -27,7 +27,7 @@ this=map.mMergeAm
 applyMethod=!iAddII
 	arg.value
 	'1
-applyTest=AoApplyFM
+applyTest=apply
 	applyMethod
 	=
 		'1
@@ -44,7 +44,7 @@ ifTest=if
 trimStartTest=sTrimStartS
 	"					hello"
 	'\\t
-form=oInitOM
+form=init
 	System.Windows.Forms.Form'
 	=
 		Text='hello
@@ -127,10 +127,10 @@ SecondLevel=
 	#arg
 argTest=FirstLevel
 	a='z
-concatenate=map.aJoinAa
+concatenate=map.join
 	'x
 	'yz
-this=map.mMergeAm
+this=map.merge
 	parent
 	testClasses
 testClass=TestClass'

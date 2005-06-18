@@ -56,7 +56,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "mMergeAm"
+                                "merge"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -226,7 +226,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "mMergeAm"
+                                "merge"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -570,7 +570,7 @@ Entry (DictionaryEntry)
                           Key (Map):
                             "literal"
                           Value (Map):
-                            "AoApplyFM"
+                            "apply"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -1101,7 +1101,7 @@ Entry (DictionaryEntry)
                           Key (Map):
                             "literal"
                           Value (Map):
-                            "oInitOM"
+                            "init"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -3635,7 +3635,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "aJoinAa"
+                                "join"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -3750,7 +3750,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "mMergeAm"
+                                "merge"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"

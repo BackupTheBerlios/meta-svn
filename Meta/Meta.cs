@@ -444,7 +444,7 @@ namespace Meta {
 				}
 			}
 			public static object ODotNetFromMetaO(object oMeta,Type tTarget) {
-				try {
+				try { // don't try-catch, check if the conversion is null (and bConverted??)
 					MetaToDotNetConversion mttdncvsConversion=(MetaToDotNetConversion)((Hashtable)
 						Interpreter.htmttdncvsToDotNetConversion[tTarget])[oMeta.GetType()];
 					bool bConverted;
@@ -2184,7 +2184,7 @@ namespace Meta {
 						nmtIndexer.OCallO(mArgument);
 					}
 					catch(Exception e) {
-						throw new ApplicationException("Cannot set "+oKey.ToString()+".");
+						throw new ApplicationException("Cannot set "+Interpreter.ODotNetFromMetaO(oKey).ToString()+".");
 					}
 				}
 			}

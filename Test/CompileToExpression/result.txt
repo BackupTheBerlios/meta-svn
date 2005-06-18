@@ -135,7 +135,7 @@ asmStatements (ArrayList):
           Entry (Literal)
             EtExtent (Extent):
               endColumn (Int32):
-                "18"
+                "15"
               endLine (Int32):
                 "16"
               fileName (String):
@@ -145,7 +145,7 @@ asmStatements (ArrayList):
               startLine (Int32):
                 "16"
             oLiteral (Map):
-              "mMergeAm"
+              "merge"
         eFirst (Search):
           eKey (Literal):
             EtExtent (Extent):
@@ -174,7 +174,7 @@ asmStatements (ArrayList):
               "16"
         EtExtent (Extent):
           endColumn (Int32):
-            "18"
+            "15"
           endLine (Int32):
             "16"
           fileName (String):
@@ -469,7 +469,7 @@ asmStatements (ArrayList):
           Entry (Literal)
             EtExtent (Extent):
               endColumn (Int32):
-                "18"
+                "15"
               endLine (Int32):
                 "21"
               fileName (String):
@@ -479,7 +479,7 @@ asmStatements (ArrayList):
               startLine (Int32):
                 "21"
             oLiteral (Map):
-              "mMergeAm"
+              "merge"
         eFirst (Search):
           eKey (Literal):
             EtExtent (Extent):
@@ -508,7 +508,7 @@ asmStatements (ArrayList):
               "21"
         EtExtent (Extent):
           endColumn (Int32):
-            "18"
+            "15"
           endLine (Int32):
             "21"
           fileName (String):
@@ -879,7 +879,7 @@ asmStatements (ArrayList):
         eKey (Literal):
           EtExtent (Extent):
             endColumn (Int32):
-              "20"
+              "16"
             endLine (Int32):
               "30"
             fileName (String):
@@ -889,10 +889,10 @@ asmStatements (ArrayList):
             startLine (Int32):
               "30"
           oLiteral (Map):
-            "AoApplyFM"
+            "apply"
         EtExtent (Extent):
           endColumn (Int32):
-            "20"
+            "16"
           endLine (Int32):
             "30"
           fileName (String):
@@ -1575,7 +1575,7 @@ asmStatements (ArrayList):
         eKey (Literal):
           EtExtent (Extent):
             endColumn (Int32):
-              "13"
+              "10"
             endLine (Int32):
               "47"
             fileName (String):
@@ -1585,10 +1585,10 @@ asmStatements (ArrayList):
             startLine (Int32):
               "47"
           oLiteral (Map):
-            "oInitOM"
+            "init"
         EtExtent (Extent):
           endColumn (Int32):
-            "13"
+            "10"
           endLine (Int32):
             "47"
           fileName (String):
@@ -4507,7 +4507,7 @@ asmStatements (ArrayList):
           Entry (Literal)
             EtExtent (Extent):
               endColumn (Int32):
-                "24"
+                "21"
               endLine (Int32):
                 "130"
               fileName (String):
@@ -4517,7 +4517,7 @@ asmStatements (ArrayList):
               startLine (Int32):
                 "130"
             oLiteral (Map):
-              "aJoinAa"
+              "join"
         eFirst (Search):
           eKey (Literal):
             EtExtent (Extent):
@@ -4546,7 +4546,7 @@ asmStatements (ArrayList):
               "130"
         EtExtent (Extent):
           endColumn (Int32):
-            "24"
+            "21"
           endLine (Int32):
             "130"
           fileName (String):
@@ -4685,7 +4685,7 @@ asmStatements (ArrayList):
           Entry (Literal)
             EtExtent (Extent):
               endColumn (Int32):
-                "18"
+                "15"
               endLine (Int32):
                 "133"
               fileName (String):
@@ -4695,7 +4695,7 @@ asmStatements (ArrayList):
               startLine (Int32):
                 "133"
             oLiteral (Map):
-              "mMergeAm"
+              "merge"
         eFirst (Search):
           eKey (Literal):
             EtExtent (Extent):
@@ -4724,7 +4724,7 @@ asmStatements (ArrayList):
               "133"
         EtExtent (Extent):
           endColumn (Int32):
-            "18"
+            "15"
           endLine (Int32):
             "133"
           fileName (String):

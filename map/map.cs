@@ -25,7 +25,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 
 public class map {
-	public static void oRunS(string fileName) { // TODO: not a good name, takes a file name, not a string after all, 
+	public static void run(string fileName) { // TODO: not a good name, takes a file name, not a string after all, 
 		// adding a character "f" for files doesn't make sense, though
 		// After all, the file system will be integrated anyway.
 		// Once the file system is integrated, one can simpley select the file one
@@ -35,11 +35,11 @@ public class map {
 		process.StartInfo.Arguments=fileName;
 		process.Start();
 	}
-	public static bool bHasKeyMO(Map map,object key) {
+	public static bool hasKey(Map map,object key) {
 		string a="";
 		return map.BContainsO(key);
 	}
-	public static int iCountM(Map map) {
+	public static int count(Map map) {
 		return map.ICount;
 	}
 	public static Map sTrimStartS(Map arg) {
@@ -80,7 +80,7 @@ public class map {
 		}
 		return keys;
 	}
-	public static Map aJoinAa(Map arg) {
+	public static Map join(Map arg) { // rename to "append"
 		ArrayList maps=arg.AoIntegerKeyValues;
 		int i=1;
 		Map combined=new Map();
@@ -92,10 +92,10 @@ public class map {
 		}
 		return combined;
 	}
-	public static IKeyValue mMergeAm(Map arg) {
+	public static IKeyValue merge(Map arg) {
 		return (Map)Interpreter.MergeCollection(arg.AoIntegerKeyValues);
 	}
-	public static object oInitOM(object obj,IMap map) {
+	public static object init(object obj,IMap map) { // make merge general enough to replace this
 		NetObject netObject=new NetObject(obj);
 		foreach(DictionaryEntry entry in map) {
 			netObject[entry.Key]=entry.Value;
@@ -111,7 +111,7 @@ public class map {
 //		}
 //		return mResult;
 //	}
-	public static Map AoApplyFM(Map mFunction,Map mArray) {
+	public static Map apply(Map mFunction,Map mArray) { // switch this the arguments around
 		Map mResult=new Map();
 		int counter=1;
 		foreach(object oKey in mArray.AoKeys) {
