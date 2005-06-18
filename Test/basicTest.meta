@@ -24,8 +24,8 @@ this=map.merge
 	logic
 	map
 	math
-map.interpreter.line:'5
-nestedClassTest=map.interpreter.line
+interpreter.line:'5
+nestedClassTest=interpreter.line
 applyMethod=!iAddII
 	arg.value
 	'1

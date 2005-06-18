@@ -533,7 +533,7 @@ asmStatements (ArrayList):
       Entry (Literal)
         EtExtent (Extent):
           endColumn (Int32):
-            "4"
+            "12"
           endLine (Int32):
             "27"
           fileName (String):
@@ -543,31 +543,17 @@ asmStatements (ArrayList):
           startLine (Int32):
             "27"
         oLiteral (Map):
-          "map"
-      Entry (Literal)
-        EtExtent (Extent):
-          endColumn (Int32):
-            "16"
-          endLine (Int32):
-            "27"
-          fileName (String):
-            "basicTest.meta"
-          startColumn (Int32):
-            "5"
-          startLine (Int32):
-            "27"
-        oLiteral (Map):
           "interpreter"
       Entry (Literal)
         EtExtent (Extent):
           endColumn (Int32):
-            "21"
+            "17"
           endLine (Int32):
             "27"
           fileName (String):
             "basicTest.meta"
           startColumn (Int32):
-            "17"
+            "13"
           startLine (Int32):
             "27"
         oLiteral (Map):
@@ -575,13 +561,13 @@ asmStatements (ArrayList):
     eValue (Literal):
       EtExtent (Extent):
         endColumn (Int32):
-          "24"
+          "20"
         endLine (Int32):
           "27"
         fileName (String):
           "basicTest.meta"
         startColumn (Int32):
-          "22"
+          "18"
         startLine (Int32):
           "27"
       oLiteral (Integer):
@@ -607,27 +593,13 @@ asmStatements (ArrayList):
         Entry (Literal)
           EtExtent (Extent):
             endColumn (Int32):
-              "32"
-            endLine (Int32):
-              "28"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
-              "21"
-            startLine (Int32):
-              "28"
-          oLiteral (Map):
-            "interpreter"
-        Entry (Literal)
-          EtExtent (Extent):
-            endColumn (Int32):
-              "37"
-            endLine (Int32):
-              "28"
-            fileName (String):
-              "basicTest.meta"
-            startColumn (Int32):
               "33"
+            endLine (Int32):
+              "28"
+            fileName (String):
+              "basicTest.meta"
+            startColumn (Int32):
+              "29"
             startLine (Int32):
               "28"
           oLiteral (Map):
@@ -636,7 +608,7 @@ asmStatements (ArrayList):
         eKey (Literal):
           EtExtent (Extent):
             endColumn (Int32):
-              "20"
+              "28"
             endLine (Int32):
               "28"
             fileName (String):
@@ -646,10 +618,10 @@ asmStatements (ArrayList):
             startLine (Int32):
               "28"
           oLiteral (Map):
-            "map"
+            "interpreter"
         EtExtent (Extent):
           endColumn (Int32):
-            "20"
+            "28"
           endLine (Int32):
             "28"
           fileName (String):
@@ -660,7 +632,7 @@ asmStatements (ArrayList):
             "28"
       EtExtent (Extent):
         endColumn (Int32):
-          "37"
+          "33"
         endLine (Int32):
           "28"
         fileName (String):

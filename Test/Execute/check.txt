@@ -94,6 +94,10 @@ Entry (DictionaryEntry)
         "Meta.Types.Map sTrimStartS(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
+    "interpreter"
+  Value (NetClass):
+    Entry (DictionaryEntry)
+  Key (Map):
     "join"
   Value (NetMethod):
     arMtbOverloadedMethods (MethodBase[]):

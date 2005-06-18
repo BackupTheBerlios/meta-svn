@@ -401,19 +401,10 @@ Entry (DictionaryEntry)
                   Key (Map):
                     "literal"
                   Value (Map):
-                    "map"
-            Entry (DictionaryEntry)
-              Key (Integer):
-                "2"
-              Value (Map):
-                Entry (DictionaryEntry)
-                  Key (Map):
-                    "literal"
-                  Value (Map):
                     "interpreter"
             Entry (DictionaryEntry)
               Key (Integer):
-                "3"
+                "2"
               Value (Map):
                 Entry (DictionaryEntry)
                   Key (Map):
@@ -471,19 +462,10 @@ Entry (DictionaryEntry)
                           Key (Map):
                             "literal"
                           Value (Map):
-                            "map"
+                            "interpreter"
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "2"
-                  Value (Map):
-                    Entry (DictionaryEntry)
-                      Key (Map):
-                        "literal"
-                      Value (Map):
-                        "interpreter"
-                Entry (DictionaryEntry)
-                  Key (Integer):
-                    "3"
                   Value (Map):
                     Entry (DictionaryEntry)
                       Key (Map):

@@ -2249,7 +2249,9 @@ namespace Meta {
 					foreach(EventInfo evifEvent in tType.GetEvents(bdfBinding)) {
 						hbdtrTable[new Map(evifEvent.Name)]=new NetMethod(evifEvent.GetAddMethod().Name,this.oObject,this.tType);
 					}
-//					foreach(E
+					foreach(Type tNested in tType.GetNestedTypes(bdfBinding)) { // not sure the BindingFlags are correct
+						hbdtrTable[new Map(tNested.Name)]=new NetClass(tNested);
+					}
 					int iCounter=1;
 					if(oObject!=null && oObject is IEnumerable && !(oObject is String)) { // is this useful?
 						foreach(object oEntry in (IEnumerable)oObject) {
