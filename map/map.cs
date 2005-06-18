@@ -123,12 +123,15 @@ public class map {
 		}
 		return mResult;
 	}
-	public static object @if(bool bCondition,Map mThen,Map mElse) {
-		if(bCondition) {
-			return mThen.OCallO(new Map());
+	public static object @if(Map argM) { // maybe automatically convert Maps to MapAdapters??
+		bool conditionB=(bool)Interpreter.ODotNetFromMetaO(argM[new Integer(1)],typeof(bool));
+		Map thenF=(Map)argM[new Integer(2)];
+		Map elseF=(Map)argM[new Integer(3)];
+		if(conditionB) {
+			return thenF.OCallO(new Map());
 		}
-		else if(mElse!=null) {
-			return mElse.OCallO(new Map());
+		else if(elseF!=null) {
+			return elseF.OCallO(new Map());
 		}
 		else {
 			return new Map();

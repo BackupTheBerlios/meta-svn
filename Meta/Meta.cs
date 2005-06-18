@@ -446,11 +446,11 @@ namespace Meta {
 			public static object ODotNetFromMetaO(object oMeta,Type tTarget) {
 				try {
 					MetaToDotNetConversion mttdncvsConversion=(MetaToDotNetConversion)((Hashtable)
-						Interpreter.htmttdncvsToDotNetConversion[oMeta.GetType()])[tTarget];
+						Interpreter.htmttdncvsToDotNetConversion[tTarget])[oMeta.GetType()];
 					bool bConverted;
 					return mttdncvsConversion.Convert(oMeta,out bConverted); // TODO: Why ignore bConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines mttdncvsConversion
 				}
-				catch {
+				catch (Exception e){
 					return oMeta;
 				}
 			}
