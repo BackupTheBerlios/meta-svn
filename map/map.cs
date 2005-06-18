@@ -23,8 +23,17 @@ using Meta.Execution;
 using System.Threading;
 using System.Diagnostics;
 using System.Windows.Forms;
+public delegate void BreakPointDelegate(Map map);
 
 public class map {
+	public class interpreter {
+		public static event BreakPointDelegate BreakPoint;
+		public static int line=0;
+		public static int column=0;
+		public static void run() {
+			BreakPoint(new Map("stuff"));
+		}
+	}
 	public static void run(string fileName) { // TODO: not a good name, takes a file name, not a string after all, 
 		// adding a character "f" for files doesn't make sense, though
 		// After all, the file system will be integrated anyway.

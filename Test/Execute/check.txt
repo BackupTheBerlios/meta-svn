@@ -164,6 +164,11 @@ Entry (DictionaryEntry)
         "Meta.Types.Integer bOrII(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
+    "nestedClassTest"
+  Value (Integer):
+    "0"
+Entry (DictionaryEntry)
+  Key (Map):
     "applyMethod"
   Value (Map):
     Entry (DictionaryEntry)

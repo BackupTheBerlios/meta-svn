@@ -2040,6 +2040,9 @@ namespace Meta {
 		/* Base class for NetObject and NetClass. */
 		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial {
 			public bool BContainsO(object oKey) {
+				if(oKey.Equals(new Map("interpreter"))) {
+					int asdf=0;
+				}
 				if(oKey is Map) {
 					if(((Map)oKey).BIsString) {
 						string sText=((Map)oKey).SString;
@@ -2084,6 +2087,9 @@ namespace Meta {
 			}
 			public virtual object this[object oKey]  {
 				get {
+					if(oKey.Equals(new Map("interpreter"))) {
+						int asdf=0;
+					}
 					if(oKey is Map && ((Map)oKey).BIsString) {
 						string sText=((Map)oKey).SString;
 						MemberInfo[] ambifMembers=tType.GetMember(sText,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
@@ -2102,6 +2108,10 @@ namespace Meta {
 								Delegate dlgEvent=(Delegate)tType.GetField(sText,BindingFlags.Public|
 									BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(oObject);
 								return new NetMethod("Invoke",dlgEvent,dlgEvent.GetType());
+							}
+							// this should only work in NetClass, maybe specify the BindingFlags used above in NetClass and NetObject
+							else if(ambifMembers[0] is Type) {
+								return new NetClass((Type)ambifMembers[0]);
 							}
 						}
 					}
