@@ -166,7 +166,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "nestedClassTest"
   Value (Integer):
-    "0"
+    "5"
 Entry (DictionaryEntry)
   Key (Map):
     "applyMethod"

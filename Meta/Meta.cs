@@ -222,8 +222,8 @@ namespace Meta {
 				
 				if(bSearchFirstKey) {
 					object oFirstKey=((Expression)aeKeys[0]).OEvaluateM(mParent); 
-					while(!((Map)oSelected).BContainsO(oFirstKey)) {
-						oSelected=((Map)oSelected).MParent;
+					while(!((IMap)oSelected).BContainsO(oFirstKey)) {
+						oSelected=((IMap)oSelected).MParent;
 						if(oSelected==null) {
 							throw new KeyNotFoundException(oFirstKey,((Expression)aeKeys[0]).EtExtent);
 						}
