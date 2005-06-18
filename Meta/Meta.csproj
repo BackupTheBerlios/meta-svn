@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = ""
+                PostBuildEvent = "move Meta.dll ..\..\..\library"
                 RootNamespace = "Meta"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""

@@ -38,7 +38,7 @@ namespace Test {
 			try {
 				if(args.Length==0) {
 					Directory.SetCurrentDirectory(
-						".."+Path.DirectorySeparatorChar+".."+Path.DirectorySeparatorChar);
+						".."+Path.DirectorySeparatorChar+"Test"+Path.DirectorySeparatorChar);
 					ExecuteTests test=new ExecuteTests(typeof(Tests),path);
 				}
 				else {

@@ -524,7 +524,8 @@ namespace Meta {
 			}
 			static Interpreter() {
 				Assembly asbMetaAssembly=Assembly.GetAssembly(typeof(Map));
-				sInstallationPath=Directory.GetParent(asbMetaAssembly.Location).Parent.Parent.Parent.FullName; 
+				sInstallationPath=Directory.GetParent(asbMetaAssembly.Location).Parent.FullName; 
+//				sInstallationPath=Directory.GetParent(asbMetaAssembly.Location).Parent.Parent.Parent.FullName; 
 				foreach(Type tRecognition in typeof(LiteralRecognitions).GetNestedTypes()) {
 					arcnltrLiteralRecognitions.Add((RecognizeLiteral)tRecognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				}
@@ -2223,7 +2224,7 @@ namespace Meta {
 				Delegate dlgEvent=NetMethod.DlgFromM(evifEvent.EventHandlerType,mtifInvoke,mCode);
 				return dlgEvent;
 			}
-			private IDictionary MTable { // TODO: strange, what use is this
+			private IDictionary MTable { // this is a strange way to make NetContainer enumerable
 				get {
 					HybridDictionary hbdtrTable=new HybridDictionary();
 					BindingFlags bdfBinding;
