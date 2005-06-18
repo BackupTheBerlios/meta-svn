@@ -990,7 +990,12 @@ namespace Meta {
 				else {
 					sMessage+=key;
 				}
-				sMessage+=" not found.";
+				if(this is KeyDoesNotExistException) {
+					sMessage+=" does not exist.";
+				}
+				else if(this is KeyNotFoundException) {
+					sMessage+=" not found.";
+				}
 			}
 		}
 		/* Thrown when a searched oKey was not found. */
@@ -1903,6 +1908,9 @@ namespace Meta {
 				if(oResult==null) {
 					int asdf=0;
 				}
+				if(!bExecuted) {
+					throw new ApplicationException("Method "+this.sName+" could not be called.");
+				}
 				return Interpreter.OMetaFromDotNetO(oResult);
 			}
 			/* Create a delegate of a certain tTarget that calls a Meta function. */
@@ -2131,6 +2139,9 @@ namespace Meta {
 				set {
 					if(oKey is Map && ((Map)oKey).BIsString) {
 						string sText=((Map)oKey).SString;
+						if(sText.Equals("OnBreakPoint")) {
+							int asdf=0;
+						}
 						MemberInfo[] ambifMembers=tType.GetMember(sText,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
 						if(ambifMembers.Length>0) {
 							if(ambifMembers[0] is MethodBase) {
@@ -2173,6 +2184,9 @@ namespace Meta {
 								return;
 							}
 							else if(ambifMembers[0] is EventInfo) {
+								if(ambifMembers[0].Name.Equals("BreakPoint")) {
+									int asdf=0;
+								}
 								((EventInfo)ambifMembers[0]).AddEventHandler(oObject,CreateEvent(sText,(Map)value));
 								return;
 							}
@@ -2235,6 +2249,7 @@ namespace Meta {
 					foreach(EventInfo evifEvent in tType.GetEvents(bdfBinding)) {
 						hbdtrTable[new Map(evifEvent.Name)]=new NetMethod(evifEvent.GetAddMethod().Name,this.oObject,this.tType);
 					}
+//					foreach(E
 					int iCounter=1;
 					if(oObject!=null && oObject is IEnumerable && !(oObject is String)) { // is this useful?
 						foreach(object oEntry in (IEnumerable)oObject) {
@@ -2250,6 +2265,47 @@ namespace Meta {
 					return hbdtrTable;
 				}
 			}
+//			private IDictionary MTable { // TODO: strange, what use is this
+//				get {
+//					HybridDictionary hbdtrTable=new HybridDictionary();
+//					BindingFlags bdfBinding;
+//					if(oObject==null)  {
+//						bdfBinding=BindingFlags.Public|BindingFlags.Static;
+//					}
+//					else  {
+//						bdfBinding=BindingFlags.Public|BindingFlags.Instance;
+//					}
+//					foreach(FieldInfo fifField in tType.GetFields(bdfBinding)) {
+//						hbdtrTable[new Map(fifField.Name)]=fifField.GetValue(oObject);
+//					}
+//					foreach(MethodInfo mtifInvoke in tType.GetMethods(bdfBinding))  {
+//						if(!mtifInvoke.IsSpecialName) {
+//							hbdtrTable[new Map(mtifInvoke.Name)]=new NetMethod(mtifInvoke.Name,oObject,tType);
+//						}
+//					}
+//					foreach(PropertyInfo pptifProperty in tType.GetProperties(bdfBinding)) {
+//						if(pptifProperty.Name!="Item" && pptifProperty.Name!="Chars") {
+//							hbdtrTable[new Map(pptifProperty.Name)]=pptifProperty.GetValue(oObject,new object[]{});
+//						}
+//					}
+//					foreach(EventInfo evifEvent in tType.GetEvents(bdfBinding)) {
+//						hbdtrTable[new Map(evifEvent.Name)]=new NetMethod(evifEvent.GetAddMethod().Name,this.oObject,this.tType);
+//					}
+//					int iCounter=1;
+//					if(oObject!=null && oObject is IEnumerable && !(oObject is String)) { // is this useful?
+//						foreach(object oEntry in (IEnumerable)oObject) {
+//							if(oEntry is DictionaryEntry) {
+//								hbdtrTable[Interpreter.OMetaFromDotNetO(((DictionaryEntry)oEntry).Key)]=((DictionaryEntry)oEntry).Value;
+//							}
+//							else {
+//								hbdtrTable[new Integer(iCounter)]=oEntry;
+//								iCounter++;
+//							}
+//						}
+//					}
+//					return hbdtrTable;
+//				}
+//			}
 			public NetContainer(object oObject,Type tType) {
 				this.oObject=oObject;
 				this.tType=tType;
