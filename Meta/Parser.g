@@ -429,7 +429,7 @@ delayedImplementation:
 		
 		
 		MetaAST runAst=new MetaAST(runToken);
-		runAst.setText("run");
+		runAst.setText("run"); // could we get rid of this, maybe, run isn't used anywhere else anymore, also it's a bad keyword to use (far too common)
     //#statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
 		#delayedImplementation=#([STATEMENT],#([KEY],runAst),#([FUNCTION], #delayedImplementation));
     //#delayedImplementation=#([FUNCTION], #delayedImplementation);

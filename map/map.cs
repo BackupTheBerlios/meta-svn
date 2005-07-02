@@ -23,12 +23,11 @@ using Meta.Execution;
 using System.Threading;
 using System.Diagnostics;
 using System.Windows.Forms;
-public delegate void BreakPointDelegate(Map map);
 
 public class map {
 	public class interpreter {
 //		public static event BreakPointDelegate BreakPoint;
-		public static int line=0;
+		public static int line=0; // only needed because of test in basicTest.meta
 //		public static void breakPointCallBack(Map mCallback) {
 //			Interpreter.OnBreak();
 //		}
@@ -37,7 +36,7 @@ public class map {
 //			BreakPoint(new Map("stuff"));
 //		}
 	}
-	public static void run(string fileName) { // TODO: not a good name, takes a file name, not a string after all, 
+	public static void execute(string fileName) { // TODO: not a good name, takes a file name, not a string after all, 
 		// adding a character "f" for files doesn't make sense, though
 		// After all, the file system will be integrated anyway.
 		// Once the file system is integrated, one can simpley select the file one
@@ -47,11 +46,11 @@ public class map {
 		process.StartInfo.Arguments=fileName;
 		process.Start();
 	}
-	public static bool hasKey(Map map,object key) {
+	public static bool contains(Map map,object key) {
 		string a="";
 		return map.BContainsO(key);
 	}
-	public static int count(Map map) {
+	public static int length(Map map) {
 		return map.ICount;
 	}
 	public static Map sTrimStartS(Map arg) {

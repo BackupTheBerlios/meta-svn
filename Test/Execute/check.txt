@@ -38,41 +38,6 @@ Entry (DictionaryEntry)
         "Boolean or(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "iCountStartMO"
-  Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Int32 iCountStartMO(Meta.Types.Map, System.Object)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "apply"
-  Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Types.Map apply(Meta.Types.Map, Meta.Types.Map)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "count"
-  Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Int32 count(Meta.Types.Map)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "hasKey"
-  Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean hasKey(Meta.Types.Map, System.Object)"
-Entry (DictionaryEntry)
-  Key (Map):
-    "run"
-  Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Void run(System.String)"
-Entry (DictionaryEntry)
-  Key (Map):
     "if"
   Value (NetMethod):
     arMtbOverloadedMethods (MethodBase[]):
@@ -80,11 +45,18 @@ Entry (DictionaryEntry)
         "System.Object if(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "merge"
+    "iCountStartMO"
   Value (NetMethod):
     arMtbOverloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue merge(Meta.Types.Map)"
+        "Int32 iCountStartMO(Meta.Types.Map, System.Object)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "execute"
+  Value (NetMethod):
+    arMtbOverloadedMethods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Void execute(System.String)"
 Entry (DictionaryEntry)
   Key (Map):
     "sTrimStartS"
@@ -94,15 +66,43 @@ Entry (DictionaryEntry)
         "Meta.Types.Map sTrimStartS(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
+    "apply"
+  Value (NetMethod):
+    arMtbOverloadedMethods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.Map apply(Meta.Types.Map, Meta.Types.Map)"
+Entry (DictionaryEntry)
+  Key (Map):
     "interpreter"
   Value (NetClass):
     Entry (DictionaryEntry)
+  Key (Map):
+    "contains"
+  Value (NetMethod):
+    arMtbOverloadedMethods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Boolean contains(Meta.Types.Map, System.Object)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "merge"
+  Value (NetMethod):
+    arMtbOverloadedMethods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Meta.Types.IKeyValue merge(Meta.Types.Map)"
+Entry (DictionaryEntry)
   Key (Map):
     "join"
   Value (NetMethod):
     arMtbOverloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Types.Map join(Meta.Types.Map)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "length"
+  Value (NetMethod):
+    arMtbOverloadedMethods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "Int32 length(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "aKeysM"

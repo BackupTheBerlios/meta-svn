@@ -139,7 +139,6 @@ namespace Meta {
 			}
 			public static readonly Map sSearch=new Map("search");
 		}
-
 		public class Select: Expression {
 			public ArrayList aeKeys=new ArrayList();
 			public Expression eFirst;// TODO: maybe rename to srFirst -> it's a Search
@@ -338,8 +337,15 @@ namespace Meta {
 //		}
 
 	
+		public delegate void BreakPointDelegate(Map map);
 
 		public class Interpreter  {
+			public static event BreakPointDelegate BreakPoint;
+
+			public static void Debug() {
+				BreakPoint(new Map("stuff"));
+			}
+
 			public static void SaveToFileOFn(object oMeta,string fnFile) {
 				StreamWriter swFile=new StreamWriter(fnFile);
 				swFile.Write(SaveToFileOFn(oMeta,"",true).TrimEnd(new char[]{'\n'}));
@@ -1843,6 +1849,9 @@ namespace Meta {
 				return null;
 			}
 			public object OCallO(object oArgument) {
+				if(this.sName.Equals("run")) {
+					int asdf=0;
+				}
 //				if(this.tTarget.Name.EndsWith("IndexerNoConversion") && this.sName.StartsWith("GetResultFromDelegate")) {
 //					int asdf=0;
 //				}

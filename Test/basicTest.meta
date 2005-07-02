@@ -24,6 +24,7 @@ this=map.merge
 	logic
 	map
 	math
+//run 'hello
 interpreter.line:'5
 nestedClassTest=interpreter.line
 applyMethod=!iAddII
