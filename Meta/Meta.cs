@@ -14,8 +14,6 @@
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-
-
 using System;
 using System.IO;
 using System.Collections;
@@ -43,8 +41,9 @@ namespace Meta
 	{
 		public abstract class Expression
 		{
-			public static readonly Map sRun=new Map("run"); // TODO: get rid of "String"-suffix, use Hungarian syntax, that is "s" prefix
-			public abstract object OEvaluateM(IMap parent);
+			
+			public static readonly Map runM=new Map("run"); // TODO: get rid of "String"-suffix, use Hungarian syntax, that is "s" prefix
+			public abstract object evaluateMO(IMap parent);
 			Extent extent;
 			public Extent EtExtent{
 				get
@@ -60,14 +59,14 @@ namespace Meta
 		}
 		public class Call: Expression
 		{
-			public override object OEvaluateM(IMap parent)
+			public override object evaluateMO(IMap parent)
 			{
-				object oArgument=eArgument.OEvaluateM(parent);
+				object oArgument=eArgument.evaluateMO(parent);
 				if(oArgument is IMap)
 				{
 					oArgument=((IMap)oArgument).MClone();
 				}
-				return ((ICallable)eCallable.OEvaluateM(parent)).OCallO(oArgument);
+				return ((ICallable)eCallable.evaluateMO(parent)).OCallO(oArgument);
 			}
 			public static readonly Map sCall=new Map("call");
 			public static readonly Map sFunction=new Map("function");
@@ -83,7 +82,7 @@ namespace Meta
 		}
 		public class Delayed: Expression
 		{
-			public override object OEvaluateM(IMap mParent)
+			public override object evaluateMO(IMap mParent)
 			{
 				Map mClone=mDelayed;
 				mClone.MParent=mParent;
@@ -100,12 +99,12 @@ namespace Meta
 
 		public class Program: Expression
 		{
-			public override object OEvaluateM(IMap mParent)
+			public override object evaluateMO(IMap mParent)
 			{
 				Map mLocal=new Map();
-				return OEvaluateM(mParent,mLocal);
+				return evaluateMO(mParent,mLocal);
 			}
-			public object OEvaluateM(IMap mParent,IMap mLocal)
+			public object evaluateMO(IMap mParent,IMap mLocal)
 			{
 				mLocal.MParent=mParent;
 				Interpreter.amCallers.Add(mLocal);
@@ -130,7 +129,7 @@ namespace Meta
 		}
 		public class Literal: Expression
 		{
-			public override object OEvaluateM(IMap mParent)
+			public override object evaluateMO(IMap mParent)
 			{
 				return oLiteral;
 			}
@@ -149,9 +148,9 @@ namespace Meta
 			}
 			public Expression eKey;
 			public static readonly Map sKey=new Map("key");
-			public override object OEvaluateM(IMap mParent)
+			public override object evaluateMO(IMap mParent)
 			{
-				object oKey=eKey.OEvaluateM(mParent);
+				object oKey=eKey.evaluateMO(mParent);
 				IMap mSelected=mParent;
 				while(!mSelected.BContainsO(oKey))
 				{
@@ -178,16 +177,16 @@ namespace Meta
 					aeKeys.Add(((Map)amKeys[i]).ECompile());
 				}
 			}
-			public override object OEvaluateM(IMap mParent)
+			public override object evaluateMO(IMap mParent)
 			{
-				object oSelected=eFirst.OEvaluateM(mParent);
+				object oSelected=eFirst.evaluateMO(mParent);
 				for(int iCurrent=0;iCurrent<aeKeys.Count;iCurrent++)
 				{
 					if(!(oSelected is IKeyValue))
 					{
 						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
-					object oKey=((Expression)aeKeys[iCurrent]).OEvaluateM(mParent);
+					object oKey=((Expression)aeKeys[iCurrent]).evaluateMO(mParent);
 					oSelected=((IKeyValue)oSelected)[oKey];
 					if(oSelected==null)
 					{
@@ -207,7 +206,7 @@ namespace Meta
 				
 				if(bSearchFirstKey)
 				{
-					object oFirstKey=((Expression)aeKeys[0]).OEvaluateM(mParent); 
+					object oFirstKey=((Expression)aeKeys[0]).evaluateMO(mParent); 
 					while(!((IMap)oSelected).BContainsO(oFirstKey))
 					{
 						oSelected=((IMap)oSelected).MParent;
@@ -219,7 +218,7 @@ namespace Meta
 				}
 				for(int i=0;i<aeKeys.Count-1;i++)
 				{
-					oKey=((Expression)aeKeys[i]).OEvaluateM((IMap)mParent);
+					oKey=((Expression)aeKeys[i]).evaluateMO((IMap)mParent);
 					oSelected=((IKeyValue)oSelected)[oKey];
 					if(oSelected==null)
 					{
@@ -230,8 +229,8 @@ namespace Meta
 						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
 				}
-				object oLastKey=((Expression)aeKeys[aeKeys.Count-1]).OEvaluateM((IMap)mParent);
-				object oValue=eValue.OEvaluateM((IMap)mParent);
+				object oLastKey=((Expression)aeKeys[aeKeys.Count-1]).evaluateMO((IMap)mParent);
+				object oValue=eValue.evaluateMO((IMap)mParent);
 				if(oLastKey.Equals(Map.sThis))
 				{
 					if(oValue is Map)
@@ -446,7 +445,7 @@ namespace Meta
 			public static object CallProgram(Map mProgram,IMap mArgument,IMap mParent)
 			{
 				Map mCallable=new Map();
-				mCallable[Expression.sRun]=mProgram;
+				mCallable[Expression.runM]=mProgram;
 				mCallable.MParent=mParent;
 				return mCallable.OCallO(mArgument);
 			}
@@ -1666,9 +1665,9 @@ namespace Meta
 			public object OCallO(object oArgument)
 			{
 				this.OArgument=oArgument;
-				Expression eFunction=(Expression)((Map)this[Expression.sRun]).ECompile();
+				Expression eFunction=(Expression)((Map)this[Expression.runM]).ECompile();
 				object oResult;
-				oResult=eFunction.OEvaluateM(this);
+				oResult=eFunction.evaluateMO(this);
 				return oResult;
 			}
 			public ArrayList AoKeys

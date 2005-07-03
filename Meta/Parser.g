@@ -685,9 +685,9 @@ delayed
     }:
     #(FUNCTION mExpression=expression)
     {
-				//mRun[Expression.sRun]=mExpression;
+				//mRun[Expression.runM]=mExpression;
         result[Delayed.sDelayed]=mExpression;
-//				mRun[Expression.sRun]=mExpression;
+//				mRun[Expression.runM]=mExpression;
 //        result[Delayed.sDelayed]=mRun;
     };
 
