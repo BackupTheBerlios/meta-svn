@@ -367,11 +367,11 @@ statement:
 
 					// TODO: Simplify!!, use astFactory
 				    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
-				    autokeyToken.setLine(#statement.EtExtent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-				    autokeyToken.setColumn(#statement.EtExtent.startColumn); 
-				    autokeyToken.FileName=#statement.EtExtent.fileName;
-				    autokeyToken.EndLine=#statement.EtExtent.endLine;
-				    autokeyToken.EndColumn=#statement.EtExtent.endColumn;
+				    autokeyToken.setLine(#statement.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+				    autokeyToken.setColumn(#statement.Extent.startColumn); 
+				    autokeyToken.FileName=#statement.Extent.fileName;
+				    autokeyToken.EndLine=#statement.Extent.endLine;
+				    autokeyToken.EndColumn=#statement.Extent.endColumn;
 				    MetaAST autokeyAst=new MetaAST(autokeyToken);
 				    autokeyAst.setText(Counters.autokey.Peek().ToString());
             #statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
@@ -421,11 +421,11 @@ delayedImplementation:
 		// TODO: Simplify this, factor this out into a method? Add some functionality for this stuff? Maybe to MetAST?
 		MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
 		
-		runToken.setLine(#delayedImplementation.EtExtent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-		runToken.setColumn(#delayedImplementation.EtExtent.startColumn); 
-		runToken.FileName=#delayedImplementation.EtExtent.fileName;
-		runToken.EndLine=#delayedImplementation.EtExtent.endLine;
-		runToken.EndColumn=#delayedImplementation.EtExtent.endColumn;
+		runToken.setLine(#delayedImplementation.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+		runToken.setColumn(#delayedImplementation.Extent.startColumn); 
+		runToken.FileName=#delayedImplementation.Extent.fileName;
+		runToken.EndLine=#delayedImplementation.Extent.endLine;
+		runToken.EndColumn=#delayedImplementation.Extent.endColumn;
 		
 		
 		MetaAST runAst=new MetaAST(runToken);
@@ -551,8 +551,8 @@ statement
 		val=expression
 		{
 			//Map statement=new Map();
-			statement[Statement.sKey]=k;
-			statement[Statement.sValue]=val;// TODO: Add Extent to statements, too?
+			statement[Statement.mKey]=k;
+			statement[Statement.mValue]=val;// TODO: Add Extent to statements, too?
 		}
 	)
 	;
@@ -569,8 +569,8 @@ statementSearch // maybe somehow combine this with "statement", if possible, not
 		val=expression
 		{
 			//Map statement=new Map();
-			statement[Statement.sKey]=k;
-			statement[Statement.sValue]=val;// TODO: Add Extent to statements, too?
+			statement[Statement.mKey]=k;
+			statement[Statement.mValue]=val;// TODO: Add Extent to statements, too?
 		}
 	)
 	{
@@ -581,7 +581,7 @@ map
   returns[Map result]
   {
     result=new Map();
-    result.EtExtent=#map.EtExtent;
+    result.Extent=#map.Extent;
     Map statements=new Map();
     Map s=null;
     int counter=1;
@@ -603,7 +603,7 @@ call
   returns [Map result]
   {
     result=new Map();
-    result.EtExtent=#call.EtExtent;
+    result.Extent=#call.Extent;
     Map call=new Map();
     Map delayed=new Map();
     Map argument=new Map();
@@ -626,7 +626,7 @@ select
   returns [Map result]
   {
     result=new Map();
-    result.EtExtent=#select.EtExtent;
+    result.Extent=#select.Extent;
     Map selection=new Map();
     Map key=null;
     int counter=1;
@@ -643,7 +643,7 @@ select
     )
   )
   {
-    result[Select.sSelect]=selection;
+    result[Select.mSelect]=selection;
   };
 
 
@@ -652,7 +652,7 @@ search
 	{
 		result=new Map();
 		Map lookupResult=null;
-		result.EtExtent=#search.EtExtent;
+		result.Extent=#search.Extent;
 		Map e=null;
 	}:
 	#(SEARCH e=expression)
@@ -667,7 +667,7 @@ literal
   returns [Map result]
   {
     result=new Map();
-    result.EtExtent=#literal.EtExtent;
+    result.Extent=#literal.Extent;
   }:
   token:LITERAL
   {
@@ -679,15 +679,15 @@ delayed
     returns[Map result]
     {
         result=new Map();
-        result.EtExtent=#delayed.EtExtent;
+        result.Extent=#delayed.Extent;
         Map mExpression;
         Map mRun=new Map();
     }:
     #(FUNCTION mExpression=expression)
     {
-				//mRun[Expression.runM]=mExpression;
+				//mRun[Expression.mRun]=mExpression;
         result[Delayed.sDelayed]=mExpression;
-//				mRun[Expression.runM]=mExpression;
+//				mRun[Expression.mRun]=mExpression;
 //        result[Delayed.sDelayed]=mRun;
     };
 
@@ -700,5 +700,5 @@ delayed
     #(DELAYED_EXPRESSION_ONLY mExpression=expression)
     {
 			result[Delayed.sDelayed]=mExpression;
-			//result.EtExtent=#delayedExpressionOnly.EtExtent;
+			//result.Extent=#delayedExpressionOnly.Extent;
     };*/

@@ -14,6 +14,22 @@
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+
+
+
+
+
+// characters used for Hungarian Notation:
+// o: object
+// m: map
+// z: map that is a string
+// a: array
+// s: string
+
+
+
+
+
 using System;
 using System.IO;
 using System.Collections;
@@ -42,10 +58,10 @@ namespace Meta
 		public abstract class Expression
 		{
 			
-			public static readonly Map runM=new Map("run"); // TODO: get rid of "String"-suffix, use Hungarian syntax, that is "s" prefix
-			public abstract object evaluateMO(IMap parent);
+			public static readonly Map mRun=new Map("run"); // TODO: get rid of "String"-suffix, use Hungarian syntax, that is "s" prefix
+			public abstract object oEvaluateM(IMap parentM);
 			Extent extent;
-			public Extent EtExtent{
+			public Extent Extent{
 				get
 				{
 
@@ -59,14 +75,14 @@ namespace Meta
 		}
 		public class Call: Expression
 		{
-			public override object evaluateMO(IMap parent)
+			public override object oEvaluateM(IMap parentM)
 			{
-				object oArgument=eArgument.evaluateMO(parent);
+				object oArgument=eArgument.oEvaluateM(parentM);
 				if(oArgument is IMap)
 				{
 					oArgument=((IMap)oArgument).MClone();
 				}
-				return ((ICallable)eCallable.evaluateMO(parent)).OCallO(oArgument);
+				return ((ICallable)eCallable.oEvaluateM(parentM)).oCallO(oArgument);
 			}
 			public static readonly Map sCall=new Map("call");
 			public static readonly Map sFunction=new Map("function");
@@ -74,15 +90,15 @@ namespace Meta
 			public Call(Map mCode)
 			{
 				Map mCall=(Map)mCode[sCall];
-				this.eCallable=(Expression)((Map)mCall[sFunction]).ECompile();
-				this.eArgument=(Expression)((Map)mCall[sArgument]).ECompile();
+				this.eCallable=(Expression)((Map)mCall[sFunction]).eCompile();
+				this.eArgument=(Expression)((Map)mCall[sArgument]).eCompile();
 			}
 			public Expression eArgument;
 			public Expression eCallable;
 		}
 		public class Delayed: Expression
 		{
-			public override object evaluateMO(IMap mParent)
+			public override object oEvaluateM(IMap mParent)
 			{
 				Map mClone=mDelayed;
 				mClone.MParent=mParent;
@@ -99,12 +115,12 @@ namespace Meta
 
 		public class Program: Expression
 		{
-			public override object evaluateMO(IMap mParent)
+			public override object oEvaluateM(IMap mParent)
 			{
 				Map mLocal=new Map();
-				return evaluateMO(mParent,mLocal);
+				return oEvaluateM(mParent,mLocal);
 			}
-			public object evaluateMO(IMap mParent,IMap mLocal)
+			public object oEvaluateM(IMap mParent,IMap mLocal)
 			{
 				mLocal.MParent=mParent;
 				Interpreter.amCallers.Add(mLocal);
@@ -120,7 +136,7 @@ namespace Meta
 			public static readonly Map sProgram=new Map("program");
 			public Program(Map mProgram)
 			{ // TODO: special Type for  callable maps?
-				foreach(Map mStatement in ((Map)mProgram[sProgram]).AoIntegerKeyValues)
+				foreach(Map mStatement in ((Map)mProgram[sProgram]).aIntegerKeyValues)
 				{
 					this.asmStatements.Add(new Statement(mStatement)); // should we save the original maps instead of asmStatements?
 				}
@@ -129,14 +145,14 @@ namespace Meta
 		}
 		public class Literal: Expression
 		{
-			public override object evaluateMO(IMap mParent)
+			public override object oEvaluateM(IMap mParent)
 			{
 				return oLiteral;
 			}
 			public static readonly Map sLiteral=new Map("literal");
 			public Literal(Map code)
 			{
-				this.oLiteral=Interpreter.ORecognizeLiteralS((string)((Map)code[sLiteral]).SString);
+				this.oLiteral=Interpreter.oRecognizeLiteralS((string)((Map)code[sLiteral]).SString);
 			}
 			public object oLiteral=null;
 		}
@@ -144,20 +160,20 @@ namespace Meta
 		{
 			public Search(Map mSearch)
 			{
-				this.eKey=(Expression)((Map)mSearch[sSearch]).ECompile();
+				this.eKey=(Expression)((Map)mSearch[sSearch]).eCompile();
 			}
 			public Expression eKey;
-			public static readonly Map sKey=new Map("key");
-			public override object evaluateMO(IMap mParent)
+			public static readonly Map mKey=new Map("key");
+			public override object oEvaluateM(IMap mParent)
 			{
-				object oKey=eKey.evaluateMO(mParent);
+				object oKey=eKey.oEvaluateM(mParent);
 				IMap mSelected=mParent;
-				while(!mSelected.BContainsO(oKey))
+				while(!mSelected.bContainsO(oKey))
 				{
 					mSelected=mSelected.MParent;
 					if(mSelected==null)
 					{
-						throw new KeyNotFoundException(oKey,this.EtExtent);
+						throw new KeyNotFoundException(oKey,this.Extent);
 					}
 				}
 				return mSelected[oKey];
@@ -170,33 +186,34 @@ namespace Meta
 			public Expression eFirst;// TODO: maybe rename to srFirst -> it's a Search
 			public Select(Map code)
 			{
-				ArrayList amKeys=((Map)code[sSelect]).AoIntegerKeyValues;
-				eFirst=(Expression)((Map)amKeys[0]).ECompile();
+				ArrayList amKeys=((Map)code[mSelect]).aIntegerKeyValues;
+				eFirst=(Expression)((Map)amKeys[0]).eCompile();
 				for(int i=1;i<amKeys.Count;i++)
 				{
-					aeKeys.Add(((Map)amKeys[i]).ECompile());
+					aeKeys.Add(((Map)amKeys[i]).eCompile());
 				}
 			}
-			public override object evaluateMO(IMap mParent)
+			public override object oEvaluateM(IMap mParent)
 			{
-				object oSelected=eFirst.evaluateMO(mParent);
+				object oSelected=eFirst.oEvaluateM(mParent);
 				for(int iCurrent=0;iCurrent<aeKeys.Count;iCurrent++)
 				{
 					if(!(oSelected is IKeyValue))
 					{
 						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
-					object oKey=((Expression)aeKeys[iCurrent]).evaluateMO(mParent);
+					object oKey=((Expression)aeKeys[iCurrent]).oEvaluateM(mParent);
 					oSelected=((IKeyValue)oSelected)[oKey];
 					if(oSelected==null)
 					{
-						throw new KeyDoesNotExistException(oKey,this.EtExtent);
+						throw new KeyDoesNotExistException(oKey,this.Extent);
 					}
 				}
 				return oSelected;
 			}
-			public static readonly Map sSelect=new Map("select");
+			public static readonly Map mSelect=new Map("select");
 		}
+		//TODO: invent character for statements
 		public class Statement
 		{
 			public void RealizeM(IMap mParent)
@@ -206,31 +223,31 @@ namespace Meta
 				
 				if(bSearchFirstKey)
 				{
-					object oFirstKey=((Expression)aeKeys[0]).evaluateMO(mParent); 
-					while(!((IMap)oSelected).BContainsO(oFirstKey))
+					object oFirstKey=((Expression)aeKeys[0]).oEvaluateM(mParent); 
+					while(!((IMap)oSelected).bContainsO(oFirstKey))
 					{
 						oSelected=((IMap)oSelected).MParent;
 						if(oSelected==null)
 						{
-							throw new KeyNotFoundException(oFirstKey,((Expression)aeKeys[0]).EtExtent);
+							throw new KeyNotFoundException(oFirstKey,((Expression)aeKeys[0]).Extent);
 						}
 					}
 				}
 				for(int i=0;i<aeKeys.Count-1;i++)
 				{
-					oKey=((Expression)aeKeys[i]).evaluateMO((IMap)mParent);
+					oKey=((Expression)aeKeys[i]).oEvaluateM((IMap)mParent);
 					oSelected=((IKeyValue)oSelected)[oKey];
 					if(oSelected==null)
 					{
-						throw new KeyDoesNotExistException(oKey,((Expression)aeKeys[i]).EtExtent);
+						throw new KeyDoesNotExistException(oKey,((Expression)aeKeys[i]).Extent);
 					}
 					if(!(oSelected is IKeyValue))
 					{
 						oSelected=new NetObject(oSelected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 					}
 				}
-				object oLastKey=((Expression)aeKeys[aeKeys.Count-1]).evaluateMO((IMap)mParent);
-				object oValue=eValue.evaluateMO((IMap)mParent);
+				object oLastKey=((Expression)aeKeys[aeKeys.Count-1]).oEvaluateM((IMap)mParent);
+				object oValue=eValue.oEvaluateM((IMap)mParent);
 				if(oLastKey.Equals(Map.sThis))
 				{
 					if(oValue is Map)
@@ -251,15 +268,15 @@ namespace Meta
 			}
 			public Statement(Map mStatement) 
 			{
-				if(mStatement.BContainsO(mSearch))
+				if(mStatement.bContainsO(mSearch))
 				{
 					bSearchFirstKey=true;
 				}
-				foreach(Map key in ((Map)mStatement[sKey]).AoIntegerKeyValues)
+				foreach(Map key in ((Map)mStatement[mKey]).aIntegerKeyValues)
 				{
-					aeKeys.Add(key.ECompile());
+					aeKeys.Add(key.eCompile());
 				}
-				this.eValue=(Expression)((Map)mStatement[sValue]).ECompile();
+				this.eValue=(Expression)((Map)mStatement[mValue]).eCompile();
 			}
 			public ArrayList aeKeys=new ArrayList();
 			public Expression eValue;
@@ -267,8 +284,8 @@ namespace Meta
 			bool bSearchFirstKey=false;
 			public static readonly Map mSearch=new Map("search");
 			public static readonly Map mLookup=new Map("lookup");
-			public static readonly Map sKey=new Map("key"); // s isn't really logical here!
-			public static readonly Map sValue=new Map("value");
+			public static readonly Map mKey=new Map("key"); // s isn't really logical here!
+			public static readonly Map mValue=new Map("value");
 		}
 
 		public delegate void BreakPointDelegate(Map map);
@@ -298,7 +315,7 @@ namespace Meta
 					{
 						sText+="\""+(mMap).SString+"\"";
 					}
-					else if(mMap.ICount==0)
+					else if(mMap.iCount==0)
 					{
 						sText+="()";
 					}
@@ -311,7 +328,7 @@ namespace Meta
 							{
 								sText+='['+SaveToFileOFn(dtnretEntry.Key,sIndent,true)+']'+'='+SaveToFileOFn(dtnretEntry.Value,sIndent,true)+",";
 							}
-							if(mMap.ICount!=0)
+							if(mMap.iCount!=0)
 							{
 								sText=sText.Remove(sText.Length-1,1);
 							}
@@ -322,12 +339,12 @@ namespace Meta
 							foreach(DictionaryEntry dtnretEntry in mMap)
 							{
 								sText+=sIndent+'['+SaveToFileOFn(dtnretEntry.Key,sIndent,false)+']'+'=';
-								if(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ICount!=0 && !((Map)dtnretEntry.Value).BIsString)
+								if(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).iCount!=0 && !((Map)dtnretEntry.Value).BIsString)
 								{
 									sText+="\n";
 								}
 								sText+=SaveToFileOFn(dtnretEntry.Value,sIndent+'\t',true);
-								if(!(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).ICount!=0 && !((Map)dtnretEntry.Value).BIsString))
+								if(!(dtnretEntry.Value is Map && ((Map)dtnretEntry.Value).iCount!=0 && !((Map)dtnretEntry.Value).BIsString))
 								{
 									sText+="\n";
 								}
@@ -358,7 +375,7 @@ namespace Meta
 				{
 					foreach(DictionaryEntry dtnetEntry in (IKeyValue)kvlCurrent)
 					{
-						if(dtnetEntry.Value is IKeyValue && !(dtnetEntry.Value is NetClass)&& mResult.BContainsO(dtnetEntry.Key) 
+						if(dtnetEntry.Value is IKeyValue && !(dtnetEntry.Value is NetClass)&& mResult.bContainsO(dtnetEntry.Key) 
 							&& mResult[dtnetEntry.Key] is IKeyValue && !(mResult[dtnetEntry.Key] is NetClass))
 						{
 							mResult[dtnetEntry.Key]=KvMergeAkv((IKeyValue)mResult[dtnetEntry.Key],(IKeyValue)dtnetEntry.Value);
@@ -371,11 +388,11 @@ namespace Meta
 				}
 				return mResult;
 			}	
-			public static object ORecognizeLiteralS(string text)
+			public static object oRecognizeLiteralS(string text)
 			{
 				foreach(RecognizeLiteral rcnltrCurrent in arcnltrLiteralRecognitions)
 				{
-					object recognized=rcnltrCurrent.Recognize(text);
+					object recognized=rcnltrCurrent.oRecognizeS(text);
 					if(recognized!=null)
 					{
 						return recognized;
@@ -400,7 +417,7 @@ namespace Meta
 				}
 				else
 				{
-					return dttmecvsConversion.Convert(oDotNet);
+					return dttmecvsConversion.oConvertO(oDotNet);
 				}
 			}
 			public static object ODotNetFromMetaO(object oMeta)
@@ -425,7 +442,7 @@ namespace Meta
 					MetaToDotNetConversion mttdncvsConversion=(MetaToDotNetConversion)((Hashtable)
 						Interpreter.htmttdncvsToDotNetConversion[tTarget])[oMeta.GetType()];
 					bool bConverted;
-					return mttdncvsConversion.Convert(oMeta,out bConverted); // TODO: Why ignore bConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines mttdncvsConversion
+					return mttdncvsConversion.oConvertO(oMeta,out bConverted); // TODO: Why ignore bConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines mttdncvsConversion
 				}
 				catch (Exception e){
 					return oMeta;
@@ -445,9 +462,9 @@ namespace Meta
 			public static object CallProgram(Map mProgram,IMap mArgument,IMap mParent)
 			{
 				Map mCallable=new Map();
-				mCallable[Expression.runM]=mProgram;
+				mCallable[Expression.mRun]=mProgram;
 				mCallable.MParent=mParent;
-				return mCallable.OCallO(mArgument);
+				return mCallable.oCallO(mArgument);
 			}
 
 			public static Map mCompileS(string sFileName)
@@ -506,7 +523,7 @@ namespace Meta
 					MetaToDotNetConversion mttdncvsConversion=(MetaToDotNetConversion)htcvsToDotNet[objMeta.GetType()];
 					if(mttdncvsConversion!=null)
 					{
-						return mttdncvsConversion.Convert(objMeta,out ubConverted);
+						return mttdncvsConversion.oConvertO(objMeta,out ubConverted);
 					}
 				}
 				ubConverted=false;
@@ -547,33 +564,34 @@ namespace Meta
 
 			public abstract class RecognizeLiteral
 			{
-				public abstract object Recognize(string text); // Returns null if not recognized. Null cannot currently be created this way.
+				public abstract object oRecognizeS(string text); // Returns null if not recognized. Null cannot currently be created this way.
 			}
 			public abstract class MetaToDotNetConversion
 			{
 				public Type tSource;
 				public Type tTarget;
-				public abstract object Convert(object obj,out bool converted);
+				public abstract object oConvertO(object obj,out bool converted);
 			}
 			public abstract class DotNetToMetaConversion
-			{ // TODO: rename, consider Hungarian
+			{ 
 				public Type tSource;
-				public abstract object Convert(object obj);
+				public abstract object oConvertO(object obj);
 			}
 			public class LiteralRecognitions
 			{
 				// Attention! order of RecognizeLiteral classes matters
 				public class RecognizeString:RecognizeLiteral
 				{
-					public override object Recognize(string sText)
+					public override object oRecognizeS(string sText)
 					{
 						return new Map(sText);
 					}
 				}
+				// TODO: get rid of this character escaping stuff!
 				// does everything get executed twice?
 				public class RecognizeCharacter: RecognizeLiteral
 				{
-					public override object Recognize(string sText)
+					public override object oRecognizeS(string sText)
 					{
 						if(sText.StartsWith(@"\"))
 						{ // TODO: Choose another character for starting a character
@@ -628,7 +646,7 @@ namespace Meta
 				}
 				public class RecognizeInteger: RecognizeLiteral 
 				{
-					public override object Recognize(string sText) 
+					public override object oRecognizeS(string sText) 
 					{ 
 						if(sText.Equals(""))
 						{
@@ -679,7 +697,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Byte);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						return System.Convert.ToByte(((Integer)oToConvert).LongValue());
@@ -692,7 +710,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(bool);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						int i=((Integer)oToConvert).Int;
@@ -719,7 +737,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(SByte);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						return System.Convert.ToSByte(((Integer)oToConvert).LongValue());
@@ -732,7 +750,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Char);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						return System.Convert.ToChar(((Integer)oToConvert).LongValue());
@@ -745,7 +763,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Int32);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						return System.Convert.ToInt32(((Integer)oToConvert).LongValue());
@@ -758,7 +776,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(UInt32);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						return System.Convert.ToUInt32(((Integer)oToConvert).LongValue());
@@ -771,7 +789,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Int64);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						return System.Convert.ToInt64(((Integer)oToConvert).LongValue());
@@ -784,7 +802,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(UInt64);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						return System.Convert.ToUInt64(((Integer)oToConvert).LongValue());
@@ -797,7 +815,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(Int16);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						return System.Convert.ToInt16(((Integer)oToConvert).LongValue());
@@ -810,7 +828,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(UInt16);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						return System.Convert.ToUInt16(((Integer)oToConvert).LongValue());
@@ -823,7 +841,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(decimal);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						return (decimal)(((Integer)oToConvert).LongValue());
@@ -836,7 +854,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(double);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						return (double)(((Integer)oToConvert).LongValue());
@@ -849,7 +867,7 @@ namespace Meta
 						this.tSource=typeof(Integer);
 						this.tTarget=typeof(float);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						ubConverted=true;
 						return (float)(((Integer)oToConvert).LongValue());
@@ -862,7 +880,7 @@ namespace Meta
 						this.tSource=typeof(Map);
 						this.tTarget=typeof(string);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						if(((Map)oToConvert).BIsString)
 						{
@@ -886,7 +904,7 @@ namespace Meta
 						this.tSource=typeof(Map); 
 						this.tTarget=typeof(decimal); 
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						Map mMap=(Map)oToConvert;
 						if(mMap[new Map("iNumerator")] is Integer && mMap[new Map("iDenominator")] is Integer)
@@ -909,7 +927,7 @@ namespace Meta
 						this.tSource=typeof(Map);
 						this.tTarget=typeof(double);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						Map mMap=(Map)oToConvert;
 						if(mMap[new Map("iNumerator")] is Integer && mMap[new Map("iDenominator")] is Integer)
@@ -932,7 +950,9 @@ namespace Meta
 						this.tSource=typeof(Map);
 						this.tTarget=typeof(float);
 					}
-					public override object Convert(object oToConvert, out bool ubConverted)
+					// TODO: There should be a logical type that encompasses all Meta types
+					// and a logical type that encompasses all real .NET types that have been converted
+					public override object oConvertO(object oToConvert, out bool ubConverted)
 					{
 						Map mMap=(Map)oToConvert;
 						if(mMap[new Map("iNumerator")] is Integer && mMap[new Map("iDenominator")] is Integer)
@@ -948,6 +968,7 @@ namespace Meta
 					}
 				}
 			}
+			//TODO: There should be some documentation on what all the abbreviations mean, and the type of Hungarian used
 			private abstract class DotNetToMetaConversions
 			{
 				/* These classes define the conversions that take place when .NET methods,
@@ -958,7 +979,7 @@ namespace Meta
 					{
 						this.tSource=typeof(string);
 					}
-					public override object Convert(object oToConvert)
+					public override object oConvertO(object oToConvert)
 					{
 						return new Map((string)oToConvert);
 					}
@@ -969,7 +990,7 @@ namespace Meta
 					{
 						this.tSource=typeof(bool);
 					}
-					public override object Convert(object oToConvert)
+					public override object oConvertO(object oToConvert)
 					{
 						return (bool)oToConvert? new Integer(1): new Integer(0);
 					}
@@ -981,7 +1002,7 @@ namespace Meta
 					{
 						this.tSource=typeof(Byte);
 					}
-					public override object Convert(object oToConvert)
+					public override object oConvertO(object oToConvert)
 					{
 						return new Integer((Byte)oToConvert);
 					}
@@ -992,7 +1013,7 @@ namespace Meta
 					{
 						this.tSource=typeof(SByte);
 					}
-					public override object Convert(object oToConvert)
+					public override object oConvertO(object oToConvert)
 					{
 						return new Integer((SByte)oToConvert);
 					}
@@ -1003,7 +1024,7 @@ namespace Meta
 					{
 						this.tSource=typeof(Char);
 					}
-					public override object Convert(object oToConvert)
+					public override object oConvertO(object oToConvert)
 					{
 						return new Integer((Char)oToConvert);
 					}
@@ -1014,7 +1035,7 @@ namespace Meta
 					{
 						this.tSource=typeof(Int32);
 					}
-					public override object Convert(object oToConvert)
+					public override object oConvertO(object oToConvert)
 					{
 						return new Integer((Int32)oToConvert);
 					}
@@ -1025,7 +1046,7 @@ namespace Meta
 					{
 						this.tSource=typeof(UInt32);
 					}
-					public override object Convert(object oToConvert)
+					public override object oConvertO(object oToConvert)
 					{
 						return new Integer((UInt32)oToConvert);
 					}
@@ -1036,7 +1057,7 @@ namespace Meta
 					{
 						this.tSource=typeof(Int64);
 					}
-					public override object Convert(object oToConvert)
+					public override object oConvertO(object oToConvert)
 					{
 						return new Integer((Int64)oToConvert);
 					}
@@ -1047,7 +1068,7 @@ namespace Meta
 					{
 						this.tSource=typeof(UInt64);
 					}
-					public override object Convert(object oToConvert)
+					public override object oConvertO(object oToConvert)
 					{
 						return new Integer((Int64)(UInt64)oToConvert);
 					}
@@ -1058,7 +1079,7 @@ namespace Meta
 					{
 						this.tSource=typeof(Int16);
 					}
-					public override object Convert(object oToConvert)
+					public override object oConvertO(object oToConvert)
 					{
 						return new Integer((Int16)oToConvert);
 					}
@@ -1069,7 +1090,7 @@ namespace Meta
 					{
 						this.tSource=typeof(UInt16);
 					}
-					public override object Convert(object oToConvert)
+					public override object oConvertO(object oToConvert)
 					{
 						return new Integer((UInt16)oToConvert);
 					}
@@ -1080,20 +1101,20 @@ namespace Meta
 		public class MetaException:ApplicationException
 		{
 			protected string sMessage="";
-			public MetaException(Extent etExtent)
+			public MetaException(Extent extent)
 			{
-				this.etExtent=etExtent;
+				this.extent=extent;
 			}
-			public MetaException(Exception exception,Extent etExtent):base(exception.Message,exception)
+			public MetaException(Exception exception,Extent extent):base(exception.Message,exception)
 			{ // not really all that logical, but so what
-				this.etExtent=etExtent;
+				this.extent=extent;
 			}
-			Extent etExtent;
+			Extent extent;
 			public override string Message
 			{
 				get
 				{
-					return sMessage+" In file "+etExtent.fileName+", line: "+etExtent.startLine+", column: "+etExtent.startColumn+".";
+					return sMessage+" In file "+extent.fileName+", line: "+extent.startLine+", column: "+extent.startColumn+".";
 				}
 			}
 		}
@@ -1128,14 +1149,14 @@ namespace Meta
 		/* Thrown when a searched oKey was not found. */
 		public class KeyNotFoundException:KeyException
 		{
-			public KeyNotFoundException(object oKey,Extent etExtent):base(oKey,etExtent)
+			public KeyNotFoundException(object oKey,Extent extent):base(oKey,extent)
 			{
 			}
 		}
 		/* Thrown when an accessed oKey does not exist. */
 		public class KeyDoesNotExistException:KeyException
 		{
-			public KeyDoesNotExistException(object oKey,Extent etExtent):base(oKey,etExtent)
+			public KeyDoesNotExistException(object oKey,Extent extent):base(oKey,extent)
 			{
 			}
 		}
@@ -1145,7 +1166,7 @@ namespace Meta
 		/* Everything implementing this interface can be used in a Call expression */
 		public interface ICallable
 		{
-			object OCallO(object oArgument);
+			object oCallO(object oArgument);
 		}
 		// TODO: Rename this eventually
 		public interface IMap: IKeyValue
@@ -1155,7 +1176,7 @@ namespace Meta
 				get;
 				set;
 			}
-			ArrayList AoIntegerKeyValues
+			ArrayList aIntegerKeyValues
 			{
 				get;
 			}
@@ -1169,20 +1190,20 @@ namespace Meta
 				get;
 				set;
 			}
-			ArrayList AoKeys
+			ArrayList aKeys
 			{
 				get;
 			}
-			int ICount
+			int iCount
 			{
 				get;
 			}
-			bool BContainsO(object key);			
+			bool bContainsO(object key);			
 		}		
 		/* Represents a lazily evaluated "library" Meta file. */
 		public class MetaLibrary
 		{ // TODO: Put this into Library class, make base class for everything that gets loaded
-			public object OLoad()
+			public object ovLoadV()
 			{
 				return Interpreter.ORunFnM(sPath,new Map()); // TODO: Improve this interface, isn't read lazily anyway
 			}
@@ -1200,7 +1221,7 @@ namespace Meta
 				{
 					if(mCache==null)
 					{
-						Load();
+						vLoadV();
 					}
 					return mCache[oKey];
 				}
@@ -1209,61 +1230,61 @@ namespace Meta
 					throw new ApplicationException("Cannot set oKey "+oKey.ToString()+" in .NET namespace.");
 				}
 			}
-			public ArrayList AoKeys
+			public ArrayList aKeys
 			{
 				get
 				{
 					if(mCache==null)
 					{
-						Load();
+						vLoadV();
 					}
-					return mCache.AoKeys;
+					return mCache.aKeys;
 				}
 			}
-			public int ICount
+			public int iCount
 			{
 				get
 				{
 					if(mCache==null)
 					{
-						Load();
+						vLoadV();
 					}
-					return mCache.ICount;
+					return mCache.iCount;
 				}
 			}
 			public string sFullName;
 			public ArrayList mCachedAssemblies=new ArrayList();
-			public Hashtable htsNamespaces=new Hashtable();
+			public Hashtable mNamespaces=new Hashtable();
 			public LazyNamespace(string sFullName)
 			{
 				this.sFullName=sFullName;
 			}
-			public void Load()
+			public void vLoadV()
 			{
 				mCache=new Map();
 				foreach(CachedAssembly mCachedAssembly in mCachedAssemblies)
 				{
-					mCache=(Map)Interpreter.KvMergeAkv(mCache,mCachedAssembly.MNamespaceContentsS(sFullName));
+					mCache=(Map)Interpreter.KvMergeAkv(mCache,mCachedAssembly.mNamespaceContentsS(sFullName));
 				}
-				foreach(DictionaryEntry dtretEntry in htsNamespaces)
+				foreach(DictionaryEntry dtretEntry in mNamespaces)
 				{
 					mCache[new Map((string)dtretEntry.Key)]=dtretEntry.Value;
 				}
 			}
 			public Map mCache;
-			public bool BContainsO(object key)
+			public bool bContainsO(object key)
 			{
 				if(mCache==null)
 				{
-					Load();
+					vLoadV();
 				}
-				return mCache.BContainsO(key);
+				return mCache.bContainsO(key);
 			}
 			public IEnumerator GetEnumerator()
 			{
 				if(mCache==null)
 				{
-					Load();
+					vLoadV();
 				}
 				return mCache.GetEnumerator();
 			}
@@ -1276,12 +1297,11 @@ namespace Meta
 			{
 				this.asbAssembly=asbAssembly;
 			}
-			public Map MNamespaceContentsS(string sNamespace)
+			public Map mNamespaceContentsS(string sNamespace)
 			{
 				if(mAssemblyContent==null)
 				{
-					mAssemblyContent=Library.MLoadAssembliesAs(new object[]
-{asbAssembly});
+					mAssemblyContent=Library.MLoadAssembliesAs(new object[] {asbAssembly});
 				}
 				Map mSelected=mAssemblyContent;
 				if(sNamespace!="")
@@ -1303,11 +1323,11 @@ namespace Meta
 			{
 				get
 				{
-					if(mCache.BContainsO(oKey))
+					if(mCache.bContainsO(oKey))
 					{
 						if(mCache[oKey] is MetaLibrary)
 						{
-							mCache[oKey]=((MetaLibrary)mCache[oKey]).OLoad();
+							mCache[oKey]=((MetaLibrary)mCache[oKey]).ovLoadV();
 						}
 						return mCache[oKey];
 					}
@@ -1321,29 +1341,29 @@ namespace Meta
 					throw new ApplicationException("Cannot set oKey "+oKey.ToString()+" in library.");
 				}
 			}
-			public ArrayList AoKeys
+			public ArrayList aKeys
 			{
 				get
 				{
-					return mCache.AoKeys;
+					return mCache.aKeys;
 				}
 			}
 			public IMap MClone()
 			{
 				return this;
 			}
-			public int ICount
+			public int iCount
 			{
 				get
 				{
-					return mCache.ICount;
+					return mCache.iCount;
 				}
 			}
-			public bool BContainsO(object oKey)
+			public bool bContainsO(object oKey)
 			{
-				return mCache.BContainsO(oKey);
+				return mCache.bContainsO(oKey);
 			}
-			public ArrayList AoIntegerKeyValues
+			public ArrayList aIntegerKeyValues
 			{
 				get
 				{
@@ -1383,7 +1403,7 @@ namespace Meta
 							asSubPaths.RemoveAt(asSubPaths.Count-1);
 							foreach(string sSubPath in asSubPaths) 
 							{
-								if(!mPosition.BContainsO(new Map(sSubPath))) 
+								if(!mPosition.bContainsO(new Map(sSubPath))) 
 								{
 									mPosition[new Map(sSubPath)]=new Map();
 								}
@@ -1450,7 +1470,7 @@ namespace Meta
 			public ArrayList AsNamespacesAsb(Assembly asbAssembly)
 			{ //refactor, integrate into MLoadNamespacesAasb???
 				ArrayList asNamespaces=new ArrayList();
-				if(mCachedAssemblyInfo.BContainsO(new Map(asbAssembly.Location)))
+				if(mCachedAssemblyInfo.bContainsO(new Map(asbAssembly.Location)))
 				{
 					Map info=(Map)mCachedAssemblyInfo[new Map(asbAssembly.Location)];
 					string sTimeStamp=((Map)info[new Map("timestamp")]).SString;
@@ -1504,7 +1524,7 @@ namespace Meta
 					CachedAssembly casbCachedAssembly=new CachedAssembly(assembly);
 					foreach(string sNamespace in asNamespaces)
 					{
-						LazyNamespace lznsSelected=lznsRoot;
+						LazyNamespace lznmSelected=lznsRoot;
 						if(sNamespace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.sInstallationPath,"library")))
 						{
 							continue;
@@ -1513,24 +1533,24 @@ namespace Meta
 						{
 							foreach(string sSubString in sNamespace.Split('.'))
 							{
-								if(!lznsSelected.htsNamespaces.ContainsKey(sSubString))
+								if(!lznmSelected.mNamespaces.ContainsKey(sSubString))
 								{
-									string fullName=lznsSelected.sFullName;
+									string fullName=lznmSelected.sFullName;
 									if(fullName!="")
 									{
 										fullName+=".";
 									}
 									fullName+=sSubString;
-									lznsSelected.htsNamespaces[sSubString]=new LazyNamespace(fullName);
+									lznmSelected.mNamespaces[sSubString]=new LazyNamespace(fullName);
 								}
-								lznsSelected=(LazyNamespace)lznsSelected.htsNamespaces[sSubString];
+								lznmSelected=(LazyNamespace)lznmSelected.mNamespaces[sSubString];
 							}
 						}
-						lznsSelected.mCachedAssemblies.Add(casbCachedAssembly);
+						lznmSelected.mCachedAssemblies.Add(casbCachedAssembly);
 					}
 				}
 				
-				lznsRoot.Load();
+				lznsRoot.vLoadV();
 				return lznsRoot.mCache;
 			}
 			public static Library lbrLibrary=new Library();
@@ -1562,13 +1582,14 @@ namespace Meta
 			}
 		}
 
-		//TODO: cache the AoIntegerKeyValues somewhere; put in an "Add" method
+		//TODO: cache the aIntegerKeyValues somewhere; put in an "Add" method
 		public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial
 		{
-			public static readonly Map sParent=new Map("parent");
+			public static readonly Map sParent=new Map("parent"); 
+			// TODO: use "z" for maps that are strings
 			public static readonly Map sArg=new Map("arg");
 			public static readonly Map sThis=new Map("this");
-			public object OArgument
+			public object oArgument
 			{
 				get
 				{
@@ -1605,18 +1626,18 @@ namespace Meta
 					mParent=value;
 				}
 			}
-			public int ICount
+			public int iCount
 			{
 				get
 				{
-					return mstgTable.ICount;
+					return mstgTable.iCount;
 				}
 			}
-			public ArrayList AoIntegerKeyValues
+			public ArrayList aIntegerKeyValues
 			{ 
 				get
 				{
-					return mstgTable.AoIntegerKeyValues;
+					return mstgTable.aIntegerKeyValues;
 				}
 			}
 			public virtual object this[object oKey] 
@@ -1629,7 +1650,7 @@ namespace Meta
 					}
 					else if(oKey.Equals(sArg))
 					{
-						return OArgument;
+						return oArgument;
 					}
 					else if(oKey.Equals(sThis))
 					{
@@ -1662,19 +1683,19 @@ namespace Meta
 					}
 				}
 			}
-			public object OCallO(object oArgument)
+			public object oCallO(object oArgument)
 			{
-				this.OArgument=oArgument;
-				Expression eFunction=(Expression)((Map)this[Expression.runM]).ECompile();
+				this.oArgument=oArgument;
+				Expression eFunction=(Expression)((Map)this[Expression.mRun]).eCompile();
 				object oResult;
-				oResult=eFunction.evaluateMO(this);
+				oResult=eFunction.oEvaluateM(this);
 				return oResult;
 			}
-			public ArrayList AoKeys
+			public ArrayList aKeys
 			{
 				get
 				{
-					return mstgTable.AoKeys;
+					return mstgTable.aKeys;
 				}
 			}
 			public IMap MClone()
@@ -1682,34 +1703,34 @@ namespace Meta
 				Map mClone=mstgTable.MClone();
 				mClone.MParent=MParent;
 				mClone.eCompiled=eCompiled;
-				mClone.EtExtent=EtExtent;
+				mClone.Extent=Extent;
 				return mClone;
 			}
-			public Expression ECompile() 
+			public Expression eCompile() 
 			{ // eCompiled Statements are not cached, only expressions
 				if(eCompiled==null) 
 				{
-					if(this.BContainsO(Meta.Execution.Call.sCall))
+					if(this.bContainsO(Meta.Execution.Call.sCall))
 					{
 						eCompiled=new Call(this);
 					}
-					else if(this.BContainsO(Delayed.sDelayed))
+					else if(this.bContainsO(Delayed.sDelayed))
 					{ // TODO: could be optimized, but compilation happens seldom
 						eCompiled=new Delayed(this);
 					}
-					else if(this.BContainsO(Program.sProgram))
+					else if(this.bContainsO(Program.sProgram))
 					{
 						eCompiled=new Program(this);
 					}
-					else if(this.BContainsO(Literal.sLiteral))
+					else if(this.bContainsO(Literal.sLiteral))
 					{
 						eCompiled=new Literal(this);
 					}
-					else if(this.BContainsO(Search.sSearch))
+					else if(this.bContainsO(Search.sSearch))
 					{// TODO: use static expression strings
 						eCompiled=new Search(this);
 					}
-					else if(this.BContainsO(Select.sSelect))
+					else if(this.bContainsO(Select.mSelect))
 					{
 						eCompiled=new Select(this);
 					}
@@ -1718,16 +1739,16 @@ namespace Meta
 						throw new ApplicationException("Cannot compile non-code map.");
 					}
 				}
-					((Expression)eCompiled).EtExtent=this.EtExtent;
+					((Expression)eCompiled).Extent=this.Extent;
 				return eCompiled;
 			}
-			public bool BContainsO(object oKey) 
+			public bool bContainsO(object oKey) 
 			{
 				if(oKey is Map)
 				{
 					if(oKey.Equals(sArg))
 					{
-						return this.OArgument!=null;
+						return this.oArgument!=null;
 					}
 					else if(oKey.Equals(sParent))
 					{
@@ -1738,20 +1759,33 @@ namespace Meta
 						return true;
 					}
 				}
-				return mstgTable.BContainsO(oKey);
+				return mstgTable.bContainsO(oKey);
 			}
 			public override bool Equals(object oToCompare)
 			{
+				bool bEqual=false;
 				if(Object.ReferenceEquals(oToCompare,this))
 				{
-					return true;
+					bEqual=true;
 				}
-				if(!(oToCompare is Map))
+				else if(oToCompare is Map)
 				{
-					return false;
+					bEqual=((Map)oToCompare).mstgTable.BEqualMstg(mstgTable);
 				}
-				return ((Map)oToCompare).mstgTable.BEqualMstg(mstgTable);
+				return bEqual;
 			}
+//			public override bool Equals(object oToCompare)
+//			{
+//				if(Object.ReferenceEquals(oToCompare,this))
+//				{
+//					return true;
+//				}
+//				if(!(oToCompare is Map))
+//				{
+//					return false;
+//				}
+//				return ((Map)oToCompare).mstgTable.BEqualMstg(mstgTable);
+//			}
 			public IEnumerator GetEnumerator()
 			{
 				return new MapEnumerator(this);
@@ -1760,29 +1794,29 @@ namespace Meta
 			{
 				if(!bHashCached)
 				{
-					iHash=this.mstgTable.GetHashCode();
+					hash=this.mstgTable.GetHashCode();
 					bHashCached=true;
 				}
-				return iHash;
+				return hash;
 			}
 			private bool bHashCached=false;
-			private int iHash;
+			private int hash;
 
-			Extent etExtent; // TODO: get rid of extent completely, put boatloads of integers here
-			public Extent EtExtent
+			Extent extent; // TODO: get rid of extent completely, put boatloads of integers here
+			public Extent Extent
 			{
 				get
 				{
-					return etExtent;
+					return extent;
 				}
 				set
 				{
-					etExtent=value;
+					extent=value;
 				}
 			}
 			/* TODO: Move some more logic into constructor instead of in Parser?
 			 * There is no clean separation then. But there isn't anyway. I could make 
-			 * it so that only the etExtent gets passed, that's probably best*/
+			 * it so that only the extent gets passed, that's probably best*/
 			public Map(string sText):this(new StringStrategy(sText))
 			{
 			}
@@ -1808,20 +1842,21 @@ namespace Meta
 					return null;
 				}
 			}
+
 			public abstract class MapStrategy
-			{ // TODO: Call this differently, hungarian-compatible
+			{
 				public Map mMap;
 				public MapStrategy MstgClone()
 				{
 					MapStrategy mstgStrategy=new HybridDictionaryStrategy();
-					foreach(object oKey in this.AoKeys)
+					foreach(object oKey in this.aKeys)
 					{
 						mstgStrategy[oKey]=this[oKey];
 					}
 					return mstgStrategy;	
 				}
 				public abstract Map MClone();
-				public abstract ArrayList AoIntegerKeyValues
+				public abstract ArrayList aIntegerKeyValues
 				{
 					get;
 				}
@@ -1836,11 +1871,11 @@ namespace Meta
 				{
 					get;
 				}
-				public abstract ArrayList AoKeys
+				public abstract ArrayList aKeys
 				{
 					get;
 				}
-				public abstract int ICount
+				public abstract int iCount
 				{
 					get;
 				}
@@ -1850,19 +1885,19 @@ namespace Meta
 					set;
 				}
 
-				public abstract bool BContainsO(object key);
+				public abstract bool bContainsO(object key);
 				/* Hashcodes must be exactly the same in all MapStrategies. */
 				public override int GetHashCode() 
 				{
-					int iHash=0;
-					foreach(object oKey in this.AoKeys)
+					int hash=0;
+					foreach(object oKey in this.aKeys)
 					{
 						unchecked
 						{
-							iHash+=oKey.GetHashCode()*this[oKey].GetHashCode();
+							hash+=oKey.GetHashCode()*this[oKey].GetHashCode();
 						}
 					}
-					return iHash;
+					return hash;
 				}
 				public virtual bool BEqualMstg(MapStrategy mstgToCompare)
 				{
@@ -1870,13 +1905,13 @@ namespace Meta
 					{ // check whether this is a clone of the other MapStrategy (not used yet)
 						return true;
 					}
-					if(mstgToCompare.ICount!=this.ICount)
+					if(mstgToCompare.iCount!=this.iCount)
 					{
 						return false;
 					}
-					foreach(object oKey in this.AoKeys) 
+					foreach(object oKey in this.aKeys) 
 					{
-						if(!mstgToCompare.BContainsO(oKey)||!mstgToCompare[oKey].Equals(this[oKey]))
+						if(!mstgToCompare.bContainsO(oKey)||!mstgToCompare[oKey].Equals(this[oKey]))
 						{
 							return false;
 						}
@@ -1890,12 +1925,12 @@ namespace Meta
 				// is this really identical with the other strategies? See Hashcode of Integer class to make sure
 				public override int GetHashCode()
 				{
-					int iHash=0;
+					int hash=0;
 					for(int i=0;i<sText.Length;i++)
 					{
-						iHash+=(i+1)*sText[i];
+						hash+=(i+1)*sText[i];
 					}
-					return iHash;
+					return hash;
 				}
 				public override bool BEqualMstg(MapStrategy mstgToCompare)
 				{
@@ -1912,7 +1947,7 @@ namespace Meta
 				{
 					return new Map(new StringStrategy(this));
 				}
-				public override ArrayList AoIntegerKeyValues
+				public override ArrayList aIntegerKeyValues
 				{
 					get
 					{
@@ -1938,7 +1973,7 @@ namespace Meta
 						return sText;
 					}
 				}
-				public override ArrayList AoKeys
+				public override ArrayList aKeys
 				{
 					get
 					{
@@ -1960,7 +1995,7 @@ namespace Meta
 						aiKeys.Add(new Integer(i));			// TODO: Make this unicode-safe in the first place!
 					}
 				}
-				public override int ICount
+				public override int iCount
 				{
 					get
 					{
@@ -1974,7 +2009,7 @@ namespace Meta
 						if(oKey is Integer)
 						{
 							int iInteger=((Integer)oKey).Int;
-							if(iInteger>0 && iInteger<=this.ICount)
+							if(iInteger>0 && iInteger<=this.iCount)
 							{
 								return new Integer(sText[iInteger-1]);
 							}
@@ -1989,11 +2024,11 @@ namespace Meta
 						mMap.mstgTable[oKey]=value;
 					}
 				}
-				public override bool BContainsO(object oKey) 
+				public override bool bContainsO(object oKey) 
 				{
 					if(oKey is Integer)
 					{
-						return ((Integer)oKey)>0 && ((Integer)oKey)<=this.ICount;
+						return ((Integer)oKey)>0 && ((Integer)oKey)<=this.iCount;
 					}
 					else
 					{
@@ -2022,12 +2057,12 @@ namespace Meta
 					}
 					return mClone;
 				}
-				public override ArrayList AoIntegerKeyValues
+				public override ArrayList aIntegerKeyValues
 				{
 					get
 					{
 						ArrayList aList=new ArrayList();
-						for(Integer iInteger=new Integer(1);BContainsO(iInteger);iInteger++)
+						for(Integer iInteger=new Integer(1);bContainsO(iInteger);iInteger++)
 						{
 							aList.Add(this[iInteger]);
 						}
@@ -2038,7 +2073,7 @@ namespace Meta
 				{
 					get
 					{
-						if(AoIntegerKeyValues.Count>0)
+						if(aIntegerKeyValues.Count>0)
 						{
 							try
 							{
@@ -2056,7 +2091,7 @@ namespace Meta
 					get
 					{
 						string sText="";
-						foreach(object oKey in this.AoKeys)
+						foreach(object oKey in this.aKeys)
 						{
 							if(oKey is Integer && this.mstgTable[oKey] is Integer)
 							{
@@ -2085,14 +2120,14 @@ namespace Meta
 						this.mMap=mMap;
 					}
 				}
-				public override ArrayList AoKeys
+				public override ArrayList aKeys
 				{
 					get
 					{
 						return aoKeys;
 					}
 				}
-				public override int ICount
+				public override int iCount
 				{
 					get
 					{
@@ -2107,14 +2142,14 @@ namespace Meta
 					}
 					set
 					{
-						if(!this.BContainsO(oKey))
+						if(!this.bContainsO(oKey))
 						{
 							aoKeys.Add(oKey);
 						}
 						mstgTable[oKey]=value;
 					}
 				}
-				public override bool BContainsO(object oKey) 
+				public override bool bContainsO(object oKey) 
 				{
 					return mstgTable.Contains(oKey);
 				}
@@ -2130,13 +2165,13 @@ namespace Meta
 			{
 				get
 				{
-					return new DictionaryEntry(mMap.AoKeys[iCurrent],mMap[mMap.AoKeys[iCurrent]]);
+					return new DictionaryEntry(mMap.aKeys[iCurrent],mMap[mMap.aKeys[iCurrent]]);
 				}
 			}
 			public bool MoveNext()
 			{
 				iCurrent++;
-				return iCurrent<mMap.ICount;
+				return iCurrent<mMap.iCount;
 			}
 			public void Reset()
 			{
@@ -2150,16 +2185,16 @@ namespace Meta
 			// TODO: Move this to "With" ? Move this to NetContainer?
 			public static object OAssignCollectionMOUb(Map mCollection,object oCollection,out bool bSuccess)
 			{ // TODO: is bSuccess needed?
-				if(mCollection.AoIntegerKeyValues.Count==0)
+				if(mCollection.aIntegerKeyValues.Count==0)
 				{
 					bSuccess=false;
 					return null;
 				}
 				Type tTarget=oCollection.GetType();
-				MethodInfo mtifAdding=tTarget.GetMethod("Add",new Type[]{mCollection.AoIntegerKeyValues[0].GetType()});
+				MethodInfo mtifAdding=tTarget.GetMethod("Add",new Type[]{mCollection.aIntegerKeyValues[0].GetType()});
 				if(mtifAdding!=null)
 				{
-					foreach(object oEntry in mCollection.AoIntegerKeyValues)
+					foreach(object oEntry in mCollection.aIntegerKeyValues)
 					{ // combine this with Library function "Init"
 						mtifAdding.Invoke(oCollection,new object[]{oEntry});//  call mtifAdding from above!
 					}
@@ -2189,13 +2224,13 @@ namespace Meta
 					Delegate dlgFunction=DlgFromM(tParameter,mtifInvoke,(Map)oMeta);
 					return dlgFunction;
 				}
-				else if(tParameter.IsArray && oMeta is IMap && ((Map)oMeta).AoIntegerKeyValues.Count!=0)
+				else if(tParameter.IsArray && oMeta is IMap && ((Map)oMeta).aIntegerKeyValues.Count!=0)
 				{// TODO: cheating, not very understandable
 					try
 					{
 						Type tElements=tParameter.GetElementType();
 						Map mArgument=((Map)oMeta);
-						ArrayList aArgument=mArgument.AoIntegerKeyValues;
+						ArrayList aArgument=mArgument.aIntegerKeyValues;
 						Array arArgument=Array.CreateInstance(tElements,aArgument.Count);
 						for(int i=0;i<aArgument.Count;i++)
 						{
@@ -2219,7 +2254,7 @@ namespace Meta
 				ubConverted=false;
 				return null;
 			}
-			public object OCallO(object oArgument)
+			public object oCallO(object oArgument)
 			{
 				if(this.sName.Equals("run"))
 				{
@@ -2260,13 +2295,13 @@ namespace Meta
 				}
 				if(!bExecuted)
 				{
-					ArrayList aOArguments=((IMap)oArgument).AoIntegerKeyValues;
+					ArrayList aoArguments=((IMap)oArgument).aIntegerKeyValues;
 					ArrayList aMtifRightNumberArguments=new ArrayList();
 					foreach(MethodBase mtbCurrent in arMtbOverloadedMethods)
 					{
-						if(aOArguments.Count==mtbCurrent.GetParameters().Length)
+						if(aoArguments.Count==mtbCurrent.GetParameters().Length)
 						{ // don't match if different parameter list length
-							if(aOArguments.Count==((IMap)oArgument).AoKeys.Count)
+							if(aoArguments.Count==((IMap)oArgument).aKeys.Count)
 							{ // only call if there are no non-integer keys ( move this somewhere else)
 								aMtifRightNumberArguments.Add(mtbCurrent);
 							}
@@ -2283,7 +2318,7 @@ namespace Meta
 						ParameterInfo[] arPrmtifParameters=mtbCurrent.GetParameters();
 						for(int i=0;bArgumentsMatched && i<arPrmtifParameters.Length;i++)
 						{
-							aArguments.Add(OConvertParameterOTUb(aOArguments[i],arPrmtifParameters[i].ParameterType,out bArgumentsMatched));
+							aArguments.Add(OConvertParameterOTUb(aoArguments[i],arPrmtifParameters[i].ParameterType,out bArgumentsMatched));
 						}
 						if(bArgumentsMatched)
 						{
@@ -2348,7 +2383,7 @@ namespace Meta
 				sArgumentList+=")";
 				sSource+=sArgumentList+"{";
 				sSource+=sArgumentAdding;
-				sSource+="object oResult=mCallable.OCallO(mArg);";
+				sSource+="object oResult=mCallable.oCallO(mArg);";
 				if(mtifMethod!=null)
 				{
 					if(!mtifMethod.ReturnType.Equals(typeof(void)))
@@ -2436,12 +2471,12 @@ namespace Meta
 			{
 				unchecked
 				{
-					int iHash=sName.GetHashCode()*tTarget.GetHashCode();
+					int hash=sName.GetHashCode()*tTarget.GetHashCode();
 					if(oTarget!=null)
 					{
-						iHash=iHash*oTarget.GetHashCode();
+						hash=hash*oTarget.GetHashCode();
 					}
-					return iHash;
+					return hash;
 				}
 			}
 			private string sName;
@@ -2457,9 +2492,9 @@ namespace Meta
 			{
 				this.nmtConstructor=new NetMethod(this.tType);
 			}
-			public object OCallO(object oArgument)
+			public object oCallO(object oArgument)
 			{
-				return nmtConstructor.OCallO(oArgument);
+				return nmtConstructor.oCallO(oArgument);
 			}
 		}
 		/* Representation of a .NET object. */
@@ -2476,7 +2511,7 @@ namespace Meta
 		/* Base class for NetObject and NetClass. */
 		public abstract class NetContainer: IKeyValue, IEnumerable,ISerializeSpecial
 		{
-			public bool BContainsO(object oKey)
+			public bool bContainsO(object oKey)
 			{
 				if(oKey.Equals(new Map("interpreter")))
 				{
@@ -2499,7 +2534,7 @@ namespace Meta
 				mArgument[new Integer(1)]=oKey;
 				try
 				{
-					nmtIndexer.OCallO(mArgument);
+					nmtIndexer.oCallO(mArgument);
 					return true;
 				}
 				catch(Exception)
@@ -2523,14 +2558,14 @@ namespace Meta
 					kvlParent=value;
 				}
 			}
-			public ArrayList AoKeys
+			public ArrayList aKeys
 			{
 				get
 				{
 					return new ArrayList(MTable.Keys);
 				}
 			}
-			public int ICount 
+			public int iCount 
 			{
 				get
 				{
@@ -2586,7 +2621,7 @@ namespace Meta
 					mArgument[new Integer(1)]=oKey;
 					try
 					{
-						return nmtIndexer.OCallO(mArgument);
+						return nmtIndexer.oCallO(mArgument);
 					}
 					catch(Exception e)
 					{
@@ -2682,7 +2717,7 @@ namespace Meta
 					mArgument[new Integer(2)]=value;// do this more efficiently?
 					try
 					{
-						nmtIndexer.OCallO(mArgument);
+						nmtIndexer.oCallO(mArgument);
 					}
 					catch(Exception e)
 					{

@@ -28,7 +28,7 @@ public class logic
 		return !a;
 	}
 	public static bool and(Map arg) {
-		foreach(bool val in arg.AoIntegerKeyValues) {
+		foreach(bool val in arg.aIntegerKeyValues) {
 			if(!val) {
 				return false;
 			}
@@ -36,7 +36,7 @@ public class logic
 		return true;
 	}
 	public static bool or(Map arg) {
-		foreach(bool val in arg.AoIntegerKeyValues) {
+		foreach(bool val in arg.aIntegerKeyValues) {
 			if(val) {
 				return true;
 			}

@@ -48,10 +48,10 @@ public class map {
 	}
 	public static bool contains(Map map,object key) {
 		string a="";
-		return map.BContainsO(key);
+		return map.bContainsO(key);
 	}
 	public static int length(Map map) {
-		return map.ICount;
+		return map.iCount;
 	}
 	public static Map sTrimStartS(Map arg) {
 		Map map=(Map)arg[new Integer(1)];
@@ -59,7 +59,7 @@ public class map {
 
 		Map result=new Map();
 		int counter=1;
-		foreach(object o in map.AoIntegerKeyValues) {
+		foreach(object o in map.aIntegerKeyValues) {
 			if(obj.Equals(o)) {
 				result[new Integer(counter)]=o;
 				counter++;
@@ -72,7 +72,7 @@ public class map {
 	}
 	public static int iCountStartMO(Map map,object obj) { // TODO: dumb name
 		int count=0;
-		foreach(object o in map.AoIntegerKeyValues) {
+		foreach(object o in map.aIntegerKeyValues) {
 			if(obj.Equals(o)) {
 				count++;
 			}
@@ -92,11 +92,11 @@ public class map {
 		return keys;
 	}
 	public static Map join(Map arg) { // rename to "append"
-		ArrayList maps=arg.AoIntegerKeyValues;
+		ArrayList maps=arg.aIntegerKeyValues;
 		int i=1;
 		Map combined=new Map();
 		foreach(Map map in maps) { // TODO: eigentlich nur die Arrays verwenden
-			foreach(object val in map.AoIntegerKeyValues) {
+			foreach(object val in map.aIntegerKeyValues) {
 				combined[new Integer(i)]=val;
 				i++;
 			}
@@ -104,7 +104,7 @@ public class map {
 		return combined;
 	}
 	public static IKeyValue merge(Map arg) {
-		return (Map)Interpreter.MergeCollection(arg.AoIntegerKeyValues);
+		return (Map)Interpreter.MergeCollection(arg.aIntegerKeyValues);
 	}
 	public static object init(object obj,IMap map) { // make merge general enough to replace this
 		NetObject netObject=new NetObject(obj);
@@ -116,8 +116,8 @@ public class map {
 //	public static Map AApplyFA(Map mFunction,Map mArray) {
 //		Map mResult=new Map();
 //		int counter=1;
-//		foreach(object oArgument in mArray.AoIntegerKeyValues) {
-//			mResult[new Integer(counter)]=mFunction.OCallO(oArgument);
+//		foreach(object oArgument in mArray.aIntegerKeyValues) {
+//			mResult[new Integer(counter)]=mFunction.oCallO(oArgument);
 //			counter++;
 //		}
 //		return mResult;
@@ -125,11 +125,11 @@ public class map {
 	public static Map apply(Map mFunction,Map mArray) { // switch this the arguments around
 		Map mResult=new Map();
 		int counter=1;
-		foreach(object oKey in mArray.AoKeys) {
+		foreach(object oKey in mArray.aKeys) {
 			Map mArgument=new Map();
 			mArgument[new Map("key")]=oKey;
 			mArgument[new Map("value")]=mArray[oKey];
-			mResult[new Integer(counter)]=mFunction.OCallO(mArgument);
+			mResult[new Integer(counter)]=mFunction.oCallO(mArgument);
 			counter++;
 		}
 		return mResult;
@@ -139,10 +139,10 @@ public class map {
 		Map thenF=(Map)argM[new Integer(2)];
 		Map elseF=(Map)argM[new Integer(3)];
 		if(conditionB) {
-			return thenF.OCallO(new Map());
+			return thenF.oCallO(new Map());
 		}
 		else if(elseF!=null) {
-			return elseF.OCallO(new Map());
+			return elseF.oCallO(new Map());
 		}
 		else {
 			return new Map();

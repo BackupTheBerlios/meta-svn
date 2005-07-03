@@ -77,7 +77,7 @@ public class Extent { // TODO: Rename to something more sensible
 public class MetaAST:CommonAST
 {
 	/* Read the extent of this AST from the corresponding token. */
-	public Extent EtExtent {
+	public Extent Extent {
 		get {
 			/* Update the positions and return them. */
 			/* TODO: This is a bit shaky, it doesn't seem to do this recursively, so
@@ -335,25 +335,25 @@ public class MetaAST:CommonAST
 //		if (tok != null) {
 
 		// TODO: refactor this shit
-			int line = ast.EtExtent.startLine;
+			int line = ast.Extent.startLine;
 			if (line != 0) {
-				int col = ast.EtExtent.startColumn;
+				int col = ast.Extent.startColumn;
 				int minLine = result.startLine;
 				int minCol = result.startColumn;
 				if (line < minLine) {
 					result.startLine=line;
 					result.startColumn=col;
-					result.fileName=ast.EtExtent.fileName;
+					result.fileName=ast.Extent.fileName;
 				}
 				else if ((line == minLine) && (col < minCol)) {
 					result.startColumn=col;
-					result.fileName = ast.EtExtent.fileName;
+					result.fileName = ast.Extent.fileName;
 				}
 			}
 			
-			int endLine = ast.EtExtent.endLine;
+			int endLine = ast.Extent.endLine;
 			if (endLine != 0) {
-				int endCol = ast.EtExtent.endColumn;
+				int endCol = ast.Extent.endColumn;
 				int maxLine = result.endLine;
 				int maxCol = result.endColumn;
 				if (endLine > maxLine) {

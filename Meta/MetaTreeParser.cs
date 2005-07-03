@@ -141,7 +141,7 @@ namespace Meta.Parser
 		MetaAST call_AST_in = (MetaAST)_t;
 		
 		result=new Map();
-		result.EtExtent=call_AST_in.EtExtent;
+		result.Extent=call_AST_in.Extent;
 		Map call=new Map();
 		Map delayed=new Map();
 		Map argument=new Map();
@@ -177,7 +177,7 @@ namespace Meta.Parser
 		MetaAST map_AST_in = (MetaAST)_t;
 		
 		result=new Map();
-		result.EtExtent=map_AST_in.EtExtent;
+		result.Extent=map_AST_in.Extent;
 		Map statements=new Map();
 		Map s=null;
 		int counter=1;
@@ -246,7 +246,7 @@ _loop131_breakloop:			;
 		MetaAST select_AST_in = (MetaAST)_t;
 		
 		result=new Map();
-		result.EtExtent=select_AST_in.EtExtent;
+		result.Extent=select_AST_in.Extent;
 		Map selection=new Map();
 		Map key=null;
 		int counter=1;
@@ -285,7 +285,7 @@ _loop140_breakloop:			;
 		_t = __t137;
 		_t = _t.getNextSibling();
 		
-		result[Select.sSelect]=selection;
+		result[Select.mSelect]=selection;
 		
 		retTree_ = _t;
 		return result;
@@ -299,7 +299,7 @@ _loop140_breakloop:			;
 		
 				result=new Map();
 				Map lookupResult=null;
-				result.EtExtent=search_AST_in.EtExtent;
+				result.Extent=search_AST_in.Extent;
 				Map e=null;
 			
 		
@@ -326,7 +326,7 @@ _loop140_breakloop:			;
 		MetaAST token = null;
 		
 		result=new Map();
-		result.EtExtent=literal_AST_in.EtExtent;
+		result.Extent=literal_AST_in.Extent;
 		
 		
 		token = (_t==ASTNULL) ? null : (MetaAST)_t;
@@ -346,7 +346,7 @@ _loop140_breakloop:			;
 		MetaAST delayed_AST_in = (MetaAST)_t;
 		
 		result=new Map();
-		result.EtExtent=delayed_AST_in.EtExtent;
+		result.Extent=delayed_AST_in.Extent;
 		Map mExpression;
 		Map mRun=new Map();
 		
@@ -360,9 +360,9 @@ _loop140_breakloop:			;
 		_t = __t145;
 		_t = _t.getNextSibling();
 		
-						//mRun[Expression.runM]=mExpression;
+						//mRun[Expression.mRun]=mExpression;
 		result[Delayed.sDelayed]=mExpression;
-		//				mRun[Expression.runM]=mExpression;
+		//				mRun[Expression.mRun]=mExpression;
 		//        result[Delayed.sDelayed]=mRun;
 		
 		retTree_ = _t;
@@ -436,8 +436,8 @@ _loop122_breakloop:		;
 		_t = retTree_;
 		
 					//Map statement=new Map();
-					statement[Statement.sKey]=k;
-					statement[Statement.sValue]=val;// TODO: Add Extent to statements, too?
+					statement[Statement.mKey]=k;
+					statement[Statement.mValue]=val;// TODO: Add Extent to statements, too?
 				
 		_t = __t124;
 		_t = _t.getNextSibling();
@@ -467,8 +467,8 @@ _loop122_breakloop:		;
 		_t = retTree_;
 		
 					//Map statement=new Map();
-					statement[Statement.sKey]=k;
-					statement[Statement.sValue]=val;// TODO: Add Extent to statements, too?
+					statement[Statement.mKey]=k;
+					statement[Statement.mValue]=val;// TODO: Add Extent to statements, too?
 				
 		_t = __t126;
 		_t = _t.getNextSibling();
