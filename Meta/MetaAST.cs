@@ -22,9 +22,45 @@ using Token = antlr.Token;
 using AST = antlr.collections.AST;
 using antlr;
 using Meta.Parser;
+using System.Collections;
 
 
 public class Extent { // TODO: Rename to something more sensible
+	public static Hashtable Extents
+	{
+		get
+		{
+			return extents;
+		}
+	}
+	private static Hashtable extents=new Hashtable();
+	public override bool Equals(object obj)
+	{	
+		bool isEqual=false;
+		if(obj is Extent)
+		{
+			Extent extent=(Extent)obj;
+			if(
+				extent.StartLine==StartLine && 
+				extent.StartColumn==StartColumn && 
+				extent.EndLine==EndLine && 
+				extent.EndColumn==EndColumn && 
+				extent.FileName==FileName)
+			{
+				isEqual=true;
+			}
+		}
+		return isEqual;
+	}
+	public override int GetHashCode()
+	{
+		unchecked
+		{
+			return fileName.GetHashCode()*StartLine.GetHashCode()*StartColumn.GetHashCode()*EndLine.GetHashCode()*EndColumn.GetHashCode();
+		}
+	}
+
+
 	public int StartLine
 	{
 		get
@@ -84,13 +120,23 @@ public class Extent { // TODO: Rename to something more sensible
 	int endLine;
 	int startColumn;
 	int endColumn;
-	string fileName; // TODO: A bit unlogical to make public, but needed for DetermineExtent
+	string fileName;
 	public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName) {
 		this.startLine=startLine;
 		this.startColumn=startColumn;
 		this.endLine=endLine;
 		this.endColumn=endColumn;
 		this.fileName=fileName;
+
+	}
+	public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+	{
+		Extent extent=new Extent(startLine,startColumn,endLine,endColumn,fileName);
+		if(!extents.ContainsKey(extent))
+		{
+			extents.Add(extent,extent);
+		}
+		return (Extent)extents[extent]; // return the unique extent not the extent itself 
 	}
 
 //	public int StartLine {
@@ -145,6 +191,8 @@ public class MetaAST:CommonAST
 			{
 				extent=new Extent(System.Int32.MaxValue,System.Int32.MaxValue,
 					System.Int32.MinValue,System.Int32.MinValue,null);
+//				extent=new Extent(System.Int32.MaxValue,System.Int32.MaxValue,
+//					System.Int32.MinValue,System.Int32.MinValue,null);
 				DetermineExtent(extent,this);
 			}
 			return extent;
@@ -345,7 +393,8 @@ public class MetaAST:CommonAST
 		Type=tok.Type;
 		if(tok.getLine()!=0) 
 		{
-			extent=new Extent(tok.getLine(),tok.getColumn(),((MetaToken)tok).EndLine,((MetaToken)tok).EndColumn,((MetaToken)tok).FileName);
+			extent=Extent.CreateExtent(tok.getLine(),tok.getColumn(),((MetaToken)tok).EndLine,((MetaToken)tok).EndColumn,((MetaToken)tok).FileName);
+//			extent=new Extent(tok.getLine(),tok.getColumn(),((MetaToken)tok).EndLine,((MetaToken)tok).EndColumn,((MetaToken)tok).FileName);
 		}
 		else 
 		{
