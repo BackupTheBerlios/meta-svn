@@ -160,9 +160,9 @@ namespace Meta.Parser
 			_t = retTree_;
 		}
 		
-		call[Call.sFunction]=delayed;
-		call[Call.sArgument]=argument;
-		result[Call.sCall]=call;
+		call[Strings.Function]=delayed;
+		call[Strings.Argument]=argument;
+		result[Strings.Call]=call;
 		
 		_t = __t133;
 		_t = _t.getNextSibling();
@@ -233,7 +233,7 @@ _loop131_breakloop:			;
 		_t = __t128;
 		_t = _t.getNextSibling();
 		
-		result[Program.sProgram]=statements;
+		result[Strings.Program]=statements;
 		
 		retTree_ = _t;
 		return result;
@@ -285,7 +285,7 @@ _loop140_breakloop:			;
 		_t = __t137;
 		_t = _t.getNextSibling();
 		
-		result[Select.mSelect]=selection;
+		result[Strings.Select]=selection;
 		
 		retTree_ = _t;
 		return result;
@@ -312,7 +312,7 @@ _loop140_breakloop:			;
 		_t = __t142;
 		_t = _t.getNextSibling();
 		
-				result[Search.sSearch]=e;
+				result[Strings.Search]=e;
 			
 		retTree_ = _t;
 		return result;
@@ -333,7 +333,7 @@ _loop140_breakloop:			;
 		match((AST)_t,LITERAL);
 		_t = _t.getNextSibling();
 		
-		result[Literal.sLiteral]=new Map(token.getText());
+		result[Strings.Literal]=new Map(token.getText());
 		
 		retTree_ = _t;
 		return result;
@@ -348,7 +348,7 @@ _loop140_breakloop:			;
 		result=new Map();
 		result.Extent=delayed_AST_in.Extent;
 		Map mExpression;
-		Map mRun=new Map();
+		//Map Strings.Run=new Map();
 		
 		
 		AST __t145 = _t;
@@ -360,10 +360,10 @@ _loop140_breakloop:			;
 		_t = __t145;
 		_t = _t.getNextSibling();
 		
-						//mRun[Expression.mRun]=mExpression;
-		result[Delayed.sDelayed]=mExpression;
-		//				mRun[Expression.mRun]=mExpression;
-		//        result[Delayed.sDelayed]=mRun;
+						//Strings.Run[Strings.Run]=mExpression;
+		result[Strings.Delayed]=mExpression;
+		//				Strings.Run[Strings.Run]=mExpression;
+		//        result[Strings.Delayed]=Strings.Run;
 		
 		retTree_ = _t;
 		return result;
@@ -436,8 +436,8 @@ _loop122_breakloop:		;
 		_t = retTree_;
 		
 					//Map statement=new Map();
-					statement[Statement.mKey]=k;
-					statement[Statement.mValue]=val;// TODO: Add Extent to statements, too?
+					statement[Strings.Key]=k;
+					statement[Strings.Value]=val;// TODO: Add Extent to statements, too?
 				
 		_t = __t124;
 		_t = _t.getNextSibling();
@@ -467,13 +467,13 @@ _loop122_breakloop:		;
 		_t = retTree_;
 		
 					//Map statement=new Map();
-					statement[Statement.mKey]=k;
-					statement[Statement.mValue]=val;// TODO: Add Extent to statements, too?
+					statement[Strings.Key]=k;
+					statement[Strings.Value]=val;// TODO: Add Extent to statements, too?
 				
 		_t = __t126;
 		_t = _t.getNextSibling();
 		
-				statement[Statement.mSearch]=new Integer(1);
+				statement[Strings.Search]=new Integer(1);
 			
 		retTree_ = _t;
 		return statement;

@@ -86,20 +86,20 @@ namespace testClasses
 			def[new Integer(1)]=new Map("null");
 			def[new Map("y")]=new Map("null");
 			def[new Map("p2")]=new Map("null");
-			arg=(Map)Interpreter.KvMergeAkv(def,arg);
-			this.x=(string)((Map)arg[new Integer(1)]).SString;
-			this.y=(string)((Map)arg[new Map("y")]).SString;
-			this.z=(string)((Map)arg[new Map("p2")]).SString;
+			arg=(Map)Interpreter.Merge(def,arg);
+			this.x=(string)((Map)arg[new Integer(1)]).String;
+			this.y=(string)((Map)arg[new Map("y")]).String;
+			this.z=(string)((Map)arg[new Map("p2")]).String;
 		}
 		public string Concatenate(Map arg) {
 			Map def=new Map();
 			def[new Integer(1)]=new Map("null");
 			def[new Map("b")]=new Map("null");
 			def[new Map("c")]=new Map("null");
-			arg=(Map)Interpreter.KvMergeAkv(def,arg);
-			return (string)((Map)arg[new Integer(1)]).SString+
-				(string)((Map)arg[new Map("b")]).SString+
-				(string)((Map)arg[new Map("c")]).SString+
+			arg=(Map)Interpreter.Merge(def,arg);
+			return (string)((Map)arg[new Integer(1)]).String+
+				(string)((Map)arg[new Map("b")]).String+
+				(string)((Map)arg[new Map("c")]).String+
 				this.x+this.y+this.z;
 		}
 	}

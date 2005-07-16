@@ -13,12 +13,12 @@
 //	You should have received a copy of the GNU General Public License
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-this=map.merge
+this=map.Merge
 	parent
 	=
 		'AssignedToCurrent
 unicodeText='äaba
-this=map.merge
+this=map.Merge
 	parent
 	programFlow
 	logic
@@ -27,27 +27,27 @@ this=map.merge
 //run 'hello
 interpreter.line:'5
 nestedClassTest=interpreter.line
-applyMethod=!iAddII
+applyMethod=!Add
 	arg.value
 	'1
-applyTest=apply
+applyTest=Apply
 	applyMethod
 	=
 		'1
 		'2
 		'3
-ifTest=if
-	equal
+ifTest=If
+	Equal
 		'1
 		'1
 	=
 		#"it is true"
 	=
 		#"it is false"
-trimStartTest=sTrimStartS
+trimStartTest=TrimStart
 	"					hello"
 	'\\t
-form=init
+form=Init
 	System.Windows.Forms.Form'
 	=
 		Text='hello
@@ -130,10 +130,10 @@ SecondLevel=
 	#arg
 argTest=FirstLevel
 	a='z
-concatenate=map.join
+concatenate=map.Join
 	'x
 	'yz
-this=map.merge
+this=map.Merge
 	parent
 	testClasses
 testClass=TestClass'
@@ -220,7 +220,7 @@ one='1
 two='2
 firstIf='unchanged
 secondIf='unchanged
-firstIfCondition=equal
+firstIfCondition=Equal
 	'1
 	one
 firstIfBranches=
@@ -253,7 +253,7 @@ x=
 		hello word!
 		hello!
 		"
-ored=math.bOrII
+ored=BitwiseOr
 	'20
 	System.Windows.Forms.Keys.Tab
 arrayList=System.Collections.ArrayList'
@@ -279,12 +279,12 @@ escapedText="\'\n\\\t"
 whileCounter='
 loop=
 	#
-		whileDecision=bSmallerII
+		whileDecision=Smaller
 			arg
 			'10
 		whileBranches=
 			1=
-				#loop iAddII
+				#loop Add
 					arg
 					'1
 			0=

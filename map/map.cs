@@ -24,19 +24,22 @@ using System.Threading;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-public class map {
-	public class interpreter {
-//		public static event BreakPointDelegate BreakPoint;
+public class map 
+{
+	public class interpreter 
+	{
+		//		public static event BreakPointDelegate BreakPoint;
 		public static int line=0; // only needed because of test in basicTest.meta
-//		public static void breakPointCallBack(Map mCallback) {
-//			Interpreter.OnBreak();
-//		}
-//		public static int column=0;
-//		public static void run() {
-//			BreakPoint(new Map("stuff"));
-//		}
+		//		public static void breakPointCallBack(Map mCallback) {
+		//			Interpreter.OnBreak();
+		//		}
+		//		public static int column=0;
+		//		public static void run() {
+		//			BreakPoint(new Map("stuff"));
+		//		}
 	}
-	public static void execute(string fileName) { // TODO: not a good name, takes a file name, not a string after all, 
+	public static void Execute(string fileName) 
+	{ // TODO: not a good name, takes a file name, not a string after all, 
 		// adding a character "f" for files doesn't make sense, though
 		// After all, the file system will be integrated anyway.
 		// Once the file system is integrated, one can simpley select the file one
@@ -46,105 +49,141 @@ public class map {
 		process.StartInfo.Arguments=fileName;
 		process.Start();
 	}
-	public static bool contains(Map map,object key) {
+	public static bool ContainsKey(Map map,object key) 
+	{
 		string a="";
-		return map.bContainsO(key);
+		return map.ContainsKey(key);
 	}
-	public static int length(Map map) {
-		return map.iCount;
+	public static int Length(Map map) 
+	{
+		return map.Count;
 	}
-	public static Map sTrimStartS(Map arg) {
+	public static Map TrimStart(Map arg) 
+	{
 		Map map=(Map)arg[new Integer(1)];
 		object obj=arg[new Integer(2)];
 
 		Map result=new Map();
 		int counter=1;
-		foreach(object o in map.aIntegerKeyValues) {
-			if(obj.Equals(o)) {
+		foreach(object o in map.Array) 
+		{
+			if(obj.Equals(o)) 
+			{
 				result[new Integer(counter)]=o;
 				counter++;
 			}
-			else {
+			else 
+			{
 				break;
 			}
 		}
 		return result;
 	}
-	public static int iCountStartMO(Map map,object obj) { // TODO: dumb name
-		int count=0;
-		foreach(object o in map.aIntegerKeyValues) {
-			if(obj.Equals(o)) {
-				count++;
-			}
-			else {
-				break;
-			}
-		}
-		return count;
-	}
-	public static IKeyValue aKeysM(IKeyValue map) {
+	//	public static int CountStart(Map map,object obj) { // TODO: dumb name
+	//		int count=0;
+	//		foreach(object o in map.Array) {
+	//			if(obj.Equals(o)) {
+	//				count++;
+	//			}
+	//			else {
+	//				break;
+	//			}
+	//		}
+	//		return count;
+	//	}
+	public static IKeyValue Keys(IKeyValue map) 
+	{
 		int i=1;
 		Map keys=new Map();
-		foreach(DictionaryEntry entry in map) {
+		foreach(DictionaryEntry entry in map) 
+		{
 			keys[new Integer(i)]=entry.Key;
 			i++;
 		}
 		return keys;
 	}
-	public static Map join(Map arg) { // rename to "append"
-		ArrayList maps=arg.aIntegerKeyValues;
+	public static Map Join(Map arg) 
+	{ // rename to "append"
+		ArrayList maps=arg.Array;
 		int i=1;
 		Map combined=new Map();
-		foreach(Map map in maps) { // TODO: eigentlich nur die Arrays verwenden
-			foreach(object val in map.aIntegerKeyValues) {
+		foreach(Map map in maps) 
+		{ // TODO: eigentlich nur die Arrays verwenden
+			foreach(object val in map.Array) 
+			{
 				combined[new Integer(i)]=val;
 				i++;
 			}
 		}
 		return combined;
 	}
-	public static IKeyValue merge(Map arg) {
-		return (Map)Interpreter.MergeCollection(arg.aIntegerKeyValues);
+	public static IKeyValue Merge(Map arg) 
+	{
+		return (Map)Interpreter.MergeCollection(arg.Array);
 	}
-	public static object init(object obj,IMap map) { // make merge general enough to replace this
+	public static object Init(object obj,IMap map) 
+	{ // make merge general enough to replace this
 		NetObject netObject=new NetObject(obj);
-		foreach(DictionaryEntry entry in map) {
+		foreach(DictionaryEntry entry in map) 
+		{
 			netObject[entry.Key]=entry.Value;
 		}
 		return obj;
 	}
-//	public static Map AApplyFA(Map mFunction,Map mArray) {
-//		Map mResult=new Map();
-//		int counter=1;
-//		foreach(object oArgument in mArray.aIntegerKeyValues) {
-//			mResult[new Integer(counter)]=mFunction.oCallO(oArgument);
-//			counter++;
-//		}
-//		return mResult;
-//	}
-	public static Map apply(Map mFunction,Map mArray) { // switch this the arguments around
+	public static Map Remove(object oToRemove,Map mArray)
+	{
+		Map mResult=new Map();
+		int iCounter=1;
+		foreach(object oIntegerKeyValue in mArray.Array)
+		{
+			if(!oIntegerKeyValue.Equals(oToRemove))
+			{
+				mResult[new Integer(iCounter)]=oIntegerKeyValue;
+				iCounter++;
+			}
+		}
+		return mResult;
+	}
+	public static Map Foreach(Map mArray,Map mFunction)
+	{
+		Map mResult=new Map();
+		int iCounter=1;
+		foreach(object oIntegerKeyValue in mArray.Array)
+		{
+			mResult[new Integer(iCounter)]=mFunction.Call(oIntegerKeyValue);
+			iCounter++;
+		}
+		return mResult;
+	}
+	public static Map Apply(Map mFunction,Map mArray) 
+	{ // switch this the arguments around
 		Map mResult=new Map();
 		int counter=1;
-		foreach(object oKey in mArray.aKeys) {
+		foreach(object oKey in mArray.Keys) 
+		{
 			Map mArgument=new Map();
 			mArgument[new Map("key")]=oKey;
 			mArgument[new Map("value")]=mArray[oKey];
-			mResult[new Integer(counter)]=mFunction.oCallO(mArgument);
+			mResult[new Integer(counter)]=mFunction.Call(mArgument);
 			counter++;
 		}
 		return mResult;
 	}
-	public static object @if(Map argM) { // maybe automatically convert Maps to MapAdapters??
-		bool conditionB=(bool)Interpreter.ODotNetFromMetaO(argM[new Integer(1)],typeof(bool));
+	public static object If(Map argM) 
+	{ // maybe automatically convert Maps to MapAdapters??
+		bool conditionB=(bool)Interpreter.DotNetFromMeta(argM[new Integer(1)],typeof(bool));
 		Map thenF=(Map)argM[new Integer(2)];
 		Map elseF=(Map)argM[new Integer(3)];
-		if(conditionB) {
-			return thenF.oCallO(new Map());
+		if(conditionB) 
+		{
+			return thenF.Call(new Map());
 		}
-		else if(elseF!=null) {
-			return elseF.oCallO(new Map());
+		else if(elseF!=null) 
+		{
+			return elseF.Call(new Map());
 		}
-		else {
+		else 
+		{
 			return new Map();
 		}		
 	}

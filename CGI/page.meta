@@ -1,0 +1,72 @@
+this=map.merge
+	parent
+	map
+string=
+	cFromS=!arg.1
+	sRemoveSpacesS=!map.aRemoveOA
+		cFromS " "
+		arg
+html=
+	hTableAah=!join 
+		"<table>"
+		join aForAF
+			arg
+			!join
+				"<tr>"
+				join aForAF
+					arg
+					!join
+						"<td>"
+						arg
+						"</td>"
+				"</tr>"
+		"</table>"
+	hVerdanaH=!join
+		"<div style='font-family:Verdana'>"
+		arg
+		"</div>"
+	fFontS=!
+		sFont=arg
+		#join
+			"<div style='font-family:"
+			sFont
+			"'>"
+			arg
+			"</div>"
+	MfFontsAs=!
+		mfFonts='
+		aForAF
+			arg
+			!
+				sFontName=join
+					"h"
+					System.Console.WriteLine map.join 
+						"problems here: "
+						arg
+					//string.sRemoveSpacesS arg
+					"H"
+				mfFonts.[sFontName]:MfFontsAs arg
+		this=fFonts
+	fonts=MfFontsAs
+		"New Times Roman"
+		"Verdana"
+		"Courier New"
+	hNewTimesRomanH=fFontS "New Times Roman"
+this=map.merge
+	parent
+	map
+	System
+	string
+	html
+Console.WriteLine sRemoveSpacesS "New Times Roman"
+Console.WriteLine fonts.hNewTimesRomanH "hi in roman"
+Console.WriteLine fonts.hCourierNewH "hi in courier new"
+Console.WriteLine hNewTimesRomanH "Hello World"
+this=hTableAah
+	=
+		"caption1"
+		"caption2"
+	=
+		"hello"
+		"world"
+		"<span style='font-family:Verdana'>kleiner Beispieltext in Verdana</span>"

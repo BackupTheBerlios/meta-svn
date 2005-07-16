@@ -56,7 +56,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "merge"
+                                "Merge"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -226,7 +226,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "merge"
+                                "Merge"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -538,7 +538,7 @@ Entry (DictionaryEntry)
                                           Key (Map):
                                             "literal"
                                           Value (Map):
-                                            "iAddII"
+                                            "Add"
                                 Entry (DictionaryEntry)
                                   Key (Map):
                                     "argument"
@@ -657,7 +657,7 @@ Entry (DictionaryEntry)
                           Key (Map):
                             "literal"
                           Value (Map):
-                            "apply"
+                            "Apply"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -836,7 +836,7 @@ Entry (DictionaryEntry)
                           Key (Map):
                             "literal"
                           Value (Map):
-                            "if"
+                            "If"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -882,7 +882,7 @@ Entry (DictionaryEntry)
                                               Key (Map):
                                                 "literal"
                                               Value (Map):
-                                                "equal"
+                                                "Equal"
                                     Entry (DictionaryEntry)
                                       Key (Map):
                                         "argument"
@@ -1090,7 +1090,7 @@ Entry (DictionaryEntry)
                           Key (Map):
                             "literal"
                           Value (Map):
-                            "sTrimStartS"
+                            "TrimStart"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -1188,7 +1188,7 @@ Entry (DictionaryEntry)
                           Key (Map):
                             "literal"
                           Value (Map):
-                            "init"
+                            "Init"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -3722,7 +3722,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "join"
+                                "Join"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -3837,7 +3837,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "merge"
+                                "Merge"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -6876,7 +6876,7 @@ Entry (DictionaryEntry)
                           Key (Map):
                             "literal"
                           Value (Map):
-                            "equal"
+                            "Equal"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -7850,30 +7850,13 @@ hello!
                   Value (Map):
                     Entry (DictionaryEntry)
                       Key (Map):
-                        "select"
+                        "search"
                       Value (Map):
                         Entry (DictionaryEntry)
-                          Key (Integer):
-                            "1"
+                          Key (Map):
+                            "literal"
                           Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "search"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "literal"
-                                  Value (Map):
-                                    "math"
-                        Entry (DictionaryEntry)
-                          Key (Integer):
-                            "2"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "literal"
-                              Value (Map):
-                                "bOrII"
+                            "BitwiseOr"
                 Entry (DictionaryEntry)
                   Key (Map):
                     "argument"
@@ -8691,7 +8674,7 @@ Schwaenzchen in die Hoeh.
                                                       Key (Map):
                                                         "literal"
                                                       Value (Map):
-                                                        "bSmallerII"
+                                                        "Smaller"
                                             Entry (DictionaryEntry)
                                               Key (Map):
                                                 "argument"
@@ -8868,7 +8851,7 @@ Schwaenzchen in die Hoeh.
                                                                                           Key (Map):
                                                                                             "literal"
                                                                                           Value (Map):
-                                                                                            "iAddII"
+                                                                                            "Add"
                                                                                 Entry (DictionaryEntry)
                                                                                   Key (Map):
                                                                                     "argument"

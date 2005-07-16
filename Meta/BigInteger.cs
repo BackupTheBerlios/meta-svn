@@ -2486,7 +2486,7 @@ namespace Meta.Types
 		//***********************************************************************
 		// Returns the lowest 4 bytes of the Integer as an int.
 		//***********************************************************************
-		public int Int {
+		public int Int { // maybe rename to Int32??
 			get {
 				return (int)data[0];
 			}

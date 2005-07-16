@@ -45,7 +45,7 @@ namespace Test {
 					if(!File.Exists(args[0])) {
 						throw new ApplicationException("File "+args[0]+" not found.");
 					}
-					Interpreter.ORunFnM(args[0],new Map());
+					Interpreter.Run(args[0],new Map());
 					// TODO: fix this to only show original error message
 				}
 			}
@@ -86,34 +86,34 @@ namespace Test {
 	}
 	public class Tests {
 		private static string filename=@"basicTest.meta";
-//		// TODO:make it possible to choose between different tests on command line, and whether to test at all
+		// TODO:make it possible to choose between different tests on command line, and whether to test at all
 		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
 		public class ParseToAst:TestCase {
-			public override object ORun() {
+			public override object Run() {
 				return Interpreter.ParseToAst(Path.Combine(
 					Test.path,filename));
 			}
 		}
 		public class CompileToMap:TestCase {
 			public static Map map;
-			public override object ORun() {
-				map=Interpreter.mCompileS(Path.Combine(
+			public override object Run() {
+				map=Interpreter.Compile(Path.Combine(
 					Test.path,filename));
 				return map;
 			}
 		}
 		public class CompileToExpression:TestCase {
-			public override object ORun() {
-				return Interpreter.mCompileS(Path.Combine(
-					Test.path,filename)).eCompile();
+			public override object Run() {
+				return Interpreter.Compile(Path.Combine(
+					Test.path,filename)).GetExpression();
 			}
 		}
 		public class Execute:TestCase {
-			public override object ORun() {
+			public override object Run() {
 				Map argument=new Map();
 				argument[new Integer(1)]="first arg";
 				argument[new Integer(2)]="second=arg";
-				return Interpreter.ORunFnM(Path.Combine(Test.path,filename),argument);
+				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
 	}

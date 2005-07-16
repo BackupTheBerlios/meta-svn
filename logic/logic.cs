@@ -21,22 +21,22 @@ using Meta.Execution;
 
 public class logic
 {
-	public static bool equal(object a,object b) {
+	public static bool Equal(object a,object b) {
 		return a.Equals(b);
 	}
-	public static bool not(bool a) {
+	public static bool Not(bool a) {
 		return !a;
 	}
-	public static bool and(Map arg) {
-		foreach(bool val in arg.aIntegerKeyValues) {
+	public static bool And(Map arg) {
+		foreach(bool val in arg.Array) {
 			if(!val) {
 				return false;
 			}
 		}
 		return true;
 	}
-	public static bool or(Map arg) {
-		foreach(bool val in arg.aIntegerKeyValues) {
+	public static bool Or(Map arg) {
+		foreach(bool val in arg.Array) {
 			if(val) {
 				return true;
 			}

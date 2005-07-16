@@ -10,162 +10,169 @@ Entry (DictionaryEntry)
     "äaba"
 Entry (DictionaryEntry)
   Key (Map):
-    "equal"
+    "Equal"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean equal(System.Object, System.Object)"
+        "Boolean Equal(System.Object, System.Object)"
 Entry (DictionaryEntry)
   Key (Map):
-    "not"
+    "Not"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean not(Boolean)"
+        "Boolean Not(Boolean)"
 Entry (DictionaryEntry)
   Key (Map):
-    "and"
+    "And"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean and(Meta.Types.Map)"
+        "Boolean And(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "or"
+    "Or"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean or(Meta.Types.Map)"
+        "Boolean Or(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "if"
+    "Merge"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "System.Object if(Meta.Types.Map)"
+        "Meta.Types.IKeyValue Merge(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "iCountStartMO"
+    "Keys"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Int32 iCountStartMO(Meta.Types.Map, System.Object)"
+        "Meta.Types.IKeyValue Keys(Meta.Types.IKeyValue)"
 Entry (DictionaryEntry)
   Key (Map):
-    "execute"
+    "Foreach"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Void execute(System.String)"
+        "Meta.Types.Map Foreach(Meta.Types.Map, Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "sTrimStartS"
+    "Length"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map sTrimStartS(Meta.Types.Map)"
+        "Int32 Length(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "apply"
+    "Apply"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map apply(Meta.Types.Map, Meta.Types.Map)"
+        "Meta.Types.Map Apply(Meta.Types.Map, Meta.Types.Map)"
+Entry (DictionaryEntry)
+  Key (Map):
+    "Init"
+  Value (NetMethod):
+    overloadedMethods (MethodBase[]):
+      Entry (RuntimeMethodInfo)
+        "System.Object Init(System.Object, Meta.Types.IMap)"
 Entry (DictionaryEntry)
   Key (Map):
     "interpreter"
   Value (NetClass):
     Entry (DictionaryEntry)
   Key (Map):
-    "contains"
+    "Execute"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean contains(Meta.Types.Map, System.Object)"
+        "Void Execute(System.String)"
 Entry (DictionaryEntry)
   Key (Map):
-    "merge"
+    "Join"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue merge(Meta.Types.Map)"
+        "Meta.Types.Map Join(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "join"
+    "ContainsKey"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map join(Meta.Types.Map)"
+        "Boolean ContainsKey(Meta.Types.Map, System.Object)"
 Entry (DictionaryEntry)
   Key (Map):
-    "length"
+    "Remove"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Int32 length(Meta.Types.Map)"
+        "Meta.Types.Map Remove(System.Object, Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "aKeysM"
+    "TrimStart"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue aKeysM(Meta.Types.IKeyValue)"
+        "Meta.Types.Map TrimStart(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "init"
+    "If"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "System.Object init(System.Object, Meta.Types.IMap)"
+        "System.Object If(Meta.Types.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "iAddII"
+    "Add"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer iAddII(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "iSubtractII"
+    "Subtract"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer iSubtractII(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "iMultiplyII"
+    "Multiply"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer iMultiplyII(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "iDivideII"
+    "Divide"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer iDivideII(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "bSmallerII"
+    "Smaller"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean bSmallerII(Meta.Types.Integer, Meta.Types.Integer)"
+        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "bGreaterII"
+    "Greater"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean bGreaterII(Meta.Types.Integer, Meta.Types.Integer)"
+        "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
-    "bOrII"
+    "BitwiseOr"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer bOrII(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Integer BitwiseOr(Meta.Types.Integer, Meta.Types.Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "nestedClassTest"
@@ -195,7 +202,7 @@ Entry (DictionaryEntry)
                       Key (Map):
                         "literal"
                       Value (Map):
-                        "iAddII"
+                        "Add"
             Entry (DictionaryEntry)
               Key (Map):
                 "argument"
@@ -1897,7 +1904,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "staticEvent"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.Object Invoke(System.Object)"
 Entry (DictionaryEntry)
@@ -1924,7 +1931,7 @@ Entry (DictionaryEntry)
   Key (Map):
     "instanceEvent"
   Value (NetMethod):
-    arMtbOverloadedMethods (MethodBase[]):
+    overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Int32 Invoke(Int32)"
 Entry (DictionaryEntry)
@@ -2232,7 +2239,7 @@ Entry (DictionaryEntry)
                                   Key (Map):
                                     "literal"
                                   Value (Map):
-                                    "bSmallerII"
+                                    "Smaller"
                         Entry (DictionaryEntry)
                           Key (Map):
                             "argument"
@@ -2409,7 +2416,7 @@ Entry (DictionaryEntry)
                                                                       Key (Map):
                                                                         "literal"
                                                                       Value (Map):
-                                                                        "iAddII"
+                                                                        "Add"
                                                             Entry (DictionaryEntry)
                                                               Key (Map):
                                                                 "argument"

@@ -2,9 +2,8 @@
 //	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
 //
 //	This program is free software; you can redistribute it and/or
-//	modify it under the terms of the GNU General Public License
-//	as published by the Free Software Foundation; either version 2
-//	of the License, or (at your option) any later version.
+//	modify it under the terms of the GNU General Public License version 2
+//	as published by the Free Software Foundation.
 //
 //	This program is distributed in the hope that it will be useful,
 //	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -367,11 +366,11 @@ statement:
 
 					// TODO: Simplify!!, use astFactory
 				    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
-				    autokeyToken.setLine(#statement.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-				    autokeyToken.setColumn(#statement.Extent.startColumn); 
-				    autokeyToken.FileName=#statement.Extent.fileName;
-				    autokeyToken.EndLine=#statement.Extent.endLine;
-				    autokeyToken.EndColumn=#statement.Extent.endColumn;
+				    autokeyToken.setLine(#statement.Extent.StartLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+				    autokeyToken.setColumn(#statement.Extent.StartColumn); 
+				    autokeyToken.FileName=#statement.Extent.FileName;
+				    autokeyToken.EndLine=#statement.Extent.EndLine;
+				    autokeyToken.EndColumn=#statement.Extent.EndColumn;
 				    MetaAST autokeyAst=new MetaAST(autokeyToken);
 				    autokeyAst.setText(Counters.autokey.Peek().ToString());
             #statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
@@ -421,11 +420,11 @@ delayedImplementation:
 		// TODO: Simplify this, factor this out into a method? Add some functionality for this stuff? Maybe to MetAST?
 		MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
 		
-		runToken.setLine(#delayedImplementation.Extent.startLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-		runToken.setColumn(#delayedImplementation.Extent.startColumn); 
-		runToken.FileName=#delayedImplementation.Extent.fileName;
-		runToken.EndLine=#delayedImplementation.Extent.endLine;
-		runToken.EndColumn=#delayedImplementation.Extent.endColumn;
+		runToken.setLine(#delayedImplementation.Extent.StartLine); // TODO: Not sure this is the best way to do it, or if it's even correct
+		runToken.setColumn(#delayedImplementation.Extent.StartColumn); 
+		runToken.FileName=#delayedImplementation.Extent.FileName;
+		runToken.EndLine=#delayedImplementation.Extent.EndLine;
+		runToken.EndColumn=#delayedImplementation.Extent.EndColumn;
 		
 		
 		MetaAST runAst=new MetaAST(runToken);
@@ -551,8 +550,8 @@ statement
 		val=expression
 		{
 			//Map statement=new Map();
-			statement[Statement.mKey]=k;
-			statement[Statement.mValue]=val;// TODO: Add Extent to statements, too?
+			statement[Strings.Key]=k;
+			statement[Strings.Value]=val;// TODO: Add Extent to statements, too?
 		}
 	)
 	;
@@ -569,12 +568,12 @@ statementSearch // maybe somehow combine this with "statement", if possible, not
 		val=expression
 		{
 			//Map statement=new Map();
-			statement[Statement.mKey]=k;
-			statement[Statement.mValue]=val;// TODO: Add Extent to statements, too?
+			statement[Strings.Key]=k;
+			statement[Strings.Value]=val;// TODO: Add Extent to statements, too?
 		}
 	)
 	{
-		statement[Statement.mSearch]=new Integer(1);
+		statement[Strings.Search]=new Integer(1);
 	}
 	;
 map
@@ -596,7 +595,7 @@ map
     )*
   )
   {
-    result[Program.sProgram]=statements;
+    result[Strings.Program]=statements;
   };
 
 call
@@ -616,9 +615,9 @@ call
       argument=expression
     )
     {
-      call[Call.sFunction]=delayed;
-      call[Call.sArgument]=argument;
-      result[Call.sCall]=call;
+      call[Strings.Function]=delayed;
+      call[Strings.Argument]=argument;
+      result[Strings.Call]=call;
     }
   );
 
@@ -643,7 +642,7 @@ select
     )
   )
   {
-    result[Select.mSelect]=selection;
+    result[Strings.Select]=selection;
   };
 
 
@@ -657,7 +656,7 @@ search
 	}:
 	#(SEARCH e=expression)
 	{
-		result[Search.sSearch]=e;
+		result[Strings.Search]=e;
 	}
 	;
  
@@ -671,7 +670,7 @@ literal
   }:
   token:LITERAL
   {
-    result[Literal.sLiteral]=new Map(token.getText());
+    result[Strings.Literal]=new Map(token.getText());
   };
 
 //TODO: is this even needed anymore?
@@ -681,14 +680,14 @@ delayed
         result=new Map();
         result.Extent=#delayed.Extent;
         Map mExpression;
-        Map mRun=new Map();
+        //Map Strings.Run=new Map();
     }:
     #(FUNCTION mExpression=expression)
     {
-				//mRun[Expression.mRun]=mExpression;
-        result[Delayed.sDelayed]=mExpression;
-//				mRun[Expression.mRun]=mExpression;
-//        result[Delayed.sDelayed]=mRun;
+				//Strings.Run[Strings.Run]=mExpression;
+        result[Strings.Delayed]=mExpression;
+//				Strings.Run[Strings.Run]=mExpression;
+//        result[Strings.Delayed]=Strings.Run;
     };
 
 /*delayedExpressionOnly
@@ -699,6 +698,6 @@ delayed
     }:
     #(DELAYED_EXPRESSION_ONLY mExpression=expression)
     {
-			result[Delayed.sDelayed]=mExpression;
+			result[Strings.Delayed]=mExpression;
 			//result.Extent=#delayedExpressionOnly.Extent;
     };*/
