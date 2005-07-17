@@ -312,3 +312,11 @@ documentedFunction=
 	doc="This function returns 'hello ."
 	#"hello"
 docFunctionResult=documentedFunction""
+[returnArg
+	x="1"
+	y="2"
+]="hello"
+functionAndMapInLookupTest=[
+	x="1"
+	y="2"
+]

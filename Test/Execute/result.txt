@@ -2792,3 +2792,22 @@ Entry (DictionaryEntry)
     "docFunctionResult"
   Value (Map):
     "hello"
+Entry (DictionaryEntry)
+  Key (Map):
+    Entry (DictionaryEntry)
+      Key (Map):
+        "x"
+      Value (Integer):
+        "1"
+    Entry (DictionaryEntry)
+      Key (Map):
+        "y"
+      Value (Integer):
+        "2"
+  Value (Map):
+    "hello"
+Entry (DictionaryEntry)
+  Key (Map):
+    "functionAndMapInLookupTest"
+  Value (Map):
+    "hello"
