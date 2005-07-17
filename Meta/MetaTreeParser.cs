@@ -63,11 +63,11 @@ namespace Meta.Parser
 		public const int POINT = 23;
 		public const int LITERAL_KEY = 24;
 		public const int LITERAL = 25;
-		public const int SPACES = 26;
-		public const int LINE = 27;
-		public const int SPACE = 28;
-		public const int NEWLINE = 29;
-		public const int NEWLINE_KEEP_TEXT = 30;
+		public const int LINE = 26;
+		public const int SPACE = 27;
+		public const int NEWLINE = 28;
+		public const int NEWLINE_KEEP_TEXT = 29;
+		public const int SPACES = 30;
 		
 		public MetaTreeParser()
 		{
@@ -147,7 +147,7 @@ namespace Meta.Parser
 		Map argument=new Map();
 		
 		
-		AST __t133 = _t;
+		AST __t136 = _t;
 		MetaAST tmp19_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,CALL);
 		_t = _t.getFirstChild();
@@ -164,7 +164,7 @@ namespace Meta.Parser
 		call[Strings.Argument]=argument;
 		result[Strings.Call]=call;
 		
-		_t = __t133;
+		_t = __t136;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return result;
@@ -183,7 +183,7 @@ namespace Meta.Parser
 		int counter=1;
 		
 		
-		AST __t128 = _t;
+		AST __t131 = _t;
 		MetaAST tmp20_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,MAP);
 		_t = _t.getFirstChild();
@@ -224,13 +224,13 @@ namespace Meta.Parser
 				}
 				else
 				{
-					goto _loop131_breakloop;
+					goto _loop134_breakloop;
 				}
 				
 			}
-_loop131_breakloop:			;
+_loop134_breakloop:			;
 		}    // ( ... )*
-		_t = __t128;
+		_t = __t131;
 		_t = _t.getNextSibling();
 		
 		result[Strings.Program]=statements;
@@ -252,13 +252,13 @@ _loop131_breakloop:			;
 		int counter=1;
 		
 		
-		AST __t137 = _t;
+		AST __t140 = _t;
 		MetaAST tmp21_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SELECT);
 		_t = _t.getFirstChild();
 		{
 			{ // ( ... )+
-			int _cnt140=0;
+			int _cnt143=0;
 			for (;;)
 			{
 				if (_t == null)
@@ -274,15 +274,15 @@ _loop131_breakloop:			;
 				}
 				else
 				{
-					if (_cnt140 >= 1) { goto _loop140_breakloop; } else { throw new NoViableAltException(_t);; }
+					if (_cnt143 >= 1) { goto _loop143_breakloop; } else { throw new NoViableAltException(_t);; }
 				}
 				
-				_cnt140++;
+				_cnt143++;
 			}
-_loop140_breakloop:			;
+_loop143_breakloop:			;
 			}    // ( ... )+
 		}
-		_t = __t137;
+		_t = __t140;
 		_t = _t.getNextSibling();
 		
 		result[Strings.Select]=selection;
@@ -303,13 +303,13 @@ _loop140_breakloop:			;
 				Map e=null;
 			
 		
-		AST __t142 = _t;
+		AST __t145 = _t;
 		MetaAST tmp22_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SEARCH);
 		_t = _t.getFirstChild();
 		e=expression(_t);
 		_t = retTree_;
-		_t = __t142;
+		_t = __t145;
 		_t = _t.getNextSibling();
 		
 				result[Strings.Search]=e;
@@ -351,13 +351,13 @@ _loop140_breakloop:			;
 		//Map Strings.Run=new Map();
 		
 		
-		AST __t145 = _t;
+		AST __t148 = _t;
 		MetaAST tmp23_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,FUNCTION);
 		_t = _t.getFirstChild();
 		mExpression=expression(_t);
 		_t = retTree_;
-		_t = __t145;
+		_t = __t148;
 		_t = _t.getNextSibling();
 		
 						//Strings.Run[Strings.Run]=mExpression;
@@ -380,12 +380,12 @@ _loop140_breakloop:			;
 				Map e=null;
 			
 		
-		AST __t120 = _t;
+		AST __t123 = _t;
 		MetaAST tmp24_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,KEY);
 		_t = _t.getFirstChild();
 		{ // ( ... )+
-		int _cnt122=0;
+		int _cnt125=0;
 		for (;;)
 		{
 			if (_t == null)
@@ -401,14 +401,14 @@ _loop140_breakloop:			;
 			}
 			else
 			{
-				if (_cnt122 >= 1) { goto _loop122_breakloop; } else { throw new NoViableAltException(_t);; }
+				if (_cnt125 >= 1) { goto _loop125_breakloop; } else { throw new NoViableAltException(_t);; }
 			}
 			
-			_cnt122++;
+			_cnt125++;
 		}
-_loop122_breakloop:		;
+_loop125_breakloop:		;
 		}    // ( ... )+
-		_t = __t120;
+		_t = __t123;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return result;
@@ -426,7 +426,7 @@ _loop122_breakloop:		;
 				Map k=null;
 			
 		
-		AST __t124 = _t;
+		AST __t127 = _t;
 		MetaAST tmp25_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,STATEMENT);
 		_t = _t.getFirstChild();
@@ -439,7 +439,7 @@ _loop122_breakloop:		;
 					statement[Strings.Key]=k;
 					statement[Strings.Value]=val;// TODO: Add Extent to statements, too?
 				
-		_t = __t124;
+		_t = __t127;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return statement;
@@ -457,7 +457,7 @@ _loop122_breakloop:		;
 				Map k=null;
 			
 		
-		AST __t126 = _t;
+		AST __t129 = _t;
 		MetaAST tmp26_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,STATEMENT_SEARCH);
 		_t = _t.getFirstChild();
@@ -470,7 +470,7 @@ _loop122_breakloop:		;
 					statement[Strings.Key]=k;
 					statement[Strings.Value]=val;// TODO: Add Extent to statements, too?
 				
-		_t = __t126;
+		_t = __t129;
 		_t = _t.getNextSibling();
 		
 				statement[Strings.Search]=new Integer(1);
@@ -512,11 +512,11 @@ _loop122_breakloop:		;
 		@"""POINT""",
 		@"""LITERAL_KEY""",
 		@"""LITERAL""",
-		@"""SPACES""",
 		@"""LINE""",
 		@"""SPACE""",
 		@"""NEWLINE""",
-		@"""NEWLINE_KEEP_TEXT"""
+		@"""NEWLINE_KEEP_TEXT""",
+		@"""SPACES"""
 	};
 	
 	private static long[] mk_tokenSet_0_()

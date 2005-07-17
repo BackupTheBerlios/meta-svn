@@ -172,8 +172,8 @@ LITERAL:
 	)
   ;
   
-SPACES:
-  (' ')+ ;//{_ttype=Token.SKIP;}
+//SPACES:
+//  (' ')+ ;//{_ttype=Token.SKIP;}
   
  
   
@@ -213,7 +213,7 @@ LINE		// everything in one rule because of indeterminisms
 			)
 		)*
 		NEWLINE
-	)=> // TODO: ! is unnecessary
+	)=>
 	(
 		('\t')*
 		"//"
@@ -229,6 +229,12 @@ LINE		// everything in one rule because of indeterminisms
 	{
 		$setType(Token.SKIP);
 	}
+	|
+	((' ')+)=>
+	(' ')+
+	{
+		$setType(MetaLexerTokenTypes.SPACES);
+	}  
 	// indentation
 	|
 	(
