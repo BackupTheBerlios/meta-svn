@@ -287,11 +287,15 @@ loop=
 				#loop Add
 					arg
 					"1"
+				 
 			0=
 				#arg
 		this=whileBranches.[whileDecision] arg
 whileCounter=loop "3"
+
+	
 returnInMap=
+					
 	#
 		result=arg
 literalAsArgument=returnInMap	 "1"				   

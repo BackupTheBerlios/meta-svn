@@ -229,7 +229,20 @@ LINE		// everything in one rule because of indeterminisms
 	{
 		$setType(Token.SKIP);
 	}
-
+	|(
+		('\t'!|' '!)* 
+		NEWLINE
+		('\t'!|' '!)* 
+		NEWLINE
+	)=>
+	(
+		('\t'!|' '!)* 
+		NEWLINE
+		('\t'!|' '!)* 
+	)
+	{
+		$setType(Token.SKIP);
+	}
 	// indentation
 	|
 	(('\t'!|' '!)*
