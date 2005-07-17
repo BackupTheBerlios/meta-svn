@@ -294,7 +294,7 @@ whileCounter=loop "3"
 returnInMap=
 	#
 		result=arg
-literalAsArgument=returnInMap "1"
+literalAsArgument=returnInMap	 "1"				   
 returnFunction=
 	#
 		#"functionResult"

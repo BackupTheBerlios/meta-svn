@@ -11553,13 +11553,13 @@ Schwaenzchen in die Hoeh.
       argument (Literal):
         Extent (Extent):
           EndColumn (Int32):
-            "34"
+            "35"
           EndLine (Int32):
             "297"
           FileName (String):
             "basicTest.meta"
           StartColumn (Int32):
-            "31"
+            "32"
           StartLine (Int32):
             "297"
         literal (Integer):
@@ -11592,7 +11592,7 @@ Schwaenzchen in die Hoeh.
             "returnInMap"
       Extent (Extent):
         EndColumn (Int32):
-          "34"
+          "35"
         EndLine (Int32):
           "297"
         FileName (String):

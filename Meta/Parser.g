@@ -229,22 +229,26 @@ LINE		// everything in one rule because of indeterminisms
 	{
 		$setType(Token.SKIP);
 	}
-	|
-	((' ')+)=>
-	(' ')+
-	{
-		$setType(MetaLexerTokenTypes.SPACES);
-	}  
+
 	// indentation
 	|
+	(('\t'!|' '!)*
+		NEWLINE)=>
 	(
-		('\t'!)* // throw away tabs at the end of prior line
+		('\t'!|' '!)* // throw away tabs and spaces at the end of old line
 		NEWLINE
 		('\t')* // keep tabs at the beginning of the new line
 	)
 	{
 		_ttype=MetaLexerTokenTypes.INDENTATION;
-	}; 
+	}
+	|
+	//((' '|'\t')+)=>
+	(' '|'\t')+
+	{
+		$setType(MetaLexerTokenTypes.SPACES);
+	}  	
+	; 
 
  
 protected   

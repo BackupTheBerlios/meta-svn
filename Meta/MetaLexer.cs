@@ -709,30 +709,43 @@ _loop52_breakloop:						;
 			}
 			else {
 				bool synPredMatched56 = false;
-				if (((LA(1)==' ')))
+				if (((tokenSet_5_.member(LA(1))) && (true)))
 				{
 					int _m56 = mark();
 					synPredMatched56 = true;
 					inputState.guessing++;
 					try {
 						{
-							{ // ( ... )+
-							int _cnt55=0;
-							for (;;)
-							{
-								if ((LA(1)==' '))
+							{    // ( ... )*
+								for (;;)
 								{
-									match(' ');
+									switch ( LA(1) )
+									{
+									case '\t':
+									{
+										int _saveIndex = 0;
+										_saveIndex = text.Length;
+										match('\t');
+										text.Length = _saveIndex;
+										break;
+									}
+									case ' ':
+									{
+										int _saveIndex = 0;
+										_saveIndex = text.Length;
+										match(' ');
+										text.Length = _saveIndex;
+										break;
+									}
+									default:
+									{
+										goto _loop55_breakloop;
+									}
+									 }
 								}
-								else
-								{
-									if (_cnt55 >= 1) { goto _loop55_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
-								}
-								
-								_cnt55++;
-							}
-_loop55_breakloop:							;
-							}    // ( ... )+
+_loop55_breakloop:								;
+							}    // ( ... )*
+							mNEWLINE(false);
 						}
 					}
 					catch (RecognitionException)
@@ -744,49 +757,35 @@ _loop55_breakloop:							;
 				}
 				if ( synPredMatched56 )
 				{
-					{ // ( ... )+
-					int _cnt58=0;
-					for (;;)
-					{
-						if ((LA(1)==' '))
-						{
-							match(' ');
-						}
-						else
-						{
-							if (_cnt58 >= 1) { goto _loop58_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
-						}
-						
-						_cnt58++;
-					}
-_loop58_breakloop:					;
-					}    // ( ... )+
-					if (0==inputState.guessing)
-					{
-						
-								_ttype = MetaLexerTokenTypes.SPACES;
-							
-					}
-				}
-				else if ((LA(1)=='\t'||LA(1)=='\n'||LA(1)=='\r') && (true)) {
 					{
 						{    // ( ... )*
 							for (;;)
 							{
-								if ((LA(1)=='\t'))
+								switch ( LA(1) )
+								{
+								case '\t':
 								{
 									int _saveIndex = 0;
 									_saveIndex = text.Length;
 									match('\t');
 									text.Length = _saveIndex;
+									break;
 								}
-								else
+								case ' ':
 								{
-									goto _loop61_breakloop;
+									int _saveIndex = 0;
+									_saveIndex = text.Length;
+									match(' ');
+									text.Length = _saveIndex;
+									break;
 								}
-								
+								default:
+								{
+									goto _loop59_breakloop;
+								}
+								 }
 							}
-_loop61_breakloop:							;
+_loop59_breakloop:							;
 						}    // ( ... )*
 						mNEWLINE(false);
 						{    // ( ... )*
@@ -798,17 +797,50 @@ _loop61_breakloop:							;
 								}
 								else
 								{
-									goto _loop63_breakloop;
+									goto _loop61_breakloop;
 								}
 								
 							}
-_loop63_breakloop:							;
+_loop61_breakloop:							;
 						}    // ( ... )*
 					}
 					if (0==inputState.guessing)
 					{
 						
 								_ttype=MetaLexerTokenTypes.INDENTATION;
+							
+					}
+				}
+				else if ((LA(1)=='\t'||LA(1)==' ') && (true)) {
+					{ // ( ... )+
+					int _cnt63=0;
+					for (;;)
+					{
+						switch ( LA(1) )
+						{
+						case ' ':
+						{
+							match(' ');
+							break;
+						}
+						case '\t':
+						{
+							match('\t');
+							break;
+						}
+						default:
+						{
+							if (_cnt63 >= 1) { goto _loop63_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
+						}
+						break; }
+						_cnt63++;
+					}
+_loop63_breakloop:					;
+					}    // ( ... )+
+					if (0==inputState.guessing)
+					{
+						
+								_ttype = MetaLexerTokenTypes.SPACES;
 							
 					}
 				}
@@ -942,6 +974,14 @@ _loop63_breakloop:							;
 		return data;
 	}
 	public static readonly BitSet tokenSet_4_ = new BitSet(mk_tokenSet_4_());
+	private static long[] mk_tokenSet_5_()
+	{
+		long[] data = new long[1025];
+		data[0]=4294977024L;
+		for (int i = 1; i<=1024; i++) { data[i]=0L; }
+		return data;
+	}
+	public static readonly BitSet tokenSet_5_ = new BitSet(mk_tokenSet_5_());
 	
 }
 }
