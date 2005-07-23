@@ -4003,7 +4003,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "iNumerator"
+                                "numerator"
                     Entry (DictionaryEntry)
                       Key (Map):
                         "value"
@@ -4029,7 +4029,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "iDenominator"
+                                "denominator"
                     Entry (DictionaryEntry)
                       Key (Map):
                         "value"
@@ -4089,7 +4089,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "iNumerator"
+                                "numerator"
                     Entry (DictionaryEntry)
                       Key (Map):
                         "value"
@@ -4115,7 +4115,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "iDenominator"
+                                "denominator"
                     Entry (DictionaryEntry)
                       Key (Map):
                         "value"
@@ -4175,7 +4175,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "iNumerator"
+                                "numerator"
                     Entry (DictionaryEntry)
                       Key (Map):
                         "value"
@@ -4201,7 +4201,7 @@ Entry (DictionaryEntry)
                               Key (Map):
                                 "literal"
                               Value (Map):
-                                "iDenominator"
+                                "denominator"
                     Entry (DictionaryEntry)
                       Key (Map):
                         "value"

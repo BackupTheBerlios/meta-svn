@@ -172,7 +172,7 @@ Entry (DictionaryEntry)
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer BitwiseOr(Meta.Types.Integer, Meta.Types.Integer)"
+        "Meta.Types.Integer BitwiseOr(Meta.Types.Integer[])"
 Entry (DictionaryEntry)
   Key (Map):
     "nestedClassTest"

@@ -4940,7 +4940,7 @@ statements (ArrayList):
     expression (Program):
       Extent (Extent):
         EndColumn (Int32):
-          "18"
+          "17"
         EndLine (Int32):
           "142"
         FileName (String):
@@ -4954,13 +4954,13 @@ statements (ArrayList):
           expression (Literal):
             Extent (Extent):
               EndColumn (Int32):
-                "16"
+                "15"
               EndLine (Int32):
                 "141"
               FileName (String):
                 "basicTest.meta"
               StartColumn (Int32):
-                "13"
+                "12"
               StartLine (Int32):
                 "141"
             literal (Integer):
@@ -4969,7 +4969,7 @@ statements (ArrayList):
             Entry (Literal)
               Extent (Extent):
                 EndColumn (Int32):
-                  "12"
+                  "11"
                 EndLine (Int32):
                   "141"
                 FileName (String):
@@ -4979,18 +4979,18 @@ statements (ArrayList):
                 StartLine (Int32):
                   "141"
               literal (Map):
-                "iNumerator"
+                "numerator"
         Entry (Statement)
           expression (Literal):
             Extent (Extent):
               EndColumn (Int32):
-                "18"
+                "17"
               EndLine (Int32):
                 "142"
               FileName (String):
                 "basicTest.meta"
               StartColumn (Int32):
-                "15"
+                "14"
               StartLine (Int32):
                 "142"
             literal (Integer):
@@ -4999,7 +4999,7 @@ statements (ArrayList):
             Entry (Literal)
               Extent (Extent):
                 EndColumn (Int32):
-                  "14"
+                  "13"
                 EndLine (Int32):
                   "142"
                 FileName (String):
@@ -5009,7 +5009,7 @@ statements (ArrayList):
                 StartLine (Int32):
                   "142"
               literal (Map):
-                "iDenominator"
+                "denominator"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -5043,7 +5043,7 @@ statements (ArrayList):
     expression (Program):
       Extent (Extent):
         EndColumn (Int32):
-          "18"
+          "17"
         EndLine (Int32):
           "145"
         FileName (String):
@@ -5057,13 +5057,13 @@ statements (ArrayList):
           expression (Literal):
             Extent (Extent):
               EndColumn (Int32):
-                "16"
+                "15"
               EndLine (Int32):
                 "144"
               FileName (String):
                 "basicTest.meta"
               StartColumn (Int32):
-                "13"
+                "12"
               StartLine (Int32):
                 "144"
             literal (Integer):
@@ -5072,7 +5072,7 @@ statements (ArrayList):
             Entry (Literal)
               Extent (Extent):
                 EndColumn (Int32):
-                  "12"
+                  "11"
                 EndLine (Int32):
                   "144"
                 FileName (String):
@@ -5082,18 +5082,18 @@ statements (ArrayList):
                 StartLine (Int32):
                   "144"
               literal (Map):
-                "iNumerator"
+                "numerator"
         Entry (Statement)
           expression (Literal):
             Extent (Extent):
               EndColumn (Int32):
-                "18"
+                "17"
               EndLine (Int32):
                 "145"
               FileName (String):
                 "basicTest.meta"
               StartColumn (Int32):
-                "15"
+                "14"
               StartLine (Int32):
                 "145"
             literal (Integer):
@@ -5102,7 +5102,7 @@ statements (ArrayList):
             Entry (Literal)
               Extent (Extent):
                 EndColumn (Int32):
-                  "14"
+                  "13"
                 EndLine (Int32):
                   "145"
                 FileName (String):
@@ -5112,7 +5112,7 @@ statements (ArrayList):
                 StartLine (Int32):
                   "145"
               literal (Map):
-                "iDenominator"
+                "denominator"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -5146,7 +5146,7 @@ statements (ArrayList):
     expression (Program):
       Extent (Extent):
         EndColumn (Int32):
-          "18"
+          "17"
         EndLine (Int32):
           "148"
         FileName (String):
@@ -5160,13 +5160,13 @@ statements (ArrayList):
           expression (Literal):
             Extent (Extent):
               EndColumn (Int32):
-                "16"
+                "15"
               EndLine (Int32):
                 "147"
               FileName (String):
                 "basicTest.meta"
               StartColumn (Int32):
-                "13"
+                "12"
               StartLine (Int32):
                 "147"
             literal (Integer):
@@ -5175,7 +5175,7 @@ statements (ArrayList):
             Entry (Literal)
               Extent (Extent):
                 EndColumn (Int32):
-                  "12"
+                  "11"
                 EndLine (Int32):
                   "147"
                 FileName (String):
@@ -5185,18 +5185,18 @@ statements (ArrayList):
                 StartLine (Int32):
                   "147"
               literal (Map):
-                "iNumerator"
+                "numerator"
         Entry (Statement)
           expression (Literal):
             Extent (Extent):
               EndColumn (Int32):
-                "18"
+                "17"
               EndLine (Int32):
                 "148"
               FileName (String):
                 "basicTest.meta"
               StartColumn (Int32):
-                "15"
+                "14"
               StartLine (Int32):
                 "148"
             literal (Integer):
@@ -5205,7 +5205,7 @@ statements (ArrayList):
             Entry (Literal)
               Extent (Extent):
                 EndColumn (Int32):
-                  "14"
+                  "13"
                 EndLine (Int32):
                   "148"
                 FileName (String):
@@ -5215,7 +5215,7 @@ statements (ArrayList):
                 StartLine (Int32):
                   "148"
               literal (Map):
-                "iDenominator"
+                "denominator"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):

@@ -107,7 +107,14 @@ namespace Meta
 		{
 			public override object EvaluateImplementation(IMap parent)
 			{
-				return ((ICallable)callable.Evaluate(parent)).Call(Interpreter.Clone(argument.Evaluate(parent)));
+				try
+				{
+					return ((ICallable)callable.Evaluate(parent)).Call(Interpreter.Clone(argument.Evaluate(parent)));
+				}
+				catch(Exception e)
+				{
+					throw new MetaException(e,this.Extent);
+				}
 			}
 			public Call(Map code)
 			{
@@ -965,10 +972,10 @@ namespace Meta
 					public override object Convert(object toConvert, out bool isConverted)
 					{
 						Map map=(Map)toConvert;
-						if(map[new Map("iNumerator")] is Integer && map[new Map("iDenominator")] is Integer)
+						if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
 						{
 							isConverted=true;
-							return ((decimal)((Integer)map[new Map("iNumerator")]).LongValue())/((decimal)((Integer)map[new Map("iDenominator")]).LongValue());
+							return ((decimal)((Integer)map[new Map("numerator")]).LongValue())/((decimal)((Integer)map[new Map("denominator")]).LongValue());
 						}
 						else
 						{
@@ -988,10 +995,10 @@ namespace Meta
 					public override object Convert(object toConvert, out bool isConverted)
 					{
 						Map map=(Map)toConvert;
-						if(map[new Map("iNumerator")] is Integer && map[new Map("iDenominator")] is Integer)
+						if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
 						{
 							isConverted=true;
-							return ((double)((Integer)map[new Map("iNumerator")]).LongValue())/((double)((Integer)map[new Map("iDenominator")]).LongValue());
+							return ((double)((Integer)map[new Map("numerator")]).LongValue())/((double)((Integer)map[new Map("denominator")]).LongValue());
 						}
 						else
 						{
@@ -1013,10 +1020,10 @@ namespace Meta
 					public override object Convert(object toConvert, out bool isConverted)
 					{
 						Map map=(Map)toConvert;
-						if(map[new Map("iNumerator")] is Integer && map[new Map("iDenominator")] is Integer)
+						if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
 						{
 							isConverted=true;
-							return ((float)((Integer)map[new Map("iNumerator")]).LongValue())/((float)((Integer)map[new Map("iDenominator")]).LongValue());
+							return ((float)((Integer)map[new Map("numerator")]).LongValue())/((float)((Integer)map[new Map("denominator")]).LongValue());
 						}
 						else
 						{
@@ -1163,6 +1170,11 @@ namespace Meta
 			public MetaException(Extent extent)
 			{
 				this.extent=extent;
+			}
+			public MetaException(string message,Extent extent)
+			{
+				this.extent=extent;
+				this.message=message;
 			}
 			public MetaException(Exception exception,Extent extent):base(exception.Message,exception)
 			{ // not really all that logical, but so what
@@ -2283,7 +2295,7 @@ namespace Meta
 						Array arguments=Array.CreateInstance(type,argument.Array.Count);
 						for(int i=0;i<argument.Count;i++)
 						{
-							arguments.SetValue(argument[i],i);
+							arguments.SetValue(argument[new Integer(i+1)],i);
 						}
 						return arguments;
 					}
@@ -2327,7 +2339,7 @@ namespace Meta
 
 			public object Call(object argument)
 			{
-				if(this.name.Equals("WriteLine"))
+				if(this.name.Equals("BitwiseOr"))
 				{
 					int asdf=0;
 				}
@@ -2380,7 +2392,7 @@ namespace Meta
 					}
 					if(aMtifRightNumberArguments.Count==0)
 					{
-						int asdf=0;//throw new ApplicationException("No methods with the right number of arguments.");// TODO: Just a quickfix, really
+						throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");// TODO: Just a quickfix, really
 					}
 					foreach(MethodBase method in aMtifRightNumberArguments)
 					{

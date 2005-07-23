@@ -38,7 +38,16 @@ public class math
 	public static bool Greater(Integer x,Integer y) {
 		return x>y;
 	}
-	public static Integer BitwiseOr(Integer x,Integer y) {
-		return x|y;
+	public static Integer BitwiseOr(params Integer[] integers)
+	{
+		Integer result=new Integer(0);
+		foreach(Integer i in integers)
+		{
+			result|=i;
+		}
+		return result;
 	}
+//	public static Integer BitwiseOr(Integer x,Integer y) {
+//		return x|y;
+//	}
 }
