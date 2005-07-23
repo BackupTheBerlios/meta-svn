@@ -294,7 +294,7 @@ Entry (DictionaryEntry)
                                       Key (Map):
                                         "literal"
                                       Value (Map):
-                                        "programFlow"
+                                        "logic"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "3"
@@ -324,7 +324,7 @@ Entry (DictionaryEntry)
                                       Key (Map):
                                         "literal"
                                       Value (Map):
-                                        "logic"
+                                        "map"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "4"
@@ -342,36 +342,6 @@ Entry (DictionaryEntry)
                                         "literal"
                                       Value (Map):
                                         "4"
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "value"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Map):
-                                    "search"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
-                                        "map"
-                        Entry (DictionaryEntry)
-                          Key (Integer):
-                            "5"
-                          Value (Map):
-                            Entry (DictionaryEntry)
-                              Key (Map):
-                                "key"
-                              Value (Map):
-                                Entry (DictionaryEntry)
-                                  Key (Integer):
-                                    "1"
-                                  Value (Map):
-                                    Entry (DictionaryEntry)
-                                      Key (Map):
-                                        "literal"
-                                      Value (Map):
-                                        "5"
                             Entry (DictionaryEntry)
                               Key (Map):
                                 "value"
