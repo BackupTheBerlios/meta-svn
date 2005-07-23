@@ -28,56 +28,56 @@ Entry (DictionaryEntry)
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean And(Meta.Types.Map)"
+        "Boolean And(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Or"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean Or(Meta.Types.Map)"
+        "Boolean Or(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Merge"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue Merge(Meta.Types.Map)"
+        "Meta.IKeyValue Merge(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Keys"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.IKeyValue Keys(Meta.Types.IKeyValue)"
+        "Meta.IKeyValue Keys(Meta.IKeyValue)"
 Entry (DictionaryEntry)
   Key (Map):
     "Foreach"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map Foreach(Meta.Types.Map, Meta.Types.Map)"
+        "Meta.Map Foreach(Meta.Map, Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Length"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Int32 Length(Meta.Types.Map)"
+        "Int32 Length(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Apply"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map Apply(Meta.Types.Map, Meta.Types.Map)"
+        "Meta.Map Apply(Meta.Map, Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Init"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "System.Object Init(System.Object, Meta.Types.IMap)"
+        "System.Object Init(System.Object, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (Map):
     "interpreter"
@@ -95,84 +95,84 @@ Entry (DictionaryEntry)
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map Join(Meta.Types.Map)"
+        "Meta.Map Join(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "ContainsKey"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean ContainsKey(Meta.Types.Map, System.Object)"
+        "Boolean ContainsKey(Meta.Map, System.Object)"
 Entry (DictionaryEntry)
   Key (Map):
     "Remove"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map Remove(System.Object, Meta.Types.Map)"
+        "Meta.Map Remove(System.Object, Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "TrimStart"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Map TrimStart(Meta.Types.Map)"
+        "Meta.Map TrimStart(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "If"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "System.Object If(Meta.Types.Map)"
+        "System.Object If(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Add"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Add(Meta.Types.Integer, Meta.Types.Integer)"
+        "Integer Add(Integer, Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "Subtract"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Subtract(Meta.Types.Integer, Meta.Types.Integer)"
+        "Integer Subtract(Integer, Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "Multiply"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Multiply(Meta.Types.Integer, Meta.Types.Integer)"
+        "Integer Multiply(Integer, Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "Divide"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer Divide(Meta.Types.Integer, Meta.Types.Integer)"
+        "Integer Divide(Integer, Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "Smaller"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean Smaller(Meta.Types.Integer, Meta.Types.Integer)"
+        "Boolean Smaller(Integer, Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "Greater"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean Greater(Meta.Types.Integer, Meta.Types.Integer)"
+        "Boolean Greater(Integer, Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "BitwiseOr"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Types.Integer BitwiseOr(Meta.Types.Integer[])"
+        "Integer BitwiseOr(Integer[])"
 Entry (DictionaryEntry)
   Key (Map):
     "nestedClassTest"
