@@ -1,0 +1,185 @@
+this=map.Merge
+	parent
+	programFlow
+	logic
+	map
+	math
+	System
+	System.IO
+	System.Windows.Forms
+	System.Drawing
+ChooseOpenFile=!
+	dialog=OpenFileDialog'
+	dialog.ShowDialog'
+	this=dialog.FileName
+ChooseSaveFile=!
+	dialog=SaveFileDialog'
+	dialog.ShowDialog'
+	this=dialog.FileName
+SaveAs=!
+	SaveAsFileName=ChooseSaveFile'
+	If
+		Not Equal
+			SaveAsFileName
+			'
+		!
+			fileName:SaveAsFileName
+			WriteFile
+				fileName
+				editor.GetText'
+WriteFile=!
+	writer=StreamWriter arg.1
+	writer.Write arg.2
+	writer.Close'
+fileName='
+Save=!If
+	Equal
+		fileName
+		'
+	!SaveAs'
+	!WriteFile
+		fileName
+		editor.GetText'
+ReadFile=!
+	reader=StreamReader arg
+	result=reader.ReadToEnd'
+	reader.Close'
+	this=result
+OpenFile=!
+	openFileName=ChooseOpenFile'
+	If
+		Not Equal
+			openFileName
+			'
+		!
+			fileName:openFileName
+			editor.SetRealText ReadFile fileName
+keyBindings=
+	[Keys.Escape]=!editor.StopInteractiveSearch""
+	[Keys.Alt]=
+		[Keys.K]=!editor.MoveLineDown'
+		[Keys.L]=!editor.MoveLineUp'
+		[Keys.Oemtilde]=!editor.MoveCharRight'
+		[Keys.J]=!editor.MoveCharLeft'
+	[BitwiseOr
+		Keys.Alt
+		Keys.Control
+	]=
+		[Keys.J]=!editor.control.MoveWordLeft'
+		[Keys.Oemtilde]=!editor.control.MoveWordRight'
+	[BitwiseOr
+		Keys.Alt
+		Keys.Control
+		Keys.Shift
+	]=
+		[Keys.J]=!editor.control.SelectWordLeft'
+		[Keys.Oemtilde]=!editor.control.SelectWordRight'
+		[Keys.K]=!editor.control.SelectLineUp'
+		[Keys.J]=!editor.control.SelectLineDown'
+	[Keys.F5]=!RunProgram'
+	[Keys.Control]=
+		[Keys.S]=!Save'
+		[Keys.I]=!editor.FindInteractively""
+		[Keys.F]=!editor.FindAndReplace""
+RunProgram=!
+	Save'
+	Execute fileName
+Editor=!
+	control=Init
+		ScrollingTextBox'
+		=
+			ShowSelectionMargin='1
+			AcceptsTab='1
+			Dock=DockStyle.Fill
+			ScrollBars=RichTextBoxScrollBars.ForcedBoth
+			KeyDown=!
+				e=arg.2
+				// maybe this should be the other way round ???
+				If
+					ContainsKey
+						keyBindings
+						e.Modifiers
+					!
+						subKey=keyBindings.[e.Modifiers]
+						If
+							ContainsKey
+								subKey
+								e.KeyCode
+							!
+								subKey.[e.KeyCode]'
+					!
+						If
+							ContainsKey
+								keyBindings
+								e.KeyCode
+							!keyBindings.[e.KeyCode]'
+	GetText=!control.RealText
+	FindAndReplace=!control.FindAndReplace""
+	InteractiveSearch=!control.FindInteractively""
+	StopInteractiveSearch=!control.StopInteractiveSearch""
+	SetText=!
+		control.Text:arg
+	SetRealText=!
+		control.RealText:arg
+	MoveLineDown=!
+		control.MoveLineDown'
+	MoveLineUp=!
+		control.MoveLineUp'
+	MoveCharLeft=!
+		control.MoveCharLeft'
+	MoveCharRight=!
+		control.MoveCharRight'
+Window=!
+	form=Form'
+	form.Text=arg.title
+	form.Font=arg.font
+	controls=arg.controls
+	form.Controls=Apply
+		!arg.value.control
+		arg.controls
+	form.WindowState=arg.WindowState
+	InitSubMenuItem=!Init
+		MenuItem'
+		=
+			Text=arg.key
+			Click=arg.value
+	InitMenuItem=!Init
+		MenuItem'
+		=
+			Text=arg.key
+			MenuItems=Apply
+				InitSubMenuItem
+				arg.value
+	form.Menu=Init
+		MainMenu'
+		=
+			MenuItems=Apply
+				InitMenuItem
+				arg.menu
+	Show=!
+		form.ShowDialog'
+	Close=!form.Close'
+editor=Editor'
+// rename this to something less stupid
+window=Window
+	title="Meta Editor"
+	menu=
+		File=
+			["Open..."]=!OpenFile'
+			["Save"]=Save
+			["Save as..."]=SaveAs
+			["Close"]=!window.Close'
+		Program=
+			Start=!RunProgram'
+		Debug=
+			["Set Breakpoint"]=!'
+	font=Font
+		"Courier New"
+		'10
+	opacity=
+		numerator='10
+		denominator='10
+	WindowState=FormWindowState.Maximized
+	controls=
+		editor
+window.Show'
