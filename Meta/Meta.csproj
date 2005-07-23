@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "move Meta.dll ..\..\..\ibrary"
+                PostBuildEvent = ""
                 RootNamespace = "Meta"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -94,17 +94,17 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "BigInteger.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "ExtentLexerSharedInputState.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "GAC.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Integer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
