@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "WinExe"
                 PreBuildEvent = ""
-                PostBuildEvent = "move Editor.exe ..\..\..\Library"
+                PostBuildEvent = ""
                 RootNamespace = "EditorTest"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -36,7 +36,7 @@
                     NoStdLib = "false"
                     NoWarn = ""
                     Optimize = "false"
-                    OutputPath = "bin\Debug\"
+                    OutputPath = "..\Library\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
@@ -89,6 +89,11 @@
                     AssemblyName = "System.Xml"
                     HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
+                <Reference
+                    Name = "Meta"
+                    Project = "{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
@@ -126,9 +131,19 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Replace.resx"
+                    DependentUpon = "Replace.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "ScrollingTextBox.cs"
                     SubType = "Component"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ScrollingTextBox.resx"
+                    DependentUpon = "ScrollingTextBox.cs"
+                    BuildAction = "EmbeddedResource"
                 />
             </Include>
         </Files>

@@ -19,16 +19,30 @@ public class ScrollingTextBox: RichTextBox
 		this.VertScrollValueChanged+=new ScrollEventHandler(ScrollingTextBox_VertScrollValueChanged);
 		//Select(GetCharIndexFromPosition(new Point(this.Size.Width/2,this.Size.Height/2)),0);
 		this.replace=new FindAndReplace(this);
-//		replace.Owner=this.FindForm();
+		//		replace.Owner=this.FindForm();
 //		keyBindings[Keys.Control|Keys.H]=new Function(FindAndReplace);
 //		keyBindings[Keys.Control|Keys.I]=new Function(InteractiveSearch);
-
+//		keyBindings[Keys.Alt|Keys.N]=new Function(DeleteBackward);
+//		keyBindings[Keys.Alt|Keys.M]=new Function(DeleteForward);
+//		keyBindings[Keys.Alt|Keys.L]=new Function(MoveLineUp);
+//		keyBindings[Keys.Alt|Keys.Oemtilde]=new Function(MoveCharRight);
+//		keyBindings[Keys.Alt|Keys.J]=new Function(MoveCharLeft);
+//		keyBindings[Keys.Alt|Keys.Control|Keys.N]=new Function(DeleteWordLeft);
+//		keyBindings[Keys.Alt|Keys.Control|Keys.M]=new Function(DeleteWordRight);
+//		keyBindings[Keys.Escape]=new Function(StopInteractiveSearch);
+//		keyBindings[Keys.Shift|Keys.Alt|Keys.J]=new Function(SelectCharLeft);
+//		keyBindings[Keys.Shift|Keys.Alt|Keys.K]=new Function(SelectLineDown);
+//		keyBindings[Keys.Shift|Keys.Alt|Keys.L]=new Function(SelectLineUp);
+//		keyBindings[Keys.Shift|Keys.Alt|Keys.Oemtilde]=new Function(SelectCharRight);
+//		keyBindings[Keys.Shift|Keys.Alt|Keys.Control|Keys.J]=new Function(SelectWordLeft);
+		keyBindings[Keys.Shift|Keys.Alt|Keys.Control|Keys.Oemtilde]=new Function(SelectWordRight);
 		for(int i=0;i<25;i++)
 		{
 			emptyLines+="\n";
-//			emptyLines+=Environment.NewLine;
 		}
+		interactiveSearch=new InteractiveSearch((RichTextBox)this);
 	}
+
 	string emptyLines;
 	protected string TopMargin
 	{
@@ -44,22 +58,6 @@ public class ScrollingTextBox: RichTextBox
 			return emptyLines;
 		}
 	}
-	//	System.Windows.Forms.Timer timer=new System.Windows.Forms.Timer();
-//	public void Init() 
-//	{ // this is dumb, remove it
-//		//		timer.Tick+=new EventHandler(timer_Tick);
-//		//		timer.Interval=10;
-//		//		timer.Start();
-//		//		Text=indent+Text+indent;
-//
-//
-//		//		MouseWheel+=new MouseEventHandler(ScrollingTextBox_MouseWheel);
-//
-//		//this.Text="\n\n\n\n\n\n\n\n\n\n"+this.Text;
-//		//		rightTimer.Start();
-//		//		leftTimer.Start();
-//		//		verticalTimer.Start();
-//	}
 
 	private void InitializeComponent() 
 	{
@@ -76,7 +74,6 @@ public class ScrollingTextBox: RichTextBox
 		this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScrollingTextBox_MouseDown);
 		this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ScrollingTextBox_KeyPress);
 		this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ScrollingTextBox_MouseMove);
-		this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScrollingTextBox_KeyUp);
 		this.SelectionChanged += new System.EventHandler(this.ScrollingTextBox_SelectionChanged);
 
 	}
@@ -172,33 +169,52 @@ public class ScrollingTextBox: RichTextBox
 			double width=Convert.ToDouble(this.Size.Width)/2.618f;
 			double height=Convert.ToDouble(this.Size.Height)/2.618f;
 			SelectionIndent=Convert.ToInt32(width);//(height+width)/2.0f);//+Convert.ToDouble(this.Size.Height)/1.618f)/2); // idiotic
-//			SelectionIndent=Convert.ToInt32(Convert.ToDecimal(this.Size.Height)/2.618m); // idiotic
+			//			SelectionIndent=Convert.ToInt32(Convert.ToDecimal(this.Size.Height)/2.618m); // idiotic
 			Select(selectionStart,0);
 		}
 	}
-//	bool shiftB=false;
+	//	bool shiftB=false;
 
 	bool wasControlITab=false;
 	private void ScrollingTextBox_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e) 
 	{
-		if(isInteractiveFindMode) // make this its own class?
+		if(interactiveSearch.Active) // make this its own class?
 		{
-			if(!(e.KeyChar=='\t'&&wasControlITab))
-			{
-				interactiveFindText+=e.KeyChar;
-//				InteractiveSearch();
-				int findStart=SelectionStart-interactiveFindText.Length+1;
-				if(Find(interactiveFindText,findStart,RichTextBoxFinds.None)==-1)
-				{
-					Find(interactiveFindText,0,RichTextBoxFinds.None);
-				}
-			}
-			else
-			{
-				wasControlITab=false;
-			}
+			interactiveSearch.OnKeyPress(e.KeyChar);
+//			if(!(e.KeyChar=='\t'&&wasControlITab))
+//			{
+//				interactiveFindText+=e.KeyChar;
+//				//				InteractiveSearch();
+//				int findStart=SelectionStart-interactiveFindText.Length+1;
+//				if(Find(interactiveFindText,findStart,RichTextBoxFinds.None)==-1)
+//				{
+//					Find(interactiveFindText,0,RichTextBoxFinds.None);
+//				}
+//			}
+//			else
+//			{
+//				wasControlITab=false;
+//			}
 			e.Handled=true;
 		}
+//		if(isInteractiveFindMode) // make this its own class?
+//		{
+//			if(!(e.KeyChar=='\t'&&wasControlITab))
+//			{
+//				interactiveFindText+=e.KeyChar;
+//				//				InteractiveSearch();
+//				int findStart=SelectionStart-interactiveFindText.Length+1;
+//				if(Find(interactiveFindText,findStart,RichTextBoxFinds.None)==-1)
+//				{
+//					Find(interactiveFindText,0,RichTextBoxFinds.None);
+//				}
+//			}
+//			else
+//			{
+//				wasControlITab=false;
+//			}
+//			e.Handled=true;
+//		}
 		else
 		{
 			if(e.KeyChar.Equals((char)Keys.Enter)) 
@@ -212,17 +228,17 @@ public class ScrollingTextBox: RichTextBox
 				SelectedText=sTabs;
 			}
 		}
-//		if(!Char.IsControl(e.KeyChar))
-//		{
-//			string insertS=Convert.ToString(e.KeyChar);
-//			if(shiftB)
-//			{
-//				insertS=insertS.ToUpper();
-//				shiftB=false;
-//			}
-//			SelectedText=insertS;
-//			e.Handled=true;
-//		}
+		//		if(!Char.IsControl(e.KeyChar))
+		//		{
+		//			string insertS=Convert.ToString(e.KeyChar);
+		//			if(shiftB)
+		//			{
+		//				insertS=insertS.ToUpper();
+		//				shiftB=false;
+		//			}
+		//			SelectedText=insertS;
+		//			e.Handled=true;
+		//		}
 	}
 	private void ScrollingTextBox_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e) 
 	{
@@ -230,120 +246,127 @@ public class ScrollingTextBox: RichTextBox
 		{
 			wasControlITab=true;
 		}
-//		if(keyBindings.ContainsKey(e.KeyData))
-//		{
-//			((Function)keyBindings[e.KeyData])();
-//			wasControlITab=true;
-			//			e.Handled=true;
-//		}
-//		else if(e.KeyData==(Keys.Control|Keys.Back))
-//		{
-//			if(Text[SelectionStart]=='\t')
-//			{
-//				while(CurrentCharacter=='\t')
-//				{
-//					DeleteBackward();
-//				}
-//			}
-//		}
-
-		if(e.KeyCode==Keys.Escape)
+		if(keyBindings.ContainsKey(e.KeyData))
 		{
-			StopInteractiveSearch();
-//			isInteractiveFindMode=false; // make this its own class, absolutely!!
-//			interactiveFindText="";	// move all the shortcuts into Meta
+			((Function)keyBindings[e.KeyData])();
+			//			wasControlITab=true;
+			e.Handled=true;
 		}
-//			if(e.KeyCode.Equals(Keys.CapsLock)) // only for tests
-//			{
-//				SelectedText="  ";
-//				e.Handled=true;
-//			}
-		//		else if(e.KeyCode.Equals(Keys.ShiftKey)) // only for tests
+		//		else if(e.KeyData==(Keys.Control|Keys.Back))
 		//		{
-		//			MoveLineStart();
+		//			if(Text[SelectionStart]=='\t')
+		//			{
+		//				while(CurrentCharacter=='\t')
+		//				{
+		//					DeleteBackward();
+		//				}
+		//			}
 		//		}
+
+//		if(e.KeyCode==Keys.Escape)
+//		{
+//			StopInteractiveSearch();
+//		}
 		if(e.KeyCode.Equals(Keys.ControlKey)) //only for tests
 		{
-			MoveLineDown();
-//			StreamWriter writer=new StreamWriter(@"C:\test.txt");
-//			writer.Write(this.RealText);
-//			writer.Close();
-			//this.SaveFile(@"C:\test.txt");
 		}
-		//		if(e.Shift)
-		//		{
-		//			shiftB=true;
-		//		}
-		//		if(e.KeyCode==Keys.A) {
-		//			MoveLineDown();
-		//		}
+
 		iTabs=GetTabs(GetLeftLine());
+	}
+	private InteractiveSearch interactiveSearch;
+//	public InteractiveSearch InteractiveSearch
+//	{
+//		get
+//		{
+//			return interactiveSearch;
+//		}
+//	}
+	public class InteractiveSearch
+	{
+		public void OnKeyPress(char keyChar)
+		{
+//			if(!(e.KeyChar=='\t'&&wasControlITab))
+//			{
+				text+=keyChar;
+				//				InteractiveSearch();
+				int start=textBox.SelectionStart-text.Length+1;
+				if(textBox.Find(text,start,RichTextBoxFinds.None)==-1)
+				{
+					textBox.Find(text,0,RichTextBoxFinds.None);
+				}
+//			}
+//			else
+//			{
+////				wasControlITab=false;
+//			}
+		}
+//		public bool OnKeyDown()
+//		{
+//			return false;
+//		}
+		private bool active=false;
+		private string text="";
+		private int startPosition=0;
+		public bool Active
+		{
+			get
+			{
+				return active;
+			}
+		}
+		public void Start()
+		{
+//			if(interactiveSearch.Active)
+//			{
+//
+//			}
+//			else
+//			{
+				active=true; 
+				text="";
+//			}
+		}
+		public void Find()
+		{
+			int start=textBox.SelectionStart+1;
+			if(textBox.Find(text,start,RichTextBoxFinds.None)==-1)
+			{
+				textBox.Find(text,0,RichTextBoxFinds.None);
+			}
+		}
+		public void Stop()
+		{
+			active=false;
+//			isInteractiveFindMode=false; // make this its own class, absolutely!!
+			text="";	// move all the shortcuts into Meta
+		}
+		private RichTextBox textBox;
+		public InteractiveSearch(RichTextBox textBox)
+		{
+			this.textBox=textBox;
+		}
+        private int startLine;
+		
 	}
 	public void StopInteractiveSearch()
 	{
-		isInteractiveFindMode=false; // make this its own class, absolutely!!
-		interactiveFindText="";	// move all the shortcuts into Meta
+		interactiveSearch.Stop();
+//		isInteractiveFindMode=false; // make this its own class, absolutely!!
+//		interactiveFindText="";	// move all the shortcuts into Meta
 	}
 
 	static int iTabs=0;
 
 	Hashtable keyBindings=new Hashtable();
 	public delegate void Function();
-	private void ScrollingTextBox_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
-	{		
-//		if(e.KeyCode==Keys.ShiftKey)
-//		{
-//			InteractiveSearch();
-//			//			shiftB=false;
-//		}
-//		else if(e.KeyCode==Keys.ControlKey)
-//		{
-//			FindAndReplace();
-//		}
-	}
 
 	public void DeleteWordRight()
 	{
+		
 	}
 	public void DeleteWordLeft()
 	{
-	}
-	public void MoveEndOfDocument()
-	{
-	}
-	public void MoveStartOfDocument()
-	{
-	}
 
-	public void DeleteBackward()
-	{
-		Text=Text.Remove(SelectionStart-1,1);
-	}
-	public void DeleteForward()
-	{
-		Text=Text.Remove(SelectionStart,1);
-	}
-
-	private void ScrollingTextBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e) 
-	{
-		if(e.Delta!=0) 
-		{
-			int asdf=0;
-		}
-	}
-	public void MoveLineEnd()
-	{
-		MoveTo(GetLinesLength(Line));
-	}
-	public void SelectLineEnd()
-	{
-	}
-	public void MoveLineStart()
-	{
-		MoveTo(GetLinesLength(Line));
-	}
-	public void SelectLineStart()
-	{
 	}
 	public void MoveWordLeft()
 	{
@@ -373,32 +396,84 @@ public class ScrollingTextBox: RichTextBox
 			}
 		}
 	}
-	public void MoveLineUp() 
+	private int RealIndexFromIndex(int index)
 	{
-		MoveCursor(GetLine()-1,GetScrollColumn());
+		return index-emptyLines.Length;
 	}
-//	public void MoveLineDownExtend()
-//	{
-//	}
-//	public void MoveLineUpExtend()
-//	{
-//	}
-//	public void MoveCharLeftExtend()
-//	{
-//	}
-//	public void MoveCharRightExtend()
-//	{
-//	}
-//	public void MoveWordLeftExtend()
-//	{
-//	}
-//	public void MoveWordRightExtend()
-//	{
-//	}
+	private int IndexFromRealIndex(int index)
+	{
+		return index+emptyLines.Length;
+	}
+	public void MoveEndOfDocument()
+	{
+		SelectionStart=IndexFromRealIndex(RealText.Length-1);
+	}
+	public void MoveStartOfDocument()
+	{
+		SelectionStart=IndexFromRealIndex(0);
+	}
+
+	public void DeleteBackward()
+	{
+		//		int start=SelectionStart;
+		Select(SelectionStart-1,1);
+		SelectedText="";
+		//		SelectionStart=start;
+		//		Text=Text.Remove(SelectionStart-1,1);
+	}
+	public void DeleteForward()
+	{
+		//		int start=SelectionStart; // stupid bugfix
+		Select(SelectionStart,1);
+		SelectedText="";
+		//		SelectionStart=start;
+		//		Text=Text.Remove(SelectionStart,1);
+	}
+
+	private void ScrollingTextBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e) 
+	{
+		if(e.Delta!=0) 
+		{
+			int asdf=0;
+		}
+	}
+	public void MoveLineEnd()
+	{
+		MoveTo(GetLinesLength(Line));
+	}
+	public void MoveLineStart()
+	{
+		MoveTo(GetLinesLength(Line));
+	}
+
+	public void SelectLineDown()
+	{
+	}
+	public void SelectLineUp()
+	{
+	}
+	public void SelectCharLeft()
+	{
+	}
+	public void SelectCharRight()
+	{
+	}
+	public void SelectWordLeft()
+	{
+	}
 	public void MoveLineDown() 
 	{
 		MoveCursor(GetLine()+1,GetScrollColumn());
 	}
+	public void SelectWordRight()
+	{
+	}
+
+	public void MoveLineUp() 
+	{
+		MoveCursor(GetLine()-1,GetScrollColumn());
+	}
+
 	public void MoveCharLeft() 
 	{
 		SelectionStart--;
@@ -465,24 +540,29 @@ public class ScrollingTextBox: RichTextBox
 		replace.Owner=FindForm();
 		replace.Show();
 	}
-	private bool isInteractiveFindMode=false;
-	private string interactiveFindText="";
-	public void InteractiveSearch()
+//	private bool isInteractiveFindMode=false;
+//	private string interactiveFindText="";
+	public void StartInteractiveSearch()
 	{
-		if(isInteractiveFindMode)
-		{
-			int findStart=SelectionStart+1;//-interactiveFindText.Length+1;
-			if(Find(interactiveFindText,findStart,RichTextBoxFinds.None)==-1)
-			{
-				Find(interactiveFindText,0,RichTextBoxFinds.None);
-			}
-		}
-		else
-		{
-			isInteractiveFindMode=true;
-			interactiveFindText="";
-		}
+		interactiveSearch.Start();
 	}
+
+//	public void StartInteractiveSearch()
+//	{
+//		if(isInteractiveFindMode)
+//		{
+//			int findStart=SelectionStart+1;//-interactiveFindText.Length+1;
+//			if(Find(interactiveFindText,findStart,RichTextBoxFinds.None)==-1)
+//			{
+//				Find(interactiveFindText,0,RichTextBoxFinds.None);
+//			}
+//		}
+//		else
+//		{
+//			isInteractiveFindMode=true;
+//			interactiveFindText="";
+//		}
+//	}
 	public void MoveCursor(int line,int scrollColumn) 
 	{
 		if(Lines.Length!=0)

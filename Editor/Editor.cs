@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using System.Threading;
+using Meta;
 
 namespace EditorTest
 {
@@ -127,12 +128,19 @@ namespace EditorTest
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		static void Main() 
+		static void Main(string[] args) 
 		{
-			Form1 form=new Form1();
-//			form.richTextBox1.Init();
-			Application.Run(form);
-			//form.richTextBox1.thread.Abort();
+//			if(args.Length==1 && args[0]=="-meta")
+//			{
+//				Interpreter.Run(@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta",new Map());
+//			}
+//			else
+//			{
+				Form1 form=new Form1();
+				//			form.richTextBox1.Init();
+				Application.Run(form);
+				//form.richTextBox1.thread.Abort();
+//			}
 		}
 	}
 }

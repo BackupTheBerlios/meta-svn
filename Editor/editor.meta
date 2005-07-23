@@ -25,7 +25,7 @@ SaveAs=!
 			fileName:SaveAsFileName
 			WriteFile
 				fileName
-				editor.GetText'
+				editor.control.RealText'
 WriteFile=!
 	writer=StreamWriter arg.1
 	writer.Write arg.2
@@ -38,7 +38,7 @@ Save=!If
 	then=!SaveAs'
 	else=!WriteFile
 		fileName
-		editor.GetText'
+		editor.control.RealText'
 ReadFile=!
 	reader=StreamReader arg
 	result=reader.ReadToEnd'
@@ -52,7 +52,7 @@ OpenFile=!
 			'
 		then=!
 			fileName:openFileName
-			editor.SetRealText ReadFile fileName
+			editor.control.RealText:ReadFile fileName
 keyBindings=
 	[Keys.Escape]=!editor.control.StopInteractiveSearch""
 	[Keys.Alt]=
@@ -78,7 +78,7 @@ keyBindings=
 	[Keys.F5]=!RunProgram'
 	[Keys.Control]=
 		[Keys.S]=!Save'
-		[Keys.I]=!editor.control.FindInteractively""
+		[Keys.I]=!editor.control.StartInteractiveSearch""
 		[Keys.F]=!editor.control.FindAndReplace""
 RunProgram=!
 	Save'
@@ -112,22 +112,8 @@ Editor=!
 								keyBindings
 								e.KeyCode
 							then=!keyBindings.[e.KeyCode]'
-	GetText=!control.RealText
-	FindAndReplace=!control.FindAndReplace""
-	InteractiveSearch=!control.FindInteractively""
-	StopInteractiveSearch=!control.StopInteractiveSearch""
 	SetText=!
 		control.Text:arg
-	SetRealText=!
-		control.RealText:arg
-	MoveLineDown=!
-		control.MoveLineDown'
-	MoveLineUp=!
-		control.MoveLineUp'
-	//MoveCharLeft=!
-	//	control.MoveCharLeft'
-	//MoveCharRight=!
-	//	control.MoveCharRight'
 Window=!
 	form=Form'
 	form.Text=arg.title
