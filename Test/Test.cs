@@ -45,8 +45,13 @@ namespace Test {
 					if(!File.Exists(args[0])) {
 						throw new ApplicationException("File "+args[0]+" not found.");
 					}
-					Interpreter.Run(args[0],new Map());
-					// TODO: fix this to only show original error message
+
+					object result=Interpreter.Run(args[0],new Map());
+					if(result is Map && ((Map)result).IsString)
+					{
+						Console.Write("Content-Type: text/html\n\n");
+						Console.Write(((Map)result).String);
+					}
 				}
 			}
 			catch(CharStreamException e) {// put this into "Run" ???, no don't, every caller can do this differently
