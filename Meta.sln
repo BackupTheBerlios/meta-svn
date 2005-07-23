@@ -3,15 +3,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", 
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClasses", "TestClasses\TestClasses.csproj", "{0BFC676A-F509-49CF-8F51-A800361F6F5E}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta", "Meta\Meta.csproj", "{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGI", "CGI\CGI.csproj", "{0555A47C-661C-4C3D-BBDE-650374D2D1B3}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -39,14 +31,6 @@ Global
 		{870B2FE3-C18D-4072-BBA8-75A639A34D18}.Release.Build.0 = Release|.NET
 		{870B2FE3-C18D-4072-BBA8-75A639A34D18}.Test.ActiveCfg = Release|.NET
 		{870B2FE3-C18D-4072-BBA8-75A639A34D18}.Test.Build.0 = Release|.NET
-		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Debug.ActiveCfg = Debug|.NET
-		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Debug.Build.0 = Debug|.NET
-		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Interactive.ActiveCfg = Release|.NET
-		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Interactive.Build.0 = Release|.NET
-		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Release.ActiveCfg = Release|.NET
-		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Release.Build.0 = Release|.NET
-		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Test.ActiveCfg = Release|.NET
-		{0BFC676A-F509-49CF-8F51-A800361F6F5E}.Test.Build.0 = Release|.NET
 		{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}.Debug.ActiveCfg = Debug|.NET
 		{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}.Debug.Build.0 = Debug|.NET
 		{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}.Interactive.ActiveCfg = Release|.NET
@@ -55,14 +39,6 @@ Global
 		{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}.Release.Build.0 = Release|.NET
 		{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}.Test.ActiveCfg = Release|.NET
 		{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}.Test.Build.0 = Release|.NET
-		{0555A47C-661C-4C3D-BBDE-650374D2D1B3}.Debug.ActiveCfg = Debug|.NET
-		{0555A47C-661C-4C3D-BBDE-650374D2D1B3}.Debug.Build.0 = Debug|.NET
-		{0555A47C-661C-4C3D-BBDE-650374D2D1B3}.Interactive.ActiveCfg = Release|.NET
-		{0555A47C-661C-4C3D-BBDE-650374D2D1B3}.Interactive.Build.0 = Release|.NET
-		{0555A47C-661C-4C3D-BBDE-650374D2D1B3}.Release.ActiveCfg = Release|.NET
-		{0555A47C-661C-4C3D-BBDE-650374D2D1B3}.Release.Build.0 = Release|.NET
-		{0555A47C-661C-4C3D-BBDE-650374D2D1B3}.Test.ActiveCfg = Release|.NET
-		{0555A47C-661C-4C3D-BBDE-650374D2D1B3}.Test.Build.0 = Release|.NET
 		{2F710547-5B9E-4CB6-849B-1FFF439D3D62}.Debug.ActiveCfg = Debug|.NET
 		{2F710547-5B9E-4CB6-849B-1FFF439D3D62}.Debug.Build.0 = Debug|.NET
 		{2F710547-5B9E-4CB6-849B-1FFF439D3D62}.Interactive.ActiveCfg = Release|.NET

@@ -1394,6 +1394,10 @@ namespace Meta
 			{
 				get
 				{
+					if(key.Equals(new Map("testClasses")))
+					{
+						 int asdf=0;
+					}
 					if(cache.ContainsKey(key))
 					{
 						if(cache[key] is MetaLibrary)
@@ -1543,9 +1547,14 @@ namespace Meta
 				ArrayList nameSpaces=new ArrayList();
 				if(cachedAssemblyInfo.ContainsKey(new Map(assembly.Location)))
 				{
+					if(assembly.Location.EndsWith("MetaTest.exe"))
+					{
+						int asdf=0;
+					}
 					Map info=(Map)cachedAssemblyInfo[new Map(assembly.Location)];
 					string timestamp=((Map)info[new Map("timestamp")]).String;
-					if(timestamp.Equals(File.GetCreationTime(assembly.Location).ToString()))
+					if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
+						//					if(timestamp.Equals(File.GetCreationTime(assembly.Location).ToString()))
 					{
 						Map namespaces=(Map)info[new Map("namespaces")];// SHIT! Name collision!
 						foreach(DictionaryEntry entry in namespaces)
@@ -1553,7 +1562,11 @@ namespace Meta
 							string text=((Map)entry.Value).String;
 							nameSpaces.Add(text);
 						}
-						return nameSpaces;
+						return nameSpaces; // BAAAADDD!
+					}
+					else
+					{
+						int asdf=0;
 					}
 				}
 				foreach(Type tType in assembly.GetExportedTypes())
