@@ -929,7 +929,7 @@ Entry (DictionaryEntry)
                                       Key (Map):
                                         "literal"
                                       Value (Map):
-                                        "2"
+                                        "then"
                             Entry (DictionaryEntry)
                               Key (Map):
                                 "value"
@@ -984,7 +984,7 @@ Entry (DictionaryEntry)
                                       Key (Map):
                                         "literal"
                                       Value (Map):
-                                        "3"
+                                        "else"
                             Entry (DictionaryEntry)
                               Key (Map):
                                 "value"

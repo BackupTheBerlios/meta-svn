@@ -1188,17 +1188,17 @@ statements (ArrayList):
               Entry (Literal)
                 Extent (Extent):
                   EndColumn (Int32):
-                    "16"
+                    "6"
                   EndLine (Int32):
-                    "43"
+                    "42"
                   FileName (String):
                     "basicTest.meta"
                   StartColumn (Int32):
-                    "4"
+                    "2"
                   StartLine (Int32):
-                    "43"
-                literal (Integer):
-                  "2"
+                    "42"
+                literal (Map):
+                  "then"
           Entry (Statement)
             expression (Program):
               Extent (Extent):
@@ -1251,17 +1251,17 @@ statements (ArrayList):
               Entry (Literal)
                 Extent (Extent):
                   EndColumn (Int32):
-                    "17"
+                    "6"
                   EndLine (Int32):
-                    "45"
+                    "44"
                   FileName (String):
                     "basicTest.meta"
                   StartColumn (Int32):
-                    "4"
+                    "2"
                   StartLine (Int32):
-                    "45"
-                literal (Integer):
-                  "3"
+                    "44"
+                literal (Map):
+                  "else"
       callable (Search):
         Extent (Extent):
           EndColumn (Int32):

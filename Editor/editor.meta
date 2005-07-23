@@ -22,7 +22,7 @@ SaveAs=!
 		Not Equal
 			SaveAsFileName
 			'
-		!
+		then=!
 			fileName:SaveAsFileName
 			WriteFile
 				fileName
@@ -36,8 +36,8 @@ Save=!If
 	Equal
 		fileName
 		'
-	!SaveAs'
-	!WriteFile
+	then=!SaveAs'
+	else=!WriteFile
 		fileName
 		editor.GetText'
 ReadFile=!
@@ -51,7 +51,7 @@ OpenFile=!
 		Not Equal
 			openFileName
 			'
-		!
+		then=!
 			fileName:openFileName
 			editor.SetRealText ReadFile fileName
 keyBindings=
@@ -99,20 +99,20 @@ Editor=!
 					ContainsKey
 						keyBindings
 						e.Modifiers
-					!
+					then=!
 						subKey=keyBindings.[e.Modifiers]
 						If
 							ContainsKey
 								subKey
 								e.KeyCode
-							!
+							then=!
 								subKey.[e.KeyCode]'
-					!
+					else=!
 						If
 							ContainsKey
 								keyBindings
 								e.KeyCode
-							!keyBindings.[e.KeyCode]'
+							then=!keyBindings.[e.KeyCode]'
 	GetText=!control.RealText
 	FindAndReplace=!control.FindAndReplace""
 	InteractiveSearch=!control.FindInteractively""

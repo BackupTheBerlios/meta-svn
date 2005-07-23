@@ -122,6 +122,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "editor.meta"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "Replace.cs"
                     SubType = "Form"
                     BuildAction = "Compile"

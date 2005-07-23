@@ -39,9 +39,9 @@ ifTest=If
 	Equal
 		"1"
 		"1"
-	=
+	then=
 		#"it is true"
-	=
+	else=
 		#"it is false"
 trimStartTest=TrimStart
 	"					hello"

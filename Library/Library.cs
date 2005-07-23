@@ -153,8 +153,8 @@ public class map
 	public static object If(Map argM) 
 	{ // maybe automatically convert Maps to MapAdapters??
 		bool conditionB=(bool)Interpreter.DotNetFromMeta(argM[new Integer(1)],typeof(bool));
-		Map thenF=(Map)argM[new Integer(2)];
-		Map elseF=(Map)argM[new Integer(3)];
+		Map thenF=(Map)argM[new Map("then")];
+		Map elseF=(Map)argM[new Map("else")];
 		if(conditionB) 
 		{
 			return thenF.Call(new Map());
