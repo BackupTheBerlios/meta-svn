@@ -54,12 +54,12 @@ OpenFile=!
 			fileName:openFileName
 			editor.SetRealText ReadFile fileName
 keyBindings=
-	[Keys.Escape]=!editor.StopInteractiveSearch""
+	[Keys.Escape]=!editor.control.StopInteractiveSearch""
 	[Keys.Alt]=
-		[Keys.K]=!editor.MoveLineDown'
-		[Keys.L]=!editor.MoveLineUp'
-		[Keys.Oemtilde]=!editor.MoveCharRight'
-		[Keys.J]=!editor.MoveCharLeft'
+		[Keys.K]=!editor.control.MoveLineDown'
+		[Keys.L]=!editor.control.MoveLineUp'
+		[Keys.Oemtilde]=!editor.control.MoveCharRight'
+		[Keys.J]=!editor.control.MoveCharLeft'
 	[BitwiseOr
 		Keys.Alt
 		Keys.Control
@@ -78,8 +78,8 @@ keyBindings=
 	[Keys.F5]=!RunProgram'
 	[Keys.Control]=
 		[Keys.S]=!Save'
-		[Keys.I]=!editor.FindInteractively""
-		[Keys.F]=!editor.FindAndReplace""
+		[Keys.I]=!editor.control.FindInteractively""
+		[Keys.F]=!editor.control.FindAndReplace""
 RunProgram=!
 	Save'
 	Execute fileName
@@ -124,10 +124,10 @@ Editor=!
 		control.MoveLineDown'
 	MoveLineUp=!
 		control.MoveLineUp'
-	MoveCharLeft=!
-		control.MoveCharLeft'
-	MoveCharRight=!
-		control.MoveCharRight'
+	//MoveCharLeft=!
+	//	control.MoveCharLeft'
+	//MoveCharRight=!
+	//	control.MoveCharRight'
 Window=!
 	form=Form'
 	form.Text=arg.title
