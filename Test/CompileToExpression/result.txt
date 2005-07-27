@@ -209,25 +209,25 @@ statements (ArrayList):
     expression (Search):
       Extent (Extent):
         EndColumn (Int32):
-          "7"
+          "15"
         EndLine (Int32):
           "20"
         FileName (String):
           "basicTest.meta"
         StartColumn (Int32):
-          "3"
+          "11"
         StartLine (Int32):
           "20"
       search (Literal):
         Extent (Extent):
           EndColumn (Int32):
-            "7"
+            "15"
           EndLine (Int32):
             "20"
           FileName (String):
             "basicTest.meta"
           StartColumn (Int32):
-            "3"
+            "11"
           StartLine (Int32):
             "20"
         literal (Map):
@@ -236,7 +236,7 @@ statements (ArrayList):
       Entry (Literal)
         Extent (Extent):
           EndColumn (Int32):
-            "2"
+            "10"
           EndLine (Int32):
             "20"
           FileName (String):
@@ -246,7 +246,7 @@ statements (ArrayList):
           StartLine (Int32):
             "20"
         literal (Map):
-          "x"
+          "metaStuff"
   Entry (Statement)
     expression (Literal):
       Extent (Extent):

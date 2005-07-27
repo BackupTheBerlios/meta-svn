@@ -5,6 +5,186 @@ Entry (DictionaryEntry)
     "ImpliedAutokey"
 Entry (DictionaryEntry)
   Key (Map):
+    "metaStuff"
+  Value (LazyNamespace):
+    Entry (DictionaryEntry)
+      Key (Map):
+        "DebugCallback"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "Strings"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "Expression"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "Call"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "Delayed"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "Program"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "BreakPoint"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "Literal"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "Search"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "Select"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "Statement"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "Interpreter"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "MetaException"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "KeyException"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "KeyNotFoundException"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "KeyDoesNotExistException"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "ICallable"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "IKeyValue"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "IMap"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "MetaLibrary"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "LazyNamespace"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "CachedAssembly"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "Library"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "MapAdapter"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "TestingFramework"
+      Value (LazyNamespace):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "ISerializeSpecial"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (Map):
+            "TestCase"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (Map):
+            "ExecuteTests"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (Map):
+            "DontSerializeFieldOrPropertyAttribute"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (Map):
+            "SerializeMethodsAttribute"
+          Value (NetClass):
+                Entry (DictionaryEntry)
+      Key (Map):
+        "Map"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "MapEnumerator"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "DelegateCreatedForGenericDelegates"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "NetMethod"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "NetContainer"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "NetClass"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "NetObject"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
+        "Parser"
+      Value (LazyNamespace):
+        Entry (DictionaryEntry)
+          Key (Map):
+            "IndentationStream"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (Map):
+            "MetaLexer"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (Map):
+            "MetaLexerTokenTypes"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (Map):
+            "MetaParser"
+          Value (NetClass):
+                    Entry (DictionaryEntry)
+          Key (Map):
+            "MetaTreeParser"
+          Value (NetClass):
+                Entry (DictionaryEntry)
+      Key (Map):
+        "Extent"
+      Value (NetClass):
+        Entry (DictionaryEntry)
+  Key (Map):
     "unicodeText"
   Value (Map):
     "äaba"

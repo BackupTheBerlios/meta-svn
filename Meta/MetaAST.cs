@@ -23,7 +23,7 @@ using AST = antlr.collections.AST;
 using antlr;
 using Meta.Parser;
 using System.Collections;
-
+using Meta;
 
 //public class Extent 
 //{ // TODO: Rename to something more sensible

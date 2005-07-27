@@ -36,7 +36,7 @@
                     NoStdLib = "false"
                     NoWarn = ""
                     Optimize = "false"
-                    OutputPath = "..\..\..\Library\"
+                    OutputPath = "..\Library\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
@@ -82,7 +82,7 @@
                 <Reference
                     Name = "antlr.runtime"
                     AssemblyName = "antlr.runtime"
-                    HintPath = "..\..\..\Programme\antlr-2.7.3\lib\csharp\src\bin\antlr.runtime.dll"
+                    HintPath = "..\Library\antlr.runtime.dll"
                 />
             </References>
         </Build>

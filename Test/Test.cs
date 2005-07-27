@@ -82,7 +82,7 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			args=new string[] {@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta"};
+//			args=new string[] {@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta"};
 //			args[0]=@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta";
 			//			args[0]=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
 			//args=new string[]{@"C:\_ProectSupportMaterial\Meta\library\function.meta"};
@@ -236,33 +236,33 @@ namespace Test
 	{
 		private static string filename=@"basicTest.meta";
 		// TODO:make it possible to choose between different tests on command line, and whether to test at all
-//		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-//			public class ParseToAst:TestCase 
-//		{
-//			public override object Run() 
-//			{
-//				return Interpreter.ParseToAst(Path.Combine(
-//					Test.path,filename));
-//			}
-//		}
-//		public class CompileToMap:TestCase 
-//		{
-//			public static Map map;
-//			public override object Run() 
-//			{
-//				map=Interpreter.Compile(Path.Combine(
-//					Test.path,filename));
-//				return map;
-//			}
-//		}
-//		public class CompileToExpression:TestCase 
-//		{
-//			public override object Run() 
-//			{
-//				return Interpreter.Compile(Path.Combine(
-//					Test.path,filename)).GetExpression();
-//			}
-//		}
+		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
+			public class ParseToAst:TestCase 
+		{
+			public override object Run() 
+			{
+				return Interpreter.ParseToAst(Path.Combine(
+					Test.path,filename));
+			}
+		}
+		public class CompileToMap:TestCase 
+		{
+			public static Map map;
+			public override object Run() 
+			{
+				map=Interpreter.Compile(Path.Combine(
+					Test.path,filename));
+				return map;
+			}
+		}
+		public class CompileToExpression:TestCase 
+		{
+			public override object Run() 
+			{
+				return Interpreter.Compile(Path.Combine(
+					Test.path,filename)).GetExpression();
+			}
+		}
 		public class Execute:TestCase 
 		{
 			public override object Run() 

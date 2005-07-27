@@ -162,7 +162,7 @@ Entry (DictionaryEntry)
                   Key (Map):
                     "literal"
                   Value (Map):
-                    "x"
+                    "metaStuff"
         Entry (DictionaryEntry)
           Key (Map):
             "value"
