@@ -2387,7 +2387,7 @@ namespace Meta
 
 		public object Call(object argument)
 		{
-			if(this.name.Equals("BitwiseOr"))
+			if(this.name.Equals("Merge"))
 			{
 				int asdf=0;
 			}
