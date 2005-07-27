@@ -25,146 +25,148 @@ using Meta.Parser;
 using System.Collections;
 
 
-public class Extent { // TODO: Rename to something more sensible
-	public static Hashtable Extents
-	{
-		get
-		{
-			return extents;
-		}
-	}
-	private static Hashtable extents=new Hashtable();
-	public override bool Equals(object obj)
-	{	
-		bool isEqual=false;
-		if(obj is Extent)
-		{
-			Extent extent=(Extent)obj;
-			if(
-				extent.StartLine==StartLine && 
-				extent.StartColumn==StartColumn && 
-				extent.EndLine==EndLine && 
-				extent.EndColumn==EndColumn && 
-				extent.FileName==FileName)
-			{
-				isEqual=true;
-			}
-		}
-		return isEqual;
-	}
-	public override int GetHashCode()
-	{
-		unchecked
-		{
-			return fileName.GetHashCode()*StartLine.GetHashCode()*StartColumn.GetHashCode()*EndLine.GetHashCode()*EndColumn.GetHashCode();
-		}
-	}
-
-
-	public int StartLine
-	{
-		get
-		{
-			return startLine;
-		}
-		set
-		{
-			startLine=value;
-		}
-	}
-	public int EndLine
-	{
-		get
-		{
-			return endLine;
-		}
-		set
-		{
-			endLine=value;
-		}
-	}
-	public int StartColumn
-	{
-		get
-		{
-			return startColumn;
-		}
-		set
-		{
-			startColumn=value;
-		}
-	}
-	public int EndColumn
-	{
-		get
-		{
-			return endColumn;
-		}
-		set
-		{
-			endColumn=value;
-		}
-	}
-	public string FileName
-	{
-		get
-		{
-			return fileName;
-		}
-		set
-		{
-			fileName=value;
-		}
-	}
-	int startLine;
-	int endLine;
-	int startColumn;
-	int endColumn;
-	string fileName;
-	public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName) {
-		this.startLine=startLine;
-		this.startColumn=startColumn;
-		this.endLine=endLine;
-		this.endColumn=endColumn;
-		this.fileName=fileName;
-
-	}
-	public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
-	{
-		Extent extent=new Extent(startLine,startColumn,endLine,endColumn,fileName);
-		if(!extents.ContainsKey(extent))
-		{
-			extents.Add(extent,extent);
-		}
-		return (Extent)extents[extent]; // return the unique extent not the extent itself 
-	}
-
-//	public int StartLine {
-//		get {
+//public class Extent 
+//{ // TODO: Rename to something more sensible
+//	public static Hashtable Extents
+//	{
+//		get
+//		{
+//			return extents;
+//		}
+//	}
+//	private static Hashtable extents=new Hashtable();
+//	public override bool Equals(object obj)
+//	{	
+//		bool isEqual=false;
+//		if(obj is Extent)
+//		{
+//			Extent extent=(Extent)obj;
+//			if(
+//				extent.StartLine==StartLine && 
+//				extent.StartColumn==StartColumn && 
+//				extent.EndLine==EndLine && 
+//				extent.EndColumn==EndColumn && 
+//				extent.FileName==FileName)
+//			{
+//				isEqual=true;
+//			}
+//		}
+//		return isEqual;
+//	}
+//	public override int GetHashCode()
+//	{
+//		unchecked
+//		{
+//			return fileName.GetHashCode()*StartLine.GetHashCode()*StartColumn.GetHashCode()*EndLine.GetHashCode()*EndColumn.GetHashCode();
+//		}
+//	}
+//
+//
+//	public int StartLine
+//	{
+//		get
+//		{
 //			return startLine;
 //		}
+//		set
+//		{
+//			startLine=value;
+//		}
 //	}
-//	public int EndLine {
-//		get {
+//	public int EndLine
+//	{
+//		get
+//		{
 //			return endLine;
 //		}
+//		set
+//		{
+//			endLine=value;
+//		}
 //	}
-//	public int StartColumn {
-//		get {
+//	public int StartColumn
+//	{
+//		get
+//		{
 //			return startColumn;
 //		}
+//		set
+//		{
+//			startColumn=value;
+//		}
 //	}
-//	public int EndColumn {
-//		get {
+//	public int EndColumn
+//	{
+//		get
+//		{
 //			return endColumn;
 //		}
-//	}
-//	public string FileName {
-//		get {
-//			return this.fileName;
+//		set
+//		{
+//			endColumn=value;
 //		}
 //	}
-}
+//	public string FileName
+//	{
+//		get
+//		{
+//			return fileName;
+//		}
+//		set
+//		{
+//			fileName=value;
+//		}
+//	}
+//	int startLine;
+//	int endLine;
+//	int startColumn;
+//	int endColumn;
+//	string fileName;
+//	public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+//	{
+//		this.startLine=startLine;
+//		this.startColumn=startColumn;
+//		this.endLine=endLine;
+//		this.endColumn=endColumn;
+//		this.fileName=fileName;
+//
+//	}
+//	public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+//	{
+//		Extent extent=new Extent(startLine,startColumn,endLine,endColumn,fileName);
+//		if(!extents.ContainsKey(extent))
+//		{
+//			extents.Add(extent,extent);
+//		}
+//		return (Extent)extents[extent]; // return the unique extent not the extent itself 
+//	}
+//
+//	//	public int StartLine {
+//	//		get {
+//	//			return startLine;
+//	//		}
+//	//	}
+//	//	public int EndLine {
+//	//		get {
+//	//			return endLine;
+//	//		}
+//	//	}
+//	//	public int StartColumn {
+//	//		get {
+//	//			return startColumn;
+//	//		}
+//	//	}
+//	//	public int EndColumn {
+//	//		get {
+//	//			return endColumn;
+//	//		}
+//	//	}
+//	//	public string FileName {
+//	//		get {
+//	//			return this.fileName;
+//	//		}
+//	//	}
+//}
 /// <summary> AST node implementation which stores tokens explicitly. This
 /// is handy if you'd rather derive information from tokens on an
 /// as-needed basis instead of snarfing data from a token as an AST
@@ -191,8 +193,8 @@ public class MetaAST:CommonAST
 			{
 				extent=new Extent(System.Int32.MaxValue,System.Int32.MaxValue,
 					System.Int32.MinValue,System.Int32.MinValue,null);
-//				extent=new Extent(System.Int32.MaxValue,System.Int32.MaxValue,
-//					System.Int32.MinValue,System.Int32.MinValue,null);
+				//				extent=new Extent(System.Int32.MaxValue,System.Int32.MaxValue,
+				//					System.Int32.MinValue,System.Int32.MinValue,null);
 				DetermineExtent(extent,this);
 			}
 			return extent;
@@ -394,7 +396,7 @@ public class MetaAST:CommonAST
 		if(tok.getLine()!=0) 
 		{
 			extent=Extent.CreateExtent(tok.getLine(),tok.getColumn(),((MetaToken)tok).EndLine,((MetaToken)tok).EndColumn,((MetaToken)tok).FileName);
-//			extent=new Extent(tok.getLine(),tok.getColumn(),((MetaToken)tok).EndLine,((MetaToken)tok).EndColumn,((MetaToken)tok).FileName);
+			//			extent=new Extent(tok.getLine(),tok.getColumn(),((MetaToken)tok).EndLine,((MetaToken)tok).EndColumn,((MetaToken)tok).FileName);
 		}
 		else 
 		{

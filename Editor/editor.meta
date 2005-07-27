@@ -7,6 +7,8 @@ this=map.Merge
 	System.IO
 	System.Windows.Forms
 	System.Drawing
+//Meta.Interpreter.Test:!Console.WriteLine "At least this works"
+Meta.Expression.DebugBreak:!Console.WriteLine "Yipiiiiiieeeheheheeheheheh"
 ChooseOpenFile=!
 	dialog=OpenFileDialog'
 	dialog.ShowDialog'

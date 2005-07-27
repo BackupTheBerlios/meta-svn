@@ -17,6 +17,7 @@ this=map.Merge
 	parent
 	=
 		"AssignedToCurrent"
+metaStuff=Meta
 unicodeText="äaba"
 this=map.Merge
 	parent

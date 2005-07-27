@@ -9,11 +9,20 @@ using System.Text;
 using System.Runtime.InteropServices;
 using HWND = System.IntPtr;
 using System.IO;
+using Meta;
 
 public class ScrollingTextBox: RichTextBox
 {
 	public ScrollingTextBox() 
 	{
+
+//		Label label=new Label();
+//		label.BackColor=Color.Transparent;
+//		label.Text="hello hello hello";
+//		Controls.Add(label);
+//		label.Location=new Point(400,400);
+
+
 		InitializeComponent();
 		this.HorzScrollValueChanged+=new ScrollEventHandler(ScrollingTextBox_HorzScrollValueChanged);
 		this.VertScrollValueChanged+=new ScrollEventHandler(ScrollingTextBox_VertScrollValueChanged);
@@ -35,12 +44,33 @@ public class ScrollingTextBox: RichTextBox
 //		keyBindings[Keys.Shift|Keys.Alt|Keys.L]=new Function(SelectLineUp);
 //		keyBindings[Keys.Shift|Keys.Alt|Keys.Oemtilde]=new Function(SelectCharRight);
 //		keyBindings[Keys.Shift|Keys.Alt|Keys.Control|Keys.J]=new Function(SelectWordLeft);
-		keyBindings[Keys.Shift|Keys.Alt|Keys.Control|Keys.Oemtilde]=new Function(SelectWordRight);
+//		keyBindings[Keys.Shift|Keys.Alt|Keys.Control|Keys.Oemtilde]=new Function(SelectWordRight);
+		keyBindings[Keys.Control|Keys.I]=new Function(StartInteractiveSearch);
+		keyBindings[Keys.Alt|Keys.X]=new Function(Test);
+		keyBindings[Keys.Escape]=new Function(StopInteractiveSearch);
 		for(int i=0;i<25;i++)
 		{
 			emptyLines+="\n";
 		}
 		interactiveSearch=new InteractiveSearch((RichTextBox)this);
+
+//		Value val=new Value("hello hello hello");
+//		val.Show();
+
+
+//		Value val=new Value("hello !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//        this.Controls.Add(val);
+//		val.Location=new Point(400,400);
+//		val.SetNow();
+	}
+	public void Test()
+	{
+		DrawValue(new Rectangle(400,400,100,100),"hello, everybody, clap your hands!!!!!!!!!!!!!!");
+	}
+	public void DrawValue(Rectangle rectangle,string text)
+	{
+		Graphics graphics=this.CreateGraphics();
+		graphics.DrawString(text,this.Font,Brushes.Red,rectangle);
 	}
 
 	string emptyLines;
@@ -178,56 +208,65 @@ public class ScrollingTextBox: RichTextBox
 	bool wasControlITab=false;
 	private void ScrollingTextBox_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e) 
 	{
-		if(interactiveSearch.Active) // make this its own class?
+		if(!(e.KeyChar=='\t'&&wasControlITab)) // ignore Ctrl+I, which inserts a tab
 		{
-			interactiveSearch.OnKeyPress(e.KeyChar);
-//			if(!(e.KeyChar=='\t'&&wasControlITab))
-//			{
-//				interactiveFindText+=e.KeyChar;
-//				//				InteractiveSearch();
-//				int findStart=SelectionStart-interactiveFindText.Length+1;
-//				if(Find(interactiveFindText,findStart,RichTextBoxFinds.None)==-1)
-//				{
-//					Find(interactiveFindText,0,RichTextBoxFinds.None);
-//				}
-//			}
-//			else
-//			{
-//				wasControlITab=false;
-//			}
-			e.Handled=true;
-		}
-//		if(isInteractiveFindMode) // make this its own class?
-//		{
-//			if(!(e.KeyChar=='\t'&&wasControlITab))
-//			{
-//				interactiveFindText+=e.KeyChar;
-//				//				InteractiveSearch();
-//				int findStart=SelectionStart-interactiveFindText.Length+1;
-//				if(Find(interactiveFindText,findStart,RichTextBoxFinds.None)==-1)
-//				{
-//					Find(interactiveFindText,0,RichTextBoxFinds.None);
-//				}
-//			}
-//			else
-//			{
-//				wasControlITab=false;
-//			}
-//			e.Handled=true;
-//		}
-		else
-		{
-			if(e.KeyChar.Equals((char)Keys.Enter)) 
+			if(interactiveSearch.Active) // make this its own class?
 			{
-				//int iTabs=GetTabs(GetLeftLine());
-				string sTabs="";
-				for(int i=0;i<iTabs;i++) 
+				interactiveSearch.OnKeyPress(e.KeyChar);
+				//			if(!(e.KeyChar=='\t'&&wasControlITab))
+				//			{
+				//				interactiveFindText+=e.KeyChar;
+				//				//				InteractiveSearch();
+				//				int findStart=SelectionStart-interactiveFindText.Length+1;
+				//				if(Find(interactiveFindText,findStart,RichTextBoxFinds.None)==-1)
+				//				{
+				//					Find(interactiveFindText,0,RichTextBoxFinds.None);
+				//				}
+				//			}
+				//			else
+				//			{
+				//				wasControlITab=false;
+				//			}
+				e.Handled=true;
+			}
+			else
+			{
+				if(e.KeyChar.Equals((char)Keys.Enter)) 
 				{
-					sTabs+='\t';
+					//int iTabs=GetTabs(GetLeftLine());
+					string sTabs="";
+					for(int i=0;i<iTabs;i++) 
+					{
+						sTabs+='\t';
+					}
+					SelectedText=sTabs;
 				}
-				SelectedText=sTabs;
 			}
 		}
+		else
+		{
+			wasControlITab=false;
+			e.Handled=true;
+		}
+			//		if(isInteractiveFindMode) // make this its own class?
+			//		{
+			//			if(!(e.KeyChar=='\t'&&wasControlITab))
+			//			{
+			//				interactiveFindText+=e.KeyChar;
+			//				//				InteractiveSearch();
+			//				int findStart=SelectionStart-interactiveFindText.Length+1;
+			//				if(Find(interactiveFindText,findStart,RichTextBoxFinds.None)==-1)
+			//				{
+			//					Find(interactiveFindText,0,RichTextBoxFinds.None);
+			//				}
+			//			}
+			//			else
+			//			{
+			//				wasControlITab=false;
+			//			}
+			//			e.Handled=true;
+			//		}
+
 		//		if(!Char.IsControl(e.KeyChar))
 		//		{
 		//			string insertS=Convert.ToString(e.KeyChar);
@@ -289,11 +328,12 @@ public class ScrollingTextBox: RichTextBox
 //			{
 				text+=keyChar;
 				//				InteractiveSearch();
-				int start=textBox.SelectionStart-text.Length+1;
-				if(textBox.Find(text,start,RichTextBoxFinds.None)==-1)
-				{
-					textBox.Find(text,0,RichTextBoxFinds.None);
-				}
+			Find();
+//				int start=textBox.SelectionStart-text.Length+1;
+//				if(textBox.Find(text,start,RichTextBoxFinds.None)==-1)
+//				{
+//					textBox.Find(text,0,RichTextBoxFinds.None);
+//				}
 //			}
 //			else
 //			{
@@ -544,7 +584,14 @@ public class ScrollingTextBox: RichTextBox
 //	private string interactiveFindText="";
 	public void StartInteractiveSearch()
 	{
-		interactiveSearch.Start();
+		if(interactiveSearch.Active)
+		{
+			interactiveSearch.Find();
+		}
+		else
+		{
+			interactiveSearch.Start();
+		}
 	}
 
 //	public void StartInteractiveSearch()
@@ -585,9 +632,11 @@ public class ScrollingTextBox: RichTextBox
 				{
                     virtualSpace+=" ";
 				}
-				string[] lines=Lines;
-				lines[line]=lines[line]+virtualSpace;
-				Lines=lines;
+				Select(lineLength+actualColumns,0);
+				SelectedText=virtualSpace;
+//				string[] lines=Lines;
+//				lines[line]=lines[line]+virtualSpace;
+//				Lines=lines;
 			}
 			int newStart=lineLength+columns;
 //			int newStart=GetLinesLength(line)+ColumnFromScrollColumn(line,scrollColumn);
@@ -767,6 +816,30 @@ public class ScrollingTextBox: RichTextBox
 		{
 			return Text[SelectionStart];
 		}
+	}
+	public class Value:Form
+	{
+		private Label label;
+		public Value(string text)
+		{
+			this.label=new Label();
+			label.Text=text;
+//			this.Text=text;
+
+////			SetStyle(ControlStyles.Opaque, false);
+////			this.SetStyle(ControlStyles.Opaque, false);
+////			this.BackColor=Color.Transparent;
+////			BackColor(aTransparentColor); 
+//			SetNow();
+		}
+//		public void SetNow()
+//		{
+//			this.SetStyle(ControlStyles.Opaque, false);
+//			this.BackColor=Color.Transparent;
+//		}
+	}
+	public void ShowValue()
+	{
 	}
 
 

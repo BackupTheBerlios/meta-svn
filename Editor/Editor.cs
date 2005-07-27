@@ -17,8 +17,33 @@ namespace EditorTest
 		private ScrollingTextBox richTextBox1;
 		private System.ComponentModel.IContainer components;
 
+//		protected override CreateParams CreateParams
+//
+//		{
+//
+//			get
+//
+//			{
+//
+//				CreateParams cp = base.CreateParams;
+//
+//				cp.ExStyle |= 0x00000020; //WS_EX_TRANSPARENT
+//
+//				return cp;
+//
+//			}
+//
+//		}
 		public Form1()
 		{
+//			this.Opacity=0.5d;
+//			Label label=new Label();
+//			//label.BackColor=Color.Transparent;
+//			label.Text="hello hello hello";
+//			Controls.Add(label);
+//			label.Location=new Point(400,400);
+//			label.SetNow();
+
 			//
 			// Required for Windows Form Designer support
 			//
@@ -28,6 +53,11 @@ namespace EditorTest
 			// TODO: Add any constructor code after InitializeComponent call
 			//
 
+
+//			ScrollingTextBox.Value label=new ScrollingTextBox.Value("hello hello hello");
+//			Controls.Add(label);
+//			label.Location=new Point(400,400);
+//			label.SetNow();
 		}
 
 

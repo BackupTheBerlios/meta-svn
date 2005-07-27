@@ -37,6 +37,8 @@ using System.Text;
 
 namespace Meta
 {
+	public delegate void DebugCallback(IMap map);
+
 	public class Strings
 	{
 		public readonly static Map Literal=new Map("literal");
@@ -55,7 +57,6 @@ namespace Meta
 		public static readonly Map Arg=new Map("arg");
 		public static readonly Map This=new Map("this");
 	}
-	public delegate void DebugCallback(IMap map);
 	public abstract class Expression
 	{
 
@@ -66,15 +67,19 @@ namespace Meta
 				return breakPoint;
 			}
 		}
-		static BreakPoint breakPoint=new BreakPoint("basicTest.meta",74,7);
-		public static event DebugCallback Debug;
+		static BreakPoint breakPoint=new BreakPoint(@"c:\_projectsupportmaterial\meta\editor\editor.meta",15,8);
+		public static event DebugCallback DebugBreak;
 		static Expression()
 		{
-			Debug+=new DebugCallback(Expression_BreakPoint);
+//			DebugBreak+=new DebugCallback(Expression_BreakPoint);
 		}
 		public static void CallDebug(IMap parent)
 		{
-			Debug(parent);
+//			Test();
+//			if(DebugBreak!=null)
+//			{
+				DebugBreak(parent);
+//			}
 		}
 		public object Evaluate(IMap parent)
 		{
@@ -200,18 +205,52 @@ namespace Meta
 	{
 		public override object EvaluateImplementation(IMap parent)
 		{
-			if(BreakPoint.FileName==Extent.FileName && 
-				BreakPoint.Line==this.Extent.StartLine &&
-				BreakPoint.Column>Extent.StartColumn && 
-				BreakPoint.Column<Extent.EndColumn
-
-				) // Extent is similar to breakpoint
+			if(this.literal.Equals(new Map("Meta")))
 			{
-				CallDebug(parent);
-				int asdf=0;					
+				int asdf=0;
+			}
+			//			if(DebugBreak!=null)
+			//			{
+//			CallDebug(parent);
+			//			}
+			if(String.Compare(BreakPoint.FileName,Extent.FileName,true)==0)
+			{ 
+				if(BreakPoint.Line==this.Extent.StartLine)
+				{
+					if(BreakPoint.Column>Extent.StartColumn)
+					{
+						if(BreakPoint.Column<Extent.EndColumn)
+						{
+							CallDebug(parent);
+							int asdf=0;					
+						}
+					}
+				}
 			}
 			return literal;
 		}
+//		public override object EvaluateImplementation(IMap parent)
+//		{
+//			if(this.literal.Equals(new Map("Meta")))
+//			{
+//				int asdf=0;
+//			}
+////			if(DebugBreak!=null)
+////			{
+//				CallDebug(parent);
+////			}
+//			if(BreakPoint.FileName==Extent.FileName && 
+//				BreakPoint.Line==this.Extent.StartLine &&
+//				BreakPoint.Column>Extent.StartColumn && 
+//				BreakPoint.Column<Extent.EndColumn
+//
+//				) // Extent is similar to BreakPoint
+//			{
+//				CallDebug(parent);
+//				int asdf=0;					
+//			}
+//			return literal;
+//		}
 		public Literal(Map code)
 		{
 			this.literal=RecognizeLiteral((string)code.String);
@@ -356,6 +395,7 @@ namespace Meta
 	public class Interpreter  // what about multiple interpreters? or make interpreter multithreaded, what about events vs. multithreading?
 	{
 
+		public static event EventHandler Test;
 //			public static int line=10;
 		public static object Clone(object meta)
 		{
@@ -2719,7 +2759,11 @@ namespace Meta
 				if(key is Map && ((Map)key).IsString)
 				{
 					string text=((Map)key).String;
-					if(text.Equals("OnBreakPoint"))
+					if(text.Equals("DebugBreak"))
+					{
+						int asdf=0;
+					}
+					if(text.Equals("Test"))
 					{
 						int asdf=0;
 					}
@@ -3148,4 +3192,159 @@ namespace Meta
 			}
 		}
 	}
+}
+public class Extent 
+{
+	public static ArrayList GetEvents(string fileName,int firstLine,int lastLine)
+	{
+		ArrayList result=new ArrayList();
+		foreach(DictionaryEntry entry in Extents)
+		{
+			Extent extent=(Extent)entry.Value;
+			if(extent.FileName==fileName && extent.StartLine>=firstLine && extent.EndLine<=lastLine)
+			{
+				result.Add(extent);
+			}
+		}
+		return result;
+	}
+	public static Hashtable Extents
+	{
+		get
+		{
+			return extents;
+		}
+	}
+	private static Hashtable extents=new Hashtable();
+	public override bool Equals(object obj)
+	{	
+		bool isEqual=false;
+		if(obj is Extent)
+		{
+			Extent extent=(Extent)obj;
+			if(
+				extent.StartLine==StartLine && 
+				extent.StartColumn==StartColumn && 
+				extent.EndLine==EndLine && 
+				extent.EndColumn==EndColumn && 
+				extent.FileName==FileName)
+			{
+				isEqual=true;
+			}
+		}
+		return isEqual;
+	}
+	public override int GetHashCode()
+	{
+		unchecked
+		{
+			return fileName.GetHashCode()*StartLine.GetHashCode()*StartColumn.GetHashCode()*EndLine.GetHashCode()*EndColumn.GetHashCode();
+		}
+	}
+
+
+	public int StartLine
+	{
+		get
+		{
+			return startLine;
+		}
+		set
+		{
+			startLine=value;
+		}
+	}
+	public int EndLine // rename this
+	{
+		get
+		{
+			return endLine;
+		}
+		set
+		{
+			endLine=value;
+		}
+	}
+	public int StartColumn
+	{
+		get
+		{
+			return startColumn;
+		}
+		set
+		{
+			startColumn=value;
+		}
+	}
+	public int EndColumn
+	{
+		get
+		{
+			return endColumn;
+		}
+		set
+		{
+			endColumn=value;
+		}
+	}
+	public string FileName
+	{
+		get
+		{
+			return fileName;
+		}
+		set
+		{
+			fileName=value;
+		}
+	}
+	int startLine;
+	int endLine;
+	int startColumn;
+	int endColumn;
+	string fileName;
+	public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+	{
+		this.startLine=startLine;
+		this.startColumn=startColumn;
+		this.endLine=endLine;
+		this.endColumn=endColumn;
+		this.fileName=fileName;
+
+	}
+	public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+	{
+		Extent extent=new Extent(startLine,startColumn,endLine,endColumn,fileName);
+		if(!extents.ContainsKey(extent))
+		{
+			extents.Add(extent,extent);
+		}
+		return (Extent)extents[extent]; // return the unique extent not the extent itself 
+	}
+
+	//	public int StartLine {
+	//		get {
+	//			return startLine;
+	//		}
+	//	}
+	//	public int EndLine {
+	//		get {
+	//			return endLine;
+	//		}
+	//	}
+	//	public int StartColumn {
+	//		get {
+	//			return startColumn;
+	//		}
+	//	}
+	//	public int EndColumn {
+	//		get {
+	//			return endColumn;
+	//		}
+	//	}
+	//	public string FileName {
+	//		get {
+	//			return this.fileName;
+	//		}
+	//	}
 }
