@@ -389,11 +389,11 @@ statement:
 
 					// TODO: Simplify!!, use astFactory
 				    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
-				    autokeyToken.setLine(#statement.Extent.StartLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-				    autokeyToken.setColumn(#statement.Extent.StartColumn); 
+				    autokeyToken.setLine(#statement.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
+				    autokeyToken.setColumn(#statement.Extent.Start.Column); 
 				    autokeyToken.FileName=#statement.Extent.FileName;
-				    autokeyToken.EndLine=#statement.Extent.EndLine;
-				    autokeyToken.EndColumn=#statement.Extent.EndColumn;
+				    autokeyToken.EndLine=#statement.Extent.End.Line;
+				    autokeyToken.EndColumn=#statement.Extent.End.Column;
 				    MetaAST autokeyAst=new MetaAST(autokeyToken);
 				    autokeyAst.setText(Counters.autokey.Peek().ToString());
             #statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
@@ -443,11 +443,11 @@ delayedImplementation:
 		// TODO: Simplify this, factor this out into a method? Add some functionality for this stuff? Maybe to MetAST?
 		MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
 		
-		runToken.setLine(#delayedImplementation.Extent.StartLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-		runToken.setColumn(#delayedImplementation.Extent.StartColumn); 
+		runToken.setLine(#delayedImplementation.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
+		runToken.setColumn(#delayedImplementation.Extent.Start.Column); 
 		runToken.FileName=#delayedImplementation.Extent.FileName;
-		runToken.EndLine=#delayedImplementation.Extent.EndLine;
-		runToken.EndColumn=#delayedImplementation.Extent.EndColumn;
+		runToken.EndLine=#delayedImplementation.Extent.End.Line;
+		runToken.EndColumn=#delayedImplementation.Extent.End.Column;
 		
 		
 		MetaAST runAst=new MetaAST(runToken);

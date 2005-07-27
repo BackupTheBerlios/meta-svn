@@ -215,11 +215,11 @@ namespace Meta
 			//			}
 			if(String.Compare(BreakPoint.FileName,Extent.FileName,true)==0)
 			{ 
-				if(BreakPoint.Line==this.Extent.StartLine)
+				if(BreakPoint.Line==this.Extent.Start.Line)
 				{
-					if(BreakPoint.Column>Extent.StartColumn)
+					if(BreakPoint.Column>Extent.Start.Column)
 					{
-						if(BreakPoint.Column<Extent.EndColumn)
+						if(BreakPoint.Column<Extent.End.Column)
 						{
 							CallDebug(parent);
 							int asdf=0;					
@@ -1222,7 +1222,7 @@ namespace Meta
 		{
 			get
 			{
-				return message+" In file "+extent.FileName+", line: "+extent.StartLine+", column: "+extent.StartColumn+".";
+				return message+" In file "+extent.FileName+", line: "+extent.Start.Line+", column: "+extent.Start.Column+".";
 			}
 		}
 	}
@@ -3200,7 +3200,7 @@ namespace Meta
 			foreach(DictionaryEntry entry in Extents)
 			{
 				Extent extent=(Extent)entry.Value;
-				if(extent.FileName==fileName && extent.StartLine>=firstLine && extent.EndLine<=lastLine)
+				if(extent.FileName==fileName && extent.Start.Line>=firstLine && extent.End.Line<=lastLine)
 				{
 					result.Add(extent);
 				}
@@ -3222,10 +3222,10 @@ namespace Meta
 			{
 				Extent extent=(Extent)obj;
 				if(
-					extent.StartLine==StartLine && 
-					extent.StartColumn==StartColumn && 
-					extent.EndLine==EndLine && 
-					extent.EndColumn==EndColumn && 
+					extent.Start.Line==Start.Line && 
+					extent.Start.Column==Start.Column && 
+					extent.End.Line==End.Line && 
+					extent.End.Column==End.Column && 
 					extent.FileName==FileName)
 				{
 					isEqual=true;
@@ -3237,55 +3237,109 @@ namespace Meta
 		{
 			unchecked
 			{
-				return fileName.GetHashCode()*StartLine.GetHashCode()*StartColumn.GetHashCode()*EndLine.GetHashCode()*EndColumn.GetHashCode();
+				return fileName.GetHashCode()*Start.Line.GetHashCode()*Start.Column.GetHashCode()*End.Line.GetHashCode()*End.Column.GetHashCode();
 			}
 		}
+		public class Position
+		{
+			private int line;
+			private int column;
+			public Position(int line,int column)
+			{
+				this.line=line;
+				this.column=column;
 
-
-		public int StartLine
+			}
+			public int Line
+			{
+				get
+				{
+					return line;
+				}
+				set
+				{
+					line=value;
+				}
+			}
+			public int Column
+			{
+				get
+				{
+					return column;
+				}
+				set
+				{
+					column=value;
+				}
+			}
+		}
+		public Position Start
 		{
 			get
 			{
-				return startLine;
-			}
-			set
-			{
-				startLine=value;
+				return start;
 			}
 		}
-		public int EndLine // rename this
+		public Position End
 		{
 			get
 			{
-				return endLine;
-			}
-			set
-			{
-				endLine=value;
+				return end;
 			}
 		}
-		public int StartColumn
-		{
-			get
-			{
-				return startColumn;
-			}
-			set
-			{
-				startColumn=value;
-			}
-		}
-		public int EndColumn
-		{
-			get
-			{
-				return endColumn;
-			}
-			set
-			{
-				endColumn=value;
-			}
-		}
+		private Position start;
+		private Position end;
+//
+//
+//		public int StartLine
+//		{
+//			get
+//			{
+//				return startLine;
+//			}
+//			set
+//			{
+//				startLine=value;
+//			}
+//		}
+//		public int EndLine // rename this
+//		{
+//			get
+//			{
+//				return endLine;
+//			}
+//			set
+//			{
+//				endLine=value;
+//			}
+//		}
+//		public int StartColumn
+//		{
+//			get
+//			{
+//				return startColumn;
+//			}
+//			set
+//			{
+//				startColumn=value;
+//			}
+//		}
+//		public int EndColumn
+//		{
+//			get
+//			{
+//				return endColumn;
+//			}
+//			set
+//			{
+//				endColumn=value;
+//			}
+//		}
+//
+//		int startLine;
+//		int endLine;
+//		int startColumn;
+//		int endColumn;
 		public string FileName
 		{
 			get
@@ -3297,17 +3351,15 @@ namespace Meta
 				fileName=value;
 			}
 		}
-		int startLine;
-		int endLine;
-		int startColumn;
-		int endColumn;
 		string fileName;
 		public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
 		{
-			this.startLine=startLine;
-			this.startColumn=startColumn;
-			this.endLine=endLine;
-			this.endColumn=endColumn;
+			this.start=new Position(startLine,startColumn);
+			this.end=new Position(endLine,endColumn);
+//			this.Start.Line=startLine;
+//			this.Start.Column=startColumn;
+//			this.End.Line=endLine;
+//			this.End.Column=endColumn;
 			this.fileName=fileName;
 
 		}

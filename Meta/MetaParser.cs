@@ -700,11 +700,11 @@ _loop93_breakloop:				;
 							
 												// TODO: Simplify!!, use astFactory
 											    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
-											    autokeyToken.setLine(statement_AST.Extent.StartLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-											    autokeyToken.setColumn(statement_AST.Extent.StartColumn); 
+											    autokeyToken.setLine(statement_AST.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
+											    autokeyToken.setColumn(statement_AST.Extent.Start.Column); 
 											    autokeyToken.FileName=statement_AST.Extent.FileName;
-											    autokeyToken.EndLine=statement_AST.Extent.EndLine;
-											    autokeyToken.EndColumn=statement_AST.Extent.EndColumn;
+											    autokeyToken.EndLine=statement_AST.Extent.End.Line;
+											    autokeyToken.EndColumn=statement_AST.Extent.End.Column;
 											    MetaAST autokeyAst=new MetaAST(autokeyToken);
 											    autokeyAst.setText(Counters.autokey.Peek().ToString());
 							statement_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(KEY)).add((AST)autokeyAst))).add((AST)statement_AST));
@@ -852,11 +852,11 @@ _loop96_breakloop:			;
 					// TODO: Simplify this, factor this out into a method? Add some functionality for this stuff? Maybe to MetAST?
 					MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
 					
-					runToken.setLine(delayedImplementation_AST.Extent.StartLine); // TODO: Not sure this is the best way to do it, or if it's even correct
-					runToken.setColumn(delayedImplementation_AST.Extent.StartColumn); 
+					runToken.setLine(delayedImplementation_AST.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
+					runToken.setColumn(delayedImplementation_AST.Extent.Start.Column); 
 					runToken.FileName=delayedImplementation_AST.Extent.FileName;
-					runToken.EndLine=delayedImplementation_AST.Extent.EndLine;
-					runToken.EndColumn=delayedImplementation_AST.Extent.EndColumn;
+					runToken.EndLine=delayedImplementation_AST.Extent.End.Line;
+					runToken.EndColumn=delayedImplementation_AST.Extent.End.Column;
 					
 					
 					MetaAST runAst=new MetaAST(runToken);

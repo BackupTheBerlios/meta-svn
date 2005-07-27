@@ -438,26 +438,26 @@ public class MetaAST:CommonAST
 	}
 	private static void DetermineExtent(Extent result,MetaAST ast) 
 	{
-		if (ast.Extent.StartLine < result.StartLine) 
+		if (ast.Extent.Start.Line < result.Start.Line) 
 		{
-			result.StartLine=ast.Extent.StartLine;
-			result.StartColumn=ast.Extent.StartColumn;
+			result.Start.Line=ast.Extent.Start.Line;
+			result.Start.Column=ast.Extent.Start.Column;
 			result.FileName=ast.Extent.FileName;
 		}
-		else if ((ast.Extent.StartLine == result.StartLine) && (ast.Extent.StartColumn < result.StartColumn)) 
+		else if ((ast.Extent.Start.Line == result.Start.Line) && (ast.Extent.Start.Column < result.Start.Column)) 
 		{
-			result.StartColumn=ast.Extent.StartColumn;
+			result.Start.Column=ast.Extent.Start.Column;
 			result.FileName = ast.Extent.FileName;
 		}
 
-		if (ast.Extent.EndLine > result.EndLine) 
+		if (ast.Extent.End.Line > result.End.Line) 
 		{
-			result.EndLine = ast.Extent.EndLine;
-			result.EndColumn = ast.Extent.EndColumn;
+			result.End.Line = ast.Extent.End.Line;
+			result.End.Column = ast.Extent.End.Column;
 		}
-		else if ((ast.Extent.EndLine == result.EndLine) && (ast.Extent.EndColumn > result.EndColumn)) 
+		else if ((ast.Extent.End.Line == result.End.Line) && (ast.Extent.End.Column > result.End.Column)) 
 		{
-			result.EndColumn = ast.Extent.EndColumn;
+			result.End.Column = ast.Extent.End.Column;
 		}
 
 		for(MetaAST child = (MetaAST) ast.getFirstChild();child != null;child = (MetaAST) child.getNextSibling())
