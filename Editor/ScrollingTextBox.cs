@@ -388,6 +388,10 @@ public class ScrollingTextBox: RichTextBox
         private int startLine;
 		
 	}
+	public void ShowDebugValue(string text)
+	{
+		MessageBox.Show(text);
+	}
 	public void StopInteractiveSearch()
 	{
 		interactiveSearch.Stop();
@@ -768,7 +772,7 @@ public class ScrollingTextBox: RichTextBox
 			string text="";
 			foreach(string line in Lines)
 			{
-				text+=line.TrimEnd(' ');
+				text+=line.TrimEnd(' ')+"\n";
 			}				
 			return text.Replace(emptyLines,"");
 		}

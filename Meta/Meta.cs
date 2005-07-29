@@ -83,38 +83,23 @@ namespace Meta
 				return breakPoint;
 			}
 		}
-//		static BreakPoint breakPoint=new BreakPoint(@"c:\_projectsupportmaterial\meta\editor\editor.meta",15,8);
-		static BreakPoint breakPoint=new BreakPoint(@"c:\_projectsupportmaterial\test\basicTest.meta",16,13);
-		public static event DebugCallback DebugBreak;
+		static BreakPoint breakPoint=new BreakPoint(@"c:\_projectsupportmaterial\meta\editor\editor.meta",152,11);
+		//static BreakPoint breakPoint=new BreakPoint(@"c:\_projectsupportmaterial\test\basicTest.meta",22,12);
 		static Expression()
 		{
 //			DebugBreak+=new DebugCallback(Expression_BreakPoint);
 		}
-		public static void CallDebug(object stuff)
-		{
-			debugValue=stuff;
-			if(DebugBreak!=null)
-			{
-				DebugBreak();
-			}
-		}
+
 		public object Evaluate(IMap parent)
 		{
 			object result=EvaluateImplementation(parent);
 			if(Stop())
 			{
-				CallDebug(result);
+				Interpreter.CallDebug(result);
 			}
 			return result;
 		}
-		private static object debugValue="";
-		public static object DebugValue
-		{
-			get
-			{
-				return debugValue;
-			}
-		}
+
 		public abstract object EvaluateImplementation(IMap parent);
 		Extent extent;
 		public Extent Extent // refactor Extent, it sucks big deal
@@ -144,14 +129,19 @@ namespace Meta
 
 		public override object EvaluateImplementation(IMap parent)
 		{
-			try
-			{
-				return ((ICallable)callable.Evaluate(parent)).Call(Interpreter.Clone(argument.Evaluate(parent)));
-			}
-			catch(Exception e)
-			{
-				throw new MetaException(e,this.Extent);
-			}
+//			try
+//			{
+				object function=callable.Evaluate(parent);
+				if(function is ICallable)
+				{
+					return ((ICallable)function).Call(Interpreter.Clone(argument.Evaluate(parent)));
+				}
+				throw new MetaException("Object to be called is not callable.",this.Extent);
+//			}
+//			catch(Exception e)
+//			{
+//				throw new MetaException(e,this.Extent);
+//			}
 		}
 		public Call(Map code)
 		{
@@ -451,7 +441,23 @@ namespace Meta
 
 	public class Interpreter  // what about multiple interpreters? or make interpreter multithreaded, what about events vs. multithreading?
 	{
-
+		private static object debugValue="";
+		public static object DebugValue
+		{
+			get
+			{
+				return debugValue;
+			}
+		}
+		public static event DebugCallback DebugBreak;
+		public static void CallDebug(object stuff)
+		{
+			debugValue=stuff;
+			if(DebugBreak!=null)
+			{
+				DebugBreak();
+			}
+		}
 		public static event EventHandler Test;
 //			public static int line=10;
 		public static object Clone(object meta)
@@ -2910,7 +2916,7 @@ namespace Meta
 				}
 				catch(Exception e)
 				{
-					throw new ApplicationException("Cannot set "+Interpreter.DotNetFromMeta(key).ToString()+".");
+					throw new ApplicationException("Cannot set "+Interpreter.DotNetFromMeta(key).ToString()+".");// use a KeyException or something like that here
 				}
 			}
 		}
@@ -3298,7 +3304,7 @@ namespace Meta
 			{
 				return fileName.GetHashCode()*Start.Line.GetHashCode()*Start.Column.GetHashCode()*End.Line.GetHashCode()*End.Column.GetHashCode();
 			}
-		}
+		}public class Line { }
 		public class Position // make lines and columns classes, too?
 		{
 			private int line;

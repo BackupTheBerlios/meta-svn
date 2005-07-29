@@ -8,7 +8,7 @@ this=map.Merge
 	System.Windows.Forms
 	System.Drawing
 //Meta.Interpreter.Test:!Console.WriteLine "At least this works"
-Meta.Expression.DebugBreak:!Console.WriteLine "Yipiiiiiieeeheheheeheheheh"
+//Meta.Expression.DebugBreak:!Console.WriteLine "Yipiiiiiieeeheheheeheheheh"
 ChooseOpenFile=!
 	dialog=OpenFileDialog'
 	dialog.ShowDialog'
@@ -27,7 +27,7 @@ SaveAs=!
 			fileName:SaveAsFileName
 			WriteFile
 				fileName
-				editor.control.RealText'
+				editor.control.RealText
 WriteFile=!
 	writer=StreamWriter arg.1
 	writer.Write arg.2
@@ -40,7 +40,7 @@ Save=!If
 	then=!SaveAs'
 	else=!WriteFile
 		fileName
-		editor.control.RealText'
+		editor.control.RealText
 ReadFile=!
 	reader=StreamReader arg
 	result=reader.ReadToEnd'
@@ -84,6 +84,7 @@ keyBindings=
 		[Keys.F]=!editor.control.FindAndReplace""
 RunProgram=!
 	Save'
+	Meta.Interpreter.DebugBreak:!editor.control.ShowDebugValue "test"
 	Execute fileName
 Editor=!
 	control=Init
@@ -158,8 +159,6 @@ window=Window
 			["Close"]=!window.Close'
 		Program=
 			Start=RunProgram
-		Debug=
-			["Set Breakpoint"]=!'
 	font=Font
 		"Courier New"
 		'10
