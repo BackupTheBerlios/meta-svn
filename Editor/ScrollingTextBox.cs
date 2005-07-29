@@ -772,8 +772,10 @@ public class ScrollingTextBox: RichTextBox
 			string text="";
 			foreach(string line in Lines)
 			{
-				text+=line.TrimEnd(' ')+"\n";
-			}				
+				text+=line.TrimEnd(' ')+Environment.NewLine;
+			}
+			text=text.TrimStart(null);
+			text=text.TrimEnd(null);
 			return text.Replace(emptyLines,"");
 		}
 		set
