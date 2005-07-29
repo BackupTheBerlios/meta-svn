@@ -37,7 +37,7 @@ using System.Text;
 
 namespace Meta
 {
-	public delegate void DebugCallback(IMap map);
+	public delegate void DebugCallback();
 
 	public class Strings
 	{
@@ -59,6 +59,22 @@ namespace Meta
 	}
 	public abstract class Expression
 	{
+		public virtual bool Stop()
+		{
+			bool stop=false;
+			if(BreakPoint.Line>=Extent.Start.Line && BreakPoint.Line<=Extent.End.Line)
+			{
+				if(BreakPoint.Column>=Extent.Start.Column && BreakPoint.Column<=Extent.End.Column)
+				{
+//					if(!HasChildren())
+//					{
+						stop=true;
+//					}
+				}
+			}
+			return stop;
+		}
+//		protected abstract bool HasChildren();
 
 		public static BreakPoint BreakPoint
 		{
@@ -67,23 +83,37 @@ namespace Meta
 				return breakPoint;
 			}
 		}
-		static BreakPoint breakPoint=new BreakPoint(@"c:\_projectsupportmaterial\meta\editor\editor.meta",15,8);
+//		static BreakPoint breakPoint=new BreakPoint(@"c:\_projectsupportmaterial\meta\editor\editor.meta",15,8);
+		static BreakPoint breakPoint=new BreakPoint(@"c:\_projectsupportmaterial\test\basicTest.meta",16,13);
 		public static event DebugCallback DebugBreak;
 		static Expression()
 		{
 //			DebugBreak+=new DebugCallback(Expression_BreakPoint);
 		}
-		public static void CallDebug(IMap parent)
+		public static void CallDebug(object stuff)
 		{
-//			Test();
-//			if(DebugBreak!=null)
-//			{
-				DebugBreak(parent);
-//			}
+			debugValue=stuff;
+			if(DebugBreak!=null)
+			{
+				DebugBreak();
+			}
 		}
 		public object Evaluate(IMap parent)
 		{
-			return EvaluateImplementation(parent);
+			object result=EvaluateImplementation(parent);
+			if(Stop())
+			{
+				CallDebug(result);
+			}
+			return result;
+		}
+		private static object debugValue="";
+		public static object DebugValue
+		{
+			get
+			{
+				return debugValue;
+			}
 		}
 		public abstract object EvaluateImplementation(IMap parent);
 		Extent extent;
@@ -107,6 +137,11 @@ namespace Meta
 	}
 	public class Call: Expression
 	{
+		public override bool Stop()
+		{
+			return argument.Stop();
+		}
+
 		public override object EvaluateImplementation(IMap parent)
 		{
 			try
@@ -128,6 +163,11 @@ namespace Meta
 	}
 	public class Delayed: Expression
 	{
+		public override bool Stop()
+		{
+			return false;
+		}
+
 		public readonly Map delayed;
 		public Delayed(Map code)
 		{
@@ -142,6 +182,16 @@ namespace Meta
 	}
 	public class Program: Expression
 	{
+		public override bool Stop()
+		{
+			bool stop=false;
+			if(Expression.BreakPoint.Line==Extent.End.Line+1 && Expression.BreakPoint.Column==1)
+			{
+				stop=true;
+			}
+			return stop;
+		}
+
 		public override object EvaluateImplementation(IMap parent)
 		{
 			return Evaluate(parent,new Map()); // is this logical
@@ -203,6 +253,11 @@ namespace Meta
 	}
 	public class Literal: Expression
 	{
+		public override bool Stop()
+		{
+			return false;
+		}
+
 		public override object EvaluateImplementation(IMap parent)
 		{
 			if(this.literal.Equals(new Map("Meta")))
@@ -213,20 +268,20 @@ namespace Meta
 			//			{
 //			CallDebug(parent);
 			//			}
-			if(String.Compare(BreakPoint.FileName,Extent.FileName,true)==0)
-			{ 
-				if(BreakPoint.Line==this.Extent.Start.Line)
-				{
-					if(BreakPoint.Column>Extent.Start.Column)
-					{
-						if(BreakPoint.Column<Extent.End.Column)
-						{
-							CallDebug(parent);
-							int asdf=0;					
-						}
-					}
-				}
-			}
+//			if(String.Compare(BreakPoint.FileName,Extent.FileName,true)==0)
+//			{ 
+//				if(BreakPoint.Line==this.Extent.Start.Line)
+//				{
+//					if(BreakPoint.Column>Extent.Start.Column)
+//					{
+//						if(BreakPoint.Column<Extent.End.Column)
+//						{
+//							CallDebug(parent);
+//							int asdf=0;					
+//						}
+//					}
+//				}
+//			}
 			return literal;
 		}
 //		public override object EvaluateImplementation(IMap parent)
@@ -291,7 +346,7 @@ namespace Meta
 			return selected[key];
 		}
 	}
-	public class Select: Expression 
+	public class Select: Expression // define recursively
 	{
 		public ArrayList keys=new ArrayList();
 		public Expression firstKey;
@@ -313,11 +368,12 @@ namespace Meta
 				{
 					selected=new NetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
 				}
-				selected=((IKeyValue)selected)[key];
-				if(selected==null)
+				object selection=((IKeyValue)selected)[key];
+				if(selection==null)
 				{
-					throw new KeyDoesNotExistException(key,this.Extent);
+					throw new KeyDoesNotExistException(key,this.Extent,selected);
 				}
+				selected=selection;
 			}
 			return selected;
 		}
@@ -344,11 +400,12 @@ namespace Meta
 			for(int i=0;i<keys.Count-1;i++)
 			{
 				key=((Expression)keys[i]).Evaluate((IMap)parent);
-				selected=((IKeyValue)selected)[key];
-				if(selected==null)
+				object selection=((IKeyValue)selected)[key];
+				if(selection==null)
 				{
-					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent);
+					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
 				}
+				selected=selection;
 				if(!(selected is IKeyValue))
 				{
 					selected=new NetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
@@ -1264,8 +1321,10 @@ namespace Meta
 	/* Thrown when an accessed key does not exist. */
 	public class KeyDoesNotExistException:KeyException
 	{
-		public KeyDoesNotExistException(object key,Extent extent):base(key,extent)
+		private object selected;
+		public KeyDoesNotExistException(object key,Extent extent,object selected):base(key,extent)
 		{
+			this.selected=selected;
 		}
 	}
 
@@ -3240,7 +3299,7 @@ namespace Meta
 				return fileName.GetHashCode()*Start.Line.GetHashCode()*Start.Column.GetHashCode()*End.Line.GetHashCode()*End.Column.GetHashCode();
 			}
 		}
-		public class Position
+		public class Position // make lines and columns classes, too?
 		{
 			private int line;
 			private int column;
