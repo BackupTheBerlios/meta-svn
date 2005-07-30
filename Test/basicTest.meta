@@ -45,9 +45,6 @@ ifTest=If
 		#"it is true"
 	else=
 		#"it is false"
-trimStartTest=TrimStart
-	"					hello"
-	"\\t"
 form=Init
 	System.Windows.Forms.Form""
 	=
@@ -271,10 +268,6 @@ textBox.Text="
 lines=textBox.Lines
 alleMeineText=lines.1
 lines.4="bwuhahaha"
-character="\a"
-tab="\\t"
-backslash="\\\"
-endline="\\n"
 tabText="			hello"
 escapedText="\'\n\\\t"
 whileCounter=""

@@ -632,20 +632,6 @@ namespace Meta
 			}
 			return result;
 		}
-//		public static object DotNetFromMeta(object meta,Type target)
-//		{
-//			try
-//			{ 
-//				// TODO: don't try-catch, check if the conversion is null (and isConverted??)
-//				MetaToDotNetConversion conversion=(MetaToDotNetConversion)((Hashtable)
-//					Interpreter.toDotNetConversions[target])[meta.GetType()];
-//				bool isConverted;
-//				return conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
-//			}
-//			catch (Exception e){
-//				return meta;
-//			}
-//		}
 		public static object Run(string fileName,IMap argument)
 		{
 			Map program=Interpreter.Compile(fileName);
@@ -788,63 +774,63 @@ namespace Meta
 					return new Map(text);
 				}
 			}
-			// TODO: get rid of this character escaping stuff!
-			// does everything get executed twice? why? Just remove it completely, people can still use Integers they looked up specifically , or a map that has keys like "Tab" "BackSlash"
-			public class RecognizeCharacter: RecognizeLiteral
-			{
-				public override object Recognize(string text)
-				{
-					if(text.StartsWith(@"\"))
-					{ // TODO: Choose another character for starting a character
-						char result;
-						if(text.Length==2)
-						{
-							result=text[1]; // not unicode safe, write wrapper that takes care of this stuff
-						}
-						else if(text.Length==3)
-						{
-							switch(text.Substring(1,2)) 
-							{ // TODO: put this into Parser???
-								case @"\'":
-									result='\'';
-									break;
-								case @"\\":
-									result='\\';
-									break;
-								case @"\a":
-									result='\a';
-									break;
-								case @"\b":
-									result='\b';
-									break;
-								case @"\f":
-									result='\f';
-									break;
-								case @"\n":
-									result='\n';
-									break;
-								case @"\r":
-									result='\r';
-									break;
-								case @"\t":
-									result='\t';
-									break;
-								case @"\v":
-									result='\v';
-									break;
-								default:
-									throw new ApplicationException("Unrecognized escape sequence "+text);
-							}
-						}
-						else
-						{
-							return null;
-						}
-						return new Integer(result);
-					}
-					return null;
-				}
-			}
+//			// TODO: get rid of this character escaping stuff!
+//			// does everything get executed twice? why? Just remove it completely, people can still use Integers they looked up specifically , or a map that has keys like "Tab" "BackSlash"
+//			public class RecognizeCharacter: RecognizeLiteral
+//			{
+//				public override object Recognize(string text)
+//				{
+//					if(text.StartsWith(@"\"))
+//					{ // TODO: Choose another character for starting a character
+//						char result;
+//						if(text.Length==2)
+//						{
+//							result=text[1]; // not unicode safe, write wrapper that takes care of this stuff
+//						}
+//						else if(text.Length==3)
+//						{
+//							switch(text.Substring(1,2)) 
+//							{ // TODO: put this into Parser???
+//								case @"\'":
+//									result='\'';
+//									break;
+//								case @"\\":
+//									result='\\';
+//									break;
+//								case @"\a":
+//									result='\a';
+//									break;
+//								case @"\b":
+//									result='\b';
+//									break;
+//								case @"\f":
+//									result='\f';
+//									break;
+//								case @"\n":
+//									result='\n';
+//									break;
+//								case @"\r":
+//									result='\r';
+//									break;
+//								case @"\t":
+//									result='\t';
+//									break;
+//								case @"\v":
+//									result='\v';
+//									break;
+//								default:
+//									throw new ApplicationException("Unrecognized escape sequence "+text);
+//							}
+//						}
+//						else
+//						{
+//							return null;
+//						}
+//						return new Integer(result);
+//					}
+//					return null;
+//				}
+//			}
 			public class RecognizeInteger: RecognizeLiteral 
 			{
 				public override object Recognize(string text) 

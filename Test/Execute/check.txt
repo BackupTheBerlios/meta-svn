@@ -473,11 +473,6 @@ Entry (DictionaryEntry)
     "it is true"
 Entry (DictionaryEntry)
   Key (Map):
-    "trimStartTest"
-  Value (Map):
-    "					"
-Entry (DictionaryEntry)
-  Key (Map):
     "form"
   Value (Form):
     "System.Windows.Forms.Form, Text: hello"
@@ -2332,26 +2327,6 @@ Entry (DictionaryEntry)
     "alleMeineText"
   Value (Map):
     "Alle meine Entchen,"
-Entry (DictionaryEntry)
-  Key (Map):
-    "character"
-  Value (Integer):
-    "97"
-Entry (DictionaryEntry)
-  Key (Map):
-    "tab"
-  Value (Integer):
-    "9"
-Entry (DictionaryEntry)
-  Key (Map):
-    "backslash"
-  Value (Integer):
-    "92"
-Entry (DictionaryEntry)
-  Key (Map):
-    "endline"
-  Value (Integer):
-    "10"
 Entry (DictionaryEntry)
   Key (Map):
     "tabText"
