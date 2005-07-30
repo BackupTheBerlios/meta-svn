@@ -2069,15 +2069,29 @@ namespace Meta
 			// TODO: Make single exit
 			public override bool Equals(object strategy)
 			{
+				bool isEqual;
 				if(strategy is StringStrategy)
 				{	
-					return ((StringStrategy)strategy).text.Equals(this.text);
+					isEqual=((StringStrategy)strategy).text.Equals(this.text);
 				}
 				else
 				{
-					return base.Equals(strategy);
+					isEqual=base.Equals(strategy);
 				}
+				return isEqual;
 			}
+
+//			public override bool Equals(object strategy)
+//			{
+//				if(strategy is StringStrategy)
+//				{	
+//					return ((StringStrategy)strategy).text.Equals(this.text);
+//				}
+//				else
+//				{
+//					return base.Equals(strategy);
+//				}
+//			}
 			public override Map CloneMap()
 			{
 				return new Map(new StringStrategy(this));
@@ -2310,18 +2324,18 @@ namespace Meta
 	public class NetMethod: ICallable
 	{
 		// TODO: Move this to "With" ? Move this to DotNetContainer?
-		public static object AssignCollection(Map mCollection,object collection,out bool isSuccess)
-		{ // TODO: is isSuccess even needed?
-			if(mCollection.Array.Count==0)
+		public static object AssignCollection(Map map,object collection,out bool isSuccess)
+		{ 
+			if(map.Array.Count==0)
 			{
 				isSuccess=false;
 				return null;
 			}
 			Type targetType=collection.GetType();
-			MethodInfo add=targetType.GetMethod("Add",new Type[]{mCollection.Array[0].GetType()});
+			MethodInfo add=targetType.GetMethod("Add",new Type[]{map.Array[0].GetType()});
 			if(add!=null)
 			{
-				foreach(object entry in mCollection.Array)
+				foreach(object entry in map.Array)
 				{ // combine this with Library function "Init"
 					add.Invoke(collection,new object[]{entry});//  call add from above!
 				}
@@ -2331,10 +2345,8 @@ namespace Meta
 			{
 				isSuccess=false;
 			}
-
 			return collection;
 		}
-		// TODO: make single exit
 		public static object ConvertParameter(object meta,Type parameter,out bool isConverted)
 		{
 			isConverted=true;
@@ -2400,11 +2412,9 @@ namespace Meta
 				return result;
 			}
 		}
-
 		public object Call(object argument)
 		{
-			object returnValue=null;
-			object result=null; // TODO: get rid of one of them
+			object result=null;
 
 			ArrayList oneArgumentMethods=new ArrayList();
 			foreach(MethodBase method in overloadedMethods)
@@ -2424,11 +2434,11 @@ namespace Meta
 				{
 					if(method is ConstructorInfo)
 					{
-						returnValue=((ConstructorInfo)method).Invoke(new object[] {oParameter});
+						result=((ConstructorInfo)method).Invoke(new object[] {oParameter});
 					}
 					else
 					{
-						returnValue=method.Invoke(target,new object[] {oParameter});
+						result=method.Invoke(target,new object[] {oParameter});
 					}
 					isExecuted=true;// remove, use bArgumentsMatched instead
 					break;
@@ -2466,24 +2476,107 @@ namespace Meta
 					{
 						if(method is ConstructorInfo)
 						{
-							returnValue=((ConstructorInfo)method).Invoke(arguments.ToArray());
+							result=((ConstructorInfo)method).Invoke(arguments.ToArray());
 						}
 						else
 						{
-							returnValue=method.Invoke(target,arguments.ToArray());
+							result=method.Invoke(target,arguments.ToArray());
 						}
 						isExecuted=true;// remove, use bArgumentsMatched instead
 						break;
 					}
 				}
 			}
-			result=returnValue;
+//			result=returnValue;
 			if(!isExecuted)
 			{
 				throw new ApplicationException("Method "+this.name+" could not be called.");
 			}
 			return Interpreter.MetaFromDotNet(result);
 		}
+//		public object Call(object argument)
+//		{
+//			object returnValue=null;
+//			object result=null; // TODO: get rid of one of them
+//
+//			ArrayList oneArgumentMethods=new ArrayList();
+//			foreach(MethodBase method in overloadedMethods)
+//			{
+//				if(method.GetParameters().Length==1)
+//				{ 
+//					oneArgumentMethods.Add(method);
+//				}
+//			}
+//			bool isExecuted=false;
+//			oneArgumentMethods.Sort(new ArgumentComparer());
+//			foreach(MethodBase method in oneArgumentMethods)
+//			{
+//				bool isConverted;
+//				object oParameter=ConvertParameter(argument,method.GetParameters()[0].ParameterType,out isConverted);
+//				if(isConverted)
+//				{
+//					if(method is ConstructorInfo)
+//					{
+//						returnValue=((ConstructorInfo)method).Invoke(new object[] {oParameter});
+//					}
+//					else
+//					{
+//						returnValue=method.Invoke(target,new object[] {oParameter});
+//					}
+//					isExecuted=true;// remove, use bArgumentsMatched instead
+//					break;
+//				}
+//			}
+//			if(!isExecuted)
+//			{
+//				//ArrayList aarguments=((IMap)argument).Array;
+//				ArrayList aMtifRightNumberArguments=new ArrayList();
+//				foreach(MethodBase method in overloadedMethods)
+//				{
+//					if(((IMap)argument).Array.Count==method.GetParameters().Length)
+//					{ // don't match if different parameter list length
+//						if(((IMap)argument).Array.Count==((IMap)argument).Keys.Count)
+//						{ // only call if there are no non-integer keys ( move this somewhere else)
+//							aMtifRightNumberArguments.Add(method);
+//						}
+//					}
+//				}
+//				if(aMtifRightNumberArguments.Count==0)
+//				{
+//					throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");// TODO: Just a quickfix, really
+//				}
+//				foreach(MethodBase method in aMtifRightNumberArguments)
+//				{
+//					ArrayList arguments=new ArrayList();
+//					bool bArgumentsMatched=true;
+//					ParameterInfo[] arPrmtifParameters=method.GetParameters();
+//					for(int i=0;bArgumentsMatched && i<arPrmtifParameters.Length;i++)
+//					{
+//						arguments.Add(ConvertParameter(((IMap)argument).Array[i],arPrmtifParameters[i].ParameterType,out bArgumentsMatched));
+//					}
+//					// TODO: remove Hungarian in this method
+//					if(bArgumentsMatched)
+//					{
+//						if(method is ConstructorInfo)
+//						{
+//							returnValue=((ConstructorInfo)method).Invoke(arguments.ToArray());
+//						}
+//						else
+//						{
+//							returnValue=method.Invoke(target,arguments.ToArray());
+//						}
+//						isExecuted=true;// remove, use bArgumentsMatched instead
+//						break;
+//					}
+//				}
+//			}
+//			result=returnValue;
+//			if(!isExecuted)
+//			{
+//				throw new ApplicationException("Method "+this.name+" could not be called.");
+//			}
+//			return Interpreter.MetaFromDotNet(result);
+//		}
 		// TODO: rename, remove Hungarian
 		public static Delegate DlgFromM(Type delegateType,MethodInfo method,Map code)
 		{ 
