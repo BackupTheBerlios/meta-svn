@@ -145,7 +145,7 @@ Entry (DictionaryEntry)
       Value (DotNetClass):
             Entry (DictionaryEntry)
       Key (Map):
-        "NetMethod"
+        "DotNetMethod"
       Value (DotNetClass):
             Entry (DictionaryEntry)
       Key (Map):
@@ -195,63 +195,63 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "Equal"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Equal(System.Object, System.Object)"
 Entry (DictionaryEntry)
   Key (Map):
     "Not"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Not(Boolean)"
 Entry (DictionaryEntry)
   Key (Map):
     "And"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean And(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Or"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Or(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Merge"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.IKeyValue Merge(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Keys"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.IKeyValue Keys(Meta.IKeyValue)"
 Entry (DictionaryEntry)
   Key (Map):
     "Foreach"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Map Foreach(Meta.Map, Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Length"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Int32 Length(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Init"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.Object Init(System.Object, Meta.IMap)"
@@ -262,91 +262,91 @@ Entry (DictionaryEntry)
     Entry (DictionaryEntry)
   Key (Map):
     "Apply"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Map Apply(Meta.Map, Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Join"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Map Join(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "ContainsKey"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean ContainsKey(Meta.Map, System.Object)"
 Entry (DictionaryEntry)
   Key (Map):
     "Remove"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Map Remove(System.Object, Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "TrimStart"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.Map TrimStart(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "If"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.Object If(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Add"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer Add(Integer, Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "Subtract"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer Subtract(Integer, Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "Multiply"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer Multiply(Integer, Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "Divide"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer Divide(Integer, Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "Smaller"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Smaller(Integer, Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "Greater"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Greater(Integer, Integer)"
 Entry (DictionaryEntry)
   Key (Map):
     "BitwiseOr"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer BitwiseOr(Integer[])"
@@ -2075,7 +2075,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "staticEvent"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.Object Invoke(System.Object)"
@@ -2102,7 +2102,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (Map):
     "instanceEvent"
-  Value (NetMethod):
+  Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Int32 Invoke(Int32)"

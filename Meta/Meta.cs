@@ -2321,7 +2321,7 @@ namespace Meta
 		private int index=-1;
 	}
 	public delegate object DelegateCreatedForGenericDelegates(); // TODO: rename?
-	public class NetMethod: ICallable
+	public class DotNetMethod: ICallable
 	{
 		// TODO: Move this to "With" ? Move this to DotNetContainer?
 		public static object AssignCollection(Map map,object collection,out bool isSuccess)
@@ -2429,50 +2429,51 @@ namespace Meta
 			foreach(MethodBase method in oneArgumentMethods)
 			{
 				bool isConverted;
-				object oParameter=ConvertParameter(argument,method.GetParameters()[0].ParameterType,out isConverted);
+				object parameter=ConvertParameter(argument,method.GetParameters()[0].ParameterType,out isConverted);
 				if(isConverted)
 				{
 					if(method is ConstructorInfo)
 					{
-						result=((ConstructorInfo)method).Invoke(new object[] {oParameter});
+						result=((ConstructorInfo)method).Invoke(new object[] {parameter});
 					}
 					else
 					{
-						result=method.Invoke(target,new object[] {oParameter});
+						result=method.Invoke(target,new object[] {parameter});
 					}
-					isExecuted=true;// remove, use bArgumentsMatched instead
+					isExecuted=true;// remove, use argumentsMatched instead
 					break;
 				}
 			}
 			if(!isExecuted)
 			{
-				//ArrayList aarguments=((IMap)argument).Array;
-				ArrayList aMtifRightNumberArguments=new ArrayList();
+				ArrayList rightNumberArgumentMethods=new ArrayList();
 				foreach(MethodBase method in overloadedMethods)
 				{
 					if(((IMap)argument).Array.Count==method.GetParameters().Length)
-					{ // don't match if different parameter list length
+					{ 
+						// don't match if different parameter list length
 						if(((IMap)argument).Array.Count==((IMap)argument).Keys.Count)
-						{ // only call if there are no non-integer keys ( move this somewhere else)
-							aMtifRightNumberArguments.Add(method);
+						{ 
+							// only call if there are no non-integer keys ( move this somewhere else)
+							rightNumberArgumentMethods.Add(method);
 						}
 					}
 				}
-				if(aMtifRightNumberArguments.Count==0)
+				if(rightNumberArgumentMethods.Count==0)
 				{
 					throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");// TODO: Just a quickfix, really
 				}
-				foreach(MethodBase method in aMtifRightNumberArguments)
+				foreach(MethodBase method in rightNumberArgumentMethods)
 				{
 					ArrayList arguments=new ArrayList();
-					bool bArgumentsMatched=true;
+					bool argumentsMatched=true;
 					ParameterInfo[] arPrmtifParameters=method.GetParameters();
-					for(int i=0;bArgumentsMatched && i<arPrmtifParameters.Length;i++)
+					for(int i=0;argumentsMatched && i<arPrmtifParameters.Length;i++)
 					{
-						arguments.Add(ConvertParameter(((IMap)argument).Array[i],arPrmtifParameters[i].ParameterType,out bArgumentsMatched));
+						arguments.Add(ConvertParameter(((IMap)argument).Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
 					}
 					// TODO: remove Hungarian in this method
-					if(bArgumentsMatched)
+					if(argumentsMatched)
 					{
 						if(method is ConstructorInfo)
 						{
@@ -2482,12 +2483,11 @@ namespace Meta
 						{
 							result=method.Invoke(target,arguments.ToArray());
 						}
-						isExecuted=true;// remove, use bArgumentsMatched instead
+						isExecuted=true;// remove, use argumentsMatched instead
 						break;
 					}
 				}
 			}
-//			result=returnValue;
 			if(!isExecuted)
 			{
 				throw new ApplicationException("Method "+this.name+" could not be called.");
@@ -2523,39 +2523,39 @@ namespace Meta
 //					{
 //						returnValue=method.Invoke(target,new object[] {oParameter});
 //					}
-//					isExecuted=true;// remove, use bArgumentsMatched instead
+//					isExecuted=true;// remove, use argumentsMatched instead
 //					break;
 //				}
 //			}
 //			if(!isExecuted)
 //			{
 //				//ArrayList aarguments=((IMap)argument).Array;
-//				ArrayList aMtifRightNumberArguments=new ArrayList();
+//				ArrayList rightNumberArgumentMethods=new ArrayList();
 //				foreach(MethodBase method in overloadedMethods)
 //				{
 //					if(((IMap)argument).Array.Count==method.GetParameters().Length)
 //					{ // don't match if different parameter list length
 //						if(((IMap)argument).Array.Count==((IMap)argument).Keys.Count)
 //						{ // only call if there are no non-integer keys ( move this somewhere else)
-//							aMtifRightNumberArguments.Add(method);
+//							rightNumberArgumentMethods.Add(method);
 //						}
 //					}
 //				}
-//				if(aMtifRightNumberArguments.Count==0)
+//				if(rightNumberArgumentMethods.Count==0)
 //				{
 //					throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");// TODO: Just a quickfix, really
 //				}
-//				foreach(MethodBase method in aMtifRightNumberArguments)
+//				foreach(MethodBase method in rightNumberArgumentMethods)
 //				{
 //					ArrayList arguments=new ArrayList();
-//					bool bArgumentsMatched=true;
+//					bool argumentsMatched=true;
 //					ParameterInfo[] arPrmtifParameters=method.GetParameters();
-//					for(int i=0;bArgumentsMatched && i<arPrmtifParameters.Length;i++)
+//					for(int i=0;argumentsMatched && i<arPrmtifParameters.Length;i++)
 //					{
-//						arguments.Add(ConvertParameter(((IMap)argument).Array[i],arPrmtifParameters[i].ParameterType,out bArgumentsMatched));
+//						arguments.Add(ConvertParameter(((IMap)argument).Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
 //					}
 //					// TODO: remove Hungarian in this method
-//					if(bArgumentsMatched)
+//					if(argumentsMatched)
 //					{
 //						if(method is ConstructorInfo)
 //						{
@@ -2565,7 +2565,7 @@ namespace Meta
 //						{
 //							returnValue=method.Invoke(target,arguments.ToArray());
 //						}
-//						isExecuted=true;// remove, use bArgumentsMatched instead
+//						isExecuted=true;// remove, use argumentsMatched instead
 //						break;
 //					}
 //				}
@@ -2666,20 +2666,20 @@ namespace Meta
 			// TODO: remove the methods.Reverse stuff and see what happens
 			overloadedMethods=(MethodBase[])methods.ToArray(typeof(MethodBase));
 		}
-		public NetMethod(string name,object target,Type targetType)
+		public DotNetMethod(string name,object target,Type targetType)
 		{
 			this.Initialize(name,target,targetType);
 		}
-		public NetMethod(Type targetType)
+		public DotNetMethod(Type targetType)
 		{
 			this.Initialize(".ctor",null,targetType);
 		}
 		public override bool Equals(object toCompare)
 		{
-			if(toCompare is NetMethod)
+			if(toCompare is DotNetMethod)
 			{
-				NetMethod netMethod=(NetMethod)toCompare;
-				if(netMethod.target==target && netMethod.name.Equals(name) && netMethod.targetType.Equals(targetType))
+				DotNetMethod DotNetMethod=(DotNetMethod)toCompare;
+				if(DotNetMethod.target==target && DotNetMethod.name.Equals(name) && DotNetMethod.targetType.Equals(targetType))
 				{
 					return true;
 				}
@@ -2713,10 +2713,10 @@ namespace Meta
 	}
 	public class DotNetClass: DotNetContainer, IKeyValue,ICallable
 	{
-		protected NetMethod constructor;
+		protected DotNetMethod constructor;
 		public DotNetClass(Type targetType):base(null,targetType)
 		{
-			this.constructor=new NetMethod(this.targetType);
+			this.constructor=new DotNetMethod(this.targetType);
 		}
 		public object Call(object argument)
 		{
@@ -2750,7 +2750,7 @@ namespace Meta
 					}
 				}
 			}
-			NetMethod indexer=new NetMethod("get_Item",target,targetType);
+			DotNetMethod indexer=new DotNetMethod("get_Item",target,targetType);
 			Map argument=new Map();
 			argument[new Integer(1)]=key;
 			try
@@ -2805,7 +2805,7 @@ namespace Meta
 					{
 						if(members[0] is MethodBase)
 						{
-							return new NetMethod(text,target,targetType);
+							return new DotNetMethod(text,target,targetType);
 						}
 						if(members[0] is FieldInfo)
 						{
@@ -2825,7 +2825,7 @@ namespace Meta
 							}
 							else
 							{
-								return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+								return new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
 							}
 						}
 						// this should only work in DotNetClass, maybe specify the BindingFlags used above in DotNetClass and DotNetObject
@@ -2839,7 +2839,7 @@ namespace Meta
 				{
 					return Interpreter.MetaFromDotNet(((Array)target).GetValue(((Integer)key).Int)); // TODO: add error handling here
 				}
-				NetMethod indexer=new NetMethod("get_Item",target,targetType);
+				DotNetMethod indexer=new DotNetMethod("get_Item",target,targetType);
 				Map argument=new Map();
 				argument[new Integer(1)]=key;
 				try
@@ -2876,7 +2876,7 @@ namespace Meta
 							FieldInfo field=(FieldInfo)members[0];
 							bool isConverted;
 							object val;
-							val=NetMethod.ConvertParameter(value,field.FieldType,out isConverted);
+							val=DotNetMethod.ConvertParameter(value,field.FieldType,out isConverted);
 							if(isConverted)
 							{
 								field.SetValue(target,val);
@@ -2885,7 +2885,7 @@ namespace Meta
 							{
 								if(value is Map)
 								{
-									val=NetMethod.AssignCollection((Map)value,field.GetValue(target),out isConverted);
+									val=DotNetMethod.AssignCollection((Map)value,field.GetValue(target),out isConverted);
 								}
 							}
 							if(!isConverted)
@@ -2899,7 +2899,7 @@ namespace Meta
 						{
 							PropertyInfo property=(PropertyInfo)members[0];
 							bool isConverted;
-							object val=NetMethod.ConvertParameter(value,property.PropertyType,out isConverted);
+							object val=DotNetMethod.ConvertParameter(value,property.PropertyType,out isConverted);
 							if(isConverted)
 							{
 								property.SetValue(target,val,new object[]{});
@@ -2908,7 +2908,7 @@ namespace Meta
 							{
 								if(value is Map)
 								{
-									NetMethod.AssignCollection((Map)value,property.GetValue(target,new object[]{}),out isConverted);
+									DotNetMethod.AssignCollection((Map)value,property.GetValue(target,new object[]{}),out isConverted);
 								}
 								if(!isConverted)
 								{
@@ -2938,7 +2938,7 @@ namespace Meta
 						return;
 					}
 				}
-				NetMethod indexer=new NetMethod("set_Item",target,targetType);
+				DotNetMethod indexer=new DotNetMethod("set_Item",target,targetType);
 				Map argument=new Map();
 				argument[new Integer(1)]=key;
 				argument[new Integer(2)]=value;// do this more efficiently?
@@ -2962,7 +2962,7 @@ namespace Meta
 															BindingFlags.Static|BindingFlags.Instance);
 			MethodInfo invoke=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
 																						|BindingFlags.Public|BindingFlags.NonPublic);
-			Delegate eventDelegate=NetMethod.DlgFromM(eventInfo.EventHandlerType,invoke,code);
+			Delegate eventDelegate=DotNetMethod.DlgFromM(eventInfo.EventHandlerType,invoke,code);
 			return eventDelegate;
 		}
 		private IDictionary MTable
@@ -2987,7 +2987,7 @@ namespace Meta
 				{
 					if(!invoke.IsSpecialName)
 					{
-						table[new Map(invoke.Name)]=new NetMethod(invoke.Name,target,targetType);
+						table[new Map(invoke.Name)]=new DotNetMethod(invoke.Name,target,targetType);
 					}
 				}
 				foreach(PropertyInfo property in targetType.GetProperties(bindingFlags))
@@ -2999,7 +2999,7 @@ namespace Meta
 				}
 				foreach(EventInfo eventInfo in targetType.GetEvents(bindingFlags))
 				{
-					table[new Map(eventInfo.Name)]=new NetMethod(eventInfo.GetAddMethod().Name,this.target,this.targetType);
+					table[new Map(eventInfo.Name)]=new DotNetMethod(eventInfo.GetAddMethod().Name,this.target,this.targetType);
 				}
 				foreach(Type tNested in targetType.GetNestedTypes(bindingFlags))
 				{ 
