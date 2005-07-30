@@ -29,6 +29,10 @@ Entry (DictionaryEntry)
       Value (NetClass):
             Entry (DictionaryEntry)
       Key (Map):
+        "ReverseException"
+      Value (NetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
         "Program"
       Value (NetClass):
             Entry (DictionaryEntry)

@@ -117,6 +117,10 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "debug.meta"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "Editor.cs"
                     SubType = "Form"
                     BuildAction = "Compile"

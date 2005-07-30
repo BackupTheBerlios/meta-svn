@@ -179,6 +179,9 @@ namespace Meta
 			return result;
 		}
 	}
+	public class ReverseException:ApplicationException
+	{
+	}
 	public class Program: Expression
 	{
 		public override bool Stop()
@@ -202,10 +205,37 @@ namespace Meta
 		{
 			local.Parent=parent; // transplanting here, again, do this only once, combine it, make it explicit
 			Interpreter.callers.Add(local);
-			for(int i=0;i<statements.Count;i++)
+			for(int i=0;i<statements.Count && i>=0;)
 			{
-				local=(Map)Interpreter.Current;
-				((Statement)statements[i]).Realize(local);
+				if(Interpreter.reverseDebug) // rename to forwardDebug
+				{
+					bool stopReverse=((Statement)statements[i]).Undo(); // Statement should have separate Stop() function
+					if(stopReverse)
+					{
+						Interpreter.reverseDebug=false;
+						continue;
+					}
+				}
+				else
+				{
+					try
+					{
+						local=(Map)Interpreter.Current;
+						((Statement)statements[i]).Realize(local);
+					}
+					catch(ReverseException e)
+					{//maybe set reverse Debug here, threading issue
+						int asdf=0; // just go on, here, we already know how to handle reversion, this is just to get out of the currently executing statement and all its expressions and subexpressions
+					}	
+				}
+				if(Interpreter.reverseDebug)
+				{
+					i--;
+				}
+				else
+				{
+					i++;
+				}
 			}
 			object result=Interpreter.Current; // looks quite ugly
 			Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
@@ -255,10 +285,10 @@ namespace Meta
 	}
 	public class Literal: Expression
 	{
-		public override bool Stop()
-		{
-			return false;
-		}
+//		public override bool Stop()
+//		{
+//			return false;
+//		}
 
 		public override object EvaluateImplementation(IMap parent)
 		{
@@ -345,6 +375,8 @@ namespace Meta
 					throw new KeyNotFoundException(key,this.Extent);
 				}
 			}
+//			Interpreter.reverseDebug=true;
+//			throw new ReverseException();
 			return selected[key];
 		}
 	}
@@ -381,11 +413,38 @@ namespace Meta
 		}	}
 	public class Statement
 	{
-		private object replacedValue;
-//		private void Undo()
-//		{
-//
-//		}
+		private object replaceValue;
+		private IKeyValue replaceMap;
+		private object replaceKey;
+		public bool Undo()
+		{
+			if(replaceMap!=null) // need to handle "this" specially
+			{
+				replaceMap[replaceKey]=replaceValue;
+			}
+
+			bool stopReverse=false;
+			if(this.expression.Stop())
+			{
+				stopReverse=true;
+			}
+			else
+			{
+				foreach(Expression key in keys)
+				{
+					if(key.Stop())
+					{
+						stopReverse=true;
+						break;
+					}
+				}
+			}
+			return stopReverse;
+//			if(stopReverse)
+//			{
+//				Interpreter.reverseDebug=false;
+//			}
+		}
 		public void Realize(IMap parent)
 		{
 			object selected=parent;
@@ -433,15 +492,78 @@ namespace Meta
 			}
 			else
 			{
-//				if((IKeyValue)selected).ContainsKey(lastKey))
-//				{
-				//	replacedValue=((IKeyValue)selected)[lastKey];
-				//}
-				//else
-//}
-				((IKeyValue)selected)[lastKey]=val; // look up key here, before doing anything stupid
+				///////////////   for debug-undo
+				if(((IKeyValue)selected).ContainsKey(lastKey))
+				{
+					replaceValue=((IKeyValue)selected)[lastKey];
+				}
+				else
+				{
+					replaceValue=null;
+				}
+				replaceMap=(IKeyValue)selected;
+				replaceKey=lastKey;
+				//////////////
+
+				((IKeyValue)selected)[lastKey]=val;
 			}
 		}
+//		public void Realize(IMap parent)
+//		{
+//			object selected=parent;
+//			object key;
+//			
+//			if(searchFirst)
+//			{
+//				object firstKey=((Expression)keys[0]).Evaluate(parent); 
+//				while(!((IMap)selected).ContainsKey(firstKey))
+//				{
+//					selected=((IMap)selected).Parent;
+//					if(selected==null)
+//					{
+//						throw new KeyNotFoundException(firstKey,((Expression)keys[0]).Extent);
+//					}
+//				}
+//			}
+//			for(int i=0;i<keys.Count-1;i++)
+//			{
+//				key=((Expression)keys[i]).Evaluate((IMap)parent);
+//				object selection=((IKeyValue)selected)[key];
+//				if(selection==null)
+//				{
+//					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
+//				}
+//				selected=selection;
+//				if(!(selected is IKeyValue))
+//				{
+//					selected=new NetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
+//				}
+//			}
+//			object lastKey=((Expression)keys[keys.Count-1]).Evaluate((IMap)parent);
+//			object val=expression.Evaluate((IMap)parent);
+//			if(lastKey.Equals(Strings.This))
+//			{
+//				if(val is Map)
+//				{
+//					((Map)val).Parent=((Map)parent).Parent;
+//				}
+//				else
+//				{
+//					int asdf=0;
+//				}
+//				Interpreter.Current=val;
+//			}
+//			else
+//			{
+////				if((IKeyValue)selected).ContainsKey(lastKey))
+////				{
+//				//	replacedValue=((IKeyValue)selected)[lastKey];
+//				//}
+//				//else
+////}
+//				((IKeyValue)selected)[lastKey]=val; // look up key here, before doing anything stupid
+//			}
+//		}
 		public Statement(Map code) 
 		{
 			if(code.ContainsKey(Strings.Search))
@@ -472,6 +594,7 @@ namespace Meta
 			}
 		}
 		public static event DebugCallback DebugBreak;
+		public static bool reverseDebug=false;
 		public static void CallDebug(object stuff)
 		{
 			debugValue=stuff;
@@ -479,6 +602,10 @@ namespace Meta
 			{
 				DebugBreak();
 				Thread.CurrentThread.Suspend();
+				if(reverseDebug)
+				{
+					throw new ReverseException();
+				}
 			}
 		}
 		public static event EventHandler Test;
@@ -747,8 +874,13 @@ namespace Meta
 		private static Thread debugThread;
 		public static void ContinueDebug()
 		{
+			reverseDebug=false;
 			debugThread.Resume();
-//			debugThread
+		}
+		public static void ReverseDebug()
+		{
+			reverseDebug=true;
+			debugThread.Resume();
 		}
 		static Interpreter()
 		{
@@ -1942,8 +2074,8 @@ namespace Meta
 		}
 		public Expression GetExpression()  // this doesn't belong here, it's just here because of optimization, move the real work out of here
 		{ // expression Statements are not cached, only expressions
-			if(expression==null) 
-			{
+//			if(expression==null) 
+//			{
 				if(this.ContainsKey(Strings.Call))
 				{
 					expression=new Call((Map)this[Strings.Call]);
@@ -1972,7 +2104,7 @@ namespace Meta
 				{
 					throw new ApplicationException("Cannot compile non-code map.");
 				}
-			}
+//			}
 				((Expression)expression).Extent=this.Extent;
 			return expression;
 		}
@@ -2766,7 +2898,7 @@ namespace Meta
 				if(((Map)key).IsString)
 				{
 					string text=((Map)key).String;
-					if(targetType.GetMember((string)key,
+					if(targetType.GetMember(((Map)key).String,
 						BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0)
 					{
 						return true;
@@ -2847,7 +2979,14 @@ namespace Meta
 						{
 							Delegate eventDelegate=(Delegate)targetType.GetField(text,BindingFlags.Public|
 								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(target);
-							return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+							if(eventDelegate==null) // is there anything wrong here??
+							{
+								return null;
+							}
+							else
+							{
+								return new NetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+							}
 						}
 						// this should only work in NetClass, maybe specify the BindingFlags used above in NetClass and NetObject
 						else if(members[0] is Type)

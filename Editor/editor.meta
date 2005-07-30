@@ -103,6 +103,15 @@ ContinueProgram=!
 		editor.control.RealLine
 		editor.control.Column
 	Meta.Interpreter.ContinueDebug""
+ReverseProgram=!
+	// factor out the setting of the breakpoint
+	System.Console.WriteLine editor.control.RealLine
+	System.Console.WriteLine editor.control.Column
+	Meta.Expression.BreakPoint:Meta.BreakPoint
+		fileName
+		editor.control.RealLine
+		editor.control.Column
+	Meta.Interpreter.ReverseDebug""
 Editor=!
 	control=Init
 		ScrollingTextBox'
@@ -166,6 +175,8 @@ Window=!
 	Close=!form.Close'
 editor=Editor'
 // rename this to something less stupid
+abc="5"
+abc="x"
 window=Window
 	title="Meta Editor"
 	menu=
@@ -177,6 +188,7 @@ window=Window
 		Program=
 			Start=RunProgram
 			Continue=ContinueProgram
+			Reverse=ReverseProgram
 	font=Font
 		"Courier New"
 		'10
