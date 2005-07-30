@@ -94,10 +94,10 @@ public class map
 	}
 	public static object Init(object obj,IMap map) 
 	{ // make merge general enough to replace this
-		NetObject netObject=new NetObject(obj);
+		DotNetObject DotNetObject=new DotNetObject(obj);
 		foreach(DictionaryEntry entry in map) 
 		{
-			netObject[entry.Key]=entry.Value;
+			DotNetObject[entry.Key]=entry.Value;
 		}
 		return obj;
 	}
