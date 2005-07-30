@@ -774,63 +774,6 @@ namespace Meta
 					return new Map(text);
 				}
 			}
-//			// TODO: get rid of this character escaping stuff!
-//			// does everything get executed twice? why? Just remove it completely, people can still use Integers they looked up specifically , or a map that has keys like "Tab" "BackSlash"
-//			public class RecognizeCharacter: RecognizeLiteral
-//			{
-//				public override object Recognize(string text)
-//				{
-//					if(text.StartsWith(@"\"))
-//					{ // TODO: Choose another character for starting a character
-//						char result;
-//						if(text.Length==2)
-//						{
-//							result=text[1]; // not unicode safe, write wrapper that takes care of this stuff
-//						}
-//						else if(text.Length==3)
-//						{
-//							switch(text.Substring(1,2)) 
-//							{ // TODO: put this into Parser???
-//								case @"\'":
-//									result='\'';
-//									break;
-//								case @"\\":
-//									result='\\';
-//									break;
-//								case @"\a":
-//									result='\a';
-//									break;
-//								case @"\b":
-//									result='\b';
-//									break;
-//								case @"\f":
-//									result='\f';
-//									break;
-//								case @"\n":
-//									result='\n';
-//									break;
-//								case @"\r":
-//									result='\r';
-//									break;
-//								case @"\t":
-//									result='\t';
-//									break;
-//								case @"\v":
-//									result='\v';
-//									break;
-//								default:
-//									throw new ApplicationException("Unrecognized escape sequence "+text);
-//							}
-//						}
-//						else
-//						{
-//							return null;
-//						}
-//						return new Integer(result);
-//					}
-//					return null;
-//				}
-//			}
 			public class RecognizeInteger: RecognizeLiteral 
 			{
 				public override object Recognize(string text) 
@@ -3145,7 +3088,10 @@ namespace Meta
 				{
 					File.Create(Path.Combine(path,"check.txt")).Close();
 				}
-				string result=Serialize(ttoSerialize,"",functions);
+				StringBuilder stringBuilder=new StringBuilder();
+				Serialize(ttoSerialize,"",functions,stringBuilder);
+				string result=stringBuilder.ToString();
+//				string result=Serialize(ttoSerialize,"",functions);
 				StreamWriter resultWriter=new StreamWriter(Path.Combine(path,"result.txt")); // factor this stuff out?, into what class?
 				resultWriter.Write(result);
 				resultWriter.Close();
@@ -3158,40 +3104,58 @@ namespace Meta
 				checkReader.Close();
 				return result.Equals(check);
 			}
-			public static string Serialize(object ttoSerialize)
-			{
-				return Serialize(ttoSerialize,"",new string[]{});
-			}
+//			public static string Serialize(object ttoSerialize)
+//			{
+//				return Serialize(ttoSerialize,"",new string[]{});
+//			}
+
+//			public static string Serialize(object toSerialize)
+//			{
+//				StringBuilder stringBuilder=new StringBuilder();
+//				Serialize(toSerialize,"",new string[]{},stringBuilder);
+//				return stringBuilder.ToString();
+//			}
 			// TODO: refactor, make single exit
-			public static string Serialize(object toSerialize,string indent,string[] methods) 
+			public static void Serialize(object toSerialize,string indent,string[] methods,StringBuilder stringBuilder) 
 			{
 				if(toSerialize==null) 
 				{
-					return indent+"null\n";
+					stringBuilder.Append(indent+"null\n");
+					return;
+//					return indent+"null\n";
 				}
 				if(toSerialize is ISerializeSpecial) 
 				{
 					string text=((ISerializeSpecial)toSerialize).Serialize(indent,methods);
 					if(text!=null) 
 					{
-						return text;
+						stringBuilder.Append(text);
+						return;
+//						return text;
 					}
 				}
 				if(toSerialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
 					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) 
 				{
-					return indent+"\""+toSerialize.ToString()+"\""+"\n";
+					stringBuilder.Append(indent+"\""+toSerialize.ToString()+"\""+"\n");
+					return;
+//					return indent+"\""+toSerialize.ToString()+"\""+"\n";
 				}
 				if(toSerialize is IEnumerable) 
 				{
-					string text="";
+//					string text="";
 					foreach(object entry in (IEnumerable)toSerialize)
 					{
-						text+=indent+"Entry ("+entry.GetType().Name+")\n"+Serialize(entry,indent+"  ",methods);
+						stringBuilder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
+//						text+=indent+"Entry ("+entry.GetType().Name+")\n";
+						Serialize(entry,indent+"  ",methods,stringBuilder);
+//						text+=indent+"Entry ("+entry.GetType().Name+")\n"+Serialize(entry,indent+"  ",methods);
 					}
-					return text;
+//					stringBuilder.Append(text);
+					return;
+//					return text;
 				}
-				string result=""; // TODO: maybe refactor this to all use the same variable
+//				string result=""; // TODO: maybe refactor this to all use the same variable
 				ArrayList members=new ArrayList();
 
 				members.AddRange(toSerialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
@@ -3216,18 +3180,88 @@ namespace Meta
 								object val=toSerialize.GetType().InvokeMember(member.Name,BindingFlags.Public
 									|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
 									|BindingFlags.InvokeMethod,null,toSerialize,null);
-								result+=indent+member.Name;
+								stringBuilder.Append(indent+member.Name);
+//								result+=indent+member.Name;
 								if(val!=null)
 								{
-									result+=" ("+val.GetType().Name+")";
+									stringBuilder.Append(" ("+val.GetType().Name+")");
+//									result+=" ("+val.GetType().Name+")";
 								}
-								result+=":\n"+Serialize(val,indent+"  ",methods);
+								stringBuilder.Append(":\n");
+								Serialize(val,indent+"  ",methods,stringBuilder);
+//								result+=":\n"+Serialize(val,indent+"  ",methods);
 							}
 						}
 					}
 				}
-				return result;
+				return;
+//				return result;
 			}
+//			public static string Serialize(object toSerialize,string indent,string[] methods) 
+//			{
+//				if(toSerialize==null) 
+//				{
+//					return indent+"null\n";
+//				}
+//				if(toSerialize is ISerializeSpecial) 
+//				{
+//					string text=((ISerializeSpecial)toSerialize).Serialize(indent,methods);
+//					if(text!=null) 
+//					{
+//						return text;
+//					}
+//				}
+//				if(toSerialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
+//					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) 
+//				{
+//					return indent+"\""+toSerialize.ToString()+"\""+"\n";
+//				}
+//				if(toSerialize is IEnumerable) 
+//				{
+//					string text="";
+//					foreach(object entry in (IEnumerable)toSerialize)
+//					{
+//						text+=indent+"Entry ("+entry.GetType().Name+")\n"+Serialize(entry,indent+"  ",methods);
+//					}
+//					return text;
+//				}
+//				string result=""; // TODO: maybe refactor this to all use the same variable
+//				ArrayList members=new ArrayList();
+//
+//				members.AddRange(toSerialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
+//				members.AddRange(toSerialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
+//				foreach(string method in methods)
+//				{
+//					MethodInfo methodInfo=toSerialize.GetType().GetMethod(method,BindingFlags.Public|BindingFlags.Instance);
+//					if(methodInfo!=null)
+//					{ /* Only add methodInfo to members if it really exists, this isn't sure because methods are supplied per test not per class. */
+//						members.Add(methodInfo);
+//					}
+//				}
+//				members.Sort(new CompareMemberInfos());
+//				foreach(MemberInfo member in members) 
+//				{
+//					if(member.Name!="Item") 
+//					{
+//						if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) 
+//						{
+//							if(toSerialize.GetType().Namespace==null ||!toSerialize.GetType().Namespace.Equals("System.Windows.Forms"))
+//							{ // ugly hack to avoid some srange behaviour of some classes in System.Windows.Forms
+//								object val=toSerialize.GetType().InvokeMember(member.Name,BindingFlags.Public
+//									|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
+//									|BindingFlags.InvokeMethod,null,toSerialize,null);
+//								result+=indent+member.Name;
+//								if(val!=null)
+//								{
+//									result+=" ("+val.GetType().Name+")";
+//								}
+//								result+=":\n"+Serialize(val,indent+"  ",methods);
+//							}
+//						}
+//					}
+//				}
+//				return result;
+//			}
 		}
 		class CompareMemberInfos:IComparer
 		{
