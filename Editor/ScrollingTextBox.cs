@@ -825,7 +825,7 @@ public class ScrollingTextBox: RichTextBox
 	{
 		get
 		{
-			return Line-emptyLines.Length;
+			return Line-emptyLines.Length+1; // why +1? Where is the bug?
 		}
 	}
 	public int Line  // use Position class here, and Line class!!!!!!!! //// rename to UnrealLine , or so

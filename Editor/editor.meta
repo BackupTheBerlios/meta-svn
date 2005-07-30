@@ -88,11 +88,21 @@ RunProgram=!
 	System.Console.WriteLine editor.control.RealLine
 	System.Console.WriteLine editor.control.Column
 	Meta.Expression.BreakPoint:Meta.BreakPoint
-		"c:\_projectsupportmaterial\meta\editor\editor.meta"
+		//"c:\_projectsupportmaterial\meta\editor\editor.meta"
+		fileName
 		editor.control.RealLine
 		editor.control.Column
 	Meta.Interpreter.DebugBreak:!editor.control.ShowDebugValue Meta.Interpreter.DebugValue
-	Execute fileName
+	Meta.Interpreter.StartDebug fileName
+ContinueProgram=!
+	// factor out the setting of the breakpoint
+	System.Console.WriteLine editor.control.RealLine
+	System.Console.WriteLine editor.control.Column
+	Meta.Expression.BreakPoint:Meta.BreakPoint
+		fileName
+		editor.control.RealLine
+		editor.control.Column
+	Meta.Interpreter.ContinueDebug""
 Editor=!
 	control=Init
 		ScrollingTextBox'
@@ -166,6 +176,7 @@ window=Window
 			["Close"]=!window.Close'
 		Program=
 			Start=RunProgram
+			Continue=ContinueProgram
 	font=Font
 		"Courier New"
 		'10

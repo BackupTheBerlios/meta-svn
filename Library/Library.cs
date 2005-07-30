@@ -20,24 +20,6 @@ public class map
 		//			BreakPoint(new Map("stuff"));
 		//		}
 	}
-	private static void ExecuteInThread()
-	{
-		Interpreter.Run(executeFileName,new Map());
-		int asdf=0;
-	}
-	private static string executeFileName="";
-	public static void Execute(string fileName) 
-	{ 
-		executeFileName=fileName;
-		Thread thread=new Thread(new ThreadStart(ExecuteInThread));
-		thread.Start();
-		// Once the file system is integrated, one can simpley select the file one
-		// wants to run and call it. This function won't be needed anymore then.
-//		Process process=new Process();
-//		process.StartInfo.FileName=Application.ExecutablePath;
-//		process.StartInfo.Arguments=fileName;
-//		process.Start();
-	}
 	public static bool ContainsKey(Map map,object key) 
 	{
 		string a="";

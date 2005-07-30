@@ -34,6 +34,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.GAC;
 using System.Text;
+using System.Threading;
 
 namespace Meta
 {
@@ -377,10 +378,14 @@ namespace Meta
 				selected=selection;
 			}
 			return selected;
-		}
-	}
+		}	}
 	public class Statement
 	{
+		private object replacedValue;
+//		private void Undo()
+//		{
+//
+//		}
 		public void Realize(IMap parent)
 		{
 			object selected=parent;
@@ -428,7 +433,13 @@ namespace Meta
 			}
 			else
 			{
-				((IKeyValue)selected)[lastKey]=val;
+//				if((IKeyValue)selected).ContainsKey(lastKey))
+//				{
+				//	replacedValue=((IKeyValue)selected)[lastKey];
+				//}
+				//else
+//}
+				((IKeyValue)selected)[lastKey]=val; // look up key here, before doing anything stupid
 			}
 		}
 		public Statement(Map code) 
@@ -467,6 +478,7 @@ namespace Meta
 			if(DebugBreak!=null)
 			{
 				DebugBreak();
+				Thread.CurrentThread.Suspend();
 			}
 		}
 		public static event EventHandler Test;
@@ -713,6 +725,30 @@ namespace Meta
 			}
 			isConverted=false;
 			return null;
+		}
+		private static void ExecuteInThread()
+		{
+			Interpreter.Run(executeFileName,new Map());
+			int asdf=0;
+		}
+		private static string executeFileName="";
+		public static void StartDebug(string fileName) 
+		{
+			executeFileName=fileName;
+			debugThread=new Thread(new ThreadStart(ExecuteInThread));
+			debugThread.Start();
+			// Once the file system is integrated, one can simpley select the file one
+			// wants to run and call it. This function won't be needed anymore then.
+			//		Process process=new Process();
+			//		process.StartInfo.FileName=Application.ExecutablePath;
+			//		process.StartInfo.Arguments=fileName;
+			//		process.Start();
+		}
+		private static Thread debugThread;
+		public static void ContinueDebug()
+		{
+			debugThread.Resume();
+//			debugThread
 		}
 		static Interpreter()
 		{

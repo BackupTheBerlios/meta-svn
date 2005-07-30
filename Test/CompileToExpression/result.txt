@@ -10,7 +10,7 @@ Extent (Extent):
     Column (Int32):
       "1"
     Line (Int32):
-      "16"
+      "15"
 statements (ArrayList):
   Entry (Statement)
     expression (Call):
@@ -20,14 +20,14 @@ statements (ArrayList):
             Column (Int32):
               "22"
             Line (Int32):
-              "19"
+              "18"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "17"
+              "16"
         statements (ArrayList):
           Entry (Statement)
             expression (Search):
@@ -36,28 +36,28 @@ statements (ArrayList):
                   Column (Int32):
                     "8"
                   Line (Int32):
-                    "17"
+                    "16"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "17"
+                    "16"
               search (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
                       "8"
                     Line (Int32):
-                      "17"
+                      "16"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "17"
+                      "16"
                 literal (Map):
                   "parent"
             keys (ArrayList):
@@ -67,14 +67,14 @@ statements (ArrayList):
                     Column (Int32):
                       "8"
                     Line (Int32):
-                      "17"
+                      "16"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "17"
+                      "16"
                 literal (Integer):
                   "1"
           Entry (Statement)
@@ -84,14 +84,14 @@ statements (ArrayList):
                   Column (Int32):
                     "22"
                   Line (Int32):
-                    "19"
+                    "18"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "19"
+                    "18"
               statements (ArrayList):
                 Entry (Statement)
                   expression (Literal):
@@ -100,14 +100,14 @@ statements (ArrayList):
                         Column (Int32):
                           "22"
                         Line (Int32):
-                          "19"
+                          "18"
                       FileName (String):
                         "basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "3"
                         Line (Int32):
-                          "19"
+                          "18"
                     literal (Map):
                       "AssignedToCurrent"
                   keys (ArrayList):
@@ -117,14 +117,14 @@ statements (ArrayList):
                           Column (Int32):
                             "22"
                           Line (Int32):
-                            "19"
+                            "18"
                         FileName (String):
                           "basicTest.meta"
                         Start (Position):
                           Column (Int32):
                             "3"
                           Line (Int32):
-                            "19"
+                            "18"
                       literal (Integer):
                         "1"
             keys (ArrayList):
@@ -134,14 +134,14 @@ statements (ArrayList):
                     Column (Int32):
                       "22"
                     Line (Int32):
-                      "19"
+                      "18"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "3"
                     Line (Int32):
-                      "19"
+                      "18"
                 literal (Integer):
                   "2"
       callable (Select):
@@ -150,42 +150,42 @@ statements (ArrayList):
             Column (Int32):
               "15"
             Line (Int32):
-              "16"
+              "15"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "6"
             Line (Int32):
-              "16"
+              "15"
         firstKey (Search):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "9"
               Line (Int32):
-                "16"
+                "15"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "6"
               Line (Int32):
-                "16"
+                "15"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "9"
                 Line (Int32):
-                  "16"
+                  "15"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "6"
                 Line (Int32):
-                  "16"
+                  "15"
             literal (Map):
               "map"
         keys (ArrayList):
@@ -195,14 +195,14 @@ statements (ArrayList):
                 Column (Int32):
                   "15"
                 Line (Int32):
-                  "16"
+                  "15"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "10"
                 Line (Int32):
-                  "16"
+                  "15"
             literal (Map):
               "Merge"
       Extent (Extent):
@@ -210,14 +210,14 @@ statements (ArrayList):
           Column (Int32):
             "22"
           Line (Int32):
-            "19"
+            "18"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "6"
           Line (Int32):
-            "16"
+            "15"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -225,14 +225,14 @@ statements (ArrayList):
             Column (Int32):
               "5"
             Line (Int32):
-              "16"
+              "15"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "16"
+              "15"
         literal (Map):
           "this"
   Entry (Statement)

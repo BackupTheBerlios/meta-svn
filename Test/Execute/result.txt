@@ -246,13 +246,6 @@ Entry (DictionaryEntry)
         "Int32 Length(Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
-    "Apply"
-  Value (NetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.Map Apply(Meta.Map, Meta.Map)"
-Entry (DictionaryEntry)
-  Key (Map):
     "Init"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
@@ -264,11 +257,11 @@ Entry (DictionaryEntry)
   Value (NetClass):
     Entry (DictionaryEntry)
   Key (Map):
-    "Execute"
+    "Apply"
   Value (NetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Void Execute(System.String)"
+        "Meta.Map Apply(Meta.Map, Meta.Map)"
 Entry (DictionaryEntry)
   Key (Map):
     "Join"
