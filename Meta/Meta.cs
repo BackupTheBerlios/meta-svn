@@ -1615,7 +1615,7 @@ namespace Meta
 				if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
 				{
 					Map namespaces=(Map)info[new Map("namespaces")];// SHIT! Name collision!, why " name collision"?
-					foreach(DictionaryEntry entry in namespaces)
+					foreach(DictionaryEntry entry in namespaces) // TODO: maybe use MapAdapter? Good opportunity to extend MapAdapter a bit
 					{
 						string text=((Map)entry.Value).String;
 						nameSpaces.Add(text);
@@ -1653,7 +1653,7 @@ namespace Meta
 				counter++;
 			}
 			cachedAssemblyInfoMap[new Map("namespaces")]=nameSpace;
-			cachedAssemblyInfoMap[new Map("timestamp")]=new Map(File.GetCreationTime(assembly.Location).ToString());
+			cachedAssemblyInfoMap[new Map("timestamp")]=new Map(File.GetLastWriteTime(assembly.Location).ToString());
 			cachedAssemblyInfo[new Map(assembly.Location)]=cachedAssemblyInfoMap;
 			return nameSpaces;
 		}
@@ -3208,7 +3208,7 @@ namespace Meta
 			}
 		}
 	}
-	public class Extent  // TODO: rename?
+	public class Extent
 	{
 		public static ArrayList GetEvents(string fileName,int firstLine,int lastLine)
 		{
@@ -3256,12 +3256,8 @@ namespace Meta
 				return fileName.GetHashCode()*Start.Line.GetHashCode()*Start.Column.GetHashCode()*End.Line.GetHashCode()*End.Column.GetHashCode();
 			}
 		}
-		public class Line 
-		{ 
-		}
-		public class Column
-		{
-		}
+		// TODO: maybe add classes "Column" and "Line"
+		// TODO: on the other hand, maybe we should simply use the "Point" class, instead of "Position"
 		public class Position 
 		{
 			private int line;
