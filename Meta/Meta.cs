@@ -199,12 +199,13 @@ namespace Meta
 
 		public override object EvaluateImplementation(IMap parent)
 		{
-			return Evaluate(parent,new Map()); // is this logical
+			object local=new Map();
+			return Evaluate(parent,ref local); // is this logical
 		}
-		public object Evaluate(IMap parent,IMap local)
+		public object Evaluate(IMap parent,ref object local)
 		{
-			local.Parent=parent; // transplanting here, again, do this only once, combine it, make it explicit
-			Interpreter.callers.Add(local);
+			((IMap)local).Parent=parent; // transplanting here, again, do this only once, combine it, make it explicit
+//			Interpreter.callers.Add(local);
 			for(int i=0;i<statements.Count && i>=0;)
 			{
 				if(Interpreter.reverseDebug) // rename to forwardDebug
@@ -220,8 +221,8 @@ namespace Meta
 				{
 					try
 					{
-						local=(Map)Interpreter.Current;
-						((Statement)statements[i]).Realize(local);
+//						local=(Map)Interpreter.Current;
+						((Statement)statements[i]).Realize(ref local);
 					}
 					catch(ReverseException e)
 					{//maybe set reverse Debug here, threading issue
@@ -237,9 +238,10 @@ namespace Meta
 					i++;
 				}
 			}
-			object result=Interpreter.Current; // looks quite ugly
-			Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
-			return result;
+//			object result=null;
+//			object result=Interpreter.Current; // looks quite ugly
+//			Interpreter.callers.RemoveAt(Interpreter.callers.Count-1);
+			return local;// doesn't make sense to return at all
 		}
 		public Program(Map code)
 		{
@@ -445,14 +447,14 @@ namespace Meta
 //				Interpreter.reverseDebug=false;
 //			}
 		}
-		public void Realize(IMap parent)
+		public void Realize(ref object parent) // should be an IMap for the most part of this method
 		{
 			object selected=parent;
 			object key;
 			
 			if(searchFirst)
 			{
-				object firstKey=((Expression)keys[0]).Evaluate(parent); 
+				object firstKey=((Expression)keys[0]).Evaluate((IMap)parent); 
 				while(!((IMap)selected).ContainsKey(firstKey))
 				{
 					selected=((IMap)selected).Parent;
@@ -488,7 +490,8 @@ namespace Meta
 				{
 					int asdf=0;
 				}
-				Interpreter.Current=val;
+				parent=val;
+//				Interpreter.Current=val;
 			}
 			else
 			{
@@ -818,21 +821,21 @@ namespace Meta
 			file.Close();
 			return ast;
 		}
-		public static object Current
-		{
-			get
-			{
-				if(callers.Count==0)
-				{
-					return null;
-				}
-				return callers[callers.Count-1];
-			}
-			set
-			{
-				callers[callers.Count-1]=value;
-			}
-		}
+//		public static object Current
+//		{
+//			get
+//			{
+//				if(callers.Count==0)
+//				{
+//					return null;
+//				}
+//				return callers[callers.Count-1];
+//			}
+//			set
+//			{
+//				callers[callers.Count-1]=value;
+//			}
+//		}
 		public static object DotNetFromMeta(object meta,Type target,out bool isConverted)
 		{
 			if(target.IsSubclassOf(typeof(Enum)) && meta is Integer)
@@ -910,7 +913,7 @@ namespace Meta
 			}
 		}
 		public static string installationPath;
-		public static ArrayList callers=new ArrayList();
+//		public static ArrayList callers=new ArrayList();
 		public static Hashtable toDotNetConversions=new Hashtable();
 		public static Hashtable toMetaConversions=new Hashtable();
 		public static ArrayList loadedAssemblies=new ArrayList(); // make this stupid class a bit smaller
@@ -2727,7 +2730,7 @@ namespace Meta
 		/* Create a delegate of a certain targetType that calls a Meta function. */
 		public static Delegate DlgFromM(Type delegateType,MethodInfo method,Map code)
 		{ // TODO: delegateType, methode, redundant?
-			code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
+//			code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
 			CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 			ICodeCompiler iCodGetExpressionr=codeProvider.CreateCompiler();
 			string returnType;
