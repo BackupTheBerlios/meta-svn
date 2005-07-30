@@ -185,6 +185,10 @@ Entry (DictionaryEntry)
           Value (DotNetClass):
                 Entry (DictionaryEntry)
       Key (Map):
+        "Utility"
+      Value (DotNetClass):
+            Entry (DictionaryEntry)
+      Key (Map):
         "Extent"
       Value (DotNetClass):
         Entry (DictionaryEntry)

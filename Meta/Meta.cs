@@ -2497,7 +2497,7 @@ namespace Meta
 		}
 		// TODO: check use cases of this method, improve
 		public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,Map code)
-		{ 
+		{
 			CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 			ICodeCompiler compiler=codeProvider.CreateCompiler();
 			string returnType;
@@ -2576,9 +2576,8 @@ namespace Meta
 			{
 				methods=new ArrayList(targetType.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
 			}
-			methods.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
+//			methods.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
 
-			// TODO: remove the methods.Reverse stuff and see what happens
 			overloadedMethods=(MethodBase[])methods.ToArray(typeof(MethodBase));
 		}
 		public DotNetMethod(string name,object target,Type targetType)
@@ -2958,7 +2957,7 @@ namespace Meta
 			public IndentationStream(TokenStream tokenStream) 
 			{
 				this.tokenStream=tokenStream;
-				Indent(0,new Token()); // TODO: remove "new Token" ?
+				Indent(0,new Token());
 			}
 			public Token nextToken() 
 			{
@@ -3008,8 +3007,8 @@ namespace Meta
 				}
 				return (Token)tokenBuffer.Dequeue();
 			}
-			protected void Indent(int newIndentationDepth,Token token) 
-			{ 
+			protected void Indent(int newIndentationDepth,Token currentToken) 
+			{
 				// TODO: use Extent instead of Token, or just the line we're in
 				int difference=newIndentationDepth-indentationDepth; 
 				if(difference==0)
@@ -3033,13 +3032,23 @@ namespace Meta
 					// This doesn't get through properly because it is caught by ANTLR
 					// TODO: make extra exception later.
 					// I don't understand it and the lines are somehow off
-					throw new RecognitionException("Incorrect indentation.",token.getFilename(),token.getLine(),token.getColumn());
+					throw new RecognitionException("Incorrect indentation.",currentToken.getFilename(),currentToken.getLine(),currentToken.getColumn());
 				}
 				indentationDepth=newIndentationDepth;
 			}
 			protected Queue tokenBuffer=new Queue();
 			protected TokenStream tokenStream;
 			protected int indentationDepth=-1;
+		}
+	}
+	public class Utility
+	{
+		public static string ReadFile(string fileName)
+		{
+			StreamReader reader=new StreamReader(fileName);
+			string result=reader.ReadToEnd();
+			reader.Close();
+			return result;
 		}
 	}
 	namespace TestingFramework
@@ -3107,9 +3116,11 @@ namespace Meta
 				resultCopyWriter.Write(result);
 				resultCopyWriter.Close();
 				// TODO: Introduce utility methods
-				StreamReader checkReader=new StreamReader(Path.Combine(path,"check.txt"));
-				string check=checkReader.ReadToEnd();
-				checkReader.Close();
+				string check=Utility.ReadFile(Path.Combine(path,"check.txt"));
+
+//				StreamReader checkReader=new StreamReader(Path.Combine(path,"check.txt"));
+//				string check=checkReader.ReadToEnd();
+//				checkReader.Close();
 				return result.Equals(check);
 			}
 //			public static string Serialize(object ttoSerialize)
