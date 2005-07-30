@@ -3055,7 +3055,9 @@ namespace Meta
 	{
 		public interface ISerializeSpecial
 		{
-			string Serialize(string indent,string[] functions);
+			// TODO: add separate function or add "out" parameter, that says whether or not the special serialization has actually worked
+			string Serialize(string indent,string[] functions); // TODO: this is much too complicated, and rarely needed, maybe get rid of it completely, if possible
+			// TODO: at least add the indent automatically, and do not use the functions
 		}
 		public abstract class TestCase
 		{
@@ -3108,179 +3110,76 @@ namespace Meta
 				StringBuilder stringBuilder=new StringBuilder();
 				Serialize(ttoSerialize,"",functions,stringBuilder);
 				string result=stringBuilder.ToString();
-//				string result=Serialize(ttoSerialize,"",functions);
 				StreamWriter resultWriter=new StreamWriter(Path.Combine(path,"result.txt")); // factor this stuff out?, into what class?
 				resultWriter.Write(result);
 				resultWriter.Close();
 				StreamWriter resultCopyWriter=new StreamWriter(Path.Combine(path,"resultCopy.txt"));
 				resultCopyWriter.Write(result);
 				resultCopyWriter.Close();
-				// TODO: Introduce utility methods
 				string check=Utility.ReadFile(Path.Combine(path,"check.txt"));
-
-//				StreamReader checkReader=new StreamReader(Path.Combine(path,"check.txt"));
-//				string check=checkReader.ReadToEnd();
-//				checkReader.Close();
 				return result.Equals(check);
 			}
-//			public static string Serialize(object ttoSerialize)
-//			{
-//				return Serialize(ttoSerialize,"",new string[]{});
-//			}
-
-//			public static string Serialize(object toSerialize)
-//			{
-//				StringBuilder stringBuilder=new StringBuilder();
-//				Serialize(toSerialize,"",new string[]{},stringBuilder);
-//				return stringBuilder.ToString();
-//			}
-			// TODO: refactor, make single exit
 			public static void Serialize(object toSerialize,string indent,string[] methods,StringBuilder stringBuilder) 
 			{
 				if(toSerialize==null) 
 				{
 					stringBuilder.Append(indent+"null\n");
-					return;
-//					return indent+"null\n";
 				}
-				if(toSerialize is ISerializeSpecial) 
+				else if(toSerialize is ISerializeSpecial && ((ISerializeSpecial)toSerialize).Serialize(indent,methods)!=null) 
 				{
-					string text=((ISerializeSpecial)toSerialize).Serialize(indent,methods);
-					if(text!=null) 
-					{
-						stringBuilder.Append(text);
-						return;
-//						return text;
-					}
+					stringBuilder.Append(((ISerializeSpecial)toSerialize).Serialize(indent,methods));
 				}
-				if(toSerialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
+				else if(toSerialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
 					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) 
 				{
 					stringBuilder.Append(indent+"\""+toSerialize.ToString()+"\""+"\n");
-					return;
-//					return indent+"\""+toSerialize.ToString()+"\""+"\n";
 				}
-				if(toSerialize is IEnumerable) 
+				else if(toSerialize is IEnumerable) 
 				{
-//					string text="";
 					foreach(object entry in (IEnumerable)toSerialize)
 					{
 						stringBuilder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
-//						text+=indent+"Entry ("+entry.GetType().Name+")\n";
 						Serialize(entry,indent+"  ",methods,stringBuilder);
-//						text+=indent+"Entry ("+entry.GetType().Name+")\n"+Serialize(entry,indent+"  ",methods);
-					}
-//					stringBuilder.Append(text);
-					return;
-//					return text;
-				}
-//				string result=""; // TODO: maybe refactor this to all use the same variable
-				ArrayList members=new ArrayList();
-
-				members.AddRange(toSerialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
-				members.AddRange(toSerialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
-				foreach(string method in methods)
-				{
-					MethodInfo methodInfo=toSerialize.GetType().GetMethod(method,BindingFlags.Public|BindingFlags.Instance);
-					if(methodInfo!=null)
-					{ /* Only add methodInfo to members if it really exists, this isn't sure because methods are supplied per test not per class. */
-						members.Add(methodInfo);
 					}
 				}
-				members.Sort(new CompareMemberInfos());
-				foreach(MemberInfo member in members) 
+				else
 				{
-					if(member.Name!="Item") 
+					ArrayList members=new ArrayList();
+					members.AddRange(toSerialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
+					members.AddRange(toSerialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
+					foreach(string method in methods)
 					{
-						if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) 
+						MethodInfo methodInfo=toSerialize.GetType().GetMethod(method,BindingFlags.Public|BindingFlags.Instance);
+						if(methodInfo!=null)
+						{ 
+							members.Add(methodInfo);
+						}
+					}
+					members.Sort(new CompareMemberInfos());
+					foreach(MemberInfo member in members) 
+					{
+						if(member.Name!="Item") 
 						{
-							if(toSerialize.GetType().Namespace==null ||!toSerialize.GetType().Namespace.Equals("System.Windows.Forms"))
-							{ // ugly hack to avoid some srange behaviour of some classes in System.Windows.Forms
-								object val=toSerialize.GetType().InvokeMember(member.Name,BindingFlags.Public
-									|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
-									|BindingFlags.InvokeMethod,null,toSerialize,null);
-								stringBuilder.Append(indent+member.Name);
-//								result+=indent+member.Name;
-								if(val!=null)
-								{
-									stringBuilder.Append(" ("+val.GetType().Name+")");
-//									result+=" ("+val.GetType().Name+")";
+							if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) 
+							{				
+								if(toSerialize.GetType().Namespace==null ||!toSerialize.GetType().Namespace.Equals("System.Windows.Forms")) // ugly hack to avoid some srange behaviour of some classes in System.Windows.Forms
+								{ 
+									object val=toSerialize.GetType().InvokeMember(member.Name,BindingFlags.Public
+										|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
+										|BindingFlags.InvokeMethod,null,toSerialize,null);
+									stringBuilder.Append(indent+member.Name);
+									if(val!=null)
+									{
+										stringBuilder.Append(" ("+val.GetType().Name+")");
+									}
+									stringBuilder.Append(":\n");
+									Serialize(val,indent+"  ",methods,stringBuilder);
 								}
-								stringBuilder.Append(":\n");
-								Serialize(val,indent+"  ",methods,stringBuilder);
-//								result+=":\n"+Serialize(val,indent+"  ",methods);
 							}
 						}
 					}
 				}
-				return;
-//				return result;
 			}
-//			public static string Serialize(object toSerialize,string indent,string[] methods) 
-//			{
-//				if(toSerialize==null) 
-//				{
-//					return indent+"null\n";
-//				}
-//				if(toSerialize is ISerializeSpecial) 
-//				{
-//					string text=((ISerializeSpecial)toSerialize).Serialize(indent,methods);
-//					if(text!=null) 
-//					{
-//						return text;
-//					}
-//				}
-//				if(toSerialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
-//					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) 
-//				{
-//					return indent+"\""+toSerialize.ToString()+"\""+"\n";
-//				}
-//				if(toSerialize is IEnumerable) 
-//				{
-//					string text="";
-//					foreach(object entry in (IEnumerable)toSerialize)
-//					{
-//						text+=indent+"Entry ("+entry.GetType().Name+")\n"+Serialize(entry,indent+"  ",methods);
-//					}
-//					return text;
-//				}
-//				string result=""; // TODO: maybe refactor this to all use the same variable
-//				ArrayList members=new ArrayList();
-//
-//				members.AddRange(toSerialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
-//				members.AddRange(toSerialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
-//				foreach(string method in methods)
-//				{
-//					MethodInfo methodInfo=toSerialize.GetType().GetMethod(method,BindingFlags.Public|BindingFlags.Instance);
-//					if(methodInfo!=null)
-//					{ /* Only add methodInfo to members if it really exists, this isn't sure because methods are supplied per test not per class. */
-//						members.Add(methodInfo);
-//					}
-//				}
-//				members.Sort(new CompareMemberInfos());
-//				foreach(MemberInfo member in members) 
-//				{
-//					if(member.Name!="Item") 
-//					{
-//						if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) 
-//						{
-//							if(toSerialize.GetType().Namespace==null ||!toSerialize.GetType().Namespace.Equals("System.Windows.Forms"))
-//							{ // ugly hack to avoid some srange behaviour of some classes in System.Windows.Forms
-//								object val=toSerialize.GetType().InvokeMember(member.Name,BindingFlags.Public
-//									|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
-//									|BindingFlags.InvokeMethod,null,toSerialize,null);
-//								result+=indent+member.Name;
-//								if(val!=null)
-//								{
-//									result+=" ("+val.GetType().Name+")";
-//								}
-//								result+=":\n"+Serialize(val,indent+"  ",methods);
-//							}
-//						}
-//					}
-//				}
-//				return result;
-//			}
 		}
 		class CompareMemberInfos:IComparer
 		{
