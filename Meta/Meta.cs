@@ -2336,7 +2336,8 @@ namespace Meta
 			if(add!=null)
 			{
 				foreach(object entry in map.Array)
-				{ // combine this with Library function "Init"
+				{ 
+					// TODO: combine this with Library function "Init"
 					add.Invoke(collection,new object[]{entry});//  call add from above!
 				}
 				isSuccess=true;
@@ -2359,7 +2360,7 @@ namespace Meta
 			{
 				MethodInfo invoke=parameter.GetMethod("Invoke",BindingFlags.Instance
 					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-				Delegate function=DlgFromM(parameter,invoke,(Map)meta);
+				Delegate function=CreateDelegateFromCode(parameter,invoke,(Map)meta);
 				return function;
 			}
 			else if(parameter.IsArray && meta is IMap && ((Map)meta).Array.Count!=0)
@@ -2494,97 +2495,11 @@ namespace Meta
 			}
 			return Interpreter.MetaFromDotNet(result);
 		}
-//		public object Call(object argument)
-//		{
-//			object returnValue=null;
-//			object result=null; // TODO: get rid of one of them
-//
-//			ArrayList oneArgumentMethods=new ArrayList();
-//			foreach(MethodBase method in overloadedMethods)
-//			{
-//				if(method.GetParameters().Length==1)
-//				{ 
-//					oneArgumentMethods.Add(method);
-//				}
-//			}
-//			bool isExecuted=false;
-//			oneArgumentMethods.Sort(new ArgumentComparer());
-//			foreach(MethodBase method in oneArgumentMethods)
-//			{
-//				bool isConverted;
-//				object oParameter=ConvertParameter(argument,method.GetParameters()[0].ParameterType,out isConverted);
-//				if(isConverted)
-//				{
-//					if(method is ConstructorInfo)
-//					{
-//						returnValue=((ConstructorInfo)method).Invoke(new object[] {oParameter});
-//					}
-//					else
-//					{
-//						returnValue=method.Invoke(target,new object[] {oParameter});
-//					}
-//					isExecuted=true;// remove, use argumentsMatched instead
-//					break;
-//				}
-//			}
-//			if(!isExecuted)
-//			{
-//				//ArrayList aarguments=((IMap)argument).Array;
-//				ArrayList rightNumberArgumentMethods=new ArrayList();
-//				foreach(MethodBase method in overloadedMethods)
-//				{
-//					if(((IMap)argument).Array.Count==method.GetParameters().Length)
-//					{ // don't match if different parameter list length
-//						if(((IMap)argument).Array.Count==((IMap)argument).Keys.Count)
-//						{ // only call if there are no non-integer keys ( move this somewhere else)
-//							rightNumberArgumentMethods.Add(method);
-//						}
-//					}
-//				}
-//				if(rightNumberArgumentMethods.Count==0)
-//				{
-//					throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");// TODO: Just a quickfix, really
-//				}
-//				foreach(MethodBase method in rightNumberArgumentMethods)
-//				{
-//					ArrayList arguments=new ArrayList();
-//					bool argumentsMatched=true;
-//					ParameterInfo[] arPrmtifParameters=method.GetParameters();
-//					for(int i=0;argumentsMatched && i<arPrmtifParameters.Length;i++)
-//					{
-//						arguments.Add(ConvertParameter(((IMap)argument).Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
-//					}
-//					// TODO: remove Hungarian in this method
-//					if(argumentsMatched)
-//					{
-//						if(method is ConstructorInfo)
-//						{
-//							returnValue=((ConstructorInfo)method).Invoke(arguments.ToArray());
-//						}
-//						else
-//						{
-//							returnValue=method.Invoke(target,arguments.ToArray());
-//						}
-//						isExecuted=true;// remove, use argumentsMatched instead
-//						break;
-//					}
-//				}
-//			}
-//			result=returnValue;
-//			if(!isExecuted)
-//			{
-//				throw new ApplicationException("Method "+this.name+" could not be called.");
-//			}
-//			return Interpreter.MetaFromDotNet(result);
-//		}
-		// TODO: rename, remove Hungarian
-		public static Delegate DlgFromM(Type delegateType,MethodInfo method,Map code)
+		// TODO: check use cases of this method, improve
+		public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,Map code)
 		{ 
-			// TODO: delegateType, methode, redundant?
-//			code.Parent=(IMap)Interpreter.callers[Interpreter.callers.Count-1];
-			// TODO: should maybe get a parent passed in??? Test editor
 			CSharpCodeProvider codeProvider=new CSharpCodeProvider();
-			ICodeCompiler iCodGetExpressionr=codeProvider.CreateCompiler();
+			ICodeCompiler compiler=codeProvider.CreateCompiler();
 			string returnType;
 			if(method==null)
 			{
@@ -2601,9 +2516,9 @@ namespace Meta
 			string argumentBuiling="Map arg=new Map();";
 			if(method!=null)
 			{
-				foreach(ParameterInfo prmifParameter in method.GetParameters())
+				foreach(ParameterInfo parameter in method.GetParameters())
 				{
-					argumentList+=prmifParameter.ParameterType.FullName+" arg"+counter;
+					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
 					argumentBuiling+="arg[new Integer("+counter+")]=arg"+counter+";";
 					if(counter<method.GetParameters().Length)
 					{
@@ -2621,7 +2536,7 @@ namespace Meta
 				if(!method.ReturnType.Equals(typeof(void)))
 				{
 					source+="return ("+returnType+")";
-					source+="Interpreter.DotNetFromMeta(result,typeof("+returnType+"));"; // does conversion even make sense here? Must be isConverted back anyway.
+					source+="Interpreter.DotNetFromMeta(result,typeof("+returnType+"));"; 
 				}
 			}
 			else 
@@ -2636,12 +2551,12 @@ namespace Meta
 			ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
 			assemblyNames.AddRange(Interpreter.loadedAssemblies);
 			CompilerParameters compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
-			CompilerResults compilerResults=iCodGetExpressionr.CompileAssemblyFromSource(compilerParameters,source);
+			CompilerResults compilerResults=compiler.CompileAssemblyFromSource(compilerParameters,source);
 			Type containerType=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
 			object container=containerType.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {code});
-			if(method==null)
+			if(method==null) // somewhat unlogical
 			{
-				delegateType=typeof(DelegateCreatedForGenericDelegates);
+				delegateType=typeof(DelegateCreatedForGenericDelegates); // TODO: use MethodInvoker here!!
 			}
 			Delegate result=Delegate.CreateDelegate(delegateType,
 				container,"EventHandlerMethod");
@@ -2962,7 +2877,7 @@ namespace Meta
 															BindingFlags.Static|BindingFlags.Instance);
 			MethodInfo invoke=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
 																						|BindingFlags.Public|BindingFlags.NonPublic);
-			Delegate eventDelegate=DotNetMethod.DlgFromM(eventInfo.EventHandlerType,invoke,code);
+			Delegate eventDelegate=DotNetMethod.CreateDelegateFromCode(eventInfo.EventHandlerType,invoke,code);
 			return eventDelegate;
 		}
 		private IDictionary MTable
