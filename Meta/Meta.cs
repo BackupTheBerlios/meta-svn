@@ -28,10 +28,8 @@ using System.Threading;
 using Microsoft.CSharp;
 using System.Windows.Forms;
 using System.Globalization;
-
 using antlr;
 using antlr.collections;
-
 using Meta.Parser;
 using Meta.TestingFramework;
 
@@ -617,18 +615,37 @@ namespace Meta
 		}
 		public static object DotNetFromMeta(object meta,Type target)
 		{
-			try
-			{ 
-				// TODO: don't try-catch, check if the conversion is null (and isConverted??)
-				MetaToDotNetConversion conversion=(MetaToDotNetConversion)((Hashtable)
-					Interpreter.toDotNetConversions[target])[meta.GetType()];
-				bool isConverted;
-				return conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
+			object result=meta;
+			if(Interpreter.toDotNetConversions.ContainsKey(target))
+			{
+				Hashtable conversions=(Hashtable)Interpreter.toDotNetConversions[target];
+				if(conversions.ContainsKey(meta.GetType()))
+				{
+					MetaToDotNetConversion conversion=(MetaToDotNetConversion)conversions[meta.GetType()];
+					bool isConverted;
+					object converted= conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
+					if(isConverted)
+					{
+						result=converted;
+					}
+				}
 			}
-			catch (Exception e){
-				return meta;
-			}
+			return result;
 		}
+//		public static object DotNetFromMeta(object meta,Type target)
+//		{
+//			try
+//			{ 
+//				// TODO: don't try-catch, check if the conversion is null (and isConverted??)
+//				MetaToDotNetConversion conversion=(MetaToDotNetConversion)((Hashtable)
+//					Interpreter.toDotNetConversions[target])[meta.GetType()];
+//				bool isConverted;
+//				return conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
+//			}
+//			catch (Exception e){
+//				return meta;
+//			}
+//		}
 		public static object Run(string fileName,IMap argument)
 		{
 			Map program=Interpreter.Compile(fileName);
@@ -889,6 +906,7 @@ namespace Meta
 					this.source=typeof(Integer);
 					this.target=typeof(bool);
 				}
+				// TODO: make this single-exit
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					isConverted=true;
