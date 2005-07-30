@@ -1,10 +1,10 @@
 using System;
-
-
 using System.Collections;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Threading;
 using Meta;
+
 
 public class map 
 {
@@ -20,16 +20,23 @@ public class map
 		//			BreakPoint(new Map("stuff"));
 		//		}
 	}
+	private static void ExecuteInThread()
+	{
+		Interpreter.Run(executeFileName,new Map());
+		int asdf=0;
+	}
+	private static string executeFileName="";
 	public static void Execute(string fileName) 
-	{ // TODO: not a good name, takes a file name, not a string after all, 
-		// adding a character "f" for files doesn't make sense, though
-		// After all, the file system will be integrated anyway.
+	{ 
+		executeFileName=fileName;
+		Thread thread=new Thread(new ThreadStart(ExecuteInThread));
+		thread.Start();
 		// Once the file system is integrated, one can simpley select the file one
 		// wants to run and call it. This function won't be needed anymore then.
-		Process process=new Process();
-		process.StartInfo.FileName=Application.ExecutablePath;
-		process.StartInfo.Arguments=fileName;
-		process.Start();
+//		Process process=new Process();
+//		process.StartInfo.FileName=Application.ExecutablePath;
+//		process.StartInfo.Arguments=fileName;
+//		process.Start();
 	}
 	public static bool ContainsKey(Map map,object key) 
 	{

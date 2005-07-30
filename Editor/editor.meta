@@ -84,7 +84,14 @@ keyBindings=
 		[Keys.F]=!editor.control.FindAndReplace""
 RunProgram=!
 	Save'
-	Meta.Interpreter.DebugBreak:!editor.control.ShowDebugValue "test"
+	// use fileName here
+	System.Console.WriteLine editor.control.RealLine
+	System.Console.WriteLine editor.control.Column
+	Meta.Expression.BreakPoint:Meta.BreakPoint
+		"c:\_projectsupportmaterial\meta\editor\editor.meta"
+		editor.control.RealLine
+		editor.control.Column
+	Meta.Interpreter.DebugBreak:!editor.control.ShowDebugValue Meta.Interpreter.DebugValue
 	Execute fileName
 Editor=!
 	control=Init

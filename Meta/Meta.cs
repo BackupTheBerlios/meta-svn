@@ -62,14 +62,17 @@ namespace Meta
 		public virtual bool Stop()
 		{
 			bool stop=false;
-			if(BreakPoint.Line>=Extent.Start.Line && BreakPoint.Line<=Extent.End.Line)
+			if(BreakPoint!=null)
 			{
-				if(BreakPoint.Column>=Extent.Start.Column && BreakPoint.Column<=Extent.End.Column)
+				if(BreakPoint.Line>=Extent.Start.Line && BreakPoint.Line<=Extent.End.Line)
 				{
-//					if(!HasChildren())
-//					{
+					if(BreakPoint.Column>=Extent.Start.Column && BreakPoint.Column<=Extent.End.Column)
+					{
+						//					if(!HasChildren())
+						//					{
 						stop=true;
-//					}
+						//					}
+					}
 				}
 			}
 			return stop;
@@ -82,8 +85,13 @@ namespace Meta
 			{
 				return breakPoint;
 			}
+			set
+			{
+				breakPoint=value;
+			}
 		}
-		static BreakPoint breakPoint=new BreakPoint(@"c:\_projectsupportmaterial\meta\editor\editor.meta",152,11);
+		private static BreakPoint breakPoint;//=new BreakPoint(@"c:\_projectsupportmaterial\meta\editor\editor.meta",152,11);
+//		static BreakPoint breakPoint=new BreakPoint(@"c:\_projectsupportmaterial\meta\editor\editor.meta",152,11);
 		//static BreakPoint breakPoint=new BreakPoint(@"c:\_projectsupportmaterial\test\basicTest.meta",22,12);
 		static Expression()
 		{
@@ -175,9 +183,12 @@ namespace Meta
 		public override bool Stop()
 		{
 			bool stop=false;
-			if(Expression.BreakPoint.Line==Extent.End.Line+1 && Expression.BreakPoint.Column==1)
+			if(Expression.BreakPoint!=null)
 			{
-				stop=true;
+				if(Expression.BreakPoint.Line==Extent.End.Line+1 && Expression.BreakPoint.Column==1)
+				{
+					stop=true;
+				}
 			}
 			return stop;
 		}
@@ -208,7 +219,7 @@ namespace Meta
 		}
 		public readonly ArrayList statements=new ArrayList();
 	}
-	public class BreakPoint
+	public class BreakPoint //// use Position class here + Line and Column classes!!!!!
 	{
 		public BreakPoint(string fileName,int line,int column)
 		{
@@ -485,7 +496,12 @@ namespace Meta
 			streamWriter.Write(SaveToFile(meta,"",true).TrimEnd(new char[]{'\n'}));
 			streamWriter.Close();
 		}
-		public static string SaveToFile(object meta,string indent,bool isRightSide)
+		public static string Serialize(object meta)
+		{
+			return SaveToFile(meta,"",true);
+		}
+		// make this more efficient and more flexible with respect to special things, like functions
+		public static string SaveToFile(object meta,string indent,bool isRightSide) // dumb NAME!!!!
 		{
 			if(meta is Map)
 			{
@@ -540,7 +556,8 @@ namespace Meta
 			}
 			else
 			{
-				throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
+				return "\""+meta.ToString()+"\""; // fix this!!!
+				//throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
 			}
 		}
 		public static IKeyValue Merge(params IKeyValue[] arkvlToMerge)
@@ -2691,7 +2708,7 @@ namespace Meta
 	/* Representation of a .NET object. */
 	public class NetObject: NetContainer, IKeyValue
 	{
-		public NetObject(object target):base(target,target.GetType())
+		public NetObject(object target):base(target,target.GetType()) // should maybe have a test, whether target is null????
 		{
 		}
 		public override string ToString()

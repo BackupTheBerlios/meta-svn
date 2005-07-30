@@ -57,11 +57,16 @@ public class ScrollingTextBox: RichTextBox
 //		Value val=new Value("hello hello hello");
 //		val.Show();
 
-
+		//((Control)this).Paint+=new PaintEventHandler(ScrollingTextBox_Paint);
 //		Value val=new Value("hello !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 //        this.Controls.Add(val);
 //		val.Location=new Point(400,400);
 //		val.SetNow();
+//		base.SetStyle(ControlStyles.UserPaint,true);
+
+		timer.Interval=50;
+		timer.Tick+=new EventHandler(timer_Tick);
+		timer.Start();
 	}
 	public void Test()
 	{
@@ -103,6 +108,8 @@ public class ScrollingTextBox: RichTextBox
 		this.Resize += new System.EventHandler(this.ScrollingTextBox_Resize);
 		this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScrollingTextBox_MouseDown);
 		this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ScrollingTextBox_KeyPress);
+		this.TextChanged += new System.EventHandler(this.ScrollingTextBox_TextChanged);
+		this.Layout += new System.Windows.Forms.LayoutEventHandler(this.ScrollingTextBox_Layout);
 		this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ScrollingTextBox_MouseMove);
 		this.SelectionChanged += new System.EventHandler(this.ScrollingTextBox_SelectionChanged);
 
@@ -113,14 +120,14 @@ public class ScrollingTextBox: RichTextBox
 	}
 	string GetLeftLine() 
 	{
-		int iColumn=GetColumn();
+		int iColumn=Column;
 		string sLine=GetLineText();
 		string sLeft=sLine.Substring(0,iColumn);
 		return sLeft;
 	}
 	int GetScrollColumn() 
 	{ // this doesn't get the real column, but the scroll column
-		int iColumn=GetColumn();
+		int iColumn=Column;
 		int iTabs=GetTabs(GetLeftLine());
 		int iScrollLine=iTabs*5+iColumn;
 		return iScrollLine;
@@ -388,9 +395,66 @@ public class ScrollingTextBox: RichTextBox
         private int startLine;
 		
 	}
-	public void ShowDebugValue(string text)
+	private System.Windows.Forms.Timer timer=new System.Windows.Forms.Timer();
+
+	private void timer_Tick(object sender, EventArgs e)
 	{
-		MessageBox.Show(text);
+		DrawInfo();
+	}
+	public class Info
+	{
+		private string text;
+		private Font font=new Font("Courier New",10.0f);
+		public Info(string text)
+		{
+			this.text=text;
+		}
+		public void Draw(Graphics graphics,Point position)
+		{
+			graphics.DrawString(text,font,Brushes.Red,position);			
+		}
+
+
+	}
+	public Point CursorPosition
+	{
+		get
+		{
+			return GetPositionFromCharIndex(SelectionStart);
+		}
+	}
+	protected override void OnPaintBackground(PaintEventArgs pevent)
+	{
+		base.OnPaintBackground (pevent);
+	}
+	protected override void OnNotifyMessage(Message m)
+	{
+		base.OnNotifyMessage (m);
+	}
+
+
+	protected override void OnPaint(PaintEventArgs e)
+	{
+		base.OnPaint(e);
+//		if(info!=null)
+//		{
+//			info.Draw(e.Graphics,CursorPosition);
+//		}
+	}
+
+	Info info;//=new Info("hello!!!!!!!!!\n\n\nhello!!!!!!!!");
+	public void ShowDebugValue(object debugValue)
+	{
+		info=new Info(Interpreter.Serialize(debugValue));// add some real serialization here!!!!!
+//		int asdf=0;
+
+
+
+//		Graphics graphics=this.CreateGraphics();
+//		graphics.DrawString(debugValue.ToString(),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
+////		MessageBox.Show(debugValue.ToString());
+//		string x=this.Text;
+//		int asdf=0;
 	}
 	public void StopInteractiveSearch()
 	{
@@ -507,7 +571,7 @@ public class ScrollingTextBox: RichTextBox
 	}
 	public void MoveLineDown() 
 	{
-		MoveCursor(GetLine()+1,GetScrollColumn());
+		MoveCursor(Line+1,GetScrollColumn());
 	}
 	public void SelectWordRight()
 	{
@@ -515,7 +579,7 @@ public class ScrollingTextBox: RichTextBox
 
 	public void MoveLineUp() 
 	{
-		MoveCursor(GetLine()-1,GetScrollColumn());
+		MoveCursor(Line-1,GetScrollColumn());
 	}
 
 	public void MoveCharLeft() 
@@ -732,19 +796,16 @@ public class ScrollingTextBox: RichTextBox
 	}
 	void MoveUp() 
 	{
-		MoveCursor(GetLine()-1,GetColumn());
+		MoveCursor(Line-1,Column);
 	}
 	void MoveDown() 
 	{
-		MoveCursor(GetLine()+1,GetColumn());
+		MoveCursor(Line+1,Column);
 	}
-	int GetLine() 
-	{
-		return GetLineFromCharIndex(SelectionStart);
-	}
+
 	string GetLineText() 
 	{
-		int lineL=GetLine();
+		int lineL=Line;
 		string lineS;
 		if(lineL<Lines.Length)
 		{
@@ -756,15 +817,44 @@ public class ScrollingTextBox: RichTextBox
 		}
 		return lineS;
 	}
-	int GetColumn() 
+//	int Line 
+//	{
+//		return GetLineFromCharIndex(SelectionStart);
+//	}
+	public int RealLine
 	{
-		if(SelectionStart<LinesLength)
+		get
 		{
-			int asdf=0;
+			return Line-emptyLines.Length;
 		}
-		return SelectionStart-LinesLength;
-		
 	}
+	public int Line  // use Position class here, and Line class!!!!!!!! //// rename to UnrealLine , or so
+	{
+		get
+		{
+			return GetLineFromCharIndex(SelectionStart);
+		}
+	}
+	public int Column
+	{
+		get
+		{
+			if(SelectionStart<LinesLength)
+			{
+				int asdf=0;
+			}
+			return SelectionStart-LinesLength;
+		}
+	}
+//	int Column 
+//	{
+//		if(SelectionStart<LinesLength)
+//		{
+//			int asdf=0;
+//		}
+//		return SelectionStart-LinesLength;
+//		
+//	}
 	public string RealText
 	{
 		get
@@ -809,13 +899,13 @@ public class ScrollingTextBox: RichTextBox
 	{
 		SelectionStart=position;
 	}
-	public int Line
-	{
-		get
-		{
-			return GetLineFromCharIndex(SelectionStart);
-		}
-	}
+//	public int Line
+//	{
+//		get
+//		{
+//			return GetLineFromCharIndex(SelectionStart);
+//		}
+//	}
 	public char CurrentCharacter
 	{
 		get
@@ -863,23 +953,51 @@ public class ScrollingTextBox: RichTextBox
 	// implement proper tabstops sometime: http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/thread/1ef28b955bd06981/27f324e4a1b722d4?q=c%23+control+i+richtextbox+tab&rnum=5&hl=en#27f324e4a1b722d4
 	void ScrollToMiddle() 
 	{
-		Win32.POINT point=new Win32.POINT();
-//		int colC=GetColumn();
-		int lineL=GetLine();
-		string lineS=GetLineText();
-		Graphics graphics=this.CreateGraphics();
-		SizeF sizeF=graphics.MeasureString(GetLeftLine().Replace("\t","aaaaa").Replace(" ","a"),Font,new PointF(0.0f,0.0f),(StringFormat)StringFormat.GenericTypographic.Clone());
-		point.x=(int)sizeF.Width; // this sucks, can't we scroll the rest, too
-		point.y=(int)((this.Font.Height+1.0)*(float)lineL-(float)this.Size.Height/1.618f); // -1.0 is magic number, don't know why
+		if(!dontScroll) 
+		{
+			Win32.POINT point=new Win32.POINT();
+			//		int colC=Column;
+			int lineL=Line;
+			string lineS=GetLineText();
+			Graphics graphics=this.CreateGraphics();
+			SizeF sizeF=graphics.MeasureString(GetLeftLine().Replace("\t","aaaaa").Replace(" ","a"),Font,new PointF(0.0f,0.0f),(StringFormat)StringFormat.GenericTypographic.Clone());
+			point.x=(int)sizeF.Width; // this sucks, can't we scroll the rest, too
+			point.y=(int)((this.Font.Height+1.0)*(float)lineL-(float)this.Size.Height/1.618f); // -1.0 is magic number, don't know why
 			// check out this stuff: http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/thread/1ef28b955bd06981/27f324e4a1b722d4?q=c%23+control+i+richtextbox+tab&rnum=5&hl=en#27f324e4a1b722d4
-		SetScrollPos(point);
+			SetScrollPos(point);
+		}
+//		DrawInfo();
+
+	}
+	protected void DrawInfo() // get back into the correct thread!!!!!!!!!!
+	{
+		if(info!=null)
+		{
+//			if(this.InvokeRequired)
+//			{
+//				((RichTextBox)this).Invoke(new MethodInvoker(DrawInfo));
+//			}
+//			else
+//			{
+				info.Draw(this.CreateGraphics(),CursorPosition);
+//			}
+		}
 	}
 	private void ScrollingTextBox_SelectionChanged(object sender, System.EventArgs e) 
 	{
-		if(!dontScroll) 
-		{
-			ScrollToMiddle();
-		}
+//		if(!dontScroll) 
+//		{
+			ScrollToMiddle(); // make this method more general!!!!!
+//			if(info!=null)
+//			{
+//				info.Draw(this.CreateGraphics(),CursorPosition);
+//			}
+
+//		}
+	}
+	private void ScrollingTextBox_TextChanged(object sender, System.EventArgs e)
+	{
+		ScrollToMiddle();
 	}
 	// copied from http://www.thecodeproject.com/cs/miscctrl/SyntaxHighlighting.asp
 
@@ -905,11 +1023,11 @@ public class ScrollingTextBox: RichTextBox
 		{
 			if(m.WParam.ToInt32()>IntPtr.Zero.ToInt32()) 
 			{
-				MoveCursor(GetLine()-3,GetScrollColumn());
+				MoveCursor(Line-3,GetScrollColumn());
 			}
 			else if(m.WParam.ToInt32()<IntPtr.Zero.ToInt32()) 
 			{
-				MoveCursor(GetLine()+3,GetScrollColumn());
+				MoveCursor(Line+3,GetScrollColumn());
 			}
 			ScrollToMiddle();
 			return;
@@ -988,5 +1106,15 @@ public class ScrollingTextBox: RichTextBox
 
 	private void ScrollingTextBox_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e) 
 	{
+	}
+
+	private void ScrollingTextBox_Paint(object sender, PaintEventArgs e)
+	{
+		int asdf=0;
+	}
+
+	private void ScrollingTextBox_Layout(object sender, System.Windows.Forms.LayoutEventArgs e)
+	{
+		int asdf=0;
 	}
 }
