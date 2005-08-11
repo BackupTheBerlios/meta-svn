@@ -192,6 +192,23 @@ namespace Test
 					Test.path,filename)).GetExpression();
 			}
 		}
+		// should execute twice, once without caching, once with
+		public class ExecuteNoCaching:TestCase 
+		{
+			public override object Run() 
+			{
+				string cachePath=@"C:\_ProjectSupportMaterial\Meta\cachedAssemblyInfo.meta";
+				if(File.Exists(cachePath))
+				{
+					File.Delete(cachePath);
+				}
+				Map argument=new Map();
+				argument[new Integer(1)]="first arg";
+				argument[new Integer(2)]="second=arg";
+				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
+			}
+		}
+		// should execute twice, once without caching, once with
 		public class Execute:TestCase 
 		{
 			public override object Run() 

@@ -58,11 +58,11 @@ namespace Meta
 		public virtual bool Stop()
 		{
 			bool stop=false;
-			if(BreakPoint!=null)
+			if(Interpreter.BreakPoint!=null)
 			{
-				if(BreakPoint.Line>=Extent.Start.Line && BreakPoint.Line<=Extent.End.Line)
+				if(Interpreter.BreakPoint.Line>=Extent.Start.Line && Interpreter.BreakPoint.Line<=Extent.End.Line)
 				{
-					if(BreakPoint.Column>=Extent.Start.Column && BreakPoint.Column<=Extent.End.Column)
+					if(Interpreter.BreakPoint.Column>=Extent.Start.Column && Interpreter.BreakPoint.Column<=Extent.End.Column)
 					{
 						stop=true;
 					}
@@ -70,20 +70,6 @@ namespace Meta
 			}
 			return stop;
 		}
-
-		public static BreakPoint BreakPoint
-		{
-			get
-			{
-				return breakPoint;
-			}
-			set
-			{
-				breakPoint=value;
-			}
-		}
-		private static BreakPoint breakPoint;//=new BreakPoint(@"c:\_projectsupportmaterial\meta\editor\editor.meta",152,11);
-
 		public object Evaluate(IMap parent)
 		{
 			object result=EvaluateImplementation(parent);
@@ -160,9 +146,9 @@ namespace Meta
 		public override bool Stop()
 		{
 			bool stop=false;
-			if(Expression.BreakPoint!=null)
+			if(Interpreter.BreakPoint!=null)
 			{
-				if(Expression.BreakPoint.Line==Extent.End.Line+1 && Expression.BreakPoint.Column==1)
+				if(Interpreter.BreakPoint.Line==Extent.End.Line+1 && Interpreter.BreakPoint.Column==1)
 				{
 					stop=true;
 				}
@@ -256,6 +242,11 @@ namespace Meta
 	}
 	public class Literal: Expression
 	{
+		public override bool Stop()
+		{
+			return false;
+		}
+
 		public override object EvaluateImplementation(IMap parent)
 		{
 			return literal;
@@ -445,6 +436,20 @@ namespace Meta
 
 	public class Interpreter  // what about multiple interpreters? or make interpreter multithreaded, what about events vs. multithreading?
 	{
+
+		public static BreakPoint BreakPoint
+		{
+			get
+			{
+				return breakPoint;
+			}
+			set
+			{
+				breakPoint=value;
+			}
+		}
+		private static BreakPoint breakPoint;//=new BreakPoint(@"c:\_projectsupportmaterial\meta\editor\editor.meta",152,11);
+
 		private static object debugValue="";
 		public static object DebugValue
 		{
@@ -468,7 +473,7 @@ namespace Meta
 				}
 			}
 		}
-		public static event EventHandler Test;
+//		public static event EventHandler Test;
 		public static object Clone(object meta)
 		{
 			if(meta is IMap)
@@ -1622,10 +1627,6 @@ namespace Meta
 					}
 					return nameSpaces; // BAAAADDD!, make this method single exit
 				}
-				else
-				{
-					int asdf=0;
-				}
 			}
 			foreach(Type tType in assembly.GetExportedTypes())
 			{
@@ -1657,6 +1658,59 @@ namespace Meta
 			cachedAssemblyInfo[new Map(assembly.Location)]=cachedAssemblyInfoMap;
 			return nameSpaces;
 		}
+//		public ArrayList NameSpaces(Assembly assembly)
+//		{ 
+//			//TODO: refactor, integrate into LoadNamespaces???
+//			ArrayList nameSpaces=new ArrayList();
+//			if(cachedAssemblyInfo.ContainsKey(new Map(assembly.Location)))
+//			{
+//				Map info=(Map)cachedAssemblyInfo[new Map(assembly.Location)];
+//				string timestamp=((Map)info[new Map("timestamp")]).String;
+//				if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
+//				{
+//					Map namespaces=(Map)info[new Map("namespaces")];// SHIT! Name collision!, why " name collision"?
+//					foreach(DictionaryEntry entry in namespaces) // TODO: maybe use MapAdapter? Good opportunity to extend MapAdapter a bit
+//					{
+//						string text=((Map)entry.Value).String;
+//						nameSpaces.Add(text);
+//					}
+//					return nameSpaces; // BAAAADDD!, make this method single exit
+//				}
+//				else
+//				{
+//					int asdf=0;
+//				}
+//			}
+//			foreach(Type tType in assembly.GetExportedTypes())
+//			{
+//				if(!nameSpaces.Contains(tType.Namespace))
+//				{
+//					if(tType.Namespace==null)
+//					{
+//						if(!nameSpaces.Contains(""))
+//						{
+//							nameSpaces.Add("");
+//						}
+//					}
+//					else
+//					{
+//						nameSpaces.Add(tType.Namespace);
+//					}
+//				}
+//			}
+//			Map cachedAssemblyInfoMap=new Map();
+//			Map nameSpace=new Map(); 
+//			Integer counter=new Integer(0);
+//			foreach(string na in nameSpaces)
+//			{
+//				nameSpace[counter]=new Map(na);
+//				counter++;
+//			}
+//			cachedAssemblyInfoMap[new Map("namespaces")]=nameSpace;
+//			cachedAssemblyInfoMap[new Map("timestamp")]=new Map(File.GetLastWriteTime(assembly.Location).ToString());
+//			cachedAssemblyInfo[new Map(assembly.Location)]=cachedAssemblyInfoMap;
+//			return nameSpaces;
+//		}
 		public Map LoadNamespaces(ArrayList assemblies)
 		{
 			LazyNamespace root=new LazyNamespace("");

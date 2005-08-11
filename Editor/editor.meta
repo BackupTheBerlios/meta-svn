@@ -87,7 +87,7 @@ RunProgram=!
 	// use fileName here
 	System.Console.WriteLine editor.control.RealLine
 	System.Console.WriteLine editor.control.Column
-	Meta.Expression.BreakPoint:Meta.BreakPoint
+	Meta.Interpreter.BreakPoint:Meta.BreakPoint
 		//"c:\_projectsupportmaterial\meta\editor\editor.meta"
 		fileName
 		editor.control.RealLine
