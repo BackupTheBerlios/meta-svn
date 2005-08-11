@@ -165,35 +165,46 @@ namespace Test
 	{
 		private static string filename=@"basicTest.meta";
 		// TODO:make it possible to choose between different tests on command line, and whether to test at all
-		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-			public class ParseToAst:TestCase 
+//		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
+//			public class ParseToAst:TestCase 
+//		{
+//			public override object Run() 
+//			{
+//				return Interpreter.ParseToAst(Path.Combine(
+//					Test.path,filename));
+//			}
+//		}
+//		public class CompileToMap:TestCase 
+//		{
+//			public static Map map;
+//			public override object Run() 
+//			{
+//				map=Interpreter.Compile(Path.Combine(
+//					Test.path,filename));
+//				return map;
+//			}
+//		}
+//		public class CompileToExpression:TestCase 
+//		{
+//			public override object Run() 
+//			{
+//				return Interpreter.Compile(Path.Combine(
+//					Test.path,filename)).GetExpression();
+//			}
+//		}
+		// should execute twice, once without caching, once with
+		public class Execute:TestCase 
 		{
 			public override object Run() 
 			{
-				return Interpreter.ParseToAst(Path.Combine(
-					Test.path,filename));
-			}
-		}
-		public class CompileToMap:TestCase 
-		{
-			public static Map map;
-			public override object Run() 
-			{
-				map=Interpreter.Compile(Path.Combine(
-					Test.path,filename));
-				return map;
-			}
-		}
-		public class CompileToExpression:TestCase 
-		{
-			public override object Run() 
-			{
-				return Interpreter.Compile(Path.Combine(
-					Test.path,filename)).GetExpression();
+				Map argument=new Map();
+				argument[new Integer(1)]="first arg";
+				argument[new Integer(2)]="second=arg";
+				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
 		// should execute twice, once without caching, once with
-		public class ExecuteNoCaching:TestCase 
+		public class ExecuteNoCaching:TestCase // TODO: combine with above, only result must be the same, a third file is needed, only one check file!!! ???
 		{
 			public override object Run() 
 			{
@@ -208,16 +219,6 @@ namespace Test
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
-		// should execute twice, once without caching, once with
-		public class Execute:TestCase 
-		{
-			public override object Run() 
-			{
-				Map argument=new Map();
-				argument[new Integer(1)]="first arg";
-				argument[new Integer(2)]="second=arg";
-				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
-			}
-		}
+
 	}
 }

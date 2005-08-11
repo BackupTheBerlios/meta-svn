@@ -18,7 +18,6 @@ this=map.Merge
 	=
 		"AssignedToCurrent"
 //Meta.Interpreter.DebugBreak:!System.Console.Write Meta.Interpreter.DebugValue
-metaStuff=Meta
 unicodeText="äaba"
 this=map.Merge
 	parent

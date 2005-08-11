@@ -583,7 +583,7 @@ namespace Meta
 		// TODO: Should Arrays be converted to maps, or is it sufficient to have a DotNetObject?
 		//    Map would be more convenient, but DotNetObject is ok for now
 
-		public static object MetaFromDotNet(object oDotNet)
+		public static object MetaFromDotNet(object oDotNet)// umbenennen zu: ConvertToMeta, ConvertToDotNet, put this into its own class
 		{ 
 			if(oDotNet==null)
 			{
@@ -591,7 +591,7 @@ namespace Meta
 			}
 			else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
 			{
-				return new Integer((int)Convert.ToInt32((Enum)oDotNet));
+				return new Integer((int)System.Convert.ToInt32((Enum)oDotNet));
 			}
 			DotNetToMetaConversion conversion=(DotNetToMetaConversion)toMetaConversions[oDotNet.GetType()];
 			if(conversion==null)
@@ -1611,28 +1611,32 @@ namespace Meta
 		private Map cachedAssemblyInfo=new Map();
 		public ArrayList NameSpaces(Assembly assembly)
 		{ 
-			//TODO: refactor, integrate into LoadNamespaces???
+			//TODO: integrate into LoadNamespaces???
 			ArrayList nameSpaces=new ArrayList();
-			if(cachedAssemblyInfo.ContainsKey(new Map(assembly.Location)))
+			MapAdapter cached=new MapAdapter(cachedAssemblyInfo);
+			if(cached.ContainsKey(assembly.Location))
+			//if(cachedAssemblyInfo.ContainsKey(new Map(assembly.Location)))
 			{
-				Map info=(Map)cachedAssemblyInfo[new Map(assembly.Location)];
-				string timestamp=((Map)info[new Map("timestamp")]).String;
+				MapAdapter info=new MapAdapter((Map)cached[assembly.Location]);
+				string timestamp=(string)info["timestamp"];
 				if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
 				{
-					Map namespaces=(Map)info[new Map("namespaces")];// SHIT! Name collision!, why " name collision"?
+					MapAdapter namespaces=new MapAdapter((Map)info["namespaces"]);// SHIT! Name collision!, why " name collision"?
 					foreach(DictionaryEntry entry in namespaces) // TODO: maybe use MapAdapter? Good opportunity to extend MapAdapter a bit
 					{
-						string text=((Map)entry.Value).String;
-						nameSpaces.Add(text);
+						//string text=((Map)entry.Value).String;
+						//string text=((Map)entry.Value).String;
+						nameSpaces.Add((string)entry.Value);
+						//nameSpaces.Add(text);
 					}
 					return nameSpaces; // BAAAADDD!, make this method single exit
 				}
 			}
-			foreach(Type tType in assembly.GetExportedTypes())
+			foreach(Type type in assembly.GetExportedTypes())
 			{
-				if(!nameSpaces.Contains(tType.Namespace))
+				if(!nameSpaces.Contains(type.Namespace))
 				{
-					if(tType.Namespace==null)
+					if(type.Namespace==null)
 					{
 						if(!nameSpaces.Contains(""))
 						{
@@ -1641,7 +1645,7 @@ namespace Meta
 					}
 					else
 					{
-						nameSpaces.Add(tType.Namespace);
+						nameSpaces.Add(type.Namespace);
 					}
 				}
 			}
@@ -1753,7 +1757,11 @@ namespace Meta
 		private Map cache=new Map();
 		public static string libraryPath="library"; 
 	}
-	public class MapAdapter
+	public class Convert
+	{
+
+	}
+	public class MapAdapter:IMap
 	{ 
 		// TODO: Make this a whole IMap implementation?, maybe, but might be too much work, do it if needed by library
 		Map map;
@@ -1765,6 +1773,11 @@ namespace Meta
 		{
 			this.map=new Map();
 		}
+		public bool ContainsKey(object key)
+		{
+			return map.ContainsKey(Interpreter.MetaFromDotNet(key));
+		}
+
 		public object this[object key]
 		{
 			get
@@ -1776,6 +1789,55 @@ namespace Meta
 				this.map[Interpreter.MetaFromDotNet(key)]=Interpreter.MetaFromDotNet(value);
 			}
 		}
+		public IMap Parent
+		{
+			get
+			{
+				return (IMap)Interpreter.MetaFromDotNet(map.Parent);
+			}
+			set
+			{
+				map.Parent=(IMap)Interpreter.DotNetFromMeta(value);
+			}
+		}
+		public ArrayList Array
+		{
+			get
+			{
+				return ConvertToMeta(map.Array);
+			}
+		}
+		public IMap Clone()
+		{
+			return new MapAdapter((Map)map.Clone());
+		}
+		private ArrayList ConvertToMeta(ArrayList list)
+		{
+			ArrayList result=new ArrayList();
+			foreach(object obj in list)
+			{
+				result.Add(Interpreter.DotNetFromMeta(obj));
+			}
+			return result;
+		}
+		public ArrayList Keys
+		{
+			get
+			{
+				return ConvertToMeta(map.Keys);
+			}
+		}
+		public int Count
+		{
+			get
+			{
+				return map.Count;
+			}
+		}
+		public IEnumerator GetEnumerator()
+		{
+			return new MapEnumerator(this);
+		}
 	}
 	// TODO: There should be a logical type that encompasses all Meta types
 	// and a logical type that encompasses all real .NET types that have been converted, we will see if that is really useful
@@ -1784,7 +1846,7 @@ namespace Meta
 	public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial
 	{
 
-		public object argument
+		public object Argument
 		{
 			get
 			{
@@ -1840,13 +1902,13 @@ namespace Meta
 		{
 			get
 			{
-				if(key.Equals(Strings.Parent))
+				if(key.Equals(Strings.Parent)) // make single exit
 				{
 					return Parent;
 				}
 				else if(key.Equals(Strings.Arg))
 				{
-					return argument;
+					return Argument;
 				}
 				else if(key.Equals(Strings.This))
 				{
@@ -1881,7 +1943,7 @@ namespace Meta
 		}
 		public object Call(object argument)
 		{
-			this.argument=argument;
+			this.Argument=argument;
 			Expression function=(Expression)((Map)this[Strings.Run]).GetExpression();
 			object result;
 			result=function.Evaluate(this);
@@ -1947,7 +2009,7 @@ namespace Meta
 			{
 				if(key.Equals(Strings.Arg))
 				{
-					return this.argument!=null;
+					return this.Argument!=null;
 				}
 				else if(key.Equals(Strings.Parent))
 				{
@@ -2300,7 +2362,7 @@ namespace Meta
 						{
 							try
 							{
-								text+=Convert.ToChar(((Integer)this.strategy[key]).Int);
+								text+=System.Convert.ToChar(((Integer)this.strategy[key]).Int);
 							}
 							catch
 							{
@@ -2352,7 +2414,8 @@ namespace Meta
 	}
 	public class MapEnumerator: IEnumerator
 	{
-		private Map map; public MapEnumerator(Map map)
+		private IMap map; 
+		public MapEnumerator(IMap map)
 		{
 			this.map=map;
 		}
@@ -2374,6 +2437,30 @@ namespace Meta
 		}
 		private int index=-1;
 	}
+//	public class MapEnumerator: IEnumerator
+//	{
+//		private Map map; public MapEnumerator(Map map)
+//		{
+//			this.map=map;
+//		}
+//		public object Current
+//		{
+//			get
+//			{
+//				return new DictionaryEntry(map.Keys[index],map[map.Keys[index]]);
+//			}
+//		}
+//		public bool MoveNext()
+//		{
+//			index++;
+//			return index<map.Count;
+//		}
+//		public void Reset()
+//		{
+//			index=-1;
+//		}
+//		private int index=-1;
+//	}
 	public delegate object DelegateCreatedForGenericDelegates(); // TODO: rename?
 	public class DotNetMethod: ICallable
 	{
