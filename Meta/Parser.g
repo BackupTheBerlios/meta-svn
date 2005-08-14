@@ -573,8 +573,8 @@ statement
 		val=expression
 		{
 			//Map statement=new Map();
-			statement[Strings.Key]=k;
-			statement[Strings.Value]=val;// TODO: Add Extent to statements, too?
+			statement[CodeKeys.Key]=k;
+			statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 		}
 	)
 	;
@@ -591,12 +591,12 @@ statementSearch // maybe somehow combine this with "statement", if possible, not
 		val=expression
 		{
 			//Map statement=new Map();
-			statement[Strings.Key]=k;
-			statement[Strings.Value]=val;// TODO: Add Extent to statements, too?
+			statement[CodeKeys.Key]=k;
+			statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 		}
 	)
 	{
-		statement[Strings.Search]=new Integer(1);
+		statement[CodeKeys.Search]=new Integer(1);
 	}
 	;
 map
@@ -618,7 +618,7 @@ map
     )*
   )
   {
-    result[Strings.Program]=statements;
+    result[CodeKeys.Program]=statements;
   };
 
 call
@@ -638,9 +638,9 @@ call
       argument=expression
     )
     {
-      call[Strings.Function]=delayed;
-      call[Strings.Argument]=argument;
-      result[Strings.Call]=call;
+      call[CodeKeys.Function]=delayed;
+      call[CodeKeys.Argument]=argument;
+      result[CodeKeys.Call]=call;
     }
   );
 
@@ -665,7 +665,7 @@ select
     )
   )
   {
-    result[Strings.Select]=selection;
+    result[CodeKeys.Select]=selection;
   };
 
 
@@ -679,7 +679,7 @@ search
 	}:
 	#(SEARCH e=expression)
 	{
-		result[Strings.Search]=e;
+		result[CodeKeys.Search]=e;
 	}
 	;
  
@@ -693,7 +693,7 @@ literal
   }:
   token:LITERAL
   {
-    result[Strings.Literal]=new Map(token.getText());
+    result[CodeKeys.Literal]=new Map(token.getText());
   };
 
 //TODO: is this even needed anymore?
@@ -703,14 +703,14 @@ delayed
         result=new Map();
         result.Extent=#delayed.Extent;
         Map mExpression;
-        //Map Strings.Run=new Map();
+        //Map CodeKeys.Run=new Map();
     }:
     #(FUNCTION mExpression=expression)
     {
-				//Strings.Run[Strings.Run]=mExpression;
-        result[Strings.Delayed]=mExpression;
-//				Strings.Run[Strings.Run]=mExpression;
-//        result[Strings.Delayed]=Strings.Run;
+				//CodeKeys.Run[CodeKeys.Run]=mExpression;
+        result[CodeKeys.Delayed]=mExpression;
+//				CodeKeys.Run[CodeKeys.Run]=mExpression;
+//        result[CodeKeys.Delayed]=CodeKeys.Run;
     };
 
 /*delayedExpressionOnly
@@ -721,6 +721,6 @@ delayed
     }:
     #(DELAYED_EXPRESSION_ONLY mExpression=expression)
     {
-			result[Strings.Delayed]=mExpression;
+			result[CodeKeys.Delayed]=mExpression;
 			//result.Extent=#delayedExpressionOnly.Extent;
     };*/

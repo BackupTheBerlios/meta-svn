@@ -35,7 +35,8 @@ using Meta.TestingFramework;
 
 namespace Meta
 {
-	public class Strings
+
+	public class CodeKeys
 	{
 		public readonly static Map Literal=new Map("literal");
 		public readonly static Map Run=new Map("run");
@@ -49,6 +50,9 @@ namespace Meta
 		public static readonly Map Delayed=new Map("delayed");
 		public static readonly Map Lookup=new Map("lookup");
 		public static readonly Map Value=new Map("value");
+	}
+	public class SpecialKeys
+	{
 		public static readonly Map Parent=new Map("parent"); 
 		public static readonly Map Arg=new Map("arg");
 		public static readonly Map This=new Map("this");
@@ -113,8 +117,8 @@ namespace Meta
 		}
 		public Call(Map code)
 		{
-			this.callable=((Map)code[Strings.Function]).GetExpression();
-			this.argument=((Map)code[Strings.Argument]).GetExpression();
+			this.callable=((Map)code[CodeKeys.Function]).GetExpression();
+			this.argument=((Map)code[CodeKeys.Argument]).GetExpression();
 		}
 		public Expression argument;
 		public Expression callable;
@@ -385,7 +389,7 @@ namespace Meta
 			}
 			object lastKey=((Expression)keys[keys.Count-1]).Evaluate((IMap)parent);
 			object val=expression.Evaluate((IMap)parent);
-			if(lastKey.Equals(Strings.This))
+			if(lastKey.Equals(SpecialKeys.This))
 			{
 				if(val is Map)
 				{
@@ -417,15 +421,15 @@ namespace Meta
 		}
 		public Statement(Map code) 
 		{
-			if(code.ContainsKey(Strings.Search))
+			if(code.ContainsKey(CodeKeys.Search))
 			{
 				searchFirst=true;
 			}
-			foreach(Map key in ((Map)code[Strings.Key]).Array)
+			foreach(Map key in ((Map)code[CodeKeys.Key]).Array)
 			{
 				keys.Add(key.GetExpression());
 			}
-			this.expression=(Expression)((Map)code[Strings.Value]).GetExpression();
+			this.expression=(Expression)((Map)code[CodeKeys.Value]).GetExpression();
 		}
 		public ArrayList keys=new ArrayList();
 		public Expression expression;
@@ -651,7 +655,7 @@ namespace Meta
 		public static object CallProgram(Map program,IMap argument,IMap parent)
 		{
 			Map callable=new Map();
-			callable[Strings.Run]=program;
+			callable[CodeKeys.Run]=program;
 			callable.Parent=parent;
 			return callable.Call(argument);
 		}
@@ -1902,15 +1906,15 @@ namespace Meta
 		{
 			get
 			{
-				if(key.Equals(Strings.Parent)) // make single exit
+				if(key.Equals(SpecialKeys.Parent)) // make single exit
 				{
 					return Parent;
 				}
-				else if(key.Equals(Strings.Arg))
+				else if(key.Equals(SpecialKeys.Arg))
 				{
 					return Argument;
 				}
-				else if(key.Equals(Strings.This))
+				else if(key.Equals(SpecialKeys.This))
 				{
 					return this;
 				}
@@ -1925,7 +1929,7 @@ namespace Meta
 				if(value!=null)
 				{
 					isHashCached=false;
-					if(key.Equals(Strings.This))
+					if(key.Equals(SpecialKeys.This))
 					{
 						this.strategy=((Map)value).strategy.Clone();
 					}
@@ -1944,7 +1948,7 @@ namespace Meta
 		public object Call(object argument)
 		{
 			this.Argument=argument;
-			Expression function=(Expression)((Map)this[Strings.Run]).GetExpression();
+			Expression function=(Expression)((Map)this[CodeKeys.Run]).GetExpression();
 			object result;
 			result=function.Evaluate(this);
 			return result;
@@ -1971,29 +1975,29 @@ namespace Meta
 			// no caching anymore, because of possible issues when reverse-debugging
 //			if(expression==null) 
 //			{
-				if(this.ContainsKey(Strings.Call))
+				if(this.ContainsKey(CodeKeys.Call))
 				{
-					expression=new Call((Map)this[Strings.Call]);
+					expression=new Call((Map)this[CodeKeys.Call]);
 				}
-				else if(this.ContainsKey(Strings.Delayed))
+				else if(this.ContainsKey(CodeKeys.Delayed))
 				{ 
-					expression=new Delayed((Map)this[Strings.Delayed]);
+					expression=new Delayed((Map)this[CodeKeys.Delayed]);
 				}
-				else if(this.ContainsKey(Strings.Program))
+				else if(this.ContainsKey(CodeKeys.Program))
 				{
-					expression=new Program((Map)this[Strings.Program]);
+					expression=new Program((Map)this[CodeKeys.Program]);
 				}
-				else if(this.ContainsKey(Strings.Literal))
+				else if(this.ContainsKey(CodeKeys.Literal))
 				{
-					expression=new Literal((Map)this[Strings.Literal]);
+					expression=new Literal((Map)this[CodeKeys.Literal]);
 				}
-				else if(this.ContainsKey(Strings.Search))
+				else if(this.ContainsKey(CodeKeys.Search))
 				{
-					expression=new Search((Map)this[Strings.Search]);
+					expression=new Search((Map)this[CodeKeys.Search]);
 				}
-				else if(this.ContainsKey(Strings.Select))
+				else if(this.ContainsKey(CodeKeys.Select))
 				{
-					expression=new Select((Map)this[Strings.Select]);
+					expression=new Select((Map)this[CodeKeys.Select]);
 				}
 				else
 				{
@@ -2007,15 +2011,15 @@ namespace Meta
 		{
 			if(key is Map)
 			{
-				if(key.Equals(Strings.Arg))
+				if(key.Equals(SpecialKeys.Arg))
 				{
 					return this.Argument!=null;
 				}
-				else if(key.Equals(Strings.Parent))
+				else if(key.Equals(SpecialKeys.Parent))
 				{
 					return this.Parent!=null;
 				}
-				else if(key.Equals(Strings.This))
+				else if(key.Equals(SpecialKeys.This))
 				{
 					return true;
 				}
