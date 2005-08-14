@@ -245,21 +245,15 @@ namespace Meta
 		int column;
 	}
 
-	public abstract class RecognizeLiteral
+	public abstract class Recognition
 	{
 		public abstract object Recognize(string text); // Returns null if not recognized. Null cannot currently be created this way, so, add a variable that indicates success
 	}
-	public class LiteralRecognitions
+	public class Recognitions
 	{
 		// The order of the classes determines the precedence of literal recognitions
-		public class RecognizeString:RecognizeLiteral  // rename to LiteralRecognition, or something even better, maybe LiteralType, and LiteralTypes
-		{
-			public override object Recognize(string text)
-			{
-				return new Map(text);
-			}
-		}
-		public class RecognizeInteger: RecognizeLiteral 
+
+		public class IntegerRecogition: Recognition 
 		{
 			public override object Recognize(string text) 
 			{ 
@@ -296,17 +290,24 @@ namespace Meta
 				}
 			}
 		}
+		public class StringRecognition:Recognition  // rename to LiteralRecognition, or something even better, maybe LiteralType, and LiteralTypes
+		{
+			public override object Recognize(string text)
+			{
+				return new Map(text);
+			}
+		}
 	}
 	public class Literal: Expression
 	{
 		public static ArrayList recognitions=new ArrayList();
 		static Literal()
 		{
-			foreach(Type recognition in typeof(LiteralRecognitions).GetNestedTypes())
+			foreach(Type recognition in typeof(Recognitions).GetNestedTypes())
 			{
-				recognitions.Add((RecognizeLiteral)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+				recognitions.Add((Recognition)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 			}
-			recognitions.Reverse();
+//			recognitions.Reverse();
 
 		}
 		public override bool Stop()
@@ -320,12 +321,12 @@ namespace Meta
 		}
 		public Literal(Map code)
 		{
-			this.literal=RecognizeLiteral((string)code.String);
+			this.literal=Recognition((string)code.String);
 		}
 		public object literal=null;
-		public static object RecognizeLiteral(string text) // somehow put this somewhere else, (Literal?)
+		public static object Recognition(string text) // somehow put this somewhere else, (Literal?)
 		{
-			foreach(RecognizeLiteral recognition in recognitions) // move the rest of the pack here
+			foreach(Recognition recognition in recognitions) // move the rest of the pack here
 			{
 				object recognized=recognition.Recognize(text);
 				if(recognized!=null)
@@ -1612,11 +1613,11 @@ namespace Meta
 //				ArrayList keys=new ArrayList();
 //				foreach(DirectoryInfo dir in directory.GetDirectories())
 //				{
-//					keys.Add(Literal.RecognizeLiteral(dir.Name));
+//					keys.Add(Literal.Recognition(dir.Name));
 //				}
 //				foreach(FileInfo file in directory.GetFiles())
 //				{
-//					keys.Add(Literal.RecognizeLiteral(file.Name));
+//					keys.Add(Literal.Recognition(file.Name));
 //				}
 //				return keys;
 //			}
@@ -1756,11 +1757,11 @@ namespace Meta
 //				ArrayList keys=new ArrayList();
 //				foreach(DirectoryInfo dir in directory.GetDirectories())
 //				{
-//					keys.Add(Literal.RecognizeLiteral(dir.Name));
+//					keys.Add(Literal.Recognition(dir.Name));
 //				}
 //				foreach(FileInfo file in directory.GetFiles())
 //				{
-//					keys.Add(Literal.RecognizeLiteral(file.Name));
+//					keys.Add(Literal.Recognition(file.Name));
 //				}
 //				return keys;
 //			}
