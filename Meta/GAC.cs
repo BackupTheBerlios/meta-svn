@@ -52,6 +52,8 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Globalization;
+using System.Collections;
+using System.Reflection;
 
 namespace System.GAC
 {
@@ -241,8 +243,42 @@ namespace System.GAC
 
 	#endregion
 
-	public class AssemblyCache
+	public class GlobalAssemblyCache
 	{
+		public static ArrayList Assemblies
+		{
+			get
+			{
+				ArrayList assemblies=new ArrayList();
+				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
+
+				IAssemblyEnum assemblyEnum=CreateGACEnum();
+				IAssemblyName iname; 
+				while (GetNextAssembly(assemblyEnum, out iname) == 0)
+				{
+					try
+					{
+						string assemblyName=AssemblyName(iname);
+						assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
+					}
+					catch(Exception e)
+					{
+					}
+				}
+				return assemblies;
+			}
+		}
+
+		private static string AssemblyName(IAssemblyName assemblyName)
+		{ 
+			AssemblyName name = new AssemblyName();
+			name.Name = GetName(assemblyName);
+			name.Version = GetVersion(assemblyName);
+			name.CultureInfo = GetCulture(assemblyName);
+			name.SetPublicKeyToken(GetPublicKeyToken(assemblyName));
+			return name.Name;
+		}
+
 		#region DLL Entries
 
 		/// <summary>
@@ -364,7 +400,7 @@ namespace System.GAC
 		{
 			IAssemblyCache ac;
 
-			AssemblyCache.CreateAssemblyCache(out ac, 0);
+			GlobalAssemblyCache.CreateAssemblyCache(out ac, 0);
 	
 			return ac;
 		}
@@ -377,7 +413,7 @@ namespace System.GAC
 		{
 			IAssemblyName an;
 
-			AssemblyCache.CreateAssemblyNameObject(out an, name, 2, (IntPtr)0);
+			GlobalAssemblyCache.CreateAssemblyNameObject(out an, name, 2, (IntPtr)0);
 
 			return an;
 		}
@@ -448,7 +484,7 @@ namespace System.GAC
 		{
 			IAssemblyEnum ae;
 
-			AssemblyCache.CreateAssemblyEnum(out ae, (IntPtr)0, null, ASM_CACHE_FLAGS.ASM_CACHE_GAC, (IntPtr)0);
+			GlobalAssemblyCache.CreateAssemblyEnum(out ae, (IntPtr)0, null, ASM_CACHE_FLAGS.ASM_CACHE_GAC, (IntPtr)0);
 
 			return ae;
 		}
@@ -468,7 +504,7 @@ namespace System.GAC
 		{
 			uint bufferSize = 255;
 			StringBuilder buffer = new StringBuilder((int) bufferSize);
-			AssemblyCache.GetCachePath(ASM_CACHE_FLAGS.ASM_CACHE_GAC, buffer, ref bufferSize);
+			GlobalAssemblyCache.GetCachePath(ASM_CACHE_FLAGS.ASM_CACHE_GAC, buffer, ref bufferSize);
 			return buffer.ToString();
 		}
 
@@ -476,7 +512,7 @@ namespace System.GAC
 		{
 			uint bufferSize = 255;
 			StringBuilder buffer = new StringBuilder((int) bufferSize);
-			AssemblyCache.GetCachePath(ASM_CACHE_FLAGS.ASM_CACHE_ZAP, buffer, ref bufferSize);
+			GlobalAssemblyCache.GetCachePath(ASM_CACHE_FLAGS.ASM_CACHE_ZAP, buffer, ref bufferSize);
 			return buffer.ToString();
 		}
 
@@ -484,7 +520,7 @@ namespace System.GAC
 		{
 			uint bufferSize = 255;
 			StringBuilder buffer = new StringBuilder((int) bufferSize);
-			AssemblyCache.GetCachePath(ASM_CACHE_FLAGS.ASM_CACHE_DOWNLOAD, buffer, ref bufferSize);
+			GlobalAssemblyCache.GetCachePath(ASM_CACHE_FLAGS.ASM_CACHE_DOWNLOAD, buffer, ref bufferSize);
 			return buffer.ToString();
 		}
 

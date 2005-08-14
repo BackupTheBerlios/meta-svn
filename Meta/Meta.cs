@@ -86,7 +86,7 @@ namespace Meta
 
 		public abstract object EvaluateImplementation(IMap parent);
 		Extent extent;
-		public Extent Extent // refactor Extent, it sucks big deal, add Line, Column
+		public Extent Extent
 		{
 			get
 			{
@@ -251,8 +251,6 @@ namespace Meta
 	}
 	public class Recognitions
 	{
-		// The order of the classes determines the precedence of literal recognitions
-
 		public class IntegerRecogition: Recognition 
 		{
 			public override object Recognize(string text) 
@@ -307,8 +305,6 @@ namespace Meta
 			{
 				recognitions.Add((Recognition)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 			}
-//			recognitions.Reverse();
-
 		}
 		public override bool Stop()
 		{
@@ -324,9 +320,9 @@ namespace Meta
 			this.literal=Recognition((string)code.String);
 		}
 		public object literal=null;
-		public static object Recognition(string text) // somehow put this somewhere else, (Literal?)
+		public static object Recognition(string text)
 		{
-			foreach(Recognition recognition in recognitions) // move the rest of the pack here
+			foreach(Recognition recognition in recognitions)
 			{
 				object recognized=recognition.Recognize(text);
 				if(recognized!=null)
@@ -348,7 +344,7 @@ namespace Meta
 		{
 			object key=search.Evaluate(parent);
 			IMap selected=parent;
-			while(!selected.ContainsKey(key)) // mhhm is this needed anywhere else?
+			while(!selected.ContainsKey(key))
 			{
 				selected=selected.Parent;
 				if(selected==null)
@@ -359,7 +355,7 @@ namespace Meta
 			return selected[key];
 		}
 	}
-	public class Select: Expression // define recursively
+	public class Select: Expression
 	{
 		public ArrayList keys=new ArrayList();
 		public Expression firstKey;
@@ -420,7 +416,7 @@ namespace Meta
 			}
 			return stopReverse;
 		}
-		public void Realize(ref object parent) // should be an IMap for the most part of this method
+		public void Realize(ref object parent)
 		{
 			object selected=parent;
 			object key;
@@ -459,10 +455,6 @@ namespace Meta
 				{
 					((Map)val).Parent=((Map)parent).Parent;
 				}
-				else
-				{
-					int asdf=0;
-				}
 				parent=val;
 			}
 			else
@@ -500,18 +492,12 @@ namespace Meta
 		
 		bool searchFirst=false;
 	}
-	public class IMeta // TODO: Should integer be a map? Then we would not need a Meta type, seems sensible, but exact representation not clear yet
+	public class IMeta
 	{
 	}
 
 	public class Interpreter
 	{
-		// TODO: make Interpreter multithreaded
-
-		// TODO: might need a call stack, after all, to determine access rights
-		// maybe not, though, might carry them around, seems more sensible
-		// call stack would necessitate multiple Interpreters, which is not good
-		// TODO: maybe we could get rid of Interpreter completely
 		
 		
 		public static BreakPoint BreakPoint // TODO: Shouldn't be here, but in Expression
@@ -1115,10 +1101,10 @@ namespace Meta
 		{
 			get
 			{
-				if(key.Equals(new Map("testClasses")))
-				{
-						int asdf=0;
-				}
+//				if(key.Equals(new Map("testClasses")))
+//				{
+//						int asdf=0;
+//				}
 				if(cache.ContainsKey(key))
 				{
 					if(cache[key] is MetaLibrary)
@@ -1180,15 +1166,15 @@ namespace Meta
 		public override IEnumerator GetEnumerator()
 		{ 
 			foreach(DictionaryEntry entry in cache)
-			{ // TODO: create separate enumerator for efficiency?
-				object temp=cache[entry.Key];				  // or remove IEnumerable from IMap (only needed for foreach)
-			}														// decide later
+			{ 
+				object temp=cache[entry.Key];
+			}
 			return cache.GetEnumerator();
 		}
-		public static Map LoadAssemblies(IEnumerable enmrbasbAssmblies)
+		public static Map LoadAssemblies(IEnumerable assemblies)
 		{
 			Map root=new Map();
-			foreach(Assembly currentAssembly in enmrbasbAssmblies)
+			foreach(Assembly currentAssembly in assemblies)
 			{
 				foreach(Type type in currentAssembly.GetExportedTypes()) 
 				{
@@ -1212,34 +1198,27 @@ namespace Meta
 			}
 			return root;
 		}
-		private static string AssemblyName(IAssemblyName assemblyName)
-		{ 
-			AssemblyName name = new AssemblyName();
-			name.Name = AssemblyCache.GetName(assemblyName);
-			name.Version = AssemblyCache.GetVersion(assemblyName);
-			name.CultureInfo = AssemblyCache.GetCulture(assemblyName);
-			name.SetPublicKeyToken(AssemblyCache.GetPublicKeyToken(assemblyName));
-			return name.Name;
-		}
+
 		public Library()
 		{
 			ArrayList assemblies=new ArrayList();
 			libraryPath=Path.Combine(Interpreter.installationPath,"library");
-			IAssemblyEnum assemblyEnum=AssemblyCache.CreateGACEnum();
-			IAssemblyName iname; 
-			assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
-			while (AssemblyCache.GetNextAssembly(assemblyEnum, out iname) == 0)
-			{
-				try
-				{
-					string assemblyName=AssemblyName(iname);
-					assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
-				}
-				catch(Exception e)
-				{
-				}
-			}
-			foreach(string dll in System.IO.Directory.GetFiles(libraryPath,"*.dll"))
+			assemblies=GlobalAssemblyCache.Assemblies;
+//			IAssemblyEnum assemblyEnum=AssemblyCache.CreateGACEnum();
+//			IAssemblyName iname; 
+//			assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
+//			while (AssemblyCache.GetNextAssembly(assemblyEnum, out iname) == 0)
+//			{
+//				try
+//				{
+//					string assemblyName=AssemblyName(iname);
+//					assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
+//				}
+//				catch(Exception e)
+//				{
+//				}
+//			}
+			foreach(string dll in System.IO.Directory.GetFiles(libraryPath,"*.dll")) // TODO: this must be removed
 			{
 				assemblies.Add(Assembly.LoadFrom(dll));
 			}
