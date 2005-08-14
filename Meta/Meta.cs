@@ -657,7 +657,7 @@ namespace Meta
 			}
 			return result;
 		}	
-//		public static object MetaFromDotNet(object oDotNet)// umbenennen zu: ConvertToMeta, ConvertToDotNet, put this into its own class
+//		public static object ToMeta(object oDotNet)// umbenennen zu: ConvertToMeta, ConvertToDotNet, put this into its own class
 //		{ 
 //			if(oDotNet==null)
 //			{
@@ -1788,33 +1788,32 @@ namespace Meta
 	{
 		static Convert()
 		{
-			foreach(Type toMetaConversion in typeof(DotNetToMetaConversions).GetNestedTypes())
+			foreach(Type conversionType in typeof(DotNetToMetaConversions).GetNestedTypes())
 			{
-				DotNetToMetaConversion conversion=((DotNetToMetaConversion)toMetaConversion.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-				toMetaConversions[conversion.source]=conversion;
+				DotNetToMetaConversion conversion=((DotNetToMetaConversion)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+				toMeta[conversion.source]=conversion;
 			}
-			foreach(Type toDotNetConversion in typeof(MetaToDotNetConversions).GetNestedTypes())
+			foreach(Type conversionType in typeof(MetaToDotNetConversions).GetNestedTypes())
 			{
-				MetaToDotNetConversion conversion=(MetaToDotNetConversion)toDotNetConversion.GetConstructor(new Type[]{}).Invoke(new object[]{});
-				if(!toDotNetConversions.ContainsKey(conversion.target))
+				MetaToDotNetConversion conversion=(MetaToDotNetConversion)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{});
+				if(!toDotNet.ContainsKey(conversion.target))
 				{
-					toDotNetConversions[conversion.target]=new Hashtable();
+					toDotNet[conversion.target]=new Hashtable();
 				}
-				((Hashtable)toDotNetConversions[conversion.target])[conversion.source]=conversion; // put the search shit for this into a function
+				((Hashtable)toDotNet[conversion.target])[conversion.source]=conversion;
 			}
 		}
-		public static object DotNetFromMeta(object meta,Type target,out bool isConverted)
+		public static object ToDotNet(object meta,Type target,out bool isConverted)
 		{
 			if(target.IsSubclassOf(typeof(Enum)) && meta is Integer)
 			{ 
 				isConverted=true;
 				return Enum.ToObject(target,((Integer)meta).Int);
 			}
-			Hashtable toDotNet=(Hashtable)
-				toDotNetConversions[target];
-			if(toDotNet!=null)
+			Hashtable conversions=(Hashtable)toDotNet[target];
+			if(conversions!=null)
 			{
-				MetaToDotNetConversion conversion=(MetaToDotNetConversion)toDotNet[meta.GetType()];
+				MetaToDotNetConversion conversion=(MetaToDotNetConversion)conversions[meta.GetType()];
 				if(conversion!=null)
 				{
 					return conversion.Convert(meta,out isConverted);
@@ -1823,8 +1822,28 @@ namespace Meta
 			isConverted=false;
 			return null;
 		}
+		// TODO: maybe refactor with above
+		public static object ToDotNet(object meta,Type target)
+		{
+			object result=meta;
+			if(toDotNet.ContainsKey(target))
+			{
+				Hashtable conversions=(Hashtable)toDotNet[target];
+				if(conversions.ContainsKey(meta.GetType()))
+				{
+					MetaToDotNetConversion conversion=(MetaToDotNetConversion)conversions[meta.GetType()];
+					bool isConverted;
+					object converted= conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
+					if(isConverted)
+					{
+						result=converted;
+					}
+				}
+			}
+			return result;
+		}
 		// TODO: maybe convert .NET arrays to maps
-		public static object MetaFromDotNet(object oDotNet)// umbenennen zu: ConvertToMeta, ConvertToDotNet, put this into its own class
+		public static object ToMeta(object oDotNet)
 		{ 
 			if(oDotNet==null)
 			{
@@ -1834,7 +1853,7 @@ namespace Meta
 			{
 				return new Integer((int)System.Convert.ToInt32((Enum)oDotNet));
 			}
-			DotNetToMetaConversion conversion=(DotNetToMetaConversion)toMetaConversions[oDotNet.GetType()];
+			DotNetToMetaConversion conversion=(DotNetToMetaConversion)toMeta[oDotNet.GetType()];
 			if(conversion==null)
 			{
 				return oDotNet;
@@ -1844,8 +1863,7 @@ namespace Meta
 				return conversion.Convert(oDotNet);
 			}
 		}
-
-		public static object DotNetFromMeta(object meta) // there will be name collision with the classes used, but there is only one function, so rename the function
+		public static object ToDotNet(object meta) 
 		{
 			if(meta is Integer)
 			{
@@ -1860,28 +1878,8 @@ namespace Meta
 				return meta;
 			}
 		}
-		public static object DotNetFromMeta(object meta,Type target)
-		{
-			object result=meta;
-			if(toDotNetConversions.ContainsKey(target))
-			{
-				Hashtable conversions=(Hashtable)toDotNetConversions[target];
-				if(conversions.ContainsKey(meta.GetType()))
-				{
-					MetaToDotNetConversion conversion=(MetaToDotNetConversion)conversions[meta.GetType()];
-					bool isConverted;
-					object converted= conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
-					if(isConverted)
-					{
-						result=converted;
-					}
-				}
-			}
-			return result;
-		}
-		public static Hashtable toDotNetConversions=new Hashtable();
-		public static Hashtable toMetaConversions=new Hashtable();
-
+		private static Hashtable toDotNet=new Hashtable();
+		private static Hashtable toMeta=new Hashtable();
 	}
 	public abstract class MetaToDotNetConversion
 	{
@@ -1897,8 +1895,6 @@ namespace Meta
 
 	abstract class DotNetToMetaConversions
 	{
-		/* These classes define the conversions that take place when .NET methods,
-			* properties and fields return. */
 		public class ConvertStringToMap: DotNetToMetaConversion
 		{
 			public ConvertStringToMap()  
@@ -2312,29 +2308,29 @@ namespace Meta
 		}
 		public override bool ContainsKey(object key)
 		{
-			return map.ContainsKey(Convert.MetaFromDotNet(key));
+			return map.ContainsKey(Convert.ToMeta(key));
 		}
 
 		public override object this[object key]
 		{
 			get
 			{
-				return Convert.DotNetFromMeta(map[Convert.MetaFromDotNet(key)]);
+				return Convert.ToDotNet(map[Convert.ToMeta(key)]);
 			}
 			set
 			{
-				this.map[Convert.MetaFromDotNet(key)]=Convert.MetaFromDotNet(value);
+				this.map[Convert.ToMeta(key)]=Convert.ToMeta(value);
 			}
 		}
 		public override IMap Parent
 		{
 			get
 			{
-				return (IMap)Convert.MetaFromDotNet(map.Parent);
+				return (IMap)Convert.ToMeta(map.Parent);
 			}
 			set
 			{
-				map.Parent=(IMap)Convert.DotNetFromMeta(value);
+				map.Parent=(IMap)Convert.ToDotNet(value);
 			}
 		}
 		public override ArrayList Array
@@ -2353,7 +2349,7 @@ namespace Meta
 			ArrayList result=new ArrayList();
 			foreach(object obj in list)
 			{
-				result.Add(Convert.DotNetFromMeta(obj));
+				result.Add(Convert.ToDotNet(obj));
 			}
 			return result;
 		}
@@ -3061,7 +3057,7 @@ namespace Meta
 			else
 			{
 				bool converted; // TODO: get rid of this, can't really work correctly
-				object result=Convert.DotNetFromMeta(meta,parameter,out converted);
+				object result=Convert.ToDotNet(meta,parameter,out converted);
 				if(converted)
 				{
 					return result;
@@ -3171,7 +3167,7 @@ namespace Meta
 			{
 				throw new ApplicationException("Method "+this.name+" could not be called.");
 			}
-			return Convert.MetaFromDotNet(result);
+			return Convert.ToMeta(result);
 		}
 		// TODO: check use cases of this method, improve
 		public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,Map code)
@@ -3214,7 +3210,7 @@ namespace Meta
 				if(!method.ReturnType.Equals(typeof(void)))
 				{
 					source+="return ("+returnType+")";
-					source+="Meta.Convert.DotNetFromMeta(result,typeof("+returnType+"));"; 
+					source+="Meta.Convert.ToDotNet(result,typeof("+returnType+"));"; 
 				}
 			}
 			else 
@@ -3401,11 +3397,11 @@ namespace Meta
 						}
 						if(members[0] is FieldInfo)
 						{
-							return Convert.MetaFromDotNet(targetType.GetField(text).GetValue(target));
+							return Convert.ToMeta(targetType.GetField(text).GetValue(target));
 						}
 						else if(members[0] is PropertyInfo)
 						{
-							return Convert.MetaFromDotNet(targetType.GetProperty(text).GetValue(target,new object[]{}));
+							return Convert.ToMeta(targetType.GetProperty(text).GetValue(target,new object[]{}));
 						}
 						else if(members[0] is EventInfo)
 						{
@@ -3429,7 +3425,7 @@ namespace Meta
 				}
 				if(this.target!=null && key is Integer && this.targetType.IsArray)
 				{
-					return Convert.MetaFromDotNet(((Array)target).GetValue(((Integer)key).Int)); // TODO: add error handling here
+					return Convert.ToMeta(((Array)target).GetValue(((Integer)key).Int)); // TODO: add error handling here
 				}
 				DotNetMethod indexer=new DotNetMethod("get_Item",target,targetType);
 				Map argument=new Map();
@@ -3523,7 +3519,7 @@ namespace Meta
 				if(target!=null && key is Integer && targetType.IsArray)
 				{
 					bool isConverted; 
-					object converted=Convert.DotNetFromMeta(value,targetType.GetElementType(),out isConverted);
+					object converted=Convert.ToDotNet(value,targetType.GetElementType(),out isConverted);
 					if(isConverted)
 					{
 						((Array)target).SetValue(converted,((Integer)key).Int);
@@ -3540,7 +3536,7 @@ namespace Meta
 				}
 				catch(Exception e)
 				{
-					throw new ApplicationException("Cannot set "+Convert.DotNetFromMeta(key).ToString()+".");// use a KeyException or something like that here
+					throw new ApplicationException("Cannot set "+Convert.ToDotNet(key).ToString()+".");// use a KeyException or something like that here
 				}
 			}
 		}
@@ -3606,7 +3602,7 @@ namespace Meta
 					{
 						if(entry is DictionaryEntry)
 						{
-							table[Convert.MetaFromDotNet(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+							table[Convert.ToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
 						}
 						else
 						{
