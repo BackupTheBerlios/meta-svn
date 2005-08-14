@@ -2021,9 +2021,9 @@ namespace Meta
 	}
 	abstract class ToDotNetConversions
 	{
-		public class ConvertIntegerToByte: ToDotNetConversion // get rid of "Convert", is redundant
+		public class IntegerToByte: ToDotNetConversion // get rid of "Convert", is redundant
 		{
-			public ConvertIntegerToByte()
+			public IntegerToByte()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(Byte);
@@ -2034,37 +2034,38 @@ namespace Meta
 				return System.Convert.ToByte(((Integer)toConvert).LongValue());
 			}
 		}
-		public class ConvertIntegerToBool: ToDotNetConversion
+		public class IntegerToBool: ToDotNetConversion
 		{
-			public ConvertIntegerToBool()
+			public IntegerToBool()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(bool);
 			}
-			// TODO: make this single-exit
 			public override object Convert(object toConvert, out bool isConverted)
 			{
-				isConverted=true;
+				object result;
 				int i=((Integer)toConvert).Int;
 				if(i==0)
 				{
-					return false;
+					isConverted=true;
+					result=false;
 				}
 				else if(i==1)
 				{
-					return true;
+					isConverted=true;
+					result=true;
 				}
 				else
 				{
-					isConverted=false; // TODO
-					return null;
+					isConverted=false;
+					result=null;
 				}
+				return result;
 			}
-
 		}
-		public class ConvertIntegerToSByte: ToDotNetConversion
+		public class IntegerToSByte: ToDotNetConversion
 		{
-			public ConvertIntegerToSByte()
+			public IntegerToSByte()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(SByte);
@@ -2075,9 +2076,9 @@ namespace Meta
 				return System.Convert.ToSByte(((Integer)toConvert).LongValue());
 			}
 		}
-		public class ConvertIntegerToChar: ToDotNetConversion
+		public class IntegerToChar: ToDotNetConversion
 		{
-			public ConvertIntegerToChar()
+			public IntegerToChar()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(Char);
@@ -2088,9 +2089,9 @@ namespace Meta
 				return System.Convert.ToChar(((Integer)toConvert).LongValue());
 			}
 		}
-		public class ConvertIntegerToInt32: ToDotNetConversion
+		public class IntegerToInt32: ToDotNetConversion
 		{
-			public ConvertIntegerToInt32()
+			public IntegerToInt32()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(Int32);
@@ -2101,9 +2102,9 @@ namespace Meta
 				return System.Convert.ToInt32(((Integer)toConvert).LongValue());
 			}
 		}
-		public class ConvertIntegerToUInt32: ToDotNetConversion
+		public class IntegerToUInt32: ToDotNetConversion
 		{
-			public ConvertIntegerToUInt32()
+			public IntegerToUInt32()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(UInt32);
@@ -2114,9 +2115,9 @@ namespace Meta
 				return System.Convert.ToUInt32(((Integer)toConvert).LongValue());
 			}
 		}
-		public class ConvertIntegerToInt64: ToDotNetConversion
+		public class IntegerToInt64: ToDotNetConversion
 		{
-			public ConvertIntegerToInt64()
+			public IntegerToInt64()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(Int64);
@@ -2127,9 +2128,9 @@ namespace Meta
 				return System.Convert.ToInt64(((Integer)toConvert).LongValue());
 			}
 		}
-		public class ConvertIntegerToUInt64: ToDotNetConversion
+		public class IntegerToUInt64: ToDotNetConversion
 		{
-			public ConvertIntegerToUInt64()
+			public IntegerToUInt64()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(UInt64);
@@ -2140,9 +2141,9 @@ namespace Meta
 				return System.Convert.ToUInt64(((Integer)toConvert).LongValue());
 			}
 		}
-		public class ConvertIntegerToInt16: ToDotNetConversion
+		public class IntegerToInt16: ToDotNetConversion
 		{
-			public ConvertIntegerToInt16()
+			public IntegerToInt16()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(Int16);
@@ -2153,9 +2154,9 @@ namespace Meta
 				return System.Convert.ToInt16(((Integer)toConvert).LongValue());
 			}
 		}
-		public class ConvertIntegerToUInt16: ToDotNetConversion
+		public class IntegerToUInt16: ToDotNetConversion
 		{
-			public ConvertIntegerToUInt16()
+			public IntegerToUInt16()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(UInt16);
@@ -2166,9 +2167,9 @@ namespace Meta
 				return System.Convert.ToUInt16(((Integer)toConvert).LongValue());
 			}
 		}
-		public class ConvertIntegerToDecimal: ToDotNetConversion
+		public class IntegerToDecimal: ToDotNetConversion
 		{
-			public ConvertIntegerToDecimal()
+			public IntegerToDecimal()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(decimal);
@@ -2179,9 +2180,9 @@ namespace Meta
 				return (decimal)(((Integer)toConvert).LongValue());
 			}
 		}
-		public class ConvertIntegerToDouble: ToDotNetConversion
+		public class IntegerToDouble: ToDotNetConversion
 		{
-			public ConvertIntegerToDouble()
+			public IntegerToDouble()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(double);
@@ -2192,9 +2193,9 @@ namespace Meta
 				return (double)(((Integer)toConvert).LongValue());
 			}
 		}
-		public class ConvertIntegerToFloat: ToDotNetConversion
+		public class IntegerToFloat: ToDotNetConversion
 		{
-			public ConvertIntegerToFloat()
+			public IntegerToFloat()
 			{
 				this.source=typeof(Integer);
 				this.target=typeof(float);
@@ -2205,9 +2206,9 @@ namespace Meta
 				return (float)(((Integer)toConvert).LongValue());
 			}
 		}
-		public class ConvertMapToString: ToDotNetConversion
+		public class MapToString: ToDotNetConversion
 		{
-			public ConvertMapToString()
+			public MapToString()
 			{
 				this.source=typeof(Map);
 				this.target=typeof(string);
@@ -2226,9 +2227,9 @@ namespace Meta
 				}
 			}
 		}
-		public class ConvertFractionToDecimal: ToDotNetConversion
+		public class FractionToDecimal: ToDotNetConversion
 		{
-			public ConvertFractionToDecimal()
+			public FractionToDecimal()
 			{
 				this.source=typeof(Map); 
 				this.target=typeof(decimal); 
@@ -2249,9 +2250,9 @@ namespace Meta
 			}
 
 		}
-		public class ConvertFractionToDouble: ToDotNetConversion
+		public class FractionToDouble: ToDotNetConversion
 		{
-			public ConvertFractionToDouble()
+			public FractionToDouble()
 			{
 				this.source=typeof(Map);
 				this.target=typeof(double);
@@ -2272,9 +2273,9 @@ namespace Meta
 			}
 
 		}
-		public class ConvertFractionToFloat: ToDotNetConversion
+		public class FractionToFloat: ToDotNetConversion
 		{
-			public ConvertFractionToFloat()
+			public FractionToFloat()
 			{
 				this.source=typeof(Map);
 				this.target=typeof(float);
