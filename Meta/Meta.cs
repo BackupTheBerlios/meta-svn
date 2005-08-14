@@ -641,11 +641,20 @@ namespace Meta
 			}
 			return result;
 		}
+
 		public static object Run(string fileName,IMap argument)
 		{
 			Map program=Interpreter.Compile(fileName);
+
+			//Directory parent=new Directory(new DirectoryInfo(Path.GetDirectoryName(fileName)));
+			//return CallProgram(program,argument,parent);
 			return CallProgram(program,argument,Library.library);
 		}
+//		public static object Run(string fileName,IMap argument)
+//		{
+//			Map program=Interpreter.Compile(fileName);
+//			return CallProgram(program,argument,Library.library);
+//		}
 
 		public static object RunWithoutLibrary(string fileName,IMap argument)
 		{
@@ -1312,19 +1321,52 @@ namespace Meta
 		object Call(object argument);
 	}
 	// TODO: Rename this eventually
-	public interface IMap: IKeyValue
+	public abstract class IMap: IKeyValue
 	{
-		IMap Parent
+		public abstract IMap Parent
 		{
 			get;
 			set;
 		}
-		ArrayList Array
+		public abstract ArrayList Array
 		{
 			get;
 		}
-		IMap Clone();
+		public abstract IMap Clone();
+
+		public abstract object this[object key]
+		{
+			get;
+			set;
+		}
+
+		public abstract ArrayList Keys
+		{
+			get;
+		}
+
+		public abstract int Count
+		{
+			get;
+		}
+
+		public abstract bool ContainsKey(object key);
+		public abstract IEnumerator GetEnumerator();
+
 	}
+//	public interface IMap: IKeyValue
+//	{
+//		IMap Parent
+//		{
+//			get;
+//			set;
+//		}
+//		ArrayList Array
+//		{
+//			get;
+//		}
+//		IMap Clone();
+//	}
 	// TODO: Does the IKeyValue<->IMap distinction make sense?
 	public interface IKeyValue: IEnumerable
 	{
@@ -1461,9 +1503,9 @@ namespace Meta
 	}
 	/* The library namespace, containing both Meta libraries as well as .NET libraries
 		*  from the "library" path and the GAC. */
-	public class Library: IKeyValue,IMap
+	public class Library: IMap,IKeyValue
 	{
-		public object this[object key]
+		public override object this[object key]
 		{
 			get
 			{
@@ -1489,36 +1531,36 @@ namespace Meta
 				throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
 			}
 		}
-		public ArrayList Keys
+		public override ArrayList Keys
 		{
 			get
 			{
 				return cache.Keys;
 			}
 		}
-		public IMap Clone()
+		public override IMap Clone()
 		{
 			return this;
 		}
-		public int Count
+		public override int Count
 		{
 			get
 			{
 				return cache.Count;
 			}
 		}
-		public bool ContainsKey(object key)
+		public override bool ContainsKey(object key)
 		{
 			return cache.ContainsKey(key);
 		}
-		public ArrayList Array
+		public override ArrayList Array
 		{
 			get
 			{
 				return new ArrayList();
 			}
 		}
-		public IMap Parent
+		public override IMap Parent
 		{
 			get
 			{
@@ -1529,7 +1571,7 @@ namespace Meta
 				throw new ApplicationException("Cannot set parent of library.");
 			}
 		}
-		public IEnumerator GetEnumerator()
+		public override IEnumerator GetEnumerator()
 		{ 
 			foreach(DictionaryEntry entry in cache)
 			{ // TODO: create separate enumerator for efficiency?
@@ -1591,11 +1633,11 @@ namespace Meta
 				{
 				}
 			}
-			foreach(string dll in Directory.GetFiles(libraryPath,"*.dll"))
+			foreach(string dll in System.IO.Directory.GetFiles(libraryPath,"*.dll"))
 			{
 				assemblies.Add(Assembly.LoadFrom(dll));
 			}
-			foreach(string exe in Directory.GetFiles(libraryPath,"*.exe"))
+			foreach(string exe in System.IO.Directory.GetFiles(libraryPath,"*.exe"))
 			{
 				assemblies.Add(Assembly.LoadFrom(exe));
 			}
@@ -1607,7 +1649,7 @@ namespace Meta
 			
 			cache=LoadNamespaces(assemblies);
 			Interpreter.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
-			foreach(string meta in Directory.GetFiles(libraryPath,"*.meta"))
+			foreach(string meta in System.IO.Directory.GetFiles(libraryPath,"*.meta"))
 			{
 				cache[new Map(Path.GetFileNameWithoutExtension(meta))]=new MetaLibrary(meta);
 			}
@@ -1761,6 +1803,382 @@ namespace Meta
 		private Map cache=new Map();
 		public static string libraryPath="library"; 
 	}
+//	public class PersistentMap:IMap
+//	{
+//		#region IMap Members
+//
+//		public IMap Parent
+//		{
+//			get
+//			{
+//				// TODO:  Add PersistentMap.Parent getter implementation
+//				return null;
+//			}
+//			set
+//			{
+//				// TODO:  Add PersistentMap.Parent setter implementation
+//			}
+//		}
+//
+//		public ArrayList Array
+//		{
+//			get
+//			{
+//				// TODO:  Add PersistentMap.Array getter implementation
+//				return null;
+//			}
+//		}
+//
+//		public IMap Clone()
+//		{
+//			// TODO:  Add PersistentMap.Clone implementation
+//			return null;
+//		}
+//
+//		#endregion
+//
+//		#region IKeyValue Members
+//
+//		public object this[object key]
+//		{
+//			get
+//			{
+//				// TODO:  Add PersistentMap.this getter implementation
+//				return null;
+//			}
+//			set
+//			{
+//				// TODO:  Add PersistentMap.this setter implementation
+//			}
+//		}
+//
+//		public ArrayList Keys
+//		{
+//			get
+//			{
+//				// TODO:  Add PersistentMap.Keys getter implementation
+//				return null;
+//			}
+//		}
+//
+//		public int Count
+//		{
+//			get
+//			{
+//				// TODO:  Add PersistentMap.Count getter implementation
+//				return 0;
+//			}
+//		}
+//
+//		public bool ContainsKey(object key)
+//		{
+//			// TODO:  Add PersistentMap.ContainsKey implementation
+//			return false;
+//		}
+//
+//		#endregion
+//
+//		#region IEnumerable Members
+//
+//		public IEnumerator GetEnumerator()
+//		{
+//			// TODO:  Add PersistentMap.GetEnumerator implementation
+//			return null;
+//		}
+//
+//		#endregion
+//
+//	}
+//	public class PersistantMapStrategy
+//	{
+//	}
+//	public class MetaFileStrategy
+//	{
+//	}
+//	public class DirectoryStrategy:PersistantMapStrategy
+//	{
+//		//		private string path;
+//		private DirectoryInfo directory;
+//		private IMap parent=null;
+//		public DirectoryStrategy(DirectoryInfo directory)
+//		{
+//			//			directory=new DirectoryInfo(path);
+//			if(directory.Parent!=null)
+//			{
+//				parent=new Directory(directory.Parent);
+//			}
+//			else
+//			{
+//				parent=Library.library;
+//			}
+//			//			this.path=path;
+//		}
+//		public IMap Parent
+//		{
+//			get
+//			{
+//				return parent;
+//			}
+//			set
+//			{
+//				throw new ApplicationException("Tried to set parent of directory. "+directory.FullName);
+//			}
+//		}
+//		public ArrayList Array
+//		{
+//			get
+//			{
+//				return new ArrayList(); // TODO: maybe we interpret file names 1,2,3 as numbers, too??? would make sense, actually
+//			}
+//		}
+//		public IMap Clone()
+//		{
+//			throw new ApplicationException("Clone in Directory not implemented yet"); // TODO
+//		}
+//		public object this[object key]
+//		{
+//			get
+//			{
+//				bool hasKey;
+//				string fileName="";
+//				if(key is Map)
+//				{
+//					Map map=(Map)key;
+//					if(map.IsString)
+//					{
+//						fileName=map.String;
+//					}
+//				}
+//				if(key is Integer)
+//				{
+//					fileName=((Integer)key).ToString();
+//				}
+//				object result;
+//				if(fileName!="")
+//				{
+//					if(System.IO.Directory.Exists(fileName)) // TODO: maybe always use DirectoryInfo instead of System.IO.Directory
+//					{
+//						result=new Directory(new DirectoryInfo(fileName));
+//					}
+//					else 
+//					{
+//						if(fileName.EndsWith(".meta"))
+//						{
+//							result=new MetaFile(fileName);
+//						}
+//						else
+//						{
+//							ArrayList bytes=new ArrayList(); // amazingly slow, but binary reading ist just too stupid
+//							FileStream stream=new FileStream(fileName,FileMode.Open);
+//							while(true)
+//							{
+//								int read=stream.ReadByte();
+//								if(read>=0)
+//								{
+//									bytes.Add(read);
+//								}
+//								else
+//								{
+//									break;
+//								}
+//							}
+//							Byte[] array=(Byte[])bytes.ToArray(typeof(byte));
+//							Integer integer=new Integer(array);
+//							result=integer;
+//						}
+//					}
+//				}
+//				else
+//				{
+//					result=null;
+//				}
+//				return result;
+//			}
+//			set
+//			{
+//				// TODO:  Uh, oh complicated, throw for now
+//				throw new ApplicationException("Setting in directories not implemented yet.");
+//			}
+//		}
+//		public ArrayList Keys
+//		{
+//			get
+//			{
+//				ArrayList keys=new ArrayList();
+//				foreach(DirectoryInfo dir in directory.GetDirectories())
+//				{
+//					keys.Add(Literal.RecognizeLiteral(dir.Name));
+//				}
+//				foreach(FileInfo file in directory.GetFiles())
+//				{
+//					keys.Add(Literal.RecognizeLiteral(file.Name));
+//				}
+//				return keys;
+//			}
+//		}
+//
+//		public int Count
+//		{
+//			get
+//			{
+//				return Keys.Count;
+//			}
+//		}
+//
+//		public bool ContainsKey(object key)
+//		{
+//			return Keys.Contains(key);
+//		}
+//
+//		public IEnumerator GetEnumerator()
+//		{
+//			return new MapEnumerator(this);
+//		}
+//	}
+
+//	public class MetaFile
+//	{
+//	}
+//	public class Directory:IMap
+//	{
+////		private string path;
+//		private DirectoryInfo directory;
+//		private IMap parent=null;
+//		public Directory(DirectoryInfo directory)
+//		{
+////			directory=new DirectoryInfo(path);
+//			if(directory.Parent!=null)
+//			{
+//				parent=new Directory(directory.Parent);
+//			}
+//			else
+//			{
+//				parent=Library.library;
+//			}
+////			this.path=path;
+//		}
+//		public IMap Parent
+//		{
+//			get
+//			{
+//				return parent;
+//			}
+//			set
+//			{
+//				throw new ApplicationException("Tried to set parent of directory. "+directory.FullName);
+//			}
+//		}
+//		public ArrayList Array
+//		{
+//			get
+//			{
+//				return new ArrayList(); // TODO: maybe we interpret file names 1,2,3 as numbers, too??? would make sense, actually
+//			}
+//		}
+//		public IMap Clone()
+//		{
+//			throw new ApplicationException("Clone in Directory not implemented yet"); // TODO
+//		}
+//		public object this[object key]
+//		{
+//			get
+//			{
+//				bool hasKey;
+//				string fileName="";
+//				if(key is Map)
+//				{
+//					Map map=(Map)key;
+//					if(map.IsString)
+//					{
+//						fileName=map.String;
+//					}
+//				}
+//				if(key is Integer)
+//				{
+//					fileName=((Integer)key).ToString();
+//				}
+//				object result;
+//				if(fileName!="")
+//				{
+//					if(System.IO.Directory.Exists(fileName)) // TODO: maybe always use DirectoryInfo instead of System.IO.Directory
+//					{
+//						result=new Directory(new DirectoryInfo(fileName));
+//					}
+//					else 
+//					{
+//						if(fileName.EndsWith(".meta"))
+//						{
+//							result=new MetaFile(fileName);
+//						}
+//						else
+//						{
+//							ArrayList bytes=new ArrayList(); // amazingly slow, but binary reading ist just too stupid
+//							FileStream stream=new FileStream(fileName,FileMode.Open);
+//							while(true)
+//							{
+//								int read=stream.ReadByte();
+//								if(read>=0)
+//								{
+//									bytes.Add(read);
+//								}
+//								else
+//								{
+//									break;
+//								}
+//							}
+//							Byte[] array=(Byte[])bytes.ToArray(typeof(byte));
+//							Integer integer=new Integer(array);
+//							result=integer;
+//						}
+//					}
+//				}
+//				else
+//				{
+//					result=null;
+//				}
+//				return result;
+//			}
+//			set
+//			{
+//				// TODO:  Uh, oh complicated, throw for now
+//				throw new ApplicationException("Setting in directories not implemented yet.");
+//			}
+//		}
+//		public ArrayList Keys
+//		{
+//			get
+//			{
+//				ArrayList keys=new ArrayList();
+//				foreach(DirectoryInfo dir in directory.GetDirectories())
+//				{
+//					keys.Add(Literal.RecognizeLiteral(dir.Name));
+//				}
+//				foreach(FileInfo file in directory.GetFiles())
+//				{
+//					keys.Add(Literal.RecognizeLiteral(file.Name));
+//				}
+//				return keys;
+//			}
+//		}
+//
+//		public int Count
+//		{
+//			get
+//			{
+//				return Keys.Count;
+//			}
+//		}
+//
+//		public bool ContainsKey(object key)
+//		{
+//			return Keys.Contains(key);
+//		}
+//
+//		public IEnumerator GetEnumerator()
+//		{
+//			return new MapEnumerator(this);
+//		}
+//	}
 	public class Convert
 	{
 
@@ -1777,12 +2195,12 @@ namespace Meta
 		{
 			this.map=new Map();
 		}
-		public bool ContainsKey(object key)
+		public override bool ContainsKey(object key)
 		{
 			return map.ContainsKey(Interpreter.MetaFromDotNet(key));
 		}
 
-		public object this[object key]
+		public override object this[object key]
 		{
 			get
 			{
@@ -1793,7 +2211,7 @@ namespace Meta
 				this.map[Interpreter.MetaFromDotNet(key)]=Interpreter.MetaFromDotNet(value);
 			}
 		}
-		public IMap Parent
+		public override IMap Parent
 		{
 			get
 			{
@@ -1804,14 +2222,14 @@ namespace Meta
 				map.Parent=(IMap)Interpreter.DotNetFromMeta(value);
 			}
 		}
-		public ArrayList Array
+		public override ArrayList Array
 		{
 			get
 			{
 				return ConvertToMeta(map.Array);
 			}
 		}
-		public IMap Clone()
+		public override IMap Clone()
 		{
 			return new MapAdapter((Map)map.Clone());
 		}
@@ -1824,21 +2242,21 @@ namespace Meta
 			}
 			return result;
 		}
-		public ArrayList Keys
+		public override ArrayList Keys
 		{
 			get
 			{
 				return ConvertToMeta(map.Keys);
 			}
 		}
-		public int Count
+		public override int Count
 		{
 			get
 			{
 				return map.Count;
 			}
 		}
-		public IEnumerator GetEnumerator()
+		public override IEnumerator GetEnumerator()
 		{
 			return new MapEnumerator(this);
 		}
@@ -1847,7 +2265,7 @@ namespace Meta
 	// and a logical type that encompasses all real .NET types that have been converted, we will see if that is really useful
 
 	//TODO: cache the Array somewhere; put in an "Add" method
-	public class Map: IKeyValue, IMap, ICallable, IEnumerable, ISerializeSpecial
+	public class Map: IMap, IKeyValue, ICallable, IEnumerable, ISerializeSpecial
 	{
 
 		public object Argument
@@ -1877,7 +2295,7 @@ namespace Meta
 				return strategy.String;
 			}
 		}
-		public IMap Parent
+		public override IMap Parent
 		{
 			get
 			{
@@ -1888,21 +2306,21 @@ namespace Meta
 				parent=value;
 			}
 		}
-		public int Count
+		public override int Count
 		{
 			get
 			{
 				return strategy.Count;
 			}
 		}
-		public ArrayList Array
+		public override ArrayList Array
 		{ 
 			get
 			{
 				return strategy.Array;
 			}
 		}
-		public virtual object this[object key] 
+		public override object this[object key] 
 		{
 			get
 			{
@@ -1953,14 +2371,14 @@ namespace Meta
 			result=function.Evaluate(this);
 			return result;
 		}
-		public ArrayList Keys
+		public override ArrayList Keys
 		{
 			get
 			{
 				return strategy.Keys;
 			}
 		}
-		public IMap Clone()
+		public override IMap Clone()
 		{
 			Map clone=strategy.CloneMap();
 			clone.Parent=Parent;
@@ -2007,7 +2425,7 @@ namespace Meta
 				((Expression)expression).Extent=this.Extent;
 			return expression;
 		}
-		public bool ContainsKey(object key) 
+		public override bool ContainsKey(object key) 
 		{
 			if(key is Map)
 			{
@@ -2039,7 +2457,7 @@ namespace Meta
 			}
 			return isEqual;
 		}
-		public IEnumerator GetEnumerator()
+		public override IEnumerator GetEnumerator()
 		{
 			return new MapEnumerator(this);
 		}
@@ -3247,7 +3665,7 @@ namespace Meta
 			}
 			private bool CompareResult(string path,object ttoSerialize,string[] functions)
 			{
-				Directory.CreateDirectory(path);
+				System.IO.Directory.CreateDirectory(path);
 				if(!File.Exists(Path.Combine(path,"check.txt")))
 				{
 					File.Create(Path.Combine(path,"check.txt")).Close();
