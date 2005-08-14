@@ -244,8 +244,71 @@ namespace Meta
 		int line;
 		int column;
 	}
+
+	public abstract class RecognizeLiteral
+	{
+		public abstract object Recognize(string text); // Returns null if not recognized. Null cannot currently be created this way, so, add a variable that indicates success
+	}
+	public class LiteralRecognitions
+	{
+		// The order of the classes determines the precedence of literal recognitions
+		public class RecognizeString:RecognizeLiteral  // rename to LiteralRecognition, or something even better, maybe LiteralType, and LiteralTypes
+		{
+			public override object Recognize(string text)
+			{
+				return new Map(text);
+			}
+		}
+		public class RecognizeInteger: RecognizeLiteral 
+		{
+			public override object Recognize(string text) 
+			{ 
+				if(text.Equals(""))
+				{
+					return null;
+				}
+				else
+				{
+					Integer result=new Integer(0);
+					int index=0;
+					if(text[0]=='-')
+					{
+						index++;
+					}
+					// TODO: the following is probably incorrect for multi-byte unicode
+					// use StringInfo in the future instead, or something like that
+					for(;index<text.Length;index++)
+					{
+						if(char.IsDigit(text[index]))
+						{
+							result=result*10+(text[index]-'0');
+						}
+						else
+						{
+							return null;
+						}
+					}
+					if(text[0]=='-')
+					{
+						result=-result;
+					}
+					return result;
+				}
+			}
+		}
+	}
 	public class Literal: Expression
 	{
+		public static ArrayList recognitions=new ArrayList();
+		static Literal()
+		{
+			foreach(Type recognition in typeof(LiteralRecognitions).GetNestedTypes())
+			{
+				recognitions.Add((RecognizeLiteral)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+			}
+			recognitions.Reverse();
+
+		}
 		public override bool Stop()
 		{
 			return false;
@@ -262,9 +325,9 @@ namespace Meta
 		public object literal=null;
 		public static object RecognizeLiteral(string text) // somehow put this somewhere else, (Literal?)
 		{
-			foreach(Interpreter.RecognizeLiteral rcnltrCurrent in Interpreter.recognitions) // move the rest of the pack here
+			foreach(RecognizeLiteral recognition in recognitions) // move the rest of the pack here
 			{
-				object recognized=rcnltrCurrent.Recognize(text);
+				object recognized=recognition.Recognize(text);
 				if(recognized!=null)
 				{
 					return recognized;
@@ -748,11 +811,6 @@ namespace Meta
 			////////// TODO: installation path still sucks big deal
 			installationPath=@"c:\_projectsupportmaterial\meta";//Directory.GetParent(metaAssembly.Location).Parent.FullName; 
 //				installationPath=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName; 
-			foreach(Type recognition in typeof(LiteralRecognitions).GetNestedTypes())
-			{
-				recognitions.Add((RecognizeLiteral)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-			}
-			recognitions.Reverse();
 //			foreach(Type toMetaConversion in typeof(DotNetToMetaConversions).GetNestedTypes())
 //			{
 //				DotNetToMetaConversion conversion=((DotNetToMetaConversion)toMetaConversion.GetConstructor(new Type[]{}).Invoke(new object[]{}));
@@ -772,13 +830,6 @@ namespace Meta
 //		public static Hashtable toDotNetConversions=new Hashtable();
 //		public static Hashtable toMetaConversions=new Hashtable();
 		public static ArrayList loadedAssemblies=new ArrayList(); // make this stupid class a bit smaller
-
-		public static ArrayList recognitions=new ArrayList();
-
-		public abstract class RecognizeLiteral
-		{
-			public abstract object Recognize(string text); // Returns null if not recognized. Null cannot currently be created this way, so, add a variable that indicates success
-		}
 //		public abstract class MetaToDotNetConversion
 //		{
 //			public Type source;
@@ -790,55 +841,6 @@ namespace Meta
 //			public Type source;
 //			public abstract object Convert(object obj);
 //		}
-		public class LiteralRecognitions
-		{
-			// The order of the classes determines the precedence of literal recognitions
-			public class RecognizeString:RecognizeLiteral  // rename to LiteralRecognition, or something even better, maybe LiteralType, and LiteralTypes
-			{
-				public override object Recognize(string text)
-				{
-					return new Map(text);
-				}
-			}
-			public class RecognizeInteger: RecognizeLiteral 
-			{
-				public override object Recognize(string text) 
-				{ 
-					if(text.Equals(""))
-					{
-						return null;
-					}
-					else
-					{
-						Integer result=new Integer(0);
-						int index=0;
-						if(text[0]=='-')
-						{
-							index++;
-						}
-						// TODO: the following is probably incorrect for multi-byte unicode
-						// use StringInfo in the future instead, or something like that
-						for(;index<text.Length;index++)
-						{
-							if(char.IsDigit(text[index]))
-							{
-								result=result*10+(text[index]-'0');
-							}
-							else
-							{
-								return null;
-							}
-						}
-						if(text[0]=='-')
-						{
-							result=-result;
-						}
-						return result;
-					}
-				}
-			}
-
-		}
 	}
 	/* Base class of exceptions in Meta. */
 	public class MetaException:ApplicationException
