@@ -1790,12 +1790,12 @@ namespace Meta
 		{
 			foreach(Type conversionType in typeof(ToMetaConversions).GetNestedTypes())
 			{
-				ToMetaConversion conversion=((ToMetaConversion)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+				ToMeta conversion=((ToMeta)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 				toMeta[conversion.source]=conversion;
 			}
 			foreach(Type conversionType in typeof(ToDotNetConversions).GetNestedTypes())
 			{
-				ToDotNetConversion conversion=(ToDotNetConversion)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{});
+				ToDotNet conversion=(ToDotNet)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{});
 				if(!toDotNet.ContainsKey(conversion.target))
 				{
 					toDotNet[conversion.target]=new Hashtable();
@@ -1813,7 +1813,7 @@ namespace Meta
 			Hashtable conversions=(Hashtable)toDotNet[target];
 			if(conversions!=null)
 			{
-				ToDotNetConversion conversion=(ToDotNetConversion)conversions[meta.GetType()];
+				ToDotNet conversion=(ToDotNet)conversions[meta.GetType()];
 				if(conversion!=null)
 				{
 					return conversion.Convert(meta,out isConverted);
@@ -1831,7 +1831,7 @@ namespace Meta
 				Hashtable conversions=(Hashtable)toDotNet[target];
 				if(conversions.ContainsKey(meta.GetType()))
 				{
-					ToDotNetConversion conversion=(ToDotNetConversion)conversions[meta.GetType()];
+					ToDotNet conversion=(ToDotNet)conversions[meta.GetType()];
 					bool isConverted;
 					object converted= conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
 					if(isConverted)
@@ -1853,7 +1853,7 @@ namespace Meta
 			{
 				return new Integer((int)System.Convert.ToInt32((Enum)oDotNet));
 			}
-			ToMetaConversion conversion=(ToMetaConversion)toMeta[oDotNet.GetType()];
+			ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
 			if(conversion==null)
 			{
 				return oDotNet;
@@ -1882,12 +1882,12 @@ namespace Meta
 		private static Hashtable toMeta=new Hashtable();
 	}
 
-	public abstract class ToMetaConversion
+	public abstract class ToMeta
 	{ 
 		public Type source;
 		public abstract object Convert(object obj);
 	}
-	public abstract class ToDotNetConversion
+	public abstract class ToDotNet
 	{
 		public Type source;
 		public Type target;
@@ -1896,7 +1896,7 @@ namespace Meta
 
 	abstract class ToMetaConversions
 	{
-		public class ConvertStringToMap: ToMetaConversion
+		public class ConvertStringToMap: ToMeta
 		{
 			public ConvertStringToMap()  
 			{
@@ -1907,7 +1907,7 @@ namespace Meta
 				return new Map((string)toConvert);
 			}
 		}
-		public class ConvertBoolToInteger: ToMetaConversion
+		public class ConvertBoolToInteger: ToMeta
 		{
 			public ConvertBoolToInteger()
 			{
@@ -1919,7 +1919,7 @@ namespace Meta
 			}
 
 		}
-		public class ConvertByteToInteger: ToMetaConversion
+		public class ConvertByteToInteger: ToMeta
 		{
 			public ConvertByteToInteger()
 			{
@@ -1930,7 +1930,7 @@ namespace Meta
 				return new Integer((Byte)toConvert);
 			}
 		}
-		public class ConvertSByteToInteger: ToMetaConversion
+		public class ConvertSByteToInteger: ToMeta
 		{
 			public ConvertSByteToInteger()
 			{
@@ -1941,7 +1941,7 @@ namespace Meta
 				return new Integer((SByte)toConvert);
 			}
 		}
-		public class ConvertCharToInteger: ToMetaConversion
+		public class ConvertCharToInteger: ToMeta
 		{
 			public ConvertCharToInteger()
 			{
@@ -1952,7 +1952,7 @@ namespace Meta
 				return new Integer((Char)toConvert);
 			}
 		}
-		public class ConvertInt32ToInteger: ToMetaConversion
+		public class ConvertInt32ToInteger: ToMeta
 		{
 			public ConvertInt32ToInteger()
 			{
@@ -1963,7 +1963,7 @@ namespace Meta
 				return new Integer((Int32)toConvert);
 			}
 		}
-		public class ConvertUInt32ToInteger: ToMetaConversion
+		public class ConvertUInt32ToInteger: ToMeta
 		{
 			public ConvertUInt32ToInteger()
 			{
@@ -1974,7 +1974,7 @@ namespace Meta
 				return new Integer((UInt32)toConvert);
 			}
 		}
-		public class ConvertInt64ToInteger: ToMetaConversion
+		public class ConvertInt64ToInteger: ToMeta
 		{
 			public ConvertInt64ToInteger()
 			{
@@ -1985,7 +1985,7 @@ namespace Meta
 				return new Integer((Int64)toConvert);
 			}
 		}
-		public class ConvertUInt64ToInteger: ToMetaConversion
+		public class ConvertUInt64ToInteger: ToMeta
 		{
 			public ConvertUInt64ToInteger()
 			{
@@ -1996,7 +1996,7 @@ namespace Meta
 				return new Integer((Int64)(UInt64)toConvert);
 			}
 		}
-		public class ConvertInt16ToInteger: ToMetaConversion
+		public class ConvertInt16ToInteger: ToMeta
 		{
 			public ConvertInt16ToInteger()
 			{
@@ -2007,7 +2007,7 @@ namespace Meta
 				return new Integer((Int16)toConvert);
 			}
 		}
-		public class ConvertUInt16ToInteger: ToMetaConversion
+		public class ConvertUInt16ToInteger: ToMeta
 		{
 			public ConvertUInt16ToInteger()
 			{
@@ -2021,7 +2021,7 @@ namespace Meta
 	}
 	abstract class ToDotNetConversions
 	{
-		public class IntegerToByte: ToDotNetConversion // get rid of "Convert", is redundant
+		public class IntegerToByte: ToDotNet // get rid of "Convert", is redundant
 		{
 			public IntegerToByte()
 			{
@@ -2034,7 +2034,7 @@ namespace Meta
 				return System.Convert.ToByte(((Integer)toConvert).LongValue());
 			}
 		}
-		public class IntegerToBool: ToDotNetConversion
+		public class IntegerToBool: ToDotNet
 		{
 			public IntegerToBool()
 			{
@@ -2063,7 +2063,7 @@ namespace Meta
 				return result;
 			}
 		}
-		public class IntegerToSByte: ToDotNetConversion
+		public class IntegerToSByte: ToDotNet
 		{
 			public IntegerToSByte()
 			{
@@ -2076,7 +2076,7 @@ namespace Meta
 				return System.Convert.ToSByte(((Integer)toConvert).LongValue());
 			}
 		}
-		public class IntegerToChar: ToDotNetConversion
+		public class IntegerToChar: ToDotNet
 		{
 			public IntegerToChar()
 			{
@@ -2089,7 +2089,7 @@ namespace Meta
 				return System.Convert.ToChar(((Integer)toConvert).LongValue());
 			}
 		}
-		public class IntegerToInt32: ToDotNetConversion
+		public class IntegerToInt32: ToDotNet
 		{
 			public IntegerToInt32()
 			{
@@ -2102,7 +2102,7 @@ namespace Meta
 				return System.Convert.ToInt32(((Integer)toConvert).LongValue());
 			}
 		}
-		public class IntegerToUInt32: ToDotNetConversion
+		public class IntegerToUInt32: ToDotNet
 		{
 			public IntegerToUInt32()
 			{
@@ -2115,7 +2115,7 @@ namespace Meta
 				return System.Convert.ToUInt32(((Integer)toConvert).LongValue());
 			}
 		}
-		public class IntegerToInt64: ToDotNetConversion
+		public class IntegerToInt64: ToDotNet
 		{
 			public IntegerToInt64()
 			{
@@ -2128,7 +2128,7 @@ namespace Meta
 				return System.Convert.ToInt64(((Integer)toConvert).LongValue());
 			}
 		}
-		public class IntegerToUInt64: ToDotNetConversion
+		public class IntegerToUInt64: ToDotNet
 		{
 			public IntegerToUInt64()
 			{
@@ -2141,7 +2141,7 @@ namespace Meta
 				return System.Convert.ToUInt64(((Integer)toConvert).LongValue());
 			}
 		}
-		public class IntegerToInt16: ToDotNetConversion
+		public class IntegerToInt16: ToDotNet
 		{
 			public IntegerToInt16()
 			{
@@ -2154,7 +2154,7 @@ namespace Meta
 				return System.Convert.ToInt16(((Integer)toConvert).LongValue());
 			}
 		}
-		public class IntegerToUInt16: ToDotNetConversion
+		public class IntegerToUInt16: ToDotNet
 		{
 			public IntegerToUInt16()
 			{
@@ -2167,7 +2167,7 @@ namespace Meta
 				return System.Convert.ToUInt16(((Integer)toConvert).LongValue());
 			}
 		}
-		public class IntegerToDecimal: ToDotNetConversion
+		public class IntegerToDecimal: ToDotNet
 		{
 			public IntegerToDecimal()
 			{
@@ -2180,7 +2180,7 @@ namespace Meta
 				return (decimal)(((Integer)toConvert).LongValue());
 			}
 		}
-		public class IntegerToDouble: ToDotNetConversion
+		public class IntegerToDouble: ToDotNet
 		{
 			public IntegerToDouble()
 			{
@@ -2193,7 +2193,7 @@ namespace Meta
 				return (double)(((Integer)toConvert).LongValue());
 			}
 		}
-		public class IntegerToFloat: ToDotNetConversion
+		public class IntegerToFloat: ToDotNet
 		{
 			public IntegerToFloat()
 			{
@@ -2206,7 +2206,7 @@ namespace Meta
 				return (float)(((Integer)toConvert).LongValue());
 			}
 		}
-		public class MapToString: ToDotNetConversion
+		public class MapToString: ToDotNet
 		{
 			public MapToString()
 			{
@@ -2227,7 +2227,7 @@ namespace Meta
 				}
 			}
 		}
-		public class FractionToDecimal: ToDotNetConversion
+		public class FractionToDecimal: ToDotNet
 		{
 			public FractionToDecimal()
 			{
@@ -2250,7 +2250,7 @@ namespace Meta
 			}
 
 		}
-		public class FractionToDouble: ToDotNetConversion
+		public class FractionToDouble: ToDotNet
 		{
 			public FractionToDouble()
 			{
@@ -2273,7 +2273,7 @@ namespace Meta
 			}
 
 		}
-		public class FractionToFloat: ToDotNetConversion
+		public class FractionToFloat: ToDotNet
 		{
 			public FractionToFloat()
 			{
