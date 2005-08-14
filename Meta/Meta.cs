@@ -436,12 +436,21 @@ namespace Meta
 		
 		bool searchFirst=false;
 	}
-
-
-	public class Interpreter  // what about multiple interpreters? or make interpreter multithreaded, what about events vs. multithreading?
+	public class IMeta // TODO: Should integer be a map? Then we would not need a Meta type, seems sensible, but exact representation not clear yet
 	{
+	}
 
-		public static BreakPoint BreakPoint
+	public class Interpreter
+	{
+		// TODO: make Interpreter multithreaded
+
+		// TODO: might need a call stack, after all, to determine access rights
+		// maybe not, though, might carry them around, seems more sensible
+		// call stack would necessitate multiple Interpreters, which is not good
+		// TODO: maybe we could get rid of Interpreter completely
+		
+		
+		public static BreakPoint BreakPoint // TODO: Shouldn't be here, but in Expression
 		{
 			get
 			{
@@ -455,7 +464,7 @@ namespace Meta
 		private static BreakPoint breakPoint;//=new BreakPoint(@"c:\_projectsupportmaterial\meta\editor\editor.meta",152,11);
 
 		private static object debugValue="";
-		public static object DebugValue
+		public static object DebugValue// TODO: put into expression!, and all the rest, too
 		{
 			get
 			{
@@ -477,8 +486,7 @@ namespace Meta
 				}
 			}
 		}
-//		public static event EventHandler Test;
-		public static object Clone(object meta)
+		public static object Clone(object meta) // TODO: Stupid function
 		{
 			if(meta is IMap)
 			{
@@ -489,7 +497,7 @@ namespace Meta
 				return meta;
 			}
 		}
-		public static void SaveToFile(object meta,string path)
+		public static void SaveToFile(object meta,string path) // TODO: stupid function
 		{
 			StreamWriter streamWriter=new StreamWriter(path);
 			streamWriter.Write(SaveToFile(meta,"",true).TrimEnd(new char[]{'\n'}));
@@ -499,9 +507,11 @@ namespace Meta
 		{
 			return SaveToFile(meta,"",true);
 		}
+		// TODO: extend this, and move it to somewhere else,
+		// Should be able to serialize everything
+		// Should also be able to serialize things which cannot be serialized in Meta at the moment, that is strings that contain "", or begin with them, especially
 		// make this more efficient and more flexible with respect to special things, like functions
-		// maybe add function for serialization that is non-critical, that is for intellisense stuff
-		public static string SaveToFile(object meta,string indent,bool isRightSide) // dumb NAME!!!!
+		public static string SaveToFile(object meta,string indent,bool isRightSide) // TODO: dumb NAME!!!! Rename!
 		{
 			if(meta is Map)
 			{
@@ -584,63 +594,60 @@ namespace Meta
 			}
 			return result;
 		}	
-		// TODO: Should Arrays be converted to maps, or is it sufficient to have a DotNetObject?
-		//    Map would be more convenient, but DotNetObject is ok for now
-
-		public static object MetaFromDotNet(object oDotNet)// umbenennen zu: ConvertToMeta, ConvertToDotNet, put this into its own class
-		{ 
-			if(oDotNet==null)
-			{
-				return null;
-			}
-			else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
-			{
-				return new Integer((int)System.Convert.ToInt32((Enum)oDotNet));
-			}
-			DotNetToMetaConversion conversion=(DotNetToMetaConversion)toMetaConversions[oDotNet.GetType()];
-			if(conversion==null)
-			{
-				return oDotNet;
-			}
-			else
-			{
-				return conversion.Convert(oDotNet);
-			}
-		}
-		public static object DotNetFromMeta(object meta) // there will be name collision with the classes used, but there is only one function, so rename the function
-		{
-			if(meta is Integer)
-			{
-				return ((Integer)meta).Int;
-			}
-			else if(meta is Map && ((Map)meta).IsString)
-			{
-				return ((Map)meta).String;
-			}
-			else
-			{
-				return meta;
-			}
-		}
-		public static object DotNetFromMeta(object meta,Type target)
-		{
-			object result=meta;
-			if(Interpreter.toDotNetConversions.ContainsKey(target))
-			{
-				Hashtable conversions=(Hashtable)Interpreter.toDotNetConversions[target];
-				if(conversions.ContainsKey(meta.GetType()))
-				{
-					MetaToDotNetConversion conversion=(MetaToDotNetConversion)conversions[meta.GetType()];
-					bool isConverted;
-					object converted= conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
-					if(isConverted)
-					{
-						result=converted;
-					}
-				}
-			}
-			return result;
-		}
+//		public static object MetaFromDotNet(object oDotNet)// umbenennen zu: ConvertToMeta, ConvertToDotNet, put this into its own class
+//		{ 
+//			if(oDotNet==null)
+//			{
+//				return null;
+//			}
+//			else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
+//			{
+//				return new Integer((int)System.Convert.ToInt32((Enum)oDotNet));
+//			}
+//			DotNetToMetaConversion conversion=(DotNetToMetaConversion)toMetaConversions[oDotNet.GetType()];
+//			if(conversion==null)
+//			{
+//				return oDotNet;
+//			}
+//			else
+//			{
+//				return conversion.Convert(oDotNet);
+//			}
+//		}
+//		public static object DotNetFromMeta(object meta) // there will be name collision with the classes used, but there is only one function, so rename the function
+//		{
+//			if(meta is Integer)
+//			{
+//				return ((Integer)meta).Int;
+//			}
+//			else if(meta is Map && ((Map)meta).IsString)
+//			{
+//				return ((Map)meta).String;
+//			}
+//			else
+//			{
+//				return meta;
+//			}
+//		}
+//		public static object DotNetFromMeta(object meta,Type target)
+//		{
+//			object result=meta;
+//			if(Interpreter.toDotNetConversions.ContainsKey(target))
+//			{
+//				Hashtable conversions=(Hashtable)Interpreter.toDotNetConversions[target];
+//				if(conversions.ContainsKey(meta.GetType()))
+//				{
+//					MetaToDotNetConversion conversion=(MetaToDotNetConversion)conversions[meta.GetType()];
+//					bool isConverted;
+//					object converted= conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
+//					if(isConverted)
+//					{
+//						result=converted;
+//					}
+//				}
+//			}
+//			return result;
+//		}
 
 		public static object Run(string fileName,IMap argument)
 		{
@@ -668,7 +675,7 @@ namespace Meta
 			callable.Parent=parent;
 			return callable.Call(argument);
 		}
-
+		// TODO: move somewhere else??
 		public static Map Compile(string fileName)
 		{
 			return (new MetaTreeParser()).map(ParseToAst(fileName));
@@ -690,26 +697,27 @@ namespace Meta
 			return ast;
 		}
 
-		public static object DotNetFromMeta(object meta,Type target,out bool isConverted)
-		{
-			if(target.IsSubclassOf(typeof(Enum)) && meta is Integer)
-			{ 
-				isConverted=true;
-				return Enum.ToObject(target,((Integer)meta).Int);
-			}
-			Hashtable toDotNet=(Hashtable)
-				Interpreter.toDotNetConversions[target];
-			if(toDotNet!=null)
-			{
-				MetaToDotNetConversion conversion=(MetaToDotNetConversion)toDotNet[meta.GetType()];
-				if(conversion!=null)
-				{
-					return conversion.Convert(meta,out isConverted);
-				}
-			}
-			isConverted=false;
-			return null;
-		}
+//		public static object DotNetFromMeta(object meta,Type target,out bool isConverted)
+//		{
+//			if(target.IsSubclassOf(typeof(Enum)) && meta is Integer)
+//			{ 
+//				isConverted=true;
+//				return Enum.ToObject(target,((Integer)meta).Int);
+//			}
+//			Hashtable toDotNet=(Hashtable)
+//				Interpreter.toDotNetConversions[target];
+//			if(toDotNet!=null)
+//			{
+//				MetaToDotNetConversion conversion=(MetaToDotNetConversion)toDotNet[meta.GetType()];
+//				if(conversion!=null)
+//				{
+//					return conversion.Convert(meta,out isConverted);
+//				}
+//			}
+//			isConverted=false;
+//			return null;
+//		}
+		// TODO: move this stuff somewhere else
 		private static void ExecuteInThread()
 		{
 			Interpreter.Run(executeFileName,new Map());
@@ -745,24 +753,24 @@ namespace Meta
 				recognitions.Add((RecognizeLiteral)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 			}
 			recognitions.Reverse();
-			foreach(Type toMetaConversion in typeof(DotNetToMetaConversions).GetNestedTypes())
-			{
-				DotNetToMetaConversion conversion=((DotNetToMetaConversion)toMetaConversion.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-				toMetaConversions[conversion.source]=conversion;
-			}
-			foreach(Type toDotNetConversion in typeof(MetaToDotNetConversions).GetNestedTypes())
-			{
-				MetaToDotNetConversion conversion=(MetaToDotNetConversion)toDotNetConversion.GetConstructor(new Type[]{}).Invoke(new object[]{});
-				if(!toDotNetConversions.ContainsKey(conversion.target))
-				{
-					toDotNetConversions[conversion.target]=new Hashtable();
-				}
-				((Hashtable)toDotNetConversions[conversion.target])[conversion.source]=conversion; // put the search shit for this into a function
-			}
+//			foreach(Type toMetaConversion in typeof(DotNetToMetaConversions).GetNestedTypes())
+//			{
+//				DotNetToMetaConversion conversion=((DotNetToMetaConversion)toMetaConversion.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+//				toMetaConversions[conversion.source]=conversion;
+//			}
+//			foreach(Type toDotNetConversion in typeof(MetaToDotNetConversions).GetNestedTypes())
+//			{
+//				MetaToDotNetConversion conversion=(MetaToDotNetConversion)toDotNetConversion.GetConstructor(new Type[]{}).Invoke(new object[]{});
+//				if(!toDotNetConversions.ContainsKey(conversion.target))
+//				{
+//					toDotNetConversions[conversion.target]=new Hashtable();
+//				}
+//				((Hashtable)toDotNetConversions[conversion.target])[conversion.source]=conversion; // put the search shit for this into a function
+//			}
 		}
 		public static string installationPath;
-		public static Hashtable toDotNetConversions=new Hashtable();
-		public static Hashtable toMetaConversions=new Hashtable();
+//		public static Hashtable toDotNetConversions=new Hashtable();
+//		public static Hashtable toMetaConversions=new Hashtable();
 		public static ArrayList loadedAssemblies=new ArrayList(); // make this stupid class a bit smaller
 
 		public static ArrayList recognitions=new ArrayList();
@@ -771,17 +779,17 @@ namespace Meta
 		{
 			public abstract object Recognize(string text); // Returns null if not recognized. Null cannot currently be created this way, so, add a variable that indicates success
 		}
-		public abstract class MetaToDotNetConversion
-		{
-			public Type source;
-			public Type target;
-			public abstract object Convert(object obj,out bool converted);
-		}
-		public abstract class DotNetToMetaConversion
-		{ 
-			public Type source;
-			public abstract object Convert(object obj);
-		}
+//		public abstract class MetaToDotNetConversion
+//		{
+//			public Type source;
+//			public Type target;
+//			public abstract object Convert(object obj,out bool converted);
+//		}
+//		public abstract class DotNetToMetaConversion
+//		{ 
+//			public Type source;
+//			public abstract object Convert(object obj);
+//		}
 		public class LiteralRecognitions
 		{
 			// The order of the classes determines the precedence of literal recognitions
@@ -831,411 +839,6 @@ namespace Meta
 			}
 
 		}
-		private abstract class MetaToDotNetConversions  // name is too long, all the names are to long
-		{
-			public class ConvertIntegerToByte: MetaToDotNetConversion // get rid of "Convert", is redundant
-			{
-				public ConvertIntegerToByte()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(Byte);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return System.Convert.ToByte(((Integer)toConvert).LongValue());
-				}
-			}
-			public class ConvertIntegerToBool: MetaToDotNetConversion
-			{
-				public ConvertIntegerToBool()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(bool);
-				}
-				// TODO: make this single-exit
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					int i=((Integer)toConvert).Int;
-					if(i==0)
-					{
-						return false;
-					}
-					else if(i==1)
-					{
-						return true;
-					}
-					else
-					{
-						isConverted=false; // TODO
-						return null;
-					}
-				}
-
-			}
-			public class ConvertIntegerToSByte: MetaToDotNetConversion
-			{
-				public ConvertIntegerToSByte()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(SByte);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return System.Convert.ToSByte(((Integer)toConvert).LongValue());
-				}
-			}
-			public class ConvertIntegerToChar: MetaToDotNetConversion
-			{
-				public ConvertIntegerToChar()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(Char);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return System.Convert.ToChar(((Integer)toConvert).LongValue());
-				}
-			}
-			public class ConvertIntegerToInt32: MetaToDotNetConversion
-			{
-				public ConvertIntegerToInt32()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(Int32);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return System.Convert.ToInt32(((Integer)toConvert).LongValue());
-				}
-			}
-			public class ConvertIntegerToUInt32: MetaToDotNetConversion
-			{
-				public ConvertIntegerToUInt32()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(UInt32);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return System.Convert.ToUInt32(((Integer)toConvert).LongValue());
-				}
-			}
-			public class ConvertIntegerToInt64: MetaToDotNetConversion
-			{
-				public ConvertIntegerToInt64()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(Int64);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return System.Convert.ToInt64(((Integer)toConvert).LongValue());
-				}
-			}
-			public class ConvertIntegerToUInt64: MetaToDotNetConversion
-			{
-				public ConvertIntegerToUInt64()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(UInt64);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return System.Convert.ToUInt64(((Integer)toConvert).LongValue());
-				}
-			}
-			public class ConvertIntegerToInt16: MetaToDotNetConversion
-			{
-				public ConvertIntegerToInt16()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(Int16);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return System.Convert.ToInt16(((Integer)toConvert).LongValue());
-				}
-			}
-			public class ConvertIntegerToUInt16: MetaToDotNetConversion
-			{
-				public ConvertIntegerToUInt16()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(UInt16);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return System.Convert.ToUInt16(((Integer)toConvert).LongValue());
-				}
-			}
-			public class ConvertIntegerToDecimal: MetaToDotNetConversion
-			{
-				public ConvertIntegerToDecimal()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(decimal);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return (decimal)(((Integer)toConvert).LongValue());
-				}
-			}
-			public class ConvertIntegerToDouble: MetaToDotNetConversion
-			{
-				public ConvertIntegerToDouble()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(double);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return (double)(((Integer)toConvert).LongValue());
-				}
-			}
-			public class ConvertIntegerToFloat: MetaToDotNetConversion
-			{
-				public ConvertIntegerToFloat()
-				{
-					this.source=typeof(Integer);
-					this.target=typeof(float);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return (float)(((Integer)toConvert).LongValue());
-				}
-			}
-			public class ConvertMapToString: MetaToDotNetConversion
-			{
-				public ConvertMapToString()
-				{
-					this.source=typeof(Map);
-					this.target=typeof(string);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					if(((Map)toConvert).IsString)
-					{
-						isConverted=true;
-						return ((Map)toConvert).String;
-					}
-					else
-					{
-						isConverted=false;
-						return null;
-					}
-				}
-			}
-			public class ConvertFractionToDecimal: MetaToDotNetConversion
-			{
-				public ConvertFractionToDecimal()
-				{
-					this.source=typeof(Map); 
-					this.target=typeof(decimal); 
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					Map map=(Map)toConvert;
-					if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
-					{
-						isConverted=true;
-						return ((decimal)((Integer)map[new Map("numerator")]).LongValue())/((decimal)((Integer)map[new Map("denominator")]).LongValue());
-					}
-					else
-					{
-						isConverted=false;
-						return null;
-					}
-				}
-
-			}
-			public class ConvertFractionToDouble: MetaToDotNetConversion
-			{
-				public ConvertFractionToDouble()
-				{
-					this.source=typeof(Map);
-					this.target=typeof(double);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					Map map=(Map)toConvert;
-					if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
-					{
-						isConverted=true;
-						return ((double)((Integer)map[new Map("numerator")]).LongValue())/((double)((Integer)map[new Map("denominator")]).LongValue());
-					}
-					else
-					{
-						isConverted=false;
-						return null;
-					}
-				}
-
-			}
-			public class ConvertFractionToFloat: MetaToDotNetConversion
-			{
-				public ConvertFractionToFloat()
-				{
-					this.source=typeof(Map);
-					this.target=typeof(float);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					Map map=(Map)toConvert;
-					if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
-					{
-						isConverted=true;
-						return ((float)((Integer)map[new Map("numerator")]).LongValue())/((float)((Integer)map[new Map("denominator")]).LongValue());
-					}
-					else
-					{
-						isConverted=false;
-						return null;
-					}
-				}
-			}
-		}
-		//TODO: There should be some documentation on what all the abbreviations mean, and the type of Hungarian used
-		private abstract class DotNetToMetaConversions
-		{
-			/* These classes define the conversions that take place when .NET methods,
-				* properties and fields return. */
-			public class ConvertStringToMap: DotNetToMetaConversion
-			{
-				public ConvertStringToMap()  
-				{
-					this.source=typeof(string);
-				}
-				public override object Convert(object toConvert)
-				{
-					return new Map((string)toConvert);
-				}
-			}
-			public class ConvertBoolToInteger: DotNetToMetaConversion
-			{
-				public ConvertBoolToInteger()
-				{
-					this.source=typeof(bool);
-				}
-				public override object Convert(object toConvert)
-				{
-					return (bool)toConvert? new Integer(1): new Integer(0);
-				}
-
-			}
-			public class ConvertByteToInteger: DotNetToMetaConversion
-			{
-				public ConvertByteToInteger()
-				{
-					this.source=typeof(Byte);
-				}
-				public override object Convert(object toConvert)
-				{
-					return new Integer((Byte)toConvert);
-				}
-			}
-			public class ConvertSByteToInteger: DotNetToMetaConversion
-			{
-				public ConvertSByteToInteger()
-				{
-					this.source=typeof(SByte);
-				}
-				public override object Convert(object toConvert)
-				{
-					return new Integer((SByte)toConvert);
-				}
-			}
-			public class ConvertCharToInteger: DotNetToMetaConversion
-			{
-				public ConvertCharToInteger()
-				{
-					this.source=typeof(Char);
-				}
-				public override object Convert(object toConvert)
-				{
-					return new Integer((Char)toConvert);
-				}
-			}
-			public class ConvertInt32ToInteger: DotNetToMetaConversion
-			{
-				public ConvertInt32ToInteger()
-				{
-					this.source=typeof(Int32);
-				}
-				public override object Convert(object toConvert)
-				{
-					return new Integer((Int32)toConvert);
-				}
-			}
-			public class ConvertUInt32ToInteger: DotNetToMetaConversion
-			{
-				public ConvertUInt32ToInteger()
-				{
-					this.source=typeof(UInt32);
-				}
-				public override object Convert(object toConvert)
-				{
-					return new Integer((UInt32)toConvert);
-				}
-			}
-			public class ConvertInt64ToInteger: DotNetToMetaConversion
-			{
-				public ConvertInt64ToInteger()
-				{
-					this.source=typeof(Int64);
-				}
-				public override object Convert(object toConvert)
-				{
-					return new Integer((Int64)toConvert);
-				}
-			}
-			public class ConvertUInt64ToInteger: DotNetToMetaConversion
-			{
-				public ConvertUInt64ToInteger()
-				{
-					this.source=typeof(UInt64);
-				}
-				public override object Convert(object toConvert)
-				{
-					return new Integer((Int64)(UInt64)toConvert);
-				}
-			}
-			public class ConvertInt16ToInteger: DotNetToMetaConversion
-			{
-				public ConvertInt16ToInteger()
-				{
-					this.source=typeof(Int16);
-				}
-				public override object Convert(object toConvert)
-				{
-					return new Integer((Int16)toConvert);
-				}
-			}
-			public class ConvertUInt16ToInteger: DotNetToMetaConversion
-			{
-				public ConvertUInt16ToInteger()
-				{
-					this.source=typeof(UInt16);
-				}
-				public override object Convert(object toConvert)
-				{
-					return new Integer((UInt16)toConvert);
-				}
-			}
-		}
-
 	}
 	/* Base class of exceptions in Meta. */
 	public class MetaException:ApplicationException
@@ -2181,7 +1784,517 @@ namespace Meta
 //	}
 	public class Convert
 	{
+		static Convert()
+		{
+			foreach(Type toMetaConversion in typeof(DotNetToMetaConversions).GetNestedTypes())
+			{
+				DotNetToMetaConversion conversion=((DotNetToMetaConversion)toMetaConversion.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+				toMetaConversions[conversion.source]=conversion;
+			}
+			foreach(Type toDotNetConversion in typeof(MetaToDotNetConversions).GetNestedTypes())
+			{
+				MetaToDotNetConversion conversion=(MetaToDotNetConversion)toDotNetConversion.GetConstructor(new Type[]{}).Invoke(new object[]{});
+				if(!toDotNetConversions.ContainsKey(conversion.target))
+				{
+					toDotNetConversions[conversion.target]=new Hashtable();
+				}
+				((Hashtable)toDotNetConversions[conversion.target])[conversion.source]=conversion; // put the search shit for this into a function
+			}
+		}
+		public static object DotNetFromMeta(object meta,Type target,out bool isConverted)
+		{
+			if(target.IsSubclassOf(typeof(Enum)) && meta is Integer)
+			{ 
+				isConverted=true;
+				return Enum.ToObject(target,((Integer)meta).Int);
+			}
+			Hashtable toDotNet=(Hashtable)
+				toDotNetConversions[target];
+			if(toDotNet!=null)
+			{
+				MetaToDotNetConversion conversion=(MetaToDotNetConversion)toDotNet[meta.GetType()];
+				if(conversion!=null)
+				{
+					return conversion.Convert(meta,out isConverted);
+				}
+			}
+			isConverted=false;
+			return null;
+		}
+		// TODO: maybe convert .NET arrays to maps
+		public static object MetaFromDotNet(object oDotNet)// umbenennen zu: ConvertToMeta, ConvertToDotNet, put this into its own class
+		{ 
+			if(oDotNet==null)
+			{
+				return null;
+			}
+			else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
+			{
+				return new Integer((int)System.Convert.ToInt32((Enum)oDotNet));
+			}
+			DotNetToMetaConversion conversion=(DotNetToMetaConversion)toMetaConversions[oDotNet.GetType()];
+			if(conversion==null)
+			{
+				return oDotNet;
+			}
+			else
+			{
+				return conversion.Convert(oDotNet);
+			}
+		}
 
+		public static object DotNetFromMeta(object meta) // there will be name collision with the classes used, but there is only one function, so rename the function
+		{
+			if(meta is Integer)
+			{
+				return ((Integer)meta).Int;
+			}
+			else if(meta is Map && ((Map)meta).IsString)
+			{
+				return ((Map)meta).String;
+			}
+			else
+			{
+				return meta;
+			}
+		}
+		public static object DotNetFromMeta(object meta,Type target)
+		{
+			object result=meta;
+			if(toDotNetConversions.ContainsKey(target))
+			{
+				Hashtable conversions=(Hashtable)toDotNetConversions[target];
+				if(conversions.ContainsKey(meta.GetType()))
+				{
+					MetaToDotNetConversion conversion=(MetaToDotNetConversion)conversions[meta.GetType()];
+					bool isConverted;
+					object converted= conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
+					if(isConverted)
+					{
+						result=converted;
+					}
+				}
+			}
+			return result;
+		}
+		public static Hashtable toDotNetConversions=new Hashtable();
+		public static Hashtable toMetaConversions=new Hashtable();
+
+	}
+	public abstract class MetaToDotNetConversion
+	{
+		public Type source;
+		public Type target;
+		public abstract object Convert(object obj,out bool converted);
+	}
+	public abstract class DotNetToMetaConversion
+	{ 
+		public Type source;
+		public abstract object Convert(object obj);
+	}
+
+	abstract class DotNetToMetaConversions
+	{
+		/* These classes define the conversions that take place when .NET methods,
+			* properties and fields return. */
+		public class ConvertStringToMap: DotNetToMetaConversion
+		{
+			public ConvertStringToMap()  
+			{
+				this.source=typeof(string);
+			}
+			public override object Convert(object toConvert)
+			{
+				return new Map((string)toConvert);
+			}
+		}
+		public class ConvertBoolToInteger: DotNetToMetaConversion
+		{
+			public ConvertBoolToInteger()
+			{
+				this.source=typeof(bool);
+			}
+			public override object Convert(object toConvert)
+			{
+				return (bool)toConvert? new Integer(1): new Integer(0);
+			}
+
+		}
+		public class ConvertByteToInteger: DotNetToMetaConversion
+		{
+			public ConvertByteToInteger()
+			{
+				this.source=typeof(Byte);
+			}
+			public override object Convert(object toConvert)
+			{
+				return new Integer((Byte)toConvert);
+			}
+		}
+		public class ConvertSByteToInteger: DotNetToMetaConversion
+		{
+			public ConvertSByteToInteger()
+			{
+				this.source=typeof(SByte);
+			}
+			public override object Convert(object toConvert)
+			{
+				return new Integer((SByte)toConvert);
+			}
+		}
+		public class ConvertCharToInteger: DotNetToMetaConversion
+		{
+			public ConvertCharToInteger()
+			{
+				this.source=typeof(Char);
+			}
+			public override object Convert(object toConvert)
+			{
+				return new Integer((Char)toConvert);
+			}
+		}
+		public class ConvertInt32ToInteger: DotNetToMetaConversion
+		{
+			public ConvertInt32ToInteger()
+			{
+				this.source=typeof(Int32);
+			}
+			public override object Convert(object toConvert)
+			{
+				return new Integer((Int32)toConvert);
+			}
+		}
+		public class ConvertUInt32ToInteger: DotNetToMetaConversion
+		{
+			public ConvertUInt32ToInteger()
+			{
+				this.source=typeof(UInt32);
+			}
+			public override object Convert(object toConvert)
+			{
+				return new Integer((UInt32)toConvert);
+			}
+		}
+		public class ConvertInt64ToInteger: DotNetToMetaConversion
+		{
+			public ConvertInt64ToInteger()
+			{
+				this.source=typeof(Int64);
+			}
+			public override object Convert(object toConvert)
+			{
+				return new Integer((Int64)toConvert);
+			}
+		}
+		public class ConvertUInt64ToInteger: DotNetToMetaConversion
+		{
+			public ConvertUInt64ToInteger()
+			{
+				this.source=typeof(UInt64);
+			}
+			public override object Convert(object toConvert)
+			{
+				return new Integer((Int64)(UInt64)toConvert);
+			}
+		}
+		public class ConvertInt16ToInteger: DotNetToMetaConversion
+		{
+			public ConvertInt16ToInteger()
+			{
+				this.source=typeof(Int16);
+			}
+			public override object Convert(object toConvert)
+			{
+				return new Integer((Int16)toConvert);
+			}
+		}
+		public class ConvertUInt16ToInteger: DotNetToMetaConversion
+		{
+			public ConvertUInt16ToInteger()
+			{
+				this.source=typeof(UInt16);
+			}
+			public override object Convert(object toConvert)
+			{
+				return new Integer((UInt16)toConvert);
+			}
+		}
+	}
+	abstract class MetaToDotNetConversions  // name is too long, all the names are to long
+	{
+		public class ConvertIntegerToByte: MetaToDotNetConversion // get rid of "Convert", is redundant
+		{
+			public ConvertIntegerToByte()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(Byte);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToByte(((Integer)toConvert).LongValue());
+			}
+		}
+		public class ConvertIntegerToBool: MetaToDotNetConversion
+		{
+			public ConvertIntegerToBool()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(bool);
+			}
+			// TODO: make this single-exit
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				int i=((Integer)toConvert).Int;
+				if(i==0)
+				{
+					return false;
+				}
+				else if(i==1)
+				{
+					return true;
+				}
+				else
+				{
+					isConverted=false; // TODO
+					return null;
+				}
+			}
+
+		}
+		public class ConvertIntegerToSByte: MetaToDotNetConversion
+		{
+			public ConvertIntegerToSByte()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(SByte);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToSByte(((Integer)toConvert).LongValue());
+			}
+		}
+		public class ConvertIntegerToChar: MetaToDotNetConversion
+		{
+			public ConvertIntegerToChar()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(Char);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToChar(((Integer)toConvert).LongValue());
+			}
+		}
+		public class ConvertIntegerToInt32: MetaToDotNetConversion
+		{
+			public ConvertIntegerToInt32()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(Int32);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToInt32(((Integer)toConvert).LongValue());
+			}
+		}
+		public class ConvertIntegerToUInt32: MetaToDotNetConversion
+		{
+			public ConvertIntegerToUInt32()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(UInt32);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToUInt32(((Integer)toConvert).LongValue());
+			}
+		}
+		public class ConvertIntegerToInt64: MetaToDotNetConversion
+		{
+			public ConvertIntegerToInt64()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(Int64);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToInt64(((Integer)toConvert).LongValue());
+			}
+		}
+		public class ConvertIntegerToUInt64: MetaToDotNetConversion
+		{
+			public ConvertIntegerToUInt64()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(UInt64);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToUInt64(((Integer)toConvert).LongValue());
+			}
+		}
+		public class ConvertIntegerToInt16: MetaToDotNetConversion
+		{
+			public ConvertIntegerToInt16()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(Int16);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToInt16(((Integer)toConvert).LongValue());
+			}
+		}
+		public class ConvertIntegerToUInt16: MetaToDotNetConversion
+		{
+			public ConvertIntegerToUInt16()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(UInt16);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToUInt16(((Integer)toConvert).LongValue());
+			}
+		}
+		public class ConvertIntegerToDecimal: MetaToDotNetConversion
+		{
+			public ConvertIntegerToDecimal()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(decimal);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return (decimal)(((Integer)toConvert).LongValue());
+			}
+		}
+		public class ConvertIntegerToDouble: MetaToDotNetConversion
+		{
+			public ConvertIntegerToDouble()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(double);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return (double)(((Integer)toConvert).LongValue());
+			}
+		}
+		public class ConvertIntegerToFloat: MetaToDotNetConversion
+		{
+			public ConvertIntegerToFloat()
+			{
+				this.source=typeof(Integer);
+				this.target=typeof(float);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return (float)(((Integer)toConvert).LongValue());
+			}
+		}
+		public class ConvertMapToString: MetaToDotNetConversion
+		{
+			public ConvertMapToString()
+			{
+				this.source=typeof(Map);
+				this.target=typeof(string);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				if(((Map)toConvert).IsString)
+				{
+					isConverted=true;
+					return ((Map)toConvert).String;
+				}
+				else
+				{
+					isConverted=false;
+					return null;
+				}
+			}
+		}
+		public class ConvertFractionToDecimal: MetaToDotNetConversion
+		{
+			public ConvertFractionToDecimal()
+			{
+				this.source=typeof(Map); 
+				this.target=typeof(decimal); 
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				Map map=(Map)toConvert;
+				if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
+				{
+					isConverted=true;
+					return ((decimal)((Integer)map[new Map("numerator")]).LongValue())/((decimal)((Integer)map[new Map("denominator")]).LongValue());
+				}
+				else
+				{
+					isConverted=false;
+					return null;
+				}
+			}
+
+		}
+		public class ConvertFractionToDouble: MetaToDotNetConversion
+		{
+			public ConvertFractionToDouble()
+			{
+				this.source=typeof(Map);
+				this.target=typeof(double);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				Map map=(Map)toConvert;
+				if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
+				{
+					isConverted=true;
+					return ((double)((Integer)map[new Map("numerator")]).LongValue())/((double)((Integer)map[new Map("denominator")]).LongValue());
+				}
+				else
+				{
+					isConverted=false;
+					return null;
+				}
+			}
+
+		}
+		public class ConvertFractionToFloat: MetaToDotNetConversion
+		{
+			public ConvertFractionToFloat()
+			{
+				this.source=typeof(Map);
+				this.target=typeof(float);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				Map map=(Map)toConvert;
+				if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
+				{
+					isConverted=true;
+					return ((float)((Integer)map[new Map("numerator")]).LongValue())/((float)((Integer)map[new Map("denominator")]).LongValue());
+				}
+				else
+				{
+					isConverted=false;
+					return null;
+				}
+			}
+		}
 	}
 	public class MapAdapter:IMap
 	{ 
@@ -2197,29 +2310,29 @@ namespace Meta
 		}
 		public override bool ContainsKey(object key)
 		{
-			return map.ContainsKey(Interpreter.MetaFromDotNet(key));
+			return map.ContainsKey(Convert.MetaFromDotNet(key));
 		}
 
 		public override object this[object key]
 		{
 			get
 			{
-				return Interpreter.DotNetFromMeta(map[Interpreter.MetaFromDotNet(key)]);
+				return Convert.DotNetFromMeta(map[Convert.MetaFromDotNet(key)]);
 			}
 			set
 			{
-				this.map[Interpreter.MetaFromDotNet(key)]=Interpreter.MetaFromDotNet(value);
+				this.map[Convert.MetaFromDotNet(key)]=Convert.MetaFromDotNet(value);
 			}
 		}
 		public override IMap Parent
 		{
 			get
 			{
-				return (IMap)Interpreter.MetaFromDotNet(map.Parent);
+				return (IMap)Convert.MetaFromDotNet(map.Parent);
 			}
 			set
 			{
-				map.Parent=(IMap)Interpreter.DotNetFromMeta(value);
+				map.Parent=(IMap)Convert.DotNetFromMeta(value);
 			}
 		}
 		public override ArrayList Array
@@ -2238,7 +2351,7 @@ namespace Meta
 			ArrayList result=new ArrayList();
 			foreach(object obj in list)
 			{
-				result.Add(Interpreter.DotNetFromMeta(obj));
+				result.Add(Convert.DotNetFromMeta(obj));
 			}
 			return result;
 		}
@@ -2946,7 +3059,7 @@ namespace Meta
 			else
 			{
 				bool converted; // TODO: get rid of this, can't really work correctly
-				object result=Interpreter.DotNetFromMeta(meta,parameter,out converted);
+				object result=Convert.DotNetFromMeta(meta,parameter,out converted);
 				if(converted)
 				{
 					return result;
@@ -3056,7 +3169,7 @@ namespace Meta
 			{
 				throw new ApplicationException("Method "+this.name+" could not be called.");
 			}
-			return Interpreter.MetaFromDotNet(result);
+			return Convert.MetaFromDotNet(result);
 		}
 		// TODO: check use cases of this method, improve
 		public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,Map code)
@@ -3099,7 +3212,7 @@ namespace Meta
 				if(!method.ReturnType.Equals(typeof(void)))
 				{
 					source+="return ("+returnType+")";
-					source+="Interpreter.DotNetFromMeta(result,typeof("+returnType+"));"; 
+					source+="Meta.Convert.DotNetFromMeta(result,typeof("+returnType+"));"; 
 				}
 			}
 			else 
@@ -3286,11 +3399,11 @@ namespace Meta
 						}
 						if(members[0] is FieldInfo)
 						{
-							return Interpreter.MetaFromDotNet(targetType.GetField(text).GetValue(target));
+							return Convert.MetaFromDotNet(targetType.GetField(text).GetValue(target));
 						}
 						else if(members[0] is PropertyInfo)
 						{
-							return Interpreter.MetaFromDotNet(targetType.GetProperty(text).GetValue(target,new object[]{}));
+							return Convert.MetaFromDotNet(targetType.GetProperty(text).GetValue(target,new object[]{}));
 						}
 						else if(members[0] is EventInfo)
 						{
@@ -3314,7 +3427,7 @@ namespace Meta
 				}
 				if(this.target!=null && key is Integer && this.targetType.IsArray)
 				{
-					return Interpreter.MetaFromDotNet(((Array)target).GetValue(((Integer)key).Int)); // TODO: add error handling here
+					return Convert.MetaFromDotNet(((Array)target).GetValue(((Integer)key).Int)); // TODO: add error handling here
 				}
 				DotNetMethod indexer=new DotNetMethod("get_Item",target,targetType);
 				Map argument=new Map();
@@ -3408,7 +3521,7 @@ namespace Meta
 				if(target!=null && key is Integer && targetType.IsArray)
 				{
 					bool isConverted; 
-					object converted=Interpreter.DotNetFromMeta(value,targetType.GetElementType(),out isConverted);
+					object converted=Convert.DotNetFromMeta(value,targetType.GetElementType(),out isConverted);
 					if(isConverted)
 					{
 						((Array)target).SetValue(converted,((Integer)key).Int);
@@ -3425,7 +3538,7 @@ namespace Meta
 				}
 				catch(Exception e)
 				{
-					throw new ApplicationException("Cannot set "+Interpreter.DotNetFromMeta(key).ToString()+".");// use a KeyException or something like that here
+					throw new ApplicationException("Cannot set "+Convert.DotNetFromMeta(key).ToString()+".");// use a KeyException or something like that here
 				}
 			}
 		}
@@ -3491,7 +3604,7 @@ namespace Meta
 					{
 						if(entry is DictionaryEntry)
 						{
-							table[Interpreter.MetaFromDotNet(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+							table[Convert.MetaFromDotNet(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
 						}
 						else
 						{
