@@ -82,7 +82,7 @@
                 <Reference
                     Name = "antlr.runtime"
                     AssemblyName = "antlr.runtime"
-                    HintPath = "..\Library\antlr.runtime.dll"
+                    HintPath = "..\..\antlr-2.7.3\lib\csharp\src\bin\antlr.runtime.dll"
                 />
             </References>
         </Build>

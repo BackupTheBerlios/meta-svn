@@ -168,6 +168,35 @@ Entry (DictionaryEntry)
         "Integer BitwiseOr(Integer[])"
 Entry (DictionaryEntry)
   Key (Map):
+    "literalEscapeTest"
+  Value (Map):
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "1"
+      Value (Map):
+        "asdf"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "2"
+      Value (Map):
+        "asdf"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "3"
+      Value (Map):
+        "as"'df"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "4"
+      Value (Map):
+        "as"'"df"
+    Entry (DictionaryEntry)
+      Key (Integer):
+        "5"
+      Value (Map):
+        "as"'"'"'"'"'"'"'"'df"
+Entry (DictionaryEntry)
+  Key (Map):
     "nestedClassTest"
   Value (Integer):
     "5"

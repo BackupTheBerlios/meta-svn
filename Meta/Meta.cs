@@ -3460,7 +3460,7 @@ namespace Meta
 							}
 							if(!isConverted)
 							{
-								throw new ApplicationException("Field "+field.Name+"could not be assigned because it cannot be isConverted.");
+								throw new ApplicationException("Field "+field.Name+"could not be assigned because it cannot be converted.");
 							}
 							//TODO: refactor
 							return;
@@ -3704,6 +3704,15 @@ namespace Meta
 			StreamReader reader=new StreamReader(fileName);
 			string result=reader.ReadToEnd();
 			reader.Close();
+			return result;
+		}
+		public static string ReverseString(string text)
+		{
+			string result="";
+			foreach(char c in text)
+			{
+				result=c+result;
+			}
 			return result;
 		}
 	}

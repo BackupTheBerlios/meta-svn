@@ -26,6 +26,12 @@ this=map.Merge
 	math
 //run "hello"
 interpreter.line:"5"
+literalEscapeTest=
+	1="'asdf'"
+	2="'"asdf"'"
+	3="'"as"'df"'"
+	4="'"'as"'"df'"'"
+	5="'"'"'"'"'"'"'"'"as"'"'"'"'"'"'"'"'df"'"'"'"'"'"'"'"'"
 nestedClassTest=interpreter.line
 applyMethod=!Add
 	arg.value

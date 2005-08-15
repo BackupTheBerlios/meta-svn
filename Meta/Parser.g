@@ -1,4 +1,4 @@
-//	Meta is a simple programming language.
+//	Meta is a programming language.
 //	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
 //
 //	This program is free software; you can redistribute it and/or
@@ -133,45 +133,77 @@ LITERAL_KEY:
 		)
 	)+
 	;
-    
-LITERAL:
-  (
-		'\''! 
-		(
-			~(
-				' '
-				|'\t'
-				|'\r'
-				|'\n'
-				|'='
-				|'.'
-				|'\''
-				|'"'
-				|'('
-				|')'
-				|'['
-				|']'
-				|':'
-			) 
-		)*
-	)
-  |
+protected
+LITERAL_START:
 	(
-		"\""! 
+		"\""
 		(
-			(~ 
+			("'")=>
+			(
+				"'"
+				(options{greedy=true;}:
+					"\"'"
+				)*
 				(
-					'\"'
-					|'\n'
-					|'\r'
+					("\"")=>
+					("\"")
+					|
+					"" // optional
 				)
 			)
-			|NEWLINE_KEEP_TEXT
+			|
+			"" // optional
+		)
+		{
+			Counters.LastLiteralStart=text.ToString();
+			$setText("");
+		}
+	)
+;
+protected
+LITERAL_END:
+	(
+		(
+			(
+				("\'")=> // optional '
+				("\'"!)
+				|
+				"" 
+			)
+			(options{greedy=true;}:
+				"\"'"!
+			)*
+		)
+		LITERAL_VERY_END
+	)
+;
+protected
+LITERAL_VERY_END:
+		'\"'!
+;
+LITERAL:
+	(
+		LITERAL_START
+		(options{greedy=true;}:
+			{!Counters.IsLiteralEnd(this)}?
+			(
+				(~
+					(
+						'\n'
+						|'\r'
+					)
+				)
+				|NEWLINE_KEEP_TEXT
+			)
 		)*
-		"\""!
+		LITERAL_END
 	)
   ;
-  
+//protected
+//LITERAL_END:
+//	{Counters.IsLiteralEnd(this)}? {$setText(Counters.NextLiteralEnd);}
+//	|""
+//;
 //SPACES:
 //  (' ')+ ;//{_ttype=Token.SKIP;}
   
@@ -309,6 +341,34 @@ NEWLINE_KEEP_TEXT:
   using System.Collections;
   class Counters
   {
+	public static bool IsLiteralEnd(MetaLexer lexer)
+	{
+		bool matched=true;
+		for(int i=0;i<Counters.NextLiteralEnd.Length;i++)
+		{
+			if(lexer.LA(i+1)!=Counters.NextLiteralEnd[i])
+			{
+				matched=false;
+				break;
+			}
+		}
+		return matched;
+	}
+	public static string LastLiteralStart
+	{
+		set
+		{
+			nextLiteralEnd=Utility.ReverseString(value);
+		}
+	}
+	public static string NextLiteralEnd
+	{
+		get
+		{
+			return nextLiteralEnd;
+		}
+	}
+	public static string nextLiteralEnd;
     public static Stack autokey=new Stack();
   }
 }

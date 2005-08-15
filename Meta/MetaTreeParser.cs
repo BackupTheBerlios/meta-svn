@@ -62,12 +62,15 @@ namespace Meta.Parser
 		public const int RBRACKET = 22;
 		public const int POINT = 23;
 		public const int LITERAL_KEY = 24;
-		public const int LITERAL = 25;
-		public const int LINE = 26;
-		public const int SPACE = 27;
-		public const int NEWLINE = 28;
-		public const int NEWLINE_KEEP_TEXT = 29;
-		public const int SPACES = 30;
+		public const int LITERAL_START = 25;
+		public const int LITERAL_END = 26;
+		public const int LITERAL_VERY_END = 27;
+		public const int LITERAL = 28;
+		public const int LINE = 29;
+		public const int SPACE = 30;
+		public const int NEWLINE = 31;
+		public const int NEWLINE_KEEP_TEXT = 32;
+		public const int SPACES = 33;
 		
 		public MetaTreeParser()
 		{
@@ -147,7 +150,7 @@ namespace Meta.Parser
 		Map argument=new Map();
 		
 		
-		AST __t147 = _t;
+		AST __t166 = _t;
 		MetaAST tmp19_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,CALL);
 		_t = _t.getFirstChild();
@@ -164,7 +167,7 @@ namespace Meta.Parser
 		call[CodeKeys.Argument]=argument;
 		result[CodeKeys.Call]=call;
 		
-		_t = __t147;
+		_t = __t166;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return result;
@@ -183,7 +186,7 @@ namespace Meta.Parser
 		int counter=1;
 		
 		
-		AST __t142 = _t;
+		AST __t161 = _t;
 		MetaAST tmp20_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,MAP);
 		_t = _t.getFirstChild();
@@ -224,13 +227,13 @@ namespace Meta.Parser
 				}
 				else
 				{
-					goto _loop145_breakloop;
+					goto _loop164_breakloop;
 				}
 				
 			}
-_loop145_breakloop:			;
+_loop164_breakloop:			;
 		}    // ( ... )*
-		_t = __t142;
+		_t = __t161;
 		_t = _t.getNextSibling();
 		
 		result[CodeKeys.Program]=statements;
@@ -252,13 +255,13 @@ _loop145_breakloop:			;
 		int counter=1;
 		
 		
-		AST __t151 = _t;
+		AST __t170 = _t;
 		MetaAST tmp21_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SELECT);
 		_t = _t.getFirstChild();
 		{
 			{ // ( ... )+
-			int _cnt154=0;
+			int _cnt173=0;
 			for (;;)
 			{
 				if (_t == null)
@@ -274,15 +277,15 @@ _loop145_breakloop:			;
 				}
 				else
 				{
-					if (_cnt154 >= 1) { goto _loop154_breakloop; } else { throw new NoViableAltException(_t);; }
+					if (_cnt173 >= 1) { goto _loop173_breakloop; } else { throw new NoViableAltException(_t);; }
 				}
 				
-				_cnt154++;
+				_cnt173++;
 			}
-_loop154_breakloop:			;
+_loop173_breakloop:			;
 			}    // ( ... )+
 		}
-		_t = __t151;
+		_t = __t170;
 		_t = _t.getNextSibling();
 		
 		result[CodeKeys.Select]=selection;
@@ -303,13 +306,13 @@ _loop154_breakloop:			;
 				Map e=null;
 			
 		
-		AST __t156 = _t;
+		AST __t175 = _t;
 		MetaAST tmp22_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SEARCH);
 		_t = _t.getFirstChild();
 		e=expression(_t);
 		_t = retTree_;
-		_t = __t156;
+		_t = __t175;
 		_t = _t.getNextSibling();
 		
 				result[CodeKeys.Search]=e;
@@ -351,13 +354,13 @@ _loop154_breakloop:			;
 		//Map CodeKeys.Run=new Map();
 		
 		
-		AST __t159 = _t;
+		AST __t178 = _t;
 		MetaAST tmp23_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,FUNCTION);
 		_t = _t.getFirstChild();
 		mExpression=expression(_t);
 		_t = retTree_;
-		_t = __t159;
+		_t = __t178;
 		_t = _t.getNextSibling();
 		
 						//CodeKeys.Run[CodeKeys.Run]=mExpression;
@@ -380,12 +383,12 @@ _loop154_breakloop:			;
 				Map e=null;
 			
 		
-		AST __t134 = _t;
+		AST __t153 = _t;
 		MetaAST tmp24_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,KEY);
 		_t = _t.getFirstChild();
 		{ // ( ... )+
-		int _cnt136=0;
+		int _cnt155=0;
 		for (;;)
 		{
 			if (_t == null)
@@ -401,14 +404,14 @@ _loop154_breakloop:			;
 			}
 			else
 			{
-				if (_cnt136 >= 1) { goto _loop136_breakloop; } else { throw new NoViableAltException(_t);; }
+				if (_cnt155 >= 1) { goto _loop155_breakloop; } else { throw new NoViableAltException(_t);; }
 			}
 			
-			_cnt136++;
+			_cnt155++;
 		}
-_loop136_breakloop:		;
+_loop155_breakloop:		;
 		}    // ( ... )+
-		_t = __t134;
+		_t = __t153;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return result;
@@ -426,7 +429,7 @@ _loop136_breakloop:		;
 				Map k=null;
 			
 		
-		AST __t138 = _t;
+		AST __t157 = _t;
 		MetaAST tmp25_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,STATEMENT);
 		_t = _t.getFirstChild();
@@ -439,7 +442,7 @@ _loop136_breakloop:		;
 					statement[CodeKeys.Key]=k;
 					statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 				
-		_t = __t138;
+		_t = __t157;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return statement;
@@ -457,7 +460,7 @@ _loop136_breakloop:		;
 				Map k=null;
 			
 		
-		AST __t140 = _t;
+		AST __t159 = _t;
 		MetaAST tmp26_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,STATEMENT_SEARCH);
 		_t = _t.getFirstChild();
@@ -470,7 +473,7 @@ _loop136_breakloop:		;
 					statement[CodeKeys.Key]=k;
 					statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 				
-		_t = __t140;
+		_t = __t159;
 		_t = _t.getNextSibling();
 		
 				statement[CodeKeys.Search]=new Integer(1);
@@ -511,6 +514,9 @@ _loop136_breakloop:		;
 		@"""RBRACKET""",
 		@"""POINT""",
 		@"""LITERAL_KEY""",
+		@"""LITERAL_START""",
+		@"""LITERAL_END""",
+		@"""LITERAL_VERY_END""",
 		@"""LITERAL""",
 		@"""LINE""",
 		@"""SPACE""",
@@ -521,7 +527,7 @@ _loop136_breakloop:		;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 33569536L, 0L};
+		long[] data = { 268450560L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());
