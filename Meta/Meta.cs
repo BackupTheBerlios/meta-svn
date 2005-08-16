@@ -3237,106 +3237,6 @@ namespace Meta
 					}
 				}
 			}
-//			set
-//			{
-//				if(key is Map && ((Map)key).IsString)
-//				{
-//					string text=((Map)key).String;
-//					if(text.Equals("DebugBreak"))
-//					{
-//						int asdf=0;
-//					}
-//					if(text.Equals("Test"))
-//					{
-//						int asdf=0;
-//					}
-//					MemberInfo[] members=targetType.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
-//					if(members.Length>0)
-//					{
-//						if(members[0] is MethodBase)
-//						{
-//							throw new ApplicationException("Cannot set invoke "+key+".");
-//						}
-//						else if(members[0] is FieldInfo)
-//						{
-//							FieldInfo field=(FieldInfo)members[0];
-//							bool isConverted;
-//							object val;
-//							val=DotNetMethod.ConvertParameter(value,field.FieldType,out isConverted);
-//							if(isConverted)
-//							{
-//								field.SetValue(target,val);
-//							}
-//							if(!isConverted)
-//							{
-//								if(value is Map)
-//								{
-//									val=DotNetMethod.AssignCollection((Map)value,field.GetValue(target),out isConverted);
-//								}
-//							}
-//							if(!isConverted)
-//							{
-//								throw new ApplicationException("Field "+field.Name+"could not be assigned because it cannot be converted.");
-//							}
-//							//TODO: refactor
-//							return;
-//						}
-//						else if(members[0] is PropertyInfo)
-//						{
-//							PropertyInfo property=(PropertyInfo)members[0];
-//							bool isConverted;
-//							object val=DotNetMethod.ConvertParameter(value,property.PropertyType,out isConverted);
-//							if(isConverted)
-//							{
-//								property.SetValue(target,val,new object[]{});
-//							}
-//							if(!isConverted)
-//							{
-//								if(value is Map)
-//								{
-//									DotNetMethod.AssignCollection((Map)value,property.GetValue(target,new object[]{}),out isConverted);
-//								}
-//								if(!isConverted)
-//								{
-//									throw new ApplicationException("Property "+this.targetType.Name+"."+Interpreter.SaveToFile(key,"",false)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
-//								}
-//							}
-//							return;
-//						}
-//						else if(members[0] is EventInfo)
-//						{
-//							if(members[0].Name.Equals("BreakPoint"))
-//							{
-//								int asdf=0;
-//							}
-//							((EventInfo)members[0]).AddEventHandler(target,CreateEvent(text,(Map)value));
-//							return;
-//						}
-//					}
-//				}
-//				if(target!=null && key is Integer && targetType.IsArray)
-//				{
-//					bool isConverted; 
-//					object converted=Convert.ToDotNet(value,targetType.GetElementType(),out isConverted);
-//					if(isConverted)
-//					{
-//						((Array)target).SetValue(converted,((Integer)key).Int);
-//						return;
-//					}
-//				}
-//				DotNetMethod indexer=new DotNetMethod("set_Item",target,targetType);
-//				Map argument=new Map();
-//				argument[new Integer(1)]=key;
-//				argument[new Integer(2)]=value;// do this more efficiently?
-//				try
-//				{
-//					indexer.Call(argument);
-//				}
-//				catch(Exception e)
-//				{
-//					throw new ApplicationException("Cannot set "+Convert.ToDotNet(key).ToString()+".");// use a KeyException or something like that here
-//				}
-//			}
 		}
 		public string Serialize(string indent,string[] functions)
 		{
@@ -3356,15 +3256,6 @@ namespace Meta
 			get
 			{
 				HybridDictionary table=new HybridDictionary();
-				BindingFlags bindingFlags;
-				if(target==null) 
-				{
-					bindingFlags=BindingFlags.Public|BindingFlags.Static;
-				}
-				else 
-				{
-					bindingFlags=BindingFlags.Public|BindingFlags.Instance;
-				}
 				foreach(FieldInfo field in targetType.GetFields(bindingFlags))
 				{
 					table[new Map(field.Name)]=field.GetValue(target);
@@ -3387,10 +3278,9 @@ namespace Meta
 				{
 					table[new Map(eventInfo.Name)]=new DotNetMethod(eventInfo.GetAddMethod().Name,this.target,this.targetType);
 				}
-				foreach(Type tNested in targetType.GetNestedTypes(bindingFlags))
+				foreach(Type type in targetType.GetNestedTypes(bindingFlags))
 				{ 
-					// not sure the BindingFlags are correct
-					table[new Map(tNested.Name)]=new DotNetClass(tNested);
+					table[new Map(type.Name)]=new DotNetClass(type);
 				}
 				int counter=1;
 				if(target!=null && target is IEnumerable && !(target is String))
@@ -3453,14 +3343,14 @@ namespace Meta
 						case MetaLexerTokenTypes.INDENTATION:
 							Indent(token.getText().Length,token);
 							break;
-						case MetaLexerTokenTypes.LITERAL: // move this into parser, for correct error handling?
+						case MetaLexerTokenTypes.LITERAL:
 							string indentation="";
 							for(int i=0;i<indentationDepth+1;i++)
 							{
 								indentation+='\t';
 							}
 							string text=token.getText();
-							text=text.Replace(Environment.NewLine,"\n"); // replace so we can use Split, which only works with characters
+							text=text.Replace(Environment.NewLine,"\n");
 							string[] lines=text.Split('\n');
 							string result="";
 							for(int i=0;i<lines.Length;i++)
@@ -3490,11 +3380,10 @@ namespace Meta
 			}
 			protected void Indent(int newIndentationDepth,Token currentToken) 
 			{
-				// TODO: use Extent instead of Token, or just the line we're in
 				int difference=newIndentationDepth-indentationDepth; 
 				if(difference==0)
 				{
-					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));//TODO: use something else here
+					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
 				}
 				else if(difference==1)
 				{
@@ -3506,13 +3395,10 @@ namespace Meta
 					{
 						tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
 					}
-					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE)); // TODO: tiny bit unlogical? maybe create this in Parser?
+					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
 				}
 				else if(difference>1)
 				{
-					// This doesn't get through properly because it is caught by ANTLR
-					// TODO: make extra exception later.
-					// I don't understand it and the lines are somehow off
 					throw new RecognitionException("Incorrect indentation.",currentToken.getFilename(),currentToken.getLine(),currentToken.getColumn());
 				}
 				indentationDepth=newIndentationDepth;
@@ -3522,8 +3408,14 @@ namespace Meta
 			protected int indentationDepth=-1;
 		}
 	}
-	public class Utility
+	public class Utility // TODO: rename
 	{
+		public static void WriteFile(string fileName,string text)
+		{
+			StreamWriter writer=new StreamWriter(fileName); // TODO: move to utility
+			writer.Write(text);
+			writer.Close();
+		}
 		public static string ReadFile(string fileName)
 		{
 			StreamReader reader=new StreamReader(fileName);
@@ -3545,9 +3437,7 @@ namespace Meta
 	{
 		public interface ISerializeSpecial
 		{
-			// TODO: add separate function or add "out" parameter, that says whether or not the special serialization has actually worked
-			string Serialize(string indent,string[] functions); // TODO: this is much too complicated, and rarely needed, maybe get rid of it completely, if possible
-			// TODO: at least add the indent automatically, and do not use the functions
+			string Serialize(string indent,string[] functions); // TODO: refactor
 		}
 		public abstract class TestCase
 		{
@@ -3590,22 +3480,20 @@ namespace Meta
 					Console.ReadLine();
 				}
 			}
-			private bool CompareResult(string path,object ttoSerialize,string[] functions)
+			private bool CompareResult(string path,object toSerialize,string[] functions)
 			{
 				System.IO.Directory.CreateDirectory(path);
 				if(!File.Exists(Path.Combine(path,"check.txt")))
 				{
-					File.Create(Path.Combine(path,"check.txt")).Close();
+					File.Create(Path.Combine(path,"check.txt")).Close(); // TODO: move to Utility
 				}
 				StringBuilder stringBuilder=new StringBuilder();
-				Serialize(ttoSerialize,"",functions,stringBuilder);
+				Serialize(toSerialize,"",functions,stringBuilder);
+
 				string result=stringBuilder.ToString();
-				StreamWriter resultWriter=new StreamWriter(Path.Combine(path,"result.txt")); // factor this stuff out?, into what class?
-				resultWriter.Write(result);
-				resultWriter.Close();
-				StreamWriter resultCopyWriter=new StreamWriter(Path.Combine(path,"resultCopy.txt"));
-				resultCopyWriter.Write(result);
-				resultCopyWriter.Close();
+
+				Utility.WriteFile(Path.Combine(path,"result.txt"),result);
+				Utility.WriteFile(Path.Combine(path,"resultCopy.txt"),result);
 				string check=Utility.ReadFile(Path.Combine(path,"check.txt"));
 				return result.Equals(check);
 			}
