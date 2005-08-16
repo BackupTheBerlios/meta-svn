@@ -3634,8 +3634,6 @@ namespace Meta
 				return fileName.GetHashCode()*Start.Line.GetHashCode()*Start.Column.GetHashCode()*End.Line.GetHashCode()*End.Column.GetHashCode();
 			}
 		}
-		// TODO: maybe add classes "Column" and "Line"
-		// TODO: on the other hand, maybe we should simply use the "Point" class, instead of "Position"
 		public class Position 
 		{
 			private int line;
