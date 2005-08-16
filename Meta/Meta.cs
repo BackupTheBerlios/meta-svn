@@ -3089,12 +3089,10 @@ namespace Meta
 			get
 			{
 				object result;
-				if(key is Map && ((Map)key).IsString && targetType.GetMember(((Map)key).String,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length>0)
+				if(key is Map && ((Map)key).IsString && targetType.GetMember(((Map)key).String,bindingFlags).Length>0)
 				{
 					string text=((Map)key).String;
-					MemberInfo[] members=targetType.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
-//					if(members.Length>0)
-//					{
+					MemberInfo[] members=targetType.GetMember(text,bindingFlags);
 					if(members[0] is MethodBase)
 					{
 						result=new DotNetMethod(text,target,targetType);
@@ -3120,7 +3118,7 @@ namespace Meta
 							result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
 						}
 					}
-					else if(members[0] is Type) //TODO: separate bindingflags, so this does not work with objects
+					else if(members[0] is Type)
 					{
 						result=new DotNetClass((Type)members[0]);
 					}
@@ -3128,10 +3126,6 @@ namespace Meta
 					{
 						result=null;
 					}
-//					}
-//					else
-//					{
-//					}
 				}
 				else if(this.target!=null && key is Integer && this.targetType.IsArray)
 				{
@@ -3153,61 +3147,6 @@ namespace Meta
 				}
 				return result;
 			}
-//			get
-//			{
-//				if(key is Map && ((Map)key).IsString)
-//				{
-//					string text=((Map)key).String;
-//					MemberInfo[] members=targetType.GetMember(text,BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance);
-//					if(members.Length>0)
-//					{
-//						if(members[0] is MethodBase)
-//						{
-//							return new DotNetMethod(text,target,targetType);
-//						}
-//						if(members[0] is FieldInfo)
-//						{
-//							return Convert.ToMeta(targetType.GetField(text).GetValue(target));
-//						}
-//						else if(members[0] is PropertyInfo)
-//						{
-//							return Convert.ToMeta(targetType.GetProperty(text).GetValue(target,new object[]{}));
-//						}
-//						else if(members[0] is EventInfo)
-//						{
-//							Delegate eventDelegate=(Delegate)targetType.GetField(text,BindingFlags.Public|
-//								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(target);
-//							if(eventDelegate==null)
-//							{
-//								return null; // TODO: maybe throw?
-//							}
-//							else
-//							{
-//								return new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
-//							}
-//						}
-//						else if(members[0] is Type) //TODO: separate bindingflags, so this does not work with objects
-//						{
-//							return new DotNetClass((Type)members[0]);
-//						}
-//					}
-//				}
-//				if(this.target!=null && key is Integer && this.targetType.IsArray)
-//				{
-//					return Convert.ToMeta(((Array)target).GetValue(((Integer)key).Int)); // TODO: add error handling here
-//				}
-//				DotNetMethod indexer=new DotNetMethod("get_Item",target,targetType);
-//				Map argument=new Map();
-//				argument[new Integer(1)]=key;
-//				try
-//				{
-//					return indexer.Call(argument);
-//				}
-//				catch(Exception e)
-//				{
-//					return null;
-//				}
-//			}
 			set
 			{
 				if(key is Map && ((Map)key).IsString)
@@ -3366,7 +3305,7 @@ namespace Meta
 				int counter=1;
 				if(target!=null && target is IEnumerable && !(target is String))
 				{ 
-					// is this useful?
+					// TODO: is this useful?
 					foreach(object entry in (IEnumerable)target)
 					{
 						if(entry is DictionaryEntry)
@@ -3385,9 +3324,18 @@ namespace Meta
 		}
 		public DotNetContainer(object target,Type targetType)
 		{
+			if(target==null)
+			{
+				this.bindingFlags=BindingFlags.Public|BindingFlags.Static;
+			}
+			else
+			{
+				this.bindingFlags=BindingFlags.Public|BindingFlags.Instance;
+			}
 			this.target=target;
 			this.targetType=targetType;
 		}
+		private BindingFlags bindingFlags;
 		private IKeyValue parent;
 		public object target;
 		public Type targetType;
