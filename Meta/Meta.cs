@@ -111,7 +111,7 @@ namespace Meta
 			object function=callable.Evaluate(parent);
 			if(function is ICallable)
 			{
-				return ((ICallable)function).Call(Interpreter.Clone(argument.Evaluate(parent)));
+				return ((ICallable)function).Call(argument.Evaluate(parent));
 			}
 			throw new MetaException("Object to be called is not callable.",this.Extent);
 		}
@@ -137,7 +137,7 @@ namespace Meta
 		}
 		public override object EvaluateImplementation(IMap parent)
 		{
-			Map result=delayed; // maybe clone here, too, determine where cloning is needed, or, respectively, transplantation into a new environment, this could easily include the assignment of the parent
+			Map result=delayed;
 			result.Parent=parent;
 			return result;
 		}
@@ -159,18 +159,18 @@ namespace Meta
 			}
 			return stop;
 		}
-
 		public override object EvaluateImplementation(IMap parent)
 		{
 			object local=new Map();
-			return Evaluate(parent,ref local); // is this logical
+			Evaluate(parent,ref local);
+			return local;
 		}
-		public object Evaluate(IMap parent,ref object local)
+		public void Evaluate(IMap parent,ref object local)
 		{
-			((IMap)local).Parent=parent; // transplanting here, again, do this only once, combine it, make it explicit
+			((IMap)local).Parent=parent;
 			for(int i=0;i<statements.Count && i>=0;)
 			{
-				if(Interpreter.reverseDebug) // rename to forwardDebug
+				if(Interpreter.reverseDebug)
 				{
 					bool stopReverse=((Statement)statements[i]).Undo(); // Statement should have separate Stop() function
 					if(stopReverse)
@@ -187,8 +187,7 @@ namespace Meta
 					}
 					catch(ReverseException e)
 					{
-						//maybe set reverse Debug here, threading issue
-						int asdf=0; // just go on, here, we already know how to handle reversion, this is just to get out of the currently executing statement and all its expressions and subexpressions
+						int asdf=0;
 					}	
 				}
 				if(Interpreter.reverseDebug)
@@ -200,18 +199,17 @@ namespace Meta
 					i++;
 				}
 			}
-			return local;// doesn't make sense to return at all
 		}
 		public Program(Map code)
 		{
 			foreach(Map statement in code.Array)
 			{
-				this.statements.Add(new Statement(statement)); // should we save the original maps instead of statements?
+				this.statements.Add(new Statement(statement));
 			}
 		}
 		public readonly ArrayList statements=new ArrayList();
 	}
-	public class BreakPoint //// use Position class here + Line and Column classes!!!!!
+	public class BreakPoint
 	{
 		public BreakPoint(string fileName,int line,int column)
 		{
@@ -226,6 +224,7 @@ namespace Meta
 				return fileName;
 			}
 		}
+		// TODO: use Position
 		public int Line
 		{
 			get
@@ -247,7 +246,7 @@ namespace Meta
 
 	public abstract class Recognition
 	{
-		public abstract object Recognize(string text); // Returns null if not recognized. Null cannot currently be created this way, so, add a variable that indicates success
+		public abstract object Recognize(string text);
 	}
 	public class Recognitions
 	{
@@ -267,8 +266,7 @@ namespace Meta
 					{
 						index++;
 					}
-					// TODO: the following is probably incorrect for multi-byte unicode
-					// use StringInfo in the future instead, or something like that
+					// TODO: make unicode-safe
 					for(;index<text.Length;index++)
 					{
 						if(char.IsDigit(text[index]))
@@ -288,7 +286,7 @@ namespace Meta
 				}
 			}
 		}
-		public class StringRecognition:Recognition  // rename to LiteralRecognition, or something even better, maybe LiteralType, and LiteralTypes
+		public class StringRecognition:Recognition
 		{
 			public override object Recognize(string text)
 			{
@@ -373,9 +371,9 @@ namespace Meta
 			for(int i=0;i<keys.Count;i++)
 			{
 				object key=((Expression)keys[i]).Evaluate(parent);
-				if(!(selected is IKeyValue)) // This is unlogical:
+				if(!(selected is IKeyValue))
 				{
-					selected=new DotNetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
+					selected=new DotNetObject(selected);// TODO: put into Map.this[]
 				}
 				object selection=((IKeyValue)selected)[key];
 				if(selection==null)
@@ -393,7 +391,7 @@ namespace Meta
 		private object replaceKey;
 		public bool Undo()
 		{
-			if(replaceMap!=null) // need to handle "this" specially
+			if(replaceMap!=null) // TODO: "this" specially
 			{
 				replaceMap[replaceKey]=replaceValue;
 			}
@@ -444,7 +442,7 @@ namespace Meta
 				selected=selection;
 				if(!(selected is IKeyValue))
 				{
-					selected=new DotNetObject(selected);// TODO: put this into Map.this[] ??, or always save like this, would be inefficient, though
+					selected=new DotNetObject(selected);// TODO: put this into Map.this[]
 				}
 			}
 			object lastKey=((Expression)keys[keys.Count-1]).Evaluate((IMap)parent);
@@ -459,7 +457,6 @@ namespace Meta
 			}
 			else
 			{
-				///////////////   for debug-undo
 				if(((IKeyValue)selected).ContainsKey(lastKey))
 				{
 					replaceValue=((IKeyValue)selected)[lastKey];
@@ -470,7 +467,6 @@ namespace Meta
 				}
 				replaceMap=(IKeyValue)selected;
 				replaceKey=lastKey;
-				//////////////
 
 				((IKeyValue)selected)[lastKey]=val;
 			}
@@ -500,7 +496,7 @@ namespace Meta
 	{
 		
 		
-		public static BreakPoint BreakPoint // TODO: Shouldn't be here, but in Expression
+		public static BreakPoint BreakPoint // TODO: move to Expression
 		{
 			get
 			{
@@ -511,10 +507,10 @@ namespace Meta
 				breakPoint=value;
 			}
 		}
-		private static BreakPoint breakPoint;//=new BreakPoint(@"c:\_projectsupportmaterial\meta\editor\editor.meta",152,11);
+		private static BreakPoint breakPoint;
 
 		private static object debugValue="";
-		public static object DebugValue// TODO: put into expression!, and all the rest, too
+		public static object DebugValue// TODO: put into expression
 		{
 			get
 			{
@@ -536,18 +532,7 @@ namespace Meta
 				}
 			}
 		}
-		public static object Clone(object meta) // TODO: Stupid function
-		{
-			if(meta is IMap)
-			{
-				return ((IMap)meta).Clone();
-			}
-			else
-			{
-				return meta;
-			}
-		}
-		public static void SaveToFile(object meta,string path) // TODO: stupid function
+		public static void SaveToFile(object meta,string path)// move into core functionality
 		{
 			StreamWriter streamWriter=new StreamWriter(path);
 			streamWriter.Write(SaveToFile(meta,"",true).TrimEnd(new char[]{'\n'}));
@@ -557,11 +542,8 @@ namespace Meta
 		{
 			return SaveToFile(meta,"",true);
 		}
-		// TODO: extend this, and move it to somewhere else,
-		// Should be able to serialize everything
-		// Should also be able to serialize things which cannot be serialized in Meta at the moment, that is strings that contain "", or begin with them, especially
-		// make this more efficient and more flexible with respect to special things, like functions
-		public static string SaveToFile(object meta,string indent,bool isRightSide) // TODO: dumb NAME!!!! Rename!
+		// TODO: extend, integrate into Directory
+		public static string SaveToFile(object meta,string indent,bool isRightSide)
 		{
 			if(meta is Map)
 			{
@@ -577,9 +559,9 @@ namespace Meta
 				}
 				else
 				{
-					if(!isRightSide) // TODO: this isn't really allowed anymore, but will maybe be needed for serialization, if allow, use indentation, however
+					if(!isRightSide)
 					{
-						text+="(";
+						text+="("; // TODO: correct this to use indentation instead of parentheses
 						foreach(DictionaryEntry entry in map)
 						{
 							text+='['+SaveToFile(entry.Key,indent,true)+']'+'='+SaveToFile(entry.Value,indent,true)+",";
@@ -616,7 +598,7 @@ namespace Meta
 			}
 			else
 			{
-				return "\""+meta.ToString()+"\""; // fix this!!!, for other types
+				return "\""+meta.ToString()+"\"";
 				//throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
 			}
 		}
@@ -626,7 +608,7 @@ namespace Meta
 		}
 		public static IKeyValue MergeCollection(ICollection collection)
 		{
-			Map result=new Map();//use clone here?
+			Map result=new Map();
 			foreach(IKeyValue current in collection)
 			{
 				foreach(DictionaryEntry entry in (IKeyValue)current)
@@ -643,79 +625,15 @@ namespace Meta
 				}
 			}
 			return result;
-		}	
-//		public static object ToMeta(object oDotNet)// umbenennen zu: ConvertToMeta, ConvertToDotNet, put this into its own class
-//		{ 
-//			if(oDotNet==null)
-//			{
-//				return null;
-//			}
-//			else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
-//			{
-//				return new Integer((int)System.Convert.ToInt32((Enum)oDotNet));
-//			}
-//			ToMetaConversion conversion=(ToMetaConversion)toMetaConversions[oDotNet.GetType()];
-//			if(conversion==null)
-//			{
-//				return oDotNet;
-//			}
-//			else
-//			{
-//				return conversion.Convert(oDotNet);
-//			}
-//		}
-//		public static object DotNetFromMeta(object meta) // there will be name collision with the classes used, but there is only one function, so rename the function
-//		{
-//			if(meta is Integer)
-//			{
-//				return ((Integer)meta).Int;
-//			}
-//			else if(meta is Map && ((Map)meta).IsString)
-//			{
-//				return ((Map)meta).String;
-//			}
-//			else
-//			{
-//				return meta;
-//			}
-//		}
-//		public static object DotNetFromMeta(object meta,Type target)
-//		{
-//			object result=meta;
-//			if(Interpreter.toDotNetConversions.ContainsKey(target))
-//			{
-//				Hashtable conversions=(Hashtable)Interpreter.toDotNetConversions[target];
-//				if(conversions.ContainsKey(meta.GetType()))
-//				{
-//					ToDotNetConversion conversion=(ToDotNetConversion)conversions[meta.GetType()];
-//					bool isConverted;
-//					object converted= conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
-//					if(isConverted)
-//					{
-//						result=converted;
-//					}
-//				}
-//			}
-//			return result;
-//		}
-
+		}
 		public static object Run(string fileName,IMap argument)
 		{
 			Map program=Interpreter.Compile(fileName);
-
-			//Directory parent=new Directory(new DirectoryInfo(Path.GetDirectoryName(fileName)));
-			//return CallProgram(program,argument,parent);
 			return CallProgram(program,argument,Library.library);
 		}
-//		public static object Run(string fileName,IMap argument)
-//		{
-//			Map program=Interpreter.Compile(fileName);
-//			return CallProgram(program,argument,Library.library);
-//		}
-
 		public static object RunWithoutLibrary(string fileName,IMap argument)
 		{
-			Map program=Compile(fileName); // TODO: rename, is not really a program but a function
+			Map program=Compile(fileName);
 			return CallProgram(program,argument,null);
 		}
 		public static object CallProgram(Map program,IMap argument,IMap parent)
@@ -725,8 +643,7 @@ namespace Meta
 			callable.Parent=parent;
 			return callable.Call(argument);
 		}
-		// TODO: move somewhere else??
-		public static Map Compile(string fileName)
+		public static Map Compile(string fileName) // TODO: move this into Directory
 		{
 			return (new MetaTreeParser()).map(ParseToAst(fileName));
 		}
@@ -746,39 +663,18 @@ namespace Meta
 			file.Close();
 			return ast;
 		}
-
-//		public static object DotNetFromMeta(object meta,Type target,out bool isConverted)
-//		{
-//			if(target.IsSubclassOf(typeof(Enum)) && meta is Integer)
-//			{ 
-//				isConverted=true;
-//				return Enum.ToObject(target,((Integer)meta).Int);
-//			}
-//			Hashtable toDotNet=(Hashtable)
-//				Interpreter.toDotNetConversions[target];
-//			if(toDotNet!=null)
-//			{
-//				ToDotNetConversion conversion=(ToDotNetConversion)toDotNet[meta.GetType()];
-//				if(conversion!=null)
-//				{
-//					return conversion.Convert(meta,out isConverted);
-//				}
-//			}
-//			isConverted=false;
-//			return null;
-//		}
-		// TODO: move this stuff somewhere else
+		// TODO: rethinkg these things, not good to put it here, maybe integrate somehow
 		private static void ExecuteInThread()
 		{
 			Interpreter.Run(executeFileName,new Map());
 			int asdf=0;
 		}
 		private static string executeFileName="";
-		public static void StartDebug(string fileName) 
+		public static void StartDebug(string fileName) // TODO: make debugging not special case
 		{
 			executeFileName=fileName;
 			debugThread=new Thread(new ThreadStart(ExecuteInThread));
-			debugThread.Start(); // there can be many debug threads, they also shouldn't be anything special
+			debugThread.Start();
 		}
 		private static Thread debugThread;
 		public static void ContinueDebug()
@@ -795,42 +691,12 @@ namespace Meta
 		{
 			Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
 
-			////////// TODO: installation path still sucks big deal
-			installationPath=@"c:\_projectsupportmaterial\meta";//Directory.GetParent(metaAssembly.Location).Parent.FullName; 
-//				installationPath=Directory.GetParent(metaAssembly.Location).Parent.Parent.Parent.FullName; 
-//			foreach(Type toMetaConversion in typeof(ToMetaConversions).GetNestedTypes())
-//			{
-//				ToMetaConversion conversion=((ToMetaConversion)toMetaConversion.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-//				toMetaConversions[conversion.source]=conversion;
-//			}
-//			foreach(Type toDotNetConversion in typeof(ToDotNetConversions).GetNestedTypes())
-//			{
-//				ToDotNetConversion conversion=(ToDotNetConversion)toDotNetConversion.GetConstructor(new Type[]{}).Invoke(new object[]{});
-//				if(!toDotNetConversions.ContainsKey(conversion.target))
-//				{
-//					toDotNetConversions[conversion.target]=new Hashtable();
-//				}
-//				((Hashtable)toDotNetConversions[conversion.target])[conversion.source]=conversion; // put the search shit for this into a function
-//			}
+			installationPath=@"c:\_projectsupportmaterial\meta";
 		}
 		public static string installationPath;
-//		public static Hashtable toDotNetConversions=new Hashtable();
-//		public static Hashtable toMetaConversions=new Hashtable();
-		public static ArrayList loadedAssemblies=new ArrayList(); // make this stupid class a bit smaller
-//		public abstract class ToDotNetConversion
-//		{
-//			public Type source;
-//			public Type target;
-//			public abstract object Convert(object obj,out bool converted);
-//		}
-//		public abstract class ToMetaConversion
-//		{ 
-//			public Type source;
-//			public abstract object Convert(object obj);
-//		}
+		public static ArrayList loadedAssemblies=new ArrayList();
 	}
-	/* Base class of exceptions in Meta. */
-	public class MetaException:ApplicationException
+	public class MetaException:ApplicationException // TODO: revise the exception handling, propagation and output, hierarchy
 	{
 		protected string message="";
 		public MetaException(Extent extent)
@@ -843,7 +709,7 @@ namespace Meta
 			this.message=message;
 		}
 		public MetaException(Exception exception,Extent extent):base(exception.Message,exception)
-		{ // not really all that logical, but so what
+		{
 			this.extent=extent;
 		}
 		Extent extent;
@@ -863,9 +729,8 @@ namespace Meta
 			this.map=map;
 		}
 	}
-	/* Base class for key exceptions. */
-	public abstract class KeyException:MetaException
-	{ // TODO: Add proper formatting here, output strings as strings, for example, if possible, as well as integers
+	public abstract class KeyException:MetaException // TODO: improve output
+	{ 
 		public KeyException(object key,Extent extent):base(extent)
 		{
 			message="Key ";
@@ -891,15 +756,13 @@ namespace Meta
 			}
 		}
 	}
-	/* Thrown when a searched key was not found. */
 	public class KeyNotFoundException:KeyException
 	{
 		public KeyNotFoundException(object key,Extent extent):base(key,extent)
 		{
 		}
 	}
-	/* Thrown when an accessed key does not exist. */
-	public class KeyDoesNotExistException:KeyException
+	public class KeyDoesNotExistException:KeyException // TODO: rename
 	{
 		private object selected;
 		public KeyDoesNotExistException(object key,Extent extent,object selected):base(key,extent)
@@ -907,13 +770,11 @@ namespace Meta
 			this.selected=selected;
 		}
 	}
-
 	public interface ICallable
 	{
 		object Call(object argument);
 	}
-	// TODO: Rename this eventually
-	public abstract class IMap: IKeyValue
+	public abstract class IMap: IKeyValue // TODO: rename
 	{
 		public abstract IMap Parent
 		{
@@ -946,20 +807,7 @@ namespace Meta
 		public abstract IEnumerator GetEnumerator();
 
 	}
-//	public interface IMap: IKeyValue
-//	{
-//		IMap Parent
-//		{
-//			get;
-//			set;
-//		}
-//		ArrayList Array
-//		{
-//			get;
-//		}
-//		IMap Clone();
-//	}
-	// TODO: Does the IKeyValue<->IMap distinction make sense?
+	// TODO: remove IKeyValue - IMap distinction?
 	public interface IKeyValue: IEnumerable
 	{
 		object this[object key]
@@ -977,12 +825,11 @@ namespace Meta
 		}
 		bool ContainsKey(object key);			
 	}		
-	public class MetaLibrary
+	public class MetaLibrary // TODO: remove, integrate into Directory
 	{
-		// TODO: Put this into Library class, make base class for everything that gets loaded
 		public object Load()
 		{
-			return Interpreter.Run(path,new Map()); // TODO: Improve this interface, isn't read lazily anyway
+			return Interpreter.Run(path,new Map());
 		}
 		public MetaLibrary(string path)
 		{
@@ -990,9 +837,8 @@ namespace Meta
 		}
 		string path;
 	}
-	public class LazyNamespace: IKeyValue
+	public class LazyNamespace: IKeyValue // TODO: integrate into Directory
 	{ 
-		// TODO: Put this into library, combine with MetaLibrary
 		public object this[object key]
 		{
 			get
@@ -1067,9 +913,8 @@ namespace Meta
 			return cache.GetEnumerator();
 		}
 	}
-	/* TODO: What's this for? */
-	public class CachedAssembly
-	{  // TODO: Put this into Library class
+	public class CachedAssembly // TODO: integrate into Directory
+	{  
 		private Assembly assembly;
 		public CachedAssembly(Assembly assembly)
 		{
@@ -1093,18 +938,12 @@ namespace Meta
 		}			
 		private Map assemblyContent;
 	}
-	/* The library namespace, containing both Meta libraries as well as .NET libraries
-		*  from the "library" path and the GAC. */
-	public class Library: IMap,IKeyValue
+	public class Library: IMap,IKeyValue // TODO: split into GAC and Directory
 	{
 		public override object this[object key]
 		{
 			get
 			{
-//				if(key.Equals(new Map("testClasses")))
-//				{
-//						int asdf=0;
-//				}
 				if(cache.ContainsKey(key))
 				{
 					if(cache[key] is MetaLibrary)
@@ -1204,21 +1043,7 @@ namespace Meta
 			ArrayList assemblies=new ArrayList();
 			libraryPath=Path.Combine(Interpreter.installationPath,"library");
 			assemblies=GlobalAssemblyCache.Assemblies;
-//			IAssemblyEnum assemblyEnum=AssemblyCache.CreateGACEnum();
-//			IAssemblyName iname; 
-//			assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
-//			while (AssemblyCache.GetNextAssembly(assemblyEnum, out iname) == 0)
-//			{
-//				try
-//				{
-//					string assemblyName=AssemblyName(iname);
-//					assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
-//				}
-//				catch(Exception e)
-//				{
-//				}
-//			}
-			foreach(string dll in System.IO.Directory.GetFiles(libraryPath,"*.dll")) // TODO: this must be removed
+			foreach(string dll in System.IO.Directory.GetFiles(libraryPath,"*.dll"))
 			{
 				assemblies.Add(Assembly.LoadFrom(dll));
 			}
@@ -1226,7 +1051,7 @@ namespace Meta
 			{
 				assemblies.Add(Assembly.LoadFrom(exe));
 			}
-			string cachedAssemblyPath=Path.Combine(Interpreter.installationPath,"cachedAssemblyInfo.meta"); // TODO: Use another name that doesn't collide with C# meaning
+			string cachedAssemblyPath=Path.Combine(Interpreter.installationPath,"cachedAssemblyInfo.meta");
 			if(File.Exists(cachedAssemblyPath))
 			{
 				cachedAssemblyInfo=(Map)Interpreter.RunWithoutLibrary(cachedAssemblyPath,new Map());
@@ -1240,27 +1065,22 @@ namespace Meta
 			}
 		}
 		private Map cachedAssemblyInfo=new Map();
-		public ArrayList NameSpaces(Assembly assembly)
+		public ArrayList NameSpaces(Assembly assembly) //TODO: integrate into LoadNamespaces???
 		{ 
-			//TODO: integrate into LoadNamespaces???
 			ArrayList nameSpaces=new ArrayList();
 			MapAdapter cached=new MapAdapter(cachedAssemblyInfo);
 			if(cached.ContainsKey(assembly.Location))
-			//if(cachedAssemblyInfo.ContainsKey(new Map(assembly.Location)))
 			{
 				MapAdapter info=new MapAdapter((Map)cached[assembly.Location]);
 				string timestamp=(string)info["timestamp"];
 				if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
 				{
-					MapAdapter namespaces=new MapAdapter((Map)info["namespaces"]);// SHIT! Name collision!, why " name collision"?
-					foreach(DictionaryEntry entry in namespaces) // TODO: maybe use MapAdapter? Good opportunity to extend MapAdapter a bit
+					MapAdapter namespaces=new MapAdapter((Map)info["namespaces"]);
+					foreach(DictionaryEntry entry in namespaces)
 					{
-						//string text=((Map)entry.Value).String;
-						//string text=((Map)entry.Value).String;
 						nameSpaces.Add((string)entry.Value);
-						//nameSpaces.Add(text);
 					}
-					return nameSpaces; // BAAAADDD!, make this method single exit
+					return nameSpaces;
 				}
 			}
 			foreach(Type type in assembly.GetExportedTypes())
@@ -1293,59 +1113,6 @@ namespace Meta
 			cachedAssemblyInfo[new Map(assembly.Location)]=cachedAssemblyInfoMap;
 			return nameSpaces;
 		}
-//		public ArrayList NameSpaces(Assembly assembly)
-//		{ 
-//			//TODO: refactor, integrate into LoadNamespaces???
-//			ArrayList nameSpaces=new ArrayList();
-//			if(cachedAssemblyInfo.ContainsKey(new Map(assembly.Location)))
-//			{
-//				Map info=(Map)cachedAssemblyInfo[new Map(assembly.Location)];
-//				string timestamp=((Map)info[new Map("timestamp")]).String;
-//				if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
-//				{
-//					Map namespaces=(Map)info[new Map("namespaces")];// SHIT! Name collision!, why " name collision"?
-//					foreach(DictionaryEntry entry in namespaces) // TODO: maybe use MapAdapter? Good opportunity to extend MapAdapter a bit
-//					{
-//						string text=((Map)entry.Value).String;
-//						nameSpaces.Add(text);
-//					}
-//					return nameSpaces; // BAAAADDD!, make this method single exit
-//				}
-//				else
-//				{
-//					int asdf=0;
-//				}
-//			}
-//			foreach(Type tType in assembly.GetExportedTypes())
-//			{
-//				if(!nameSpaces.Contains(tType.Namespace))
-//				{
-//					if(tType.Namespace==null)
-//					{
-//						if(!nameSpaces.Contains(""))
-//						{
-//							nameSpaces.Add("");
-//						}
-//					}
-//					else
-//					{
-//						nameSpaces.Add(tType.Namespace);
-//					}
-//				}
-//			}
-//			Map cachedAssemblyInfoMap=new Map();
-//			Map nameSpace=new Map(); 
-//			Integer counter=new Integer(0);
-//			foreach(string na in nameSpaces)
-//			{
-//				nameSpace[counter]=new Map(na);
-//				counter++;
-//			}
-//			cachedAssemblyInfoMap[new Map("namespaces")]=nameSpace;
-//			cachedAssemblyInfoMap[new Map("timestamp")]=new Map(File.GetLastWriteTime(assembly.Location).ToString());
-//			cachedAssemblyInfo[new Map(assembly.Location)]=cachedAssemblyInfoMap;
-//			return nameSpaces;
-//		}
 		public Map LoadNamespaces(ArrayList assemblies)
 		{
 			LazyNamespace root=new LazyNamespace("");
@@ -2001,7 +1768,7 @@ namespace Meta
 	}
 	abstract class ToDotNetConversions
 	{
-		public class IntegerToByte: ToDotNet // get rid of "Convert", is redundant
+		public class IntegerToByte: ToDotNet
 		{
 			public IntegerToByte()
 			{
@@ -2278,8 +2045,7 @@ namespace Meta
 	}
 	public class MapAdapter:IMap
 	{ 
-		// TODO: Make this a whole IMap implementation?, maybe, but might be too much work, do it if needed by library
-		Map map;
+		private Map map;
 		public MapAdapter(Map map)
 		{
 			this.map=map;
@@ -2354,10 +2120,6 @@ namespace Meta
 			return new MapEnumerator(this);
 		}
 	}
-	// TODO: There should be a logical type that encompasses all Meta types
-	// and a logical type that encompasses all real .NET types that have been converted, we will see if that is really useful
-
-	//TODO: cache the Array somewhere; put in an "Add" method
 	public class Map: IMap, IKeyValue, ICallable, IEnumerable, ISerializeSpecial
 	{
 
@@ -2406,7 +2168,7 @@ namespace Meta
 				return strategy.Count;
 			}
 		}
-		public override ArrayList Array
+		public override ArrayList Array		//TODO: cache the Array somewhere; put in an "Add" method
 		{ 
 			get
 			{
@@ -2417,23 +2179,24 @@ namespace Meta
 		{
 			get
 			{
-				if(key.Equals(SpecialKeys.Parent)) // make single exit
+				object result;
+				if(key.Equals(SpecialKeys.Parent))
 				{
-					return Parent;
+					result=Parent;
 				}
 				else if(key.Equals(SpecialKeys.Arg))
 				{
-					return Argument;
+					result=Argument;
 				}
 				else if(key.Equals(SpecialKeys.This))
 				{
-					return this;
+					result=this;
 				}
 				else
 				{
-					object result=strategy[key];
-					return result;
+					result=strategy[key];
 				}
+				return result;
 			}
 			set
 			{
@@ -2446,10 +2209,15 @@ namespace Meta
 					}
 					else
 					{
-						object val=value is IMap? ((IMap)value).Clone(): value; // TODO: combine with next line
+						object val;
 						if(value is IMap)
 						{
+							val=((IMap)value).Clone();
 							((IMap)val).Parent=this;
+						}
+						else
+						{
+							val=value;
 						}
 						strategy[key]=val;
 					}
@@ -2475,17 +2243,18 @@ namespace Meta
 		{
 			Map clone=strategy.CloneMap();
 			clone.Parent=Parent;
-			clone.expression=expression;
+			//clone.expression=expression;
 			clone.Extent=Extent;
 			return clone;
 		}
-		public Expression GetExpression()  // this doesn't belong here, it's just here because of optimization, move the real work out of here
-		{ 
+		public Expression GetExpression() // TODO: move to Expression
+		{
 			// expression Statements are not cached, only expressions
 
 			// no caching anymore, because of possible issues when reverse-debugging
 //			if(expression==null) 
 //			{
+			Expression expression;
 				if(this.ContainsKey(CodeKeys.Call))
 				{
 					expression=new Call((Map)this[CodeKeys.Call]);
@@ -2578,9 +2347,6 @@ namespace Meta
 				extent=value;
 			}
 		}
-		/* TODO: Move some more logic into constructor instead of in Parser?
-			* There is no clean separation then. But there isn't anyway. I could make 
-			* it so that only the extent gets passed, that's probably best*/
 		public Map(string text):this(new StringStrategy(text))
 		{
 		}
@@ -2594,7 +2360,7 @@ namespace Meta
 		}
 		private IMap parent;
 		private MapStrategy strategy;
-		public Expression expression; // why have this at all, why not for statements? probably a question of performance.
+//		public Expression expression; // why have this at all, why not for statements? probably a question of performance.
 		public string Serialize(string indentation,string[] functions)
 		{
 			if(this.IsString)
@@ -2666,7 +2432,6 @@ namespace Meta
 				{ 
 					return true;
 				}
-				// TODO: check whether this is a clone of the other MapStrategy (cloning isn't used yet)
 				else if(!(strategy is MapStrategy))
 				{
 					return false;
@@ -2687,7 +2452,6 @@ namespace Meta
 		}
 		public class StringStrategy:MapStrategy
 		{
-			// is this really identical with the other strategies? See Hashcode of Integer class to make sure
 			public override int GetHashCode()
 			{
 				int hash=0;
@@ -2697,7 +2461,6 @@ namespace Meta
 				}
 				return hash;
 			}
-			// TODO: Make single exit
 			public override bool Equals(object strategy)
 			{
 				bool isEqual;
@@ -2711,18 +2474,6 @@ namespace Meta
 				}
 				return isEqual;
 			}
-
-//			public override bool Equals(object strategy)
-//			{
-//				if(strategy is StringStrategy)
-//				{	
-//					return ((StringStrategy)strategy).text.Equals(this.text);
-//				}
-//				else
-//				{
-//					return base.Equals(strategy);
-//				}
-//			}
 			public override Map CloneMap()
 			{
 				return new Map(new StringStrategy(this));
@@ -2770,10 +2521,9 @@ namespace Meta
 			public StringStrategy(string text)
 			{
 				this.text=text;
+				// TODO: make unicode-safe
 				for(int i=1;i<=text.Length;i++)
 				{ 
-					// TODO: make this lazy? it won't work with unicode anymore then, though
-					// TODO: Make this unicode-safe in the first place!
 					keys.Add(new Integer(i));			
 				}
 			}
@@ -2784,7 +2534,7 @@ namespace Meta
 					return text.Length;
 				}
 			}
-			public override object this[object key] 
+			public override object this[object key]
 			{
 				get
 				{
@@ -2853,17 +2603,19 @@ namespace Meta
 			{
 				get
 				{
+					bool isString=false;;
 					if(Array.Count>0)
 					{
 						try
 						{
-							object o=String;// TODO: a bit of a hack, just trying if "String" works or not
-							return true;
+							object o=String;
+							isString=true;
 						}
-						catch{
+						catch
+						{
 						}
 					}
-					return false;
+					return isString;
 				}
 			}
 			public override string String
@@ -2952,34 +2704,10 @@ namespace Meta
 		}
 		private int index=-1;
 	}
-//	public class MapEnumerator: IEnumerator
-//	{
-//		private Map map; public MapEnumerator(Map map)
-//		{
-//			this.map=map;
-//		}
-//		public object Current
-//		{
-//			get
-//			{
-//				return new DictionaryEntry(map.Keys[index],map[map.Keys[index]]);
-//			}
-//		}
-//		public bool MoveNext()
-//		{
-//			index++;
-//			return index<map.Count;
-//		}
-//		public void Reset()
-//		{
-//			index=-1;
-//		}
-//		private int index=-1;
-//	}
 	public delegate object DelegateCreatedForGenericDelegates(); // TODO: rename?
 	public class DotNetMethod: ICallable
 	{
-		// TODO: Move this to "With" ? Move this to DotNetContainer?
+		// TODO: remove??
 		public static object AssignCollection(Map map,object collection,out bool isSuccess)
 		{ 
 			if(map.Array.Count==0)
@@ -3038,7 +2766,7 @@ namespace Meta
 			}
 			else
 			{
-				bool converted; // TODO: get rid of this, can't really work correctly
+				bool converted;
 				object result=Convert.ToDotNet(meta,parameter,out converted);
 				if(converted)
 				{
@@ -3097,7 +2825,7 @@ namespace Meta
 					{
 						result=method.Invoke(target,new object[] {parameter});
 					}
-					isExecuted=true;// remove, use argumentsMatched instead
+					isExecuted=true;
 					break;
 				}
 			}
@@ -3108,17 +2836,15 @@ namespace Meta
 				{
 					if(((IMap)argument).Array.Count==method.GetParameters().Length)
 					{ 
-						// don't match if different parameter list length
 						if(((IMap)argument).Array.Count==((IMap)argument).Keys.Count)
 						{ 
-							// only call if there are no non-integer keys ( move this somewhere else)
 							rightNumberArgumentMethods.Add(method);
 						}
 					}
 				}
 				if(rightNumberArgumentMethods.Count==0)
 				{
-					throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");// TODO: Just a quickfix, really
+					throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");
 				}
 				foreach(MethodBase method in rightNumberArgumentMethods)
 				{
@@ -3129,7 +2855,6 @@ namespace Meta
 					{
 						arguments.Add(ConvertParameter(((IMap)argument).Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
 					}
-					// TODO: remove Hungarian in this method
 					if(argumentsMatched)
 					{
 						if(method is ConstructorInfo)
@@ -3140,7 +2865,7 @@ namespace Meta
 						{
 							result=method.Invoke(target,arguments.ToArray());
 						}
-						isExecuted=true;// remove, use argumentsMatched instead
+						isExecuted=true;
 						break;
 					}
 				}
@@ -3151,7 +2876,6 @@ namespace Meta
 			}
 			return Convert.ToMeta(result);
 		}
-		// TODO: check use cases of this method, improve
 		public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,Map code)
 		{
 			CSharpCodeProvider codeProvider=new CSharpCodeProvider();
@@ -3210,9 +2934,9 @@ namespace Meta
 			CompilerResults compilerResults=compiler.CompileAssemblyFromSource(compilerParameters,source);
 			Type containerType=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
 			object container=containerType.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {code});
-			if(method==null) // somewhat unlogical
+			if(method==null)
 			{
-				delegateType=typeof(DelegateCreatedForGenericDelegates); // TODO: use MethodInvoker here!!
+				delegateType=typeof(DelegateCreatedForGenericDelegates);
 			}
 			Delegate result=Delegate.CreateDelegate(delegateType,
 				container,"EventHandlerMethod");
@@ -3232,8 +2956,6 @@ namespace Meta
 			{
 				methods=new ArrayList(targetType.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
 			}
-//			methods.Reverse(); // this is a hack for an invocation bug with a certain method I don't remember, maybe remove
-
 			overloadedMethods=(MethodBase[])methods.ToArray(typeof(MethodBase));
 		}
 		public DotNetMethod(string name,object target,Type targetType)
@@ -3295,7 +3017,7 @@ namespace Meta
 	}
 	public class DotNetObject: DotNetContainer, IKeyValue
 	{
-		public DotNetObject(object target):base(target,target.GetType()) // should maybe have a test, whether target is null????
+		public DotNetObject(object target):base(target,target.GetType())
 		{
 		}
 		public override string ToString()
@@ -3337,7 +3059,6 @@ namespace Meta
 		{
 			return MTable.GetEnumerator();
 		}
-		// TODO: why does DotNetContainer have a parent when it isn't ever used?
 		public IKeyValue Parent
 		{
 			get
@@ -3389,17 +3110,16 @@ namespace Meta
 						{
 							Delegate eventDelegate=(Delegate)targetType.GetField(text,BindingFlags.Public|
 								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(target);
-							if(eventDelegate==null) // is there anything wrong here??
+							if(eventDelegate==null)
 							{
-								return null;
+								return null; // TODO: maybe throw?
 							}
 							else
 							{
 								return new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
 							}
 						}
-						// this should only work in DotNetClass, maybe specify the BindingFlags used above in DotNetClass and DotNetObject
-						else if(members[0] is Type)
+						else if(members[0] is Type) //TODO: separate bindingflags, so this does not work with objects
 						{
 							return new DotNetClass((Type)members[0]);
 						}
@@ -4002,4 +3722,3 @@ namespace Meta
 		}
 	}
 }
-
