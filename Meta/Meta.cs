@@ -64,9 +64,9 @@ namespace Meta
 			bool stop=false;
 			if(Interpreter.BreakPoint!=null)
 			{
-				if(Interpreter.BreakPoint.Line>=Extent.Start.Line && Interpreter.BreakPoint.Line<=Extent.End.Line)
+				if(Interpreter.BreakPoint.Position.Line>=Extent.Start.Line && Interpreter.BreakPoint.Position.Line<=Extent.End.Line)// TODO: put this functionality into Position
 				{
-					if(Interpreter.BreakPoint.Column>=Extent.Start.Column && Interpreter.BreakPoint.Column<=Extent.End.Column)
+					if(Interpreter.BreakPoint.Position.Column>=Extent.Start.Column && Interpreter.BreakPoint.Position.Column<=Extent.End.Column)
 					{
 						stop=true;
 					}
@@ -152,7 +152,7 @@ namespace Meta
 			bool stop=false;
 			if(Interpreter.BreakPoint!=null)
 			{
-				if(Interpreter.BreakPoint.Line==Extent.End.Line+1 && Interpreter.BreakPoint.Column==1)
+				if(Interpreter.BreakPoint.Position.Line==Extent.End.Line+1 && Interpreter.BreakPoint.Position.Column==1)
 				{
 					stop=true;
 				}
@@ -211,12 +211,18 @@ namespace Meta
 	}
 	public class BreakPoint
 	{
-		public BreakPoint(string fileName,int line,int column)
+		public BreakPoint(string fileName,Position position)
 		{
-			this.fileName=fileName;
-			this.line=line;
-			this.column=column;
+			this.position=position;
+			//			this.line=line;
+			//			this.column=column;
 		}
+//		public BreakPoint(string fileName,int line,int column)
+//		{
+//			this.fileName=fileName;
+////			this.line=line;
+////			this.column=column;
+//		}
 		public string FileName
 		{
 			get
@@ -224,24 +230,32 @@ namespace Meta
 				return fileName;
 			}
 		}
-		// TODO: use Position
-		public int Line
+//		// TODO: use Position
+//		public int Line
+//		{
+//			get
+//			{
+//				return line;
+//			}
+//		}
+//		public int Column
+//		{
+//			get
+//			{
+//				return column;
+//			}
+//		}
+		public Position Position
 		{
 			get
 			{
-				return line;
+				return position;
 			}
 		}
-		public int Column
-		{
-			get
-			{
-				return column;
-			}
-		}
+		private Position position;
 		string fileName;
-		int line;
-		int column;
+//		int line;
+//		int column;
 	}
 
 	public abstract class Recognition
@@ -640,7 +654,7 @@ namespace Meta
 		public static object Run(string fileName,IMap argument)
 		{
 			IMap program=Interpreter.Compile(fileName);
-			return CallProgram(program,argument,Library.library);
+			return CallProgram(program,argument,GAC.library);
 		}
 		public static object RunWithoutLibrary(string fileName,IMap argument)
 		{
@@ -2306,7 +2320,7 @@ namespace Meta
 			{
 				if(assemblyContent==null)
 				{
-					assemblyContent=Library.LoadAssemblies(new object[] {assembly});
+					assemblyContent=GAC.LoadAssemblies(new object[] {assembly});
 				}
 				IMap selected=assemblyContent;
 				if(nameSpace!="")
@@ -2320,7 +2334,8 @@ namespace Meta
 			}			
 			private IMap assemblyContent;
 		}
-		public class Library: MapStrategy// TODO: split into GAC and Directory
+		// TODO: refactor
+		public class GAC: MapStrategy// TODO: split into GAC and Directory
 		{
 			public override IMap CloneMap()
 			{
@@ -2431,7 +2446,7 @@ namespace Meta
 			}
 			private string fileSystemPath;
 
-			public Library()
+			public GAC()
 			{
 				fileSystemPath=Path.Combine(Interpreter.installationPath,"Library"); // TODO: has to be renamed to??? root, maybe, or just Meta, installation will look different anyway
 				ArrayList assemblies=new ArrayList();
@@ -2554,7 +2569,7 @@ namespace Meta
 				((LazyNamespace)root.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
 				return root; // TODO: is this correct?
 			}
-			public static IMap library=new IMap(new Library()); // TODO: is this the right way to do it??
+			public static IMap library=new IMap(new GAC()); // TODO: is this the right way to do it??
 			private IMap cache=new IMap();
 			public static string libraryPath="library"; 
 		}
@@ -5125,7 +5140,7 @@ namespace Meta
 			}
 
 		}
-	public abstract class MapStrategy:ISerializeSpecial
+	public abstract class MapStrategy:ISerializeSpecial // TODO: rename
 	{
 		public virtual void Serialize(string indentation,string[] functions,StringBuilder stringBuilder)
 		{
@@ -6453,6 +6468,39 @@ namespace Meta
 			}
 		}
 	}
+	public class Position 
+	{
+		private int line;
+		private int column;
+		public Position(int line,int column)
+		{
+			this.line=line;
+			this.column=column;
+
+		}
+		public int Line
+		{
+			get
+			{
+				return line;
+			}
+			set
+			{
+				line=value;
+			}
+		}
+		public int Column
+		{
+			get
+			{
+				return column;
+			}
+			set
+			{
+				column=value;
+			}
+		}
+	}
 	public class Extent
 	{
 		public static ArrayList GetEvents(string fileName,int firstLine,int lastLine)
@@ -6501,39 +6549,7 @@ namespace Meta
 				return fileName.GetHashCode()*Start.Line.GetHashCode()*Start.Column.GetHashCode()*End.Line.GetHashCode()*End.Column.GetHashCode();
 			}
 		}
-		public class Position 
-		{
-			private int line;
-			private int column;
-			public Position(int line,int column)
-			{
-				this.line=line;
-				this.column=column;
 
-			}
-			public int Line
-			{
-				get
-				{
-					return line;
-				}
-				set
-				{
-					line=value;
-				}
-			}
-			public int Column
-			{
-				get
-				{
-					return column;
-				}
-				set
-				{
-					column=value;
-				}
-			}
-		}
 		public Position Start
 		{
 			get
