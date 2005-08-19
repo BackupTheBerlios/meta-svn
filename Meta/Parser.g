@@ -358,7 +358,7 @@ NEWLINE_KEEP_TEXT:
 	{
 		set
 		{
-			nextLiteralEnd=Utility.ReverseString(value);
+			nextLiteralEnd=Helper.ReverseString(value);
 		}
 	}
 	public static string NextLiteralEnd

@@ -60,7 +60,7 @@ namespace Meta.Parser
 	{
 		set
 		{
-			nextLiteralEnd=Utility.ReverseString(value);
+			nextLiteralEnd=Helper.ReverseString(value);
 		}
 	}
 	public static string NextLiteralEnd
