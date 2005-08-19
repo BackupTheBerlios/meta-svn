@@ -371,11 +371,11 @@ namespace Meta
 			for(int i=0;i<keys.Count;i++)
 			{
 				object key=((Expression)keys[i]).Evaluate(parent);
-				if(!(selected is IKeyValue))
+				if(!(selected is IMap))
 				{
 					selected=new DotNetObject(selected);// TODO: put into Map.this[]
 				}
-				object selection=((IKeyValue)selected)[key];
+				object selection=((IMap)selected)[key];
 				if(selection==null)
 				{
 					throw new KeyDoesNotExistException(key,this.Extent,selected);
@@ -387,7 +387,7 @@ namespace Meta
 	public class Statement
 	{
 		private object replaceValue;
-		private IKeyValue replaceMap;
+		private IMap replaceMap;
 		private object replaceKey;
 		public bool Undo()
 		{
@@ -434,13 +434,13 @@ namespace Meta
 			for(int i=0;i<keys.Count-1;i++)
 			{
 				key=((Expression)keys[i]).Evaluate((IMap)parent);
-				object selection=((IKeyValue)selected)[key];
+				object selection=((IMap)selected)[key];
 				if(selection==null)
 				{
 					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
 				}
 				selected=selection;
-				if(!(selected is IKeyValue))
+				if(!(selected is IMap))
 				{
 					selected=new DotNetObject(selected);// TODO: put this into Map.this[]
 				}
@@ -457,18 +457,18 @@ namespace Meta
 			}
 			else
 			{
-				if(((IKeyValue)selected).ContainsKey(lastKey))
+				if(((IMap)selected).ContainsKey(lastKey))
 				{
-					replaceValue=((IKeyValue)selected)[lastKey];
+					replaceValue=((IMap)selected)[lastKey];
 				}
 				else
 				{
 					replaceValue=null;
 				}
-				replaceMap=(IKeyValue)selected;
+				replaceMap=(IMap)selected;
 				replaceKey=lastKey;
 
-				((IKeyValue)selected)[lastKey]=val;
+				((IMap)selected)[lastKey]=val;
 			}
 		}
 		public Statement(Map code) 
@@ -488,9 +488,9 @@ namespace Meta
 		
 		bool searchFirst=false;
 	}
-	public class IMeta
-	{
-	}
+//	public class IMeta
+//	{
+//	}
 
 	public class Interpreter
 	{
@@ -602,21 +602,21 @@ namespace Meta
 				//throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
 			}
 		}
-		public static IKeyValue Merge(params IKeyValue[] arkvlToMerge)
+		public static IMap Merge(params IMap[] arkvlToMerge)
 		{
 			return MergeCollection(arkvlToMerge);
 		}
-		public static IKeyValue MergeCollection(ICollection collection)
+		public static IMap MergeCollection(ICollection collection)
 		{
 			Map result=new Map();
-			foreach(IKeyValue current in collection)
+			foreach(IMap current in collection)
 			{
-				foreach(DictionaryEntry entry in (IKeyValue)current)
+				foreach(DictionaryEntry entry in (IMap)current)
 				{
-					if(entry.Value is IKeyValue && !(entry.Value is DotNetClass)&& result.ContainsKey(entry.Key) 
-						&& result[entry.Key] is IKeyValue && !(result[entry.Key] is DotNetClass))
+					if(entry.Value is IMap && !(entry.Value is DotNetClass)&& result.ContainsKey(entry.Key) 
+						&& result[entry.Key] is IMap && !(result[entry.Key] is DotNetClass))
 					{
-						result[entry.Key]=Merge((IKeyValue)result[entry.Key],(IKeyValue)entry.Value);
+						result[entry.Key]=Merge((IMap )result[entry.Key],(IMap)entry.Value);
 					}
 					else
 					{
@@ -784,8 +784,23 @@ namespace Meta
 	// we could maybe also more easily inherit some behaviour
 	// i will have to do that sometime later methinks
 	// but it will be cool enough
-	public abstract class IMap: IKeyValue // TODO: rename
+	public abstract class IMap // TODO: rename
 	{
+//		object this[object key]
+//		{
+//			get;
+//			set;
+//		}
+//		ArrayList Keys
+//		{
+//			get;
+//		}
+//		int Count
+//		{
+//			get;
+//		}
+//		bool ContainsKey(object key);			
+		
 		public abstract IMap Parent
 		{
 			get;
@@ -797,7 +812,7 @@ namespace Meta
 		}
 		public abstract IMap Clone();
 
-		public abstract object this[object key]
+		public abstract object this[object key] // make both key and value IMaps
 		{
 			get;
 			set;
@@ -817,7 +832,7 @@ namespace Meta
 		public abstract IEnumerator GetEnumerator();
 
 	}
-	public class Map: IMap,IKeyValue, ICallable, IEnumerable, ISerializeSpecial
+	public class Map: IMap, ICallable, IEnumerable, ISerializeSpecial
 	{
 
 		public object Argument
@@ -1377,23 +1392,23 @@ namespace Meta
 		}
 	}
 	// TODO: remove IKeyValue - IMap distinction?
-	public interface IKeyValue: IEnumerable // remove
-	{
-		object this[object key]
-		{
-			get;
-			set;
-		}
-		ArrayList Keys
-		{
-			get;
-		}
-		int Count
-		{
-			get;
-		}
-		bool ContainsKey(object key);			
-	}		
+//	public interface IKeyValue: IEnumerable // remove
+//	{
+//		object this[object key]
+//		{
+//			get;
+//			set;
+//		}
+//		ArrayList Keys
+//		{
+//			get;
+//		}
+//		int Count
+//		{
+//			get;
+//		}
+//		bool ContainsKey(object key);			
+//	}		
 	public class MetaLibrary // TODO: remove, integrate into Directory
 	{
 		public object Load()
@@ -1406,9 +1421,35 @@ namespace Meta
 		}
 		string path;
 	}
-	public class LazyNamespace: IKeyValue // TODO: integrate into Directory
+	public class LazyNamespace: IMap // TODO: integrate into Directory
 	{ 
-		public object this[object key]
+		public override ArrayList Array // TODO: maybe do this in IMap?
+		{
+			get
+			{
+				return new ArrayList();
+			}
+		}
+		public override IMap Clone() // TODO: need to think a bit more about this cloning stuff and how it applies to namespaces and assemblies, can assemblies be changed during execution? Should this have immediate effects, should the cloned copies be updated or not?
+		{
+			return this;
+//			LazyNamespace clone=new LazyNamespace(fullName);
+		}
+		public override IMap Parent // TODO: implement in IMap
+		{
+			get
+			{
+				return parent;
+			}
+			set
+			{
+				parent=value;
+			}
+		}
+		private IMap parent;
+
+
+		public override object this[object key]
 		{
 			get
 			{
@@ -1420,10 +1461,11 @@ namespace Meta
 			}
 			set
 			{
-				throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
+				namespaces[key]=value;
+//				throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
 			}
 		}
-		public ArrayList Keys
+		public override ArrayList Keys
 		{
 			get
 			{
@@ -1434,7 +1476,7 @@ namespace Meta
 				return cache.Keys;
 			}
 		}
-		public int Count
+		public override int Count
 		{
 			get
 			{
@@ -1446,11 +1488,24 @@ namespace Meta
 			}
 		}
 		public string fullName;
-		public ArrayList cachedAssemblies=new ArrayList();
+		public void AddAssembly(CachedAssembly assembly)
+		{
+			if(this.fullName=="System")
+			{
+				int asdf=0;
+			}
+			cachedAssemblies.Add(assembly);
+		}
+		private ArrayList cachedAssemblies=new ArrayList(); // TODO: rename
 		public Hashtable namespaces=new Hashtable();
+
 		public LazyNamespace(string fullName)
 		{
 			this.fullName=fullName;
+			if(this.fullName=="System")
+			{
+				int asdf=0;
+			}
 		}
 		public void Load()
 		{
@@ -1465,3043 +1520,3049 @@ namespace Meta
 			}
 		}
 		public Map cache;
-		public bool ContainsKey(object key)
-		{
-			if(cache==null)
-			{
-				Load();
-			}
-			return cache.ContainsKey(key);
-		}
-		public IEnumerator GetEnumerator()
-		{
-			if(cache==null)
-			{
-				Load();
-			}
-			return cache.GetEnumerator();
-		}
-	}
-	public class CachedAssembly // TODO: integrate into Directory
-	{  
-		private Assembly assembly;
-		public CachedAssembly(Assembly assembly)
-		{
-			this.assembly=assembly;
-		}
-		public Map NamespaceContents(string nameSpace)
-		{
-			if(assemblyContent==null)
-			{
-				assemblyContent=Library.LoadAssemblies(new object[] {assembly});
-			}
-			Map selected=assemblyContent;
-			if(nameSpace!="")
-			{
-				foreach(string subString in nameSpace.Split('.'))
-				{
-					selected=(Map)selected[new Map(subString)];
-				}
-			}
-			return selected;
-		}			
-		private Map assemblyContent;
-	}
-	public class Library: IMap,IKeyValue // TODO: split into GAC and Directory
-	{
-		public override object this[object key]
-		{
-			get
-			{
-				if(cache.ContainsKey(key))
-				{
-					if(cache[key] is MetaLibrary)
-					{
-						cache[key]=((MetaLibrary)cache[key]).Load();
-					}
-					return cache[key];
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
-			}
-		}
-		public override ArrayList Keys
-		{
-			get
-			{
-				return cache.Keys;
-			}
-		}
-		public override IMap Clone()
-		{
-			return this;
-		}
-		public override int Count
-		{
-			get
-			{
-				return cache.Count;
-			}
-		}
 		public override bool ContainsKey(object key)
 		{
+			if(cache==null)
+			{
+				Load();
+			}
 			return cache.ContainsKey(key);
 		}
-		public override ArrayList Array
-		{
-			get
-			{
-				return new ArrayList();
-			}
-		}
-		public override IMap Parent
-		{
-			get
-			{
-				return null;
-			}
-			set
-			{
-				throw new ApplicationException("Cannot set parent of library.");
-			}
-		}
 		public override IEnumerator GetEnumerator()
-		{ 
-			foreach(DictionaryEntry entry in cache)
-			{ 
-				object temp=cache[entry.Key];
+		{
+			if(cache==null)
+			{
+				Load();
 			}
 			return cache.GetEnumerator();
 		}
-		public static Map LoadAssemblies(IEnumerable assemblies)
-		{
-			Map root=new Map();
-			foreach(Assembly currentAssembly in assemblies)
+	}
+		public class CachedAssembly // TODO: integrate into Directory
+		{  
+			private Assembly assembly;
+			public CachedAssembly(Assembly assembly)
 			{
-				foreach(Type type in currentAssembly.GetExportedTypes()) 
+				this.assembly=assembly;
+			}
+			public Map NamespaceContents(string nameSpace)
+			{
+				if(assemblyContent==null)
 				{
-					if(type.DeclaringType==null) 
+					assemblyContent=Library.LoadAssemblies(new object[] {assembly});
+				}
+				Map selected=assemblyContent;
+				if(nameSpace!="")
+				{
+					foreach(string subString in nameSpace.Split('.'))
 					{
-						Map position=root;
-						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
-						subPaths.RemoveAt(subPaths.Count-1);
-						foreach(string subPath in subPaths) 
-						{
-							if(!position.ContainsKey(new Map(subPath))) 
-							{
-								position[new Map(subPath)]=new Map();
-							}
-							position=(Map)position[new Map(subPath)];
-						}
-						position[new Map(type.Name)]=new DotNetClass(type);
+						selected=(Map)selected[new Map(subString)];
 					}
 				}
-				Interpreter.loadedAssemblies.Add(currentAssembly.Location);
-			}
-			return root;
+				return selected;
+			}			
+			private Map assemblyContent;
 		}
-		private string fileSystemPath;
-
-		public Library()
+		public class Library: IMap// TODO: split into GAC and Directory
 		{
-			fileSystemPath=Path.Combine(Interpreter.installationPath,"Library"); // TODO: has to be renamed to??? root, maybe, or just Meta, installation will look different anyway
-			ArrayList assemblies=new ArrayList();
-			libraryPath=Path.Combine(Interpreter.installationPath,"library");
-			assemblies=GlobalAssemblyCache.Assemblies;
-			foreach(string dll in System.IO.Directory.GetFiles(libraryPath,"*.dll"))
+			public override object this[object key]
 			{
-				assemblies.Add(Assembly.LoadFrom(dll));
-			}
-			foreach(string exe in System.IO.Directory.GetFiles(libraryPath,"*.exe"))
-			{
-				assemblies.Add(Assembly.LoadFrom(exe));
-			}
-			string cachedAssemblyPath=Path.Combine(Interpreter.installationPath,"cachedAssemblyInfo.meta");
-			if(File.Exists(cachedAssemblyPath))
-			{
-				cachedAssemblyInfo=(Map)Interpreter.RunWithoutLibrary(cachedAssemblyPath,new Map());
-			}
-			
-			cache=LoadNamespaces(assemblies);
-			Interpreter.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
-			foreach(string meta in System.IO.Directory.GetFiles(libraryPath,"*.meta"))
-			{
-				cache[new Map(Path.GetFileNameWithoutExtension(meta))]=new MetaLibrary(meta);
-			}
-		}
-		private Map cachedAssemblyInfo=new Map();
-		public ArrayList NameSpaces(Assembly assembly) //TODO: integrate into LoadNamespaces???
-		{ 
-			ArrayList nameSpaces=new ArrayList();
-			MapAdapter cached=new MapAdapter(cachedAssemblyInfo);
-			if(cached.ContainsKey(assembly.Location))
-			{
-				MapAdapter info=new MapAdapter((Map)cached[assembly.Location]);
-				string timestamp=(string)info["timestamp"];
-				if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
+				get
 				{
-					MapAdapter namespaces=new MapAdapter((Map)info["namespaces"]);
-					foreach(DictionaryEntry entry in namespaces)
+					if(cache.ContainsKey(key))
 					{
-						nameSpaces.Add((string)entry.Value);
-					}
-					return nameSpaces;
-				}
-			}
-			foreach(Type type in assembly.GetExportedTypes())
-			{
-				if(!nameSpaces.Contains(type.Namespace))
-				{
-					if(type.Namespace==null)
-					{
-						if(!nameSpaces.Contains(""))
+						if(cache[key] is MetaLibrary)
 						{
-							nameSpaces.Add("");
+							cache[key]=((MetaLibrary)cache[key]).Load();
 						}
+						return cache[key];
 					}
 					else
 					{
-						nameSpaces.Add(type.Namespace);
+						return null;
 					}
 				}
-			}
-			Map cachedAssemblyInfoMap=new Map();
-			Map nameSpace=new Map(); 
-			Integer counter=new Integer(0);
-			foreach(string na in nameSpaces)
-			{
-				nameSpace[counter]=new Map(na);
-				counter++;
-			}
-			cachedAssemblyInfoMap[new Map("namespaces")]=nameSpace;
-			cachedAssemblyInfoMap[new Map("timestamp")]=new Map(File.GetLastWriteTime(assembly.Location).ToString());
-			cachedAssemblyInfo[new Map(assembly.Location)]=cachedAssemblyInfoMap;
-			return nameSpaces;
-		}
-		public Map LoadNamespaces(ArrayList assemblies)
-		{
-			LazyNamespace root=new LazyNamespace("");
-			foreach(Assembly assembly in assemblies)
-			{
-				ArrayList nameSpaces=NameSpaces(assembly);
-				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
-				foreach(string nameSpace in nameSpaces)
+				set
 				{
-					LazyNamespace selected=root;
-					if(nameSpace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.installationPath,"library")))
+					throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
+				}
+			}
+			public override ArrayList Keys
+			{
+				get
+				{
+					return cache.Keys;
+				}
+			}
+			public override IMap Clone()
+			{
+				return this;
+			}
+			public override int Count
+			{
+				get
+				{
+					return cache.Count;
+				}
+			}
+			public override bool ContainsKey(object key)
+			{
+				return cache.ContainsKey(key);
+			}
+			public override ArrayList Array
+			{
+				get
+				{
+					return new ArrayList();
+				}
+			}
+			public override IMap Parent
+			{
+				get
+				{
+					return null;
+				}
+				set
+				{
+					throw new ApplicationException("Cannot set parent of library.");
+				}
+			}
+			public override IEnumerator GetEnumerator()
+			{ 
+				foreach(DictionaryEntry entry in cache)
+				{ 
+					object temp=cache[entry.Key];
+				}
+				return cache.GetEnumerator();
+			}
+			public static Map LoadAssemblies(IEnumerable assemblies)
+			{
+				Map root=new Map();
+				foreach(Assembly currentAssembly in assemblies)
+				{
+					foreach(Type type in currentAssembly.GetExportedTypes()) 
 					{
-						continue;
-					}
-					if(nameSpace!="")
-					{
-						foreach(string subString in nameSpace.Split('.'))
+						if(type.DeclaringType==null) 
 						{
-							if(!selected.namespaces.ContainsKey(subString))
+							Map position=root;
+							ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
+							subPaths.RemoveAt(subPaths.Count-1);
+							foreach(string subPath in subPaths) 
 							{
-								string fullName=selected.fullName;
-								if(fullName!="")
+								if(!position.ContainsKey(new Map(subPath))) 
 								{
-									fullName+=".";
+									position[new Map(subPath)]=new Map();
 								}
-								fullName+=subString;
-								selected.namespaces[subString]=new LazyNamespace(fullName);
+								position=(Map)position[new Map(subPath)];
 							}
-							selected=(LazyNamespace)selected.namespaces[subString];
+							position[new Map(type.Name)]=new DotNetClass(type);
 						}
 					}
-					selected.cachedAssemblies.Add(cachedAssembly);
+					Interpreter.loadedAssemblies.Add(currentAssembly.Location);
 				}
+				return root;
 			}
+			private string fileSystemPath;
+
+			public Library()
+			{
+				fileSystemPath=Path.Combine(Interpreter.installationPath,"Library"); // TODO: has to be renamed to??? root, maybe, or just Meta, installation will look different anyway
+				ArrayList assemblies=new ArrayList();
+				libraryPath=Path.Combine(Interpreter.installationPath,"library");
+				assemblies=GlobalAssemblyCache.Assemblies;
+				foreach(string dll in System.IO.Directory.GetFiles(libraryPath,"*.dll"))
+				{
+					assemblies.Add(Assembly.LoadFrom(dll));
+				}
+				foreach(string exe in System.IO.Directory.GetFiles(libraryPath,"*.exe"))
+				{
+					assemblies.Add(Assembly.LoadFrom(exe));
+				}
+				string cachedAssemblyPath=Path.Combine(Interpreter.installationPath,"cachedAssemblyInfo.meta");
+				if(File.Exists(cachedAssemblyPath))
+				{
+					cachedAssemblyInfo=(Map)Interpreter.RunWithoutLibrary(cachedAssemblyPath,new Map());
+				}
 			
-			root.Load();
-			return root.cache;
-		}
-		public static Library library=new Library();
-		private Map cache=new Map();
-		public static string libraryPath="library"; 
-	}
-//	public class PersistentMap:IMap
-//	{
-//		#region IMap Members
-//
-//		public IMap Parent
-//		{
-//			get
-//			{
-//				// TODO:  Add PersistentMap.Parent getter implementation
-//				return null;
-//			}
-//			set
-//			{
-//				// TODO:  Add PersistentMap.Parent setter implementation
-//			}
-//		}
-//
-//		public ArrayList Array
-//		{
-//			get
-//			{
-//				// TODO:  Add PersistentMap.Array getter implementation
-//				return null;
-//			}
-//		}
-//
-//		public IMap Clone()
-//		{
-//			// TODO:  Add PersistentMap.Clone implementation
-//			return null;
-//		}
-//
-//		#endregion
-//
-//		#region IKeyValue Members
-//
-//		public object this[object key]
-//		{
-//			get
-//			{
-//				// TODO:  Add PersistentMap.this getter implementation
-//				return null;
-//			}
-//			set
-//			{
-//				// TODO:  Add PersistentMap.this setter implementation
-//			}
-//		}
-//
-//		public ArrayList Keys
-//		{
-//			get
-//			{
-//				// TODO:  Add PersistentMap.Keys getter implementation
-//				return null;
-//			}
-//		}
-//
-//		public int Count
-//		{
-//			get
-//			{
-//				// TODO:  Add PersistentMap.Count getter implementation
-//				return 0;
-//			}
-//		}
-//
-//		public bool ContainsKey(object key)
-//		{
-//			// TODO:  Add PersistentMap.ContainsKey implementation
-//			return false;
-//		}
-//
-//		#endregion
-//
-//		#region IEnumerable Members
-//
-//		public IEnumerator GetEnumerator()
-//		{
-//			// TODO:  Add PersistentMap.GetEnumerator implementation
-//			return null;
-//		}
-//
-//		#endregion
-//
-//	}
-//	public class PersistantMapStrategy
-//	{
-//	}
-//	public class MetaFileStrategy
-//	{
-//	}
-//	public class DirectoryStrategy:PersistantMapStrategy
-//	{
-//		//		private string path;
-//		private DirectoryInfo directory;
-//		private IMap parent=null;
-//		public DirectoryStrategy(DirectoryInfo directory)
-//		{
-//			//			directory=new DirectoryInfo(path);
-//			if(directory.Parent!=null)
-//			{
-//				parent=new Directory(directory.Parent);
-//			}
-//			else
-//			{
-//				parent=Library.library;
-//			}
-//			//			this.path=path;
-//		}
-//		public IMap Parent
-//		{
-//			get
-//			{
-//				return parent;
-//			}
-//			set
-//			{
-//				throw new ApplicationException("Tried to set parent of directory. "+directory.FullName);
-//			}
-//		}
-//		public ArrayList Array
-//		{
-//			get
-//			{
-//				return new ArrayList(); // TODO: maybe we interpret file names 1,2,3 as numbers, too??? would make sense, actually
-//			}
-//		}
-//		public IMap Clone()
-//		{
-//			throw new ApplicationException("Clone in Directory not implemented yet"); // TODO
-//		}
-//		public object this[object key]
-//		{
-//			get
-//			{
-//				bool hasKey;
-//				string fileName="";
-//				if(key is Map)
-//				{
-//					Map map=(Map)key;
-//					if(map.IsString)
-//					{
-//						fileName=map.String;
-//					}
-//				}
-//				if(key is Integer)
-//				{
-//					fileName=((Integer)key).ToString();
-//				}
-//				object result;
-//				if(fileName!="")
-//				{
-//					if(System.IO.Directory.Exists(fileName)) // TODO: maybe always use DirectoryInfo instead of System.IO.Directory
-//					{
-//						result=new Directory(new DirectoryInfo(fileName));
-//					}
-//					else 
-//					{
-//						if(fileName.EndsWith(".meta"))
-//						{
-//							result=new MetaFile(fileName);
-//						}
-//						else
-//						{
-//							ArrayList bytes=new ArrayList(); // amazingly slow, but binary reading ist just too stupid
-//							FileStream stream=new FileStream(fileName,FileMode.Open);
-//							while(true)
-//							{
-//								int read=stream.ReadByte();
-//								if(read>=0)
-//								{
-//									bytes.Add(read);
-//								}
-//								else
-//								{
-//									break;
-//								}
-//							}
-//							Byte[] array=(Byte[])bytes.ToArray(typeof(byte));
-//							Integer integer=new Integer(array);
-//							result=integer;
-//						}
-//					}
-//				}
-//				else
-//				{
-//					result=null;
-//				}
-//				return result;
-//			}
-//			set
-//			{
-//				// TODO:  Uh, oh complicated, throw for now
-//				throw new ApplicationException("Setting in directories not implemented yet.");
-//			}
-//		}
-//		public ArrayList Keys
-//		{
-//			get
-//			{
-//				ArrayList keys=new ArrayList();
-//				foreach(DirectoryInfo dir in directory.GetDirectories())
-//				{
-//					keys.Add(Literal.Recognition(dir.Name));
-//				}
-//				foreach(FileInfo file in directory.GetFiles())
-//				{
-//					keys.Add(Literal.Recognition(file.Name));
-//				}
-//				return keys;
-//			}
-//		}
-//
-//		public int Count
-//		{
-//			get
-//			{
-//				return Keys.Count;
-//			}
-//		}
-//
-//		public bool ContainsKey(object key)
-//		{
-//			return Keys.Contains(key);
-//		}
-//
-//		public IEnumerator GetEnumerator()
-//		{
-//			return new MapEnumerator(this);
-//		}
-//	}
-
-
-
-
-
-//	public class MetaFile
-//	{
-//	}
-//	public class Directory:IMap
-//	{
-////		private string path;
-//		private DirectoryInfo directory;
-//		private IMap parent=null;
-//		public Directory(DirectoryInfo directory)
-//		{
-////			directory=new DirectoryInfo(path);
-//			if(directory.Parent!=null)
-//			{
-//				parent=new Directory(directory.Parent);
-//			}
-//			else
-//			{
-//				parent=Library.library;
-//			}
-////			this.path=path;
-//		}
-//		public IMap Parent
-//		{
-//			get
-//			{
-//				return parent;
-//			}
-//			set
-//			{
-//				throw new ApplicationException("Tried to set parent of directory. "+directory.FullName);
-//			}
-//		}
-//		public ArrayList Array
-//		{
-//			get
-//			{
-//				return new ArrayList(); // TODO: maybe we interpret file names 1,2,3 as numbers, too??? would make sense, actually
-//			}
-//		}
-//		public IMap Clone()
-//		{
-//			throw new ApplicationException("Clone in Directory not implemented yet"); // TODO
-//		}
-//		public object this[object key]
-//		{
-//			get
-//			{
-//				bool hasKey;
-//				string fileName="";
-//				if(key is Map)
-//				{
-//					Map map=(Map)key;
-//					if(map.IsString)
-//					{
-//						fileName=map.String;
-//					}
-//				}
-//				if(key is Integer)
-//				{
-//					fileName=((Integer)key).ToString();
-//				}
-//				object result;
-//				if(fileName!="")
-//				{
-//					if(System.IO.Directory.Exists(fileName)) // TODO: maybe always use DirectoryInfo instead of System.IO.Directory
-//					{
-//						result=new Directory(new DirectoryInfo(fileName));
-//					}
-//					else 
-//					{
-//						if(fileName.EndsWith(".meta"))
-//						{
-//							result=new MetaFile(fileName);
-//						}
-//						else
-//						{
-//							ArrayList bytes=new ArrayList(); // amazingly slow, but binary reading ist just too stupid
-//							FileStream stream=new FileStream(fileName,FileMode.Open);
-//							while(true)
-//							{
-//								int read=stream.ReadByte();
-//								if(read>=0)
-//								{
-//									bytes.Add(read);
-//								}
-//								else
-//								{
-//									break;
-//								}
-//							}
-//							Byte[] array=(Byte[])bytes.ToArray(typeof(byte));
-//							Integer integer=new Integer(array);
-//							result=integer;
-//						}
-//					}
-//				}
-//				else
-//				{
-//					result=null;
-//				}
-//				return result;
-//			}
-//			set
-//			{
-//				// TODO:  Uh, oh complicated, throw for now
-//				throw new ApplicationException("Setting in directories not implemented yet.");
-//			}
-//		}
-//		public ArrayList Keys
-//		{
-//			get
-//			{
-//				ArrayList keys=new ArrayList();
-//				foreach(DirectoryInfo dir in directory.GetDirectories())
-//				{
-//					keys.Add(Literal.Recognition(dir.Name));
-//				}
-//				foreach(FileInfo file in directory.GetFiles())
-//				{
-//					keys.Add(Literal.Recognition(file.Name));
-//				}
-//				return keys;
-//			}
-//		}
-//
-//		public int Count
-//		{
-//			get
-//			{
-//				return Keys.Count;
-//			}
-//		}
-//
-//		public bool ContainsKey(object key)
-//		{
-//			return Keys.Contains(key);
-//		}
-//
-//		public IEnumerator GetEnumerator()
-//		{
-//			return new MapEnumerator(this);
-//		}
-//	}
-	public class Convert
-	{
-		static Convert()
-		{
-			foreach(Type conversionType in typeof(ToMetaConversions).GetNestedTypes())
-			{
-				ToMeta conversion=((ToMeta)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-				toMeta[conversion.source]=conversion;
-			}
-			foreach(Type conversionType in typeof(ToDotNetConversions).GetNestedTypes())
-			{
-				ToDotNet conversion=(ToDotNet)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{});
-				if(!toDotNet.ContainsKey(conversion.target))
+				cache=LoadNamespaces(assemblies);
+				Interpreter.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
+				foreach(string meta in System.IO.Directory.GetFiles(libraryPath,"*.meta"))
 				{
-					toDotNet[conversion.target]=new Hashtable();
+					cache[new Map(Path.GetFileNameWithoutExtension(meta))]=new MetaLibrary(meta);
 				}
-				((Hashtable)toDotNet[conversion.target])[conversion.source]=conversion;
 			}
-		}
-		public static object ToDotNet(object meta,Type target,out bool isConverted)
-		{
-			if(target.IsSubclassOf(typeof(Enum)) && meta is Integer)
+			private Map cachedAssemblyInfo=new Map();
+			public ArrayList NameSpaces(Assembly assembly) //TODO: integrate into LoadNamespaces???
 			{ 
-				isConverted=true;
-				return Enum.ToObject(target,((Integer)meta).Int);
-			}
-			Hashtable conversions=(Hashtable)toDotNet[target];
-			if(conversions!=null)
-			{
-				ToDotNet conversion=(ToDotNet)conversions[meta.GetType()];
-				if(conversion!=null)
+				ArrayList nameSpaces=new ArrayList();
+				MapAdapter cached=new MapAdapter(cachedAssemblyInfo);
+				if(cached.ContainsKey(assembly.Location))
 				{
-					return conversion.Convert(meta,out isConverted);
-				}
-			}
-			isConverted=false;
-			return null;
-		}
-		// TODO: maybe refactor with above
-		public static object ToDotNet(object meta,Type target)
-		{
-			object result=meta;
-			if(toDotNet.ContainsKey(target))
-			{
-				Hashtable conversions=(Hashtable)toDotNet[target];
-				if(conversions.ContainsKey(meta.GetType()))
-				{
-					ToDotNet conversion=(ToDotNet)conversions[meta.GetType()];
-					bool isConverted;
-					object converted= conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
-					if(isConverted)
+					MapAdapter info=new MapAdapter((Map)cached[assembly.Location]);
+					string timestamp=(string)info["timestamp"];
+					if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
 					{
-						result=converted;
-					}
-				}
-			}
-			return result;
-		}
-		// TODO: maybe convert .NET arrays to maps
-		public static object ToMeta(object oDotNet)
-		{ 
-			if(oDotNet==null)
-			{
-				return null;
-			}
-			else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
-			{
-				return new Integer((int)System.Convert.ToInt32((Enum)oDotNet));
-			}
-			ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
-			if(conversion==null)
-			{
-				return oDotNet;
-			}
-			else
-			{
-				return conversion.Convert(oDotNet);
-			}
-		}
-		public static object ToDotNet(object meta) 
-		{
-			if(meta is Integer)
-			{
-				return ((Integer)meta).Int;
-			}
-			else if(meta is Map && ((Map)meta).IsString)
-			{
-				return ((Map)meta).String;
-			}
-			else
-			{
-				return meta;
-			}
-		}
-		private static Hashtable toDotNet=new Hashtable();
-		private static Hashtable toMeta=new Hashtable();
-	}
-
-	public abstract class ToMeta
-	{ 
-		public Type source;
-		public abstract object Convert(object obj);
-	}
-	public abstract class ToDotNet
-	{
-		public Type source;
-		public Type target;
-		public abstract object Convert(object obj,out bool converted);
-	}
-
-	abstract class ToMetaConversions
-	{
-		public class ConvertStringToMap: ToMeta
-		{
-			public ConvertStringToMap()  
-			{
-				this.source=typeof(string);
-			}
-			public override object Convert(object toConvert)
-			{
-				return new Map((string)toConvert);
-			}
-		}
-		public class ConvertBoolToInteger: ToMeta
-		{
-			public ConvertBoolToInteger()
-			{
-				this.source=typeof(bool);
-			}
-			public override object Convert(object toConvert)
-			{
-				return (bool)toConvert? new Integer(1): new Integer(0);
-			}
-
-		}
-		public class ConvertByteToInteger: ToMeta
-		{
-			public ConvertByteToInteger()
-			{
-				this.source=typeof(Byte);
-			}
-			public override object Convert(object toConvert)
-			{
-				return new Integer((Byte)toConvert);
-			}
-		}
-		public class ConvertSByteToInteger: ToMeta
-		{
-			public ConvertSByteToInteger()
-			{
-				this.source=typeof(SByte);
-			}
-			public override object Convert(object toConvert)
-			{
-				return new Integer((SByte)toConvert);
-			}
-		}
-		public class ConvertCharToInteger: ToMeta
-		{
-			public ConvertCharToInteger()
-			{
-				this.source=typeof(Char);
-			}
-			public override object Convert(object toConvert)
-			{
-				return new Integer((Char)toConvert);
-			}
-		}
-		public class ConvertInt32ToInteger: ToMeta
-		{
-			public ConvertInt32ToInteger()
-			{
-				this.source=typeof(Int32);
-			}
-			public override object Convert(object toConvert)
-			{
-				return new Integer((Int32)toConvert);
-			}
-		}
-		public class ConvertUInt32ToInteger: ToMeta
-		{
-			public ConvertUInt32ToInteger()
-			{
-				this.source=typeof(UInt32);
-			}
-			public override object Convert(object toConvert)
-			{
-				return new Integer((UInt32)toConvert);
-			}
-		}
-		public class ConvertInt64ToInteger: ToMeta
-		{
-			public ConvertInt64ToInteger()
-			{
-				this.source=typeof(Int64);
-			}
-			public override object Convert(object toConvert)
-			{
-				return new Integer((Int64)toConvert);
-			}
-		}
-		public class ConvertUInt64ToInteger: ToMeta
-		{
-			public ConvertUInt64ToInteger()
-			{
-				this.source=typeof(UInt64);
-			}
-			public override object Convert(object toConvert)
-			{
-				return new Integer((Int64)(UInt64)toConvert);
-			}
-		}
-		public class ConvertInt16ToInteger: ToMeta
-		{
-			public ConvertInt16ToInteger()
-			{
-				this.source=typeof(Int16);
-			}
-			public override object Convert(object toConvert)
-			{
-				return new Integer((Int16)toConvert);
-			}
-		}
-		public class ConvertUInt16ToInteger: ToMeta
-		{
-			public ConvertUInt16ToInteger()
-			{
-				this.source=typeof(UInt16);
-			}
-			public override object Convert(object toConvert)
-			{
-				return new Integer((UInt16)toConvert);
-			}
-		}
-	}
-	abstract class ToDotNetConversions
-	{
-		public class IntegerToByte: ToDotNet
-		{
-			public IntegerToByte()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(Byte);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				isConverted=true;
-				return System.Convert.ToByte(((Integer)toConvert).LongValue());
-			}
-		}
-		public class IntegerToBool: ToDotNet
-		{
-			public IntegerToBool()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(bool);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				object result;
-				int i=((Integer)toConvert).Int;
-				if(i==0)
-				{
-					isConverted=true;
-					result=false;
-				}
-				else if(i==1)
-				{
-					isConverted=true;
-					result=true;
-				}
-				else
-				{
-					isConverted=false;
-					result=null;
-				}
-				return result;
-			}
-		}
-		public class IntegerToSByte: ToDotNet
-		{
-			public IntegerToSByte()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(SByte);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				isConverted=true;
-				return System.Convert.ToSByte(((Integer)toConvert).LongValue());
-			}
-		}
-		public class IntegerToChar: ToDotNet
-		{
-			public IntegerToChar()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(Char);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				isConverted=true;
-				return System.Convert.ToChar(((Integer)toConvert).LongValue());
-			}
-		}
-		public class IntegerToInt32: ToDotNet
-		{
-			public IntegerToInt32()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(Int32);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				isConverted=true;
-				return System.Convert.ToInt32(((Integer)toConvert).LongValue());
-			}
-		}
-		public class IntegerToUInt32: ToDotNet
-		{
-			public IntegerToUInt32()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(UInt32);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				isConverted=true;
-				return System.Convert.ToUInt32(((Integer)toConvert).LongValue());
-			}
-		}
-		public class IntegerToInt64: ToDotNet
-		{
-			public IntegerToInt64()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(Int64);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				isConverted=true;
-				return System.Convert.ToInt64(((Integer)toConvert).LongValue());
-			}
-		}
-		public class IntegerToUInt64: ToDotNet
-		{
-			public IntegerToUInt64()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(UInt64);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				isConverted=true;
-				return System.Convert.ToUInt64(((Integer)toConvert).LongValue());
-			}
-		}
-		public class IntegerToInt16: ToDotNet
-		{
-			public IntegerToInt16()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(Int16);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				isConverted=true;
-				return System.Convert.ToInt16(((Integer)toConvert).LongValue());
-			}
-		}
-		public class IntegerToUInt16: ToDotNet
-		{
-			public IntegerToUInt16()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(UInt16);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				isConverted=true;
-				return System.Convert.ToUInt16(((Integer)toConvert).LongValue());
-			}
-		}
-		public class IntegerToDecimal: ToDotNet
-		{
-			public IntegerToDecimal()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(decimal);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				isConverted=true;
-				return (decimal)(((Integer)toConvert).LongValue());
-			}
-		}
-		public class IntegerToDouble: ToDotNet
-		{
-			public IntegerToDouble()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(double);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				isConverted=true;
-				return (double)(((Integer)toConvert).LongValue());
-			}
-		}
-		public class IntegerToFloat: ToDotNet
-		{
-			public IntegerToFloat()
-			{
-				this.source=typeof(Integer);
-				this.target=typeof(float);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				isConverted=true;
-				return (float)(((Integer)toConvert).LongValue());
-			}
-		}
-		public class MapToString: ToDotNet
-		{
-			public MapToString()
-			{
-				this.source=typeof(Map);
-				this.target=typeof(string);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				if(((Map)toConvert).IsString)
-				{
-					isConverted=true;
-					return ((Map)toConvert).String;
-				}
-				else
-				{
-					isConverted=false;
-					return null;
-				}
-			}
-		}
-		public class FractionToDecimal: ToDotNet
-		{
-			public FractionToDecimal()
-			{
-				this.source=typeof(Map); 
-				this.target=typeof(decimal); 
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				Map map=(Map)toConvert;
-				if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
-				{
-					isConverted=true;
-					return ((decimal)((Integer)map[new Map("numerator")]).LongValue())/((decimal)((Integer)map[new Map("denominator")]).LongValue());
-				}
-				else
-				{
-					isConverted=false;
-					return null;
-				}
-			}
-
-		}
-		public class FractionToDouble: ToDotNet
-		{
-			public FractionToDouble()
-			{
-				this.source=typeof(Map);
-				this.target=typeof(double);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				Map map=(Map)toConvert;
-				if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
-				{
-					isConverted=true;
-					return ((double)((Integer)map[new Map("numerator")]).LongValue())/((double)((Integer)map[new Map("denominator")]).LongValue());
-				}
-				else
-				{
-					isConverted=false;
-					return null;
-				}
-			}
-
-		}
-		public class FractionToFloat: ToDotNet
-		{
-			public FractionToFloat()
-			{
-				this.source=typeof(Map);
-				this.target=typeof(float);
-			}
-			public override object Convert(object toConvert, out bool isConverted)
-			{
-				Map map=(Map)toConvert;
-				if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
-				{
-					isConverted=true;
-					return ((float)((Integer)map[new Map("numerator")]).LongValue())/((float)((Integer)map[new Map("denominator")]).LongValue());
-				}
-				else
-				{
-					isConverted=false;
-					return null;
-				}
-			}
-		}
-	}
-	public class MapAdapter:IMap
-	{ 
-		private Map map;
-		public MapAdapter(Map map)
-		{
-			this.map=map;
-		}
-		public MapAdapter()
-		{
-			this.map=new Map();
-		}
-		public override bool ContainsKey(object key)
-		{
-			return map.ContainsKey(Convert.ToMeta(key));
-		}
-
-		public override object this[object key]
-		{
-			get
-			{
-				return Convert.ToDotNet(map[Convert.ToMeta(key)]);
-			}
-			set
-			{
-				this.map[Convert.ToMeta(key)]=Convert.ToMeta(value);
-			}
-		}
-		public override IMap Parent
-		{
-			get
-			{
-				return (IMap)Convert.ToMeta(map.Parent);
-			}
-			set
-			{
-				map.Parent=(IMap)Convert.ToDotNet(value);
-			}
-		}
-		public override ArrayList Array
-		{
-			get
-			{
-				return ConvertToMeta(map.Array);
-			}
-		}
-		public override IMap Clone()
-		{
-			return new MapAdapter((Map)map.Clone());
-		}
-		private ArrayList ConvertToMeta(ArrayList list)
-		{
-			ArrayList result=new ArrayList();
-			foreach(object obj in list)
-			{
-				result.Add(Convert.ToDotNet(obj));
-			}
-			return result;
-		}
-		public override ArrayList Keys
-		{
-			get
-			{
-				return ConvertToMeta(map.Keys);
-			}
-		}
-		public override int Count
-		{
-			get
-			{
-				return map.Count;
-			}
-		}
-		public override IEnumerator GetEnumerator()
-		{
-			return new MapEnumerator(this);
-		}
-	}
-//	public class Map: IMap, IKeyValue, ICallable, IEnumerable, ISerializeSpecial
-//	{
-//
-//		public object Argument
-//		{
-//			get
-//			{
-//				return arg;
-//			}
-//			set
-//			{ 
-//				// TODO: Remove set, maybe?
-//				arg=value;
-//			}
-//		}
-//		object arg=null;
-//		public bool IsString // TODO: move to IMap
-//		{
-//			get
-//			{
-//				return strategy.IsString;
-//			}
-//		}
-//		public string String
-//		{
-//			get
-//			{
-//				return strategy.String;
-//			}
-//		}
-//		public override IMap Parent
-//		{
-//			get
-//			{
-//				return parent;
-//			}
-//			set
-//			{
-//				parent=value;
-//			}
-//		}
-//		public override int Count
-//		{
-//			get
-//			{
-//				return strategy.Count;
-//			}
-//		}
-//		public override ArrayList Array		//TODO: cache the Array somewhere; put in an "Add" method
-//		{ 
-//			get
-//			{
-//				return strategy.Array;
-//			}
-//		}
-//		public override object this[object key] 
-//		{
-//			get
-//			{
-//				object result;
-//				if(key.Equals(SpecialKeys.Parent))
-//				{
-//					result=Parent;
-//				}
-//				else if(key.Equals(SpecialKeys.Arg))
-//				{
-//					result=Argument;
-//				}
-//				else if(key.Equals(SpecialKeys.This))
-//				{
-//					result=this;
-//				}
-//				else
-//				{
-//					result=strategy[key];
-//				}
-//				return result;
-//			}
-//			set
-//			{
-//				if(value!=null)
-//				{
-//					isHashCached=false;
-//					if(key.Equals(SpecialKeys.This))
-//					{
-//						this.strategy=((Map)value).strategy.Clone();
-//					}
-//					else
-//					{
-//						object val;
-//						if(value is IMap)
-//						{
-//							val=((IMap)value).Clone();
-//							((IMap)val).Parent=this;
-//						}
-//						else
-//						{
-//							val=value;
-//						}
-//						strategy[key]=val;
-//					}
-//				}
-//			}
-//		}
-//		public object Call(object argument)
-//		{
-//			this.Argument=argument;
-//			Expression function=(Expression)((Map)this[CodeKeys.Run]).GetExpression();
-//			object result;
-//			result=function.Evaluate(this);
-//			return result;
-//		}
-//		public override ArrayList Keys
-//		{
-//			get
-//			{
-//				return strategy.Keys;
-//			}
-//		}
-//		public override IMap Clone()
-//		{
-//			Map clone=strategy.CloneMap();
-//			clone.Parent=Parent;
-//			//clone.expression=expression;
-//			clone.Extent=Extent;
-//			return clone;
-//		}
-//		public Expression GetExpression() // TODO: move to Expression
-//		{
-//			// expression Statements are not cached, only expressions
-//
-//			// no caching anymore, because of possible issues when reverse-debugging
-//			//			if(expression==null) 
-//			//			{
-//			Expression expression;
-//			if(this.ContainsKey(CodeKeys.Call))
-//			{
-//				expression=new Call((Map)this[CodeKeys.Call]);
-//			}
-//			else if(this.ContainsKey(CodeKeys.Delayed))
-//			{ 
-//				expression=new Delayed((Map)this[CodeKeys.Delayed]);
-//			}
-//			else if(this.ContainsKey(CodeKeys.Program))
-//			{
-//				expression=new Program((Map)this[CodeKeys.Program]);
-//			}
-//			else if(this.ContainsKey(CodeKeys.Literal))
-//			{
-//				expression=new Literal((Map)this[CodeKeys.Literal]);
-//			}
-//			else if(this.ContainsKey(CodeKeys.Search))
-//			{
-//				expression=new Search((Map)this[CodeKeys.Search]);
-//			}
-//			else if(this.ContainsKey(CodeKeys.Select))
-//			{
-//				expression=new Select((Map)this[CodeKeys.Select]);
-//			}
-//			else
-//			{
-//				throw new ApplicationException("Cannot compile non-code map.");
-//			}
-//			//			}
-//			((Expression)expression).Extent=this.Extent;
-//			return expression;
-//		}
-//		public override bool ContainsKey(object key) 
-//		{
-//			if(key is Map)
-//			{
-//				if(key.Equals(SpecialKeys.Arg))
-//				{
-//					return this.Argument!=null;
-//				}
-//				else if(key.Equals(SpecialKeys.Parent))
-//				{
-//					return this.Parent!=null;
-//				}
-//				else if(key.Equals(SpecialKeys.This))
-//				{
-//					return true;
-//				}
-//			}
-//			return strategy.ContainsKey(key);
-//		}
-//		public override bool Equals(object toCompare)
-//		{
-//			bool isEqual=false;
-//			if(Object.ReferenceEquals(toCompare,this))
-//			{
-//				isEqual=true;
-//			}
-//			else if(toCompare is Map)
-//			{
-//				isEqual=((Map)toCompare).strategy.Equals(strategy);
-//			}
-//			return isEqual;
-//		}
-//		public override IEnumerator GetEnumerator()
-//		{
-//			return new MapEnumerator(this);
-//		}
-//		public override int GetHashCode() 
-//		{
-//			if(!isHashCached)
-//			{
-//				hash=this.strategy.GetHashCode();
-//				isHashCached=true;
-//			}
-//			return hash;
-//		}
-//		private bool isHashCached=false;
-//		private int hash;
-//
-//		Extent extent;
-//		public Extent Extent
-//		{
-//			get
-//			{
-//				return extent;
-//			}
-//			set
-//			{
-//				extent=value;
-//			}
-//		}
-//		public Map(string text):this(new StringStrategy(text))
-//		{
-//		}
-//		public Map(MapStrategy strategy)
-//		{
-//			this.strategy=strategy;
-//			this.strategy.map=this;
-//		}
-//		public Map():this(new HybridDictionaryStrategy())
-//		{
-//		}
-//		private IMap parent;
-//		private MapStrategy strategy;
-//		//		public Expression expression; // why have this at all, why not for statements? probably a question of performance.
-//		public string Serialize(string indentation,string[] functions)
-//		{
-//			if(this.IsString)
-//			{
-//				return indentation+"\""+this.String+"\""+"\n";
-//			}
-//			else
-//			{
-//				return null;
-//			}
-//		}
-//
-//		public abstract class MapStrategy
-//		{
-//			public Map map;
-//			public MapStrategy Clone()
-//			{
-//				MapStrategy strategy=new HybridDictionaryStrategy();
-//				foreach(object key in this.Keys)
-//				{
-//					strategy[key]=this[key];
-//				}
-//				return strategy;	
-//			}
-//			public abstract Map CloneMap();
-//			public abstract ArrayList Array
-//			{
-//				get;
-//			}
-//			public abstract bool IsString
-//			{
-//				get;
-//			}
-//			public abstract string String
-//			{
-//				get;
-//			}
-//			public abstract ArrayList Keys
-//			{
-//				get;
-//			}
-//			public abstract int Count
-//			{
-//				get;
-//			}
-//			public abstract object this[object key] 
-//			{
-//				get;
-//				set;
-//			}
-//
-//			public abstract bool ContainsKey(object key);
-//			public override int GetHashCode() 
-//			{
-//				int hash=0;
-//				foreach(object key in this.Keys)
-//				{
-//					unchecked
-//					{
-//						hash+=key.GetHashCode()*this[key].GetHashCode();
-//					}
-//				}
-//				return hash;
-//			}
-//			public override bool Equals(object strategy)
-//			{
-//
-//				if(Object.ReferenceEquals(strategy,this))
-//				{ 
-//					return true;
-//				}
-//				else if(!(strategy is MapStrategy))
-//				{
-//					return false;
-//				}
-//				else if(((MapStrategy)strategy).Count!=this.Count)
-//				{
-//					return false;
-//				}
-//				foreach(object key in this.Keys) 
-//				{
-//					if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy)[key].Equals(this[key]))
-//					{
-//						return false;
-//					}
-//				}
-//				return true;
-//			}
-//		}
-//		public class StringStrategy:MapStrategy
-//		{
-//			public override int GetHashCode()
-//			{
-//				int hash=0;
-//				for(int i=0;i<text.Length;i++)
-//				{
-//					hash+=(i+1)*text[i];
-//				}
-//				return hash;
-//			}
-//			public override bool Equals(object strategy)
-//			{
-//				bool isEqual;
-//				if(strategy is StringStrategy)
-//				{	
-//					isEqual=((StringStrategy)strategy).text.Equals(this.text);
-//				}
-//				else
-//				{
-//					isEqual=base.Equals(strategy);
-//				}
-//				return isEqual;
-//			}
-//			public override Map CloneMap()
-//			{
-//				return new Map(new StringStrategy(this));
-//			}
-//			public override ArrayList Array
-//			{
-//				get
-//				{
-//					ArrayList list=new ArrayList();
-//					foreach(char iChar in text)
-//					{
-//						list.Add(new Integer(iChar));
-//					}
-//					return list;
-//				}
-//			}
-//			public override bool IsString
-//			{
-//				get
-//				{
-//					return true;
-//				}
-//			}
-//			public override string String
-//			{
-//				get
-//				{
-//					return text;
-//				}
-//			}
-//			public override ArrayList Keys
-//			{
-//				get
-//				{
-//					return keys;
-//				}
-//			}
-//			private ArrayList keys=new ArrayList();
-//			private string text;
-//			public StringStrategy(StringStrategy clone)
-//			{
-//				this.text=clone.text;
-//				this.keys=(ArrayList)clone.keys.Clone();
-//			}
-//			public StringStrategy(string text)
-//			{
-//				this.text=text;
-//				// TODO: make unicode-safe
-//				for(int i=1;i<=text.Length;i++)
-//				{ 
-//					keys.Add(new Integer(i));			
-//				}
-//			}
-//			public override int Count
-//			{
-//				get
-//				{
-//					return text.Length;
-//				}
-//			}
-//			public override object this[object key]
-//			{
-//				get
-//				{
-//					if(key is Integer)
-//					{
-//						int iInteger=((Integer)key).Int;
-//						if(iInteger>0 && iInteger<=this.Count)
-//						{
-//							return new Integer(text[iInteger-1]);
-//						}
-//					}
-//					return null;
-//				}
-//				set
-//				{
-//					map.strategy=this.Clone();
-//					map.strategy[key]=value;
-//				}
-//			}
-//			public override bool ContainsKey(object key) 
-//			{
-//				if(key is Integer)
-//				{
-//					return ((Integer)key)>0 && ((Integer)key)<=this.Count;
-//				}
-//				else
-//				{
-//					return false;
-//				}
-//			}
-//		}
-//		public class HybridDictionaryStrategy:MapStrategy
-//		{
-//			ArrayList keys;
-//			private HybridDictionary strategy;
-//			public HybridDictionaryStrategy():this(2)
-//			{
-//			}
-//			public HybridDictionaryStrategy(int Count)
-//			{
-//				this.keys=new ArrayList(Count);
-//				this.strategy=new HybridDictionary(Count);
-//			}
-//			public override Map CloneMap()
-//			{
-//				Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
-//				foreach(object key in keys)
-//				{
-//					clone[key]=strategy[key];
-//				}
-//				return clone;
-//			}
-//			public override ArrayList Array
-//			{
-//				get
-//				{
-//					ArrayList list=new ArrayList();
-//					for(Integer iInteger=new Integer(1);ContainsKey(iInteger);iInteger++)
-//					{
-//						list.Add(this[iInteger]);
-//					}
-//					return list;
-//				}
-//			}
-//			public override bool IsString
-//			{
-//				get
-//				{
-//					bool isString=false;;
-//					if(Array.Count>0)
-//					{
-//						try
-//						{
-//							object o=String;
-//							isString=true;
-//						}
-//						catch
-//						{
-//						}
-//					}
-//					return isString;
-//				}
-//			}
-//			public override string String
-//			{
-//				get
-//				{
-//					string text="";
-//					foreach(object key in this.Keys)
-//					{
-//						if(key is Integer && this.strategy[key] is Integer)
-//						{
-//							try
-//							{
-//								text+=System.Convert.ToChar(((Integer)this.strategy[key]).Int);
-//							}
-//							catch
-//							{
-//								throw new MapException(this.map,"Map is not a string");
-//							}
-//						}
-//						else
-//						{
-//							throw new MapException(this.map,"Map is not a string");
-//						}
-//					}
-//					return text;
-//				}
-//			}
-//			public override ArrayList Keys
-//			{
-//				get
-//				{
-//					return keys;
-//				}
-//			}
-//			public override int Count
-//			{
-//				get
-//				{
-//					return strategy.Count;
-//				}
-//			}
-//			public override object this[object key] 
-//			{
-//				get
-//				{
-//					return strategy[key];
-//				}
-//				set
-//				{
-//					if(!this.ContainsKey(key))
-//					{
-//						keys.Add(key);
-//					}
-//					strategy[key]=value;
-//				}
-//			}
-//			public override bool ContainsKey(object key) 
-//			{
-//				return strategy.Contains(key);
-//			}
-//		}
-//	}
-//	public class Map: IMap, IKeyValue, ICallable, IEnumerable, ISerializeSpecial
-//	{
-//
-//		public object Argument
-//		{
-//			get
-//			{
-//				return arg;
-//			}
-//			set
-//			{ 
-//				// TODO: Remove set, maybe?
-//				arg=value;
-//			}
-//		}
-//		object arg=null;
-//		public bool IsString // TODO: move to IMap
-//		{
-//			get
-//			{
-//				return strategy.IsString;
-//			}
-//		}
-//		public string String
-//		{
-//			get
-//			{
-//				return strategy.String;
-//			}
-//		}
-//		public override IMap Parent
-//		{
-//			get
-//			{
-//				return parent;
-//			}
-//			set
-//			{
-//				parent=value;
-//			}
-//		}
-//		public override int Count
-//		{
-//			get
-//			{
-//				return strategy.Count;
-//			}
-//		}
-//		public override ArrayList Array		//TODO: cache the Array somewhere; put in an "Add" method
-//		{ 
-//			get
-//			{
-//				return strategy.Array;
-//			}
-//		}
-//		public override object this[object key] 
-//		{
-//			get
-//			{
-//				object result;
-//				if(key.Equals(SpecialKeys.Parent))
-//				{
-//					result=Parent;
-//				}
-//				else if(key.Equals(SpecialKeys.Arg))
-//				{
-//					result=Argument;
-//				}
-//				else if(key.Equals(SpecialKeys.This))
-//				{
-//					result=this;
-//				}
-//				else
-//				{
-//					result=strategy[key];
-//				}
-//				return result;
-//			}
-//			set
-//			{
-//				if(value!=null)
-//				{
-//					isHashCached=false;
-//					if(key.Equals(SpecialKeys.This))
-//					{
-//						this.strategy=((Map)value).strategy.Clone();
-//					}
-//					else
-//					{
-//						object val;
-//						if(value is IMap)
-//						{
-//							val=((IMap)value).Clone();
-//							((IMap)val).Parent=this;
-//						}
-//						else
-//						{
-//							val=value;
-//						}
-//						strategy[key]=val;
-//					}
-//				}
-//			}
-//		}
-//		public object Call(object argument)
-//		{
-//			this.Argument=argument;
-//			Expression function=(Expression)((Map)this[CodeKeys.Run]).GetExpression();
-//			object result;
-//			result=function.Evaluate(this);
-//			return result;
-//		}
-//		public override ArrayList Keys
-//		{
-//			get
-//			{
-//				return strategy.Keys;
-//			}
-//		}
-//		public override IMap Clone()
-//		{
-//			Map clone=strategy.CloneMap();
-//			clone.Parent=Parent;
-//			//clone.expression=expression;
-//			clone.Extent=Extent;
-//			return clone;
-//		}
-//		public Expression GetExpression() // TODO: move to Expression
-//		{
-//			// expression Statements are not cached, only expressions
-//
-//			// no caching anymore, because of possible issues when reverse-debugging
-////			if(expression==null) 
-////			{
-//			Expression expression;
-//				if(this.ContainsKey(CodeKeys.Call))
-//				{
-//					expression=new Call((Map)this[CodeKeys.Call]);
-//				}
-//				else if(this.ContainsKey(CodeKeys.Delayed))
-//				{ 
-//					expression=new Delayed((Map)this[CodeKeys.Delayed]);
-//				}
-//				else if(this.ContainsKey(CodeKeys.Program))
-//				{
-//					expression=new Program((Map)this[CodeKeys.Program]);
-//				}
-//				else if(this.ContainsKey(CodeKeys.Literal))
-//				{
-//					expression=new Literal((Map)this[CodeKeys.Literal]);
-//				}
-//				else if(this.ContainsKey(CodeKeys.Search))
-//				{
-//					expression=new Search((Map)this[CodeKeys.Search]);
-//				}
-//				else if(this.ContainsKey(CodeKeys.Select))
-//				{
-//					expression=new Select((Map)this[CodeKeys.Select]);
-//				}
-//				else
-//				{
-//					throw new ApplicationException("Cannot compile non-code map.");
-//				}
-////			}
-//				((Expression)expression).Extent=this.Extent;
-//			return expression;
-//		}
-//		public override bool ContainsKey(object key) 
-//		{
-//			if(key is Map)
-//			{
-//				if(key.Equals(SpecialKeys.Arg))
-//				{
-//					return this.Argument!=null;
-//				}
-//				else if(key.Equals(SpecialKeys.Parent))
-//				{
-//					return this.Parent!=null;
-//				}
-//				else if(key.Equals(SpecialKeys.This))
-//				{
-//					return true;
-//				}
-//			}
-//			return strategy.ContainsKey(key);
-//		}
-//		public override bool Equals(object toCompare)
-//		{
-//			bool isEqual=false;
-//			if(Object.ReferenceEquals(toCompare,this))
-//			{
-//				isEqual=true;
-//			}
-//			else if(toCompare is Map)
-//			{
-//				isEqual=((Map)toCompare).strategy.Equals(strategy);
-//			}
-//			return isEqual;
-//		}
-//		public override IEnumerator GetEnumerator()
-//		{
-//			return new MapEnumerator(this);
-//		}
-//		public override int GetHashCode() 
-//		{
-//			if(!isHashCached)
-//			{
-//				hash=this.strategy.GetHashCode();
-//				isHashCached=true;
-//			}
-//			return hash;
-//		}
-//		private bool isHashCached=false;
-//		private int hash;
-//
-//		Extent extent;
-//		public Extent Extent
-//		{
-//			get
-//			{
-//				return extent;
-//			}
-//			set
-//			{
-//				extent=value;
-//			}
-//		}
-//		public Map(string text):this(new StringStrategy(text))
-//		{
-//		}
-//		public Map(MapStrategy strategy)
-//		{
-//			this.strategy=strategy;
-//			this.strategy.map=this;
-//		}
-//		public Map():this(new HybridDictionaryStrategy())
-//		{
-//		}
-//		private IMap parent;
-//		private MapStrategy strategy;
-////		public Expression expression; // why have this at all, why not for statements? probably a question of performance.
-//		public string Serialize(string indentation,string[] functions)
-//		{
-//			if(this.IsString)
-//			{
-//				return indentation+"\""+this.String+"\""+"\n";
-//			}
-//			else
-//			{
-//				return null;
-//			}
-//		}
-//
-//		public abstract class MapStrategy
-//		{
-//			public Map map;
-//			public MapStrategy Clone()
-//			{
-//				MapStrategy strategy=new HybridDictionaryStrategy();
-//				foreach(object key in this.Keys)
-//				{
-//					strategy[key]=this[key];
-//				}
-//				return strategy;	
-//			}
-//			public abstract Map CloneMap();
-//			public abstract ArrayList Array
-//			{
-//				get;
-//			}
-//			public abstract bool IsString
-//			{
-//				get;
-//			}
-//			public abstract string String
-//			{
-//				get;
-//			}
-//			public abstract ArrayList Keys
-//			{
-//				get;
-//			}
-//			public abstract int Count
-//			{
-//				get;
-//			}
-//			public abstract object this[object key] 
-//			{
-//				get;
-//				set;
-//			}
-//
-//			public abstract bool ContainsKey(object key);
-//			public override int GetHashCode() 
-//			{
-//				int hash=0;
-//				foreach(object key in this.Keys)
-//				{
-//					unchecked
-//					{
-//						hash+=key.GetHashCode()*this[key].GetHashCode();
-//					}
-//				}
-//				return hash;
-//			}
-//			public override bool Equals(object strategy)
-//			{
-//
-//				if(Object.ReferenceEquals(strategy,this))
-//				{ 
-//					return true;
-//				}
-//				else if(!(strategy is MapStrategy))
-//				{
-//					return false;
-//				}
-//				else if(((MapStrategy)strategy).Count!=this.Count)
-//				{
-//					return false;
-//				}
-//				foreach(object key in this.Keys) 
-//				{
-//					if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy)[key].Equals(this[key]))
-//					{
-//						return false;
-//					}
-//				}
-//				return true;
-//			}
-//		}
-//		public class StringStrategy:MapStrategy
-//		{
-//			public override int GetHashCode()
-//			{
-//				int hash=0;
-//				for(int i=0;i<text.Length;i++)
-//				{
-//					hash+=(i+1)*text[i];
-//				}
-//				return hash;
-//			}
-//			public override bool Equals(object strategy)
-//			{
-//				bool isEqual;
-//				if(strategy is StringStrategy)
-//				{	
-//					isEqual=((StringStrategy)strategy).text.Equals(this.text);
-//				}
-//				else
-//				{
-//					isEqual=base.Equals(strategy);
-//				}
-//				return isEqual;
-//			}
-//			public override Map CloneMap()
-//			{
-//				return new Map(new StringStrategy(this));
-//			}
-//			public override ArrayList Array
-//			{
-//				get
-//				{
-//					ArrayList list=new ArrayList();
-//					foreach(char iChar in text)
-//					{
-//						list.Add(new Integer(iChar));
-//					}
-//					return list;
-//				}
-//			}
-//			public override bool IsString
-//			{
-//				get
-//				{
-//					return true;
-//				}
-//			}
-//			public override string String
-//			{
-//				get
-//				{
-//					return text;
-//				}
-//			}
-//			public override ArrayList Keys
-//			{
-//				get
-//				{
-//					return keys;
-//				}
-//			}
-//			private ArrayList keys=new ArrayList();
-//			private string text;
-//			public StringStrategy(StringStrategy clone)
-//			{
-//				this.text=clone.text;
-//				this.keys=(ArrayList)clone.keys.Clone();
-//			}
-//			public StringStrategy(string text)
-//			{
-//				this.text=text;
-//				// TODO: make unicode-safe
-//				for(int i=1;i<=text.Length;i++)
-//				{ 
-//					keys.Add(new Integer(i));			
-//				}
-//			}
-//			public override int Count
-//			{
-//				get
-//				{
-//					return text.Length;
-//				}
-//			}
-//			public override object this[object key]
-//			{
-//				get
-//				{
-//					if(key is Integer)
-//					{
-//						int iInteger=((Integer)key).Int;
-//						if(iInteger>0 && iInteger<=this.Count)
-//						{
-//							return new Integer(text[iInteger-1]);
-//						}
-//					}
-//					return null;
-//				}
-//				set
-//				{
-//					map.strategy=this.Clone();
-//					map.strategy[key]=value;
-//				}
-//			}
-//			public override bool ContainsKey(object key) 
-//			{
-//				if(key is Integer)
-//				{
-//					return ((Integer)key)>0 && ((Integer)key)<=this.Count;
-//				}
-//				else
-//				{
-//					return false;
-//				}
-//			}
-//		}
-//		public class HybridDictionaryStrategy:MapStrategy
-//		{
-//			ArrayList keys;
-//			private HybridDictionary strategy;
-//			public HybridDictionaryStrategy():this(2)
-//			{
-//			}
-//			public HybridDictionaryStrategy(int Count)
-//			{
-//				this.keys=new ArrayList(Count);
-//				this.strategy=new HybridDictionary(Count);
-//			}
-//			public override Map CloneMap()
-//			{
-//				Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
-//				foreach(object key in keys)
-//				{
-//					clone[key]=strategy[key];
-//				}
-//				return clone;
-//			}
-//			public override ArrayList Array
-//			{
-//				get
-//				{
-//					ArrayList list=new ArrayList();
-//					for(Integer iInteger=new Integer(1);ContainsKey(iInteger);iInteger++)
-//					{
-//						list.Add(this[iInteger]);
-//					}
-//					return list;
-//				}
-//			}
-//			public override bool IsString
-//			{
-//				get
-//				{
-//					bool isString=false;;
-//					if(Array.Count>0)
-//					{
-//						try
-//						{
-//							object o=String;
-//							isString=true;
-//						}
-//						catch
-//						{
-//						}
-//					}
-//					return isString;
-//				}
-//			}
-//			public override string String
-//			{
-//				get
-//				{
-//					string text="";
-//					foreach(object key in this.Keys)
-//					{
-//						if(key is Integer && this.strategy[key] is Integer)
-//						{
-//							try
-//							{
-//								text+=System.Convert.ToChar(((Integer)this.strategy[key]).Int);
-//							}
-//							catch
-//							{
-//								throw new MapException(this.map,"Map is not a string");
-//							}
-//						}
-//						else
-//						{
-//							throw new MapException(this.map,"Map is not a string");
-//						}
-//					}
-//					return text;
-//				}
-//			}
-//			public override ArrayList Keys
-//			{
-//				get
-//				{
-//					return keys;
-//				}
-//			}
-//			public override int Count
-//			{
-//				get
-//				{
-//					return strategy.Count;
-//				}
-//			}
-//			public override object this[object key] 
-//			{
-//				get
-//				{
-//					return strategy[key];
-//				}
-//				set
-//				{
-//					if(!this.ContainsKey(key))
-//					{
-//						keys.Add(key);
-//					}
-//					strategy[key]=value;
-//				}
-//			}
-//			public override bool ContainsKey(object key) 
-//			{
-//				return strategy.Contains(key);
-//			}
-//		}
-//	}
-	public class MapEnumerator: IEnumerator
-	{
-		private IMap map; 
-		public MapEnumerator(IMap map)
-		{
-			this.map=map;
-		}
-		public object Current
-		{
-			get
-			{
-				return new DictionaryEntry(map.Keys[index],map[map.Keys[index]]);
-			}
-		}
-		public bool MoveNext()
-		{
-			index++;
-			return index<map.Count;
-		}
-		public void Reset()
-		{
-			index=-1;
-		}
-		private int index=-1;
-	}
-	public delegate object DelegateCreatedForGenericDelegates(); // TODO: rename?
-	public class DotNetMethod: ICallable
-	{
-		// TODO: remove??
-		public static object AssignCollection(Map map,object collection,out bool isSuccess)
-		{ 
-			if(map.Array.Count==0)
-			{
-				isSuccess=false;
-				return null;
-			}
-			Type targetType=collection.GetType();
-			MethodInfo add=targetType.GetMethod("Add",new Type[]{map.Array[0].GetType()});
-			if(add!=null)
-			{
-				foreach(object entry in map.Array)
-				{ 
-					// TODO: combine this with Library function "Init"
-					add.Invoke(collection,new object[]{entry});//  call add from above!
-				}
-				isSuccess=true;
-			}
-			else
-			{
-				isSuccess=false;
-			}
-			return collection;
-		}
-		public static object ConvertParameter(object meta,Type parameter,out bool isConverted)
-		{
-			isConverted=true;
-			if(parameter.IsAssignableFrom(meta.GetType()))
-			{
-				return meta;
-			}
-			else if((parameter.IsSubclassOf(typeof(Delegate))
-				||parameter.Equals(typeof(Delegate))) && (meta is Map))
-			{
-				MethodInfo invoke=parameter.GetMethod("Invoke",BindingFlags.Instance
-					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-				Delegate function=CreateDelegateFromCode(parameter,invoke,(Map)meta);
-				return function;
-			}
-			else if(parameter.IsArray && meta is IMap && ((Map)meta).Array.Count!=0)
-			{
-				try
-				{
-					Type type=parameter.GetElementType();
-					Map argument=((Map)meta);
-					Array arguments=Array.CreateInstance(type,argument.Array.Count);
-					for(int i=0;i<argument.Count;i++)
-					{
-						arguments.SetValue(argument[new Integer(i+1)],i);
-					}
-					return arguments;
-				}
-				catch
-				{
-				}
-			}
-			else
-			{
-				bool converted;
-				object result=Convert.ToDotNet(meta,parameter,out converted);
-				if(converted)
-				{
-					return result;
-				}
-			}
-			isConverted=false;
-			return null;
-		}
-		public class ArgumentComparer: IComparer
-		{
-			public int Compare(object x, object y)
-			{
-				int result;
-				MethodBase first=(MethodBase)x;
-				MethodBase second=(MethodBase)y;
-				ParameterInfo[] firstParameters=first.GetParameters();
-				ParameterInfo[] secondParameters=second.GetParameters();
-				if(firstParameters.Length==1 && firstParameters[0].ParameterType==typeof(string)
-					&& !(secondParameters.Length==1 && secondParameters[0].ParameterType==typeof(string)))
-				{
-					result=-1;
-				}
-				else
-				{
-					result=0;
-				}
-				return result;
-			}
-		}
-		public object Call(object argument)
-		{
-			object result=null;
-
-			ArrayList oneArgumentMethods=new ArrayList();
-			foreach(MethodBase method in overloadedMethods)
-			{
-				if(method.GetParameters().Length==1)
-				{ 
-					oneArgumentMethods.Add(method);
-				}
-			}
-			bool isExecuted=false;
-			oneArgumentMethods.Sort(new ArgumentComparer());
-			foreach(MethodBase method in oneArgumentMethods)
-			{
-				bool isConverted;
-				object parameter=ConvertParameter(argument,method.GetParameters()[0].ParameterType,out isConverted);
-				if(isConverted)
-				{
-					if(method is ConstructorInfo)
-					{
-						result=((ConstructorInfo)method).Invoke(new object[] {parameter});
-					}
-					else
-					{
-						result=method.Invoke(target,new object[] {parameter});
-					}
-					isExecuted=true;
-					break;
-				}
-			}
-			if(!isExecuted)
-			{
-				ArrayList rightNumberArgumentMethods=new ArrayList();
-				foreach(MethodBase method in overloadedMethods)
-				{
-					if(((IMap)argument).Array.Count==method.GetParameters().Length)
-					{ 
-						if(((IMap)argument).Array.Count==((IMap)argument).Keys.Count)
-						{ 
-							rightNumberArgumentMethods.Add(method);
-						}
-					}
-				}
-				if(rightNumberArgumentMethods.Count==0)
-				{
-					throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");
-				}
-				foreach(MethodBase method in rightNumberArgumentMethods)
-				{
-					ArrayList arguments=new ArrayList();
-					bool argumentsMatched=true;
-					ParameterInfo[] arPrmtifParameters=method.GetParameters();
-					for(int i=0;argumentsMatched && i<arPrmtifParameters.Length;i++)
-					{
-						arguments.Add(ConvertParameter(((IMap)argument).Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
-					}
-					if(argumentsMatched)
-					{
-						if(method is ConstructorInfo)
+						MapAdapter namespaces=new MapAdapter((Map)info["namespaces"]);
+						foreach(DictionaryEntry entry in namespaces)
 						{
-							result=((ConstructorInfo)method).Invoke(arguments.ToArray());
+							nameSpaces.Add((string)entry.Value);
+						}
+						return nameSpaces;
+					}
+				}
+				foreach(Type type in assembly.GetExportedTypes())
+				{
+					if(!nameSpaces.Contains(type.Namespace))
+					{
+						if(type.Namespace==null)
+						{
+							if(!nameSpaces.Contains(""))
+							{
+								nameSpaces.Add("");
+							}
 						}
 						else
 						{
-							result=method.Invoke(target,arguments.ToArray());
+							nameSpaces.Add(type.Namespace);
+						}
+					}
+				}
+				Map cachedAssemblyInfoMap=new Map();
+				Map nameSpace=new Map(); 
+				Integer counter=new Integer(0);
+				foreach(string na in nameSpaces)
+				{
+					nameSpace[counter]=new Map(na);
+					counter++;
+				}
+				cachedAssemblyInfoMap[new Map("namespaces")]=nameSpace;
+				cachedAssemblyInfoMap[new Map("timestamp")]=new Map(File.GetLastWriteTime(assembly.Location).ToString());
+				cachedAssemblyInfo[new Map(assembly.Location)]=cachedAssemblyInfoMap;
+				return nameSpaces;
+			}
+			// TODO: refactor this
+			public Map LoadNamespaces(ArrayList assemblies) // TODO: rename
+			{
+				LazyNamespace root=new LazyNamespace("");
+				foreach(Assembly assembly in assemblies)
+				{
+					ArrayList nameSpaces=NameSpaces(assembly);
+					CachedAssembly cachedAssembly=new CachedAssembly(assembly);
+					foreach(string nameSpace in nameSpaces)
+					{
+						if(nameSpace=="System")
+						{
+							int asdf=0;
+						}
+						LazyNamespace selected=root;
+						if(nameSpace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.installationPath,"library")))
+						{
+							continue;
+						}
+						if(nameSpace!="")
+						{
+							foreach(string subString in nameSpace.Split('.'))
+							{
+								if(!selected.namespaces.ContainsKey(subString))
+								{
+									string fullName=selected.fullName;
+									if(fullName!="")
+									{
+										fullName+=".";
+									}
+									fullName+=subString;
+									selected.namespaces[subString]=new LazyNamespace(fullName);
+								}
+								selected=(LazyNamespace)selected.namespaces[subString];
+							}
+						}
+						selected.AddAssembly(cachedAssembly);
+						//selected.cachedAssemblies.Add(cachedAssembly);
+					}
+				}
+			
+				root.Load();
+				return root.cache;
+			}
+			public static Library library=new Library();
+			private Map cache=new Map();
+			public static string libraryPath="library"; 
+		}
+		//	public class PersistentMap:IMap
+		//	{
+		//		#region IMap Members
+		//
+		//		public IMap Parent
+		//		{
+		//			get
+		//			{
+		//				// TODO:  Add PersistentMap.Parent getter implementation
+		//				return null;
+		//			}
+		//			set
+		//			{
+		//				// TODO:  Add PersistentMap.Parent setter implementation
+		//			}
+		//		}
+		//
+		//		public ArrayList Array
+		//		{
+		//			get
+		//			{
+		//				// TODO:  Add PersistentMap.Array getter implementation
+		//				return null;
+		//			}
+		//		}
+		//
+		//		public IMap Clone()
+		//		{
+		//			// TODO:  Add PersistentMap.Clone implementation
+		//			return null;
+		//		}
+		//
+		//		#endregion
+		//
+		//		#region IKeyValue Members
+		//
+		//		public object this[object key]
+		//		{
+		//			get
+		//			{
+		//				// TODO:  Add PersistentMap.this getter implementation
+		//				return null;
+		//			}
+		//			set
+		//			{
+		//				// TODO:  Add PersistentMap.this setter implementation
+		//			}
+		//		}
+		//
+		//		public ArrayList Keys
+		//		{
+		//			get
+		//			{
+		//				// TODO:  Add PersistentMap.Keys getter implementation
+		//				return null;
+		//			}
+		//		}
+		//
+		//		public int Count
+		//		{
+		//			get
+		//			{
+		//				// TODO:  Add PersistentMap.Count getter implementation
+		//				return 0;
+		//			}
+		//		}
+		//
+		//		public bool ContainsKey(object key)
+		//		{
+		//			// TODO:  Add PersistentMap.ContainsKey implementation
+		//			return false;
+		//		}
+		//
+		//		#endregion
+		//
+		//		#region IEnumerable Members
+		//
+		//		public IEnumerator GetEnumerator()
+		//		{
+		//			// TODO:  Add PersistentMap.GetEnumerator implementation
+		//			return null;
+		//		}
+		//
+		//		#endregion
+		//
+		//	}
+		//	public class PersistantMapStrategy
+		//	{
+		//	}
+		//	public class MetaFileStrategy
+		//	{
+		//	}
+		//	public class DirectoryStrategy:PersistantMapStrategy
+		//	{
+		//		//		private string path;
+		//		private DirectoryInfo directory;
+		//		private IMap parent=null;
+		//		public DirectoryStrategy(DirectoryInfo directory)
+		//		{
+		//			//			directory=new DirectoryInfo(path);
+		//			if(directory.Parent!=null)
+		//			{
+		//				parent=new Directory(directory.Parent);
+		//			}
+		//			else
+		//			{
+		//				parent=Library.library;
+		//			}
+		//			//			this.path=path;
+		//		}
+		//		public IMap Parent
+		//		{
+		//			get
+		//			{
+		//				return parent;
+		//			}
+		//			set
+		//			{
+		//				throw new ApplicationException("Tried to set parent of directory. "+directory.FullName);
+		//			}
+		//		}
+		//		public ArrayList Array
+		//		{
+		//			get
+		//			{
+		//				return new ArrayList(); // TODO: maybe we interpret file names 1,2,3 as numbers, too??? would make sense, actually
+		//			}
+		//		}
+		//		public IMap Clone()
+		//		{
+		//			throw new ApplicationException("Clone in Directory not implemented yet"); // TODO
+		//		}
+		//		public object this[object key]
+		//		{
+		//			get
+		//			{
+		//				bool hasKey;
+		//				string fileName="";
+		//				if(key is Map)
+		//				{
+		//					Map map=(Map)key;
+		//					if(map.IsString)
+		//					{
+		//						fileName=map.String;
+		//					}
+		//				}
+		//				if(key is Integer)
+		//				{
+		//					fileName=((Integer)key).ToString();
+		//				}
+		//				object result;
+		//				if(fileName!="")
+		//				{
+		//					if(System.IO.Directory.Exists(fileName)) // TODO: maybe always use DirectoryInfo instead of System.IO.Directory
+		//					{
+		//						result=new Directory(new DirectoryInfo(fileName));
+		//					}
+		//					else 
+		//					{
+		//						if(fileName.EndsWith(".meta"))
+		//						{
+		//							result=new MetaFile(fileName);
+		//						}
+		//						else
+		//						{
+		//							ArrayList bytes=new ArrayList(); // amazingly slow, but binary reading ist just too stupid
+		//							FileStream stream=new FileStream(fileName,FileMode.Open);
+		//							while(true)
+		//							{
+		//								int read=stream.ReadByte();
+		//								if(read>=0)
+		//								{
+		//									bytes.Add(read);
+		//								}
+		//								else
+		//								{
+		//									break;
+		//								}
+		//							}
+		//							Byte[] array=(Byte[])bytes.ToArray(typeof(byte));
+		//							Integer integer=new Integer(array);
+		//							result=integer;
+		//						}
+		//					}
+		//				}
+		//				else
+		//				{
+		//					result=null;
+		//				}
+		//				return result;
+		//			}
+		//			set
+		//			{
+		//				// TODO:  Uh, oh complicated, throw for now
+		//				throw new ApplicationException("Setting in directories not implemented yet.");
+		//			}
+		//		}
+		//		public ArrayList Keys
+		//		{
+		//			get
+		//			{
+		//				ArrayList keys=new ArrayList();
+		//				foreach(DirectoryInfo dir in directory.GetDirectories())
+		//				{
+		//					keys.Add(Literal.Recognition(dir.Name));
+		//				}
+		//				foreach(FileInfo file in directory.GetFiles())
+		//				{
+		//					keys.Add(Literal.Recognition(file.Name));
+		//				}
+		//				return keys;
+		//			}
+		//		}
+		//
+		//		public int Count
+		//		{
+		//			get
+		//			{
+		//				return Keys.Count;
+		//			}
+		//		}
+		//
+		//		public bool ContainsKey(object key)
+		//		{
+		//			return Keys.Contains(key);
+		//		}
+		//
+		//		public IEnumerator GetEnumerator()
+		//		{
+		//			return new MapEnumerator(this);
+		//		}
+		//	}
+
+
+
+
+
+		//	public class MetaFile
+		//	{
+		//	}
+		//	public class Directory:IMap
+		//	{
+		////		private string path;
+		//		private DirectoryInfo directory;
+		//		private IMap parent=null;
+		//		public Directory(DirectoryInfo directory)
+		//		{
+		////			directory=new DirectoryInfo(path);
+		//			if(directory.Parent!=null)
+		//			{
+		//				parent=new Directory(directory.Parent);
+		//			}
+		//			else
+		//			{
+		//				parent=Library.library;
+		//			}
+		////			this.path=path;
+		//		}
+		//		public IMap Parent
+		//		{
+		//			get
+		//			{
+		//				return parent;
+		//			}
+		//			set
+		//			{
+		//				throw new ApplicationException("Tried to set parent of directory. "+directory.FullName);
+		//			}
+		//		}
+		//		public ArrayList Array
+		//		{
+		//			get
+		//			{
+		//				return new ArrayList(); // TODO: maybe we interpret file names 1,2,3 as numbers, too??? would make sense, actually
+		//			}
+		//		}
+		//		public IMap Clone()
+		//		{
+		//			throw new ApplicationException("Clone in Directory not implemented yet"); // TODO
+		//		}
+		//		public object this[object key]
+		//		{
+		//			get
+		//			{
+		//				bool hasKey;
+		//				string fileName="";
+		//				if(key is Map)
+		//				{
+		//					Map map=(Map)key;
+		//					if(map.IsString)
+		//					{
+		//						fileName=map.String;
+		//					}
+		//				}
+		//				if(key is Integer)
+		//				{
+		//					fileName=((Integer)key).ToString();
+		//				}
+		//				object result;
+		//				if(fileName!="")
+		//				{
+		//					if(System.IO.Directory.Exists(fileName)) // TODO: maybe always use DirectoryInfo instead of System.IO.Directory
+		//					{
+		//						result=new Directory(new DirectoryInfo(fileName));
+		//					}
+		//					else 
+		//					{
+		//						if(fileName.EndsWith(".meta"))
+		//						{
+		//							result=new MetaFile(fileName);
+		//						}
+		//						else
+		//						{
+		//							ArrayList bytes=new ArrayList(); // amazingly slow, but binary reading ist just too stupid
+		//							FileStream stream=new FileStream(fileName,FileMode.Open);
+		//							while(true)
+		//							{
+		//								int read=stream.ReadByte();
+		//								if(read>=0)
+		//								{
+		//									bytes.Add(read);
+		//								}
+		//								else
+		//								{
+		//									break;
+		//								}
+		//							}
+		//							Byte[] array=(Byte[])bytes.ToArray(typeof(byte));
+		//							Integer integer=new Integer(array);
+		//							result=integer;
+		//						}
+		//					}
+		//				}
+		//				else
+		//				{
+		//					result=null;
+		//				}
+		//				return result;
+		//			}
+		//			set
+		//			{
+		//				// TODO:  Uh, oh complicated, throw for now
+		//				throw new ApplicationException("Setting in directories not implemented yet.");
+		//			}
+		//		}
+		//		public ArrayList Keys
+		//		{
+		//			get
+		//			{
+		//				ArrayList keys=new ArrayList();
+		//				foreach(DirectoryInfo dir in directory.GetDirectories())
+		//				{
+		//					keys.Add(Literal.Recognition(dir.Name));
+		//				}
+		//				foreach(FileInfo file in directory.GetFiles())
+		//				{
+		//					keys.Add(Literal.Recognition(file.Name));
+		//				}
+		//				return keys;
+		//			}
+		//		}
+		//
+		//		public int Count
+		//		{
+		//			get
+		//			{
+		//				return Keys.Count;
+		//			}
+		//		}
+		//
+		//		public bool ContainsKey(object key)
+		//		{
+		//			return Keys.Contains(key);
+		//		}
+		//
+		//		public IEnumerator GetEnumerator()
+		//		{
+		//			return new MapEnumerator(this);
+		//		}
+		//	}
+		public class Convert
+		{
+			static Convert()
+			{
+				foreach(Type conversionType in typeof(ToMetaConversions).GetNestedTypes())
+				{
+					ToMeta conversion=((ToMeta)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+					toMeta[conversion.source]=conversion;
+				}
+				foreach(Type conversionType in typeof(ToDotNetConversions).GetNestedTypes())
+				{
+					ToDotNet conversion=(ToDotNet)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{});
+					if(!toDotNet.ContainsKey(conversion.target))
+					{
+						toDotNet[conversion.target]=new Hashtable();
+					}
+					((Hashtable)toDotNet[conversion.target])[conversion.source]=conversion;
+				}
+			}
+			public static object ToDotNet(object meta,Type target,out bool isConverted)
+			{
+				if(target.IsSubclassOf(typeof(Enum)) && meta is Integer)
+				{ 
+					isConverted=true;
+					return Enum.ToObject(target,((Integer)meta).Int);
+				}
+				Hashtable conversions=(Hashtable)toDotNet[target];
+				if(conversions!=null)
+				{
+					ToDotNet conversion=(ToDotNet)conversions[meta.GetType()];
+					if(conversion!=null)
+					{
+						return conversion.Convert(meta,out isConverted);
+					}
+				}
+				isConverted=false;
+				return null;
+			}
+			// TODO: maybe refactor with above
+			public static object ToDotNet(object meta,Type target)
+			{
+				object result=meta;
+				if(toDotNet.ContainsKey(target))
+				{
+					Hashtable conversions=(Hashtable)toDotNet[target];
+					if(conversions.ContainsKey(meta.GetType()))
+					{
+						ToDotNet conversion=(ToDotNet)conversions[meta.GetType()];
+						bool isConverted;
+						object converted= conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
+						if(isConverted)
+						{
+							result=converted;
+						}
+					}
+				}
+				return result;
+			}
+			// TODO: maybe convert .NET arrays to maps
+			public static object ToMeta(object oDotNet)
+			{ 
+				if(oDotNet==null)
+				{
+					return null;
+				}
+				else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
+				{
+					return new Integer((int)System.Convert.ToInt32((Enum)oDotNet));
+				}
+				ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
+				if(conversion==null)
+				{
+					return oDotNet;
+				}
+				else
+				{
+					return conversion.Convert(oDotNet);
+				}
+			}
+			public static object ToDotNet(object meta) 
+			{
+				if(meta is Integer)
+				{
+					return ((Integer)meta).Int;
+				}
+				else if(meta is Map && ((Map)meta).IsString)
+				{
+					return ((Map)meta).String;
+				}
+				else
+				{
+					return meta;
+				}
+			}
+			private static Hashtable toDotNet=new Hashtable();
+			private static Hashtable toMeta=new Hashtable();
+		}
+
+		public abstract class ToMeta
+		{ 
+			public Type source;
+			public abstract object Convert(object obj);
+		}
+		public abstract class ToDotNet
+		{
+			public Type source;
+			public Type target;
+			public abstract object Convert(object obj,out bool converted);
+		}
+
+		abstract class ToMetaConversions
+		{
+			public class ConvertStringToMap: ToMeta
+			{
+				public ConvertStringToMap()  
+				{
+					this.source=typeof(string);
+				}
+				public override object Convert(object toConvert)
+				{
+					return new Map((string)toConvert);
+				}
+			}
+			public class ConvertBoolToInteger: ToMeta
+			{
+				public ConvertBoolToInteger()
+				{
+					this.source=typeof(bool);
+				}
+				public override object Convert(object toConvert)
+				{
+					return (bool)toConvert? new Integer(1): new Integer(0);
+				}
+
+			}
+			public class ConvertByteToInteger: ToMeta
+			{
+				public ConvertByteToInteger()
+				{
+					this.source=typeof(Byte);
+				}
+				public override object Convert(object toConvert)
+				{
+					return new Integer((Byte)toConvert);
+				}
+			}
+			public class ConvertSByteToInteger: ToMeta
+			{
+				public ConvertSByteToInteger()
+				{
+					this.source=typeof(SByte);
+				}
+				public override object Convert(object toConvert)
+				{
+					return new Integer((SByte)toConvert);
+				}
+			}
+			public class ConvertCharToInteger: ToMeta
+			{
+				public ConvertCharToInteger()
+				{
+					this.source=typeof(Char);
+				}
+				public override object Convert(object toConvert)
+				{
+					return new Integer((Char)toConvert);
+				}
+			}
+			public class ConvertInt32ToInteger: ToMeta
+			{
+				public ConvertInt32ToInteger()
+				{
+					this.source=typeof(Int32);
+				}
+				public override object Convert(object toConvert)
+				{
+					return new Integer((Int32)toConvert);
+				}
+			}
+			public class ConvertUInt32ToInteger: ToMeta
+			{
+				public ConvertUInt32ToInteger()
+				{
+					this.source=typeof(UInt32);
+				}
+				public override object Convert(object toConvert)
+				{
+					return new Integer((UInt32)toConvert);
+				}
+			}
+			public class ConvertInt64ToInteger: ToMeta
+			{
+				public ConvertInt64ToInteger()
+				{
+					this.source=typeof(Int64);
+				}
+				public override object Convert(object toConvert)
+				{
+					return new Integer((Int64)toConvert);
+				}
+			}
+			public class ConvertUInt64ToInteger: ToMeta
+			{
+				public ConvertUInt64ToInteger()
+				{
+					this.source=typeof(UInt64);
+				}
+				public override object Convert(object toConvert)
+				{
+					return new Integer((Int64)(UInt64)toConvert);
+				}
+			}
+			public class ConvertInt16ToInteger: ToMeta
+			{
+				public ConvertInt16ToInteger()
+				{
+					this.source=typeof(Int16);
+				}
+				public override object Convert(object toConvert)
+				{
+					return new Integer((Int16)toConvert);
+				}
+			}
+			public class ConvertUInt16ToInteger: ToMeta
+			{
+				public ConvertUInt16ToInteger()
+				{
+					this.source=typeof(UInt16);
+				}
+				public override object Convert(object toConvert)
+				{
+					return new Integer((UInt16)toConvert);
+				}
+			}
+		}
+		abstract class ToDotNetConversions
+		{
+			public class IntegerToByte: ToDotNet
+			{
+				public IntegerToByte()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(Byte);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					isConverted=true;
+					return System.Convert.ToByte(((Integer)toConvert).LongValue());
+				}
+			}
+			public class IntegerToBool: ToDotNet
+			{
+				public IntegerToBool()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(bool);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					object result;
+					int i=((Integer)toConvert).Int;
+					if(i==0)
+					{
+						isConverted=true;
+						result=false;
+					}
+					else if(i==1)
+					{
+						isConverted=true;
+						result=true;
+					}
+					else
+					{
+						isConverted=false;
+						result=null;
+					}
+					return result;
+				}
+			}
+			public class IntegerToSByte: ToDotNet
+			{
+				public IntegerToSByte()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(SByte);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					isConverted=true;
+					return System.Convert.ToSByte(((Integer)toConvert).LongValue());
+				}
+			}
+			public class IntegerToChar: ToDotNet
+			{
+				public IntegerToChar()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(Char);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					isConverted=true;
+					return System.Convert.ToChar(((Integer)toConvert).LongValue());
+				}
+			}
+			public class IntegerToInt32: ToDotNet
+			{
+				public IntegerToInt32()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(Int32);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					isConverted=true;
+					return System.Convert.ToInt32(((Integer)toConvert).LongValue());
+				}
+			}
+			public class IntegerToUInt32: ToDotNet
+			{
+				public IntegerToUInt32()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(UInt32);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					isConverted=true;
+					return System.Convert.ToUInt32(((Integer)toConvert).LongValue());
+				}
+			}
+			public class IntegerToInt64: ToDotNet
+			{
+				public IntegerToInt64()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(Int64);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					isConverted=true;
+					return System.Convert.ToInt64(((Integer)toConvert).LongValue());
+				}
+			}
+			public class IntegerToUInt64: ToDotNet
+			{
+				public IntegerToUInt64()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(UInt64);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					isConverted=true;
+					return System.Convert.ToUInt64(((Integer)toConvert).LongValue());
+				}
+			}
+			public class IntegerToInt16: ToDotNet
+			{
+				public IntegerToInt16()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(Int16);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					isConverted=true;
+					return System.Convert.ToInt16(((Integer)toConvert).LongValue());
+				}
+			}
+			public class IntegerToUInt16: ToDotNet
+			{
+				public IntegerToUInt16()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(UInt16);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					isConverted=true;
+					return System.Convert.ToUInt16(((Integer)toConvert).LongValue());
+				}
+			}
+			public class IntegerToDecimal: ToDotNet
+			{
+				public IntegerToDecimal()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(decimal);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					isConverted=true;
+					return (decimal)(((Integer)toConvert).LongValue());
+				}
+			}
+			public class IntegerToDouble: ToDotNet
+			{
+				public IntegerToDouble()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(double);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					isConverted=true;
+					return (double)(((Integer)toConvert).LongValue());
+				}
+			}
+			public class IntegerToFloat: ToDotNet
+			{
+				public IntegerToFloat()
+				{
+					this.source=typeof(Integer);
+					this.target=typeof(float);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					isConverted=true;
+					return (float)(((Integer)toConvert).LongValue());
+				}
+			}
+			public class MapToString: ToDotNet
+			{
+				public MapToString()
+				{
+					this.source=typeof(Map);
+					this.target=typeof(string);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					if(((Map)toConvert).IsString)
+					{
+						isConverted=true;
+						return ((Map)toConvert).String;
+					}
+					else
+					{
+						isConverted=false;
+						return null;
+					}
+				}
+			}
+			public class FractionToDecimal: ToDotNet
+			{
+				public FractionToDecimal()
+				{
+					this.source=typeof(Map); 
+					this.target=typeof(decimal); 
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					Map map=(Map)toConvert;
+					if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
+					{
+						isConverted=true;
+						return ((decimal)((Integer)map[new Map("numerator")]).LongValue())/((decimal)((Integer)map[new Map("denominator")]).LongValue());
+					}
+					else
+					{
+						isConverted=false;
+						return null;
+					}
+				}
+
+			}
+			public class FractionToDouble: ToDotNet
+			{
+				public FractionToDouble()
+				{
+					this.source=typeof(Map);
+					this.target=typeof(double);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					Map map=(Map)toConvert;
+					if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
+					{
+						isConverted=true;
+						return ((double)((Integer)map[new Map("numerator")]).LongValue())/((double)((Integer)map[new Map("denominator")]).LongValue());
+					}
+					else
+					{
+						isConverted=false;
+						return null;
+					}
+				}
+
+			}
+			public class FractionToFloat: ToDotNet
+			{
+				public FractionToFloat()
+				{
+					this.source=typeof(Map);
+					this.target=typeof(float);
+				}
+				public override object Convert(object toConvert, out bool isConverted)
+				{
+					Map map=(Map)toConvert;
+					if(map[new Map("numerator")] is Integer && map[new Map("denominator")] is Integer)
+					{
+						isConverted=true;
+						return ((float)((Integer)map[new Map("numerator")]).LongValue())/((float)((Integer)map[new Map("denominator")]).LongValue());
+					}
+					else
+					{
+						isConverted=false;
+						return null;
+					}
+				}
+			}
+		}
+		public class MapAdapter:IMap
+		{ 
+			private Map map;
+			public MapAdapter(Map map)
+			{
+				this.map=map;
+			}
+			public MapAdapter()
+			{
+				this.map=new Map();
+			}
+			public override bool ContainsKey(object key)
+			{
+				return map.ContainsKey(Convert.ToMeta(key));
+			}
+
+			public override object this[object key]
+			{
+				get
+				{
+					return Convert.ToDotNet(map[Convert.ToMeta(key)]);
+				}
+				set
+				{
+					this.map[Convert.ToMeta(key)]=Convert.ToMeta(value);
+				}
+			}
+			public override IMap Parent
+			{
+				get
+				{
+					return (IMap)Convert.ToMeta(map.Parent);
+				}
+				set
+				{
+					map.Parent=(IMap)Convert.ToDotNet(value);
+				}
+			}
+			public override ArrayList Array
+			{
+				get
+				{
+					return ConvertToMeta(map.Array);
+				}
+			}
+			public override IMap Clone()
+			{
+				return new MapAdapter((Map)map.Clone());
+			}
+			private ArrayList ConvertToMeta(ArrayList list)
+			{
+				ArrayList result=new ArrayList();
+				foreach(object obj in list)
+				{
+					result.Add(Convert.ToDotNet(obj));
+				}
+				return result;
+			}
+			public override ArrayList Keys
+			{
+				get
+				{
+					return ConvertToMeta(map.Keys);
+				}
+			}
+			public override int Count
+			{
+				get
+				{
+					return map.Count;
+				}
+			}
+			public override IEnumerator GetEnumerator()
+			{
+				return new MapEnumerator(this);
+			}
+		}
+		//	public class Map: IMap, IKeyValue, ICallable, IEnumerable, ISerializeSpecial
+		//	{
+		//
+		//		public object Argument
+		//		{
+		//			get
+		//			{
+		//				return arg;
+		//			}
+		//			set
+		//			{ 
+		//				// TODO: Remove set, maybe?
+		//				arg=value;
+		//			}
+		//		}
+		//		object arg=null;
+		//		public bool IsString // TODO: move to IMap
+		//		{
+		//			get
+		//			{
+		//				return strategy.IsString;
+		//			}
+		//		}
+		//		public string String
+		//		{
+		//			get
+		//			{
+		//				return strategy.String;
+		//			}
+		//		}
+		//		public override IMap Parent
+		//		{
+		//			get
+		//			{
+		//				return parent;
+		//			}
+		//			set
+		//			{
+		//				parent=value;
+		//			}
+		//		}
+		//		public override int Count
+		//		{
+		//			get
+		//			{
+		//				return strategy.Count;
+		//			}
+		//		}
+		//		public override ArrayList Array		//TODO: cache the Array somewhere; put in an "Add" method
+		//		{ 
+		//			get
+		//			{
+		//				return strategy.Array;
+		//			}
+		//		}
+		//		public override object this[object key] 
+		//		{
+		//			get
+		//			{
+		//				object result;
+		//				if(key.Equals(SpecialKeys.Parent))
+		//				{
+		//					result=Parent;
+		//				}
+		//				else if(key.Equals(SpecialKeys.Arg))
+		//				{
+		//					result=Argument;
+		//				}
+		//				else if(key.Equals(SpecialKeys.This))
+		//				{
+		//					result=this;
+		//				}
+		//				else
+		//				{
+		//					result=strategy[key];
+		//				}
+		//				return result;
+		//			}
+		//			set
+		//			{
+		//				if(value!=null)
+		//				{
+		//					isHashCached=false;
+		//					if(key.Equals(SpecialKeys.This))
+		//					{
+		//						this.strategy=((Map)value).strategy.Clone();
+		//					}
+		//					else
+		//					{
+		//						object val;
+		//						if(value is IMap)
+		//						{
+		//							val=((IMap)value).Clone();
+		//							((IMap)val).Parent=this;
+		//						}
+		//						else
+		//						{
+		//							val=value;
+		//						}
+		//						strategy[key]=val;
+		//					}
+		//				}
+		//			}
+		//		}
+		//		public object Call(object argument)
+		//		{
+		//			this.Argument=argument;
+		//			Expression function=(Expression)((Map)this[CodeKeys.Run]).GetExpression();
+		//			object result;
+		//			result=function.Evaluate(this);
+		//			return result;
+		//		}
+		//		public override ArrayList Keys
+		//		{
+		//			get
+		//			{
+		//				return strategy.Keys;
+		//			}
+		//		}
+		//		public override IMap Clone()
+		//		{
+		//			Map clone=strategy.CloneMap();
+		//			clone.Parent=Parent;
+		//			//clone.expression=expression;
+		//			clone.Extent=Extent;
+		//			return clone;
+		//		}
+		//		public Expression GetExpression() // TODO: move to Expression
+		//		{
+		//			// expression Statements are not cached, only expressions
+		//
+		//			// no caching anymore, because of possible issues when reverse-debugging
+		//			//			if(expression==null) 
+		//			//			{
+		//			Expression expression;
+		//			if(this.ContainsKey(CodeKeys.Call))
+		//			{
+		//				expression=new Call((Map)this[CodeKeys.Call]);
+		//			}
+		//			else if(this.ContainsKey(CodeKeys.Delayed))
+		//			{ 
+		//				expression=new Delayed((Map)this[CodeKeys.Delayed]);
+		//			}
+		//			else if(this.ContainsKey(CodeKeys.Program))
+		//			{
+		//				expression=new Program((Map)this[CodeKeys.Program]);
+		//			}
+		//			else if(this.ContainsKey(CodeKeys.Literal))
+		//			{
+		//				expression=new Literal((Map)this[CodeKeys.Literal]);
+		//			}
+		//			else if(this.ContainsKey(CodeKeys.Search))
+		//			{
+		//				expression=new Search((Map)this[CodeKeys.Search]);
+		//			}
+		//			else if(this.ContainsKey(CodeKeys.Select))
+		//			{
+		//				expression=new Select((Map)this[CodeKeys.Select]);
+		//			}
+		//			else
+		//			{
+		//				throw new ApplicationException("Cannot compile non-code map.");
+		//			}
+		//			//			}
+		//			((Expression)expression).Extent=this.Extent;
+		//			return expression;
+		//		}
+		//		public override bool ContainsKey(object key) 
+		//		{
+		//			if(key is Map)
+		//			{
+		//				if(key.Equals(SpecialKeys.Arg))
+		//				{
+		//					return this.Argument!=null;
+		//				}
+		//				else if(key.Equals(SpecialKeys.Parent))
+		//				{
+		//					return this.Parent!=null;
+		//				}
+		//				else if(key.Equals(SpecialKeys.This))
+		//				{
+		//					return true;
+		//				}
+		//			}
+		//			return strategy.ContainsKey(key);
+		//		}
+		//		public override bool Equals(object toCompare)
+		//		{
+		//			bool isEqual=false;
+		//			if(Object.ReferenceEquals(toCompare,this))
+		//			{
+		//				isEqual=true;
+		//			}
+		//			else if(toCompare is Map)
+		//			{
+		//				isEqual=((Map)toCompare).strategy.Equals(strategy);
+		//			}
+		//			return isEqual;
+		//		}
+		//		public override IEnumerator GetEnumerator()
+		//		{
+		//			return new MapEnumerator(this);
+		//		}
+		//		public override int GetHashCode() 
+		//		{
+		//			if(!isHashCached)
+		//			{
+		//				hash=this.strategy.GetHashCode();
+		//				isHashCached=true;
+		//			}
+		//			return hash;
+		//		}
+		//		private bool isHashCached=false;
+		//		private int hash;
+		//
+		//		Extent extent;
+		//		public Extent Extent
+		//		{
+		//			get
+		//			{
+		//				return extent;
+		//			}
+		//			set
+		//			{
+		//				extent=value;
+		//			}
+		//		}
+		//		public Map(string text):this(new StringStrategy(text))
+		//		{
+		//		}
+		//		public Map(MapStrategy strategy)
+		//		{
+		//			this.strategy=strategy;
+		//			this.strategy.map=this;
+		//		}
+		//		public Map():this(new HybridDictionaryStrategy())
+		//		{
+		//		}
+		//		private IMap parent;
+		//		private MapStrategy strategy;
+		//		//		public Expression expression; // why have this at all, why not for statements? probably a question of performance.
+		//		public string Serialize(string indentation,string[] functions)
+		//		{
+		//			if(this.IsString)
+		//			{
+		//				return indentation+"\""+this.String+"\""+"\n";
+		//			}
+		//			else
+		//			{
+		//				return null;
+		//			}
+		//		}
+		//
+		//		public abstract class MapStrategy
+		//		{
+		//			public Map map;
+		//			public MapStrategy Clone()
+		//			{
+		//				MapStrategy strategy=new HybridDictionaryStrategy();
+		//				foreach(object key in this.Keys)
+		//				{
+		//					strategy[key]=this[key];
+		//				}
+		//				return strategy;	
+		//			}
+		//			public abstract Map CloneMap();
+		//			public abstract ArrayList Array
+		//			{
+		//				get;
+		//			}
+		//			public abstract bool IsString
+		//			{
+		//				get;
+		//			}
+		//			public abstract string String
+		//			{
+		//				get;
+		//			}
+		//			public abstract ArrayList Keys
+		//			{
+		//				get;
+		//			}
+		//			public abstract int Count
+		//			{
+		//				get;
+		//			}
+		//			public abstract object this[object key] 
+		//			{
+		//				get;
+		//				set;
+		//			}
+		//
+		//			public abstract bool ContainsKey(object key);
+		//			public override int GetHashCode() 
+		//			{
+		//				int hash=0;
+		//				foreach(object key in this.Keys)
+		//				{
+		//					unchecked
+		//					{
+		//						hash+=key.GetHashCode()*this[key].GetHashCode();
+		//					}
+		//				}
+		//				return hash;
+		//			}
+		//			public override bool Equals(object strategy)
+		//			{
+		//
+		//				if(Object.ReferenceEquals(strategy,this))
+		//				{ 
+		//					return true;
+		//				}
+		//				else if(!(strategy is MapStrategy))
+		//				{
+		//					return false;
+		//				}
+		//				else if(((MapStrategy)strategy).Count!=this.Count)
+		//				{
+		//					return false;
+		//				}
+		//				foreach(object key in this.Keys) 
+		//				{
+		//					if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy)[key].Equals(this[key]))
+		//					{
+		//						return false;
+		//					}
+		//				}
+		//				return true;
+		//			}
+		//		}
+		//		public class StringStrategy:MapStrategy
+		//		{
+		//			public override int GetHashCode()
+		//			{
+		//				int hash=0;
+		//				for(int i=0;i<text.Length;i++)
+		//				{
+		//					hash+=(i+1)*text[i];
+		//				}
+		//				return hash;
+		//			}
+		//			public override bool Equals(object strategy)
+		//			{
+		//				bool isEqual;
+		//				if(strategy is StringStrategy)
+		//				{	
+		//					isEqual=((StringStrategy)strategy).text.Equals(this.text);
+		//				}
+		//				else
+		//				{
+		//					isEqual=base.Equals(strategy);
+		//				}
+		//				return isEqual;
+		//			}
+		//			public override Map CloneMap()
+		//			{
+		//				return new Map(new StringStrategy(this));
+		//			}
+		//			public override ArrayList Array
+		//			{
+		//				get
+		//				{
+		//					ArrayList list=new ArrayList();
+		//					foreach(char iChar in text)
+		//					{
+		//						list.Add(new Integer(iChar));
+		//					}
+		//					return list;
+		//				}
+		//			}
+		//			public override bool IsString
+		//			{
+		//				get
+		//				{
+		//					return true;
+		//				}
+		//			}
+		//			public override string String
+		//			{
+		//				get
+		//				{
+		//					return text;
+		//				}
+		//			}
+		//			public override ArrayList Keys
+		//			{
+		//				get
+		//				{
+		//					return keys;
+		//				}
+		//			}
+		//			private ArrayList keys=new ArrayList();
+		//			private string text;
+		//			public StringStrategy(StringStrategy clone)
+		//			{
+		//				this.text=clone.text;
+		//				this.keys=(ArrayList)clone.keys.Clone();
+		//			}
+		//			public StringStrategy(string text)
+		//			{
+		//				this.text=text;
+		//				// TODO: make unicode-safe
+		//				for(int i=1;i<=text.Length;i++)
+		//				{ 
+		//					keys.Add(new Integer(i));			
+		//				}
+		//			}
+		//			public override int Count
+		//			{
+		//				get
+		//				{
+		//					return text.Length;
+		//				}
+		//			}
+		//			public override object this[object key]
+		//			{
+		//				get
+		//				{
+		//					if(key is Integer)
+		//					{
+		//						int iInteger=((Integer)key).Int;
+		//						if(iInteger>0 && iInteger<=this.Count)
+		//						{
+		//							return new Integer(text[iInteger-1]);
+		//						}
+		//					}
+		//					return null;
+		//				}
+		//				set
+		//				{
+		//					map.strategy=this.Clone();
+		//					map.strategy[key]=value;
+		//				}
+		//			}
+		//			public override bool ContainsKey(object key) 
+		//			{
+		//				if(key is Integer)
+		//				{
+		//					return ((Integer)key)>0 && ((Integer)key)<=this.Count;
+		//				}
+		//				else
+		//				{
+		//					return false;
+		//				}
+		//			}
+		//		}
+		//		public class HybridDictionaryStrategy:MapStrategy
+		//		{
+		//			ArrayList keys;
+		//			private HybridDictionary strategy;
+		//			public HybridDictionaryStrategy():this(2)
+		//			{
+		//			}
+		//			public HybridDictionaryStrategy(int Count)
+		//			{
+		//				this.keys=new ArrayList(Count);
+		//				this.strategy=new HybridDictionary(Count);
+		//			}
+		//			public override Map CloneMap()
+		//			{
+		//				Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
+		//				foreach(object key in keys)
+		//				{
+		//					clone[key]=strategy[key];
+		//				}
+		//				return clone;
+		//			}
+		//			public override ArrayList Array
+		//			{
+		//				get
+		//				{
+		//					ArrayList list=new ArrayList();
+		//					for(Integer iInteger=new Integer(1);ContainsKey(iInteger);iInteger++)
+		//					{
+		//						list.Add(this[iInteger]);
+		//					}
+		//					return list;
+		//				}
+		//			}
+		//			public override bool IsString
+		//			{
+		//				get
+		//				{
+		//					bool isString=false;;
+		//					if(Array.Count>0)
+		//					{
+		//						try
+		//						{
+		//							object o=String;
+		//							isString=true;
+		//						}
+		//						catch
+		//						{
+		//						}
+		//					}
+		//					return isString;
+		//				}
+		//			}
+		//			public override string String
+		//			{
+		//				get
+		//				{
+		//					string text="";
+		//					foreach(object key in this.Keys)
+		//					{
+		//						if(key is Integer && this.strategy[key] is Integer)
+		//						{
+		//							try
+		//							{
+		//								text+=System.Convert.ToChar(((Integer)this.strategy[key]).Int);
+		//							}
+		//							catch
+		//							{
+		//								throw new MapException(this.map,"Map is not a string");
+		//							}
+		//						}
+		//						else
+		//						{
+		//							throw new MapException(this.map,"Map is not a string");
+		//						}
+		//					}
+		//					return text;
+		//				}
+		//			}
+		//			public override ArrayList Keys
+		//			{
+		//				get
+		//				{
+		//					return keys;
+		//				}
+		//			}
+		//			public override int Count
+		//			{
+		//				get
+		//				{
+		//					return strategy.Count;
+		//				}
+		//			}
+		//			public override object this[object key] 
+		//			{
+		//				get
+		//				{
+		//					return strategy[key];
+		//				}
+		//				set
+		//				{
+		//					if(!this.ContainsKey(key))
+		//					{
+		//						keys.Add(key);
+		//					}
+		//					strategy[key]=value;
+		//				}
+		//			}
+		//			public override bool ContainsKey(object key) 
+		//			{
+		//				return strategy.Contains(key);
+		//			}
+		//		}
+		//	}
+		//	public class Map: IMap, IKeyValue, ICallable, IEnumerable, ISerializeSpecial
+		//	{
+		//
+		//		public object Argument
+		//		{
+		//			get
+		//			{
+		//				return arg;
+		//			}
+		//			set
+		//			{ 
+		//				// TODO: Remove set, maybe?
+		//				arg=value;
+		//			}
+		//		}
+		//		object arg=null;
+		//		public bool IsString // TODO: move to IMap
+		//		{
+		//			get
+		//			{
+		//				return strategy.IsString;
+		//			}
+		//		}
+		//		public string String
+		//		{
+		//			get
+		//			{
+		//				return strategy.String;
+		//			}
+		//		}
+		//		public override IMap Parent
+		//		{
+		//			get
+		//			{
+		//				return parent;
+		//			}
+		//			set
+		//			{
+		//				parent=value;
+		//			}
+		//		}
+		//		public override int Count
+		//		{
+		//			get
+		//			{
+		//				return strategy.Count;
+		//			}
+		//		}
+		//		public override ArrayList Array		//TODO: cache the Array somewhere; put in an "Add" method
+		//		{ 
+		//			get
+		//			{
+		//				return strategy.Array;
+		//			}
+		//		}
+		//		public override object this[object key] 
+		//		{
+		//			get
+		//			{
+		//				object result;
+		//				if(key.Equals(SpecialKeys.Parent))
+		//				{
+		//					result=Parent;
+		//				}
+		//				else if(key.Equals(SpecialKeys.Arg))
+		//				{
+		//					result=Argument;
+		//				}
+		//				else if(key.Equals(SpecialKeys.This))
+		//				{
+		//					result=this;
+		//				}
+		//				else
+		//				{
+		//					result=strategy[key];
+		//				}
+		//				return result;
+		//			}
+		//			set
+		//			{
+		//				if(value!=null)
+		//				{
+		//					isHashCached=false;
+		//					if(key.Equals(SpecialKeys.This))
+		//					{
+		//						this.strategy=((Map)value).strategy.Clone();
+		//					}
+		//					else
+		//					{
+		//						object val;
+		//						if(value is IMap)
+		//						{
+		//							val=((IMap)value).Clone();
+		//							((IMap)val).Parent=this;
+		//						}
+		//						else
+		//						{
+		//							val=value;
+		//						}
+		//						strategy[key]=val;
+		//					}
+		//				}
+		//			}
+		//		}
+		//		public object Call(object argument)
+		//		{
+		//			this.Argument=argument;
+		//			Expression function=(Expression)((Map)this[CodeKeys.Run]).GetExpression();
+		//			object result;
+		//			result=function.Evaluate(this);
+		//			return result;
+		//		}
+		//		public override ArrayList Keys
+		//		{
+		//			get
+		//			{
+		//				return strategy.Keys;
+		//			}
+		//		}
+		//		public override IMap Clone()
+		//		{
+		//			Map clone=strategy.CloneMap();
+		//			clone.Parent=Parent;
+		//			//clone.expression=expression;
+		//			clone.Extent=Extent;
+		//			return clone;
+		//		}
+		//		public Expression GetExpression() // TODO: move to Expression
+		//		{
+		//			// expression Statements are not cached, only expressions
+		//
+		//			// no caching anymore, because of possible issues when reverse-debugging
+		////			if(expression==null) 
+		////			{
+		//			Expression expression;
+		//				if(this.ContainsKey(CodeKeys.Call))
+		//				{
+		//					expression=new Call((Map)this[CodeKeys.Call]);
+		//				}
+		//				else if(this.ContainsKey(CodeKeys.Delayed))
+		//				{ 
+		//					expression=new Delayed((Map)this[CodeKeys.Delayed]);
+		//				}
+		//				else if(this.ContainsKey(CodeKeys.Program))
+		//				{
+		//					expression=new Program((Map)this[CodeKeys.Program]);
+		//				}
+		//				else if(this.ContainsKey(CodeKeys.Literal))
+		//				{
+		//					expression=new Literal((Map)this[CodeKeys.Literal]);
+		//				}
+		//				else if(this.ContainsKey(CodeKeys.Search))
+		//				{
+		//					expression=new Search((Map)this[CodeKeys.Search]);
+		//				}
+		//				else if(this.ContainsKey(CodeKeys.Select))
+		//				{
+		//					expression=new Select((Map)this[CodeKeys.Select]);
+		//				}
+		//				else
+		//				{
+		//					throw new ApplicationException("Cannot compile non-code map.");
+		//				}
+		////			}
+		//				((Expression)expression).Extent=this.Extent;
+		//			return expression;
+		//		}
+		//		public override bool ContainsKey(object key) 
+		//		{
+		//			if(key is Map)
+		//			{
+		//				if(key.Equals(SpecialKeys.Arg))
+		//				{
+		//					return this.Argument!=null;
+		//				}
+		//				else if(key.Equals(SpecialKeys.Parent))
+		//				{
+		//					return this.Parent!=null;
+		//				}
+		//				else if(key.Equals(SpecialKeys.This))
+		//				{
+		//					return true;
+		//				}
+		//			}
+		//			return strategy.ContainsKey(key);
+		//		}
+		//		public override bool Equals(object toCompare)
+		//		{
+		//			bool isEqual=false;
+		//			if(Object.ReferenceEquals(toCompare,this))
+		//			{
+		//				isEqual=true;
+		//			}
+		//			else if(toCompare is Map)
+		//			{
+		//				isEqual=((Map)toCompare).strategy.Equals(strategy);
+		//			}
+		//			return isEqual;
+		//		}
+		//		public override IEnumerator GetEnumerator()
+		//		{
+		//			return new MapEnumerator(this);
+		//		}
+		//		public override int GetHashCode() 
+		//		{
+		//			if(!isHashCached)
+		//			{
+		//				hash=this.strategy.GetHashCode();
+		//				isHashCached=true;
+		//			}
+		//			return hash;
+		//		}
+		//		private bool isHashCached=false;
+		//		private int hash;
+		//
+		//		Extent extent;
+		//		public Extent Extent
+		//		{
+		//			get
+		//			{
+		//				return extent;
+		//			}
+		//			set
+		//			{
+		//				extent=value;
+		//			}
+		//		}
+		//		public Map(string text):this(new StringStrategy(text))
+		//		{
+		//		}
+		//		public Map(MapStrategy strategy)
+		//		{
+		//			this.strategy=strategy;
+		//			this.strategy.map=this;
+		//		}
+		//		public Map():this(new HybridDictionaryStrategy())
+		//		{
+		//		}
+		//		private IMap parent;
+		//		private MapStrategy strategy;
+		////		public Expression expression; // why have this at all, why not for statements? probably a question of performance.
+		//		public string Serialize(string indentation,string[] functions)
+		//		{
+		//			if(this.IsString)
+		//			{
+		//				return indentation+"\""+this.String+"\""+"\n";
+		//			}
+		//			else
+		//			{
+		//				return null;
+		//			}
+		//		}
+		//
+		//		public abstract class MapStrategy
+		//		{
+		//			public Map map;
+		//			public MapStrategy Clone()
+		//			{
+		//				MapStrategy strategy=new HybridDictionaryStrategy();
+		//				foreach(object key in this.Keys)
+		//				{
+		//					strategy[key]=this[key];
+		//				}
+		//				return strategy;	
+		//			}
+		//			public abstract Map CloneMap();
+		//			public abstract ArrayList Array
+		//			{
+		//				get;
+		//			}
+		//			public abstract bool IsString
+		//			{
+		//				get;
+		//			}
+		//			public abstract string String
+		//			{
+		//				get;
+		//			}
+		//			public abstract ArrayList Keys
+		//			{
+		//				get;
+		//			}
+		//			public abstract int Count
+		//			{
+		//				get;
+		//			}
+		//			public abstract object this[object key] 
+		//			{
+		//				get;
+		//				set;
+		//			}
+		//
+		//			public abstract bool ContainsKey(object key);
+		//			public override int GetHashCode() 
+		//			{
+		//				int hash=0;
+		//				foreach(object key in this.Keys)
+		//				{
+		//					unchecked
+		//					{
+		//						hash+=key.GetHashCode()*this[key].GetHashCode();
+		//					}
+		//				}
+		//				return hash;
+		//			}
+		//			public override bool Equals(object strategy)
+		//			{
+		//
+		//				if(Object.ReferenceEquals(strategy,this))
+		//				{ 
+		//					return true;
+		//				}
+		//				else if(!(strategy is MapStrategy))
+		//				{
+		//					return false;
+		//				}
+		//				else if(((MapStrategy)strategy).Count!=this.Count)
+		//				{
+		//					return false;
+		//				}
+		//				foreach(object key in this.Keys) 
+		//				{
+		//					if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy)[key].Equals(this[key]))
+		//					{
+		//						return false;
+		//					}
+		//				}
+		//				return true;
+		//			}
+		//		}
+		//		public class StringStrategy:MapStrategy
+		//		{
+		//			public override int GetHashCode()
+		//			{
+		//				int hash=0;
+		//				for(int i=0;i<text.Length;i++)
+		//				{
+		//					hash+=(i+1)*text[i];
+		//				}
+		//				return hash;
+		//			}
+		//			public override bool Equals(object strategy)
+		//			{
+		//				bool isEqual;
+		//				if(strategy is StringStrategy)
+		//				{	
+		//					isEqual=((StringStrategy)strategy).text.Equals(this.text);
+		//				}
+		//				else
+		//				{
+		//					isEqual=base.Equals(strategy);
+		//				}
+		//				return isEqual;
+		//			}
+		//			public override Map CloneMap()
+		//			{
+		//				return new Map(new StringStrategy(this));
+		//			}
+		//			public override ArrayList Array
+		//			{
+		//				get
+		//				{
+		//					ArrayList list=new ArrayList();
+		//					foreach(char iChar in text)
+		//					{
+		//						list.Add(new Integer(iChar));
+		//					}
+		//					return list;
+		//				}
+		//			}
+		//			public override bool IsString
+		//			{
+		//				get
+		//				{
+		//					return true;
+		//				}
+		//			}
+		//			public override string String
+		//			{
+		//				get
+		//				{
+		//					return text;
+		//				}
+		//			}
+		//			public override ArrayList Keys
+		//			{
+		//				get
+		//				{
+		//					return keys;
+		//				}
+		//			}
+		//			private ArrayList keys=new ArrayList();
+		//			private string text;
+		//			public StringStrategy(StringStrategy clone)
+		//			{
+		//				this.text=clone.text;
+		//				this.keys=(ArrayList)clone.keys.Clone();
+		//			}
+		//			public StringStrategy(string text)
+		//			{
+		//				this.text=text;
+		//				// TODO: make unicode-safe
+		//				for(int i=1;i<=text.Length;i++)
+		//				{ 
+		//					keys.Add(new Integer(i));			
+		//				}
+		//			}
+		//			public override int Count
+		//			{
+		//				get
+		//				{
+		//					return text.Length;
+		//				}
+		//			}
+		//			public override object this[object key]
+		//			{
+		//				get
+		//				{
+		//					if(key is Integer)
+		//					{
+		//						int iInteger=((Integer)key).Int;
+		//						if(iInteger>0 && iInteger<=this.Count)
+		//						{
+		//							return new Integer(text[iInteger-1]);
+		//						}
+		//					}
+		//					return null;
+		//				}
+		//				set
+		//				{
+		//					map.strategy=this.Clone();
+		//					map.strategy[key]=value;
+		//				}
+		//			}
+		//			public override bool ContainsKey(object key) 
+		//			{
+		//				if(key is Integer)
+		//				{
+		//					return ((Integer)key)>0 && ((Integer)key)<=this.Count;
+		//				}
+		//				else
+		//				{
+		//					return false;
+		//				}
+		//			}
+		//		}
+		//		public class HybridDictionaryStrategy:MapStrategy
+		//		{
+		//			ArrayList keys;
+		//			private HybridDictionary strategy;
+		//			public HybridDictionaryStrategy():this(2)
+		//			{
+		//			}
+		//			public HybridDictionaryStrategy(int Count)
+		//			{
+		//				this.keys=new ArrayList(Count);
+		//				this.strategy=new HybridDictionary(Count);
+		//			}
+		//			public override Map CloneMap()
+		//			{
+		//				Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
+		//				foreach(object key in keys)
+		//				{
+		//					clone[key]=strategy[key];
+		//				}
+		//				return clone;
+		//			}
+		//			public override ArrayList Array
+		//			{
+		//				get
+		//				{
+		//					ArrayList list=new ArrayList();
+		//					for(Integer iInteger=new Integer(1);ContainsKey(iInteger);iInteger++)
+		//					{
+		//						list.Add(this[iInteger]);
+		//					}
+		//					return list;
+		//				}
+		//			}
+		//			public override bool IsString
+		//			{
+		//				get
+		//				{
+		//					bool isString=false;;
+		//					if(Array.Count>0)
+		//					{
+		//						try
+		//						{
+		//							object o=String;
+		//							isString=true;
+		//						}
+		//						catch
+		//						{
+		//						}
+		//					}
+		//					return isString;
+		//				}
+		//			}
+		//			public override string String
+		//			{
+		//				get
+		//				{
+		//					string text="";
+		//					foreach(object key in this.Keys)
+		//					{
+		//						if(key is Integer && this.strategy[key] is Integer)
+		//						{
+		//							try
+		//							{
+		//								text+=System.Convert.ToChar(((Integer)this.strategy[key]).Int);
+		//							}
+		//							catch
+		//							{
+		//								throw new MapException(this.map,"Map is not a string");
+		//							}
+		//						}
+		//						else
+		//						{
+		//							throw new MapException(this.map,"Map is not a string");
+		//						}
+		//					}
+		//					return text;
+		//				}
+		//			}
+		//			public override ArrayList Keys
+		//			{
+		//				get
+		//				{
+		//					return keys;
+		//				}
+		//			}
+		//			public override int Count
+		//			{
+		//				get
+		//				{
+		//					return strategy.Count;
+		//				}
+		//			}
+		//			public override object this[object key] 
+		//			{
+		//				get
+		//				{
+		//					return strategy[key];
+		//				}
+		//				set
+		//				{
+		//					if(!this.ContainsKey(key))
+		//					{
+		//						keys.Add(key);
+		//					}
+		//					strategy[key]=value;
+		//				}
+		//			}
+		//			public override bool ContainsKey(object key) 
+		//			{
+		//				return strategy.Contains(key);
+		//			}
+		//		}
+		//	}
+		public class MapEnumerator: IEnumerator
+		{
+			private IMap map; 
+			public MapEnumerator(IMap map)
+			{
+				this.map=map;
+			}
+			public object Current
+			{
+				get
+				{
+					return new DictionaryEntry(map.Keys[index],map[map.Keys[index]]);
+				}
+			}
+			public bool MoveNext()
+			{
+				index++;
+				return index<map.Count;
+			}
+			public void Reset()
+			{
+				index=-1;
+			}
+			private int index=-1;
+		}
+		public delegate object DelegateCreatedForGenericDelegates(); // TODO: rename?
+		public class DotNetMethod: ICallable
+		{
+			// TODO: remove??
+			public static object AssignCollection(Map map,object collection,out bool isSuccess)
+			{ 
+				if(map.Array.Count==0)
+				{
+					isSuccess=false;
+					return null;
+				}
+				Type targetType=collection.GetType();
+				MethodInfo add=targetType.GetMethod("Add",new Type[]{map.Array[0].GetType()});
+				if(add!=null)
+				{
+					foreach(object entry in map.Array)
+					{ 
+						// TODO: combine this with Library function "Init"
+						add.Invoke(collection,new object[]{entry});//  call add from above!
+					}
+					isSuccess=true;
+				}
+				else
+				{
+					isSuccess=false;
+				}
+				return collection;
+			}
+			public static object ConvertParameter(object meta,Type parameter,out bool isConverted)
+			{
+				isConverted=true;
+				if(parameter.IsAssignableFrom(meta.GetType()))
+				{
+					return meta;
+				}
+				else if((parameter.IsSubclassOf(typeof(Delegate))
+					||parameter.Equals(typeof(Delegate))) && (meta is Map))
+				{
+					MethodInfo invoke=parameter.GetMethod("Invoke",BindingFlags.Instance
+						|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+					Delegate function=CreateDelegateFromCode(parameter,invoke,(Map)meta);
+					return function;
+				}
+				else if(parameter.IsArray && meta is IMap && ((Map)meta).Array.Count!=0)
+				{
+					try
+					{
+						Type type=parameter.GetElementType();
+						Map argument=((Map)meta);
+						Array arguments=Array.CreateInstance(type,argument.Array.Count);
+						for(int i=0;i<argument.Count;i++)
+						{
+							arguments.SetValue(argument[new Integer(i+1)],i);
+						}
+						return arguments;
+					}
+					catch
+					{
+					}
+				}
+				else
+				{
+					bool converted;
+					object result=Convert.ToDotNet(meta,parameter,out converted);
+					if(converted)
+					{
+						return result;
+					}
+				}
+				isConverted=false;
+				return null;
+			}
+			public class ArgumentComparer: IComparer
+			{
+				public int Compare(object x, object y)
+				{
+					int result;
+					MethodBase first=(MethodBase)x;
+					MethodBase second=(MethodBase)y;
+					ParameterInfo[] firstParameters=first.GetParameters();
+					ParameterInfo[] secondParameters=second.GetParameters();
+					if(firstParameters.Length==1 && firstParameters[0].ParameterType==typeof(string)
+						&& !(secondParameters.Length==1 && secondParameters[0].ParameterType==typeof(string)))
+					{
+						result=-1;
+					}
+					else
+					{
+						result=0;
+					}
+					return result;
+				}
+			}
+			public object Call(object argument)
+			{
+				object result=null;
+
+				ArrayList oneArgumentMethods=new ArrayList();
+				foreach(MethodBase method in overloadedMethods)
+				{
+					if(method.GetParameters().Length==1)
+					{ 
+						oneArgumentMethods.Add(method);
+					}
+				}
+				bool isExecuted=false;
+				oneArgumentMethods.Sort(new ArgumentComparer());
+				foreach(MethodBase method in oneArgumentMethods)
+				{
+					bool isConverted;
+					object parameter=ConvertParameter(argument,method.GetParameters()[0].ParameterType,out isConverted);
+					if(isConverted)
+					{
+						if(method is ConstructorInfo)
+						{
+							result=((ConstructorInfo)method).Invoke(new object[] {parameter});
+						}
+						else
+						{
+							result=method.Invoke(target,new object[] {parameter});
 						}
 						isExecuted=true;
 						break;
 					}
 				}
-			}
-			if(!isExecuted)
-			{
-				throw new ApplicationException("Method "+this.name+" could not be called.");
-			}
-			return Convert.ToMeta(result);
-		}
-		public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,Map code)
-		{
-			CSharpCodeProvider codeProvider=new CSharpCodeProvider();
-			ICodeCompiler compiler=codeProvider.CreateCompiler();
-			string returnType;
-			if(method==null)
-			{
-				returnType="object";
-			}
-			else
-			{
-				returnType=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
-			}
-			string source="using System;using Meta;";
-			source+="public class EventHandlerContainer{public "+returnType+" EventHandlerMethod";
-			int counter=1;
-			string argumentList="(";
-			string argumentBuiling="Map arg=new Map();";
-			if(method!=null)
-			{
-				foreach(ParameterInfo parameter in method.GetParameters())
+				if(!isExecuted)
 				{
-					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
-					argumentBuiling+="arg[new Integer("+counter+")]=arg"+counter+";";
-					if(counter<method.GetParameters().Length)
+					ArrayList rightNumberArgumentMethods=new ArrayList();
+					foreach(MethodBase method in overloadedMethods)
 					{
-						argumentList+=",";
+						if(((IMap)argument).Array.Count==method.GetParameters().Length)
+						{ 
+							if(((IMap)argument).Array.Count==((IMap)argument).Keys.Count)
+							{ 
+								rightNumberArgumentMethods.Add(method);
+							}
+						}
 					}
-					counter++;
+					if(rightNumberArgumentMethods.Count==0)
+					{
+						throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");
+					}
+					foreach(MethodBase method in rightNumberArgumentMethods)
+					{
+						ArrayList arguments=new ArrayList();
+						bool argumentsMatched=true;
+						ParameterInfo[] arPrmtifParameters=method.GetParameters();
+						for(int i=0;argumentsMatched && i<arPrmtifParameters.Length;i++)
+						{
+							arguments.Add(ConvertParameter(((IMap)argument).Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
+						}
+						if(argumentsMatched)
+						{
+							if(method is ConstructorInfo)
+							{
+								result=((ConstructorInfo)method).Invoke(arguments.ToArray());
+							}
+							else
+							{
+								result=method.Invoke(target,arguments.ToArray());
+							}
+							isExecuted=true;
+							break;
+						}
+					}
 				}
-			}
-			argumentList+=")";
-			source+=argumentList+"{";
-			source+=argumentBuiling;
-			source+="object result=callable.Call(arg);";
-			if(method!=null)
-			{
-				if(!method.ReturnType.Equals(typeof(void)))
+				if(!isExecuted)
 				{
-					source+="return ("+returnType+")";
-					source+="Meta.Convert.ToDotNet(result,typeof("+returnType+"));"; 
+					throw new ApplicationException("Method "+this.name+" could not be called.");
 				}
+				return Convert.ToMeta(result);
 			}
-			else 
+			public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,Map code)
 			{
-				source+="return";
-				source+=" result;";
-			}
-			source+="}";
-			source+="private Map callable;";
-			source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-			string metaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
-			ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
-			assemblyNames.AddRange(Interpreter.loadedAssemblies);
-			CompilerParameters compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
-			CompilerResults compilerResults=compiler.CompileAssemblyFromSource(compilerParameters,source);
-			Type containerType=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
-			object container=containerType.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {code});
-			if(method==null)
-			{
-				delegateType=typeof(DelegateCreatedForGenericDelegates);
-			}
-			Delegate result=Delegate.CreateDelegate(delegateType,
-				container,"EventHandlerMethod");
-			return result;
-		}
-		private void Initialize(string name,object target,Type targetType)
-		{
-			this.name=name;
-			this.target=target;
-			this.targetType=targetType;
-			ArrayList methods;
-			if(name==".ctor")
-			{
-				methods=new ArrayList(targetType.GetConstructors());
-			}
-			else
-			{
-				methods=new ArrayList(targetType.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
-			}
-			overloadedMethods=(MethodBase[])methods.ToArray(typeof(MethodBase));
-		}
-		public DotNetMethod(string name,object target,Type targetType)
-		{
-			this.Initialize(name,target,targetType);
-		}
-		public DotNetMethod(Type targetType)
-		{
-			this.Initialize(".ctor",null,targetType);
-		}
-		public override bool Equals(object toCompare)
-		{
-			if(toCompare is DotNetMethod)
-			{
-				DotNetMethod DotNetMethod=(DotNetMethod)toCompare;
-				if(DotNetMethod.target==target && DotNetMethod.name.Equals(name) && DotNetMethod.targetType.Equals(targetType))
+				CSharpCodeProvider codeProvider=new CSharpCodeProvider();
+				ICodeCompiler compiler=codeProvider.CreateCompiler();
+				string returnType;
+				if(method==null)
 				{
-					return true;
+					returnType="object";
+				}
+				else
+				{
+					returnType=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
+				}
+				string source="using System;using Meta;";
+				source+="public class EventHandlerContainer{public "+returnType+" EventHandlerMethod";
+				int counter=1;
+				string argumentList="(";
+				string argumentBuiling="Map arg=new Map();";
+				if(method!=null)
+				{
+					foreach(ParameterInfo parameter in method.GetParameters())
+					{
+						argumentList+=parameter.ParameterType.FullName+" arg"+counter;
+						argumentBuiling+="arg[new Integer("+counter+")]=arg"+counter+";";
+						if(counter<method.GetParameters().Length)
+						{
+							argumentList+=",";
+						}
+						counter++;
+					}
+				}
+				argumentList+=")";
+				source+=argumentList+"{";
+				source+=argumentBuiling;
+				source+="object result=callable.Call(arg);";
+				if(method!=null)
+				{
+					if(!method.ReturnType.Equals(typeof(void)))
+					{
+						source+="return ("+returnType+")";
+						source+="Meta.Convert.ToDotNet(result,typeof("+returnType+"));"; 
+					}
+				}
+				else 
+				{
+					source+="return";
+					source+=" result;";
+				}
+				source+="}";
+				source+="private Map callable;";
+				source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
+				string metaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
+				ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
+				assemblyNames.AddRange(Interpreter.loadedAssemblies);
+				CompilerParameters compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
+				CompilerResults compilerResults=compiler.CompileAssemblyFromSource(compilerParameters,source);
+				Type containerType=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
+				object container=containerType.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {code});
+				if(method==null)
+				{
+					delegateType=typeof(DelegateCreatedForGenericDelegates);
+				}
+				Delegate result=Delegate.CreateDelegate(delegateType,
+					container,"EventHandlerMethod");
+				return result;
+			}
+			private void Initialize(string name,object target,Type targetType)
+			{
+				this.name=name;
+				this.target=target;
+				this.targetType=targetType;
+				ArrayList methods;
+				if(name==".ctor")
+				{
+					methods=new ArrayList(targetType.GetConstructors());
+				}
+				else
+				{
+					methods=new ArrayList(targetType.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+				}
+				overloadedMethods=(MethodBase[])methods.ToArray(typeof(MethodBase));
+			}
+			public DotNetMethod(string name,object target,Type targetType)
+			{
+				this.Initialize(name,target,targetType);
+			}
+			public DotNetMethod(Type targetType)
+			{
+				this.Initialize(".ctor",null,targetType);
+			}
+			public override bool Equals(object toCompare)
+			{
+				if(toCompare is DotNetMethod)
+				{
+					DotNetMethod DotNetMethod=(DotNetMethod)toCompare;
+					if(DotNetMethod.target==target && DotNetMethod.name.Equals(name) && DotNetMethod.targetType.Equals(targetType))
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
 				}
 				else
 				{
 					return false;
 				}
 			}
-			else
+			public override int GetHashCode()
 			{
-				return false;
-			}
-		}
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				int hash=name.GetHashCode()*targetType.GetHashCode();
-				if(target!=null)
+				unchecked
 				{
-					hash=hash*target.GetHashCode();
-				}
-				return hash;
-			}
-		}
-		private string name;
-		protected object target;
-		protected Type targetType;
-
-		public MethodBase[] overloadedMethods;
-	}
-	public class DotNetClass: DotNetContainer, IKeyValue,ICallable
-	{
-		public override IMap Clone()
-		{
-			return new DotNetClass(targetType);
-		}
-
-		protected DotNetMethod constructor;
-		public DotNetClass(Type targetType):base(null,targetType)
-		{
-			this.constructor=new DotNetMethod(this.targetType);
-		}
-		public object Call(object argument)
-		{
-			return constructor.Call(argument);
-		}
-	}
-	public class DotNetObject: DotNetContainer, IKeyValue
-	{
-		public DotNetObject(object target):base(target,target.GetType())
-		{
-		}
-		public override string ToString()
-		{
-			return target.ToString();
-		}
-		public override IMap Clone()
-		{
-			return new DotNetObject(target);
-		}
-
-	}
-	// TODO: change to IMap
-	public abstract class DotNetContainer: IMap,IKeyValue, IEnumerable,ISerializeSpecial
-	{
-		public override ArrayList Array // TODO: not sure this works correctly
-		{
-			get
-			{
-				ArrayList array=new ArrayList();
-				foreach(object key in Keys)
-				{
-					if(key is Integer)
+					int hash=name.GetHashCode()*targetType.GetHashCode();
+					if(target!=null)
 					{
-						array.Add(this[key]);
+						hash=hash*target.GetHashCode();
 					}
-				}
-				return array;
-//				ArrayList integerKeys=new ArrayList();
-//				foreach(object key in Keys)
-//				{
-//					if(key is Integer)
-//					{
-//						integerKeys.Add(this[key]);
-//					}
-//				}
-//				ArrayList array=new ArrayList();
-//				foreach(object key in integerKeys)
-//				{
-//					array.Add(this[key]);
-//				}
-
-
-			}
-		}
-
-
-		//
-
-		public override bool ContainsKey(object key)
-		{
-			if(key is Map)
-			{
-				if(((Map)key).IsString)
-				{
-					string text=((Map)key).String;
-					if(targetType.GetMember(((Map)key).String,
-						BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0)
-					{
-						return true;
-					}
+					return hash;
 				}
 			}
-			DotNetMethod indexer=new DotNetMethod("get_Item",target,targetType);
-			Map argument=new Map();
-			argument[new Integer(1)]=key;
-			try
+			private string name;
+			protected object target;
+			protected Type targetType;
+
+			public MethodBase[] overloadedMethods;
+		}
+		public class DotNetClass: DotNetContainer, ICallable // TODO: possibly remove ICallable, every map is potentially callable, after all
+		{
+			public override IMap Clone()
 			{
-				indexer.Call(argument);
-				return true;
+				return new DotNetClass(targetType);
 			}
-			catch(Exception)
+
+			protected DotNetMethod constructor;
+			public DotNetClass(Type targetType):base(null,targetType)
 			{
-				return false;
+				this.constructor=new DotNetMethod(this.targetType);
+			}
+			public object Call(object argument)
+			{
+				return constructor.Call(argument);
 			}
 		}
-		public override  IEnumerator GetEnumerator()
+		public class DotNetObject: DotNetContainer
 		{
-			return MTable.GetEnumerator();
-		}
-		public override IMap Parent
-		{
-			get
+			public DotNetObject(object target):base(target,target.GetType())
 			{
-				return parent;
 			}
-			set
+			public override string ToString()
 			{
-				parent=value;
+				return target.ToString();
 			}
-		}
-		// TODO: make some sort of guarantee about the order of the keys here, somewhat problematic
-		public override ArrayList Keys
-		{
-			get
+			public override IMap Clone()
 			{
-				return new ArrayList(MTable.Keys);
+				return new DotNetObject(target);
 			}
+
 		}
-		public override int Count 
+		// TODO: change to IMap
+		public abstract class DotNetContainer: IMap, IEnumerable,ISerializeSpecial
 		{
-			get
+			public override ArrayList Array // TODO: not sure this works correctly
 			{
-				return MTable.Count;
-			}
-		}
-		public override object this[object key] 
-		{
-			get
-			{
-				object result;
-				if(key is Map && ((Map)key).IsString && targetType.GetMember(((Map)key).String,bindingFlags).Length>0)
+				get
 				{
-					string text=((Map)key).String;
-					MemberInfo[] members=targetType.GetMember(text,bindingFlags);
-					if(members[0] is MethodBase)
+					ArrayList array=new ArrayList();
+					foreach(object key in Keys)
 					{
-						result=new DotNetMethod(text,target,targetType);
-					}
-					else if(members[0] is FieldInfo)
-					{
-						result=Convert.ToMeta(targetType.GetField(text).GetValue(target));
-					}
-					else if(members[0] is PropertyInfo)
-					{
-						result=Convert.ToMeta(targetType.GetProperty(text).GetValue(target,new object[]{}));
-					}
-					else if(members[0] is EventInfo)
-					{
-						Delegate eventDelegate=(Delegate)targetType.GetField(text,BindingFlags.Public|
-							BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(target);
-						if(eventDelegate==null)
+						if(key is Integer)
 						{
-							result=null; // TODO: maybe throw?
+							array.Add(this[key]);
+						}
+					}
+					return array;
+					//				ArrayList integerKeys=new ArrayList();
+					//				foreach(object key in Keys)
+					//				{
+					//					if(key is Integer)
+					//					{
+					//						integerKeys.Add(this[key]);
+					//					}
+					//				}
+					//				ArrayList array=new ArrayList();
+					//				foreach(object key in integerKeys)
+					//				{
+					//					array.Add(this[key]);
+					//				}
+
+
+				}
+			}
+
+
+			//
+
+			public override bool ContainsKey(object key)
+			{
+				if(key is Map)
+				{
+					if(((Map)key).IsString)
+					{
+						string text=((Map)key).String;
+						if(targetType.GetMember(((Map)key).String,
+							BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0)
+						{
+							return true;
+						}
+					}
+				}
+				DotNetMethod indexer=new DotNetMethod("get_Item",target,targetType);
+				Map argument=new Map();
+				argument[new Integer(1)]=key;
+				try
+				{
+					indexer.Call(argument);
+					return true;
+				}
+				catch(Exception)
+				{
+					return false;
+				}
+			}
+			public override  IEnumerator GetEnumerator()
+			{
+				return MTable.GetEnumerator();
+			}
+			public override IMap Parent
+			{
+				get
+				{
+					return parent;
+				}
+				set
+				{
+					parent=value;
+				}
+			}
+			// TODO: make some sort of guarantee about the order of the keys here, somewhat problematic
+			public override ArrayList Keys
+			{
+				get
+				{
+					return new ArrayList(MTable.Keys);
+				}
+			}
+			public override int Count 
+			{
+				get
+				{
+					return MTable.Count;
+				}
+			}
+			public override object this[object key] 
+			{
+				get
+				{
+					object result;
+					if(key is Map && ((Map)key).IsString && targetType.GetMember(((Map)key).String,bindingFlags).Length>0)
+					{
+						string text=((Map)key).String;
+						MemberInfo[] members=targetType.GetMember(text,bindingFlags);
+						if(members[0] is MethodBase)
+						{
+							result=new DotNetMethod(text,target,targetType);
+						}
+						else if(members[0] is FieldInfo)
+						{
+							result=Convert.ToMeta(targetType.GetField(text).GetValue(target));
+						}
+						else if(members[0] is PropertyInfo)
+						{
+							result=Convert.ToMeta(targetType.GetProperty(text).GetValue(target,new object[]{}));
+						}
+						else if(members[0] is EventInfo)
+						{
+							Delegate eventDelegate=(Delegate)targetType.GetField(text,BindingFlags.Public|
+								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(target);
+							if(eventDelegate==null)
+							{
+								result=null; // TODO: maybe throw?
+							}
+							else
+							{
+								result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+							}
+						}
+						else if(members[0] is Type)
+						{
+							result=new DotNetClass((Type)members[0]);
 						}
 						else
 						{
-							result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+							result=null;
 						}
 					}
-					else if(members[0] is Type)
+					else if(this.target!=null && key is Integer && this.targetType.IsArray)
 					{
-						result=new DotNetClass((Type)members[0]);
+						result=Convert.ToMeta(((Array)target).GetValue(((Integer)key).Int)); // TODO: add error handling here
 					}
 					else
 					{
-						result=null;
-					}
-				}
-				else if(this.target!=null && key is Integer && this.targetType.IsArray)
-				{
-					result=Convert.ToMeta(((Array)target).GetValue(((Integer)key).Int)); // TODO: add error handling here
-				}
-				else
-				{
-					DotNetMethod indexer=new DotNetMethod("get_Item",target,targetType);
-					Map argument=new Map();
-					argument[new Integer(1)]=key;
-					try
-					{
-						result=indexer.Call(argument);
-					}
-					catch(Exception e)
-					{
-						result=null;
-					}
-				}
-				return result;
-			}
-			set
-			{
-				if(key is Map && ((Map)key).IsString && targetType.GetMember(((Map)key).String,bindingFlags).Length!=0)
-				{
-					string text=((Map)key).String;
-					MemberInfo[] members=targetType.GetMember(text,bindingFlags);
-					if(members[0] is MethodBase)
-					{
-						throw new ApplicationException("Cannot set MethodeBase "+key+"."); // TODO: change exception
-					}
-					else if(members[0] is FieldInfo)
-					{
-						FieldInfo field=(FieldInfo)members[0];
-						bool isConverted;
-						object val;
-						val=DotNetMethod.ConvertParameter(value,field.FieldType,out isConverted);
-						if(isConverted)
+						DotNetMethod indexer=new DotNetMethod("get_Item",target,targetType);
+						Map argument=new Map();
+						argument[new Integer(1)]=key;
+						try
 						{
-							field.SetValue(target,val);
+							result=indexer.Call(argument);
 						}
-						else
+						catch(Exception e)
 						{
-							if(value is Map)
+							result=null;
+						}
+					}
+					return result;
+				}
+				set
+				{
+					if(key is Map && ((Map)key).IsString && targetType.GetMember(((Map)key).String,bindingFlags).Length!=0)
+					{
+						string text=((Map)key).String;
+						MemberInfo[] members=targetType.GetMember(text,bindingFlags);
+						if(members[0] is MethodBase)
+						{
+							throw new ApplicationException("Cannot set MethodeBase "+key+"."); // TODO: change exception
+						}
+						else if(members[0] is FieldInfo)
+						{
+							FieldInfo field=(FieldInfo)members[0];
+							bool isConverted;
+							object val;
+							val=DotNetMethod.ConvertParameter(value,field.FieldType,out isConverted);
+							if(isConverted)
 							{
-								// TODO: do not reuse isConverted
-								val=DotNetMethod.AssignCollection((Map)value,field.GetValue(target),out isConverted); // TODO: really do this? does not make much sense
+								field.SetValue(target,val);
 							}
-						}
-						if(!isConverted)
-						{
-							throw new ApplicationException("Field "+field.Name+"could not be assigned because it cannot be converted.");
-						}
-					}
-					else if(members[0] is PropertyInfo)
-					{
-						PropertyInfo property=(PropertyInfo)members[0];
-						bool isConverted;// TODO: rename
-						object val=DotNetMethod.ConvertParameter(value,property.PropertyType,out isConverted);
-						if(isConverted)
-						{
-							property.SetValue(target,val,new object[]{});
-						}
-						else
-						{
-							if(value is Map)
+							else
 							{
-								DotNetMethod.AssignCollection((Map)value,property.GetValue(target,new object[]{}),out isConverted);
+								if(value is Map)
+								{
+									// TODO: do not reuse isConverted
+									val=DotNetMethod.AssignCollection((Map)value,field.GetValue(target),out isConverted); // TODO: really do this? does not make much sense
+								}
 							}
 							if(!isConverted)
 							{
-								throw new ApplicationException("Property "+this.targetType.Name+"."+Interpreter.SaveToFile(key,"",false)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
+								throw new ApplicationException("Field "+field.Name+"could not be assigned because it cannot be converted.");
 							}
 						}
-						return;
-					}
-					else if(members[0] is EventInfo)
-					{
-						((EventInfo)members[0]).AddEventHandler(target,CreateEvent(text,(Map)value));
-					}
-					else
-					{
-						throw new ApplicationException("Could not assign "+text+" .");
-					}
-				}
-				else if(target!=null && key is Integer && targetType.IsArray)
-				{
-					bool isConverted; 
-					object converted=Convert.ToDotNet(value,targetType.GetElementType(),out isConverted);
-					if(isConverted)
-					{
-						((Array)target).SetValue(converted,((Integer)key).Int);
-						return;
-					}
-				}
-				else
-				{
-					DotNetMethod indexer=new DotNetMethod("set_Item",target,targetType); // TODO: refactor
-					Map argument=new Map();
-					argument[new Integer(1)]=key;
-					argument[new Integer(2)]=value;
-					try
-					{
-						indexer.Call(argument);
-					}
-					catch(Exception e)
-					{
-						throw new ApplicationException("Cannot set "+Convert.ToDotNet(key).ToString()+".");// TODO: change exception
-					}
-				}
-			}
-		}
-		public string Serialize(string indent,string[] functions)
-		{
-			return indent;
-		}
-		public Delegate CreateEvent(string name,Map code)
-		{
-			EventInfo eventInfo=targetType.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
-															BindingFlags.Static|BindingFlags.Instance);
-			MethodInfo invoke=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
-																						|BindingFlags.Public|BindingFlags.NonPublic);
-			Delegate eventDelegate=DotNetMethod.CreateDelegateFromCode(eventInfo.EventHandlerType,invoke,code);
-			return eventDelegate;
-		}
-		private IDictionary MTable
-		{ 
-			get
-			{
-				HybridDictionary table=new HybridDictionary();
-				foreach(FieldInfo field in targetType.GetFields(bindingFlags))
-				{
-					table[new Map(field.Name)]=field.GetValue(target);
-				}
-				foreach(MethodInfo invoke in targetType.GetMethods(bindingFlags)) 
-				{
-					if(!invoke.IsSpecialName)
-					{
-						table[new Map(invoke.Name)]=new DotNetMethod(invoke.Name,target,targetType);
-					}
-				}
-				foreach(PropertyInfo property in targetType.GetProperties(bindingFlags))
-				{
-					if(property.Name!="Item" && property.Name!="Chars")
-					{
-						table[new Map(property.Name)]=property.GetValue(target,new object[]{});
-					}
-				}
-				foreach(EventInfo eventInfo in targetType.GetEvents(bindingFlags))
-				{
-					table[new Map(eventInfo.Name)]=new DotNetMethod(eventInfo.GetAddMethod().Name,this.target,this.targetType);
-				}
-				foreach(Type type in targetType.GetNestedTypes(bindingFlags))
-				{ 
-					table[new Map(type.Name)]=new DotNetClass(type);
-				}
-				int counter=1;
-				if(target!=null && target is IEnumerable && !(target is String))
-				{ 
-					// TODO: is this useful?
-					foreach(object entry in (IEnumerable)target)
-					{
-						if(entry is DictionaryEntry)
+						else if(members[0] is PropertyInfo)
 						{
-							table[Convert.ToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+							PropertyInfo property=(PropertyInfo)members[0];
+							bool isConverted;// TODO: rename
+							object val=DotNetMethod.ConvertParameter(value,property.PropertyType,out isConverted);
+							if(isConverted)
+							{
+								property.SetValue(target,val,new object[]{});
+							}
+							else
+							{
+								if(value is Map)
+								{
+									DotNetMethod.AssignCollection((Map)value,property.GetValue(target,new object[]{}),out isConverted);
+								}
+								if(!isConverted)
+								{
+									throw new ApplicationException("Property "+this.targetType.Name+"."+Interpreter.SaveToFile(key,"",false)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
+								}
+							}
+							return;
+						}
+						else if(members[0] is EventInfo)
+						{
+							((EventInfo)members[0]).AddEventHandler(target,CreateEvent(text,(Map)value));
 						}
 						else
 						{
-							table[new Integer(counter)]=entry;
-							counter++;
+							throw new ApplicationException("Could not assign "+text+" .");
+						}
+					}
+					else if(target!=null && key is Integer && targetType.IsArray)
+					{
+						bool isConverted; 
+						object converted=Convert.ToDotNet(value,targetType.GetElementType(),out isConverted);
+						if(isConverted)
+						{
+							((Array)target).SetValue(converted,((Integer)key).Int);
+							return;
+						}
+					}
+					else
+					{
+						DotNetMethod indexer=new DotNetMethod("set_Item",target,targetType); // TODO: refactor
+						Map argument=new Map();
+						argument[new Integer(1)]=key;
+						argument[new Integer(2)]=value;
+						try
+						{
+							indexer.Call(argument);
+						}
+						catch(Exception e)
+						{
+							throw new ApplicationException("Cannot set "+Convert.ToDotNet(key).ToString()+".");// TODO: change exception
 						}
 					}
 				}
-				return table;
 			}
-		}
-		public DotNetContainer(object target,Type targetType)
-		{
-			if(target==null)
+			public string Serialize(string indent,string[] functions)
 			{
-				this.bindingFlags=BindingFlags.Public|BindingFlags.Static;
+				return indent;
 			}
-			else
+			public Delegate CreateEvent(string name,Map code)
 			{
-				this.bindingFlags=BindingFlags.Public|BindingFlags.Instance;
+				EventInfo eventInfo=targetType.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
+					BindingFlags.Static|BindingFlags.Instance);
+				MethodInfo invoke=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
+					|BindingFlags.Public|BindingFlags.NonPublic);
+				Delegate eventDelegate=DotNetMethod.CreateDelegateFromCode(eventInfo.EventHandlerType,invoke,code);
+				return eventDelegate;
 			}
-			this.target=target;
-			this.targetType=targetType;
+			private IDictionary MTable
+			{ 
+				get
+				{
+					HybridDictionary table=new HybridDictionary();
+					foreach(FieldInfo field in targetType.GetFields(bindingFlags))
+					{
+						table[new Map(field.Name)]=field.GetValue(target);
+					}
+					foreach(MethodInfo invoke in targetType.GetMethods(bindingFlags)) 
+					{
+						if(!invoke.IsSpecialName)
+						{
+							table[new Map(invoke.Name)]=new DotNetMethod(invoke.Name,target,targetType);
+						}
+					}
+					foreach(PropertyInfo property in targetType.GetProperties(bindingFlags))
+					{
+						if(property.Name!="Item" && property.Name!="Chars")
+						{
+							table[new Map(property.Name)]=property.GetValue(target,new object[]{});
+						}
+					}
+					foreach(EventInfo eventInfo in targetType.GetEvents(bindingFlags))
+					{
+						table[new Map(eventInfo.Name)]=new DotNetMethod(eventInfo.GetAddMethod().Name,this.target,this.targetType);
+					}
+					foreach(Type type in targetType.GetNestedTypes(bindingFlags))
+					{ 
+						table[new Map(type.Name)]=new DotNetClass(type);
+					}
+					int counter=1;
+					if(target!=null && target is IEnumerable && !(target is String))
+					{ 
+						// TODO: is this useful?
+						foreach(object entry in (IEnumerable)target)
+						{
+							if(entry is DictionaryEntry)
+							{
+								table[Convert.ToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+							}
+							else
+							{
+								table[new Integer(counter)]=entry;
+								counter++;
+							}
+						}
+					}
+					return table;
+				}
+			}
+			public DotNetContainer(object target,Type targetType)
+			{
+				if(target==null)
+				{
+					this.bindingFlags=BindingFlags.Public|BindingFlags.Static;
+				}
+				else
+				{
+					this.bindingFlags=BindingFlags.Public|BindingFlags.Instance;
+				}
+				this.target=target;
+				this.targetType=targetType;
+			}
+			private BindingFlags bindingFlags;
+			private IMap parent;
+			public object target;
+			public Type targetType; // TODO: rename
 		}
-		private BindingFlags bindingFlags;
-		private IMap parent;
-		public object target;
-		public Type targetType; // TODO: rename
-	}
 
-	namespace Parser 
-	{
+		namespace Parser 
+				  {
 		public class IndentationStream: TokenStream
 		{
 			public IndentationStream(TokenStream tokenStream) 

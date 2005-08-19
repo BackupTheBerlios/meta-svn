@@ -62,7 +62,7 @@ public class map
 	//		}
 	//		return count;
 	//	}
-	public static IKeyValue Keys(IKeyValue map) 
+	public static IMap Keys(IMap map) 
 	{
 		int i=1;
 		Map keys=new Map();
@@ -88,7 +88,7 @@ public class map
 		}
 		return combined;
 	}
-	public static IKeyValue Merge(Map arg) 
+	public static IMap Merge(Map arg) // TODO: replace all Maps with IMaps
 	{
 		return (Map)Interpreter.MergeCollection(arg.Array);
 	}

@@ -193,17 +193,6 @@ namespace Test
 			}
 		}
 		// should execute twice, once without caching, once with
-		public class Execute:TestCase 
-		{
-			public override object Run() 
-			{
-				Map argument=new Map();
-				argument[new Integer(1)]="first arg";
-				argument[new Integer(2)]="second=arg";
-				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
-			}
-		}
-		// should execute twice, once without caching, once with
 		public class ExecuteNoCaching:TestCase // TODO: combine with above, only result must be the same, a third file is needed, only one check file!!! ???
 		{
 			public override object Run() 
@@ -218,7 +207,19 @@ namespace Test
 				argument[new Integer(2)]="second=arg";
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
+		}	
+		// should execute twice, once without caching, once with
+		public class Execute:TestCase 
+		{
+			public override object Run() 
+			{
+				Map argument=new Map();
+				argument[new Integer(1)]="first arg";
+				argument[new Integer(2)]="second=arg";
+				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
+			}
 		}
+
 
 	}
 }
