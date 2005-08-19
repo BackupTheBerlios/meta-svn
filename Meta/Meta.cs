@@ -2045,6 +2045,11 @@ namespace Meta
 	}
 	public class LazyNamespace: MapStrategy // TODO: integrate into Directory
 	{
+//		public override void Serialize(string indentation, string[] functions, StringBuilder stringBuilder)
+//		{
+//			return this.fu
+//		}
+
 		public override ArrayList Array // TODO: maybe do this in IMap?
 		{
 			get

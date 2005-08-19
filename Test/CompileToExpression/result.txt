@@ -2043,6 +2043,164 @@ statements (ArrayList):
         literal (Integer):
           "2"
   Entry (Statement)
+    expression (Select):
+      Extent (Extent):
+        End (Position):
+          Column (Int32):
+            "27"
+          Line (Int32):
+            "59"
+        FileName (String):
+          "basicTest.meta"
+        Start (Position):
+          Column (Int32):
+            "9"
+          Line (Int32):
+            "59"
+      firstKey (Search):
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "15"
+            Line (Int32):
+              "59"
+          FileName (String):
+            "basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "9"
+            Line (Int32):
+              "59"
+        search (Literal):
+          Extent (Extent):
+            End (Position):
+              Column (Int32):
+                "15"
+              Line (Int32):
+                "59"
+            FileName (String):
+              "basicTest.meta"
+            Start (Position):
+              Column (Int32):
+                "9"
+              Line (Int32):
+                "59"
+          literal (IMap):
+            "System"
+      keys (ArrayList):
+        Entry (Literal)
+          Extent (Extent):
+            End (Position):
+              Column (Int32):
+                "27"
+              Line (Int32):
+                "59"
+            FileName (String):
+              "basicTest.meta"
+            Start (Position):
+              Column (Int32):
+                "16"
+              Line (Int32):
+                "59"
+          literal (IMap):
+            "Collections"
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "8"
+            Line (Int32):
+              "59"
+          FileName (String):
+            "basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "1"
+            Line (Int32):
+              "59"
+        literal (IMap):
+          "gacTest"
+  Entry (Statement)
+    expression (Select):
+      Extent (Extent):
+        End (Position):
+          Column (Int32):
+            "29"
+          Line (Int32):
+            "60"
+        FileName (String):
+          "basicTest.meta"
+        Start (Position):
+          Column (Int32):
+            "13"
+          Line (Int32):
+            "60"
+      firstKey (Search):
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "22"
+            Line (Int32):
+              "60"
+          FileName (String):
+            "basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "13"
+            Line (Int32):
+              "60"
+        search (Literal):
+          Extent (Extent):
+            End (Position):
+              Column (Int32):
+                "22"
+              Line (Int32):
+                "60"
+            FileName (String):
+              "basicTest.meta"
+            Start (Position):
+              Column (Int32):
+                "13"
+              Line (Int32):
+                "60"
+          literal (IMap):
+            "Microsoft"
+      keys (ArrayList):
+        Entry (Literal)
+          Extent (Extent):
+            End (Position):
+              Column (Int32):
+                "29"
+              Line (Int32):
+                "60"
+            FileName (String):
+              "basicTest.meta"
+            Start (Position):
+              Column (Int32):
+                "23"
+              Line (Int32):
+                "60"
+          literal (IMap):
+            "CSharp"
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "12"
+            Line (Int32):
+              "60"
+          FileName (String):
+            "basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "1"
+            Line (Int32):
+              "60"
+        literal (IMap):
+          "lazyGACTest"
+  Entry (Statement)
     expression (Search):
       Extent (Extent):
         End (Position):

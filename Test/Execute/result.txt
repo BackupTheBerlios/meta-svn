@@ -329,6 +329,188 @@ Entry (DictionaryEntry)
     "Autokey"
 Entry (DictionaryEntry)
   Key (IMap):
+    "gacTest"
+  Value (IMap):
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "IEnumerable"
+      Value (IMap):
+        "System.Collections.IEnumerable"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "ICollection"
+      Value (IMap):
+        "System.Collections.ICollection"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "IList"
+      Value (IMap):
+        "System.Collections.IList"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "IEnumerator"
+      Value (IMap):
+        "System.Collections.IEnumerator"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "ArrayList"
+      Value (IMap):
+        "System.Collections.ArrayList"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "BitArray"
+      Value (IMap):
+        "System.Collections.BitArray"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "IComparer"
+      Value (IMap):
+        "System.Collections.IComparer"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "CaseInsensitiveComparer"
+      Value (IMap):
+        "System.Collections.CaseInsensitiveComparer"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "IHashCodeProvider"
+      Value (IMap):
+        "System.Collections.IHashCodeProvider"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "CaseInsensitiveHashCodeProvider"
+      Value (IMap):
+        "System.Collections.CaseInsensitiveHashCodeProvider"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "CollectionBase"
+      Value (IMap):
+        "System.Collections.CollectionBase"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "Comparer"
+      Value (IMap):
+        "System.Collections.Comparer"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "IDictionary"
+      Value (IMap):
+        "System.Collections.IDictionary"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "DictionaryBase"
+      Value (IMap):
+        "System.Collections.DictionaryBase"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "DictionaryEntry"
+      Value (IMap):
+        "System.Collections.DictionaryEntry"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "Hashtable"
+      Value (IMap):
+        "System.Collections.Hashtable"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "IDictionaryEnumerator"
+      Value (IMap):
+        "System.Collections.IDictionaryEnumerator"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "Queue"
+      Value (IMap):
+        "System.Collections.Queue"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "ReadOnlyCollectionBase"
+      Value (IMap):
+        "System.Collections.ReadOnlyCollectionBase"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "SortedList"
+      Value (IMap):
+        "System.Collections.SortedList"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "Stack"
+      Value (IMap):
+        "System.Collections.Stack"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "Specialized"
+      Value (IMap):
+        Entry (DictionaryEntry)
+          Key (IMap):
+            "BitVector32"
+          Value (IMap):
+            "System.Collections.Specialized.BitVector32"
+        Entry (DictionaryEntry)
+          Key (IMap):
+            "CollectionsUtil"
+          Value (IMap):
+            "System.Collections.Specialized.CollectionsUtil"
+        Entry (DictionaryEntry)
+          Key (IMap):
+            "HybridDictionary"
+          Value (IMap):
+            "System.Collections.Specialized.HybridDictionary"
+        Entry (DictionaryEntry)
+          Key (IMap):
+            "ListDictionary"
+          Value (IMap):
+            "System.Collections.Specialized.ListDictionary"
+        Entry (DictionaryEntry)
+          Key (IMap):
+            "NameObjectCollectionBase"
+          Value (IMap):
+            "System.Collections.Specialized.NameObjectCollectionBase"
+        Entry (DictionaryEntry)
+          Key (IMap):
+            "NameValueCollection"
+          Value (IMap):
+            "System.Collections.Specialized.NameValueCollection"
+        Entry (DictionaryEntry)
+          Key (IMap):
+            "StringCollection"
+          Value (IMap):
+            "System.Collections.Specialized.StringCollection"
+        Entry (DictionaryEntry)
+          Key (IMap):
+            "StringEnumerator"
+          Value (IMap):
+            "System.Collections.Specialized.StringEnumerator"
+        Entry (DictionaryEntry)
+          Key (IMap):
+            "StringDictionary"
+          Value (IMap):
+            "System.Collections.Specialized.StringDictionary"
+Entry (DictionaryEntry)
+  Key (IMap):
+    "lazyGACTest"
+  Value (IMap):
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "ErrorLevel"
+      Value (IMap):
+        "Microsoft.CSharp.ErrorLevel"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "CompilerError"
+      Value (IMap):
+        "Microsoft.CSharp.CompilerError"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "Compiler"
+      Value (IMap):
+        "Microsoft.CSharp.Compiler"
+    Entry (DictionaryEntry)
+      Key (IMap):
+        "CSharpCodeProvider"
+      Value (IMap):
+        "Microsoft.CSharp.CSharpCodeProvider"
+Entry (DictionaryEntry)
+  Key (IMap):
     "commandLineArguments"
   Value (IMap):
     Entry (DictionaryEntry)

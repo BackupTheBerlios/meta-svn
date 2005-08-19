@@ -56,8 +56,8 @@ form=Init
 		Text="hello"
 "ImpliedAutokey"
 ="Autokey"
-//gacTest=System.Collections TODO: reinclude the namespace tests
-//lazyGACTest=Microsoft.CSharp
+gacTest=System.Collections
+lazyGACTest=Microsoft.CSharp
 //metaLibTest=metaLib
 commandLineArguments=arg
 //libraryAssemblyTest=testClasses
