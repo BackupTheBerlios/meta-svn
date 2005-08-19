@@ -774,6 +774,16 @@ namespace Meta
 	{
 		object Call(object argument);
 	}
+	// one map class should really be sufficient, maybe i can combine them all
+	// that would be really great
+	// i mean, it is always the strategies decision to change to another strategy
+	// a directory strategy will simply never change to non-persistanct strategy
+	// we will simply have persistant strategies and non-persistant strategies
+	// there are still some problems of course
+	// the unification would be useful, though, on so many levels
+	// we could maybe also more easily inherit some behaviour
+	// i will have to do that sometime later methinks
+	// but it will be cool enough
 	public abstract class IMap: IKeyValue // TODO: rename
 	{
 		public abstract IMap Parent
@@ -1037,9 +1047,11 @@ namespace Meta
 			}
 			return root;
 		}
+		private string fileSystemPath;
 
 		public Library()
 		{
+			fileSystemPath=Path.Combine(Interpreter.installationPath,"Library"); // TODO: has to be renamed to??? root, maybe, or just Meta, installation will look different anyway
 			ArrayList assemblies=new ArrayList();
 			libraryPath=Path.Combine(Interpreter.installationPath,"library");
 			assemblies=GlobalAssemblyCache.Assemblies;
