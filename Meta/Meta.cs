@@ -817,8 +817,567 @@ namespace Meta
 		public abstract IEnumerator GetEnumerator();
 
 	}
+	public class Map: IMap,IKeyValue, ICallable, IEnumerable, ISerializeSpecial
+	{
+
+		public object Argument
+		{
+			get
+			{
+				return arg;
+			}
+			set
+			{ 
+				// TODO: Remove set, maybe?
+				arg=value;
+			}
+		}
+		object arg=null;
+		public bool IsString // TODO: move to IMap
+		{
+			get
+			{
+				return strategy.IsString;
+			}
+		}
+		public string String
+		{
+			get
+			{
+				return strategy.String;
+			}
+		}
+		public override IMap Parent
+		{
+			get
+			{
+				return parent;
+			}
+			set
+			{
+				parent=value;
+			}
+		}
+		public override int Count
+		{
+			get
+			{
+				return strategy.Count;
+			}
+		}
+		public override ArrayList Array		//TODO: cache the Array somewhere; put in an "Add" method
+		{ 
+			get
+			{
+				return strategy.Array;
+			}
+		}
+		public override object this[object key] 
+		{
+			get
+			{
+				object result;
+				if(key.Equals(SpecialKeys.Parent))
+				{
+					result=Parent;
+				}
+				else if(key.Equals(SpecialKeys.Arg))
+				{
+					result=Argument;
+				}
+				else if(key.Equals(SpecialKeys.This))
+				{
+					result=this;
+				}
+				else
+				{
+					result=strategy[key];
+				}
+				return result;
+			}
+			set
+			{
+				if(value!=null)
+				{
+					isHashCached=false;
+					if(key.Equals(SpecialKeys.This))
+					{
+						this.strategy=((Map)value).strategy.Clone();
+					}
+					else
+					{
+						object val;
+						if(value is IMap)
+						{
+							val=((IMap)value).Clone();
+							((IMap)val).Parent=this;
+						}
+						else
+						{
+							val=value;
+						}
+						strategy[key]=val;
+					}
+				}
+			}
+		}
+		public object Call(object argument)
+		{
+			this.Argument=argument;
+			Expression function=(Expression)((Map)this[CodeKeys.Run]).GetExpression();
+			object result;
+			result=function.Evaluate(this);
+			return result;
+		}
+		public override ArrayList Keys
+		{
+			get
+			{
+				return strategy.Keys;
+			}
+		}
+		public override IMap Clone()
+		{
+			Map clone=strategy.CloneMap();
+			clone.Parent=Parent;
+			//clone.expression=expression;
+			clone.Extent=Extent;
+			return clone;
+		}
+		public Expression GetExpression() // TODO: move to Expression
+		{
+			// expression Statements are not cached, only expressions
+
+			// no caching anymore, because of possible issues when reverse-debugging
+			//			if(expression==null) 
+			//			{
+			Expression expression;
+			if(this.ContainsKey(CodeKeys.Call))
+			{
+				expression=new Call((Map)this[CodeKeys.Call]);
+			}
+			else if(this.ContainsKey(CodeKeys.Delayed))
+			{ 
+				expression=new Delayed((Map)this[CodeKeys.Delayed]);
+			}
+			else if(this.ContainsKey(CodeKeys.Program))
+			{
+				expression=new Program((Map)this[CodeKeys.Program]);
+			}
+			else if(this.ContainsKey(CodeKeys.Literal))
+			{
+				expression=new Literal((Map)this[CodeKeys.Literal]);
+			}
+			else if(this.ContainsKey(CodeKeys.Search))
+			{
+				expression=new Search((Map)this[CodeKeys.Search]);
+			}
+			else if(this.ContainsKey(CodeKeys.Select))
+			{
+				expression=new Select((Map)this[CodeKeys.Select]);
+			}
+			else
+			{
+				throw new ApplicationException("Cannot compile non-code map.");
+			}
+			//			}
+			((Expression)expression).Extent=this.Extent;
+			return expression;
+		}
+		public override bool ContainsKey(object key) 
+		{
+			if(key is Map)
+			{
+				if(key.Equals(SpecialKeys.Arg))
+				{
+					return this.Argument!=null;
+				}
+				else if(key.Equals(SpecialKeys.Parent))
+				{
+					return this.Parent!=null;
+				}
+				else if(key.Equals(SpecialKeys.This))
+				{
+					return true;
+				}
+			}
+			return strategy.ContainsKey(key);
+		}
+		public override bool Equals(object toCompare)
+		{
+			bool isEqual=false;
+			if(Object.ReferenceEquals(toCompare,this))
+			{
+				isEqual=true;
+			}
+			else if(toCompare is Map)
+			{
+				isEqual=((Map)toCompare).strategy.Equals(strategy);
+			}
+			return isEqual;
+		}
+		public override IEnumerator GetEnumerator()
+		{
+			return new MapEnumerator(this);
+		}
+		public override int GetHashCode() 
+		{
+			if(!isHashCached)
+			{
+				hash=this.strategy.GetHashCode();
+				isHashCached=true;
+			}
+			return hash;
+		}
+		private bool isHashCached=false;
+		private int hash;
+
+		Extent extent;
+		public Extent Extent
+		{
+			get
+			{
+				return extent;
+			}
+			set
+			{
+				extent=value;
+			}
+		}
+		public Map(string text):this(new StringStrategy(text))
+		{
+		}
+		public Map(MapStrategy strategy)
+		{
+			this.strategy=strategy;
+			this.strategy.map=this;
+		}
+		public Map():this(new HybridDictionaryStrategy())
+		{
+		}
+		private IMap parent;
+		private MapStrategy strategy;
+		//		public Expression expression; // why have this at all, why not for statements? probably a question of performance.
+		public string Serialize(string indentation,string[] functions)
+		{
+			if(this.IsString)
+			{
+				return indentation+"\""+this.String+"\""+"\n";
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public abstract class MapStrategy
+		{
+			public Map map;
+			public MapStrategy Clone()
+			{
+				MapStrategy strategy=new HybridDictionaryStrategy();
+				foreach(object key in this.Keys)
+				{
+					strategy[key]=this[key];
+				}
+				return strategy;	
+			}
+			public abstract Map CloneMap();
+			public abstract ArrayList Array
+			{
+				get;
+			}
+			public abstract bool IsString
+			{
+				get;
+			}
+			public abstract string String
+			{
+				get;
+			}
+			public abstract ArrayList Keys
+			{
+				get;
+			}
+			public abstract int Count
+			{
+				get;
+			}
+			public abstract object this[object key] 
+			{
+				get;
+				set;
+			}
+
+			public abstract bool ContainsKey(object key);
+			public override int GetHashCode() 
+			{
+				int hash=0;
+				foreach(object key in this.Keys)
+				{
+					unchecked
+					{
+						hash+=key.GetHashCode()*this[key].GetHashCode();
+					}
+				}
+				return hash;
+			}
+			public override bool Equals(object strategy)
+			{
+
+				if(Object.ReferenceEquals(strategy,this))
+				{ 
+					return true;
+				}
+				else if(!(strategy is MapStrategy))
+				{
+					return false;
+				}
+				else if(((MapStrategy)strategy).Count!=this.Count)
+				{
+					return false;
+				}
+				foreach(object key in this.Keys) 
+				{
+					if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy)[key].Equals(this[key]))
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+		public class StringStrategy:MapStrategy
+		{
+			public override int GetHashCode()
+			{
+				int hash=0;
+				for(int i=0;i<text.Length;i++)
+				{
+					hash+=(i+1)*text[i];
+				}
+				return hash;
+			}
+			public override bool Equals(object strategy)
+			{
+				bool isEqual;
+				if(strategy is StringStrategy)
+				{	
+					isEqual=((StringStrategy)strategy).text.Equals(this.text);
+				}
+				else
+				{
+					isEqual=base.Equals(strategy);
+				}
+				return isEqual;
+			}
+			public override Map CloneMap()
+			{
+				return new Map(new StringStrategy(this));
+			}
+			public override ArrayList Array
+			{
+				get
+				{
+					ArrayList list=new ArrayList();
+					foreach(char iChar in text)
+					{
+						list.Add(new Integer(iChar));
+					}
+					return list;
+				}
+			}
+			public override bool IsString
+			{
+				get
+				{
+					return true;
+				}
+			}
+			public override string String
+			{
+				get
+				{
+					return text;
+				}
+			}
+			public override ArrayList Keys
+			{
+				get
+				{
+					return keys;
+				}
+			}
+			private ArrayList keys=new ArrayList();
+			private string text;
+			public StringStrategy(StringStrategy clone)
+			{
+				this.text=clone.text;
+				this.keys=(ArrayList)clone.keys.Clone();
+			}
+			public StringStrategy(string text)
+			{
+				this.text=text;
+				// TODO: make unicode-safe
+				for(int i=1;i<=text.Length;i++)
+				{ 
+					keys.Add(new Integer(i));			
+				}
+			}
+			public override int Count
+			{
+				get
+				{
+					return text.Length;
+				}
+			}
+			public override object this[object key]
+			{
+				get
+				{
+					if(key is Integer)
+					{
+						int iInteger=((Integer)key).Int;
+						if(iInteger>0 && iInteger<=this.Count)
+						{
+							return new Integer(text[iInteger-1]);
+						}
+					}
+					return null;
+				}
+				set
+				{
+					map.strategy=this.Clone();
+					map.strategy[key]=value;
+				}
+			}
+			public override bool ContainsKey(object key) 
+			{
+				if(key is Integer)
+				{
+					return ((Integer)key)>0 && ((Integer)key)<=this.Count;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		public class HybridDictionaryStrategy:MapStrategy
+		{
+			ArrayList keys;
+			private HybridDictionary strategy;
+			public HybridDictionaryStrategy():this(2)
+			{
+			}
+			public HybridDictionaryStrategy(int Count)
+			{
+				this.keys=new ArrayList(Count);
+				this.strategy=new HybridDictionary(Count);
+			}
+			public override Map CloneMap()
+			{
+				Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
+				foreach(object key in keys)
+				{
+					clone[key]=strategy[key];
+				}
+				return clone;
+			}
+			public override ArrayList Array
+			{
+				get
+				{
+					ArrayList list=new ArrayList();
+					for(Integer iInteger=new Integer(1);ContainsKey(iInteger);iInteger++)
+					{
+						list.Add(this[iInteger]);
+					}
+					return list;
+				}
+			}
+			public override bool IsString
+			{
+				get
+				{
+					bool isString=false;;
+					if(Array.Count>0)
+					{
+						try
+						{
+							object o=String;
+							isString=true;
+						}
+						catch
+						{
+						}
+					}
+					return isString;
+				}
+			}
+			public override string String
+			{
+				get
+				{
+					string text="";
+					foreach(object key in this.Keys)
+					{
+						if(key is Integer && this.strategy[key] is Integer)
+						{
+							try
+							{
+								text+=System.Convert.ToChar(((Integer)this.strategy[key]).Int);
+							}
+							catch
+							{
+								throw new MapException(this.map,"Map is not a string");
+							}
+						}
+						else
+						{
+							throw new MapException(this.map,"Map is not a string");
+						}
+					}
+					return text;
+				}
+			}
+			public override ArrayList Keys
+			{
+				get
+				{
+					return keys;
+				}
+			}
+			public override int Count
+			{
+				get
+				{
+					return strategy.Count;
+				}
+			}
+			public override object this[object key] 
+			{
+				get
+				{
+					return strategy[key];
+				}
+				set
+				{
+					if(!this.ContainsKey(key))
+					{
+						keys.Add(key);
+					}
+					strategy[key]=value;
+				}
+			}
+			public override bool ContainsKey(object key) 
+			{
+				return strategy.Contains(key);
+			}
+		}
+	}
 	// TODO: remove IKeyValue - IMap distinction?
-	public interface IKeyValue: IEnumerable
+	public interface IKeyValue: IEnumerable // remove
 	{
 		object this[object key]
 		{
@@ -1399,6 +1958,10 @@ namespace Meta
 //			return new MapEnumerator(this);
 //		}
 //	}
+
+
+
+
 
 //	public class MetaFile
 //	{
@@ -2132,565 +2695,1124 @@ namespace Meta
 			return new MapEnumerator(this);
 		}
 	}
-	public class Map: IMap, IKeyValue, ICallable, IEnumerable, ISerializeSpecial
-	{
-
-		public object Argument
-		{
-			get
-			{
-				return arg;
-			}
-			set
-			{ 
-				// TODO: Remove set, maybe?
-				arg=value;
-			}
-		}
-		object arg=null;
-		public bool IsString // TODO: move to IMap
-		{
-			get
-			{
-				return strategy.IsString;
-			}
-		}
-		public string String
-		{
-			get
-			{
-				return strategy.String;
-			}
-		}
-		public override IMap Parent
-		{
-			get
-			{
-				return parent;
-			}
-			set
-			{
-				parent=value;
-			}
-		}
-		public override int Count
-		{
-			get
-			{
-				return strategy.Count;
-			}
-		}
-		public override ArrayList Array		//TODO: cache the Array somewhere; put in an "Add" method
-		{ 
-			get
-			{
-				return strategy.Array;
-			}
-		}
-		public override object this[object key] 
-		{
-			get
-			{
-				object result;
-				if(key.Equals(SpecialKeys.Parent))
-				{
-					result=Parent;
-				}
-				else if(key.Equals(SpecialKeys.Arg))
-				{
-					result=Argument;
-				}
-				else if(key.Equals(SpecialKeys.This))
-				{
-					result=this;
-				}
-				else
-				{
-					result=strategy[key];
-				}
-				return result;
-			}
-			set
-			{
-				if(value!=null)
-				{
-					isHashCached=false;
-					if(key.Equals(SpecialKeys.This))
-					{
-						this.strategy=((Map)value).strategy.Clone();
-					}
-					else
-					{
-						object val;
-						if(value is IMap)
-						{
-							val=((IMap)value).Clone();
-							((IMap)val).Parent=this;
-						}
-						else
-						{
-							val=value;
-						}
-						strategy[key]=val;
-					}
-				}
-			}
-		}
-		public object Call(object argument)
-		{
-			this.Argument=argument;
-			Expression function=(Expression)((Map)this[CodeKeys.Run]).GetExpression();
-			object result;
-			result=function.Evaluate(this);
-			return result;
-		}
-		public override ArrayList Keys
-		{
-			get
-			{
-				return strategy.Keys;
-			}
-		}
-		public override IMap Clone()
-		{
-			Map clone=strategy.CloneMap();
-			clone.Parent=Parent;
-			//clone.expression=expression;
-			clone.Extent=Extent;
-			return clone;
-		}
-		public Expression GetExpression() // TODO: move to Expression
-		{
-			// expression Statements are not cached, only expressions
-
-			// no caching anymore, because of possible issues when reverse-debugging
-//			if(expression==null) 
+//	public class Map: IMap, IKeyValue, ICallable, IEnumerable, ISerializeSpecial
+//	{
+//
+//		public object Argument
+//		{
+//			get
 //			{
-			Expression expression;
-				if(this.ContainsKey(CodeKeys.Call))
-				{
-					expression=new Call((Map)this[CodeKeys.Call]);
-				}
-				else if(this.ContainsKey(CodeKeys.Delayed))
-				{ 
-					expression=new Delayed((Map)this[CodeKeys.Delayed]);
-				}
-				else if(this.ContainsKey(CodeKeys.Program))
-				{
-					expression=new Program((Map)this[CodeKeys.Program]);
-				}
-				else if(this.ContainsKey(CodeKeys.Literal))
-				{
-					expression=new Literal((Map)this[CodeKeys.Literal]);
-				}
-				else if(this.ContainsKey(CodeKeys.Search))
-				{
-					expression=new Search((Map)this[CodeKeys.Search]);
-				}
-				else if(this.ContainsKey(CodeKeys.Select))
-				{
-					expression=new Select((Map)this[CodeKeys.Select]);
-				}
-				else
-				{
-					throw new ApplicationException("Cannot compile non-code map.");
-				}
+//				return arg;
 //			}
-				((Expression)expression).Extent=this.Extent;
-			return expression;
-		}
-		public override bool ContainsKey(object key) 
-		{
-			if(key is Map)
-			{
-				if(key.Equals(SpecialKeys.Arg))
-				{
-					return this.Argument!=null;
-				}
-				else if(key.Equals(SpecialKeys.Parent))
-				{
-					return this.Parent!=null;
-				}
-				else if(key.Equals(SpecialKeys.This))
-				{
-					return true;
-				}
-			}
-			return strategy.ContainsKey(key);
-		}
-		public override bool Equals(object toCompare)
-		{
-			bool isEqual=false;
-			if(Object.ReferenceEquals(toCompare,this))
-			{
-				isEqual=true;
-			}
-			else if(toCompare is Map)
-			{
-				isEqual=((Map)toCompare).strategy.Equals(strategy);
-			}
-			return isEqual;
-		}
-		public override IEnumerator GetEnumerator()
-		{
-			return new MapEnumerator(this);
-		}
-		public override int GetHashCode() 
-		{
-			if(!isHashCached)
-			{
-				hash=this.strategy.GetHashCode();
-				isHashCached=true;
-			}
-			return hash;
-		}
-		private bool isHashCached=false;
-		private int hash;
-
-		Extent extent;
-		public Extent Extent
-		{
-			get
-			{
-				return extent;
-			}
-			set
-			{
-				extent=value;
-			}
-		}
-		public Map(string text):this(new StringStrategy(text))
-		{
-		}
-		public Map(MapStrategy strategy)
-		{
-			this.strategy=strategy;
-			this.strategy.map=this;
-		}
-		public Map():this(new HybridDictionaryStrategy())
-		{
-		}
-		private IMap parent;
-		private MapStrategy strategy;
-//		public Expression expression; // why have this at all, why not for statements? probably a question of performance.
-		public string Serialize(string indentation,string[] functions)
-		{
-			if(this.IsString)
-			{
-				return indentation+"\""+this.String+"\""+"\n";
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		public abstract class MapStrategy
-		{
-			public Map map;
-			public MapStrategy Clone()
-			{
-				MapStrategy strategy=new HybridDictionaryStrategy();
-				foreach(object key in this.Keys)
-				{
-					strategy[key]=this[key];
-				}
-				return strategy;	
-			}
-			public abstract Map CloneMap();
-			public abstract ArrayList Array
-			{
-				get;
-			}
-			public abstract bool IsString
-			{
-				get;
-			}
-			public abstract string String
-			{
-				get;
-			}
-			public abstract ArrayList Keys
-			{
-				get;
-			}
-			public abstract int Count
-			{
-				get;
-			}
-			public abstract object this[object key] 
-			{
-				get;
-				set;
-			}
-
-			public abstract bool ContainsKey(object key);
-			public override int GetHashCode() 
-			{
-				int hash=0;
-				foreach(object key in this.Keys)
-				{
-					unchecked
-					{
-						hash+=key.GetHashCode()*this[key].GetHashCode();
-					}
-				}
-				return hash;
-			}
-			public override bool Equals(object strategy)
-			{
-
-				if(Object.ReferenceEquals(strategy,this))
-				{ 
-					return true;
-				}
-				else if(!(strategy is MapStrategy))
-				{
-					return false;
-				}
-				else if(((MapStrategy)strategy).Count!=this.Count)
-				{
-					return false;
-				}
-				foreach(object key in this.Keys) 
-				{
-					if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy)[key].Equals(this[key]))
-					{
-						return false;
-					}
-				}
-				return true;
-			}
-		}
-		public class StringStrategy:MapStrategy
-		{
-			public override int GetHashCode()
-			{
-				int hash=0;
-				for(int i=0;i<text.Length;i++)
-				{
-					hash+=(i+1)*text[i];
-				}
-				return hash;
-			}
-			public override bool Equals(object strategy)
-			{
-				bool isEqual;
-				if(strategy is StringStrategy)
-				{	
-					isEqual=((StringStrategy)strategy).text.Equals(this.text);
-				}
-				else
-				{
-					isEqual=base.Equals(strategy);
-				}
-				return isEqual;
-			}
-			public override Map CloneMap()
-			{
-				return new Map(new StringStrategy(this));
-			}
-			public override ArrayList Array
-			{
-				get
-				{
-					ArrayList list=new ArrayList();
-					foreach(char iChar in text)
-					{
-						list.Add(new Integer(iChar));
-					}
-					return list;
-				}
-			}
-			public override bool IsString
-			{
-				get
-				{
-					return true;
-				}
-			}
-			public override string String
-			{
-				get
-				{
-					return text;
-				}
-			}
-			public override ArrayList Keys
-			{
-				get
-				{
-					return keys;
-				}
-			}
-			private ArrayList keys=new ArrayList();
-			private string text;
-			public StringStrategy(StringStrategy clone)
-			{
-				this.text=clone.text;
-				this.keys=(ArrayList)clone.keys.Clone();
-			}
-			public StringStrategy(string text)
-			{
-				this.text=text;
-				// TODO: make unicode-safe
-				for(int i=1;i<=text.Length;i++)
-				{ 
-					keys.Add(new Integer(i));			
-				}
-			}
-			public override int Count
-			{
-				get
-				{
-					return text.Length;
-				}
-			}
-			public override object this[object key]
-			{
-				get
-				{
-					if(key is Integer)
-					{
-						int iInteger=((Integer)key).Int;
-						if(iInteger>0 && iInteger<=this.Count)
-						{
-							return new Integer(text[iInteger-1]);
-						}
-					}
-					return null;
-				}
-				set
-				{
-					map.strategy=this.Clone();
-					map.strategy[key]=value;
-				}
-			}
-			public override bool ContainsKey(object key) 
-			{
-				if(key is Integer)
-				{
-					return ((Integer)key)>0 && ((Integer)key)<=this.Count;
-				}
-				else
-				{
-					return false;
-				}
-			}
-		}
-		public class HybridDictionaryStrategy:MapStrategy
-		{
-			ArrayList keys;
-			private HybridDictionary strategy;
-			public HybridDictionaryStrategy():this(2)
-			{
-			}
-			public HybridDictionaryStrategy(int Count)
-			{
-				this.keys=new ArrayList(Count);
-				this.strategy=new HybridDictionary(Count);
-			}
-			public override Map CloneMap()
-			{
-				Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
-				foreach(object key in keys)
-				{
-					clone[key]=strategy[key];
-				}
-				return clone;
-			}
-			public override ArrayList Array
-			{
-				get
-				{
-					ArrayList list=new ArrayList();
-					for(Integer iInteger=new Integer(1);ContainsKey(iInteger);iInteger++)
-					{
-						list.Add(this[iInteger]);
-					}
-					return list;
-				}
-			}
-			public override bool IsString
-			{
-				get
-				{
-					bool isString=false;;
-					if(Array.Count>0)
-					{
-						try
-						{
-							object o=String;
-							isString=true;
-						}
-						catch
-						{
-						}
-					}
-					return isString;
-				}
-			}
-			public override string String
-			{
-				get
-				{
-					string text="";
-					foreach(object key in this.Keys)
-					{
-						if(key is Integer && this.strategy[key] is Integer)
-						{
-							try
-							{
-								text+=System.Convert.ToChar(((Integer)this.strategy[key]).Int);
-							}
-							catch
-							{
-								throw new MapException(this.map,"Map is not a string");
-							}
-						}
-						else
-						{
-							throw new MapException(this.map,"Map is not a string");
-						}
-					}
-					return text;
-				}
-			}
-			public override ArrayList Keys
-			{
-				get
-				{
-					return keys;
-				}
-			}
-			public override int Count
-			{
-				get
-				{
-					return strategy.Count;
-				}
-			}
-			public override object this[object key] 
-			{
-				get
-				{
-					return strategy[key];
-				}
-				set
-				{
-					if(!this.ContainsKey(key))
-					{
-						keys.Add(key);
-					}
-					strategy[key]=value;
-				}
-			}
-			public override bool ContainsKey(object key) 
-			{
-				return strategy.Contains(key);
-			}
-		}
-	}
+//			set
+//			{ 
+//				// TODO: Remove set, maybe?
+//				arg=value;
+//			}
+//		}
+//		object arg=null;
+//		public bool IsString // TODO: move to IMap
+//		{
+//			get
+//			{
+//				return strategy.IsString;
+//			}
+//		}
+//		public string String
+//		{
+//			get
+//			{
+//				return strategy.String;
+//			}
+//		}
+//		public override IMap Parent
+//		{
+//			get
+//			{
+//				return parent;
+//			}
+//			set
+//			{
+//				parent=value;
+//			}
+//		}
+//		public override int Count
+//		{
+//			get
+//			{
+//				return strategy.Count;
+//			}
+//		}
+//		public override ArrayList Array		//TODO: cache the Array somewhere; put in an "Add" method
+//		{ 
+//			get
+//			{
+//				return strategy.Array;
+//			}
+//		}
+//		public override object this[object key] 
+//		{
+//			get
+//			{
+//				object result;
+//				if(key.Equals(SpecialKeys.Parent))
+//				{
+//					result=Parent;
+//				}
+//				else if(key.Equals(SpecialKeys.Arg))
+//				{
+//					result=Argument;
+//				}
+//				else if(key.Equals(SpecialKeys.This))
+//				{
+//					result=this;
+//				}
+//				else
+//				{
+//					result=strategy[key];
+//				}
+//				return result;
+//			}
+//			set
+//			{
+//				if(value!=null)
+//				{
+//					isHashCached=false;
+//					if(key.Equals(SpecialKeys.This))
+//					{
+//						this.strategy=((Map)value).strategy.Clone();
+//					}
+//					else
+//					{
+//						object val;
+//						if(value is IMap)
+//						{
+//							val=((IMap)value).Clone();
+//							((IMap)val).Parent=this;
+//						}
+//						else
+//						{
+//							val=value;
+//						}
+//						strategy[key]=val;
+//					}
+//				}
+//			}
+//		}
+//		public object Call(object argument)
+//		{
+//			this.Argument=argument;
+//			Expression function=(Expression)((Map)this[CodeKeys.Run]).GetExpression();
+//			object result;
+//			result=function.Evaluate(this);
+//			return result;
+//		}
+//		public override ArrayList Keys
+//		{
+//			get
+//			{
+//				return strategy.Keys;
+//			}
+//		}
+//		public override IMap Clone()
+//		{
+//			Map clone=strategy.CloneMap();
+//			clone.Parent=Parent;
+//			//clone.expression=expression;
+//			clone.Extent=Extent;
+//			return clone;
+//		}
+//		public Expression GetExpression() // TODO: move to Expression
+//		{
+//			// expression Statements are not cached, only expressions
+//
+//			// no caching anymore, because of possible issues when reverse-debugging
+//			//			if(expression==null) 
+//			//			{
+//			Expression expression;
+//			if(this.ContainsKey(CodeKeys.Call))
+//			{
+//				expression=new Call((Map)this[CodeKeys.Call]);
+//			}
+//			else if(this.ContainsKey(CodeKeys.Delayed))
+//			{ 
+//				expression=new Delayed((Map)this[CodeKeys.Delayed]);
+//			}
+//			else if(this.ContainsKey(CodeKeys.Program))
+//			{
+//				expression=new Program((Map)this[CodeKeys.Program]);
+//			}
+//			else if(this.ContainsKey(CodeKeys.Literal))
+//			{
+//				expression=new Literal((Map)this[CodeKeys.Literal]);
+//			}
+//			else if(this.ContainsKey(CodeKeys.Search))
+//			{
+//				expression=new Search((Map)this[CodeKeys.Search]);
+//			}
+//			else if(this.ContainsKey(CodeKeys.Select))
+//			{
+//				expression=new Select((Map)this[CodeKeys.Select]);
+//			}
+//			else
+//			{
+//				throw new ApplicationException("Cannot compile non-code map.");
+//			}
+//			//			}
+//			((Expression)expression).Extent=this.Extent;
+//			return expression;
+//		}
+//		public override bool ContainsKey(object key) 
+//		{
+//			if(key is Map)
+//			{
+//				if(key.Equals(SpecialKeys.Arg))
+//				{
+//					return this.Argument!=null;
+//				}
+//				else if(key.Equals(SpecialKeys.Parent))
+//				{
+//					return this.Parent!=null;
+//				}
+//				else if(key.Equals(SpecialKeys.This))
+//				{
+//					return true;
+//				}
+//			}
+//			return strategy.ContainsKey(key);
+//		}
+//		public override bool Equals(object toCompare)
+//		{
+//			bool isEqual=false;
+//			if(Object.ReferenceEquals(toCompare,this))
+//			{
+//				isEqual=true;
+//			}
+//			else if(toCompare is Map)
+//			{
+//				isEqual=((Map)toCompare).strategy.Equals(strategy);
+//			}
+//			return isEqual;
+//		}
+//		public override IEnumerator GetEnumerator()
+//		{
+//			return new MapEnumerator(this);
+//		}
+//		public override int GetHashCode() 
+//		{
+//			if(!isHashCached)
+//			{
+//				hash=this.strategy.GetHashCode();
+//				isHashCached=true;
+//			}
+//			return hash;
+//		}
+//		private bool isHashCached=false;
+//		private int hash;
+//
+//		Extent extent;
+//		public Extent Extent
+//		{
+//			get
+//			{
+//				return extent;
+//			}
+//			set
+//			{
+//				extent=value;
+//			}
+//		}
+//		public Map(string text):this(new StringStrategy(text))
+//		{
+//		}
+//		public Map(MapStrategy strategy)
+//		{
+//			this.strategy=strategy;
+//			this.strategy.map=this;
+//		}
+//		public Map():this(new HybridDictionaryStrategy())
+//		{
+//		}
+//		private IMap parent;
+//		private MapStrategy strategy;
+//		//		public Expression expression; // why have this at all, why not for statements? probably a question of performance.
+//		public string Serialize(string indentation,string[] functions)
+//		{
+//			if(this.IsString)
+//			{
+//				return indentation+"\""+this.String+"\""+"\n";
+//			}
+//			else
+//			{
+//				return null;
+//			}
+//		}
+//
+//		public abstract class MapStrategy
+//		{
+//			public Map map;
+//			public MapStrategy Clone()
+//			{
+//				MapStrategy strategy=new HybridDictionaryStrategy();
+//				foreach(object key in this.Keys)
+//				{
+//					strategy[key]=this[key];
+//				}
+//				return strategy;	
+//			}
+//			public abstract Map CloneMap();
+//			public abstract ArrayList Array
+//			{
+//				get;
+//			}
+//			public abstract bool IsString
+//			{
+//				get;
+//			}
+//			public abstract string String
+//			{
+//				get;
+//			}
+//			public abstract ArrayList Keys
+//			{
+//				get;
+//			}
+//			public abstract int Count
+//			{
+//				get;
+//			}
+//			public abstract object this[object key] 
+//			{
+//				get;
+//				set;
+//			}
+//
+//			public abstract bool ContainsKey(object key);
+//			public override int GetHashCode() 
+//			{
+//				int hash=0;
+//				foreach(object key in this.Keys)
+//				{
+//					unchecked
+//					{
+//						hash+=key.GetHashCode()*this[key].GetHashCode();
+//					}
+//				}
+//				return hash;
+//			}
+//			public override bool Equals(object strategy)
+//			{
+//
+//				if(Object.ReferenceEquals(strategy,this))
+//				{ 
+//					return true;
+//				}
+//				else if(!(strategy is MapStrategy))
+//				{
+//					return false;
+//				}
+//				else if(((MapStrategy)strategy).Count!=this.Count)
+//				{
+//					return false;
+//				}
+//				foreach(object key in this.Keys) 
+//				{
+//					if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy)[key].Equals(this[key]))
+//					{
+//						return false;
+//					}
+//				}
+//				return true;
+//			}
+//		}
+//		public class StringStrategy:MapStrategy
+//		{
+//			public override int GetHashCode()
+//			{
+//				int hash=0;
+//				for(int i=0;i<text.Length;i++)
+//				{
+//					hash+=(i+1)*text[i];
+//				}
+//				return hash;
+//			}
+//			public override bool Equals(object strategy)
+//			{
+//				bool isEqual;
+//				if(strategy is StringStrategy)
+//				{	
+//					isEqual=((StringStrategy)strategy).text.Equals(this.text);
+//				}
+//				else
+//				{
+//					isEqual=base.Equals(strategy);
+//				}
+//				return isEqual;
+//			}
+//			public override Map CloneMap()
+//			{
+//				return new Map(new StringStrategy(this));
+//			}
+//			public override ArrayList Array
+//			{
+//				get
+//				{
+//					ArrayList list=new ArrayList();
+//					foreach(char iChar in text)
+//					{
+//						list.Add(new Integer(iChar));
+//					}
+//					return list;
+//				}
+//			}
+//			public override bool IsString
+//			{
+//				get
+//				{
+//					return true;
+//				}
+//			}
+//			public override string String
+//			{
+//				get
+//				{
+//					return text;
+//				}
+//			}
+//			public override ArrayList Keys
+//			{
+//				get
+//				{
+//					return keys;
+//				}
+//			}
+//			private ArrayList keys=new ArrayList();
+//			private string text;
+//			public StringStrategy(StringStrategy clone)
+//			{
+//				this.text=clone.text;
+//				this.keys=(ArrayList)clone.keys.Clone();
+//			}
+//			public StringStrategy(string text)
+//			{
+//				this.text=text;
+//				// TODO: make unicode-safe
+//				for(int i=1;i<=text.Length;i++)
+//				{ 
+//					keys.Add(new Integer(i));			
+//				}
+//			}
+//			public override int Count
+//			{
+//				get
+//				{
+//					return text.Length;
+//				}
+//			}
+//			public override object this[object key]
+//			{
+//				get
+//				{
+//					if(key is Integer)
+//					{
+//						int iInteger=((Integer)key).Int;
+//						if(iInteger>0 && iInteger<=this.Count)
+//						{
+//							return new Integer(text[iInteger-1]);
+//						}
+//					}
+//					return null;
+//				}
+//				set
+//				{
+//					map.strategy=this.Clone();
+//					map.strategy[key]=value;
+//				}
+//			}
+//			public override bool ContainsKey(object key) 
+//			{
+//				if(key is Integer)
+//				{
+//					return ((Integer)key)>0 && ((Integer)key)<=this.Count;
+//				}
+//				else
+//				{
+//					return false;
+//				}
+//			}
+//		}
+//		public class HybridDictionaryStrategy:MapStrategy
+//		{
+//			ArrayList keys;
+//			private HybridDictionary strategy;
+//			public HybridDictionaryStrategy():this(2)
+//			{
+//			}
+//			public HybridDictionaryStrategy(int Count)
+//			{
+//				this.keys=new ArrayList(Count);
+//				this.strategy=new HybridDictionary(Count);
+//			}
+//			public override Map CloneMap()
+//			{
+//				Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
+//				foreach(object key in keys)
+//				{
+//					clone[key]=strategy[key];
+//				}
+//				return clone;
+//			}
+//			public override ArrayList Array
+//			{
+//				get
+//				{
+//					ArrayList list=new ArrayList();
+//					for(Integer iInteger=new Integer(1);ContainsKey(iInteger);iInteger++)
+//					{
+//						list.Add(this[iInteger]);
+//					}
+//					return list;
+//				}
+//			}
+//			public override bool IsString
+//			{
+//				get
+//				{
+//					bool isString=false;;
+//					if(Array.Count>0)
+//					{
+//						try
+//						{
+//							object o=String;
+//							isString=true;
+//						}
+//						catch
+//						{
+//						}
+//					}
+//					return isString;
+//				}
+//			}
+//			public override string String
+//			{
+//				get
+//				{
+//					string text="";
+//					foreach(object key in this.Keys)
+//					{
+//						if(key is Integer && this.strategy[key] is Integer)
+//						{
+//							try
+//							{
+//								text+=System.Convert.ToChar(((Integer)this.strategy[key]).Int);
+//							}
+//							catch
+//							{
+//								throw new MapException(this.map,"Map is not a string");
+//							}
+//						}
+//						else
+//						{
+//							throw new MapException(this.map,"Map is not a string");
+//						}
+//					}
+//					return text;
+//				}
+//			}
+//			public override ArrayList Keys
+//			{
+//				get
+//				{
+//					return keys;
+//				}
+//			}
+//			public override int Count
+//			{
+//				get
+//				{
+//					return strategy.Count;
+//				}
+//			}
+//			public override object this[object key] 
+//			{
+//				get
+//				{
+//					return strategy[key];
+//				}
+//				set
+//				{
+//					if(!this.ContainsKey(key))
+//					{
+//						keys.Add(key);
+//					}
+//					strategy[key]=value;
+//				}
+//			}
+//			public override bool ContainsKey(object key) 
+//			{
+//				return strategy.Contains(key);
+//			}
+//		}
+//	}
+//	public class Map: IMap, IKeyValue, ICallable, IEnumerable, ISerializeSpecial
+//	{
+//
+//		public object Argument
+//		{
+//			get
+//			{
+//				return arg;
+//			}
+//			set
+//			{ 
+//				// TODO: Remove set, maybe?
+//				arg=value;
+//			}
+//		}
+//		object arg=null;
+//		public bool IsString // TODO: move to IMap
+//		{
+//			get
+//			{
+//				return strategy.IsString;
+//			}
+//		}
+//		public string String
+//		{
+//			get
+//			{
+//				return strategy.String;
+//			}
+//		}
+//		public override IMap Parent
+//		{
+//			get
+//			{
+//				return parent;
+//			}
+//			set
+//			{
+//				parent=value;
+//			}
+//		}
+//		public override int Count
+//		{
+//			get
+//			{
+//				return strategy.Count;
+//			}
+//		}
+//		public override ArrayList Array		//TODO: cache the Array somewhere; put in an "Add" method
+//		{ 
+//			get
+//			{
+//				return strategy.Array;
+//			}
+//		}
+//		public override object this[object key] 
+//		{
+//			get
+//			{
+//				object result;
+//				if(key.Equals(SpecialKeys.Parent))
+//				{
+//					result=Parent;
+//				}
+//				else if(key.Equals(SpecialKeys.Arg))
+//				{
+//					result=Argument;
+//				}
+//				else if(key.Equals(SpecialKeys.This))
+//				{
+//					result=this;
+//				}
+//				else
+//				{
+//					result=strategy[key];
+//				}
+//				return result;
+//			}
+//			set
+//			{
+//				if(value!=null)
+//				{
+//					isHashCached=false;
+//					if(key.Equals(SpecialKeys.This))
+//					{
+//						this.strategy=((Map)value).strategy.Clone();
+//					}
+//					else
+//					{
+//						object val;
+//						if(value is IMap)
+//						{
+//							val=((IMap)value).Clone();
+//							((IMap)val).Parent=this;
+//						}
+//						else
+//						{
+//							val=value;
+//						}
+//						strategy[key]=val;
+//					}
+//				}
+//			}
+//		}
+//		public object Call(object argument)
+//		{
+//			this.Argument=argument;
+//			Expression function=(Expression)((Map)this[CodeKeys.Run]).GetExpression();
+//			object result;
+//			result=function.Evaluate(this);
+//			return result;
+//		}
+//		public override ArrayList Keys
+//		{
+//			get
+//			{
+//				return strategy.Keys;
+//			}
+//		}
+//		public override IMap Clone()
+//		{
+//			Map clone=strategy.CloneMap();
+//			clone.Parent=Parent;
+//			//clone.expression=expression;
+//			clone.Extent=Extent;
+//			return clone;
+//		}
+//		public Expression GetExpression() // TODO: move to Expression
+//		{
+//			// expression Statements are not cached, only expressions
+//
+//			// no caching anymore, because of possible issues when reverse-debugging
+////			if(expression==null) 
+////			{
+//			Expression expression;
+//				if(this.ContainsKey(CodeKeys.Call))
+//				{
+//					expression=new Call((Map)this[CodeKeys.Call]);
+//				}
+//				else if(this.ContainsKey(CodeKeys.Delayed))
+//				{ 
+//					expression=new Delayed((Map)this[CodeKeys.Delayed]);
+//				}
+//				else if(this.ContainsKey(CodeKeys.Program))
+//				{
+//					expression=new Program((Map)this[CodeKeys.Program]);
+//				}
+//				else if(this.ContainsKey(CodeKeys.Literal))
+//				{
+//					expression=new Literal((Map)this[CodeKeys.Literal]);
+//				}
+//				else if(this.ContainsKey(CodeKeys.Search))
+//				{
+//					expression=new Search((Map)this[CodeKeys.Search]);
+//				}
+//				else if(this.ContainsKey(CodeKeys.Select))
+//				{
+//					expression=new Select((Map)this[CodeKeys.Select]);
+//				}
+//				else
+//				{
+//					throw new ApplicationException("Cannot compile non-code map.");
+//				}
+////			}
+//				((Expression)expression).Extent=this.Extent;
+//			return expression;
+//		}
+//		public override bool ContainsKey(object key) 
+//		{
+//			if(key is Map)
+//			{
+//				if(key.Equals(SpecialKeys.Arg))
+//				{
+//					return this.Argument!=null;
+//				}
+//				else if(key.Equals(SpecialKeys.Parent))
+//				{
+//					return this.Parent!=null;
+//				}
+//				else if(key.Equals(SpecialKeys.This))
+//				{
+//					return true;
+//				}
+//			}
+//			return strategy.ContainsKey(key);
+//		}
+//		public override bool Equals(object toCompare)
+//		{
+//			bool isEqual=false;
+//			if(Object.ReferenceEquals(toCompare,this))
+//			{
+//				isEqual=true;
+//			}
+//			else if(toCompare is Map)
+//			{
+//				isEqual=((Map)toCompare).strategy.Equals(strategy);
+//			}
+//			return isEqual;
+//		}
+//		public override IEnumerator GetEnumerator()
+//		{
+//			return new MapEnumerator(this);
+//		}
+//		public override int GetHashCode() 
+//		{
+//			if(!isHashCached)
+//			{
+//				hash=this.strategy.GetHashCode();
+//				isHashCached=true;
+//			}
+//			return hash;
+//		}
+//		private bool isHashCached=false;
+//		private int hash;
+//
+//		Extent extent;
+//		public Extent Extent
+//		{
+//			get
+//			{
+//				return extent;
+//			}
+//			set
+//			{
+//				extent=value;
+//			}
+//		}
+//		public Map(string text):this(new StringStrategy(text))
+//		{
+//		}
+//		public Map(MapStrategy strategy)
+//		{
+//			this.strategy=strategy;
+//			this.strategy.map=this;
+//		}
+//		public Map():this(new HybridDictionaryStrategy())
+//		{
+//		}
+//		private IMap parent;
+//		private MapStrategy strategy;
+////		public Expression expression; // why have this at all, why not for statements? probably a question of performance.
+//		public string Serialize(string indentation,string[] functions)
+//		{
+//			if(this.IsString)
+//			{
+//				return indentation+"\""+this.String+"\""+"\n";
+//			}
+//			else
+//			{
+//				return null;
+//			}
+//		}
+//
+//		public abstract class MapStrategy
+//		{
+//			public Map map;
+//			public MapStrategy Clone()
+//			{
+//				MapStrategy strategy=new HybridDictionaryStrategy();
+//				foreach(object key in this.Keys)
+//				{
+//					strategy[key]=this[key];
+//				}
+//				return strategy;	
+//			}
+//			public abstract Map CloneMap();
+//			public abstract ArrayList Array
+//			{
+//				get;
+//			}
+//			public abstract bool IsString
+//			{
+//				get;
+//			}
+//			public abstract string String
+//			{
+//				get;
+//			}
+//			public abstract ArrayList Keys
+//			{
+//				get;
+//			}
+//			public abstract int Count
+//			{
+//				get;
+//			}
+//			public abstract object this[object key] 
+//			{
+//				get;
+//				set;
+//			}
+//
+//			public abstract bool ContainsKey(object key);
+//			public override int GetHashCode() 
+//			{
+//				int hash=0;
+//				foreach(object key in this.Keys)
+//				{
+//					unchecked
+//					{
+//						hash+=key.GetHashCode()*this[key].GetHashCode();
+//					}
+//				}
+//				return hash;
+//			}
+//			public override bool Equals(object strategy)
+//			{
+//
+//				if(Object.ReferenceEquals(strategy,this))
+//				{ 
+//					return true;
+//				}
+//				else if(!(strategy is MapStrategy))
+//				{
+//					return false;
+//				}
+//				else if(((MapStrategy)strategy).Count!=this.Count)
+//				{
+//					return false;
+//				}
+//				foreach(object key in this.Keys) 
+//				{
+//					if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy)[key].Equals(this[key]))
+//					{
+//						return false;
+//					}
+//				}
+//				return true;
+//			}
+//		}
+//		public class StringStrategy:MapStrategy
+//		{
+//			public override int GetHashCode()
+//			{
+//				int hash=0;
+//				for(int i=0;i<text.Length;i++)
+//				{
+//					hash+=(i+1)*text[i];
+//				}
+//				return hash;
+//			}
+//			public override bool Equals(object strategy)
+//			{
+//				bool isEqual;
+//				if(strategy is StringStrategy)
+//				{	
+//					isEqual=((StringStrategy)strategy).text.Equals(this.text);
+//				}
+//				else
+//				{
+//					isEqual=base.Equals(strategy);
+//				}
+//				return isEqual;
+//			}
+//			public override Map CloneMap()
+//			{
+//				return new Map(new StringStrategy(this));
+//			}
+//			public override ArrayList Array
+//			{
+//				get
+//				{
+//					ArrayList list=new ArrayList();
+//					foreach(char iChar in text)
+//					{
+//						list.Add(new Integer(iChar));
+//					}
+//					return list;
+//				}
+//			}
+//			public override bool IsString
+//			{
+//				get
+//				{
+//					return true;
+//				}
+//			}
+//			public override string String
+//			{
+//				get
+//				{
+//					return text;
+//				}
+//			}
+//			public override ArrayList Keys
+//			{
+//				get
+//				{
+//					return keys;
+//				}
+//			}
+//			private ArrayList keys=new ArrayList();
+//			private string text;
+//			public StringStrategy(StringStrategy clone)
+//			{
+//				this.text=clone.text;
+//				this.keys=(ArrayList)clone.keys.Clone();
+//			}
+//			public StringStrategy(string text)
+//			{
+//				this.text=text;
+//				// TODO: make unicode-safe
+//				for(int i=1;i<=text.Length;i++)
+//				{ 
+//					keys.Add(new Integer(i));			
+//				}
+//			}
+//			public override int Count
+//			{
+//				get
+//				{
+//					return text.Length;
+//				}
+//			}
+//			public override object this[object key]
+//			{
+//				get
+//				{
+//					if(key is Integer)
+//					{
+//						int iInteger=((Integer)key).Int;
+//						if(iInteger>0 && iInteger<=this.Count)
+//						{
+//							return new Integer(text[iInteger-1]);
+//						}
+//					}
+//					return null;
+//				}
+//				set
+//				{
+//					map.strategy=this.Clone();
+//					map.strategy[key]=value;
+//				}
+//			}
+//			public override bool ContainsKey(object key) 
+//			{
+//				if(key is Integer)
+//				{
+//					return ((Integer)key)>0 && ((Integer)key)<=this.Count;
+//				}
+//				else
+//				{
+//					return false;
+//				}
+//			}
+//		}
+//		public class HybridDictionaryStrategy:MapStrategy
+//		{
+//			ArrayList keys;
+//			private HybridDictionary strategy;
+//			public HybridDictionaryStrategy():this(2)
+//			{
+//			}
+//			public HybridDictionaryStrategy(int Count)
+//			{
+//				this.keys=new ArrayList(Count);
+//				this.strategy=new HybridDictionary(Count);
+//			}
+//			public override Map CloneMap()
+//			{
+//				Map clone=new Map(new HybridDictionaryStrategy(this.keys.Count));
+//				foreach(object key in keys)
+//				{
+//					clone[key]=strategy[key];
+//				}
+//				return clone;
+//			}
+//			public override ArrayList Array
+//			{
+//				get
+//				{
+//					ArrayList list=new ArrayList();
+//					for(Integer iInteger=new Integer(1);ContainsKey(iInteger);iInteger++)
+//					{
+//						list.Add(this[iInteger]);
+//					}
+//					return list;
+//				}
+//			}
+//			public override bool IsString
+//			{
+//				get
+//				{
+//					bool isString=false;;
+//					if(Array.Count>0)
+//					{
+//						try
+//						{
+//							object o=String;
+//							isString=true;
+//						}
+//						catch
+//						{
+//						}
+//					}
+//					return isString;
+//				}
+//			}
+//			public override string String
+//			{
+//				get
+//				{
+//					string text="";
+//					foreach(object key in this.Keys)
+//					{
+//						if(key is Integer && this.strategy[key] is Integer)
+//						{
+//							try
+//							{
+//								text+=System.Convert.ToChar(((Integer)this.strategy[key]).Int);
+//							}
+//							catch
+//							{
+//								throw new MapException(this.map,"Map is not a string");
+//							}
+//						}
+//						else
+//						{
+//							throw new MapException(this.map,"Map is not a string");
+//						}
+//					}
+//					return text;
+//				}
+//			}
+//			public override ArrayList Keys
+//			{
+//				get
+//				{
+//					return keys;
+//				}
+//			}
+//			public override int Count
+//			{
+//				get
+//				{
+//					return strategy.Count;
+//				}
+//			}
+//			public override object this[object key] 
+//			{
+//				get
+//				{
+//					return strategy[key];
+//				}
+//				set
+//				{
+//					if(!this.ContainsKey(key))
+//					{
+//						keys.Add(key);
+//					}
+//					strategy[key]=value;
+//				}
+//			}
+//			public override bool ContainsKey(object key) 
+//			{
+//				return strategy.Contains(key);
+//			}
+//		}
+//	}
 	public class MapEnumerator: IEnumerator
 	{
 		private IMap map; 
@@ -3017,6 +4139,11 @@ namespace Meta
 	}
 	public class DotNetClass: DotNetContainer, IKeyValue,ICallable
 	{
+		public override IMap Clone()
+		{
+			return new DotNetClass(targetType);
+		}
+
 		protected DotNetMethod constructor;
 		public DotNetClass(Type targetType):base(null,targetType)
 		{
@@ -3036,11 +4163,50 @@ namespace Meta
 		{
 			return target.ToString();
 		}
+		public override IMap Clone()
+		{
+			return new DotNetObject(target);
+		}
+
 	}
-	/* Base class for DotNetObject and DotNetClass. */
-	public abstract class DotNetContainer: IKeyValue, IEnumerable,ISerializeSpecial
+	// TODO: change to IMap
+	public abstract class DotNetContainer: IMap,IKeyValue, IEnumerable,ISerializeSpecial
 	{
-		public bool ContainsKey(object key)
+		public override ArrayList Array // TODO: not sure this works correctly
+		{
+			get
+			{
+				ArrayList array=new ArrayList();
+				foreach(object key in Keys)
+				{
+					if(key is Integer)
+					{
+						array.Add(this[key]);
+					}
+				}
+				return array;
+//				ArrayList integerKeys=new ArrayList();
+//				foreach(object key in Keys)
+//				{
+//					if(key is Integer)
+//					{
+//						integerKeys.Add(this[key]);
+//					}
+//				}
+//				ArrayList array=new ArrayList();
+//				foreach(object key in integerKeys)
+//				{
+//					array.Add(this[key]);
+//				}
+
+
+			}
+		}
+
+
+		//
+
+		public override bool ContainsKey(object key)
 		{
 			if(key is Map)
 			{
@@ -3067,11 +4233,11 @@ namespace Meta
 				return false;
 			}
 		}
-		public IEnumerator GetEnumerator()
+		public override  IEnumerator GetEnumerator()
 		{
 			return MTable.GetEnumerator();
 		}
-		public IKeyValue Parent
+		public override IMap Parent
 		{
 			get
 			{
@@ -3082,21 +4248,22 @@ namespace Meta
 				parent=value;
 			}
 		}
-		public ArrayList Keys
+		// TODO: make some sort of guarantee about the order of the keys here, somewhat problematic
+		public override ArrayList Keys
 		{
 			get
 			{
 				return new ArrayList(MTable.Keys);
 			}
 		}
-		public int Count 
+		public override int Count 
 		{
 			get
 			{
 				return MTable.Count;
 			}
 		}
-		public virtual object this[object key] 
+		public override object this[object key] 
 		{
 			get
 			{
@@ -3328,9 +4495,9 @@ namespace Meta
 			this.targetType=targetType;
 		}
 		private BindingFlags bindingFlags;
-		private IKeyValue parent;
+		private IMap parent;
 		public object target;
-		public Type targetType;
+		public Type targetType; // TODO: rename
 	}
 
 	namespace Parser 
