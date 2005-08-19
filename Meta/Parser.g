@@ -393,7 +393,7 @@ expression:
 		|search
   );
   
-//TODO: rename map to program, or something like that
+//TODO: rename IMap to program, or something like that
 map:
   {
     Counters.autokey.Push(0);
@@ -589,9 +589,9 @@ options {
     ASTLabelType = "MetaAST";
 }
 expression
-  returns[Map result]
+  returns[IMap result]
   {
-    result=null;//new Map();
+    result=null;//new IMap();
   }:
   (
     result=call
@@ -604,11 +604,11 @@ expression
   )
   ;
 key
-	returns[Map result]
+	returns[IMap result]
 	{
 		int counter=1;
-		result=new Map();
-		Map e=null;
+		result=new IMap();
+		IMap e=null;
 	}:
 	#(KEY
 		(
@@ -621,36 +621,36 @@ key
 	)
 	;
 statement
-	returns[Map statement]
+	returns[IMap statement]
 	{
-		statement=new Map();
-		//Map key=null;
-		Map val=null;
-		Map k=null;
+		statement=new IMap();
+		//IMap key=null;
+		IMap val=null;
+		IMap k=null;
 	}:
 	#(STATEMENT
 		k=key
 		val=expression
 		{
-			//Map statement=new Map();
+			//IMap statement=new IMap();
 			statement[CodeKeys.Key]=k;
 			statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 		}
 	)
 	;
 statementSearch // maybe somehow combine this with "statement", if possible, not sure if tree has lookahead at all, didn't seem to work in one rule
-	returns[Map statement]
+	returns[IMap statement]
 	{
-		statement=new Map();
-		//Map key=null;
-		Map val=null;
-		Map k=null;
+		statement=new IMap();
+		//IMap key=null;
+		IMap val=null;
+		IMap k=null;
 	}:
 	#(STATEMENT_SEARCH
 		k=key
 		val=expression
 		{
-			//Map statement=new Map();
+			//IMap statement=new IMap();
 			statement[CodeKeys.Key]=k;
 			statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 		}
@@ -660,12 +660,12 @@ statementSearch // maybe somehow combine this with "statement", if possible, not
 	}
 	;
 map
-  returns[Map result]
+  returns[IMap result]
   {
-    result=new Map();
+    result=new IMap();
     result.Extent=#map.Extent;
-    Map statements=new Map();
-    Map s=null;
+    IMap statements=new IMap();
+    IMap s=null;
     int counter=1;
   }:
   #(MAP
@@ -682,13 +682,13 @@ map
   };
 
 call
-  returns [Map result]
+  returns [IMap result]
   {
-    result=new Map();
+    result=new IMap();
     result.Extent=#call.Extent;
-    Map call=new Map();
-    Map delayed=new Map();
-    Map argument=new Map();
+    IMap call=new IMap();
+    IMap delayed=new IMap();
+    IMap argument=new IMap();
   }:
   #(CALL
     (
@@ -705,12 +705,12 @@ call
   );
 
 select
-  returns [Map result]
+  returns [IMap result]
   {
-    result=new Map();
+    result=new IMap();
     result.Extent=#select.Extent;
-    Map selection=new Map();
-    Map key=null;
+    IMap selection=new IMap();
+    IMap key=null;
     int counter=1;
   }: 
   #(SELECT
@@ -730,12 +730,12 @@ select
 
 
 search
-	returns [Map result]
+	returns [IMap result]
 	{
-		result=new Map();
-		Map lookupResult=null;
+		result=new IMap();
+		IMap lookupResult=null;
 		result.Extent=#search.Extent;
-		Map e=null;
+		IMap e=null;
 	}:
 	#(SEARCH e=expression)
 	{
@@ -746,24 +746,24 @@ search
 // TODO: somewhat unlogical that literal doesn't build a higher AST in the first place,
 // if there was also a parser rule for Literal, then we could match an AST instead of a token here
 literal
-  returns [Map result]
+  returns [IMap result]
   {
-    result=new Map();
+    result=new IMap();
     result.Extent=#literal.Extent;
   }:
   token:LITERAL
   {
-    result[CodeKeys.Literal]=new Map(token.getText());
+    result[CodeKeys.Literal]=new IMap(token.getText());
   };
 
 //TODO: is this even needed anymore?
 delayed
-    returns[Map result]
+    returns[IMap result]
     {
-        result=new Map();
+        result=new IMap();
         result.Extent=#delayed.Extent;
-        Map mExpression;
-        //Map CodeKeys.Run=new Map();
+        IMap mExpression;
+        //IMap CodeKeys.Run=new IMap();
     }:
     #(FUNCTION mExpression=expression)
     {
@@ -774,10 +774,10 @@ delayed
     };
 
 /*delayedExpressionOnly
-    returns[Map result]
+    returns[IMap result]
     {
-        result=new Map();
-        Map mExpression=null;
+        result=new IMap();
+        IMap mExpression=null;
     }:
     #(DELAYED_EXPRESSION_ONLY mExpression=expression)
     {

@@ -12,29 +12,29 @@ public class map
 	{
 		//		public static event BreakPointDelegate BreakPoint;
 		public static int line=0; // only needed because of test in basicTest.meta
-		//		public static void breakPointCallBack(Map mCallback) {
+		//		public static void breakPointCallBack(IMap mCallback) {
 		//			Interpreter.OnBreak();
 		//		}
 		//		public static int column=0;
 		//		public static void run() {
-		//			BreakPoint(new Map("stuff"));
+		//			BreakPoint(new IMap("stuff"));
 		//		}
 	}
-	public static bool ContainsKey(Map map,object key) 
+	public static bool ContainsKey(IMap map,object key) 
 	{
 		string a="";
 		return map.ContainsKey(key);
 	}
-	public static int Length(Map map) 
+	public static int Length(IMap map) 
 	{
 		return map.Count;
 	}
-	public static Map TrimStart(Map arg) 
+	public static IMap TrimStart(IMap arg) 
 	{
-		Map map=(Map)arg[new Integer(1)];
+		IMap map=(IMap)arg[new Integer(1)];
 		object obj=arg[new Integer(2)];
 
-		Map result=new Map();
+		IMap result=new IMap();
 		int counter=1;
 		foreach(object o in map.Array) 
 		{
@@ -50,7 +50,7 @@ public class map
 		}
 		return result;
 	}
-	//	public static int CountStart(Map map,object obj) { // TODO: dumb name
+	//	public static int CountStart(IMap map,object obj) { // TODO: dumb name
 	//		int count=0;
 	//		foreach(object o in map.Array) {
 	//			if(obj.Equals(o)) {
@@ -65,7 +65,7 @@ public class map
 	public static IMap Keys(IMap map) 
 	{
 		int i=1;
-		Map keys=new Map();
+		IMap keys=new IMap();
 		foreach(DictionaryEntry entry in map) 
 		{
 			keys[new Integer(i)]=entry.Key;
@@ -73,12 +73,12 @@ public class map
 		}
 		return keys;
 	}
-	public static Map Join(Map arg) 
+	public static IMap Join(IMap arg) 
 	{ // rename to "append"
 		ArrayList maps=arg.Array;
 		int i=1;
-		Map combined=new Map();
-		foreach(Map map in maps) 
+		IMap combined=new IMap();
+		foreach(IMap map in maps) 
 		{ // TODO: eigentlich nur die Arrays verwenden
 			foreach(object val in map.Array) 
 			{
@@ -88,9 +88,9 @@ public class map
 		}
 		return combined;
 	}
-	public static IMap Merge(Map arg) // TODO: replace all Maps with IMaps
+	public static IMap Merge(IMap arg) // TODO: replace all Maps with IMaps
 	{
-		return (Map)Interpreter.MergeCollection(arg.Array);
+		return (IMap)Interpreter.MergeCollection(arg.Array);
 	}
 	public static object Init(object obj,IMap map) 
 	{ // make merge general enough to replace this
@@ -101,9 +101,9 @@ public class map
 		}
 		return obj;
 	}
-	public static Map Remove(object oToRemove,Map mArray)
+	public static IMap Remove(object oToRemove,IMap mArray)
 	{
-		Map mResult=new Map();
+		IMap mResult=new IMap();
 		int iCounter=1;
 		foreach(object oIntegerKeyValue in mArray.Array)
 		{
@@ -115,9 +115,9 @@ public class map
 		}
 		return mResult;
 	}
-	public static Map Foreach(Map mArray,Map mFunction)
+	public static IMap Foreach(IMap mArray,IMap mFunction)
 	{
-		Map mResult=new Map();
+		IMap mResult=new IMap();
 		int iCounter=1;
 		foreach(object oIntegerKeyValue in mArray.Array)
 		{
@@ -126,36 +126,36 @@ public class map
 		}
 		return mResult;
 	}
-	public static Map Apply(Map mFunction,Map mArray) 
+	public static IMap Apply(IMap mFunction,IMap mArray) 
 	{ // switch this the arguments around
-		Map mResult=new Map();
+		IMap mResult=new IMap();
 		int counter=1;
 		foreach(object oKey in mArray.Keys) 
 		{
-			Map mArgument=new Map();
-			mArgument[new Map("key")]=oKey;
-			mArgument[new Map("value")]=mArray[oKey];
+			IMap mArgument=new IMap();
+			mArgument[new IMap("key")]=oKey;
+			mArgument[new IMap("value")]=mArray[oKey];
 			mResult[new Integer(counter)]=mFunction.Call(mArgument);
 			counter++;
 		}
 		return mResult;
 	}
-	public static object If(Map argM) 
+	public static object If(IMap argM) 
 	{ // maybe automatically convert Maps to MapAdapters??
 		bool conditionB=(bool)System.Convert.ToBoolean(Meta.Convert.ToDotNet(argM[new Integer(1)]));//,typeof(bool));
-		Map thenF=(Map)argM[new Map("then")];
-		Map elseF=(Map)argM[new Map("else")];
+		IMap thenF=(IMap)argM[new IMap("then")];
+		IMap elseF=(IMap)argM[new IMap("else")];
 		if(conditionB) 
 		{
-			return thenF.Call(new Map());
+			return thenF.Call(new IMap());
 		}
 		else if(elseF!=null) 
 		{
-			return elseF.Call(new Map());
+			return elseF.Call(new IMap());
 		}
 		else 
 		{
-			return new Map();
+			return new IMap();
 		}		
 	}
 }
@@ -169,7 +169,7 @@ public class logic
 	{
 		return !a;
 	}
-	public static bool And(Map arg) 
+	public static bool And(IMap arg) 
 	{
 		foreach(bool val in arg.Array) 
 		{
@@ -180,7 +180,7 @@ public class logic
 		}
 		return true;
 	}
-	public static bool Or(Map arg) 
+	public static bool Or(IMap arg) 
 	{
 		foreach(bool val in arg.Array) 
 		{

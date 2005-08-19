@@ -1,335 +1,336 @@
 Entry (DictionaryEntry)
   Key (Integer):
     "1"
-  Value (Map):
+  Value (IMap):
     "ImpliedAutokey"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "unicodeText"
-  Value (Map):
+  Value (IMap):
     "äaba"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Equal"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Equal(System.Object, System.Object)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Not"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Not(Boolean)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "And"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean And(Meta.Map)"
+        "Boolean And(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Or"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean Or(Meta.Map)"
+        "Boolean Or(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Merge"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.IMap Merge(Meta.Map)"
+        "Meta.IMap Merge(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Keys"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.IMap Keys(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Foreach"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Map Foreach(Meta.Map, Meta.Map)"
+        "Meta.IMap Foreach(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Length"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Int32 Length(Meta.Map)"
+        "Int32 Length(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Init"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.Object Init(System.Object, Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "interpreter"
-  Value (DotNetClass):
-    Entry (DictionaryEntry)
-  Key (Map):
+  Value (IMap):
+    "map+interpreter"
+Entry (DictionaryEntry)
+  Key (IMap):
     "Apply"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Map Apply(Meta.Map, Meta.Map)"
+        "Meta.IMap Apply(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Join"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Map Join(Meta.Map)"
+        "Meta.IMap Join(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "ContainsKey"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean ContainsKey(Meta.Map, System.Object)"
+        "Boolean ContainsKey(Meta.IMap, System.Object)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Remove"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Map Remove(System.Object, Meta.Map)"
+        "Meta.IMap Remove(System.Object, Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "TrimStart"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Meta.Map TrimStart(Meta.Map)"
+        "Meta.IMap TrimStart(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "If"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "System.Object If(Meta.Map)"
+        "System.Object If(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Add"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer Add(Integer, Integer)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Subtract"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer Subtract(Integer, Integer)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Multiply"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer Multiply(Integer, Integer)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Divide"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer Divide(Integer, Integer)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Smaller"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Smaller(Integer, Integer)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "Greater"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Greater(Integer, Integer)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "BitwiseOr"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer BitwiseOr(Integer[])"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "literalEscapeTest"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (Map):
+      Value (IMap):
         "asdf"
     Entry (DictionaryEntry)
       Key (Integer):
         "2"
-      Value (Map):
+      Value (IMap):
         "asdf"
     Entry (DictionaryEntry)
       Key (Integer):
         "3"
-      Value (Map):
+      Value (IMap):
         "as"'df"
     Entry (DictionaryEntry)
       Key (Integer):
         "4"
-      Value (Map):
+      Value (IMap):
         "as"'"df"
     Entry (DictionaryEntry)
       Key (Integer):
         "5"
-      Value (Map):
+      Value (IMap):
         "as"'"'"'"'"'"'"'"'df"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "nestedClassTest"
   Value (Integer):
     "5"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "applyMethod"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "call"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "function"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "search"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "literal"
-                      Value (Map):
+                      Value (IMap):
                         "Add"
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "argument"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "program"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "key"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
                               Key (Integer):
                                 "1"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "literal"
-                                  Value (Map):
+                                  Value (IMap):
                                     "1"
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "value"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "select"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "search"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
-                                          Key (Map):
+                                          Key (IMap):
                                             "literal"
-                                          Value (Map):
+                                          Value (IMap):
                                             "arg"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "literal"
-                                      Value (Map):
+                                      Value (IMap):
                                         "value"
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "2"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "key"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
                               Key (Integer):
                                 "1"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "literal"
-                                  Value (Map):
+                                  Value (IMap):
                                     "2"
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "value"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "literal"
-                              Value (Map):
+                              Value (IMap):
                                 "1"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "applyTest"
-  Value (Map):
+  Value (IMap):
     ""
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "ifTest"
-  Value (Map):
+  Value (IMap):
     "it is true"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "form"
-  Value (Form):
+  Value (IMap):
     "System.Windows.Forms.Form, Text: hello"
 Entry (DictionaryEntry)
   Key (Integer):
     "2"
-  Value (Map):
+  Value (IMap):
     "Autokey"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "commandLineArguments"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
@@ -341,871 +342,878 @@ Entry (DictionaryEntry)
       Value (String):
         "second=arg"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "aMap"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "a"
-      Value (Map):
+      Value (IMap):
         "a"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "a"
-      Value (Map):
+      Value (IMap):
         "a"
-  Value (Map):
+  Value (IMap):
     "Object"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "normal symbol"
-  Value (Map):
+  Value (IMap):
     "NormalSymbol"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "lookupSymbol"
-  Value (Map):
+  Value (IMap):
     "LookupSymbol"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "long key symbol"
-  Value (Map):
+  Value (IMap):
     "LookupExtendedSymbol"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "lookedUpMap"
-  Value (Map):
+  Value (IMap):
     "Object"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "lookedUpNormalSymbol"
-  Value (Map):
+  Value (IMap):
     "NormalSymbol"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "lookedUpSymbol"
-  Value (Map):
+  Value (IMap):
     "LookupSymbol"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "lookedUpLongSymbol"
-  Value (Map):
+  Value (IMap):
     "LookupExtendedSymbol"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "object"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "a"
-      Value (Map):
+      Value (IMap):
         "c"
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "autoSearch"
-      Value (Map):
+      Value (IMap):
         "changed"
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "b"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
           Key (Integer):
             "1"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "x"
               Value (Integer):
                 "7"
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "z"
               Value (Integer):
                 "1"
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "SetA"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "run"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "program"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "1"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "key"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "literal"
-                              Value (Map):
+                              Value (IMap):
                                 "a"
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "value"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "c"
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "search"
                       Value (Integer):
                         "1"
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "2"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "key"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "literal"
-                              Value (Map):
+                              Value (IMap):
                                 "autoSearch"
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "value"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "changed"
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "search"
                       Value (Integer):
                         "1"
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "SetB"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "run"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "program"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "1"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "key"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "literal"
-                              Value (Map):
+                              Value (IMap):
                                 "b"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "literal"
-                              Value (Map):
+                              Value (IMap):
                                 "1"
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "value"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "select"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
                               Key (Integer):
                                 "1"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "search"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "literal"
-                                      Value (Map):
+                                      Value (IMap):
                                         "arg"
                             Entry (DictionaryEntry)
                               Key (Integer):
                                 "2"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "literal"
-                                  Value (Map):
+                                  Value (IMap):
                                     "value"
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "search"
                       Value (Integer):
                         "1"
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "2"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "key"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "literal"
-                              Value (Map):
+                              Value (IMap):
                                 "this"
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "value"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "changed"
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "x"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "a"
-          Value (Map):
+          Value (IMap):
             "b"
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "c"
-          Value (Map):
+          Value (IMap):
             "d"
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "run"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "program"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "1"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "key"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "literal"
-                              Value (Map):
+                              Value (IMap):
                                 "this"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "literal"
-                              Value (Map):
+                              Value (IMap):
                                 "a"
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "value"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "b"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "a"
-  Value (Map):
+  Value (IMap):
     "default"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "b"
-  Value (Map):
+  Value (IMap):
     ""
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "aSet"
-  Value (Map):
+  Value (IMap):
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "bSet"
-  Value (Map):
+  Value (IMap):
     "changed"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "ReturnEverything"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "search"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "arg"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "everythingReturned"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (Map):
+      Value (IMap):
         "a"
     Entry (DictionaryEntry)
       Key (Integer):
         "2"
-      Value (Map):
+      Value (IMap):
         "b"
     Entry (DictionaryEntry)
       Key (Integer):
         "3"
-      Value (Map):
+      Value (IMap):
         "c"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "variableAsArgument"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (Map):
+      Value (IMap):
         "x"
     Entry (DictionaryEntry)
       Key (Integer):
         "2"
-      Value (Map):
+      Value (IMap):
         "y"
     Entry (DictionaryEntry)
       Key (Integer):
         "3"
-      Value (Map):
+      Value (IMap):
         "z"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "ReturnFunction"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "program"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "key"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "literal"
-                                      Value (Map):
+                                      Value (IMap):
                                         "run"
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "value"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "delayed"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "program"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
                                           Key (Integer):
                                             "1"
-                                          Value (Map):
+                                          Value (IMap):
                                             Entry (DictionaryEntry)
-                                              Key (Map):
+                                              Key (IMap):
                                                 "key"
-                                              Value (Map):
+                                              Value (IMap):
                                                 Entry (DictionaryEntry)
                                                   Key (Integer):
                                                     "1"
-                                                  Value (Map):
+                                                  Value (IMap):
                                                     Entry (DictionaryEntry)
-                                                      Key (Map):
+                                                      Key (IMap):
                                                         "literal"
-                                                      Value (Map):
+                                                      Value (IMap):
                                                         "this"
                                             Entry (DictionaryEntry)
-                                              Key (Map):
+                                              Key (IMap):
                                                 "value"
-                                              Value (Map):
+                                              Value (IMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (Map):
+                                                  Key (IMap):
                                                     "program"
-                                                  Value (Map):
+                                                  Value (IMap):
                                                     Entry (DictionaryEntry)
                                                       Key (Integer):
                                                         "1"
-                                                      Value (Map):
+                                                      Value (IMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (Map):
+                                                          Key (IMap):
                                                             "key"
-                                                          Value (Map):
+                                                          Value (IMap):
                                                             Entry (DictionaryEntry)
                                                               Key (Integer):
                                                                 "1"
-                                                              Value (Map):
+                                                              Value (IMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (Map):
+                                                                  Key (IMap):
                                                                     "literal"
-                                                                  Value (Map):
+                                                                  Value (IMap):
                                                                     "1"
                                                         Entry (DictionaryEntry)
-                                                          Key (Map):
+                                                          Key (IMap):
                                                             "value"
-                                                          Value (Map):
+                                                          Value (IMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (Map):
+                                                              Key (IMap):
                                                                 "literal"
-                                                              Value (Map):
+                                                              Value (IMap):
                                                                 "1"
                                                     Entry (DictionaryEntry)
                                                       Key (Integer):
                                                         "2"
-                                                      Value (Map):
+                                                      Value (IMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (Map):
+                                                          Key (IMap):
                                                             "key"
-                                                          Value (Map):
+                                                          Value (IMap):
                                                             Entry (DictionaryEntry)
                                                               Key (Integer):
                                                                 "1"
-                                                              Value (Map):
+                                                              Value (IMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (Map):
+                                                                  Key (IMap):
                                                                     "literal"
-                                                                  Value (Map):
+                                                                  Value (IMap):
                                                                     "2"
                                                         Entry (DictionaryEntry)
-                                                          Key (Map):
+                                                          Key (IMap):
                                                             "value"
-                                                          Value (Map):
+                                                          Value (IMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (Map):
+                                                              Key (IMap):
                                                                 "literal"
-                                                              Value (Map):
+                                                              Value (IMap):
                                                                 "2"
                                                     Entry (DictionaryEntry)
                                                       Key (Integer):
                                                         "3"
-                                                      Value (Map):
+                                                      Value (IMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (Map):
+                                                          Key (IMap):
                                                             "key"
-                                                          Value (Map):
+                                                          Value (IMap):
                                                             Entry (DictionaryEntry)
                                                               Key (Integer):
                                                                 "1"
-                                                              Value (Map):
+                                                              Value (IMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (Map):
+                                                                  Key (IMap):
                                                                     "literal"
-                                                                  Value (Map):
+                                                                  Value (IMap):
                                                                     "3"
                                                         Entry (DictionaryEntry)
-                                                          Key (Map):
+                                                          Key (IMap):
                                                             "value"
-                                                          Value (Map):
+                                                          Value (IMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (Map):
+                                                              Key (IMap):
                                                                 "literal"
-                                                              Value (Map):
+                                                              Value (IMap):
                                                                 "3"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "SetCurrent"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "program"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "key"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "literal"
-                                      Value (Map):
+                                      Value (IMap):
                                         "arg"
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "value"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "search"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "literal"
-                                      Value (Map):
+                                      Value (IMap):
                                         "arg"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "key"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "literal"
-                                      Value (Map):
+                                      Value (IMap):
                                         "x"
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "value"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "select"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "1"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
-                                          Key (Map):
+                                          Key (IMap):
                                             "search"
-                                          Value (Map):
+                                          Value (IMap):
                                             Entry (DictionaryEntry)
-                                              Key (Map):
+                                              Key (IMap):
                                                 "literal"
-                                              Value (Map):
+                                              Value (IMap):
                                                 "arg"
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "2"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
-                                          Key (Map):
+                                          Key (IMap):
                                             "literal"
-                                          Value (Map):
+                                          Value (IMap):
                                             "symbol"
             Entry (DictionaryEntry)
               Key (Integer):
                 "2"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "search"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "x"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "thisSet"
-  Value (Map):
+  Value (IMap):
     "haha"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "FirstLevel"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "1"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "call"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "function"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "search"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "literal"
-                                  Value (Map):
+                                  Value (IMap):
                                     "SecondLevel"
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "argument"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "search"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "literal"
-                                  Value (Map):
+                                  Value (IMap):
                                     "arg"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "SecondLevel"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "search"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "literal"
-              Value (Map):
+              Value (IMap):
                 "arg"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "argTest"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "a"
-          Value (Map):
+          Value (IMap):
             "z"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "concatenate"
-  Value (Map):
+  Value (IMap):
     "xyz"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "MemberTest"
-  Value (DotNetClass):
-    Entry (DictionaryEntry)
-  Key (Map):
+  Value (IMap):
+    "testClasses.MemberTest"
+Entry (DictionaryEntry)
+  Key (IMap):
     "IntEvent"
-  Value (DotNetClass):
-    Entry (DictionaryEntry)
-  Key (Map):
+  Value (IMap):
+    "testClasses.IntEvent"
+Entry (DictionaryEntry)
+  Key (IMap):
     "NormalEvent"
-  Value (DotNetClass):
-    Entry (DictionaryEntry)
-  Key (Map):
+  Value (IMap):
+    "testClasses.NormalEvent"
+Entry (DictionaryEntry)
+  Key (IMap):
     "TestClass"
-  Value (DotNetClass):
-    Entry (DictionaryEntry)
-  Key (Map):
+  Value (IMap):
+    "testClasses.TestClass"
+Entry (DictionaryEntry)
+  Key (IMap):
     "PositionalNoConversion"
-  Value (DotNetClass):
-    Entry (DictionaryEntry)
-  Key (Map):
+  Value (IMap):
+    "testClasses.PositionalNoConversion"
+Entry (DictionaryEntry)
+  Key (IMap):
     "NamedNoConversion"
-  Value (DotNetClass):
-    Entry (DictionaryEntry)
-  Key (Map):
+  Value (IMap):
+    "testClasses.NamedNoConversion"
+Entry (DictionaryEntry)
+  Key (IMap):
     "IndexerNoConversion"
-  Value (DotNetClass):
-    Entry (DictionaryEntry)
-  Key (Map):
+  Value (IMap):
+    "testClasses.IndexerNoConversion"
+Entry (DictionaryEntry)
+  Key (IMap):
     "testClass"
-  Value (TestClass):
+  Value (IMap):
     decimalValue (Decimal):
       "0.3333333333333333333333333333"
     doubleValue (Double):
@@ -1213,27 +1221,27 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0.3333333"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "boolTest"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "memberTest"
-  Value (MemberTest):
+  Value (IMap):
     instanceField (String):
       "b"
     InstanceProperty (String):
       "b"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "interceptedSymbol"
-  Value (Map):
+  Value (IMap):
     "/hello/"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "positionalNoConversion"
-  Value (PositionalNoConversion):
+  Value (IMap):
     decimalValue (Decimal):
       "0"
     doubleValue (Double):
@@ -1241,14 +1249,14 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "positionalNoConversionConcatenated"
-  Value (Map):
+  Value (IMap):
     "rstmno"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "namedNoConversion"
-  Value (NamedNoConversion):
+  Value (IMap):
     decimalValue (Decimal):
       "0"
     doubleValue (Double):
@@ -1256,14 +1264,14 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "namedNoConversionConcatenated"
-  Value (Map):
+  Value (IMap):
     "rullnulltullmullnullnull"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "indexerNoConversion"
-  Value (IndexerNoConversion):
+  Value (IMap):
     decimalValue (Decimal):
       "0"
     doubleValue (Double):
@@ -1271,346 +1279,346 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "indexerNoConversionIndexed"
-  Value (Map):
+  Value (IMap):
     "abchihiunchangedYunchangedZabc"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "interceptedSymbol2"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "k"
-  Value (Map):
+  Value (IMap):
     "hello"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "xyz"
-  Value (Map):
+  Value (IMap):
     "w"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "literalFunction"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "literal"
-          Value (Map):
+          Value (IMap):
             "5"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "literalFunctionResult"
   Value (Integer):
     "5"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "function"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "literal"
-                      Value (Map):
+                      Value (IMap):
                         "simple function this"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "callFunction"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "search"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "literal"
-              Value (Map):
+              Value (IMap):
                 "function"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "callFunctionResult"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "literal"
-                      Value (Map):
+                      Value (IMap):
                         "simple function this"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "delayedFunction"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "run"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "delayed"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "program"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
                               Key (Integer):
                                 "1"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "key"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "1"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
-                                          Key (Map):
+                                          Key (IMap):
                                             "literal"
-                                          Value (Map):
+                                          Value (IMap):
                                             "x"
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "value"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "literal"
-                                      Value (Map):
+                                      Value (IMap):
                                         "y"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "delayedFunctionResult"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "x"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "literal"
-                      Value (Map):
+                      Value (IMap):
                         "y"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "value"
-  Value (Map):
+  Value (IMap):
     "xyz"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "selectionFunction"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "search"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "literal"
-              Value (Map):
+              Value (IMap):
                 "value"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "selectionFunctionResult"
-  Value (Map):
+  Value (IMap):
     "xyz"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "bigInteger"
   Value (Integer):
     "89383838383832839123497123047217340712340720347072304702340720347"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "upperLevel"
-  Value (Map):
+  Value (IMap):
     "changed"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "ChangeUpperLevel"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "upperLevel"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "literal"
-                      Value (Map):
+                      Value (IMap):
                         "changed"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "search"
                   Value (Integer):
                     "1"
 Entry (DictionaryEntry)
   Key (Integer):
     "3"
-  Value (Map):
+  Value (IMap):
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "staticEventChanged"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "staticEvent"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.Object Invoke(System.Object)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "resultFromDelegate"
-  Value (Map):
+  Value (IMap):
     "resultFromDelegate"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "staticEventResult"
-  Value (TestClass):
+  Value (IMap):
     decimalValue (Decimal):
       "0.3333333333333333333333333333"
     doubleValue (Double):
@@ -1618,200 +1626,200 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0.3333333"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "instanceEventChanged"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "instanceEvent"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Int32 Invoke(Int32)"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "instanceEventResult"
   Value (Integer):
     "5"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "one"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "two"
   Value (Integer):
     "2"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "firstIf"
-  Value (Map):
+  Value (IMap):
     "then"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "secondIf"
-  Value (Map):
+  Value (IMap):
     "unchanged"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "firstIfCondition"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "firstIfBranches"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "run"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "literal"
-              Value (Map):
+              Value (IMap):
                 "then"
     Entry (DictionaryEntry)
       Key (Integer):
         "0"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "run"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "literal"
-              Value (Map):
+              Value (IMap):
                 "else"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "bigNumber"
   Value (Integer):
     "50020202029029233344"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "secondSwitch"
-  Value (Map):
+  Value (IMap):
     "three"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "secondSwitchCases"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (Map):
+      Value (IMap):
         "one"
     Entry (DictionaryEntry)
       Key (Integer):
         "2"
-      Value (Map):
+      Value (IMap):
         "two"
     Entry (DictionaryEntry)
       Key (Integer):
         "3"
-      Value (Map):
+      Value (IMap):
         "three"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "emptyMap"
-  Value (Map):
+  Value (IMap):
     ""
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "emptyFunction"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "x"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "literal"
-                      Value (Map):
+                      Value (IMap):
                         "hello"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "emptyFunctionResult"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "x"
-      Value (Map):
+      Value (IMap):
         "hello"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "font"
-  Value (Font):
+  Value (IMap):
     "[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "stringTest"
-  Value (Map):
+  Value (IMap):
     "helloh"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "helloh"
-  Value (Map):
+  Value (IMap):
     "hi"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "stringStrategyHashTest"
-  Value (Map):
+  Value (IMap):
     "hi"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "x"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "aLongText"
-      Value (Map):
+      Value (IMap):
         "
 hello word!
 hello!
 "
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "ored"
   Value (Integer):
     "29"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "arrayList"
-  Value (ArrayList):
-    Entry (Map)
+  Value (IMap):
+    Entry (IMap)
       "hello"
 Entry (DictionaryEntry)
   Key (Integer):
@@ -1819,18 +1827,18 @@ Entry (DictionaryEntry)
   Value (Integer):
     "0"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "arrayListResult"
-  Value (Map):
+  Value (IMap):
     "hello"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "textBox"
-  Value (TextBox):
+  Value (IMap):
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "lines"
-  Value (String[]):
+  Value (IMap):
     Entry (String)
       ""
     Entry (String)
@@ -1846,643 +1854,643 @@ Entry (DictionaryEntry)
     Entry (String)
       ""
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "alleMeineText"
-  Value (Map):
+  Value (IMap):
     "Alle meine Entchen,"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "tabText"
-  Value (Map):
+  Value (IMap):
     "			hello"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "escapedText"
-  Value (Map):
+  Value (IMap):
     "\'\n\\\t"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "whileCounter"
   Value (Integer):
     "10"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "loop"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "whileDecision"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "call"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "function"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "search"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "literal"
-                                  Value (Map):
+                                  Value (IMap):
                                     "Smaller"
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "argument"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "program"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "key"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
                                           Key (Integer):
                                             "1"
-                                          Value (Map):
+                                          Value (IMap):
                                             Entry (DictionaryEntry)
-                                              Key (Map):
+                                              Key (IMap):
                                                 "literal"
-                                              Value (Map):
+                                              Value (IMap):
                                                 "1"
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "value"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
-                                          Key (Map):
+                                          Key (IMap):
                                             "search"
-                                          Value (Map):
+                                          Value (IMap):
                                             Entry (DictionaryEntry)
-                                              Key (Map):
+                                              Key (IMap):
                                                 "literal"
-                                              Value (Map):
+                                              Value (IMap):
                                                 "arg"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "key"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
                                           Key (Integer):
                                             "1"
-                                          Value (Map):
+                                          Value (IMap):
                                             Entry (DictionaryEntry)
-                                              Key (Map):
+                                              Key (IMap):
                                                 "literal"
-                                              Value (Map):
+                                              Value (IMap):
                                                 "2"
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "value"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
-                                          Key (Map):
+                                          Key (IMap):
                                             "literal"
-                                          Value (Map):
+                                          Value (IMap):
                                             "10"
             Entry (DictionaryEntry)
               Key (Integer):
                 "2"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "whileBranches"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "program"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "key"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "literal"
-                                      Value (Map):
+                                      Value (IMap):
                                         "1"
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "value"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "program"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "1"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
-                                          Key (Map):
+                                          Key (IMap):
                                             "key"
-                                          Value (Map):
+                                          Value (IMap):
                                             Entry (DictionaryEntry)
                                               Key (Integer):
                                                 "1"
-                                              Value (Map):
+                                              Value (IMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (Map):
+                                                  Key (IMap):
                                                     "literal"
-                                                  Value (Map):
+                                                  Value (IMap):
                                                     "run"
                                         Entry (DictionaryEntry)
-                                          Key (Map):
+                                          Key (IMap):
                                             "value"
-                                          Value (Map):
+                                          Value (IMap):
                                             Entry (DictionaryEntry)
-                                              Key (Map):
+                                              Key (IMap):
                                                 "delayed"
-                                              Value (Map):
+                                              Value (IMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (Map):
+                                                  Key (IMap):
                                                     "call"
-                                                  Value (Map):
+                                                  Value (IMap):
                                                     Entry (DictionaryEntry)
-                                                      Key (Map):
+                                                      Key (IMap):
                                                         "function"
-                                                      Value (Map):
+                                                      Value (IMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (Map):
+                                                          Key (IMap):
                                                             "search"
-                                                          Value (Map):
+                                                          Value (IMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (Map):
+                                                              Key (IMap):
                                                                 "literal"
-                                                              Value (Map):
+                                                              Value (IMap):
                                                                 "loop"
                                                     Entry (DictionaryEntry)
-                                                      Key (Map):
+                                                      Key (IMap):
                                                         "argument"
-                                                      Value (Map):
+                                                      Value (IMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (Map):
+                                                          Key (IMap):
                                                             "call"
-                                                          Value (Map):
+                                                          Value (IMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (Map):
+                                                              Key (IMap):
                                                                 "function"
-                                                              Value (Map):
+                                                              Value (IMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (Map):
+                                                                  Key (IMap):
                                                                     "search"
-                                                                  Value (Map):
+                                                                  Value (IMap):
                                                                     Entry (DictionaryEntry)
-                                                                      Key (Map):
+                                                                      Key (IMap):
                                                                         "literal"
-                                                                      Value (Map):
+                                                                      Value (IMap):
                                                                         "Add"
                                                             Entry (DictionaryEntry)
-                                                              Key (Map):
+                                                              Key (IMap):
                                                                 "argument"
-                                                              Value (Map):
+                                                              Value (IMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (Map):
+                                                                  Key (IMap):
                                                                     "program"
-                                                                  Value (Map):
+                                                                  Value (IMap):
                                                                     Entry (DictionaryEntry)
                                                                       Key (Integer):
                                                                         "1"
-                                                                      Value (Map):
+                                                                      Value (IMap):
                                                                         Entry (DictionaryEntry)
-                                                                          Key (Map):
+                                                                          Key (IMap):
                                                                             "key"
-                                                                          Value (Map):
+                                                                          Value (IMap):
                                                                             Entry (DictionaryEntry)
                                                                               Key (Integer):
                                                                                 "1"
-                                                                              Value (Map):
+                                                                              Value (IMap):
                                                                                 Entry (DictionaryEntry)
-                                                                                  Key (Map):
+                                                                                  Key (IMap):
                                                                                     "literal"
-                                                                                  Value (Map):
+                                                                                  Value (IMap):
                                                                                     "1"
                                                                         Entry (DictionaryEntry)
-                                                                          Key (Map):
+                                                                          Key (IMap):
                                                                             "value"
-                                                                          Value (Map):
+                                                                          Value (IMap):
                                                                             Entry (DictionaryEntry)
-                                                                              Key (Map):
+                                                                              Key (IMap):
                                                                                 "search"
-                                                                              Value (Map):
+                                                                              Value (IMap):
                                                                                 Entry (DictionaryEntry)
-                                                                                  Key (Map):
+                                                                                  Key (IMap):
                                                                                     "literal"
-                                                                                  Value (Map):
+                                                                                  Value (IMap):
                                                                                     "arg"
                                                                     Entry (DictionaryEntry)
                                                                       Key (Integer):
                                                                         "2"
-                                                                      Value (Map):
+                                                                      Value (IMap):
                                                                         Entry (DictionaryEntry)
-                                                                          Key (Map):
+                                                                          Key (IMap):
                                                                             "key"
-                                                                          Value (Map):
+                                                                          Value (IMap):
                                                                             Entry (DictionaryEntry)
                                                                               Key (Integer):
                                                                                 "1"
-                                                                              Value (Map):
+                                                                              Value (IMap):
                                                                                 Entry (DictionaryEntry)
-                                                                                  Key (Map):
+                                                                                  Key (IMap):
                                                                                     "literal"
-                                                                                  Value (Map):
+                                                                                  Value (IMap):
                                                                                     "2"
                                                                         Entry (DictionaryEntry)
-                                                                          Key (Map):
+                                                                          Key (IMap):
                                                                             "value"
-                                                                          Value (Map):
+                                                                          Value (IMap):
                                                                             Entry (DictionaryEntry)
-                                                                              Key (Map):
+                                                                              Key (IMap):
                                                                                 "literal"
-                                                                              Value (Map):
+                                                                              Value (IMap):
                                                                                 "1"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "key"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "literal"
-                                      Value (Map):
+                                      Value (IMap):
                                         "0"
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "value"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "program"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "1"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
-                                          Key (Map):
+                                          Key (IMap):
                                             "key"
-                                          Value (Map):
+                                          Value (IMap):
                                             Entry (DictionaryEntry)
                                               Key (Integer):
                                                 "1"
-                                              Value (Map):
+                                              Value (IMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (Map):
+                                                  Key (IMap):
                                                     "literal"
-                                                  Value (Map):
+                                                  Value (IMap):
                                                     "run"
                                         Entry (DictionaryEntry)
-                                          Key (Map):
+                                          Key (IMap):
                                             "value"
-                                          Value (Map):
+                                          Value (IMap):
                                             Entry (DictionaryEntry)
-                                              Key (Map):
+                                              Key (IMap):
                                                 "delayed"
-                                              Value (Map):
+                                              Value (IMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (Map):
+                                                  Key (IMap):
                                                     "search"
-                                                  Value (Map):
+                                                  Value (IMap):
                                                     Entry (DictionaryEntry)
-                                                      Key (Map):
+                                                      Key (IMap):
                                                         "literal"
-                                                      Value (Map):
+                                                      Value (IMap):
                                                         "arg"
             Entry (DictionaryEntry)
               Key (Integer):
                 "3"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "call"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "function"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "select"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "search"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
-                                          Key (Map):
+                                          Key (IMap):
                                             "literal"
-                                          Value (Map):
+                                          Value (IMap):
                                             "whileBranches"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
-                                  Value (Map):
+                                  Value (IMap):
                                     Entry (DictionaryEntry)
-                                      Key (Map):
+                                      Key (IMap):
                                         "search"
-                                      Value (Map):
+                                      Value (IMap):
                                         Entry (DictionaryEntry)
-                                          Key (Map):
+                                          Key (IMap):
                                             "literal"
-                                          Value (Map):
+                                          Value (IMap):
                                             "whileDecision"
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "argument"
-                          Value (Map):
+                          Value (IMap):
                             Entry (DictionaryEntry)
-                              Key (Map):
+                              Key (IMap):
                                 "search"
-                              Value (Map):
+                              Value (IMap):
                                 Entry (DictionaryEntry)
-                                  Key (Map):
+                                  Key (IMap):
                                     "literal"
-                                  Value (Map):
+                                  Value (IMap):
                                     "arg"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "returnInMap"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "result"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "search"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "arg"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "literalAsArgument"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "result"
       Value (Integer):
         "1"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "returnFunction"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "run"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "delayed"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "functionResult"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "returnArg"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "search"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
-              Key (Map):
+              Key (IMap):
                 "literal"
-              Value (Map):
+              Value (IMap):
                 "arg"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "myArg"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "program"
-          Value (Map):
+          Value (IMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (Map):
+              Value (IMap):
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "key"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (Map):
+                      Value (IMap):
                         Entry (DictionaryEntry)
-                          Key (Map):
+                          Key (IMap):
                             "literal"
-                          Value (Map):
+                          Value (IMap):
                             "hello"
                 Entry (DictionaryEntry)
-                  Key (Map):
+                  Key (IMap):
                     "value"
-                  Value (Map):
+                  Value (IMap):
                     Entry (DictionaryEntry)
-                      Key (Map):
+                      Key (IMap):
                         "literal"
-                      Value (Map):
+                      Value (IMap):
                         "world"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "funcReturnTest"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "hello"
-      Value (Map):
+      Value (IMap):
         "world"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "documentedFunction"
-  Value (Map):
+  Value (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "doc"
-      Value (Map):
+      Value (IMap):
         "This function returns 'hello ."
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "run"
-      Value (Map):
+      Value (IMap):
         Entry (DictionaryEntry)
-          Key (Map):
+          Key (IMap):
             "literal"
-          Value (Map):
+          Value (IMap):
             "hello"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "docFunctionResult"
-  Value (Map):
+  Value (IMap):
     "hello"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "x"
       Value (Integer):
         "1"
     Entry (DictionaryEntry)
-      Key (Map):
+      Key (IMap):
         "y"
       Value (Integer):
         "2"
-  Value (Map):
+  Value (IMap):
     "hello"
 Entry (DictionaryEntry)
-  Key (Map):
+  Key (IMap):
     "functionAndMapInLookupTest"
-  Value (Map):
+  Value (IMap):
     "hello"

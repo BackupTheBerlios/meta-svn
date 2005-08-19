@@ -77,13 +77,13 @@ namespace Meta.Parser
 			tokenNames = tokenNames_;
 		}
 		
-	public Map  expression(AST _t) //throws RecognitionException
+	public IMap  expression(AST _t) //throws RecognitionException
 {
-		Map result;
+		IMap result;
 		
 		MetaAST expression_AST_in = (MetaAST)_t;
 		
-		result=null;//new Map();
+		result=null;//new IMap();
 		
 		
 		{
@@ -137,17 +137,17 @@ namespace Meta.Parser
 		return result;
 	}
 	
-	public Map  call(AST _t) //throws RecognitionException
+	public IMap  call(AST _t) //throws RecognitionException
 {
-		Map result;
+		IMap result;
 		
 		MetaAST call_AST_in = (MetaAST)_t;
 		
-		result=new Map();
+		result=new IMap();
 		result.Extent=call_AST_in.Extent;
-		Map call=new Map();
-		Map delayed=new Map();
-		Map argument=new Map();
+		IMap call=new IMap();
+		IMap delayed=new IMap();
+		IMap argument=new IMap();
 		
 		
 		AST __t166 = _t;
@@ -173,16 +173,16 @@ namespace Meta.Parser
 		return result;
 	}
 	
-	public Map  map(AST _t) //throws RecognitionException
+	public IMap  map(AST _t) //throws RecognitionException
 {
-		Map result;
+		IMap result;
 		
 		MetaAST map_AST_in = (MetaAST)_t;
 		
-		result=new Map();
+		result=new IMap();
 		result.Extent=map_AST_in.Extent;
-		Map statements=new Map();
-		Map s=null;
+		IMap statements=new IMap();
+		IMap s=null;
 		int counter=1;
 		
 		
@@ -242,16 +242,16 @@ _loop164_breakloop:			;
 		return result;
 	}
 	
-	public Map  select(AST _t) //throws RecognitionException
+	public IMap  select(AST _t) //throws RecognitionException
 {
-		Map result;
+		IMap result;
 		
 		MetaAST select_AST_in = (MetaAST)_t;
 		
-		result=new Map();
+		result=new IMap();
 		result.Extent=select_AST_in.Extent;
-		Map selection=new Map();
-		Map key=null;
+		IMap selection=new IMap();
+		IMap key=null;
 		int counter=1;
 		
 		
@@ -294,16 +294,16 @@ _loop173_breakloop:			;
 		return result;
 	}
 	
-	public Map  search(AST _t) //throws RecognitionException
+	public IMap  search(AST _t) //throws RecognitionException
 {
-		Map result;
+		IMap result;
 		
 		MetaAST search_AST_in = (MetaAST)_t;
 		
-				result=new Map();
-				Map lookupResult=null;
+				result=new IMap();
+				IMap lookupResult=null;
 				result.Extent=search_AST_in.Extent;
-				Map e=null;
+				IMap e=null;
 			
 		
 		AST __t175 = _t;
@@ -321,14 +321,14 @@ _loop173_breakloop:			;
 		return result;
 	}
 	
-	public Map  literal(AST _t) //throws RecognitionException
+	public IMap  literal(AST _t) //throws RecognitionException
 {
-		Map result;
+		IMap result;
 		
 		MetaAST literal_AST_in = (MetaAST)_t;
 		MetaAST token = null;
 		
-		result=new Map();
+		result=new IMap();
 		result.Extent=literal_AST_in.Extent;
 		
 		
@@ -336,22 +336,22 @@ _loop173_breakloop:			;
 		match((AST)_t,LITERAL);
 		_t = _t.getNextSibling();
 		
-		result[CodeKeys.Literal]=new Map(token.getText());
+		result[CodeKeys.Literal]=new IMap(token.getText());
 		
 		retTree_ = _t;
 		return result;
 	}
 	
-	public Map  delayed(AST _t) //throws RecognitionException
+	public IMap  delayed(AST _t) //throws RecognitionException
 {
-		Map result;
+		IMap result;
 		
 		MetaAST delayed_AST_in = (MetaAST)_t;
 		
-		result=new Map();
+		result=new IMap();
 		result.Extent=delayed_AST_in.Extent;
-		Map mExpression;
-		//Map CodeKeys.Run=new Map();
+		IMap mExpression;
+		//IMap CodeKeys.Run=new IMap();
 		
 		
 		AST __t178 = _t;
@@ -372,15 +372,15 @@ _loop173_breakloop:			;
 		return result;
 	}
 	
-	public Map  key(AST _t) //throws RecognitionException
+	public IMap  key(AST _t) //throws RecognitionException
 {
-		Map result;
+		IMap result;
 		
 		MetaAST key_AST_in = (MetaAST)_t;
 		
 				int counter=1;
-				result=new Map();
-				Map e=null;
+				result=new IMap();
+				IMap e=null;
 			
 		
 		AST __t153 = _t;
@@ -417,16 +417,16 @@ _loop155_breakloop:		;
 		return result;
 	}
 	
-	public Map  statement(AST _t) //throws RecognitionException
+	public IMap  statement(AST _t) //throws RecognitionException
 {
-		Map statement;
+		IMap statement;
 		
 		MetaAST statement_AST_in = (MetaAST)_t;
 		
-				statement=new Map();
-				//Map key=null;
-				Map val=null;
-				Map k=null;
+				statement=new IMap();
+				//IMap key=null;
+				IMap val=null;
+				IMap k=null;
 			
 		
 		AST __t157 = _t;
@@ -438,7 +438,7 @@ _loop155_breakloop:		;
 		val=expression(_t);
 		_t = retTree_;
 		
-					//Map statement=new Map();
+					//IMap statement=new IMap();
 					statement[CodeKeys.Key]=k;
 					statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 				
@@ -448,16 +448,16 @@ _loop155_breakloop:		;
 		return statement;
 	}
 	
-	public Map  statementSearch(AST _t) //throws RecognitionException
+	public IMap  statementSearch(AST _t) //throws RecognitionException
 {
-		Map statement;
+		IMap statement;
 		
 		MetaAST statementSearch_AST_in = (MetaAST)_t;
 		
-				statement=new Map();
-				//Map key=null;
-				Map val=null;
-				Map k=null;
+				statement=new IMap();
+				//IMap key=null;
+				IMap val=null;
+				IMap k=null;
 			
 		
 		AST __t159 = _t;
@@ -469,7 +469,7 @@ _loop155_breakloop:		;
 		val=expression(_t);
 		_t = retTree_;
 		
-					//Map statement=new Map();
+					//IMap statement=new IMap();
 					statement[CodeKeys.Key]=k;
 					statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 				
