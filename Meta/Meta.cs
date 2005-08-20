@@ -770,6 +770,20 @@ namespace Meta
 	}
 	public abstract class IMap: ICallable, IEnumerable //, ISerializeSpecial
 	{
+//		public virtual bool IsNumber
+//		{
+//			get
+//			{
+//				return false;
+//			}
+//		}
+		public virtual Integer Number
+		{
+			get
+			{
+				throw new ApplicationException("Map is not a number");
+			}
+		}
 		public object Argument
 		{
 			get
@@ -1076,7 +1090,7 @@ namespace Meta
 				extent=value;
 			}
 		}
-		//		public IMap(int number):this(new Integer(number))
+		//		public IMap(Integer Number):this(new Integer(number))
 		//		{
 		//		}
 		//		public IMap(Integer number):this(new IntegerStrategy(number))
@@ -1117,6 +1131,22 @@ namespace Meta
 	}
 	public class StrategyMap: IMap, ISerializeSpecial // TODO: make this an abstract class
 	{
+//		public override bool IsNumber
+//		{
+//			get
+//			{
+//				return strategy.IsNumber;
+//			}
+//		}
+		public override Integer Number
+		{
+			get
+			{
+				return strategy.Number;
+			}
+		}
+
+
 //		public StrategyMap(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new LazyNamespace(namespaceName,subNamespaces,assemblies))
 //	{
 //	}
@@ -1357,12 +1387,15 @@ namespace Meta
 //				extent=value;
 //			}
 //		}
-//		public IMap(int number):this(new Integer(number))
+//		public IMap(Integer Number):this(new Integer(number))
 //		{
 //		}
 //		public IMap(Integer number):this(new IntegerStrategy(number))
 //		{
 //		}
+		public StrategyMap(Integer number):this(new IntegerStrategy(number))
+		{
+		}
 		public StrategyMap(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new LazyNamespace(namespaceName,subNamespaces,assemblies))
 		{
 		}
@@ -3120,6 +3153,21 @@ namespace Meta
 	}
 	public abstract class MapStrategy:ISerializeSpecial // TODO: maybe rename to MapImplementation, look at Patterns Book
 	{
+//		public virtual bool IsNumber
+//		{
+//			get
+//			{
+//				return false;
+//			}
+//		}
+		public virtual Integer Number
+		{
+			get
+			{
+				return null;
+				//throw new ApplicationException("Map is not a number.");
+			}
+		}
 
 //		public MapStrategy(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new LazyNamespace(namespaceName,subNamespaces,assemblies))
 //		{
@@ -3262,7 +3310,6 @@ namespace Meta
 			}
 			return true;
 		}
-
 	}
 	public class StringStrategy:MapStrategy
 	{
@@ -3381,6 +3428,52 @@ namespace Meta
 	}
 	public class HybridDictionaryStrategy:MapStrategy
 	{
+//		public override bool IsNumber
+//		{
+//			get
+//			{
+//				bool isNumber;
+//				if(this.map.Equals(NumberKeys.EmptyMap))
+//				{
+//					isNumber=true;
+//				}
+//				else if(this.Count==1 && this.ContainsKey(NumberKeys.EmptyMap))
+//				{
+//					isNumber=true;
+//				}
+//				else
+//				{
+//					isNumber=false;
+//				}
+//				return isNumber;
+//			}
+//		}
+		public override Integer Number
+		{
+			get
+			{
+				Integer number;
+				if(this.map.Equals(NumberKeys.EmptyMap))
+				{
+					number=0;
+				}
+				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative))) && this.ContainsKey(NumberKeys.EmptyMap) && this[NumberKeys.EmptyMap] is IMap && ((IMap)this[NumberKeys.EmptyMap]).Number!=null)
+				{
+					number=((IMap)this[NumberKeys.EmptyMap]).Number+1;
+					if(this.ContainsKey(NumberKeys.Negative))
+					{
+						number=-number;
+					}
+				}
+				else
+				{
+					number=null;
+				}
+				return number;
+			}
+		}
+
+
 		ArrayList keys;
 		private HybridDictionary strategy;
 		public HybridDictionaryStrategy():this(2)
@@ -4113,123 +4206,127 @@ namespace Meta
 //		public object obj;
 //		public Type type;
 //	}
-//	public class IntegerStrategy:MapStrategy
-//	{
-//		private Integer number;
-//		public override ArrayList Array
-//		{
-//			get
-//			{
-//				return new ArrayList();
-//			}
-//		}
-//		public IntegerStrategy(Integer number)
-//		{
-//			this.number=new Integer(number);
-//		}
-//		public override MapStrategy Clone()
-//		{
-//			return new IntegerStrategy(number);
-//		}
-//		public override IMap CloneMap()
-//		{
-//			return new IMap(new IntegerStrategy(number));
-//		}
-//		public override ArrayList Keys
-//		{
-//			get
-//			{
-//				ArrayList keys=new ArrayList();
-//				if(number!=0)
-//				{
-//					keys.Add(NumberKeys.EmptyMap);
-//				}
-//				if(number<0)
-//				{
-//					keys.Add(NumberKeys.Negative);
-//				}
-//				return keys;
-//			}
-//		}
-//		public override object this[object key]
-//		{
-//			get
-//			{
-//				IMap result;
-//				if(key.Equals(NumberKeys.EmptyMap))
-//				{
-//					if(number==0)
-//					{
-//						result=new IMap(0);
-//					}
-//					else
-//					{
-//						Integer newNumber;
-//						Integer absoluteOfNewNumber=number.abs()-1;
-//						if(number>0)
-//						{
-//							newNumber=absoluteOfNewNumber;
-//						}
-//						else
-//						{
-//							newNumber=-absoluteOfNewNumber;
-//						}
-//						result=new IMap(newNumber);
-//					}
-//				}
-//				else if(key.Equals(NumberKeys.Negative))
-//				{
-//					if(number<0)
-//					{
-//						result=new StrategyMap();
-//					}
-//					else
-//					{
-//						result=null;
-//					}
-//				}
-//				return result;
-//			}
-//			set
-//			{
-//				if(key.Equals(NumberKeys.EmptyMap))
-//				{
-//					if(value is IMap)// TODO: remove this test, must always be IMap
-//					{
-//						IMap map=(IMap)value;
-//						if(map.IsInteger)
-//						{
-//
-//						}
-//					}
-//				}
-//				else if(key.Equals(NumberKeys.Negative))
-//				{
-//					if(value==null)
-//					{
-//						number=number.abs();
-//					}
-//					else if(value.Equals(NumberKeys.EmptyMap))
-//					{
-//						number=-number.abs();
-//					}
-//					else
-//					{
-//						Panic(key,value);
-//					}
-//				}
-//				else
-//				{
-//					Panic(key,value);
-//				}
-//			}
-//		}
-//		private void Panic(object key,object val)// TODO: remove, put into MapStrategy
-//		{
-//			map.strategy=this.Clone(); // TODO: move Clone into MapStrategy???, or at least rename
-//			map.strategy[key]=value;
-//		}
-//	}
+	public class IntegerStrategy:MapStrategy
+	{
+		private Integer number;
+		public override ArrayList Array
+		{
+			get
+			{
+				return new ArrayList();
+			}
+		}
+		public IntegerStrategy(Integer number)
+		{
+			this.number=new Integer(number);
+		}
+		public override MapStrategy Clone()
+		{
+			return new IntegerStrategy(number);
+		}
+		public override IMap CloneMap()
+		{
+			return new StrategyMap(new IntegerStrategy(number));
+		}
+		public override ArrayList Keys
+		{
+			get
+			{
+				ArrayList keys=new ArrayList();
+				if(number!=0)
+				{
+					keys.Add(NumberKeys.EmptyMap);
+				}
+				if(number<0)
+				{
+					keys.Add(NumberKeys.Negative);
+				}
+				return keys;
+			}
+		}
+		public override object this[object key]
+		{
+			get
+			{
+				IMap result;
+				if(key.Equals(NumberKeys.EmptyMap))
+				{
+					if(number==0)
+					{
+						result=new StrategyMap(new Integer(0));
+					}
+					else
+					{
+						Integer newNumber;
+						Integer absoluteOfNewNumber=number.abs()-1;
+						if(number>0)
+						{
+							newNumber=absoluteOfNewNumber;
+						}
+						else
+						{
+							newNumber=-absoluteOfNewNumber;
+						}
+						result=new StrategyMap(newNumber);
+					}
+				}
+				else if(key.Equals(NumberKeys.Negative))
+				{
+					if(number<0)
+					{
+						result=new StrategyMap();
+					}
+					else
+					{
+						result=null;
+					}
+				}
+				else
+				{
+					result=null;
+				}
+				return result;
+			}
+			set
+			{
+				if(key.Equals(NumberKeys.EmptyMap))
+				{
+					if(value is IMap)// TODO: remove this test, must always be IMap
+					{
+						IMap map=(IMap)value;
+						if(map.Number!=null)
+						{
+
+						}
+					}
+				}
+				else if(key.Equals(NumberKeys.Negative))
+				{
+					if(value==null)
+					{
+						number=number.abs();
+					}
+					else if(value.Equals(NumberKeys.EmptyMap))
+					{
+						number=-number.abs();
+					}
+					else
+					{
+						Panic(key,value);
+					}
+				}
+				else
+				{
+					Panic(key,value);
+				}
+			}
+		}
+		private void Panic(object key,object val)// TODO: remove, put into MapStrategy
+		{
+			map.strategy=this.Clone(); // TODO: move Clone into MapStrategy???, or at least rename
+			map.strategy[key]=val;
+		}
+	}
 	namespace Parser 
 	{
 		public class IndentationStream: TokenStream
