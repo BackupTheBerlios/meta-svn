@@ -74,7 +74,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "interpreter"
-  Value (StrategyMap):
+  Value (DotNetClass):
     "map+interpreter"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -320,7 +320,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "form"
-  Value (StrategyMap):
+  Value (DotNetObject):
     "System.Windows.Forms.Form, Text: hello"
 Entry (DictionaryEntry)
   Key (Integer):
@@ -334,107 +334,107 @@ Entry (DictionaryEntry)
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "IEnumerable"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.IEnumerable"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "ICollection"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.ICollection"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "IList"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.IList"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "IEnumerator"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.IEnumerator"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "ArrayList"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.ArrayList"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "BitArray"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.BitArray"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "IComparer"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.IComparer"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "CaseInsensitiveComparer"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.CaseInsensitiveComparer"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "IHashCodeProvider"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.IHashCodeProvider"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "CaseInsensitiveHashCodeProvider"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.CaseInsensitiveHashCodeProvider"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "CollectionBase"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.CollectionBase"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "Comparer"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.Comparer"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "IDictionary"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.IDictionary"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "DictionaryBase"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.DictionaryBase"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "DictionaryEntry"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.DictionaryEntry"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "Hashtable"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.Hashtable"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "IDictionaryEnumerator"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.IDictionaryEnumerator"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "Queue"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.Queue"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "ReadOnlyCollectionBase"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.ReadOnlyCollectionBase"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "SortedList"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.SortedList"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "Stack"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "System.Collections.Stack"
     Entry (DictionaryEntry)
       Key (StrategyMap):
@@ -443,47 +443,47 @@ Entry (DictionaryEntry)
         Entry (DictionaryEntry)
           Key (StrategyMap):
             "BitVector32"
-          Value (StrategyMap):
+          Value (DotNetClass):
             "System.Collections.Specialized.BitVector32"
         Entry (DictionaryEntry)
           Key (StrategyMap):
             "CollectionsUtil"
-          Value (StrategyMap):
+          Value (DotNetClass):
             "System.Collections.Specialized.CollectionsUtil"
         Entry (DictionaryEntry)
           Key (StrategyMap):
             "HybridDictionary"
-          Value (StrategyMap):
+          Value (DotNetClass):
             "System.Collections.Specialized.HybridDictionary"
         Entry (DictionaryEntry)
           Key (StrategyMap):
             "ListDictionary"
-          Value (StrategyMap):
+          Value (DotNetClass):
             "System.Collections.Specialized.ListDictionary"
         Entry (DictionaryEntry)
           Key (StrategyMap):
             "NameObjectCollectionBase"
-          Value (StrategyMap):
+          Value (DotNetClass):
             "System.Collections.Specialized.NameObjectCollectionBase"
         Entry (DictionaryEntry)
           Key (StrategyMap):
             "NameValueCollection"
-          Value (StrategyMap):
+          Value (DotNetClass):
             "System.Collections.Specialized.NameValueCollection"
         Entry (DictionaryEntry)
           Key (StrategyMap):
             "StringCollection"
-          Value (StrategyMap):
+          Value (DotNetClass):
             "System.Collections.Specialized.StringCollection"
         Entry (DictionaryEntry)
           Key (StrategyMap):
             "StringEnumerator"
-          Value (StrategyMap):
+          Value (DotNetClass):
             "System.Collections.Specialized.StringEnumerator"
         Entry (DictionaryEntry)
           Key (StrategyMap):
             "StringDictionary"
-          Value (StrategyMap):
+          Value (DotNetClass):
             "System.Collections.Specialized.StringDictionary"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -492,22 +492,22 @@ Entry (DictionaryEntry)
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "ErrorLevel"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "Microsoft.CSharp.ErrorLevel"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "CompilerError"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "Microsoft.CSharp.CompilerError"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "Compiler"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "Microsoft.CSharp.Compiler"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "CSharpCodeProvider"
-      Value (StrategyMap):
+      Value (DotNetClass):
         "Microsoft.CSharp.CSharpCodeProvider"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -1360,42 +1360,42 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "MemberTest"
-  Value (StrategyMap):
+  Value (DotNetClass):
     "testClasses.MemberTest"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "IntEvent"
-  Value (StrategyMap):
+  Value (DotNetClass):
     "testClasses.IntEvent"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "NormalEvent"
-  Value (StrategyMap):
+  Value (DotNetClass):
     "testClasses.NormalEvent"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "TestClass"
-  Value (StrategyMap):
+  Value (DotNetClass):
     "testClasses.TestClass"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "PositionalNoConversion"
-  Value (StrategyMap):
+  Value (DotNetClass):
     "testClasses.PositionalNoConversion"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "NamedNoConversion"
-  Value (StrategyMap):
+  Value (DotNetClass):
     "testClasses.NamedNoConversion"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "IndexerNoConversion"
-  Value (StrategyMap):
+  Value (DotNetClass):
     "testClasses.IndexerNoConversion"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "testClass"
-  Value (StrategyMap):
+  Value (DotNetObject):
     decimalValue (Decimal):
       "0.3333333333333333333333333333"
     doubleValue (Double):
@@ -1410,7 +1410,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "memberTest"
-  Value (StrategyMap):
+  Value (DotNetObject):
     instanceField (String):
       "b"
     InstanceProperty (String):
@@ -1423,7 +1423,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "positionalNoConversion"
-  Value (StrategyMap):
+  Value (DotNetObject):
     decimalValue (Decimal):
       "0"
     doubleValue (Double):
@@ -1438,7 +1438,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "namedNoConversion"
-  Value (StrategyMap):
+  Value (DotNetObject):
     decimalValue (Decimal):
       "0"
     doubleValue (Double):
@@ -1453,7 +1453,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "indexerNoConversion"
-  Value (StrategyMap):
+  Value (DotNetObject):
     decimalValue (Decimal):
       "0"
     doubleValue (Double):
@@ -1800,7 +1800,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "staticEventResult"
-  Value (StrategyMap):
+  Value (DotNetObject):
     decimalValue (Decimal):
       "0.3333333333333333333333333333"
     doubleValue (Double):
@@ -1963,7 +1963,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "font"
-  Value (StrategyMap):
+  Value (DotNetObject):
     "[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -2000,7 +2000,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "arrayList"
-  Value (StrategyMap):
+  Value (DotNetObject):
     Entry (StrategyMap)
       "hello"
 Entry (DictionaryEntry)
@@ -2016,11 +2016,11 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "textBox"
-  Value (StrategyMap):
+  Value (DotNetObject):
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "lines"
-  Value (StrategyMap):
+  Value (DotNetObject):
     Entry (String)
       ""
     Entry (String)

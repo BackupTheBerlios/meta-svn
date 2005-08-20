@@ -1366,12 +1366,12 @@ namespace Meta
 		public StrategyMap(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new LazyNamespace(namespaceName,subNamespaces,assemblies))
 		{
 		}
-		public StrategyMap(object obj):this(new DotNetObject(obj))
-		{
-		}
-		public StrategyMap(Type type):this(new DotNetClass(type))
-		{
-		}
+//		public StrategyMap(object obj):this(new DotNetObject(obj))
+//		{
+//		}
+//		public StrategyMap(Type type):this(new DotNetClass(type))
+//		{
+//		}
 		public StrategyMap(string text):this(new StringStrategy(text))
 		{
 		}
@@ -1523,7 +1523,8 @@ namespace Meta
 	{
 		public override IMap CloneMap()
 		{
-			return new StrategyMap(true); // TODO: this is definitely a bug!!!
+			return new StrategyMap(this);
+			//return new StrategyMap(true); // TODO: this is definitely a bug!!!
 		}
 
 		public override object this[object key]
@@ -1597,7 +1598,8 @@ namespace Meta
 							}
 							position=(IMap)position[new StrategyMap(subPath)];
 						}
-						position[new StrategyMap(type.Name)]=new StrategyMap(type);
+						position[new StrategyMap(type.Name)]=new DotNetClass(type);
+						//position[new StrategyMap(type.Name)]=new StrategyMap(type);
 						//position[new IMap(type.Name)]=new DotNetClass(type);
 					}
 				}
@@ -1854,7 +1856,8 @@ namespace Meta
 				}
 				else
 				{
-					return new StrategyMap(oDotNet);
+					return new DotNetObject(oDotNet);
+					//return new StrategyMap(oDotNet);
 				}
 			}
 			else
@@ -2807,10 +2810,15 @@ namespace Meta
 	}
 	public class DotNetClass: DotNetContainer
 	{
-		public override IMap CloneMap()
+		public override IMap Clone()
 		{
-			return new StrategyMap(type);
+			return new DotNetClass(type);
 		}
+
+//		public override IMap CloneMap()
+//		{
+//			return new StrategyMap(type);
+//		}
 		protected DotNetMethod constructor;
 		public DotNetClass(Type targetType):base(null,targetType)
 		{
@@ -2824,10 +2832,10 @@ namespace Meta
 	}
 	public class DotNetObject: DotNetContainer
 	{
-		public override IMap CloneMap()
-		{
-			return new StrategyMap(obj);
-		}
+//		public override IMap CloneMap()
+//		{
+//			return new StrategyMap(obj);
+//		}
 
 		public DotNetObject(object target):base(target,target.GetType())
 		{
@@ -2836,10 +2844,14 @@ namespace Meta
 		{
 			return obj.ToString();
 		}
-		public override MapStrategy Clone()
+		public override IMap Clone()
 		{
 			return new DotNetObject(obj); // TODO: is this correct?
 		}
+//		public override MapStrategy Clone()
+//		{
+//			return new DotNetObject(obj); // TODO: is this correct?
+//		}
 
 	}
 	public abstract class MapStrategy:ISerializeSpecial // TODO: maybe rename to MapImplementation, look at Patterns Book
@@ -3215,9 +3227,9 @@ namespace Meta
 			return strategy.Contains(key);
 		}
 	}
-	public abstract class DotNetContainer: MapStrategy, ISerializeSpecial
+	public abstract class DotNetContainer: IMap, ISerializeSpecial
 	{
-		public override void Serialize(string indentation, string[] functions, StringBuilder stringBuilder)
+		public void Serialize(string indentation, string[] functions, StringBuilder stringBuilder)
 		{
 			ExecuteTests.Serialize(obj!=null?this.obj:this.type,indentation,functions,stringBuilder);
 			//stringBuilder.Append(indentation+this.type.FullName);
@@ -3321,7 +3333,8 @@ namespace Meta
 					}
 					else if(members[0] is Type)
 					{
-						result=new StrategyMap((Type)members[0]);
+						result=new DotNetClass((Type)members[0]);
+						//result=new StrategyMap((Type)members[0]);
 					}
 					else
 					{
@@ -3487,7 +3500,8 @@ namespace Meta
 				}
 				foreach(Type nestedType in type.GetNestedTypes(bindingFlags))
 				{ 
-					table[new StrategyMap(nestedType.Name)]=new StrategyMap(nestedType);
+					table[new StrategyMap(nestedType.Name)]=new DotNetClass(nestedType);
+					//table[new StrategyMap(nestedType.Name)]=new StrategyMap(nestedType);
 				}
 				int counter=1;
 				if(obj!=null && obj is IEnumerable && !(obj is String))
@@ -3525,6 +3539,316 @@ namespace Meta
 		public object obj;
 		public Type type;
 	}
+//	public abstract class DotNetContainer: MapStrategy, ISerializeSpecial
+//	{
+//		public override void Serialize(string indentation, string[] functions, StringBuilder stringBuilder)
+//		{
+//			ExecuteTests.Serialize(obj!=null?this.obj:this.type,indentation,functions,stringBuilder);
+//			//stringBuilder.Append(indentation+this.type.FullName);
+//		}
+//		public override ArrayList Array
+//		{
+//			get
+//			{
+//				ArrayList array=new ArrayList();
+//				foreach(object key in Keys)
+//				{
+//					if(key is Integer)
+//					{
+//						array.Add(this[key]);
+//					}
+//				}
+//				return array;
+//			}
+//		}
+//		public override bool ContainsKey(object key)
+//		{
+//			if(key is IMap)
+//			{
+//				if(((IMap)key).IsString)
+//				{
+//					string text=((IMap)key).String;
+//					if(type.GetMember(((IMap)key).String,
+//						BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0)
+//					{
+//						return true;
+//					}
+//				}
+//			}
+//			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
+//			IMap argument=new StrategyMap(); // TODO: refactor
+//			argument[new Integer(1)]=key;
+//			try
+//			{
+//				indexer.Call(argument);
+//				return true;
+//			}
+//			catch(Exception)
+//			{
+//				return false;
+//			}
+//		}
+//		public override ArrayList Keys
+//		{
+//			get
+//			{
+//				return new ArrayList(MTable.Keys);
+//			}
+//		}
+//		public override int Count 
+//		{
+//			get
+//			{
+//				return MTable.Count;
+//			}
+//		}
+//		public override object this[object key] 
+//		{
+//			get
+//			{
+//				object result;
+//				if(key is IMap && ((IMap)key).IsString && type.GetMember(((IMap)key).String,bindingFlags).Length>0)
+//				{
+//					string text=((IMap)key).String; // TODO: There are a few too many empty parent maps around here
+//					MemberInfo[] members=type.GetMember(text,bindingFlags);
+//					if(members[0] is MethodBase)
+//					{
+//						result=new DotNetMethod(text,obj,type);
+//					}
+//					else if(members[0] is FieldInfo)
+//					{
+//						result=Convert.ToMeta(type.GetField(text).GetValue(obj));
+//					}
+//					else if(members[0] is PropertyInfo)
+//					{
+//						result=Convert.ToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
+//					}
+//					else if(members[0] is EventInfo)
+//					{
+//						try // TODO: fix this? refactor? what is this even supposed to do?
+//						{
+//							Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
+//								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
+//							if(eventDelegate==null)
+//							{
+//								result=null;
+//							}
+//							else
+//							{
+//								result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+//							}
+//						}
+//						catch
+//						{
+//							result=null;
+//						}
+//					}
+//					else if(members[0] is Type)
+//					{
+//						result=new StrategyMap((Type)members[0]);
+//					}
+//					else
+//					{
+//						result=null;
+//					}
+//				}
+//				else if(this.obj!=null && key is Integer && this.type.IsArray)
+//				{
+//					result=Convert.ToMeta(((Array)obj).GetValue(((Integer)key).Int));
+//				}
+//				else
+//				{
+//					DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
+//					IMap argument=new StrategyMap(); // refactor
+//					argument[new Integer(1)]=key;
+//					try
+//					{
+//						result=Convert.ToMeta(indexer.Call(argument));
+//					}
+//					catch(Exception e)
+//					{
+//						result=null;
+//					}
+//				}
+//				return result;
+//			}
+//			// TODO: refactor
+//			set
+//			{
+//				if(key is IMap && ((IMap)key).IsString && type.GetMember(((IMap)key).String,bindingFlags).Length!=0)
+//				{
+//					string text=((IMap)key).String;
+//					if(text.Equals("Text"))
+//					{
+//						int asdf=0;
+//					}
+//					MemberInfo[] members=type.GetMember(text,bindingFlags);
+//					if(members[0] is MethodBase)
+//					{
+//						throw new ApplicationException("Cannot set MethodeBase "+key+".");
+//					}
+//					else if(members[0] is FieldInfo)
+//					{
+//						FieldInfo field=(FieldInfo)members[0];
+//						bool isConverted;
+//						object val;
+//						val=DotNetMethod.ConvertParameter(value,field.FieldType,out isConverted);
+//						if(isConverted)
+//						{
+//							field.SetValue(obj,val);
+//						}
+//						else
+//						{
+//							if(value is IMap)
+//							{
+//								// TODO: do not reuse isConverted
+//								// TODO: really do this? does not make much sense
+//								val=DotNetMethod.AssignCollection((IMap)value,field.GetValue(obj),out isConverted);
+//							}
+//						}
+//						if(!isConverted)
+//						{
+//							throw new ApplicationException("Field "+field.Name+"could not be assigned because it cannot be converted.");
+//						}
+//					}
+//					else if(members[0] is PropertyInfo)
+//					{
+//						PropertyInfo property=(PropertyInfo)members[0];
+//						bool isConverted;
+//						object val=DotNetMethod.ConvertParameter(value,property.PropertyType,out isConverted);
+//						if(isConverted)
+//						{
+//							property.SetValue(obj,val,new object[]{});
+//						}
+//						else
+//						{
+//							if(value is IMap)
+//							{
+//								DotNetMethod.AssignCollection((IMap)value,property.GetValue(obj,new object[]{}),out isConverted);
+//							}
+//							if(!isConverted)
+//							{
+//								throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.SaveToFile(key,"",false)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
+//							}
+//						}
+//						return;
+//					}
+//					else if(members[0] is EventInfo)
+//					{
+//						((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(IMap)value));
+//					}
+//					else
+//					{
+//						throw new ApplicationException("Could not assign "+text+" .");
+//					}
+//				}
+//				else if(obj!=null && key is Integer && type.IsArray)
+//				{
+//					bool isConverted; 
+//					object converted=Convert.ToDotNet(value,type.GetElementType(),out isConverted);
+//					if(isConverted)
+//					{
+//						((Array)obj).SetValue(converted,((Integer)key).Int);
+//						return;
+//					}
+//				}
+//				else
+//				{
+//					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type); // TODO: refactor
+//					IMap argument=new StrategyMap();// TODO: refactor
+//					argument[new Integer(1)]=key;
+//					argument[new Integer(2)]=value;
+//					try
+//					{
+//						indexer.Call(argument);
+//					}
+//					catch(Exception e)
+//					{
+//						throw new ApplicationException("Cannot set "+Convert.ToDotNet(key).ToString()+".");// TODO: change exception
+//					}
+//				}
+//			}
+//		}
+//		public string Serialize(string indent,string[] functions)
+//		{
+//			return indent;
+//		}
+//		public Delegate CreateEvent(string name,IMap code)
+//		{
+//			EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
+//				BindingFlags.Static|BindingFlags.Instance);
+//			MethodInfo invoke=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
+//				|BindingFlags.Public|BindingFlags.NonPublic);
+//			Delegate eventDelegate=DotNetMethod.CreateDelegateFromCode(eventInfo.EventHandlerType,invoke,code);
+//			return eventDelegate;
+//		}
+//		private IDictionary MTable
+//		{ 
+//			get
+//			{
+//				HybridDictionary table=new HybridDictionary();
+//				foreach(FieldInfo field in type.GetFields(bindingFlags))
+//				{
+//					table[new StrategyMap(field.Name)]=field.GetValue(obj);
+//				}
+//				foreach(MethodInfo invoke in type.GetMethods(bindingFlags)) 
+//				{
+//					if(!invoke.IsSpecialName)
+//					{
+//						table[new StrategyMap(invoke.Name)]=new DotNetMethod(invoke.Name,obj,type);
+//					}
+//				}
+//				foreach(PropertyInfo property in type.GetProperties(bindingFlags))
+//				{
+//					if(property.Name!="Item" && property.Name!="Chars")
+//					{
+//						table[new StrategyMap(property.Name)]=property.GetValue(obj,new object[]{});
+//					}
+//				}
+//				foreach(EventInfo eventInfo in type.GetEvents(bindingFlags))
+//				{
+//					table[new StrategyMap(eventInfo.Name)]=new DotNetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
+//				}
+//				foreach(Type nestedType in type.GetNestedTypes(bindingFlags))
+//				{ 
+//					table[new StrategyMap(nestedType.Name)]=new StrategyMap(nestedType);
+//				}
+//				int counter=1;
+//				if(obj!=null && obj is IEnumerable && !(obj is String))
+//				{ 
+//					foreach(object entry in (IEnumerable)obj)
+//					{
+//						if(entry is DictionaryEntry)
+//						{
+//							table[Convert.ToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+//						}
+//						else
+//						{
+//							table[new Integer(counter)]=entry;
+//							counter++;
+//						}
+//					}
+//				}
+//				return table;
+//			}
+//		}
+//		public DotNetContainer(object obj,Type type)
+//		{
+//			if(obj==null)
+//			{
+//				this.bindingFlags=BindingFlags.Public|BindingFlags.Static;
+//			}
+//			else
+//			{
+//				this.bindingFlags=BindingFlags.Public|BindingFlags.Instance;
+//			}
+//			this.obj=obj;
+//			this.type=type;
+//		}
+//		private BindingFlags bindingFlags;
+//		public object obj;
+//		public Type type;
+//	}
 //	public class IntegerStrategy:MapStrategy
 //	{
 //		private Integer number;
