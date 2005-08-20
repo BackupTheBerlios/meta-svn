@@ -591,7 +591,7 @@ options {
 expression
   returns[IMap result]
   {
-    result=null;//new IMap();
+    result=null;//new StrategyMap();
   }:
   (
     result=call
@@ -607,7 +607,7 @@ key
 	returns[IMap result]
 	{
 		int counter=1;
-		result=new IMap();
+		result=new StrategyMap();
 		IMap e=null;
 	}:
 	#(KEY
@@ -623,7 +623,7 @@ key
 statement
 	returns[IMap statement]
 	{
-		statement=new IMap();
+		statement=new StrategyMap();
 		//IMap key=null;
 		IMap val=null;
 		IMap k=null;
@@ -632,7 +632,7 @@ statement
 		k=key
 		val=expression
 		{
-			//IMap statement=new IMap();
+			//IMap statement=new StrategyMap();
 			statement[CodeKeys.Key]=k;
 			statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 		}
@@ -641,7 +641,7 @@ statement
 statementSearch // maybe somehow combine this with "statement", if possible, not sure if tree has lookahead at all, didn't seem to work in one rule
 	returns[IMap statement]
 	{
-		statement=new IMap();
+		statement=new StrategyMap();
 		//IMap key=null;
 		IMap val=null;
 		IMap k=null;
@@ -650,7 +650,7 @@ statementSearch // maybe somehow combine this with "statement", if possible, not
 		k=key
 		val=expression
 		{
-			//IMap statement=new IMap();
+			//IMap statement=new StrategyMap();
 			statement[CodeKeys.Key]=k;
 			statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 		}
@@ -662,9 +662,9 @@ statementSearch // maybe somehow combine this with "statement", if possible, not
 map
   returns[IMap result]
   {
-    result=new IMap();
+    result=new StrategyMap();
     result.Extent=#map.Extent;
-    IMap statements=new IMap();
+    IMap statements=new StrategyMap();
     IMap s=null;
     int counter=1;
   }:
@@ -684,11 +684,11 @@ map
 call
   returns [IMap result]
   {
-    result=new IMap();
+    result=new StrategyMap();
     result.Extent=#call.Extent;
-    IMap call=new IMap();
-    IMap delayed=new IMap();
-    IMap argument=new IMap();
+    IMap call=new StrategyMap();
+    IMap delayed=new StrategyMap();
+    IMap argument=new StrategyMap();
   }:
   #(CALL
     (
@@ -707,9 +707,9 @@ call
 select
   returns [IMap result]
   {
-    result=new IMap();
+    result=new StrategyMap();
     result.Extent=#select.Extent;
-    IMap selection=new IMap();
+    IMap selection=new StrategyMap();
     IMap key=null;
     int counter=1;
   }: 
@@ -732,7 +732,7 @@ select
 search
 	returns [IMap result]
 	{
-		result=new IMap();
+		result=new StrategyMap();
 		IMap lookupResult=null;
 		result.Extent=#search.Extent;
 		IMap e=null;
@@ -748,22 +748,22 @@ search
 literal
   returns [IMap result]
   {
-    result=new IMap();
+    result=new StrategyMap();
     result.Extent=#literal.Extent;
   }:
   token:LITERAL
   {
-    result[CodeKeys.Literal]=new IMap(token.getText());
+    result[CodeKeys.Literal]=new StrategyMap(token.getText());
   };
 
 //TODO: is this even needed anymore?
 delayed
     returns[IMap result]
     {
-        result=new IMap();
+        result=new StrategyMap();
         result.Extent=#delayed.Extent;
         IMap mExpression;
-        //IMap CodeKeys.Run=new IMap();
+        //IMap CodeKeys.Run=new StrategyMap();
     }:
     #(FUNCTION mExpression=expression)
     {
@@ -776,7 +776,7 @@ delayed
 /*delayedExpressionOnly
     returns[IMap result]
     {
-        result=new IMap();
+        result=new StrategyMap();
         IMap mExpression=null;
     }:
     #(DELAYED_EXPRESSION_ONLY mExpression=expression)

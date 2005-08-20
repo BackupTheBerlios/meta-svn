@@ -17,7 +17,7 @@ public class map
 		//		}
 		//		public static int column=0;
 		//		public static void run() {
-		//			BreakPoint(new IMap("stuff"));
+		//			BreakPoint(new StrategyMap("stuff"));
 		//		}
 	}
 	public static bool ContainsKey(IMap map,object key) 
@@ -34,7 +34,7 @@ public class map
 		IMap map=(IMap)arg[new Integer(1)];
 		object obj=arg[new Integer(2)];
 
-		IMap result=new IMap();
+		IMap result=new StrategyMap();
 		int counter=1;
 		foreach(object o in map.Array) 
 		{
@@ -65,7 +65,7 @@ public class map
 	public static IMap Keys(IMap map) 
 	{
 		int i=1;
-		IMap keys=new IMap();
+		IMap keys=new StrategyMap();
 		foreach(DictionaryEntry entry in map) 
 		{
 			keys[new Integer(i)]=entry.Key;
@@ -77,7 +77,7 @@ public class map
 	{ // rename to "append"
 		ArrayList maps=arg.Array;
 		int i=1;
-		IMap combined=new IMap();
+		IMap combined=new StrategyMap();
 		foreach(IMap map in maps) 
 		{ // TODO: eigentlich nur die Arrays verwenden
 			foreach(object val in map.Array) 
@@ -103,7 +103,7 @@ public class map
 	}
 	public static IMap Remove(object oToRemove,IMap mArray)
 	{
-		IMap mResult=new IMap();
+		IMap mResult=new StrategyMap();
 		int iCounter=1;
 		foreach(object oIntegerKeyValue in mArray.Array)
 		{
@@ -117,7 +117,7 @@ public class map
 	}
 	public static IMap Foreach(IMap mArray,IMap mFunction)
 	{
-		IMap mResult=new IMap();
+		IMap mResult=new StrategyMap();
 		int iCounter=1;
 		foreach(object oIntegerKeyValue in mArray.Array)
 		{
@@ -128,13 +128,13 @@ public class map
 	}
 	public static IMap Apply(IMap mFunction,IMap mArray) 
 	{ // switch this the arguments around
-		IMap mResult=new IMap();
+		IMap mResult=new StrategyMap();
 		int counter=1;
 		foreach(object oKey in mArray.Keys) 
 		{
-			IMap mArgument=new IMap();
-			mArgument[new IMap("key")]=oKey;
-			mArgument[new IMap("value")]=mArray[oKey];
+			IMap mArgument=new StrategyMap();
+			mArgument[new StrategyMap("key")]=oKey;
+			mArgument[new StrategyMap("value")]=mArray[oKey];
 			mResult[new Integer(counter)]=mFunction.Call(mArgument);
 			counter++;
 		}
@@ -143,19 +143,19 @@ public class map
 	public static object If(IMap argM) 
 	{ // maybe automatically convert Maps to MapAdapters??
 		bool conditionB=(bool)System.Convert.ToBoolean(Meta.Convert.ToDotNet(argM[new Integer(1)]));//,typeof(bool));
-		IMap thenF=(IMap)argM[new IMap("then")];
-		IMap elseF=(IMap)argM[new IMap("else")];
+		IMap thenF=(IMap)argM[new StrategyMap("then")];
+		IMap elseF=(IMap)argM[new StrategyMap("else")];
 		if(conditionB) 
 		{
-			return thenF.Call(new IMap());
+			return thenF.Call(new StrategyMap());
 		}
 		else if(elseF!=null) 
 		{
-			return elseF.Call(new IMap());
+			return elseF.Call(new StrategyMap());
 		}
 		else 
 		{
-			return new IMap();
+			return new StrategyMap();
 		}		
 	}
 }

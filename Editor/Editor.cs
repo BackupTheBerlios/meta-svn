@@ -162,7 +162,7 @@ namespace EditorTest
 		{
 //			if(args.Length==1 && args[0]=="-meta")
 //			{
-//				Interpreter.Run(@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta",new IMap());
+//				Interpreter.Run(@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta",new StrategyMap());
 //			}
 //			else
 //			{

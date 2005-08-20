@@ -1,518 +1,518 @@
 Entry (DictionaryEntry)
   Key (Integer):
     "1"
-  Value (IMap):
+  Value (StrategyMap):
     "ImpliedAutokey"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "unicodeText"
-  Value (IMap):
+  Value (StrategyMap):
     "äaba"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Equal"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Equal(System.Object, System.Object)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Not"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Not(Boolean)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "And"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean And(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Or"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Or(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Merge"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.IMap Merge(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Keys"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.IMap Keys(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Foreach"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.IMap Foreach(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Length"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Int32 Length(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Init"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.Object Init(System.Object, Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "interpreter"
-  Value (IMap):
+  Value (StrategyMap):
     "map+interpreter"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Apply"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.IMap Apply(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Join"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.IMap Join(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "ContainsKey"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean ContainsKey(Meta.IMap, System.Object)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Remove"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.IMap Remove(System.Object, Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "TrimStart"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Meta.IMap TrimStart(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "If"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.Object If(Meta.IMap)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Add"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer Add(Integer, Integer)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Subtract"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer Subtract(Integer, Integer)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Multiply"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer Multiply(Integer, Integer)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Divide"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer Divide(Integer, Integer)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Smaller"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Smaller(Integer, Integer)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "Greater"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Boolean Greater(Integer, Integer)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "BitwiseOr"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Integer BitwiseOr(Integer[])"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "literalEscapeTest"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (IMap):
+      Value (StrategyMap):
         "asdf"
     Entry (DictionaryEntry)
       Key (Integer):
         "2"
-      Value (IMap):
+      Value (StrategyMap):
         "asdf"
     Entry (DictionaryEntry)
       Key (Integer):
         "3"
-      Value (IMap):
+      Value (StrategyMap):
         "as"'df"
     Entry (DictionaryEntry)
       Key (Integer):
         "4"
-      Value (IMap):
+      Value (StrategyMap):
         "as"'"df"
     Entry (DictionaryEntry)
       Key (Integer):
         "5"
-      Value (IMap):
+      Value (StrategyMap):
         "as"'"'"'"'"'"'"'"'df"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "nestedClassTest"
   Value (Integer):
     "5"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "applyMethod"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "call"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "function"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "search"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "literal"
-                      Value (IMap):
+                      Value (StrategyMap):
                         "Add"
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "argument"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "program"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "key"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
                               Key (Integer):
                                 "1"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "literal"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     "1"
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "value"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "select"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "search"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (IMap):
+                                          Key (StrategyMap):
                                             "literal"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             "arg"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "literal"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         "value"
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "2"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "key"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
                               Key (Integer):
                                 "1"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "literal"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     "2"
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "value"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "literal"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 "1"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "applyTest"
-  Value (IMap):
+  Value (StrategyMap):
     ""
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "ifTest"
-  Value (IMap):
+  Value (StrategyMap):
     "it is true"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "form"
-  Value (IMap):
+  Value (StrategyMap):
     "System.Windows.Forms.Form, Text: hello"
 Entry (DictionaryEntry)
   Key (Integer):
     "2"
-  Value (IMap):
+  Value (StrategyMap):
     "Autokey"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "gacTest"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "IEnumerable"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.IEnumerable"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "ICollection"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.ICollection"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "IList"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.IList"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "IEnumerator"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.IEnumerator"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "ArrayList"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.ArrayList"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "BitArray"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.BitArray"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "IComparer"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.IComparer"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "CaseInsensitiveComparer"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.CaseInsensitiveComparer"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "IHashCodeProvider"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.IHashCodeProvider"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "CaseInsensitiveHashCodeProvider"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.CaseInsensitiveHashCodeProvider"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "CollectionBase"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.CollectionBase"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "Comparer"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.Comparer"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "IDictionary"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.IDictionary"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "DictionaryBase"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.DictionaryBase"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "DictionaryEntry"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.DictionaryEntry"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "Hashtable"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.Hashtable"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "IDictionaryEnumerator"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.IDictionaryEnumerator"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "Queue"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.Queue"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "ReadOnlyCollectionBase"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.ReadOnlyCollectionBase"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "SortedList"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.SortedList"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "Stack"
-      Value (IMap):
+      Value (StrategyMap):
         "System.Collections.Stack"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "Specialized"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "BitVector32"
-          Value (IMap):
+          Value (StrategyMap):
             "System.Collections.Specialized.BitVector32"
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "CollectionsUtil"
-          Value (IMap):
+          Value (StrategyMap):
             "System.Collections.Specialized.CollectionsUtil"
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "HybridDictionary"
-          Value (IMap):
+          Value (StrategyMap):
             "System.Collections.Specialized.HybridDictionary"
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "ListDictionary"
-          Value (IMap):
+          Value (StrategyMap):
             "System.Collections.Specialized.ListDictionary"
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "NameObjectCollectionBase"
-          Value (IMap):
+          Value (StrategyMap):
             "System.Collections.Specialized.NameObjectCollectionBase"
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "NameValueCollection"
-          Value (IMap):
+          Value (StrategyMap):
             "System.Collections.Specialized.NameValueCollection"
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "StringCollection"
-          Value (IMap):
+          Value (StrategyMap):
             "System.Collections.Specialized.StringCollection"
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "StringEnumerator"
-          Value (IMap):
+          Value (StrategyMap):
             "System.Collections.Specialized.StringEnumerator"
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "StringDictionary"
-          Value (IMap):
+          Value (StrategyMap):
             "System.Collections.Specialized.StringDictionary"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "lazyGACTest"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "ErrorLevel"
-      Value (IMap):
+      Value (StrategyMap):
         "Microsoft.CSharp.ErrorLevel"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "CompilerError"
-      Value (IMap):
+      Value (StrategyMap):
         "Microsoft.CSharp.CompilerError"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "Compiler"
-      Value (IMap):
+      Value (StrategyMap):
         "Microsoft.CSharp.Compiler"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "CSharpCodeProvider"
-      Value (IMap):
+      Value (StrategyMap):
         "Microsoft.CSharp.CSharpCodeProvider"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "commandLineArguments"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
@@ -524,878 +524,878 @@ Entry (DictionaryEntry)
       Value (String):
         "second=arg"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "aMap"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "a"
-      Value (IMap):
+      Value (StrategyMap):
         "a"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "a"
-      Value (IMap):
+      Value (StrategyMap):
         "a"
-  Value (IMap):
+  Value (StrategyMap):
     "Object"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "normal symbol"
-  Value (IMap):
+  Value (StrategyMap):
     "NormalSymbol"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "lookupSymbol"
-  Value (IMap):
+  Value (StrategyMap):
     "LookupSymbol"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "long key symbol"
-  Value (IMap):
+  Value (StrategyMap):
     "LookupExtendedSymbol"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "lookedUpMap"
-  Value (IMap):
+  Value (StrategyMap):
     "Object"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "lookedUpNormalSymbol"
-  Value (IMap):
+  Value (StrategyMap):
     "NormalSymbol"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "lookedUpSymbol"
-  Value (IMap):
+  Value (StrategyMap):
     "LookupSymbol"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "lookedUpLongSymbol"
-  Value (IMap):
+  Value (StrategyMap):
     "LookupExtendedSymbol"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "object"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "a"
-      Value (IMap):
+      Value (StrategyMap):
         "c"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "autoSearch"
-      Value (IMap):
+      Value (StrategyMap):
         "changed"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "b"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
           Key (Integer):
             "1"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "x"
               Value (Integer):
                 "7"
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "z"
               Value (Integer):
                 "1"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "SetA"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "run"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "program"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "1"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "key"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "literal"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 "a"
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "value"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "c"
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "search"
                       Value (Integer):
                         "1"
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "2"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "key"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "literal"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 "autoSearch"
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "value"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "changed"
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "search"
                       Value (Integer):
                         "1"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "SetB"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "run"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "program"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "1"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "key"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "literal"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 "b"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "literal"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 "1"
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "value"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "select"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
                               Key (Integer):
                                 "1"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "search"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "literal"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         "arg"
                             Entry (DictionaryEntry)
                               Key (Integer):
                                 "2"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "literal"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     "value"
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "search"
                       Value (Integer):
                         "1"
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "2"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "key"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "literal"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 "this"
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "value"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "changed"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "x"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "a"
-          Value (IMap):
+          Value (StrategyMap):
             "b"
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "c"
-          Value (IMap):
+          Value (StrategyMap):
             "d"
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "run"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "program"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
                   Key (Integer):
                     "1"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "key"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "literal"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 "this"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "literal"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 "a"
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "value"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "b"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "a"
-  Value (IMap):
+  Value (StrategyMap):
     "default"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "b"
-  Value (IMap):
+  Value (StrategyMap):
     ""
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "aSet"
-  Value (IMap):
+  Value (StrategyMap):
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "bSet"
-  Value (IMap):
+  Value (StrategyMap):
     "changed"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "ReturnEverything"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "search"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "arg"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "everythingReturned"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (IMap):
+      Value (StrategyMap):
         "a"
     Entry (DictionaryEntry)
       Key (Integer):
         "2"
-      Value (IMap):
+      Value (StrategyMap):
         "b"
     Entry (DictionaryEntry)
       Key (Integer):
         "3"
-      Value (IMap):
+      Value (StrategyMap):
         "c"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "variableAsArgument"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (IMap):
+      Value (StrategyMap):
         "x"
     Entry (DictionaryEntry)
       Key (Integer):
         "2"
-      Value (IMap):
+      Value (StrategyMap):
         "y"
     Entry (DictionaryEntry)
       Key (Integer):
         "3"
-      Value (IMap):
+      Value (StrategyMap):
         "z"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "ReturnFunction"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "program"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "key"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "literal"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         "run"
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "value"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "delayed"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "program"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
                                           Key (Integer):
                                             "1"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             Entry (DictionaryEntry)
-                                              Key (IMap):
+                                              Key (StrategyMap):
                                                 "key"
-                                              Value (IMap):
+                                              Value (StrategyMap):
                                                 Entry (DictionaryEntry)
                                                   Key (Integer):
                                                     "1"
-                                                  Value (IMap):
+                                                  Value (StrategyMap):
                                                     Entry (DictionaryEntry)
-                                                      Key (IMap):
+                                                      Key (StrategyMap):
                                                         "literal"
-                                                      Value (IMap):
+                                                      Value (StrategyMap):
                                                         "this"
                                             Entry (DictionaryEntry)
-                                              Key (IMap):
+                                              Key (StrategyMap):
                                                 "value"
-                                              Value (IMap):
+                                              Value (StrategyMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (IMap):
+                                                  Key (StrategyMap):
                                                     "program"
-                                                  Value (IMap):
+                                                  Value (StrategyMap):
                                                     Entry (DictionaryEntry)
                                                       Key (Integer):
                                                         "1"
-                                                      Value (IMap):
+                                                      Value (StrategyMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (IMap):
+                                                          Key (StrategyMap):
                                                             "key"
-                                                          Value (IMap):
+                                                          Value (StrategyMap):
                                                             Entry (DictionaryEntry)
                                                               Key (Integer):
                                                                 "1"
-                                                              Value (IMap):
+                                                              Value (StrategyMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (IMap):
+                                                                  Key (StrategyMap):
                                                                     "literal"
-                                                                  Value (IMap):
+                                                                  Value (StrategyMap):
                                                                     "1"
                                                         Entry (DictionaryEntry)
-                                                          Key (IMap):
+                                                          Key (StrategyMap):
                                                             "value"
-                                                          Value (IMap):
+                                                          Value (StrategyMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (IMap):
+                                                              Key (StrategyMap):
                                                                 "literal"
-                                                              Value (IMap):
+                                                              Value (StrategyMap):
                                                                 "1"
                                                     Entry (DictionaryEntry)
                                                       Key (Integer):
                                                         "2"
-                                                      Value (IMap):
+                                                      Value (StrategyMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (IMap):
+                                                          Key (StrategyMap):
                                                             "key"
-                                                          Value (IMap):
+                                                          Value (StrategyMap):
                                                             Entry (DictionaryEntry)
                                                               Key (Integer):
                                                                 "1"
-                                                              Value (IMap):
+                                                              Value (StrategyMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (IMap):
+                                                                  Key (StrategyMap):
                                                                     "literal"
-                                                                  Value (IMap):
+                                                                  Value (StrategyMap):
                                                                     "2"
                                                         Entry (DictionaryEntry)
-                                                          Key (IMap):
+                                                          Key (StrategyMap):
                                                             "value"
-                                                          Value (IMap):
+                                                          Value (StrategyMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (IMap):
+                                                              Key (StrategyMap):
                                                                 "literal"
-                                                              Value (IMap):
+                                                              Value (StrategyMap):
                                                                 "2"
                                                     Entry (DictionaryEntry)
                                                       Key (Integer):
                                                         "3"
-                                                      Value (IMap):
+                                                      Value (StrategyMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (IMap):
+                                                          Key (StrategyMap):
                                                             "key"
-                                                          Value (IMap):
+                                                          Value (StrategyMap):
                                                             Entry (DictionaryEntry)
                                                               Key (Integer):
                                                                 "1"
-                                                              Value (IMap):
+                                                              Value (StrategyMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (IMap):
+                                                                  Key (StrategyMap):
                                                                     "literal"
-                                                                  Value (IMap):
+                                                                  Value (StrategyMap):
                                                                     "3"
                                                         Entry (DictionaryEntry)
-                                                          Key (IMap):
+                                                          Key (StrategyMap):
                                                             "value"
-                                                          Value (IMap):
+                                                          Value (StrategyMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (IMap):
+                                                              Key (StrategyMap):
                                                                 "literal"
-                                                              Value (IMap):
+                                                              Value (StrategyMap):
                                                                 "3"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "SetCurrent"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "program"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "key"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "literal"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         "arg"
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "value"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "search"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "literal"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         "arg"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "key"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "literal"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         "x"
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "value"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "select"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "1"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (IMap):
+                                          Key (StrategyMap):
                                             "search"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             Entry (DictionaryEntry)
-                                              Key (IMap):
+                                              Key (StrategyMap):
                                                 "literal"
-                                              Value (IMap):
+                                              Value (StrategyMap):
                                                 "arg"
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "2"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (IMap):
+                                          Key (StrategyMap):
                                             "literal"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             "symbol"
             Entry (DictionaryEntry)
               Key (Integer):
                 "2"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "search"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "x"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "thisSet"
-  Value (IMap):
+  Value (StrategyMap):
     "haha"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "FirstLevel"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "1"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "call"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "function"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "search"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "literal"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     "SecondLevel"
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "argument"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "search"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "literal"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     "arg"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "SecondLevel"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "search"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "literal"
-              Value (IMap):
+              Value (StrategyMap):
                 "arg"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "argTest"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "a"
-          Value (IMap):
+          Value (StrategyMap):
             "z"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "concatenate"
-  Value (IMap):
+  Value (StrategyMap):
     "xyz"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "MemberTest"
-  Value (IMap):
+  Value (StrategyMap):
     "testClasses.MemberTest"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "IntEvent"
-  Value (IMap):
+  Value (StrategyMap):
     "testClasses.IntEvent"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "NormalEvent"
-  Value (IMap):
+  Value (StrategyMap):
     "testClasses.NormalEvent"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "TestClass"
-  Value (IMap):
+  Value (StrategyMap):
     "testClasses.TestClass"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "PositionalNoConversion"
-  Value (IMap):
+  Value (StrategyMap):
     "testClasses.PositionalNoConversion"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "NamedNoConversion"
-  Value (IMap):
+  Value (StrategyMap):
     "testClasses.NamedNoConversion"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "IndexerNoConversion"
-  Value (IMap):
+  Value (StrategyMap):
     "testClasses.IndexerNoConversion"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "testClass"
-  Value (IMap):
+  Value (StrategyMap):
     decimalValue (Decimal):
       "0.3333333333333333333333333333"
     doubleValue (Double):
@@ -1403,27 +1403,27 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0.3333333"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "boolTest"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "memberTest"
-  Value (IMap):
+  Value (StrategyMap):
     instanceField (String):
       "b"
     InstanceProperty (String):
       "b"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "interceptedSymbol"
-  Value (IMap):
+  Value (StrategyMap):
     "/hello/"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "positionalNoConversion"
-  Value (IMap):
+  Value (StrategyMap):
     decimalValue (Decimal):
       "0"
     doubleValue (Double):
@@ -1431,14 +1431,14 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "positionalNoConversionConcatenated"
-  Value (IMap):
+  Value (StrategyMap):
     "rstmno"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "namedNoConversion"
-  Value (IMap):
+  Value (StrategyMap):
     decimalValue (Decimal):
       "0"
     doubleValue (Double):
@@ -1446,14 +1446,14 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "namedNoConversionConcatenated"
-  Value (IMap):
+  Value (StrategyMap):
     "rullnulltullmullnullnull"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "indexerNoConversion"
-  Value (IMap):
+  Value (StrategyMap):
     decimalValue (Decimal):
       "0"
     doubleValue (Double):
@@ -1461,346 +1461,346 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "indexerNoConversionIndexed"
-  Value (IMap):
+  Value (StrategyMap):
     "abchihiunchangedYunchangedZabc"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "interceptedSymbol2"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "k"
-  Value (IMap):
+  Value (StrategyMap):
     "hello"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "xyz"
-  Value (IMap):
+  Value (StrategyMap):
     "w"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "literalFunction"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "literal"
-          Value (IMap):
+          Value (StrategyMap):
             "5"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "literalFunctionResult"
   Value (Integer):
     "5"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "function"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "literal"
-                      Value (IMap):
+                      Value (StrategyMap):
                         "simple function this"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "callFunction"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "search"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "literal"
-              Value (IMap):
+              Value (StrategyMap):
                 "function"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "callFunctionResult"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "literal"
-                      Value (IMap):
+                      Value (StrategyMap):
                         "simple function this"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "delayedFunction"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "run"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "delayed"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "program"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
                               Key (Integer):
                                 "1"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "key"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "1"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (IMap):
+                                          Key (StrategyMap):
                                             "literal"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             "x"
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "value"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "literal"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         "y"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "delayedFunctionResult"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "x"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "literal"
-                      Value (IMap):
+                      Value (StrategyMap):
                         "y"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "value"
-  Value (IMap):
+  Value (StrategyMap):
     "xyz"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "selectionFunction"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "search"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "literal"
-              Value (IMap):
+              Value (StrategyMap):
                 "value"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "selectionFunctionResult"
-  Value (IMap):
+  Value (StrategyMap):
     "xyz"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "bigInteger"
   Value (Integer):
     "89383838383832839123497123047217340712340720347072304702340720347"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "upperLevel"
-  Value (IMap):
+  Value (StrategyMap):
     "changed"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "ChangeUpperLevel"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "upperLevel"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "literal"
-                      Value (IMap):
+                      Value (StrategyMap):
                         "changed"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "search"
                   Value (Integer):
                     "1"
 Entry (DictionaryEntry)
   Key (Integer):
     "3"
-  Value (IMap):
+  Value (StrategyMap):
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "staticEventChanged"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "staticEvent"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "System.Object Invoke(System.Object)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "resultFromDelegate"
-  Value (IMap):
+  Value (StrategyMap):
     "resultFromDelegate"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "staticEventResult"
-  Value (IMap):
+  Value (StrategyMap):
     decimalValue (Decimal):
       "0.3333333333333333333333333333"
     doubleValue (Double):
@@ -1808,200 +1808,200 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0.3333333"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "instanceEventChanged"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "instanceEvent"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
         "Int32 Invoke(Int32)"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "instanceEventResult"
   Value (Integer):
     "5"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "one"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "two"
   Value (Integer):
     "2"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "firstIf"
-  Value (IMap):
+  Value (StrategyMap):
     "then"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "secondIf"
-  Value (IMap):
+  Value (StrategyMap):
     "unchanged"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "firstIfCondition"
   Value (Integer):
     "1"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "firstIfBranches"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "run"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "literal"
-              Value (IMap):
+              Value (StrategyMap):
                 "then"
     Entry (DictionaryEntry)
       Key (Integer):
         "0"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "run"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "literal"
-              Value (IMap):
+              Value (StrategyMap):
                 "else"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "bigNumber"
   Value (Integer):
     "50020202029029233344"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "secondSwitch"
-  Value (IMap):
+  Value (StrategyMap):
     "three"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "secondSwitchCases"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
       Key (Integer):
         "1"
-      Value (IMap):
+      Value (StrategyMap):
         "one"
     Entry (DictionaryEntry)
       Key (Integer):
         "2"
-      Value (IMap):
+      Value (StrategyMap):
         "two"
     Entry (DictionaryEntry)
       Key (Integer):
         "3"
-      Value (IMap):
+      Value (StrategyMap):
         "three"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "emptyMap"
-  Value (IMap):
+  Value (StrategyMap):
     ""
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "emptyFunction"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "x"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "literal"
-                      Value (IMap):
+                      Value (StrategyMap):
                         "hello"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "emptyFunctionResult"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "x"
-      Value (IMap):
+      Value (StrategyMap):
         "hello"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "font"
-  Value (IMap):
+  Value (StrategyMap):
     "[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "stringTest"
-  Value (IMap):
+  Value (StrategyMap):
     "helloh"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "helloh"
-  Value (IMap):
+  Value (StrategyMap):
     "hi"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "stringStrategyHashTest"
-  Value (IMap):
+  Value (StrategyMap):
     "hi"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "x"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "aLongText"
-      Value (IMap):
+      Value (StrategyMap):
         "
 hello word!
 hello!
 "
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "ored"
   Value (Integer):
     "29"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "arrayList"
-  Value (IMap):
-    Entry (IMap)
+  Value (StrategyMap):
+    Entry (StrategyMap)
       "hello"
 Entry (DictionaryEntry)
   Key (Integer):
@@ -2009,18 +2009,18 @@ Entry (DictionaryEntry)
   Value (Integer):
     "0"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "arrayListResult"
-  Value (IMap):
+  Value (StrategyMap):
     "hello"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "textBox"
-  Value (IMap):
+  Value (StrategyMap):
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "lines"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (String)
       ""
     Entry (String)
@@ -2036,643 +2036,643 @@ Entry (DictionaryEntry)
     Entry (String)
       ""
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "alleMeineText"
-  Value (IMap):
+  Value (StrategyMap):
     "Alle meine Entchen,"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "tabText"
-  Value (IMap):
+  Value (StrategyMap):
     "			hello"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "escapedText"
-  Value (IMap):
+  Value (StrategyMap):
     "\'\n\\\t"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "whileCounter"
   Value (Integer):
     "10"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "loop"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "whileDecision"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "call"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "function"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "search"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "literal"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     "Smaller"
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "argument"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "program"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "key"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
                                           Key (Integer):
                                             "1"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             Entry (DictionaryEntry)
-                                              Key (IMap):
+                                              Key (StrategyMap):
                                                 "literal"
-                                              Value (IMap):
+                                              Value (StrategyMap):
                                                 "1"
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "value"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (IMap):
+                                          Key (StrategyMap):
                                             "search"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             Entry (DictionaryEntry)
-                                              Key (IMap):
+                                              Key (StrategyMap):
                                                 "literal"
-                                              Value (IMap):
+                                              Value (StrategyMap):
                                                 "arg"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "key"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
                                           Key (Integer):
                                             "1"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             Entry (DictionaryEntry)
-                                              Key (IMap):
+                                              Key (StrategyMap):
                                                 "literal"
-                                              Value (IMap):
+                                              Value (StrategyMap):
                                                 "2"
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "value"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (IMap):
+                                          Key (StrategyMap):
                                             "literal"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             "10"
             Entry (DictionaryEntry)
               Key (Integer):
                 "2"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "whileBranches"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "program"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "1"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "key"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "literal"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         "1"
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "value"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "program"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "1"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (IMap):
+                                          Key (StrategyMap):
                                             "key"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             Entry (DictionaryEntry)
                                               Key (Integer):
                                                 "1"
-                                              Value (IMap):
+                                              Value (StrategyMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (IMap):
+                                                  Key (StrategyMap):
                                                     "literal"
-                                                  Value (IMap):
+                                                  Value (StrategyMap):
                                                     "run"
                                         Entry (DictionaryEntry)
-                                          Key (IMap):
+                                          Key (StrategyMap):
                                             "value"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             Entry (DictionaryEntry)
-                                              Key (IMap):
+                                              Key (StrategyMap):
                                                 "delayed"
-                                              Value (IMap):
+                                              Value (StrategyMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (IMap):
+                                                  Key (StrategyMap):
                                                     "call"
-                                                  Value (IMap):
+                                                  Value (StrategyMap):
                                                     Entry (DictionaryEntry)
-                                                      Key (IMap):
+                                                      Key (StrategyMap):
                                                         "function"
-                                                      Value (IMap):
+                                                      Value (StrategyMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (IMap):
+                                                          Key (StrategyMap):
                                                             "search"
-                                                          Value (IMap):
+                                                          Value (StrategyMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (IMap):
+                                                              Key (StrategyMap):
                                                                 "literal"
-                                                              Value (IMap):
+                                                              Value (StrategyMap):
                                                                 "loop"
                                                     Entry (DictionaryEntry)
-                                                      Key (IMap):
+                                                      Key (StrategyMap):
                                                         "argument"
-                                                      Value (IMap):
+                                                      Value (StrategyMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (IMap):
+                                                          Key (StrategyMap):
                                                             "call"
-                                                          Value (IMap):
+                                                          Value (StrategyMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (IMap):
+                                                              Key (StrategyMap):
                                                                 "function"
-                                                              Value (IMap):
+                                                              Value (StrategyMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (IMap):
+                                                                  Key (StrategyMap):
                                                                     "search"
-                                                                  Value (IMap):
+                                                                  Value (StrategyMap):
                                                                     Entry (DictionaryEntry)
-                                                                      Key (IMap):
+                                                                      Key (StrategyMap):
                                                                         "literal"
-                                                                      Value (IMap):
+                                                                      Value (StrategyMap):
                                                                         "Add"
                                                             Entry (DictionaryEntry)
-                                                              Key (IMap):
+                                                              Key (StrategyMap):
                                                                 "argument"
-                                                              Value (IMap):
+                                                              Value (StrategyMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (IMap):
+                                                                  Key (StrategyMap):
                                                                     "program"
-                                                                  Value (IMap):
+                                                                  Value (StrategyMap):
                                                                     Entry (DictionaryEntry)
                                                                       Key (Integer):
                                                                         "1"
-                                                                      Value (IMap):
+                                                                      Value (StrategyMap):
                                                                         Entry (DictionaryEntry)
-                                                                          Key (IMap):
+                                                                          Key (StrategyMap):
                                                                             "key"
-                                                                          Value (IMap):
+                                                                          Value (StrategyMap):
                                                                             Entry (DictionaryEntry)
                                                                               Key (Integer):
                                                                                 "1"
-                                                                              Value (IMap):
+                                                                              Value (StrategyMap):
                                                                                 Entry (DictionaryEntry)
-                                                                                  Key (IMap):
+                                                                                  Key (StrategyMap):
                                                                                     "literal"
-                                                                                  Value (IMap):
+                                                                                  Value (StrategyMap):
                                                                                     "1"
                                                                         Entry (DictionaryEntry)
-                                                                          Key (IMap):
+                                                                          Key (StrategyMap):
                                                                             "value"
-                                                                          Value (IMap):
+                                                                          Value (StrategyMap):
                                                                             Entry (DictionaryEntry)
-                                                                              Key (IMap):
+                                                                              Key (StrategyMap):
                                                                                 "search"
-                                                                              Value (IMap):
+                                                                              Value (StrategyMap):
                                                                                 Entry (DictionaryEntry)
-                                                                                  Key (IMap):
+                                                                                  Key (StrategyMap):
                                                                                     "literal"
-                                                                                  Value (IMap):
+                                                                                  Value (StrategyMap):
                                                                                     "arg"
                                                                     Entry (DictionaryEntry)
                                                                       Key (Integer):
                                                                         "2"
-                                                                      Value (IMap):
+                                                                      Value (StrategyMap):
                                                                         Entry (DictionaryEntry)
-                                                                          Key (IMap):
+                                                                          Key (StrategyMap):
                                                                             "key"
-                                                                          Value (IMap):
+                                                                          Value (StrategyMap):
                                                                             Entry (DictionaryEntry)
                                                                               Key (Integer):
                                                                                 "1"
-                                                                              Value (IMap):
+                                                                              Value (StrategyMap):
                                                                                 Entry (DictionaryEntry)
-                                                                                  Key (IMap):
+                                                                                  Key (StrategyMap):
                                                                                     "literal"
-                                                                                  Value (IMap):
+                                                                                  Value (StrategyMap):
                                                                                     "2"
                                                                         Entry (DictionaryEntry)
-                                                                          Key (IMap):
+                                                                          Key (StrategyMap):
                                                                             "value"
-                                                                          Value (IMap):
+                                                                          Value (StrategyMap):
                                                                             Entry (DictionaryEntry)
-                                                                              Key (IMap):
+                                                                              Key (StrategyMap):
                                                                                 "literal"
-                                                                              Value (IMap):
+                                                                              Value (StrategyMap):
                                                                                 "1"
                         Entry (DictionaryEntry)
                           Key (Integer):
                             "2"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "key"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "literal"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         "0"
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "value"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "program"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
                                       Key (Integer):
                                         "1"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (IMap):
+                                          Key (StrategyMap):
                                             "key"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             Entry (DictionaryEntry)
                                               Key (Integer):
                                                 "1"
-                                              Value (IMap):
+                                              Value (StrategyMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (IMap):
+                                                  Key (StrategyMap):
                                                     "literal"
-                                                  Value (IMap):
+                                                  Value (StrategyMap):
                                                     "run"
                                         Entry (DictionaryEntry)
-                                          Key (IMap):
+                                          Key (StrategyMap):
                                             "value"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             Entry (DictionaryEntry)
-                                              Key (IMap):
+                                              Key (StrategyMap):
                                                 "delayed"
-                                              Value (IMap):
+                                              Value (StrategyMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (IMap):
+                                                  Key (StrategyMap):
                                                     "search"
-                                                  Value (IMap):
+                                                  Value (StrategyMap):
                                                     Entry (DictionaryEntry)
-                                                      Key (IMap):
+                                                      Key (StrategyMap):
                                                         "literal"
-                                                      Value (IMap):
+                                                      Value (StrategyMap):
                                                         "arg"
             Entry (DictionaryEntry)
               Key (Integer):
                 "3"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "call"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "function"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "select"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "1"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "search"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (IMap):
+                                          Key (StrategyMap):
                                             "literal"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             "whileBranches"
                                 Entry (DictionaryEntry)
                                   Key (Integer):
                                     "2"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (IMap):
+                                      Key (StrategyMap):
                                         "search"
-                                      Value (IMap):
+                                      Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (IMap):
+                                          Key (StrategyMap):
                                             "literal"
-                                          Value (IMap):
+                                          Value (StrategyMap):
                                             "whileDecision"
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "argument"
-                          Value (IMap):
+                          Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (IMap):
+                              Key (StrategyMap):
                                 "search"
-                              Value (IMap):
+                              Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (IMap):
+                                  Key (StrategyMap):
                                     "literal"
-                                  Value (IMap):
+                                  Value (StrategyMap):
                                     "arg"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "returnInMap"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "result"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "search"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "arg"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "literalAsArgument"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "result"
       Value (Integer):
         "1"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "returnFunction"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "run"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "delayed"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "functionResult"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "returnArg"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "search"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (IMap):
+              Key (StrategyMap):
                 "literal"
-              Value (IMap):
+              Value (StrategyMap):
                 "arg"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "myArg"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "program"
-          Value (IMap):
+          Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (Integer):
                 "1"
-              Value (IMap):
+              Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "key"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
                       Key (Integer):
                         "1"
-                      Value (IMap):
+                      Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (IMap):
+                          Key (StrategyMap):
                             "literal"
-                          Value (IMap):
+                          Value (StrategyMap):
                             "hello"
                 Entry (DictionaryEntry)
-                  Key (IMap):
+                  Key (StrategyMap):
                     "value"
-                  Value (IMap):
+                  Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (IMap):
+                      Key (StrategyMap):
                         "literal"
-                      Value (IMap):
+                      Value (StrategyMap):
                         "world"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "funcReturnTest"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "hello"
-      Value (IMap):
+      Value (StrategyMap):
         "world"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "documentedFunction"
-  Value (IMap):
+  Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "doc"
-      Value (IMap):
+      Value (StrategyMap):
         "This function returns 'hello ."
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "run"
-      Value (IMap):
+      Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (IMap):
+          Key (StrategyMap):
             "literal"
-          Value (IMap):
+          Value (StrategyMap):
             "hello"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "docFunctionResult"
-  Value (IMap):
+  Value (StrategyMap):
     "hello"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "x"
       Value (Integer):
         "1"
     Entry (DictionaryEntry)
-      Key (IMap):
+      Key (StrategyMap):
         "y"
       Value (Integer):
         "2"
-  Value (IMap):
+  Value (StrategyMap):
     "hello"
 Entry (DictionaryEntry)
-  Key (IMap):
+  Key (StrategyMap):
     "functionAndMapInLookupTest"
-  Value (IMap):
+  Value (StrategyMap):
     "hello"

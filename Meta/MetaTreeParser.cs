@@ -83,7 +83,7 @@ namespace Meta.Parser
 		
 		MetaAST expression_AST_in = (MetaAST)_t;
 		
-		result=null;//new IMap();
+		result=null;//new StrategyMap();
 		
 		
 		{
@@ -143,11 +143,11 @@ namespace Meta.Parser
 		
 		MetaAST call_AST_in = (MetaAST)_t;
 		
-		result=new IMap();
+		result=new StrategyMap();
 		result.Extent=call_AST_in.Extent;
-		IMap call=new IMap();
-		IMap delayed=new IMap();
-		IMap argument=new IMap();
+		IMap call=new StrategyMap();
+		IMap delayed=new StrategyMap();
+		IMap argument=new StrategyMap();
 		
 		
 		AST __t166 = _t;
@@ -179,9 +179,9 @@ namespace Meta.Parser
 		
 		MetaAST map_AST_in = (MetaAST)_t;
 		
-		result=new IMap();
+		result=new StrategyMap();
 		result.Extent=map_AST_in.Extent;
-		IMap statements=new IMap();
+		IMap statements=new StrategyMap();
 		IMap s=null;
 		int counter=1;
 		
@@ -248,9 +248,9 @@ _loop164_breakloop:			;
 		
 		MetaAST select_AST_in = (MetaAST)_t;
 		
-		result=new IMap();
+		result=new StrategyMap();
 		result.Extent=select_AST_in.Extent;
-		IMap selection=new IMap();
+		IMap selection=new StrategyMap();
 		IMap key=null;
 		int counter=1;
 		
@@ -300,7 +300,7 @@ _loop173_breakloop:			;
 		
 		MetaAST search_AST_in = (MetaAST)_t;
 		
-				result=new IMap();
+				result=new StrategyMap();
 				IMap lookupResult=null;
 				result.Extent=search_AST_in.Extent;
 				IMap e=null;
@@ -328,7 +328,7 @@ _loop173_breakloop:			;
 		MetaAST literal_AST_in = (MetaAST)_t;
 		MetaAST token = null;
 		
-		result=new IMap();
+		result=new StrategyMap();
 		result.Extent=literal_AST_in.Extent;
 		
 		
@@ -336,7 +336,7 @@ _loop173_breakloop:			;
 		match((AST)_t,LITERAL);
 		_t = _t.getNextSibling();
 		
-		result[CodeKeys.Literal]=new IMap(token.getText());
+		result[CodeKeys.Literal]=new StrategyMap(token.getText());
 		
 		retTree_ = _t;
 		return result;
@@ -348,10 +348,10 @@ _loop173_breakloop:			;
 		
 		MetaAST delayed_AST_in = (MetaAST)_t;
 		
-		result=new IMap();
+		result=new StrategyMap();
 		result.Extent=delayed_AST_in.Extent;
 		IMap mExpression;
-		//IMap CodeKeys.Run=new IMap();
+		//IMap CodeKeys.Run=new StrategyMap();
 		
 		
 		AST __t178 = _t;
@@ -379,7 +379,7 @@ _loop173_breakloop:			;
 		MetaAST key_AST_in = (MetaAST)_t;
 		
 				int counter=1;
-				result=new IMap();
+				result=new StrategyMap();
 				IMap e=null;
 			
 		
@@ -423,7 +423,7 @@ _loop155_breakloop:		;
 		
 		MetaAST statement_AST_in = (MetaAST)_t;
 		
-				statement=new IMap();
+				statement=new StrategyMap();
 				//IMap key=null;
 				IMap val=null;
 				IMap k=null;
@@ -438,7 +438,7 @@ _loop155_breakloop:		;
 		val=expression(_t);
 		_t = retTree_;
 		
-					//IMap statement=new IMap();
+					//IMap statement=new StrategyMap();
 					statement[CodeKeys.Key]=k;
 					statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 				
@@ -454,7 +454,7 @@ _loop155_breakloop:		;
 		
 		MetaAST statementSearch_AST_in = (MetaAST)_t;
 		
-				statement=new IMap();
+				statement=new StrategyMap();
 				//IMap key=null;
 				IMap val=null;
 				IMap k=null;
@@ -469,7 +469,7 @@ _loop155_breakloop:		;
 		val=expression(_t);
 		_t = retTree_;
 		
-					//IMap statement=new IMap();
+					//IMap statement=new StrategyMap();
 					statement[CodeKeys.Key]=k;
 					statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 				
