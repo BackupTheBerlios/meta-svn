@@ -57,12 +57,12 @@ namespace Meta
 		public static readonly IMap Arg=new NormalMap("arg");
 		public static readonly IMap This=new NormalMap("this");
 	}
-	public class NumberKeys // TODO: maybe combine this stuff, is too little members per class
+	public class NumberKeys
 	{
 		public static readonly IMap Denominator=new NormalMap("denominator");
 		public static readonly IMap Numerator=new NormalMap("numerator");
 		public static readonly IMap Negative=new NormalMap("negative");
-		public static readonly IMap EmptyMap=new NormalMap(); // TODO: move somewhere else, reorganize SpecialKeys and so on
+		public static readonly IMap EmptyMap=new NormalMap();
 	}
 	public abstract class Expression
 	{
@@ -1159,65 +1159,27 @@ namespace Meta
 			((Expression)expression).Extent=this.Extent;
 			return expression;
 		}
-		public virtual bool ContainsKey(IMap key)  // TODO: make single-exit
+		public virtual bool ContainsKey(IMap key)
 		{
-//			if(key is IMap)
-//			{
-				if(key.Equals(SpecialKeys.Arg))
-				{
-					return this.Argument!=null;
-				}
-				else if(key.Equals(SpecialKeys.Parent))
-				{
-					return this.Parent!=null;
-				}
-				else if(key.Equals(SpecialKeys.This))
-				{
-					return true;
-				}
-//			}
-			return Keys.Contains(key);
+			bool containsKey;
+			if(key.Equals(SpecialKeys.Arg))
+			{
+				containsKey=this.Argument!=null;
+			}
+			else if(key.Equals(SpecialKeys.Parent))
+			{
+				containsKey=this.Parent!=null;
+			}
+			else if(key.Equals(SpecialKeys.This))
+			{
+				containsKey=true;
+			}
+			else
+			{
+				containsKey=Keys.Contains(key);
+			}
+			return containsKey;
 		}
-//		{
-//			if(key is IMap)
-//			{
-//				if(key.Equals(SpecialKeys.Arg))
-//				{
-//					return this.Argument!=null;
-//				}
-//				else if(key.Equals(SpecialKeys.Parent))
-//				{
-//					return this.Parent!=null;
-//				}
-//				else if(key.Equals(SpecialKeys.This))
-//				{
-//					return true;
-//				}
-//			}
-//			return strategy.ContainsKey(key);
-//		}
-
-
-		//public abstract bool Equals(object toCompare); // TODO: maybe provide default implementation
-
-
-
-//		{
-//			bool isEqual;
-//			if(Object.ReferenceEquals(toCompare,this))
-//			{
-//				isEqual=true;
-//			}
-//			else if(toCompare is IMap)
-//			{
-//				isEqual=((IMap)toCompare).strategy.Equals(strategy);
-//			}
-//			else
-//			{
-//				isEqual=false;
-//			}
-//			return isEqual;
-//		}
 		public virtual IEnumerator GetEnumerator()
 		{
 			return new MapEnumerator(this);
@@ -1234,15 +1196,6 @@ namespace Meta
 			}
 			return hash;
 		}
-//		public abstract int GetHashCode();
-//		{
-//			if(!isHashCached)
-//			{
-//				hash=this.strategy.GetHashCode();
-//				isHashCached=true;
-//			}
-//			return hash;
-//		}
 		private bool isHashCached=false;
 		private int hash;
 		Extent extent;
@@ -1256,56 +1209,11 @@ namespace Meta
 			{
 				extent=value;
 			}
-		}
-		//		public IMap(Integer Number):this(new Integer(number))
-		//		{
-		//		}
-		//		public IMap(Integer number):this(new IntegerStrategy(number))
-		//		{
-		//		}
-
-
-//		public IMap(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new LazyNamespace(namespaceName,subNamespaces,assemblies))
-//		{
-//		}
-//		public IMap(object obj):this(new DotNetObject(obj))
-//		{
-//		}
-//		public IMap(Type type):this(new DotNetClass(type))
-//		{
-//		}
-//		public IMap(string text):this(new StringStrategy(text))
-//		{
-//		}
-//		public IMap():this(new HybridDictionaryStrategy())
-//		{
-//		}
-//		public IMap(MapStrategy strategy)
-//		{
-//			this.strategy=strategy;
-//			this.strategy.map=this;
-//		}
-//		public MapStrategy strategy;
-
-
-
-		private IMap parent;
-//
-//		public void Serialize(string indentation,string[] functions,StringBuilder stringBuilder)
-//		{
-//			strategy.Serialize(indentation,functions,stringBuilder);
-//		}
+		}		private IMap parent;
 	}
 	
 	public abstract class StrategyMap: IMap, ISerializeSpecial // TODO: make this an abstract class
 	{
-//		public override bool IsNumber
-//		{
-//			get
-//			{
-//				return strategy.IsNumber;
-//			}
-//		}
 		public override Integer Number
 		{
 			get
@@ -1314,44 +1222,6 @@ namespace Meta
 			}
 		}
 
-
-//		public NormalMap(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new LazyNamespace(namespaceName,subNamespaces,assemblies))
-//	{
-//	}
-//		public NormalMap(object obj):this(new DotNetObject(obj))
-//	{
-//	}
-//		public NormalMap(Type type):this(new DotNetClass(type))
-//	{
-//	}
-//		public NormalMap(string text):this(new StringStrategy(text))
-//	{
-//	}
-//		public NormalMap():this(new HybridDictionaryStrategy())
-//	{
-//	}
-//		public NormalMap(MapStrategy strategy)
-//		{
-//			this.strategy=strategy;
-//			this.strategy.map=this.map;
-//		}
-//		public MapStrategy strategy;
-//		public void Serialize(string indentation,string[] functions,StringBuilder stringBuilder)
-//		{
-//			strategy.Serialize(indentation,functions,stringBuilder);
-//		}
-//		public object Argument
-//		{
-//			get
-//			{
-//				return arg;
-//			}
-//			set
-//			{ 
-//				arg=value;
-//			}
-//		}
-//		object arg=null;
 		public override bool IsString
 		{
 			get
@@ -1366,17 +1236,7 @@ namespace Meta
 				return strategy.String;
 			}
 		}
-//		public virtual IMap Parent
-//		{
-//			get
-//			{
-//				return parent;
-//			}
-//			set
-//			{
-//				parent=value;
-//			}
-//		}
+
 		public override int Count
 		{
 			get
@@ -1426,15 +1286,8 @@ namespace Meta
 					else
 					{
 						IMap val;
-//						if(value is IMap)
-//						{
-							val=((IMap)value).Clone();
-							((IMap)val).Parent=this;
-//						}
-//						else
-//						{
-//							val=value;
-//						}
+						val=((IMap)value).Clone();
+						((IMap)val).Parent=this;
 						strategy[key]=val;
 					}
 				}
@@ -2511,33 +2364,66 @@ namespace Meta
 			return result;
 		}
 		// TODO: maybe convert .NET arrays to maps
-		public static IMap ToMeta(object oDotNet) // TODO: refactor, make single-exit
+//		public static IMap ToMeta(object oDotNet)
+//		{ 
+//			IMap meta;
+//			if(oDotNet==null)
+//			{
+//				meta=null;
+//			}
+//			else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
+//			{
+//				meta=new NormalMap(new Integer((int)System.Convert.ToInt32((Enum)oDotNet)));
+//			}
+//			ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
+//			if(conversion==null)
+//			{
+//				if(oDotNet is IMap || Helper.IsNumber(oDotNet))
+//				{
+//					meta=(IMap)oDotNet;
+//				}
+//				else
+//				{
+//					meta=new DotNetObject(oDotNet);
+//				}
+//			}
+//			else
+//			{
+//				meta=conversion.Convert(oDotNet);
+//			}
+//			return meta;
+//		}
+		public static IMap ToMeta(object oDotNet)
 		{ 
+			IMap meta;
 			if(oDotNet==null)
 			{
-				return null;
+				meta=null;
 			}
 			else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
 			{
-				return new NormalMap(new Integer((int)System.Convert.ToInt32((Enum)oDotNet)));
-			}
-			ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
-			if(conversion==null)
-			{
-				if(oDotNet is IMap || Helper.IsNumber(oDotNet))
-				{
-					return (IMap)oDotNet;
-				}
-				else
-				{
-					return new DotNetObject(oDotNet);
-					//return new NormalMap(oDotNet);
-				}
+				meta=new NormalMap(new Integer((int)System.Convert.ToInt32((Enum)oDotNet)));
 			}
 			else
 			{
-				return conversion.Convert(oDotNet);
+				ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
+				if(conversion==null)
+				{
+					if(oDotNet is IMap || Helper.IsNumber(oDotNet))
+					{
+						meta=(IMap)oDotNet;
+					}
+					else
+					{
+						meta=new DotNetObject(oDotNet);
+					}
+				}
+				else
+				{
+					meta=conversion.Convert(oDotNet);
+				}
 			}
+			return meta;
 		}
 		public static object ToDotNet(object meta) 
 		{
@@ -5395,7 +5281,8 @@ namespace Meta
 						{
 							if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) 
 							{				
-								if(toSerialize.GetType().Namespace==null ||!toSerialize.GetType().Namespace.Equals("System.Windows.Forms")) // ugly hack to avoid some srange behaviour of some classes in System.Windows.Forms
+								if(toSerialize.GetType().Namespace!="System.Windows.Forms")
+//								if(toSerialize.GetType().Namespace==null ||!toSerialize.GetType().Namespace.Equals("System.Windows.Forms"))
 								{ 
 									object val=toSerialize.GetType().InvokeMember(member.Name,BindingFlags.Public
 										|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
@@ -5565,7 +5452,7 @@ namespace Meta
 			{
 				extents.Add(extent,extent);
 			}
-			return (Extent)extents[extent]; // return the unique extent not the extent itself 
+			return (Extent)extents[extent];
 		}
 	}
 }
