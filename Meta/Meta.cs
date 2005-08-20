@@ -84,12 +84,9 @@ namespace Meta
 			bool stop=false;
 			if(BreakPoint!=null)
 			{
-				if(BreakPoint.Position.Line>=Extent.Start.Line && BreakPoint.Position.Line<=Extent.End.Line)// TODO: put this functionality into Position
+				if(BreakPoint.Position.ContainedIn(Extent.Start,Extent.End))
 				{
-					if(BreakPoint.Position.Column>=Extent.Start.Column && BreakPoint.Position.Column<=Extent.End.Column)
-					{
-						stop=true;
-					}
+					stop=true;
 				}
 			}
 			return stop;
@@ -260,17 +257,18 @@ namespace Meta
 				return position;
 			}
 		}
+
 		private Position position;
 		string fileName;
 	}
 
-	public abstract class Recognition // TODO: rename, to Filter or something like that
+	public abstract class Filter
 	{
 		public abstract IMap Recognize(string text);
 	}
-	public class Recognitions
+	public class Filters
 	{
-		public class DecimalRecognition: Recognition
+		public class DecimalFilter: Filter
 		{
 			public override IMap Recognize(string text)
 			{
@@ -280,7 +278,7 @@ namespace Meta
 				{
 					if(text.IndexOf(".",pointPos+1)==-1)
 					{
-						Integer numerator=IntegerRecognition.ParseInteger(text.Replace(".",""));
+						Integer numerator=IntegerFilter.ParseInteger(text.Replace(".",""));
 						if(numerator!=null)
 						{
 							Integer denominator=System.Convert.ToInt32(Math.Pow(10,text.Length-pointPos-1));
@@ -293,7 +291,7 @@ namespace Meta
 				return result;
 			}
 		}
-		public class FractionRecognition: Recognition
+		public class FractionFilter: Filter
 		{
 			public override IMap Recognize(string text)
 			{
@@ -303,10 +301,10 @@ namespace Meta
 				{
 					if(text.IndexOf("/",pointPos+1)==-1)
 					{
-						Integer numerator=IntegerRecognition.ParseInteger(text.Substring(0,text.Length-pointPos-2));
+						Integer numerator=IntegerFilter.ParseInteger(text.Substring(0,text.Length-pointPos-2));
 						if(numerator!=null)
 						{
-							Integer denominator=IntegerRecognition.ParseInteger(text.Substring(pointPos+1,text.Length-pointPos-1));
+							Integer denominator=IntegerFilter.ParseInteger(text.Substring(pointPos+1,text.Length-pointPos-1));
 							if(denominator!=null)
 							{
 								result=new NormalMap();
@@ -319,54 +317,57 @@ namespace Meta
 				return result;
 			}
 		}
-		public class IntegerRecognition: Recognition 
+		public class IntegerFilter: Filter 
 		{
 			public static Integer ParseInteger(string text)
 			{
+
 				Integer result=new Integer(0);
-				int index=0;
-				if(text[0]=='-')
+				if(text.Equals(""))
 				{
-					index++;
+					result=null;
 				}
-				for(;index<text.Length;index++)
+				else
 				{
-					if(char.IsDigit(text[index]))
+					int index=0;
+					if(text[0]=='-')
 					{
-						result=result*10+(text[index]-'0');
+						index++;
 					}
-					else
+					for(;index<text.Length;index++)
 					{
-						return null;
+						if(char.IsDigit(text[index]))
+						{
+							result=result*10+(text[index]-'0');
+						}
+						else
+						{
+							return null;
+						}
 					}
-				}
-				if(text[0]=='-')
-				{
-					result=-result;
+					if(text[0]=='-')
+					{
+						result=-result;
+					}
 				}
 				return result;
 			}
 			public override IMap Recognize(string text)  // TODO: refactor
 			{ 
-				if(text.Equals(""))
+				IMap recognized;
+				Integer integer=ParseInteger(text);
+				if(integer!=null)
 				{
-					return null;
+					recognized=new NormalMap(integer);
 				}
 				else
 				{
-					Integer result=ParseInteger(text);
-					if(result!=null)
-					{
-						return new NormalMap(result);
-					}
-					else
-					{
-						return null;
-					}
+					recognized=null;
 				}
+				return recognized;
 			}
 		}
-		public class StringRecognition:Recognition
+		public class StringFilter:Filter
 		{
 			public override IMap Recognize(string text)
 			{
@@ -379,9 +380,9 @@ namespace Meta
 		public static ArrayList recognitions=new ArrayList();
 		static Literal()
 		{
-			foreach(Type recognition in typeof(Recognitions).GetNestedTypes())
+			foreach(Type recognition in typeof(Filters).GetNestedTypes())
 			{
-				recognitions.Add((Recognition)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+				recognitions.Add((Filter)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 			}
 		}
 		public override bool Stop()
@@ -399,12 +400,12 @@ namespace Meta
 		}
 		public Literal(IMap code)
 		{
-			this.literal=Recognition((string)code.String);
+			this.literal=Filter((string)code.String);
 		}
 		public IMap literal=null; // TODO: should always be IMap
-		public static IMap Recognition(string text) // TODO: rename
+		public static IMap Filter(string text) // TODO: rename
 		{
-			foreach(Recognition recognition in recognitions)
+			foreach(Filter recognition in recognitions)
 			{
 				IMap recognized=recognition.Recognize(text);
 				if(recognized!=null)
@@ -3893,6 +3894,10 @@ namespace Meta
 	}
 	public class Position 
 	{
+		public bool ContainedIn(Position start,Position end)
+		{
+			return Line>=start.Line && Line<=end.Line && Column>=start.Column && Column<=end.Column;
+		}
 		private int line;
 		private int column;
 		public Position(int line,int column)
