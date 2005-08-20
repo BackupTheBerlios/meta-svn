@@ -1,5 +1,5 @@
 Entry (DictionaryEntry)
-  Key (Integer):
+  Key (StrategyMap):
     "1"
   Value (StrategyMap):
     "ImpliedAutokey"
@@ -124,82 +124,82 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Integer Add(Integer, Integer)"
+        "Meta.IMap Add(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Subtract"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Integer Subtract(Integer, Integer)"
+        "Meta.IMap Subtract(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Multiply"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Integer Multiply(Integer, Integer)"
+        "Meta.IMap Multiply(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Divide"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Integer Divide(Integer, Integer)"
+        "Meta.IMap Divide(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Smaller"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean Smaller(Integer, Integer)"
+        "Boolean Smaller(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Greater"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Boolean Greater(Integer, Integer)"
+        "Boolean Greater(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "BitwiseOr"
   Value (DotNetMethod):
     overloadedMethods (MethodBase[]):
       Entry (RuntimeMethodInfo)
-        "Integer BitwiseOr(Integer[])"
+        "Meta.StrategyMap BitwiseOr(Meta.StrategyMap[])"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "literalEscapeTest"
   Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "1"
       Value (StrategyMap):
         "asdf"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "2"
       Value (StrategyMap):
         "asdf"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "3"
       Value (StrategyMap):
         "as"'df"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "4"
       Value (StrategyMap):
         "as"'"df"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "5"
       Value (StrategyMap):
         "as"'"'"'"'"'"'"'"'df"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "nestedClassTest"
-  Value (Integer):
+  Value (StrategyMap):
     "5"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -235,7 +235,7 @@ Entry (DictionaryEntry)
                     "program"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -243,7 +243,7 @@ Entry (DictionaryEntry)
                             "key"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (Integer):
+                              Key (StrategyMap):
                                 "1"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
@@ -260,7 +260,7 @@ Entry (DictionaryEntry)
                                 "select"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -273,7 +273,7 @@ Entry (DictionaryEntry)
                                           Value (StrategyMap):
                                             "arg"
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "2"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -282,7 +282,7 @@ Entry (DictionaryEntry)
                                       Value (StrategyMap):
                                         "value"
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "2"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -290,7 +290,7 @@ Entry (DictionaryEntry)
                             "key"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (Integer):
+                              Key (StrategyMap):
                                 "1"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
@@ -323,7 +323,7 @@ Entry (DictionaryEntry)
   Value (DotNetObject):
     "System.Windows.Forms.Form, Text: hello"
 Entry (DictionaryEntry)
-  Key (Integer):
+  Key (StrategyMap):
     "2"
   Value (StrategyMap):
     "Autokey"
@@ -514,12 +514,12 @@ Entry (DictionaryEntry)
     "commandLineArguments"
   Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "1"
       Value (String):
         "first arg"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "2"
       Value (String):
         "second=arg"
@@ -595,18 +595,18 @@ Entry (DictionaryEntry)
         "b"
       Value (StrategyMap):
         Entry (DictionaryEntry)
-          Key (Integer):
+          Key (StrategyMap):
             "1"
           Value (StrategyMap):
             Entry (DictionaryEntry)
               Key (StrategyMap):
                 "x"
-              Value (Integer):
+              Value (StrategyMap):
                 "7"
             Entry (DictionaryEntry)
               Key (StrategyMap):
                 "z"
-              Value (Integer):
+              Value (StrategyMap):
                 "1"
     Entry (DictionaryEntry)
       Key (StrategyMap):
@@ -621,7 +621,7 @@ Entry (DictionaryEntry)
                 "program"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (Integer):
+                  Key (StrategyMap):
                     "1"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
@@ -629,7 +629,7 @@ Entry (DictionaryEntry)
                         "key"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "1"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -649,10 +649,10 @@ Entry (DictionaryEntry)
                     Entry (DictionaryEntry)
                       Key (StrategyMap):
                         "search"
-                      Value (Integer):
+                      Value (StrategyMap):
                         "1"
                 Entry (DictionaryEntry)
-                  Key (Integer):
+                  Key (StrategyMap):
                     "2"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
@@ -660,7 +660,7 @@ Entry (DictionaryEntry)
                         "key"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "1"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -680,7 +680,7 @@ Entry (DictionaryEntry)
                     Entry (DictionaryEntry)
                       Key (StrategyMap):
                         "search"
-                      Value (Integer):
+                      Value (StrategyMap):
                         "1"
     Entry (DictionaryEntry)
       Key (StrategyMap):
@@ -695,7 +695,7 @@ Entry (DictionaryEntry)
                 "program"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (Integer):
+                  Key (StrategyMap):
                     "1"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
@@ -703,7 +703,7 @@ Entry (DictionaryEntry)
                         "key"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "1"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -712,7 +712,7 @@ Entry (DictionaryEntry)
                               Value (StrategyMap):
                                 "b"
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "2"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -729,7 +729,7 @@ Entry (DictionaryEntry)
                             "select"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (Integer):
+                              Key (StrategyMap):
                                 "1"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
@@ -742,7 +742,7 @@ Entry (DictionaryEntry)
                                       Value (StrategyMap):
                                         "arg"
                             Entry (DictionaryEntry)
-                              Key (Integer):
+                              Key (StrategyMap):
                                 "2"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
@@ -753,10 +753,10 @@ Entry (DictionaryEntry)
                     Entry (DictionaryEntry)
                       Key (StrategyMap):
                         "search"
-                      Value (Integer):
+                      Value (StrategyMap):
                         "1"
                 Entry (DictionaryEntry)
-                  Key (Integer):
+                  Key (StrategyMap):
                     "2"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
@@ -764,7 +764,7 @@ Entry (DictionaryEntry)
                         "key"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "1"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -796,7 +796,7 @@ Entry (DictionaryEntry)
           Value (StrategyMap):
             "d"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "1"
       Value (StrategyMap):
         Entry (DictionaryEntry)
@@ -808,7 +808,7 @@ Entry (DictionaryEntry)
                 "program"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
-                  Key (Integer):
+                  Key (StrategyMap):
                     "1"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
@@ -816,7 +816,7 @@ Entry (DictionaryEntry)
                         "key"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "1"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -825,7 +825,7 @@ Entry (DictionaryEntry)
                               Value (StrategyMap):
                                 "this"
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "2"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -856,6 +856,7 @@ Entry (DictionaryEntry)
   Key (StrategyMap):
     "aSet"
   Value (StrategyMap):
+    "0"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "bSet"
@@ -874,7 +875,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -882,7 +883,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -908,17 +909,17 @@ Entry (DictionaryEntry)
     "everythingReturned"
   Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "1"
       Value (StrategyMap):
         "a"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "2"
       Value (StrategyMap):
         "b"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "3"
       Value (StrategyMap):
         "c"
@@ -927,17 +928,17 @@ Entry (DictionaryEntry)
     "variableAsArgument"
   Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "1"
       Value (StrategyMap):
         "x"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "2"
       Value (StrategyMap):
         "y"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "3"
       Value (StrategyMap):
         "z"
@@ -954,7 +955,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -962,7 +963,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -979,7 +980,7 @@ Entry (DictionaryEntry)
                         "program"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "1"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -987,7 +988,7 @@ Entry (DictionaryEntry)
                                 "key"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -1008,7 +1009,7 @@ Entry (DictionaryEntry)
                                         "program"
                                       Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (Integer):
+                                          Key (StrategyMap):
                                             "1"
                                           Value (StrategyMap):
                                             Entry (DictionaryEntry)
@@ -1016,7 +1017,7 @@ Entry (DictionaryEntry)
                                                 "key"
                                               Value (StrategyMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (Integer):
+                                                  Key (StrategyMap):
                                                     "1"
                                                   Value (StrategyMap):
                                                     Entry (DictionaryEntry)
@@ -1033,7 +1034,7 @@ Entry (DictionaryEntry)
                                                     "program"
                                                   Value (StrategyMap):
                                                     Entry (DictionaryEntry)
-                                                      Key (Integer):
+                                                      Key (StrategyMap):
                                                         "1"
                                                       Value (StrategyMap):
                                                         Entry (DictionaryEntry)
@@ -1041,7 +1042,7 @@ Entry (DictionaryEntry)
                                                             "key"
                                                           Value (StrategyMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (Integer):
+                                                              Key (StrategyMap):
                                                                 "1"
                                                               Value (StrategyMap):
                                                                 Entry (DictionaryEntry)
@@ -1059,7 +1060,7 @@ Entry (DictionaryEntry)
                                                               Value (StrategyMap):
                                                                 "1"
                                                     Entry (DictionaryEntry)
-                                                      Key (Integer):
+                                                      Key (StrategyMap):
                                                         "2"
                                                       Value (StrategyMap):
                                                         Entry (DictionaryEntry)
@@ -1067,7 +1068,7 @@ Entry (DictionaryEntry)
                                                             "key"
                                                           Value (StrategyMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (Integer):
+                                                              Key (StrategyMap):
                                                                 "1"
                                                               Value (StrategyMap):
                                                                 Entry (DictionaryEntry)
@@ -1085,7 +1086,7 @@ Entry (DictionaryEntry)
                                                               Value (StrategyMap):
                                                                 "2"
                                                     Entry (DictionaryEntry)
-                                                      Key (Integer):
+                                                      Key (StrategyMap):
                                                         "3"
                                                       Value (StrategyMap):
                                                         Entry (DictionaryEntry)
@@ -1093,7 +1094,7 @@ Entry (DictionaryEntry)
                                                             "key"
                                                           Value (StrategyMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (Integer):
+                                                              Key (StrategyMap):
                                                                 "1"
                                                               Value (StrategyMap):
                                                                 Entry (DictionaryEntry)
@@ -1123,7 +1124,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -1131,7 +1132,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -1148,7 +1149,7 @@ Entry (DictionaryEntry)
                         "program"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "1"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -1156,7 +1157,7 @@ Entry (DictionaryEntry)
                                 "key"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -1178,7 +1179,7 @@ Entry (DictionaryEntry)
                                       Value (StrategyMap):
                                         "arg"
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "2"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -1186,7 +1187,7 @@ Entry (DictionaryEntry)
                                 "key"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -1203,7 +1204,7 @@ Entry (DictionaryEntry)
                                     "select"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (Integer):
+                                      Key (StrategyMap):
                                         "1"
                                       Value (StrategyMap):
                                         Entry (DictionaryEntry)
@@ -1216,7 +1217,7 @@ Entry (DictionaryEntry)
                                               Value (StrategyMap):
                                                 "arg"
                                     Entry (DictionaryEntry)
-                                      Key (Integer):
+                                      Key (StrategyMap):
                                         "2"
                                       Value (StrategyMap):
                                         Entry (DictionaryEntry)
@@ -1225,7 +1226,7 @@ Entry (DictionaryEntry)
                                           Value (StrategyMap):
                                             "symbol"
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "2"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -1233,7 +1234,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -1272,7 +1273,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -1280,7 +1281,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -1344,7 +1345,7 @@ Entry (DictionaryEntry)
     "argTest"
   Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "1"
       Value (StrategyMap):
         Entry (DictionaryEntry)
@@ -1405,7 +1406,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "boolTest"
-  Value (Integer):
+  Value (StrategyMap):
     "1"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -1449,7 +1450,7 @@ Entry (DictionaryEntry)
   Key (StrategyMap):
     "namedNoConversionConcatenated"
   Value (StrategyMap):
-    "rullnulltullmullnullnull"
+    "nullnullnullnullnullnull"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "indexerNoConversion"
@@ -1468,7 +1469,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "interceptedSymbol2"
-  Value (Integer):
+  Value (StrategyMap):
     "1"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -1496,7 +1497,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "literalFunctionResult"
-  Value (Integer):
+  Value (StrategyMap):
     "5"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -1511,7 +1512,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -1519,7 +1520,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -1566,7 +1567,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -1574,7 +1575,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -1604,7 +1605,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -1612,7 +1613,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -1633,7 +1634,7 @@ Entry (DictionaryEntry)
                             "program"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
-                              Key (Integer):
+                              Key (StrategyMap):
                                 "1"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
@@ -1641,7 +1642,7 @@ Entry (DictionaryEntry)
                                     "key"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (Integer):
+                                      Key (StrategyMap):
                                         "1"
                                       Value (StrategyMap):
                                         Entry (DictionaryEntry)
@@ -1671,7 +1672,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -1679,7 +1680,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -1726,7 +1727,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "bigInteger"
-  Value (Integer):
+  Value (StrategyMap):
     "89383838383832839123497123047217340712340720347072304702340720347"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -1746,7 +1747,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -1754,7 +1755,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -1774,16 +1775,17 @@ Entry (DictionaryEntry)
                 Entry (DictionaryEntry)
                   Key (StrategyMap):
                     "search"
-                  Value (Integer):
+                  Value (StrategyMap):
                     "1"
 Entry (DictionaryEntry)
-  Key (Integer):
+  Key (StrategyMap):
     "3"
   Value (StrategyMap):
+    "0"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "staticEventChanged"
-  Value (Integer):
+  Value (StrategyMap):
     "1"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -1810,7 +1812,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "instanceEventChanged"
-  Value (Integer):
+  Value (StrategyMap):
     "1"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -1822,17 +1824,17 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "instanceEventResult"
-  Value (Integer):
+  Value (StrategyMap):
     "5"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "one"
-  Value (Integer):
+  Value (StrategyMap):
     "1"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "two"
-  Value (Integer):
+  Value (StrategyMap):
     "2"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -1847,14 +1849,14 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "firstIfCondition"
-  Value (Integer):
+  Value (StrategyMap):
     "1"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "firstIfBranches"
   Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "1"
       Value (StrategyMap):
         Entry (DictionaryEntry)
@@ -1867,7 +1869,7 @@ Entry (DictionaryEntry)
               Value (StrategyMap):
                 "then"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "0"
       Value (StrategyMap):
         Entry (DictionaryEntry)
@@ -1882,7 +1884,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "bigNumber"
-  Value (Integer):
+  Value (StrategyMap):
     "50020202029029233344"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -1894,17 +1896,17 @@ Entry (DictionaryEntry)
     "secondSwitchCases"
   Value (StrategyMap):
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "1"
       Value (StrategyMap):
         "one"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "2"
       Value (StrategyMap):
         "two"
     Entry (DictionaryEntry)
-      Key (Integer):
+      Key (StrategyMap):
         "3"
       Value (StrategyMap):
         "three"
@@ -1926,7 +1928,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -1934,7 +1936,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -1977,11 +1979,6 @@ Entry (DictionaryEntry)
     "hi"
 Entry (DictionaryEntry)
   Key (StrategyMap):
-    "stringStrategyHashTest"
-  Value (StrategyMap):
-    "hi"
-Entry (DictionaryEntry)
-  Key (StrategyMap):
     "x"
   Value (StrategyMap):
     Entry (DictionaryEntry)
@@ -1995,7 +1992,7 @@ hello!
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "ored"
-  Value (Integer):
+  Value (StrategyMap):
     "29"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -2004,9 +2001,9 @@ Entry (DictionaryEntry)
     Entry (StrategyMap)
       "hello"
 Entry (DictionaryEntry)
-  Key (Integer):
+  Key (StrategyMap):
     "5"
-  Value (Integer):
+  Value (StrategyMap):
     "0"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -2053,7 +2050,7 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "whileCounter"
-  Value (Integer):
+  Value (StrategyMap):
     "10"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -2068,7 +2065,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -2076,7 +2073,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -2114,7 +2111,7 @@ Entry (DictionaryEntry)
                                 "program"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -2122,7 +2119,7 @@ Entry (DictionaryEntry)
                                         "key"
                                       Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (Integer):
+                                          Key (StrategyMap):
                                             "1"
                                           Value (StrategyMap):
                                             Entry (DictionaryEntry)
@@ -2144,7 +2141,7 @@ Entry (DictionaryEntry)
                                               Value (StrategyMap):
                                                 "arg"
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "2"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -2152,7 +2149,7 @@ Entry (DictionaryEntry)
                                         "key"
                                       Value (StrategyMap):
                                         Entry (DictionaryEntry)
-                                          Key (Integer):
+                                          Key (StrategyMap):
                                             "1"
                                           Value (StrategyMap):
                                             Entry (DictionaryEntry)
@@ -2170,7 +2167,7 @@ Entry (DictionaryEntry)
                                           Value (StrategyMap):
                                             "10"
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "2"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -2178,7 +2175,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -2195,7 +2192,7 @@ Entry (DictionaryEntry)
                         "program"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "1"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -2203,7 +2200,7 @@ Entry (DictionaryEntry)
                                 "key"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -2220,7 +2217,7 @@ Entry (DictionaryEntry)
                                     "program"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (Integer):
+                                      Key (StrategyMap):
                                         "1"
                                       Value (StrategyMap):
                                         Entry (DictionaryEntry)
@@ -2228,7 +2225,7 @@ Entry (DictionaryEntry)
                                             "key"
                                           Value (StrategyMap):
                                             Entry (DictionaryEntry)
-                                              Key (Integer):
+                                              Key (StrategyMap):
                                                 "1"
                                               Value (StrategyMap):
                                                 Entry (DictionaryEntry)
@@ -2291,7 +2288,7 @@ Entry (DictionaryEntry)
                                                                     "program"
                                                                   Value (StrategyMap):
                                                                     Entry (DictionaryEntry)
-                                                                      Key (Integer):
+                                                                      Key (StrategyMap):
                                                                         "1"
                                                                       Value (StrategyMap):
                                                                         Entry (DictionaryEntry)
@@ -2299,7 +2296,7 @@ Entry (DictionaryEntry)
                                                                             "key"
                                                                           Value (StrategyMap):
                                                                             Entry (DictionaryEntry)
-                                                                              Key (Integer):
+                                                                              Key (StrategyMap):
                                                                                 "1"
                                                                               Value (StrategyMap):
                                                                                 Entry (DictionaryEntry)
@@ -2321,7 +2318,7 @@ Entry (DictionaryEntry)
                                                                                   Value (StrategyMap):
                                                                                     "arg"
                                                                     Entry (DictionaryEntry)
-                                                                      Key (Integer):
+                                                                      Key (StrategyMap):
                                                                         "2"
                                                                       Value (StrategyMap):
                                                                         Entry (DictionaryEntry)
@@ -2329,7 +2326,7 @@ Entry (DictionaryEntry)
                                                                             "key"
                                                                           Value (StrategyMap):
                                                                             Entry (DictionaryEntry)
-                                                                              Key (Integer):
+                                                                              Key (StrategyMap):
                                                                                 "1"
                                                                               Value (StrategyMap):
                                                                                 Entry (DictionaryEntry)
@@ -2347,7 +2344,7 @@ Entry (DictionaryEntry)
                                                                               Value (StrategyMap):
                                                                                 "1"
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "2"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -2355,7 +2352,7 @@ Entry (DictionaryEntry)
                                 "key"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -2372,7 +2369,7 @@ Entry (DictionaryEntry)
                                     "program"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (Integer):
+                                      Key (StrategyMap):
                                         "1"
                                       Value (StrategyMap):
                                         Entry (DictionaryEntry)
@@ -2380,7 +2377,7 @@ Entry (DictionaryEntry)
                                             "key"
                                           Value (StrategyMap):
                                             Entry (DictionaryEntry)
-                                              Key (Integer):
+                                              Key (StrategyMap):
                                                 "1"
                                               Value (StrategyMap):
                                                 Entry (DictionaryEntry)
@@ -2406,7 +2403,7 @@ Entry (DictionaryEntry)
                                                       Value (StrategyMap):
                                                         "arg"
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "3"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -2414,7 +2411,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -2439,7 +2436,7 @@ Entry (DictionaryEntry)
                                 "select"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -2452,7 +2449,7 @@ Entry (DictionaryEntry)
                                           Value (StrategyMap):
                                             "whileBranches"
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "2"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -2490,7 +2487,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -2498,7 +2495,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -2526,7 +2523,7 @@ Entry (DictionaryEntry)
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "result"
-      Value (Integer):
+      Value (StrategyMap):
         "1"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -2541,7 +2538,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -2549,7 +2546,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -2600,7 +2597,7 @@ Entry (DictionaryEntry)
             "program"
           Value (StrategyMap):
             Entry (DictionaryEntry)
-              Key (Integer):
+              Key (StrategyMap):
                 "1"
               Value (StrategyMap):
                 Entry (DictionaryEntry)
@@ -2608,7 +2605,7 @@ Entry (DictionaryEntry)
                     "key"
                   Value (StrategyMap):
                     Entry (DictionaryEntry)
-                      Key (Integer):
+                      Key (StrategyMap):
                         "1"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
@@ -2662,12 +2659,12 @@ Entry (DictionaryEntry)
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "x"
-      Value (Integer):
+      Value (StrategyMap):
         "1"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "y"
-      Value (Integer):
+      Value (StrategyMap):
         "2"
   Value (StrategyMap):
     "hello"

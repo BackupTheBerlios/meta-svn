@@ -221,7 +221,7 @@ namespace Meta.Parser
 						 }
 					}
 					
-									statements[new Integer(counter)]=s;					
+									statements[new StrategyMap(new Integer(counter))]=s;					
 									counter++;
 								
 				}
@@ -271,7 +271,7 @@ _loop164_breakloop:			;
 					key=expression(_t);
 					_t = retTree_;
 					
-					selection[new Integer(counter)]=key;
+					selection[new StrategyMap(new Integer(counter))]=key;
 					counter++;
 					
 				}
@@ -398,7 +398,7 @@ _loop173_breakloop:			;
 				e=expression(_t);
 				_t = retTree_;
 				
-								result[new Integer(counter)]=e;
+								result[new StrategyMap(new Integer(counter))]=e;
 								counter++;
 							
 			}
@@ -476,7 +476,7 @@ _loop155_breakloop:		;
 		_t = __t159;
 		_t = _t.getNextSibling();
 		
-				statement[CodeKeys.Search]=new Integer(1);
+				statement[CodeKeys.Search]=new StrategyMap(new Integer(1));
 			
 		retTree_ = _t;
 		return statement;

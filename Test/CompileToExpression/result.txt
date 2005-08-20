@@ -3,7 +3,7 @@ Extent (Extent):
     Column (Int32):
       "7"
     Line (Int32):
-      "320"
+      "322"
   FileName (String):
     "basicTest.meta"
   Start (Position):
@@ -75,7 +75,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "17"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Program):
@@ -125,7 +125,7 @@ statements (ArrayList):
                             "3"
                           Line (Int32):
                             "19"
-                      literal (Integer):
+                      literal (StrategyMap):
                         "1"
             keys (ArrayList):
               Entry (Literal)
@@ -142,7 +142,7 @@ statements (ArrayList):
                       "3"
                     Line (Int32):
                       "19"
-                literal (Integer):
+                literal (StrategyMap):
                   "2"
       callable (Select):
         Extent (Extent):
@@ -332,7 +332,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "23"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Search):
@@ -380,7 +380,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "24"
-                literal (Integer):
+                literal (StrategyMap):
                   "2"
           Entry (Statement)
             expression (Search):
@@ -428,7 +428,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "25"
-                literal (Integer):
+                literal (StrategyMap):
                   "3"
           Entry (Statement)
             expression (Search):
@@ -476,7 +476,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "26"
-                literal (Integer):
+                literal (StrategyMap):
                   "4"
       callable (Select):
         Extent (Extent):
@@ -584,7 +584,7 @@ statements (ArrayList):
             "18"
           Line (Int32):
             "28"
-      literal (Integer):
+      literal (StrategyMap):
         "5"
     keys (ArrayList):
       Entry (Literal)
@@ -667,7 +667,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "30"
-              literal (Integer):
+              literal (StrategyMap):
                 "1"
         Entry (Statement)
           expression (Literal):
@@ -701,7 +701,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "31"
-              literal (Integer):
+              literal (StrategyMap):
                 "2"
         Entry (Statement)
           expression (Literal):
@@ -735,7 +735,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "32"
-              literal (Integer):
+              literal (StrategyMap):
                 "3"
         Entry (Statement)
           expression (Literal):
@@ -769,7 +769,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "33"
-              literal (Integer):
+              literal (StrategyMap):
                 "4"
         Entry (Statement)
           expression (Literal):
@@ -803,7 +803,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "34"
-              literal (Integer):
+              literal (StrategyMap):
                 "5"
     keys (ArrayList):
       Entry (Literal)
@@ -946,7 +946,7 @@ statements (ArrayList):
                           "program"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -954,7 +954,7 @@ statements (ArrayList):
                                   "key"
                                 Value (StrategyMap):
                                   Entry (DictionaryEntry)
-                                    Key (Integer):
+                                    Key (StrategyMap):
                                       "1"
                                     Value (StrategyMap):
                                       Entry (DictionaryEntry)
@@ -971,7 +971,7 @@ statements (ArrayList):
                                       "select"
                                     Value (StrategyMap):
                                       Entry (DictionaryEntry)
-                                        Key (Integer):
+                                        Key (StrategyMap):
                                           "1"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
@@ -984,7 +984,7 @@ statements (ArrayList):
                                                 Value (StrategyMap):
                                                   "arg"
                                       Entry (DictionaryEntry)
-                                        Key (Integer):
+                                        Key (StrategyMap):
                                           "2"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
@@ -993,7 +993,7 @@ statements (ArrayList):
                                             Value (StrategyMap):
                                               "value"
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "2"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -1001,7 +1001,7 @@ statements (ArrayList):
                                   "key"
                                 Value (StrategyMap):
                                   Entry (DictionaryEntry)
-                                    Key (Integer):
+                                    Key (StrategyMap):
                                       "1"
                                     Value (StrategyMap):
                                       Entry (DictionaryEntry)
@@ -1128,7 +1128,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "40"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Program):
@@ -1161,7 +1161,7 @@ statements (ArrayList):
                           "3"
                         Line (Int32):
                           "42"
-                    literal (Integer):
+                    literal (StrategyMap):
                       "1"
                   keys (ArrayList):
                     Entry (Literal)
@@ -1178,7 +1178,7 @@ statements (ArrayList):
                             "3"
                           Line (Int32):
                             "42"
-                      literal (Integer):
+                      literal (StrategyMap):
                         "1"
                 Entry (Statement)
                   expression (Literal):
@@ -1195,7 +1195,7 @@ statements (ArrayList):
                           "3"
                         Line (Int32):
                           "43"
-                    literal (Integer):
+                    literal (StrategyMap):
                       "2"
                   keys (ArrayList):
                     Entry (Literal)
@@ -1212,7 +1212,7 @@ statements (ArrayList):
                             "3"
                           Line (Int32):
                             "43"
-                      literal (Integer):
+                      literal (StrategyMap):
                         "2"
                 Entry (Statement)
                   expression (Literal):
@@ -1229,7 +1229,7 @@ statements (ArrayList):
                           "3"
                         Line (Int32):
                           "44"
-                    literal (Integer):
+                    literal (StrategyMap):
                       "3"
                   keys (ArrayList):
                     Entry (Literal)
@@ -1246,7 +1246,7 @@ statements (ArrayList):
                             "3"
                           Line (Int32):
                             "44"
-                      literal (Integer):
+                      literal (StrategyMap):
                         "3"
             keys (ArrayList):
               Entry (Literal)
@@ -1263,7 +1263,7 @@ statements (ArrayList):
                       "3"
                     Line (Int32):
                       "42"
-                literal (Integer):
+                literal (StrategyMap):
                   "2"
       callable (Search):
         Extent (Extent):
@@ -1374,7 +1374,7 @@ statements (ArrayList):
                             "3"
                           Line (Int32):
                             "47"
-                      literal (Integer):
+                      literal (StrategyMap):
                         "1"
                     keys (ArrayList):
                       Entry (Literal)
@@ -1391,7 +1391,7 @@ statements (ArrayList):
                               "3"
                             Line (Int32):
                               "47"
-                        literal (Integer):
+                        literal (StrategyMap):
                           "1"
                   Entry (Statement)
                     expression (Literal):
@@ -1408,7 +1408,7 @@ statements (ArrayList):
                             "3"
                           Line (Int32):
                             "48"
-                      literal (Integer):
+                      literal (StrategyMap):
                         "1"
                     keys (ArrayList):
                       Entry (Literal)
@@ -1425,7 +1425,7 @@ statements (ArrayList):
                               "3"
                             Line (Int32):
                               "48"
-                        literal (Integer):
+                        literal (StrategyMap):
                           "2"
               callable (Search):
                 Extent (Extent):
@@ -1485,7 +1485,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "46"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Program):
@@ -1845,7 +1845,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "54"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Program):
@@ -1912,7 +1912,7 @@ statements (ArrayList):
                       "3"
                     Line (Int32):
                       "56"
-                literal (Integer):
+                literal (StrategyMap):
                   "2"
       callable (Search):
         Extent (Extent):
@@ -2006,7 +2006,7 @@ statements (ArrayList):
               "1"
             Line (Int32):
               "57"
-        literal (Integer):
+        literal (StrategyMap):
           "1"
   Entry (Statement)
     expression (Literal):
@@ -2040,7 +2040,7 @@ statements (ArrayList):
               "2"
             Line (Int32):
               "58"
-        literal (Integer):
+        literal (StrategyMap):
           "2"
   Entry (Statement)
     expression (Select):
@@ -2813,7 +2813,7 @@ statements (ArrayList):
                         "program"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "1"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -2821,7 +2821,7 @@ statements (ArrayList):
                                 "key"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -2841,10 +2841,10 @@ statements (ArrayList):
                             Entry (DictionaryEntry)
                               Key (StrategyMap):
                                 "search"
-                              Value (Integer):
+                              Value (StrategyMap):
                                 "1"
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "2"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -2852,7 +2852,7 @@ statements (ArrayList):
                                 "key"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -2872,7 +2872,7 @@ statements (ArrayList):
                             Entry (DictionaryEntry)
                               Key (StrategyMap):
                                 "search"
-                              Value (Integer):
+                              Value (StrategyMap):
                                 "1"
                   Extent (Extent):
                     End (Position):
@@ -2945,7 +2945,7 @@ statements (ArrayList):
                         "program"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "1"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -2953,7 +2953,7 @@ statements (ArrayList):
                                 "key"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -2962,7 +2962,7 @@ statements (ArrayList):
                                       Value (StrategyMap):
                                         "b"
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "2"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -2979,7 +2979,7 @@ statements (ArrayList):
                                     "select"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
-                                      Key (Integer):
+                                      Key (StrategyMap):
                                         "1"
                                       Value (StrategyMap):
                                         Entry (DictionaryEntry)
@@ -2992,7 +2992,7 @@ statements (ArrayList):
                                               Value (StrategyMap):
                                                 "arg"
                                     Entry (DictionaryEntry)
-                                      Key (Integer):
+                                      Key (StrategyMap):
                                         "2"
                                       Value (StrategyMap):
                                         Entry (DictionaryEntry)
@@ -3003,10 +3003,10 @@ statements (ArrayList):
                             Entry (DictionaryEntry)
                               Key (StrategyMap):
                                 "search"
-                              Value (Integer):
+                              Value (StrategyMap):
                                 "1"
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "2"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -3014,7 +3014,7 @@ statements (ArrayList):
                                 "key"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -3203,7 +3203,7 @@ statements (ArrayList):
                         "program"
                       Value (StrategyMap):
                         Entry (DictionaryEntry)
-                          Key (Integer):
+                          Key (StrategyMap):
                             "1"
                           Value (StrategyMap):
                             Entry (DictionaryEntry)
@@ -3211,7 +3211,7 @@ statements (ArrayList):
                                 "key"
                               Value (StrategyMap):
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "1"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -3220,7 +3220,7 @@ statements (ArrayList):
                                       Value (StrategyMap):
                                         "this"
                                 Entry (DictionaryEntry)
-                                  Key (Integer):
+                                  Key (StrategyMap):
                                     "2"
                                   Value (StrategyMap):
                                     Entry (DictionaryEntry)
@@ -3282,7 +3282,7 @@ statements (ArrayList):
                     "4"
                   Line (Int32):
                     "94"
-              literal (Integer):
+              literal (StrategyMap):
                 "1"
     keys (ArrayList):
       Entry (Literal)
@@ -3526,7 +3526,7 @@ statements (ArrayList):
                           "5"
                         Line (Int32):
                           "100"
-                    literal (Integer):
+                    literal (StrategyMap):
                       "7"
                   keys (ArrayList):
                     Entry (Literal)
@@ -3560,7 +3560,7 @@ statements (ArrayList):
                           "5"
                         Line (Int32):
                           "101"
-                    literal (Integer):
+                    literal (StrategyMap):
                       "1"
                   keys (ArrayList):
                     Entry (Literal)
@@ -3711,7 +3711,7 @@ statements (ArrayList):
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -3719,7 +3719,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -3836,7 +3836,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "106"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Literal):
@@ -3870,7 +3870,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "107"
-                literal (Integer):
+                literal (StrategyMap):
                   "2"
           Entry (Statement)
             expression (Literal):
@@ -3904,7 +3904,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "108"
-                literal (Integer):
+                literal (StrategyMap):
                   "3"
       callable (Search):
         Extent (Extent):
@@ -4015,7 +4015,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "110"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Literal):
@@ -4049,7 +4049,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "111"
-                literal (Integer):
+                literal (StrategyMap):
                   "2"
           Entry (Statement)
             expression (Literal):
@@ -4083,7 +4083,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "112"
-                literal (Integer):
+                literal (StrategyMap):
                   "3"
       callable (Search):
         Extent (Extent):
@@ -4169,7 +4169,7 @@ statements (ArrayList):
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -4177,7 +4177,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -4194,7 +4194,7 @@ statements (ArrayList):
                               "program"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
-                                Key (Integer):
+                                Key (StrategyMap):
                                   "1"
                                 Value (StrategyMap):
                                   Entry (DictionaryEntry)
@@ -4202,7 +4202,7 @@ statements (ArrayList):
                                       "key"
                                     Value (StrategyMap):
                                       Entry (DictionaryEntry)
-                                        Key (Integer):
+                                        Key (StrategyMap):
                                           "1"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
@@ -4223,7 +4223,7 @@ statements (ArrayList):
                                               "program"
                                             Value (StrategyMap):
                                               Entry (DictionaryEntry)
-                                                Key (Integer):
+                                                Key (StrategyMap):
                                                   "1"
                                                 Value (StrategyMap):
                                                   Entry (DictionaryEntry)
@@ -4231,7 +4231,7 @@ statements (ArrayList):
                                                       "key"
                                                     Value (StrategyMap):
                                                       Entry (DictionaryEntry)
-                                                        Key (Integer):
+                                                        Key (StrategyMap):
                                                           "1"
                                                         Value (StrategyMap):
                                                           Entry (DictionaryEntry)
@@ -4248,7 +4248,7 @@ statements (ArrayList):
                                                           "program"
                                                         Value (StrategyMap):
                                                           Entry (DictionaryEntry)
-                                                            Key (Integer):
+                                                            Key (StrategyMap):
                                                               "1"
                                                             Value (StrategyMap):
                                                               Entry (DictionaryEntry)
@@ -4256,7 +4256,7 @@ statements (ArrayList):
                                                                   "key"
                                                                 Value (StrategyMap):
                                                                   Entry (DictionaryEntry)
-                                                                    Key (Integer):
+                                                                    Key (StrategyMap):
                                                                       "1"
                                                                     Value (StrategyMap):
                                                                       Entry (DictionaryEntry)
@@ -4274,7 +4274,7 @@ statements (ArrayList):
                                                                     Value (StrategyMap):
                                                                       "1"
                                                           Entry (DictionaryEntry)
-                                                            Key (Integer):
+                                                            Key (StrategyMap):
                                                               "2"
                                                             Value (StrategyMap):
                                                               Entry (DictionaryEntry)
@@ -4282,7 +4282,7 @@ statements (ArrayList):
                                                                   "key"
                                                                 Value (StrategyMap):
                                                                   Entry (DictionaryEntry)
-                                                                    Key (Integer):
+                                                                    Key (StrategyMap):
                                                                       "1"
                                                                     Value (StrategyMap):
                                                                       Entry (DictionaryEntry)
@@ -4300,7 +4300,7 @@ statements (ArrayList):
                                                                     Value (StrategyMap):
                                                                       "2"
                                                           Entry (DictionaryEntry)
-                                                            Key (Integer):
+                                                            Key (StrategyMap):
                                                               "3"
                                                             Value (StrategyMap):
                                                               Entry (DictionaryEntry)
@@ -4308,7 +4308,7 @@ statements (ArrayList):
                                                                   "key"
                                                                 Value (StrategyMap):
                                                                   Entry (DictionaryEntry)
-                                                                    Key (Integer):
+                                                                    Key (StrategyMap):
                                                                       "1"
                                                                     Value (StrategyMap):
                                                                       Entry (DictionaryEntry)
@@ -4396,7 +4396,7 @@ statements (ArrayList):
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -4404,7 +4404,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -4421,7 +4421,7 @@ statements (ArrayList):
                               "program"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
-                                Key (Integer):
+                                Key (StrategyMap):
                                   "1"
                                 Value (StrategyMap):
                                   Entry (DictionaryEntry)
@@ -4429,7 +4429,7 @@ statements (ArrayList):
                                       "key"
                                     Value (StrategyMap):
                                       Entry (DictionaryEntry)
-                                        Key (Integer):
+                                        Key (StrategyMap):
                                           "1"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
@@ -4451,7 +4451,7 @@ statements (ArrayList):
                                             Value (StrategyMap):
                                               "arg"
                               Entry (DictionaryEntry)
-                                Key (Integer):
+                                Key (StrategyMap):
                                   "2"
                                 Value (StrategyMap):
                                   Entry (DictionaryEntry)
@@ -4459,7 +4459,7 @@ statements (ArrayList):
                                       "key"
                                     Value (StrategyMap):
                                       Entry (DictionaryEntry)
-                                        Key (Integer):
+                                        Key (StrategyMap):
                                           "1"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
@@ -4476,7 +4476,7 @@ statements (ArrayList):
                                           "select"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
-                                            Key (Integer):
+                                            Key (StrategyMap):
                                               "1"
                                             Value (StrategyMap):
                                               Entry (DictionaryEntry)
@@ -4489,7 +4489,7 @@ statements (ArrayList):
                                                     Value (StrategyMap):
                                                       "arg"
                                           Entry (DictionaryEntry)
-                                            Key (Integer):
+                                            Key (StrategyMap):
                                               "2"
                                             Value (StrategyMap):
                                               Entry (DictionaryEntry)
@@ -4498,7 +4498,7 @@ statements (ArrayList):
                                                 Value (StrategyMap):
                                                   "symbol"
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "2"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -4506,7 +4506,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -4709,7 +4709,7 @@ statements (ArrayList):
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -4717,7 +4717,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -5041,7 +5041,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "137"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Literal):
@@ -5075,7 +5075,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "138"
-                literal (Integer):
+                literal (StrategyMap):
                   "2"
       callable (Select):
         Extent (Extent):
@@ -5231,7 +5231,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "140"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Search):
@@ -5279,7 +5279,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "141"
-                literal (Integer):
+                literal (StrategyMap):
                   "2"
       callable (Select):
         Extent (Extent):
@@ -5481,7 +5481,7 @@ statements (ArrayList):
                   "12"
                 Line (Int32):
                   "144"
-            literal (Integer):
+            literal (StrategyMap):
               "1"
           keys (ArrayList):
             Entry (Literal)
@@ -5515,7 +5515,7 @@ statements (ArrayList):
                   "14"
                 Line (Int32):
                   "145"
-            literal (Integer):
+            literal (StrategyMap):
               "3"
           keys (ArrayList):
             Entry (Literal)
@@ -5598,7 +5598,7 @@ statements (ArrayList):
                   "12"
                 Line (Int32):
                   "147"
-            literal (Integer):
+            literal (StrategyMap):
               "1"
           keys (ArrayList):
             Entry (Literal)
@@ -5632,7 +5632,7 @@ statements (ArrayList):
                   "14"
                 Line (Int32):
                   "148"
-            literal (Integer):
+            literal (StrategyMap):
               "3"
           keys (ArrayList):
             Entry (Literal)
@@ -5715,7 +5715,7 @@ statements (ArrayList):
                   "12"
                 Line (Int32):
                   "150"
-            literal (Integer):
+            literal (StrategyMap):
               "1"
           keys (ArrayList):
             Entry (Literal)
@@ -5749,7 +5749,7 @@ statements (ArrayList):
                   "14"
                 Line (Int32):
                   "151"
-            literal (Integer):
+            literal (StrategyMap):
               "3"
           keys (ArrayList):
             Entry (Literal)
@@ -5816,7 +5816,7 @@ statements (ArrayList):
             "20"
           Line (Int32):
             "152"
-      literal (Integer):
+      literal (StrategyMap):
         "1"
     keys (ArrayList):
       Entry (Literal)
@@ -6381,7 +6381,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "161"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Literal):
@@ -6415,7 +6415,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "162"
-                literal (Integer):
+                literal (StrategyMap):
                   "2"
           Entry (Statement)
             expression (Literal):
@@ -6449,7 +6449,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "163"
-                literal (Integer):
+                literal (StrategyMap):
                   "3"
       callable (Search):
         Extent (Extent):
@@ -6560,7 +6560,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "165"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Literal):
@@ -6594,7 +6594,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "166"
-                literal (Integer):
+                literal (StrategyMap):
                   "2"
           Entry (Statement)
             expression (Literal):
@@ -6628,7 +6628,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "167"
-                literal (Integer):
+                literal (StrategyMap):
                   "3"
       callable (Select):
         Extent (Extent):
@@ -6770,7 +6770,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "169"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Literal):
@@ -6949,7 +6949,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "173"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
       callable (Select):
         Extent (Extent):
@@ -7264,7 +7264,7 @@ statements (ArrayList):
             "20"
           Line (Int32):
             "177"
-      literal (Integer):
+      literal (StrategyMap):
         "1"
     keys (ArrayList):
       Entry (Literal)
@@ -7524,7 +7524,7 @@ statements (ArrayList):
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -7532,7 +7532,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -7773,7 +7773,7 @@ statements (ArrayList):
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -7781,7 +7781,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -7802,7 +7802,7 @@ statements (ArrayList):
                                   "program"
                                 Value (StrategyMap):
                                   Entry (DictionaryEntry)
-                                    Key (Integer):
+                                    Key (StrategyMap):
                                       "1"
                                     Value (StrategyMap):
                                       Entry (DictionaryEntry)
@@ -7810,7 +7810,7 @@ statements (ArrayList):
                                           "key"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
-                                            Key (Integer):
+                                            Key (StrategyMap):
                                               "1"
                                             Value (StrategyMap):
                                               Entry (DictionaryEntry)
@@ -8154,7 +8154,7 @@ statements (ArrayList):
             "12"
           Line (Int32):
             "198"
-      literal (Integer):
+      literal (StrategyMap):
         "89383838383832839123497123047217340712340720347072304702340720347"
     keys (ArrayList):
       Entry (Literal)
@@ -8231,7 +8231,7 @@ statements (ArrayList):
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -8239,7 +8239,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -8259,7 +8259,7 @@ statements (ArrayList):
                       Entry (DictionaryEntry)
                         Key (StrategyMap):
                           "search"
-                        Value (Integer):
+                        Value (StrategyMap):
                           "1"
             Extent (Extent):
               End (Position):
@@ -8384,7 +8384,7 @@ statements (ArrayList):
               "1"
             Line (Int32):
               "203"
-        literal (Integer):
+        literal (StrategyMap):
           "3"
   Entry (Statement)
     expression (Literal):
@@ -8401,7 +8401,7 @@ statements (ArrayList):
             "20"
           Line (Int32):
             "204"
-      literal (Integer):
+      literal (StrategyMap):
         "0"
     keys (ArrayList):
       Entry (Literal)
@@ -8444,7 +8444,7 @@ statements (ArrayList):
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -8452,7 +8452,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -8472,10 +8472,10 @@ statements (ArrayList):
                       Entry (DictionaryEntry)
                         Key (StrategyMap):
                           "search"
-                        Value (Integer):
+                        Value (StrategyMap):
                           "1"
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "2"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -8483,7 +8483,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -8500,7 +8500,7 @@ statements (ArrayList):
                               "select"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
-                                Key (Integer):
+                                Key (StrategyMap):
                                   "1"
                                 Value (StrategyMap):
                                   Entry (DictionaryEntry)
@@ -8513,7 +8513,7 @@ statements (ArrayList):
                                         Value (StrategyMap):
                                           "arg"
                               Entry (DictionaryEntry)
-                                Key (Integer):
+                                Key (StrategyMap):
                                   "2"
                                 Value (StrategyMap):
                                   Entry (DictionaryEntry)
@@ -8807,7 +8807,7 @@ statements (ArrayList):
               "1"
             Line (Int32):
               "210"
-        literal (Integer):
+        literal (StrategyMap):
           "4"
   Entry (Statement)
     expression (Call):
@@ -9056,7 +9056,7 @@ statements (ArrayList):
             "22"
           Line (Int32):
             "214"
-      literal (Integer):
+      literal (StrategyMap):
         "0"
     keys (ArrayList):
       Entry (Literal)
@@ -9099,7 +9099,7 @@ statements (ArrayList):
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -9107,7 +9107,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -9127,10 +9127,10 @@ statements (ArrayList):
                       Entry (DictionaryEntry)
                         Key (StrategyMap):
                           "search"
-                        Value (Integer):
+                        Value (StrategyMap):
                           "1"
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "2"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -9138,7 +9138,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -9155,7 +9155,7 @@ statements (ArrayList):
                               "select"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
-                                Key (Integer):
+                                Key (StrategyMap):
                                   "1"
                                 Value (StrategyMap):
                                   Entry (DictionaryEntry)
@@ -9168,7 +9168,7 @@ statements (ArrayList):
                                         Value (StrategyMap):
                                           "arg"
                               Entry (DictionaryEntry)
-                                Key (Integer):
+                                Key (StrategyMap):
                                   "2"
                                 Value (StrategyMap):
                                   Entry (DictionaryEntry)
@@ -9350,7 +9350,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "221"
-              literal (Integer):
+              literal (StrategyMap):
                 "5"
             keys (ArrayList):
               Entry (Literal)
@@ -9367,7 +9367,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "221"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
       callable (Select):
         Extent (Extent):
@@ -9475,7 +9475,7 @@ statements (ArrayList):
             "5"
           Line (Int32):
             "222"
-      literal (Integer):
+      literal (StrategyMap):
         "1"
     keys (ArrayList):
       Entry (Literal)
@@ -9509,7 +9509,7 @@ statements (ArrayList):
             "5"
           Line (Int32):
             "223"
-      literal (Integer):
+      literal (StrategyMap):
         "2"
     keys (ArrayList):
       Entry (Literal)
@@ -9628,7 +9628,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "227"
-              literal (Integer):
+              literal (StrategyMap):
                 "1"
             keys (ArrayList):
               Entry (Literal)
@@ -9645,7 +9645,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "227"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Search):
@@ -9693,7 +9693,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "228"
-                literal (Integer):
+                literal (StrategyMap):
                   "2"
       callable (Search):
         Extent (Extent):
@@ -9840,7 +9840,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "230"
-              literal (Integer):
+              literal (StrategyMap):
                 "1"
         Entry (Statement)
           expression (Program):
@@ -9911,7 +9911,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "232"
-              literal (Integer):
+              literal (StrategyMap):
                 "0"
     keys (ArrayList):
       Entry (Literal)
@@ -10068,7 +10068,7 @@ statements (ArrayList):
             "11"
           Line (Int32):
             "235"
-      literal (Integer):
+      literal (StrategyMap):
         "50020202029029233344"
     keys (ArrayList):
       Entry (Literal)
@@ -10169,7 +10169,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "238"
-              literal (Integer):
+              literal (StrategyMap):
                 "1"
         Entry (Statement)
           expression (Literal):
@@ -10203,7 +10203,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "239"
-              literal (Integer):
+              literal (StrategyMap):
                 "2"
         Entry (Statement)
           expression (Literal):
@@ -10237,7 +10237,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "240"
-              literal (Integer):
+              literal (StrategyMap):
                 "3"
     keys (ArrayList):
       Entry (Literal)
@@ -10316,7 +10316,7 @@ statements (ArrayList):
                 "32"
               Line (Int32):
                 "241"
-          literal (Integer):
+          literal (StrategyMap):
             "3"
     keys (ArrayList):
       Entry (Literal)
@@ -10393,7 +10393,7 @@ statements (ArrayList):
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -10401,7 +10401,7 @@ statements (ArrayList):
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -10549,9 +10549,9 @@ statements (ArrayList):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "6"
+              "18"
             Line (Int32):
-              "249"
+              "251"
           FileName (String):
             "basicTest.meta"
           Start (Position):
@@ -10592,31 +10592,98 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "248"
-                literal (Integer):
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
-            expression (Literal):
+            expression (Program):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
-                    "6"
+                    "18"
                   Line (Int32):
-                    "249"
+                    "251"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
-                    "2"
+                    "3"
                   Line (Int32):
-                    "249"
-              literal (Integer):
-                "10"
+                    "250"
+              statements (ArrayList):
+                Entry (Statement)
+                  expression (Literal):
+                    Extent (Extent):
+                      End (Position):
+                        Column (Int32):
+                          "17"
+                        Line (Int32):
+                          "250"
+                      FileName (String):
+                        "basicTest.meta"
+                      Start (Position):
+                        Column (Int32):
+                          "13"
+                        Line (Int32):
+                          "250"
+                    literal (StrategyMap):
+                      "10"
+                  keys (ArrayList):
+                    Entry (Literal)
+                      Extent (Extent):
+                        End (Position):
+                          Column (Int32):
+                            "12"
+                          Line (Int32):
+                            "250"
+                        FileName (String):
+                          "basicTest.meta"
+                        Start (Position):
+                          Column (Int32):
+                            "3"
+                          Line (Int32):
+                            "250"
+                      literal (StrategyMap):
+                        "numerator"
+                Entry (Statement)
+                  expression (Literal):
+                    Extent (Extent):
+                      End (Position):
+                        Column (Int32):
+                          "18"
+                        Line (Int32):
+                          "251"
+                      FileName (String):
+                        "basicTest.meta"
+                      Start (Position):
+                        Column (Int32):
+                          "15"
+                        Line (Int32):
+                          "251"
+                    literal (StrategyMap):
+                      "1"
+                  keys (ArrayList):
+                    Entry (Literal)
+                      Extent (Extent):
+                        End (Position):
+                          Column (Int32):
+                            "14"
+                          Line (Int32):
+                            "251"
+                        FileName (String):
+                          "basicTest.meta"
+                        Start (Position):
+                          Column (Int32):
+                            "3"
+                          Line (Int32):
+                            "251"
+                      literal (StrategyMap):
+                        "denominator"
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
-                      "6"
+                      "3"
                     Line (Int32):
                       "249"
                   FileName (String):
@@ -10626,7 +10693,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "249"
-                literal (Integer):
+                literal (StrategyMap):
                   "2"
       callable (Select):
         Extent (Extent):
@@ -10708,9 +10775,9 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "6"
+            "18"
           Line (Int32):
-            "249"
+            "251"
         FileName (String):
           "basicTest.meta"
         Start (Position):
@@ -10742,14 +10809,14 @@ statements (ArrayList):
           Column (Int32):
             "19"
           Line (Int32):
-            "250"
+            "252"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "12"
           Line (Int32):
-            "250"
+            "252"
       literal (StrategyMap):
         "hello"
     keys (ArrayList):
@@ -10759,14 +10826,14 @@ statements (ArrayList):
             Column (Int32):
               "11"
             Line (Int32):
-              "250"
+              "252"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "250"
+              "252"
         literal (StrategyMap):
           "stringTest"
   Entry (Statement)
@@ -10776,42 +10843,42 @@ statements (ArrayList):
           Column (Int32):
             "26"
           Line (Int32):
-            "251"
+            "253"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "14"
           Line (Int32):
-            "251"
+            "253"
       firstKey (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "24"
             Line (Int32):
-              "251"
+              "253"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "14"
             Line (Int32):
-              "251"
+              "253"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "24"
               Line (Int32):
-                "251"
+                "253"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "14"
               Line (Int32):
-                "251"
+                "253"
           literal (StrategyMap):
             "stringTest"
       keys (ArrayList):
@@ -10821,118 +10888,6 @@ statements (ArrayList):
               Column (Int32):
                 "26"
               Line (Int32):
-                "251"
-            FileName (String):
-              "basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "25"
-              Line (Int32):
-                "251"
-          literal (Integer):
-            "1"
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          End (Position):
-            Column (Int32):
-              "11"
-            Line (Int32):
-              "251"
-          FileName (String):
-            "basicTest.meta"
-          Start (Position):
-            Column (Int32):
-              "1"
-            Line (Int32):
-              "251"
-        literal (StrategyMap):
-          "stringTest"
-      Entry (Literal)
-        Extent (Extent):
-          End (Position):
-            Column (Int32):
-              "13"
-            Line (Int32):
-              "251"
-          FileName (String):
-            "basicTest.meta"
-          Start (Position):
-            Column (Int32):
-              "12"
-            Line (Int32):
-              "251"
-        literal (Integer):
-          "6"
-  Entry (Statement)
-    expression (Literal):
-      Extent (Extent):
-        End (Position):
-          Column (Int32):
-            "12"
-          Line (Int32):
-            "252"
-        FileName (String):
-          "basicTest.meta"
-        Start (Position):
-          Column (Int32):
-            "8"
-          Line (Int32):
-            "252"
-      literal (StrategyMap):
-        "hi"
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          End (Position):
-            Column (Int32):
-              "7"
-            Line (Int32):
-              "252"
-          FileName (String):
-            "basicTest.meta"
-          Start (Position):
-            Column (Int32):
-              "1"
-            Line (Int32):
-              "252"
-        literal (StrategyMap):
-          "helloh"
-  Entry (Statement)
-    expression (Search):
-      Extent (Extent):
-        End (Position):
-          Column (Int32):
-            "35"
-          Line (Int32):
-            "253"
-        FileName (String):
-          "basicTest.meta"
-        Start (Position):
-          Column (Int32):
-            "25"
-          Line (Int32):
-            "253"
-      search (Search):
-        Extent (Extent):
-          End (Position):
-            Column (Int32):
-              "35"
-            Line (Int32):
-              "253"
-          FileName (String):
-            "basicTest.meta"
-          Start (Position):
-            Column (Int32):
-              "25"
-            Line (Int32):
-              "253"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "35"
-              Line (Int32):
                 "253"
             FileName (String):
               "basicTest.meta"
@@ -10942,13 +10897,13 @@ statements (ArrayList):
               Line (Int32):
                 "253"
           literal (StrategyMap):
-            "stringTest"
+            "1"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "23"
+              "11"
             Line (Int32):
               "253"
           FileName (String):
@@ -10959,7 +10914,57 @@ statements (ArrayList):
             Line (Int32):
               "253"
         literal (StrategyMap):
-          "stringStrategyHashTest"
+          "stringTest"
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "13"
+            Line (Int32):
+              "253"
+          FileName (String):
+            "basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "12"
+            Line (Int32):
+              "253"
+        literal (StrategyMap):
+          "6"
+  Entry (Statement)
+    expression (Literal):
+      Extent (Extent):
+        End (Position):
+          Column (Int32):
+            "12"
+          Line (Int32):
+            "254"
+        FileName (String):
+          "basicTest.meta"
+        Start (Position):
+          Column (Int32):
+            "8"
+          Line (Int32):
+            "254"
+      literal (StrategyMap):
+        "hi"
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "7"
+            Line (Int32):
+              "254"
+          FileName (String):
+            "basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "1"
+            Line (Int32):
+              "254"
+        literal (StrategyMap):
+          "helloh"
   Entry (Statement)
     expression (Program):
       Extent (Extent):
@@ -10967,14 +10972,14 @@ statements (ArrayList):
           Column (Int32):
             "4"
           Line (Int32):
-            "258"
+            "260"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "2"
           Line (Int32):
-            "255"
+            "257"
       statements (ArrayList):
         Entry (Statement)
           expression (Literal):
@@ -10983,14 +10988,14 @@ statements (ArrayList):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "258"
+                  "260"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "12"
                 Line (Int32):
-                  "255"
+                  "257"
             literal (StrategyMap):
               "
 hello word!
@@ -11003,14 +11008,14 @@ hello!
                   Column (Int32):
                     "11"
                   Line (Int32):
-                    "255"
+                    "257"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "255"
+                    "257"
               literal (StrategyMap):
                 "aLongText"
     keys (ArrayList):
@@ -11020,14 +11025,14 @@ hello!
             Column (Int32):
               "2"
             Line (Int32):
-              "254"
+              "256"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "254"
+              "256"
         literal (StrategyMap):
           "x"
   Entry (Statement)
@@ -11038,14 +11043,14 @@ hello!
             Column (Int32):
               "31"
             Line (Int32):
-              "261"
+              "263"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "260"
+              "262"
         statements (ArrayList):
           Entry (Statement)
             expression (Literal):
@@ -11054,15 +11059,15 @@ hello!
                   Column (Int32):
                     "6"
                   Line (Int32):
-                    "260"
+                    "262"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "260"
-              literal (Integer):
+                    "262"
+              literal (StrategyMap):
                 "20"
             keys (ArrayList):
               Entry (Literal)
@@ -11071,15 +11076,15 @@ hello!
                     Column (Int32):
                       "6"
                     Line (Int32):
-                      "260"
+                      "262"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "260"
-                literal (Integer):
+                      "262"
+                literal (StrategyMap):
                   "1"
           Entry (Statement)
             expression (Select):
@@ -11088,42 +11093,42 @@ hello!
                   Column (Int32):
                     "31"
                   Line (Int32):
-                    "261"
+                    "263"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "261"
+                    "263"
               firstKey (Search):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
                       "8"
                     Line (Int32):
-                      "261"
+                      "263"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "261"
+                      "263"
                 search (Literal):
                   Extent (Extent):
                     End (Position):
                       Column (Int32):
                         "8"
                       Line (Int32):
-                        "261"
+                        "263"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "2"
                       Line (Int32):
-                        "261"
+                        "263"
                   literal (StrategyMap):
                     "System"
               keys (ArrayList):
@@ -11133,14 +11138,14 @@ hello!
                       Column (Int32):
                         "16"
                       Line (Int32):
-                        "261"
+                        "263"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "9"
                       Line (Int32):
-                        "261"
+                        "263"
                   literal (StrategyMap):
                     "Windows"
                 Entry (Literal)
@@ -11149,14 +11154,14 @@ hello!
                       Column (Int32):
                         "22"
                       Line (Int32):
-                        "261"
+                        "263"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "17"
                       Line (Int32):
-                        "261"
+                        "263"
                   literal (StrategyMap):
                     "Forms"
                 Entry (Literal)
@@ -11165,14 +11170,14 @@ hello!
                       Column (Int32):
                         "27"
                       Line (Int32):
-                        "261"
+                        "263"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "23"
                       Line (Int32):
-                        "261"
+                        "263"
                   literal (StrategyMap):
                     "Keys"
                 Entry (Literal)
@@ -11181,14 +11186,14 @@ hello!
                       Column (Int32):
                         "31"
                       Line (Int32):
-                        "261"
+                        "263"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "28"
                       Line (Int32):
-                        "261"
+                        "263"
                   literal (StrategyMap):
                     "Tab"
             keys (ArrayList):
@@ -11198,15 +11203,15 @@ hello!
                     Column (Int32):
                       "31"
                     Line (Int32):
-                      "261"
+                      "263"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "261"
-                literal (Integer):
+                      "263"
+                literal (StrategyMap):
                   "2"
       callable (Search):
         Extent (Extent):
@@ -11214,28 +11219,28 @@ hello!
             Column (Int32):
               "15"
             Line (Int32):
-              "259"
+              "261"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "6"
             Line (Int32):
-              "259"
+              "261"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "15"
               Line (Int32):
-                "259"
+                "261"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "6"
               Line (Int32):
-                "259"
+                "261"
           literal (StrategyMap):
             "BitwiseOr"
       Extent (Extent):
@@ -11243,14 +11248,14 @@ hello!
           Column (Int32):
             "31"
           Line (Int32):
-            "261"
+            "263"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "6"
           Line (Int32):
-            "259"
+            "261"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -11258,14 +11263,14 @@ hello!
             Column (Int32):
               "5"
             Line (Int32):
-              "259"
+              "261"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "259"
+              "261"
         literal (StrategyMap):
           "ored"
   Entry (Statement)
@@ -11276,14 +11281,14 @@ hello!
             Column (Int32):
               "41"
             Line (Int32):
-              "262"
+              "264"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "39"
             Line (Int32):
-              "262"
+              "264"
         literal (StrategyMap):
           ""
       callable (Select):
@@ -11292,42 +11297,42 @@ hello!
             Column (Int32):
               "39"
             Line (Int32):
-              "262"
+              "264"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "11"
             Line (Int32):
-              "262"
+              "264"
         firstKey (Search):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "17"
               Line (Int32):
-                "262"
+                "264"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "11"
               Line (Int32):
-                "262"
+                "264"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "17"
                 Line (Int32):
-                  "262"
+                  "264"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "11"
                 Line (Int32):
-                  "262"
+                  "264"
             literal (StrategyMap):
               "System"
         keys (ArrayList):
@@ -11337,14 +11342,14 @@ hello!
                 Column (Int32):
                   "29"
                 Line (Int32):
-                  "262"
+                  "264"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "18"
                 Line (Int32):
-                  "262"
+                  "264"
             literal (StrategyMap):
               "Collections"
           Entry (Literal)
@@ -11353,14 +11358,14 @@ hello!
                 Column (Int32):
                   "39"
                 Line (Int32):
-                  "262"
+                  "264"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "30"
                 Line (Int32):
-                  "262"
+                  "264"
             literal (StrategyMap):
               "ArrayList"
       Extent (Extent):
@@ -11368,14 +11373,14 @@ hello!
           Column (Int32):
             "41"
           Line (Int32):
-            "262"
+            "264"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "11"
           Line (Int32):
-            "262"
+            "264"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -11383,14 +11388,14 @@ hello!
             Column (Int32):
               "10"
             Line (Int32):
-              "262"
+              "264"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "262"
+              "264"
         literal (StrategyMap):
           "arrayList"
   Entry (Statement)
@@ -11401,14 +11406,14 @@ hello!
             Column (Int32):
               "22"
             Line (Int32):
-              "263"
+              "265"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "15"
             Line (Int32):
-              "263"
+              "265"
         literal (StrategyMap):
           "hello"
       callable (Select):
@@ -11417,42 +11422,42 @@ hello!
             Column (Int32):
               "14"
             Line (Int32):
-              "263"
+              "265"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "263"
+              "265"
         firstKey (Search):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "10"
               Line (Int32):
-                "263"
+                "265"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "1"
               Line (Int32):
-                "263"
+                "265"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "10"
                 Line (Int32):
-                  "263"
+                  "265"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "1"
                 Line (Int32):
-                  "263"
+                  "265"
             literal (StrategyMap):
               "arrayList"
         keys (ArrayList):
@@ -11462,14 +11467,14 @@ hello!
                 Column (Int32):
                   "14"
                 Line (Int32):
-                  "263"
+                  "265"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "11"
                 Line (Int32):
-                  "263"
+                  "265"
             literal (StrategyMap):
               "Add"
       Extent (Extent):
@@ -11477,14 +11482,14 @@ hello!
           Column (Int32):
             "22"
           Line (Int32):
-            "263"
+            "265"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "1"
           Line (Int32):
-            "263"
+            "265"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -11492,15 +11497,15 @@ hello!
             Column (Int32):
               "22"
             Line (Int32):
-              "263"
+              "265"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "263"
-        literal (Integer):
+              "265"
+        literal (StrategyMap):
           "5"
   Entry (Statement)
     expression (Select):
@@ -11509,42 +11514,42 @@ hello!
           Column (Int32):
             "28"
           Line (Int32):
-            "264"
+            "266"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "17"
           Line (Int32):
-            "264"
+            "266"
       firstKey (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "26"
             Line (Int32):
-              "264"
+              "266"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "17"
             Line (Int32):
-              "264"
+              "266"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "26"
               Line (Int32):
-                "264"
+                "266"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "17"
               Line (Int32):
-                "264"
+                "266"
           literal (StrategyMap):
             "arrayList"
       keys (ArrayList):
@@ -11554,15 +11559,15 @@ hello!
               Column (Int32):
                 "28"
               Line (Int32):
-                "264"
+                "266"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "27"
               Line (Int32):
-                "264"
-          literal (Integer):
+                "266"
+          literal (StrategyMap):
             "0"
     keys (ArrayList):
       Entry (Literal)
@@ -11571,14 +11576,14 @@ hello!
             Column (Int32):
               "16"
             Line (Int32):
-              "264"
+              "266"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "264"
+              "266"
         literal (StrategyMap):
           "arrayListResult"
   Entry (Statement)
@@ -11589,14 +11594,14 @@ hello!
             Column (Int32):
               "39"
             Line (Int32):
-              "265"
+              "267"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "37"
             Line (Int32):
-              "265"
+              "267"
         literal (StrategyMap):
           ""
       callable (Select):
@@ -11605,42 +11610,42 @@ hello!
             Column (Int32):
               "37"
             Line (Int32):
-              "265"
+              "267"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "9"
             Line (Int32):
-              "265"
+              "267"
         firstKey (Search):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "15"
               Line (Int32):
-                "265"
+                "267"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "9"
               Line (Int32):
-                "265"
+                "267"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "15"
                 Line (Int32):
-                  "265"
+                  "267"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "9"
                 Line (Int32):
-                  "265"
+                  "267"
             literal (StrategyMap):
               "System"
         keys (ArrayList):
@@ -11650,14 +11655,14 @@ hello!
                 Column (Int32):
                   "23"
                 Line (Int32):
-                  "265"
+                  "267"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "16"
                 Line (Int32):
-                  "265"
+                  "267"
             literal (StrategyMap):
               "Windows"
           Entry (Literal)
@@ -11666,14 +11671,14 @@ hello!
                 Column (Int32):
                   "29"
                 Line (Int32):
-                  "265"
+                  "267"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "24"
                 Line (Int32):
-                  "265"
+                  "267"
             literal (StrategyMap):
               "Forms"
           Entry (Literal)
@@ -11682,14 +11687,14 @@ hello!
                 Column (Int32):
                   "37"
                 Line (Int32):
-                  "265"
+                  "267"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "30"
                 Line (Int32):
-                  "265"
+                  "267"
             literal (StrategyMap):
               "TextBox"
       Extent (Extent):
@@ -11697,14 +11702,14 @@ hello!
           Column (Int32):
             "39"
           Line (Int32):
-            "265"
+            "267"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "9"
           Line (Int32):
-            "265"
+            "267"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -11712,14 +11717,14 @@ hello!
             Column (Int32):
               "8"
             Line (Int32):
-              "265"
+              "267"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "265"
+              "267"
         literal (StrategyMap):
           "textBox"
   Entry (Statement)
@@ -11729,14 +11734,14 @@ hello!
           Column (Int32):
             "3"
           Line (Int32):
-            "272"
+            "274"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "14"
           Line (Int32):
-            "266"
+            "268"
       literal (StrategyMap):
         "
 Alle meine Entchen,
@@ -11752,14 +11757,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "8"
             Line (Int32):
-              "266"
+              "268"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "266"
+              "268"
         literal (StrategyMap):
           "textBox"
       Entry (Literal)
@@ -11768,14 +11773,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "13"
             Line (Int32):
-              "266"
+              "268"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "9"
             Line (Int32):
-              "266"
+              "268"
         literal (StrategyMap):
           "Text"
   Entry (Statement)
@@ -11785,42 +11790,42 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "20"
           Line (Int32):
-            "273"
+            "275"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "7"
           Line (Int32):
-            "273"
+            "275"
       firstKey (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "14"
             Line (Int32):
-              "273"
+              "275"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "7"
             Line (Int32):
-              "273"
+              "275"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "14"
               Line (Int32):
-                "273"
+                "275"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "7"
               Line (Int32):
-                "273"
+                "275"
           literal (StrategyMap):
             "textBox"
       keys (ArrayList):
@@ -11830,14 +11835,14 @@ Schwaenzchen in die Hoeh.
               Column (Int32):
                 "20"
               Line (Int32):
-                "273"
+                "275"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "15"
               Line (Int32):
-                "273"
+                "275"
           literal (StrategyMap):
             "Lines"
     keys (ArrayList):
@@ -11847,14 +11852,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "6"
             Line (Int32):
-              "273"
+              "275"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "273"
+              "275"
         literal (StrategyMap):
           "lines"
   Entry (Statement)
@@ -11864,42 +11869,42 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "22"
           Line (Int32):
-            "274"
+            "276"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "15"
           Line (Int32):
-            "274"
+            "276"
       firstKey (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "20"
             Line (Int32):
-              "274"
+              "276"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "15"
             Line (Int32):
-              "274"
+              "276"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "20"
               Line (Int32):
-                "274"
+                "276"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "15"
               Line (Int32):
-                "274"
+                "276"
           literal (StrategyMap):
             "lines"
       keys (ArrayList):
@@ -11909,15 +11914,15 @@ Schwaenzchen in die Hoeh.
               Column (Int32):
                 "22"
               Line (Int32):
-                "274"
+                "276"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "21"
               Line (Int32):
-                "274"
-          literal (Integer):
+                "276"
+          literal (StrategyMap):
             "1"
     keys (ArrayList):
       Entry (Literal)
@@ -11926,14 +11931,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "14"
             Line (Int32):
-              "274"
+              "276"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "274"
+              "276"
         literal (StrategyMap):
           "alleMeineText"
   Entry (Statement)
@@ -11943,14 +11948,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "20"
           Line (Int32):
-            "275"
+            "277"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "9"
           Line (Int32):
-            "275"
+            "277"
       literal (StrategyMap):
         "bwuhahaha"
     keys (ArrayList):
@@ -11960,14 +11965,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "6"
             Line (Int32):
-              "275"
+              "277"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "275"
+              "277"
         literal (StrategyMap):
           "lines"
       Entry (Literal)
@@ -11976,15 +11981,15 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "8"
             Line (Int32):
-              "275"
+              "277"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "7"
             Line (Int32):
-              "275"
-        literal (Integer):
+              "277"
+        literal (StrategyMap):
           "4"
   Entry (Statement)
     expression (Literal):
@@ -11993,14 +11998,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "19"
           Line (Int32):
-            "276"
+            "278"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "9"
           Line (Int32):
-            "276"
+            "278"
       literal (StrategyMap):
         "			hello"
     keys (ArrayList):
@@ -12010,14 +12015,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "8"
             Line (Int32):
-              "276"
+              "278"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "276"
+              "278"
         literal (StrategyMap):
           "tabText"
   Entry (Statement)
@@ -12027,14 +12032,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "23"
           Line (Int32):
-            "277"
+            "279"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "13"
           Line (Int32):
-            "277"
+            "279"
       literal (StrategyMap):
         "\'\n\\\t"
     keys (ArrayList):
@@ -12044,14 +12049,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "12"
             Line (Int32):
-              "277"
+              "279"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "277"
+              "279"
         literal (StrategyMap):
           "escapedText"
   Entry (Statement)
@@ -12061,14 +12066,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "16"
           Line (Int32):
-            "278"
+            "280"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "14"
           Line (Int32):
-            "278"
+            "280"
       literal (StrategyMap):
         ""
     keys (ArrayList):
@@ -12078,14 +12083,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "13"
             Line (Int32):
-              "278"
+              "280"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "278"
+              "280"
         literal (StrategyMap):
           "whileCounter"
   Entry (Statement)
@@ -12095,14 +12100,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "41"
           Line (Int32):
-            "292"
+            "294"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "281"
+            "283"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -12112,7 +12117,7 @@ Schwaenzchen in die Hoeh.
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -12120,7 +12125,7 @@ Schwaenzchen in die Hoeh.
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -12158,7 +12163,7 @@ Schwaenzchen in die Hoeh.
                                       "program"
                                     Value (StrategyMap):
                                       Entry (DictionaryEntry)
-                                        Key (Integer):
+                                        Key (StrategyMap):
                                           "1"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
@@ -12166,7 +12171,7 @@ Schwaenzchen in die Hoeh.
                                               "key"
                                             Value (StrategyMap):
                                               Entry (DictionaryEntry)
-                                                Key (Integer):
+                                                Key (StrategyMap):
                                                   "1"
                                                 Value (StrategyMap):
                                                   Entry (DictionaryEntry)
@@ -12188,7 +12193,7 @@ Schwaenzchen in die Hoeh.
                                                     Value (StrategyMap):
                                                       "arg"
                                       Entry (DictionaryEntry)
-                                        Key (Integer):
+                                        Key (StrategyMap):
                                           "2"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
@@ -12196,7 +12201,7 @@ Schwaenzchen in die Hoeh.
                                               "key"
                                             Value (StrategyMap):
                                               Entry (DictionaryEntry)
-                                                Key (Integer):
+                                                Key (StrategyMap):
                                                   "1"
                                                 Value (StrategyMap):
                                                   Entry (DictionaryEntry)
@@ -12214,7 +12219,7 @@ Schwaenzchen in die Hoeh.
                                                 Value (StrategyMap):
                                                   "10"
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "2"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -12222,7 +12227,7 @@ Schwaenzchen in die Hoeh.
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -12239,7 +12244,7 @@ Schwaenzchen in die Hoeh.
                               "program"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
-                                Key (Integer):
+                                Key (StrategyMap):
                                   "1"
                                 Value (StrategyMap):
                                   Entry (DictionaryEntry)
@@ -12247,7 +12252,7 @@ Schwaenzchen in die Hoeh.
                                       "key"
                                     Value (StrategyMap):
                                       Entry (DictionaryEntry)
-                                        Key (Integer):
+                                        Key (StrategyMap):
                                           "1"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
@@ -12264,7 +12269,7 @@ Schwaenzchen in die Hoeh.
                                           "program"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
-                                            Key (Integer):
+                                            Key (StrategyMap):
                                               "1"
                                             Value (StrategyMap):
                                               Entry (DictionaryEntry)
@@ -12272,7 +12277,7 @@ Schwaenzchen in die Hoeh.
                                                   "key"
                                                 Value (StrategyMap):
                                                   Entry (DictionaryEntry)
-                                                    Key (Integer):
+                                                    Key (StrategyMap):
                                                       "1"
                                                     Value (StrategyMap):
                                                       Entry (DictionaryEntry)
@@ -12335,7 +12340,7 @@ Schwaenzchen in die Hoeh.
                                                                           "program"
                                                                         Value (StrategyMap):
                                                                           Entry (DictionaryEntry)
-                                                                            Key (Integer):
+                                                                            Key (StrategyMap):
                                                                               "1"
                                                                             Value (StrategyMap):
                                                                               Entry (DictionaryEntry)
@@ -12343,7 +12348,7 @@ Schwaenzchen in die Hoeh.
                                                                                   "key"
                                                                                 Value (StrategyMap):
                                                                                   Entry (DictionaryEntry)
-                                                                                    Key (Integer):
+                                                                                    Key (StrategyMap):
                                                                                       "1"
                                                                                     Value (StrategyMap):
                                                                                       Entry (DictionaryEntry)
@@ -12365,7 +12370,7 @@ Schwaenzchen in die Hoeh.
                                                                                         Value (StrategyMap):
                                                                                           "arg"
                                                                           Entry (DictionaryEntry)
-                                                                            Key (Integer):
+                                                                            Key (StrategyMap):
                                                                               "2"
                                                                             Value (StrategyMap):
                                                                               Entry (DictionaryEntry)
@@ -12373,7 +12378,7 @@ Schwaenzchen in die Hoeh.
                                                                                   "key"
                                                                                 Value (StrategyMap):
                                                                                   Entry (DictionaryEntry)
-                                                                                    Key (Integer):
+                                                                                    Key (StrategyMap):
                                                                                       "1"
                                                                                     Value (StrategyMap):
                                                                                       Entry (DictionaryEntry)
@@ -12391,7 +12396,7 @@ Schwaenzchen in die Hoeh.
                                                                                     Value (StrategyMap):
                                                                                       "1"
                               Entry (DictionaryEntry)
-                                Key (Integer):
+                                Key (StrategyMap):
                                   "2"
                                 Value (StrategyMap):
                                   Entry (DictionaryEntry)
@@ -12399,7 +12404,7 @@ Schwaenzchen in die Hoeh.
                                       "key"
                                     Value (StrategyMap):
                                       Entry (DictionaryEntry)
-                                        Key (Integer):
+                                        Key (StrategyMap):
                                           "1"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
@@ -12416,7 +12421,7 @@ Schwaenzchen in die Hoeh.
                                           "program"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
-                                            Key (Integer):
+                                            Key (StrategyMap):
                                               "1"
                                             Value (StrategyMap):
                                               Entry (DictionaryEntry)
@@ -12424,7 +12429,7 @@ Schwaenzchen in die Hoeh.
                                                   "key"
                                                 Value (StrategyMap):
                                                   Entry (DictionaryEntry)
-                                                    Key (Integer):
+                                                    Key (StrategyMap):
                                                       "1"
                                                     Value (StrategyMap):
                                                       Entry (DictionaryEntry)
@@ -12450,7 +12455,7 @@ Schwaenzchen in die Hoeh.
                                                             Value (StrategyMap):
                                                               "arg"
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "3"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -12458,7 +12463,7 @@ Schwaenzchen in die Hoeh.
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -12483,7 +12488,7 @@ Schwaenzchen in die Hoeh.
                                       "select"
                                     Value (StrategyMap):
                                       Entry (DictionaryEntry)
-                                        Key (Integer):
+                                        Key (StrategyMap):
                                           "1"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
@@ -12496,7 +12501,7 @@ Schwaenzchen in die Hoeh.
                                                 Value (StrategyMap):
                                                   "whileBranches"
                                       Entry (DictionaryEntry)
-                                        Key (Integer):
+                                        Key (StrategyMap):
                                           "2"
                                         Value (StrategyMap):
                                           Entry (DictionaryEntry)
@@ -12526,14 +12531,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "41"
                 Line (Int32):
-                  "292"
+                  "294"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "281"
+                  "283"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -12541,14 +12546,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "41"
                   Line (Int32):
-                    "292"
+                    "294"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "281"
+                    "283"
               literal (StrategyMap):
                 "run"
     keys (ArrayList):
@@ -12558,14 +12563,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "5"
             Line (Int32):
-              "279"
+              "281"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "279"
+              "281"
         literal (StrategyMap):
           "loop"
   Entry (Statement)
@@ -12576,15 +12581,15 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "22"
             Line (Int32):
-              "293"
+              "295"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "19"
             Line (Int32):
-              "293"
-        literal (Integer):
+              "295"
+        literal (StrategyMap):
           "3"
       callable (Search):
         Extent (Extent):
@@ -12592,28 +12597,28 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "18"
             Line (Int32):
-              "293"
+              "295"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "14"
             Line (Int32):
-              "293"
+              "295"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "18"
               Line (Int32):
-                "293"
+                "295"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "14"
               Line (Int32):
-                "293"
+                "295"
           literal (StrategyMap):
             "loop"
       Extent (Extent):
@@ -12621,14 +12626,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "22"
           Line (Int32):
-            "293"
+            "295"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "14"
           Line (Int32):
-            "293"
+            "295"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -12636,14 +12641,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "13"
             Line (Int32):
-              "293"
+              "295"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "293"
+              "295"
         literal (StrategyMap):
           "whileCounter"
   Entry (Statement)
@@ -12653,14 +12658,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "13"
           Line (Int32):
-            "299"
+            "301"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "299"
+            "301"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -12670,7 +12675,7 @@ Schwaenzchen in die Hoeh.
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -12678,7 +12683,7 @@ Schwaenzchen in die Hoeh.
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -12704,14 +12709,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "13"
                 Line (Int32):
-                  "299"
+                  "301"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "299"
+                  "301"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -12719,14 +12724,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "13"
                   Line (Int32):
-                    "299"
+                    "301"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "299"
+                    "301"
               literal (StrategyMap):
                 "run"
     keys (ArrayList):
@@ -12736,14 +12741,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "12"
             Line (Int32):
-              "296"
+              "298"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "296"
+              "298"
         literal (StrategyMap):
           "returnInMap"
   Entry (Statement)
@@ -12754,15 +12759,15 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "35"
             Line (Int32):
-              "300"
+              "302"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "32"
             Line (Int32):
-              "300"
-        literal (Integer):
+              "302"
+        literal (StrategyMap):
           "1"
       callable (Search):
         Extent (Extent):
@@ -12770,28 +12775,28 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "30"
             Line (Int32):
-              "300"
+              "302"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "19"
             Line (Int32):
-              "300"
+              "302"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "30"
               Line (Int32):
-                "300"
+                "302"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "19"
               Line (Int32):
-                "300"
+                "302"
           literal (StrategyMap):
             "returnInMap"
       Extent (Extent):
@@ -12799,14 +12804,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "35"
           Line (Int32):
-            "300"
+            "302"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "19"
           Line (Int32):
-            "300"
+            "302"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -12814,14 +12819,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "18"
             Line (Int32):
-              "300"
+              "302"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "300"
+              "302"
         literal (StrategyMap):
           "literalAsArgument"
   Entry (Statement)
@@ -12831,14 +12836,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "20"
           Line (Int32):
-            "303"
+            "305"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "4"
           Line (Int32):
-            "303"
+            "305"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -12848,7 +12853,7 @@ Schwaenzchen in die Hoeh.
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -12856,7 +12861,7 @@ Schwaenzchen in die Hoeh.
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -12882,14 +12887,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "20"
                 Line (Int32):
-                  "303"
+                  "305"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "303"
+                  "305"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -12897,14 +12902,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "20"
                   Line (Int32):
-                    "303"
+                    "305"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "4"
                   Line (Int32):
-                    "303"
+                    "305"
               literal (StrategyMap):
                 "run"
     keys (ArrayList):
@@ -12914,14 +12919,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "15"
             Line (Int32):
-              "301"
+              "303"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "301"
+              "303"
         literal (StrategyMap):
           "returnFunction"
   Entry (Statement)
@@ -12931,14 +12936,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "6"
           Line (Int32):
-            "305"
+            "307"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "305"
+            "307"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -12957,14 +12962,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "6"
                 Line (Int32):
-                  "305"
+                  "307"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "305"
+                  "307"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -12972,14 +12977,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "6"
                   Line (Int32):
-                    "305"
+                    "307"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "305"
+                    "307"
               literal (StrategyMap):
                 "run"
     keys (ArrayList):
@@ -12989,14 +12994,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "10"
             Line (Int32):
-              "304"
+              "306"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "304"
+              "306"
         literal (StrategyMap):
           "returnArg"
   Entry (Statement)
@@ -13006,14 +13011,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "16"
           Line (Int32):
-            "308"
+            "310"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "308"
+            "310"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -13023,7 +13028,7 @@ Schwaenzchen in die Hoeh.
                   "program"
                 Value (StrategyMap):
                   Entry (DictionaryEntry)
-                    Key (Integer):
+                    Key (StrategyMap):
                       "1"
                     Value (StrategyMap):
                       Entry (DictionaryEntry)
@@ -13031,7 +13036,7 @@ Schwaenzchen in die Hoeh.
                           "key"
                         Value (StrategyMap):
                           Entry (DictionaryEntry)
-                            Key (Integer):
+                            Key (StrategyMap):
                               "1"
                             Value (StrategyMap):
                               Entry (DictionaryEntry)
@@ -13053,14 +13058,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "16"
                 Line (Int32):
-                  "308"
+                  "310"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "308"
+                  "310"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -13068,14 +13073,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "16"
                   Line (Int32):
-                    "308"
+                    "310"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "308"
+                    "310"
               literal (StrategyMap):
                 "run"
     keys (ArrayList):
@@ -13085,14 +13090,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "6"
             Line (Int32):
-              "306"
+              "308"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "306"
+              "308"
         literal (StrategyMap):
           "myArg"
   Entry (Statement)
@@ -13104,14 +13109,14 @@ Schwaenzchen in die Hoeh.
               Column (Int32):
                 "33"
               Line (Int32):
-                "309"
+                "311"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "31"
               Line (Int32):
-                "309"
+                "311"
           literal (StrategyMap):
             ""
         callable (Search):
@@ -13120,28 +13125,28 @@ Schwaenzchen in die Hoeh.
               Column (Int32):
                 "31"
               Line (Int32):
-                "309"
+                "311"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "26"
               Line (Int32):
-                "309"
+                "311"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "31"
                 Line (Int32):
-                  "309"
+                  "311"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "26"
                 Line (Int32):
-                  "309"
+                  "311"
             literal (StrategyMap):
               "myArg"
         Extent (Extent):
@@ -13149,42 +13154,42 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "33"
             Line (Int32):
-              "309"
+              "311"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "26"
             Line (Int32):
-              "309"
+              "311"
       callable (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "25"
             Line (Int32):
-              "309"
+              "311"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "16"
             Line (Int32):
-              "309"
+              "311"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "25"
               Line (Int32):
-                "309"
+                "311"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "16"
               Line (Int32):
-                "309"
+                "311"
           literal (StrategyMap):
             "returnArg"
       Extent (Extent):
@@ -13192,14 +13197,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "33"
           Line (Int32):
-            "309"
+            "311"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "16"
           Line (Int32):
-            "309"
+            "311"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -13207,14 +13212,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "15"
             Line (Int32):
-              "309"
+              "311"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "309"
+              "311"
         literal (StrategyMap):
           "funcReturnTest"
   Entry (Statement)
@@ -13224,14 +13229,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "10"
           Line (Int32):
-            "312"
+            "314"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "2"
           Line (Int32):
-            "311"
+            "313"
       statements (ArrayList):
         Entry (Statement)
           expression (Literal):
@@ -13240,14 +13245,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "38"
                 Line (Int32):
-                  "311"
+                  "313"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "6"
                 Line (Int32):
-                  "311"
+                  "313"
             literal (StrategyMap):
               "This function returns 'hello ."
           keys (ArrayList):
@@ -13257,14 +13262,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "5"
                   Line (Int32):
-                    "311"
+                    "313"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "311"
+                    "313"
               literal (StrategyMap):
                 "doc"
         Entry (Statement)
@@ -13280,14 +13285,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "10"
                 Line (Int32):
-                  "312"
+                  "314"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "312"
+                  "314"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -13295,14 +13300,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "10"
                   Line (Int32):
-                    "312"
+                    "314"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "312"
+                    "314"
               literal (StrategyMap):
                 "run"
     keys (ArrayList):
@@ -13312,14 +13317,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "19"
             Line (Int32):
-              "310"
+              "312"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "310"
+              "312"
         literal (StrategyMap):
           "documentedFunction"
   Entry (Statement)
@@ -13330,14 +13335,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "39"
             Line (Int32):
-              "313"
+              "315"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "37"
             Line (Int32):
-              "313"
+              "315"
         literal (StrategyMap):
           ""
       callable (Search):
@@ -13346,28 +13351,28 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "37"
             Line (Int32):
-              "313"
+              "315"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "19"
             Line (Int32):
-              "313"
+              "315"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "37"
               Line (Int32):
-                "313"
+                "315"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "19"
               Line (Int32):
-                "313"
+                "315"
           literal (StrategyMap):
             "documentedFunction"
       Extent (Extent):
@@ -13375,14 +13380,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "39"
           Line (Int32):
-            "313"
+            "315"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "19"
           Line (Int32):
-            "313"
+            "315"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -13390,14 +13395,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "18"
             Line (Int32):
-              "313"
+              "315"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "313"
+              "315"
         literal (StrategyMap):
           "docFunctionResult"
   Entry (Statement)
@@ -13407,14 +13412,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "10"
           Line (Int32):
-            "317"
+            "319"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "317"
+            "319"
       literal (StrategyMap):
         "hello"
     keys (ArrayList):
@@ -13425,14 +13430,14 @@ Schwaenzchen in die Hoeh.
               Column (Int32):
                 "7"
               Line (Int32):
-                "316"
+                "318"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "2"
               Line (Int32):
-                "315"
+                "317"
           statements (ArrayList):
             Entry (Statement)
               expression (Literal):
@@ -13441,15 +13446,15 @@ Schwaenzchen in die Hoeh.
                     Column (Int32):
                       "7"
                     Line (Int32):
-                      "315"
+                      "317"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "4"
                     Line (Int32):
-                      "315"
-                literal (Integer):
+                      "317"
+                literal (StrategyMap):
                   "1"
               keys (ArrayList):
                 Entry (Literal)
@@ -13458,14 +13463,14 @@ Schwaenzchen in die Hoeh.
                       Column (Int32):
                         "3"
                       Line (Int32):
-                        "315"
+                        "317"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "2"
                       Line (Int32):
-                        "315"
+                        "317"
                   literal (StrategyMap):
                     "x"
             Entry (Statement)
@@ -13475,15 +13480,15 @@ Schwaenzchen in die Hoeh.
                     Column (Int32):
                       "7"
                     Line (Int32):
-                      "316"
+                      "318"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "4"
                     Line (Int32):
-                      "316"
-                literal (Integer):
+                      "318"
+                literal (StrategyMap):
                   "2"
               keys (ArrayList):
                 Entry (Literal)
@@ -13492,14 +13497,14 @@ Schwaenzchen in die Hoeh.
                       Column (Int32):
                         "3"
                       Line (Int32):
-                        "316"
+                        "318"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "2"
                       Line (Int32):
-                        "316"
+                        "318"
                   literal (StrategyMap):
                     "y"
         callable (Search):
@@ -13508,28 +13513,28 @@ Schwaenzchen in die Hoeh.
               Column (Int32):
                 "11"
               Line (Int32):
-                "314"
+                "316"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "2"
               Line (Int32):
-                "314"
+                "316"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "11"
                 Line (Int32):
-                  "314"
+                  "316"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "2"
                 Line (Int32):
-                  "314"
+                  "316"
             literal (StrategyMap):
               "returnArg"
         Extent (Extent):
@@ -13537,14 +13542,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "7"
             Line (Int32):
-              "316"
+              "318"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "314"
+              "316"
   Entry (Statement)
     expression (Search):
       Extent (Extent):
@@ -13552,28 +13557,28 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "7"
           Line (Int32):
-            "320"
+            "322"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "2"
           Line (Int32):
-            "319"
+            "321"
       search (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "7"
             Line (Int32):
-              "320"
+              "322"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "319"
+              "321"
         statements (ArrayList):
           Entry (Statement)
             expression (Literal):
@@ -13582,15 +13587,15 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "7"
                   Line (Int32):
-                    "319"
+                    "321"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "4"
                   Line (Int32):
-                    "319"
-              literal (Integer):
+                    "321"
+              literal (StrategyMap):
                 "1"
             keys (ArrayList):
               Entry (Literal)
@@ -13599,14 +13604,14 @@ Schwaenzchen in die Hoeh.
                     Column (Int32):
                       "3"
                     Line (Int32):
-                      "319"
+                      "321"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "319"
+                      "321"
                 literal (StrategyMap):
                   "x"
           Entry (Statement)
@@ -13616,15 +13621,15 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "7"
                   Line (Int32):
-                    "320"
+                    "322"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "4"
                   Line (Int32):
-                    "320"
-              literal (Integer):
+                    "322"
+              literal (StrategyMap):
                 "2"
             keys (ArrayList):
               Entry (Literal)
@@ -13633,14 +13638,14 @@ Schwaenzchen in die Hoeh.
                     Column (Int32):
                       "3"
                     Line (Int32):
-                      "320"
+                      "322"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "320"
+                      "322"
                 literal (StrategyMap):
                   "y"
     keys (ArrayList):
@@ -13650,13 +13655,13 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "27"
             Line (Int32):
-              "318"
+              "320"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "318"
+              "320"
         literal (StrategyMap):
           "functionAndMapInLookupTest"

@@ -614,7 +614,7 @@ key
 		(
 			e=expression
 			{
-				result[new Integer(counter)]=e;
+				result[new StrategyMap(new Integer(counter))]=e;
 				counter++;
 			}
 		)+
@@ -656,7 +656,7 @@ statementSearch // maybe somehow combine this with "statement", if possible, not
 		}
 	)
 	{
-		statement[CodeKeys.Search]=new Integer(1);
+		statement[CodeKeys.Search]=new StrategyMap(new Integer(1));
 	}
 	;
 map
@@ -672,7 +672,7 @@ map
     (
 			(s=statement|s=statementSearch)
 			{
-				statements[new Integer(counter)]=s;					
+				statements[new StrategyMap(new Integer(counter))]=s;					
 				counter++;
 			}
     )*
@@ -718,7 +718,7 @@ select
       (
         key=expression
         {
-          selection[new Integer(counter)]=key;
+          selection[new StrategyMap(new Integer(counter))]=key;
           counter++;
         }
       )+

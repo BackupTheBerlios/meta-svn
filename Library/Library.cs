@@ -31,8 +31,8 @@ public class map
 	}
 	public static IMap TrimStart(IMap arg) 
 	{
-		IMap map=(IMap)arg[new Integer(1)];
-		object obj=arg[new Integer(2)];
+		IMap map=(IMap)arg[new StrategyMap(new Integer(1))];
+		object obj=arg[new StrategyMap(new Integer(2))];
 
 		IMap result=new StrategyMap();
 		int counter=1;
@@ -40,7 +40,7 @@ public class map
 		{
 			if(obj.Equals(o)) 
 			{
-				result[new Integer(counter)]=o;
+				result[new StrategyMap(new Integer(counter))]=o;
 				counter++;
 			}
 			else 
@@ -68,7 +68,7 @@ public class map
 		IMap keys=new StrategyMap();
 		foreach(DictionaryEntry entry in map) 
 		{
-			keys[new Integer(i)]=entry.Key;
+			keys[new StrategyMap(new Integer(i))]=entry.Key;
 			i++;
 		}
 		return keys;
@@ -82,7 +82,7 @@ public class map
 		{ // TODO: eigentlich nur die Arrays verwenden
 			foreach(object val in map.Array) 
 			{
-				combined[new Integer(i)]=val;
+				combined[new StrategyMap(new Integer(i))]=val;
 				i++;
 			}
 		}
@@ -109,19 +109,19 @@ public class map
 		{
 			if(!oIntegerKeyValue.Equals(oToRemove))
 			{
-				mResult[new Integer(iCounter)]=oIntegerKeyValue;
+				mResult[new StrategyMap(new Integer(iCounter))]=oIntegerKeyValue;
 				iCounter++;
 			}
 		}
 		return mResult;
 	}
-	public static IMap Foreach(IMap mArray,IMap mFunction)
+	public static IMap Foreach(IMap mArray,IMap mFunction) // TODO: use MapAdapters here
 	{
 		IMap mResult=new StrategyMap();
 		int iCounter=1;
 		foreach(object oIntegerKeyValue in mArray.Array)
 		{
-			mResult[new Integer(iCounter)]=mFunction.Call(oIntegerKeyValue);
+			mResult[new StrategyMap(new Integer(iCounter))]=mFunction.Call(oIntegerKeyValue);
 			iCounter++;
 		}
 		return mResult;
@@ -135,14 +135,14 @@ public class map
 			IMap mArgument=new StrategyMap();
 			mArgument[new StrategyMap("key")]=oKey;
 			mArgument[new StrategyMap("value")]=mArray[oKey];
-			mResult[new Integer(counter)]=mFunction.Call(mArgument);
+			mResult[new StrategyMap(new Integer(counter))]=mFunction.Call(mArgument);
 			counter++;
 		}
 		return mResult;
 	}
 	public static object If(IMap argM) 
 	{ // maybe automatically convert Maps to MapAdapters??
-		bool conditionB=(bool)System.Convert.ToBoolean(Meta.Convert.ToDotNet(argM[new Integer(1)]));//,typeof(bool));
+		bool conditionB=(bool)System.Convert.ToBoolean(Meta.Convert.ToDotNet(argM[new StrategyMap(new Integer(1))]));//,typeof(bool));
 		IMap thenF=(IMap)argM[new StrategyMap("then")];
 		IMap elseF=(IMap)argM[new StrategyMap("else")];
 		if(conditionB) 
@@ -194,39 +194,48 @@ public class logic
 }
 public class math
 {
-	public static Integer Add(Integer x,Integer y) 
+	public static IMap Add(IMap x,IMap y) // TODO: decide whether to use native types in library or not, and apply everywhere
 	{
-		return x+y;
+		return new StrategyMap(x.Number+y.Number);
 	}
-	public static Integer Subtract(Integer x,Integer y) 
+	public static IMap Subtract(IMap x,IMap y) 
 	{
-		return x-y;		
+		return new StrategyMap(x.Number-y.Number);		
 	}
-	public static Integer Multiply(Integer x,Integer y) 
+	public static IMap Multiply(IMap x,IMap y) 
 	{
-		return x*y;
+		return new StrategyMap(x.Number*y.Number);
 	}
-	public static Integer Divide(Integer x,Integer y) 
+	public static IMap Divide(IMap x,IMap y) 
 	{
-		return x/y;
+		return new StrategyMap(x.Number/y.Number);
 	}
-	public static bool Smaller(Integer x,Integer y) 
+	public static bool Smaller(IMap x,IMap y) 
 	{
-		return x<y;
+		return x.Number<y.Number;
 	}
-	public static bool Greater(Integer x,Integer y) 
+	public static bool Greater(IMap x,IMap y) 
 	{
-		return x>y;
+		return x.Number>y.Number;
 	}
-	public static Integer BitwiseOr(params Integer[] integers)
+	public static StrategyMap BitwiseOr(params StrategyMap[] integers)
 	{
 		Integer result=new Integer(0);
-		foreach(Integer i in integers)
+		foreach(StrategyMap i in integers)
 		{
-			result|=i;
+			result|=i.Number;
 		}
-		return result;
+		return new StrategyMap(result);
 	}
+//	public static Integer BitwiseOr(params Integer[] integers)
+//	{
+//		Integer result=new Integer(0);
+//		foreach(Integer i in integers)
+//		{
+//			result|=i;
+//		}
+//		return result;
+//	}
 	//	public static Integer BitwiseOr(Integer x,Integer y) {
 	//		return x|y;
 	//	}

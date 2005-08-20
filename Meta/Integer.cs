@@ -968,17 +968,28 @@ public class Integer
 	//***********************************************************************
 	// Overloading of equality operator
 	//***********************************************************************
-
 	public static bool operator ==(Integer bi1, Integer bi2)
 	{
-		return bi1.Equals(bi2);
+		return (object.ReferenceEquals(bi1,bi2)) || bi1.Equals(bi2);
+		//return bi1.Equals(bi2);
 	}
 
 
 	public static bool operator !=(Integer bi1, Integer bi2)
 	{
-		return !(bi1.Equals(bi2));
+		return !(bi1==bi2);
 	}
+
+//	public static bool operator ==(Integer bi1, Integer bi2)
+//	{
+//		return bi1.Equals(bi2);
+//	}
+//
+//
+//	public static bool operator !=(Integer bi1, Integer bi2)
+//	{
+//		return !(bi1.Equals(bi2));
+//	}
 
 
 	public override bool Equals(object o)

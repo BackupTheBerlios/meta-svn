@@ -57,6 +57,8 @@ namespace Test
 //		}
 		private static void Run(string file)
 		{
+//			IMap map=new StrategyMap(new Integer(5));
+//			int asdf=0;
 			if(file=="") 
 			{
 				Directory.SetCurrentDirectory(
@@ -203,8 +205,10 @@ namespace Test
 					File.Delete(cachePath);
 				}
 				IMap argument=new StrategyMap();
-				argument[new Integer(1)]="first arg";
-				argument[new Integer(2)]="second=arg";
+				argument[new StrategyMap(1)]="first arg";
+				//argument[new Integer(1)]="first arg";
+				argument[new StrategyMap(2)]="second=arg";
+				//argument[new Integer(2)]="second=arg";
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}	
@@ -214,8 +218,8 @@ namespace Test
 			public override object Run() 
 			{
 				IMap argument=new StrategyMap();
-				argument[new Integer(1)]="first arg";
-				argument[new Integer(2)]="second=arg";
+				argument[new StrategyMap(1)]="first arg";
+				argument[new StrategyMap(2)]="second=arg";
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}

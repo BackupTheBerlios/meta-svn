@@ -190,6 +190,10 @@ namespace Meta
 			((IMap)local).Parent=parent;
 			for(int i=0;i<statements.Count && i>=0;)
 			{
+				if(i==85)
+				{
+					int asdf=0;
+				}
 				if(Interpreter.reverseDebug)
 				{
 					bool stopReverse=((Statement)statements[i]).Undo(); // Statement should have separate Stop() function
@@ -222,8 +226,14 @@ namespace Meta
 		}
 		public Program(IMap code)
 		{
+			object a=code.Array;
 			foreach(IMap statement in code.Array)
 			{
+				if(statement==null)
+				{
+					object x=code.Array;
+					int asdf=0;
+				}
 				this.statements.Add(new Statement(statement));
 			}
 		}
@@ -270,7 +280,7 @@ namespace Meta
 				}
 				else
 				{
-					Integer result=new Integer(0);
+					Integer result=new Integer(0); // TODO: dont use explicit Integer creation when not necessary
 					int index=0;
 					if(text[0]=='-')
 					{
@@ -291,7 +301,7 @@ namespace Meta
 					{
 						result=-result;
 					}
-					return result;
+					return new StrategyMap(result);
 				}
 			}
 		}
@@ -330,7 +340,7 @@ namespace Meta
 		{
 			this.literal=Recognition((string)code.String);
 		}
-		public object literal=null;
+		public object literal=null; // TODO: should always be IMap
 		public static object Recognition(string text)
 		{
 			foreach(Recognition recognition in recognitions)
@@ -354,6 +364,10 @@ namespace Meta
 		public override object EvaluateImplementation(IMap parent)
 		{
 			object key=search.Evaluate(parent);
+			if(key.Equals(new StrategyMap("helloh")))
+			{
+				int asdf=0;
+			}
 			IMap selected=parent;
 			while(!selected.ContainsKey(key))
 			{
@@ -586,11 +600,16 @@ namespace Meta
 				}
 				return text;
 			}
-			else if(meta is Integer)
+			if(meta is IMap && ((IMap)meta).Number!=null) // TODO: refactor
 			{
-				Integer integer=(Integer)meta;
+				Integer integer=((IMap)meta).Number;
 				return "\""+integer.ToString()+"\"";
 			}
+//			else if(meta is Integer)
+//			{
+//				Integer integer=(Integer)meta;
+//				return "\""+integer.ToString()+"\"";
+//			}
 			else
 			{
 				return "\""+meta.ToString()+"\"";
@@ -601,6 +620,7 @@ namespace Meta
 		{
 			return MergeCollection(arkvlToMerge);
 		}
+		// TODO: integrate merging into the IMap, and specialise
 		public static IMap MergeCollection(ICollection collection)
 		{
 			IMap result=new StrategyMap();
@@ -770,6 +790,13 @@ namespace Meta
 	}
 	public abstract class IMap: ICallable, IEnumerable //, ISerializeSpecial
 	{
+		public virtual bool IsNumber
+		{
+			get
+			{
+				return Number!=null;
+			}
+		}
 //		public virtual bool IsNumber
 //		{
 //			get
@@ -777,11 +804,11 @@ namespace Meta
 //				return false;
 //			}
 //		}
-		public virtual Integer Number
+		public virtual Integer Number // TODO: IMap should be able to be a Number, too, problem is duplication with HybridDictionaryStrategy, need default implementation usable from Strategy
 		{
 			get
 			{
-				throw new ApplicationException("Map is not a number");
+				return null;
 			}
 		}
 		public object Argument
@@ -796,7 +823,7 @@ namespace Meta
 			}
 		}
 		object arg=null;
-		public virtual bool IsString
+		public virtual bool IsString // TODO: dont do try-catch, instead return null from all Strings and check for that
 		{
 			get
 			{
@@ -823,11 +850,12 @@ namespace Meta
 				string text="";
 				foreach(object key in this.Keys)
 				{
-					if(key is Integer && this[key] is Integer)
+					if(key is IMap && ((IMap)key).Number!=null && this[key] is IMap && ((IMap)this[key]).Number!=null) // TODO: refactor, when IMap only returns IMap, and keys can only be IMaps
+//					if(key is Integer && this[key] is Integer)
 					{
 						try
 						{
-							text+=System.Convert.ToChar(((Integer)this[key]).Int);
+							text+=System.Convert.ToChar(((IMap)this[key]).Number.Int);
 						}
 						catch
 						{
@@ -868,7 +896,7 @@ namespace Meta
 				ArrayList array=new ArrayList();
 				foreach(object key in this.Keys) // TODO: need to sort the keys, by integer?? or require that keys are already sorted
 				{
-					if(key is Integer)
+					if(Helper.IsNumber(key))
 					{
 						array.Add(this[key]);
 					}
@@ -1438,6 +1466,14 @@ namespace Meta
 	}
 	public class LazyNamespace: MapStrategy // TODO: integrate into Directory
 	{
+		public override Integer Number
+		{
+			get
+			{
+				return null;
+			}
+		}
+
 		public override ArrayList Array
 		{
 			get
@@ -1714,7 +1750,7 @@ namespace Meta
 			Integer counter=new Integer(0);
 			foreach(string na in nameSpaces)
 			{
-				nameSpace[counter]=new StrategyMap(na);
+				nameSpace[new StrategyMap(counter)]=new StrategyMap(na);
 				counter++;
 			}
 			cachedAssemblyInfoMap[new StrategyMap("namespaces")]=nameSpace;
@@ -2096,10 +2132,10 @@ namespace Meta
 		}
 		public static object ToDotNet(object meta,Type target,out bool isConverted)
 		{
-			if(target.IsSubclassOf(typeof(Enum)) && meta is Integer)
+			if(target.IsSubclassOf(typeof(Enum)) && Helper.IsNumber(meta))
 			{ 
 				isConverted=true;
-				return Enum.ToObject(target,((Integer)meta).Int);
+				return Enum.ToObject(target,((IMap)meta).Number.Int);
 			}
 			Hashtable conversions=(Hashtable)toDotNet[target];
 			if(conversions!=null)
@@ -2142,12 +2178,12 @@ namespace Meta
 			}
 			else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
 			{
-				return new Integer((int)System.Convert.ToInt32((Enum)oDotNet));
+				return new StrategyMap(new Integer((int)System.Convert.ToInt32((Enum)oDotNet)));
 			}
 			ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
 			if(conversion==null)
 			{
-				if(oDotNet is IMap || oDotNet is Integer)
+				if(oDotNet is IMap || Helper.IsNumber(oDotNet))
 				{
 					return oDotNet;
 				}
@@ -2164,9 +2200,9 @@ namespace Meta
 		}
 		public static object ToDotNet(object meta) 
 		{
-			if(meta is Integer)
+			if(Helper.IsNumber(meta))
 			{
-				return ((Integer)meta).Int;
+				return ((IMap)meta).Number.Int;
 			}
 			else if(meta is IMap && ((IMap)meta).IsString)
 			{
@@ -2212,7 +2248,7 @@ namespace Meta
 			}
 			public override object Convert(object toConvert)
 			{
-				return (bool)toConvert? new Integer(1): new Integer(0);
+				return (bool)toConvert? new StrategyMap(1): new StrategyMap(0);
 			}
 
 		}
@@ -2224,7 +2260,7 @@ namespace Meta
 			}
 			public override object Convert(object toConvert)
 			{
-				return new Integer((Byte)toConvert);
+				return new StrategyMap(new Integer((Byte)toConvert));
 			}
 		}
 		public class ConvertSByteToInteger: ToMeta
@@ -2235,7 +2271,7 @@ namespace Meta
 			}
 			public override object Convert(object toConvert)
 			{
-				return new Integer((SByte)toConvert);
+				return new StrategyMap(new Integer((SByte)toConvert));
 			}
 		}
 		public class ConvertCharToInteger: ToMeta
@@ -2246,7 +2282,7 @@ namespace Meta
 			}
 			public override object Convert(object toConvert)
 			{
-				return new Integer((Char)toConvert);
+				return new StrategyMap(new Integer((Char)toConvert));
 			}
 		}
 		public class ConvertInt32ToInteger: ToMeta
@@ -2257,7 +2293,7 @@ namespace Meta
 			}
 			public override object Convert(object toConvert)
 			{
-				return new Integer((Int32)toConvert);
+				return new StrategyMap(new Integer((Int32)toConvert));
 			}
 		}
 		public class ConvertUInt32ToInteger: ToMeta
@@ -2268,7 +2304,7 @@ namespace Meta
 			}
 			public override object Convert(object toConvert)
 			{
-				return new Integer((UInt32)toConvert);
+				return new StrategyMap(new Integer((UInt32)toConvert));
 			}
 		}
 		public class ConvertInt64ToInteger: ToMeta
@@ -2279,7 +2315,7 @@ namespace Meta
 			}
 			public override object Convert(object toConvert)
 			{
-				return new Integer((Int64)toConvert);
+				return new StrategyMap(new Integer((Int64)toConvert));
 			}
 		}
 		public class ConvertUInt64ToInteger: ToMeta
@@ -2290,7 +2326,7 @@ namespace Meta
 			}
 			public override object Convert(object toConvert)
 			{
-				return new Integer((Int64)(UInt64)toConvert);
+				return new StrategyMap(new Integer((Int64)(UInt64)toConvert));
 			}
 		}
 		public class ConvertInt16ToInteger: ToMeta
@@ -2301,10 +2337,10 @@ namespace Meta
 			}
 			public override object Convert(object toConvert)
 			{
-				return new Integer((Int16)toConvert);
+				return new StrategyMap(new Integer((Int16)toConvert));
 			}
 		}
-		public class ConvertUInt16ToInteger: ToMeta
+		public class ConvertUInt16ToInteger: ToMeta // TODO: get rid of Convert-prefix
 		{
 			public ConvertUInt16ToInteger()
 			{
@@ -2312,7 +2348,7 @@ namespace Meta
 			}
 			public override object Convert(object toConvert)
 			{
-				return new Integer((UInt16)toConvert);
+				return new StrategyMap(new Integer((UInt16)toConvert));
 			}
 		}
 	}
@@ -2322,26 +2358,27 @@ namespace Meta
 			{
 				public IntegerToByte()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap); // TODO: this isnt quite accurate, should be able to convert every IMap
+					//this.source=typeof(Integer);
 					this.target=typeof(Byte);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					isConverted=true;
-					return System.Convert.ToByte(((Integer)toConvert).LongValue());
+					return System.Convert.ToByte(((IMap)toConvert).Number.LongValue());
 				}
 			}
 			public class IntegerToBool: ToDotNet
 			{
 				public IntegerToBool()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap);
 					this.target=typeof(bool);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					object result;
-					int i=((Integer)toConvert).Int;
+					int i=((IMap)toConvert).Number.Int;
 					if(i==0)
 					{
 						isConverted=true;
@@ -2364,143 +2401,160 @@ namespace Meta
 			{
 				public IntegerToSByte()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap);
 					this.target=typeof(SByte);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					isConverted=true;
-					return System.Convert.ToSByte(((Integer)toConvert).LongValue());
+					return System.Convert.ToSByte(((IMap)toConvert).Number.LongValue());
 				}
 			}
 			public class IntegerToChar: ToDotNet
 			{
 				public IntegerToChar()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap);
 					this.target=typeof(Char);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					isConverted=true;
-					return System.Convert.ToChar(((Integer)toConvert).LongValue());
+					return System.Convert.ToChar(((IMap)toConvert).Number.LongValue());
 				}
 			}
 			public class IntegerToInt32: ToDotNet
 			{
 				public IntegerToInt32()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap);
 					this.target=typeof(Int32);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
-					isConverted=true;
-					return System.Convert.ToInt32(((Integer)toConvert).LongValue());
+					if(((IMap)toConvert).Number!=null)
+					{
+						isConverted=true;
+//						isConverted=true;
+						return System.Convert.ToInt32(((IMap)toConvert).Number.LongValue());
+					}
+					else
+					{
+						isConverted=false;
+						return null;
+					}
 				}
 			}
 			public class IntegerToUInt32: ToDotNet
 			{
 				public IntegerToUInt32()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap);
 					this.target=typeof(UInt32);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
-					isConverted=true;
-					return System.Convert.ToUInt32(((Integer)toConvert).LongValue());
+					if(((IMap)toConvert).Number!=null)
+					{
+						isConverted=true;
+						return System.Convert.ToUInt32(((IMap)toConvert).Number.LongValue());
+					}
+					else
+					{
+						isConverted=false;
+						return null;
+					}
 				}
 			}
 			public class IntegerToInt64: ToDotNet
 			{
 				public IntegerToInt64()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap);
 					this.target=typeof(Int64);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					isConverted=true;
-					return System.Convert.ToInt64(((Integer)toConvert).LongValue());
+					return System.Convert.ToInt64(((IMap)toConvert).Number.LongValue());
 				}
 			}
 			public class IntegerToUInt64: ToDotNet
 			{
 				public IntegerToUInt64()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap);
 					this.target=typeof(UInt64);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					isConverted=true;
-					return System.Convert.ToUInt64(((Integer)toConvert).LongValue());
+					return System.Convert.ToUInt64(((IMap)toConvert).Number.LongValue());
 				}
 			}
 			public class IntegerToInt16: ToDotNet
 			{
 				public IntegerToInt16()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap);
 					this.target=typeof(Int16);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					isConverted=true;
-					return System.Convert.ToInt16(((Integer)toConvert).LongValue());
+					return System.Convert.ToInt16(((IMap)toConvert).Number.LongValue());
 				}
 			}
 			public class IntegerToUInt16: ToDotNet
 			{
 				public IntegerToUInt16()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap);
 					this.target=typeof(UInt16);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					isConverted=true;
-					return System.Convert.ToUInt16(((Integer)toConvert).LongValue());
+					return System.Convert.ToUInt16(((IMap)toConvert).Number.LongValue());
 				}
 			}
 			public class IntegerToDecimal: ToDotNet
 			{
 				public IntegerToDecimal()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap);
 					this.target=typeof(decimal);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					isConverted=true;
-					return (decimal)(((Integer)toConvert).LongValue());
+					return (decimal)(((IMap)toConvert).Number.LongValue());
 				}
 			}
 			public class IntegerToDouble: ToDotNet
 			{
 				public IntegerToDouble()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap);
 					this.target=typeof(double);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					isConverted=true;
-					return (double)(((Integer)toConvert).LongValue());
+					return (double)(((IMap)toConvert).Number.LongValue());
 				}
 			}
 			public class IntegerToFloat: ToDotNet
 			{
 				public IntegerToFloat()
 				{
-					this.source=typeof(Integer);
+					this.source=typeof(StrategyMap);
 					this.target=typeof(float);
 				}
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					isConverted=true;
-					return (float)(((Integer)toConvert).LongValue());
+					return (float)(((IMap)toConvert).Number.LongValue());
 				}
 			}
 			public class MapToString: ToDotNet
@@ -2545,10 +2599,10 @@ namespace Meta
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					IMap map=(IMap)toConvert;
-					if(map[new StrategyMap("numerator")] is Integer && map[new StrategyMap("denominator")] is Integer)
+					if(Helper.IsNumber(map[new StrategyMap("numerator")]) && Helper.IsNumber(map[new StrategyMap("denominator")]))
 					{
 						isConverted=true;
-						return ((decimal)((Integer)map[new StrategyMap("numerator")]).LongValue())/((decimal)((Integer)map[new StrategyMap("denominator")]).LongValue());
+						return ((decimal)((IMap)map[new StrategyMap("numerator")]).Number.LongValue())/((decimal)((IMap)map[new StrategyMap("denominator")]).Number.LongValue());
 					}
 					else
 					{
@@ -2573,10 +2627,10 @@ namespace Meta
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					IMap map=(IMap)toConvert;
-					if(map[new StrategyMap("numerator")] is Integer && map[new StrategyMap("denominator")] is Integer)
+					if(Helper.IsNumber(map[new StrategyMap("numerator")]) && Helper.IsNumber(map[new StrategyMap("denominator")]))
 					{
 						isConverted=true;
-						return ((double)((Integer)map[new StrategyMap("numerator")]).LongValue())/((double)((Integer)map[new StrategyMap("denominator")]).LongValue());
+						return ((double)((IMap)map[new StrategyMap("numerator")]).Number.LongValue())/((double)((IMap)map[new StrategyMap("denominator")]).Number.LongValue());
 					}
 					else
 					{
@@ -2601,10 +2655,10 @@ namespace Meta
 				public override object Convert(object toConvert, out bool isConverted)
 				{
 					IMap map=(IMap)toConvert;
-					if(map[new StrategyMap("numerator")] is Integer && map[new StrategyMap("denominator")] is Integer)
+					if(Helper.IsNumber(map[new StrategyMap("numerator")]) && Helper.IsNumber(map[new StrategyMap("denominator")]))
 					{
 						isConverted=true;
-						return ((float)((Integer)map[new StrategyMap("numerator")]).LongValue())/((float)((Integer)map[new StrategyMap("denominator")]).LongValue());
+						return ((float)((IMap)map[new StrategyMap("numerator")]).Number.LongValue())/((float)((IMap)map[new StrategyMap("denominator")]).Number.LongValue());
 					}
 					else
 					{
@@ -2854,7 +2908,7 @@ namespace Meta
 					Array arguments=Array.CreateInstance(type,argument.Array.Count);
 					for(int i=0;i<argument.Count;i++)
 					{
-						arguments.SetValue(argument[new Integer(i+1)],i);
+						arguments.SetValue(argument[new StrategyMap(new Integer(i+1))],i);
 					}
 					return arguments;
 				}
@@ -3001,7 +3055,7 @@ namespace Meta
 				foreach(ParameterInfo parameter in method.GetParameters())
 				{
 					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
-					argumentBuiling+="arg[new Integer("+counter+")]=arg"+counter+";";
+					argumentBuiling+="arg[new StrategyMap(new Integer("+counter+"))]=arg"+counter+";";
 					if(counter<method.GetParameters().Length)
 					{
 						argumentList+=",";
@@ -3123,6 +3177,10 @@ namespace Meta
 		}
 		public override object Call(object argument)
 		{
+			if(this.type.Name.IndexOf("Font")!=-1)
+			{
+				int asdf=0;
+			}
 			return constructor.Call(argument);
 		}
 
@@ -3160,14 +3218,19 @@ namespace Meta
 //				return false;
 //			}
 //		}
-		public virtual Integer Number
+		public abstract Integer Number
 		{
-			get
-			{
-				return null;
-				//throw new ApplicationException("Map is not a number.");
-			}
+			get;
 		}
+
+//		public virtual Integer Number
+//		{
+//			get
+//			{
+//				return null;
+//				//throw new ApplicationException("Map is not a number.");
+//			}
+//		}
 
 //		public MapStrategy(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new LazyNamespace(namespaceName,subNamespaces,assemblies))
 //		{
@@ -3195,6 +3258,10 @@ namespace Meta
 			if(this.IsString)
 			{
 				stringBuilder.Append(indentation+"\""+this.String+"\""+"\n");
+			}
+			else if(this.Number!=null)
+			{
+				stringBuilder.Append(indentation+"\""+this.Number.ToString()+"\""+"\n"); // TODO: this should maybe be moved into IMap
 			}
 			else
 			{
@@ -3313,6 +3380,14 @@ namespace Meta
 	}
 	public class StringStrategy:MapStrategy
 	{
+		public override Integer Number
+		{
+			get
+			{
+				return null;
+			}
+		}
+
 		public override int GetHashCode()
 		{
 			int hash=0;
@@ -3346,7 +3421,7 @@ namespace Meta
 				ArrayList list=new ArrayList();
 				foreach(char iChar in text)
 				{
-					list.Add(new Integer(iChar));
+					list.Add(new StrategyMap(new Integer(iChar)));
 				}
 				return list;
 			}
@@ -3384,7 +3459,7 @@ namespace Meta
 			this.text=text;
 			for(int i=1;i<=text.Length;i++)
 			{ 
-				keys.Add(new Integer(i));			
+				keys.Add(new StrategyMap(new Integer(i)));			
 			}
 		}
 		public override int Count
@@ -3398,12 +3473,12 @@ namespace Meta
 		{
 			get
 			{
-				if(key is Integer)
+				if(Helper.IsNumber(key))
 				{
-					int iInteger=((Integer)key).Int;
+					int iInteger=((IMap)key).Number.Int;
 					if(iInteger>0 && iInteger<=this.Count)
 					{
-						return new Integer(text[iInteger-1]);
+						return new StrategyMap(new Integer(text[iInteger-1]));
 					}
 				}
 				return null;
@@ -3416,9 +3491,9 @@ namespace Meta
 		}
 		public override bool ContainsKey(object key) 
 		{
-			if(key is Integer)
+			if(Helper.IsNumber(key))
 			{
-				return ((Integer)key)>0 && ((Integer)key)<=this.Count;
+				return ((IMap)key).Number>0 && ((IMap)key).Number<=this.Count;
 			}
 			else
 			{
@@ -3457,12 +3532,26 @@ namespace Meta
 				{
 					number=0;
 				}
-				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative))) && this.ContainsKey(NumberKeys.EmptyMap) && this[NumberKeys.EmptyMap] is IMap && ((IMap)this[NumberKeys.EmptyMap]).Number!=null)
+				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative))) && this.ContainsKey(NumberKeys.EmptyMap))
 				{
-					number=((IMap)this[NumberKeys.EmptyMap]).Number+1;
-					if(this.ContainsKey(NumberKeys.Negative))
+					if(this[NumberKeys.EmptyMap] is IMap)
 					{
-						number=-number;
+						if(((IMap)this[NumberKeys.EmptyMap]).Number!=null)
+						{
+							number=((IMap)this[NumberKeys.EmptyMap]).Number+1;
+							if(this.ContainsKey(NumberKeys.Negative))
+							{
+								number=-number;
+							}
+						}
+						else
+						{
+							number=null;
+						}
+					}
+					else
+					{
+						number=null;
 					}
 				}
 				else
@@ -3498,9 +3587,9 @@ namespace Meta
 			get
 			{
 				ArrayList list=new ArrayList();
-				for(Integer iInteger=new Integer(1);ContainsKey(iInteger);iInteger++)
+				for(Integer iInteger=new Integer(1);ContainsKey(new StrategyMap(iInteger));iInteger++)
 				{
-					list.Add(this[iInteger]);
+					list.Add(this[new StrategyMap(iInteger)]);
 				}
 				return list;
 			}
@@ -3531,15 +3620,15 @@ namespace Meta
 				string text="";
 				foreach(object key in this.Keys)
 				{
-					if(key is Integer && this.strategy[key] is Integer)
+					if(Helper.IsNumber(key) && Helper.IsNumber(this.strategy[key]))
 					{
 						try
 						{
-							text+=System.Convert.ToChar(((Integer)this.strategy[key]).Int);
+							text+=System.Convert.ToChar(((IMap)this.strategy[key]).Number.Int);
 						}
 						catch
 						{
-							throw new MapException(this.map,"Map is not a string");
+							throw new MapException(this.map,"Map is not a string");// TODO: exception throwing isnt great
 						}
 					}
 					else
@@ -3598,7 +3687,7 @@ namespace Meta
 				ArrayList array=new ArrayList();
 				foreach(object key in Keys)
 				{
-					if(key is Integer)
+					if(Helper.IsNumber(key))
 					{
 						array.Add(this[key]);
 					}
@@ -3622,7 +3711,7 @@ namespace Meta
 			}
 			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
 			IMap argument=new StrategyMap(); // TODO: refactor
-			argument[new Integer(1)]=key;
+			argument[new StrategyMap(new Integer(1))]=key;
 			try
 			{
 				indexer.Call(argument);
@@ -3698,15 +3787,15 @@ namespace Meta
 						result=null;
 					}
 				}
-				else if(this.obj!=null && key is Integer && this.type.IsArray)
+				else if(this.obj!=null && Helper.IsNumber(key) && this.type.IsArray)
 				{
-					result=Convert.ToMeta(((Array)obj).GetValue(((Integer)key).Int));
+					result=Convert.ToMeta(((Array)obj).GetValue(((IMap)key).Number.Int));
 				}
 				else
 				{
 					DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
 					IMap argument=new StrategyMap(); // refactor
-					argument[new Integer(1)]=key;
+					argument[new StrategyMap(new Integer(1))]=key;
 					try
 					{
 						result=Convert.ToMeta(indexer.Call(argument));
@@ -3788,13 +3877,13 @@ namespace Meta
 						throw new ApplicationException("Could not assign "+text+" .");
 					}
 				}
-				else if(obj!=null && key is Integer && type.IsArray)
+				else if(obj!=null && Helper.IsNumber(key) && type.IsArray)
 				{
 					bool isConverted; 
 					object converted=Convert.ToDotNet(value,type.GetElementType(),out isConverted);
 					if(isConverted)
 					{
-						((Array)obj).SetValue(converted,((Integer)key).Int);
+						((Array)obj).SetValue(converted,((IMap)key).Number.Int);
 						return;
 					}
 				}
@@ -3802,8 +3891,8 @@ namespace Meta
 				{
 					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type); // TODO: refactor
 					IMap argument=new StrategyMap();// TODO: refactor
-					argument[new Integer(1)]=key;
-					argument[new Integer(2)]=value;
+					argument[new StrategyMap(new Integer(1))]=key;
+					argument[new StrategyMap(new Integer(2))]=value;
 					try
 					{
 						indexer.Call(argument);
@@ -3871,7 +3960,7 @@ namespace Meta
 						}
 						else
 						{
-							table[new Integer(counter)]=entry;
+							table[new StrategyMap(new Integer(counter))]=entry;
 							counter++;
 						}
 					}
@@ -4209,6 +4298,34 @@ namespace Meta
 	public class IntegerStrategy:MapStrategy
 	{
 		private Integer number;
+		public override Integer Number
+		{
+			get
+			{
+				return number;
+			}
+		}
+		public override bool Equals(object obj)
+		{
+			bool equals;
+			if(obj is IntegerStrategy)
+			{
+				if(((IntegerStrategy)obj).Number==Number)
+				{
+					equals=true;
+				}
+				else
+				{
+					equals=false;
+				}
+			}
+			else
+			{
+				equals=base.Equals(obj);
+			}
+			return equals;
+		}
+
 		public override ArrayList Array
 		{
 			get
@@ -4416,6 +4533,10 @@ namespace Meta
 	}
 	public class Helper
 	{
+		public static bool IsNumber(object obj)
+		{
+			return obj is IMap && ((IMap)obj).Number!=null;
+		}
 		public static void WriteFile(string fileName,string text)
 		{
 			StreamWriter writer=new StreamWriter(fileName);
