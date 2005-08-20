@@ -1159,7 +1159,7 @@ namespace Meta
 			((Expression)expression).Extent=this.Extent;
 			return expression;
 		}
-		public virtual bool ContainsKey(IMap key)
+		public bool ContainsKey(IMap key)
 		{
 			bool containsKey;
 			if(key.Equals(SpecialKeys.Arg))
@@ -1176,10 +1176,36 @@ namespace Meta
 			}
 			else
 			{
-				containsKey=Keys.Contains(key);
+				containsKey=ContainsKeyImplementation(key);
+				//containsKey=Keys.Contains(key);
 			}
 			return containsKey;
 		}
+		protected virtual bool ContainsKeyImplementation(IMap key)
+		{
+			return Keys.Contains(key);
+		}
+//		public virtual bool ContainsKey(IMap key)
+//		{
+//			bool containsKey;
+//			if(key.Equals(SpecialKeys.Arg)) // TODO: put specialKey-Handling into separate function
+//			{
+//				containsKey=this.Argument!=null;
+//			}
+//			else if(key.Equals(SpecialKeys.Parent))
+//			{
+//				containsKey=this.Parent!=null;
+//			}
+//			else if(key.Equals(SpecialKeys.This))
+//			{
+//				containsKey=true;
+//			}
+//			else
+//			{
+//				containsKey=Keys.Contains(key);
+//			}
+//			return containsKey;
+//		}
 		public virtual IEnumerator GetEnumerator()
 		{
 			return new MapEnumerator(this);
@@ -1345,25 +1371,48 @@ namespace Meta
 			((Expression)expression).Extent=this.Extent;
 			return expression;
 		}
-		public override bool ContainsKey(IMap key)  // TODO: make single-exit
+		protected override bool ContainsKeyImplementation(IMap key)
 		{
-//			if(key is IMap) // TODO: duplicated with IMap
+//			bool containsKey;
+//			if(key.Equals(SpecialKeys.Arg))
 //			{
-				if(key.Equals(SpecialKeys.Arg))
-				{
-					return this.Argument!=null;
-				}
-				else if(key.Equals(SpecialKeys.Parent))
-				{
-					return this.Parent!=null;
-				}
-				else if(key.Equals(SpecialKeys.This))
-				{
-					return true;
-				}
+//				containsKey=this.Argument!=null;
 //			}
-			return strategy.ContainsKey(key);
+//			else if(key.Equals(SpecialKeys.Parent))
+//			{
+//				containsKey=this.Parent!=null;
+//			}
+//			else if(key.Equals(SpecialKeys.This))
+//			{
+//				containsKey=true;
+//			}
+//			else
+//			{
+				return strategy.ContainsKey(key);
+//			}
+//			return containsKey;
 		}
+//		public override bool ContainsKey(IMap key)
+//		{
+//			bool containsKey;
+//			if(key.Equals(SpecialKeys.Arg))
+//			{
+//				containsKey=this.Argument!=null;
+//			}
+//			else if(key.Equals(SpecialKeys.Parent))
+//			{
+//				containsKey=this.Parent!=null;
+//			}
+//			else if(key.Equals(SpecialKeys.This))
+//			{
+//				containsKey=true;
+//			}
+//			else
+//			{
+//				containsKey=strategy.ContainsKey(key);
+//			}
+//			return containsKey;
+//		}
 		public override bool Equals(object toCompare)
 		{
 			bool isEqual;
@@ -1829,10 +1878,14 @@ namespace Meta
 				return cache.Count;
 			}
 		}
-		public override bool ContainsKey(IMap key)
+		protected override bool ContainsKeyImplementation(IMap key)
 		{
 			return cache.ContainsKey(key);
 		}
+//		public override bool ContainsKey(IMap key)
+//		{
+//			return cache.ContainsKey(key);
+//		}
 		public override ArrayList Array
 		{
 			get
@@ -4301,20 +4354,20 @@ namespace Meta
 				return array;
 			}
 		}
-		public override bool ContainsKey(IMap key)
+		protected override bool ContainsKeyImplementation(IMap key)
 		{
-//			if(key is IMap)
-//			{
-				if(((IMap)key).IsString)
+			//			if(key is IMap)
+			//			{
+			if(((IMap)key).IsString)
+			{
+				string text=((IMap)key).String;
+				if(type.GetMember(((IMap)key).String,
+					BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0)
 				{
-					string text=((IMap)key).String;
-					if(type.GetMember(((IMap)key).String,
-						BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0)
-					{
-						return true;
-					}
+					return true;
 				}
-//			}
+			}
+			//			}
 			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
 			IMap argument=new NormalMap(); // TODO: refactor
 			argument[new NormalMap(new Integer(1))]=key;
@@ -4328,6 +4381,33 @@ namespace Meta
 				return false;
 			}
 		}
+//		public override bool ContainsKey(IMap key)
+//		{
+////			if(key is IMap)
+////			{
+//				if(((IMap)key).IsString)
+//				{
+//					string text=((IMap)key).String;
+//					if(type.GetMember(((IMap)key).String,
+//						BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0)
+//					{
+//						return true;
+//					}
+//				}
+////			}
+//			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
+//			IMap argument=new NormalMap(); // TODO: refactor
+//			argument[new NormalMap(new Integer(1))]=key;
+//			try
+//			{
+//				indexer.Call(argument);
+//				return true;
+//			}
+//			catch(Exception)
+//			{
+//				return false;
+//			}
+//		}
 		public override ArrayList Keys
 		{
 			get
