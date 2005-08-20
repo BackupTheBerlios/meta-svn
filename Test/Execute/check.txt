@@ -1911,6 +1911,20 @@ Entry (DictionaryEntry)
         "100"
 Entry (DictionaryEntry)
   Key (NormalMap):
+    "fractionText"
+  Value (NormalMap):
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "numerator"
+      Value (NormalMap):
+        "4"
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "denominator"
+      Value (NormalMap):
+        "52"
+Entry (DictionaryEntry)
+  Key (NormalMap):
     "stringTest"
   Value (NormalMap):
     "helloh"

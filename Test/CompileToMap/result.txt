@@ -7683,6 +7683,32 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
+                    "fractionText"
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "value"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "literal"
+              Value (NormalMap):
+                "4/52"
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "104"
+      Value (NormalMap):
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "key"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "1"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "literal"
+                  Value (NormalMap):
                     "stringTest"
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7695,7 +7721,7 @@ Entry (DictionaryEntry)
                 "hello"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "104"
+        "105"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7751,7 +7777,7 @@ Entry (DictionaryEntry)
                         "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "105"
+        "106"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7777,7 +7803,7 @@ Entry (DictionaryEntry)
                 "hi"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "106"
+        "107"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7831,7 +7857,7 @@ hello!
 "
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "107"
+        "108"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7977,7 +8003,7 @@ hello!
                                             "Tab"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "108"
+        "109"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8050,7 +8076,7 @@ hello!
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "109"
+        "110"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8114,7 +8140,7 @@ hello!
                         "hello"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "110"
+        "111"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8161,7 +8187,7 @@ hello!
                         "0"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "111"
+        "112"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8243,7 +8269,7 @@ hello!
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "112"
+        "113"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8284,7 +8310,7 @@ Schwaenzchen in die Hoeh.
 "
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "113"
+        "114"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8331,7 +8357,7 @@ Schwaenzchen in die Hoeh.
                         "Lines"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "114"
+        "115"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8378,7 +8404,7 @@ Schwaenzchen in die Hoeh.
                         "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "115"
+        "116"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8413,7 +8439,7 @@ Schwaenzchen in die Hoeh.
                 "bwuhahaha"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "116"
+        "117"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8439,7 +8465,7 @@ Schwaenzchen in die Hoeh.
                 "			hello"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "117"
+        "118"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8465,7 +8491,7 @@ Schwaenzchen in die Hoeh.
                 "\'\n\\\t"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "118"
+        "119"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8491,7 +8517,7 @@ Schwaenzchen in die Hoeh.
                 ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "119"
+        "120"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8955,7 +8981,7 @@ Schwaenzchen in die Hoeh.
                                                         "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "120"
+        "121"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9002,7 +9028,7 @@ Schwaenzchen in die Hoeh.
                         "3"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "121"
+        "122"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9086,7 +9112,7 @@ Schwaenzchen in die Hoeh.
                                                 "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "122"
+        "123"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9133,7 +9159,7 @@ Schwaenzchen in die Hoeh.
                         "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "123"
+        "124"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9217,7 +9243,7 @@ Schwaenzchen in die Hoeh.
                                                 "functionResult"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "124"
+        "125"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9276,7 +9302,7 @@ Schwaenzchen in die Hoeh.
                                     "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "125"
+        "126"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9356,7 +9382,7 @@ Schwaenzchen in die Hoeh.
                                             "world"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "126"
+        "127"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9424,7 +9450,7 @@ Schwaenzchen in die Hoeh.
                                 ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "127"
+        "128"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9505,7 +9531,7 @@ Schwaenzchen in die Hoeh.
                                 "hello"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "128"
+        "129"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9552,7 +9578,7 @@ Schwaenzchen in die Hoeh.
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "129"
+        "130"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9650,7 +9676,7 @@ Schwaenzchen in die Hoeh.
                 "hello"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "130"
+        "131"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):

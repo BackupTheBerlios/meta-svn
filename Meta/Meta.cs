@@ -313,13 +313,34 @@ namespace Meta
 //			}
 
 		}
-//		public class FractionRecognition: Recognition
-//		{
-//			public override IMap Recognize(string text)
-//			{
-//
-//			}
-//		}
+		public class FractionRecognition: Recognition
+		{
+			public override IMap Recognize(string text)
+			{
+				IMap result=null;
+				int pointPos=text.IndexOf("/");
+				if(pointPos!=-1)
+				{
+					if(text.IndexOf("/",pointPos+1)==-1)
+					{
+						Integer numerator=IntegerRecognition.ParseInteger(text.Substring(0,text.Length-pointPos-2));
+						//Integer numerator=IntegerRecognition.ParseInteger(text.Replace("/",""));
+						if(numerator!=null)
+						{
+							Integer denominator=IntegerRecognition.ParseInteger(text.Substring(pointPos+1,text.Length-pointPos-1));
+							if(denominator!=null)
+							{
+								//Integer denominator=System.Convert.ToInt32(Math.Pow(10,text.Length-pointPos-1));
+								result=new NormalMap();
+								result[NumberKeys.Numerator]=new NormalMap(numerator);
+								result[NumberKeys.Denominator]=new NormalMap(denominator);
+							}
+						}
+					}
+				}
+				return result;
+			}
+		}
 		public class IntegerRecognition: Recognition 
 		{
 			public static Integer ParseInteger(string text)
