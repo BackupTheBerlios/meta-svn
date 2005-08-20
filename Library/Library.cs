@@ -20,7 +20,7 @@ public class map
 		//			BreakPoint(new StrategyMap("stuff"));
 		//		}
 	}
-	public static bool ContainsKey(IMap map,object key) 
+	public static bool ContainsKey(IMap map,IMap key) 
 	{
 		string a="";
 		return map.ContainsKey(key);
@@ -36,7 +36,7 @@ public class map
 
 		IMap result=new StrategyMap();
 		int counter=1;
-		foreach(object o in map.Array) 
+		foreach(IMap o in map.Array) 
 		{
 			if(obj.Equals(o)) 
 			{
@@ -68,7 +68,7 @@ public class map
 		IMap keys=new StrategyMap();
 		foreach(DictionaryEntry entry in map) 
 		{
-			keys[new StrategyMap(new Integer(i))]=entry.Key;
+			keys[new StrategyMap(new Integer(i))]=(IMap)entry.Key;
 			i++;
 		}
 		return keys;
@@ -80,9 +80,9 @@ public class map
 		IMap combined=new StrategyMap();
 		foreach(IMap map in maps) 
 		{ // TODO: eigentlich nur die Arrays verwenden
-			foreach(object val in map.Array) 
+			foreach(IMap val in map.Array) 
 			{
-				combined[new StrategyMap(new Integer(i))]=val;
+				combined[new StrategyMap(new Integer(i))]=(IMap)val;
 				i++;
 			}
 		}
@@ -97,7 +97,7 @@ public class map
 		DotNetObject DotNetObject=new DotNetObject(obj);
 		foreach(DictionaryEntry entry in map) 
 		{
-			DotNetObject[entry.Key]=entry.Value;
+			DotNetObject[(IMap)entry.Key]=(IMap)entry.Value;
 		}
 		return obj;
 	}
@@ -105,7 +105,7 @@ public class map
 	{
 		IMap mResult=new StrategyMap();
 		int iCounter=1;
-		foreach(object oIntegerKeyValue in mArray.Array)
+		foreach(IMap oIntegerKeyValue in mArray.Array)
 		{
 			if(!oIntegerKeyValue.Equals(oToRemove))
 			{
@@ -119,7 +119,7 @@ public class map
 	{
 		IMap mResult=new StrategyMap();
 		int iCounter=1;
-		foreach(object oIntegerKeyValue in mArray.Array)
+		foreach(IMap oIntegerKeyValue in mArray.Array)
 		{
 			mResult[new StrategyMap(new Integer(iCounter))]=mFunction.Call(oIntegerKeyValue);
 			iCounter++;
@@ -130,7 +130,7 @@ public class map
 	{ // switch this the arguments around
 		IMap mResult=new StrategyMap();
 		int counter=1;
-		foreach(object oKey in mArray.Keys) 
+		foreach(IMap oKey in mArray.Keys) 
 		{
 			IMap mArgument=new StrategyMap();
 			mArgument[new StrategyMap("key")]=oKey;

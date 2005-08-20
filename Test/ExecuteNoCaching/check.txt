@@ -12,65 +12,38 @@ Entry (DictionaryEntry)
   Key (StrategyMap):
     "Equal"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean Equal(System.Object, System.Object)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Not"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean Not(Boolean)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "And"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean And(Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Or"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean Or(Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Merge"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.IMap Merge(Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Keys"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.IMap Keys(Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Foreach"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.IMap Foreach(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Length"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Int32 Length(Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Init"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "System.Object Init(System.Object, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "interpreter"
@@ -80,93 +53,54 @@ Entry (DictionaryEntry)
   Key (StrategyMap):
     "Apply"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.IMap Apply(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Join"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.IMap Join(Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "ContainsKey"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean ContainsKey(Meta.IMap, System.Object)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Remove"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.IMap Remove(System.Object, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "TrimStart"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.IMap TrimStart(Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "If"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "System.Object If(Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Add"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.IMap Add(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Subtract"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.IMap Subtract(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Multiply"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.IMap Multiply(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Divide"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.IMap Divide(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Smaller"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean Smaller(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "Greater"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Boolean Greater(Meta.IMap, Meta.IMap)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "BitwiseOr"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Meta.StrategyMap BitwiseOr(Meta.StrategyMap[])"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "literalEscapeTest"
@@ -516,12 +450,12 @@ Entry (DictionaryEntry)
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "1"
-      Value (String):
+      Value (StrategyMap):
         "first arg"
     Entry (DictionaryEntry)
       Key (StrategyMap):
         "2"
-      Value (String):
+      Value (StrategyMap):
         "second=arg"
 Entry (DictionaryEntry)
   Key (StrategyMap):
@@ -1791,9 +1725,6 @@ Entry (DictionaryEntry)
   Key (StrategyMap):
     "staticEvent"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "System.Object Invoke(System.Object)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "resultFromDelegate"
@@ -1818,9 +1749,6 @@ Entry (DictionaryEntry)
   Key (StrategyMap):
     "instanceEvent"
   Value (DotNetMethod):
-    overloadedMethods (MethodBase[]):
-      Entry (RuntimeMethodInfo)
-        "Int32 Invoke(Int32)"
 Entry (DictionaryEntry)
   Key (StrategyMap):
     "instanceEventResult"

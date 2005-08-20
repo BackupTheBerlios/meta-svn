@@ -205,9 +205,9 @@ namespace Test
 					File.Delete(cachePath);
 				}
 				IMap argument=new StrategyMap();
-				argument[new StrategyMap(1)]="first arg";
+				argument[new StrategyMap(1)]=new StrategyMap("first arg");
 				//argument[new Integer(1)]="first arg";
-				argument[new StrategyMap(2)]="second=arg";
+				argument[new StrategyMap(2)]=new StrategyMap("second=arg");
 				//argument[new Integer(2)]="second=arg";
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
@@ -218,8 +218,8 @@ namespace Test
 			public override object Run() 
 			{
 				IMap argument=new StrategyMap();
-				argument[new StrategyMap(1)]="first arg";
-				argument[new StrategyMap(2)]="second=arg";
+				argument[new StrategyMap(1)]=new StrategyMap("first arg");
+				argument[new StrategyMap(2)]=new StrategyMap("second=arg");
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
