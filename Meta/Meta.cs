@@ -57,7 +57,7 @@ namespace Meta
 		public static readonly IMap Arg=new NormalMap("arg");
 		public static readonly IMap This=new NormalMap("this");
 	}
-	public class NumberKeys
+	public class NumberKeys // TODO: maybe combine this stuff, is too little members per class
 	{
 		public static readonly IMap Denominator=new NormalMap("denominator");
 		public static readonly IMap Numerator=new NormalMap("numerator");
@@ -264,15 +264,90 @@ namespace Meta
 		string fileName;
 	}
 
-	public abstract class Recognition
+	public abstract class Recognition // TODO: rename, to Filter or something like that
 	{
 		public abstract IMap Recognize(string text);
 	}
 	public class Recognitions
 	{
-		public class IntegerRecogition: Recognition 
+		public class DecimalRecognition: Recognition
 		{
-			public override IMap Recognize(string text) 
+			public override IMap Recognize(string text)
+			{
+				IMap result=null;
+				int pointPos=text.IndexOf(".");
+				if(pointPos!=-1)
+				{
+					if(text.IndexOf(".",pointPos)==-1) // TODO: probably wrong position
+					{
+						Integer numerator=IntegerRecognition.ParseInteger(text.Replace(".",""));
+						if(numerator!=null)
+						{
+							Integer denominator=10*(text.Length-pointPos);
+							result=new NormalMap();
+							result[NumberKeys.Numerator]=new NormalMap(numerator);
+							result[NumberKeys.Denominator]=new NormalMap(denominator);
+						}
+					}
+				}
+				return result;
+			}
+//			public override IMap Recognize(string text)
+//			{
+//				IMap result=null;
+//				int pointPos=text.IndexOf(".");
+//				if(pointPos!=-1)
+//				{
+//					if(text.IndexOf(".",pointPos)==-1) // TODO: probably wrong position
+//					{
+//						Integer beforeComma=IntegerRecognition.ParseInteger(text.Substring(0,pointPos));
+//						Integer afterComma=IntegerRecognition.ParseInteger(text.Substring(pointPos,text.Length-pointPos));
+//						if(beforeComma!=null && afterComma!=null)
+//						{
+//							result=new NormalMap();
+//							result[NumberKeys.Numerator]=beforeComma afterComma
+//						}
+//					}
+//				}
+//				return result;
+//			}
+
+		}
+//		public class FractionRecognition: Recognition
+//		{
+//			public override IMap Recognize(string text)
+//			{
+//
+//			}
+//		}
+		public class IntegerRecognition: Recognition 
+		{
+			public static Integer ParseInteger(string text)
+			{
+				Integer result=new Integer(0);
+				int index=0;
+				if(text[0]=='-')
+				{
+					index++;
+				}
+				for(;index<text.Length;index++)
+				{
+					if(char.IsDigit(text[index]))
+					{
+						result=result*10+(text[index]-'0');
+					}
+					else
+					{
+						return null;
+					}
+				}
+				if(text[0]=='-')
+				{
+					result=-result;
+				}
+				return result;
+			}
+			public override IMap Recognize(string text)  // TODO: refactor
 			{ 
 				if(text.Equals(""))
 				{
@@ -280,31 +355,74 @@ namespace Meta
 				}
 				else
 				{
-					Integer result=new Integer(0); // TODO: dont use explicit Integer creation when not necessary
-					int index=0;
-					if(text[0]=='-')
+					Integer result=ParseInteger(text);
+//					Integer result=new Integer(0);
+//					int index=0;
+//					if(text[0]=='-')
+//					{
+//						index++;
+//					}
+//					for(;index<text.Length;index++)
+//					{
+//						if(char.IsDigit(text[index]))
+//						{
+//							result=result*10+(text[index]-'0');
+//						}
+//						else
+//						{
+//							return null;
+//						}
+//					}
+//					if(text[0]=='-')
+//					{
+//						result=-result;
+//					}
+					if(result!=null)
 					{
-						index++;
+						return new NormalMap(result);
 					}
-					for(;index<text.Length;index++)
+					else
 					{
-						if(char.IsDigit(text[index]))
-						{
-							result=result*10+(text[index]-'0');
-						}
-						else
-						{
-							return null;
-						}
+						return null;
 					}
-					if(text[0]=='-')
-					{
-						result=-result;
-					}
-					return new NormalMap(result);
 				}
 			}
 		}
+//		public class IntegerRecognition: Recognition 
+//		{
+//			public override IMap Recognize(string text) 
+//			{ 
+//				if(text.Equals(""))
+//				{
+//					return null;
+//				}
+//				else
+//				{
+//					Integer result=new Integer(0); // TODO: dont use explicit Integer creation when not necessary
+//					int index=0;
+//					if(text[0]=='-')
+//					{
+//						index++;
+//					}
+//					for(;index<text.Length;index++)
+//					{
+//						if(char.IsDigit(text[index]))
+//						{
+//							result=result*10+(text[index]-'0');
+//						}
+//						else
+//						{
+//							return null;
+//						}
+//					}
+//					if(text[0]=='-')
+//					{
+//						result=-result;
+//					}
+//					return new NormalMap(result);
+//				}
+//			}
+//		}
 		public class StringRecognition:Recognition
 		{
 			public override IMap Recognize(string text)
