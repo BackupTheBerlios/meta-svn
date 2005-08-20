@@ -84,54 +84,54 @@ namespace testClasses
 	public class NamedNoConversion:TestClass { //refactor
 		public NamedNoConversion(IMap arg) 
 		{
-			IMap def=new StrategyMap();
-			def[new StrategyMap(1)]=new StrategyMap("null");
-			def[new StrategyMap("y")]=new StrategyMap("null");
-			def[new StrategyMap("p2")]=new StrategyMap("null");
+			IMap def=new NormalMap();
+			def[new NormalMap(1)]=new NormalMap("null");
+			def[new NormalMap("y")]=new NormalMap("null");
+			def[new NormalMap("p2")]=new NormalMap("null");
 //			arg=(IMap)Interpreter.Merge(def,arg);
-//			object whatever=new StrategyMap("null");//arg[new StrategyMap(1)];
+//			object whatever=new NormalMap("null");//arg[new NormalMap(1)];
 //			Integer test=new Integer('h');
-//			object whatever=arg[new StrategyMap(1)];
+//			object whatever=arg[new NormalMap(1)];
 			arg=def;
-			this.x=(string)((IMap)arg[new StrategyMap(1)]).String;
-			this.y=(string)((IMap)arg[new StrategyMap("y")]).String;
-			this.z=(string)((IMap)arg[new StrategyMap("p2")]).String;
+			this.x=(string)((IMap)arg[new NormalMap(1)]).String;
+			this.y=(string)((IMap)arg[new NormalMap("y")]).String;
+			this.z=(string)((IMap)arg[new NormalMap("p2")]).String;
 		}
 //		public NamedNoConversion(IMap arg) {
-//			IMap def=new StrategyMap();
-//			def[new StrategyMap(1)]=new StrategyMap("null");
-//			def[new StrategyMap("y")]=new StrategyMap("null");
-//			def[new StrategyMap("p2")]=new StrategyMap("null");
+//			IMap def=new NormalMap();
+//			def[new NormalMap(1)]=new NormalMap("null");
+//			def[new NormalMap("y")]=new NormalMap("null");
+//			def[new NormalMap("p2")]=new NormalMap("null");
 //			arg=(IMap)Interpreter.Merge(def,arg);
-//			//object whatever=new StrategyMap("null");//arg[new StrategyMap(1)];
+//			//object whatever=new NormalMap("null");//arg[new NormalMap(1)];
 //			Integer test=new Integer('h');
-//			object whatever=arg[new StrategyMap(1)];
+//			object whatever=arg[new NormalMap(1)];
 //			this.x=(string)((IMap)whatever).String;
-//			this.y=(string)((IMap)arg[new StrategyMap("y")]).String;
-//			this.z=(string)((IMap)arg[new StrategyMap("p2")]).String;
+//			this.y=(string)((IMap)arg[new NormalMap("y")]).String;
+//			this.z=(string)((IMap)arg[new NormalMap("p2")]).String;
 //		}
 		public string Concatenate(IMap arg) 
 		{
-			IMap def=new StrategyMap();
-			def[new StrategyMap(1)]=new StrategyMap("null");
-			def[new StrategyMap("b")]=new StrategyMap("null");
-			def[new StrategyMap("c")]=new StrategyMap("null");
+			IMap def=new NormalMap();
+			def[new NormalMap(1)]=new NormalMap("null");
+			def[new NormalMap("b")]=new NormalMap("null");
+			def[new NormalMap("c")]=new NormalMap("null");
 //			arg=(IMap)Interpreter.Merge(def,arg);
 			arg=def;
-			return (string)((IMap)arg[new StrategyMap(1)]).String+
-				(string)((IMap)arg[new StrategyMap("b")]).String+
-				(string)((IMap)arg[new StrategyMap("c")]).String+
+			return (string)((IMap)arg[new NormalMap(1)]).String+
+				(string)((IMap)arg[new NormalMap("b")]).String+
+				(string)((IMap)arg[new NormalMap("c")]).String+
 				this.x+this.y+this.z;
 		}
 //		public string Concatenate(IMap arg) {
-//			IMap def=new StrategyMap();
-//			def[new StrategyMap(1)]=new StrategyMap("null");
-//			def[new StrategyMap("b")]=new StrategyMap("null");
-//			def[new StrategyMap("c")]=new StrategyMap("null");
+//			IMap def=new NormalMap();
+//			def[new NormalMap(1)]=new NormalMap("null");
+//			def[new NormalMap("b")]=new NormalMap("null");
+//			def[new NormalMap("c")]=new NormalMap("null");
 //			arg=(IMap)Interpreter.Merge(def,arg);
-//			return (string)((IMap)arg[new StrategyMap(1)]).String+
-//				(string)((IMap)arg[new StrategyMap("b")]).String+
-//				(string)((IMap)arg[new StrategyMap("c")]).String+
+//			return (string)((IMap)arg[new NormalMap(1)]).String+
+//				(string)((IMap)arg[new NormalMap("b")]).String+
+//				(string)((IMap)arg[new NormalMap("c")]).String+
 //				this.x+this.y+this.z;
 //		}
 	}

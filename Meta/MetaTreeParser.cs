@@ -83,7 +83,7 @@ namespace Meta.Parser
 		
 		MetaAST expression_AST_in = (MetaAST)_t;
 		
-		result=null;//new StrategyMap();
+		result=null;//new NormalMap();
 		
 		
 		{
@@ -143,11 +143,11 @@ namespace Meta.Parser
 		
 		MetaAST call_AST_in = (MetaAST)_t;
 		
-		result=new StrategyMap();
+		result=new NormalMap();
 		result.Extent=call_AST_in.Extent;
-		IMap call=new StrategyMap();
-		IMap delayed=new StrategyMap();
-		IMap argument=new StrategyMap();
+		IMap call=new NormalMap();
+		IMap delayed=new NormalMap();
+		IMap argument=new NormalMap();
 		
 		
 		AST __t166 = _t;
@@ -179,9 +179,9 @@ namespace Meta.Parser
 		
 		MetaAST map_AST_in = (MetaAST)_t;
 		
-		result=new StrategyMap();
+		result=new NormalMap();
 		result.Extent=map_AST_in.Extent;
-		IMap statements=new StrategyMap();
+		IMap statements=new NormalMap();
 		IMap s=null;
 		int counter=1;
 		
@@ -221,7 +221,7 @@ namespace Meta.Parser
 						 }
 					}
 					
-									statements[new StrategyMap(new Integer(counter))]=s;					
+									statements[new NormalMap(new Integer(counter))]=s;					
 									counter++;
 								
 				}
@@ -248,9 +248,9 @@ _loop164_breakloop:			;
 		
 		MetaAST select_AST_in = (MetaAST)_t;
 		
-		result=new StrategyMap();
+		result=new NormalMap();
 		result.Extent=select_AST_in.Extent;
-		IMap selection=new StrategyMap();
+		IMap selection=new NormalMap();
 		IMap key=null;
 		int counter=1;
 		
@@ -271,7 +271,7 @@ _loop164_breakloop:			;
 					key=expression(_t);
 					_t = retTree_;
 					
-					selection[new StrategyMap(new Integer(counter))]=key;
+					selection[new NormalMap(new Integer(counter))]=key;
 					counter++;
 					
 				}
@@ -300,7 +300,7 @@ _loop173_breakloop:			;
 		
 		MetaAST search_AST_in = (MetaAST)_t;
 		
-				result=new StrategyMap();
+				result=new NormalMap();
 				IMap lookupResult=null;
 				result.Extent=search_AST_in.Extent;
 				IMap e=null;
@@ -328,7 +328,7 @@ _loop173_breakloop:			;
 		MetaAST literal_AST_in = (MetaAST)_t;
 		MetaAST token = null;
 		
-		result=new StrategyMap();
+		result=new NormalMap();
 		result.Extent=literal_AST_in.Extent;
 		
 		
@@ -336,7 +336,7 @@ _loop173_breakloop:			;
 		match((AST)_t,LITERAL);
 		_t = _t.getNextSibling();
 		
-		result[CodeKeys.Literal]=new StrategyMap(token.getText());
+		result[CodeKeys.Literal]=new NormalMap(token.getText());
 		
 		retTree_ = _t;
 		return result;
@@ -348,10 +348,10 @@ _loop173_breakloop:			;
 		
 		MetaAST delayed_AST_in = (MetaAST)_t;
 		
-		result=new StrategyMap();
+		result=new NormalMap();
 		result.Extent=delayed_AST_in.Extent;
 		IMap mExpression;
-		//IMap CodeKeys.Run=new StrategyMap();
+		//IMap CodeKeys.Run=new NormalMap();
 		
 		
 		AST __t178 = _t;
@@ -379,7 +379,7 @@ _loop173_breakloop:			;
 		MetaAST key_AST_in = (MetaAST)_t;
 		
 				int counter=1;
-				result=new StrategyMap();
+				result=new NormalMap();
 				IMap e=null;
 			
 		
@@ -398,7 +398,7 @@ _loop173_breakloop:			;
 				e=expression(_t);
 				_t = retTree_;
 				
-								result[new StrategyMap(new Integer(counter))]=e;
+								result[new NormalMap(new Integer(counter))]=e;
 								counter++;
 							
 			}
@@ -423,7 +423,7 @@ _loop155_breakloop:		;
 		
 		MetaAST statement_AST_in = (MetaAST)_t;
 		
-				statement=new StrategyMap();
+				statement=new NormalMap();
 				//IMap key=null;
 				IMap val=null;
 				IMap k=null;
@@ -438,7 +438,7 @@ _loop155_breakloop:		;
 		val=expression(_t);
 		_t = retTree_;
 		
-					//IMap statement=new StrategyMap();
+					//IMap statement=new NormalMap();
 					statement[CodeKeys.Key]=k;
 					statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 				
@@ -454,7 +454,7 @@ _loop155_breakloop:		;
 		
 		MetaAST statementSearch_AST_in = (MetaAST)_t;
 		
-				statement=new StrategyMap();
+				statement=new NormalMap();
 				//IMap key=null;
 				IMap val=null;
 				IMap k=null;
@@ -469,14 +469,14 @@ _loop155_breakloop:		;
 		val=expression(_t);
 		_t = retTree_;
 		
-					//IMap statement=new StrategyMap();
+					//IMap statement=new NormalMap();
 					statement[CodeKeys.Key]=k;
 					statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 				
 		_t = __t159;
 		_t = _t.getNextSibling();
 		
-				statement[CodeKeys.Search]=new StrategyMap(new Integer(1));
+				statement[CodeKeys.Search]=new NormalMap(new Integer(1));
 			
 		retTree_ = _t;
 		return statement;

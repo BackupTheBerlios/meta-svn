@@ -17,7 +17,7 @@ public class map
 		//		}
 		//		public static int column=0;
 		//		public static void run() {
-		//			BreakPoint(new StrategyMap("stuff"));
+		//			BreakPoint(new NormalMap("stuff"));
 		//		}
 	}
 	public static bool ContainsKey(IMap map,IMap key) 
@@ -31,16 +31,16 @@ public class map
 	}
 	public static IMap TrimStart(IMap arg) 
 	{
-		IMap map=(IMap)arg[new StrategyMap(new Integer(1))];
-		object obj=arg[new StrategyMap(new Integer(2))];
+		IMap map=(IMap)arg[new NormalMap(new Integer(1))];
+		object obj=arg[new NormalMap(new Integer(2))];
 
-		IMap result=new StrategyMap();
+		IMap result=new NormalMap();
 		int counter=1;
 		foreach(IMap o in map.Array) 
 		{
 			if(obj.Equals(o)) 
 			{
-				result[new StrategyMap(new Integer(counter))]=o;
+				result[new NormalMap(new Integer(counter))]=o;
 				counter++;
 			}
 			else 
@@ -65,10 +65,10 @@ public class map
 	public static IMap Keys(IMap map) 
 	{
 		int i=1;
-		IMap keys=new StrategyMap();
+		IMap keys=new NormalMap();
 		foreach(DictionaryEntry entry in map) 
 		{
-			keys[new StrategyMap(new Integer(i))]=(IMap)entry.Key;
+			keys[new NormalMap(new Integer(i))]=(IMap)entry.Key;
 			i++;
 		}
 		return keys;
@@ -77,12 +77,12 @@ public class map
 	{ // rename to "append"
 		ArrayList maps=arg.Array;
 		int i=1;
-		IMap combined=new StrategyMap();
+		IMap combined=new NormalMap();
 		foreach(IMap map in maps) 
 		{ // TODO: eigentlich nur die Arrays verwenden
 			foreach(IMap val in map.Array) 
 			{
-				combined[new StrategyMap(new Integer(i))]=(IMap)val;
+				combined[new NormalMap(new Integer(i))]=(IMap)val;
 				i++;
 			}
 		}
@@ -103,13 +103,13 @@ public class map
 	}
 	public static IMap Remove(object oToRemove,IMap mArray)
 	{
-		IMap mResult=new StrategyMap();
+		IMap mResult=new NormalMap();
 		int iCounter=1;
 		foreach(IMap oIntegerKeyValue in mArray.Array)
 		{
 			if(!oIntegerKeyValue.Equals(oToRemove))
 			{
-				mResult[new StrategyMap(new Integer(iCounter))]=oIntegerKeyValue;
+				mResult[new NormalMap(new Integer(iCounter))]=oIntegerKeyValue;
 				iCounter++;
 			}
 		}
@@ -117,45 +117,45 @@ public class map
 	}
 	public static IMap Foreach(IMap mArray,IMap mFunction) // TODO: use MapAdapters here
 	{
-		IMap mResult=new StrategyMap();
+		IMap mResult=new NormalMap();
 		int iCounter=1;
 		foreach(IMap oIntegerKeyValue in mArray.Array)
 		{
-			mResult[new StrategyMap(new Integer(iCounter))]=mFunction.Call(oIntegerKeyValue);
+			mResult[new NormalMap(new Integer(iCounter))]=mFunction.Call(oIntegerKeyValue);
 			iCounter++;
 		}
 		return mResult;
 	}
 	public static IMap Apply(IMap mFunction,IMap mArray) 
 	{ // switch this the arguments around
-		IMap mResult=new StrategyMap();
+		IMap mResult=new NormalMap();
 		int counter=1;
 		foreach(IMap oKey in mArray.Keys) 
 		{
-			IMap mArgument=new StrategyMap();
-			mArgument[new StrategyMap("key")]=oKey;
-			mArgument[new StrategyMap("value")]=mArray[oKey];
-			mResult[new StrategyMap(new Integer(counter))]=mFunction.Call(mArgument);
+			IMap mArgument=new NormalMap();
+			mArgument[new NormalMap("key")]=oKey;
+			mArgument[new NormalMap("value")]=mArray[oKey];
+			mResult[new NormalMap(new Integer(counter))]=mFunction.Call(mArgument);
 			counter++;
 		}
 		return mResult;
 	}
 	public static object If(IMap argM) 
 	{ // maybe automatically convert Maps to MapAdapters??
-		bool conditionB=(bool)System.Convert.ToBoolean(Meta.Convert.ToDotNet(argM[new StrategyMap(new Integer(1))]));//,typeof(bool));
-		IMap thenF=(IMap)argM[new StrategyMap("then")];
-		IMap elseF=(IMap)argM[new StrategyMap("else")];
+		bool conditionB=(bool)System.Convert.ToBoolean(Meta.Convert.ToDotNet(argM[new NormalMap(new Integer(1))]));//,typeof(bool));
+		IMap thenF=(IMap)argM[new NormalMap("then")];
+		IMap elseF=(IMap)argM[new NormalMap("else")];
 		if(conditionB) 
 		{
-			return thenF.Call(new StrategyMap());
+			return thenF.Call(new NormalMap());
 		}
 		else if(elseF!=null) 
 		{
-			return elseF.Call(new StrategyMap());
+			return elseF.Call(new NormalMap());
 		}
 		else 
 		{
-			return new StrategyMap();
+			return new NormalMap();
 		}		
 	}
 }
@@ -196,19 +196,19 @@ public class math
 {
 	public static IMap Add(IMap x,IMap y) // TODO: decide whether to use native types in library or not, and apply everywhere
 	{
-		return new StrategyMap(x.Number+y.Number);
+		return new NormalMap(x.Number+y.Number);
 	}
 	public static IMap Subtract(IMap x,IMap y) 
 	{
-		return new StrategyMap(x.Number-y.Number);		
+		return new NormalMap(x.Number-y.Number);		
 	}
 	public static IMap Multiply(IMap x,IMap y) 
 	{
-		return new StrategyMap(x.Number*y.Number);
+		return new NormalMap(x.Number*y.Number);
 	}
 	public static IMap Divide(IMap x,IMap y) 
 	{
-		return new StrategyMap(x.Number/y.Number);
+		return new NormalMap(x.Number/y.Number);
 	}
 	public static bool Smaller(IMap x,IMap y) 
 	{
@@ -218,14 +218,14 @@ public class math
 	{
 		return x.Number>y.Number;
 	}
-	public static StrategyMap BitwiseOr(params StrategyMap[] integers)
+	public static NormalMap BitwiseOr(params NormalMap[] integers)
 	{
 		Integer result=new Integer(0);
-		foreach(StrategyMap i in integers)
+		foreach(NormalMap i in integers)
 		{
 			result|=i.Number;
 		}
-		return new StrategyMap(result);
+		return new NormalMap(result);
 	}
 //	public static Integer BitwiseOr(params Integer[] integers)
 //	{

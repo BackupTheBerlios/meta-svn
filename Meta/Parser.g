@@ -591,7 +591,7 @@ options {
 expression
   returns[IMap result]
   {
-    result=null;//new StrategyMap();
+    result=null;//new NormalMap();
   }:
   (
     result=call
@@ -607,14 +607,14 @@ key
 	returns[IMap result]
 	{
 		int counter=1;
-		result=new StrategyMap();
+		result=new NormalMap();
 		IMap e=null;
 	}:
 	#(KEY
 		(
 			e=expression
 			{
-				result[new StrategyMap(new Integer(counter))]=e;
+				result[new NormalMap(new Integer(counter))]=e;
 				counter++;
 			}
 		)+
@@ -623,7 +623,7 @@ key
 statement
 	returns[IMap statement]
 	{
-		statement=new StrategyMap();
+		statement=new NormalMap();
 		//IMap key=null;
 		IMap val=null;
 		IMap k=null;
@@ -632,7 +632,7 @@ statement
 		k=key
 		val=expression
 		{
-			//IMap statement=new StrategyMap();
+			//IMap statement=new NormalMap();
 			statement[CodeKeys.Key]=k;
 			statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 		}
@@ -641,7 +641,7 @@ statement
 statementSearch // maybe somehow combine this with "statement", if possible, not sure if tree has lookahead at all, didn't seem to work in one rule
 	returns[IMap statement]
 	{
-		statement=new StrategyMap();
+		statement=new NormalMap();
 		//IMap key=null;
 		IMap val=null;
 		IMap k=null;
@@ -650,21 +650,21 @@ statementSearch // maybe somehow combine this with "statement", if possible, not
 		k=key
 		val=expression
 		{
-			//IMap statement=new StrategyMap();
+			//IMap statement=new NormalMap();
 			statement[CodeKeys.Key]=k;
 			statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 		}
 	)
 	{
-		statement[CodeKeys.Search]=new StrategyMap(new Integer(1));
+		statement[CodeKeys.Search]=new NormalMap(new Integer(1));
 	}
 	;
 map
   returns[IMap result]
   {
-    result=new StrategyMap();
+    result=new NormalMap();
     result.Extent=#map.Extent;
-    IMap statements=new StrategyMap();
+    IMap statements=new NormalMap();
     IMap s=null;
     int counter=1;
   }:
@@ -672,7 +672,7 @@ map
     (
 			(s=statement|s=statementSearch)
 			{
-				statements[new StrategyMap(new Integer(counter))]=s;					
+				statements[new NormalMap(new Integer(counter))]=s;					
 				counter++;
 			}
     )*
@@ -684,11 +684,11 @@ map
 call
   returns [IMap result]
   {
-    result=new StrategyMap();
+    result=new NormalMap();
     result.Extent=#call.Extent;
-    IMap call=new StrategyMap();
-    IMap delayed=new StrategyMap();
-    IMap argument=new StrategyMap();
+    IMap call=new NormalMap();
+    IMap delayed=new NormalMap();
+    IMap argument=new NormalMap();
   }:
   #(CALL
     (
@@ -707,9 +707,9 @@ call
 select
   returns [IMap result]
   {
-    result=new StrategyMap();
+    result=new NormalMap();
     result.Extent=#select.Extent;
-    IMap selection=new StrategyMap();
+    IMap selection=new NormalMap();
     IMap key=null;
     int counter=1;
   }: 
@@ -718,7 +718,7 @@ select
       (
         key=expression
         {
-          selection[new StrategyMap(new Integer(counter))]=key;
+          selection[new NormalMap(new Integer(counter))]=key;
           counter++;
         }
       )+
@@ -732,7 +732,7 @@ select
 search
 	returns [IMap result]
 	{
-		result=new StrategyMap();
+		result=new NormalMap();
 		IMap lookupResult=null;
 		result.Extent=#search.Extent;
 		IMap e=null;
@@ -748,22 +748,22 @@ search
 literal
   returns [IMap result]
   {
-    result=new StrategyMap();
+    result=new NormalMap();
     result.Extent=#literal.Extent;
   }:
   token:LITERAL
   {
-    result[CodeKeys.Literal]=new StrategyMap(token.getText());
+    result[CodeKeys.Literal]=new NormalMap(token.getText());
   };
 
 //TODO: is this even needed anymore?
 delayed
     returns[IMap result]
     {
-        result=new StrategyMap();
+        result=new NormalMap();
         result.Extent=#delayed.Extent;
         IMap mExpression;
-        //IMap CodeKeys.Run=new StrategyMap();
+        //IMap CodeKeys.Run=new NormalMap();
     }:
     #(FUNCTION mExpression=expression)
     {
@@ -776,7 +776,7 @@ delayed
 /*delayedExpressionOnly
     returns[IMap result]
     {
-        result=new StrategyMap();
+        result=new NormalMap();
         IMap mExpression=null;
     }:
     #(DELAYED_EXPRESSION_ONLY mExpression=expression)

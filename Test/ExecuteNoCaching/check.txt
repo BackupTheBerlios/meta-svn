@@ -1,1334 +1,1334 @@
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "1"
-  Value (StrategyMap):
+  Value (NormalMap):
     "ImpliedAutokey"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "unicodeText"
-  Value (StrategyMap):
+  Value (NormalMap):
     "äaba"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Equal"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Not"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "And"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Or"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Merge"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Keys"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Foreach"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Length"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Init"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "interpreter"
   Value (DotNetClass):
     "map+interpreter"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Apply"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Join"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "ContainsKey"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Remove"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "TrimStart"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "If"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Add"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Subtract"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Multiply"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Divide"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Smaller"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "Greater"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "BitwiseOr"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "literalEscapeTest"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "1"
-      Value (StrategyMap):
+      Value (NormalMap):
         "asdf"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "2"
-      Value (StrategyMap):
+      Value (NormalMap):
         "asdf"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "3"
-      Value (StrategyMap):
+      Value (NormalMap):
         "as"'df"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "4"
-      Value (StrategyMap):
+      Value (NormalMap):
         "as"'"df"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "5"
-      Value (StrategyMap):
+      Value (NormalMap):
         "as"'"'"'"'"'"'"'"'df"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "nestedClassTest"
-  Value (StrategyMap):
+  Value (NormalMap):
     "5"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "applyMethod"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "call"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "function"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "search"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "literal"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         "Add"
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "argument"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "program"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "key"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "1"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "literal"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     "1"
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "value"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "select"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "1"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "search"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "literal"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             "arg"
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "2"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "literal"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         "value"
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "2"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "key"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "1"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "literal"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     "2"
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "value"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "literal"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 "1"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "applyTest"
-  Value (StrategyMap):
+  Value (NormalMap):
     ""
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "ifTest"
-  Value (StrategyMap):
+  Value (NormalMap):
     "it is true"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "form"
   Value (DotNetObject):
     "System.Windows.Forms.Form, Text: hello"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "2"
-  Value (StrategyMap):
+  Value (NormalMap):
     "Autokey"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "gacTest"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "IEnumerable"
       Value (DotNetClass):
         "System.Collections.IEnumerable"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "ICollection"
       Value (DotNetClass):
         "System.Collections.ICollection"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "IList"
       Value (DotNetClass):
         "System.Collections.IList"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "IEnumerator"
       Value (DotNetClass):
         "System.Collections.IEnumerator"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "ArrayList"
       Value (DotNetClass):
         "System.Collections.ArrayList"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "BitArray"
       Value (DotNetClass):
         "System.Collections.BitArray"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "IComparer"
       Value (DotNetClass):
         "System.Collections.IComparer"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "CaseInsensitiveComparer"
       Value (DotNetClass):
         "System.Collections.CaseInsensitiveComparer"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "IHashCodeProvider"
       Value (DotNetClass):
         "System.Collections.IHashCodeProvider"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "CaseInsensitiveHashCodeProvider"
       Value (DotNetClass):
         "System.Collections.CaseInsensitiveHashCodeProvider"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "CollectionBase"
       Value (DotNetClass):
         "System.Collections.CollectionBase"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "Comparer"
       Value (DotNetClass):
         "System.Collections.Comparer"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "IDictionary"
       Value (DotNetClass):
         "System.Collections.IDictionary"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "DictionaryBase"
       Value (DotNetClass):
         "System.Collections.DictionaryBase"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "DictionaryEntry"
       Value (DotNetClass):
         "System.Collections.DictionaryEntry"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "Hashtable"
       Value (DotNetClass):
         "System.Collections.Hashtable"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "IDictionaryEnumerator"
       Value (DotNetClass):
         "System.Collections.IDictionaryEnumerator"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "Queue"
       Value (DotNetClass):
         "System.Collections.Queue"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "ReadOnlyCollectionBase"
       Value (DotNetClass):
         "System.Collections.ReadOnlyCollectionBase"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "SortedList"
       Value (DotNetClass):
         "System.Collections.SortedList"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "Stack"
       Value (DotNetClass):
         "System.Collections.Stack"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "Specialized"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "BitVector32"
           Value (DotNetClass):
             "System.Collections.Specialized.BitVector32"
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "CollectionsUtil"
           Value (DotNetClass):
             "System.Collections.Specialized.CollectionsUtil"
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "HybridDictionary"
           Value (DotNetClass):
             "System.Collections.Specialized.HybridDictionary"
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "ListDictionary"
           Value (DotNetClass):
             "System.Collections.Specialized.ListDictionary"
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "NameObjectCollectionBase"
           Value (DotNetClass):
             "System.Collections.Specialized.NameObjectCollectionBase"
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "NameValueCollection"
           Value (DotNetClass):
             "System.Collections.Specialized.NameValueCollection"
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "StringCollection"
           Value (DotNetClass):
             "System.Collections.Specialized.StringCollection"
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "StringEnumerator"
           Value (DotNetClass):
             "System.Collections.Specialized.StringEnumerator"
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "StringDictionary"
           Value (DotNetClass):
             "System.Collections.Specialized.StringDictionary"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "lazyGACTest"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "ErrorLevel"
       Value (DotNetClass):
         "Microsoft.CSharp.ErrorLevel"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "CompilerError"
       Value (DotNetClass):
         "Microsoft.CSharp.CompilerError"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "Compiler"
       Value (DotNetClass):
         "Microsoft.CSharp.Compiler"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "CSharpCodeProvider"
       Value (DotNetClass):
         "Microsoft.CSharp.CSharpCodeProvider"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "commandLineArguments"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "1"
-      Value (StrategyMap):
+      Value (NormalMap):
         "first arg"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "2"
-      Value (StrategyMap):
+      Value (NormalMap):
         "second=arg"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "aMap"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "a"
-      Value (StrategyMap):
+      Value (NormalMap):
         "a"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "a"
-      Value (StrategyMap):
+      Value (NormalMap):
         "a"
-  Value (StrategyMap):
+  Value (NormalMap):
     "Object"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "normal symbol"
-  Value (StrategyMap):
+  Value (NormalMap):
     "NormalSymbol"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "lookupSymbol"
-  Value (StrategyMap):
+  Value (NormalMap):
     "LookupSymbol"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "long key symbol"
-  Value (StrategyMap):
+  Value (NormalMap):
     "LookupExtendedSymbol"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "lookedUpMap"
-  Value (StrategyMap):
+  Value (NormalMap):
     "Object"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "lookedUpNormalSymbol"
-  Value (StrategyMap):
+  Value (NormalMap):
     "NormalSymbol"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "lookedUpSymbol"
-  Value (StrategyMap):
+  Value (NormalMap):
     "LookupSymbol"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "lookedUpLongSymbol"
-  Value (StrategyMap):
+  Value (NormalMap):
     "LookupExtendedSymbol"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "object"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "a"
-      Value (StrategyMap):
+      Value (NormalMap):
         "c"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "autoSearch"
-      Value (StrategyMap):
+      Value (NormalMap):
         "changed"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "b"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "1"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "x"
-              Value (StrategyMap):
+              Value (NormalMap):
                 "7"
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "z"
-              Value (StrategyMap):
+              Value (NormalMap):
                 "1"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "SetA"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "run"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "program"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "1"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "key"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "1"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "literal"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 "a"
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "value"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "c"
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "search"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         "1"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "2"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "key"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "1"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "literal"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 "autoSearch"
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "value"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "changed"
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "search"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         "1"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "SetB"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "run"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "program"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "1"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "key"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "1"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "literal"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 "b"
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "2"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "literal"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 "1"
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "value"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "select"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "1"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "search"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "literal"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         "arg"
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "2"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "literal"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     "value"
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "search"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         "1"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "2"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "key"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "1"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "literal"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 "this"
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "value"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "changed"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "x"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "a"
-          Value (StrategyMap):
+          Value (NormalMap):
             "b"
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "c"
-          Value (StrategyMap):
+          Value (NormalMap):
             "d"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "1"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "run"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "program"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "1"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "key"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "1"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "literal"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 "this"
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "2"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "literal"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 "a"
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "value"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "b"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "a"
-  Value (StrategyMap):
+  Value (NormalMap):
     "default"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "b"
-  Value (StrategyMap):
+  Value (NormalMap):
     ""
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "aSet"
-  Value (StrategyMap):
+  Value (NormalMap):
     "0"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "bSet"
-  Value (StrategyMap):
+  Value (NormalMap):
     "changed"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "ReturnEverything"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "search"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "arg"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "everythingReturned"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "1"
-      Value (StrategyMap):
+      Value (NormalMap):
         "a"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "2"
-      Value (StrategyMap):
+      Value (NormalMap):
         "b"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "3"
-      Value (StrategyMap):
+      Value (NormalMap):
         "c"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "variableAsArgument"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "1"
-      Value (StrategyMap):
+      Value (NormalMap):
         "x"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "2"
-      Value (StrategyMap):
+      Value (NormalMap):
         "y"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "3"
-      Value (StrategyMap):
+      Value (NormalMap):
         "z"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "ReturnFunction"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "program"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "1"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "key"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "1"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "literal"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         "run"
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "value"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "delayed"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "program"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "1"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             Entry (DictionaryEntry)
-                                              Key (StrategyMap):
+                                              Key (NormalMap):
                                                 "key"
-                                              Value (StrategyMap):
+                                              Value (NormalMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (StrategyMap):
+                                                  Key (NormalMap):
                                                     "1"
-                                                  Value (StrategyMap):
+                                                  Value (NormalMap):
                                                     Entry (DictionaryEntry)
-                                                      Key (StrategyMap):
+                                                      Key (NormalMap):
                                                         "literal"
-                                                      Value (StrategyMap):
+                                                      Value (NormalMap):
                                                         "this"
                                             Entry (DictionaryEntry)
-                                              Key (StrategyMap):
+                                              Key (NormalMap):
                                                 "value"
-                                              Value (StrategyMap):
+                                              Value (NormalMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (StrategyMap):
+                                                  Key (NormalMap):
                                                     "program"
-                                                  Value (StrategyMap):
+                                                  Value (NormalMap):
                                                     Entry (DictionaryEntry)
-                                                      Key (StrategyMap):
+                                                      Key (NormalMap):
                                                         "1"
-                                                      Value (StrategyMap):
+                                                      Value (NormalMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (StrategyMap):
+                                                          Key (NormalMap):
                                                             "key"
-                                                          Value (StrategyMap):
+                                                          Value (NormalMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (StrategyMap):
+                                                              Key (NormalMap):
                                                                 "1"
-                                                              Value (StrategyMap):
+                                                              Value (NormalMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (StrategyMap):
+                                                                  Key (NormalMap):
                                                                     "literal"
-                                                                  Value (StrategyMap):
+                                                                  Value (NormalMap):
                                                                     "1"
                                                         Entry (DictionaryEntry)
-                                                          Key (StrategyMap):
+                                                          Key (NormalMap):
                                                             "value"
-                                                          Value (StrategyMap):
+                                                          Value (NormalMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (StrategyMap):
+                                                              Key (NormalMap):
                                                                 "literal"
-                                                              Value (StrategyMap):
+                                                              Value (NormalMap):
                                                                 "1"
                                                     Entry (DictionaryEntry)
-                                                      Key (StrategyMap):
+                                                      Key (NormalMap):
                                                         "2"
-                                                      Value (StrategyMap):
+                                                      Value (NormalMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (StrategyMap):
+                                                          Key (NormalMap):
                                                             "key"
-                                                          Value (StrategyMap):
+                                                          Value (NormalMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (StrategyMap):
+                                                              Key (NormalMap):
                                                                 "1"
-                                                              Value (StrategyMap):
+                                                              Value (NormalMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (StrategyMap):
+                                                                  Key (NormalMap):
                                                                     "literal"
-                                                                  Value (StrategyMap):
+                                                                  Value (NormalMap):
                                                                     "2"
                                                         Entry (DictionaryEntry)
-                                                          Key (StrategyMap):
+                                                          Key (NormalMap):
                                                             "value"
-                                                          Value (StrategyMap):
+                                                          Value (NormalMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (StrategyMap):
+                                                              Key (NormalMap):
                                                                 "literal"
-                                                              Value (StrategyMap):
+                                                              Value (NormalMap):
                                                                 "2"
                                                     Entry (DictionaryEntry)
-                                                      Key (StrategyMap):
+                                                      Key (NormalMap):
                                                         "3"
-                                                      Value (StrategyMap):
+                                                      Value (NormalMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (StrategyMap):
+                                                          Key (NormalMap):
                                                             "key"
-                                                          Value (StrategyMap):
+                                                          Value (NormalMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (StrategyMap):
+                                                              Key (NormalMap):
                                                                 "1"
-                                                              Value (StrategyMap):
+                                                              Value (NormalMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (StrategyMap):
+                                                                  Key (NormalMap):
                                                                     "literal"
-                                                                  Value (StrategyMap):
+                                                                  Value (NormalMap):
                                                                     "3"
                                                         Entry (DictionaryEntry)
-                                                          Key (StrategyMap):
+                                                          Key (NormalMap):
                                                             "value"
-                                                          Value (StrategyMap):
+                                                          Value (NormalMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (StrategyMap):
+                                                              Key (NormalMap):
                                                                 "literal"
-                                                              Value (StrategyMap):
+                                                              Value (NormalMap):
                                                                 "3"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "SetCurrent"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "program"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "1"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "key"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "1"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "literal"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         "arg"
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "value"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "search"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "literal"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         "arg"
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "2"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "key"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "1"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "literal"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         "x"
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "value"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "select"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "1"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "search"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             Entry (DictionaryEntry)
-                                              Key (StrategyMap):
+                                              Key (NormalMap):
                                                 "literal"
-                                              Value (StrategyMap):
+                                              Value (NormalMap):
                                                 "arg"
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "2"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "literal"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             "symbol"
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "2"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "search"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "x"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "thisSet"
-  Value (StrategyMap):
+  Value (NormalMap):
     "haha"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "FirstLevel"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "1"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "call"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "function"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "search"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "literal"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     "SecondLevel"
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "argument"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "search"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "literal"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     "arg"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "SecondLevel"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "search"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "literal"
-              Value (StrategyMap):
+              Value (NormalMap):
                 "arg"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "argTest"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "1"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "a"
-          Value (StrategyMap):
+          Value (NormalMap):
             "z"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "concatenate"
-  Value (StrategyMap):
+  Value (NormalMap):
     "xyz"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "MemberTest"
   Value (DotNetClass):
     "testClasses.MemberTest"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "IntEvent"
   Value (DotNetClass):
     "testClasses.IntEvent"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "NormalEvent"
   Value (DotNetClass):
     "testClasses.NormalEvent"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "TestClass"
   Value (DotNetClass):
     "testClasses.TestClass"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "PositionalNoConversion"
   Value (DotNetClass):
     "testClasses.PositionalNoConversion"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "NamedNoConversion"
   Value (DotNetClass):
     "testClasses.NamedNoConversion"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "IndexerNoConversion"
   Value (DotNetClass):
     "testClasses.IndexerNoConversion"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "testClass"
   Value (DotNetObject):
     decimalValue (Decimal):
@@ -1338,12 +1338,12 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0.3333333"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "boolTest"
-  Value (StrategyMap):
+  Value (NormalMap):
     "1"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "memberTest"
   Value (DotNetObject):
     instanceField (String):
@@ -1351,12 +1351,12 @@ Entry (DictionaryEntry)
     InstanceProperty (String):
       "b"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "interceptedSymbol"
-  Value (StrategyMap):
+  Value (NormalMap):
     "/hello/"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "positionalNoConversion"
   Value (DotNetObject):
     decimalValue (Decimal):
@@ -1366,12 +1366,12 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "positionalNoConversionConcatenated"
-  Value (StrategyMap):
+  Value (NormalMap):
     "rstmno"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "namedNoConversion"
   Value (DotNetObject):
     decimalValue (Decimal):
@@ -1381,12 +1381,12 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "namedNoConversionConcatenated"
-  Value (StrategyMap):
+  Value (NormalMap):
     "nullnullnullnullnullnull"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "indexerNoConversion"
   Value (DotNetObject):
     decimalValue (Decimal):
@@ -1396,342 +1396,342 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "indexerNoConversionIndexed"
-  Value (StrategyMap):
+  Value (NormalMap):
     "abchihiunchangedYunchangedZabc"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "interceptedSymbol2"
-  Value (StrategyMap):
+  Value (NormalMap):
     "1"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "k"
-  Value (StrategyMap):
+  Value (NormalMap):
     "hello"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "xyz"
-  Value (StrategyMap):
+  Value (NormalMap):
     "w"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "literalFunction"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "literal"
-          Value (StrategyMap):
+          Value (NormalMap):
             "5"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "literalFunctionResult"
-  Value (StrategyMap):
+  Value (NormalMap):
     "5"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "function"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "literal"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         "simple function this"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "callFunction"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "search"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "literal"
-              Value (StrategyMap):
+              Value (NormalMap):
                 "function"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "callFunctionResult"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "literal"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         "simple function this"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "delayedFunction"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "run"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "delayed"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "program"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "1"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "key"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "1"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "literal"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             "x"
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "value"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "literal"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         "y"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "delayedFunctionResult"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "x"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "literal"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         "y"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "value"
-  Value (StrategyMap):
+  Value (NormalMap):
     "xyz"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "selectionFunction"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "search"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "literal"
-              Value (StrategyMap):
+              Value (NormalMap):
                 "value"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "selectionFunctionResult"
-  Value (StrategyMap):
+  Value (NormalMap):
     "xyz"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "bigInteger"
-  Value (StrategyMap):
+  Value (NormalMap):
     "89383838383832839123497123047217340712340720347072304702340720347"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "upperLevel"
-  Value (StrategyMap):
+  Value (NormalMap):
     "changed"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "ChangeUpperLevel"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "upperLevel"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "literal"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         "changed"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "search"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     "1"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "3"
-  Value (StrategyMap):
+  Value (NormalMap):
     "0"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "staticEventChanged"
-  Value (StrategyMap):
+  Value (NormalMap):
     "1"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "staticEvent"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "resultFromDelegate"
-  Value (StrategyMap):
+  Value (NormalMap):
     "resultFromDelegate"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "staticEventResult"
   Value (DotNetObject):
     decimalValue (Decimal):
@@ -1741,209 +1741,209 @@ Entry (DictionaryEntry)
     floatValue (Single):
       "0.3333333"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "instanceEventChanged"
-  Value (StrategyMap):
+  Value (NormalMap):
     "1"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "instanceEvent"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "instanceEventResult"
-  Value (StrategyMap):
+  Value (NormalMap):
     "5"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "one"
-  Value (StrategyMap):
+  Value (NormalMap):
     "1"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "two"
-  Value (StrategyMap):
+  Value (NormalMap):
     "2"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "firstIf"
-  Value (StrategyMap):
+  Value (NormalMap):
     "then"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "secondIf"
-  Value (StrategyMap):
+  Value (NormalMap):
     "unchanged"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "firstIfCondition"
-  Value (StrategyMap):
+  Value (NormalMap):
     "1"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "firstIfBranches"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "1"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "run"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "literal"
-              Value (StrategyMap):
+              Value (NormalMap):
                 "then"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "0"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "run"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "literal"
-              Value (StrategyMap):
+              Value (NormalMap):
                 "else"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "bigNumber"
-  Value (StrategyMap):
+  Value (NormalMap):
     "50020202029029233344"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "secondSwitch"
-  Value (StrategyMap):
+  Value (NormalMap):
     "three"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "secondSwitchCases"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "1"
-      Value (StrategyMap):
+      Value (NormalMap):
         "one"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "2"
-      Value (StrategyMap):
+      Value (NormalMap):
         "two"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "3"
-      Value (StrategyMap):
+      Value (NormalMap):
         "three"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "emptyMap"
-  Value (StrategyMap):
+  Value (NormalMap):
     ""
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "emptyFunction"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "x"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "literal"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         "hello"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "emptyFunctionResult"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "x"
-      Value (StrategyMap):
+      Value (NormalMap):
         "hello"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "font"
   Value (DotNetObject):
     "[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "stringTest"
-  Value (StrategyMap):
+  Value (NormalMap):
     "helloh"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "helloh"
-  Value (StrategyMap):
+  Value (NormalMap):
     "hi"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "x"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "aLongText"
-      Value (StrategyMap):
+      Value (NormalMap):
         "
 hello word!
 hello!
 "
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "ored"
-  Value (StrategyMap):
+  Value (NormalMap):
     "29"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "arrayList"
   Value (DotNetObject):
-    Entry (StrategyMap)
+    Entry (NormalMap)
       "hello"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "5"
-  Value (StrategyMap):
+  Value (NormalMap):
     "0"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "arrayListResult"
-  Value (StrategyMap):
+  Value (NormalMap):
     "hello"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "textBox"
   Value (DotNetObject):
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "lines"
   Value (DotNetObject):
     Entry (String)
@@ -1961,643 +1961,643 @@ Entry (DictionaryEntry)
     Entry (String)
       ""
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "alleMeineText"
-  Value (StrategyMap):
+  Value (NormalMap):
     "Alle meine Entchen,"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "tabText"
-  Value (StrategyMap):
+  Value (NormalMap):
     "			hello"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "escapedText"
-  Value (StrategyMap):
+  Value (NormalMap):
     "\'\n\\\t"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "whileCounter"
-  Value (StrategyMap):
+  Value (NormalMap):
     "10"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "loop"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "whileDecision"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "call"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "function"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "search"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "literal"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     "Smaller"
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "argument"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "program"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "1"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "key"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "1"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             Entry (DictionaryEntry)
-                                              Key (StrategyMap):
+                                              Key (NormalMap):
                                                 "literal"
-                                              Value (StrategyMap):
+                                              Value (NormalMap):
                                                 "1"
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "value"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "search"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             Entry (DictionaryEntry)
-                                              Key (StrategyMap):
+                                              Key (NormalMap):
                                                 "literal"
-                                              Value (StrategyMap):
+                                              Value (NormalMap):
                                                 "arg"
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "2"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "key"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "1"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             Entry (DictionaryEntry)
-                                              Key (StrategyMap):
+                                              Key (NormalMap):
                                                 "literal"
-                                              Value (StrategyMap):
+                                              Value (NormalMap):
                                                 "2"
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "value"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "literal"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             "10"
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "2"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "whileBranches"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "program"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "1"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "key"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "1"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "literal"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         "1"
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "value"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "program"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "1"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "key"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             Entry (DictionaryEntry)
-                                              Key (StrategyMap):
+                                              Key (NormalMap):
                                                 "1"
-                                              Value (StrategyMap):
+                                              Value (NormalMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (StrategyMap):
+                                                  Key (NormalMap):
                                                     "literal"
-                                                  Value (StrategyMap):
+                                                  Value (NormalMap):
                                                     "run"
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "value"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             Entry (DictionaryEntry)
-                                              Key (StrategyMap):
+                                              Key (NormalMap):
                                                 "delayed"
-                                              Value (StrategyMap):
+                                              Value (NormalMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (StrategyMap):
+                                                  Key (NormalMap):
                                                     "call"
-                                                  Value (StrategyMap):
+                                                  Value (NormalMap):
                                                     Entry (DictionaryEntry)
-                                                      Key (StrategyMap):
+                                                      Key (NormalMap):
                                                         "function"
-                                                      Value (StrategyMap):
+                                                      Value (NormalMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (StrategyMap):
+                                                          Key (NormalMap):
                                                             "search"
-                                                          Value (StrategyMap):
+                                                          Value (NormalMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (StrategyMap):
+                                                              Key (NormalMap):
                                                                 "literal"
-                                                              Value (StrategyMap):
+                                                              Value (NormalMap):
                                                                 "loop"
                                                     Entry (DictionaryEntry)
-                                                      Key (StrategyMap):
+                                                      Key (NormalMap):
                                                         "argument"
-                                                      Value (StrategyMap):
+                                                      Value (NormalMap):
                                                         Entry (DictionaryEntry)
-                                                          Key (StrategyMap):
+                                                          Key (NormalMap):
                                                             "call"
-                                                          Value (StrategyMap):
+                                                          Value (NormalMap):
                                                             Entry (DictionaryEntry)
-                                                              Key (StrategyMap):
+                                                              Key (NormalMap):
                                                                 "function"
-                                                              Value (StrategyMap):
+                                                              Value (NormalMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (StrategyMap):
+                                                                  Key (NormalMap):
                                                                     "search"
-                                                                  Value (StrategyMap):
+                                                                  Value (NormalMap):
                                                                     Entry (DictionaryEntry)
-                                                                      Key (StrategyMap):
+                                                                      Key (NormalMap):
                                                                         "literal"
-                                                                      Value (StrategyMap):
+                                                                      Value (NormalMap):
                                                                         "Add"
                                                             Entry (DictionaryEntry)
-                                                              Key (StrategyMap):
+                                                              Key (NormalMap):
                                                                 "argument"
-                                                              Value (StrategyMap):
+                                                              Value (NormalMap):
                                                                 Entry (DictionaryEntry)
-                                                                  Key (StrategyMap):
+                                                                  Key (NormalMap):
                                                                     "program"
-                                                                  Value (StrategyMap):
+                                                                  Value (NormalMap):
                                                                     Entry (DictionaryEntry)
-                                                                      Key (StrategyMap):
+                                                                      Key (NormalMap):
                                                                         "1"
-                                                                      Value (StrategyMap):
+                                                                      Value (NormalMap):
                                                                         Entry (DictionaryEntry)
-                                                                          Key (StrategyMap):
+                                                                          Key (NormalMap):
                                                                             "key"
-                                                                          Value (StrategyMap):
+                                                                          Value (NormalMap):
                                                                             Entry (DictionaryEntry)
-                                                                              Key (StrategyMap):
+                                                                              Key (NormalMap):
                                                                                 "1"
-                                                                              Value (StrategyMap):
+                                                                              Value (NormalMap):
                                                                                 Entry (DictionaryEntry)
-                                                                                  Key (StrategyMap):
+                                                                                  Key (NormalMap):
                                                                                     "literal"
-                                                                                  Value (StrategyMap):
+                                                                                  Value (NormalMap):
                                                                                     "1"
                                                                         Entry (DictionaryEntry)
-                                                                          Key (StrategyMap):
+                                                                          Key (NormalMap):
                                                                             "value"
-                                                                          Value (StrategyMap):
+                                                                          Value (NormalMap):
                                                                             Entry (DictionaryEntry)
-                                                                              Key (StrategyMap):
+                                                                              Key (NormalMap):
                                                                                 "search"
-                                                                              Value (StrategyMap):
+                                                                              Value (NormalMap):
                                                                                 Entry (DictionaryEntry)
-                                                                                  Key (StrategyMap):
+                                                                                  Key (NormalMap):
                                                                                     "literal"
-                                                                                  Value (StrategyMap):
+                                                                                  Value (NormalMap):
                                                                                     "arg"
                                                                     Entry (DictionaryEntry)
-                                                                      Key (StrategyMap):
+                                                                      Key (NormalMap):
                                                                         "2"
-                                                                      Value (StrategyMap):
+                                                                      Value (NormalMap):
                                                                         Entry (DictionaryEntry)
-                                                                          Key (StrategyMap):
+                                                                          Key (NormalMap):
                                                                             "key"
-                                                                          Value (StrategyMap):
+                                                                          Value (NormalMap):
                                                                             Entry (DictionaryEntry)
-                                                                              Key (StrategyMap):
+                                                                              Key (NormalMap):
                                                                                 "1"
-                                                                              Value (StrategyMap):
+                                                                              Value (NormalMap):
                                                                                 Entry (DictionaryEntry)
-                                                                                  Key (StrategyMap):
+                                                                                  Key (NormalMap):
                                                                                     "literal"
-                                                                                  Value (StrategyMap):
+                                                                                  Value (NormalMap):
                                                                                     "2"
                                                                         Entry (DictionaryEntry)
-                                                                          Key (StrategyMap):
+                                                                          Key (NormalMap):
                                                                             "value"
-                                                                          Value (StrategyMap):
+                                                                          Value (NormalMap):
                                                                             Entry (DictionaryEntry)
-                                                                              Key (StrategyMap):
+                                                                              Key (NormalMap):
                                                                                 "literal"
-                                                                              Value (StrategyMap):
+                                                                              Value (NormalMap):
                                                                                 "1"
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "2"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "key"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "1"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "literal"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         "0"
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "value"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "program"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "1"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "key"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             Entry (DictionaryEntry)
-                                              Key (StrategyMap):
+                                              Key (NormalMap):
                                                 "1"
-                                              Value (StrategyMap):
+                                              Value (NormalMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (StrategyMap):
+                                                  Key (NormalMap):
                                                     "literal"
-                                                  Value (StrategyMap):
+                                                  Value (NormalMap):
                                                     "run"
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "value"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             Entry (DictionaryEntry)
-                                              Key (StrategyMap):
+                                              Key (NormalMap):
                                                 "delayed"
-                                              Value (StrategyMap):
+                                              Value (NormalMap):
                                                 Entry (DictionaryEntry)
-                                                  Key (StrategyMap):
+                                                  Key (NormalMap):
                                                     "search"
-                                                  Value (StrategyMap):
+                                                  Value (NormalMap):
                                                     Entry (DictionaryEntry)
-                                                      Key (StrategyMap):
+                                                      Key (NormalMap):
                                                         "literal"
-                                                      Value (StrategyMap):
+                                                      Value (NormalMap):
                                                         "arg"
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "3"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "this"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "call"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "function"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "select"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "1"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "search"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "literal"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             "whileBranches"
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "2"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     Entry (DictionaryEntry)
-                                      Key (StrategyMap):
+                                      Key (NormalMap):
                                         "search"
-                                      Value (StrategyMap):
+                                      Value (NormalMap):
                                         Entry (DictionaryEntry)
-                                          Key (StrategyMap):
+                                          Key (NormalMap):
                                             "literal"
-                                          Value (StrategyMap):
+                                          Value (NormalMap):
                                             "whileDecision"
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "argument"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             Entry (DictionaryEntry)
-                              Key (StrategyMap):
+                              Key (NormalMap):
                                 "search"
-                              Value (StrategyMap):
+                              Value (NormalMap):
                                 Entry (DictionaryEntry)
-                                  Key (StrategyMap):
+                                  Key (NormalMap):
                                     "literal"
-                                  Value (StrategyMap):
+                                  Value (NormalMap):
                                     "arg"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "returnInMap"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "result"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "search"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "arg"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "literalAsArgument"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "result"
-      Value (StrategyMap):
+      Value (NormalMap):
         "1"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "returnFunction"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "run"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "delayed"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "functionResult"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "returnArg"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "search"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "literal"
-              Value (StrategyMap):
+              Value (NormalMap):
                 "arg"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "myArg"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "program"
-          Value (StrategyMap):
+          Value (NormalMap):
             Entry (DictionaryEntry)
-              Key (StrategyMap):
+              Key (NormalMap):
                 "1"
-              Value (StrategyMap):
+              Value (NormalMap):
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "key"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "1"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         Entry (DictionaryEntry)
-                          Key (StrategyMap):
+                          Key (NormalMap):
                             "literal"
-                          Value (StrategyMap):
+                          Value (NormalMap):
                             "hello"
                 Entry (DictionaryEntry)
-                  Key (StrategyMap):
+                  Key (NormalMap):
                     "value"
-                  Value (StrategyMap):
+                  Value (NormalMap):
                     Entry (DictionaryEntry)
-                      Key (StrategyMap):
+                      Key (NormalMap):
                         "literal"
-                      Value (StrategyMap):
+                      Value (NormalMap):
                         "world"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "funcReturnTest"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "hello"
-      Value (StrategyMap):
+      Value (NormalMap):
         "world"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "documentedFunction"
-  Value (StrategyMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "doc"
-      Value (StrategyMap):
+      Value (NormalMap):
         "This function returns 'hello ."
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "run"
-      Value (StrategyMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
-          Key (StrategyMap):
+          Key (NormalMap):
             "literal"
-          Value (StrategyMap):
+          Value (NormalMap):
             "hello"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "docFunctionResult"
-  Value (StrategyMap):
+  Value (NormalMap):
     "hello"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "x"
-      Value (StrategyMap):
+      Value (NormalMap):
         "1"
     Entry (DictionaryEntry)
-      Key (StrategyMap):
+      Key (NormalMap):
         "y"
-      Value (StrategyMap):
+      Value (NormalMap):
         "2"
-  Value (StrategyMap):
+  Value (NormalMap):
     "hello"
 Entry (DictionaryEntry)
-  Key (StrategyMap):
+  Key (NormalMap):
     "functionAndMapInLookupTest"
-  Value (StrategyMap):
+  Value (NormalMap):
     "hello"

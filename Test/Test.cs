@@ -47,7 +47,7 @@ namespace Test
 //					throw new ApplicationException("File "+args[0]+" not found.");
 //				}
 //
-//				object result=Interpreter.Run(args[0],new StrategyMap());
+//				object result=Interpreter.Run(args[0],new NormalMap());
 //				if(result is IMap && ((Map)result).IsString)
 //				{
 //					Console.Write("Content-Type: text/html\n\n");
@@ -57,7 +57,7 @@ namespace Test
 //		}
 		private static void Run(string file)
 		{
-//			IMap map=new StrategyMap(new Integer(5));
+//			IMap map=new NormalMap(new Integer(5));
 //			int asdf=0;
 			if(file=="") 
 			{
@@ -73,7 +73,7 @@ namespace Test
 					throw new ApplicationException("File "+file+" not found.");
 				}
 
-				object result=Interpreter.Run(file,new StrategyMap());
+				object result=Interpreter.Run(file,new NormalMap());
 				if(result is IMap && ((IMap)result).IsString)
 				{
 					Console.Write("Content-Type: text/html\n\n");
@@ -204,10 +204,10 @@ namespace Test
 				{
 					File.Delete(cachePath);
 				}
-				IMap argument=new StrategyMap();
-				argument[new StrategyMap(1)]=new StrategyMap("first arg");
+				IMap argument=new NormalMap();
+				argument[new NormalMap(1)]=new NormalMap("first arg");
 				//argument[new Integer(1)]="first arg";
-				argument[new StrategyMap(2)]=new StrategyMap("second=arg");
+				argument[new NormalMap(2)]=new NormalMap("second=arg");
 				//argument[new Integer(2)]="second=arg";
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
@@ -217,9 +217,9 @@ namespace Test
 		{
 			public override object Run() 
 			{
-				IMap argument=new StrategyMap();
-				argument[new StrategyMap(1)]=new StrategyMap("first arg");
-				argument[new StrategyMap(2)]=new StrategyMap("second=arg");
+				IMap argument=new NormalMap();
+				argument[new NormalMap(1)]=new NormalMap("first arg");
+				argument[new NormalMap(2)]=new NormalMap("second=arg");
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
