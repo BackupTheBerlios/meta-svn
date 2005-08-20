@@ -1519,13 +1519,13 @@ namespace Meta
 		private IMap assemblyContent;
 	}
 		// TODO: refactor
-	public class GAC: MapStrategy// TODO: split into GAC and Directory
+	public class GAC: IMap// TODO: split into GAC and Directory
 	{
-		public override IMap CloneMap()
-		{
-			return new StrategyMap(this);
-			//return new StrategyMap(true); // TODO: this is definitely a bug!!!
-		}
+//		public override IMap CloneMap()
+//		{
+//			return new StrategyMap(this);
+//			//return new StrategyMap(true); // TODO: this is definitely a bug!!!
+//		}
 
 		public override object this[object key]
 		{
@@ -1556,10 +1556,14 @@ namespace Meta
 				return cache.Keys;
 			}
 		}
-		public override MapStrategy Clone() // TODO: not sure this is correct
+		public override IMap Clone() // TODO: doesnt work correctly yet
 		{
 			return this;
 		}
+//		public override MapStrategy Clone() // TODO: not sure this is correct
+//		{
+//			return this;
+//		}
 		public override int Count
 		{
 			get
@@ -1730,9 +1734,225 @@ namespace Meta
 			((LazyNamespace)root.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
 			return root; // TODO: is this correct?
 		}
+		//		public IMap LoadNamespaces(ArrayList assemblies) // TODO: rename
+		//		{
+		//			IMap root=new StrategyMap("",new Hashtable(),new ArrayList());
+		//			//LazyNamespace root=new LazyNamespace("",new Hashtable(),new ArrayList());
+		//			foreach(Assembly assembly in assemblies)
+		//			{
+		//				ArrayList nameSpaces=NameSpaces(assembly);
+		//				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
+		//				foreach(string nameSpace in nameSpaces)
+		//				{
+		//					if(nameSpace=="System")
+		//					{
+		//						int asdf=0;
+		//					}
+		//					LazyNamespace selected=(LazyNamespace)root.strategy; // TODO: this sucks quite a bit!!
+		//					if(nameSpace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.installationPath,"library")))
+		//					{
+		//						continue;
+		//					}
+		//					if(nameSpace!="")
+		//					{
+		//						foreach(string subString in nameSpace.Split('.'))
+		//						{
+		//							if(!selected.namespaces.ContainsKey(subString))
+		//							{
+		//								string fullName=selected.fullName;
+		//								if(fullName!="")
+		//								{
+		//									fullName+=".";
+		//								}
+		//								fullName+=subString;
+		//								selected.namespaces[subString]=new IMap(fullName,new Hashtable(),new ArrayList());
+		//								//selected.namespaces[subString]=new LazyNamespace(fullName,new Hashtable(),new ArrayList());
+		//							}
+		//							selected=(LazyNamespace)((IMap)selected.namespaces[subString]).strategy; // TODO: this sucks!
+		//						}
+		//					}
+		//					selected.AddAssembly(cachedAssembly);
+		//					//selected.cachedAssemblies.Add(cachedAssembly);
+		//				}
+		//			}
+		//			((LazyNamespace)root.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
+		//			return root; // TODO: is this correct?
+		//		}
+		public static IMap library=new GAC(); // TODO: is this the right way to do it??
+		//public static IMap library=new StrategyMap(new GAC()); // TODO: is this the right way to do it??
+		private IMap cache=new StrategyMap();
+		public static string libraryPath="library"; 
+	}
+//	public class GAC: MapStrategy// TODO: split into GAC and Directory
+//	{
+//		public override IMap CloneMap()
+//		{
+//			return new StrategyMap(this);
+//			//return new StrategyMap(true); // TODO: this is definitely a bug!!!
+//		}
+//
+//		public override object this[object key]
+//		{
+//			get
+//			{
+//				if(cache.ContainsKey(key))
+//				{
+//					if(cache[key] is MetaLibrary)
+//					{
+//						cache[key]=((MetaLibrary)cache[key]).Load();
+//					}
+//					return cache[key];
+//				}
+//				else
+//				{
+//					return null;
+//				}
+//			}
+//			set
+//			{
+//				throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
+//			}
+//		}
+//		public override ArrayList Keys
+//		{
+//			get
+//			{
+//				return cache.Keys;
+//			}
+//		}
+//		public override MapStrategy Clone() // TODO: not sure this is correct
+//		{
+//			return this;
+//		}
+//		public override int Count
+//		{
+//			get
+//			{
+//				return cache.Count;
+//			}
+//		}
+//		public override bool ContainsKey(object key)
+//		{
+//			return cache.ContainsKey(key);
+//		}
+//		public override ArrayList Array
+//		{
+//			get
+//			{
+//				return new ArrayList();
+//			}
+//		}
+//		public static IMap LoadAssemblies(IEnumerable assemblies)
+//		{
+//			IMap root=new StrategyMap();
+//			foreach(Assembly currentAssembly in assemblies)
+//			{
+//				foreach(Type type in currentAssembly.GetExportedTypes()) 
+//				{
+//					if(type.DeclaringType==null) 
+//					{
+//						IMap position=root;
+//						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
+//						subPaths.RemoveAt(subPaths.Count-1);
+//						foreach(string subPath in subPaths) 
+//						{
+//							if(!position.ContainsKey(new StrategyMap(subPath))) 
+//							{
+//								position[new StrategyMap(subPath)]=new StrategyMap();
+//							}
+//							position=(IMap)position[new StrategyMap(subPath)];
+//						}
+//						position[new StrategyMap(type.Name)]=new DotNetClass(type);
+//						//position[new StrategyMap(type.Name)]=new StrategyMap(type);
+//						//position[new IMap(type.Name)]=new DotNetClass(type);
+//					}
+//				}
+//				Interpreter.loadedAssemblies.Add(currentAssembly.Location);
+//			}
+//			return root;
+//		}
+//		private string fileSystemPath;
+//
+//		public GAC()
+//		{
+//			fileSystemPath=Path.Combine(Interpreter.installationPath,"Library"); // TODO: has to be renamed to??? root, maybe, or just Meta, installation will look different anyway
+//			ArrayList assemblies=new ArrayList();
+//			libraryPath=Path.Combine(Interpreter.installationPath,"library");
+//			assemblies=GlobalAssemblyCache.Assemblies;
+//			foreach(string dll in System.IO.Directory.GetFiles(libraryPath,"*.dll"))
+//			{
+//				assemblies.Add(Assembly.LoadFrom(dll));
+//			}
+//			foreach(string exe in System.IO.Directory.GetFiles(libraryPath,"*.exe"))
+//			{
+//				assemblies.Add(Assembly.LoadFrom(exe));
+//			}
+//			string cachedAssemblyPath=Path.Combine(Interpreter.installationPath,"cachedAssemblyInfo.meta");
+//			if(File.Exists(cachedAssemblyPath))
+//			{
+//				cachedAssemblyInfo=(IMap)Interpreter.RunWithoutLibrary(cachedAssemblyPath,new StrategyMap());
+//			}
+//		
+//			cache=LoadNamespaces(assemblies);
+//			Interpreter.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
+//			foreach(string meta in System.IO.Directory.GetFiles(libraryPath,"*.meta"))
+//			{
+//				cache[new StrategyMap(Path.GetFileNameWithoutExtension(meta))]=new MetaLibrary(meta);
+//			}
+//		}
+//		private IMap cachedAssemblyInfo=new StrategyMap();
+//		public ArrayList NameSpaces(Assembly assembly) //TODO: integrate into LoadNamespaces???
+//		{ 
+//			ArrayList nameSpaces=new ArrayList();
+//			MapAdapter cached=new MapAdapter(cachedAssemblyInfo);
+//			if(cached.ContainsKey(assembly.Location))
+//			{
+//				MapAdapter info=new MapAdapter((IMap)cached[assembly.Location]);
+//				string timestamp=(string)info["timestamp"];
+//				if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
+//				{
+//					MapAdapter namespaces=new MapAdapter((IMap)info["namespaces"]);
+//					foreach(DictionaryEntry entry in namespaces)
+//					{
+//						nameSpaces.Add((string)entry.Value);
+//					}
+//					return nameSpaces;
+//				}
+//			}
+//			foreach(Type type in assembly.GetExportedTypes())
+//			{
+//				if(!nameSpaces.Contains(type.Namespace))
+//				{
+//					if(type.Namespace==null)
+//					{
+//						if(!nameSpaces.Contains(""))
+//						{
+//							nameSpaces.Add("");
+//						}
+//					}
+//					else
+//					{
+//						nameSpaces.Add(type.Namespace);
+//					}
+//				}
+//			}
+//			IMap cachedAssemblyInfoMap=new StrategyMap();
+//			IMap nameSpace=new StrategyMap(); 
+//			Integer counter=new Integer(0);
+//			foreach(string na in nameSpaces)
+//			{
+//				nameSpace[counter]=new StrategyMap(na);
+//				counter++;
+//			}
+//			cachedAssemblyInfoMap[new StrategyMap("namespaces")]=nameSpace;
+//			cachedAssemblyInfoMap[new StrategyMap("timestamp")]=new StrategyMap(File.GetLastWriteTime(assembly.Location).ToString());
+//			cachedAssemblyInfo[new StrategyMap(assembly.Location)]=cachedAssemblyInfoMap;
+//			return nameSpaces;
+//		}
+//		// TODO: refactor this
 //		public IMap LoadNamespaces(ArrayList assemblies) // TODO: rename
 //		{
-//			IMap root=new StrategyMap("",new Hashtable(),new ArrayList());
+//			StrategyMap root=new StrategyMap("",new Hashtable(),new ArrayList());
 //			//LazyNamespace root=new LazyNamespace("",new Hashtable(),new ArrayList());
 //			foreach(Assembly assembly in assemblies)
 //			{
@@ -1761,10 +1981,10 @@ namespace Meta
 //									fullName+=".";
 //								}
 //								fullName+=subString;
-//								selected.namespaces[subString]=new IMap(fullName,new Hashtable(),new ArrayList());
+//								selected.namespaces[subString]=new StrategyMap(fullName,new Hashtable(),new ArrayList());
 //								//selected.namespaces[subString]=new LazyNamespace(fullName,new Hashtable(),new ArrayList());
 //							}
-//							selected=(LazyNamespace)((IMap)selected.namespaces[subString]).strategy; // TODO: this sucks!
+//							selected=(LazyNamespace)((StrategyMap)selected.namespaces[subString]).strategy; // TODO: this sucks!
 //						}
 //					}
 //					selected.AddAssembly(cachedAssembly);
@@ -1774,10 +1994,54 @@ namespace Meta
 //			((LazyNamespace)root.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
 //			return root; // TODO: is this correct?
 //		}
-		public static IMap library=new StrategyMap(new GAC()); // TODO: is this the right way to do it??
-		private IMap cache=new StrategyMap();
-		public static string libraryPath="library"; 
-	}
+////		public IMap LoadNamespaces(ArrayList assemblies) // TODO: rename
+////		{
+////			IMap root=new StrategyMap("",new Hashtable(),new ArrayList());
+////			//LazyNamespace root=new LazyNamespace("",new Hashtable(),new ArrayList());
+////			foreach(Assembly assembly in assemblies)
+////			{
+////				ArrayList nameSpaces=NameSpaces(assembly);
+////				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
+////				foreach(string nameSpace in nameSpaces)
+////				{
+////					if(nameSpace=="System")
+////					{
+////						int asdf=0;
+////					}
+////					LazyNamespace selected=(LazyNamespace)root.strategy; // TODO: this sucks quite a bit!!
+////					if(nameSpace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.installationPath,"library")))
+////					{
+////						continue;
+////					}
+////					if(nameSpace!="")
+////					{
+////						foreach(string subString in nameSpace.Split('.'))
+////						{
+////							if(!selected.namespaces.ContainsKey(subString))
+////							{
+////								string fullName=selected.fullName;
+////								if(fullName!="")
+////								{
+////									fullName+=".";
+////								}
+////								fullName+=subString;
+////								selected.namespaces[subString]=new IMap(fullName,new Hashtable(),new ArrayList());
+////								//selected.namespaces[subString]=new LazyNamespace(fullName,new Hashtable(),new ArrayList());
+////							}
+////							selected=(LazyNamespace)((IMap)selected.namespaces[subString]).strategy; // TODO: this sucks!
+////						}
+////					}
+////					selected.AddAssembly(cachedAssembly);
+////					//selected.cachedAssemblies.Add(cachedAssembly);
+////				}
+////			}
+////			((LazyNamespace)root.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
+////			return root; // TODO: is this correct?
+////		}
+//		public static IMap library=new StrategyMap(new GAC()); // TODO: is this the right way to do it??
+//		private IMap cache=new StrategyMap();
+//		public static string libraryPath="library"; 
+//	}
 	public class Convert
 	{
 		static Convert()
