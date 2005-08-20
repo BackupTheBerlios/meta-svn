@@ -3,7 +3,7 @@ Extent (Extent):
     Column (Int32):
       "7"
     Line (Int32):
-      "322"
+      "323"
   FileName (String):
     "basicTest.meta"
   Start (Position):
@@ -10807,16 +10807,59 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "19"
+            "20"
           Line (Int32):
             "252"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
-            "12"
+            "13"
           Line (Int32):
             "252"
+      literal (NormalMap):
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "numerator"
+          Value (NormalMap):
+            "5023"
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "denominator"
+          Value (NormalMap):
+            "100"
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "12"
+            Line (Int32):
+              "252"
+          FileName (String):
+            "basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "1"
+            Line (Int32):
+              "252"
+        literal (NormalMap):
+          "decimalTest"
+  Entry (Statement)
+    expression (Literal):
+      Extent (Extent):
+        End (Position):
+          Column (Int32):
+            "19"
+          Line (Int32):
+            "253"
+        FileName (String):
+          "basicTest.meta"
+        Start (Position):
+          Column (Int32):
+            "12"
+          Line (Int32):
+            "253"
       literal (NormalMap):
         "hello"
     keys (ArrayList):
@@ -10826,14 +10869,14 @@ statements (ArrayList):
             Column (Int32):
               "11"
             Line (Int32):
-              "252"
+              "253"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "252"
+              "253"
         literal (NormalMap):
           "stringTest"
   Entry (Statement)
@@ -10843,42 +10886,42 @@ statements (ArrayList):
           Column (Int32):
             "26"
           Line (Int32):
-            "253"
+            "254"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "14"
           Line (Int32):
-            "253"
+            "254"
       firstKey (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "24"
             Line (Int32):
-              "253"
+              "254"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "14"
             Line (Int32):
-              "253"
+              "254"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "24"
               Line (Int32):
-                "253"
+                "254"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "14"
               Line (Int32):
-                "253"
+                "254"
           literal (NormalMap):
             "stringTest"
       keys (ArrayList):
@@ -10888,14 +10931,14 @@ statements (ArrayList):
               Column (Int32):
                 "26"
               Line (Int32):
-                "253"
+                "254"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "25"
               Line (Int32):
-                "253"
+                "254"
           literal (NormalMap):
             "1"
     keys (ArrayList):
@@ -10905,14 +10948,14 @@ statements (ArrayList):
             Column (Int32):
               "11"
             Line (Int32):
-              "253"
+              "254"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "253"
+              "254"
         literal (NormalMap):
           "stringTest"
       Entry (Literal)
@@ -10921,14 +10964,14 @@ statements (ArrayList):
             Column (Int32):
               "13"
             Line (Int32):
-              "253"
+              "254"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "12"
             Line (Int32):
-              "253"
+              "254"
         literal (NormalMap):
           "6"
   Entry (Statement)
@@ -10938,14 +10981,14 @@ statements (ArrayList):
           Column (Int32):
             "12"
           Line (Int32):
-            "254"
+            "255"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "8"
           Line (Int32):
-            "254"
+            "255"
       literal (NormalMap):
         "hi"
     keys (ArrayList):
@@ -10955,14 +10998,14 @@ statements (ArrayList):
             Column (Int32):
               "7"
             Line (Int32):
-              "254"
+              "255"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "254"
+              "255"
         literal (NormalMap):
           "helloh"
   Entry (Statement)
@@ -10972,14 +11015,14 @@ statements (ArrayList):
           Column (Int32):
             "4"
           Line (Int32):
-            "260"
+            "261"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "2"
           Line (Int32):
-            "257"
+            "258"
       statements (ArrayList):
         Entry (Statement)
           expression (Literal):
@@ -10988,14 +11031,14 @@ statements (ArrayList):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "260"
+                  "261"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "12"
                 Line (Int32):
-                  "257"
+                  "258"
             literal (NormalMap):
               "
 hello word!
@@ -11008,14 +11051,14 @@ hello!
                   Column (Int32):
                     "11"
                   Line (Int32):
-                    "257"
+                    "258"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "257"
+                    "258"
               literal (NormalMap):
                 "aLongText"
     keys (ArrayList):
@@ -11025,14 +11068,14 @@ hello!
             Column (Int32):
               "2"
             Line (Int32):
-              "256"
+              "257"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "256"
+              "257"
         literal (NormalMap):
           "x"
   Entry (Statement)
@@ -11043,14 +11086,14 @@ hello!
             Column (Int32):
               "31"
             Line (Int32):
-              "263"
+              "264"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "262"
+              "263"
         statements (ArrayList):
           Entry (Statement)
             expression (Literal):
@@ -11059,14 +11102,14 @@ hello!
                   Column (Int32):
                     "6"
                   Line (Int32):
-                    "262"
+                    "263"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "262"
+                    "263"
               literal (NormalMap):
                 "20"
             keys (ArrayList):
@@ -11076,14 +11119,14 @@ hello!
                     Column (Int32):
                       "6"
                     Line (Int32):
-                      "262"
+                      "263"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "262"
+                      "263"
                 literal (NormalMap):
                   "1"
           Entry (Statement)
@@ -11093,42 +11136,42 @@ hello!
                   Column (Int32):
                     "31"
                   Line (Int32):
-                    "263"
+                    "264"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "263"
+                    "264"
               firstKey (Search):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
                       "8"
                     Line (Int32):
-                      "263"
+                      "264"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "263"
+                      "264"
                 search (Literal):
                   Extent (Extent):
                     End (Position):
                       Column (Int32):
                         "8"
                       Line (Int32):
-                        "263"
+                        "264"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "2"
                       Line (Int32):
-                        "263"
+                        "264"
                   literal (NormalMap):
                     "System"
               keys (ArrayList):
@@ -11138,14 +11181,14 @@ hello!
                       Column (Int32):
                         "16"
                       Line (Int32):
-                        "263"
+                        "264"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "9"
                       Line (Int32):
-                        "263"
+                        "264"
                   literal (NormalMap):
                     "Windows"
                 Entry (Literal)
@@ -11154,14 +11197,14 @@ hello!
                       Column (Int32):
                         "22"
                       Line (Int32):
-                        "263"
+                        "264"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "17"
                       Line (Int32):
-                        "263"
+                        "264"
                   literal (NormalMap):
                     "Forms"
                 Entry (Literal)
@@ -11170,14 +11213,14 @@ hello!
                       Column (Int32):
                         "27"
                       Line (Int32):
-                        "263"
+                        "264"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "23"
                       Line (Int32):
-                        "263"
+                        "264"
                   literal (NormalMap):
                     "Keys"
                 Entry (Literal)
@@ -11186,14 +11229,14 @@ hello!
                       Column (Int32):
                         "31"
                       Line (Int32):
-                        "263"
+                        "264"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "28"
                       Line (Int32):
-                        "263"
+                        "264"
                   literal (NormalMap):
                     "Tab"
             keys (ArrayList):
@@ -11203,14 +11246,14 @@ hello!
                     Column (Int32):
                       "31"
                     Line (Int32):
-                      "263"
+                      "264"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "263"
+                      "264"
                 literal (NormalMap):
                   "2"
       callable (Search):
@@ -11219,28 +11262,28 @@ hello!
             Column (Int32):
               "15"
             Line (Int32):
-              "261"
+              "262"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "6"
             Line (Int32):
-              "261"
+              "262"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "15"
               Line (Int32):
-                "261"
+                "262"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "6"
               Line (Int32):
-                "261"
+                "262"
           literal (NormalMap):
             "BitwiseOr"
       Extent (Extent):
@@ -11248,14 +11291,14 @@ hello!
           Column (Int32):
             "31"
           Line (Int32):
-            "263"
+            "264"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "6"
           Line (Int32):
-            "261"
+            "262"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -11263,14 +11306,14 @@ hello!
             Column (Int32):
               "5"
             Line (Int32):
-              "261"
+              "262"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "261"
+              "262"
         literal (NormalMap):
           "ored"
   Entry (Statement)
@@ -11281,14 +11324,14 @@ hello!
             Column (Int32):
               "41"
             Line (Int32):
-              "264"
+              "265"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "39"
             Line (Int32):
-              "264"
+              "265"
         literal (NormalMap):
           ""
       callable (Select):
@@ -11297,42 +11340,42 @@ hello!
             Column (Int32):
               "39"
             Line (Int32):
-              "264"
+              "265"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "11"
             Line (Int32):
-              "264"
+              "265"
         firstKey (Search):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "17"
               Line (Int32):
-                "264"
+                "265"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "11"
               Line (Int32):
-                "264"
+                "265"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "17"
                 Line (Int32):
-                  "264"
+                  "265"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "11"
                 Line (Int32):
-                  "264"
+                  "265"
             literal (NormalMap):
               "System"
         keys (ArrayList):
@@ -11342,14 +11385,14 @@ hello!
                 Column (Int32):
                   "29"
                 Line (Int32):
-                  "264"
+                  "265"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "18"
                 Line (Int32):
-                  "264"
+                  "265"
             literal (NormalMap):
               "Collections"
           Entry (Literal)
@@ -11358,14 +11401,14 @@ hello!
                 Column (Int32):
                   "39"
                 Line (Int32):
-                  "264"
+                  "265"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "30"
                 Line (Int32):
-                  "264"
+                  "265"
             literal (NormalMap):
               "ArrayList"
       Extent (Extent):
@@ -11373,14 +11416,14 @@ hello!
           Column (Int32):
             "41"
           Line (Int32):
-            "264"
+            "265"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "11"
           Line (Int32):
-            "264"
+            "265"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -11388,14 +11431,14 @@ hello!
             Column (Int32):
               "10"
             Line (Int32):
-              "264"
+              "265"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "264"
+              "265"
         literal (NormalMap):
           "arrayList"
   Entry (Statement)
@@ -11406,14 +11449,14 @@ hello!
             Column (Int32):
               "22"
             Line (Int32):
-              "265"
+              "266"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "15"
             Line (Int32):
-              "265"
+              "266"
         literal (NormalMap):
           "hello"
       callable (Select):
@@ -11422,42 +11465,42 @@ hello!
             Column (Int32):
               "14"
             Line (Int32):
-              "265"
+              "266"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "265"
+              "266"
         firstKey (Search):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "10"
               Line (Int32):
-                "265"
+                "266"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "1"
               Line (Int32):
-                "265"
+                "266"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "10"
                 Line (Int32):
-                  "265"
+                  "266"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "1"
                 Line (Int32):
-                  "265"
+                  "266"
             literal (NormalMap):
               "arrayList"
         keys (ArrayList):
@@ -11467,14 +11510,14 @@ hello!
                 Column (Int32):
                   "14"
                 Line (Int32):
-                  "265"
+                  "266"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "11"
                 Line (Int32):
-                  "265"
+                  "266"
             literal (NormalMap):
               "Add"
       Extent (Extent):
@@ -11482,14 +11525,14 @@ hello!
           Column (Int32):
             "22"
           Line (Int32):
-            "265"
+            "266"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "1"
           Line (Int32):
-            "265"
+            "266"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -11497,14 +11540,14 @@ hello!
             Column (Int32):
               "22"
             Line (Int32):
-              "265"
+              "266"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "265"
+              "266"
         literal (NormalMap):
           "5"
   Entry (Statement)
@@ -11514,42 +11557,42 @@ hello!
           Column (Int32):
             "28"
           Line (Int32):
-            "266"
+            "267"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "17"
           Line (Int32):
-            "266"
+            "267"
       firstKey (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "26"
             Line (Int32):
-              "266"
+              "267"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "17"
             Line (Int32):
-              "266"
+              "267"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "26"
               Line (Int32):
-                "266"
+                "267"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "17"
               Line (Int32):
-                "266"
+                "267"
           literal (NormalMap):
             "arrayList"
       keys (ArrayList):
@@ -11559,14 +11602,14 @@ hello!
               Column (Int32):
                 "28"
               Line (Int32):
-                "266"
+                "267"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "27"
               Line (Int32):
-                "266"
+                "267"
           literal (NormalMap):
             "0"
     keys (ArrayList):
@@ -11576,14 +11619,14 @@ hello!
             Column (Int32):
               "16"
             Line (Int32):
-              "266"
+              "267"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "266"
+              "267"
         literal (NormalMap):
           "arrayListResult"
   Entry (Statement)
@@ -11594,14 +11637,14 @@ hello!
             Column (Int32):
               "39"
             Line (Int32):
-              "267"
+              "268"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "37"
             Line (Int32):
-              "267"
+              "268"
         literal (NormalMap):
           ""
       callable (Select):
@@ -11610,42 +11653,42 @@ hello!
             Column (Int32):
               "37"
             Line (Int32):
-              "267"
+              "268"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "9"
             Line (Int32):
-              "267"
+              "268"
         firstKey (Search):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "15"
               Line (Int32):
-                "267"
+                "268"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "9"
               Line (Int32):
-                "267"
+                "268"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "15"
                 Line (Int32):
-                  "267"
+                  "268"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "9"
                 Line (Int32):
-                  "267"
+                  "268"
             literal (NormalMap):
               "System"
         keys (ArrayList):
@@ -11655,14 +11698,14 @@ hello!
                 Column (Int32):
                   "23"
                 Line (Int32):
-                  "267"
+                  "268"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "16"
                 Line (Int32):
-                  "267"
+                  "268"
             literal (NormalMap):
               "Windows"
           Entry (Literal)
@@ -11671,14 +11714,14 @@ hello!
                 Column (Int32):
                   "29"
                 Line (Int32):
-                  "267"
+                  "268"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "24"
                 Line (Int32):
-                  "267"
+                  "268"
             literal (NormalMap):
               "Forms"
           Entry (Literal)
@@ -11687,14 +11730,14 @@ hello!
                 Column (Int32):
                   "37"
                 Line (Int32):
-                  "267"
+                  "268"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "30"
                 Line (Int32):
-                  "267"
+                  "268"
             literal (NormalMap):
               "TextBox"
       Extent (Extent):
@@ -11702,14 +11745,14 @@ hello!
           Column (Int32):
             "39"
           Line (Int32):
-            "267"
+            "268"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "9"
           Line (Int32):
-            "267"
+            "268"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -11717,14 +11760,14 @@ hello!
             Column (Int32):
               "8"
             Line (Int32):
-              "267"
+              "268"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "267"
+              "268"
         literal (NormalMap):
           "textBox"
   Entry (Statement)
@@ -11734,14 +11777,14 @@ hello!
           Column (Int32):
             "3"
           Line (Int32):
-            "274"
+            "275"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "14"
           Line (Int32):
-            "268"
+            "269"
       literal (NormalMap):
         "
 Alle meine Entchen,
@@ -11757,14 +11800,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "8"
             Line (Int32):
-              "268"
+              "269"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "268"
+              "269"
         literal (NormalMap):
           "textBox"
       Entry (Literal)
@@ -11773,14 +11816,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "13"
             Line (Int32):
-              "268"
+              "269"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "9"
             Line (Int32):
-              "268"
+              "269"
         literal (NormalMap):
           "Text"
   Entry (Statement)
@@ -11790,42 +11833,42 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "20"
           Line (Int32):
-            "275"
+            "276"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "7"
           Line (Int32):
-            "275"
+            "276"
       firstKey (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "14"
             Line (Int32):
-              "275"
+              "276"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "7"
             Line (Int32):
-              "275"
+              "276"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "14"
               Line (Int32):
-                "275"
+                "276"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "7"
               Line (Int32):
-                "275"
+                "276"
           literal (NormalMap):
             "textBox"
       keys (ArrayList):
@@ -11835,14 +11878,14 @@ Schwaenzchen in die Hoeh.
               Column (Int32):
                 "20"
               Line (Int32):
-                "275"
+                "276"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "15"
               Line (Int32):
-                "275"
+                "276"
           literal (NormalMap):
             "Lines"
     keys (ArrayList):
@@ -11852,14 +11895,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "6"
             Line (Int32):
-              "275"
+              "276"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "275"
+              "276"
         literal (NormalMap):
           "lines"
   Entry (Statement)
@@ -11869,42 +11912,42 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "22"
           Line (Int32):
-            "276"
+            "277"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "15"
           Line (Int32):
-            "276"
+            "277"
       firstKey (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "20"
             Line (Int32):
-              "276"
+              "277"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "15"
             Line (Int32):
-              "276"
+              "277"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "20"
               Line (Int32):
-                "276"
+                "277"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "15"
               Line (Int32):
-                "276"
+                "277"
           literal (NormalMap):
             "lines"
       keys (ArrayList):
@@ -11914,14 +11957,14 @@ Schwaenzchen in die Hoeh.
               Column (Int32):
                 "22"
               Line (Int32):
-                "276"
+                "277"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "21"
               Line (Int32):
-                "276"
+                "277"
           literal (NormalMap):
             "1"
     keys (ArrayList):
@@ -11931,14 +11974,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "14"
             Line (Int32):
-              "276"
+              "277"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "276"
+              "277"
         literal (NormalMap):
           "alleMeineText"
   Entry (Statement)
@@ -11948,14 +11991,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "20"
           Line (Int32):
-            "277"
+            "278"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "9"
           Line (Int32):
-            "277"
+            "278"
       literal (NormalMap):
         "bwuhahaha"
     keys (ArrayList):
@@ -11965,14 +12008,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "6"
             Line (Int32):
-              "277"
+              "278"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "277"
+              "278"
         literal (NormalMap):
           "lines"
       Entry (Literal)
@@ -11981,14 +12024,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "8"
             Line (Int32):
-              "277"
+              "278"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "7"
             Line (Int32):
-              "277"
+              "278"
         literal (NormalMap):
           "4"
   Entry (Statement)
@@ -11998,14 +12041,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "19"
           Line (Int32):
-            "278"
+            "279"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "9"
           Line (Int32):
-            "278"
+            "279"
       literal (NormalMap):
         "			hello"
     keys (ArrayList):
@@ -12015,14 +12058,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "8"
             Line (Int32):
-              "278"
+              "279"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "278"
+              "279"
         literal (NormalMap):
           "tabText"
   Entry (Statement)
@@ -12032,14 +12075,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "23"
           Line (Int32):
-            "279"
+            "280"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "13"
           Line (Int32):
-            "279"
+            "280"
       literal (NormalMap):
         "\'\n\\\t"
     keys (ArrayList):
@@ -12049,14 +12092,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "12"
             Line (Int32):
-              "279"
+              "280"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "279"
+              "280"
         literal (NormalMap):
           "escapedText"
   Entry (Statement)
@@ -12066,14 +12109,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "16"
           Line (Int32):
-            "280"
+            "281"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "14"
           Line (Int32):
-            "280"
+            "281"
       literal (NormalMap):
         ""
     keys (ArrayList):
@@ -12083,14 +12126,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "13"
             Line (Int32):
-              "280"
+              "281"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "280"
+              "281"
         literal (NormalMap):
           "whileCounter"
   Entry (Statement)
@@ -12100,14 +12143,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "41"
           Line (Int32):
-            "294"
+            "295"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "283"
+            "284"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -12531,14 +12574,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "41"
                 Line (Int32):
-                  "294"
+                  "295"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "283"
+                  "284"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -12546,14 +12589,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "41"
                   Line (Int32):
-                    "294"
+                    "295"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "283"
+                    "284"
               literal (NormalMap):
                 "run"
     keys (ArrayList):
@@ -12563,14 +12606,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "5"
             Line (Int32):
-              "281"
+              "282"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "281"
+              "282"
         literal (NormalMap):
           "loop"
   Entry (Statement)
@@ -12581,14 +12624,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "22"
             Line (Int32):
-              "295"
+              "296"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "19"
             Line (Int32):
-              "295"
+              "296"
         literal (NormalMap):
           "3"
       callable (Search):
@@ -12597,28 +12640,28 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "18"
             Line (Int32):
-              "295"
+              "296"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "14"
             Line (Int32):
-              "295"
+              "296"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "18"
               Line (Int32):
-                "295"
+                "296"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "14"
               Line (Int32):
-                "295"
+                "296"
           literal (NormalMap):
             "loop"
       Extent (Extent):
@@ -12626,14 +12669,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "22"
           Line (Int32):
-            "295"
+            "296"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "14"
           Line (Int32):
-            "295"
+            "296"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -12641,14 +12684,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "13"
             Line (Int32):
-              "295"
+              "296"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "295"
+              "296"
         literal (NormalMap):
           "whileCounter"
   Entry (Statement)
@@ -12658,14 +12701,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "13"
           Line (Int32):
-            "301"
+            "302"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "301"
+            "302"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -12709,14 +12752,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "13"
                 Line (Int32):
-                  "301"
+                  "302"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "301"
+                  "302"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -12724,14 +12767,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "13"
                   Line (Int32):
-                    "301"
+                    "302"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "301"
+                    "302"
               literal (NormalMap):
                 "run"
     keys (ArrayList):
@@ -12741,14 +12784,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "12"
             Line (Int32):
-              "298"
+              "299"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "298"
+              "299"
         literal (NormalMap):
           "returnInMap"
   Entry (Statement)
@@ -12759,14 +12802,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "35"
             Line (Int32):
-              "302"
+              "303"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "32"
             Line (Int32):
-              "302"
+              "303"
         literal (NormalMap):
           "1"
       callable (Search):
@@ -12775,28 +12818,28 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "30"
             Line (Int32):
-              "302"
+              "303"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "19"
             Line (Int32):
-              "302"
+              "303"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "30"
               Line (Int32):
-                "302"
+                "303"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "19"
               Line (Int32):
-                "302"
+                "303"
           literal (NormalMap):
             "returnInMap"
       Extent (Extent):
@@ -12804,14 +12847,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "35"
           Line (Int32):
-            "302"
+            "303"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "19"
           Line (Int32):
-            "302"
+            "303"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -12819,14 +12862,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "18"
             Line (Int32):
-              "302"
+              "303"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "302"
+              "303"
         literal (NormalMap):
           "literalAsArgument"
   Entry (Statement)
@@ -12836,14 +12879,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "20"
           Line (Int32):
-            "305"
+            "306"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "4"
           Line (Int32):
-            "305"
+            "306"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -12887,14 +12930,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "20"
                 Line (Int32):
-                  "305"
+                  "306"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "305"
+                  "306"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -12902,14 +12945,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "20"
                   Line (Int32):
-                    "305"
+                    "306"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "4"
                   Line (Int32):
-                    "305"
+                    "306"
               literal (NormalMap):
                 "run"
     keys (ArrayList):
@@ -12919,14 +12962,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "15"
             Line (Int32):
-              "303"
+              "304"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "303"
+              "304"
         literal (NormalMap):
           "returnFunction"
   Entry (Statement)
@@ -12936,14 +12979,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "6"
           Line (Int32):
-            "307"
+            "308"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "307"
+            "308"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -12962,14 +13005,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "6"
                 Line (Int32):
-                  "307"
+                  "308"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "307"
+                  "308"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -12977,14 +13020,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "6"
                   Line (Int32):
-                    "307"
+                    "308"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "307"
+                    "308"
               literal (NormalMap):
                 "run"
     keys (ArrayList):
@@ -12994,14 +13037,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "10"
             Line (Int32):
-              "306"
+              "307"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "306"
+              "307"
         literal (NormalMap):
           "returnArg"
   Entry (Statement)
@@ -13011,14 +13054,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "16"
           Line (Int32):
-            "310"
+            "311"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "310"
+            "311"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -13058,14 +13101,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "16"
                 Line (Int32):
-                  "310"
+                  "311"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "310"
+                  "311"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -13073,14 +13116,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "16"
                   Line (Int32):
-                    "310"
+                    "311"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "310"
+                    "311"
               literal (NormalMap):
                 "run"
     keys (ArrayList):
@@ -13090,14 +13133,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "6"
             Line (Int32):
-              "308"
+              "309"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "308"
+              "309"
         literal (NormalMap):
           "myArg"
   Entry (Statement)
@@ -13109,14 +13152,14 @@ Schwaenzchen in die Hoeh.
               Column (Int32):
                 "33"
               Line (Int32):
-                "311"
+                "312"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "31"
               Line (Int32):
-                "311"
+                "312"
           literal (NormalMap):
             ""
         callable (Search):
@@ -13125,28 +13168,28 @@ Schwaenzchen in die Hoeh.
               Column (Int32):
                 "31"
               Line (Int32):
-                "311"
+                "312"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "26"
               Line (Int32):
-                "311"
+                "312"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "31"
                 Line (Int32):
-                  "311"
+                  "312"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "26"
                 Line (Int32):
-                  "311"
+                  "312"
             literal (NormalMap):
               "myArg"
         Extent (Extent):
@@ -13154,42 +13197,42 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "33"
             Line (Int32):
-              "311"
+              "312"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "26"
             Line (Int32):
-              "311"
+              "312"
       callable (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "25"
             Line (Int32):
-              "311"
+              "312"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "16"
             Line (Int32):
-              "311"
+              "312"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "25"
               Line (Int32):
-                "311"
+                "312"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "16"
               Line (Int32):
-                "311"
+                "312"
           literal (NormalMap):
             "returnArg"
       Extent (Extent):
@@ -13197,14 +13240,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "33"
           Line (Int32):
-            "311"
+            "312"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "16"
           Line (Int32):
-            "311"
+            "312"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -13212,14 +13255,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "15"
             Line (Int32):
-              "311"
+              "312"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "311"
+              "312"
         literal (NormalMap):
           "funcReturnTest"
   Entry (Statement)
@@ -13229,14 +13272,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "10"
           Line (Int32):
-            "314"
+            "315"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "2"
           Line (Int32):
-            "313"
+            "314"
       statements (ArrayList):
         Entry (Statement)
           expression (Literal):
@@ -13245,14 +13288,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "38"
                 Line (Int32):
-                  "313"
+                  "314"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "6"
                 Line (Int32):
-                  "313"
+                  "314"
             literal (NormalMap):
               "This function returns 'hello ."
           keys (ArrayList):
@@ -13262,14 +13305,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "5"
                   Line (Int32):
-                    "313"
+                    "314"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "313"
+                    "314"
               literal (NormalMap):
                 "doc"
         Entry (Statement)
@@ -13285,14 +13328,14 @@ Schwaenzchen in die Hoeh.
                 Column (Int32):
                   "10"
                 Line (Int32):
-                  "314"
+                  "315"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "314"
+                  "315"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -13300,14 +13343,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "10"
                   Line (Int32):
-                    "314"
+                    "315"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "314"
+                    "315"
               literal (NormalMap):
                 "run"
     keys (ArrayList):
@@ -13317,14 +13360,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "19"
             Line (Int32):
-              "312"
+              "313"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "312"
+              "313"
         literal (NormalMap):
           "documentedFunction"
   Entry (Statement)
@@ -13335,14 +13378,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "39"
             Line (Int32):
-              "315"
+              "316"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "37"
             Line (Int32):
-              "315"
+              "316"
         literal (NormalMap):
           ""
       callable (Search):
@@ -13351,28 +13394,28 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "37"
             Line (Int32):
-              "315"
+              "316"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "19"
             Line (Int32):
-              "315"
+              "316"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "37"
               Line (Int32):
-                "315"
+                "316"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "19"
               Line (Int32):
-                "315"
+                "316"
           literal (NormalMap):
             "documentedFunction"
       Extent (Extent):
@@ -13380,14 +13423,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "39"
           Line (Int32):
-            "315"
+            "316"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "19"
           Line (Int32):
-            "315"
+            "316"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -13395,14 +13438,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "18"
             Line (Int32):
-              "315"
+              "316"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "315"
+              "316"
         literal (NormalMap):
           "docFunctionResult"
   Entry (Statement)
@@ -13412,14 +13455,14 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "10"
           Line (Int32):
-            "319"
+            "320"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "319"
+            "320"
       literal (NormalMap):
         "hello"
     keys (ArrayList):
@@ -13430,14 +13473,14 @@ Schwaenzchen in die Hoeh.
               Column (Int32):
                 "7"
               Line (Int32):
-                "318"
+                "319"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "2"
               Line (Int32):
-                "317"
+                "318"
           statements (ArrayList):
             Entry (Statement)
               expression (Literal):
@@ -13446,14 +13489,14 @@ Schwaenzchen in die Hoeh.
                     Column (Int32):
                       "7"
                     Line (Int32):
-                      "317"
+                      "318"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "4"
                     Line (Int32):
-                      "317"
+                      "318"
                 literal (NormalMap):
                   "1"
               keys (ArrayList):
@@ -13463,14 +13506,14 @@ Schwaenzchen in die Hoeh.
                       Column (Int32):
                         "3"
                       Line (Int32):
-                        "317"
+                        "318"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "2"
                       Line (Int32):
-                        "317"
+                        "318"
                   literal (NormalMap):
                     "x"
             Entry (Statement)
@@ -13480,14 +13523,14 @@ Schwaenzchen in die Hoeh.
                     Column (Int32):
                       "7"
                     Line (Int32):
-                      "318"
+                      "319"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "4"
                     Line (Int32):
-                      "318"
+                      "319"
                 literal (NormalMap):
                   "2"
               keys (ArrayList):
@@ -13497,14 +13540,14 @@ Schwaenzchen in die Hoeh.
                       Column (Int32):
                         "3"
                       Line (Int32):
-                        "318"
+                        "319"
                     FileName (String):
                       "basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "2"
                       Line (Int32):
-                        "318"
+                        "319"
                   literal (NormalMap):
                     "y"
         callable (Search):
@@ -13513,28 +13556,28 @@ Schwaenzchen in die Hoeh.
               Column (Int32):
                 "11"
               Line (Int32):
-                "316"
+                "317"
             FileName (String):
               "basicTest.meta"
             Start (Position):
               Column (Int32):
                 "2"
               Line (Int32):
-                "316"
+                "317"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "11"
                 Line (Int32):
-                  "316"
+                  "317"
               FileName (String):
                 "basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "2"
                 Line (Int32):
-                  "316"
+                  "317"
             literal (NormalMap):
               "returnArg"
         Extent (Extent):
@@ -13542,14 +13585,14 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "7"
             Line (Int32):
-              "318"
+              "319"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "316"
+              "317"
   Entry (Statement)
     expression (Search):
       Extent (Extent):
@@ -13557,28 +13600,28 @@ Schwaenzchen in die Hoeh.
           Column (Int32):
             "7"
           Line (Int32):
-            "322"
+            "323"
         FileName (String):
           "basicTest.meta"
         Start (Position):
           Column (Int32):
             "2"
           Line (Int32):
-            "321"
+            "322"
       search (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "7"
             Line (Int32):
-              "322"
+              "323"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "321"
+              "322"
         statements (ArrayList):
           Entry (Statement)
             expression (Literal):
@@ -13587,14 +13630,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "7"
                   Line (Int32):
-                    "321"
+                    "322"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "4"
                   Line (Int32):
-                    "321"
+                    "322"
               literal (NormalMap):
                 "1"
             keys (ArrayList):
@@ -13604,14 +13647,14 @@ Schwaenzchen in die Hoeh.
                     Column (Int32):
                       "3"
                     Line (Int32):
-                      "321"
+                      "322"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "321"
+                      "322"
                 literal (NormalMap):
                   "x"
           Entry (Statement)
@@ -13621,14 +13664,14 @@ Schwaenzchen in die Hoeh.
                   Column (Int32):
                     "7"
                   Line (Int32):
-                    "322"
+                    "323"
                 FileName (String):
                   "basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "4"
                   Line (Int32):
-                    "322"
+                    "323"
               literal (NormalMap):
                 "2"
             keys (ArrayList):
@@ -13638,14 +13681,14 @@ Schwaenzchen in die Hoeh.
                     Column (Int32):
                       "3"
                     Line (Int32):
-                      "322"
+                      "323"
                   FileName (String):
                     "basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "322"
+                      "323"
                 literal (NormalMap):
                   "y"
     keys (ArrayList):
@@ -13655,13 +13698,13 @@ Schwaenzchen in die Hoeh.
             Column (Int32):
               "27"
             Line (Int32):
-              "320"
+              "321"
           FileName (String):
             "basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "320"
+              "321"
         literal (NormalMap):
           "functionAndMapInLookupTest"

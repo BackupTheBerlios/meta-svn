@@ -278,12 +278,12 @@ namespace Meta
 				int pointPos=text.IndexOf(".");
 				if(pointPos!=-1)
 				{
-					if(text.IndexOf(".",pointPos)==-1) // TODO: probably wrong position
+					if(text.IndexOf(".",pointPos+1)==-1)
 					{
 						Integer numerator=IntegerRecognition.ParseInteger(text.Replace(".",""));
 						if(numerator!=null)
 						{
-							Integer denominator=10*(text.Length-pointPos);
+							Integer denominator=System.Convert.ToInt32(Math.Pow(10,text.Length-pointPos-1));
 							result=new NormalMap();
 							result[NumberKeys.Numerator]=new NormalMap(numerator);
 							result[NumberKeys.Denominator]=new NormalMap(denominator);

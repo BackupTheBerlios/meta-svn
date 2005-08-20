@@ -1897,6 +1897,20 @@ Entry (DictionaryEntry)
     "[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]"
 Entry (DictionaryEntry)
   Key (NormalMap):
+    "decimalTest"
+  Value (NormalMap):
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "numerator"
+      Value (NormalMap):
+        "5023"
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "denominator"
+      Value (NormalMap):
+        "100"
+Entry (DictionaryEntry)
+  Key (NormalMap):
     "stringTest"
   Value (NormalMap):
     "helloh"
