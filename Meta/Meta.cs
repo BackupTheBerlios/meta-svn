@@ -2568,7 +2568,7 @@ namespace Meta
 		public Type target;
 		public abstract object Convert(object obj,out bool converted);
 	}
-	abstract class ToMetaConversions
+	abstract class ToMetaConversions // TODO: refactor??, no I think these work just fine
 	{
 		public class ConvertStringToMap: ToMeta
 		{
@@ -2693,322 +2693,322 @@ namespace Meta
 			}
 		}
 	}
-		abstract class ToDotNetConversions
+	abstract class ToDotNetConversions // TODO: make this a single function??? somehow combine, old method doesnt work, put conversion methods right here??, consolidate them
+	{
+		public class IntegerToByte: ToDotNet
 		{
-			public class IntegerToByte: ToDotNet
+			public IntegerToByte()
 			{
-				public IntegerToByte()
-				{
-					this.source=typeof(NormalMap); // TODO: this isnt quite accurate, should be able to convert every IMap
-					//this.source=typeof(Integer);
-					this.target=typeof(Byte);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
+				this.source=typeof(NormalMap); // TODO: this isnt quite accurate, should be able to convert every IMap
+				//this.source=typeof(Integer);
+				this.target=typeof(Byte);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToByte(((IMap)toConvert).Number.LongValue());
+			}
+		}
+		public class IntegerToBool: ToDotNet
+		{
+			public IntegerToBool()
+			{
+				this.source=typeof(NormalMap);
+				this.target=typeof(bool);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				object result;
+				int i=((IMap)toConvert).Number.Int;
+				if(i==0)
 				{
 					isConverted=true;
-					return System.Convert.ToByte(((IMap)toConvert).Number.LongValue());
+					result=false;
 				}
-			}
-			public class IntegerToBool: ToDotNet
-			{
-				public IntegerToBool()
-				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(bool);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					object result;
-					int i=((IMap)toConvert).Number.Int;
-					if(i==0)
-					{
-						isConverted=true;
-						result=false;
-					}
-					else if(i==1)
-					{
-						isConverted=true;
-						result=true;
-					}
-					else
-					{
-						isConverted=false;
-						result=null;
-					}
-					return result;
-				}
-			}
-			public class IntegerToSByte: ToDotNet
-			{
-				public IntegerToSByte()
-				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(SByte);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
+				else if(i==1)
 				{
 					isConverted=true;
-					return System.Convert.ToSByte(((IMap)toConvert).Number.LongValue());
+					result=true;
 				}
-			}
-			public class IntegerToChar: ToDotNet
-			{
-				public IntegerToChar()
+				else
 				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(Char);
+					isConverted=false;
+					result=null;
 				}
-				public override object Convert(object toConvert, out bool isConverted)
+				return result;
+			}
+		}
+		public class IntegerToSByte: ToDotNet
+		{
+			public IntegerToSByte()
+			{
+				this.source=typeof(NormalMap);
+				this.target=typeof(SByte);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToSByte(((IMap)toConvert).Number.LongValue());
+			}
+		}
+		public class IntegerToChar: ToDotNet
+		{
+			public IntegerToChar()
+			{
+				this.source=typeof(NormalMap);
+				this.target=typeof(Char);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToChar(((IMap)toConvert).Number.LongValue());
+			}
+		}
+		public class IntegerToInt32: ToDotNet
+		{
+			public IntegerToInt32()
+			{
+				this.source=typeof(NormalMap);
+				this.target=typeof(Int32);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				if(((IMap)toConvert).Number!=null)
 				{
 					isConverted=true;
-					return System.Convert.ToChar(((IMap)toConvert).Number.LongValue());
-				}
-			}
-			public class IntegerToInt32: ToDotNet
-			{
-				public IntegerToInt32()
-				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(Int32);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					if(((IMap)toConvert).Number!=null)
-					{
-						isConverted=true;
 //						isConverted=true;
-						return System.Convert.ToInt32(((IMap)toConvert).Number.LongValue());
-					}
-					else
-					{
-						isConverted=false;
-						return null;
-					}
+					return System.Convert.ToInt32(((IMap)toConvert).Number.LongValue());
+				}
+				else
+				{
+					isConverted=false;
+					return null;
 				}
 			}
-			public class IntegerToUInt32: ToDotNet
+		}
+		public class IntegerToUInt32: ToDotNet
+		{
+			public IntegerToUInt32()
 			{
-				public IntegerToUInt32()
-				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(UInt32);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					if(((IMap)toConvert).Number!=null)
-					{
-						isConverted=true;
-						return System.Convert.ToUInt32(((IMap)toConvert).Number.LongValue());
-					}
-					else
-					{
-						isConverted=false;
-						return null;
-					}
-				}
+				this.source=typeof(NormalMap);
+				this.target=typeof(UInt32);
 			}
-			public class IntegerToInt64: ToDotNet
+			public override object Convert(object toConvert, out bool isConverted)
 			{
-				public IntegerToInt64()
-				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(Int64);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
+				if(((IMap)toConvert).Number!=null)
 				{
 					isConverted=true;
-					return System.Convert.ToInt64(((IMap)toConvert).Number.LongValue());
+					return System.Convert.ToUInt32(((IMap)toConvert).Number.LongValue());
+				}
+				else
+				{
+					isConverted=false;
+					return null;
 				}
 			}
-			public class IntegerToUInt64: ToDotNet
+		}
+		public class IntegerToInt64: ToDotNet
+		{
+			public IntegerToInt64()
 			{
-				public IntegerToUInt64()
-				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(UInt64);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return System.Convert.ToUInt64(((IMap)toConvert).Number.LongValue());
-				}
+				this.source=typeof(NormalMap);
+				this.target=typeof(Int64);
 			}
-			public class IntegerToInt16: ToDotNet
+			public override object Convert(object toConvert, out bool isConverted)
 			{
-				public IntegerToInt16()
-				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(Int16);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return System.Convert.ToInt16(((IMap)toConvert).Number.LongValue());
-				}
+				isConverted=true;
+				return System.Convert.ToInt64(((IMap)toConvert).Number.LongValue());
 			}
-			public class IntegerToUInt16: ToDotNet
+		}
+		public class IntegerToUInt64: ToDotNet
+		{
+			public IntegerToUInt64()
 			{
-				public IntegerToUInt16()
-				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(UInt16);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return System.Convert.ToUInt16(((IMap)toConvert).Number.LongValue());
-				}
+				this.source=typeof(NormalMap);
+				this.target=typeof(UInt64);
 			}
-			public class IntegerToDecimal: ToDotNet
+			public override object Convert(object toConvert, out bool isConverted)
 			{
-				public IntegerToDecimal()
-				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(decimal);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return (decimal)(((IMap)toConvert).Number.LongValue());
-				}
+				isConverted=true;
+				return System.Convert.ToUInt64(((IMap)toConvert).Number.LongValue());
 			}
-			public class IntegerToDouble: ToDotNet
+		}
+		public class IntegerToInt16: ToDotNet
+		{
+			public IntegerToInt16()
 			{
-				public IntegerToDouble()
-				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(double);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return (double)(((IMap)toConvert).Number.LongValue());
-				}
+				this.source=typeof(NormalMap);
+				this.target=typeof(Int16);
 			}
-			public class IntegerToFloat: ToDotNet
+			public override object Convert(object toConvert, out bool isConverted)
 			{
-				public IntegerToFloat()
-				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(float);
-				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					isConverted=true;
-					return (float)(((IMap)toConvert).Number.LongValue());
-				}
+				isConverted=true;
+				return System.Convert.ToInt16(((IMap)toConvert).Number.LongValue());
 			}
-			public class MapToString: ToDotNet
+		}
+		public class IntegerToUInt16: ToDotNet
+		{
+			public IntegerToUInt16()
 			{
-				public MapToString()
-				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(string);
-				}
+				this.source=typeof(NormalMap);
+				this.target=typeof(UInt16);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return System.Convert.ToUInt16(((IMap)toConvert).Number.LongValue());
+			}
+		}
+		public class IntegerToDecimal: ToDotNet
+		{
+			public IntegerToDecimal()
+			{
+				this.source=typeof(NormalMap);
+				this.target=typeof(decimal);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return (decimal)(((IMap)toConvert).Number.LongValue());
+			}
+		}
+		public class IntegerToDouble: ToDotNet
+		{
+			public IntegerToDouble()
+			{
+				this.source=typeof(NormalMap);
+				this.target=typeof(double);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return (double)(((IMap)toConvert).Number.LongValue());
+			}
+		}
+		public class IntegerToFloat: ToDotNet
+		{
+			public IntegerToFloat()
+			{
+				this.source=typeof(NormalMap);
+				this.target=typeof(float);
+			}
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				isConverted=true;
+				return (float)(((IMap)toConvert).Number.LongValue());
+			}
+		}
+		public class MapToString: ToDotNet
+		{
+			public MapToString()
+			{
+				this.source=typeof(NormalMap);
+				this.target=typeof(string);
+			}
 //
 //				public MapToString()
 //				{
 //					this.source=typeof(IMap);
 //					this.target=typeof(string);
 //				}
-				public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				if(((IMap)toConvert).IsString)
 				{
-					if(((IMap)toConvert).IsString)
-					{
-						isConverted=true;
-						return ((IMap)toConvert).String;
-					}
-					else
-					{
-						isConverted=false;
-						return null;
-					}
+					isConverted=true;
+					return ((IMap)toConvert).String;
+				}
+				else
+				{
+					isConverted=false;
+					return null;
 				}
 			}
-			public class FractionToDecimal: ToDotNet
+		}
+		public class FractionToDecimal: ToDotNet
+		{
+			public FractionToDecimal()
 			{
-				public FractionToDecimal()
-				{
-					this.source=typeof(NormalMap);  // TODO: think about whether this should really be NormalMap?? better would be IsSubClass test, or something like that
-					this.target=typeof(decimal); 
-				}
+				this.source=typeof(NormalMap);  // TODO: think about whether this should really be NormalMap?? better would be IsSubClass test, or something like that
+				this.target=typeof(decimal); 
+			}
 //				public FractionToDecimal()
 //				{
 //					this.source=typeof(IMap); 
 //					this.target=typeof(decimal); 
 //				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					IMap map=(IMap)toConvert;
-					if(Helper.IsNumber(map[new NormalMap("numerator")]) && Helper.IsNumber(map[new NormalMap("denominator")]))
-					{
-						isConverted=true;
-						return ((decimal)((IMap)map[new NormalMap("numerator")]).Number.LongValue())/((decimal)((IMap)map[new NormalMap("denominator")]).Number.LongValue());
-					}
-					else
-					{
-						isConverted=false;
-						return null;
-					}
-				}
-
-			}
-			public class FractionToDouble: ToDotNet
+			public override object Convert(object toConvert, out bool isConverted)
 			{
-				public FractionToDouble()
+				IMap map=(IMap)toConvert;
+				if(Helper.IsNumber(map[new NormalMap("numerator")]) && Helper.IsNumber(map[new NormalMap("denominator")]))
 				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(double);
+					isConverted=true;
+					return ((decimal)((IMap)map[new NormalMap("numerator")]).Number.LongValue())/((decimal)((IMap)map[new NormalMap("denominator")]).Number.LongValue());
 				}
+				else
+				{
+					isConverted=false;
+					return null;
+				}
+			}
+
+		}
+		public class FractionToDouble: ToDotNet
+		{
+			public FractionToDouble()
+			{
+				this.source=typeof(NormalMap);
+				this.target=typeof(double);
+			}
 //				public FractionToDouble()
 //				{
 //					this.source=typeof(IMap);
 //					this.target=typeof(double);
 //				}
-				public override object Convert(object toConvert, out bool isConverted)
-				{
-					IMap map=(IMap)toConvert;
-					if(Helper.IsNumber(map[new NormalMap("numerator")]) && Helper.IsNumber(map[new NormalMap("denominator")]))
-					{
-						isConverted=true;
-						return ((double)((IMap)map[new NormalMap("numerator")]).Number.LongValue())/((double)((IMap)map[new NormalMap("denominator")]).Number.LongValue());
-					}
-					else
-					{
-						isConverted=false;
-						return null;
-					}
-				}
-
-			}
-			public class FractionToFloat: ToDotNet
+			public override object Convert(object toConvert, out bool isConverted)
 			{
-				public FractionToFloat()
+				IMap map=(IMap)toConvert;
+				if(Helper.IsNumber(map[new NormalMap("numerator")]) && Helper.IsNumber(map[new NormalMap("denominator")]))
 				{
-					this.source=typeof(NormalMap);
-					this.target=typeof(float);
+					isConverted=true;
+					return ((double)((IMap)map[new NormalMap("numerator")]).Number.LongValue())/((double)((IMap)map[new NormalMap("denominator")]).Number.LongValue());
 				}
+				else
+				{
+					isConverted=false;
+					return null;
+				}
+			}
+
+		}
+		public class FractionToFloat: ToDotNet
+		{
+			public FractionToFloat()
+			{
+				this.source=typeof(NormalMap);
+				this.target=typeof(float);
+			}
 //				public FractionToFloat()
 //				{
 //					this.source=typeof(IMap);
 //					this.target=typeof(float);
 //				}
-				public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(object toConvert, out bool isConverted)
+			{
+				IMap map=(IMap)toConvert;
+				if(Helper.IsNumber(map[new NormalMap("numerator")]) && Helper.IsNumber(map[new NormalMap("denominator")]))
 				{
-					IMap map=(IMap)toConvert;
-					if(Helper.IsNumber(map[new NormalMap("numerator")]) && Helper.IsNumber(map[new NormalMap("denominator")]))
-					{
-						isConverted=true;
-						return ((float)((IMap)map[new NormalMap("numerator")]).Number.LongValue())/((float)((IMap)map[new NormalMap("denominator")]).Number.LongValue());
-					}
-					else
-					{
-						isConverted=false;
-						return null;
-					}
+					isConverted=true;
+					return ((float)((IMap)map[new NormalMap("numerator")]).Number.LongValue())/((float)((IMap)map[new NormalMap("denominator")]).Number.LongValue());
+				}
+				else
+				{
+					isConverted=false;
+					return null;
 				}
 			}
 		}
+	}
 	public class MapAdapterEnumerator: IEnumerator
 	{
 		private MapAdapter map; // TODO: rename
