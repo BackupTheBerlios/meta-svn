@@ -197,7 +197,7 @@ namespace Test
 		// should execute twice, once without caching, once with
 		public class ExecuteNoCaching:TestCase // TODO: combine with above, only result must be the same, a third file is needed, only one check file!!! ???
 		{
-			public override object Run() 
+			public override object Run()
 			{
 				string cachePath=@"C:\_ProjectSupportMaterial\Meta\cachedAssemblyInfo.meta";
 				if(File.Exists(cachePath))

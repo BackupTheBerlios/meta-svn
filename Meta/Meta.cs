@@ -612,10 +612,10 @@ namespace Meta
 			IMap val=expression.Evaluate((IMap)parent);
 			if(lastKey.Equals(SpecialKeys.This))
 			{
-				if(val is IMap)
-				{
+//				if(val is IMap)
+//				{
 					((IMap)val).Parent=((IMap)parent).Parent;
-				}
+//				}
 				parent=val;
 			}
 			else
@@ -989,7 +989,7 @@ namespace Meta
 				string text="";
 				foreach(IMap key in this.Keys)
 				{
-					if(key is IMap && ((IMap)key).Number!=null && this[key] is IMap && ((IMap)this[key]).Number!=null) // TODO: refactor, when IMap only returns IMap, and keys can only be IMaps
+					if(key.Number!=null && this[key].Number!=null)
 //					if(key is Integer && this[key] is Integer)
 					{
 						try
@@ -1159,10 +1159,10 @@ namespace Meta
 			((Expression)expression).Extent=this.Extent;
 			return expression;
 		}
-		public virtual bool ContainsKey(IMap key) 
+		public virtual bool ContainsKey(IMap key)  // TODO: make single-exit
 		{
-			if(key is IMap)
-			{
+//			if(key is IMap)
+//			{
 				if(key.Equals(SpecialKeys.Arg))
 				{
 					return this.Argument!=null;
@@ -1175,7 +1175,7 @@ namespace Meta
 				{
 					return true;
 				}
-			}
+//			}
 			return Keys.Contains(key);
 		}
 //		{
@@ -1426,15 +1426,15 @@ namespace Meta
 					else
 					{
 						IMap val;
-						if(value is IMap)
-						{
+//						if(value is IMap)
+//						{
 							val=((IMap)value).Clone();
 							((IMap)val).Parent=this;
-						}
-						else
-						{
-							val=value;
-						}
+//						}
+//						else
+//						{
+//							val=value;
+//						}
 						strategy[key]=val;
 					}
 				}
@@ -1492,10 +1492,10 @@ namespace Meta
 			((Expression)expression).Extent=this.Extent;
 			return expression;
 		}
-		public override bool ContainsKey(IMap key) 
+		public override bool ContainsKey(IMap key)  // TODO: make single-exit
 		{
-			if(key is IMap) // TODO: duplicated with IMap
-			{
+//			if(key is IMap) // TODO: duplicated with IMap
+//			{
 				if(key.Equals(SpecialKeys.Arg))
 				{
 					return this.Argument!=null;
@@ -1508,7 +1508,7 @@ namespace Meta
 				{
 					return true;
 				}
-			}
+//			}
 			return strategy.ContainsKey(key);
 		}
 		public override bool Equals(object toCompare)
@@ -3366,7 +3366,7 @@ namespace Meta
 				return result;
 			}
 		}
-		public IMap Call(IMap argument)
+		public override IMap Call(IMap argument)
 		{
 			object result=null;
 
@@ -4254,8 +4254,8 @@ namespace Meta
 				}
 				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative))) && this.ContainsKey(NumberKeys.EmptyMap))
 				{
-					if(this[NumberKeys.EmptyMap] is IMap)
-					{
+//					if(this[NumberKeys.EmptyMap] is IMap)
+//					{
 						if(((IMap)this[NumberKeys.EmptyMap]).Number!=null)
 						{
 							number=((IMap)this[NumberKeys.EmptyMap]).Number+1;
@@ -4268,11 +4268,11 @@ namespace Meta
 						{
 							number=null;
 						}
-					}
-					else
-					{
-						number=null;
-					}
+//					}
+//					else
+//					{
+//						number=null;
+//					}
 				}
 				else
 				{
@@ -4417,8 +4417,8 @@ namespace Meta
 		}
 		public override bool ContainsKey(IMap key)
 		{
-			if(key is IMap)
-			{
+//			if(key is IMap)
+//			{
 				if(((IMap)key).IsString)
 				{
 					string text=((IMap)key).String;
@@ -4428,7 +4428,7 @@ namespace Meta
 						return true;
 					}
 				}
-			}
+//			}
 			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
 			IMap argument=new NormalMap(); // TODO: refactor
 			argument[new NormalMap(new Integer(1))]=key;
@@ -4461,7 +4461,7 @@ namespace Meta
 			get
 			{
 				IMap result;
-				if(key is IMap && ((IMap)key).IsString && type.GetMember(((IMap)key).String,bindingFlags).Length>0)
+				if(key.IsString && type.GetMember(key.String,bindingFlags).Length>0)
 				{
 					string text=((IMap)key).String; // TODO: There are a few too many empty parent maps around here
 					MemberInfo[] members=type.GetMember(text,bindingFlags);
@@ -4530,7 +4530,7 @@ namespace Meta
 			// TODO: refactor
 			set
 			{
-				if(key is IMap && ((IMap)key).IsString && type.GetMember(((IMap)key).String,bindingFlags).Length!=0)
+				if(key.IsString && type.GetMember(key.String,bindingFlags).Length!=0)
 				{
 					string text=((IMap)key).String;
 					if(text.Equals("Text"))
@@ -4554,12 +4554,12 @@ namespace Meta
 						}
 						else
 						{
-							if(value is IMap)
-							{
+//							if(value is IMap)
+//							{
 								// TODO: do not reuse isConverted
 								// TODO: really do this? does not make much sense
 								val=DotNetMethod.AssignCollection((IMap)value,field.GetValue(obj),out isConverted);
-							}
+//							}
 						}
 						if(!isConverted)
 						{
@@ -4577,10 +4577,10 @@ namespace Meta
 						}
 						else
 						{
-							if(value is IMap)
-							{
+//							if(value is IMap)
+//							{
 								DotNetMethod.AssignCollection((IMap)value,property.GetValue(obj,new object[]{}),out isConverted);
-							}
+//							}
 							if(!isConverted)
 							{
 								throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.SaveToFile(key,"",false)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
@@ -5128,14 +5128,14 @@ namespace Meta
 			{
 				if(key.Equals(NumberKeys.EmptyMap))
 				{
-					if(value is IMap)// TODO: remove this test, must always be IMap
-					{
+//					if(value is IMap)
+//					{
 						IMap map=(IMap)value;
 						if(map.Number!=null)
 						{
-
+							int asdf=0; // TODO: implement
 						}
-					}
+//					}
 				}
 				else if(key.Equals(NumberKeys.Negative))
 				{
