@@ -135,8 +135,8 @@ namespace Meta
 		}
 		public Call(IMap code)
 		{
-			this.callable=((IMap)code[CodeKeys.Function]).GetExpression();
-			this.argument=((IMap)code[CodeKeys.Argument]).GetExpression();
+			this.callable=code[CodeKeys.Function].GetExpression();
+			this.argument=code[CodeKeys.Argument].GetExpression();
 		}
 		public Expression argument;
 		public Expression callable;
@@ -185,7 +185,7 @@ namespace Meta
 		}
 		public void Evaluate(IMap parent,ref IMap local)
 		{
-			((IMap)local).Parent=parent;
+			local.Parent=parent;
 			for(int i=0;i<statements.Count && i>=0;)
 			{
 				if(i==85)
@@ -457,10 +457,10 @@ namespace Meta
 			for(int i=0;i<keys.Count;i++)
 			{
 				IMap key=((Expression)keys[i]).Evaluate(parent);
-				IMap selection=((IMap)selected)[key];
+				IMap selection=selected[key];
 				if(selection==null)
 				{
-					object test=((IMap)selected)[key];
+					object test=selected[key];
 					throw new KeyDoesNotExistException(key,this.Extent,selected);
 				}
 				selected=selection;
@@ -499,19 +499,19 @@ namespace Meta
 		}
 		public void Realize(ref IMap parent)
 		{
-			object selected=parent;
+			IMap selected=parent;
 			IMap key;
 			
 			if(searchFirst)
 			{
-				IMap firstKey=((Expression)keys[0]).Evaluate((IMap)parent); 
+				IMap firstKey=((Expression)keys[0]).Evaluate(parent); 
 				if(firstKey.Equals(new NormalMap("instanceEventChanged")))
 				{
 					int asdf=0;
 				}
-				while(!((IMap)selected).ContainsKey(firstKey))
+				while(!selected.ContainsKey(firstKey))
 				{
-					selected=((IMap)selected).Parent;
+					selected=(selected).Parent;
 					if(selected==null)
 					{
 						throw new KeyNotFoundException(firstKey,((Expression)keys[0]).Extent);
@@ -520,35 +520,35 @@ namespace Meta
 			}
 			for(int i=0;i<keys.Count-1;i++)
 			{
-				key=(IMap)((Expression)keys[i]).Evaluate((IMap)parent);
-				object selection=((IMap)selected)[key];
+				key=((Expression)keys[i]).Evaluate(parent);
+				IMap selection=selected[key];
 				if(selection==null)
 				{
 					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
 				}
 				selected=selection;
 			}
-			IMap lastKey=(IMap)((Expression)keys[keys.Count-1]).Evaluate((IMap)parent);
-			IMap val=expression.Evaluate((IMap)parent);
+			IMap lastKey=((Expression)keys[keys.Count-1]).Evaluate(parent);
+			IMap val=expression.Evaluate(parent);
 			if(lastKey.Equals(SpecialKeys.This))
 			{
-				((IMap)val).Parent=((IMap)parent).Parent;
+				val.Parent=parent.Parent;
 				parent=val;
 			}
 			else
 			{
-				if(((IMap)selected).ContainsKey(lastKey))
+				if(selected.ContainsKey(lastKey))
 				{
-					replaceValue=((IMap)selected)[lastKey];
+					replaceValue=selected[lastKey];
 				}
 				else
 				{
 					replaceValue=null;
 				}
-				replaceMap=(IMap)selected;
+				replaceMap=selected;
 				replaceKey=lastKey;
 
-				((IMap)selected)[lastKey]=val;
+				selected[lastKey]=val;
 			}
 		}
 		public Statement(IMap code) 
@@ -557,11 +557,11 @@ namespace Meta
 			{
 				searchFirst=true;
 			}
-			foreach(IMap key in ((IMap)code[CodeKeys.Key]).Array)
+			foreach(IMap key in code[CodeKeys.Key].Array)
 			{
 				keys.Add(key.GetExpression());
 			}
-			this.expression=(Expression)((IMap)code[CodeKeys.Value]).GetExpression();
+			this.expression=code[CodeKeys.Value].GetExpression();
 		}
 		public ArrayList keys=new ArrayList();
 		public Expression expression;
@@ -621,17 +621,17 @@ namespace Meta
 			}
 			return result;
 		}
-		public static object Run(string fileName,IMap argument)
+		public static IMap Run(string fileName,IMap argument)
 		{
 			IMap program=Interpreter.Compile(fileName);
 			return CallProgram(program,argument,GAC.library);
 		}
-		public static object RunWithoutLibrary(string fileName,IMap argument)
+		public static IMap RunWithoutLibrary(string fileName,IMap argument)
 		{
 			IMap program=Compile(fileName);
 			return CallProgram(program,argument,null);
 		}
-		public static object CallProgram(IMap program,IMap argument,IMap parent)
+		public static IMap CallProgram(IMap program,IMap argument,IMap parent)
 		{
 			IMap callable=new NormalMap();
 			callable[CodeKeys.Run]=program;
@@ -1092,8 +1092,10 @@ namespace Meta
 				return strategy.Keys;
 			}
 		}
+		protected abstract StrategyMap CloneImplementation();
 		public override IMap Clone()
 		{
+			//IMap clone=CloneImplementation();
 			IMap clone=strategy.CloneMap();
 			clone.Parent=Parent;
 			clone.Extent=Extent;
@@ -1179,7 +1181,12 @@ namespace Meta
 	}
 	public class NormalMap:StrategyMap
 	{
-		public NormalMap(MapStrategy strategy):base(strategy)
+		protected override StrategyMap CloneImplementation()
+		{
+			return new NormalMap(strategy.Clone());
+		}
+
+		public NormalMap(MapStrategy strategy):base(strategy) // TOOD: NormalMap should only accept Strategies that make sense for the normal map
 		{
 		}
 		public NormalMap():this(new HybridDictionaryStrategy())
@@ -1197,6 +1204,11 @@ namespace Meta
 	}
 	public class PersistantMap:StrategyMap
 	{
+		protected override StrategyMap CloneImplementation()
+		{
+			return new NormalMap(strategy.Clone());
+		}
+
 		public PersistantMap(PersistantStrategy strategy):base(strategy)
 		{
 		}
@@ -1823,7 +1835,7 @@ namespace Meta
 			}
 			IMap cachedAssemblyInfoMap=new NormalMap();
 			IMap nameSpace=new NormalMap(); 
-			Integer counter=new Integer(1);
+			Integer counter=new Integer(1);// TODO: shouldnt be zero
 			foreach(string na in nameSpaces)
 			{
 				nameSpace[new NormalMap(counter)]=new NormalMap(na);
