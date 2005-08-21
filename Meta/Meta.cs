@@ -724,7 +724,7 @@ namespace Meta
 	}
 	public abstract class KeyException:MetaException
 	{ 
-		public KeyException(object key,Extent extent):base(extent)
+		public KeyException(IMap key,Extent extent):base(extent)
 		{
 			message="Key ";
 			if(key is IMap && ((IMap)key).IsString)
@@ -751,14 +751,14 @@ namespace Meta
 	}
 	public class KeyNotFoundException:KeyException
 	{
-		public KeyNotFoundException(object key,Extent extent):base(key,extent)
+		public KeyNotFoundException(IMap key,Extent extent):base(key,extent)
 		{
 		}
 	}
 	public class KeyDoesNotExistException:KeyException
 	{
 		private object selected;
-		public KeyDoesNotExistException(object key,Extent extent,object selected):base(key,extent)
+		public KeyDoesNotExistException(IMap key,Extent extent,object selected):base(key,extent)
 		{
 			this.selected=selected;
 		}
@@ -1215,18 +1215,17 @@ namespace Meta
 	}
 	public class DirectoryStrategy:PersistantStrategy
 	{
-		public static void SaveToFile(object meta,string path)// TODO: move into Directory
+		public static void SaveToFile(IMap meta,string path)// TODO: move into Directory
 		{
 			StreamWriter streamWriter=new StreamWriter(path);
 			streamWriter.Write(SaveToFile(meta,"",true).TrimEnd(new char[]{'\n'}));
 			streamWriter.Close();
 		}
-		public static string Serialize(object meta)
-		{
-			return SaveToFile(meta,"",true);
-		}
-		// TODO: integrate into Directory
-		public static string SaveToFile(object meta,string indent,bool isRightSide)
+//		public static string Serialize(object meta)
+//		{
+//			return SaveToFile(meta,"",true);
+//		}
+		public static string SaveToFile(IMap meta,string indent,bool isRightSide)
 		{
 			if(meta is IMap)
 			{
@@ -1247,7 +1246,7 @@ namespace Meta
 						text+="("; // TODO: correct this to use indentation instead of parentheses
 						foreach(DictionaryEntry entry in map)
 						{
-							text+='['+SaveToFile(entry.Key,indent,true)+']'+'='+SaveToFile(entry.Value,indent,true)+",";
+							text+='['+SaveToFile((IMap)entry.Key,indent,true)+']'+'='+SaveToFile((IMap)entry.Value,indent,true)+",";
 						}
 						if(map.Count!=0)
 						{
@@ -1259,12 +1258,12 @@ namespace Meta
 					{
 						foreach(DictionaryEntry entry in map)
 						{
-							text+=indent+'['+SaveToFile(entry.Key,indent,false)+']'+'=';
+							text+=indent+'['+SaveToFile((IMap)entry.Key,indent,false)+']'+'=';
 							if(entry.Value is IMap && ((IMap)entry.Value).Count!=0 && !((IMap)entry.Value).IsString)
 							{
 								text+="\n";
 							}
-							text+=SaveToFile(entry.Value,indent+'\t',true);
+							text+=SaveToFile((IMap)entry.Value,indent+'\t',true);
 							if(!(entry.Value is IMap && ((IMap)entry.Value).Count!=0 && !((IMap)entry.Value).IsString))
 							{
 								text+="\n";
@@ -1285,6 +1284,65 @@ namespace Meta
 				//throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
 			}
 		}
+//		public static string SaveToFile(object meta,string indent,bool isRightSide)
+//		{
+//			if(meta is IMap)
+//			{
+//				string text="";
+//				IMap map=(IMap)meta;
+//				if(map.IsString)
+//				{
+//					text+="\""+(map).String+"\"";
+//				}
+//				else if(map.Count==0)
+//				{
+//					text+='\'';
+//				}
+//				else
+//				{
+//					if(!isRightSide)
+//					{
+//						text+="("; // TODO: correct this to use indentation instead of parentheses
+//						foreach(DictionaryEntry entry in map)
+//						{
+//							text+='['+SaveToFile(entry.Key,indent,true)+']'+'='+SaveToFile(entry.Value,indent,true)+",";
+//						}
+//						if(map.Count!=0)
+//						{
+//							text=text.Remove(text.Length-1,1);
+//						}
+//						text+=")";
+//					}
+//					else
+//					{
+//						foreach(DictionaryEntry entry in map)
+//						{
+//							text+=indent+'['+SaveToFile(entry.Key,indent,false)+']'+'=';
+//							if(entry.Value is IMap && ((IMap)entry.Value).Count!=0 && !((IMap)entry.Value).IsString)
+//							{
+//								text+="\n";
+//							}
+//							text+=SaveToFile(entry.Value,indent+'\t',true);
+//							if(!(entry.Value is IMap && ((IMap)entry.Value).Count!=0 && !((IMap)entry.Value).IsString))
+//							{
+//								text+="\n";
+//							}
+//						}
+//					}
+//				}
+//				return text;
+//			}
+//			if(meta is IMap && ((IMap)meta).Number!=null) // TODO: refactor
+//			{
+//				Integer integer=((IMap)meta).Number;
+//				return "\""+integer.ToString()+"\"";
+//			}
+//			else
+//			{
+//				return "\""+meta.ToString()+"\"";
+//				//throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
+//			}
+//		}
 		public override ArrayList Array
 		{
 			get
