@@ -196,34 +196,34 @@ public class math
 {
 	public static IMap Add(IMap x,IMap y) // TODO: decide whether to use native types in library or not, and apply everywhere
 	{
-		return new NormalMap(x.Number+y.Number);
+		return new NormalMap(x.Integer+y.Integer);
 	}
 	public static IMap Subtract(IMap x,IMap y) 
 	{
-		return new NormalMap(x.Number-y.Number);		
+		return new NormalMap(x.Integer-y.Integer);		
 	}
 	public static IMap Multiply(IMap x,IMap y) 
 	{
-		return new NormalMap(x.Number*y.Number);
+		return new NormalMap(x.Integer*y.Integer);
 	}
 	public static IMap Divide(IMap x,IMap y) 
 	{
-		return new NormalMap(x.Number/y.Number);
+		return new NormalMap(x.Integer/y.Integer);
 	}
 	public static bool Smaller(IMap x,IMap y) 
 	{
-		return x.Number<y.Number;
+		return x.Integer<y.Integer;
 	}
 	public static bool Greater(IMap x,IMap y) 
 	{
-		return x.Number>y.Number;
+		return x.Integer>y.Integer;
 	}
 	public static NormalMap BitwiseOr(params NormalMap[] integers)
 	{
 		Integer result=new Integer(0);
 		foreach(NormalMap i in integers)
 		{
-			result|=i.Number;
+			result|=i.Integer;
 		}
 		return new NormalMap(result);
 	}

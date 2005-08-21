@@ -121,7 +121,7 @@
 // [1] D. E. Knuth, "Seminumerical Algorithms", The Art of Computer Programming Vol. 2,
 //     3rd Edition, Addison-Wesley, 1998.
 //
-// [2] K. H. Rosen, "Elementary Number Theory and Its Applications", 3rd Ed,
+// [2] K. H. Rosen, "Elementary Integer Theory and Its Applications", 3rd Ed,
 //     Addison-Wesley, 1993.
 //
 // [3] B. Schneier, "Applied Cryptography", 2nd Ed, John Wiley & Sons, 1996.
@@ -1796,7 +1796,7 @@ public class Integer
 			dwords++;
 
 		if(dwords > maxLength)
-			throw (new ArithmeticException("Number of required bits > maxLength."));
+			throw (new ArithmeticException("Integer of required bits > maxLength."));
 
 		for(int i = 0; i < dwords; i++)
 			data[i] = (uint)(rand.NextDouble() * 0x100000000);

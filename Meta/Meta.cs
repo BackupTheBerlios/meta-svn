@@ -58,7 +58,7 @@ namespace Meta
 		public static readonly IMap Arg=new NormalMap("arg");
 		public static readonly IMap This=new NormalMap("this");
 	}
-	public class NumberKeys
+	public class IntegerKeys
 	{
 		public static readonly IMap Denominator=new NormalMap("denominator");
 		public static readonly IMap Numerator=new NormalMap("numerator");
@@ -284,8 +284,8 @@ namespace Meta
 						{
 							Integer denominator=System.Convert.ToInt32(Math.Pow(10,text.Length-pointPos-1));
 							result=new NormalMap();
-							result[NumberKeys.Numerator]=new NormalMap(numerator);
-							result[NumberKeys.Denominator]=new NormalMap(denominator);
+							result[IntegerKeys.Numerator]=new NormalMap(numerator);
+							result[IntegerKeys.Denominator]=new NormalMap(denominator);
 						}
 					}
 				}
@@ -309,8 +309,8 @@ namespace Meta
 							if(denominator!=null)
 							{
 								result=new NormalMap();
-								result[NumberKeys.Numerator]=new NormalMap(numerator);
-								result[NumberKeys.Denominator]=new NormalMap(denominator);
+								result[IntegerKeys.Numerator]=new NormalMap(numerator);
+								result[IntegerKeys.Denominator]=new NormalMap(denominator);
 							}
 						}
 					}
@@ -766,14 +766,14 @@ namespace Meta
 	}
 	public abstract class IMap: ICallable, IEnumerable
 	{
-		public virtual bool IsNumber // TODO: rename to IsInteger
+		public virtual bool IsInteger // TODO: rename to IsInteger
 		{
 			get
 			{
-				return Number!=null;
+				return Integer!=null;
 			}
 		}
-		public abstract Integer Number // TODO: rename to Integer
+		public abstract Integer Integer // TODO: rename to Integer
 		{
 			get;
 		}
@@ -836,11 +836,11 @@ namespace Meta
 				string text="";
 				foreach(IMap key in this.Keys)
 				{
-					if(key.Number!=null && this[key].Number!=null)
+					if(key.Integer!=null && this[key].Integer!=null)
 					{
 						try
 						{
-							text+=System.Convert.ToChar(this[key].Number.Int);
+							text+=System.Convert.ToChar(this[key].Integer.Int);
 						}
 						catch
 						{
@@ -883,7 +883,7 @@ namespace Meta
 				ArrayList array=new ArrayList();
 				foreach(IMap key in this.Keys) // TODO: need to sort the keys, by integer?? or require that keys are already sorted
 				{
-					if(Helper.IsNumber(key))
+					if(Helper.IsInteger(key))
 					{
 						array.Add(this[key]);
 					}
@@ -1002,11 +1002,11 @@ namespace Meta
 	
 	public abstract class StrategyMap: IMap, ISerializeSpecial // TODO: make this an abstract class
 	{
-		public override Integer Number
+		public override Integer Integer
 		{
 			get
 			{
-				return strategy.Number;
+				return strategy.Integer;
 			}
 		}
 
@@ -1209,9 +1209,9 @@ namespace Meta
 			{
 				text=SerializeStringKey(key,indentation);
 			}
-			else if(key.IsNumber)
+			else if(key.IsInteger)
 			{
-				text=SerializeNumberKey(key);
+				text=SerializeIntegerKey(key);
 			} 
 			else
 			{
@@ -1230,9 +1230,9 @@ namespace Meta
 			{
 				text=SerializeStringValue(val,indentation);
 			}
-			else if(val.IsNumber)
+			else if(val.IsInteger)
 			{
-				text=SerializeNumberValue(val);
+				text=SerializeIntegerValue(val);
 			}
 			else
 			{
@@ -1240,11 +1240,11 @@ namespace Meta
 			}
 			return text;
 		}
-		private static string SerializeNumberKey(IMap number)
+		private static string SerializeIntegerKey(IMap number)
 		{
-			return number.Number.ToString();
+			return number.Integer.ToString();
 		}
-		private static string SerializeNumberValue(IMap number)
+		private static string SerializeIntegerValue(IMap number)
 		{
 			return literalDelimiter+number.ToString()+literalDelimiter;
 		}
@@ -1394,7 +1394,7 @@ namespace Meta
 		{
 			return !key.StartsWith(".");
 		}
-		public override Integer Number
+		public override Integer Integer
 		{
 			get
 			{
@@ -1473,7 +1473,7 @@ namespace Meta
 				return null;
 			}
 		}
-		public override Integer Number // TODO: implement a default implementation in MapStrategy
+		public override Integer Integer // TODO: implement a default implementation in MapStrategy
 		{
 			get
 			{
@@ -1519,7 +1519,7 @@ namespace Meta
 	}
 	public class LazyNamespace: MapStrategy // TODO: integrate into Directory
 	{
-		public override Integer Number
+		public override Integer Integer
 		{
 			get
 			{
@@ -1643,7 +1643,7 @@ namespace Meta
 	// TODO: refactor
 	public class GAC: IMap// TODO: split into GAC and Directory
 	{
-		public override Integer Number
+		public override Integer Integer
 		{
 			get
 			{
@@ -1866,10 +1866,10 @@ namespace Meta
 		}
 		public static object ToDotNet(IMap meta,Type target,out bool isConverted)
 		{
-			if(target.IsSubclassOf(typeof(Enum)) && Helper.IsNumber(meta))
+			if(target.IsSubclassOf(typeof(Enum)) && Helper.IsInteger(meta))
 			{ 
 				isConverted=true;
-				return Enum.ToObject(target,meta.Number.Int);
+				return Enum.ToObject(target,meta.Integer.Int);
 			}
 			Hashtable conversions=(Hashtable)toDotNet[target];
 			if(conversions!=null)
@@ -1923,7 +1923,7 @@ namespace Meta
 				ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
 				if(conversion==null)
 				{
-					if(oDotNet is IMap || Helper.IsNumber(oDotNet))
+					if(oDotNet is IMap || Helper.IsInteger(oDotNet))
 					{
 						meta=(IMap)oDotNet;
 					}
@@ -1941,9 +1941,9 @@ namespace Meta
 		}
 		public static object ToDotNet(IMap meta) 
 		{
-			if(Helper.IsNumber(meta))
+			if(Helper.IsInteger(meta))
 			{
-				return meta.Number.Int;
+				return meta.Integer.Int;
 			}
 			else if(meta is IMap && meta.IsString)
 			{
@@ -2105,7 +2105,7 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted) // TODO: rename toConvert to meta
 			{
 				isConverted=true;
-				return System.Convert.ToByte(toConvert.Number.LongValue());
+				return System.Convert.ToByte(toConvert.Integer.LongValue());
 			}
 		}
 		public class IntegerToBool: ToDotNet
@@ -2118,7 +2118,7 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				object result;
-				int i=toConvert.Number.Int;
+				int i=toConvert.Integer.Int;
 				if(i==0)
 				{
 					isConverted=true;
@@ -2147,7 +2147,7 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return System.Convert.ToSByte(toConvert.Number.LongValue());
+				return System.Convert.ToSByte(toConvert.Integer.LongValue());
 			}
 		}
 		public class IntegerToChar: ToDotNet
@@ -2160,7 +2160,7 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return System.Convert.ToChar(toConvert.Number.LongValue());
+				return System.Convert.ToChar(toConvert.Integer.LongValue());
 			}
 		}
 		public class IntegerToInt32: ToDotNet
@@ -2172,10 +2172,10 @@ namespace Meta
 			}
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
-				if(toConvert.Number!=null)
+				if(toConvert.Integer!=null)
 				{
 					isConverted=true;
-					return System.Convert.ToInt32(toConvert.Number.LongValue());
+					return System.Convert.ToInt32(toConvert.Integer.LongValue());
 				}
 				else
 				{
@@ -2193,10 +2193,10 @@ namespace Meta
 			}
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
-				if(toConvert.Number!=null)
+				if(toConvert.Integer!=null)
 				{
 					isConverted=true;
-					return System.Convert.ToUInt32(toConvert.Number.LongValue());
+					return System.Convert.ToUInt32(toConvert.Integer.LongValue());
 				}
 				else
 				{
@@ -2215,7 +2215,7 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return System.Convert.ToInt64(toConvert.Number.LongValue());
+				return System.Convert.ToInt64(toConvert.Integer.LongValue());
 			}
 		}
 		public class IntegerToUInt64: ToDotNet
@@ -2228,7 +2228,7 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return System.Convert.ToUInt64(toConvert.Number.LongValue());
+				return System.Convert.ToUInt64(toConvert.Integer.LongValue());
 			}
 		}
 		public class IntegerToInt16: ToDotNet
@@ -2241,7 +2241,7 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return System.Convert.ToInt16(toConvert.Number.LongValue());
+				return System.Convert.ToInt16(toConvert.Integer.LongValue());
 			}
 		}
 		public class IntegerToUInt16: ToDotNet
@@ -2254,7 +2254,7 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return System.Convert.ToUInt16(toConvert.Number.LongValue());
+				return System.Convert.ToUInt16(toConvert.Integer.LongValue());
 			}
 		}
 		public class IntegerToDecimal: ToDotNet
@@ -2267,7 +2267,7 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return (decimal)(toConvert.Number.LongValue());
+				return (decimal)(toConvert.Integer.LongValue());
 			}
 		}
 		public class IntegerToDouble: ToDotNet
@@ -2280,7 +2280,7 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return (double)(toConvert.Number.LongValue());
+				return (double)(toConvert.Integer.LongValue());
 			}
 		}
 		public class IntegerToFloat: ToDotNet
@@ -2293,7 +2293,7 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return (float)(toConvert.Number.LongValue());
+				return (float)(toConvert.Integer.LongValue());
 			}
 		}
 		public class MapToString: ToDotNet
@@ -2327,10 +2327,10 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				IMap map=toConvert; // TODO: remove map
-				if(Helper.IsNumber(map[new NormalMap("numerator")]) && Helper.IsNumber(map[new NormalMap("denominator")]))
+				if(Helper.IsInteger(map[new NormalMap("numerator")]) && Helper.IsInteger(map[new NormalMap("denominator")]))
 				{
 					isConverted=true;
-					return ((decimal)(map[new NormalMap("numerator")]).Number.LongValue())/((decimal)(map[new NormalMap("denominator")]).Number.LongValue());
+					return ((decimal)(map[new NormalMap("numerator")]).Integer.LongValue())/((decimal)(map[new NormalMap("denominator")]).Integer.LongValue());
 				}
 				else
 				{
@@ -2350,10 +2350,10 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				IMap map=toConvert;// TODO
-				if(Helper.IsNumber(map[new NormalMap("numerator")]) && Helper.IsNumber(map[new NormalMap("denominator")]))
+				if(Helper.IsInteger(map[new NormalMap("numerator")]) && Helper.IsInteger(map[new NormalMap("denominator")]))
 				{
 					isConverted=true;
-					return ((double)(map[new NormalMap("numerator")]).Number.LongValue())/((double)(map[new NormalMap("denominator")]).Number.LongValue());
+					return ((double)(map[new NormalMap("numerator")]).Integer.LongValue())/((double)(map[new NormalMap("denominator")]).Integer.LongValue());
 				}
 				else
 				{
@@ -2373,10 +2373,10 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				IMap map=toConvert;
-				if(Helper.IsNumber(map[new NormalMap("numerator")]) && Helper.IsNumber(map[new NormalMap("denominator")]))
+				if(Helper.IsInteger(map[new NormalMap("numerator")]) && Helper.IsInteger(map[new NormalMap("denominator")]))
 				{
 					isConverted=true;
-					return ((float)(map[new NormalMap("numerator")]).Number.LongValue())/((float)(map[new NormalMap("denominator")]).Number.LongValue());
+					return ((float)(map[new NormalMap("numerator")]).Integer.LongValue())/((float)(map[new NormalMap("denominator")]).Integer.LongValue());
 				}
 				else
 				{
@@ -2513,7 +2513,7 @@ namespace Meta
 	public delegate object DelegateCreatedForGenericDelegates(); // TODO: rename?
 	public class DotNetMethod: IMap,ICallable
 	{
-		public override Integer Number
+		public override Integer Integer
 		{
 			get
 			{
@@ -2670,22 +2670,22 @@ namespace Meta
 			}
 			if(!isExecuted)
 			{
-				ArrayList rightNumberArgumentMethods=new ArrayList();
+				ArrayList rightIntegerArgumentMethods=new ArrayList();
 				foreach(MethodBase method in overloadedMethods)
 				{
 					if(argument.Array.Count==method.GetParameters().Length)
 					{ 
 						if(argument.Array.Count==((IMap)argument).Keys.Count)
 						{ 
-							rightNumberArgumentMethods.Add(method);
+							rightIntegerArgumentMethods.Add(method);
 						}
 					}
 				}
-				if(rightNumberArgumentMethods.Count==0)
+				if(rightIntegerArgumentMethods.Count==0)
 				{
 					throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");
 				}
-				foreach(MethodBase method in rightNumberArgumentMethods)
+				foreach(MethodBase method in rightIntegerArgumentMethods)
 				{
 					ArrayList arguments=new ArrayList();
 					bool argumentsMatched=true;
@@ -2849,7 +2849,7 @@ namespace Meta
 	}
 	public class DotNetClass: DotNetContainer
 	{
-		public override Integer Number
+		public override Integer Integer
 		{
 			get
 			{
@@ -2878,7 +2878,7 @@ namespace Meta
 	}
 	public class DotNetObject: DotNetContainer
 	{
-		public override Integer Number
+		public override Integer Integer
 		{
 			get
 			{
@@ -2900,7 +2900,7 @@ namespace Meta
 	}
 	public abstract class MapStrategy:ISerializeSpecial // TODO: maybe rename to MapImplementation, look at Patterns Book
 	{
-		public abstract Integer Number
+		public abstract Integer Integer
 		{
 			get;
 		}
@@ -2910,9 +2910,9 @@ namespace Meta
 			{
 				stringBuilder.Append(indentation+"\""+this.String+"\""+"\n");
 			}
-			else if(this.Number!=null)
+			else if(this.Integer!=null)
 			{
-				stringBuilder.Append(indentation+"\""+this.Number.ToString()+"\""+"\n"); // TODO: this should maybe be moved into IMap
+				stringBuilder.Append(indentation+"\""+this.Integer.ToString()+"\""+"\n"); // TODO: this should maybe be moved into IMap
 			}
 			else
 			{
@@ -3020,7 +3020,7 @@ namespace Meta
 	}
 	public class StringStrategy:MapStrategy
 	{
-		public override Integer Number
+		public override Integer Integer
 		{
 			get
 			{
@@ -3106,9 +3106,9 @@ namespace Meta
 		{
 			get
 			{
-				if(Helper.IsNumber(key))
+				if(Helper.IsInteger(key))
 				{
-					int iInteger=key.Number.Int;
+					int iInteger=key.Integer.Int;
 					if(iInteger>0 && iInteger<=this.Count)
 					{
 						return new NormalMap(new Integer(text[iInteger-1]));
@@ -3124,9 +3124,9 @@ namespace Meta
 		}
 		public override bool ContainsKey(IMap key) 
 		{
-			if(Helper.IsNumber(key))
+			if(Helper.IsInteger(key))
 			{
-				return key.Number>0 && key.Number<=this.Count;
+				return key.Integer>0 && key.Integer<=this.Count;
 			}
 			else
 			{
@@ -3136,21 +3136,21 @@ namespace Meta
 	}
 	public class HybridDictionaryStrategy:MapStrategy
 	{
-		public override Integer Number
+		public override Integer Integer
 		{
 			get
 			{
 				Integer number;
-				if(this.map.Equals(NumberKeys.EmptyMap))
+				if(this.map.Equals(IntegerKeys.EmptyMap))
 				{
 					number=0;
 				}
-				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative))) && this.ContainsKey(NumberKeys.EmptyMap))
+				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(IntegerKeys.Negative))) && this.ContainsKey(IntegerKeys.EmptyMap))
 				{
-					if(this[NumberKeys.EmptyMap].Number!=null)
+					if(this[IntegerKeys.EmptyMap].Integer!=null)
 					{
-						number=this[NumberKeys.EmptyMap].Number+1;
-						if(this.ContainsKey(NumberKeys.Negative))
+						number=this[IntegerKeys.EmptyMap].Integer+1;
+						if(this.ContainsKey(IntegerKeys.Negative))
 						{
 							number=-number;
 						}
@@ -3201,7 +3201,7 @@ namespace Meta
 			}
 		}
 		// TODO: combine with default implelmentation
-		public override string String // TODO: maybe move all the String and Number stuff into MapAdapter???, might make sense, but no opportunity for more efficient implementation
+		public override string String // TODO: maybe move all the String and Integer stuff into MapAdapter???, might make sense, but no opportunity for more efficient implementation
 		{
 			get
 			{
@@ -3214,11 +3214,11 @@ namespace Meta
 				{
 					foreach(IMap val in this.Array)
 					{
-						if(Helper.IsNumber(val))
+						if(Helper.IsInteger(val))
 						{
 							try
 							{
-								text+=System.Convert.ToChar(val.Number.Int);
+								text+=System.Convert.ToChar(val.Integer.Int);
 							}
 							catch
 							{
@@ -3243,11 +3243,11 @@ namespace Meta
 //				string text="";
 //				foreach(object key in this.Keys)
 //				{
-//					if(Helper.IsNumber(key) && Helper.IsNumber(this.strategy[key]))
+//					if(Helper.IsInteger(key) && Helper.IsInteger(this.strategy[key]))
 //					{
 //						try
 //						{
-//							text+=System.Convert.ToChar(((IMap)this.strategy[key]).Number.Int);
+//							text+=System.Convert.ToChar(((IMap)this.strategy[key]).Integer.Int);
 //						}
 //						catch
 //						{
@@ -3309,7 +3309,7 @@ namespace Meta
 				ArrayList array=new ArrayList();
 				foreach(IMap key in Keys)
 				{
-					if(Helper.IsNumber(key))
+					if(Helper.IsInteger(key))
 					{
 						array.Add(this[key]);
 					}
@@ -3405,9 +3405,9 @@ namespace Meta
 						result=null;
 					}
 				}
-				else if(this.obj!=null && Helper.IsNumber(key) && this.type.IsArray)
+				else if(this.obj!=null && Helper.IsInteger(key) && this.type.IsArray)
 				{
-					result=Convert.ToMeta(((Array)obj).GetValue(key.Number.Int));
+					result=Convert.ToMeta(((Array)obj).GetValue(key.Integer.Int));
 				}
 				else
 				{
@@ -3487,13 +3487,13 @@ namespace Meta
 						throw new ApplicationException("Could not assign "+text+" .");
 					}
 				}
-				else if(obj!=null && Helper.IsNumber(key) && type.IsArray)
+				else if(obj!=null && Helper.IsInteger(key) && type.IsArray)
 				{
 					bool isConverted; 
 					object converted=Convert.ToDotNet(value,type.GetElementType(),out isConverted);
 					if(isConverted)
 					{
-						((Array)obj).SetValue(converted,key.Number.Int);
+						((Array)obj).SetValue(converted,key.Integer.Int);
 						return;
 					}
 				}
@@ -3597,7 +3597,7 @@ namespace Meta
 	public class IntegerStrategy:MapStrategy // TODO: override GetHashCode
 	{
 		private Integer number;
-		public override Integer Number
+		public override Integer Integer
 		{
 			get
 			{
@@ -3609,7 +3609,7 @@ namespace Meta
 			bool equals;
 			if(obj is IntegerStrategy)
 			{
-				if(((IntegerStrategy)obj).Number==Number)
+				if(((IntegerStrategy)obj).Integer==Integer)
 				{
 					equals=true;
 				}
@@ -3651,11 +3651,11 @@ namespace Meta
 				ArrayList keys=new ArrayList();
 				if(number!=0)
 				{
-					keys.Add(NumberKeys.EmptyMap);
+					keys.Add(IntegerKeys.EmptyMap);
 				}
 				if(number<0)
 				{
-					keys.Add(NumberKeys.Negative);
+					keys.Add(IntegerKeys.Negative);
 				}
 				return keys;
 			}
@@ -3665,7 +3665,7 @@ namespace Meta
 			get
 			{
 				IMap result;
-				if(key.Equals(NumberKeys.EmptyMap))
+				if(key.Equals(IntegerKeys.EmptyMap))
 				{
 					if(number==0)
 					{
@@ -3673,20 +3673,20 @@ namespace Meta
 					}
 					else
 					{
-						Integer newNumber;
-						Integer absoluteOfNewNumber=number.abs()-1;
+						Integer newInteger;
+						Integer absoluteOfNewInteger=number.abs()-1;
 						if(number>0)
 						{
-							newNumber=absoluteOfNewNumber;
+							newInteger=absoluteOfNewInteger;
 						}
 						else
 						{
-							newNumber=-absoluteOfNewNumber;
+							newInteger=-absoluteOfNewInteger;
 						}
-						result=new NormalMap(newNumber);
+						result=new NormalMap(newInteger);
 					}
 				}
-				else if(key.Equals(NumberKeys.Negative))
+				else if(key.Equals(IntegerKeys.Negative))
 				{
 					if(number<0)
 					{
@@ -3705,21 +3705,21 @@ namespace Meta
 			}
 			set
 			{
-				if(key.Equals(NumberKeys.EmptyMap)) // TODO: implement
+				if(key.Equals(IntegerKeys.EmptyMap)) // TODO: implement
 				{
 					IMap map=value;// TODO: remove
-					if(map.Number!=null)
+					if(map.Integer!=null)
 					{
 						int asdf=0; // TODO: implement
 					}
 				}
-				else if(key.Equals(NumberKeys.Negative))
+				else if(key.Equals(IntegerKeys.Negative))
 				{
 					if(value==null)
 					{
 						number=number.abs();
 					}
-					else if(value.Equals(NumberKeys.EmptyMap))
+					else if(value.Equals(IntegerKeys.EmptyMap))
 					{
 						number=-number.abs();
 					}
@@ -3829,9 +3829,9 @@ namespace Meta
 	}
 	public class Helper
 	{
-		public static bool IsNumber(object obj) // TODO: use IMap instead of object
+		public static bool IsInteger(object obj) // TODO: use IMap instead of object
 		{
-			return obj is IMap && ((IMap)obj).Number!=null;
+			return obj is IMap && ((IMap)obj).Integer!=null;
 		}
 		public static void WriteFile(string fileName,string text)
 		{

@@ -409,7 +409,7 @@
 ["c:\_projectsupportmaterial\meta\library\library.dll"]=
 	namespaces=
 		1=""
-	timestamp="21/08/2005 19:19:02"
+	timestamp="21/08/2005 19:21:54"
 ["c:\_projectsupportmaterial\meta\library\meta.dll"]=
 	namespaces=
 		1=""
@@ -417,7 +417,7 @@
 		3="Meta"
 		4="Meta.TestingFramework"
 		5="Meta.Parser"
-	timestamp="21/08/2005 19:17:38"
+	timestamp="21/08/2005 19:21:54"
 ["c:\_projectsupportmaterial\meta\library\antlr.runtime.dll"]=
 	namespaces=
 		1="antlr"
@@ -430,9 +430,9 @@
 	namespaces=
 		1="Test"
 		2="testClasses"
-	timestamp="21/08/2005 19:19:02"
+	timestamp="21/08/2005 19:21:54"
 ["c:\_projectsupportmaterial\meta\library\editor.exe"]=
 	namespaces=
 		1="EditorTest"
 		2=""
-	timestamp="21/08/2005 19:17:38"
+	timestamp="21/08/2005 19:21:54"
