@@ -1343,19 +1343,6 @@ namespace Meta
 		private const string newLine="\n";
 		private const string literalDelimiter="\"";
 
-
-
-
-//		private static string SerializeMap(IMap map)
-//		{
-//			string text="";
-//			foreach(DictionaryEntry entry in meta)
-//			{
-//				text+=indentation+SerializeKey((IMap)entry.Key,indentation)	+ "=" + SerializeValue((IMap)entry.Value,indentation+'\t');
-//			}
-//			return text;
-//		}
-
 		private static bool IsLiteralKey(string text)
 		{
 			return -1==text.IndexOfAny(new char[] {'@',' ','\t','\r','\n','=','.','/','\'','"','(',')','[',']','*',':','#','!'});
@@ -1611,7 +1598,7 @@ namespace Meta
 			cache=new NormalMap();
 			foreach(CachedAssembly cachedAssembly in cachedAssemblies)
 			{
-				cache=(IMap)Interpreter.Merge(cache,cachedAssembly.NamespaceContents(fullName));
+				cache=Interpreter.Merge(cache,cachedAssembly.NamespaceContents(fullName));
 			}
 			foreach(DictionaryEntry entry in namespaces)
 			{
@@ -1646,7 +1633,7 @@ namespace Meta
 			{
 				foreach(string subString in nameSpace.Split('.'))
 				{
-					selected=(IMap)selected[new NormalMap(subString)];
+					selected=selected[new NormalMap(subString)];
 				}
 			}
 			return selected;
@@ -1729,7 +1716,7 @@ namespace Meta
 							{
 								position[new NormalMap(subPath)]=new NormalMap();
 							}
-							position=(IMap)position[new NormalMap(subPath)];
+							position=position[new NormalMap(subPath)];
 						}
 						position[new NormalMap(type.Name)]=new DotNetClass(type);
 					}
@@ -1757,7 +1744,7 @@ namespace Meta
 			string cachedAssemblyPath=Path.Combine(Interpreter.installationPath,"cachedAssemblyInfo.meta");
 			if(File.Exists(cachedAssemblyPath))
 			{
-				cachedAssemblyInfo=(IMap)Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
+				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
 			}
 		
 			cache=LoadNamespaces(assemblies);
@@ -1877,12 +1864,12 @@ namespace Meta
 				((Hashtable)toDotNet[conversion.target])[conversion.source]=conversion;
 			}
 		}
-		public static object ToDotNet(object meta,Type target,out bool isConverted)
+		public static object ToDotNet(IMap meta,Type target,out bool isConverted)
 		{
 			if(target.IsSubclassOf(typeof(Enum)) && Helper.IsNumber(meta))
 			{ 
 				isConverted=true;
-				return Enum.ToObject(target,((IMap)meta).Number.Int);
+				return Enum.ToObject(target,meta.Number.Int);
 			}
 			Hashtable conversions=(Hashtable)toDotNet[target];
 			if(conversions!=null)
@@ -2584,7 +2571,7 @@ namespace Meta
 			}
 			return collection;
 		}
-		public static object ConvertParameter(object meta,Type parameter,out bool isConverted)
+		public static object ConvertParameter(IMap meta,Type parameter,out bool isConverted)
 		{
 			isConverted=true;
 			if(parameter.IsAssignableFrom(meta.GetType()))
@@ -2705,7 +2692,7 @@ namespace Meta
 					ParameterInfo[] arPrmtifParameters=method.GetParameters();
 					for(int i=0;argumentsMatched && i<arPrmtifParameters.Length;i++)
 					{
-						arguments.Add(ConvertParameter(((IMap)argument).Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
+						arguments.Add(ConvertParameter((IMap)((IMap)argument).Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
 					}
 					if(argumentsMatched)
 					{
