@@ -2882,13 +2882,6 @@ namespace Meta
 		{
 			get;
 		}
-//		public virtual bool IsString
-//		{
-//			get
-//			{
-//				return false;
-//			}
-//		}
 		public virtual string String
 		{
 			get
@@ -2896,13 +2889,6 @@ namespace Meta
 				return null;
 			}
 		}
-//		public virtual string String
-//		{
-//			get
-//			{
-//				return "";
-//			}
-//		}
 		public abstract ArrayList Keys
 		{
 			get;
@@ -2938,27 +2924,31 @@ namespace Meta
 		}
 		public override bool Equals(object strategy)
 		{
-
+			bool isEqual;
 			if(Object.ReferenceEquals(strategy,this))
 			{ 
-				return true;
+				isEqual=true;
 			}
 			else if(!(strategy is MapStrategy))
 			{
-				return false;
+				isEqual=false;
 			}
 			else if(((MapStrategy)strategy).Count!=this.Count)
 			{
-				return false;
+				isEqual=false;
 			}
-			foreach(IMap key in this.Keys) 
+			else
 			{
-				if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy)[key].Equals(this[key]))
+				isEqual=true;
+				foreach(IMap key in this.Keys) 
 				{
-					return false;
+					if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy)[key].Equals(this[key]))
+					{
+						isEqual=false;
+					}
 				}
 			}
-			return true;
+			return isEqual;
 		}
 	}
 	public class StringStrategy:MapStrategy
@@ -3009,13 +2999,6 @@ namespace Meta
 				return list;
 			}
 		}
-//		public override bool IsString
-//		{
-//			get
-//			{
-//				return true;
-//			}
-//		}
 		public override string String
 		{
 			get
@@ -3150,48 +3133,37 @@ namespace Meta
 				return list;
 			}
 		}
-//		public override bool IsString
-//		{
-//			get
-//			{
-//				bool isString=false;;
-//				if(Array.Count>0)
-//				{
-//					try
-//					{
-//						object o=String;
-//						isString=true;
-//					}
-//					catch
-//					{
-//					}
-//				}
-//				return isString;
-//			}
-//		}
-		public override string String // TODO: make single-exit, combine with default implementation, use the default implementation?
+		// TODO: combine with default implelmentation
+		public override string String // TODO: maybe move all the String and Number stuff into MapAdapter???, might make sense, but no opportunity for more efficient implementation
 		{
 			get
 			{
 				string text="";
-				foreach(object key in this.Keys)
+				if(Array.Count!=Keys.Count)
 				{
-					if(Helper.IsNumber(key) && Helper.IsNumber(this.strategy[key]))
+					text=null;
+				}
+				else
+				{
+					foreach(IMap val in this.Array)
 					{
-						try
+						if(Helper.IsNumber(val))
 						{
-							text+=System.Convert.ToChar(((IMap)this.strategy[key]).Number.Int);
+							try
+							{
+								text+=System.Convert.ToChar(val.Number.Int);
+							}
+							catch
+							{
+								text=null;
+								break;
+							}
 						}
-						catch
+						else
 						{
-							return null;
-							//throw new MapException(this.map,"Map is not a string");// TODO: exception throwing isnt great
+							text=null;
+							break;
 						}
-					}
-					else
-					{
-						return null;
-						//throw new MapException(this.map,"Map is not a string");
 					}
 				}
 				return text;
@@ -3212,12 +3184,12 @@ namespace Meta
 //						}
 //						catch
 //						{
-//							throw new MapException(this.map,"Map is not a string");// TODO: exception throwing isnt great
+//							return null;
 //						}
 //					}
 //					else
 //					{
-//						throw new MapException(this.map,"Map is not a string");
+//						return null;
 //					}
 //				}
 //				return text;
@@ -3555,7 +3527,7 @@ namespace Meta
 		public object obj;
 		public Type type;
 	}
-	public class IntegerStrategy:MapStrategy
+	public class IntegerStrategy:MapStrategy // TODO: override GetHashCode
 	{
 		private Integer number;
 		public override Integer Number
@@ -3790,7 +3762,7 @@ namespace Meta
 	}
 	public class Helper
 	{
-		public static bool IsNumber(object obj)
+		public static bool IsNumber(object obj) // TODO: use IMap instead of object
 		{
 			return obj is IMap && ((IMap)obj).Number!=null;
 		}
