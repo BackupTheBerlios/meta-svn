@@ -264,13 +264,13 @@ namespace Meta
 
 	public abstract class Filter
 	{
-		public abstract IMap Recognize(string text);
+		public abstract IMap Detect(string text);
 	}
 	public class Filters
 	{
 		public class DecimalFilter: Filter
 		{
-			public override IMap Recognize(string text)
+			public override IMap Detect(string text)
 			{
 				IMap result=null;
 				int pointPos=text.IndexOf(".");
@@ -293,7 +293,7 @@ namespace Meta
 		}
 		public class FractionFilter: Filter
 		{
-			public override IMap Recognize(string text)
+			public override IMap Detect(string text)
 			{
 				IMap result=null;
 				int pointPos=text.IndexOf("/");
@@ -352,7 +352,7 @@ namespace Meta
 				}
 				return result;
 			}
-			public override IMap Recognize(string text)  // TODO: refactor
+			public override IMap Detect(string text)
 			{ 
 				IMap recognized;
 				Integer integer=ParseInteger(text);
@@ -369,7 +369,7 @@ namespace Meta
 		}
 		public class StringFilter:Filter
 		{
-			public override IMap Recognize(string text)
+			public override IMap Detect(string text)
 			{
 				return new NormalMap(text);
 			}
@@ -392,22 +392,18 @@ namespace Meta
 
 		public override IMap EvaluateImplementation(IMap parent)
 		{
-			if(literal.Equals(new NormalMap("EnabledChanged")))
-			{
-				int asdf=0;
-			}
 			return literal;
 		}
 		public Literal(IMap code)
 		{
 			this.literal=Filter((string)code.String);
 		}
-		public IMap literal=null; // TODO: should always be IMap
-		public static IMap Filter(string text) // TODO: rename
+		public IMap literal=null;
+		public static IMap Filter(string text)
 		{
 			foreach(Filter recognition in recognitions)
 			{
-				IMap recognized=recognition.Recognize(text);
+				IMap recognized=recognition.Detect(text);
 				if(recognized!=null)
 				{
 					return recognized;
@@ -599,77 +595,6 @@ namespace Meta
 			}
 		}
 
-
-		public static void SaveToFile(object meta,string path)// TODO: move into Directory
-		{
-			StreamWriter streamWriter=new StreamWriter(path);
-			streamWriter.Write(SaveToFile(meta,"",true).TrimEnd(new char[]{'\n'}));
-			streamWriter.Close();
-		}
-		public static string Serialize(object meta)
-		{
-			return SaveToFile(meta,"",true);
-		}
-		// TODO: integrate into Directory
-		public static string SaveToFile(object meta,string indent,bool isRightSide)
-		{
-			if(meta is IMap)
-			{
-				string text="";
-				IMap map=(IMap)meta;
-				if(map.IsString)
-				{
-					text+="\""+(map).String+"\"";
-				}
-				else if(map.Count==0)
-				{
-					text+='\'';
-				}
-				else
-				{
-					if(!isRightSide)
-					{
-						text+="("; // TODO: correct this to use indentation instead of parentheses
-						foreach(DictionaryEntry entry in map)
-						{
-							text+='['+SaveToFile(entry.Key,indent,true)+']'+'='+SaveToFile(entry.Value,indent,true)+",";
-						}
-						if(map.Count!=0)
-						{
-							text=text.Remove(text.Length-1,1);
-						}
-						text+=")";
-					}
-					else
-					{
-						foreach(DictionaryEntry entry in map)
-						{
-							text+=indent+'['+SaveToFile(entry.Key,indent,false)+']'+'=';
-							if(entry.Value is IMap && ((IMap)entry.Value).Count!=0 && !((IMap)entry.Value).IsString)
-							{
-								text+="\n";
-							}
-							text+=SaveToFile(entry.Value,indent+'\t',true);
-							if(!(entry.Value is IMap && ((IMap)entry.Value).Count!=0 && !((IMap)entry.Value).IsString))
-							{
-								text+="\n";
-							}
-						}
-					}
-				}
-				return text;
-			}
-			if(meta is IMap && ((IMap)meta).Number!=null) // TODO: refactor
-			{
-				Integer integer=((IMap)meta).Number;
-				return "\""+integer.ToString()+"\"";
-			}
-			else
-			{
-				return "\""+meta.ToString()+"\"";
-				//throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
-			}
-		}
 		public static IMap Merge(params IMap[] arkvlToMerge)
 		{
 			return MergeCollection(arkvlToMerge);
@@ -712,7 +637,7 @@ namespace Meta
 			callable.Parent=parent;
 			return callable.Call(argument);
 		}
-		public static IMap Compile(string fileName) // TODO: move this into MetaFile, will be implicit
+		public static IMap Compile(string fileName)
 		{
 			return (new MetaTreeParser()).map(ParseToAst(fileName));
 		}
@@ -808,7 +733,7 @@ namespace Meta
 			}
 			else if(key is IMap)
 			{
-				message+=Interpreter.SaveToFile(key,"",true);
+				message+=DirectoryStrategy.SaveToFile(key,"",true);
 			}
 			else
 			{
@@ -842,7 +767,7 @@ namespace Meta
 	{
 		IMap Call(IMap argument);
 	}
-	public abstract class IMap: ICallable, IEnumerable //, ISerializeSpecial
+	public abstract class IMap: ICallable, IEnumerable
 	{
 		public virtual bool IsNumber
 		{
@@ -851,12 +776,9 @@ namespace Meta
 				return Number!=null;
 			}
 		}
-		public virtual Integer Number // TODO: IMap should be able to be a Number, too, problem is duplication with HybridDictionaryStrategy, need default implementation usable from Strategy
+		public abstract Integer Number
 		{
-			get
-			{
-				return null;
-			}
+			get;
 		}
 		public IMap Argument
 		{
@@ -874,21 +796,41 @@ namespace Meta
 		{
 			get
 			{
-				bool isString=false;
-				if(Array.Count>0) // TODO: this might not be quite correct
-				{
-					try
-					{
-						object o=String;
-						isString=true;
-					}
-					catch
-					{
-					}
-				}
-				return isString;
+				return String!=null;
+//				bool isString=false;
+//				if(Array.Count>0) // TODO: this might not be quite correct
+//				{
+//					try
+//					{
+//						object o=String;
+//						isString=true;
+//					}
+//					catch
+//					{
+//					}
+//				}
+//				return isString;
 			}
 		}
+//		public virtual bool IsString // TODO: dont do try-catch, instead return null from all Strings and check for that
+//		{
+//			get
+//			{
+//				bool isString=false;
+//				if(Array.Count>0) // TODO: this might not be quite correct
+//				{
+//					try
+//					{
+//						object o=String;
+//						isString=true;
+//					}
+//					catch
+//					{
+//					}
+//				}
+//				return isString;
+//			}
+//		}
 		// TODO: this is duplicated in MapStrategy
 		public virtual string String // TODO: put this into a separate function, with IEnumerable as argument, maybe
 		{
@@ -905,12 +847,14 @@ namespace Meta
 						}
 						catch
 						{
-							throw new MapException(this,"Map is not a string");
+							return null;
+							//throw new MapException(this,"Map is not a string");
 						}
 					}
 					else
 					{
-						throw new MapException(this,"Map is not a string");
+						return null;
+						//throw new MapException(this,"Map is not a string");
 					}
 				}
 				return text;
@@ -1069,13 +1013,13 @@ namespace Meta
 			}
 		}
 
-		public override bool IsString
-		{
-			get
-			{
-				return strategy.IsString;
-			}
-		}
+//		public override bool IsString
+//		{
+//			get
+//			{
+//				return strategy.IsString;
+//			}
+//		}
 		public override string String
 		{
 			get
@@ -1271,6 +1215,76 @@ namespace Meta
 	}
 	public class DirectoryStrategy:PersistantStrategy
 	{
+		public static void SaveToFile(object meta,string path)// TODO: move into Directory
+		{
+			StreamWriter streamWriter=new StreamWriter(path);
+			streamWriter.Write(SaveToFile(meta,"",true).TrimEnd(new char[]{'\n'}));
+			streamWriter.Close();
+		}
+		public static string Serialize(object meta)
+		{
+			return SaveToFile(meta,"",true);
+		}
+		// TODO: integrate into Directory
+		public static string SaveToFile(object meta,string indent,bool isRightSide)
+		{
+			if(meta is IMap)
+			{
+				string text="";
+				IMap map=(IMap)meta;
+				if(map.IsString)
+				{
+					text+="\""+(map).String+"\"";
+				}
+				else if(map.Count==0)
+				{
+					text+='\'';
+				}
+				else
+				{
+					if(!isRightSide)
+					{
+						text+="("; // TODO: correct this to use indentation instead of parentheses
+						foreach(DictionaryEntry entry in map)
+						{
+							text+='['+SaveToFile(entry.Key,indent,true)+']'+'='+SaveToFile(entry.Value,indent,true)+",";
+						}
+						if(map.Count!=0)
+						{
+							text=text.Remove(text.Length-1,1);
+						}
+						text+=")";
+					}
+					else
+					{
+						foreach(DictionaryEntry entry in map)
+						{
+							text+=indent+'['+SaveToFile(entry.Key,indent,false)+']'+'=';
+							if(entry.Value is IMap && ((IMap)entry.Value).Count!=0 && !((IMap)entry.Value).IsString)
+							{
+								text+="\n";
+							}
+							text+=SaveToFile(entry.Value,indent+'\t',true);
+							if(!(entry.Value is IMap && ((IMap)entry.Value).Count!=0 && !((IMap)entry.Value).IsString))
+							{
+								text+="\n";
+							}
+						}
+					}
+				}
+				return text;
+			}
+			if(meta is IMap && ((IMap)meta).Number!=null) // TODO: refactor
+			{
+				Integer integer=((IMap)meta).Number;
+				return "\""+integer.ToString()+"\"";
+			}
+			else
+			{
+				return "\""+meta.ToString()+"\"";
+				//throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
+			}
+		}
 		public override ArrayList Array
 		{
 			get
@@ -1407,7 +1421,7 @@ namespace Meta
 		}
 		private void SaveMap(IMap map)
 		{
-			Interpreter.SaveToFile(map,file.FullName);
+			DirectoryStrategy.SaveToFile(map,file.FullName);
 		}
 		public override IMap this[IMap key]
 		{
@@ -1562,6 +1576,14 @@ namespace Meta
 	// TODO: refactor
 	public class GAC: IMap// TODO: split into GAC and Directory
 	{
+		public override Integer Number
+		{
+			get
+			{
+				return null;
+			}
+		}
+
 		public override IMap this[IMap key]
 		{
 			get
@@ -1659,7 +1681,7 @@ namespace Meta
 			}
 		
 			cache=LoadNamespaces(assemblies);
-			Interpreter.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
+			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 		}
 		private IMap cachedAssemblyInfo=new NormalMap();
 		public ArrayList NameSpaces(Assembly assembly) //TODO: integrate into LoadNamespaces???
@@ -2424,6 +2446,14 @@ namespace Meta
 	public delegate object DelegateCreatedForGenericDelegates(); // TODO: rename?
 	public class DotNetMethod: IMap,ICallable
 	{
+		public override Integer Number
+		{
+			get
+			{
+				return null;
+			}
+		}
+
 		public override IMap Clone()
 		{
 			return new DotNetMethod(this.name,this.target,this.targetType);
@@ -2752,6 +2782,14 @@ namespace Meta
 	}
 	public class DotNetClass: DotNetContainer
 	{
+		public override Integer Number
+		{
+			get
+			{
+				return null;
+			}
+		}
+
 		public override IMap Clone()
 		{
 			return new DotNetClass(type);
@@ -2773,6 +2811,14 @@ namespace Meta
 	}
 	public class DotNetObject: DotNetContainer
 	{
+		public override Integer Number
+		{
+			get
+			{
+				return null;
+			}
+		}
+
 		public DotNetObject(object target):base(target,target.GetType())
 		{
 		}
@@ -2793,7 +2839,7 @@ namespace Meta
 		}
 		public virtual void Serialize(string indentation,string[] functions,StringBuilder stringBuilder)
 		{
-			if(this.IsString)
+			if(this.String!=null)
 			{
 				stringBuilder.Append(indentation+"\""+this.String+"\""+"\n");
 			}
@@ -2836,20 +2882,27 @@ namespace Meta
 		{
 			get;
 		}
-		public virtual bool IsString
-		{
-			get
-			{
-				return false;
-			}
-		}
+//		public virtual bool IsString
+//		{
+//			get
+//			{
+//				return false;
+//			}
+//		}
 		public virtual string String
 		{
 			get
 			{
-				return "";
+				return null;
 			}
 		}
+//		public virtual string String
+//		{
+//			get
+//			{
+//				return "";
+//			}
+//		}
 		public abstract ArrayList Keys
 		{
 			get;
@@ -2956,13 +3009,13 @@ namespace Meta
 				return list;
 			}
 		}
-		public override bool IsString
-		{
-			get
-			{
-				return true;
-			}
-		}
+//		public override bool IsString
+//		{
+//			get
+//			{
+//				return true;
+//			}
+//		}
 		public override string String
 		{
 			get
@@ -3097,26 +3150,26 @@ namespace Meta
 				return list;
 			}
 		}
-		public override bool IsString
-		{
-			get
-			{
-				bool isString=false;;
-				if(Array.Count>0)
-				{
-					try
-					{
-						object o=String;
-						isString=true;
-					}
-					catch
-					{
-					}
-				}
-				return isString;
-			}
-		}
-		public override string String
+//		public override bool IsString
+//		{
+//			get
+//			{
+//				bool isString=false;;
+//				if(Array.Count>0)
+//				{
+//					try
+//					{
+//						object o=String;
+//						isString=true;
+//					}
+//					catch
+//					{
+//					}
+//				}
+//				return isString;
+//			}
+//		}
+		public override string String // TODO: make single-exit, combine with default implementation, use the default implementation?
 		{
 			get
 			{
@@ -3131,17 +3184,45 @@ namespace Meta
 						}
 						catch
 						{
-							throw new MapException(this.map,"Map is not a string");// TODO: exception throwing isnt great
+							return null;
+							//throw new MapException(this.map,"Map is not a string");// TODO: exception throwing isnt great
 						}
 					}
 					else
 					{
-						throw new MapException(this.map,"Map is not a string");
+						return null;
+						//throw new MapException(this.map,"Map is not a string");
 					}
 				}
 				return text;
 			}
 		}
+//		public override string String
+//		{
+//			get
+//			{
+//				string text="";
+//				foreach(object key in this.Keys)
+//				{
+//					if(Helper.IsNumber(key) && Helper.IsNumber(this.strategy[key]))
+//					{
+//						try
+//						{
+//							text+=System.Convert.ToChar(((IMap)this.strategy[key]).Number.Int);
+//						}
+//						catch
+//						{
+//							throw new MapException(this.map,"Map is not a string");// TODO: exception throwing isnt great
+//						}
+//					}
+//					else
+//					{
+//						throw new MapException(this.map,"Map is not a string");
+//					}
+//				}
+//				return text;
+//			}
+//		}
 		public override ArrayList Keys
 		{
 			get
@@ -3353,7 +3434,7 @@ namespace Meta
 							DotNetMethod.AssignCollection((IMap)value,property.GetValue(obj,new object[]{}),out isConverted);
 							if(!isConverted)
 							{
-								throw new ApplicationException("Property "+this.type.Name+"."+Interpreter.SaveToFile(key,"",false)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
+								throw new ApplicationException("Property "+this.type.Name+"."+DirectoryStrategy.SaveToFile(key,"",false)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
 							}
 						}
 						return;

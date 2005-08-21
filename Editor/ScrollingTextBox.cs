@@ -445,7 +445,7 @@ public class ScrollingTextBox: RichTextBox
 	Info info;//=new Info("hello!!!!!!!!!\n\n\nhello!!!!!!!!");
 	public void ShowDebugValue(object debugValue)
 	{
-		info=new Info(Interpreter.Serialize(debugValue));// add some real serialization here!!!!!
+		info=new Info(DirectoryStrategy.Serialize(debugValue));// add some real serialization here!!!!!
 //		int asdf=0;
 
 

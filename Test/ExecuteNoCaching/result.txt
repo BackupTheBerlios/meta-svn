@@ -790,7 +790,7 @@ Entry (DictionaryEntry)
   Key (NormalMap):
     "aSet"
   Value (NormalMap):
-    "0"
+    ""
 Entry (DictionaryEntry)
   Key (NormalMap):
     "bSet"
@@ -1715,7 +1715,7 @@ Entry (DictionaryEntry)
   Key (NormalMap):
     "3"
   Value (NormalMap):
-    "0"
+    ""
 Entry (DictionaryEntry)
   Key (NormalMap):
     "staticEventChanged"
