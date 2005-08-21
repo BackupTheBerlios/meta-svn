@@ -2583,15 +2583,15 @@ namespace Meta
 			{
 				MethodInfo invoke=parameter.GetMethod("Invoke",BindingFlags.Instance
 					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-				Delegate function=CreateDelegateFromCode(parameter,invoke,(IMap)meta);
+				Delegate function=CreateDelegateFromCode(parameter,invoke,meta);
 				return function;
 			}
-			else if(parameter.IsArray && meta is IMap && ((IMap)meta).Array.Count!=0)
+			else if(parameter.IsArray && meta.Array.Count!=0)
 			{
 				try
 				{
 					Type type=parameter.GetElementType();
-					IMap argument=((IMap)meta);
+					IMap argument=meta; // TODO: refactor, whole function???
 					Array arguments=System.Array.CreateInstance(type,argument.Array.Count);
 					for(int i=0;i<argument.Count;i++)
 					{
@@ -2673,9 +2673,9 @@ namespace Meta
 				ArrayList rightNumberArgumentMethods=new ArrayList();
 				foreach(MethodBase method in overloadedMethods)
 				{
-					if(((IMap)argument).Array.Count==method.GetParameters().Length)
+					if(argument.Array.Count==method.GetParameters().Length)
 					{ 
-						if(((IMap)argument).Array.Count==((IMap)argument).Keys.Count)
+						if(argument.Array.Count==((IMap)argument).Keys.Count)
 						{ 
 							rightNumberArgumentMethods.Add(method);
 						}
@@ -2692,7 +2692,7 @@ namespace Meta
 					ParameterInfo[] arPrmtifParameters=method.GetParameters();
 					for(int i=0;argumentsMatched && i<arPrmtifParameters.Length;i++)
 					{
-						arguments.Add(ConvertParameter((IMap)((IMap)argument).Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
+						arguments.Add(ConvertParameter((IMap)argument.Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
 					}
 					if(argumentsMatched)
 					{
@@ -2926,7 +2926,7 @@ namespace Meta
 		public virtual IMap Call(IMap argument)
 		{
 			map.Argument=argument;
-			Expression function=(Expression)((IMap)this[CodeKeys.Run]).GetExpression();
+			Expression function=(Expression)this[CodeKeys.Run].GetExpression();
 			IMap result;
 			result=function.Evaluate(map);
 			return result;
@@ -3108,7 +3108,7 @@ namespace Meta
 			{
 				if(Helper.IsNumber(key))
 				{
-					int iInteger=((IMap)key).Number.Int;
+					int iInteger=key.Number.Int;
 					if(iInteger>0 && iInteger<=this.Count)
 					{
 						return new NormalMap(new Integer(text[iInteger-1]));
@@ -3126,7 +3126,7 @@ namespace Meta
 		{
 			if(Helper.IsNumber(key))
 			{
-				return ((IMap)key).Number>0 && ((IMap)key).Number<=this.Count;
+				return key.Number>0 && key.Number<=this.Count;
 			}
 			else
 			{
@@ -3147,9 +3147,9 @@ namespace Meta
 				}
 				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative))) && this.ContainsKey(NumberKeys.EmptyMap))
 				{
-					if(((IMap)this[NumberKeys.EmptyMap]).Number!=null)
+					if(this[NumberKeys.EmptyMap].Number!=null)
 					{
-						number=((IMap)this[NumberKeys.EmptyMap]).Number+1;
+						number=this[NumberKeys.EmptyMap].Number+1;
 						if(this.ContainsKey(NumberKeys.Negative))
 						{
 							number=-number;
@@ -3170,7 +3170,7 @@ namespace Meta
 
 
 		ArrayList keys;
-		private HybridDictionary strategy;
+		private HybridDictionary strategy; // TODO: rename
 		public HybridDictionaryStrategy():this(2)
 		{
 		}
@@ -3319,10 +3319,10 @@ namespace Meta
 		}
 		protected override bool ContainsKeyImplementation(IMap key)
 		{
-			if(((IMap)key).IsString)
+			if(key.IsString)
 			{
-				string text=((IMap)key).String;
-				if(type.GetMember(((IMap)key).String,
+				string text=key.String;
+				if(type.GetMember(key.String,
 					BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0)
 				{
 					return true;
@@ -3362,7 +3362,7 @@ namespace Meta
 				IMap result;
 				if(key.IsString && type.GetMember(key.String,bindingFlags).Length>0)
 				{
-					string text=((IMap)key).String; // TODO: There are a few too many empty parent maps around here
+					string text=key.String; // TODO: There are a few too many empty parent maps around here
 					MemberInfo[] members=type.GetMember(text,bindingFlags);
 					if(members[0] is MethodBase)
 					{
@@ -3407,7 +3407,7 @@ namespace Meta
 				}
 				else if(this.obj!=null && Helper.IsNumber(key) && this.type.IsArray)
 				{
-					result=Convert.ToMeta(((Array)obj).GetValue(((IMap)key).Number.Int));
+					result=Convert.ToMeta(((Array)obj).GetValue(key.Number.Int));
 				}
 				else
 				{
@@ -3430,7 +3430,7 @@ namespace Meta
 			{
 				if(key.IsString && type.GetMember(key.String,bindingFlags).Length!=0)
 				{
-					string text=((IMap)key).String;
+					string text=key.String;
 					if(text.Equals("Text"))
 					{
 						int asdf=0;
@@ -3452,7 +3452,7 @@ namespace Meta
 						}
 						else
 						{
-							val=DotNetMethod.AssignCollection((IMap)value,field.GetValue(obj),out isConverted);
+							val=DotNetMethod.AssignCollection(value,field.GetValue(obj),out isConverted);
 						}
 						if(!isConverted)
 						{
@@ -3470,7 +3470,7 @@ namespace Meta
 						}
 						else
 						{
-							DotNetMethod.AssignCollection((IMap)value,property.GetValue(obj,new object[]{}),out isConverted);
+							DotNetMethod.AssignCollection(value,property.GetValue(obj,new object[]{}),out isConverted);
 							if(!isConverted)
 							{
 								throw new ApplicationException("Property "+this.type.Name+"."+DirectoryStrategy.SerializeKey(key)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
@@ -3480,7 +3480,7 @@ namespace Meta
 					}
 					else if(members[0] is EventInfo)
 					{
-						((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,(IMap)value));
+						((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,value));
 					}
 					else
 					{
@@ -3493,7 +3493,7 @@ namespace Meta
 					object converted=Convert.ToDotNet(value,type.GetElementType(),out isConverted);
 					if(isConverted)
 					{
-						((Array)obj).SetValue(converted,((IMap)key).Number.Int);
+						((Array)obj).SetValue(converted,key.Number.Int);
 						return;
 					}
 				}
@@ -3707,7 +3707,7 @@ namespace Meta
 			{
 				if(key.Equals(NumberKeys.EmptyMap)) // TODO: implement
 				{
-					IMap map=(IMap)value;
+					IMap map=value;// TODO: remove
 					if(map.Number!=null)
 					{
 						int asdf=0; // TODO: implement

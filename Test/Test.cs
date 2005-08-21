@@ -78,7 +78,7 @@ namespace Test
 //				if(result is IMap && ((IMap)result).IsString)
 				{
 					Console.Write("Content-Type: text/html\n\n");
-					Console.Write(((IMap)result).String);
+					Console.Write(result.String);
 				}
 			}
 		}

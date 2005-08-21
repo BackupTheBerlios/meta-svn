@@ -29,9 +29,9 @@ public class map
 	{
 		return map.Count;
 	}
-	public static IMap TrimStart(IMap arg) 
+	public static IMap TrimStart(IMap arg)  // TODO: remove this completely
 	{
-		IMap map=(IMap)arg[new NormalMap(new Integer(1))];
+		IMap map=arg[new NormalMap(new Integer(1))];
 		object obj=arg[new NormalMap(new Integer(2))];
 
 		IMap result=new NormalMap();
@@ -82,7 +82,7 @@ public class map
 		{ // TODO: eigentlich nur die Arrays verwenden
 			foreach(IMap val in map.Array) 
 			{
-				combined[new NormalMap(new Integer(i))]=(IMap)val;
+				combined[new NormalMap(new Integer(i))]=val;
 				i++;
 			}
 		}
@@ -90,7 +90,7 @@ public class map
 	}
 	public static IMap Merge(IMap arg) // TODO: replace all Maps with IMaps
 	{
-		return (IMap)Interpreter.MergeCollection(arg.Array);
+		return Interpreter.MergeCollection(arg.Array);
 	}
 	public static object Init(object obj,IMap map) 
 	{ // make merge general enough to replace this
@@ -143,8 +143,8 @@ public class map
 	public static object If(IMap argM) 
 	{ // maybe automatically convert Maps to MapAdapters??
 		bool conditionB=(bool)System.Convert.ToBoolean(Meta.Convert.ToDotNet(argM[new NormalMap(new Integer(1))]));//,typeof(bool));
-		IMap thenF=(IMap)argM[new NormalMap("then")];
-		IMap elseF=(IMap)argM[new NormalMap("else")];
+		IMap thenF=argM[new NormalMap("then")];
+		IMap elseF=argM[new NormalMap("else")];
 		if(conditionB) 
 		{
 			return thenF.Call(new NormalMap());
