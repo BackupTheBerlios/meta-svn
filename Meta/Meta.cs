@@ -1884,7 +1884,7 @@ namespace Meta
 			return null;
 		}
 		// TODO: maybe refactor with above
-		public static object ToDotNet(object meta,Type target)
+		public static object ToDotNet(IMap meta,Type target)
 		{ 
 			if(target==typeof(System.Int32))
 			{
@@ -1939,15 +1939,15 @@ namespace Meta
 			}
 			return meta;
 		}
-		public static object ToDotNet(object meta) 
+		public static object ToDotNet(IMap meta) 
 		{
 			if(Helper.IsNumber(meta))
 			{
-				return ((IMap)meta).Number.Int;
+				return meta.Number.Int;
 			}
-			else if(meta is IMap && ((IMap)meta).IsString)
+			else if(meta is IMap && meta.IsString)
 			{
-				return ((IMap)meta).String;
+				return meta.String;
 			}
 			else
 			{
@@ -1966,7 +1966,7 @@ namespace Meta
 	{
 		public Type source;
 		public Type target;
-		public abstract object Convert(object obj,out bool converted);
+		public abstract object Convert(IMap obj,out bool converted);
 	}
 	abstract class ToMetaConversions // TODO: refactor??, no I think these work just fine
 	{
@@ -2102,10 +2102,10 @@ namespace Meta
 				this.source=typeof(NormalMap); // TODO: this isnt quite accurate, should be able to convert every IMap
 				this.target=typeof(Byte);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted) // TODO: rename toConvert to meta
 			{
 				isConverted=true;
-				return System.Convert.ToByte(((IMap)toConvert).Number.LongValue());
+				return System.Convert.ToByte(toConvert.Number.LongValue());
 			}
 		}
 		public class IntegerToBool: ToDotNet
@@ -2115,10 +2115,10 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(bool);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				object result;
-				int i=((IMap)toConvert).Number.Int;
+				int i=toConvert.Number.Int;
 				if(i==0)
 				{
 					isConverted=true;
@@ -2144,10 +2144,10 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(SByte);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return System.Convert.ToSByte(((IMap)toConvert).Number.LongValue());
+				return System.Convert.ToSByte(toConvert.Number.LongValue());
 			}
 		}
 		public class IntegerToChar: ToDotNet
@@ -2157,10 +2157,10 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(Char);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return System.Convert.ToChar(((IMap)toConvert).Number.LongValue());
+				return System.Convert.ToChar(toConvert.Number.LongValue());
 			}
 		}
 		public class IntegerToInt32: ToDotNet
@@ -2170,12 +2170,12 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(Int32);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
-				if(((IMap)toConvert).Number!=null)
+				if(toConvert.Number!=null)
 				{
 					isConverted=true;
-					return System.Convert.ToInt32(((IMap)toConvert).Number.LongValue());
+					return System.Convert.ToInt32(toConvert.Number.LongValue());
 				}
 				else
 				{
@@ -2191,12 +2191,12 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(UInt32);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
-				if(((IMap)toConvert).Number!=null)
+				if(toConvert.Number!=null)
 				{
 					isConverted=true;
-					return System.Convert.ToUInt32(((IMap)toConvert).Number.LongValue());
+					return System.Convert.ToUInt32(toConvert.Number.LongValue());
 				}
 				else
 				{
@@ -2212,10 +2212,10 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(Int64);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return System.Convert.ToInt64(((IMap)toConvert).Number.LongValue());
+				return System.Convert.ToInt64(toConvert.Number.LongValue());
 			}
 		}
 		public class IntegerToUInt64: ToDotNet
@@ -2225,10 +2225,10 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(UInt64);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return System.Convert.ToUInt64(((IMap)toConvert).Number.LongValue());
+				return System.Convert.ToUInt64(toConvert.Number.LongValue());
 			}
 		}
 		public class IntegerToInt16: ToDotNet
@@ -2238,10 +2238,10 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(Int16);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return System.Convert.ToInt16(((IMap)toConvert).Number.LongValue());
+				return System.Convert.ToInt16(toConvert.Number.LongValue());
 			}
 		}
 		public class IntegerToUInt16: ToDotNet
@@ -2251,10 +2251,10 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(UInt16);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return System.Convert.ToUInt16(((IMap)toConvert).Number.LongValue());
+				return System.Convert.ToUInt16(toConvert.Number.LongValue());
 			}
 		}
 		public class IntegerToDecimal: ToDotNet
@@ -2264,10 +2264,10 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(decimal);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return (decimal)(((IMap)toConvert).Number.LongValue());
+				return (decimal)(toConvert.Number.LongValue());
 			}
 		}
 		public class IntegerToDouble: ToDotNet
@@ -2277,10 +2277,10 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(double);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return (double)(((IMap)toConvert).Number.LongValue());
+				return (double)(toConvert.Number.LongValue());
 			}
 		}
 		public class IntegerToFloat: ToDotNet
@@ -2290,10 +2290,10 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(float);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				isConverted=true;
-				return (float)(((IMap)toConvert).Number.LongValue());
+				return (float)(toConvert.Number.LongValue());
 			}
 		}
 		public class MapToString: ToDotNet
@@ -2303,12 +2303,12 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(string);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
-				if(((IMap)toConvert).IsString)
+				if(toConvert.IsString)
 				{
 					isConverted=true;
-					return ((IMap)toConvert).String;
+					return toConvert.String;
 				}
 				else
 				{
@@ -2324,13 +2324,13 @@ namespace Meta
 				this.source=typeof(NormalMap);  // TODO: think about whether this should really be NormalMap?? better would be IsSubClass test, or something like that
 				this.target=typeof(decimal); 
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
-				IMap map=(IMap)toConvert;
+				IMap map=toConvert; // TODO: remove map
 				if(Helper.IsNumber(map[new NormalMap("numerator")]) && Helper.IsNumber(map[new NormalMap("denominator")]))
 				{
 					isConverted=true;
-					return ((decimal)((IMap)map[new NormalMap("numerator")]).Number.LongValue())/((decimal)((IMap)map[new NormalMap("denominator")]).Number.LongValue());
+					return ((decimal)(map[new NormalMap("numerator")]).Number.LongValue())/((decimal)(map[new NormalMap("denominator")]).Number.LongValue());
 				}
 				else
 				{
@@ -2347,13 +2347,13 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(double);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
-				IMap map=(IMap)toConvert;
+				IMap map=toConvert;// TODO
 				if(Helper.IsNumber(map[new NormalMap("numerator")]) && Helper.IsNumber(map[new NormalMap("denominator")]))
 				{
 					isConverted=true;
-					return ((double)((IMap)map[new NormalMap("numerator")]).Number.LongValue())/((double)((IMap)map[new NormalMap("denominator")]).Number.LongValue());
+					return ((double)(map[new NormalMap("numerator")]).Number.LongValue())/((double)(map[new NormalMap("denominator")]).Number.LongValue());
 				}
 				else
 				{
@@ -2370,13 +2370,13 @@ namespace Meta
 				this.source=typeof(NormalMap);
 				this.target=typeof(float);
 			}
-			public override object Convert(object toConvert, out bool isConverted)
+			public override object Convert(IMap toConvert, out bool isConverted)
 			{
-				IMap map=(IMap)toConvert;
+				IMap map=toConvert;
 				if(Helper.IsNumber(map[new NormalMap("numerator")]) && Helper.IsNumber(map[new NormalMap("denominator")]))
 				{
 					isConverted=true;
-					return ((float)((IMap)map[new NormalMap("numerator")]).Number.LongValue())/((float)((IMap)map[new NormalMap("denominator")]).Number.LongValue());
+					return ((float)(map[new NormalMap("numerator")]).Number.LongValue())/((float)(map[new NormalMap("denominator")]).Number.LongValue());
 				}
 				else
 				{
@@ -2460,7 +2460,7 @@ namespace Meta
 		private ArrayList ConvertToMeta(ArrayList list)
 		{
 			ArrayList result=new ArrayList();
-			foreach(object obj in list)
+			foreach(IMap obj in list)
 			{
 				result.Add(Convert.ToDotNet(obj));
 			}
@@ -2754,7 +2754,7 @@ namespace Meta
 			argumentList+=")";
 			source+=argumentList+"{";
 			source+=argumentBuiling;
-			source+="object result=callable.Call(arg);";
+			source+="IMap result=callable.Call(arg);";
 			if(method!=null)
 			{
 				if(!method.ReturnType.Equals(typeof(void)))
