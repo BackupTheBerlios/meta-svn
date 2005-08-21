@@ -606,12 +606,12 @@ namespace Meta
 			IMap result=new NormalMap();
 			foreach(IMap current in collection)
 			{
-				foreach(DictionaryEntry entry in (IMap)current)
+				foreach(DictionaryEntry entry in current)
 				{
-					if(entry.Value is IMap && !(entry.Value is DotNetClass)&& result.ContainsKey((IMap)entry.Key) 
+					if(!(entry.Value is DotNetClass) && result.ContainsKey((IMap)entry.Key) // TODO: this is a mess
 						 && !(result[(IMap)entry.Key] is DotNetClass))
 					{
-						result[(IMap)entry.Key]=Merge((IMap )result[(IMap)entry.Key],(IMap)entry.Value);
+						result[(IMap)entry.Key]=Merge(result[(IMap)entry.Key],(IMap)entry.Value);
 					}
 					else
 					{
@@ -730,7 +730,7 @@ namespace Meta
 			message="Key ";
 			if(key.IsString)
 			{
-				message+=((IMap)key).String;
+				message+=key.String;
 			}
 			else
 			{
@@ -840,7 +840,7 @@ namespace Meta
 					{
 						try
 						{
-							text+=System.Convert.ToChar(((IMap)this[key]).Number.Int);
+							text+=System.Convert.ToChar(this[key].Number.Int);
 						}
 						catch
 						{
@@ -899,7 +899,7 @@ namespace Meta
 		public virtual IMap Call(IMap argument)
 		{
 			Argument=argument;
-			Expression function=(Expression)((IMap)this[CodeKeys.Run]).GetExpression();
+			Expression function=(Expression)this[CodeKeys.Run].GetExpression();
 			IMap result;
 			result=function.Evaluate(this);
 			return result;
@@ -914,27 +914,27 @@ namespace Meta
 			Expression expression;
 			if(this.ContainsKey(CodeKeys.Call))
 			{
-				expression=new Call((IMap)this[CodeKeys.Call]);
+				expression=new Call(this[CodeKeys.Call]);
 			}
 			else if(this.ContainsKey(CodeKeys.Delayed))
 			{ 
-				expression=new Delayed((IMap)this[CodeKeys.Delayed]);
+				expression=new Delayed(this[CodeKeys.Delayed]);
 			}
 			else if(this.ContainsKey(CodeKeys.Program))
 			{
-				expression=new Program((IMap)this[CodeKeys.Program]);
+				expression=new Program(this[CodeKeys.Program]);
 			}
 			else if(this.ContainsKey(CodeKeys.Literal))
 			{
-				expression=new Literal((IMap)this[CodeKeys.Literal]);
+				expression=new Literal(this[CodeKeys.Literal]);
 			}
 			else if(this.ContainsKey(CodeKeys.Search))
 			{
-				expression=new Search((IMap)this[CodeKeys.Search]);
+				expression=new Search(this[CodeKeys.Search]);
 			}
 			else if(this.ContainsKey(CodeKeys.Select))
 			{
-				expression=new Select((IMap)this[CodeKeys.Select]);
+				expression=new Select(this[CodeKeys.Select]);
 			}
 			else
 			{
@@ -1074,8 +1074,8 @@ namespace Meta
 					else
 					{
 						IMap val;
-						val=((IMap)value).Clone();
-						((IMap)val).Parent=this;
+						val=value.Clone();
+						val.Parent=this;
 						strategy[key]=val;
 					}
 				}
@@ -1100,40 +1100,6 @@ namespace Meta
 			clone.Parent=Parent;
 			clone.Extent=Extent;
 			return clone;
-		}
-		public override Expression GetExpression() // maybe move up????
-		{
-			Expression expression;
-			if(this.ContainsKey(CodeKeys.Call))
-			{
-				expression=new Call((IMap)this[CodeKeys.Call]);
-			}
-			else if(this.ContainsKey(CodeKeys.Delayed))
-			{ 
-				expression=new Delayed((IMap)this[CodeKeys.Delayed]);
-			}
-			else if(this.ContainsKey(CodeKeys.Program))
-			{
-				expression=new Program((IMap)this[CodeKeys.Program]);
-			}
-			else if(this.ContainsKey(CodeKeys.Literal))
-			{
-				expression=new Literal((IMap)this[CodeKeys.Literal]);
-			}
-			else if(this.ContainsKey(CodeKeys.Search))
-			{
-				expression=new Search((IMap)this[CodeKeys.Search]);
-			}
-			else if(this.ContainsKey(CodeKeys.Select))
-			{
-				expression=new Select((IMap)this[CodeKeys.Select]);
-			}
-			else
-			{
-				throw new ApplicationException("Cannot compile non-code map.");
-			}
-			((Expression)expression).Extent=this.Extent;
-			return expression;
 		}
 		protected override bool ContainsKeyImplementation(IMap key)
 		{
