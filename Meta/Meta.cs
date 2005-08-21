@@ -32,6 +32,7 @@ using antlr;
 using antlr.collections;
 using Meta.Parser;
 using Meta.TestingFramework;
+using System.Text.RegularExpressions;
 
 namespace Meta
 {
@@ -727,17 +728,13 @@ namespace Meta
 		public KeyException(IMap key,Extent extent):base(extent)
 		{
 			message="Key ";
-			if(key is IMap && ((IMap)key).IsString)
+			if(key.IsString)
 			{
 				message+=((IMap)key).String;
 			}
-			else if(key is IMap)
-			{
-				message+=DirectoryStrategy.SaveToFile(key,"",true);
-			}
 			else
 			{
-				message+=key;
+				message+=DirectoryStrategy.SerializeKey(key);
 			}
 			if(this is KeyDoesNotExistException)
 			{
@@ -769,14 +766,14 @@ namespace Meta
 	}
 	public abstract class IMap: ICallable, IEnumerable
 	{
-		public virtual bool IsNumber
+		public virtual bool IsNumber // TODO: rename to IsInteger
 		{
 			get
 			{
 				return Number!=null;
 			}
 		}
-		public abstract Integer Number
+		public abstract Integer Number // TODO: rename to Integer
 		{
 			get;
 		}
@@ -1218,131 +1215,178 @@ namespace Meta
 		public static void SaveToFile(IMap meta,string path)// TODO: move into Directory
 		{
 			StreamWriter streamWriter=new StreamWriter(path);
-			streamWriter.Write(SaveToFile(meta,"",true).TrimEnd(new char[]{'\n'}));
+			//streamWriter.Write(SerializeValue(meta));
+			streamWriter.Write(SerializeValue(meta).Trim(new char[]{'\n'}));
+			//streamWriter.Write(SerializeValue(meta).TrimStart(new char[]{'\n'}));
 			streamWriter.Close();
 		}
-//		public static string Serialize(object meta)
-//		{
-//			return SaveToFile(meta,"",true);
-//		}
-		public static string SaveToFile(IMap meta,string indent,bool isRightSide)
+		public static string SerializeKey(IMap key)
 		{
-			if(meta is IMap)
+			return SerializeKey(key,"");
+		}
+		private static string SerializeKey(IMap key,string indentation) // TODO: add this stuff to Convert class???
+		{
+			string text;
+			if(key.IsString)
 			{
-				string text="";
-				IMap map=(IMap)meta;
-				if(map.IsString)
-				{
-					text+="\""+(map).String+"\"";
-				}
-				else if(map.Count==0)
-				{
-					text+='\'';
-				}
-				else
-				{
-					if(!isRightSide)
-					{
-						text+="("; // TODO: correct this to use indentation instead of parentheses
-						foreach(DictionaryEntry entry in map)
-						{
-							text+='['+SaveToFile((IMap)entry.Key,indent,true)+']'+'='+SaveToFile((IMap)entry.Value,indent,true)+",";
-						}
-						if(map.Count!=0)
-						{
-							text=text.Remove(text.Length-1,1);
-						}
-						text+=")";
-					}
-					else
-					{
-						foreach(DictionaryEntry entry in map)
-						{
-							text+=indent+'['+SaveToFile((IMap)entry.Key,indent,false)+']'+'=';
-							if(entry.Value is IMap && ((IMap)entry.Value).Count!=0 && !((IMap)entry.Value).IsString)
-							{
-								text+="\n";
-							}
-							text+=SaveToFile((IMap)entry.Value,indent+'\t',true);
-							if(!(entry.Value is IMap && ((IMap)entry.Value).Count!=0 && !((IMap)entry.Value).IsString))
-							{
-								text+="\n";
-							}
-						}
-					}
-				}
-				return text;
+				text=SerializeStringKey(key,indentation);
 			}
-			if(meta is IMap && ((IMap)meta).Number!=null) // TODO: refactor
+			else if(key.IsNumber)
 			{
-				Integer integer=((IMap)meta).Number;
-				return "\""+integer.ToString()+"\"";
+				text=SerializeNumberKey(key);
+			} 
+			else
+			{
+				text=SerializeMapKey(key,indentation);
+			}
+			return text;			
+		}
+		public static string SerializeValue(IMap val)
+		{
+			return SerializeValue(val,"");
+		}
+		private static string SerializeValue(IMap val,string indentation)
+		{
+			string text;
+			if(val.IsString)
+			{
+				text=SerializeStringValue(val,indentation);
+			}
+			else if(val.IsNumber)
+			{
+				text=SerializeNumberValue(val);
 			}
 			else
 			{
-				return "\""+meta.ToString()+"\"";
-				//throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
+				text=SerializeMapValue(val,indentation);
 			}
+			return text;
 		}
-//		public static string SaveToFile(object meta,string indent,bool isRightSide)
+		private static string SerializeNumberKey(IMap number)
+		{
+			return number.Number.ToString();
+		}
+		private static string SerializeNumberValue(IMap number)
+		{
+			return literalDelimiter+number.ToString()+literalDelimiter;
+		}
+
+		private static string SerializeStringKey(IMap key,string indentation) // TODO: maybe drop the Serialize-prefix
+		{
+			string text;
+			if(IsLiteralKey(key.String))
+			{
+				text=key.String;
+			}
+			else
+			{
+				text=leftBracket + SerializeStringValue(key,indentation) + rightBracket;
+			}
+			return text;
+		}
+//		private static string MakeEscapeSequence(string longestEscape,string text)
 //		{
-//			if(meta is IMap)
-//			{
-//				string text="";
-//				IMap map=(IMap)meta;
-//				if(map.IsString)
-//				{
-//					text+="\""+(map).String+"\"";
-//				}
-//				else if(map.Count==0)
-//				{
-//					text+='\'';
-//				}
-//				else
-//				{
-//					if(!isRightSide)
-//					{
-//						text+="("; // TODO: correct this to use indentation instead of parentheses
-//						foreach(DictionaryEntry entry in map)
-//						{
-//							text+='['+SaveToFile(entry.Key,indent,true)+']'+'='+SaveToFile(entry.Value,indent,true)+",";
-//						}
-//						if(map.Count!=0)
-//						{
-//							text=text.Remove(text.Length-1,1);
-//						}
-//						text+=")";
-//					}
-//					else
-//					{
-//						foreach(DictionaryEntry entry in map)
-//						{
-//							text+=indent+'['+SaveToFile(entry.Key,indent,false)+']'+'=';
-//							if(entry.Value is IMap && ((IMap)entry.Value).Count!=0 && !((IMap)entry.Value).IsString)
-//							{
-//								text+="\n";
-//							}
-//							text+=SaveToFile(entry.Value,indent+'\t',true);
-//							if(!(entry.Value is IMap && ((IMap)entry.Value).Count!=0 && !((IMap)entry.Value).IsString))
-//							{
-//								text+="\n";
-//							}
-//						}
-//					}
-//				}
-//				return text;
-//			}
-//			if(meta is IMap && ((IMap)meta).Number!=null) // TODO: refactor
-//			{
-//				Integer integer=((IMap)meta).Number;
-//				return "\""+integer.ToString()+"\"";
-//			}
-//			else
-//			{
-//				return "\""+meta.ToString()+"\"";
-//				//throw new ApplicationException("Serialization not implemented for type "+meta.GetType().ToString()+".");
-//			}
+//
 //		}
+//		private static string FindLongestEscapeSequence(string text)
+//		{
+//			return longestEscape;
+//		}
+
+		private static string SerializeStringValue(IMap val,string indentation)
+		{
+			string text;
+			if(Literal.Filter(val.String).IsString)
+			{
+				string longestEscape="\"";
+				foreach(Match match in Regex.Matches(val.String,"(')?(\"')*\""))
+				{
+					if(match.ToString().Length>longestEscape.Length)
+					{
+						longestEscape=match.ToString();
+					}
+				}
+				int delimiterLength=longestEscape.Length;
+				if(val.String.StartsWith("\""))
+				{
+					if(delimiterLength%2==0)
+					{
+						delimiterLength++;
+					}
+				}
+				else if(val.String.StartsWith("'"))
+				{
+					if(delimiterLength%2==1)
+					{
+						delimiterLength++;
+					}
+				}
+				string startDelimiter="";
+				for(int i=0;i<delimiterLength;i++)
+				{
+					if(i%2==0)
+					{
+						startDelimiter+="\"";
+					}
+					else
+					{
+						startDelimiter+="'";
+					}
+				}
+
+				string endDelimiter=Helper.ReverseString(startDelimiter);
+				text=startDelimiter+val.String+endDelimiter;
+			}
+			else
+			{
+				text=SerializeMapValue(val,indentation);
+			}
+			return text;
+		}
+		private static string SerializeMapKey(IMap map,string indentation)
+		{
+			return indentation + leftBracket + newLine + SerializeMapValue(map,indentation) + rightBracket;
+		}
+		private static string SerializeMapValue(IMap map,string indentation)
+		{
+			string text=newLine;
+			foreach(DictionaryEntry entry in map)
+			{
+				text+=indentation + SerializeKey((IMap)entry.Key,indentation)	+ "=" + SerializeValue((IMap)entry.Value,indentation+'\t');
+				if(!text.EndsWith(newLine))
+				{
+					text+=newLine;
+				}
+			}
+			return text;
+		}
+		private const string leftBracket="[";
+		private const string rightBracket="]";
+		private const string newLine="\n";
+		private const string literalDelimiter="\"";
+
+
+
+
+//		private static string SerializeMap(IMap map)
+//		{
+//			string text="";
+//			foreach(DictionaryEntry entry in meta)
+//			{
+//				text+=indentation+SerializeKey((IMap)entry.Key,indentation)	+ "=" + SerializeValue((IMap)entry.Value,indentation+'\t');
+//			}
+//			return text;
+//		}
+
+		private static bool IsLiteralKey(string text)
+		{
+			return -1==text.IndexOfAny(new char[] {'@',' ','\t','\r','\n','=','.','/','\'','"','(',')','[',']','*',':','#','!'});
+		}
+
+
+
+
+
 		public override ArrayList Array
 		{
 			get
@@ -1779,7 +1823,7 @@ namespace Meta
 			}
 			IMap cachedAssemblyInfoMap=new NormalMap();
 			IMap nameSpace=new NormalMap(); 
-			Integer counter=new Integer(0);
+			Integer counter=new Integer(1);
 			foreach(string na in nameSpaces)
 			{
 				nameSpace[new NormalMap(counter)]=new NormalMap(na);
@@ -3464,7 +3508,7 @@ namespace Meta
 							DotNetMethod.AssignCollection((IMap)value,property.GetValue(obj,new object[]{}),out isConverted);
 							if(!isConverted)
 							{
-								throw new ApplicationException("Property "+this.type.Name+"."+DirectoryStrategy.SaveToFile(key,"",false)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
+								throw new ApplicationException("Property "+this.type.Name+"."+DirectoryStrategy.SerializeKey(key)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
 							}
 						}
 						return;

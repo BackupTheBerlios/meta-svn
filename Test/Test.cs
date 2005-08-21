@@ -167,33 +167,33 @@ namespace Test
 	{
 		private static string filename=@"basicTest.meta";
 		// TODO:make it possible to choose between different tests on command line, and whether to test at all
-		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-			public class ParseToAst:TestCase 
-		{
-			public override object Run() 
-			{
-				return Interpreter.ParseToAst(Path.Combine(
-					Test.path,filename));
-			}
-		}
-		public class CompileToMap:TestCase 
-		{
-			public static IMap map;
-			public override object Run() 
-			{
-				map=Interpreter.Compile(Path.Combine(
-					Test.path,filename));
-				return map;
-			}
-		}
-		public class CompileToExpression:TestCase 
-		{
-			public override object Run() 
-			{
-				return Interpreter.Compile(Path.Combine(
-					Test.path,filename)).GetExpression();
-			}
-		}
+//		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
+//			public class ParseToAst:TestCase 
+//		{
+//			public override object Run() 
+//			{
+//				return Interpreter.ParseToAst(Path.Combine(
+//					Test.path,filename));
+//			}
+//		}
+//		public class CompileToMap:TestCase 
+//		{
+//			public static IMap map;
+//			public override object Run() 
+//			{
+//				map=Interpreter.Compile(Path.Combine(
+//					Test.path,filename));
+//				return map;
+//			}
+//		}
+//		public class CompileToExpression:TestCase 
+//		{
+//			public override object Run() 
+//			{
+//				return Interpreter.Compile(Path.Combine(
+//					Test.path,filename)).GetExpression();
+//			}
+//		}
 		// should execute twice, once without caching, once with
 		public class ExecuteNoCaching:TestCase // TODO: combine with above, only result must be the same, a third file is needed, only one check file!!! ???
 		{
@@ -220,6 +220,7 @@ namespace Test
 				IMap argument=new NormalMap();
 				argument[new NormalMap(1)]=new NormalMap("first arg");
 				argument[new NormalMap(2)]=new NormalMap("second=arg");
+				GAC.library=new GAC();
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}

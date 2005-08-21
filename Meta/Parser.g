@@ -109,7 +109,7 @@ POINT:
 
 // fix the exact characters allowed
 // rename to LOOKUP_LITERAL
-LITERAL_KEY:
+LITERAL_KEY: // TODO: review the list of forbidden characters, do the same for serialization
   ( 
 		~(
 			'@'
