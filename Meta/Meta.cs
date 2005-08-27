@@ -2920,8 +2920,7 @@ namespace Meta
 		}
 		public StrategyMap map;
 
-		// TODO: think about clone and CloneMap
-		public virtual MapStrategy Clone() // TODO: maybe make this abstract??? really not very reliable
+		public virtual MapStrategy Clone()
 		{
 			MapStrategy strategy=new HybridDictionaryStrategy();
 			foreach(IMap key in this.Keys)
@@ -3537,13 +3536,12 @@ namespace Meta
 		public object obj;
 		public Type type;
 	}
-	public class IntegerStrategy:MapStrategy // TODO: override GetHashCode
+	public class IntegerStrategy:MapStrategy
 	{
 		public override int GetHashCode()
 		{
 			return base.GetHashCode ();
 		}
-
 		private Integer number;
 		public override Integer Integer
 		{
@@ -3554,23 +3552,23 @@ namespace Meta
 		}
 		public override bool Equals(object obj)
 		{
-			bool equals;
+			bool isEqual;
 			if(obj is IntegerStrategy)
 			{
 				if(((IntegerStrategy)obj).Integer==Integer)
 				{
-					equals=true;
+					isEqual=true;
 				}
 				else
 				{
-					equals=false;
+					isEqual=false;
 				}
 			}
 			else
 			{
-				equals=base.Equals(obj);
+				isEqual=base.Equals(obj);
 			}
-			return equals;
+			return isEqual;
 		}
 
 		public override ArrayList Array
@@ -3682,9 +3680,9 @@ namespace Meta
 				}
 			}
 		}
-		private void Panic(IMap key,IMap val)// TODO: remove, put into MapStrategy
+		private void Panic(IMap key,IMap val)
 		{
-			map.strategy=this.Clone(); // TODO: move Clone into MapStrategy???, or at least rename
+			map.strategy=this.Clone();
 			map.strategy[key]=val;
 		}
 	}
@@ -3864,9 +3862,6 @@ namespace Meta
 				string check=Helper.ReadFile(Path.Combine(path,"check.txt"));
 				return result.Equals(check);
 			}
-			// TODO: refactor
-			// TODO: maybe add class information for DotNetObject, DotNetClass
-			// TODO: maybe split this up a bit, we probably need more customization for the serialization
 			public static void Serialize(object toSerialize,string indent,string[] methods,StringBuilder stringBuilder) 
 			{
 				if(toSerialize==null) 
