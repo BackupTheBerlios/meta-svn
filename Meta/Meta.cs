@@ -2537,30 +2537,30 @@ namespace Meta
 
 
 
-		public static object AssignCollection(IMap map,object collection,out bool isSuccess) // TODO: of somewhat doubtful value, only for control and form initialization, should be removed, I think, need to write more extensive wrappers around the .NET libraries anyway
-		{ 
-			if(map.Array.Count==0)
-			{
-				isSuccess=false;
-				return null;
-			}
-			Type targetType=collection.GetType();
-			MethodInfo add=targetType.GetMethod("Add",new Type[]{map.Array[0].GetType()});
-			if(add!=null)
-			{
-				foreach(object entry in map.Array)
-				{ 
-					// TODO: combine this with Library function "Init"
-					add.Invoke(collection,new object[]{entry});//  call add from above!
-				}
-				isSuccess=true;
-			}
-			else
-			{
-				isSuccess=false;
-			}
-			return collection;
-		}
+//		public static object AssignCollection(IMap map,object collection,out bool isSuccess) // TODO: of somewhat doubtful value, only for control and form initialization, should be removed, I think, need to write more extensive wrappers around the .NET libraries anyway
+//		{ 
+//			if(map.Array.Count==0)
+//			{
+//				isSuccess=false;
+//				return null;
+//			}
+//			Type targetType=collection.GetType();
+//			MethodInfo add=targetType.GetMethod("Add",new Type[]{map.Array[0].GetType()});
+//			if(add!=null)
+//			{
+//				foreach(object entry in map.Array)
+//				{ 
+//					// TODO: combine this with Library function "Init"
+//					add.Invoke(collection,new object[]{entry});//  call add from above!
+//				}
+//				isSuccess=true;
+//			}
+//			else
+//			{
+//				isSuccess=false;
+//			}
+//			return collection;
+//		}
 		// TODO: refactor
 		public static object ConvertParameter(IMap meta,Type parameter,out bool isConverted)
 		{
@@ -3415,10 +3415,10 @@ namespace Meta
 						{
 							field.SetValue(obj,val);
 						}
-						else
-						{
-							val=DotNetMethod.AssignCollection(value,field.GetValue(obj),out isConverted);
-						}
+//						else
+//						{
+//							val=DotNetMethod.AssignCollection(value,field.GetValue(obj),out isConverted);
+//						}
 						if(!isConverted)
 						{
 							throw new ApplicationException("Field "+field.Name+"could not be assigned because it cannot be converted.");
@@ -3433,14 +3433,14 @@ namespace Meta
 						{
 							property.SetValue(obj,val,new object[]{});
 						}
-						else
-						{
-							DotNetMethod.AssignCollection(value,property.GetValue(obj,new object[]{}),out isConverted);
-							if(!isConverted)
-							{
-								throw new ApplicationException("Property "+this.type.Name+"."+DirectoryStrategy.SerializeKey(key)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
-							}
-						}
+//						else
+//						{
+//							DotNetMethod.AssignCollection(value,property.GetValue(obj,new object[]{}),out isConverted);
+//							if(!isConverted)
+//							{
+//								throw new ApplicationException("Property "+this.type.Name+"."+DirectoryStrategy.SerializeKey(key)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
+//							}
+//						}
 						return;
 					}
 					else if(members[0] is EventInfo)
