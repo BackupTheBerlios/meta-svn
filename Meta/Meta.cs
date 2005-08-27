@@ -766,14 +766,14 @@ namespace Meta
 	}
 	public abstract class IMap: ICallable, IEnumerable
 	{
-		public virtual bool IsInteger // TODO: rename to IsInteger
+		public virtual bool IsInteger
 		{
 			get
 			{
 				return Integer!=null;
 			}
 		}
-		public abstract Integer Integer // TODO: rename to Integer
+		public abstract Integer Integer
 		{
 			get;
 		}
@@ -794,40 +794,8 @@ namespace Meta
 			get
 			{
 				return String!=null;
-//				bool isString=false;
-//				if(Array.Count>0) // TODO: this might not be quite correct
-//				{
-//					try
-//					{
-//						object o=String;
-//						isString=true;
-//					}
-//					catch
-//					{
-//					}
-//				}
-//				return isString;
 			}
 		}
-//		public virtual bool IsString // TODO: dont do try-catch, instead return null from all Strings and check for that
-//		{
-//			get
-//			{
-//				bool isString=false;
-//				if(Array.Count>0) // TODO: this might not be quite correct
-//				{
-//					try
-//					{
-//						object o=String;
-//						isString=true;
-//					}
-//					catch
-//					{
-//					}
-//				}
-//				return isString;
-//			}
-//		}
 		// TODO: this is duplicated in MapStrategy
 		public virtual string String // TODO: put this into a separate function, with IEnumerable as argument, maybe
 		{
@@ -845,13 +813,11 @@ namespace Meta
 						catch
 						{
 							return null;
-							//throw new MapException(this,"Map is not a string");
 						}
 					}
 					else
 					{
 						return null;
-						//throw new MapException(this,"Map is not a string");
 					}
 				}
 				return text;
@@ -1000,7 +966,7 @@ namespace Meta
 		}		private IMap parent;
 	}
 	
-	public abstract class StrategyMap: IMap, ISerializeSpecial // TODO: make this an abstract class
+	public abstract class StrategyMap: IMap, ISerializeSpecial
 	{
 		public override Integer Integer
 		{
@@ -1009,14 +975,6 @@ namespace Meta
 				return strategy.Integer;
 			}
 		}
-
-//		public override bool IsString
-//		{
-//			get
-//			{
-//				return strategy.IsString;
-//			}
-//		}
 		public override string String
 		{
 			get
@@ -1190,7 +1148,7 @@ namespace Meta
 	}
 	public class DirectoryStrategy:PersistantStrategy
 	{
-		public static void SaveToFile(IMap meta,string path)// TODO: move into Directory
+		public static void SaveToFile(IMap meta,string path)
 		{
 			StreamWriter streamWriter=new StreamWriter(path);
 			//streamWriter.Write(SerializeValue(meta));
@@ -1202,7 +1160,7 @@ namespace Meta
 		{
 			return SerializeKey(key,"");
 		}
-		private static string SerializeKey(IMap key,string indentation) // TODO: add this stuff to Convert class???
+		private static string SerializeKey(IMap key,string indentation)
 		{
 			string text;
 			if(key.IsString)
@@ -1249,7 +1207,7 @@ namespace Meta
 			return literalDelimiter+number.ToString()+literalDelimiter;
 		}
 
-		private static string SerializeStringKey(IMap key,string indentation) // TODO: maybe drop the Serialize-prefix
+		private static string SerializeStringKey(IMap key,string indentation)
 		{
 			string text;
 			if(IsLiteralKey(key.String))
@@ -1373,7 +1331,7 @@ namespace Meta
 			get
 			{
 				ArrayList keys=new ArrayList();
-				foreach(DirectoryInfo subDirectory in directory.GetDirectories()) // TODO: put this into a separate function???
+				foreach(DirectoryInfo subDirectory in directory.GetDirectories())
 				{
 					if(ValidName(subDirectory.Name))
 					{
@@ -1443,7 +1401,7 @@ namespace Meta
 			set
 			{
 				int asdf=0;
-				// TODO:
+				// TODO: implement
 			}
 		}
 
@@ -1788,7 +1746,7 @@ namespace Meta
 			}
 			IMap cachedAssemblyInfoMap=new NormalMap();
 			IMap nameSpace=new NormalMap(); 
-			Integer counter=new Integer(1);// TODO: shouldnt be zero
+			Integer counter=new Integer(1);
 			foreach(string na in nameSpaces)
 			{
 				nameSpace[new NormalMap(counter)]=new NormalMap(na);
@@ -2093,6 +2051,10 @@ namespace Meta
 			}
 		}
 	}
+	// TODO: refactor this whole mess, doesnt work very well the way it is now, because there is only one Meta-type
+	// target type determines everything, methods must be sorted by preference
+	// additional preferences between types, maybe, maybe prefer smaller types to larger types
+	// must test if actual conversion is possible, not just whether some types match, has never worked all that well anyway
 	abstract class ToDotNetConversions // TODO: make this a single function??? somehow combine, old method doesnt work, put conversion methods right here??, consolidate them
 	{
 		public class IntegerToByte: ToDotNet
@@ -2321,12 +2283,12 @@ namespace Meta
 		{
 			public FractionToDecimal()
 			{
-				this.source=typeof(NormalMap);  // TODO: think about whether this should really be NormalMap?? better would be IsSubClass test, or something like that
+				this.source=typeof(NormalMap);
 				this.target=typeof(decimal); 
 			}
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
-				IMap map=toConvert; // TODO: remove map
+				IMap map=toConvert;
 				if(Helper.IsInteger(map[new NormalMap("numerator")]) && Helper.IsInteger(map[new NormalMap("denominator")]))
 				{
 					isConverted=true;
@@ -2349,7 +2311,7 @@ namespace Meta
 			}
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
-				IMap map=toConvert;// TODO
+				IMap map=toConvert;
 				if(Helper.IsInteger(map[new NormalMap("numerator")]) && Helper.IsInteger(map[new NormalMap("denominator")]))
 				{
 					isConverted=true;
@@ -2388,22 +2350,22 @@ namespace Meta
 	}
 	public class MapAdapterEnumerator: IEnumerator
 	{
-		private MapAdapter map; // TODO: rename
-		public MapAdapterEnumerator(MapAdapter map)
+		private MapAdapter mapAdapter;
+		public MapAdapterEnumerator(MapAdapter mapAdapter)
 		{
-			this.map=map;
+			this.mapAdapter=mapAdapter;
 		}
 		public object Current
 		{
 			get
 			{
-				return new DictionaryEntry(map.Keys[index],map[map.Keys[index]]);
+				return new DictionaryEntry(mapAdapter.Keys[index],mapAdapter[mapAdapter.Keys[index]]);
 			}
 		}
 		public bool MoveNext()
 		{
 			index++;
-			return index<map.Count;
+			return index<mapAdapter.Count;
 		}
 		public void Reset()
 		{
@@ -2480,7 +2442,7 @@ namespace Meta
 				return map.Count;
 			}
 		}
-		public IEnumerator GetEnumerator() // TODO: shouldnt be necessary to override this
+		public IEnumerator GetEnumerator()
 		{
 			return new MapAdapterEnumerator(this);
 		}
@@ -2510,7 +2472,7 @@ namespace Meta
 		}
 		private int index=-1;
 	}
-	public delegate object DelegateCreatedForGenericDelegates(); // TODO: rename?
+	public delegate object DelegateCreatedForGenericDelegates();
 	public class DotNetMethod: IMap,ICallable
 	{
 		public override Integer Integer
@@ -2571,6 +2533,7 @@ namespace Meta
 			}
 			return collection;
 		}
+		// TODO: refactor
 		public static object ConvertParameter(IMap meta,Type parameter,out bool isConverted)
 		{
 			isConverted=true;
@@ -2591,7 +2554,7 @@ namespace Meta
 				try
 				{
 					Type type=parameter.GetElementType();
-					IMap argument=meta; // TODO: refactor, whole function???
+					IMap argument=meta;
 					Array arguments=System.Array.CreateInstance(type,argument.Array.Count);
 					for(int i=0;i<argument.Count;i++)
 					{
@@ -2740,10 +2703,10 @@ namespace Meta
 			string argumentBuiling="IMap arg=new NormalMap();";
 			if(method!=null)
 			{
-				foreach(ParameterInfo parameter in method.GetParameters()) // TODO: maybe iterate here twice
+				foreach(ParameterInfo parameter in method.GetParameters())
 				{
 					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
-					argumentBuiling+="arg[new NormalMap(new Integer("+counter+"))]=Meta.Convert.ToMeta(arg"+counter+");"; // TODO: not sure a DotNetObject should always be created
+					argumentBuiling+="arg[new NormalMap(new Integer("+counter+"))]=Meta.Convert.ToMeta(arg"+counter+");";
 					if(counter<method.GetParameters().Length)
 					{
 						argumentList+=",";
@@ -2898,12 +2861,13 @@ namespace Meta
 			return new DotNetObject(obj); // TODO: is this correct?
 		}
 	}
-	public abstract class MapStrategy:ISerializeSpecial // TODO: maybe rename to MapImplementation, look at Patterns Book
+	public abstract class MapStrategy:ISerializeSpecial
 	{
 		public abstract Integer Integer
 		{
 			get;
 		}
+		// TODO: why in MapStrategy??
 		public virtual void Serialize(string indentation,string[] functions,StringBuilder stringBuilder)
 		{
 			if(this.String!=null)
@@ -2912,7 +2876,7 @@ namespace Meta
 			}
 			else if(this.Integer!=null)
 			{
-				stringBuilder.Append(indentation+"\""+this.Integer.ToString()+"\""+"\n"); // TODO: this should maybe be moved into IMap
+				stringBuilder.Append(indentation+"\""+this.Integer.ToString()+"\""+"\n");
 			}
 			else
 			{
@@ -2932,7 +2896,6 @@ namespace Meta
 			return result;
 		}
 		public StrategyMap map;
-		//public NormalMap map;
 
 		// TODO: think about clone and CloneMap
 		public virtual MapStrategy Clone() // TODO: maybe make this abstract??? really not very reliable
@@ -2944,7 +2907,7 @@ namespace Meta
 			}
 			return strategy;	
 		}
-		public abstract IMap CloneMap();// TODO: why is this needed
+		public abstract IMap CloneMap();// TODO: why is this even needed
 		public abstract ArrayList Array
 		{
 			get;
@@ -2977,7 +2940,7 @@ namespace Meta
 		{
 			return Keys.Contains(key);
 		}
-		public override int GetHashCode()  // TODO: duplicated with IMap
+		public override int GetHashCode()  // TODO: combine with IMap.GetHashCode
 		{
 			int hash=0;
 			foreach(IMap key in this.Keys)
@@ -3170,21 +3133,21 @@ namespace Meta
 
 
 		ArrayList keys;
-		private HybridDictionary strategy; // TODO: rename
+		private HybridDictionary dictionary;
 		public HybridDictionaryStrategy():this(2)
 		{
 		}
 		public HybridDictionaryStrategy(int Count)
 		{
 			this.keys=new ArrayList(Count);
-			this.strategy=new HybridDictionary(Count);
+			this.dictionary=new HybridDictionary(Count);
 		}
 		public override IMap CloneMap()
 		{
 			IMap clone=new NormalMap(new HybridDictionaryStrategy(this.keys.Count));
 			foreach(IMap key in keys)
 			{
-				clone[key]=(IMap)strategy[key];
+				clone[key]=(IMap)dictionary[key];
 			}
 			return clone;
 		}
@@ -3200,8 +3163,8 @@ namespace Meta
 				return list;
 			}
 		}
-		// TODO: combine with default implelmentation
-		public override string String // TODO: maybe move all the String and Integer stuff into MapAdapter???, might make sense, but no opportunity for more efficient implementation
+		// TODO: combine with IMap.String
+		public override string String
 		{
 			get
 			{
@@ -3236,32 +3199,6 @@ namespace Meta
 				return text;
 			}
 		}
-//		public override string String
-//		{
-//			get
-//			{
-//				string text="";
-//				foreach(object key in this.Keys)
-//				{
-//					if(Helper.IsInteger(key) && Helper.IsInteger(this.strategy[key]))
-//					{
-//						try
-//						{
-//							text+=System.Convert.ToChar(((IMap)this.strategy[key]).Integer.Int);
-//						}
-//						catch
-//						{
-//							return null;
-//						}
-//					}
-//					else
-//					{
-//						return null;
-//					}
-//				}
-//				return text;
-//			}
-//		}
 		public override ArrayList Keys
 		{
 			get
@@ -3273,14 +3210,14 @@ namespace Meta
 		{
 			get
 			{
-				return strategy.Count;
+				return dictionary.Count;
 			}
 		}
 		public override IMap this[IMap key] 
 		{
 			get
 			{
-				return (IMap)strategy[key];
+				return (IMap)dictionary[key];
 			}
 			set
 			{
@@ -3288,12 +3225,12 @@ namespace Meta
 				{
 					keys.Add(key);
 				}
-				strategy[key]=value;
+				dictionary[key]=value;
 			}
 		}
 		public override bool ContainsKey(IMap key) 
 		{
-			return strategy.Contains(key);
+			return dictionary.Contains(key);
 		}
 	}
 	public abstract class DotNetContainer: IMap, ISerializeSpecial
@@ -3329,7 +3266,7 @@ namespace Meta
 				}
 			}
 			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
-			IMap argument=new NormalMap(); // TODO: refactor
+			IMap argument=new NormalMap(); // TODO: call indexer directly, combine with other indexer calls
 			argument[new NormalMap(new Integer(1))]=key;
 			try
 			{
@@ -3362,7 +3299,7 @@ namespace Meta
 				IMap result;
 				if(key.IsString && type.GetMember(key.String,bindingFlags).Length>0)
 				{
-					string text=key.String; // TODO: There are a few too many empty parent maps around here
+					string text=key.String; // TODO: Remove empty parent maps
 					MemberInfo[] members=type.GetMember(text,bindingFlags);
 					if(members[0] is MethodBase)
 					{
@@ -3378,7 +3315,7 @@ namespace Meta
 					}
 					else if(members[0] is EventInfo)
 					{
-						try // TODO: fix this? refactor? what is this even supposed to do?
+						try // TODO: determine if necessary, then remove or fix
 						{
 							Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
 								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
