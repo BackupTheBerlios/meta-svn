@@ -111,107 +111,28 @@ Entry (DictionaryEntry)
       Value (PersistantMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
-            "program"
+            "x"
+          Value (NormalMap):
+            "hello"
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "y"
+          Value (NormalMap):
+            "world"
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "subMap"
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "1"
+                "a"
               Value (NormalMap):
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "key"
-                  Value (NormalMap):
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "1"
-                      Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "x"
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "value"
-                  Value (NormalMap):
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "literal"
-                      Value (NormalMap):
-                        "hello"
+                "b"
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "2"
+                "c"
               Value (NormalMap):
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "key"
-                  Value (NormalMap):
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "1"
-                      Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "y"
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "value"
-                  Value (NormalMap):
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "literal"
-                      Value (NormalMap):
-                        "world"
-            Entry (DictionaryEntry)
-              Key (NormalMap):
-                "3"
-              Value (NormalMap):
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "key"
-                  Value (NormalMap):
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "1"
-                      Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "gacFromMetaLib"
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "value"
-                  Value (NormalMap):
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "select"
-                      Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "1"
-                          Value (NormalMap):
-                            Entry (DictionaryEntry)
-                              Key (NormalMap):
-                                "search"
-                              Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "System"
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "2"
-                          Value (NormalMap):
-                            Entry (DictionaryEntry)
-                              Key (NormalMap):
-                                "literal"
-                              Value (NormalMap):
-                                "Collections"
+                "d"
 Entry (DictionaryEntry)
   Key (NormalMap):
     "literalEscapeTest"

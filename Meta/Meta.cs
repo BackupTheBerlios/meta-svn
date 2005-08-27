@@ -1700,7 +1700,7 @@ namespace Meta
 		}
 		private IMap GetMap()
 		{
-			IMap data=Interpreter.Compile(this.file.FullName);
+			IMap data=Interpreter.RunWithoutLibrary(this.file.FullName,new NormalMap());
 			data.Parent=this.map;
 			return data;
 		}
