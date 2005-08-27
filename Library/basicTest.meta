@@ -25,6 +25,13 @@ this=map.Merge
 	map
 	math
 //run "hello"
+testSubDir.x:""
+persistantDeleteTest=testSubDir.x
+testSubDir.x:
+	a="b"
+	x=
+		x="hello"
+		y="world"
 persistenceTest=testSubDir
 interpreter.line:"5"
 literalEscapeTest=

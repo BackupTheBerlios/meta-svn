@@ -392,7 +392,7 @@ expression:
     |LITERAL
 		|search
   );
-  
+
 //TODO: rename IMap to program, or something like that
 map:
   {
@@ -400,7 +400,7 @@ map:
   }
 	(
 	  INDENT!
-	  (statement|delayed) // TODO: maybe put delayed into statement??? Would make sense, I think, since it's essentially the same
+	  (statement|delayed)? // TODO: maybe put delayed into statement??? Would make sense, I think, since it's essentially the same
 	  (
 	    ENDLINE!
 	    (delayed|statement)

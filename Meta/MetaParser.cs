@@ -454,6 +454,11 @@ _loop140_breakloop:		;
 					}
 					break;
 				}
+				case ENDLINE:
+				case DEDENT:
+				{
+					break;
+				}
 				default:
 				{
 					throw new NoViableAltException(LT(1), getFilename());

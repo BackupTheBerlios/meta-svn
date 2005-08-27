@@ -103,12 +103,17 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
+    "persistantDeleteTest"
+  Value (NormalMap):
+    ""
+Entry (DictionaryEntry)
+  Key (NormalMap):
     "persistenceTest"
-  Value (PersistantMap):
+  Value (NormalMap):
     Entry (DictionaryEntry)
       Key (NormalMap):
         "testLib"
-      Value (PersistantMap):
+      Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
             "x"
@@ -133,6 +138,29 @@ Entry (DictionaryEntry)
                 "c"
               Value (NormalMap):
                 "d"
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "x"
+      Value (NormalMap):
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "a"
+          Value (NormalMap):
+            "b"
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "x"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "x"
+              Value (NormalMap):
+                "hello"
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "y"
+              Value (NormalMap):
+                "world"
 Entry (DictionaryEntry)
   Key (NormalMap):
     "literalEscapeTest"

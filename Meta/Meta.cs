@@ -662,7 +662,8 @@ namespace Meta
 		}
 		public static AST ParseToAst(string fileName) 
 		{
-			FileStream file=new FileStream(fileName,FileMode.Open);
+			FileStream file=new FileStream(fileName, FileMode.Open,FileAccess.Read, FileShare.ReadWrite); 
+//			FileStream file=new FileStream(fileName,FileMode.Open);
 			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(file,fileName); 
 			MetaLexer metaLexer = new MetaLexer(sharedInputState);
 	
@@ -1177,7 +1178,12 @@ namespace Meta
 			File.Create(path).Close();
 			StreamWriter streamWriter=new StreamWriter(path);
 			//streamWriter.Write(SerializeValue(meta));
-			streamWriter.Write(SerializeValue(meta).Trim(new char[]{'\n'}));
+			string text=SerializeValue(meta).Trim(new char[]{'\n'});
+			if(text=="\"\"")
+			{
+				text="";
+			}
+			streamWriter.Write(text);
 			//streamWriter.Write(SerializeValue(meta).TrimStart(new char[]{'\n'}));
 			streamWriter.Close();
 		}
@@ -1344,7 +1350,8 @@ namespace Meta
 		}
 		public override IMap CloneMap()
 		{
-			return this.map; // TODO: completely buggy, I dont understand what CloneMap should be good for
+			return new NormalMap(this.Clone());
+			//return this.map; // TODO: completely buggy, I dont understand what CloneMap should be good for
 		}
 		private DirectoryInfo directory;
 		public DirectoryStrategy(DirectoryInfo directory)
@@ -1486,7 +1493,16 @@ namespace Meta
 			}
 			set
 			{
-				int asdf=0;
+				if(key.IsString && ValidName(key.String))
+				{
+//					IMap map=new PersistantMap(new FileInfo(Path.Combine(directory.FullName,key.String+".meta")));
+//					map[key]=value;
+					SaveToFile(value,Path.Combine(directory.FullName,key.String+".meta"));
+				}
+				else
+				{
+					throw new ApplicationException("Cannot set key "+key.ToString()+" in DirectoryStrategy.");
+				}
 				// TODO: implement
 			}
 		}
@@ -1670,6 +1686,10 @@ namespace Meta
 		public FileStrategy(FileInfo file)
 		{
 			this.file=file;
+			if(!file.Exists)
+			{
+				file.Create().Close();
+			}
 		}
 		private FileInfo file;
 		public override ArrayList Array
@@ -1681,7 +1701,8 @@ namespace Meta
 		}
 		public override IMap CloneMap()
 		{
-			return this.map; // TODO: wrong, wrong, wrong
+			return new NormalMap(this.Clone());
+			//return this.map; // TODO: wrong, wrong, wrong
 		}
 //		IMap data;
 		public override ArrayList Keys
@@ -3374,7 +3395,7 @@ namespace Meta
 			}
 			return strategy;	
 		}
-		public abstract IMap CloneMap();// TODO: why is this even needed
+		public abstract IMap CloneMap();// TODO: refactor
 		public abstract ArrayList Array
 		{
 			get;
