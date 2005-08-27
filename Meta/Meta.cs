@@ -877,7 +877,7 @@ namespace Meta
 				ArrayList array=new ArrayList();
 				foreach(IMap key in this.Keys) // TODO: need to sort the keys, by integer?? or require that keys are already sorted
 				{
-					if(Helper.IsInteger(key))
+					if(key.IsInteger)
 					{
 						array.Add(this[key]);
 					}
@@ -1852,7 +1852,7 @@ namespace Meta
 		}
 		public static object ToDotNet(IMap meta,Type target,out bool isConverted)
 		{
-			if(target.IsSubclassOf(typeof(Enum)) && Helper.IsInteger(meta))
+			if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
 			{ 
 				isConverted=true;
 				return Enum.ToObject(target,meta.Integer.Int);
@@ -1909,7 +1909,8 @@ namespace Meta
 				ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
 				if(conversion==null)
 				{
-					if(oDotNet is IMap || Helper.IsInteger(oDotNet))
+					if(oDotNet is IMap)
+					//if(oDotNet is IMap || IsInteger(oDotNet))
 					{
 						meta=(IMap)oDotNet;
 					}
@@ -1927,11 +1928,12 @@ namespace Meta
 		}
 		public static object ToDotNet(IMap meta) 
 		{
-			if(Helper.IsInteger(meta))
+			if(meta.IsInteger)
 			{
 				return meta.Integer.Int;
 			}
-			else if(meta is IMap && meta.IsString)
+			else if(meta.IsString)
+			//else if(meta is IMap && meta.IsString)
 			{
 				return meta.String;
 			}
@@ -2317,7 +2319,8 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				IMap map=toConvert;
-				if(Helper.IsInteger(map[new NormalMap("numerator")]) && Helper.IsInteger(map[new NormalMap("denominator")]))
+				if(map[new NormalMap("numerator")].IsInteger && map[new NormalMap("denominator")].IsInteger)
+				//if(Helper.IsInteger(map[new NormalMap("numerator")]) && Helper.IsInteger(map[new NormalMap("denominator")]))
 				{
 					isConverted=true;
 					return ((decimal)(map[new NormalMap("numerator")]).Integer.LongValue())/((decimal)(map[new NormalMap("denominator")]).Integer.LongValue());
@@ -2340,7 +2343,8 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				IMap map=toConvert;
-				if(Helper.IsInteger(map[new NormalMap("numerator")]) && Helper.IsInteger(map[new NormalMap("denominator")]))
+				if(map[new NormalMap("numerator")].IsInteger && map[new NormalMap("denominator")].IsInteger)
+				//if(Helper.IsInteger(map[new NormalMap("numerator")]) && Helper.IsInteger(map[new NormalMap("denominator")]))
 				{
 					isConverted=true;
 					return ((double)(map[new NormalMap("numerator")]).Integer.LongValue())/((double)(map[new NormalMap("denominator")]).Integer.LongValue());
@@ -2363,7 +2367,7 @@ namespace Meta
 			public override object Convert(IMap toConvert, out bool isConverted)
 			{
 				IMap map=toConvert;
-				if(Helper.IsInteger(map[new NormalMap("numerator")]) && Helper.IsInteger(map[new NormalMap("denominator")]))
+				if(map[new NormalMap("numerator")].IsInteger && map[new NormalMap("denominator")].IsInteger)
 				{
 					isConverted=true;
 					return ((float)(map[new NormalMap("numerator")]).Integer.LongValue())/((float)(map[new NormalMap("denominator")]).Integer.LongValue());
@@ -3097,7 +3101,7 @@ namespace Meta
 		{
 			get
 			{
-				if(Helper.IsInteger(key))
+				if(key.IsInteger)
 				{
 					int iInteger=key.Integer.Int;
 					if(iInteger>0 && iInteger<=this.Count)
@@ -3115,7 +3119,7 @@ namespace Meta
 		}
 		public override bool ContainsKey(IMap key) 
 		{
-			if(Helper.IsInteger(key))
+			if(key.IsInteger)
 			{
 				return key.Integer>0 && key.Integer<=this.Count;
 			}
@@ -3205,7 +3209,7 @@ namespace Meta
 				{
 					foreach(IMap val in this.Array)
 					{
-						if(Helper.IsInteger(val))
+						if(val.IsInteger)
 						{
 							try
 							{
@@ -3274,7 +3278,7 @@ namespace Meta
 				ArrayList array=new ArrayList();
 				foreach(IMap key in Keys)
 				{
-					if(Helper.IsInteger(key))
+					if(key.IsInteger)
 					{
 						array.Add(this[key]);
 					}
@@ -3370,7 +3374,7 @@ namespace Meta
 						result=null;
 					}
 				}
-				else if(this.obj!=null && Helper.IsInteger(key) && this.type.IsArray)
+				else if(this.obj!=null && key.IsInteger && this.type.IsArray)
 				{
 					result=Convert.ToMeta(((Array)obj).GetValue(key.Integer.Int));
 				}
@@ -3396,63 +3400,50 @@ namespace Meta
 				if(key.IsString && type.GetMember(key.String,bindingFlags).Length!=0)
 				{
 					string text=key.String;
-					if(text.Equals("Text"))
+					MemberInfo member=type.GetMember(text,bindingFlags)[0];
+					if(member is FieldInfo)
 					{
-						int asdf=0;
-					}
-					MemberInfo[] members=type.GetMember(text,bindingFlags);
-					if(members[0] is MethodBase)
-					{
-						throw new ApplicationException("Cannot set MethodeBase "+key+".");
-					}
-					else if(members[0] is FieldInfo)
-					{
-						FieldInfo field=(FieldInfo)members[0];
+						FieldInfo field=(FieldInfo)member;
 						bool isConverted;
-						object val;
-						val=DotNetMethod.ConvertParameter(value,field.FieldType,out isConverted);
+						object val=DotNetMethod.ConvertParameter(value,field.FieldType,out isConverted);
 						if(isConverted)
 						{
 							field.SetValue(obj,val);
 						}
-//						else
-//						{
-//							val=DotNetMethod.AssignCollection(value,field.GetValue(obj),out isConverted);
-//						}
-						if(!isConverted)
+						else
 						{
-							throw new ApplicationException("Field "+field.Name+"could not be assigned because it cannot be converted.");
+							throw new ApplicationException("Field "+field.Name+"could not be assigned because the value cannot be converted.");
 						}
 					}
-					else if(members[0] is PropertyInfo)
+					else if(member is PropertyInfo)
 					{
-						PropertyInfo property=(PropertyInfo)members[0];
+						PropertyInfo property=(PropertyInfo)member;
 						bool isConverted;
 						object val=DotNetMethod.ConvertParameter(value,property.PropertyType,out isConverted);
 						if(isConverted)
 						{
 							property.SetValue(obj,val,new object[]{});
 						}
-//						else
-//						{
-//							DotNetMethod.AssignCollection(value,property.GetValue(obj,new object[]{}),out isConverted);
-//							if(!isConverted)
-//							{
-//								throw new ApplicationException("Property "+this.type.Name+"."+DirectoryStrategy.SerializeKey(key)+" could not be set to "+value.ToString()+". The value can not be isConverted.");
-//							}
-//						}
+						else
+						{
+							throw new ApplicationException("Property "+property.Name+"could not be assigned because the value cannot be converted.");
+						}
 						return;
 					}
-					else if(members[0] is EventInfo)
+					else if(member is EventInfo)
 					{
-						((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,value));
+						((EventInfo)member).AddEventHandler(obj,CreateEventDelegate(text,value));
 					}
+					else if(member is MethodBase)
+					{
+						throw new ApplicationException("Cannot assign to method "+member.Name+".");
+					}					 
 					else
 					{
 						throw new ApplicationException("Could not assign "+text+" .");
 					}
 				}
-				else if(obj!=null && Helper.IsInteger(key) && type.IsArray)
+				else if(obj!=null && key.IsInteger && type.IsArray)
 				{
 					bool isConverted; 
 					object converted=Convert.ToDotNet(value,type.GetElementType(),out isConverted);
@@ -3478,12 +3469,83 @@ namespace Meta
 					}
 				}
 			}
+//			set
+//			{
+//				if(key.IsString && type.GetMember(key.String,bindingFlags).Length!=0)
+//				{
+//					string text=key.String;
+//					MemberInfo[] members=type.GetMember(text,bindingFlags);
+//					if(members[0] is MethodBase)
+//					{
+//						throw new ApplicationException("Cannot set MethodeBase "+key+".");
+//					}
+//					else if(members[0] is FieldInfo)
+//					{
+//						FieldInfo field=(FieldInfo)members[0];
+//						bool isConverted;
+//						object val;
+//						val=DotNetMethod.ConvertParameter(value,field.FieldType,out isConverted);
+//						if(isConverted)
+//						{
+//							field.SetValue(obj,val);
+//						}
+//						if(!isConverted)
+//						{
+//							throw new ApplicationException("Field "+field.Name+"could not be assigned because it cannot be converted.");
+//						}
+//					}
+//					else if(members[0] is PropertyInfo)
+//					{
+//						PropertyInfo property=(PropertyInfo)members[0];
+//						bool isConverted;
+//						object val=DotNetMethod.ConvertParameter(value,property.PropertyType,out isConverted);
+//						if(isConverted)
+//						{
+//							property.SetValue(obj,val,new object[]{});
+//						}
+//						return;
+//					}
+//					else if(members[0] is EventInfo)
+//					{
+//						((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,value));
+//					}
+//					else
+//					{
+//						throw new ApplicationException("Could not assign "+text+" .");
+//					}
+//				}
+//				else if(obj!=null && Helper.IsInteger(key) && type.IsArray)
+//				{
+//					bool isConverted; 
+//					object converted=Convert.ToDotNet(value,type.GetElementType(),out isConverted);
+//					if(isConverted)
+//					{
+//						((Array)obj).SetValue(converted,key.Integer.Int);
+//						return;
+//					}
+//				}
+//				else
+//				{
+//					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type); // TODO: refactor
+//					IMap argument=new NormalMap();// TODO: refactor
+//					argument[new NormalMap(new Integer(1))]=key;
+//					argument[new NormalMap(new Integer(2))]=value;
+//					try
+//					{
+//						indexer.Call(argument);
+//					}
+//					catch(Exception e)
+//					{
+//						throw new ApplicationException("Cannot set "+Convert.ToDotNet(key).ToString()+".");// TODO: change exception
+//					}
+//				}
+//			}
 		}
 		public string Serialize(string indent,string[] functions)
 		{
 			return indent;
 		}
-		public Delegate CreateEvent(string name,IMap code)
+		public Delegate CreateEventDelegate(string name,IMap code)
 		{
 			EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
 				BindingFlags.Static|BindingFlags.Instance);
@@ -3794,10 +3856,10 @@ namespace Meta
 	}
 	public class Helper
 	{
-		public static bool IsInteger(object obj) // TODO: use IMap instead of object
-		{
-			return obj is IMap && ((IMap)obj).Integer!=null;
-		}
+//		public static bool IsInteger(object obj) // TODO: use IMap instead of object
+//		{
+//			return obj is IMap && ((IMap)obj).Integer!=null;
+//		}
 		public static void WriteFile(string fileName,string text)
 		{
 			StreamWriter writer=new StreamWriter(fileName);
