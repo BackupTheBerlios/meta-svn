@@ -1173,6 +1173,8 @@ namespace Meta
 	{
 		public static void SaveToFile(IMap meta,string path)
 		{
+			Directory.CreateDirectory(Path.GetDirectoryName(path));
+			File.Create(path).Close();
 			StreamWriter streamWriter=new StreamWriter(path);
 			//streamWriter.Write(SerializeValue(meta));
 			streamWriter.Write(SerializeValue(meta).Trim(new char[]{'\n'}));
@@ -1363,13 +1365,14 @@ namespace Meta
 					assemblies.Add(Assembly.LoadFrom(exePath));
 				}
 			}
-//			string cachedAssemblyPath=Path.Combine(Interpreter.installationPath,"cachedAssemblyInfo.meta");
-//			if(File.Exists(cachedAssemblyPath))
-//			{
-//				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
-//			}
+			string cachedAssemblyPath=Path.Combine(directory.FullName,"assembly\\cachedAssemblyInfo.meta");
+//			cachedAssemblyPath=Path.Combine(Interpreter.installationPath,"cachedAssemblyInfo.meta");
+			if(File.Exists(cachedAssemblyPath))
+			{
+				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
+			}
 			cache=LoadNamespaces(assemblies);
-			//DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
+			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 		}
 		public override ArrayList Keys
 		{
@@ -1424,7 +1427,7 @@ namespace Meta
 //		}
 		private bool ValidName(string key)
 		{
-			return !key.StartsWith(".");
+			return !key.StartsWith(".") && !key.Equals("assembly");
 		}
 		public override Integer Integer
 		{
