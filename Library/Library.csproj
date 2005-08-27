@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "copy library.dll ..\"
+                PostBuildEvent = "copy library.dll ..\assembly\"
                 RootNamespace = "library"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""

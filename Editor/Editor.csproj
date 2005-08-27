@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "WinExe"
                 PreBuildEvent = ""
-                PostBuildEvent = "copy Editor.exe ..\Library\"
+                PostBuildEvent = "copy Editor.exe ..\Library\assembly\"
                 RootNamespace = "EditorTest"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
