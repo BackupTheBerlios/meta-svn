@@ -32,6 +32,12 @@ testSubDir.x:
 	x=
 		x="hello"
 		y="world"
+integerHashTest=
+	2="correct hash content"
+	hashTest=[
+		[""]=
+			[""]=""
+	]
 persistenceTest=testSubDir
 interpreter.line:"5"
 literalEscapeTest=

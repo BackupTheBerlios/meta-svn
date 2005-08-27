@@ -4026,8 +4026,12 @@ namespace Meta
 	{
 		public override int GetHashCode()
 		{
-			return base.GetHashCode ();
+			return 0; // TODO: make more efficient, but keep correctness
 		}
+//		public override int GetHashCode()
+//		{
+//			return base.GetHashCode ();
+//		}
 		private Integer number;
 		public override Integer Integer
 		{

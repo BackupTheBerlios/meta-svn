@@ -108,6 +108,20 @@ Entry (DictionaryEntry)
     ""
 Entry (DictionaryEntry)
   Key (NormalMap):
+    "integerHashTest"
+  Value (NormalMap):
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "2"
+      Value (NormalMap):
+        "correct hash content"
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "hashTest"
+      Value (NormalMap):
+        "correct hash content"
+Entry (DictionaryEntry)
+  Key (NormalMap):
     "persistenceTest"
   Value (NormalMap):
     Entry (DictionaryEntry)
