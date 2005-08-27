@@ -188,10 +188,6 @@ namespace Meta
 			local.Parent=parent;
 			for(int i=0;i<statements.Count && i>=0;)
 			{
-				if(i==85)
-				{
-					int asdf=0;
-				}
 				if(Interpreter.reverseDebug)
 				{
 					bool stopReverse=((Statement)statements[i]).Undo(); // Statement should have separate Stop() function
@@ -600,7 +596,13 @@ namespace Meta
 		{
 			return MergeCollection(arkvlToMerge);
 		}
-		// TODO: integrate merging into the IMap, and specialise
+		// TODO: integrate merging into the IMap, and specialise, I think this is still buggy, how far down do we want to merge, anyway, 
+		// TODO: overwriting should be disallowed, must decide on exception handling first, though
+		// or allow overwritign??, probably must be allowed, for default arguments
+		// however, doesnt work as expected for integers, maybe
+		// whhere does overwriting start, where to draw the line
+
+		//ugly hack would be, dont merge if it is an integer, or a class or an object, or whatever
 		public static IMap MergeCollection(ICollection collection)
 		{
 			IMap result=new NormalMap();
@@ -625,7 +627,6 @@ namespace Meta
 		{
 			IMap program=Interpreter.Compile(fileName);
 			return CallProgram(program,argument,GetPersistantMaps(fileName));
-			//return CallProgram(program,argument,GAC.library);
 		}
 		public static IMap GetPersistantMaps(string fileName)
 		{
@@ -679,10 +680,10 @@ namespace Meta
 			file.Close();
 			return ast;
 		}
+		// TODO: debugging is messy
 		private static void ExecuteInThread()
 		{
 			Interpreter.Run(executeFileName,new NormalMap());
-			int asdf=0;
 		}
 		private static string executeFileName="";
 		public static void StartDebug(string fileName)
@@ -708,7 +709,8 @@ namespace Meta
 
 			installationPath=@"c:\_projectsupportmaterial\meta";
 		}
-		public static string installationPath;
+		public static string installationPath; // TODO: too many paths
+		// TODO: infer path from executable path
 		public static DirectoryInfo LibraryPath
 		{
 			get
@@ -817,38 +819,62 @@ namespace Meta
 			}
 		}
 		IMap arg=null;
-		public virtual bool IsString // TODO: dont do try-catch, instead return null from all Strings and check for that
+		public virtual bool IsString
 		{
 			get
 			{
 				return String!=null;
 			}
 		}
+		public static string GetString(IMap map)
+		{
+			string text="";
+			foreach(IMap key in map.Keys)
+			{
+				if(key.Integer!=null && map[key].Integer!=null)
+				{
+					try
+					{
+						text+=System.Convert.ToChar(map[key].Integer.Int);
+					}
+					catch
+					{
+						return null;
+					}
+				}
+				else
+				{
+					return null;
+				}
+			}
+			return text;
+		}
 		// TODO: this is duplicated in MapStrategy
 		public virtual string String // TODO: put this into a separate function, with IEnumerable as argument, maybe
 		{
 			get
 			{
-				string text="";
-				foreach(IMap key in this.Keys)
-				{
-					if(key.Integer!=null && this[key].Integer!=null)
-					{
-						try
-						{
-							text+=System.Convert.ToChar(this[key].Integer.Int);
-						}
-						catch
-						{
-							return null;
-						}
-					}
-					else
-					{
-						return null;
-					}
-				}
-				return text;
+				return GetString(this);
+//				string text="";
+//				foreach(IMap key in this.Keys)
+//				{
+//					if(key.Integer!=null && this[key].Integer!=null)
+//					{
+//						try
+//						{
+//							text+=System.Convert.ToChar(this[key].Integer.Int);
+//						}
+//						catch
+//						{
+//							return null;
+//						}
+//					}
+//					else
+//					{
+//						return null;
+//					}
+//				}
+//				return text;
 			
 			}
 		}
@@ -3162,8 +3188,6 @@ namespace Meta
 				return number;
 			}
 		}
-
-
 		ArrayList keys;
 		private HybridDictionary dictionary;
 		public HybridDictionaryStrategy():this(2)
@@ -3856,10 +3880,6 @@ namespace Meta
 	}
 	public class Helper
 	{
-//		public static bool IsInteger(object obj) // TODO: use IMap instead of object
-//		{
-//			return obj is IMap && ((IMap)obj).Integer!=null;
-//		}
 		public static void WriteFile(string fileName,string text)
 		{
 			StreamWriter writer=new StreamWriter(fileName);
