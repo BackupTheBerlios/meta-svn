@@ -85,7 +85,7 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-//			args=new string[] {@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta"};
+			//args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
 //			args[0]=@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta";
 			//			args[0]=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
 			//args=new string[]{@"C:\_ProectSupportMaterial\Meta\library\function.meta"};
@@ -100,7 +100,7 @@ namespace Test
 				{
 					string data="";
 					string key=args[i].TrimStart('-');
-					if(i+1<args.Length)
+					if(i+1<args.Length-1)
 					{
 						string next=args[i+1];
 						if(!next.StartsWith("-"))
@@ -113,12 +113,10 @@ namespace Test
 				}
 				else
 				{
-					if(i==args.Length-1)
-					{
-						fileName=args[i];
-					}
+					fileName=args[i];
 				}
 			}
+
 			if(options.ContainsKey("debug"))
 			{
 				Run(fileName);

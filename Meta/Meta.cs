@@ -2310,6 +2310,24 @@ namespace Meta
 //	}
 	public class Convert
 	{
+//		static Convert()
+//		{
+//			foreach(Type conversionType in typeof(ToMetaConversions).GetNestedTypes())
+//			{
+//				ToMeta conversion=((ToMeta)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+//				toMeta[conversion.source]=conversion;
+//			}
+//			foreach(Type conversionType in typeof(ToDotNetConversions).GetNestedTypes())
+//			{
+//				ToDotNet conversion=(ToDotNet)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{});
+//				if(!toDotNet.ContainsKey(conversion.target))
+//				{
+//					toDotNet[conversion.target]=conversion;
+////					toDotNet[conversion.target]=new Hashtable();
+//				}
+////				((Hashtable)toDotNet[conversion.target])[conversion.source]=conversion;
+//			}
+//		}
 		static Convert()
 		{
 			foreach(Type conversionType in typeof(ToMetaConversions).GetNestedTypes())
@@ -2326,6 +2344,53 @@ namespace Meta
 				}
 				((Hashtable)toDotNet[conversion.target])[conversion.source]=conversion;
 			}
+		}
+
+		// TODO: maybe refactor with above
+		public static object ToDotNet(IMap meta) 
+		{
+			if(meta.IsInteger)
+			{
+				return meta.Integer.Int;
+			}
+			else if(meta.IsString)
+				//else if(meta is IMap && meta.IsString)
+			{
+				return meta.String;
+			}
+			else
+			{
+				return meta;
+			}
+		}
+
+//		public static object ToDotNet(IMap meta,Type target)
+//		{ 
+//			if(target==typeof(System.Int32))
+//			{
+//				int asdf=0;
+//			}
+//			object result=meta;
+//			if(toDotNet.ContainsKey(target))
+//			{
+//				Hashtable conversions=(Hashtable)toDotNet[target];
+//				if(conversions.ContainsKey(meta.GetType()))
+//				{
+//					ToDotNet conversion=(ToDotNet)conversions[meta.GetType()];
+//					bool isConverted;
+//					object converted= conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
+//					if(isConverted)
+//					{
+//						result=converted;
+//					}
+//				}
+//			}
+//			return result;
+//		}
+		public static object ToDotNet(IMap meta,Type target)
+		{
+			bool isConverted;
+			return ToDotNet(meta,target,out isConverted);
 		}
 		public static object ToDotNet(IMap meta,Type target,out bool isConverted)
 		{
@@ -2344,32 +2409,8 @@ namespace Meta
 				}
 			}
 			isConverted=false;
-			return null;
-		}
-		// TODO: maybe refactor with above
-		public static object ToDotNet(IMap meta,Type target)
-		{ 
-			if(target==typeof(System.Int32))
-			{
-				int asdf=0;
-			}
-			object result=meta;
-			if(toDotNet.ContainsKey(target))
-			{
-				Hashtable conversions=(Hashtable)toDotNet[target];
-				if(conversions.ContainsKey(meta.GetType()))
-				{
-					ToDotNet conversion=(ToDotNet)conversions[meta.GetType()];
-					bool isConverted;
-					object converted= conversion.Convert(meta,out isConverted); // TODO: Why ignore isConverted here?, Should really loop through all the possibilities -> no not necessary here, type determines conversion
-					if(isConverted)
-					{
-						result=converted;
-					}
-				}
-			}
-			return result;
-		}
+			return meta;
+		}	
 		public static IMap ToMeta(object oDotNet)
 		{ 
 			IMap meta;
@@ -2402,22 +2443,6 @@ namespace Meta
 				}
 			}
 			return meta;
-		}
-		public static object ToDotNet(IMap meta) 
-		{
-			if(meta.IsInteger)
-			{
-				return meta.Integer.Int;
-			}
-			else if(meta.IsString)
-			//else if(meta is IMap && meta.IsString)
-			{
-				return meta.String;
-			}
-			else
-			{
-				return meta;
-			}
 		}
 		private static Hashtable toDotNet=new Hashtable();
 		private static Hashtable toMeta=new Hashtable();
