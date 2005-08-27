@@ -384,6 +384,10 @@ namespace Meta
 
 		public override IMap EvaluateImplementation(IMap parent)
 		{
+			if(literal.Equals(new NormalMap("testSubDir")))
+			{
+				int asdf=0;
+			}
 			return literal;
 		}
 		public Literal(IMap code)
@@ -1348,13 +1352,16 @@ namespace Meta
 			ArrayList assemblies=new ArrayList();
 			assemblyPath=Path.Combine(directory.FullName,"assembly");
 //			assemblies=GlobalAssemblyCache.Assemblies;
-			foreach(string dllPath in System.IO.Directory.GetFiles(assemblyPath,"*.dll"))
+			if(Directory.Exists(assemblyPath))
 			{
-				assemblies.Add(Assembly.LoadFrom(dllPath));
-			}
-			foreach(string exePath in System.IO.Directory.GetFiles(assemblyPath,"*.exe"))
-			{
-				assemblies.Add(Assembly.LoadFrom(exePath));
+				foreach(string dllPath in System.IO.Directory.GetFiles(assemblyPath,"*.dll"))
+				{
+					assemblies.Add(Assembly.LoadFrom(dllPath));
+				}
+				foreach(string exePath in System.IO.Directory.GetFiles(assemblyPath,"*.exe"))
+				{
+					assemblies.Add(Assembly.LoadFrom(exePath));
+				}
 			}
 //			string cachedAssemblyPath=Path.Combine(Interpreter.installationPath,"cachedAssemblyInfo.meta");
 //			if(File.Exists(cachedAssemblyPath))
@@ -1438,7 +1445,7 @@ namespace Meta
 					if(ValidName(key.String))
 					{
 						string path=Path.Combine(directory.FullName,key.String);
-						FileInfo file=new FileInfo(path);
+						FileInfo file=new FileInfo(path+".meta");
 						if(file.Exists)
 						{
 							result=new PersistantMap(file);
@@ -1673,25 +1680,26 @@ namespace Meta
 		{
 			return this.map; // TODO: wrong, wrong, wrong
 		}
+//		IMap data;
 		public override ArrayList Keys
 		{
 			get
 			{
-				return null;
+				return GetMap().Keys;
 			}
 		}
 		public override Integer Integer // TODO: implement a default implementation in MapStrategy
 		{
 			get
 			{
-				return null; // TODO: not entirely correct, this COULD be a number
+				return GetMap().Integer; // TODO: not entirely correct, this COULD be a number
 			}
 		}
 		private IMap GetMap()
 		{
-			IMap map=Interpreter.Compile(this.file.FullName);
-			map.Parent=this.map;
-			return map;
+			IMap data=Interpreter.Compile(this.file.FullName);
+			data.Parent=this.map;
+			return data;
 		}
 		private void SaveMap(IMap map)
 		{
@@ -1701,14 +1709,14 @@ namespace Meta
 		{
 			get
 			{
-				IMap map=GetMap();
-				return map[key];
+				IMap data=GetMap();
+				return data[key];
 			}
 			set
 			{
-				IMap map=GetMap();
-				map[key]=value;
-				SaveMap(map);
+				IMap data=GetMap();
+				data[key]=value;
+				SaveMap(data);
 			}
 		}
 	}
