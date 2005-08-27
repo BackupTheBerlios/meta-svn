@@ -609,19 +609,39 @@ namespace Meta
 			{
 				foreach(DictionaryEntry entry in current)
 				{
-					if(!(entry.Value is DotNetClass) && result.ContainsKey((IMap)entry.Key) // TODO: this is a mess
-						 && !(result[(IMap)entry.Key] is DotNetClass))
-					{
-						result[(IMap)entry.Key]=Merge(result[(IMap)entry.Key],(IMap)entry.Value);
-					}
-					else
-					{
+//					if(!(entry.Value is DotNetClass) && result.ContainsKey((IMap)entry.Key) // TODO: this is a mess
+//						&& !(result[(IMap)entry.Key] is DotNetClass))
+//					{
+//						result[(IMap)entry.Key]=Merge(result[(IMap)entry.Key],(IMap)entry.Value);
+//					}
+//					else
+//					{
 						result[(IMap)entry.Key]=(IMap)entry.Value;
-					}
+//					}
 				}
 			}
 			return result;
 		}
+//		public static IMap MergeCollection(ICollection collection)
+//		{
+//			IMap result=new NormalMap();
+//			foreach(IMap current in collection)
+//			{
+//				foreach(DictionaryEntry entry in current)
+//				{
+//					if(!(entry.Value is DotNetClass) && result.ContainsKey((IMap)entry.Key) // TODO: this is a mess
+//						 && !(result[(IMap)entry.Key] is DotNetClass))
+//					{
+//						result[(IMap)entry.Key]=Merge(result[(IMap)entry.Key],(IMap)entry.Value);
+//					}
+//					else
+//					{
+//						result[(IMap)entry.Key]=(IMap)entry.Value;
+//					}
+//				}
+//			}
+//			return result;
+//		}
 		public static IMap Run(string fileName,IMap argument)
 		{
 			IMap program=Interpreter.Compile(fileName);
