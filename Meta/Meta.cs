@@ -223,11 +223,6 @@ namespace Meta
 			object a=code.Array;
 			foreach(IMap statement in code.Array)
 			{
-				if(statement==null)
-				{
-					object x=code.Array;
-					int asdf=0;
-				}
 				this.statements.Add(new Statement(statement));
 			}
 		}
@@ -259,7 +254,7 @@ namespace Meta
 		string fileName;
 	}
 
-	public abstract class Filter
+	public abstract class Filter // TODO: rename, remove??
 	{
 		public abstract IMap Detect(string text);
 	}
@@ -640,10 +635,7 @@ namespace Meta
 					current.Parent=GAC.library;
 					break;
 				}
-				else
-				{
-					current.Parent=new PersistantMap(directory.Parent);
-				}
+				current.Parent=new PersistantMap(directory.Parent);
 				current=current.Parent;
 			}
 			return root;
@@ -680,7 +672,6 @@ namespace Meta
 			file.Close();
 			return ast;
 		}
-		// TODO: debugging is messy
 		private static void ExecuteInThread()
 		{
 			Interpreter.Run(executeFileName,new NormalMap());
@@ -709,8 +700,7 @@ namespace Meta
 
 			installationPath=@"c:\_projectsupportmaterial\meta";
 		}
-		public static string installationPath; // TODO: too many paths
-		// TODO: infer path from executable path
+		public static string installationPath;
 		public static DirectoryInfo LibraryPath
 		{
 			get
@@ -849,33 +839,11 @@ namespace Meta
 			}
 			return text;
 		}
-		// TODO: this is duplicated in MapStrategy
-		public virtual string String // TODO: put this into a separate function, with IEnumerable as argument, maybe
+		public virtual string String
 		{
 			get
 			{
 				return GetString(this);
-//				string text="";
-//				foreach(IMap key in this.Keys)
-//				{
-//					if(key.Integer!=null && this[key].Integer!=null)
-//					{
-//						try
-//						{
-//							text+=System.Convert.ToChar(this[key].Integer.Int);
-//						}
-//						catch
-//						{
-//							return null;
-//						}
-//					}
-//					else
-//					{
-//						return null;
-//					}
-//				}
-//				return text;
-			
 			}
 		}
 		public virtual IMap Parent
@@ -1004,8 +972,6 @@ namespace Meta
 			}
 			return hash;
 		}
-		private bool isHashCached=false;
-		private int hash;
 		Extent extent;
 		public Extent Extent
 		{
@@ -1104,10 +1070,9 @@ namespace Meta
 				return strategy.Keys;
 			}
 		}
-		protected abstract StrategyMap CloneImplementation();
+//		protected abstract StrategyMap CloneImplementation();
 		public override IMap Clone()
 		{
-			//IMap clone=CloneImplementation();
 			IMap clone=strategy.CloneMap();
 			clone.Parent=Parent;
 			clone.Extent=Extent;
@@ -1159,10 +1124,10 @@ namespace Meta
 	}
 	public class NormalMap:StrategyMap
 	{
-		protected override StrategyMap CloneImplementation()
-		{
-			return new NormalMap(strategy.Clone());
-		}
+//		protected override StrategyMap CloneImplementation()
+//		{
+//			return new NormalMap(strategy.Clone());
+//		}
 
 		public NormalMap(MapStrategy strategy):base(strategy) // TOOD: NormalMap should only accept Strategies that make sense for the normal map
 		{
@@ -1182,10 +1147,10 @@ namespace Meta
 	}
 	public class PersistantMap:StrategyMap
 	{
-		protected override StrategyMap CloneImplementation()
-		{
-			return new NormalMap(strategy.Clone());
-		}
+//		protected override StrategyMap CloneImplementation()
+//		{
+//			return new NormalMap(strategy.Clone());
+//		}
 
 		public PersistantMap(PersistantStrategy strategy):base(strategy)
 		{
@@ -3219,7 +3184,6 @@ namespace Meta
 				return list;
 			}
 		}
-		// TODO: combine with IMap.String
 		public override string String
 		{
 			get
@@ -3371,7 +3335,7 @@ namespace Meta
 					}
 					else if(members[0] is EventInfo)
 					{
-						try // TODO: determine if necessary, then remove or fix
+						try // TODO: refactor
 						{
 							Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
 								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
@@ -3418,7 +3382,6 @@ namespace Meta
 				}
 				return result;
 			}
-			// TODO: refactor
 			set
 			{
 				if(key.IsString && type.GetMember(key.String,bindingFlags).Length!=0)
@@ -3493,77 +3456,6 @@ namespace Meta
 					}
 				}
 			}
-//			set
-//			{
-//				if(key.IsString && type.GetMember(key.String,bindingFlags).Length!=0)
-//				{
-//					string text=key.String;
-//					MemberInfo[] members=type.GetMember(text,bindingFlags);
-//					if(members[0] is MethodBase)
-//					{
-//						throw new ApplicationException("Cannot set MethodeBase "+key+".");
-//					}
-//					else if(members[0] is FieldInfo)
-//					{
-//						FieldInfo field=(FieldInfo)members[0];
-//						bool isConverted;
-//						object val;
-//						val=DotNetMethod.ConvertParameter(value,field.FieldType,out isConverted);
-//						if(isConverted)
-//						{
-//							field.SetValue(obj,val);
-//						}
-//						if(!isConverted)
-//						{
-//							throw new ApplicationException("Field "+field.Name+"could not be assigned because it cannot be converted.");
-//						}
-//					}
-//					else if(members[0] is PropertyInfo)
-//					{
-//						PropertyInfo property=(PropertyInfo)members[0];
-//						bool isConverted;
-//						object val=DotNetMethod.ConvertParameter(value,property.PropertyType,out isConverted);
-//						if(isConverted)
-//						{
-//							property.SetValue(obj,val,new object[]{});
-//						}
-//						return;
-//					}
-//					else if(members[0] is EventInfo)
-//					{
-//						((EventInfo)members[0]).AddEventHandler(obj,CreateEvent(text,value));
-//					}
-//					else
-//					{
-//						throw new ApplicationException("Could not assign "+text+" .");
-//					}
-//				}
-//				else if(obj!=null && Helper.IsInteger(key) && type.IsArray)
-//				{
-//					bool isConverted; 
-//					object converted=Convert.ToDotNet(value,type.GetElementType(),out isConverted);
-//					if(isConverted)
-//					{
-//						((Array)obj).SetValue(converted,key.Integer.Int);
-//						return;
-//					}
-//				}
-//				else
-//				{
-//					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type); // TODO: refactor
-//					IMap argument=new NormalMap();// TODO: refactor
-//					argument[new NormalMap(new Integer(1))]=key;
-//					argument[new NormalMap(new Integer(2))]=value;
-//					try
-//					{
-//						indexer.Call(argument);
-//					}
-//					catch(Exception e)
-//					{
-//						throw new ApplicationException("Cannot set "+Convert.ToDotNet(key).ToString()+".");// TODO: change exception
-//					}
-//				}
-//			}
 		}
 		public string Serialize(string indent,string[] functions)
 		{
@@ -3647,6 +3539,11 @@ namespace Meta
 	}
 	public class IntegerStrategy:MapStrategy // TODO: override GetHashCode
 	{
+		public override int GetHashCode()
+		{
+			return base.GetHashCode ();
+		}
+
 		private Integer number;
 		public override Integer Integer
 		{
@@ -3759,10 +3656,10 @@ namespace Meta
 				if(key.Equals(IntegerKeys.EmptyMap)) // TODO: implement
 				{
 					IMap map=value;// TODO: remove
-					if(map.Integer!=null)
-					{
-						int asdf=0; // TODO: implement
-					}
+//					if(map.Integer!=null)
+//					{
+//						int asdf=0; // TODO: implement
+//					}
 				}
 				else if(key.Equals(IntegerKeys.Negative))
 				{
