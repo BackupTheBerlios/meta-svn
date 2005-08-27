@@ -624,18 +624,39 @@ namespace Meta
 		public static IMap Run(string fileName,IMap argument)
 		{
 			IMap program=Interpreter.Compile(fileName);
-			return CallProgram(program,argument,GAC.library);
+			return CallProgram(program,argument,GetPersistantMaps(fileName));
+			//return CallProgram(program,argument,GAC.library);
+		}
+		public static IMap GetPersistantMaps(string fileName)
+		{
+			DirectoryInfo directory=new DirectoryInfo(Path.GetDirectoryName(fileName));
+			IMap root=new PersistantMap(directory);
+			IMap current=root;
+			while(true)
+			{
+				if(String.Compare(directory.FullName,Interpreter.LibraryPath.FullName,true)==0)
+				{
+					current.Parent=GAC.library;
+					break;
+				}
+				else
+				{
+					current.Parent=new PersistantMap(directory.Parent);
+				}
+				current=current.Parent;
+			}
+			return root;
 		}
 		public static IMap RunWithoutLibrary(string fileName,IMap argument)
 		{
 			IMap program=Compile(fileName);
 			return CallProgram(program,argument,null);
 		}
-		public static IMap CallProgram(IMap program,IMap argument,IMap parent)
+		public static IMap CallProgram(IMap program,IMap argument,IMap current)
 		{
 			IMap callable=new NormalMap();
 			callable[CodeKeys.Run]=program;
-			callable.Parent=parent;
+			callable.Parent=current;
 			return callable.Call(argument);
 		}
 		public static IMap Compile(string fileName)
@@ -688,6 +709,13 @@ namespace Meta
 			installationPath=@"c:\_projectsupportmaterial\meta";
 		}
 		public static string installationPath;
+		public static DirectoryInfo LibraryPath
+		{
+			get
+			{
+				return new DirectoryInfo(@"c:\_projectsupportmaterial\meta\library");
+			}
+		}
 		public static ArrayList loadedAssemblies=new ArrayList();
 	}
 	public class MetaException:ApplicationException
