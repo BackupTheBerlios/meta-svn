@@ -206,6 +206,10 @@ namespace Test
 				{
 					File.Delete(cachePath);
 				}
+				foreach(FileInfo file in Helper.FindFiles(Interpreter.LibraryPath,"cachedAssemblyInfo.meta"))
+				{
+					file.Delete();
+				}
 				IMap argument=new NormalMap();
 				argument[new NormalMap(1)]=new NormalMap("first arg");
 				//argument[new Integer(1)]="first arg";

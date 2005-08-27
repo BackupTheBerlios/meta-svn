@@ -1171,7 +1171,7 @@ namespace Meta
 	}
 	public class DirectoryStrategy:PersistantStrategy
 	{
-		public static void SaveToFile(IMap meta,string path)
+		public static void SaveToFile(IMap meta,string path)// TODO: refactor
 		{
 			Directory.CreateDirectory(Path.GetDirectoryName(path));
 			File.Create(path).Close();
@@ -4220,6 +4220,22 @@ namespace Meta
 	}
 	public class Helper
 	{
+		public static FileInfo[] FindFiles(DirectoryInfo directory,string fileName)
+		{
+			ArrayList files=new ArrayList();
+			foreach(FileInfo file in directory.GetFiles())
+			{
+				if(file.Name==fileName)
+				{
+					files.Add(file);
+				}
+			}
+			foreach(DirectoryInfo subDirectory in directory.GetDirectories())
+			{
+				files.AddRange(FindFiles(subDirectory,fileName));
+			}
+			return (FileInfo[])files.ToArray(typeof(FileInfo));
+		}
 		public static void WriteFile(string fileName,string text)
 		{
 			StreamWriter writer=new StreamWriter(fileName);
