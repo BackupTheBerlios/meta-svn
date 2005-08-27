@@ -1740,14 +1740,14 @@ namespace Meta
 		public ArrayList NameSpaces(Assembly assembly) //TODO: integrate into LoadNamespaces???
 		{ 
 			ArrayList nameSpaces=new ArrayList();
-			MapAdapter cached=new MapAdapter(cachedAssemblyInfo);
+			MapInfo cached=new MapInfo(cachedAssemblyInfo);
 			if(cached.ContainsKey(assembly.Location))
 			{
-				MapAdapter info=new MapAdapter((IMap)cached[assembly.Location]);
+				MapInfo info=new MapInfo((IMap)cached[assembly.Location]);
 				string timestamp=(string)info["timestamp"];
 				if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
 				{
-					MapAdapter namespaces=new MapAdapter((IMap)info["namespaces"]);
+					MapInfo namespaces=new MapInfo((IMap)info["namespaces"]);
 					foreach(DictionaryEntry entry in namespaces)
 					{
 						nameSpaces.Add((string)entry.Value);
@@ -2376,24 +2376,24 @@ namespace Meta
 			}
 		}
 	}
-	public class MapAdapterEnumerator: IEnumerator
+	public class MapInfoEnumerator: IEnumerator
 	{
-		private MapAdapter mapAdapter;
-		public MapAdapterEnumerator(MapAdapter mapAdapter)
+		private MapInfo MapInfo;
+		public MapInfoEnumerator(MapInfo MapInfo)
 		{
-			this.mapAdapter=mapAdapter;
+			this.MapInfo=MapInfo;
 		}
 		public object Current
 		{
 			get
 			{
-				return new DictionaryEntry(mapAdapter.Keys[index],mapAdapter[mapAdapter.Keys[index]]);
+				return new DictionaryEntry(MapInfo.Keys[index],MapInfo[MapInfo.Keys[index]]);
 			}
 		}
 		public bool MoveNext()
 		{
 			index++;
-			return index<mapAdapter.Count;
+			return index<MapInfo.Count;
 		}
 		public void Reset()
 		{
@@ -2401,15 +2401,15 @@ namespace Meta
 		}
 		private int index=-1;
 	}
-	public class MapAdapter
+	public class MapInfo
 	{ 
 		private IMap map;
-		public MapAdapter(IMap map)
+		public MapInfo(IMap map)
 		{
 			this.map=map;
 		}
 
-		public MapAdapter()
+		public MapInfo()
 		{
 			this.map=new NormalMap();
 		}
@@ -2472,7 +2472,7 @@ namespace Meta
 		}
 		public IEnumerator GetEnumerator()
 		{
-			return new MapAdapterEnumerator(this);
+			return new MapInfoEnumerator(this);
 		}
 	}
 	public class MapEnumerator: IEnumerator

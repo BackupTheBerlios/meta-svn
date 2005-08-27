@@ -115,7 +115,7 @@ public class map
 		}
 		return mResult;
 	}
-	public static IMap Foreach(IMap mArray,IMap mFunction) // TODO: use MapAdapters here
+	public static IMap Foreach(IMap mArray,IMap mFunction) // TODO: use MapInfos here
 	{
 		IMap mResult=new NormalMap();
 		int iCounter=1;
@@ -141,7 +141,7 @@ public class map
 		return mResult;
 	}
 	public static object If(IMap argM) 
-	{ // maybe automatically convert Maps to MapAdapters??
+	{ // maybe automatically convert Maps to MapInfos??
 		bool conditionB=(bool)System.Convert.ToBoolean(Meta.Convert.ToDotNet(argM[new NormalMap(new Integer(1))]));//,typeof(bool));
 		IMap thenF=argM[new NormalMap("then")];
 		IMap elseF=argM[new NormalMap("else")];
