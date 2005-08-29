@@ -1406,7 +1406,7 @@ Entry (DictionaryEntry)
     "testClass"
   Value (DotNetObject):
     decimalValue (Decimal):
-      "0.3333333333333333333333333333"
+      "0.333333333333333"
     doubleValue (Double):
       "0.333333333333333"
     floatValue (Single):
@@ -1809,7 +1809,7 @@ Entry (DictionaryEntry)
     "staticEventResult"
   Value (DotNetObject):
     decimalValue (Decimal):
-      "0.3333333333333333333333333333"
+      "0.333333333333333"
     doubleValue (Double):
       "0.333333333333333"
     floatValue (Single):

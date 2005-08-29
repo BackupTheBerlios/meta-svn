@@ -184,9 +184,11 @@ public class Integer
 	public int dataLength;                 // number of actual chars used
 
 
+
 	//***********************************************************************
 	// Constructor (Default value for Integer is 0
 	//***********************************************************************
+
 
 	public Integer()
 	{
@@ -2494,7 +2496,7 @@ public class Integer
 	//***********************************************************************
 	// Returns the lowest 4 bytes of the Integer as an int.
 	//***********************************************************************
-	public int Int { // maybe rename to Int32??
+	public int Int32 {
 		get {
 			return (int)data[0];
 		}
