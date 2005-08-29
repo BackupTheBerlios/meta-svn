@@ -1019,7 +1019,7 @@ public class Integer
 		while(x>int.MaxValue) {
 			x=x%int.MaxValue;
 		}
-		return x.Int;
+		return x.Int32;
 	}
 //		public override int GetHashCode() {
 //			uint hash=7;
@@ -2503,7 +2503,7 @@ public class Integer
 	}
 	public char Char {
 		get {
-			return Convert.ToChar(Int);
+			return Convert.ToChar(Int32);
 		}
 	}
 //		public int Int
