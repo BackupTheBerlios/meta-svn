@@ -58,7 +58,7 @@ namespace Meta
 		public static readonly IMap Arg=new NormalMap("arg");
 		public static readonly IMap This=new NormalMap("this");
 	}
-	public class IntegerKeys // TODO: rename
+	public class NumberKeys // TODO: rename
 	{
 		public static readonly IMap Denominator=new NormalMap("denominator");
 		public static readonly IMap Numerator=new NormalMap("numerator");
@@ -275,8 +275,8 @@ namespace Meta
 						{
 							Integer denominator=System.Convert.ToInt32(Math.Pow(10,text.Length-pointPos-1));
 							result=new NormalMap();
-							result[IntegerKeys.Numerator]=new NormalMap(numerator);
-							result[IntegerKeys.Denominator]=new NormalMap(denominator);
+							result[NumberKeys.Numerator]=new NormalMap(numerator);
+							result[NumberKeys.Denominator]=new NormalMap(denominator);
 						}
 					}
 				}
@@ -300,8 +300,8 @@ namespace Meta
 							if(denominator!=null)
 							{
 								result=new NormalMap();
-								result[IntegerKeys.Numerator]=new NormalMap(numerator);
-								result[IntegerKeys.Denominator]=new NormalMap(denominator);
+								result[NumberKeys.Numerator]=new NormalMap(numerator);
+								result[NumberKeys.Denominator]=new NormalMap(denominator);
 							}
 						}
 					}
@@ -791,13 +791,13 @@ namespace Meta
 		IMap Call(IMap argument);
 	}
 	public abstract class IMap: ICallable, IEnumerable
-	{
+	{		// TODO: maybe add boolean property??
 		// TODO: maybe use an own fraction type here?? otherwise, loss of precision
 		public virtual bool IsFraction
 		{
 			get
 			{
-				return this.ContainsKey(IntegerKeys.Numerator) && this[IntegerKeys.Numerator].IsInteger && this.ContainsKey(IntegerKeys.Denominator) && this[IntegerKeys.Denominator].IsInteger;
+				return this.ContainsKey(NumberKeys.Numerator) && this[NumberKeys.Numerator].IsInteger && this.ContainsKey(NumberKeys.Denominator) && this[NumberKeys.Denominator].IsInteger;
 			}
 		}
 		public virtual double Fraction
@@ -1164,6 +1164,12 @@ namespace Meta
 		public NormalMap(Integer number):this(new IntegerStrategy(number))
 		{
 		}
+		public NormalMap(double fraction):this(new HybridDictionaryStrategy(fraction))
+		{
+		}
+//		public NormalMap(decimal fraction):this(new HybridDictionaryStrategy(fraction))
+//		{
+//		}
 		public NormalMap(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new LazyNamespace(namespaceName,subNamespaces,assemblies))
 		{
 		}
@@ -2007,16 +2013,16 @@ namespace Meta
 		private IMap cache=new NormalMap();
 		public static string libraryPath="library"; 
 	}
-	public class Convert
+	public class Convert // TODO: rename
 	{
-		static Convert()
-		{
-			foreach(Type conversionType in typeof(ToMetaConversions).GetNestedTypes())
-			{
-				ToMeta conversion=((ToMeta)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-				toMeta[conversion.source]=conversion;
-			}
-		}
+//		static Convert()
+//		{
+////			foreach(Type conversionType in typeof(ToMetaConversions).GetNestedTypes())
+////			{
+////				ToMeta conversion=((ToMeta)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+////				toMeta[conversion.source]=conversion;
+////			}
+//		}
 
 		// TODO: maybe refactor with above
 		public static object ToDotNet(IMap meta) 
@@ -2108,6 +2114,8 @@ namespace Meta
 						dotNet=System.Convert.ToDouble(meta.Fraction);
 					}
 					break;
+//				case TypeCode.Empty:
+//					break;
 				case TypeCode.Int16:
 					if(IsIntegerInRange(meta,Int16.MinValue,Int16.MaxValue))
 					{
@@ -2132,9 +2140,13 @@ namespace Meta
 						isConverted=true;
 						dotNet=Enum.ToObject(target,meta.Integer.Int32);
 					}
-					else if(meta is DotNetObject)
+					else if(meta is DotNetObject && target.IsAssignableFrom(((DotNetObject)meta).type))
 					{
 						dotNet=((DotNetObject)meta).obj;
+					}
+					else if(target.IsAssignableFrom(meta.GetType()))
+					{
+						dotNet=meta;
 					}
 					break;
 				case TypeCode.SByte:
@@ -2177,6 +2189,8 @@ namespace Meta
 						dotNet=System.Convert.ToUInt64(meta.Integer.LongValue());
 					}
 					break;
+				default:
+					throw new ApplicationException("not implemented");
 			}
 			if(dotNet!=null)
 			{
@@ -2195,38 +2209,154 @@ namespace Meta
 			}
 			return dotNet;
 		}
-		public static IMap ToMeta(object oDotNet)
-		{ 
+//		public static IMap ToMeta(object oDotNet)
+//		{ 
+//			IMap meta;
+//			if(oDotNet==null)
+//			{
+//				meta=null;
+//			}
+//			else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
+//			{
+//				meta=new NormalMap(new Integer((int)System.Convert.ToInt32((Enum)oDotNet)));
+//			}
+//			else
+//			{
+//				ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
+//				if(conversion==null)
+//				{
+//					if(oDotNet is IMap)
+//					//if(oDotNet is IMap || IsInteger(oDotNet))
+//					{
+//						meta=(IMap)oDotNet;
+//					}
+//					else
+//					{
+//						meta=new DotNetObject(oDotNet);
+//					}
+//				}
+//				else
+//				{
+//					meta=conversion.Convert(oDotNet);
+//				}
+//			}
+//			return meta;
+//		}
+		public static IMap ToMeta(object dotNet)
+		{
 			IMap meta;
-			if(oDotNet==null)
+//			if(dotNet==null)
+//			{
+//				dotNet=null;
+//			}
+//			else 
+//			if(dotNet.GetType().IsSubclassOf(typeof(Enum)))
+//			{
+//				meta=new NormalMap(new Integer((int)System.Convert.ToInt32((Enum)dotNet)));
+//			}
+//			else
+//			{
+//				ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
+//				if(conversion==null)
+//				{
+//					if(oDotNet is IMap)
+//						//if(oDotNet is IMap || IsInteger(oDotNet))
+//					{
+//						meta=(IMap)oDotNet;
+//					}
+//					else
+//					{
+//						meta=new DotNetObject(oDotNet);
+//					}
+//				}
+//				else
+//				{
+//					meta=conversion.Convert(oDotNet);
+//				}
+//			}
+//			return meta;
+////		}
+//			else
+//			{
+			if(dotNet==null)
 			{
-				meta=null;
-			}
-			else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
-			{
-				meta=new NormalMap(new Integer((int)System.Convert.ToInt32((Enum)oDotNet)));
+				meta=new NormalMap(new Integer(0));
 			}
 			else
-			{
-				ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
-				if(conversion==null)
+			{			
+				switch(Type.GetTypeCode(dotNet.GetType()))
 				{
-					if(oDotNet is IMap)
-					//if(oDotNet is IMap || IsInteger(oDotNet))
-					{
-						meta=(IMap)oDotNet;
-					}
-					else
-					{
-						meta=new DotNetObject(oDotNet);
-					}
-				}
-				else
-				{
-					meta=conversion.Convert(oDotNet);
+					case TypeCode.Boolean:
+						meta=new NormalMap(new Integer((bool)dotNet? 1:0));
+						break;
+					case TypeCode.Byte:
+						meta=new NormalMap(new Integer((Byte)dotNet));
+						break;
+					case TypeCode.Char:
+						meta=new NormalMap(new Integer((char)dotNet));
+						break;
+					case TypeCode.DateTime:
+						meta=new DotNetObject(dotNet);
+						break;
+					case TypeCode.DBNull:
+						meta=new DotNetObject(dotNet);
+						break;
+					case TypeCode.Decimal:
+						meta=new NormalMap(System.Convert.ToDouble((decimal)dotNet));
+						break;
+					case TypeCode.Double:
+						meta=new NormalMap((double)dotNet);
+						break;
+						//					case TypeCode.Empty:
+						//						meta=new NormalMap(new Integer(0));
+						//						break;
+					case TypeCode.Int16:
+						meta=new NormalMap(new Integer((Int16)dotNet));
+						break;
+					case TypeCode.Int32:
+						meta=new NormalMap(new Integer((Int32)dotNet));
+						break;
+					case TypeCode.Int64:
+						meta=new NormalMap(new Integer((UInt64)dotNet));
+						break;
+					case TypeCode.Object:
+						if(dotNet.GetType().IsSubclassOf(typeof(Enum)))
+						{
+							meta=new NormalMap(new Integer((int)System.Convert.ToInt32((Enum)dotNet)));
+						}
+						else if(dotNet is IMap)
+						{
+							meta=(IMap)dotNet;
+						}
+						else
+						{
+							meta=new DotNetObject(dotNet);
+						}
+						break;
+					case TypeCode.SByte:
+						meta=new NormalMap(new Integer((SByte)dotNet));
+						break;
+					case TypeCode.Single:
+						meta=new NormalMap((float)dotNet);
+						break;
+					case TypeCode.String:
+						meta=new NormalMap((string)dotNet);
+						break;
+					case TypeCode.UInt32:
+						meta=new NormalMap(new Integer((UInt32)dotNet));
+						break;
+					case TypeCode.UInt64:
+						meta=new NormalMap(new Integer((UInt64)dotNet));
+						break;
+					case TypeCode.UInt16:
+						meta=new NormalMap(new Integer((UInt16)dotNet));
+						break;
+					default:
+						throw new ApplicationException("not implemented");
 				}
 			}
 			return meta;
+//			}
 		}
 		private static Hashtable toDotNet=new Hashtable();
 		private static Hashtable toMeta=new Hashtable();
@@ -2242,131 +2372,132 @@ namespace Meta
 		public Type target;
 		public abstract object Convert(IMap obj,out bool converted);
 	}
-	abstract class ToMetaConversions // TODO: refactor??, no I think these work just fine
-	{
-		public class ConvertStringToMap: ToMeta
-		{
-			public ConvertStringToMap()  
-			{
-				this.source=typeof(string);
-			}
-			public override IMap Convert(object toConvert)
-			{
-				return new NormalMap((string)toConvert);
-			}
-		}
-		public class ConvertBoolToInteger: ToMeta
-		{
-			public ConvertBoolToInteger()
-			{
-				this.source=typeof(bool);
-			}
-			public override IMap Convert(object toConvert)
-			{
-				return (bool)toConvert? new NormalMap(1): new NormalMap(0);
-			}
 
-		}
-		public class ConvertByteToInteger: ToMeta
-		{
-			public ConvertByteToInteger()
-			{
-				this.source=typeof(Byte);
-			}
-			public override IMap Convert(object toConvert)
-			{
-				return new NormalMap(new Integer((Byte)toConvert));
-			}
-		}
-		public class ConvertSByteToInteger: ToMeta
-		{
-			public ConvertSByteToInteger()
-			{
-				this.source=typeof(SByte);
-			}
-			public override IMap Convert(object toConvert)
-			{
-				return new NormalMap(new Integer((SByte)toConvert));
-			}
-		}
-		public class ConvertCharToInteger: ToMeta
-		{
-			public ConvertCharToInteger()
-			{
-				this.source=typeof(Char);
-			}
-			public override IMap Convert(object toConvert)
-			{
-				return new NormalMap(new Integer((Char)toConvert));
-			}
-		}
-		public class ConvertInt32ToInteger: ToMeta
-		{
-			public ConvertInt32ToInteger()
-			{
-				this.source=typeof(Int32);
-			}
-			public override IMap Convert(object toConvert)
-			{
-				return new NormalMap(new Integer((Int32)toConvert));
-			}
-		}
-		public class ConvertUInt32ToInteger: ToMeta
-		{
-			public ConvertUInt32ToInteger()
-			{
-				this.source=typeof(UInt32);
-			}
-			public override IMap Convert(object toConvert)
-			{
-				return new NormalMap(new Integer((UInt32)toConvert));
-			}
-		}
-		public class ConvertInt64ToInteger: ToMeta
-		{
-			public ConvertInt64ToInteger()
-			{
-				this.source=typeof(Int64);
-			}
-			public override IMap Convert(object toConvert)
-			{
-				return new NormalMap(new Integer((Int64)toConvert));
-			}
-		}
-		public class ConvertUInt64ToInteger: ToMeta
-		{
-			public ConvertUInt64ToInteger()
-			{
-				this.source=typeof(UInt64);
-			}
-			public override IMap Convert(object toConvert)
-			{
-				return new NormalMap(new Integer((Int64)(UInt64)toConvert));
-			}
-		}
-		public class ConvertInt16ToInteger: ToMeta
-		{
-			public ConvertInt16ToInteger()
-			{
-				this.source=typeof(Int16);
-			}
-			public override IMap Convert(object toConvert)
-			{
-				return new NormalMap(new Integer((Int16)toConvert));
-			}
-		}
-		public class ConvertUInt16ToInteger: ToMeta // TODO: get rid of Convert-prefix
-		{
-			public ConvertUInt16ToInteger()
-			{
-				this.source=typeof(UInt16);
-			}
-			public override IMap Convert(object toConvert)
-			{
-				return new NormalMap(new Integer((UInt16)toConvert));
-			}
-		}
-	}
+//	abstract class ToMetaConversions // TODO: refactor??, no I think these work just fine
+//	{
+//		public class ConvertStringToMap: ToMeta
+//		{
+//			public ConvertStringToMap()  
+//			{
+//				this.source=typeof(string);
+//			}
+//			public override IMap Convert(object toConvert)
+//			{
+//				return new NormalMap((string)toConvert);
+//			}
+//		}
+//		public class ConvertBoolToInteger: ToMeta
+//		{
+//			public ConvertBoolToInteger()
+//			{
+//				this.source=typeof(bool);
+//			}
+//			public override IMap Convert(object toConvert)
+//			{
+//				return (bool)toConvert? new NormalMap(1): new NormalMap(0);
+//			}
+//
+//		}
+//		public class ConvertByteToInteger: ToMeta
+//		{
+//			public ConvertByteToInteger()
+//			{
+//				this.source=typeof(Byte);
+//			}
+//			public override IMap Convert(object toConvert)
+//			{
+//				return new NormalMap(new Integer((Byte)toConvert));
+//			}
+//		}
+//		public class ConvertSByteToInteger: ToMeta
+//		{
+//			public ConvertSByteToInteger()
+//			{
+//				this.source=typeof(SByte);
+//			}
+//			public override IMap Convert(object toConvert)
+//			{
+//				return new NormalMap(new Integer((SByte)toConvert));
+//			}
+//		}
+//		public class ConvertCharToInteger: ToMeta
+//		{
+//			public ConvertCharToInteger()
+//			{
+//				this.source=typeof(Char);
+//			}
+//			public override IMap Convert(object toConvert)
+//			{
+//				return new NormalMap(new Integer((Char)toConvert));
+//			}
+//		}
+//		public class ConvertInt32ToInteger: ToMeta
+//		{
+//			public ConvertInt32ToInteger()
+//			{
+//				this.source=typeof(Int32);
+//			}
+//			public override IMap Convert(object toConvert)
+//			{
+//				return new NormalMap(new Integer((Int32)toConvert));
+//			}
+//		}
+//		public class ConvertUInt32ToInteger: ToMeta
+//		{
+//			public ConvertUInt32ToInteger()
+//			{
+//				this.source=typeof(UInt32);
+//			}
+//			public override IMap Convert(object toConvert)
+//			{
+//				return new NormalMap(new Integer((UInt32)toConvert));
+//			}
+//		}
+//		public class ConvertInt64ToInteger: ToMeta
+//		{
+//			public ConvertInt64ToInteger()
+//			{
+//				this.source=typeof(Int64);
+//			}
+//			public override IMap Convert(object toConvert)
+//			{
+//				return new NormalMap(new Integer((Int64)toConvert));
+//			}
+//		}
+//		public class ConvertUInt64ToInteger: ToMeta
+//		{
+//			public ConvertUInt64ToInteger()
+//			{
+//				this.source=typeof(UInt64);
+//			}
+//			public override IMap Convert(object toConvert)
+//			{
+//				return new NormalMap(new Integer((Int64)(UInt64)toConvert));
+//			}
+//		}
+//		public class ConvertInt16ToInteger: ToMeta
+//		{
+//			public ConvertInt16ToInteger()
+//			{
+//				this.source=typeof(Int16);
+//			}
+//			public override IMap Convert(object toConvert)
+//			{
+//				return new NormalMap(new Integer((Int16)toConvert));
+//			}
+//		}
+//		public class ConvertUInt16ToInteger: ToMeta // TODO: get rid of Convert-prefix
+//		{
+//			public ConvertUInt16ToInteger()
+//			{
+//				this.source=typeof(UInt16);
+//			}
+//			public override IMap Convert(object toConvert)
+//			{
+//				return new NormalMap(new Integer((UInt16)toConvert));
+//			}
+//		}
+//	}
 	public class MapInfoEnumerator: IEnumerator
 	{
 		private MapInfo MapInfo;
@@ -2527,12 +2658,17 @@ namespace Meta
 		// TODO: refactor, make single-exit
 		public static object ConvertParameter(IMap meta,Type parameter,out bool isConverted)
 		{
-			isConverted=true;
-			if(parameter.IsAssignableFrom(meta.GetType()))
+			if(meta is DotNetObject)
 			{
-				return meta;
+				int asdf=0;
 			}
-			else if((parameter.IsSubclassOf(typeof(Delegate))
+			isConverted=true;
+//			if(parameter.IsAssignableFrom(meta.GetType()))
+//			{
+//				return meta;
+//			}
+//			else 
+			if((parameter.IsSubclassOf(typeof(Delegate))
 				||parameter.Equals(typeof(Delegate))))// && (meta is IMap))
 			{
 				MethodInfo invoke=parameter.GetMethod("Invoke",BindingFlags.Instance
@@ -2624,22 +2760,22 @@ namespace Meta
 			}
 			if(!isExecuted)
 			{
-				ArrayList rightIntegerArgumentMethods=new ArrayList();
+				ArrayList rightNumberArgumentMethods=new ArrayList();
 				foreach(MethodBase method in overloadedMethods)
 				{
 					if(argument.Array.Count==method.GetParameters().Length)
 					{ 
 						if(argument.Array.Count==((IMap)argument).Keys.Count)
 						{ 
-							rightIntegerArgumentMethods.Add(method);
+							rightNumberArgumentMethods.Add(method);
 						}
 					}
 				}
-				if(rightIntegerArgumentMethods.Count==0)
+				if(rightNumberArgumentMethods.Count==0)
 				{
 					throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");
 				}
-				foreach(MethodBase method in rightIntegerArgumentMethods)
+				foreach(MethodBase method in rightNumberArgumentMethods)
 				{
 					ArrayList arguments=new ArrayList();
 					bool argumentsMatched=true;
@@ -3103,16 +3239,16 @@ namespace Meta
 			get
 			{
 				Integer number;
-				if(this.map.Equals(IntegerKeys.EmptyMap))
+				if(this.map.Equals(NumberKeys.EmptyMap))
 				{
 					number=0;
 				}
-				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(IntegerKeys.Negative))) && this.ContainsKey(IntegerKeys.EmptyMap))
+				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative))) && this.ContainsKey(NumberKeys.EmptyMap))
 				{
-					if(this[IntegerKeys.EmptyMap].Integer!=null)
+					if(this[NumberKeys.EmptyMap].Integer!=null)
 					{
-						number=this[IntegerKeys.EmptyMap].Integer+1;
-						if(this.ContainsKey(IntegerKeys.Negative))
+						number=this[NumberKeys.EmptyMap].Integer+1;
+						if(this.ContainsKey(NumberKeys.Negative))
 						{
 							number=-number;
 						}
@@ -3131,10 +3267,24 @@ namespace Meta
 		}
 		ArrayList keys;
 		private HybridDictionary dictionary;
+
+		public HybridDictionaryStrategy(double fraction):this(2)
+		{
+			Integer denominator=new Integer(1);
+			while(Math.Floor(fraction)!=fraction)
+			{
+				fraction*=2;
+				denominator*=2;
+			}
+			Integer numerator=Helper.IntegerFromDouble(fraction);
+			this[NumberKeys.Numerator]=new NormalMap(numerator);
+			this[NumberKeys.Denominator]=new NormalMap(denominator);
+		}
+
 		public HybridDictionaryStrategy():this(2)
 		{
 		}
-		public HybridDictionaryStrategy(int Count)
+		public HybridDictionaryStrategy(int Count) // TODO: maybe remove this performance stuff, confusing
 		{
 			this.keys=new ArrayList(Count);
 			this.dictionary=new HybridDictionary(Count);
@@ -3363,6 +3513,10 @@ namespace Meta
 				if(key.IsString && type.GetMember(key.String,bindingFlags).Length!=0)
 				{
 					string text=key.String;
+					if(text=="abc")
+					{
+						int asdf=0;
+					}
 					MemberInfo member=type.GetMember(text,bindingFlags)[0];
 					if(member is FieldInfo)
 					{
@@ -3574,11 +3728,11 @@ namespace Meta
 				ArrayList keys=new ArrayList();
 				if(number!=0)
 				{
-					keys.Add(IntegerKeys.EmptyMap);
+					keys.Add(NumberKeys.EmptyMap);
 				}
 				if(number<0)
 				{
-					keys.Add(IntegerKeys.Negative);
+					keys.Add(NumberKeys.Negative);
 				}
 				return keys;
 			}
@@ -3588,7 +3742,7 @@ namespace Meta
 			get
 			{
 				IMap result;
-				if(key.Equals(IntegerKeys.EmptyMap))
+				if(key.Equals(NumberKeys.EmptyMap))
 				{
 					if(number==0)
 					{
@@ -3609,7 +3763,7 @@ namespace Meta
 						result=new NormalMap(newInteger);
 					}
 				}
-				else if(key.Equals(IntegerKeys.Negative))
+				else if(key.Equals(NumberKeys.Negative))
 				{
 					if(number<0)
 					{
@@ -3628,17 +3782,17 @@ namespace Meta
 			}
 			set
 			{
-				if(key.Equals(IntegerKeys.EmptyMap)) // TODO: implement
+				if(key.Equals(NumberKeys.EmptyMap)) // TODO: implement
 				{
 					IMap map=value;// TODO: remove
 				}
-				else if(key.Equals(IntegerKeys.Negative))
+				else if(key.Equals(NumberKeys.Negative))
 				{
 					if(value==null)
 					{
 						number=number.abs();
 					}
-					else if(value.Equals(IntegerKeys.EmptyMap))
+					else if(value.Equals(NumberKeys.EmptyMap))
 					{
 						number=-number.abs();
 					}

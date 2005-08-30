@@ -85,7 +85,7 @@ namespace testClasses
 		public NamedNoConversion(IMap arg) 
 		{
 			IMap def=new NormalMap();
-			def[new NormalMap(1)]=new NormalMap("null");
+			def[new NormalMap(new Integer(1))]=new NormalMap("null");
 			def[new NormalMap("y")]=new NormalMap("null");
 			def[new NormalMap("p2")]=new NormalMap("null");
 //			arg=(IMap)Interpreter.Merge(def,arg);
@@ -93,7 +93,7 @@ namespace testClasses
 //			Integer test=new Integer('h');
 //			object whatever=arg[new NormalMap(1)];
 			arg=def;
-			this.x=arg[new NormalMap(1)].String;
+			this.x=arg[new NormalMap(new Integer(1))].String;
 			this.y=arg[new NormalMap("y")].String;
 			this.z=arg[new NormalMap("p2")].String;
 		}
@@ -113,12 +113,12 @@ namespace testClasses
 		public string Concatenate(IMap arg) 
 		{
 			IMap def=new NormalMap();
-			def[new NormalMap(1)]=new NormalMap("null");
+			def[new NormalMap(new Integer(1))]=new NormalMap("null");
 			def[new NormalMap("b")]=new NormalMap("null");
 			def[new NormalMap("c")]=new NormalMap("null");
 //			arg=(IMap)Interpreter.Merge(def,arg);
 			arg=def;
-			return arg[new NormalMap(1)].String+arg[new NormalMap("b")].String+arg[new NormalMap("c")].String+
+			return arg[new NormalMap(new Integer(1))].String+arg[new NormalMap("b")].String+arg[new NormalMap("c")].String+
 				this.x+this.y+this.z;
 		}
 //		public string Concatenate(IMap arg) {

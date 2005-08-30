@@ -209,9 +209,9 @@ namespace Test
 					file.Delete();
 				}
 				IMap argument=new NormalMap();
-				argument[new NormalMap(1)]=new NormalMap("first arg");
+				argument[new NormalMap(new Integer(1))]=new NormalMap("first arg");
 				//argument[new Integer(1)]="first arg";
-				argument[new NormalMap(2)]=new NormalMap("second=arg");
+				argument[new NormalMap(new Integer(2))]=new NormalMap("second=arg");
 				//argument[new Integer(2)]="second=arg";
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
@@ -222,8 +222,8 @@ namespace Test
 			public override object Run() 
 			{
 				IMap argument=new NormalMap();
-				argument[new NormalMap(1)]=new NormalMap("first arg");
-				argument[new NormalMap(2)]=new NormalMap("second=arg");
+				argument[new NormalMap(new Integer(1))]=new NormalMap("first arg");
+				argument[new NormalMap(new Integer(2))]=new NormalMap("second=arg");
 				GAC.library=new GAC();
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
