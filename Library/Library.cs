@@ -126,7 +126,7 @@ public class map
 		}
 		return mResult;
 	}
-	public static IMap Apply(IMap mFunction,IMap mArray) 
+	public static IMap Apply(IMap mFunction,IMap mArray) // TODO: use MapInfo
 	{ // switch this the arguments around
 		IMap mResult=new NormalMap();
 		int counter=1;

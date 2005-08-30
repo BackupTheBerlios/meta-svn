@@ -103,6 +103,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "editor.meta"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "Library.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -2024,7 +2024,7 @@ namespace Meta
 ////			}
 //		}
 
-		// TODO: maybe refactor with above
+		// TODO: maybe refactor with above , make sure it never fails
 		public static object ToDotNet(IMap meta) 
 		{
 			object dotNet;
@@ -2058,139 +2058,146 @@ namespace Meta
 		public static object ToDotNet(IMap meta,Type target,out bool isConverted)
 		{
 			object dotNet=null;
-			switch(Type.GetTypeCode(target))
+			if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
+			{ 
+				dotNet=Enum.ToObject(target,meta.Integer.Int32); // TODO: pick integer type dynamically
+			}
+			else 
 			{
-				case TypeCode.Boolean:
-					if(IsIntegerInRange(meta,0,1))
-					{
-						if(meta.Integer==0)
+				switch(Type.GetTypeCode(target))
+				{
+					case TypeCode.Boolean:
+						if(IsIntegerInRange(meta,0,1))
 						{
-							dotNet=false;
+							if(meta.Integer==0)
+							{
+								dotNet=false;
+							}
+							else if(meta.Integer==1)
+							{
+								dotNet=true;
+							}
 						}
-						else if(meta.Integer==1)
+						break;
+					case TypeCode.Byte:
+						if(IsIntegerInRange(meta,new Integer(Byte.MinValue),new Integer(Byte.MaxValue))) // TODO: overload this some
 						{
-							dotNet=true;
+							dotNet=System.Convert.ToByte(meta.Integer.Int32);
 						}
-					}
-					break;
-				case TypeCode.Byte:
-					if(IsIntegerInRange(meta,new Integer(Byte.MinValue),new Integer(Byte.MaxValue))) // TODO: overload this some
-					{
-						dotNet=System.Convert.ToByte(meta.Integer.Int32);
-					}
-					break;
-				case TypeCode.Char:
-					if(IsIntegerInRange(meta,(int)Char.MinValue,(int)Char.MaxValue))
-					{
-						dotNet=System.Convert.ToChar(meta.Integer.LongValue());
-					}
-					break;
-				case TypeCode.DateTime:
-					isConverted=false;
-					break;
-				case TypeCode.DBNull:
-					if(meta.IsInteger && meta.Integer==0)
-					{
-						dotNet=DBNull.Value;
-					}
-					break;
-				case TypeCode.Decimal:
-					if(IsIntegerInRange(meta,Helper.IntegerFromDouble((double)decimal.MinValue),Helper.IntegerFromDouble((double)decimal.MaxValue)))
-					{
-						dotNet=(decimal)(meta.Integer.LongValue());
-					}
-					else if(IsFractionInRange(meta,(double)decimal.MinValue,(double)decimal.MaxValue))
-					{
-						dotNet=(decimal)meta.Fraction;
-					}
-					break;
-				case TypeCode.Double:
-					if(IsIntegerInRange(meta,Helper.IntegerFromDouble(double.MinValue),Helper.IntegerFromDouble(double.MaxValue)))
-					{
-						dotNet=(double)(meta.Integer.LongValue());
-					}
-					else if(IsFractionInRange(meta,double.MinValue,double.MaxValue))
-					{
-						dotNet=System.Convert.ToDouble(meta.Fraction);
-					}
-					break;
-//				case TypeCode.Empty:
-//					break;
-				case TypeCode.Int16:
-					if(IsIntegerInRange(meta,Int16.MinValue,Int16.MaxValue))
-					{
-						dotNet=System.Convert.ToInt16(meta.Integer.LongValue());
-					}
-					break;
-				case TypeCode.Int32:
-					if(IsIntegerInRange(meta,Int32.MinValue,Int32.MaxValue))
-					{
-						dotNet=meta.Integer.Int32;
-					}
-					break;
-				case TypeCode.Int64:
-					if(IsIntegerInRange(meta,Int64.MinValue,Int64.MaxValue))
-					{
-						dotNet=System.Convert.ToInt64(meta.Integer.LongValue());
-					}
-					break;
-				case TypeCode.Object:
-					if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
-					{ 
-						isConverted=true;
-						dotNet=Enum.ToObject(target,meta.Integer.Int32);
-					}
-					else if(meta is DotNetObject && target.IsAssignableFrom(((DotNetObject)meta).type))
-					{
-						dotNet=((DotNetObject)meta).obj;
-					}
-					else if(target.IsAssignableFrom(meta.GetType()))
-					{
-						dotNet=meta;
-					}
-					break;
-				case TypeCode.SByte:
-					if(IsIntegerInRange(meta,SByte.MinValue,SByte.MaxValue))
-					{
-						dotNet=System.Convert.ToSByte(meta.Integer.LongValue());
-					}
-					break;
-				case TypeCode.Single:
-					if(IsIntegerInRange(meta,Helper.IntegerFromDouble(Single.MinValue),Helper.IntegerFromDouble(Single.MaxValue)))
-					{
-						dotNet=(float)meta.Integer.LongValue();
-					}
-					else if(IsFractionInRange(meta,Single.MinValue,Single.MaxValue))
-					{
-						dotNet=(float)meta.Fraction;
-					}
-					break;
-				case TypeCode.String:
-					if(meta.IsString)
-					{
-						dotNet=meta.String;
-					}
-					break;
-				case TypeCode.UInt16:
-					if(IsIntegerInRange(meta,new Integer(UInt16.MinValue),new Integer(UInt16.MaxValue)))
-					{
-						dotNet=System.Convert.ToUInt16(meta.Integer.LongValue());
-					}
-					break;
-				case TypeCode.UInt32:
-					if(IsIntegerInRange(meta,UInt32.MinValue,UInt32.MaxValue))
-					{
-						dotNet=System.Convert.ToUInt32(meta.Integer.LongValue());
-					}
-					break;
-				case TypeCode.UInt64:
-					if(IsIntegerInRange(meta,UInt64.MinValue,UInt64.MaxValue))
-					{
-						dotNet=System.Convert.ToUInt64(meta.Integer.LongValue());
-					}
-					break;
-				default:
-					throw new ApplicationException("not implemented");
+						break;
+					case TypeCode.Char:
+						if(IsIntegerInRange(meta,(int)Char.MinValue,(int)Char.MaxValue))
+						{
+							dotNet=System.Convert.ToChar(meta.Integer.LongValue());
+						}
+						break;
+					case TypeCode.DateTime:
+						isConverted=false;
+						break;
+					case TypeCode.DBNull:
+						if(meta.IsInteger && meta.Integer==0)
+						{
+							dotNet=DBNull.Value;
+						}
+						break;
+					case TypeCode.Decimal:
+						if(IsIntegerInRange(meta,Helper.IntegerFromDouble((double)decimal.MinValue),Helper.IntegerFromDouble((double)decimal.MaxValue)))
+						{
+							dotNet=(decimal)(meta.Integer.LongValue());
+						}
+						else if(IsFractionInRange(meta,(double)decimal.MinValue,(double)decimal.MaxValue))
+						{
+							dotNet=(decimal)meta.Fraction;
+						}
+						break;
+					case TypeCode.Double:
+						if(IsIntegerInRange(meta,Helper.IntegerFromDouble(double.MinValue),Helper.IntegerFromDouble(double.MaxValue)))
+						{
+							dotNet=(double)(meta.Integer.LongValue());
+						}
+						else if(IsFractionInRange(meta,double.MinValue,double.MaxValue))
+						{
+							dotNet=System.Convert.ToDouble(meta.Fraction);
+						}
+						break;
+						//				case TypeCode.Empty:
+						//					break;
+					case TypeCode.Int16:
+						if(IsIntegerInRange(meta,Int16.MinValue,Int16.MaxValue))
+						{
+							dotNet=System.Convert.ToInt16(meta.Integer.LongValue());
+						}
+						break;
+					case TypeCode.Int32:
+						if(IsIntegerInRange(meta,Int32.MinValue,Int32.MaxValue))
+						{
+							dotNet=meta.Integer.Int32;
+						}
+						break;
+					case TypeCode.Int64:
+						if(IsIntegerInRange(meta,Int64.MinValue,Int64.MaxValue))
+						{
+							dotNet=System.Convert.ToInt64(meta.Integer.LongValue());
+						}
+						break;
+					case TypeCode.Object:
+						//					if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
+						//					{ 
+						//						isConverted=true;
+						//						dotNet=Enum.ToObject(target,meta.Integer.Int32);
+						//					}
+						if(meta is DotNetObject && target.IsAssignableFrom(((DotNetObject)meta).type))
+						{
+							dotNet=((DotNetObject)meta).obj;
+						}
+						else if(target.IsAssignableFrom(meta.GetType()))
+						{
+							dotNet=meta;
+						}
+						break;
+					case TypeCode.SByte:
+						if(IsIntegerInRange(meta,SByte.MinValue,SByte.MaxValue))
+						{
+							dotNet=System.Convert.ToSByte(meta.Integer.LongValue());
+						}
+						break;
+					case TypeCode.Single:
+						if(IsIntegerInRange(meta,Helper.IntegerFromDouble(Single.MinValue),Helper.IntegerFromDouble(Single.MaxValue)))
+						{
+							dotNet=(float)meta.Integer.LongValue();
+						}
+						else if(IsFractionInRange(meta,Single.MinValue,Single.MaxValue))
+						{
+							dotNet=(float)meta.Fraction;
+						}
+						break;
+					case TypeCode.String:
+						if(meta.IsString)
+						{
+							dotNet=meta.String;
+						}
+						break;
+					case TypeCode.UInt16:
+						if(IsIntegerInRange(meta,new Integer(UInt16.MinValue),new Integer(UInt16.MaxValue)))
+						{
+							dotNet=System.Convert.ToUInt16(meta.Integer.LongValue());
+						}
+						break;
+					case TypeCode.UInt32:
+						if(IsIntegerInRange(meta,UInt32.MinValue,UInt32.MaxValue))
+						{
+							dotNet=System.Convert.ToUInt32(meta.Integer.LongValue());
+						}
+						break;
+					case TypeCode.UInt64:
+						if(IsIntegerInRange(meta,UInt64.MinValue,UInt64.MaxValue))
+						{
+							dotNet=System.Convert.ToUInt64(meta.Integer.LongValue());
+						}
+						break;
+					default:
+						throw new ApplicationException("not implemented");
+				}
 			}
 			if(dotNet!=null)
 			{
@@ -2655,10 +2662,14 @@ namespace Meta
 				throw new ApplicationException("Cannot set key in DotNetMethod");
 			}
 		}
-		// TODO: refactor, make single-exit
+		// TODO: refactor, make single-exit, combine with ToDotNet
 		public static object ConvertParameter(IMap meta,Type parameter,out bool isConverted)
 		{
 			if(meta is DotNetObject)
+			{
+				int asdf=0;
+			}
+			if(parameter.Name.IndexOf("MenuItems")!=-1)
 			{
 				int asdf=0;
 			}
@@ -2681,16 +2692,18 @@ namespace Meta
 				try
 				{
 					Type type=parameter.GetElementType();
-					IMap argument=meta;
+					IMap argument=meta; // TODO: maybe use MapInfo
 					Array arguments=System.Array.CreateInstance(type,argument.Array.Count);
 					for(int i=0;i<argument.Count;i++)
 					{
-						arguments.SetValue(argument[new NormalMap(new Integer(i+1))],i);
+						arguments.SetValue(Convert.ToDotNet(argument[new NormalMap(new Integer(i+1))],type),i); // TODO: make safe for failing conversion, conversion shouldnt fail, ever
+//						arguments.SetValue(argument[new NormalMap(new Integer(i+1))],i);
 					}
 					return arguments;
 				}
 				catch
 				{
+					int asdf=0;
 				}
 			}
 			else
@@ -2775,6 +2788,10 @@ namespace Meta
 				{
 					throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");
 				}
+				if(this.name=="AddRange")
+				{
+					int asdf=0;
+				}
 				foreach(MethodBase method in rightNumberArgumentMethods)
 				{
 					ArrayList arguments=new ArrayList();
@@ -2792,7 +2809,7 @@ namespace Meta
 						}
 						else
 						{
-							if(this.name=="Invoke")
+							if(this.name=="AddRange")
 							{
 								int asdf=0;
 							}
@@ -3534,6 +3551,10 @@ namespace Meta
 					}
 					else if(member is PropertyInfo)
 					{
+						if(text=="MenuItems")
+						{
+							int asdf=0;
+						}
 						PropertyInfo property=(PropertyInfo)member;
 						bool isConverted;
 						object val=DotNetMethod.ConvertParameter(value,property.PropertyType,out isConverted);

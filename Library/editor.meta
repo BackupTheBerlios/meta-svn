@@ -148,7 +148,7 @@ Window=!
 	form.Text=arg.title
 	form.Font=arg.font
 	controls=arg.controls
-	form.Controls=Apply
+	form.Controls.AddRange Apply
 		!arg.value.control
 		arg.controls
 	form.WindowState=arg.WindowState
@@ -157,19 +157,20 @@ Window=!
 		=
 			Text=arg.key
 			Click=arg.value
-	InitMenuItem=!Init
-		MenuItem""
-		=
-			Text=arg.key
-			MenuItems=Apply
-				InitSubMenuItem
-				arg.value
-	form.Menu=Init
-		MainMenu""
-		=
-			MenuItems=Apply
-				InitMenuItem
-				arg.menu
+	InitMenuItem=!
+		menuItem=MenuItem""
+		menuItem.Text=arg.key
+		menuItem.MenuItems.AddRange Apply
+			InitSubMenuItem
+			arg.value
+		this=menuItem
+	// TODO: refactor this, use constructor
+	form.Menu=
+		menu=MainMenu""
+		menu.MenuItems.AddRange Apply
+			InitMenuItem
+			arg.menu
+		this=menu
 	Show=!
 		form.ShowDialog""
 	Close=!form.Close""
