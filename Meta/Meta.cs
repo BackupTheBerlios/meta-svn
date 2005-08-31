@@ -1224,12 +1224,12 @@ namespace Meta
 	public abstract class PersistantStrategy:MapStrategy
 	{
 	}
-	public class GAC: IMap// Should be a strategy, not a map, that way it could also be cloned easily
+	public class GAC: PersistantStrategy// Should be a strategy, not a map, that way it could also be cloned easily
 	{
-//		public override IMap CloneMap()
-//		{
-//			re
-//		}
+		//		public override IMap CloneMap()
+		//		{
+		//			re
+		//		}
 
 		public override Integer Integer
 		{
@@ -1264,10 +1264,10 @@ namespace Meta
 				return cache.Keys;
 			}
 		}
-		public override IMap Clone() // TODO: doesnt work correctly yet
-		{
-			return this;
-		}
+//		public override IMap Clone() // TODO: doesnt work correctly yet
+//		{
+//			return this;
+//		}
 		public override int Count
 		{
 			get
@@ -1275,10 +1275,10 @@ namespace Meta
 				return cache.Count;
 			}
 		}
-		protected override bool ContainsKeyImplementation(IMap key)
-		{
-			return cache.ContainsKey(key);
-		}
+//		protected override bool ContainsKeyImplementation(IMap key)
+//		{
+//			return cache.ContainsKey(key);
+//		}
 		public override ArrayList Array
 		{
 			get
@@ -1326,7 +1326,7 @@ namespace Meta
 			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 		}
 		private IMap cachedAssemblyInfo=new NormalMap();
-		public static ArrayList NameSpaces(Assembly assembly,MapInfo cached)
+		public static ArrayList NamespacesFromAssembly(Assembly assembly,MapInfo cached)
 		{ 
 			ArrayList nameSpaces=new ArrayList();
 			bool isCached;
@@ -1391,9 +1391,9 @@ namespace Meta
 			NormalMap root=new NormalMap("",new Hashtable(),new ArrayList());
 			foreach(Assembly assembly in assemblies)
 			{
-				ArrayList nameSpaces=NameSpaces(assembly,cachedInfo);
+				ArrayList namespaces=NamespacesFromAssembly(assembly,cachedInfo);
 				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
-				foreach(string nameSpace in nameSpaces)
+				foreach(string nameSpace in namespaces)
 				{
 					NamespaceStrategy selected=(NamespaceStrategy)root.strategy; // TODO: this sucks quite a bit!!
 					if(nameSpace=="" && !assembly.Location.StartsWith(Interpreter.LibraryPath.FullName))
@@ -1424,12 +1424,17 @@ namespace Meta
 			((NamespaceStrategy)root.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
 			return root; // TODO: is this correct?
 		}
-		public static IMap library=new GAC();
+		public static IMap library=new PersistantMap(new GAC());
+//		public static IMap library=new GAC();
 		private IMap cache=new NormalMap();
-		//		public static string libraryPath="library"; 
 	}
-//	public class GAC: IMap // Should be a strategy, not a map, that way it could also be cloned easily
+//	public class GAC: IMap// Should be a strategy, not a map, that way it could also be cloned easily
 //	{
+////		public override IMap CloneMap()
+////		{
+////			re
+////		}
+//
 //		public override Integer Integer
 //		{
 //			get
@@ -1525,7 +1530,7 @@ namespace Meta
 //			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 //		}
 //		private IMap cachedAssemblyInfo=new NormalMap();
-//		public static ArrayList NameSpaces(Assembly assembly,MapInfo cached)
+//		public static ArrayList NamespacesFromAssembly(Assembly assembly,MapInfo cached)
 //		{ 
 //			ArrayList nameSpaces=new ArrayList();
 //			bool isCached;
@@ -1590,13 +1595,13 @@ namespace Meta
 //			NormalMap root=new NormalMap("",new Hashtable(),new ArrayList());
 //			foreach(Assembly assembly in assemblies)
 //			{
-//				ArrayList nameSpaces=NameSpaces(assembly,cachedInfo);
+//				ArrayList namespaces=NamespacesFromAssembly(assembly,cachedInfo);
 //				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
-//				foreach(string nameSpace in nameSpaces)
+//				foreach(string nameSpace in namespaces)
 //				{
 //					NamespaceStrategy selected=(NamespaceStrategy)root.strategy; // TODO: this sucks quite a bit!!
 //					if(nameSpace=="" && !assembly.Location.StartsWith(Interpreter.LibraryPath.FullName))
-////					if(nameSpace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.installationPath,"library")))
+//						//					if(nameSpace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.installationPath,"library")))
 //					{
 //						continue;
 //					}
@@ -1625,7 +1630,6 @@ namespace Meta
 //		}
 //		public static IMap library=new GAC();
 //		private IMap cache=new NormalMap();
-////		public static string libraryPath="library"; 
 //	}
 	public class DirectoryStrategy:PersistantStrategy
 	{
