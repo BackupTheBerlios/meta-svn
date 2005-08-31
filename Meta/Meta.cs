@@ -254,11 +254,11 @@ namespace Meta
 		string fileName;
 	}
 
-	public abstract class Filter // TODO: remove??
+	public abstract class Filter
 	{
 		public abstract IMap Detect(string text);
 	}
-	public class Filters
+	public class Filters // TODO: put into one monster-method?
 	{
 		public class DecimalFilter: Filter
 		{
@@ -678,10 +678,7 @@ namespace Meta
 		static Interpreter()
 		{
 			Assembly metaAssembly=Assembly.GetAssembly(typeof(IMap));
-
-//			installationPath=@"c:\_projectsupportmaterial\meta";
 		}
-//		public static string installationPath;
 		public static DirectoryInfo LibraryPath
 		{
 			get
@@ -691,18 +688,6 @@ namespace Meta
 		}
 		public static ArrayList loadedAssemblies=new ArrayList();
 	}
-//	public class Paths
-//	{
-//		public static string Installation
-//		{
-//			get
-//			{
-//				installationPath=@"c:\_projectsupportmaterial\meta";
-//			}
-//		}
-//
-//	}
-
 	public class MetaException:ApplicationException
 	{
 		protected string message="";
@@ -1233,19 +1218,12 @@ namespace Meta
 		{ 
 			ArrayList namespaces=new ArrayList();
 			IMap cached=cache;
-//			MapReader cached=new MapReader(cache);
-			//			MapInfo cached=new MapInfo(cache);
 			if(cached.ContainsKey(assembly.Location) && cached[assembly.Location]["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
-//				if(cached.ContainsKey(assembly.Location) && ((MapReader)cached[assembly.Location])["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
-				//				if(cached.ContainsKey(assembly.Location) && ((MapInfo)cached[assembly.Location])["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
 			{
 				foreach(string namespaceName in cached[assembly.Location].Array)
 				{
 					namespaces.Add(namespaceName);
 				}
-//				namespaces.AddRange((string[])cached[assembly.Location].Array);
-				//				namespaces.AddRange(((MapReader)cached[assembly.Location]).Array);
-				//				namespaces.AddRange(((MapInfo)cached[assembly.Location]).Array);
 			}
 			else
 			{
@@ -1266,12 +1244,8 @@ namespace Meta
 					}
 				}
 				IMap info=new NormalMap();
-//				MapWriter info=new MapWriter();
-				//				MapInfo info=new MapInfo();
 				IMap namespaceInfo=new NormalMap();
-//				MapWriter namespaceInfo=new MapWriter();
-				//				MapInfo namespaceInfo=new MapInfo();
-				int counter=1;// AddRange method in IMap and MapInfo
+				int counter=1;
 				foreach(string name in namespaces)
 				{
 					namespaceInfo[counter]=name;
@@ -1280,8 +1254,6 @@ namespace Meta
 				info["namespaces"]=namespaceInfo;
 				info["timestamp"]=File.GetLastWriteTime(assembly.Location).ToString();
 				cached[assembly.Location]=info;
-//				new MapWriter(cached.Map)[assembly.Location]=info;
-				//				cached[assembly.Location]=info;
 			}
 			return namespaces;
 		}
@@ -1308,7 +1280,8 @@ namespace Meta
 								fullName+=subNamespace;
 								currentNamespace.namespaces[subNamespace]=new NormalMap(fullName,new Hashtable(),new ArrayList());
 							}
-							currentNamespace=(NamespaceStrategy)((NormalMap)currentNamespace.namespaces[subNamespace]).strategy; // TODO: this sucks!
+							//TODO: this sucks
+							currentNamespace=(NamespaceStrategy)((NormalMap)currentNamespace.namespaces[subNamespace]).strategy;
 						}
 					}
 					currentNamespace.AddAssembly(cachedAssembly);
@@ -1317,45 +1290,10 @@ namespace Meta
 			((NamespaceStrategy)rootNamespace.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
 			cache=rootNamespace;
 		}
-//		public void LoadNamespaces(ArrayList assemblies)//,MapInfo cachedInfo)
-//		{
-//			NormalMap rootNamespace=new NormalMap("",new Hashtable(),new ArrayList());
-//			foreach(Assembly assembly in assemblies)
-//			{
-//				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
-//				foreach(string namespaceName in NamespacesFromAssembly(assembly))
-//				{
-//					NamespaceStrategy currentNamespace=(NamespaceStrategy)rootNamespace.strategy;
-//					if(namespaceName!="")
-//					{
-//						foreach(string subNamespace in namespaceName.Split('.'))
-//						{
-//							if(!currentNamespace.namespaces.ContainsKey(subNamespace))
-//							{
-//								string fullName=currentNamespace.fullName;
-//								if(fullName!="")
-//								{
-//									fullName+=".";
-//								}
-//								fullName+=subNamespace;
-//								currentNamespace.namespaces[subNamespace]=new NormalMap(fullName,new Hashtable(),new ArrayList());
-//							}
-//							currentNamespace=(NamespaceStrategy)((NormalMap)currentNamespace.namespaces[subNamespace]).strategy; // TODO: this sucks!
-//						}
-//					}
-//					currentNamespace.AddAssembly(cachedAssembly);
-//				}
-//			}
-//			((NamespaceStrategy)rootNamespace.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
-//			cache=rootNamespace;
-//		}
 		protected IMap cachedAssemblyInfo=new NormalMap();
-
 		protected NormalMap cache=new NormalMap();
-//		protected IMap cache=new NormalMap();
-
 	}
-	public class GAC: AssemblyStrategy// Should be a strategy, not a map, that way it could also be cloned easily
+	public class GAC: AssemblyStrategy
 	{
 		public override Integer Integer
 		{
@@ -1407,13 +1345,13 @@ namespace Meta
 		{
 			ArrayList assemblies=new ArrayList();
 			assemblies=GlobalAssemblyCache.Assemblies;
-			string cachedAssemblyPath=Path.Combine(Interpreter.LibraryPath.FullName,"cachedAssemblyInfo.meta"); // TODO: change location of this file
+			// TODO: change location of this file
+			string cachedAssemblyPath=Path.Combine(Interpreter.LibraryPath.FullName,"cachedAssemblyInfo.meta"); 
 			if(File.Exists(cachedAssemblyPath))
 			{
 				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
 			}		
-			LoadNamespaces(assemblies);//,new MapInfo(cachedAssemblyInfo));
-//			cache=LoadNamespaces(assemblies);//,new MapInfo(cachedAssemblyInfo));
+			LoadNamespaces(assemblies);
 			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 		}
 		public static IMap library=new PersistantMap(new GAC());
@@ -1441,8 +1379,7 @@ namespace Meta
 			{
 				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
 			}
-			LoadNamespaces(assemblies);//,new MapInfo(cachedAssemblyInfo));
-//			cache=LoadNamespaces(assemblies);//,new MapInfo(cachedAssemblyInfo));
+			LoadNamespaces(assemblies);
 			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 		}
 		private string assemblyPath;
@@ -1715,10 +1652,6 @@ namespace Meta
 				return new ArrayList();
 			}
 		}
-//		public override IMap CloneMap()
-//		{
-//			return new NormalMap((NormalStrategy)this.Clone());
-//		}
 		public override ArrayList Keys
 		{
 			get
@@ -1819,7 +1752,8 @@ namespace Meta
 		public ArrayList cachedAssemblies=new ArrayList();
 		public Hashtable namespaces=new Hashtable();
 
-		public NamespaceStrategy(string fullName,Hashtable subNamespaces,ArrayList assemblies)// TODO: actually use those arguments
+		// TODO: actually use those arguments
+		public NamespaceStrategy(string fullName,Hashtable subNamespaces,ArrayList assemblies)
 		{
 			this.fullName=fullName;
 		}
@@ -1846,59 +1780,7 @@ namespace Meta
 		}
 	}
 	public class CachedAssembly
-	{  
-//		public IMap LoadAssembly() // TODO: refactor
-//		{
-//			MapInfo root=new MapInfo();
-//			//			IMap root=new NormalMap();
-//			foreach(Type type in assembly.GetExportedTypes()) // TODO: use MapInfo her
-//			{
-//				if(type.DeclaringType==null) 
-//				{
-//					MapInfo current=root;
-//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
-//					//					subNames.RemoveAt(subNames.Count-1);
-//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
-//					{
-//						if(!current.ContainsKey(subName))
-//						{
-//							current[subName]=new NormalMap(); // maybe MapInfo here?
-//						}
-//						current=(MapInfo)current[subName];
-//					}
-//					current[type.Name]=new DotNetClass(type);
-//				}
-//			}
-//			Interpreter.loadedAssemblies.Add(assembly.Location);
-//			return root.Map;
-//		}
-
-//		public IMap LoadAssembly() // TODO: refactor
-//		{
-//			MapInfo root=new MapInfo();
-//			//			IMap root=new NormalMap();
-//			foreach(Type type in assembly.GetExportedTypes()) // TODO: use MapInfo her
-//			{
-//				if(type.DeclaringType==null) 
-//				{
-//					MapInfo current=root;
-//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
-//					//					subNames.RemoveAt(subNames.Count-1);
-//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
-//					{
-//						if(!current.ContainsKey(subName))
-//						{
-//							current[subName]=new NormalMap(); // maybe MapInfo here?
-//						}
-//						current=(MapInfo)current[subName];
-//					}
-//					current[type.Name]=new DotNetClass(type);
-//				}
-//			}
-//			Interpreter.loadedAssemblies.Add(assembly.Location);
-//			return root.Map;
-//		}
-
+	{
 		public IMap LoadAssembly()
 		{
 			IMap root=new NormalMap();
@@ -1922,59 +1804,6 @@ namespace Meta
 			Interpreter.loadedAssemblies.Add(assembly.Location);
 			return root;
 		}
-//		public IMap LoadAssembly() // TODO: refactor
-//		{
-//			IMap root=new NormalMap();
-//			foreach(Type type in assembly.GetExportedTypes())
-//			{
-//				if(type.DeclaringType==null) 
-//				{
-//					IMap current=root;
-//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
-////					subNames.RemoveAt(subNames.Count-1);
-//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
-//					{
-//						if(!current.ContainsKey(new NormalMap(subName))) 
-//						{
-//							current[new NormalMap(subName)]=new NormalMap();
-//						}
-//						current=current[new NormalMap(subName)];
-//					}
-//					current[new NormalMap(type.Name)]=new DotNetClass(type);
-//				}
-//			}
-//			Interpreter.loadedAssemblies.Add(assembly.Location);
-//			return root;
-//		}
-
-
-//		public IMap LoadAssemblies(IEnumerable assemblies) // TODO: refactor
-//		{
-//			IMap root=new NormalMap();
-//			foreach(Assembly currentAssembly in assemblies)
-//			{
-//				foreach(Type type in currentAssembly.GetExportedTypes()) 
-//				{
-//					if(type.DeclaringType==null) 
-//					{
-//						IMap position=root;
-//						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
-//						subPaths.RemoveAt(subPaths.Count-1);
-//						foreach(string subPath in subPaths) 
-//						{
-//							if(!position.ContainsKey(new NormalMap(subPath))) 
-//							{
-//								position[new NormalMap(subPath)]=new NormalMap();
-//							}
-//							position=position[new NormalMap(subPath)];
-//						}
-//						position[new NormalMap(type.Name)]=new DotNetClass(type);
-//					}
-//				}
-//				Interpreter.loadedAssemblies.Add(currentAssembly.Location);
-//			}
-//			return root;
-//		}
 		private Assembly assembly;
 		public CachedAssembly(Assembly assembly)
 		{
@@ -1985,7 +1814,6 @@ namespace Meta
 			if(assemblyContent==null)
 			{
 				assemblyContent=LoadAssembly();
-//				assemblyContent=LoadAssemblies(new object[] {assembly});
 			}
 			IMap selected=assemblyContent;
 			if(nameSpace!="")
@@ -1999,58 +1827,6 @@ namespace Meta
 		}			
 		private IMap assemblyContent;
 	}
-//	public class CachedAssembly
-//	{  
-//		public IMap LoadAssemblies(IEnumerable assemblies) // TODO: refactor
-//		{
-//			IMap root=new NormalMap();
-//			foreach(Assembly currentAssembly in assemblies)
-//			{
-//				foreach(Type type in currentAssembly.GetExportedTypes()) 
-//				{
-//					if(type.DeclaringType==null) 
-//					{
-//						IMap position=root;
-//						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
-//						subPaths.RemoveAt(subPaths.Count-1);
-//						foreach(string subPath in subPaths) 
-//						{
-//							if(!position.ContainsKey(new NormalMap(subPath))) 
-//							{
-//								position[new NormalMap(subPath)]=new NormalMap();
-//							}
-//							position=position[new NormalMap(subPath)];
-//						}
-//						position[new NormalMap(type.Name)]=new DotNetClass(type);
-//					}
-//				}
-//				Interpreter.loadedAssemblies.Add(currentAssembly.Location);
-//			}
-//			return root;
-//		}
-//		private Assembly assembly;
-//		public CachedAssembly(Assembly assembly)
-//		{
-//			this.assembly=assembly;
-//		}
-//		public IMap NamespaceContents(string nameSpace)
-//		{
-//			if(assemblyContent==null)
-//			{
-//				assemblyContent=LoadAssemblies(new object[] {assembly});
-//			}
-//			IMap selected=assemblyContent;
-//			if(nameSpace!="")
-//			{
-//				foreach(string subString in nameSpace.Split('.'))
-//				{
-//					selected=selected[new NormalMap(subString)];
-//				}
-//			}
-//			return selected;
-//		}			
-//		private IMap assemblyContent;
-//	}
 	public class Transform
 	{
 		public static object ToDotNet(IMap meta) 
@@ -2110,7 +1886,7 @@ namespace Meta
 			}
 			else if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
 			{ 
-				dotNet=Enum.ToObject(target,meta.Integer.Int32); // TODO: pick integer type dynamically
+				dotNet=Enum.ToObject(target,meta.Integer.Int32); // TODO: pick underlying type dynamically, maybe have an object-number in Integer
 			}
 			else 
 			{
@@ -2130,7 +1906,8 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Byte:
-						if(IsIntegerInRange(meta,new Integer(Byte.MinValue),new Integer(Byte.MaxValue))) // TODO: overload this some
+						 // TODO: overload this some??
+						if(IsIntegerInRange(meta,new Integer(Byte.MinValue),new Integer(Byte.MaxValue)))
 						{
 							dotNet=Convert.ToByte(meta.Integer.Int32);
 						}
@@ -2349,369 +2126,6 @@ namespace Meta
 		private static Hashtable toDotNet=new Hashtable();
 		private static Hashtable toMeta=new Hashtable();
 	}
-//	public abstract class MapHelper
-//	{
-//		public MapHelper(IMap map)
-//		{
-//			this.map=map;
-//		}
-//		public IMap Map
-//		{
-//			get
-//			{
-//				return map;
-//			}
-//		}
-//		private IMap map;
-//	}
-//	public class MapReader:MapHelper
-//	{
-//		public MapReader(IMap map):base(map)
-//		{
-//		}
-//
-////
-////		public MapInfo()
-////		{
-////			this.map=new NormalMap();
-////		}
-//		public bool ContainsKey(object key)
-//		{
-//			return Map.ContainsKey(Transform.ToMeta(key));
-////			return map.ContainsKey(Transform.ToMeta(key));
-//		}
-//
-//		public object this[object key]
-//		{
-//			get
-//			{
-//				object val=Transform.ToDotNet(Map[Transform.ToMeta(key)]);
-////				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
-//				if(val is IMap)
-//				{
-//					val=new MapReader((IMap)val); // TODO: integrate this into ToDotNet
-////					val=new MapInfo((IMap)val); // TODO: integrate this into ToDotNet
-//				}
-//				return val;
-//			}
-////			set
-////			{
-////				IMap val;
-////				if(value is MapInfo)
-////				{
-////					val=((MapInfo)value).map;
-////				}
-////				else
-////				{
-////					val=Transform.ToMeta(value);
-////				}
-////				this.map[Transform.ToMeta(key)]=val;
-////			}
-//		}
-//		public IMap Parent
-//		{
-//			get
-//			{
-//				return (IMap)Transform.ToMeta(Map.Parent);
-////				return (IMap)Transform.ToMeta(map.Parent);
-//			}
-////			set
-////			{
-////				map.Parent=(IMap)Transform.ToDotNet(value);
-////			}
-//		}
-//		public ArrayList Array
-//		{
-//			get
-//			{
-//				return ConvertToMeta(Map.Array);
-////				return ConvertToMeta(map.Array);
-//			}
-//		}
-//		private ArrayList ConvertToMeta(ArrayList list)
-//		{
-//			ArrayList result=new ArrayList();
-//			foreach(IMap obj in list)
-//			{
-//				result.Add(Transform.ToDotNet(obj));
-//			}
-//			return result;
-//		}
-//		public ArrayList Keys
-//		{
-//			get
-//			{
-//				return ConvertToMeta(Map.Keys);
-////				return ConvertToMeta(map.Keys);
-//			}
-//		}
-//		public int Count
-//		{
-//			get
-//			{
-//				return Map.Count;
-////				return map.Count;
-//			}
-//		}
-//		public IEnumerator GetEnumerator()
-//		{
-//			return new MapReaderEnumerator(this);
-////			return new MapInfoEnumerator(this);
-//		}
-//	}
-//	public class MapWriter:MapHelper
-//	{
-////		public IMap Map
-////		{
-////			get
-////			{
-////				return map;
-////			}
-////		}
-////		private IMap map;
-//		public MapWriter(IMap map):base(map)
-//		{
-////			this.map=map;
-//		}
-//
-//		public MapWriter():base(new NormalMap())
-//		{
-////			this.map=new NormalMap();
-//		}
-////		public bool ContainsKey(object key)
-////		{
-////			return map.ContainsKey(Transform.ToMeta(key));
-////		}
-//
-//		public object this[object key]
-//		{
-////			get
-////			{
-////				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
-////				if(val is IMap)
-////				{
-////					val=new MapInfo((IMap)val); // TODO: integrate this into ToDotNet
-////				}
-////				return val;
-////			}
-//			set
-//			{
-//				IMap val;
-//				if(value is MapHelper)
-////					if(value is MapReader)
-//					//					if(value is MapInfo)
-//				{
-//					val=((MapHelper)value).Map;
-//				}
-////				else if(value is MapWriter)
-////				{
-////					val=((MapWriter)value).Map;
-////				}
-//				else
-//				{
-//					val=Transform.ToMeta(value);
-//				}
-//				this.Map[Transform.ToMeta(key)]=val;
-////				this.map[Transform.ToMeta(key)]=val;
-//			}
-//		}
-//		public IMap Parent
-//		{
-////			get
-////			{
-////				return (IMap)Transform.ToMeta(map.Parent);
-////			}
-//			set
-//			{
-//				Map.Parent=(IMap)Transform.ToDotNet(value);
-////				map.Parent=(IMap)Transform.ToDotNet(value);
-//			}
-//		}
-////		public ArrayList Array
-////		{
-////			get
-////			{
-////				return ConvertToMeta(map.Array);
-////			}
-////		}
-////		private ArrayList ConvertToMeta(ArrayList list)
-////		{
-////			ArrayList result=new ArrayList();
-////			foreach(IMap obj in list)
-////			{
-////				result.Add(Transform.ToDotNet(obj));
-////			}
-////			return result;
-////		}
-////		public ArrayList Keys
-////		{
-////			get
-////			{
-////				return ConvertToMeta(map.Keys);
-////			}
-////		}
-////		public int Count
-////		{
-////			get
-////			{
-////				return map.Count;
-////			}
-////		}
-////		public IEnumerator GetEnumerator()
-////		{
-////			return new MapInfoEnumerator(this);
-////		}
-//	}
-//	public class MapInfo
-//	{
-//		public IMap Map
-//		{
-//			get
-//			{
-//				return map;
-//			}
-//		}
-//		private IMap map;
-//		public MapInfo(IMap map)
-//		{
-//			this.map=map;
-//		}
-//
-//		public MapInfo()
-//		{
-//			this.map=new NormalMap();
-//		}
-//		public bool ContainsKey(object key)
-//		{
-//			return map.ContainsKey(Transform.ToMeta(key));
-//		}
-//
-//		public object this[object key]
-//		{
-//			get
-//			{
-//				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
-//				if(val is IMap)
-//				{
-//					val=new MapInfo((IMap)val); // TODO: integrate this into ToDotNet
-//				}
-//				return val;
-//			}
-//			set
-//			{
-//				IMap val;
-//				if(value is MapInfo)
-//				{
-//					val=((MapInfo)value).map;
-//				}
-//				else
-//				{
-//					val=Transform.ToMeta(value);
-//				}
-//				this.map[Transform.ToMeta(key)]=val;
-//			}
-//		}
-//		public IMap Parent
-//		{
-//			get
-//			{
-//				return (IMap)Transform.ToMeta(map.Parent);
-//			}
-//			set
-//			{
-//				map.Parent=(IMap)Transform.ToDotNet(value);
-//			}
-//		}
-//		public ArrayList Array
-//		{
-//			get
-//			{
-//				return ConvertToMeta(map.Array);
-//			}
-//		}
-//		private ArrayList ConvertToMeta(ArrayList list)
-//		{
-//			ArrayList result=new ArrayList();
-//			foreach(IMap obj in list)
-//			{
-//				result.Add(Transform.ToDotNet(obj));
-//			}
-//			return result;
-//		}
-//		public ArrayList Keys
-//		{
-//			get
-//			{
-//				return ConvertToMeta(map.Keys);
-//			}
-//		}
-//		public int Count
-//		{
-//			get
-//			{
-//				return map.Count;
-//			}
-//		}
-//		public IEnumerator GetEnumerator()
-//		{
-//			return new MapInfoEnumerator(this);
-//		}
-//	}
-
-//	public class MapReaderEnumerator: IEnumerator
-//	{
-//
-//		private MapReader mapReader;
-//		public MapReaderEnumerator(MapReader mapReader)
-//		{
-//			this.mapReader=mapReader;
-//		}
-//		public object Current
-//		{
-//			get
-//			{
-//				return new DictionaryEntry(mapReader.Keys[index],mapReader[mapReader.Keys[index]]);
-//			}
-//		}
-//		public bool MoveNext()
-//		{
-//			index++;
-//			return index<mapReader.Count;
-//		}
-//		public void Reset()
-//		{
-//			index=-1;
-//		}
-//		private int index=-1;
-//	}
-
-
-//	public class MapInfoEnumerator: IEnumerator
-//	{
-//
-//		private MapInfo MapInfo;
-//		public MapInfoEnumerator(MapInfo MapInfo)
-//		{
-//			this.MapInfo=MapInfo;
-//		}
-//		public object Current
-//		{
-//			get
-//			{
-//				return new DictionaryEntry(MapInfo.Keys[index],MapInfo[MapInfo.Keys[index]]);
-//			}
-//		}
-//		public bool MoveNext()
-//		{
-//			index++;
-//			return index<MapInfo.Count;
-//		}
-//		public void Reset()
-//		{
-//			index=-1;
-//		}
-//		private int index=-1;
-//	}
 	public class MapEnumerator: IEnumerator
 	{
 		private IMap map; 
@@ -2791,7 +2205,7 @@ namespace Meta
 				return result;
 			}
 		}
-		public override IMap Call(IMap argument) // TODO: rename to Invoke???, or just call it evaluate, it isnt anything special, is it??
+		public override IMap Call(IMap argument)
 		{
 			object result=null;
 
@@ -2857,10 +2271,6 @@ namespace Meta
 						}
 						else
 						{
-							if(this.name=="AddRange")
-							{
-								int asdf=0;
-							}
 							result=method.Invoke(target,arguments.ToArray());
 						}
 						isExecuted=true;
@@ -3095,46 +2505,10 @@ namespace Meta
 			return result;
 		}
 		public StrategyMap map;
-
-//		public abstract MapStrategy Clone();
 		public virtual MapStrategy Clone()
 		{
 			return null;
 		}
-//		public virtual MapStrategy Clone()
-//		{
-////			return new HybridDictionaryStrategy(this.map);
-////			//return GetNormalStrategy();
-//			MapStrategy strategy=new HybridDictionaryStrategy();
-//			foreach(IMap key in this.Keys)
-//			{
-//				strategy[key]=this[key];
-//			}
-//			return strategy;	
-//		}
-
-
-//		public virtual MapStrategy Clone()
-//		{
-//			return new HybridDictionaryStrategy(this.map);
-////return GetNormalStrategy();
-//			//			MapStrategy strategy=new HybridDictionaryStrategy();
-////			foreach(IMap key in this.Keys)
-////			{
-////				strategy[key]=this[key];
-////			}
-////			return strategy;	
-//		}
-//		public MapStrategy GetNormalStrategy()// maybe make this a constructor of HybridDictionaryStrategy
-//		{
-//			MapStrategy strategy=new HybridDictionaryStrategy();
-//			foreach(IMap key in this.Keys)
-//			{
-//				strategy[key]=this[key];
-//			}
-//			return strategy;
-//		}
-//		public abstract IMap CloneMap();// TODO: refactor
 		public virtual IMap CloneMap() // TODO: move into IMap
 		{
 			IMap clone;
@@ -3151,11 +2525,6 @@ namespace Meta
 					clone[key]=this[key];
 				}
 			}
-//			IMap clone=new NormalMap((NormalStrategy)this.Clone());
-//			foreach(IMap key in Keys)
-//			{
-//				clone[key]=this[key];
-//			}
 			return clone;
 		}
 
@@ -3272,10 +2641,6 @@ namespace Meta
 			}
 			return isEqual;
 		}
-//		public override IMap CloneMap()
-//		{
-//			return new NormalMap(new StringStrategy(this));
-//		}
 		public override ArrayList Array
 		{
 			get
@@ -3340,12 +2705,9 @@ namespace Meta
 			}
 			set
 			{
-				map.strategy=new HybridDictionaryStrategy();//Clone();
+				map.strategy=new HybridDictionaryStrategy();
 				map.strategy.map=map;
 				map.InitFromStrategy(this);
-//				map.strategy=new HybridDictionaryStrategy(this.map);//Clone();
-				//				map.strategy=this.GetNormalStrategy();//Clone();
-				//				map.strategy=this.Clone();
 				map.strategy[key]=value;
 			}
 		}
@@ -3418,32 +2780,6 @@ namespace Meta
 			this.keys=new ArrayList(Count);
 			this.dictionary=new HybridDictionary(Count);
 		}
-//		public HybridDictionaryStrategy(StrategyMap clone):this(clone.Count) // TODO: this isnt very clean, should be a special function, maybe, or not
-//		{
-//			//			IMap clone=new NormalMap(new HybridDictionaryStrategy(this.keys.Count));
-//			this.map=clone;
-//			foreach(IMap key in clone.Keys)
-//			{
-//				this[key]=(IMap)clone[key];
-//			}
-//		}
-//		public HybridDictionaryStrategy(MapStrategy clone):this(clone.Count)
-//		{
-////			IMap clone=new NormalMap(new HybridDictionaryStrategy(this.keys.Count));
-//			foreach(IMap key in clone.Keys)
-//			{
-//				this[key]=(IMap)clone[key];
-//			}
-//		}
-//		public override IMap CloneMap()
-//		{
-//			IMap clone=new NormalMap(new HybridDictionaryStrategy(this.keys.Count));
-//			foreach(IMap key in keys)
-//			{
-//				clone[key]=(IMap)dictionary[key];
-//			}
-//			return clone;
-//		}
 		public override ArrayList Array
 		{
 			get
@@ -3859,10 +3195,6 @@ namespace Meta
 		{
 			return new IntegerStrategy(number);
 		}
-//		public override IMap CloneMap()
-//		{
-//			return new NormalMap(new IntegerStrategy(number));
-//		}
 		public override ArrayList Keys
 		{
 			get
