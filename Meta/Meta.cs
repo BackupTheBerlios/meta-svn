@@ -1164,7 +1164,7 @@ namespace Meta
 	public class NormalMap:StrategyMap
 	{
 
-		public NormalMap(NormalStrategy strategy):base(strategy) // TOOD: NormalMap should only accept Strategies that make sense for the normal map
+		public NormalMap(NormalStrategy strategy):base(strategy)
 		{
 		}
 		public NormalMap():this(new HybridDictionaryStrategy())
@@ -1176,6 +1176,7 @@ namespace Meta
 		public NormalMap(double fraction):this(new HybridDictionaryStrategy(fraction))
 		{
 		}
+		// TODO: refactor??
 		public NormalMap(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new LazyNamespace(namespaceName,subNamespaces,assemblies))
 		{
 		}
@@ -1200,20 +1201,16 @@ namespace Meta
 	}
 	public class DirectoryStrategy:PersistantStrategy
 	{
-		public static void SaveToFile(IMap meta,string path)// TODO: refactor
+		public static void SaveToFile(IMap meta,string path)
 		{
 			Directory.CreateDirectory(Path.GetDirectoryName(path));
 			File.Create(path).Close();
-			StreamWriter streamWriter=new StreamWriter(path);
-			//streamWriter.Write(SerializeValue(meta));
 			string text=SerializeValue(meta).Trim(new char[]{'\n'});
 			if(text=="\"\"")
 			{
 				text="";
 			}
-			streamWriter.Write(text);
-			//streamWriter.Write(SerializeValue(meta).TrimStart(new char[]{'\n'}));
-			streamWriter.Close();
+			Helper.WriteFile(path,text);
 		}
 		public static string SerializeKey(IMap key)
 		{
@@ -1370,16 +1367,13 @@ namespace Meta
 		public override IMap CloneMap()
 		{
 			return new NormalMap((NormalStrategy)this.Clone());
-			//return this.map; // TODO: completely buggy, I dont understand what CloneMap should be good for
 		}
 		private DirectoryInfo directory;
 		public DirectoryStrategy(DirectoryInfo directory)
 		{
 			this.directory=directory;
-			//fileSystemPath=Path.Combine(Interpreter.installationPath,"Library");
 			ArrayList assemblies=new ArrayList();
 			assemblyPath=Path.Combine(directory.FullName,"assembly");
-//			assemblies=GlobalAssemblyCache.Assemblies;
 			if(Directory.Exists(assemblyPath))
 			{
 				foreach(string dllPath in System.IO.Directory.GetFiles(assemblyPath,"*.dll"))
@@ -1392,7 +1386,6 @@ namespace Meta
 				}
 			}
 			string cachedAssemblyPath=Path.Combine(directory.FullName,"assembly\\cachedAssemblyInfo.meta");
-//			cachedAssemblyPath=Path.Combine(Interpreter.installationPath,"cachedAssemblyInfo.meta");
 			if(File.Exists(cachedAssemblyPath))
 			{
 				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
@@ -1437,7 +1430,7 @@ namespace Meta
 		{
 			get
 			{
-				return null; // TODO: is this really correct, move it up, no sense to put it here
+				return null;
 			}
 		}
 
