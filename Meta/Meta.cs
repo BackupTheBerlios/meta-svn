@@ -1226,17 +1226,20 @@ namespace Meta
 	}
 	public abstract class AssemblyStrategy:PersistantStrategy
 	{
-		public ArrayList NamespacesFromAssembly(Assembly assembly,MapInfo cached)
+		public ArrayList NamespacesFromAssembly(Assembly assembly)
 		{ 
 			ArrayList nameSpaces=new ArrayList();
+			MapInfo cached=new MapInfo(cache);
 			bool isCached;
 			if(cached.ContainsKey(assembly.Location))
 			{
-				MapInfo info=new MapInfo((IMap)cached[assembly.Location]);
+				MapInfo info=(MapInfo)cached[assembly.Location];
+//				MapInfo info=new MapInfo((IMap)cached[assembly.Location]);
 				string timestamp=(string)info["timestamp"];
 				if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
 				{
-					MapInfo namespaces=new MapInfo((IMap)info["namespaces"]);
+					MapInfo namespaces=(MapInfo)info["namespaces"];
+//					MapInfo namespaces=new MapInfo((IMap)info["namespaces"]);
 					foreach(DictionaryEntry entry in namespaces)
 					{
 						nameSpaces.Add((string)entry.Value);
@@ -1285,258 +1288,10 @@ namespace Meta
 			}
 			return nameSpaces;
 		}
-		// TODO: refactor 
-		public IMap LoadNamespaces(ArrayList assemblies,MapInfo cachedInfo)
-		{
-			NormalMap root=new NormalMap("",new Hashtable(),new ArrayList());
-			foreach(Assembly assembly in assemblies)
-			{
-				ArrayList namespaces=NamespacesFromAssembly(assembly,cachedInfo);
-				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
-				foreach(string nameSpace in namespaces)
-				{
-					NamespaceStrategy selected=(NamespaceStrategy)root.strategy; // TODO: this sucks quite a bit!!
-					if(nameSpace=="" && !assembly.Location.StartsWith(Interpreter.LibraryPath.FullName))
-						//					if(nameSpace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.installationPath,"library")))
-					{
-						continue;
-					}
-					if(nameSpace!="")
-					{
-						foreach(string subString in nameSpace.Split('.'))
-						{
-							if(!selected.namespaces.ContainsKey(subString))
-							{
-								string fullName=selected.fullName;
-								if(fullName!="")
-								{
-									fullName+=".";
-								}
-								fullName+=subString;
-								selected.namespaces[subString]=new NormalMap(fullName,new Hashtable(),new ArrayList());
-							}
-							selected=(NamespaceStrategy)((NormalMap)selected.namespaces[subString]).strategy; // TODO: this sucks!
-						}
-					}
-					selected.AddAssembly(cachedAssembly);
-				}
-			}
-			((NamespaceStrategy)root.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
-			return root; // TODO: is this correct?
-		}
-	}
-	public class GAC: AssemblyStrategy// Should be a strategy, not a map, that way it could also be cloned easily
-	{
-		//		public override IMap CloneMap()
-		//		{
-		//			re
-		//		}
-
-		public override Integer Integer
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		public override IMap this[IMap key]
-		{
-			get
-			{
-				if(cache.ContainsKey(key))
-				{
-					return cache[key];
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
-			}
-		}
-		public override ArrayList Keys
-		{
-			get
-			{
-				return cache.Keys;
-			}
-		}
-//		public override IMap Clone() // TODO: doesnt work correctly yet
-//		{
-//			return this;
-//		}
-		public override int Count
-		{
-			get
-			{
-				return cache.Count;
-			}
-		}
-//		protected override bool ContainsKeyImplementation(IMap key)
-//		{
-//			return cache.ContainsKey(key);
-//		}
-		public override ArrayList Array
-		{
-			get
-			{
-				return new ArrayList();
-			}
-		}
-		public static IMap LoadAssemblies(IEnumerable assemblies)
-		{
-			IMap root=new NormalMap();
-			foreach(Assembly currentAssembly in assemblies)
-			{
-				foreach(Type type in currentAssembly.GetExportedTypes()) 
-				{
-					if(type.DeclaringType==null) 
-					{
-						IMap position=root;
-						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
-						subPaths.RemoveAt(subPaths.Count-1);
-						foreach(string subPath in subPaths) 
-						{
-							if(!position.ContainsKey(new NormalMap(subPath))) 
-							{
-								position[new NormalMap(subPath)]=new NormalMap();
-							}
-							position=position[new NormalMap(subPath)];
-						}
-						position[new NormalMap(type.Name)]=new DotNetClass(type);
-					}
-				}
-				Interpreter.loadedAssemblies.Add(currentAssembly.Location);
-			}
-			return root;
-		}
-		public GAC()
-		{
-			ArrayList assemblies=new ArrayList();
-			assemblies=GlobalAssemblyCache.Assemblies;
-			string cachedAssemblyPath=Path.Combine(Interpreter.LibraryPath.FullName,"cachedAssemblyInfo.meta"); // TODO: change location of this file
-			if(File.Exists(cachedAssemblyPath))
-			{
-				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
-			}		
-			cache=LoadNamespaces(assemblies,new MapInfo(cachedAssemblyInfo));
-			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
-		}
-		private IMap cachedAssemblyInfo=new NormalMap();
-
-		private IMap cache=new NormalMap();
-		public static IMap library=new PersistantMap(new GAC());
-//		public static IMap library=new GAC();
-	}
-//	public class GAC: IMap// Should be a strategy, not a map, that way it could also be cloned easily
-//	{
-////		public override IMap CloneMap()
-////		{
-////			re
-////		}
-//
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				return null;
-//			}
-//		}
-//
-//		public override IMap this[IMap key]
-//		{
-//			get
-//			{
-//				if(cache.ContainsKey(key))
-//				{
-//					return cache[key];
-//				}
-//				else
-//				{
-//					return null;
-//				}
-//			}
-//			set
-//			{
-//				throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
-//			}
-//		}
-//		public override ArrayList Keys
-//		{
-//			get
-//			{
-//				return cache.Keys;
-//			}
-//		}
-//		public override IMap Clone() // TODO: doesnt work correctly yet
-//		{
-//			return this;
-//		}
-//		public override int Count
-//		{
-//			get
-//			{
-//				return cache.Count;
-//			}
-//		}
-//		protected override bool ContainsKeyImplementation(IMap key)
-//		{
-//			return cache.ContainsKey(key);
-//		}
-//		public override ArrayList Array
-//		{
-//			get
-//			{
-//				return new ArrayList();
-//			}
-//		}
-//		public static IMap LoadAssemblies(IEnumerable assemblies)
-//		{
-//			IMap root=new NormalMap();
-//			foreach(Assembly currentAssembly in assemblies)
-//			{
-//				foreach(Type type in currentAssembly.GetExportedTypes()) 
-//				{
-//					if(type.DeclaringType==null) 
-//					{
-//						IMap position=root;
-//						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
-//						subPaths.RemoveAt(subPaths.Count-1);
-//						foreach(string subPath in subPaths) 
-//						{
-//							if(!position.ContainsKey(new NormalMap(subPath))) 
-//							{
-//								position[new NormalMap(subPath)]=new NormalMap();
-//							}
-//							position=position[new NormalMap(subPath)];
-//						}
-//						position[new NormalMap(type.Name)]=new DotNetClass(type);
-//					}
-//				}
-//				Interpreter.loadedAssemblies.Add(currentAssembly.Location);
-//			}
-//			return root;
-//		}
-//		public GAC()
-//		{
-//			ArrayList assemblies=new ArrayList();
-//			assemblies=GlobalAssemblyCache.Assemblies;
-//			string cachedAssemblyPath=Path.Combine(Interpreter.LibraryPath.FullName,"cachedAssemblyInfo.meta"); // TODO: change location of this file
-//			if(File.Exists(cachedAssemblyPath))
-//			{
-//				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
-//			}		
-//			cache=LoadNamespaces(assemblies,new MapInfo(cachedAssemblyInfo));
-//			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
-//		}
-//		private IMap cachedAssemblyInfo=new NormalMap();
-//		public static ArrayList NamespacesFromAssembly(Assembly assembly,MapInfo cached)
+//		public ArrayList NamespacesFromAssembly(Assembly assembly)
 //		{ 
 //			ArrayList nameSpaces=new ArrayList();
+//			MapInfo cached=new MapInfo(cache);
 //			bool isCached;
 //			if(cached.ContainsKey(assembly.Location))
 //			{
@@ -1593,50 +1348,239 @@ namespace Meta
 //			}
 //			return nameSpaces;
 //		}
-//		// TODO: refactor 
-//		public static IMap LoadNamespaces(ArrayList assemblies,MapInfo cachedInfo)
-//		{
-//			NormalMap root=new NormalMap("",new Hashtable(),new ArrayList());
-//			foreach(Assembly assembly in assemblies)
-//			{
-//				ArrayList namespaces=NamespacesFromAssembly(assembly,cachedInfo);
-//				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
-//				foreach(string nameSpace in namespaces)
-//				{
-//					NamespaceStrategy selected=(NamespaceStrategy)root.strategy; // TODO: this sucks quite a bit!!
-//					if(nameSpace=="" && !assembly.Location.StartsWith(Interpreter.LibraryPath.FullName))
-//						//					if(nameSpace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.installationPath,"library")))
-//					{
-//						continue;
-//					}
-//					if(nameSpace!="")
-//					{
-//						foreach(string subString in nameSpace.Split('.'))
-//						{
-//							if(!selected.namespaces.ContainsKey(subString))
-//							{
-//								string fullName=selected.fullName;
-//								if(fullName!="")
-//								{
-//									fullName+=".";
-//								}
-//								fullName+=subString;
-//								selected.namespaces[subString]=new NormalMap(fullName,new Hashtable(),new ArrayList());
-//							}
-//							selected=(NamespaceStrategy)((NormalMap)selected.namespaces[subString]).strategy; // TODO: this sucks!
-//						}
-//					}
-//					selected.AddAssembly(cachedAssembly);
-//				}
-//			}
-//			((NamespaceStrategy)root.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
-//			return root; // TODO: is this correct?
-//		}
-//		public static IMap library=new GAC();
-//		private IMap cache=new NormalMap();
-//	}
+		// TODO: refactor 
+		public IMap LoadNamespaces(ArrayList assemblies,MapInfo cachedInfo)
+		{
+			NormalMap root=new NormalMap("",new Hashtable(),new ArrayList());
+			foreach(Assembly assembly in assemblies)
+			{
+				ArrayList namespaces=NamespacesFromAssembly(assembly);
+				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
+				foreach(string nameSpace in namespaces)
+				{
+					NamespaceStrategy selected=(NamespaceStrategy)root.strategy; // TODO: this sucks quite a bit!!
+					if(nameSpace=="" && !assembly.Location.StartsWith(Interpreter.LibraryPath.FullName))
+						//					if(nameSpace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.installationPath,"library")))
+					{
+						continue;
+					}
+					if(nameSpace!="")
+					{
+						foreach(string subString in nameSpace.Split('.'))
+						{
+							if(!selected.namespaces.ContainsKey(subString))
+							{
+								string fullName=selected.fullName;
+								if(fullName!="")
+								{
+									fullName+=".";
+								}
+								fullName+=subString;
+								selected.namespaces[subString]=new NormalMap(fullName,new Hashtable(),new ArrayList());
+							}
+							selected=(NamespaceStrategy)((NormalMap)selected.namespaces[subString]).strategy; // TODO: this sucks!
+						}
+					}
+					selected.AddAssembly(cachedAssembly);
+				}
+			}
+			((NamespaceStrategy)root.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
+			return root; // TODO: is this correct?
+		}
+		protected IMap cachedAssemblyInfo=new NormalMap();
+
+		protected IMap cache=new NormalMap();
+
+	}
+	public class GAC: AssemblyStrategy// Should be a strategy, not a map, that way it could also be cloned easily
+	{
+		public override Integer Integer
+		{
+			get
+			{
+				return null;
+			}
+		}
+		public override IMap this[IMap key]
+		{
+			get
+			{
+				if(cache.ContainsKey(key))
+				{
+					return cache[key];
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
+			}
+		}
+		public override ArrayList Keys
+		{
+			get
+			{
+				return cache.Keys;
+			}
+		}
+		public override int Count
+		{
+			get
+			{
+				return cache.Count;
+			}
+		}
+		public override ArrayList Array
+		{
+			get
+			{
+				return new ArrayList();
+			}
+		}
+		public GAC()
+		{
+			ArrayList assemblies=new ArrayList();
+			assemblies=GlobalAssemblyCache.Assemblies;
+			string cachedAssemblyPath=Path.Combine(Interpreter.LibraryPath.FullName,"cachedAssemblyInfo.meta"); // TODO: change location of this file
+			if(File.Exists(cachedAssemblyPath))
+			{
+				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
+			}		
+			cache=LoadNamespaces(assemblies,new MapInfo(cachedAssemblyInfo));
+			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
+		}
+		public static IMap library=new PersistantMap(new GAC());
+	}
 	public class DirectoryStrategy:AssemblyStrategy
 	{
+		public DirectoryStrategy(DirectoryInfo directory)
+		{
+			this.directory=directory;
+			ArrayList assemblies=new ArrayList();
+			assemblyPath=Path.Combine(directory.FullName,"assembly");
+			if(Directory.Exists(assemblyPath))
+			{
+				foreach(string dllPath in System.IO.Directory.GetFiles(assemblyPath,"*.dll"))
+				{
+					assemblies.Add(Assembly.LoadFrom(dllPath));
+				}
+				foreach(string exePath in System.IO.Directory.GetFiles(assemblyPath,"*.exe"))
+				{
+					assemblies.Add(Assembly.LoadFrom(exePath));
+				}
+			}
+			string cachedAssemblyPath=Path.Combine(directory.FullName,"assembly\\cachedAssemblyInfo.meta");
+			if(File.Exists(cachedAssemblyPath))
+			{
+				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
+			}
+			cache=LoadNamespaces(assemblies,new MapInfo(cachedAssemblyInfo));
+			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
+		}
+		private string assemblyPath;
+		public override ArrayList Array
+		{
+			get
+			{
+				return new ArrayList();
+			}
+		}
+		public override MapStrategy Clone()
+		{
+			return base.Clone ();
+		}
+
+		private DirectoryInfo directory;
+
+		public override ArrayList Keys
+		{
+			get
+			{
+				ArrayList keys=new ArrayList();
+				foreach(DirectoryInfo subDirectory in directory.GetDirectories())
+				{
+					if(ValidName(subDirectory.Name))
+					{
+						keys.Add(new NormalMap(subDirectory.Name));
+					}
+				}
+				foreach(FileInfo file in directory.GetFiles("*.meta"))
+				{
+					if(ValidName(file.Name))
+					{
+						keys.Add(new NormalMap(Path.GetFileNameWithoutExtension(file.FullName)));
+					}
+				}
+				foreach(DictionaryEntry entry in cache)
+				{
+					if(!keys.Contains(entry.Key))
+					{
+						keys.Add(entry.Key);
+					}
+				}
+				return keys;
+			}
+		}
+		private bool ValidName(string key)
+		{
+			return !key.StartsWith(".") && !key.Equals("assembly");
+		}
+		public override Integer Integer
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		public override IMap this[IMap key]
+		{
+			get
+			{
+				IMap val;
+				if(key.IsString && ValidName(key.String))
+				{
+					string path=Path.Combine(directory.FullName,key.String);
+					FileInfo file=new FileInfo(path+".meta");
+					DirectoryInfo subDirectory=new DirectoryInfo(path);
+					if(file.Exists)
+					{
+						val=new PersistantMap(file);
+					}
+					else if(subDirectory.Exists)
+					{
+						val=new PersistantMap(subDirectory);
+					}
+					else if(cache.ContainsKey(key))
+					{
+						val=cache[key];
+					}
+					else
+					{
+						val=null;
+					}
+				}
+				else
+				{
+					val=null;
+				}
+				return val;
+			}
+			set
+			{
+				if(key.IsString && ValidName(key.String))
+				{
+					SaveToFile(value,Path.Combine(directory.FullName,key.String+".meta"));
+				}
+				else
+				{
+					throw new ApplicationException("Cannot set key "+key.ToString()+" in DirectoryStrategy.");
+				}
+			}
+		}
 		public static void SaveToFile(IMap meta,string path)
 		{
 			Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -1698,7 +1642,6 @@ namespace Meta
 		{
 			return literalDelimiter+number.ToString()+literalDelimiter;
 		}
-
 		private static string SerializeStringKey(IMap key,string indentation)
 		{
 			string text;
@@ -1788,134 +1731,6 @@ namespace Meta
 		{
 			return -1==text.IndexOfAny(new char[] {'@',' ','\t','\r','\n','=','.','/','\'','"','(',')','[',']','*',':','#','!'});
 		}
-
-
-		public override ArrayList Array
-		{
-			get
-			{
-				return new ArrayList();
-			}
-		}
-		public override MapStrategy Clone()
-		{
-			return base.Clone ();
-		}
-
-		private DirectoryInfo directory;
-		public DirectoryStrategy(DirectoryInfo directory)
-		{
-			this.directory=directory;
-			ArrayList assemblies=new ArrayList();
-			assemblyPath=Path.Combine(directory.FullName,"assembly");
-			if(Directory.Exists(assemblyPath))
-			{
-				foreach(string dllPath in System.IO.Directory.GetFiles(assemblyPath,"*.dll"))
-				{
-					assemblies.Add(Assembly.LoadFrom(dllPath));
-				}
-				foreach(string exePath in System.IO.Directory.GetFiles(assemblyPath,"*.exe"))
-				{
-					assemblies.Add(Assembly.LoadFrom(exePath));
-				}
-			}
-			string cachedAssemblyPath=Path.Combine(directory.FullName,"assembly\\cachedAssemblyInfo.meta");
-			if(File.Exists(cachedAssemblyPath))
-			{
-				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
-			}
-			cache=LoadNamespaces(assemblies,new MapInfo(cachedAssemblyInfo));
-			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
-		}
-		public override ArrayList Keys
-		{
-			get
-			{
-				ArrayList keys=new ArrayList();
-				foreach(DirectoryInfo subDirectory in directory.GetDirectories())
-				{
-					if(ValidName(subDirectory.Name))
-					{
-						keys.Add(new NormalMap(subDirectory.Name));
-					}
-				}
-				foreach(FileInfo file in directory.GetFiles("*.meta"))
-				{
-					if(ValidName(file.Name))
-					{
-						keys.Add(new NormalMap(Path.GetFileNameWithoutExtension(file.FullName)));
-					}
-				}
-				foreach(DictionaryEntry entry in cache)
-				{
-					if(!keys.Contains(entry.Key))
-					{
-						keys.Add(entry.Key);
-					}
-				}
-				return keys;
-			}
-		}
-		private bool ValidName(string key)
-		{
-			return !key.StartsWith(".") && !key.Equals("assembly");
-		}
-		public override Integer Integer
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		public override IMap this[IMap key]
-		{
-			get
-			{
-				IMap val;
-				if(key.IsString && ValidName(key.String))
-				{
-					string path=Path.Combine(directory.FullName,key.String);
-					FileInfo file=new FileInfo(path+".meta");
-					DirectoryInfo subDirectory=new DirectoryInfo(path);
-					if(file.Exists)
-					{
-						val=new PersistantMap(file);
-					}
-					else if(subDirectory.Exists)
-					{
-						val=new PersistantMap(subDirectory);
-					}
-					else if(cache.ContainsKey(key))
-					{
-						val=cache[key];
-					}
-					else
-					{
-						val=null;
-					}
-				}
-				else
-				{
-					val=null;
-				}
-				return val;
-			}
-			set
-			{
-				if(key.IsString && ValidName(key.String))
-				{
-					SaveToFile(value,Path.Combine(directory.FullName,key.String+".meta"));
-				}
-				else
-				{
-					throw new ApplicationException("Cannot set key "+key.ToString()+" in DirectoryStrategy.");
-				}
-			}
-		}
-		private string assemblyPath;
-		private IMap cachedAssemblyInfo=new NormalMap();
-		private IMap cache=new NormalMap();
 	}
 	public class FileStrategy:PersistantStrategy
 	{
@@ -1994,16 +1809,6 @@ namespace Meta
 				return new ArrayList();
 			}
 		}
-//		public override IMap CloneMap()
-//		{
-//			return new NormalMap(this);
-//		}
-
-//		public override MapStrategy Clone()
-//		{
-//			return this;
-//			//return base.Clone();
-//		}
 		public override IMap this[IMap key]
 		{
 			get
@@ -2079,6 +1884,33 @@ namespace Meta
 	}
 	public class CachedAssembly // TODO: integrate into Directory/GAC
 	{  
+		public IMap LoadAssemblies(IEnumerable assemblies) // TODO: refactor
+		{
+			IMap root=new NormalMap();
+			foreach(Assembly currentAssembly in assemblies)
+			{
+				foreach(Type type in currentAssembly.GetExportedTypes()) 
+				{
+					if(type.DeclaringType==null) 
+					{
+						IMap position=root;
+						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
+						subPaths.RemoveAt(subPaths.Count-1);
+						foreach(string subPath in subPaths) 
+						{
+							if(!position.ContainsKey(new NormalMap(subPath))) 
+							{
+								position[new NormalMap(subPath)]=new NormalMap();
+							}
+							position=position[new NormalMap(subPath)];
+						}
+						position[new NormalMap(type.Name)]=new DotNetClass(type);
+					}
+				}
+				Interpreter.loadedAssemblies.Add(currentAssembly.Location);
+			}
+			return root;
+		}
 		private Assembly assembly;
 		public CachedAssembly(Assembly assembly)
 		{
@@ -2088,7 +1920,7 @@ namespace Meta
 		{
 			if(assemblyContent==null)
 			{
-				assemblyContent=GAC.LoadAssemblies(new object[] {assembly});
+				assemblyContent=LoadAssemblies(new object[] {assembly});
 			}
 			IMap selected=assemblyContent;
 			if(nameSpace!="")
@@ -2426,7 +2258,7 @@ namespace Meta
 		private int index=-1;
 	}
 	public class MapInfo
-	{ 
+	{
 		private IMap map;
 		public MapInfo(IMap map)
 		{
@@ -2446,7 +2278,12 @@ namespace Meta
 		{
 			get
 			{
-				return Transform.ToDotNet(map[Transform.ToMeta(key)]);
+				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
+				if(val is IMap)
+				{
+					val=new MapInfo((IMap)val); // TODO: integrate this into ToDotNet
+				}
+				return val;
 			}
 			set
 			{
