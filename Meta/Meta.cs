@@ -763,11 +763,57 @@ namespace Meta
 		IMap Call(IMap argument);
 	}
 	public abstract class IMap: ICallable, IEnumerable
-	{		
+	{	
+		public static implicit operator IMap(bool boolean)
+		{
+			return new NormalMap(new Integer(boolean?1:0));
+		}
+		public static implicit operator IMap(char character)
+		{
+			return new NormalMap(new Integer(character));
+		}
+		public static implicit operator IMap(byte integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+		public static implicit operator IMap(sbyte integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+		public static implicit operator IMap(uint integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+		public static implicit operator IMap(ushort integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+
+
 		public static implicit operator IMap(int integer)
 		{
 			return new NormalMap(new Integer(integer));
 		}
+		public static implicit operator IMap(long integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+		public static implicit operator IMap(ulong integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+
+
+//		public static implicit operator IMap(ulong integer)
+//		{
+//			return new NormalMap(new Integer(integer));
+//		}
+//		public static implicit operator IMap(int integer)
+//		{
+//			return new NormalMap(new Integer(integer));
+//		}
+
+
 		public static implicit operator IMap(string text)
 		{
 			return new NormalMap(text);
@@ -1869,7 +1915,8 @@ namespace Meta
 				bool isElementConverted=true;
 				for(int i=0;i<meta.Count;i++)
 				{
-					object element=Transform.ToDotNet(meta[new NormalMap(new Integer(i+1))],type,out isElementConverted);
+					object element=Transform.ToDotNet(meta[i+1],type,out isElementConverted);
+//					object element=Transform.ToDotNet(meta[new NormalMap(new Integer(i+1))],type,out isElementConverted);
 					if(isElementConverted)
 					{
 						arguments.SetValue(element,i);
@@ -2049,20 +2096,24 @@ namespace Meta
 			IMap meta;
 			if(dotNet==null)
 			{
-				meta=new NormalMap(new Integer(0));
+				meta=0;
+//				meta=new NormalMap(new Integer(0));
 			}
 			else
 			{			
 				switch(Type.GetTypeCode(dotNet.GetType()))
 				{
 					case TypeCode.Boolean:
-						meta=new NormalMap(new Integer((bool)dotNet? 1:0));
+						meta=((bool)dotNet)? 1:0;
+//						meta=new NormalMap(new Integer((bool)dotNet? 1:0));
 						break;
 					case TypeCode.Byte:
-						meta=new NormalMap(new Integer((Byte)dotNet));
+						meta=(byte)dotNet;
+//						meta=new NormalMap(new Integer((Byte)dotNet));
 						break;
 					case TypeCode.Char:
-						meta=new NormalMap(new Integer((char)dotNet));
+						meta=(char)dotNet;
+//						meta=new NormalMap(new Integer((char)dotNet));
 						break;
 					case TypeCode.DateTime:
 						meta=new DotNetObject(dotNet);
@@ -2077,18 +2128,22 @@ namespace Meta
 						meta=new NormalMap((double)dotNet);
 						break;
 					case TypeCode.Int16:
-						meta=new NormalMap(new Integer((Int16)dotNet));
+						meta=(short)dotNet;
+//						meta=new NormalMap(new Integer((Int16)dotNet));
 						break;
 					case TypeCode.Int32:
-						meta=new NormalMap(new Integer((Int32)dotNet));
+						meta=(int)dotNet;
+//						meta=new NormalMap(new Integer((Int32)dotNet));
 						break;
 					case TypeCode.Int64:
-						meta=new NormalMap(new Integer((UInt64)dotNet));
+						meta=(long)dotNet;
+//						meta=new NormalMap(new Integer((UInt64)dotNet));
 						break;
 					case TypeCode.Object:
 						if(dotNet.GetType().IsSubclassOf(typeof(Enum)))
 						{
-							meta=new NormalMap(new Integer((int)Convert.ToInt32((Enum)dotNet)));
+							meta=(int)Convert.ToInt32((Enum)dotNet);
+//							meta=new NormalMap(new Integer((int)Convert.ToInt32((Enum)dotNet)));
 						}
 						else if(dotNet is IMap)
 						{
@@ -2100,7 +2155,8 @@ namespace Meta
 						}
 						break;
 					case TypeCode.SByte:
-						meta=new NormalMap(new Integer((SByte)dotNet));
+						meta=(sbyte)dotNet;
+//						meta=new NormalMap(new Integer((SByte)dotNet));
 						break;
 					case TypeCode.Single:
 						meta=new NormalMap((float)dotNet);
@@ -2109,13 +2165,16 @@ namespace Meta
 						meta=new NormalMap((string)dotNet);
 						break;
 					case TypeCode.UInt32:
-						meta=new NormalMap(new Integer((UInt32)dotNet));
+						meta=(uint)dotNet;
+//						meta=new NormalMap(new Integer((UInt32)dotNet));
 						break;
 					case TypeCode.UInt64:
-						meta=new NormalMap(new Integer((UInt64)dotNet));
+						meta=(ulong)dotNet;
+//						meta=new NormalMap(new Integer((UInt64)dotNet));
 						break;
 					case TypeCode.UInt16:
-						meta=new NormalMap(new Integer((UInt16)dotNet));
+						meta=(ushort)dotNet;
+//						meta=new NormalMap(new Integer((UInt16)dotNet));
 						break;
 					default:
 						throw new ApplicationException("not implemented");
