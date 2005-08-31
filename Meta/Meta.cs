@@ -2015,7 +2015,7 @@ namespace Meta
 				bool isElementConverted=true;
 				for(int i=0;i<meta.Count;i++)
 				{
-					object element=Convert.ToDotNet(meta[new NormalMap(new Integer(i+1))],type,out isElementConverted);
+					object element=Transform.ToDotNet(meta[new NormalMap(new Integer(i+1))],type,out isElementConverted);
 					if(isElementConverted)
 					{
 						arguments.SetValue(element,i);
@@ -2310,29 +2310,29 @@ namespace Meta
 		}
 		public bool ContainsKey(object key)
 		{
-			return map.ContainsKey(Convert.ToMeta(key));
+			return map.ContainsKey(Transform.ToMeta(key));
 		}
 
 		public object this[object key]
 		{
 			get
 			{
-				return Convert.ToDotNet(map[Convert.ToMeta(key)]);
+				return Transform.ToDotNet(map[Transform.ToMeta(key)]);
 			}
 			set
 			{
-				this.map[Convert.ToMeta(key)]=Convert.ToMeta(value);
+				this.map[Transform.ToMeta(key)]=Transform.ToMeta(value);
 			}
 		}
 		public IMap Parent
 		{
 			get
 			{
-				return (IMap)Convert.ToMeta(map.Parent);
+				return (IMap)Transform.ToMeta(map.Parent);
 			}
 			set
 			{
-				map.Parent=(IMap)Convert.ToDotNet(value);
+				map.Parent=(IMap)Transform.ToDotNet(value);
 			}
 		}
 		public ArrayList Array
@@ -2347,7 +2347,7 @@ namespace Meta
 			ArrayList result=new ArrayList();
 			foreach(IMap obj in list)
 			{
-				result.Add(Convert.ToDotNet(obj));
+				result.Add(Transform.ToDotNet(obj));
 			}
 			return result;
 		}
@@ -2449,7 +2449,7 @@ namespace Meta
 //					Array arguments=System.Array.CreateInstance(type,argument.Array.Count);
 //					for(int i=0;i<argument.Count;i++)
 //					{
-//						arguments.SetValue(Convert.ToDotNet(argument[new NormalMap(new Integer(i+1))],type),i); // TODO: make safe for failing conversion, conversion shouldnt fail, ever
+//						arguments.SetValue(Transform.ToDotNet(argument[new NormalMap(new Integer(i+1))],type),i); // TODO: make safe for failing conversion, conversion shouldnt fail, ever
 //					}
 //					return arguments;
 //				}
@@ -2461,7 +2461,7 @@ namespace Meta
 //			else
 //			{
 //				bool converted;
-//				object result=Convert.ToDotNet(meta,parameter,out converted);
+//				object result=Transform.ToDotNet(meta,parameter,out converted);
 //				if(converted)
 //				{
 //					return result;
@@ -2508,7 +2508,7 @@ namespace Meta
 			foreach(MethodBase method in oneArgumentMethods)
 			{
 				bool isConverted;
-				object parameter=Convert.ToDotNet(argument,method.GetParameters()[0].ParameterType,out isConverted);
+				object parameter=Transform.ToDotNet(argument,method.GetParameters()[0].ParameterType,out isConverted);
 				if(isConverted)
 				{
 					if(method is ConstructorInfo)
@@ -2551,7 +2551,7 @@ namespace Meta
 					ParameterInfo[] arPrmtifParameters=method.GetParameters();
 					for(int i=0;argumentsMatched && i<arPrmtifParameters.Length;i++)
 					{
-						arguments.Add(Convert.ToDotNet((IMap)argument.Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
+						arguments.Add(Transform.ToDotNet((IMap)argument.Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
 					}
 					if(argumentsMatched)
 					{
@@ -2576,7 +2576,7 @@ namespace Meta
 			{
 				throw new ApplicationException("Method "+this.name+" could not be called.");
 			}
-			return Convert.ToMeta(result);
+			return Transform.ToMeta(result);
 		}
 		// TODO: refactor
 		public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,IMap code)
@@ -2602,7 +2602,7 @@ namespace Meta
 				foreach(ParameterInfo parameter in method.GetParameters())
 				{
 					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
-					argumentBuiling+="arg[new NormalMap(new Integer("+counter+"))]=Meta.Convert.ToMeta(arg"+counter+");";
+					argumentBuiling+="arg[new NormalMap(new Integer("+counter+"))]=Meta.Transform.ToMeta(arg"+counter+");";
 					if(counter<method.GetParameters().Length)
 					{
 						argumentList+=",";
@@ -2619,7 +2619,7 @@ namespace Meta
 				if(!method.ReturnType.Equals(typeof(void)))
 				{
 					source+="return ("+returnType+")";
-					source+="Meta.Convert.ToDotNet(result,typeof("+returnType+"));"; 
+					source+="Meta.Transform.ToDotNet(result,typeof("+returnType+"));"; 
 				}
 			}
 			else 
@@ -3225,11 +3225,11 @@ namespace Meta
 					}
 					else if(members[0] is FieldInfo)
 					{
-						result=Convert.ToMeta(type.GetField(text).GetValue(obj));
+						result=Transform.ToMeta(type.GetField(text).GetValue(obj));
 					}
 					else if(members[0] is PropertyInfo)
 					{
-						result=Convert.ToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
+						result=Transform.ToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
 					}
 					else if(members[0] is EventInfo)
 					{
@@ -3262,7 +3262,7 @@ namespace Meta
 				}
 				else if(this.obj!=null && key.IsInteger && this.type.IsArray)
 				{
-					result=Convert.ToMeta(((Array)obj).GetValue(key.Integer.Int32));
+					result=Transform.ToMeta(((Array)obj).GetValue(key.Integer.Int32));
 				}
 				else
 				{
@@ -3271,7 +3271,7 @@ namespace Meta
 					argument[new NormalMap(new Integer(1))]=key;
 					try
 					{
-						result=Convert.ToMeta(indexer.Call(argument));
+						result=Transform.ToMeta(indexer.Call(argument));
 					}
 					catch(Exception e)
 					{
@@ -3294,7 +3294,7 @@ namespace Meta
 					{
 						FieldInfo field=(FieldInfo)member;
 						bool isConverted;
-						object val=Convert.ToDotNet(value,field.FieldType,out isConverted);
+						object val=Transform.ToDotNet(value,field.FieldType,out isConverted);
 						if(isConverted)
 						{
 							field.SetValue(obj,val);
@@ -3312,7 +3312,7 @@ namespace Meta
 						}
 						PropertyInfo property=(PropertyInfo)member;
 						bool isConverted;
-						object val=Convert.ToDotNet(value,property.PropertyType,out isConverted);
+						object val=Transform.ToDotNet(value,property.PropertyType,out isConverted);
 						if(isConverted)
 						{
 							property.SetValue(obj,val,new object[]{});
@@ -3339,7 +3339,7 @@ namespace Meta
 				else if(obj!=null && key.IsInteger && type.IsArray)
 				{
 					bool isConverted; 
-					object converted=Convert.ToDotNet(value,type.GetElementType(),out isConverted);
+					object converted=Transform.ToDotNet(value,type.GetElementType(),out isConverted);
 					if(isConverted)
 					{
 						((Array)obj).SetValue(converted,key.Integer.Int32);
@@ -3358,7 +3358,7 @@ namespace Meta
 					}
 					catch(Exception e)
 					{
-						throw new ApplicationException("Cannot set "+Convert.ToDotNet(key).ToString()+".");// TODO: change exception
+						throw new ApplicationException("Cannot set "+Transform.ToDotNet(key).ToString()+".");// TODO: change exception
 					}
 				}
 			}
@@ -3414,7 +3414,7 @@ namespace Meta
 					{
 						if(entry is DictionaryEntry)
 						{
-							table[Convert.ToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+							table[Transform.ToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
 						}
 						else
 						{

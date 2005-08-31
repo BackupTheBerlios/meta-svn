@@ -142,7 +142,7 @@ public class map
 	}
 	public static object If(IMap argM) 
 	{ // maybe automatically convert Maps to MapInfos??
-		bool conditionB=(bool)System.Convert.ToBoolean(Meta.Convert.ToDotNet(argM[new NormalMap(new Integer(1))]));//,typeof(bool));
+		bool conditionB=(bool)System.Convert.ToBoolean(Meta.Transform.ToDotNet(argM[new NormalMap(new Integer(1))]));//,typeof(bool));
 		IMap thenF=argM[new NormalMap("then")];
 		IMap elseF=argM[new NormalMap("else")];
 		if(conditionB) 
