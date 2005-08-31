@@ -2306,8 +2306,12 @@ namespace Meta
 		private static Hashtable toDotNet=new Hashtable();
 		private static Hashtable toMeta=new Hashtable();
 	}
-	public class MapReader
+	public abstract class MapHelper
 	{
+		public MapHelper(IMap map)
+		{
+			this.map=map;
+		}
 		public IMap Map
 		{
 			get
@@ -2316,10 +2320,13 @@ namespace Meta
 			}
 		}
 		private IMap map;
-		public MapReader(IMap map)
+	}
+	public class MapReader:MapHelper
+	{
+		public MapReader(IMap map):base(map)
 		{
-			this.map=map;
 		}
+
 //
 //		public MapInfo()
 //		{
@@ -2327,14 +2334,16 @@ namespace Meta
 //		}
 		public bool ContainsKey(object key)
 		{
-			return map.ContainsKey(Transform.ToMeta(key));
+			return Map.ContainsKey(Transform.ToMeta(key));
+//			return map.ContainsKey(Transform.ToMeta(key));
 		}
 
 		public object this[object key]
 		{
 			get
 			{
-				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
+				object val=Transform.ToDotNet(Map[Transform.ToMeta(key)]);
+//				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
 				if(val is IMap)
 				{
 					val=new MapReader((IMap)val); // TODO: integrate this into ToDotNet
@@ -2360,7 +2369,8 @@ namespace Meta
 		{
 			get
 			{
-				return (IMap)Transform.ToMeta(map.Parent);
+				return (IMap)Transform.ToMeta(Map.Parent);
+//				return (IMap)Transform.ToMeta(map.Parent);
 			}
 //			set
 //			{
@@ -2371,7 +2381,8 @@ namespace Meta
 		{
 			get
 			{
-				return ConvertToMeta(map.Array);
+				return ConvertToMeta(Map.Array);
+//				return ConvertToMeta(map.Array);
 			}
 		}
 		private ArrayList ConvertToMeta(ArrayList list)
@@ -2387,14 +2398,16 @@ namespace Meta
 		{
 			get
 			{
-				return ConvertToMeta(map.Keys);
+				return ConvertToMeta(Map.Keys);
+//				return ConvertToMeta(map.Keys);
 			}
 		}
 		public int Count
 		{
 			get
 			{
-				return map.Count;
+				return Map.Count;
+//				return map.Count;
 			}
 		}
 		public IEnumerator GetEnumerator()
@@ -2403,24 +2416,24 @@ namespace Meta
 //			return new MapInfoEnumerator(this);
 		}
 	}
-	public class MapWriter // TODO: combine with MapReader
+	public class MapWriter:MapHelper
 	{
-		public IMap Map
+//		public IMap Map
+//		{
+//			get
+//			{
+//				return map;
+//			}
+//		}
+//		private IMap map;
+		public MapWriter(IMap map):base(map)
 		{
-			get
-			{
-				return map;
-			}
-		}
-		private IMap map;
-		public MapWriter(IMap map)
-		{
-			this.map=map;
+//			this.map=map;
 		}
 
-		public MapWriter()
+		public MapWriter():base(new NormalMap())
 		{
-			this.map=new NormalMap();
+//			this.map=new NormalMap();
 		}
 //		public bool ContainsKey(object key)
 //		{
@@ -2441,20 +2454,22 @@ namespace Meta
 			set
 			{
 				IMap val;
-				if(value is MapReader)
+				if(value is MapHelper)
+//					if(value is MapReader)
 					//					if(value is MapInfo)
 				{
-					val=((MapReader)value).Map;
+					val=((MapHelper)value).Map;
 				}
-				else if(value is MapWriter)
-				{
-					val=((MapWriter)value).Map;
-				}
+//				else if(value is MapWriter)
+//				{
+//					val=((MapWriter)value).Map;
+//				}
 				else
 				{
 					val=Transform.ToMeta(value);
 				}
-				this.map[Transform.ToMeta(key)]=val;
+				this.Map[Transform.ToMeta(key)]=val;
+//				this.map[Transform.ToMeta(key)]=val;
 			}
 		}
 		public IMap Parent
@@ -2465,7 +2480,8 @@ namespace Meta
 //			}
 			set
 			{
-				map.Parent=(IMap)Transform.ToDotNet(value);
+				Map.Parent=(IMap)Transform.ToDotNet(value);
+//				map.Parent=(IMap)Transform.ToDotNet(value);
 			}
 		}
 //		public ArrayList Array
