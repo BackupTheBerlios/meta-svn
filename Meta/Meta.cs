@@ -58,7 +58,7 @@ namespace Meta
 		public static readonly IMap Arg=new NormalMap("arg");
 		public static readonly IMap This=new NormalMap("this");
 	}
-	public class NumberKeys // TODO: rename
+	public class NumberKeys
 	{
 		public static readonly IMap Denominator=new NormalMap("denominator");
 		public static readonly IMap Numerator=new NormalMap("numerator");
@@ -254,12 +254,13 @@ namespace Meta
 		string fileName;
 	}
 
-	public abstract class Filter // TODO: rename, remove??
+	public abstract class Filter // TODO: remove??
 	{
 		public abstract IMap Detect(string text);
 	}
 	public class Filters
 	{
+		// TODO: maybe put this into Parser?
 		public class DecimalFilter: Filter
 		{
 			public override IMap Detect(string text)
@@ -595,13 +596,6 @@ namespace Meta
 		{
 			return MergeCollection(arkvlToMerge);
 		}
-		// TODO: integrate merging into the IMap, and specialise, I think this is still buggy, how far down do we want to merge, anyway, 
-		// TODO: overwriting should be disallowed, must decide on exception handling first, though
-		// or allow overwriting??, probably must be allowed, for default arguments
-		// however, doesnt work as expected for integers, maybe
-		// whhere does overwriting start, where to draw the line
-
-		//ugly hack would be, dont merge if it is an integer, or a class or an object, or whatever
 		public static IMap MergeCollection(ICollection collection)
 		{
 			IMap result=new NormalMap();
@@ -609,20 +603,11 @@ namespace Meta
 			{
 				foreach(DictionaryEntry entry in current)
 				{
-//					if(!(entry.Value is DotNetClass) && result.ContainsKey((IMap)entry.Key) // TODO: this is a mess
-//						&& !(result[(IMap)entry.Key] is DotNetClass))
-//					{
-//						result[(IMap)entry.Key]=Merge(result[(IMap)entry.Key],(IMap)entry.Value);
-//					}
-//					else
-//					{
-						result[(IMap)entry.Key]=(IMap)entry.Value;
-//					}
+					result[(IMap)entry.Key]=(IMap)entry.Value;
 				}
 			}
 			return result;
 		}
-		// introduce, MergeDeep for Namespace-Loading, or dont use Merge in namespace loading
 		public static IMap Run(string fileName,IMap argument)
 		{
 			IMap program=Interpreter.Compile(fileName);
@@ -664,7 +649,6 @@ namespace Meta
 		public static AST ParseToAst(string fileName) 
 		{
 			FileStream file=new FileStream(fileName, FileMode.Open,FileAccess.Read, FileShare.ReadWrite); 
-//			FileStream file=new FileStream(fileName,FileMode.Open);
 			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(file,fileName); 
 			MetaLexer metaLexer = new MetaLexer(sharedInputState);
 	
@@ -791,8 +775,34 @@ namespace Meta
 		IMap Call(IMap argument);
 	}
 	public abstract class IMap: ICallable, IEnumerable
-	{		// TODO: maybe add boolean property??
-		// TODO: maybe use an own fraction type here?? otherwise, loss of precision
+	{		
+		public virtual bool IsBoolean
+		{
+			get
+			{
+				return IsInteger && (Integer==0 || Integer==1);
+			}
+		}
+		public virtual bool Boolean
+		{
+			get
+			{
+				bool boolean;
+				if(Integer==0)
+				{
+					boolean=false;
+				}
+				else if(Integer==1)
+				{
+					boolean=true;
+				}
+				else
+				{
+					throw new ApplicationException("Map is not a boolean.");
+				}
+				return boolean;
+			}
+		}
 		public virtual bool IsFraction
 		{
 			get
@@ -1100,7 +1110,6 @@ namespace Meta
 				return strategy.Keys;
 			}
 		}
-//		protected abstract StrategyMap CloneImplementation();
 		public override IMap Clone()
 		{
 			IMap clone=strategy.CloneMap();
@@ -1155,7 +1164,7 @@ namespace Meta
 	public class NormalMap:StrategyMap
 	{
 
-		public NormalMap(MapStrategy strategy):base(strategy) // TOOD: NormalMap should only accept Strategies that make sense for the normal map
+		public NormalMap(NormalStrategy strategy):base(strategy) // TOOD: NormalMap should only accept Strategies that make sense for the normal map
 		{
 		}
 		public NormalMap():this(new HybridDictionaryStrategy())
@@ -1167,9 +1176,6 @@ namespace Meta
 		public NormalMap(double fraction):this(new HybridDictionaryStrategy(fraction))
 		{
 		}
-//		public NormalMap(decimal fraction):this(new HybridDictionaryStrategy(fraction))
-//		{
-//		}
 		public NormalMap(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new LazyNamespace(namespaceName,subNamespaces,assemblies))
 		{
 		}
@@ -1363,7 +1369,7 @@ namespace Meta
 		}
 		public override IMap CloneMap()
 		{
-			return new NormalMap(this.Clone());
+			return new NormalMap((NormalStrategy)this.Clone());
 			//return this.map; // TODO: completely buggy, I dont understand what CloneMap should be good for
 		}
 		private DirectoryInfo directory;
@@ -1642,7 +1648,7 @@ namespace Meta
 		}
 		public override IMap CloneMap()
 		{
-			return new NormalMap(this.Clone());
+			return new NormalMap((NormalStrategy)this.Clone());
 			//return this.map; // TODO: wrong, wrong, wrong
 		}
 //		IMap data;
@@ -1697,7 +1703,7 @@ namespace Meta
 		}
 		string path;
 	}
-	public class LazyNamespace: MapStrategy // TODO: integrate into Directory
+	public class LazyNamespace: NormalStrategy// TODO: integrate into Directory
 	{
 		public override Integer Integer
 		{
@@ -1721,7 +1727,8 @@ namespace Meta
 
 		public override MapStrategy Clone()
 		{
-			return this;
+			return base.Clone();
+//			return this;
 		}
 		public override IMap this[IMap key]
 		{
@@ -1773,7 +1780,8 @@ namespace Meta
 		{
 			this.fullName=fullName;
 		}
-		public void Load() // TODO: do this automatically, when the indexer is used, or any of the other functions depending on it
+		// TODO: does this work correctly in all instances???? I actually think so, because were only using terminal namespaces like this, or are we?
+		public void Load()
 		{
 			cache=new NormalMap();
 			foreach(CachedAssembly cachedAssembly in cachedAssemblies)
@@ -2015,15 +2023,6 @@ namespace Meta
 	}
 	public class Convert // TODO: rename
 	{
-//		static Convert()
-//		{
-////			foreach(Type conversionType in typeof(ToMetaConversions).GetNestedTypes())
-////			{
-////				ToMeta conversion=((ToMeta)conversionType.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-////				toMeta[conversion.source]=conversion;
-////			}
-//		}
-
 		// TODO: maybe refactor with above , make sure it never fails
 		public static object ToDotNet(IMap meta) 
 		{
@@ -2068,19 +2067,24 @@ namespace Meta
 			}
 			else if(target.IsArray && meta.Array.Count!=0)
 			{
-				try
+				Type type=target.GetElementType();
+				Array arguments=System.Array.CreateInstance(type,meta.Array.Count);
+				bool isElementConverted=true;
+				for(int i=0;i<meta.Count;i++)
 				{
-					Type type=target.GetElementType();
-					IMap argument=meta; // TODO: maybe use MapInfo
-					Array arguments=System.Array.CreateInstance(type,argument.Array.Count);
-					for(int i=0;i<argument.Count;i++)
+					object element=Convert.ToDotNet(meta[new NormalMap(new Integer(i+1))],type,out isElementConverted);
+					if(isElementConverted)
 					{
-						arguments.SetValue(Convert.ToDotNet(argument[new NormalMap(new Integer(i+1))],type),i); // TODO: make safe for failing conversion, conversion shouldnt fail, ever
+						arguments.SetValue(element,i); // TODO: make safe for failing conversion, conversion shouldnt fail, ever
 					}
-					dotNet=arguments;
+					else
+					{
+						break;
+					}
 				}
-				catch
+				if(isElementConverted)
 				{
+					dotNet=arguments;
 				}
 			}
 			else if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
@@ -3240,7 +3244,10 @@ namespace Meta
 			return isEqual;
 		}
 	}
-	public class StringStrategy:MapStrategy
+	public abstract class NormalStrategy:MapStrategy
+	{
+	}
+	public class StringStrategy:NormalStrategy
 	{
 		public override Integer Integer
 		{
@@ -3356,7 +3363,7 @@ namespace Meta
 			}
 		}
 	}
-	public class HybridDictionaryStrategy:MapStrategy
+	public class HybridDictionaryStrategy:NormalStrategy
 	{
 		public override Integer Integer
 		{
@@ -3795,7 +3802,7 @@ namespace Meta
 		public object obj;
 		public Type type;
 	}
-	public class IntegerStrategy:MapStrategy
+	public class IntegerStrategy:NormalStrategy
 	{
 		public override int GetHashCode()
 		{
