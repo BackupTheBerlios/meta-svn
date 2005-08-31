@@ -780,6 +780,18 @@ namespace Meta
 	}
 	public abstract class IMap: ICallable, IEnumerable
 	{		
+		public static implicit operator IMap(int integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+		public static implicit operator IMap(string text)
+		{
+			return new NormalMap(text);
+		}
+		public static implicit operator string(IMap map)
+		{
+			return map.String;
+		}
 		public virtual bool IsBoolean
 		{
 			get
@@ -1221,13 +1233,20 @@ namespace Meta
 		public ArrayList NamespacesFromAssembly(Assembly assembly)
 		{ 
 			ArrayList namespaces=new ArrayList();
-			MapReader cached=new MapReader(cache);
-//			MapInfo cached=new MapInfo(cache);
-			if(cached.ContainsKey(assembly.Location) && ((MapReader)cached[assembly.Location])["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
-//				if(cached.ContainsKey(assembly.Location) && ((MapInfo)cached[assembly.Location])["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
+			IMap cached=cache;
+//			MapReader cached=new MapReader(cache);
+			//			MapInfo cached=new MapInfo(cache);
+			if(cached.ContainsKey(assembly.Location) && cached[assembly.Location]["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
+//				if(cached.ContainsKey(assembly.Location) && ((MapReader)cached[assembly.Location])["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
+				//				if(cached.ContainsKey(assembly.Location) && ((MapInfo)cached[assembly.Location])["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
 			{
-				namespaces.AddRange(((MapReader)cached[assembly.Location]).Array);
-//				namespaces.AddRange(((MapInfo)cached[assembly.Location]).Array);
+				foreach(string namespaceName in cached[assembly.Location].Array)
+				{
+					namespaces.Add(namespaceName);
+				}
+//				namespaces.AddRange((string[])cached[assembly.Location].Array);
+				//				namespaces.AddRange(((MapReader)cached[assembly.Location]).Array);
+				//				namespaces.AddRange(((MapInfo)cached[assembly.Location]).Array);
 			}
 			else
 			{
@@ -1247,10 +1266,12 @@ namespace Meta
 						namespaces.Add(namespaceName);
 					}
 				}
-				MapWriter info=new MapWriter();
-//				MapInfo info=new MapInfo();
-				MapWriter namespaceInfo=new MapWriter();
-//				MapInfo namespaceInfo=new MapInfo();
+				IMap info=new NormalMap();
+//				MapWriter info=new MapWriter();
+				//				MapInfo info=new MapInfo();
+				IMap namespaceInfo=new NormalMap();
+//				MapWriter namespaceInfo=new MapWriter();
+				//				MapInfo namespaceInfo=new MapInfo();
 				int counter=1;// AddRange method in IMap and MapInfo
 				foreach(string name in namespaces)
 				{
@@ -1259,8 +1280,9 @@ namespace Meta
 				}
 				info["namespaces"]=namespaceInfo;
 				info["timestamp"]=File.GetLastWriteTime(assembly.Location).ToString();
-				new MapWriter(cached.Map)[assembly.Location]=info;
-//				cached[assembly.Location]=info;
+				cached[assembly.Location]=info;
+//				new MapWriter(cached.Map)[assembly.Location]=info;
+				//				cached[assembly.Location]=info;
 			}
 			return namespaces;
 		}
@@ -2306,118 +2328,12 @@ namespace Meta
 		private static Hashtable toDotNet=new Hashtable();
 		private static Hashtable toMeta=new Hashtable();
 	}
-	public abstract class MapHelper
-	{
-		public MapHelper(IMap map)
-		{
-			this.map=map;
-		}
-		public IMap Map
-		{
-			get
-			{
-				return map;
-			}
-		}
-		private IMap map;
-	}
-	public class MapReader:MapHelper
-	{
-		public MapReader(IMap map):base(map)
-		{
-		}
-
-//
-//		public MapInfo()
+//	public abstract class MapHelper
+//	{
+//		public MapHelper(IMap map)
 //		{
-//			this.map=new NormalMap();
+//			this.map=map;
 //		}
-		public bool ContainsKey(object key)
-		{
-			return Map.ContainsKey(Transform.ToMeta(key));
-//			return map.ContainsKey(Transform.ToMeta(key));
-		}
-
-		public object this[object key]
-		{
-			get
-			{
-				object val=Transform.ToDotNet(Map[Transform.ToMeta(key)]);
-//				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
-				if(val is IMap)
-				{
-					val=new MapReader((IMap)val); // TODO: integrate this into ToDotNet
-//					val=new MapInfo((IMap)val); // TODO: integrate this into ToDotNet
-				}
-				return val;
-			}
-//			set
-//			{
-//				IMap val;
-//				if(value is MapInfo)
-//				{
-//					val=((MapInfo)value).map;
-//				}
-//				else
-//				{
-//					val=Transform.ToMeta(value);
-//				}
-//				this.map[Transform.ToMeta(key)]=val;
-//			}
-		}
-		public IMap Parent
-		{
-			get
-			{
-				return (IMap)Transform.ToMeta(Map.Parent);
-//				return (IMap)Transform.ToMeta(map.Parent);
-			}
-//			set
-//			{
-//				map.Parent=(IMap)Transform.ToDotNet(value);
-//			}
-		}
-		public ArrayList Array
-		{
-			get
-			{
-				return ConvertToMeta(Map.Array);
-//				return ConvertToMeta(map.Array);
-			}
-		}
-		private ArrayList ConvertToMeta(ArrayList list)
-		{
-			ArrayList result=new ArrayList();
-			foreach(IMap obj in list)
-			{
-				result.Add(Transform.ToDotNet(obj));
-			}
-			return result;
-		}
-		public ArrayList Keys
-		{
-			get
-			{
-				return ConvertToMeta(Map.Keys);
-//				return ConvertToMeta(map.Keys);
-			}
-		}
-		public int Count
-		{
-			get
-			{
-				return Map.Count;
-//				return map.Count;
-			}
-		}
-		public IEnumerator GetEnumerator()
-		{
-			return new MapReaderEnumerator(this);
-//			return new MapInfoEnumerator(this);
-		}
-	}
-	public class MapWriter:MapHelper
-	{
 //		public IMap Map
 //		{
 //			get
@@ -2426,69 +2342,69 @@ namespace Meta
 //			}
 //		}
 //		private IMap map;
-		public MapWriter(IMap map):base(map)
-		{
-//			this.map=map;
-		}
-
-		public MapWriter():base(new NormalMap())
-		{
-//			this.map=new NormalMap();
-		}
+//	}
+//	public class MapReader:MapHelper
+//	{
+//		public MapReader(IMap map):base(map)
+//		{
+//		}
+//
+////
+////		public MapInfo()
+////		{
+////			this.map=new NormalMap();
+////		}
 //		public bool ContainsKey(object key)
 //		{
-//			return map.ContainsKey(Transform.ToMeta(key));
+//			return Map.ContainsKey(Transform.ToMeta(key));
+////			return map.ContainsKey(Transform.ToMeta(key));
 //		}
-
-		public object this[object key]
-		{
+//
+//		public object this[object key]
+//		{
 //			get
 //			{
-//				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
+//				object val=Transform.ToDotNet(Map[Transform.ToMeta(key)]);
+////				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
 //				if(val is IMap)
 //				{
-//					val=new MapInfo((IMap)val); // TODO: integrate this into ToDotNet
+//					val=new MapReader((IMap)val); // TODO: integrate this into ToDotNet
+////					val=new MapInfo((IMap)val); // TODO: integrate this into ToDotNet
 //				}
 //				return val;
 //			}
-			set
-			{
-				IMap val;
-				if(value is MapHelper)
-//					if(value is MapReader)
-					//					if(value is MapInfo)
-				{
-					val=((MapHelper)value).Map;
-				}
-//				else if(value is MapWriter)
-//				{
-//					val=((MapWriter)value).Map;
-//				}
-				else
-				{
-					val=Transform.ToMeta(value);
-				}
-				this.Map[Transform.ToMeta(key)]=val;
-//				this.map[Transform.ToMeta(key)]=val;
-			}
-		}
-		public IMap Parent
-		{
+////			set
+////			{
+////				IMap val;
+////				if(value is MapInfo)
+////				{
+////					val=((MapInfo)value).map;
+////				}
+////				else
+////				{
+////					val=Transform.ToMeta(value);
+////				}
+////				this.map[Transform.ToMeta(key)]=val;
+////			}
+//		}
+//		public IMap Parent
+//		{
 //			get
 //			{
-//				return (IMap)Transform.ToMeta(map.Parent);
+//				return (IMap)Transform.ToMeta(Map.Parent);
+////				return (IMap)Transform.ToMeta(map.Parent);
 //			}
-			set
-			{
-				Map.Parent=(IMap)Transform.ToDotNet(value);
-//				map.Parent=(IMap)Transform.ToDotNet(value);
-			}
-		}
+////			set
+////			{
+////				map.Parent=(IMap)Transform.ToDotNet(value);
+////			}
+//		}
 //		public ArrayList Array
 //		{
 //			get
 //			{
-//				return ConvertToMeta(map.Array);
+//				return ConvertToMeta(Map.Array);
+////				return ConvertToMeta(map.Array);
 //			}
 //		}
 //		private ArrayList ConvertToMeta(ArrayList list)
@@ -2504,21 +2420,127 @@ namespace Meta
 //		{
 //			get
 //			{
-//				return ConvertToMeta(map.Keys);
+//				return ConvertToMeta(Map.Keys);
+////				return ConvertToMeta(map.Keys);
 //			}
 //		}
 //		public int Count
 //		{
 //			get
 //			{
-//				return map.Count;
+//				return Map.Count;
+////				return map.Count;
 //			}
 //		}
 //		public IEnumerator GetEnumerator()
 //		{
-//			return new MapInfoEnumerator(this);
+//			return new MapReaderEnumerator(this);
+////			return new MapInfoEnumerator(this);
 //		}
-	}
+//	}
+//	public class MapWriter:MapHelper
+//	{
+////		public IMap Map
+////		{
+////			get
+////			{
+////				return map;
+////			}
+////		}
+////		private IMap map;
+//		public MapWriter(IMap map):base(map)
+//		{
+////			this.map=map;
+//		}
+//
+//		public MapWriter():base(new NormalMap())
+//		{
+////			this.map=new NormalMap();
+//		}
+////		public bool ContainsKey(object key)
+////		{
+////			return map.ContainsKey(Transform.ToMeta(key));
+////		}
+//
+//		public object this[object key]
+//		{
+////			get
+////			{
+////				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
+////				if(val is IMap)
+////				{
+////					val=new MapInfo((IMap)val); // TODO: integrate this into ToDotNet
+////				}
+////				return val;
+////			}
+//			set
+//			{
+//				IMap val;
+//				if(value is MapHelper)
+////					if(value is MapReader)
+//					//					if(value is MapInfo)
+//				{
+//					val=((MapHelper)value).Map;
+//				}
+////				else if(value is MapWriter)
+////				{
+////					val=((MapWriter)value).Map;
+////				}
+//				else
+//				{
+//					val=Transform.ToMeta(value);
+//				}
+//				this.Map[Transform.ToMeta(key)]=val;
+////				this.map[Transform.ToMeta(key)]=val;
+//			}
+//		}
+//		public IMap Parent
+//		{
+////			get
+////			{
+////				return (IMap)Transform.ToMeta(map.Parent);
+////			}
+//			set
+//			{
+//				Map.Parent=(IMap)Transform.ToDotNet(value);
+////				map.Parent=(IMap)Transform.ToDotNet(value);
+//			}
+//		}
+////		public ArrayList Array
+////		{
+////			get
+////			{
+////				return ConvertToMeta(map.Array);
+////			}
+////		}
+////		private ArrayList ConvertToMeta(ArrayList list)
+////		{
+////			ArrayList result=new ArrayList();
+////			foreach(IMap obj in list)
+////			{
+////				result.Add(Transform.ToDotNet(obj));
+////			}
+////			return result;
+////		}
+////		public ArrayList Keys
+////		{
+////			get
+////			{
+////				return ConvertToMeta(map.Keys);
+////			}
+////		}
+////		public int Count
+////		{
+////			get
+////			{
+////				return map.Count;
+////			}
+////		}
+////		public IEnumerator GetEnumerator()
+////		{
+////			return new MapInfoEnumerator(this);
+////		}
+//	}
 //	public class MapInfo
 //	{
 //		public IMap Map
@@ -2615,32 +2637,32 @@ namespace Meta
 //		}
 //	}
 
-	public class MapReaderEnumerator: IEnumerator
-	{
-
-		private MapReader mapReader;
-		public MapReaderEnumerator(MapReader mapReader)
-		{
-			this.mapReader=mapReader;
-		}
-		public object Current
-		{
-			get
-			{
-				return new DictionaryEntry(mapReader.Keys[index],mapReader[mapReader.Keys[index]]);
-			}
-		}
-		public bool MoveNext()
-		{
-			index++;
-			return index<mapReader.Count;
-		}
-		public void Reset()
-		{
-			index=-1;
-		}
-		private int index=-1;
-	}
+//	public class MapReaderEnumerator: IEnumerator
+//	{
+//
+//		private MapReader mapReader;
+//		public MapReaderEnumerator(MapReader mapReader)
+//		{
+//			this.mapReader=mapReader;
+//		}
+//		public object Current
+//		{
+//			get
+//			{
+//				return new DictionaryEntry(mapReader.Keys[index],mapReader[mapReader.Keys[index]]);
+//			}
+//		}
+//		public bool MoveNext()
+//		{
+//			index++;
+//			return index<mapReader.Count;
+//		}
+//		public void Reset()
+//		{
+//			index=-1;
+//		}
+//		private int index=-1;
+//	}
 
 
 //	public class MapInfoEnumerator: IEnumerator
