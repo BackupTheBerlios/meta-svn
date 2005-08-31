@@ -274,7 +274,7 @@ namespace Meta
 						Integer numerator=IntegerFilter.ParseInteger(text.Replace(".",""));
 						if(numerator!=null)
 						{
-							Integer denominator=System.Convert.ToInt32(Math.Pow(10,text.Length-pointPos-1));
+							Integer denominator=Convert.ToInt32(Math.Pow(10,text.Length-pointPos-1));
 							result=new NormalMap();
 							result[NumberKeys.Numerator]=new NormalMap(numerator);
 							result[NumberKeys.Denominator]=new NormalMap(denominator);
@@ -865,7 +865,7 @@ namespace Meta
 				{
 					try
 					{
-						text+=System.Convert.ToChar(map[key].Integer.Int32);
+						text+=Convert.ToChar(map[key].Integer.Int32);
 					}
 					catch
 					{
@@ -1390,7 +1390,7 @@ namespace Meta
 			{
 				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
 			}
-			cache=LoadNamespaces(assemblies);
+			cache=GAC.LoadNamespaces(assemblies,cachedAssemblyInfo);
 			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 		}
 		public override ArrayList Keys
@@ -1557,43 +1557,43 @@ namespace Meta
 			return nameSpaces;
 		}
 		// TODO: refactor this
-		public IMap LoadNamespaces(ArrayList assemblies) // TODO: rename
-		{
-			NormalMap root=new NormalMap("",new Hashtable(),new ArrayList());
-			foreach(Assembly assembly in assemblies)
-			{
-				ArrayList nameSpaces=NameSpaces(assembly);
-				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
-				foreach(string nameSpace in nameSpaces)
-				{
-					LazyNamespace selected=(LazyNamespace)root.strategy; // TODO: this sucks quite a bit!!
-					if(nameSpace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.installationPath,"library")))
-					{
-						continue;
-					}
-					if(nameSpace!="")
-					{
-						foreach(string subString in nameSpace.Split('.'))
-						{
-							if(!selected.namespaces.ContainsKey(subString))
-							{
-								string fullName=selected.fullName;
-								if(fullName!="")
-								{
-									fullName+=".";
-								}
-								fullName+=subString;
-								selected.namespaces[subString]=new NormalMap(fullName,new Hashtable(),new ArrayList());
-							}
-							selected=(LazyNamespace)((NormalMap)selected.namespaces[subString]).strategy; // TODO: this sucks!
-						}
-					}
-					selected.AddAssembly(cachedAssembly);
-				}
-			}
-			((LazyNamespace)root.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
-			return root; // TODO: is this correct?
-		}
+//		public IMap LoadNamespaces(ArrayList assemblies) // TODO: rename
+//		{
+//			NormalMap root=new NormalMap("",new Hashtable(),new ArrayList());
+//			foreach(Assembly assembly in assemblies)
+//			{
+//				ArrayList nameSpaces=NameSpaces(assembly);
+//				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
+//				foreach(string nameSpace in nameSpaces)
+//				{
+//					LazyNamespace selected=(LazyNamespace)root.strategy; // TODO: this sucks quite a bit!!
+//					if(nameSpace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.installationPath,"library")))
+//					{
+//						continue;
+//					}
+//					if(nameSpace!="")
+//					{
+//						foreach(string subString in nameSpace.Split('.'))
+//						{
+//							if(!selected.namespaces.ContainsKey(subString))
+//							{
+//								string fullName=selected.fullName;
+//								if(fullName!="")
+//								{
+//									fullName+=".";
+//								}
+//								fullName+=subString;
+//								selected.namespaces[subString]=new NormalMap(fullName,new Hashtable(),new ArrayList());
+//							}
+//							selected=(LazyNamespace)((NormalMap)selected.namespaces[subString]).strategy; // TODO: this sucks!
+//						}
+//					}
+//					selected.AddAssembly(cachedAssembly);
+//				}
+//			}
+//			((LazyNamespace)root.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
+//			return root; // TODO: is this correct?
+//		}
 		private IMap cache=new NormalMap();
 	}
 	public class FileStrategy:PersistantStrategy
@@ -1879,14 +1879,14 @@ namespace Meta
 				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
 			}
 		
-			cache=LoadNamespaces(assemblies);
+			cache=LoadNamespaces(assemblies,cachedAssemblyInfo);
 			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 		}
 		private IMap cachedAssemblyInfo=new NormalMap();
-		public ArrayList NameSpaces(Assembly assembly) //TODO: integrate into LoadNamespaces???
+		public static ArrayList NameSpaces(Assembly assembly,IMap cachedInfo) //TODO: integrate into LoadNamespaces???
 		{ 
 			ArrayList nameSpaces=new ArrayList();
-			MapInfo cached=new MapInfo(cachedAssemblyInfo);
+			MapInfo cached=new MapInfo(cachedInfo);
 			if(cached.ContainsKey(assembly.Location))
 			{
 				MapInfo info=new MapInfo((IMap)cached[assembly.Location]);
@@ -1928,16 +1928,64 @@ namespace Meta
 			}
 			cachedAssemblyInfoMap[new NormalMap("namespaces")]=nameSpace;
 			cachedAssemblyInfoMap[new NormalMap("timestamp")]=new NormalMap(File.GetLastWriteTime(assembly.Location).ToString());
-			cachedAssemblyInfo[new NormalMap(assembly.Location)]=cachedAssemblyInfoMap;
+			cachedInfo[new NormalMap(assembly.Location)]=cachedAssemblyInfoMap;
 			return nameSpaces;
 		}
+//		public static ArrayList NameSpaces(Assembly assembly,IMap cachedInfo) //TODO: integrate into LoadNamespaces???
+//		{ 
+//			ArrayList nameSpaces=new ArrayList();
+//			MapInfo cached=new MapInfo(cachedInfo);
+//			if(cached.ContainsKey(assembly.Location))
+//			{
+//				MapInfo info=new MapInfo((IMap)cached[assembly.Location]);
+//				string timestamp=(string)info["timestamp"];
+//				if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
+//				{
+//					MapInfo namespaces=new MapInfo((IMap)info["namespaces"]);
+//					foreach(DictionaryEntry entry in namespaces)
+//					{
+//						nameSpaces.Add((string)entry.Value);
+//					}
+//					return nameSpaces;
+//				}
+//			}
+//			foreach(Type type in assembly.GetExportedTypes())
+//			{
+//				if(!nameSpaces.Contains(type.Namespace))
+//				{
+//					if(type.Namespace==null)
+//					{
+//						if(!nameSpaces.Contains(""))
+//						{
+//							nameSpaces.Add("");
+//						}
+//					}
+//					else
+//					{
+//						nameSpaces.Add(type.Namespace);
+//					}
+//				}
+//			}
+//			IMap cachedAssemblyInfoMap=new NormalMap();
+//			IMap nameSpace=new NormalMap(); 
+//			Integer counter=new Integer(1);
+//			foreach(string na in nameSpaces)
+//			{
+//				nameSpace[new NormalMap(counter)]=new NormalMap(na);
+//				counter++;
+//			}
+//			cachedAssemblyInfoMap[new NormalMap("namespaces")]=nameSpace;
+//			cachedAssemblyInfoMap[new NormalMap("timestamp")]=new NormalMap(File.GetLastWriteTime(assembly.Location).ToString());
+//			cachedAssemblyInfo[new NormalMap(assembly.Location)]=cachedAssemblyInfoMap;
+//			return nameSpaces;
+//		}
 		// TODO: refactor this
-		public IMap LoadNamespaces(ArrayList assemblies) // TODO: rename
+		public static IMap LoadNamespaces(ArrayList assemblies,IMap cachedInfo) // TODO: rename
 		{
 			NormalMap root=new NormalMap("",new Hashtable(),new ArrayList());
 			foreach(Assembly assembly in assemblies)
 			{
-				ArrayList nameSpaces=NameSpaces(assembly);
+				ArrayList nameSpaces=NameSpaces(assembly,cachedInfo);
 				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
 				foreach(string nameSpace in nameSpaces)
 				{
@@ -2054,13 +2102,13 @@ namespace Meta
 					case TypeCode.Byte:
 						if(IsIntegerInRange(meta,new Integer(Byte.MinValue),new Integer(Byte.MaxValue))) // TODO: overload this some
 						{
-							dotNet=System.Convert.ToByte(meta.Integer.Int32);
+							dotNet=Convert.ToByte(meta.Integer.Int32);
 						}
 						break;
 					case TypeCode.Char:
 						if(IsIntegerInRange(meta,(int)Char.MinValue,(int)Char.MaxValue))
 						{
-							dotNet=System.Convert.ToChar(meta.Integer.LongValue());
+							dotNet=Convert.ToChar(meta.Integer.LongValue());
 						}
 						break;
 					case TypeCode.DateTime:
@@ -2089,13 +2137,13 @@ namespace Meta
 						}
 						else if(IsFractionInRange(meta,double.MinValue,double.MaxValue))
 						{
-							dotNet=System.Convert.ToDouble(meta.Fraction);
+							dotNet=Convert.ToDouble(meta.Fraction);
 						}
 						break;
 					case TypeCode.Int16:
 						if(IsIntegerInRange(meta,Int16.MinValue,Int16.MaxValue))
 						{
-							dotNet=System.Convert.ToInt16(meta.Integer.LongValue());
+							dotNet=Convert.ToInt16(meta.Integer.LongValue());
 						}
 						break;
 					case TypeCode.Int32:
@@ -2107,7 +2155,7 @@ namespace Meta
 					case TypeCode.Int64:
 						if(IsIntegerInRange(meta,Int64.MinValue,Int64.MaxValue))
 						{
-							dotNet=System.Convert.ToInt64(meta.Integer.LongValue());
+							dotNet=Convert.ToInt64(meta.Integer.LongValue());
 						}
 						break;
 					case TypeCode.Object:
@@ -2123,7 +2171,7 @@ namespace Meta
 					case TypeCode.SByte:
 						if(IsIntegerInRange(meta,SByte.MinValue,SByte.MaxValue))
 						{
-							dotNet=System.Convert.ToSByte(meta.Integer.LongValue());
+							dotNet=Convert.ToSByte(meta.Integer.LongValue());
 						}
 						break;
 					case TypeCode.Single:
@@ -2145,19 +2193,19 @@ namespace Meta
 					case TypeCode.UInt16:
 						if(IsIntegerInRange(meta,new Integer(UInt16.MinValue),new Integer(UInt16.MaxValue)))
 						{
-							dotNet=System.Convert.ToUInt16(meta.Integer.LongValue());
+							dotNet=Convert.ToUInt16(meta.Integer.LongValue());
 						}
 						break;
 					case TypeCode.UInt32:
 						if(IsIntegerInRange(meta,UInt32.MinValue,UInt32.MaxValue))
 						{
-							dotNet=System.Convert.ToUInt32(meta.Integer.LongValue());
+							dotNet=Convert.ToUInt32(meta.Integer.LongValue());
 						}
 						break;
 					case TypeCode.UInt64:
 						if(IsIntegerInRange(meta,UInt64.MinValue,UInt64.MaxValue))
 						{
-							dotNet=System.Convert.ToUInt64(meta.Integer.LongValue());
+							dotNet=Convert.ToUInt64(meta.Integer.LongValue());
 						}
 						break;
 					default:
@@ -2216,7 +2264,7 @@ namespace Meta
 						meta=new DotNetObject(dotNet);
 						break;
 					case TypeCode.Decimal:
-						meta=new NormalMap(System.Convert.ToDouble((decimal)dotNet));
+						meta=new NormalMap(Convert.ToDouble((decimal)dotNet));
 						break;
 					case TypeCode.Double:
 						meta=new NormalMap((double)dotNet);
@@ -2233,7 +2281,7 @@ namespace Meta
 					case TypeCode.Object:
 						if(dotNet.GetType().IsSubclassOf(typeof(Enum)))
 						{
-							meta=new NormalMap(new Integer((int)System.Convert.ToInt32((Enum)dotNet)));
+							meta=new NormalMap(new Integer((int)Convert.ToInt32((Enum)dotNet)));
 						}
 						else if(dotNet is IMap)
 						{
@@ -2428,48 +2476,6 @@ namespace Meta
 				throw new ApplicationException("Cannot set key in DotNetMethod");
 			}
 		}
-		// TODO:  combine with ToDotNet
-//		public static object ConvertParameter(IMap meta,Type parameter,out bool isConverted)
-//		{
-//			isConverted=true;
-//			if((parameter.IsSubclassOf(typeof(Delegate))
-//				||parameter.Equals(typeof(Delegate))))
-//			{
-//				MethodInfo invoke=parameter.GetMethod("Invoke",BindingFlags.Instance
-//					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-//				Delegate function=CreateDelegateFromCode(parameter,invoke,meta);
-//				return function;
-//			}
-//			else if(parameter.IsArray && meta.Array.Count!=0)
-//			{
-//				try
-//				{
-//					Type type=parameter.GetElementType();
-//					IMap argument=meta; // TODO: maybe use MapInfo
-//					Array arguments=System.Array.CreateInstance(type,argument.Array.Count);
-//					for(int i=0;i<argument.Count;i++)
-//					{
-//						arguments.SetValue(Transform.ToDotNet(argument[new NormalMap(new Integer(i+1))],type),i); // TODO: make safe for failing conversion, conversion shouldnt fail, ever
-//					}
-//					return arguments;
-//				}
-//				catch
-//				{
-//					int asdf=0;
-//				}
-//			}
-//			else
-//			{
-//				bool converted;
-//				object result=Transform.ToDotNet(meta,parameter,out converted);
-//				if(converted)
-//				{
-//					return result;
-//				}
-//			}
-//			isConverted=false;
-//			return null;
-//		}
 		public class ArgumentComparer: IComparer
 		{
 			public int Compare(object x, object y)
@@ -2540,10 +2546,6 @@ namespace Meta
 				{
 					throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");
 				}
-				if(this.name=="AddRange")
-				{
-					int asdf=0;
-				}
 				foreach(MethodBase method in rightNumberArgumentMethods)
 				{
 					ArrayList arguments=new ArrayList();
@@ -2578,7 +2580,6 @@ namespace Meta
 			}
 			return Transform.ToMeta(result);
 		}
-		// TODO: refactor
 		public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,IMap code)
 		{
 			CSharpCodeProvider codeProvider=new CSharpCodeProvider();
@@ -2763,7 +2764,7 @@ namespace Meta
 		}
 		public override IMap Clone()
 		{
-			return new DotNetObject(obj); // TODO: is this correct?
+			return new DotNetObject(obj);
 		}
 	}
 	public abstract class MapStrategy:ISerializeSpecial
@@ -2772,7 +2773,6 @@ namespace Meta
 		{
 			get;
 		}
-		// TODO: why in MapStrategy??
 		public virtual void Serialize(string indentation,string[] functions,StringBuilder stringBuilder)
 		{
 			if(this.String!=null)
@@ -2844,7 +2844,7 @@ namespace Meta
 		{
 			return Keys.Contains(key);
 		}
-		public override int GetHashCode()  // TODO: combine with IMap.GetHashCode
+		public override int GetHashCode()
 		{
 			int hash=0;
 			foreach(IMap key in this.Keys)
@@ -3099,7 +3099,7 @@ namespace Meta
 						{
 							try
 							{
-								text+=System.Convert.ToChar(val.Integer.Int32);
+								text+=Convert.ToChar(val.Integer.Int32);
 							}
 							catch
 							{
@@ -3184,7 +3184,7 @@ namespace Meta
 				}
 			}
 			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
-			IMap argument=new NormalMap(); // TODO: call indexer directly, combine with other indexer calls
+			IMap argument=new NormalMap();
 			argument[new NormalMap(new Integer(1))]=key;
 			try
 			{
@@ -3217,7 +3217,7 @@ namespace Meta
 				IMap result;
 				if(key.IsString && type.GetMember(key.String,bindingFlags).Length>0)
 				{
-					string text=key.String; // TODO: Remove empty parent maps
+					string text=key.String;
 					MemberInfo[] members=type.GetMember(text,bindingFlags);
 					if(members[0] is MethodBase)
 					{
@@ -3233,17 +3233,17 @@ namespace Meta
 					}
 					else if(members[0] is EventInfo)
 					{
-						try // TODO: refactor
+						try
 						{
 							Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
 								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
-							if(eventDelegate==null)
+							if(eventDelegate!=null)
 							{
-								result=null;
+								result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
 							}
 							else
 							{
-								result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+								result=null;
 							}
 						}
 						catch
@@ -3285,10 +3285,6 @@ namespace Meta
 				if(key.IsString && type.GetMember(key.String,bindingFlags).Length!=0)
 				{
 					string text=key.String;
-					if(text=="abc")
-					{
-						int asdf=0;
-					}
 					MemberInfo member=type.GetMember(text,bindingFlags)[0];
 					if(member is FieldInfo)
 					{
@@ -3306,10 +3302,6 @@ namespace Meta
 					}
 					else if(member is PropertyInfo)
 					{
-						if(text=="MenuItems")
-						{
-							int asdf=0;
-						}
 						PropertyInfo property=(PropertyInfo)member;
 						bool isConverted;
 						object val=Transform.ToDotNet(value,property.PropertyType,out isConverted);
@@ -3447,7 +3439,7 @@ namespace Meta
 	{
 		public override int GetHashCode()
 		{
-			return 0; // TODO: make more efficient, but keep correctness
+			return 0;
 		}
 		private Integer number;
 		public override Integer Integer
@@ -3686,7 +3678,7 @@ namespace Meta
 				val/=int.MaxValue;
 				integer*=int.MaxValue;
 			}
-			integer*=System.Convert.ToInt32(val);
+			integer*=Convert.ToInt32(val);
 			return integer;
 		}
 		public static FileInfo[] FindFiles(DirectoryInfo directory,string fileName)

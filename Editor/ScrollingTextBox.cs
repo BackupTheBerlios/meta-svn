@@ -203,9 +203,9 @@ public class ScrollingTextBox: RichTextBox
 		{ // this sucks
 			int selectionStart=SelectionStart;
 			SelectAll();
-			double width=System.Convert.ToDouble(this.Size.Width)/2.618f;
-			double height=System.Convert.ToDouble(this.Size.Height)/2.618f;
-			SelectionIndent=System.Convert.ToInt32(width);//(height+width)/2.0f);//+Convert.ToDouble(this.Size.Height)/1.618f)/2); // idiotic
+			double width=Convert.ToDouble(this.Size.Width)/2.618f;
+			double height=Convert.ToDouble(this.Size.Height)/2.618f;
+			SelectionIndent=Convert.ToInt32(width);//(height+width)/2.0f);//+Convert.ToDouble(this.Size.Height)/1.618f)/2); // idiotic
 			//			SelectionIndent=Convert.ToInt32(Convert.ToDecimal(this.Size.Height)/2.618m); // idiotic
 			Select(selectionStart,0);
 		}

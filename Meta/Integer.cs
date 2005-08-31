@@ -2992,7 +2992,7 @@ public class Integer
 		}
 
 		// at this point u1 = u(n+1) and v = v(n)
-		// since the last bit always 1, we need to transform u1 to u(2n+1) and v to v(2n+1)
+		// since the last bit always 1, we need to Transform u1 to u(2n+1) and v to v(2n+1)
 
 		u1 = ((u1 * v) - Q_k) % n;
 		v = ((v * v1) - (P * Q_k)) % n;
