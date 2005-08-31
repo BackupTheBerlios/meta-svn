@@ -804,21 +804,11 @@ namespace Meta
 		}
 
 
-//		public static implicit operator IMap(ulong integer)
-//		{
-//			return new NormalMap(new Integer(integer));
-//		}
-//		public static implicit operator IMap(int integer)
-//		{
-//			return new NormalMap(new Integer(integer));
-//		}
-
-
 		public static implicit operator IMap(string text)
 		{
 			return new NormalMap(text);
 		}
-		public static implicit operator string(IMap map)
+		public static explicit operator string(IMap map)
 		{
 			return map.String;
 		}
@@ -1916,7 +1906,6 @@ namespace Meta
 				for(int i=0;i<meta.Count;i++)
 				{
 					object element=Transform.ToDotNet(meta[i+1],type,out isElementConverted);
-//					object element=Transform.ToDotNet(meta[new NormalMap(new Integer(i+1))],type,out isElementConverted);
 					if(isElementConverted)
 					{
 						arguments.SetValue(element,i);
@@ -2097,7 +2086,6 @@ namespace Meta
 			if(dotNet==null)
 			{
 				meta=0;
-//				meta=new NormalMap(new Integer(0));
 			}
 			else
 			{			
@@ -2105,15 +2093,12 @@ namespace Meta
 				{
 					case TypeCode.Boolean:
 						meta=((bool)dotNet)? 1:0;
-//						meta=new NormalMap(new Integer((bool)dotNet? 1:0));
 						break;
 					case TypeCode.Byte:
 						meta=(byte)dotNet;
-//						meta=new NormalMap(new Integer((Byte)dotNet));
 						break;
 					case TypeCode.Char:
 						meta=(char)dotNet;
-//						meta=new NormalMap(new Integer((char)dotNet));
 						break;
 					case TypeCode.DateTime:
 						meta=new DotNetObject(dotNet);
@@ -2129,21 +2114,17 @@ namespace Meta
 						break;
 					case TypeCode.Int16:
 						meta=(short)dotNet;
-//						meta=new NormalMap(new Integer((Int16)dotNet));
 						break;
 					case TypeCode.Int32:
 						meta=(int)dotNet;
-//						meta=new NormalMap(new Integer((Int32)dotNet));
 						break;
 					case TypeCode.Int64:
 						meta=(long)dotNet;
-//						meta=new NormalMap(new Integer((UInt64)dotNet));
 						break;
 					case TypeCode.Object:
 						if(dotNet.GetType().IsSubclassOf(typeof(Enum)))
 						{
 							meta=(int)Convert.ToInt32((Enum)dotNet);
-//							meta=new NormalMap(new Integer((int)Convert.ToInt32((Enum)dotNet)));
 						}
 						else if(dotNet is IMap)
 						{
@@ -2156,7 +2137,6 @@ namespace Meta
 						break;
 					case TypeCode.SByte:
 						meta=(sbyte)dotNet;
-//						meta=new NormalMap(new Integer((SByte)dotNet));
 						break;
 					case TypeCode.Single:
 						meta=new NormalMap((float)dotNet);
@@ -2166,15 +2146,12 @@ namespace Meta
 						break;
 					case TypeCode.UInt32:
 						meta=(uint)dotNet;
-//						meta=new NormalMap(new Integer((UInt32)dotNet));
 						break;
 					case TypeCode.UInt64:
 						meta=(ulong)dotNet;
-//						meta=new NormalMap(new Integer((UInt64)dotNet));
 						break;
 					case TypeCode.UInt16:
 						meta=(ushort)dotNet;
-//						meta=new NormalMap(new Integer((UInt16)dotNet));
 						break;
 					default:
 						throw new ApplicationException("not implemented");
@@ -2366,7 +2343,8 @@ namespace Meta
 				foreach(ParameterInfo parameter in method.GetParameters())
 				{
 					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
-					argumentBuiling+="arg[new NormalMap(new Integer("+counter+"))]=Meta.Transform.ToMeta(arg"+counter+");";
+					argumentBuiling+="arg["+counter+"]=Meta.Transform.ToMeta(arg"+counter+");";
+//					argumentBuiling+="arg[new NormalMap(new Integer("+counter+"))]=Meta.Transform.ToMeta(arg"+counter+");";
 					if(counter<method.GetParameters().Length)
 					{
 						argumentList+=",";
@@ -2708,6 +2686,7 @@ namespace Meta
 				foreach(char iChar in text)
 				{
 					list.Add(new NormalMap(new Integer(iChar)));
+//					list.Add(new NormalMap(new Integer(iChar)));
 				}
 				return list;
 			}
@@ -2757,7 +2736,8 @@ namespace Meta
 					int iInteger=key.Integer.Int32;
 					if(iInteger>0 && iInteger<=this.Count)
 					{
-						return new NormalMap(new Integer(text[iInteger-1]));
+						return text[iInteger-1];
+//						return new NormalMap(new Integer(text[iInteger-1]));
 					}
 				}
 				return null;
@@ -2954,7 +2934,8 @@ namespace Meta
 			}
 			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
 			IMap argument=new NormalMap();
-			argument[new NormalMap(new Integer(1))]=key;
+			argument[1]=key;
+//			argument[new NormalMap(new Integer(1))]=key;
 			try
 			{
 				indexer.Call(argument);
@@ -3037,7 +3018,8 @@ namespace Meta
 				{
 					DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
 					IMap argument=new NormalMap(); // refactor
-					argument[new NormalMap(new Integer(1))]=key;
+					argument[1]=key;
+//					argument[new NormalMap(new Integer(1))]=key;
 					try
 					{
 						result=Transform.ToMeta(indexer.Call(argument));
@@ -3111,8 +3093,10 @@ namespace Meta
 				{
 					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type); // TODO: refactor
 					IMap argument=new NormalMap();// TODO: refactor
-					argument[new NormalMap(new Integer(1))]=key;
-					argument[new NormalMap(new Integer(2))]=value;
+					argument[1]=key;
+//					argument[new NormalMap(new Integer(1))]=key;
+					argument[2]=value;
+//					argument[new NormalMap(new Integer(2))]=value;
 					try
 					{
 						indexer.Call(argument);
@@ -3179,7 +3163,8 @@ namespace Meta
 						}
 						else
 						{
-							table[new NormalMap(new Integer(counter))]=entry;
+							table[counter]=entry;
+//							table[new NormalMap(new Integer(counter))]=entry;
 							counter++;
 						}
 					}
@@ -3279,7 +3264,8 @@ namespace Meta
 				{
 					if(number==0)
 					{
-						result=new NormalMap(new Integer(0));
+						result=0;
+//						result=new NormalMap(new Integer(0));
 					}
 					else
 					{

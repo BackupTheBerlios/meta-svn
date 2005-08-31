@@ -183,11 +183,7 @@ namespace Test
 				}
 				IMap argument=new NormalMap();
 				argument[1]="first arg";
-//				argument[new NormalMap(new Integer(1))]=new NormalMap("first arg");
-				//argument[new Integer(1)]="first arg";
 				argument[2]="second=arg";
-//				argument[new NormalMap(new Integer(2))]=new NormalMap("second=arg");
-				//argument[new Integer(2)]="second=arg";
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
@@ -197,9 +193,7 @@ namespace Test
 			{
 				IMap argument=new NormalMap();
 				argument[1]="first arg";
-//				argument[new NormalMap(new Integer(1))]=new NormalMap("first arg");
 				argument[2]="second=arg";
-//				argument[new NormalMap(new Integer(2))]=new NormalMap("second=arg");
 				GAC.library=new PersistantMap(new GAC());
 				//				GAC.library=new GAC();
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);

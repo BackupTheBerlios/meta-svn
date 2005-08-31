@@ -31,8 +31,8 @@ public class map
 	}
 	public static IMap TrimStart(IMap arg)  // TODO: remove this completely
 	{
-		IMap map=arg[new NormalMap(new Integer(1))];
-		object obj=arg[new NormalMap(new Integer(2))];
+		IMap map=arg[1];
+		object obj=arg[2];
 
 		IMap result=new NormalMap();
 		int counter=1;
@@ -40,7 +40,7 @@ public class map
 		{
 			if(obj.Equals(o)) 
 			{
-				result[new NormalMap(new Integer(counter))]=o;
+				result[counter]=o;
 				counter++;
 			}
 			else 
@@ -68,7 +68,7 @@ public class map
 		IMap keys=new NormalMap();
 		foreach(DictionaryEntry entry in map) 
 		{
-			keys[new NormalMap(new Integer(i))]=(IMap)entry.Key;
+			keys[i]=(IMap)entry.Key;
 			i++;
 		}
 		return keys;
@@ -82,7 +82,7 @@ public class map
 		{ // TODO: eigentlich nur die Arrays verwenden
 			foreach(IMap val in map.Array) 
 			{
-				combined[new NormalMap(new Integer(i))]=val;
+				combined[i]=val;
 				i++;
 			}
 		}
@@ -109,7 +109,7 @@ public class map
 		{
 			if(!oIntegerKeyValue.Equals(oToRemove))
 			{
-				mResult[new NormalMap(new Integer(iCounter))]=oIntegerKeyValue;
+				mResult[iCounter]=oIntegerKeyValue;
 				iCounter++;
 			}
 		}
@@ -121,7 +121,7 @@ public class map
 		int iCounter=1;
 		foreach(IMap oIntegerKeyValue in mArray.Array)
 		{
-			mResult[new NormalMap(new Integer(iCounter))]=mFunction.Call(oIntegerKeyValue);
+			mResult[iCounter]=mFunction.Call(oIntegerKeyValue);
 			iCounter++;
 		}
 		return mResult;
@@ -135,14 +135,14 @@ public class map
 			IMap mArgument=new NormalMap();
 			mArgument[new NormalMap("key")]=oKey;
 			mArgument[new NormalMap("value")]=mArray[oKey];
-			mResult[new NormalMap(new Integer(counter))]=mFunction.Call(mArgument);
+			mResult[counter]=mFunction.Call(mArgument);
 			counter++;
 		}
 		return mResult;
 	}
 	public static object If(IMap argM) 
 	{
-		bool conditionB=(bool)Convert.ToBoolean(Meta.Transform.ToDotNet(argM[new NormalMap(new Integer(1))]));//,typeof(bool));
+		bool conditionB=(bool)Convert.ToBoolean(Meta.Transform.ToDotNet(argM[1]));//,typeof(bool));
 		IMap thenF=argM[new NormalMap("then")];
 		IMap elseF=argM[new NormalMap("else")];
 		if(conditionB) 

@@ -614,7 +614,7 @@ key
 		(
 			e=expression
 			{
-				result[new NormalMap(new Integer(counter))]=e;
+				result[counter]=e;
 				counter++;
 			}
 		)+
@@ -656,7 +656,7 @@ statementSearch // maybe somehow combine this with "statement", if possible, not
 		}
 	)
 	{
-		statement[CodeKeys.Search]=new NormalMap(new Integer(1));
+		statement[CodeKeys.Search]=1;
 	}
 	;
 map
@@ -672,7 +672,7 @@ map
     (
 			(s=statement|s=statementSearch)
 			{
-				statements[new NormalMap(new Integer(counter))]=s;					
+				statements[counter]=s;					
 				counter++;
 			}
     )*
@@ -718,7 +718,7 @@ select
       (
         key=expression
         {
-          selection[new NormalMap(new Integer(counter))]=key;
+          selection[counter]=key;
           counter++;
         }
       )+
