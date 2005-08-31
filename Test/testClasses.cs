@@ -88,11 +88,12 @@ namespace testClasses
 			def[new NormalMap(new Integer(1))]=new NormalMap("null");
 			def[new NormalMap("y")]=new NormalMap("null");
 			def[new NormalMap("p2")]=new NormalMap("null");
-//			arg=(IMap)Interpreter.Merge(def,arg);
+			arg=(IMap)Interpreter.Merge(def,arg);
 //			object whatever=new NormalMap("null");//arg[new NormalMap(1)];
 //			Integer test=new Integer('h');
 //			object whatever=arg[new NormalMap(1)];
-			arg=def;
+			
+			//arg=def;
 			this.x=arg[new NormalMap(new Integer(1))].String;
 			this.y=arg[new NormalMap("y")].String;
 			this.z=arg[new NormalMap("p2")].String;
@@ -116,8 +117,8 @@ namespace testClasses
 			def[new NormalMap(new Integer(1))]=new NormalMap("null");
 			def[new NormalMap("b")]=new NormalMap("null");
 			def[new NormalMap("c")]=new NormalMap("null");
-//			arg=(IMap)Interpreter.Merge(def,arg);
-			arg=def;
+			arg=(IMap)Interpreter.Merge(def,arg);
+			//arg=def;
 			return arg[new NormalMap(new Integer(1))].String+arg[new NormalMap("b")].String+arg[new NormalMap("c")].String+
 				this.x+this.y+this.z;
 		}

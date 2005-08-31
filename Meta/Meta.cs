@@ -1221,10 +1221,13 @@ namespace Meta
 		public ArrayList NamespacesFromAssembly(Assembly assembly)
 		{ 
 			ArrayList namespaces=new ArrayList();
-			MapInfo cached=new MapInfo(cache);
-			if(cached.ContainsKey(assembly.Location) && ((MapInfo)cached[assembly.Location])["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
+			MapReader cached=new MapReader(cache);
+//			MapInfo cached=new MapInfo(cache);
+			if(cached.ContainsKey(assembly.Location) && ((MapReader)cached[assembly.Location])["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
+//				if(cached.ContainsKey(assembly.Location) && ((MapInfo)cached[assembly.Location])["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
 			{
-				namespaces.AddRange(((MapInfo)cached[assembly.Location]).Array);
+				namespaces.AddRange(((MapReader)cached[assembly.Location]).Array);
+//				namespaces.AddRange(((MapInfo)cached[assembly.Location]).Array);
 			}
 			else
 			{
@@ -1244,8 +1247,10 @@ namespace Meta
 						namespaces.Add(namespaceName);
 					}
 				}
-				MapInfo info=new MapInfo();
-				MapInfo namespaceInfo=new MapInfo();
+				MapWriter info=new MapWriter();
+//				MapInfo info=new MapInfo();
+				MapWriter namespaceInfo=new MapWriter();
+//				MapInfo namespaceInfo=new MapInfo();
 				int counter=1;// AddRange method in IMap and MapInfo
 				foreach(string name in namespaces)
 				{
@@ -1254,7 +1259,8 @@ namespace Meta
 				}
 				info["namespaces"]=namespaceInfo;
 				info["timestamp"]=File.GetLastWriteTime(assembly.Location).ToString();
-				cached[assembly.Location]=info;
+				new MapWriter(cached.Map)[assembly.Location]=info;
+//				cached[assembly.Location]=info;
 			}
 			return namespaces;
 		}
@@ -1731,7 +1737,7 @@ namespace Meta
 			}
 		}
 	}
-	public class NamespaceStrategy: NormalStrategy // TODO: integrate into Directory/GAC
+	public class NamespaceStrategy: NormalStrategy
 	{
 		public override Integer Integer
 		{
@@ -1759,8 +1765,7 @@ namespace Meta
 			}
 			set
 			{
-				namespaces[key]=value; // TODO: this is totally wrong, remove when the file system stuff is sorted out
-////				throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
+				throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
 			}
 		}
 		public override ArrayList Keys
@@ -1797,7 +1802,6 @@ namespace Meta
 		{
 			this.fullName=fullName;
 		}
-		// TODO: does this work correctly in all instances???? I actually think so, because were only using terminal namespaces like this, or are we?
 		public void Load()
 		{
 			cache=new NormalMap();
@@ -1820,35 +1824,114 @@ namespace Meta
 			return cache.ContainsKey(key);
 		}
 	}
-	public class CachedAssembly // TODO: integrate into Directory/GAC
+	public class CachedAssembly
 	{  
-		public IMap LoadAssemblies(IEnumerable assemblies) // TODO: refactor
+//		public IMap LoadAssembly() // TODO: refactor
+//		{
+//			MapInfo root=new MapInfo();
+//			//			IMap root=new NormalMap();
+//			foreach(Type type in assembly.GetExportedTypes()) // TODO: use MapInfo her
+//			{
+//				if(type.DeclaringType==null) 
+//				{
+//					MapInfo current=root;
+//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
+//					//					subNames.RemoveAt(subNames.Count-1);
+//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
+//					{
+//						if(!current.ContainsKey(subName))
+//						{
+//							current[subName]=new NormalMap(); // maybe MapInfo here?
+//						}
+//						current=(MapInfo)current[subName];
+//					}
+//					current[type.Name]=new DotNetClass(type);
+//				}
+//			}
+//			Interpreter.loadedAssemblies.Add(assembly.Location);
+//			return root.Map;
+//		}
+
+//		public IMap LoadAssembly() // TODO: refactor
+//		{
+//			MapInfo root=new MapInfo();
+//			//			IMap root=new NormalMap();
+//			foreach(Type type in assembly.GetExportedTypes()) // TODO: use MapInfo her
+//			{
+//				if(type.DeclaringType==null) 
+//				{
+//					MapInfo current=root;
+//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
+//					//					subNames.RemoveAt(subNames.Count-1);
+//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
+//					{
+//						if(!current.ContainsKey(subName))
+//						{
+//							current[subName]=new NormalMap(); // maybe MapInfo here?
+//						}
+//						current=(MapInfo)current[subName];
+//					}
+//					current[type.Name]=new DotNetClass(type);
+//				}
+//			}
+//			Interpreter.loadedAssemblies.Add(assembly.Location);
+//			return root.Map;
+//		}
+
+
+		public IMap LoadAssembly() // TODO: refactor
 		{
 			IMap root=new NormalMap();
-			foreach(Assembly currentAssembly in assemblies)
+			foreach(Type type in assembly.GetExportedTypes())
 			{
-				foreach(Type type in currentAssembly.GetExportedTypes()) 
+				if(type.DeclaringType==null) 
 				{
-					if(type.DeclaringType==null) 
+					IMap current=root;
+					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
+//					subNames.RemoveAt(subNames.Count-1);
+					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
 					{
-						IMap position=root;
-						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
-						subPaths.RemoveAt(subPaths.Count-1);
-						foreach(string subPath in subPaths) 
+						if(!current.ContainsKey(new NormalMap(subName))) 
 						{
-							if(!position.ContainsKey(new NormalMap(subPath))) 
-							{
-								position[new NormalMap(subPath)]=new NormalMap();
-							}
-							position=position[new NormalMap(subPath)];
+							current[new NormalMap(subName)]=new NormalMap();
 						}
-						position[new NormalMap(type.Name)]=new DotNetClass(type);
+						current=current[new NormalMap(subName)];
 					}
+					current[new NormalMap(type.Name)]=new DotNetClass(type);
 				}
-				Interpreter.loadedAssemblies.Add(currentAssembly.Location);
 			}
+			Interpreter.loadedAssemblies.Add(assembly.Location);
 			return root;
 		}
+
+
+//		public IMap LoadAssemblies(IEnumerable assemblies) // TODO: refactor
+//		{
+//			IMap root=new NormalMap();
+//			foreach(Assembly currentAssembly in assemblies)
+//			{
+//				foreach(Type type in currentAssembly.GetExportedTypes()) 
+//				{
+//					if(type.DeclaringType==null) 
+//					{
+//						IMap position=root;
+//						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
+//						subPaths.RemoveAt(subPaths.Count-1);
+//						foreach(string subPath in subPaths) 
+//						{
+//							if(!position.ContainsKey(new NormalMap(subPath))) 
+//							{
+//								position[new NormalMap(subPath)]=new NormalMap();
+//							}
+//							position=position[new NormalMap(subPath)];
+//						}
+//						position[new NormalMap(type.Name)]=new DotNetClass(type);
+//					}
+//				}
+//				Interpreter.loadedAssemblies.Add(currentAssembly.Location);
+//			}
+//			return root;
+//		}
 		private Assembly assembly;
 		public CachedAssembly(Assembly assembly)
 		{
@@ -1858,7 +1941,8 @@ namespace Meta
 		{
 			if(assemblyContent==null)
 			{
-				assemblyContent=LoadAssemblies(new object[] {assembly});
+				assemblyContent=LoadAssembly();
+//				assemblyContent=LoadAssemblies(new object[] {assembly});
 			}
 			IMap selected=assemblyContent;
 			if(nameSpace!="")
@@ -1872,6 +1956,58 @@ namespace Meta
 		}			
 		private IMap assemblyContent;
 	}
+//	public class CachedAssembly
+//	{  
+//		public IMap LoadAssemblies(IEnumerable assemblies) // TODO: refactor
+//		{
+//			IMap root=new NormalMap();
+//			foreach(Assembly currentAssembly in assemblies)
+//			{
+//				foreach(Type type in currentAssembly.GetExportedTypes()) 
+//				{
+//					if(type.DeclaringType==null) 
+//					{
+//						IMap position=root;
+//						ArrayList subPaths=new ArrayList(type.FullName.Split('.'));
+//						subPaths.RemoveAt(subPaths.Count-1);
+//						foreach(string subPath in subPaths) 
+//						{
+//							if(!position.ContainsKey(new NormalMap(subPath))) 
+//							{
+//								position[new NormalMap(subPath)]=new NormalMap();
+//							}
+//							position=position[new NormalMap(subPath)];
+//						}
+//						position[new NormalMap(type.Name)]=new DotNetClass(type);
+//					}
+//				}
+//				Interpreter.loadedAssemblies.Add(currentAssembly.Location);
+//			}
+//			return root;
+//		}
+//		private Assembly assembly;
+//		public CachedAssembly(Assembly assembly)
+//		{
+//			this.assembly=assembly;
+//		}
+//		public IMap NamespaceContents(string nameSpace)
+//		{
+//			if(assemblyContent==null)
+//			{
+//				assemblyContent=LoadAssemblies(new object[] {assembly});
+//			}
+//			IMap selected=assemblyContent;
+//			if(nameSpace!="")
+//			{
+//				foreach(string subString in nameSpace.Split('.'))
+//				{
+//					selected=selected[new NormalMap(subString)];
+//				}
+//			}
+//			return selected;
+//		}			
+//		private IMap assemblyContent;
+//	}
 	public class Transform
 	{
 		public static object ToDotNet(IMap meta) 
@@ -2170,8 +2306,7 @@ namespace Meta
 		private static Hashtable toDotNet=new Hashtable();
 		private static Hashtable toMeta=new Hashtable();
 	}
-	// TODO: AddRange method would be nice
-	public class MapInfo
+	public class MapReader
 	{
 		public IMap Map
 		{
@@ -2181,15 +2316,15 @@ namespace Meta
 			}
 		}
 		private IMap map;
-		public MapInfo(IMap map)
+		public MapReader(IMap map)
 		{
 			this.map=map;
 		}
-
-		public MapInfo()
-		{
-			this.map=new NormalMap();
-		}
+//
+//		public MapInfo()
+//		{
+//			this.map=new NormalMap();
+//		}
 		public bool ContainsKey(object key)
 		{
 			return map.ContainsKey(Transform.ToMeta(key));
@@ -2202,23 +2337,24 @@ namespace Meta
 				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
 				if(val is IMap)
 				{
-					val=new MapInfo((IMap)val); // TODO: integrate this into ToDotNet
+					val=new MapReader((IMap)val); // TODO: integrate this into ToDotNet
+//					val=new MapInfo((IMap)val); // TODO: integrate this into ToDotNet
 				}
 				return val;
 			}
-			set
-			{
-				IMap val;
-				if(value is MapInfo)
-				{
-					val=((MapInfo)value).map;
-				}
-				else
-				{
-					val=Transform.ToMeta(value);
-				}
-				this.map[Transform.ToMeta(key)]=val;
-			}
+//			set
+//			{
+//				IMap val;
+//				if(value is MapInfo)
+//				{
+//					val=((MapInfo)value).map;
+//				}
+//				else
+//				{
+//					val=Transform.ToMeta(value);
+//				}
+//				this.map[Transform.ToMeta(key)]=val;
+//			}
 		}
 		public IMap Parent
 		{
@@ -2226,10 +2362,10 @@ namespace Meta
 			{
 				return (IMap)Transform.ToMeta(map.Parent);
 			}
-			set
-			{
-				map.Parent=(IMap)Transform.ToDotNet(value);
-			}
+//			set
+//			{
+//				map.Parent=(IMap)Transform.ToDotNet(value);
+//			}
 		}
 		public ArrayList Array
 		{
@@ -2263,28 +2399,225 @@ namespace Meta
 		}
 		public IEnumerator GetEnumerator()
 		{
-			return new MapInfoEnumerator(this);
+			return new MapReaderEnumerator(this);
+//			return new MapInfoEnumerator(this);
 		}
 	}
-	public class MapInfoEnumerator: IEnumerator
+	public class MapWriter // TODO: combine with MapReader
+	{
+		public IMap Map
+		{
+			get
+			{
+				return map;
+			}
+		}
+		private IMap map;
+		public MapWriter(IMap map)
+		{
+			this.map=map;
+		}
+
+		public MapWriter()
+		{
+			this.map=new NormalMap();
+		}
+//		public bool ContainsKey(object key)
+//		{
+//			return map.ContainsKey(Transform.ToMeta(key));
+//		}
+
+		public object this[object key]
+		{
+//			get
+//			{
+//				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
+//				if(val is IMap)
+//				{
+//					val=new MapInfo((IMap)val); // TODO: integrate this into ToDotNet
+//				}
+//				return val;
+//			}
+			set
+			{
+				IMap val;
+				if(value is MapReader)
+					//					if(value is MapInfo)
+				{
+					val=((MapReader)value).Map;
+				}
+				else if(value is MapWriter)
+				{
+					val=((MapWriter)value).Map;
+				}
+				else
+				{
+					val=Transform.ToMeta(value);
+				}
+				this.map[Transform.ToMeta(key)]=val;
+			}
+		}
+		public IMap Parent
+		{
+//			get
+//			{
+//				return (IMap)Transform.ToMeta(map.Parent);
+//			}
+			set
+			{
+				map.Parent=(IMap)Transform.ToDotNet(value);
+			}
+		}
+//		public ArrayList Array
+//		{
+//			get
+//			{
+//				return ConvertToMeta(map.Array);
+//			}
+//		}
+//		private ArrayList ConvertToMeta(ArrayList list)
+//		{
+//			ArrayList result=new ArrayList();
+//			foreach(IMap obj in list)
+//			{
+//				result.Add(Transform.ToDotNet(obj));
+//			}
+//			return result;
+//		}
+//		public ArrayList Keys
+//		{
+//			get
+//			{
+//				return ConvertToMeta(map.Keys);
+//			}
+//		}
+//		public int Count
+//		{
+//			get
+//			{
+//				return map.Count;
+//			}
+//		}
+//		public IEnumerator GetEnumerator()
+//		{
+//			return new MapInfoEnumerator(this);
+//		}
+	}
+//	public class MapInfo
+//	{
+//		public IMap Map
+//		{
+//			get
+//			{
+//				return map;
+//			}
+//		}
+//		private IMap map;
+//		public MapInfo(IMap map)
+//		{
+//			this.map=map;
+//		}
+//
+//		public MapInfo()
+//		{
+//			this.map=new NormalMap();
+//		}
+//		public bool ContainsKey(object key)
+//		{
+//			return map.ContainsKey(Transform.ToMeta(key));
+//		}
+//
+//		public object this[object key]
+//		{
+//			get
+//			{
+//				object val=Transform.ToDotNet(map[Transform.ToMeta(key)]);
+//				if(val is IMap)
+//				{
+//					val=new MapInfo((IMap)val); // TODO: integrate this into ToDotNet
+//				}
+//				return val;
+//			}
+//			set
+//			{
+//				IMap val;
+//				if(value is MapInfo)
+//				{
+//					val=((MapInfo)value).map;
+//				}
+//				else
+//				{
+//					val=Transform.ToMeta(value);
+//				}
+//				this.map[Transform.ToMeta(key)]=val;
+//			}
+//		}
+//		public IMap Parent
+//		{
+//			get
+//			{
+//				return (IMap)Transform.ToMeta(map.Parent);
+//			}
+//			set
+//			{
+//				map.Parent=(IMap)Transform.ToDotNet(value);
+//			}
+//		}
+//		public ArrayList Array
+//		{
+//			get
+//			{
+//				return ConvertToMeta(map.Array);
+//			}
+//		}
+//		private ArrayList ConvertToMeta(ArrayList list)
+//		{
+//			ArrayList result=new ArrayList();
+//			foreach(IMap obj in list)
+//			{
+//				result.Add(Transform.ToDotNet(obj));
+//			}
+//			return result;
+//		}
+//		public ArrayList Keys
+//		{
+//			get
+//			{
+//				return ConvertToMeta(map.Keys);
+//			}
+//		}
+//		public int Count
+//		{
+//			get
+//			{
+//				return map.Count;
+//			}
+//		}
+//		public IEnumerator GetEnumerator()
+//		{
+//			return new MapInfoEnumerator(this);
+//		}
+//	}
+
+	public class MapReaderEnumerator: IEnumerator
 	{
 
-		private MapInfo MapInfo;
-		public MapInfoEnumerator(MapInfo MapInfo)
+		private MapReader mapReader;
+		public MapReaderEnumerator(MapReader mapReader)
 		{
-			this.MapInfo=MapInfo;
+			this.mapReader=mapReader;
 		}
 		public object Current
 		{
 			get
 			{
-				return new DictionaryEntry(MapInfo.Keys[index],MapInfo[MapInfo.Keys[index]]);
+				return new DictionaryEntry(mapReader.Keys[index],mapReader[mapReader.Keys[index]]);
 			}
 		}
 		public bool MoveNext()
 		{
 			index++;
-			return index<MapInfo.Count;
+			return index<mapReader.Count;
 		}
 		public void Reset()
 		{
@@ -2292,6 +2625,34 @@ namespace Meta
 		}
 		private int index=-1;
 	}
+
+
+//	public class MapInfoEnumerator: IEnumerator
+//	{
+//
+//		private MapInfo MapInfo;
+//		public MapInfoEnumerator(MapInfo MapInfo)
+//		{
+//			this.MapInfo=MapInfo;
+//		}
+//		public object Current
+//		{
+//			get
+//			{
+//				return new DictionaryEntry(MapInfo.Keys[index],MapInfo[MapInfo.Keys[index]]);
+//			}
+//		}
+//		public bool MoveNext()
+//		{
+//			index++;
+//			return index<MapInfo.Count;
+//		}
+//		public void Reset()
+//		{
+//			index=-1;
+//		}
+//		private int index=-1;
+//	}
 	public class MapEnumerator: IEnumerator
 	{
 		private IMap map; 

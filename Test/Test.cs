@@ -188,8 +188,7 @@ namespace Test
 				//argument[new Integer(2)]="second=arg";
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
-		}	
-		// should execute twice, once without caching, once with
+		}
 		public class Execute:TestCase 
 		{
 			public override object Run() 
@@ -198,11 +197,9 @@ namespace Test
 				argument[new NormalMap(new Integer(1))]=new NormalMap("first arg");
 				argument[new NormalMap(new Integer(2))]=new NormalMap("second=arg");
 				GAC.library=new PersistantMap(new GAC());
-//				GAC.library=new GAC();
+				//				GAC.library=new GAC();
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
-
-
 	}
 }
