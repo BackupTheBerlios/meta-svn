@@ -1230,80 +1230,102 @@ namespace Meta
 			{
 				foreach(Type type in assembly.GetExportedTypes())
 				{
-					string name;
+					string namespaceName;
 					if(type.Namespace==null)
 					{
-						name="";
+						namespaceName="";
 					}
 					else
 					{
-						name=type.Namespace;
+						namespaceName=type.Namespace;
 					}
-					if(!namespaces.Contains(name))
+					if(!namespaces.Contains(namespaceName))
 					{
-						namespaces.Add(name);
+						namespaces.Add(namespaceName);
 					}
 				}
-				MapInfo assemblyInfo=new MapInfo();
-//				IMap assemblyInfo=new NormalMap();
-				MapInfo assemblyNamespaces=new MapInfo();
-//				Integer counter=new Integer(1);
-				int counter=1;
-				foreach(string na in namespaces)
+				MapInfo info=new MapInfo();
+				MapInfo namespaceInfo=new MapInfo();
+				int counter=1;// AddRange method in IMap and MapInfo
+				foreach(string name in namespaces)
 				{
-					assemblyNamespaces[counter]=na;
-//					assemblyNamespaces[new NormalMap(counter)]=new NormalMap(na);
+					namespaceInfo[counter]=name;
 					counter++;
 				}
-				assemblyInfo["namespaces"]=assemblyNamespaces;
-//				assemblyInfo[new NormalMap("namespaces")]=assemblyNamespaces.Map;
-				assemblyInfo["timestamp"]=File.GetLastWriteTime(assembly.Location).ToString();
-//				assemblyInfo[new NormalMap("timestamp")]=new NormalMap(File.GetLastWriteTime(assembly.Location).ToString());
-				cached[assembly.Location]=assemblyInfo;
+				info["namespaces"]=namespaceInfo;
+				info["timestamp"]=File.GetLastWriteTime(assembly.Location).ToString();
+				cached[assembly.Location]=info;
 			}
 			return namespaces;
 		}
-		public IMap LoadNamespaces(ArrayList assemblies,MapInfo cachedInfo)
+		public void LoadNamespaces(ArrayList assemblies)
 		{
-			NormalMap root=new NormalMap("",new Hashtable(),new ArrayList());
+			NormalMap rootNamespace=new NormalMap("",new Hashtable(),new ArrayList());
 			foreach(Assembly assembly in assemblies)
 			{
-				ArrayList namespaces=NamespacesFromAssembly(assembly);
 				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
-				foreach(string nameSpace in namespaces)
+				foreach(string namespaceName in NamespacesFromAssembly(assembly))
 				{
-					NamespaceStrategy selected=(NamespaceStrategy)root.strategy; // TODO: this sucks quite a bit!!
-					if(nameSpace=="" && !assembly.Location.StartsWith(Interpreter.LibraryPath.FullName))
-						//					if(nameSpace=="" && !assembly.Location.StartsWith(Path.Combine(Interpreter.installationPath,"library")))
+					NamespaceStrategy currentNamespace=(NamespaceStrategy)rootNamespace.strategy;
+					if(namespaceName!="")
 					{
-						continue;
-					}
-					if(nameSpace!="")
-					{
-						foreach(string subString in nameSpace.Split('.'))
+						foreach(string subNamespace in namespaceName.Split('.'))
 						{
-							if(!selected.namespaces.ContainsKey(subString))
+							if(!currentNamespace.namespaces.ContainsKey(subNamespace))
 							{
-								string fullName=selected.fullName;
+								string fullName=currentNamespace.fullName;
 								if(fullName!="")
 								{
 									fullName+=".";
 								}
-								fullName+=subString;
-								selected.namespaces[subString]=new NormalMap(fullName,new Hashtable(),new ArrayList());
+								fullName+=subNamespace;
+								currentNamespace.namespaces[subNamespace]=new NormalMap(fullName,new Hashtable(),new ArrayList());
 							}
-							selected=(NamespaceStrategy)((NormalMap)selected.namespaces[subString]).strategy; // TODO: this sucks!
+							currentNamespace=(NamespaceStrategy)((NormalMap)currentNamespace.namespaces[subNamespace]).strategy; // TODO: this sucks!
 						}
 					}
-					selected.AddAssembly(cachedAssembly);
+					currentNamespace.AddAssembly(cachedAssembly);
 				}
 			}
-			((NamespaceStrategy)root.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
-			return root; // TODO: is this correct?
+			((NamespaceStrategy)rootNamespace.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
+			cache=rootNamespace;
 		}
+//		public void LoadNamespaces(ArrayList assemblies)//,MapInfo cachedInfo)
+//		{
+//			NormalMap rootNamespace=new NormalMap("",new Hashtable(),new ArrayList());
+//			foreach(Assembly assembly in assemblies)
+//			{
+//				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
+//				foreach(string namespaceName in NamespacesFromAssembly(assembly))
+//				{
+//					NamespaceStrategy currentNamespace=(NamespaceStrategy)rootNamespace.strategy;
+//					if(namespaceName!="")
+//					{
+//						foreach(string subNamespace in namespaceName.Split('.'))
+//						{
+//							if(!currentNamespace.namespaces.ContainsKey(subNamespace))
+//							{
+//								string fullName=currentNamespace.fullName;
+//								if(fullName!="")
+//								{
+//									fullName+=".";
+//								}
+//								fullName+=subNamespace;
+//								currentNamespace.namespaces[subNamespace]=new NormalMap(fullName,new Hashtable(),new ArrayList());
+//							}
+//							currentNamespace=(NamespaceStrategy)((NormalMap)currentNamespace.namespaces[subNamespace]).strategy; // TODO: this sucks!
+//						}
+//					}
+//					currentNamespace.AddAssembly(cachedAssembly);
+//				}
+//			}
+//			((NamespaceStrategy)rootNamespace.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
+//			cache=rootNamespace;
+//		}
 		protected IMap cachedAssemblyInfo=new NormalMap();
 
-		protected IMap cache=new NormalMap();
+		protected NormalMap cache=new NormalMap();
+//		protected IMap cache=new NormalMap();
 
 	}
 	public class GAC: AssemblyStrategy// Should be a strategy, not a map, that way it could also be cloned easily
@@ -1363,7 +1385,8 @@ namespace Meta
 			{
 				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
 			}		
-			cache=LoadNamespaces(assemblies,new MapInfo(cachedAssemblyInfo));
+			LoadNamespaces(assemblies);//,new MapInfo(cachedAssemblyInfo));
+//			cache=LoadNamespaces(assemblies);//,new MapInfo(cachedAssemblyInfo));
 			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 		}
 		public static IMap library=new PersistantMap(new GAC());
@@ -1391,7 +1414,8 @@ namespace Meta
 			{
 				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
 			}
-			cache=LoadNamespaces(assemblies,new MapInfo(cachedAssemblyInfo));
+			LoadNamespaces(assemblies);//,new MapInfo(cachedAssemblyInfo));
+//			cache=LoadNamespaces(assemblies);//,new MapInfo(cachedAssemblyInfo));
 			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 		}
 		private string assemblyPath;
@@ -2146,6 +2170,7 @@ namespace Meta
 		private static Hashtable toDotNet=new Hashtable();
 		private static Hashtable toMeta=new Hashtable();
 	}
+	// TODO: AddRange method would be nice
 	public class MapInfo
 	{
 		public IMap Map
