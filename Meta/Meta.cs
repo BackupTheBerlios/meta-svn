@@ -804,13 +804,40 @@ namespace Meta
 		}
 
 
+		public static implicit operator IMap(double number)
+		{
+			return new NormalMap(number);
+		}
+		public static implicit operator IMap(float number)
+		{
+			return new NormalMap(number);
+		}
+		public static implicit operator IMap(decimal number)
+		{
+			return new NormalMap(Convert.ToDouble(number));
+		}
+
 		public static implicit operator IMap(string text)
 		{
 			return new NormalMap(text);
 		}
+
+
 		public static explicit operator string(IMap map)
 		{
 			return map.String;
+		}
+		public static explicit operator double(IMap map)
+		{
+			return map.Fraction;
+		}
+		public static explicit operator float(IMap map)
+		{
+			return (float)map.Fraction;
+		}
+		public static explicit operator decimal(IMap map)
+		{
+			return (decimal)map.Fraction;
 		}
 		public virtual bool IsBoolean
 		{
@@ -1970,7 +1997,8 @@ namespace Meta
 						}
 						else if(IsFractionInRange(meta,(double)decimal.MinValue,(double)decimal.MaxValue))
 						{
-							dotNet=(decimal)meta.Fraction;
+							dotNet=(decimal)meta;
+//							dotNet=(decimal)meta.Fraction;
 						}
 						break;
 					case TypeCode.Double:
@@ -1980,7 +2008,8 @@ namespace Meta
 						}
 						else if(IsFractionInRange(meta,double.MinValue,double.MaxValue))
 						{
-							dotNet=Convert.ToDouble(meta.Fraction);
+							dotNet=(double)meta;
+//							dotNet=Convert.ToDouble(meta.Fraction);
 						}
 						break;
 					case TypeCode.Int16:
@@ -2024,7 +2053,8 @@ namespace Meta
 						}
 						else if(IsFractionInRange(meta,Single.MinValue,Single.MaxValue))
 						{
-							dotNet=(float)meta.Fraction;
+							dotNet=(float)meta;
+//							dotNet=(float)meta.Fraction;
 						}
 						break;
 					case TypeCode.String:
@@ -2107,10 +2137,12 @@ namespace Meta
 						meta=new DotNetObject(dotNet);
 						break;
 					case TypeCode.Decimal:
-						meta=new NormalMap(Convert.ToDouble((decimal)dotNet));
+						meta=(decimal)dotNet;
+//						meta=new NormalMap(Convert.ToDouble((decimal)dotNet));
 						break;
 					case TypeCode.Double:
-						meta=new NormalMap((double)dotNet);
+						meta=(double)dotNet;
+//						meta=new NormalMap((double)dotNet);
 						break;
 					case TypeCode.Int16:
 						meta=(short)dotNet;
@@ -2139,10 +2171,12 @@ namespace Meta
 						meta=(sbyte)dotNet;
 						break;
 					case TypeCode.Single:
-						meta=new NormalMap((float)dotNet);
+						meta=(float)dotNet;
+//						meta=new NormalMap((float)dotNet);
 						break;
 					case TypeCode.String:
-						meta=new NormalMap((string)dotNet);
+						meta=(string)dotNet;
+//						meta=new NormalMap((string)dotNet);
 						break;
 					case TypeCode.UInt32:
 						meta=(uint)dotNet;
