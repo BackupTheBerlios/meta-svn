@@ -822,25 +822,6 @@ namespace Meta
 			return new NormalMap(text);
 		}
 
-
-//		public static explicit operator string(IMap map)
-//		{
-//			return map.String;
-//		}
-//		public static explicit operator double(IMap map)
-//		{
-//			return map.Fraction;
-//		}
-//		public static explicit operator float(IMap map)
-//		{
-//			return (float)map.Fraction;
-//		}
-//		public static explicit operator decimal(IMap map)
-//		{
-//			return (decimal)map.Fraction;
-//		}
-
-
 		public virtual bool IsBoolean
 		{
 			get
@@ -2000,7 +1981,6 @@ namespace Meta
 						else if(IsFractionInRange(meta,(double)decimal.MinValue,(double)decimal.MaxValue))
 						{
 							dotNet=(decimal)meta.Fraction;
-//							dotNet=(decimal)meta;
 						}
 						break;
 					case TypeCode.Double:
@@ -2011,8 +1991,6 @@ namespace Meta
 						else if(IsFractionInRange(meta,double.MinValue,double.MaxValue))
 						{
 							dotNet=meta.Fraction;
-//							dotNet=(double)meta;
-							//							dotNet=Convert.ToDouble(meta.Fraction);
 						}
 						break;
 					case TypeCode.Int16:
@@ -2057,7 +2035,6 @@ namespace Meta
 						else if(IsFractionInRange(meta,Single.MinValue,Single.MaxValue))
 						{
 							dotNet=(float)meta.Fraction;
-//							dotNet=(float)meta.Fraction;
 						}
 						break;
 					case TypeCode.String:
@@ -2141,11 +2118,9 @@ namespace Meta
 						break;
 					case TypeCode.Decimal:
 						meta=(decimal)dotNet;
-//						meta=new NormalMap(Convert.ToDouble((decimal)dotNet));
 						break;
 					case TypeCode.Double:
 						meta=(double)dotNet;
-//						meta=new NormalMap((double)dotNet);
 						break;
 					case TypeCode.Int16:
 						meta=(short)dotNet;
@@ -2175,11 +2150,9 @@ namespace Meta
 						break;
 					case TypeCode.Single:
 						meta=(float)dotNet;
-//						meta=new NormalMap((float)dotNet);
 						break;
 					case TypeCode.String:
 						meta=(string)dotNet;
-//						meta=new NormalMap((string)dotNet);
 						break;
 					case TypeCode.UInt32:
 						meta=(uint)dotNet;
@@ -2381,7 +2354,6 @@ namespace Meta
 				{
 					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
 					argumentBuiling+="arg["+counter+"]=Meta.Transform.ToMeta(arg"+counter+");";
-//					argumentBuiling+="arg[new NormalMap(new Integer("+counter+"))]=Meta.Transform.ToMeta(arg"+counter+");";
 					if(counter<method.GetParameters().Length)
 					{
 						argumentList+=",";
@@ -2723,7 +2695,6 @@ namespace Meta
 				foreach(char iChar in text)
 				{
 					list.Add(new NormalMap(new Integer(iChar)));
-//					list.Add(new NormalMap(new Integer(iChar)));
 				}
 				return list;
 			}
@@ -2774,7 +2745,6 @@ namespace Meta
 					if(iInteger>0 && iInteger<=this.Count)
 					{
 						return text[iInteger-1];
-//						return new NormalMap(new Integer(text[iInteger-1]));
 					}
 				}
 				return null;
@@ -2851,7 +2821,7 @@ namespace Meta
 		public HybridDictionaryStrategy():this(2)
 		{
 		}
-		public HybridDictionaryStrategy(int Count) // TODO: maybe remove this performance stuff, confusing
+		public HybridDictionaryStrategy(int Count)
 		{
 			this.keys=new ArrayList(Count);
 			this.dictionary=new HybridDictionary(Count);
@@ -2972,7 +2942,6 @@ namespace Meta
 			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
 			IMap argument=new NormalMap();
 			argument[1]=key;
-//			argument[new NormalMap(new Integer(1))]=key;
 			try
 			{
 				indexer.Call(argument);
@@ -3054,9 +3023,8 @@ namespace Meta
 				else
 				{
 					DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
-					IMap argument=new NormalMap(); // refactor
+					IMap argument=new NormalMap();
 					argument[1]=key;
-//					argument[new NormalMap(new Integer(1))]=key;
 					try
 					{
 						result=Transform.ToMeta(indexer.Call(argument));
@@ -3128,19 +3096,17 @@ namespace Meta
 				}
 				else
 				{
-					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type); // TODO: refactor
-					IMap argument=new NormalMap();// TODO: refactor
+					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type);
+					IMap argument=new NormalMap();
 					argument[1]=key;
-//					argument[new NormalMap(new Integer(1))]=key;
 					argument[2]=value;
-//					argument[new NormalMap(new Integer(2))]=value;
 					try
 					{
 						indexer.Call(argument);
 					}
 					catch(Exception e)
 					{
-						throw new ApplicationException("Cannot set "+Transform.ToDotNet(key).ToString()+".");// TODO: change exception
+						throw new ApplicationException("Cannot set "+Transform.ToDotNet(key).ToString()+".");
 					}
 				}
 			}
@@ -3201,7 +3167,6 @@ namespace Meta
 						else
 						{
 							table[counter]=entry;
-//							table[new NormalMap(new Integer(counter))]=entry;
 							counter++;
 						}
 					}
@@ -3302,7 +3267,6 @@ namespace Meta
 					if(number==0)
 					{
 						result=0;
-//						result=new NormalMap(new Integer(0));
 					}
 					else
 					{
@@ -3338,7 +3302,7 @@ namespace Meta
 			}
 			set
 			{
-				if(key.Equals(NumberKeys.EmptyMap)) // TODO: implement
+				if(key.Equals(NumberKeys.EmptyMap))
 				{
 					IMap map=value;// TODO: remove
 				}
