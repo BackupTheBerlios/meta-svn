@@ -260,7 +260,6 @@ namespace Meta
 	}
 	public class Filters
 	{
-		// TODO: maybe put this into Parser?
 		public class DecimalFilter: Filter
 		{
 			public override IMap Detect(string text)
@@ -1900,8 +1899,7 @@ namespace Meta
 //			return root.Map;
 //		}
 
-
-		public IMap LoadAssembly() // TODO: refactor
+		public IMap LoadAssembly()
 		{
 			IMap root=new NormalMap();
 			foreach(Type type in assembly.GetExportedTypes())
@@ -1910,21 +1908,44 @@ namespace Meta
 				{
 					IMap current=root;
 					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
-//					subNames.RemoveAt(subNames.Count-1);
 					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
 					{
-						if(!current.ContainsKey(new NormalMap(subName))) 
+						if(!current.ContainsKey(subName)) 
 						{
-							current[new NormalMap(subName)]=new NormalMap();
+							current[subName]=new NormalMap();
 						}
-						current=current[new NormalMap(subName)];
+						current=current[subName];
 					}
-					current[new NormalMap(type.Name)]=new DotNetClass(type);
+					current[type.Name]=new DotNetClass(type);
 				}
 			}
 			Interpreter.loadedAssemblies.Add(assembly.Location);
 			return root;
 		}
+//		public IMap LoadAssembly() // TODO: refactor
+//		{
+//			IMap root=new NormalMap();
+//			foreach(Type type in assembly.GetExportedTypes())
+//			{
+//				if(type.DeclaringType==null) 
+//				{
+//					IMap current=root;
+//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
+////					subNames.RemoveAt(subNames.Count-1);
+//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
+//					{
+//						if(!current.ContainsKey(new NormalMap(subName))) 
+//						{
+//							current[new NormalMap(subName)]=new NormalMap();
+//						}
+//						current=current[new NormalMap(subName)];
+//					}
+//					current[new NormalMap(type.Name)]=new DotNetClass(type);
+//				}
+//			}
+//			Interpreter.loadedAssemblies.Add(assembly.Location);
+//			return root;
+//		}
 
 
 //		public IMap LoadAssemblies(IEnumerable assemblies) // TODO: refactor
