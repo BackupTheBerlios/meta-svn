@@ -1040,6 +1040,13 @@ namespace Meta
 	
 	public abstract class StrategyMap: IMap, ISerializeSpecial
 	{
+		public void InitFromStrategy(MapStrategy clone)
+		{
+			foreach(IMap key in clone.Keys)
+			{
+				this[key]=clone[key];
+			}
+		}
 		public override Integer Integer
 		{
 			get
@@ -1176,6 +1183,7 @@ namespace Meta
 	public class NormalMap:StrategyMap
 	{
 
+
 		public NormalMap(NormalStrategy strategy):base(strategy)
 		{
 		}
@@ -1198,6 +1206,11 @@ namespace Meta
 	}
 	public class PersistantMap:StrategyMap
 	{
+		public override IMap Clone()
+		{
+			return base.Clone();
+		}
+
 		public PersistantMap(PersistantStrategy strategy):base(strategy)
 		{
 		}
@@ -1780,6 +1793,11 @@ namespace Meta
 //		{
 //			return new NormalMap((NormalStrategy)this.Clone());
 //		}
+		public override MapStrategy Clone()
+		{
+			return base.Clone ();
+		}
+
 		private DirectoryInfo directory;
 		public DirectoryStrategy(DirectoryInfo directory)
 		{
@@ -1977,11 +1995,11 @@ namespace Meta
 //			return new NormalMap(this);
 //		}
 
-		public override MapStrategy Clone()
-		{
-			return this;
-			//return base.Clone();
-		}
+//		public override MapStrategy Clone()
+//		{
+//			return this;
+//			//return base.Clone();
+//		}
 		public override IMap this[IMap key]
 		{
 			get
@@ -2828,15 +2846,6 @@ namespace Meta
 	}
 	public abstract class MapStrategy:ISerializeSpecial
 	{
-		public MapStrategy GetNormalStrategy()
-		{
-			MapStrategy strategy=new HybridDictionaryStrategy();
-			foreach(IMap key in this.Keys)
-			{
-				strategy[key]=this[key];
-			}
-			return strategy;
-		}
 		public abstract Integer Integer
 		{
 			get;
@@ -2873,18 +2882,59 @@ namespace Meta
 //		public abstract MapStrategy Clone();
 		public virtual MapStrategy Clone()
 		{
-			return GetNormalStrategy();
+			return null;
+		}
+//		public virtual MapStrategy Clone()
+//		{
+////			return new HybridDictionaryStrategy(this.map);
+////			//return GetNormalStrategy();
 //			MapStrategy strategy=new HybridDictionaryStrategy();
 //			foreach(IMap key in this.Keys)
 //			{
 //				strategy[key]=this[key];
 //			}
 //			return strategy;	
-		}
+//		}
+
+
+//		public virtual MapStrategy Clone()
+//		{
+//			return new HybridDictionaryStrategy(this.map);
+////return GetNormalStrategy();
+//			//			MapStrategy strategy=new HybridDictionaryStrategy();
+////			foreach(IMap key in this.Keys)
+////			{
+////				strategy[key]=this[key];
+////			}
+////			return strategy;	
+//		}
+//		public MapStrategy GetNormalStrategy()// maybe make this a constructor of HybridDictionaryStrategy
+//		{
+//			MapStrategy strategy=new HybridDictionaryStrategy();
+//			foreach(IMap key in this.Keys)
+//			{
+//				strategy[key]=this[key];
+//			}
+//			return strategy;
+//		}
 //		public abstract IMap CloneMap();// TODO: refactor
-		public virtual IMap CloneMap()
+		public virtual IMap CloneMap() // TODO: move into IMap
 		{
-			IMap clone=new NormalMap((NormalStrategy)this.Clone());
+			IMap clone;
+			NormalStrategy strategy=(NormalStrategy)this.Clone();
+			if(strategy!=null)
+			{
+				clone=new NormalMap(strategy);
+			}
+			else
+			{
+				clone=new NormalMap();
+				foreach(IMap key in Keys)
+				{
+					clone[key]=this[key];
+				}
+			}
+//			IMap clone=new NormalMap((NormalStrategy)this.Clone());
 //			foreach(IMap key in Keys)
 //			{
 //				clone[key]=this[key];
@@ -3073,8 +3123,12 @@ namespace Meta
 			}
 			set
 			{
-				map.strategy=this.GetNormalStrategy();//Clone();
-//				map.strategy=this.Clone();
+				map.strategy=new HybridDictionaryStrategy();//Clone();
+				map.strategy.map=map;
+				map.InitFromStrategy(this);
+//				map.strategy=new HybridDictionaryStrategy(this.map);//Clone();
+				//				map.strategy=this.GetNormalStrategy();//Clone();
+				//				map.strategy=this.Clone();
 				map.strategy[key]=value;
 			}
 		}
@@ -3147,15 +3201,32 @@ namespace Meta
 			this.keys=new ArrayList(Count);
 			this.dictionary=new HybridDictionary(Count);
 		}
-		public override IMap CloneMap()
-		{
-			IMap clone=new NormalMap(new HybridDictionaryStrategy(this.keys.Count));
-			foreach(IMap key in keys)
-			{
-				clone[key]=(IMap)dictionary[key];
-			}
-			return clone;
-		}
+//		public HybridDictionaryStrategy(StrategyMap clone):this(clone.Count) // TODO: this isnt very clean, should be a special function, maybe, or not
+//		{
+//			//			IMap clone=new NormalMap(new HybridDictionaryStrategy(this.keys.Count));
+//			this.map=clone;
+//			foreach(IMap key in clone.Keys)
+//			{
+//				this[key]=(IMap)clone[key];
+//			}
+//		}
+//		public HybridDictionaryStrategy(MapStrategy clone):this(clone.Count)
+//		{
+////			IMap clone=new NormalMap(new HybridDictionaryStrategy(this.keys.Count));
+//			foreach(IMap key in clone.Keys)
+//			{
+//				this[key]=(IMap)clone[key];
+//			}
+//		}
+//		public override IMap CloneMap()
+//		{
+//			IMap clone=new NormalMap(new HybridDictionaryStrategy(this.keys.Count));
+//			foreach(IMap key in keys)
+//			{
+//				clone[key]=(IMap)dictionary[key];
+//			}
+//			return clone;
+//		}
 		public override ArrayList Array
 		{
 			get
