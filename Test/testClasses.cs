@@ -89,54 +89,21 @@ namespace testClasses
 			def["y"]="null";
 			def["p2"]="null";
 			arg=(IMap)Interpreter.Merge(def,arg);
-//			object whatever=new NormalMap("null");//arg[new NormalMap(1)];
-//			Integer test=new Integer('h');
-//			object whatever=arg[new NormalMap(1)];
-			
-			//arg=def;
+
 			this.x=arg[1].String;
 			this.y=arg["y"].String;
-//			this.y=arg[new NormalMap("y")].String;
 			this.z=arg["p2"].String;
-//			this.z=arg[new NormalMap("p2")].String;
 		}
-//		public NamedNoConversion(IMap arg) {
-//			IMap def=new NormalMap();
-//			def[new NormalMap(1)]=new NormalMap("null");
-//			def[new NormalMap("y")]=new NormalMap("null");
-//			def[new NormalMap("p2")]=new NormalMap("null");
-//			arg=(IMap)Interpreter.Merge(def,arg);
-//			//object whatever=new NormalMap("null");//arg[new NormalMap(1)];
-//			Integer test=new Integer('h');
-//			object whatever=arg[new NormalMap(1)];
-//			this.x=(string)((IMap)whatever).String;
-//			this.y=(string)((IMap)arg[new NormalMap("y")]).String;
-//			this.z=(string)((IMap)arg[new NormalMap("p2")]).String;
-//		}
 		public string Concatenate(IMap arg) 
 		{
 			IMap def=new NormalMap();
 			def[1]="null";
 			def["b"]="null";
-//			def[new NormalMap("b")]=new NormalMap("null");
 			def["c"]="null";
-//			def[new NormalMap("c")]=new NormalMap("null");
 			arg=(IMap)Interpreter.Merge(def,arg);
-			//arg=def;
 			return arg[1].String+arg["b"].String+arg["c"].String+
 				this.x+this.y+this.z;
 		}
-//		public string Concatenate(IMap arg) {
-//			IMap def=new NormalMap();
-//			def[new NormalMap(1)]=new NormalMap("null");
-//			def[new NormalMap("b")]=new NormalMap("null");
-//			def[new NormalMap("c")]=new NormalMap("null");
-//			arg=(IMap)Interpreter.Merge(def,arg);
-//			return (string)((IMap)arg[new NormalMap(1)]).String+
-//				(string)((IMap)arg[new NormalMap("b")]).String+
-//				(string)((IMap)arg[new NormalMap("c")]).String+
-//				this.x+this.y+this.z;
-//		}
 	}
 	public class IndexerNoConversion:TestClass {
 		public string this[string a] {

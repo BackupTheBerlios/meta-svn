@@ -8,17 +8,9 @@ using Meta;
 
 public class map 
 {
-	public class interpreter 
+	public class interpreter  // TODO: rename, only used for testing purposes
 	{
-		//		public static event BreakPointDelegate BreakPoint;
-		public static int line=0; // only needed because of test in basicTest.meta
-		//		public static void breakPointCallBack(IMap mCallback) {
-		//			Interpreter.OnBreak();
-		//		}
-		//		public static int column=0;
-		//		public static void run() {
-		//			BreakPoint(new NormalMap("stuff"));
-		//		}
+		public static int line=0;
 	}
 	public static bool ContainsKey(IMap map,IMap key) 
 	{
@@ -133,8 +125,8 @@ public class map
 		foreach(IMap oKey in mArray.Keys) 
 		{
 			IMap mArgument=new NormalMap();
-			mArgument[new NormalMap("key")]=oKey;
-			mArgument[new NormalMap("value")]=mArray[oKey];
+			mArgument["key"]=oKey;
+			mArgument["value"]=mArray[oKey];
 			mResult[counter]=mFunction.Call(mArgument);
 			counter++;
 		}
@@ -143,8 +135,8 @@ public class map
 	public static object If(IMap argM) 
 	{
 		bool conditionB=(bool)Convert.ToBoolean(Meta.Transform.ToDotNet(argM[1]));//,typeof(bool));
-		IMap thenF=argM[new NormalMap("then")];
-		IMap elseF=argM[new NormalMap("else")];
+		IMap thenF=argM["then"];
+		IMap elseF=argM["else"];
 		if(conditionB) 
 		{
 			return thenF.Call(new NormalMap());

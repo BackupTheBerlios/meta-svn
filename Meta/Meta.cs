@@ -39,30 +39,30 @@ namespace Meta
 
 	public class CodeKeys
 	{
-		public readonly static IMap Literal=new NormalMap("literal");
-		public readonly static IMap Run=new NormalMap("run");
-		public readonly static IMap Call=new NormalMap("call");
-		public readonly static IMap Function=new NormalMap("function");
-		public readonly static IMap Argument=new NormalMap("argument");
-		public static readonly IMap Select=new NormalMap("select");
-		public static readonly IMap Search=new NormalMap("search");
-		public static readonly IMap Key=new NormalMap("key");
-		public static readonly IMap Program=new NormalMap("program");
-		public static readonly IMap Delayed=new NormalMap("delayed");
-		public static readonly IMap Lookup=new NormalMap("lookup");
-		public static readonly IMap Value=new NormalMap("value");
+		public readonly static IMap Literal="literal";
+		public readonly static IMap Run="run";
+		public readonly static IMap Call="call";
+		public readonly static IMap Function="function";
+		public readonly static IMap Argument="argument";
+		public static readonly IMap Select="select";
+		public static readonly IMap Search="search";
+		public static readonly IMap Key="key";
+		public static readonly IMap Program="program";
+		public static readonly IMap Delayed="delayed";
+		public static readonly IMap Lookup="lookup";
+		public static readonly IMap Value="value";
 	}
 	public class SpecialKeys
 	{
-		public static readonly IMap Parent=new NormalMap("parent"); 
-		public static readonly IMap Arg=new NormalMap("arg");
-		public static readonly IMap This=new NormalMap("this");
+		public static readonly IMap Parent="parent";
+		public static readonly IMap Arg="arg";
+		public static readonly IMap This="this";
 	}
 	public class NumberKeys
 	{
-		public static readonly IMap Denominator=new NormalMap("denominator");
-		public static readonly IMap Numerator=new NormalMap("numerator");
-		public static readonly IMap Negative=new NormalMap("negative");
+		public static readonly IMap Denominator="denominator";
+		public static readonly IMap Numerator="numerator";
+		public static readonly IMap Negative="negative";
 		public static readonly IMap EmptyMap=new NormalMap();
 	}
 	public abstract class Expression
@@ -853,7 +853,7 @@ namespace Meta
 				double fraction;
 				if(IsFraction)
 				{
-					fraction=((double)(this[new NormalMap("numerator")]).Integer.LongValue())/((double)(this[new NormalMap("denominator")]).Integer.LongValue());
+					fraction=((double)(this["numerator"]).Integer.LongValue())/((double)(this["denominator"]).Integer.LongValue());
 				}
 				else
 				{
