@@ -2058,7 +2058,32 @@ namespace Meta
 		public static object ToDotNet(IMap meta,Type target,out bool isConverted)
 		{
 			object dotNet=null;
-			if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
+			if((target.IsSubclassOf(typeof(Delegate))
+				||target.Equals(typeof(Delegate))))
+			{
+				MethodInfo invoke=target.GetMethod("Invoke",BindingFlags.Instance
+					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+				Delegate function=DotNetMethod.CreateDelegateFromCode(target,invoke,meta);
+				dotNet=function;
+			}
+			else if(target.IsArray && meta.Array.Count!=0)
+			{
+				try
+				{
+					Type type=target.GetElementType();
+					IMap argument=meta; // TODO: maybe use MapInfo
+					Array arguments=System.Array.CreateInstance(type,argument.Array.Count);
+					for(int i=0;i<argument.Count;i++)
+					{
+						arguments.SetValue(Convert.ToDotNet(argument[new NormalMap(new Integer(i+1))],type),i); // TODO: make safe for failing conversion, conversion shouldnt fail, ever
+					}
+					dotNet=arguments;
+				}
+				catch
+				{
+				}
+			}
+			else if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
 			{ 
 				dotNet=Enum.ToObject(target,meta.Integer.Int32); // TODO: pick integer type dynamically
 			}
@@ -2216,75 +2241,171 @@ namespace Meta
 			}
 			return dotNet;
 		}
-//		public static IMap ToMeta(object oDotNet)
-//		{ 
-//			IMap meta;
-//			if(oDotNet==null)
-//			{
-//				meta=null;
+//		public static object ToDotNet(IMap meta,Type target,out bool isConverted)
+//		{
+//			object dotNet=null;
+//			if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
+//			{ 
+//				dotNet=Enum.ToObject(target,meta.Integer.Int32); // TODO: pick integer type dynamically
 //			}
-//			else if(oDotNet.GetType().IsSubclassOf(typeof(Enum)))
+//			else 
 //			{
-//				meta=new NormalMap(new Integer((int)System.Convert.ToInt32((Enum)oDotNet)));
+//				switch(Type.GetTypeCode(target))
+//				{
+//					case TypeCode.Boolean:
+//						if(IsIntegerInRange(meta,0,1))
+//						{
+//							if(meta.Integer==0)
+//							{
+//								dotNet=false;
+//							}
+//							else if(meta.Integer==1)
+//							{
+//								dotNet=true;
+//							}
+//						}
+//						break;
+//					case TypeCode.Byte:
+//						if(IsIntegerInRange(meta,new Integer(Byte.MinValue),new Integer(Byte.MaxValue))) // TODO: overload this some
+//						{
+//							dotNet=System.Convert.ToByte(meta.Integer.Int32);
+//						}
+//						break;
+//					case TypeCode.Char:
+//						if(IsIntegerInRange(meta,(int)Char.MinValue,(int)Char.MaxValue))
+//						{
+//							dotNet=System.Convert.ToChar(meta.Integer.LongValue());
+//						}
+//						break;
+//					case TypeCode.DateTime:
+//						isConverted=false;
+//						break;
+//					case TypeCode.DBNull:
+//						if(meta.IsInteger && meta.Integer==0)
+//						{
+//							dotNet=DBNull.Value;
+//						}
+//						break;
+//					case TypeCode.Decimal:
+//						if(IsIntegerInRange(meta,Helper.IntegerFromDouble((double)decimal.MinValue),Helper.IntegerFromDouble((double)decimal.MaxValue)))
+//						{
+//							dotNet=(decimal)(meta.Integer.LongValue());
+//						}
+//						else if(IsFractionInRange(meta,(double)decimal.MinValue,(double)decimal.MaxValue))
+//						{
+//							dotNet=(decimal)meta.Fraction;
+//						}
+//						break;
+//					case TypeCode.Double:
+//						if(IsIntegerInRange(meta,Helper.IntegerFromDouble(double.MinValue),Helper.IntegerFromDouble(double.MaxValue)))
+//						{
+//							dotNet=(double)(meta.Integer.LongValue());
+//						}
+//						else if(IsFractionInRange(meta,double.MinValue,double.MaxValue))
+//						{
+//							dotNet=System.Convert.ToDouble(meta.Fraction);
+//						}
+//						break;
+//						//				case TypeCode.Empty:
+//						//					break;
+//					case TypeCode.Int16:
+//						if(IsIntegerInRange(meta,Int16.MinValue,Int16.MaxValue))
+//						{
+//							dotNet=System.Convert.ToInt16(meta.Integer.LongValue());
+//						}
+//						break;
+//					case TypeCode.Int32:
+//						if(IsIntegerInRange(meta,Int32.MinValue,Int32.MaxValue))
+//						{
+//							dotNet=meta.Integer.Int32;
+//						}
+//						break;
+//					case TypeCode.Int64:
+//						if(IsIntegerInRange(meta,Int64.MinValue,Int64.MaxValue))
+//						{
+//							dotNet=System.Convert.ToInt64(meta.Integer.LongValue());
+//						}
+//						break;
+//					case TypeCode.Object:
+//						//					if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
+//						//					{ 
+//						//						isConverted=true;
+//						//						dotNet=Enum.ToObject(target,meta.Integer.Int32);
+//						//					}
+//						if(meta is DotNetObject && target.IsAssignableFrom(((DotNetObject)meta).type))
+//						{
+//							dotNet=((DotNetObject)meta).obj;
+//						}
+//						else if(target.IsAssignableFrom(meta.GetType()))
+//						{
+//							dotNet=meta;
+//						}
+//						break;
+//					case TypeCode.SByte:
+//						if(IsIntegerInRange(meta,SByte.MinValue,SByte.MaxValue))
+//						{
+//							dotNet=System.Convert.ToSByte(meta.Integer.LongValue());
+//						}
+//						break;
+//					case TypeCode.Single:
+//						if(IsIntegerInRange(meta,Helper.IntegerFromDouble(Single.MinValue),Helper.IntegerFromDouble(Single.MaxValue)))
+//						{
+//							dotNet=(float)meta.Integer.LongValue();
+//						}
+//						else if(IsFractionInRange(meta,Single.MinValue,Single.MaxValue))
+//						{
+//							dotNet=(float)meta.Fraction;
+//						}
+//						break;
+//					case TypeCode.String:
+//						if(meta.IsString)
+//						{
+//							dotNet=meta.String;
+//						}
+//						break;
+//					case TypeCode.UInt16:
+//						if(IsIntegerInRange(meta,new Integer(UInt16.MinValue),new Integer(UInt16.MaxValue)))
+//						{
+//							dotNet=System.Convert.ToUInt16(meta.Integer.LongValue());
+//						}
+//						break;
+//					case TypeCode.UInt32:
+//						if(IsIntegerInRange(meta,UInt32.MinValue,UInt32.MaxValue))
+//						{
+//							dotNet=System.Convert.ToUInt32(meta.Integer.LongValue());
+//						}
+//						break;
+//					case TypeCode.UInt64:
+//						if(IsIntegerInRange(meta,UInt64.MinValue,UInt64.MaxValue))
+//						{
+//							dotNet=System.Convert.ToUInt64(meta.Integer.LongValue());
+//						}
+//						break;
+//					default:
+//						throw new ApplicationException("not implemented");
+//				}
+//			}
+//			if(dotNet!=null)
+//			{
+//				isConverted=true;
 //			}
 //			else
 //			{
-//				ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
-//				if(conversion==null)
+//				if(!target.IsValueType && meta.IsInteger && meta.Integer==0)
 //				{
-//					if(oDotNet is IMap)
-//					//if(oDotNet is IMap || IsInteger(oDotNet))
-//					{
-//						meta=(IMap)oDotNet;
-//					}
-//					else
-//					{
-//						meta=new DotNetObject(oDotNet);
-//					}
+//					isConverted=true;
 //				}
 //				else
 //				{
-//					meta=conversion.Convert(oDotNet);
+//					isConverted=false;
 //				}
 //			}
-//			return meta;
+//			return dotNet;
 //		}
+
 		public static IMap ToMeta(object dotNet)
 		{
 			IMap meta;
-//			if(dotNet==null)
-//			{
-//				dotNet=null;
-//			}
-//			else 
-//			if(dotNet.GetType().IsSubclassOf(typeof(Enum)))
-//			{
-//				meta=new NormalMap(new Integer((int)System.Convert.ToInt32((Enum)dotNet)));
-//			}
-//			else
-//			{
-//				ToMeta conversion=(ToMeta)toMeta[oDotNet.GetType()];
-//				if(conversion==null)
-//				{
-//					if(oDotNet is IMap)
-//						//if(oDotNet is IMap || IsInteger(oDotNet))
-//					{
-//						meta=(IMap)oDotNet;
-//					}
-//					else
-//					{
-//						meta=new DotNetObject(oDotNet);
-//					}
-//				}
-//				else
-//				{
-//					meta=conversion.Convert(oDotNet);
-//				}
-//			}
-//			return meta;
-////		}
-//			else
-//			{
 			if(dotNet==null)
 			{
 				meta=new NormalMap(new Integer(0));
@@ -2662,62 +2783,48 @@ namespace Meta
 				throw new ApplicationException("Cannot set key in DotNetMethod");
 			}
 		}
-		// TODO: refactor, make single-exit, combine with ToDotNet
-		public static object ConvertParameter(IMap meta,Type parameter,out bool isConverted)
-		{
-			if(meta is DotNetObject)
-			{
-				int asdf=0;
-			}
-			if(parameter.Name.IndexOf("MenuItems")!=-1)
-			{
-				int asdf=0;
-			}
-			isConverted=true;
-//			if(parameter.IsAssignableFrom(meta.GetType()))
+		// TODO:  combine with ToDotNet
+//		public static object ConvertParameter(IMap meta,Type parameter,out bool isConverted)
+//		{
+//			isConverted=true;
+//			if((parameter.IsSubclassOf(typeof(Delegate))
+//				||parameter.Equals(typeof(Delegate))))
 //			{
-//				return meta;
+//				MethodInfo invoke=parameter.GetMethod("Invoke",BindingFlags.Instance
+//					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+//				Delegate function=CreateDelegateFromCode(parameter,invoke,meta);
+//				return function;
 //			}
-//			else 
-			if((parameter.IsSubclassOf(typeof(Delegate))
-				||parameter.Equals(typeof(Delegate))))// && (meta is IMap))
-			{
-				MethodInfo invoke=parameter.GetMethod("Invoke",BindingFlags.Instance
-					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-				Delegate function=CreateDelegateFromCode(parameter,invoke,meta);
-				return function;
-			}
-			else if(parameter.IsArray && meta.Array.Count!=0)
-			{
-				try
-				{
-					Type type=parameter.GetElementType();
-					IMap argument=meta; // TODO: maybe use MapInfo
-					Array arguments=System.Array.CreateInstance(type,argument.Array.Count);
-					for(int i=0;i<argument.Count;i++)
-					{
-						arguments.SetValue(Convert.ToDotNet(argument[new NormalMap(new Integer(i+1))],type),i); // TODO: make safe for failing conversion, conversion shouldnt fail, ever
-//						arguments.SetValue(argument[new NormalMap(new Integer(i+1))],i);
-					}
-					return arguments;
-				}
-				catch
-				{
-					int asdf=0;
-				}
-			}
-			else
-			{
-				bool converted;
-				object result=Convert.ToDotNet(meta,parameter,out converted);
-				if(converted)
-				{
-					return result;
-				}
-			}
-			isConverted=false;
-			return null;
-		}
+//			else if(parameter.IsArray && meta.Array.Count!=0)
+//			{
+//				try
+//				{
+//					Type type=parameter.GetElementType();
+//					IMap argument=meta; // TODO: maybe use MapInfo
+//					Array arguments=System.Array.CreateInstance(type,argument.Array.Count);
+//					for(int i=0;i<argument.Count;i++)
+//					{
+//						arguments.SetValue(Convert.ToDotNet(argument[new NormalMap(new Integer(i+1))],type),i); // TODO: make safe for failing conversion, conversion shouldnt fail, ever
+//					}
+//					return arguments;
+//				}
+//				catch
+//				{
+//					int asdf=0;
+//				}
+//			}
+//			else
+//			{
+//				bool converted;
+//				object result=Convert.ToDotNet(meta,parameter,out converted);
+//				if(converted)
+//				{
+//					return result;
+//				}
+//			}
+//			isConverted=false;
+//			return null;
+//		}
 		public class ArgumentComparer: IComparer
 		{
 			public int Compare(object x, object y)
@@ -2756,7 +2863,7 @@ namespace Meta
 			foreach(MethodBase method in oneArgumentMethods)
 			{
 				bool isConverted;
-				object parameter=ConvertParameter(argument,method.GetParameters()[0].ParameterType,out isConverted);
+				object parameter=Convert.ToDotNet(argument,method.GetParameters()[0].ParameterType,out isConverted);
 				if(isConverted)
 				{
 					if(method is ConstructorInfo)
@@ -2799,7 +2906,7 @@ namespace Meta
 					ParameterInfo[] arPrmtifParameters=method.GetParameters();
 					for(int i=0;argumentsMatched && i<arPrmtifParameters.Length;i++)
 					{
-						arguments.Add(ConvertParameter((IMap)argument.Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
+						arguments.Add(Convert.ToDotNet((IMap)argument.Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
 					}
 					if(argumentsMatched)
 					{
@@ -3539,7 +3646,7 @@ namespace Meta
 					{
 						FieldInfo field=(FieldInfo)member;
 						bool isConverted;
-						object val=DotNetMethod.ConvertParameter(value,field.FieldType,out isConverted);
+						object val=Convert.ToDotNet(value,field.FieldType,out isConverted);
 						if(isConverted)
 						{
 							field.SetValue(obj,val);
@@ -3557,7 +3664,7 @@ namespace Meta
 						}
 						PropertyInfo property=(PropertyInfo)member;
 						bool isConverted;
-						object val=DotNetMethod.ConvertParameter(value,property.PropertyType,out isConverted);
+						object val=Convert.ToDotNet(value,property.PropertyType,out isConverted);
 						if(isConverted)
 						{
 							property.SetValue(obj,val,new object[]{});

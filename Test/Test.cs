@@ -31,34 +31,8 @@ namespace Test
 	class Test 
 	{
 		public static string path="";
-//		private static void Run(string file)
-//		{
-//			if(args.Length==0) 
-//			{
-//				Directory.SetCurrentDirectory(
-//					".."+Path.DirectorySeparatorChar+"Test"+Path.DirectorySeparatorChar);
-//				ExecuteTests test=new ExecuteTests(typeof(Tests),path);
-//			}
-//			else 
-//			{
-//				if(!File.Exists(args[0])) // add parameter for debugging purposes
-//					// make this thingy a Map/parsing machine
-//				{
-//					throw new ApplicationException("File "+args[0]+" not found.");
-//				}
-//
-//				object result=Interpreter.Run(args[0],new NormalMap());
-//				if(result is IMap && ((Map)result).IsString)
-//				{
-//					Console.Write("Content-Type: text/html\n\n");
-//					Console.Write(((Map)result).String);
-//				}
-//			}
-//		}
 		private static void Run(string file)
 		{
-//			IMap map=new NormalMap(new Integer(5));
-//			int asdf=0;
 			if(file=="") 
 			{
 				Directory.SetCurrentDirectory(
@@ -75,7 +49,6 @@ namespace Test
 
 				IMap result=Interpreter.Run(file,new NormalMap());
 				if(result.IsString)
-//				if(result is IMap && ((IMap)result).IsString)
 				{
 					Console.Write("Content-Type: text/html\n\n");
 					Console.Write(result.String);
@@ -85,7 +58,7 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
+//			args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
 //			args[0]=@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta";
 			//			args[0]=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
 			//args=new string[]{@"C:\_ProectSupportMaterial\Meta\library\function.meta"};
