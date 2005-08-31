@@ -1,5 +1,5 @@
 //	Meta is a programming language.
-//	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
+//	Parts Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
 //
 //	This program is free software; you can redistribute it and/or
 //	modify it under the terms of the GNU General Public License version 2
