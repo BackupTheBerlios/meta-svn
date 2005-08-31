@@ -385,10 +385,6 @@ namespace Meta
 
 		public override IMap EvaluateImplementation(IMap parent)
 		{
-			if(literal.Equals(new NormalMap("testSubDir")))
-			{
-				int asdf=0;
-			}
 			return literal;
 		}
 		public Literal(IMap code)
@@ -419,10 +415,6 @@ namespace Meta
 		public override IMap EvaluateImplementation(IMap parent)
 		{
 			IMap key=search.Evaluate(parent);
-			if(key.Equals(new NormalMap("helloh")))
-			{
-				int asdf=0;
-			}
 			IMap selected=parent;
 			while(!selected.ContainsKey(key))
 			{
@@ -1228,127 +1220,49 @@ namespace Meta
 	{
 		public ArrayList NamespacesFromAssembly(Assembly assembly)
 		{ 
-			ArrayList nameSpaces=new ArrayList();
+			ArrayList namespaces=new ArrayList();
 			MapInfo cached=new MapInfo(cache);
-			bool isCached;
-			if(cached.ContainsKey(assembly.Location))
+			if(cached.ContainsKey(assembly.Location) && ((MapInfo)cached[assembly.Location])["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
 			{
-				MapInfo info=(MapInfo)cached[assembly.Location];
-//				MapInfo info=new MapInfo((IMap)cached[assembly.Location]);
-				string timestamp=(string)info["timestamp"];
-				if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
-				{
-					MapInfo namespaces=(MapInfo)info["namespaces"];
-//					MapInfo namespaces=new MapInfo((IMap)info["namespaces"]);
-					foreach(DictionaryEntry entry in namespaces)
-					{
-						nameSpaces.Add((string)entry.Value);
-					}
-					isCached=true;
-				}
-				else
-				{
-					isCached=false;
-				}
+				namespaces.AddRange(((MapInfo)cached[assembly.Location]).Array);
 			}
 			else
 			{
-				isCached=false;
-			}
-			if(!isCached)
-			{
 				foreach(Type type in assembly.GetExportedTypes())
 				{
-					if(!nameSpaces.Contains(type.Namespace))
+					string name;
+					if(type.Namespace==null)
 					{
-						if(type.Namespace==null)
-						{
-							if(!nameSpaces.Contains(""))
-							{
-								nameSpaces.Add("");
-							}
-						}
-						else
-						{
-							nameSpaces.Add(type.Namespace);
-						}
+						name="";
+					}
+					else
+					{
+						name=type.Namespace;
+					}
+					if(!namespaces.Contains(name))
+					{
+						namespaces.Add(name);
 					}
 				}
-				IMap cachedAssemblyInfoMap=new NormalMap();
-				IMap nameSpace=new NormalMap(); 
-				Integer counter=new Integer(1);
-				foreach(string na in nameSpaces)
+				MapInfo assemblyInfo=new MapInfo();
+//				IMap assemblyInfo=new NormalMap();
+				MapInfo assemblyNamespaces=new MapInfo();
+//				Integer counter=new Integer(1);
+				int counter=1;
+				foreach(string na in namespaces)
 				{
-					nameSpace[new NormalMap(counter)]=new NormalMap(na);
+					assemblyNamespaces[counter]=na;
+//					assemblyNamespaces[new NormalMap(counter)]=new NormalMap(na);
 					counter++;
 				}
-				cachedAssemblyInfoMap[new NormalMap("namespaces")]=nameSpace;
-				cachedAssemblyInfoMap[new NormalMap("timestamp")]=new NormalMap(File.GetLastWriteTime(assembly.Location).ToString());
-				cached[assembly.Location]=cachedAssemblyInfoMap;
+				assemblyInfo["namespaces"]=assemblyNamespaces;
+//				assemblyInfo[new NormalMap("namespaces")]=assemblyNamespaces.Map;
+				assemblyInfo["timestamp"]=File.GetLastWriteTime(assembly.Location).ToString();
+//				assemblyInfo[new NormalMap("timestamp")]=new NormalMap(File.GetLastWriteTime(assembly.Location).ToString());
+				cached[assembly.Location]=assemblyInfo;
 			}
-			return nameSpaces;
+			return namespaces;
 		}
-//		public ArrayList NamespacesFromAssembly(Assembly assembly)
-//		{ 
-//			ArrayList nameSpaces=new ArrayList();
-//			MapInfo cached=new MapInfo(cache);
-//			bool isCached;
-//			if(cached.ContainsKey(assembly.Location))
-//			{
-//				MapInfo info=new MapInfo((IMap)cached[assembly.Location]);
-//				string timestamp=(string)info["timestamp"];
-//				if(timestamp.Equals(File.GetLastWriteTime(assembly.Location).ToString()))
-//				{
-//					MapInfo namespaces=new MapInfo((IMap)info["namespaces"]);
-//					foreach(DictionaryEntry entry in namespaces)
-//					{
-//						nameSpaces.Add((string)entry.Value);
-//					}
-//					isCached=true;
-//				}
-//				else
-//				{
-//					isCached=false;
-//				}
-//			}
-//			else
-//			{
-//				isCached=false;
-//			}
-//			if(!isCached)
-//			{
-//				foreach(Type type in assembly.GetExportedTypes())
-//				{
-//					if(!nameSpaces.Contains(type.Namespace))
-//					{
-//						if(type.Namespace==null)
-//						{
-//							if(!nameSpaces.Contains(""))
-//							{
-//								nameSpaces.Add("");
-//							}
-//						}
-//						else
-//						{
-//							nameSpaces.Add(type.Namespace);
-//						}
-//					}
-//				}
-//				IMap cachedAssemblyInfoMap=new NormalMap();
-//				IMap nameSpace=new NormalMap(); 
-//				Integer counter=new Integer(1);
-//				foreach(string na in nameSpaces)
-//				{
-//					nameSpace[new NormalMap(counter)]=new NormalMap(na);
-//					counter++;
-//				}
-//				cachedAssemblyInfoMap[new NormalMap("namespaces")]=nameSpace;
-//				cachedAssemblyInfoMap[new NormalMap("timestamp")]=new NormalMap(File.GetLastWriteTime(assembly.Location).ToString());
-//				cached[assembly.Location]=cachedAssemblyInfoMap;
-//			}
-//			return nameSpaces;
-//		}
-		// TODO: refactor 
 		public IMap LoadNamespaces(ArrayList assemblies,MapInfo cachedInfo)
 		{
 			NormalMap root=new NormalMap("",new Hashtable(),new ArrayList());
@@ -2232,33 +2146,15 @@ namespace Meta
 		private static Hashtable toDotNet=new Hashtable();
 		private static Hashtable toMeta=new Hashtable();
 	}
-	public class MapInfoEnumerator: IEnumerator
+	public class MapInfo
 	{
-		private MapInfo MapInfo;
-		public MapInfoEnumerator(MapInfo MapInfo)
-		{
-			this.MapInfo=MapInfo;
-		}
-		public object Current
+		public IMap Map
 		{
 			get
 			{
-				return new DictionaryEntry(MapInfo.Keys[index],MapInfo[MapInfo.Keys[index]]);
+				return map;
 			}
 		}
-		public bool MoveNext()
-		{
-			index++;
-			return index<MapInfo.Count;
-		}
-		public void Reset()
-		{
-			index=-1;
-		}
-		private int index=-1;
-	}
-	public class MapInfo
-	{
 		private IMap map;
 		public MapInfo(IMap map)
 		{
@@ -2287,7 +2183,16 @@ namespace Meta
 			}
 			set
 			{
-				this.map[Transform.ToMeta(key)]=Transform.ToMeta(value);
+				IMap val;
+				if(value is MapInfo)
+				{
+					val=((MapInfo)value).map;
+				}
+				else
+				{
+					val=Transform.ToMeta(value);
+				}
+				this.map[Transform.ToMeta(key)]=val;
 			}
 		}
 		public IMap Parent
@@ -2335,6 +2240,32 @@ namespace Meta
 		{
 			return new MapInfoEnumerator(this);
 		}
+	}
+	public class MapInfoEnumerator: IEnumerator
+	{
+
+		private MapInfo MapInfo;
+		public MapInfoEnumerator(MapInfo MapInfo)
+		{
+			this.MapInfo=MapInfo;
+		}
+		public object Current
+		{
+			get
+			{
+				return new DictionaryEntry(MapInfo.Keys[index],MapInfo[MapInfo.Keys[index]]);
+			}
+		}
+		public bool MoveNext()
+		{
+			index++;
+			return index<MapInfo.Count;
+		}
+		public void Reset()
+		{
+			index=-1;
+		}
+		private int index=-1;
 	}
 	public class MapEnumerator: IEnumerator
 	{
