@@ -1436,50 +1436,36 @@ namespace Meta
 
 		public override IMap this[IMap key]
 		{
-			// TODO: refactor
 			get
 			{
-				IMap result;
-				if(key.IsString)
+				IMap val;
+				if(key.IsString && ValidName(key.String))
 				{
-					if(ValidName(key.String))
+					string path=Path.Combine(directory.FullName,key.String);
+					FileInfo file=new FileInfo(path+".meta");
+					DirectoryInfo subDirectory=new DirectoryInfo(path);
+					if(file.Exists)
 					{
-						string path=Path.Combine(directory.FullName,key.String);
-						FileInfo file=new FileInfo(path+".meta");
-						if(file.Exists)
-						{
-							result=new PersistantMap(file);
-						}
-						else
-						{
-							DirectoryInfo subDirectory=new DirectoryInfo(path);
-							if(subDirectory.Exists)
-							{
-								result=new PersistantMap(subDirectory);
-							}
-							else
-							{
-								result=null;
-							}
-						}
+						val=new PersistantMap(file);
+					}
+					else if(subDirectory.Exists)
+					{
+						val=new PersistantMap(subDirectory);
+					}
+					else if(cache.ContainsKey(key))
+					{
+						val=cache[key];
 					}
 					else
 					{
-						result=null;
+						val=null;
 					}
 				}
 				else
 				{
-					result=null;
+					val=null;
 				}
-				if(result==null)
-				{
-					if(cache.ContainsKey(key))
-					{
-						result=cache[key];
-					}
-				}
-				return result;
+				return val;
 			}
 			set
 			{
@@ -1491,7 +1477,6 @@ namespace Meta
 				{
 					throw new ApplicationException("Cannot set key "+key.ToString()+" in DirectoryStrategy.");
 				}
-				// TODO: implement
 			}
 		}
 		public static IMap LoadAssemblies(IEnumerable assemblies)
