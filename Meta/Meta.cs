@@ -823,22 +823,24 @@ namespace Meta
 		}
 
 
-		public static explicit operator string(IMap map)
-		{
-			return map.String;
-		}
-		public static explicit operator double(IMap map)
-		{
-			return map.Fraction;
-		}
-		public static explicit operator float(IMap map)
-		{
-			return (float)map.Fraction;
-		}
-		public static explicit operator decimal(IMap map)
-		{
-			return (decimal)map.Fraction;
-		}
+//		public static explicit operator string(IMap map)
+//		{
+//			return map.String;
+//		}
+//		public static explicit operator double(IMap map)
+//		{
+//			return map.Fraction;
+//		}
+//		public static explicit operator float(IMap map)
+//		{
+//			return (float)map.Fraction;
+//		}
+//		public static explicit operator decimal(IMap map)
+//		{
+//			return (decimal)map.Fraction;
+//		}
+
+
 		public virtual bool IsBoolean
 		{
 			get
@@ -1997,8 +1999,8 @@ namespace Meta
 						}
 						else if(IsFractionInRange(meta,(double)decimal.MinValue,(double)decimal.MaxValue))
 						{
-							dotNet=(decimal)meta;
-//							dotNet=(decimal)meta.Fraction;
+							dotNet=(decimal)meta.Fraction;
+//							dotNet=(decimal)meta;
 						}
 						break;
 					case TypeCode.Double:
@@ -2008,8 +2010,9 @@ namespace Meta
 						}
 						else if(IsFractionInRange(meta,double.MinValue,double.MaxValue))
 						{
-							dotNet=(double)meta;
-//							dotNet=Convert.ToDouble(meta.Fraction);
+							dotNet=meta.Fraction;
+//							dotNet=(double)meta;
+							//							dotNet=Convert.ToDouble(meta.Fraction);
 						}
 						break;
 					case TypeCode.Int16:
@@ -2053,7 +2056,7 @@ namespace Meta
 						}
 						else if(IsFractionInRange(meta,Single.MinValue,Single.MaxValue))
 						{
-							dotNet=(float)meta;
+							dotNet=(float)meta.Fraction;
 //							dotNet=(float)meta.Fraction;
 						}
 						break;
