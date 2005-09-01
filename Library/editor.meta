@@ -87,11 +87,12 @@ RunProgram=!
 	// use fileName here
 	System.Console.WriteLine editor.control.RealLine
 	System.Console.WriteLine editor.control.Column
-	Meta.Interpreter.BreakPoint:Meta.BreakPoint
+	Meta.Expression.BreakPoint:Meta.BreakPoint
 		//"c:\_projectsupportmaterial\meta\editor\editor.meta"
 		fileName
-		editor.control.RealLine
-		editor.control.Column
+		Meta.Position
+			editor.control.RealLine
+			editor.control.Column
 	Meta.Interpreter.DebugBreak:!editor.control.ShowDebugValue Meta.Interpreter.DebugValue
 	Meta.Interpreter.StartDebug fileName
 ContinueProgram=!
@@ -100,8 +101,9 @@ ContinueProgram=!
 	System.Console.WriteLine editor.control.Column
 	Meta.Expression.BreakPoint:Meta.BreakPoint
 		fileName
-		editor.control.RealLine
-		editor.control.Column
+		Meta.Position
+			editor.control.RealLine
+			editor.control.Column
 	Meta.Interpreter.ContinueDebug""
 ReverseProgram=!
 	// factor out the setting of the breakpoint
@@ -109,8 +111,9 @@ ReverseProgram=!
 	System.Console.WriteLine editor.control.Column
 	Meta.Expression.BreakPoint:Meta.BreakPoint
 		fileName
-		editor.control.RealLine
-		editor.control.Column
+		Meta.Position
+			editor.control.RealLine
+			editor.control.Column
 	Meta.Interpreter.ReverseDebug""
 Editor=!
 	control=Init

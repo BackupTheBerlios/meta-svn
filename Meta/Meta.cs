@@ -77,10 +77,10 @@ namespace Meta
 			{
 				breakPoint=value;
 			}
-		}
+		}// TODO: rename all the debugging stuff
 		private static BreakPoint breakPoint;
 
-		public virtual bool Stop()
+		public virtual bool Stop() // TODO: refactor
 		{
 			bool stop=false;
 			if(BreakPoint!=null)
@@ -1218,8 +1218,6 @@ namespace Meta
 	}
 	public class NormalMap:StrategyMap
 	{
-
-
 		public NormalMap(NormalStrategy strategy):base(strategy)
 		{
 		}
@@ -1232,7 +1230,6 @@ namespace Meta
 		public NormalMap(double fraction):this(new HybridDictionaryStrategy(fraction))
 		{
 		}
-		// TODO: refactor??
 		public NormalMap(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new NamespaceStrategy(namespaceName,subNamespaces,assemblies))
 		{
 		}
@@ -1265,74 +1262,90 @@ namespace Meta
 		public ArrayList NamespacesFromAssembly(Assembly assembly)
 		{ 
 			ArrayList namespaces=new ArrayList();
-			IMap cached=cache;
-			if(cached.ContainsKey(assembly.Location) && cached[assembly.Location]["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
+			foreach(Type type in assembly.GetExportedTypes())
 			{
-				foreach(string namespaceName in cached[assembly.Location].Array)
+				if(!namespaces.Contains(type.Namespace))
 				{
-					namespaces.Add(namespaceName);
+					namespaces.Add(type.Namespace);
 				}
-			}
-			else
-			{
-				foreach(Type type in assembly.GetExportedTypes())
-				{
-					string namespaceName;
-					if(type.Namespace==null)
-					{
-						namespaceName="";
-					}
-					else
-					{
-						namespaceName=type.Namespace;
-					}
-					if(!namespaces.Contains(namespaceName))
-					{
-						namespaces.Add(namespaceName);
-					}
-				}
-				IMap info=new NormalMap();
-				IMap namespaceInfo=new NormalMap();
-				int counter=1;
-				foreach(string name in namespaces)
-				{
-					namespaceInfo[counter]=name;
-					counter++;
-				}
-				info["namespaces"]=namespaceInfo;
-				info["timestamp"]=File.GetLastWriteTime(assembly.Location).ToString();
-				cached[assembly.Location]=info;
 			}
 			return namespaces;
 		}
+//		public ArrayList NamespacesFromAssembly(Assembly assembly)
+//		{ 
+//			ArrayList namespaces=new ArrayList();
+//			IMap cached=cache;
+//			if(cached.ContainsKey(assembly.Location) && cached[assembly.Location]["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
+//			{
+//				foreach(string namespaceName in cached[assembly.Location].Array)
+//				{
+//					namespaces.Add(namespaceName);
+//				}
+//			}
+//			else
+//			{
+//				foreach(Type type in assembly.GetExportedTypes())
+//				{
+//					string namespaceName;
+//					if(type.Namespace==null)
+//					{
+//						namespaceName="";
+//					}
+//					else
+//					{
+//						namespaceName=type.Namespace;
+//					}
+//					if(!namespaces.Contains(namespaceName))
+//					{
+//						namespaces.Add(namespaceName);
+//					}
+//				}
+//				IMap info=new NormalMap();
+//				IMap namespaceInfo=new NormalMap();
+//				int counter=1;
+//				foreach(string name in namespaces)
+//				{
+//					namespaceInfo[counter]=name;
+//					counter++;
+//				}
+//				info["namespaces"]=namespaceInfo;
+//				info["timestamp"]=File.GetLastWriteTime(assembly.Location).ToString();
+//				cached[assembly.Location]=info;
+//			}
+//			return namespaces;
+//		}
 		public void LoadNamespaces(ArrayList assemblies)
 		{
 			NormalMap rootNamespace=new NormalMap("",new Hashtable(),new ArrayList());
 			foreach(Assembly assembly in assemblies)
 			{
-				CachedAssembly cachedAssembly=new CachedAssembly(assembly);
-				foreach(string namespaceName in NamespacesFromAssembly(assembly))
+				if(!assembly.FullName.StartsWith("Microsoft.mshtml"))
 				{
-					NamespaceStrategy currentNamespace=(NamespaceStrategy)rootNamespace.strategy;
-					if(namespaceName!="")
+					CachedAssembly cachedAssembly=new CachedAssembly(assembly);
+
+					foreach(string namespaceName in NamespacesFromAssembly(assembly))
 					{
-						foreach(string subNamespace in namespaceName.Split('.'))
+						NamespaceStrategy currentNamespace=(NamespaceStrategy)rootNamespace.strategy;
+						if(namespaceName!=null)
 						{
-							if(!currentNamespace.namespaces.ContainsKey(subNamespace))
+							foreach(string subNamespace in namespaceName.Split('.'))
 							{
-								string fullName=currentNamespace.fullName;
-								if(fullName!="")
+								if(!currentNamespace.namespaces.ContainsKey(subNamespace))
 								{
-									fullName+=".";
+									string fullName=currentNamespace.fullName;
+									if(fullName!="")
+									{
+										fullName+=".";
+									}
+									fullName+=subNamespace;
+									currentNamespace.namespaces[subNamespace]=new NormalMap(fullName,new Hashtable(),new ArrayList());
 								}
-								fullName+=subNamespace;
-								currentNamespace.namespaces[subNamespace]=new NormalMap(fullName,new Hashtable(),new ArrayList());
+								//TODO: this sucks
+								currentNamespace=(NamespaceStrategy)((NormalMap)currentNamespace.namespaces[subNamespace]).strategy;
 							}
-							//TODO: this sucks
-							currentNamespace=(NamespaceStrategy)((NormalMap)currentNamespace.namespaces[subNamespace]).strategy;
 						}
+						currentNamespace.AddAssembly(cachedAssembly);
 					}
-					currentNamespace.AddAssembly(cachedAssembly);
 				}
 			}
 			((NamespaceStrategy)rootNamespace.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???

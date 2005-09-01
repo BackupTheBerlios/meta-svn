@@ -59,7 +59,7 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
+			//args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
 //			args[0]=@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta";
 			//			args[0]=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
 			//args=new string[]{@"C:\_ProectSupportMaterial\Meta\library\function.meta"};
@@ -141,34 +141,34 @@ namespace Test
 		private static string filename=@"C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta";
 		//private static string filename=@"basicTest.meta";
 		// TODO:make it possible to choose between different tests on command line, and whether to test at all
-		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-			public class ParseToAst:TestCase 
-		{
-			public override object Run() 
-			{
-				return Interpreter.ParseToAst(Path.Combine(
-					Test.path,filename));
-			}
-		}
-		public class CompileToMap:TestCase 
-		{
-			public static IMap map;
-			public override object Run() 
-			{
-				map=Interpreter.Compile(Path.Combine(
-					Test.path,filename));
-				return map;
-			}
-		}
-		public class CompileToExpression:TestCase 
-		{
-			public override object Run() 
-			{
-				return Interpreter.Compile(Path.Combine(
-					Test.path,filename)).GetExpression();
-			}
-		}
-		// should execute twice, once without caching, once with
+//		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
+//			public class ParseToAst:TestCase 
+//		{
+//			public override object Run() 
+//			{
+//				return Interpreter.ParseToAst(Path.Combine(
+//					Test.path,filename));
+//			}
+//		}
+//		public class CompileToMap:TestCase 
+//		{
+//			public static IMap map;
+//			public override object Run() 
+//			{
+//				map=Interpreter.Compile(Path.Combine(
+//					Test.path,filename));
+//				return map;
+//			}
+//		}
+//		public class CompileToExpression:TestCase 
+//		{
+//			public override object Run() 
+//			{
+//				return Interpreter.Compile(Path.Combine(
+//					Test.path,filename)).GetExpression();
+//			}
+//		}
+//		// should execute twice, once without caching, once with
 		public class ExecuteNoCaching:TestCase // TODO: combine with above, only result must be the same, a third file is needed, only one check file!!! ???
 		{
 			public override object Run()
@@ -188,17 +188,17 @@ namespace Test
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
-		public class Execute:TestCase 
-		{
-			public override object Run() 
-			{
-				IMap argument=new NormalMap();
-				argument[1]="first arg";
-				argument[2]="second=arg";
-				Meta.GAC.library=new PersistantMap(new Meta.GAC());
-				//				GAC.library=new GAC();
-				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
-			}
-		}
+//		public class Execute:TestCase 
+//		{
+//			public override object Run() 
+//			{
+//				IMap argument=new NormalMap();
+//				argument[1]="first arg";
+//				argument[2]="second=arg";
+//				Meta.GAC.library=new PersistantMap(new Meta.GAC());
+//				//				GAC.library=new GAC();
+//				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
+//			}
+//		}
 	}
 }
