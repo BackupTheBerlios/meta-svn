@@ -1304,7 +1304,6 @@ namespace Meta
 							}
 						}
 						currentNamespace.AddAssembly(assembly);
-//						currentNamespace.AddAssembly(cachedAssembly);
 					}
 				}
 			}
@@ -1364,16 +1363,7 @@ namespace Meta
 		}
 		public GAC()
 		{
-//			ArrayList assemblies=new ArrayList();
-//			ArrayList assemblies=
-//			assemblies=GlobalAssemblyCache.Assemblies;
-			//			string cachedAssemblyPath=Path.Combine(Interpreter.LibraryPath.FullName,"cachedAssemblyInfo.meta"); 
-//			if(File.Exists(cachedAssemblyPath))
-//			{
-//				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
-//			}		
 			LoadNamespaces(GlobalAssemblyCache.Assemblies);
-//			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 		}
 		public static IMap library=new PersistantMap(new GAC());
 	}
@@ -1851,11 +1841,13 @@ namespace Meta
 //			Interpreter.loadedAssemblies.Add(assembly.Location);
 //			return root;
 //		}
-		public IMap LoadAssembly(Assembly assembly)
+		public IMap LoadAssembly(Assembly assembly,string nameSpace)
+//			public IMap LoadAssembly(Assembly assembly)
 		{
 			IMap root=new NormalMap();
 			foreach(Type type in assembly.GetExportedTypes())
 			{
+				//if(type.DeclaringType==null && ((type.Namespace==null && nameSpace=="") || type.Namespace.StartsWith(nameSpace))) 
 				if(type.DeclaringType==null) 
 				{
 					IMap current=root;
@@ -1882,8 +1874,9 @@ namespace Meta
 //				assemblyContent=LoadAssembly();
 //			}
 			
-			IMap assemblyContent=LoadAssembly(assembly);
-//			IMap assemblyContent=LoadAssembly();
+			IMap assemblyContent=LoadAssembly(assembly,nameSpace);
+//			IMap assemblyContent=LoadAssembly(assembly);
+			//			IMap assemblyContent=LoadAssembly();
 			IMap selected=assemblyContent;
 			if(nameSpace!="")
 			{
@@ -2851,27 +2844,40 @@ namespace Meta
 				return text;
 			}
 		}
+		// TODO: could be further optimized, maybe with ArrayList.GetRange()
 		public override ArrayList Keys
 		{
 			get
 			{
+				ArrayList keys=new ArrayList();
+				for(int i=1;i<=text.Length;i++)
+				{ 
+					keys.Add(new NormalMap(new Integer(i)));			
+				}
 				return keys;
 			}
 		}
-		private ArrayList keys=new ArrayList();
+//		public override ArrayList Keys
+//		{
+//			get
+//			{
+//				return keys;
+//			}
+//		}
+//		private ArrayList keys=new ArrayList();
 		private string text;
 		public StringStrategy(StringStrategy clone)
 		{
 			this.text=clone.text;
-			this.keys=(ArrayList)clone.keys.Clone();
+//			this.keys=(ArrayList)clone.keys.Clone();
 		}
 		public StringStrategy(string text)
 		{
 			this.text=text;
-			for(int i=1;i<=text.Length;i++)
-			{ 
-				keys.Add(new NormalMap(new Integer(i)));			
-			}
+//			for(int i=1;i<=text.Length;i++)
+//			{ 
+//				keys.Add(new NormalMap(new Integer(i)));			
+//			}
 		}
 		public override int Count
 		{
