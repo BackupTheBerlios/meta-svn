@@ -1271,49 +1271,6 @@ namespace Meta
 			}
 			return namespaces;
 		}
-//		public ArrayList NamespacesFromAssembly(Assembly assembly)
-//		{ 
-//			ArrayList namespaces=new ArrayList();
-//			IMap cached=cache;
-//			if(cached.ContainsKey(assembly.Location) && cached[assembly.Location]["timestamp"].Equals(File.GetLastWriteTime(assembly.Location).ToString()))
-//			{
-//				foreach(string namespaceName in cached[assembly.Location].Array)
-//				{
-//					namespaces.Add(namespaceName);
-//				}
-//			}
-//			else
-//			{
-//				foreach(Type type in assembly.GetExportedTypes())
-//				{
-//					string namespaceName;
-//					if(type.Namespace==null)
-//					{
-//						namespaceName="";
-//					}
-//					else
-//					{
-//						namespaceName=type.Namespace;
-//					}
-//					if(!namespaces.Contains(namespaceName))
-//					{
-//						namespaces.Add(namespaceName);
-//					}
-//				}
-//				IMap info=new NormalMap();
-//				IMap namespaceInfo=new NormalMap();
-//				int counter=1;
-//				foreach(string name in namespaces)
-//				{
-//					namespaceInfo[counter]=name;
-//					counter++;
-//				}
-//				info["namespaces"]=namespaceInfo;
-//				info["timestamp"]=File.GetLastWriteTime(assembly.Location).ToString();
-//				cached[assembly.Location]=info;
-//			}
-//			return namespaces;
-//		}
 		public void LoadNamespaces(ArrayList assemblies)
 		{
 			NormalMap rootNamespace=new NormalMap("",new Hashtable(),new ArrayList());
@@ -1776,7 +1733,7 @@ namespace Meta
 				{
 					Load();
 				}
-				return cache[key];
+				return (IMap)cache[key];
 			}
 			set
 			{
@@ -1791,7 +1748,8 @@ namespace Meta
 				{
 					Load();
 				}
-				return cache.Keys;
+				return new ArrayList(cache.Keys);
+//				return cache.Keys;
 			}
 		}
 		public override int Count
@@ -1820,24 +1778,44 @@ namespace Meta
 		}
 		public void Load()
 		{
-			cache=new NormalMap();
+			cache=new ListDictionary();
+//			cache=new NameValueCollection();
+			//			cache=new NormalMap();
 			foreach(CachedAssembly cachedAssembly in cachedAssemblies)
 			{
-				cache=Interpreter.Merge(cache,cachedAssembly.NamespaceContents(fullName));
+				foreach(DictionaryEntry entry in cachedAssembly.NamespaceContents(fullName))
+				{
+					cache[entry.Key]=entry.Value;
+				}
 			}
 			foreach(DictionaryEntry entry in namespaces)
 			{
 				cache[new NormalMap((string)entry.Key)]=(IMap)entry.Value;
 			}
 		}
-		public IMap cache;
+//		public void Load()
+//		{
+//			cache=new NormalMap();
+//			foreach(CachedAssembly cachedAssembly in cachedAssemblies)
+//			{
+//				cache=Interpreter.Merge(cache,cachedAssembly.NamespaceContents(fullName));
+//			}
+//			foreach(DictionaryEntry entry in namespaces)
+//			{
+//				cache[new NormalMap((string)entry.Key)]=(IMap)entry.Value;
+//			}
+//		}
+		public ListDictionary cache;
+//		public IMap cache;
 		public override bool ContainsKey(IMap key)
 		{
 			if(cache==null)
 			{
 				Load();
 			}
-			return cache.ContainsKey(key);
+			return cache.Contains(key);
+//			return cache.ContainsKey(key);
+			//			return cache.ContainsKey(key);
 		}
 	}
 	public class CachedAssembly
@@ -1881,11 +1859,13 @@ namespace Meta
 			{
 				foreach(string subString in nameSpace.Split('.'))
 				{
-					selected=selected[new NormalMap(subString)];
+					selected=selected[subString];
+//					selected=selected[new NormalMap(subString)];
 				}
 			}
-			return selected;
-		}			
+			return selected.Clone();
+//			return selected;
+		}
 		private IMap assemblyContent;
 	}
 	public class Transform
