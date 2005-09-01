@@ -1727,6 +1727,10 @@ namespace Meta
 				return cache;
 			}
 		}
+		public override bool ContainsKey(IMap key)
+		{
+			return Cache.Contains(key);
+		}
 		public override IMap this[IMap key]
 		{
 			get
@@ -1776,28 +1780,40 @@ namespace Meta
 			}
 			this.fullName=fullName;
 		}
-		public IMap NamespaceContents(Assembly assembly,string nameSpace)
-		{			
-			IMap root=new NormalMap();
-			foreach(Type type in assembly.GetExportedTypes())
-			{
-				if(type.DeclaringType==null && nameSpace==type.Namespace) 
-				{
-					root[type.Name]=new DotNetClass(type);
-				}
-			}
-			Interpreter.loadedAssemblies.Add(assembly.Location); // TODO: make this a function
-			return root;
-		}
+//		public IMap NamespaceContents(Assembly assembly,string nameSpace)
+//		{			
+//			IMap root=new NormalMap();
+//			foreach(Type type in assembly.GetExportedTypes())
+//			{
+//				if(type.DeclaringType==null && nameSpace==type.Namespace) 
+//				{
+//					root[type.Name]=new DotNetClass(type);
+//				}
+//			}
+//			Interpreter.loadedAssemblies.Add(assembly.Location); // TODO: make this a function
+//			return root;
+//		}
 		public void Load()
 		{
 			cache=new ListDictionary();
-			foreach(Assembly cachedAssembly in cachedAssemblies)
+			foreach(Assembly assembly in cachedAssemblies)
 			{
-				foreach(DictionaryEntry entry in NamespaceContents(cachedAssembly,fullName))
+//				IMap root=new NormalMap();
+				foreach(Type type in assembly.GetExportedTypes())
 				{
-					cache[entry.Key]=entry.Value;
+					if(type.DeclaringType==null && this.FullName==type.Namespace) 
+//						if(type.DeclaringType==null && nameSpace==type.Namespace) 
+					{
+//						root[type.Name]=new DotNetClass(type);
+						cache[new NormalMap(type.Name)]=new DotNetClass(type);
+					}
 				}
+				Interpreter.loadedAssemblies.Add(assembly.Location); // TODO: make this a function
+//				return root;
+//				foreach(DictionaryEntry entry in NamespaceContents(cachedAssembly,fullName))
+//				{
+//					cache[entry.Key]=entry.Value;
+//				}
 			}
 			foreach(DictionaryEntry entry in namespaces)
 			{
@@ -1805,10 +1821,6 @@ namespace Meta
 			}
 		}
 		public ListDictionary cache;
-		public override bool ContainsKey(IMap key)
-		{
-			return Cache.Contains(key);
-		}
 	}
 	public class Transform
 	{
