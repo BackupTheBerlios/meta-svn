@@ -260,7 +260,7 @@ namespace Meta
 	{
 		public abstract IMap Detect(string text);
 	}
-	public class Filters // TODO: put into one monster-method?
+	public class Filters // TODO: put into one monster-method?, or use delegates
 	{
 		public class DecimalFilter: Filter
 		{
@@ -1274,7 +1274,8 @@ namespace Meta
 		}
 		public void LoadNamespaces(ArrayList assemblies)
 		{
-			NormalMap rootNamespace=new NormalMap("",new Hashtable(),new ArrayList());
+			NormalMap rootNamespace=new NormalMap(null,new Hashtable(),new ArrayList());
+//			NormalMap rootNamespace=new NormalMap("",new Hashtable(),new ArrayList());
 			foreach(Assembly assembly in assemblies)
 			{
 				if(!assembly.FullName.StartsWith("Microsoft.mshtml"))
@@ -1288,8 +1289,10 @@ namespace Meta
 							{
 								if(!currentNamespace.namespaces.ContainsKey(subNamespace))
 								{
-									string fullName=currentNamespace.fullName;
-									if(fullName!="")
+									string fullName=currentNamespace.FullName;
+//									string fullName=currentNamespace.fullName;
+									if(fullName!=null)
+//										if(fullName!="")
 									{
 										fullName+=".";
 									}
@@ -1753,7 +1756,19 @@ namespace Meta
 				return cache.Count;
 			}
 		}
-		public string fullName;
+		public string FullName
+		{
+			get
+			{
+				return fullName;
+			}
+//			set
+//			{
+//				this.fullName=value;
+//			}
+		}
+		private string fullName;
+//		public string fullName;
 		public void AddAssembly(Assembly assembly)
 		{
 			cachedAssemblies.Add(assembly);
@@ -1763,7 +1778,12 @@ namespace Meta
 
 		public NamespaceStrategy(string fullName,Hashtable subNamespaces,ArrayList assemblies)
 		{
+			if(fullName!=null && fullName.StartsWith("."))
+			{
+				int asdf=0;
+			}
 			this.fullName=fullName;
+//			this.fullName=fullName;
 		}
 		// TODO: use null for root namespace
 		public IMap LoadAssembly(Assembly assembly,string nameSpace)
@@ -1771,10 +1791,11 @@ namespace Meta
 			IMap root=new NormalMap();
 			foreach(Type type in assembly.GetExportedTypes())
 			{
-				if(type.DeclaringType==null && ((type.Namespace==null && nameSpace=="") || (nameSpace!="" && type.Namespace.StartsWith(nameSpace)))) 
+				if(type.DeclaringType==null && ((type.Namespace==null && nameSpace==null) || (nameSpace!=null && type.Namespace.StartsWith(nameSpace)))) 
+//					if(type.DeclaringType==null && ((type.Namespace==null && nameSpace=="") || (nameSpace!="" && type.Namespace.StartsWith(nameSpace)))) 
 				{
 					IMap current=root;
-					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
+					ArrayList subNames=new ArrayList(type.FullName.Split('.'));// TODO: only use namespace here!!
 					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
 					{
 						if(!current.ContainsKey(subName)) 
@@ -1793,7 +1814,8 @@ namespace Meta
 		{			
 			IMap assemblyContent=LoadAssembly(assembly,nameSpace);
 			IMap selected=assemblyContent;
-			if(nameSpace!="")
+			if(nameSpace!=null)
+//				if(nameSpace!="")
 			{
 				foreach(string subString in nameSpace.Split('.'))
 				{
