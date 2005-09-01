@@ -259,7 +259,10 @@ namespace GAC
 					try
 					{
 						string assemblyName=AssemblyName(iname);
-						assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
+						if(assemblyName!="Microsoft.mshtml")
+						{
+							assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
+						}
 					}
 					catch(Exception e)
 					{

@@ -1260,31 +1260,37 @@ namespace Meta
 	}
 	public abstract class AssemblyStrategy:PersistantStrategy
 	{
-		public ArrayList NamespacesFromAssembly(Assembly assembly)
-		{ 
-			ArrayList namespaces=new ArrayList();
-			foreach(Type type in assembly.GetExportedTypes())
-			{
-				if(!namespaces.Contains(type.Namespace))
-				{
-					namespaces.Add(type.Namespace);
-				}
-			}
-			return namespaces;
-		}
-		public void LoadNamespaces(ArrayList assemblies)
+		// TODO: combine with below
+//		public ArrayList NamespacesFromAssembly(Assembly assembly)
+//		{ 
+//			ArrayList namespaces=new ArrayList();
+//			foreach(Type type in assembly.GetExportedTypes())
+//			{
+//				if(!namespaces.Contains(type.Namespace))
+//				{
+//					namespaces.Add(type.Namespace);
+//				}
+//			}
+//			return namespaces;
+//		}
+//		public ArrayList NamespacesFromAssembly(Assembly assembly)
+//		{ 
+//		}
+		public void NamespacesFromAssemblies(ArrayList assemblies)
 		{
 			NormalMap rootNamespace=new NormalMap(null,new Hashtable(),new ArrayList());
 			foreach(Assembly assembly in assemblies)
 			{
-				if(!assembly.FullName.StartsWith("Microsoft.mshtml"))
+				ArrayList namespaces=new ArrayList();
+				foreach(Type type in assembly.GetExportedTypes())
 				{
-					foreach(string namespaceName in NamespacesFromAssembly(assembly))
+					if(!namespaces.Contains(type.Namespace))
 					{
+						namespaces.Add(type.Namespace);
 						NamespaceStrategy currentNamespace=(NamespaceStrategy)rootNamespace.strategy;
-						if(namespaceName!=null)
+						if(type.Namespace!=null)
 						{
-							foreach(string subNamespace in namespaceName.Split('.'))
+							foreach(string subNamespace in type.Namespace.Split('.'))
 							{
 								if(!currentNamespace.namespaces.ContainsKey(subNamespace))
 								{
@@ -1307,6 +1313,41 @@ namespace Meta
 			((NamespaceStrategy)rootNamespace.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
 			cache=rootNamespace;
 		}
+//		public void NamespacesFromAssemblies(ArrayList assemblies)
+//		{
+//			NormalMap rootNamespace=new NormalMap(null,new Hashtable(),new ArrayList());
+//			foreach(Assembly assembly in assemblies)
+//			{
+//				if(!assembly.FullName.StartsWith("Microsoft.mshtml"))
+//				{
+//					foreach(string namespaceName in NamespacesFromAssembly(assembly))
+//					{
+//						NamespaceStrategy currentNamespace=(NamespaceStrategy)rootNamespace.strategy;
+//						if(namespaceName!=null)
+//						{
+//							foreach(string subNamespace in namespaceName.Split('.'))
+//							{
+//								if(!currentNamespace.namespaces.ContainsKey(subNamespace))
+//								{
+//									string fullName=currentNamespace.FullName;
+//									if(fullName!=null)
+//									{
+//										fullName+=".";
+//									}
+//									fullName+=subNamespace;
+//									currentNamespace.namespaces[subNamespace]=new NormalMap(fullName,new Hashtable(),new ArrayList());
+//								}
+//								//TODO: this sucks
+//								currentNamespace=(NamespaceStrategy)((NormalMap)currentNamespace.namespaces[subNamespace]).strategy;
+//							}
+//						}
+//						currentNamespace.AddAssembly(assembly);
+//					}
+//				}
+//			}
+//			((NamespaceStrategy)rootNamespace.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
+//			cache=rootNamespace;
+//		}
 		protected IMap cachedAssemblyInfo=new NormalMap();
 		protected NormalMap cache=new NormalMap();
 	}
@@ -1360,7 +1401,7 @@ namespace Meta
 		}
 		public GAC()
 		{
-			LoadNamespaces(GlobalAssemblyCache.Assemblies);
+			NamespacesFromAssemblies(GlobalAssemblyCache.Assemblies);
 		}
 		public static IMap library=new PersistantMap(new GAC());
 	}
@@ -1387,7 +1428,7 @@ namespace Meta
 			{
 				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
 			}
-			LoadNamespaces(assemblies);
+			NamespacesFromAssemblies(assemblies);
 			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 		}
 		private string assemblyPath;
@@ -1767,9 +1808,9 @@ namespace Meta
 		private string fullName;
 		public void AddAssembly(Assembly assembly)
 		{
-			cachedAssemblies.Add(assembly);
+			assemblies.Add(assembly);
 		}
-		public ArrayList cachedAssemblies=new ArrayList();
+		private ArrayList assemblies=new ArrayList();
 		public Hashtable namespaces=new Hashtable();
 
 		public NamespaceStrategy(string fullName,Hashtable subNamespaces,ArrayList assemblies)
@@ -1780,40 +1821,19 @@ namespace Meta
 			}
 			this.fullName=fullName;
 		}
-//		public IMap NamespaceContents(Assembly assembly,string nameSpace)
-//		{			
-//			IMap root=new NormalMap();
-//			foreach(Type type in assembly.GetExportedTypes())
-//			{
-//				if(type.DeclaringType==null && nameSpace==type.Namespace) 
-//				{
-//					root[type.Name]=new DotNetClass(type);
-//				}
-//			}
-//			Interpreter.loadedAssemblies.Add(assembly.Location); // TODO: make this a function
-//			return root;
-//		}
 		public void Load()
 		{
 			cache=new ListDictionary();
-			foreach(Assembly assembly in cachedAssemblies)
+			foreach(Assembly assembly in assemblies)
 			{
-//				IMap root=new NormalMap();
 				foreach(Type type in assembly.GetExportedTypes())
 				{
 					if(type.DeclaringType==null && this.FullName==type.Namespace) 
-//						if(type.DeclaringType==null && nameSpace==type.Namespace) 
 					{
-//						root[type.Name]=new DotNetClass(type);
 						cache[new NormalMap(type.Name)]=new DotNetClass(type);
 					}
 				}
 				Interpreter.loadedAssemblies.Add(assembly.Location); // TODO: make this a function
-//				return root;
-//				foreach(DictionaryEntry entry in NamespaceContents(cachedAssembly,fullName))
-//				{
-//					cache[entry.Key]=entry.Value;
-//				}
 			}
 			foreach(DictionaryEntry entry in namespaces)
 			{
