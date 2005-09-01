@@ -1275,7 +1275,6 @@ namespace Meta
 		public void LoadNamespaces(ArrayList assemblies)
 		{
 			NormalMap rootNamespace=new NormalMap(null,new Hashtable(),new ArrayList());
-//			NormalMap rootNamespace=new NormalMap("",new Hashtable(),new ArrayList());
 			foreach(Assembly assembly in assemblies)
 			{
 				if(!assembly.FullName.StartsWith("Microsoft.mshtml"))
@@ -1290,9 +1289,7 @@ namespace Meta
 								if(!currentNamespace.namespaces.ContainsKey(subNamespace))
 								{
 									string fullName=currentNamespace.FullName;
-//									string fullName=currentNamespace.fullName;
 									if(fullName!=null)
-//										if(fullName!="")
 									{
 										fullName+=".";
 									}
@@ -1783,47 +1780,59 @@ namespace Meta
 				int asdf=0;
 			}
 			this.fullName=fullName;
-//			this.fullName=fullName;
 		}
-		// TODO: use null for root namespace
-		public IMap LoadAssembly(Assembly assembly,string nameSpace)
-		{
+//		public IMap LoadAssembly(Assembly assembly,string nameSpace)
+//		{
+//			IMap root=new NormalMap();
+//			foreach(Type type in assembly.GetExportedTypes())
+//			{
+//				if(type.DeclaringType==null && nameSpace==type.Namespace) 
+//				{
+//					IMap current=root;
+//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));// TODO: only use namespace here!!
+//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
+//					{
+//						if(!current.ContainsKey(subName)) 
+//						{
+//							current[subName]=new NormalMap();
+//						}
+//						current=current[subName];
+//					}
+//					current[type.Name]=new DotNetClass(type);
+//				}
+//			}
+//			Interpreter.loadedAssemblies.Add(assembly.Location);
+//			return root;
+//		}
+//		public IMap LoadAssembly(Assembly assembly,string nameSpace)
+//		{
+//		}
+		public IMap NamespaceContents(Assembly assembly,string nameSpace)
+		{			
 			IMap root=new NormalMap();
 			foreach(Type type in assembly.GetExportedTypes())
 			{
-				if(type.DeclaringType==null && ((type.Namespace==null && nameSpace==null) || (nameSpace!=null && type.Namespace.StartsWith(nameSpace)))) 
-//					if(type.DeclaringType==null && ((type.Namespace==null && nameSpace=="") || (nameSpace!="" && type.Namespace.StartsWith(nameSpace)))) 
+				if(type.DeclaringType==null && nameSpace==type.Namespace) 
 				{
-					IMap current=root;
-					ArrayList subNames=new ArrayList(type.FullName.Split('.'));// TODO: only use namespace here!!
-					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
-					{
-						if(!current.ContainsKey(subName)) 
-						{
-							current[subName]=new NormalMap();
-						}
-						current=current[subName];
-					}
-					current[type.Name]=new DotNetClass(type);
+					root[type.Name]=new DotNetClass(type);
 				}
 			}
-			Interpreter.loadedAssemblies.Add(assembly.Location);
+			Interpreter.loadedAssemblies.Add(assembly.Location); // TODO: make this a function
 			return root;
 		}
-		public IMap NamespaceContents(Assembly assembly,string nameSpace)
-		{			
-			IMap assemblyContent=LoadAssembly(assembly,nameSpace);
-			IMap selected=assemblyContent;
-			if(nameSpace!=null)
-//				if(nameSpace!="")
-			{
-				foreach(string subString in nameSpace.Split('.'))
-				{
-					selected=selected[subString];
-				}
-			}
-			return selected.Clone();
-		}
+//		public IMap NamespaceContents(Assembly assembly,string nameSpace)
+//		{			
+//			IMap assemblyContent=LoadAssembly(assembly,nameSpace);
+//			IMap selected=assemblyContent;
+//			if(nameSpace!=null)
+//			{
+//				foreach(string subString in nameSpace.Split('.'))
+//				{
+//					selected=selected[subString];
+//				}
+//			}
+//			return selected.Clone();
+//		}
 		public void Load()
 		{
 			cache=new ListDictionary();
