@@ -1841,14 +1841,16 @@ namespace Meta
 //			Interpreter.loadedAssemblies.Add(assembly.Location);
 //			return root;
 //		}
+
+		// TODO: use null for root namespace
 		public IMap LoadAssembly(Assembly assembly,string nameSpace)
 //			public IMap LoadAssembly(Assembly assembly)
 		{
 			IMap root=new NormalMap();
 			foreach(Type type in assembly.GetExportedTypes())
 			{
-				//if(type.DeclaringType==null && ((type.Namespace==null && nameSpace=="") || type.Namespace.StartsWith(nameSpace))) 
-				if(type.DeclaringType==null) 
+				if(type.DeclaringType==null && ((type.Namespace==null && nameSpace=="") || (nameSpace!="" && type.Namespace.StartsWith(nameSpace)))) 
+//				if(type.DeclaringType==null) 
 				{
 					IMap current=root;
 					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
