@@ -1231,9 +1231,9 @@ namespace Meta
 		public NormalMap(double fraction):this(new HybridDictionaryStrategy(fraction))
 		{
 		}
-		public NormalMap(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new NamespaceStrategy(namespaceName,subNamespaces,assemblies))
-		{
-		}
+//		public NormalMap(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new NamespaceStrategy(namespaceName,subNamespaces,assemblies))
+//		{
+//		}
 		public NormalMap(string text):this(new StringStrategy(text))
 		{
 		}
@@ -1260,94 +1260,41 @@ namespace Meta
 	}
 	public abstract class AssemblyStrategy:PersistantStrategy
 	{
-		// TODO: combine with below
-//		public ArrayList NamespacesFromAssembly(Assembly assembly)
-//		{ 
-//			ArrayList namespaces=new ArrayList();
-//			foreach(Type type in assembly.GetExportedTypes())
-//			{
-//				if(!namespaces.Contains(type.Namespace))
-//				{
-//					namespaces.Add(type.Namespace);
-//				}
-//			}
-//			return namespaces;
-//		}
-//		public ArrayList NamespacesFromAssembly(Assembly assembly)
-//		{ 
-//		}
-		public void NamespacesFromAssemblies(ArrayList assemblies)
+		public NormalMap NamespacesFromAssemblies(ArrayList assemblies)
 		{
-			NormalMap rootNamespace=new NormalMap(null,new Hashtable(),new ArrayList());
+			NamespaceStrategy root=new NamespaceStrategy(null);
 			foreach(Assembly assembly in assemblies)
 			{
-				ArrayList namespaces=new ArrayList();
+				ArrayList assemblyNamespaces=new ArrayList();
 				foreach(Type type in assembly.GetExportedTypes())
 				{
-					if(!namespaces.Contains(type.Namespace))
+					if(!assemblyNamespaces.Contains(type.Namespace))
 					{
-						namespaces.Add(type.Namespace);
-						NamespaceStrategy currentNamespace=(NamespaceStrategy)rootNamespace.strategy;
+						assemblyNamespaces.Add(type.Namespace);
+						NamespaceStrategy current=root;
 						if(type.Namespace!=null)
 						{
 							foreach(string subNamespace in type.Namespace.Split('.'))
 							{
-								if(!currentNamespace.namespaces.ContainsKey(subNamespace))
+								if(!current.Namespaces.ContainsKey(subNamespace))
 								{
-									string fullName=currentNamespace.FullName;
+									string fullName=current.FullName;
 									if(fullName!=null)
 									{
 										fullName+=".";
 									}
 									fullName+=subNamespace;
-									currentNamespace.namespaces[subNamespace]=new NormalMap(fullName,new Hashtable(),new ArrayList());
+									current.Namespaces[subNamespace]=new NormalMap(new NamespaceStrategy(fullName));
 								}
-								//TODO: this sucks
-								currentNamespace=(NamespaceStrategy)((NormalMap)currentNamespace.namespaces[subNamespace]).strategy;
+								current=(NamespaceStrategy)((NormalMap)current.Namespaces[subNamespace]).strategy;
 							}
 						}
-						currentNamespace.AddAssembly(assembly);
+						current.Assemblies.Add(assembly);
 					}
 				}
 			}
-			((NamespaceStrategy)rootNamespace.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
-			cache=rootNamespace;
+			return new NormalMap(root);
 		}
-//		public void NamespacesFromAssemblies(ArrayList assemblies)
-//		{
-//			NormalMap rootNamespace=new NormalMap(null,new Hashtable(),new ArrayList());
-//			foreach(Assembly assembly in assemblies)
-//			{
-//				if(!assembly.FullName.StartsWith("Microsoft.mshtml"))
-//				{
-//					foreach(string namespaceName in NamespacesFromAssembly(assembly))
-//					{
-//						NamespaceStrategy currentNamespace=(NamespaceStrategy)rootNamespace.strategy;
-//						if(namespaceName!=null)
-//						{
-//							foreach(string subNamespace in namespaceName.Split('.'))
-//							{
-//								if(!currentNamespace.namespaces.ContainsKey(subNamespace))
-//								{
-//									string fullName=currentNamespace.FullName;
-//									if(fullName!=null)
-//									{
-//										fullName+=".";
-//									}
-//									fullName+=subNamespace;
-//									currentNamespace.namespaces[subNamespace]=new NormalMap(fullName,new Hashtable(),new ArrayList());
-//								}
-//								//TODO: this sucks
-//								currentNamespace=(NamespaceStrategy)((NormalMap)currentNamespace.namespaces[subNamespace]).strategy;
-//							}
-//						}
-//						currentNamespace.AddAssembly(assembly);
-//					}
-//				}
-//			}
-//			((NamespaceStrategy)rootNamespace.strategy).Load(); // TODO: remove, integrate into indexer, is this even necessary???
-//			cache=rootNamespace;
-//		}
 		protected IMap cachedAssemblyInfo=new NormalMap();
 		protected NormalMap cache=new NormalMap();
 	}
@@ -1401,7 +1348,7 @@ namespace Meta
 		}
 		public GAC()
 		{
-			NamespacesFromAssemblies(GlobalAssemblyCache.Assemblies);
+			cache=NamespacesFromAssemblies(GlobalAssemblyCache.Assemblies);
 		}
 		public static IMap library=new PersistantMap(new GAC());
 	}
@@ -1410,26 +1357,20 @@ namespace Meta
 		public DirectoryStrategy(DirectoryInfo directory)
 		{
 			this.directory=directory;
-			ArrayList assemblies=new ArrayList();
 			assemblyPath=Path.Combine(directory.FullName,"assembly");
+			ArrayList assemblies=new ArrayList();
 			if(Directory.Exists(assemblyPath))
 			{
-				foreach(string dllPath in System.IO.Directory.GetFiles(assemblyPath,"*.dll"))
+				foreach(string dllPath in Directory.GetFiles(assemblyPath,"*.dll"))
 				{
 					assemblies.Add(Assembly.LoadFrom(dllPath));
 				}
-				foreach(string exePath in System.IO.Directory.GetFiles(assemblyPath,"*.exe"))
+				foreach(string exePath in Directory.GetFiles(assemblyPath,"*.exe"))
 				{
 					assemblies.Add(Assembly.LoadFrom(exePath));
 				}
 			}
-			string cachedAssemblyPath=Path.Combine(directory.FullName,"assembly\\cachedAssemblyInfo.meta");
-			if(File.Exists(cachedAssemblyPath))
-			{
-				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
-			}
-			NamespacesFromAssemblies(assemblies);
-			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
+			cache=NamespacesFromAssemblies(assemblies);
 		}
 		private string assemblyPath;
 		public override ArrayList Array
@@ -1439,13 +1380,11 @@ namespace Meta
 				return new ArrayList();
 			}
 		}
-		public override MapStrategy Clone()
-		{
-			return base.Clone ();
-		}
-
+//		public override MapStrategy Clone()
+//		{
+//			return base.Clone ();
+//		}
 		private DirectoryInfo directory;
-
 		public override ArrayList Keys
 		{
 			get
@@ -1486,7 +1425,6 @@ namespace Meta
 				return null;
 			}
 		}
-
 		public override IMap this[IMap key]
 		{
 			get
@@ -1656,6 +1594,7 @@ namespace Meta
 			}
 			return text;
 		}
+		// TODO: put this into another class
 		private static string SerializeMapKey(IMap map,string indentation)
 		{
 			return indentation + leftBracket + newLine + SerializeMapValue(map,indentation) + rightBracket;
@@ -1743,6 +1682,11 @@ namespace Meta
 
 	public class NamespaceStrategy: NormalStrategy
 	{
+//		public override MapStrategy Clone()
+//		{
+//			return new NamespaceStrategy(FullName,cache,assemblies);
+//		}
+
 		public override Integer Integer
 		{
 			get
@@ -1806,20 +1750,37 @@ namespace Meta
 			}
 		}
 		private string fullName;
-		public void AddAssembly(Assembly assembly)
-		{
-			assemblies.Add(assembly);
-		}
+//		public void AddAssembly(Assembly assembly)
+//		{
+//			assemblies.Add(assembly);
+//		}
 		private ArrayList assemblies=new ArrayList();
-		public Hashtable namespaces=new Hashtable();
-
-		public NamespaceStrategy(string fullName,Hashtable subNamespaces,ArrayList assemblies)
+		public ArrayList Assemblies
 		{
-			if(fullName!=null && fullName.StartsWith("."))
+			get
 			{
-				int asdf=0;
+				return assemblies;
 			}
+		}
+		public Hashtable Namespaces
+		{
+			get
+			{
+				return namespaces;
+			}
+		}
+		private Hashtable namespaces=new Hashtable();
+//		public Hashtable namespaces=new Hashtable();
+
+		public NamespaceStrategy(string fullName)
+		{
 			this.fullName=fullName;
+		}
+		public NamespaceStrategy(string fullName,ListDictionary cache,ArrayList assemblies)
+		{
+			this.fullName=fullName;
+			this.cache=cache;
+			this.assemblies=assemblies;
 		}
 		public void Load()
 		{
@@ -2641,7 +2602,7 @@ namespace Meta
 			bool isEqual;
 			if(strategy is StringStrategy)
 			{	
-				isEqual=((StringStrategy)strategy).text.Equals(this.text);
+				isEqual=((StringStrategy)strategy).text==this.text;
 			}
 			else
 			{
