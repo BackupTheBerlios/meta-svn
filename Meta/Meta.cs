@@ -455,7 +455,8 @@ namespace Meta
 				selected=selection;
 			}
 			return selected;
-		}	}
+		}	
+	}
 	public class Statement
 	{
 		private IMap replaceValue;
@@ -1278,7 +1279,8 @@ namespace Meta
 			{
 				if(!assembly.FullName.StartsWith("Microsoft.mshtml"))
 				{
-					CachedAssembly cachedAssembly=new CachedAssembly(assembly);
+//					CachedAssembly cachedAssembly=new CachedAssembly(assembly);
+//					CachedAssembly cachedAssembly=new CachedAssembly(assembly);
 
 					foreach(string namespaceName in NamespacesFromAssembly(assembly))
 					{
@@ -1301,7 +1303,8 @@ namespace Meta
 								currentNamespace=(NamespaceStrategy)((NormalMap)currentNamespace.namespaces[subNamespace]).strategy;
 							}
 						}
-						currentNamespace.AddAssembly(cachedAssembly);
+						currentNamespace.AddAssembly(assembly);
+//						currentNamespace.AddAssembly(cachedAssembly);
 					}
 				}
 			}
@@ -1361,16 +1364,16 @@ namespace Meta
 		}
 		public GAC()
 		{
-			ArrayList assemblies=new ArrayList();
-			assemblies=GlobalAssemblyCache.Assemblies;
-			// TODO: change location of this file
-			string cachedAssemblyPath=Path.Combine(Interpreter.LibraryPath.FullName,"cachedAssemblyInfo.meta"); 
-			if(File.Exists(cachedAssemblyPath))
-			{
-				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
-			}		
-			LoadNamespaces(assemblies);
-			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
+//			ArrayList assemblies=new ArrayList();
+//			ArrayList assemblies=
+//			assemblies=GlobalAssemblyCache.Assemblies;
+			//			string cachedAssemblyPath=Path.Combine(Interpreter.LibraryPath.FullName,"cachedAssemblyInfo.meta"); 
+//			if(File.Exists(cachedAssemblyPath))
+//			{
+//				cachedAssemblyInfo=Interpreter.RunWithoutLibrary(cachedAssemblyPath,new NormalMap());
+//			}		
+			LoadNamespaces(GlobalAssemblyCache.Assemblies);
+//			DirectoryStrategy.SaveToFile(cachedAssemblyInfo,cachedAssemblyPath);
 		}
 		public static IMap library=new PersistantMap(new GAC());
 	}
@@ -1709,6 +1712,7 @@ namespace Meta
 			}
 		}
 	}
+
 	public class NamespaceStrategy: NormalStrategy
 	{
 		public override Integer Integer
@@ -1764,10 +1768,14 @@ namespace Meta
 			}
 		}
 		public string fullName;
-		public void AddAssembly(CachedAssembly assembly)
+		public void AddAssembly(Assembly assembly)
 		{
 			cachedAssemblies.Add(assembly);
 		}
+//		public void AddAssembly(CachedAssembly assembly)
+//		{
+//			cachedAssemblies.Add(assembly);
+//		}
 		public ArrayList cachedAssemblies=new ArrayList();
 		public Hashtable namespaces=new Hashtable();
 
@@ -1776,18 +1784,138 @@ namespace Meta
 		{
 			this.fullName=fullName;
 		}
+//
+//		public IMap LoadAssembly()
+//		{
+//			IMap root=new NormalMap();
+//			foreach(Type type in assembly.GetExportedTypes())
+//			{
+//				if(type.DeclaringType==null) 
+//				{
+//					IMap current=root;
+//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
+//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
+//					{
+//						if(!current.ContainsKey(subName)) 
+//						{
+//							current[subName]=new NormalMap();
+//						}
+//						current=current[subName];
+//					}
+//					current[type.Name]=new DotNetClass(type);
+//				}
+//			}
+//			Interpreter.loadedAssemblies.Add(assembly.Location);
+//			return root;
+//		}
+//
+//		public IMap NamespaceContents(string nameSpace)
+//		{
+//			if(assemblyContent==null)
+//			{
+//				assemblyContent=LoadAssembly();
+//			}
+//			IMap selected=assemblyContent;
+//			if(nameSpace!="")
+//			{
+//				foreach(string subString in nameSpace.Split('.'))
+//				{
+//					selected=selected[subString];
+//					//					selected=selected[new NormalMap(subString)];
+//				}
+//			}
+//			return selected.Clone();
+//			//			return selected;
+//		}
+
+//		public IMap LoadAssembly()
+//		{
+//			IMap root=new NormalMap();
+//			foreach(Type type in assembly.GetExportedTypes())
+//			{
+//				if(type.DeclaringType==null) 
+//				{
+//					IMap current=root;
+//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
+//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
+//					{
+//						if(!current.ContainsKey(subName)) 
+//						{
+//							current[subName]=new NormalMap();
+//						}
+//						current=current[subName];
+//					}
+//					current[type.Name]=new DotNetClass(type);
+//				}
+//			}
+//			Interpreter.loadedAssemblies.Add(assembly.Location);
+//			return root;
+//		}
+		public IMap LoadAssembly(Assembly assembly)
+		{
+			IMap root=new NormalMap();
+			foreach(Type type in assembly.GetExportedTypes())
+			{
+				if(type.DeclaringType==null) 
+				{
+					IMap current=root;
+					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
+					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
+					{
+						if(!current.ContainsKey(subName)) 
+						{
+							current[subName]=new NormalMap();
+						}
+						current=current[subName];
+					}
+					current[type.Name]=new DotNetClass(type);
+				}
+			}
+			Interpreter.loadedAssemblies.Add(assembly.Location);
+			return root;
+		}
+		public IMap NamespaceContents(Assembly assembly,string nameSpace)
+		{
+//		{
+//			if(assemblyContent==null)
+//			{
+//				assemblyContent=LoadAssembly();
+//			}
+			
+			IMap assemblyContent=LoadAssembly(assembly);
+//			IMap assemblyContent=LoadAssembly();
+			IMap selected=assemblyContent;
+			if(nameSpace!="")
+			{
+				foreach(string subString in nameSpace.Split('.'))
+				{
+					selected=selected[subString];
+					//					selected=selected[new NormalMap(subString)];
+				}
+			}
+			return selected.Clone();
+			//			return selected;
+		}
 		public void Load()
 		{
 			cache=new ListDictionary();
 //			cache=new NameValueCollection();
 			//			cache=new NormalMap();
-			foreach(CachedAssembly cachedAssembly in cachedAssemblies)
+			foreach(Assembly cachedAssembly in cachedAssemblies)
 			{
-				foreach(DictionaryEntry entry in cachedAssembly.NamespaceContents(fullName))
+				foreach(DictionaryEntry entry in NamespaceContents(cachedAssembly,fullName))
 				{
 					cache[entry.Key]=entry.Value;
 				}
 			}
+//			//			cache=new NormalMap();
+//			foreach(CachedAssembly cachedAssembly in cachedAssemblies)
+//			{
+//				foreach(DictionaryEntry entry in cachedAssembly.NamespaceContents(fullName))
+//				{
+//					cache[entry.Key]=entry.Value;
+//				}
+//			}
 			foreach(DictionaryEntry entry in namespaces)
 			{
 				cache[new NormalMap((string)entry.Key)]=(IMap)entry.Value;
@@ -1818,56 +1946,85 @@ namespace Meta
 			//			return cache.ContainsKey(key);
 		}
 	}
-	public class CachedAssembly
-	{
-		public IMap LoadAssembly()
-		{
-			IMap root=new NormalMap();
-			foreach(Type type in assembly.GetExportedTypes())
-			{
-				if(type.DeclaringType==null) 
-				{
-					IMap current=root;
-					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
-					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
-					{
-						if(!current.ContainsKey(subName)) 
-						{
-							current[subName]=new NormalMap();
-						}
-						current=current[subName];
-					}
-					current[type.Name]=new DotNetClass(type);
-				}
-			}
-			Interpreter.loadedAssemblies.Add(assembly.Location);
-			return root;
-		}
-		private Assembly assembly;
-		public CachedAssembly(Assembly assembly)
-		{
-			this.assembly=assembly;
-		}
-		public IMap NamespaceContents(string nameSpace)
-		{
-			if(assemblyContent==null)
-			{
-				assemblyContent=LoadAssembly();
-			}
-			IMap selected=assemblyContent;
-			if(nameSpace!="")
-			{
-				foreach(string subString in nameSpace.Split('.'))
-				{
-					selected=selected[subString];
-//					selected=selected[new NormalMap(subString)];
-				}
-			}
-			return selected.Clone();
-//			return selected;
-		}
-		private IMap assemblyContent;
-	}
+	// TODO: remove this class completely, doesnt make sense to cache that stuff, not at all
+	// at least i havent got any numbers indicating this, rather the contrary
+//	public class CachedAssembly
+//	{
+//		// TODO: refactor
+////		public IMap NamespaceContents(string nameSpace)
+////		{
+////			IMap root=new NormalMap();
+////			foreach(Type type in assembly.GetExportedTypes())
+////			{
+////				if(type.DeclaringType==null && type.FullName.StartsWith(nameSpace)) 
+////				{
+////					IMap current=root;
+////					string restName=type.FullName.Remove(0,nameSpace.Length);
+////					ArrayList subNames=new ArrayList(restName.Split('.'));
+////					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
+////					{
+////						if(!current.ContainsKey(subName))
+////						{
+////							current[subName]=new NormalMap();
+////						}
+////						current=current[subName];
+////					}
+////					current[type.Name]=new DotNetClass(type);
+////				}
+////			}
+////			Interpreter.loadedAssemblies.Add(assembly.Location);
+////			return root;
+////		}
+//
+//		public IMap LoadAssembly()
+//		{
+//			IMap root=new NormalMap();
+//			foreach(Type type in assembly.GetExportedTypes())
+//			{
+//				if(type.DeclaringType==null) 
+//				{
+//					IMap current=root;
+//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
+//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
+//					{
+//						if(!current.ContainsKey(subName)) 
+//						{
+//							current[subName]=new NormalMap();
+//						}
+//						current=current[subName];
+//					}
+//					current[type.Name]=new DotNetClass(type);
+//				}
+//			}
+//			Interpreter.loadedAssemblies.Add(assembly.Location);
+//			return root;
+//		}
+//		private Assembly assembly;
+//		public CachedAssembly(Assembly assembly)
+//		{
+//			this.assembly=assembly;
+//		}
+//
+//		public IMap NamespaceContents(string nameSpace)
+//		{
+//			if(assemblyContent==null)
+//			{
+//				assemblyContent=LoadAssembly();
+//			}
+//			IMap selected=assemblyContent;
+//			if(nameSpace!="")
+//			{
+//				foreach(string subString in nameSpace.Split('.'))
+//				{
+//					selected=selected[subString];
+////					selected=selected[new NormalMap(subString)];
+//				}
+//			}
+//			return selected.Clone();
+////			return selected;
+//		}
+//		private IMap assemblyContent;
+//	}
 	public class Transform
 	{
 		public static object ToDotNet(IMap meta) 
