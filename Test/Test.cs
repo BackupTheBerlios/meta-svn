@@ -35,9 +35,10 @@ namespace Test
 		{
 			if(file=="") 
 			{
-				Directory.SetCurrentDirectory(
-					".."+Path.DirectorySeparatorChar+"Test"+Path.DirectorySeparatorChar);
-				ExecuteTests test=new ExecuteTests(typeof(Tests),path);
+//				Directory.SetCurrentDirectory(
+//					".."+Path.DirectorySeparatorChar+"Test"+Path.DirectorySeparatorChar);
+				ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Interpreter.LibraryPath.Parent.FullName,"Test"));
+//				ExecuteTests test=new ExecuteTests(typeof(Tests),path);
 			}
 			else 
 			{
@@ -58,7 +59,7 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-//			args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
+			args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
 //			args[0]=@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta";
 			//			args[0]=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
 			//args=new string[]{@"C:\_ProectSupportMaterial\Meta\library\function.meta"};
@@ -194,7 +195,7 @@ namespace Test
 				IMap argument=new NormalMap();
 				argument[1]="first arg";
 				argument[2]="second=arg";
-				GAC.library=new PersistantMap(new GAC());
+				Meta.GAC.library=new PersistantMap(new Meta.GAC());
 				//				GAC.library=new GAC();
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}

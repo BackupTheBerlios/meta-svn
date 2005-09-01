@@ -55,7 +55,7 @@ using System.Globalization;
 using System.Collections;
 using System.Reflection;
 
-namespace System.GAC
+namespace GAC
 {
 
 	#region Flags

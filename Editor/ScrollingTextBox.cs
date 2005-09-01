@@ -693,19 +693,19 @@ public class ScrollingTextBox: RichTextBox
 			int lineLength=GetLinesLength(line);
 			int columns=ColumnFromScrollColumn(line,scrollColumn);
 			int actualColumns=Lines[line].Length;
-			if(columns>actualColumns)
-			{
-				string virtualSpace="";
-				for(int i=0;i<columns-actualColumns;i++)
-				{
-                    virtualSpace+=" ";
-				}
-				Select(lineLength+actualColumns,0);
-				SelectedText=virtualSpace;
-//				string[] lines=Lines;
-//				lines[line]=lines[line]+virtualSpace;
-//				Lines=lines;
-			}
+//			if(columns>actualColumns)
+//			{
+//				string virtualSpace="";
+//				for(int i=0;i<columns-actualColumns;i++)
+//				{
+//                    virtualSpace+=" ";
+//				}
+//				Select(lineLength+actualColumns,0);
+//				SelectedText=virtualSpace;
+////				string[] lines=Lines;
+////				lines[line]=lines[line]+virtualSpace;
+////				Lines=lines;
+//			}
 			int newStart=lineLength+columns;
 //			int newStart=GetLinesLength(line)+ColumnFromScrollColumn(line,scrollColumn);
 			if(newStart>=Text.Length) 

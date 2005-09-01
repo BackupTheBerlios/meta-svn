@@ -22,7 +22,7 @@ using System.CodeDom.Compiler;
 using System.Xml;
 using System.Runtime.InteropServices;
 using System.Reflection;
-using System.GAC;
+using GAC;
 using System.Text;
 using System.Threading;
 using Microsoft.CSharp;
@@ -190,7 +190,9 @@ namespace Meta
 			{
 				if(Interpreter.reverseDebug)
 				{
-					bool stopReverse=((Statement)statements[i]).Undo(); // Statement should have separate Stop() function
+					// Statement should have separate Stop() function
+					// this sucks, its really not good, refactor
+					bool stopReverse=((Statement)statements[i]).Undo();
 					if(stopReverse)
 					{
 						Interpreter.reverseDebug=false;
@@ -2071,14 +2073,7 @@ namespace Meta
 			}
 			else
 			{
-//				if(!target.IsValueType && meta.IsInteger && meta.Integer==0)
-//				{
-//					isConverted=true;
-//				}
-//				else
-//				{
-					isConverted=false;
-//				}
+				isConverted=false;
 			}
 			return dotNet;
 		}
@@ -2096,7 +2091,6 @@ namespace Meta
 			if(dotNet==null)
 			{
 				meta=null;
-//				meta=0;
 			}
 			else
 			{
@@ -2305,7 +2299,7 @@ namespace Meta
 				{
 					ArrayList arguments=new ArrayList();
 					bool argumentsMatched=true;
-					ParameterInfo[] arPrmtifParameters=method.GetParameters();
+					ParameterInfo[] arPrmtifParameters=method.GetParameters();// TODO: rename
 					for(int i=0;argumentsMatched && i<arPrmtifParameters.Length;i++)
 					{
 						arguments.Add(Transform.ToDotNet((IMap)argument.Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
