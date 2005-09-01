@@ -2071,14 +2071,14 @@ namespace Meta
 			}
 			else
 			{
-				if(!target.IsValueType && meta.IsInteger && meta.Integer==0)
-				{
-					isConverted=true;
-				}
-				else
-				{
+//				if(!target.IsValueType && meta.IsInteger && meta.Integer==0)
+//				{
+//					isConverted=true;
+//				}
+//				else
+//				{
 					isConverted=false;
-				}
+//				}
 			}
 			return dotNet;
 		}
@@ -2095,10 +2095,11 @@ namespace Meta
 			IMap meta;
 			if(dotNet==null)
 			{
-				meta=0;
+				meta=null;
+//				meta=0;
 			}
 			else
-			{			
+			{
 				switch(Type.GetTypeCode(dotNet.GetType()))
 				{
 					case TypeCode.Boolean:

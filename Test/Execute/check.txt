@@ -1801,11 +1801,6 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "4"
-  Value (NormalMap):
-    "0"
-Entry (DictionaryEntry)
-  Key (NormalMap):
     "resultFromDelegate"
   Value (NormalMap):
     "resultFromDelegate"
