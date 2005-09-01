@@ -1716,7 +1716,7 @@ namespace Meta
 				return new ArrayList();
 			}
 		}
-		public override IMap this[IMap key]
+		private ListDictionary Cache
 		{
 			get
 			{
@@ -1724,10 +1724,18 @@ namespace Meta
 				{
 					Load();
 				}
-				return (IMap)cache[key];
+				return cache;
+			}
+		}
+		public override IMap this[IMap key]
+		{
+			get
+			{
+				return (IMap)Cache[key];
 			}
 			set
 			{
+				// TODO: should this be possible??? I think so
 				throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
 			}
 		}
@@ -1735,22 +1743,14 @@ namespace Meta
 		{
 			get
 			{
-				if(cache==null)
-				{
-					Load();
-				}
-				return new ArrayList(cache.Keys);
+				return new ArrayList(Cache.Keys);
 			}
 		}
 		public override int Count
 		{
 			get
 			{
-				if(cache==null)
-				{
-					Load();
-				}
-				return cache.Count;
+				return Cache.Count;
 			}
 		}
 		public string FullName
@@ -1759,13 +1759,8 @@ namespace Meta
 			{
 				return fullName;
 			}
-//			set
-//			{
-//				this.fullName=value;
-//			}
 		}
 		private string fullName;
-//		public string fullName;
 		public void AddAssembly(Assembly assembly)
 		{
 			cachedAssemblies.Add(assembly);
@@ -1781,32 +1776,6 @@ namespace Meta
 			}
 			this.fullName=fullName;
 		}
-//		public IMap LoadAssembly(Assembly assembly,string nameSpace)
-//		{
-//			IMap root=new NormalMap();
-//			foreach(Type type in assembly.GetExportedTypes())
-//			{
-//				if(type.DeclaringType==null && nameSpace==type.Namespace) 
-//				{
-//					IMap current=root;
-//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));// TODO: only use namespace here!!
-//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
-//					{
-//						if(!current.ContainsKey(subName)) 
-//						{
-//							current[subName]=new NormalMap();
-//						}
-//						current=current[subName];
-//					}
-//					current[type.Name]=new DotNetClass(type);
-//				}
-//			}
-//			Interpreter.loadedAssemblies.Add(assembly.Location);
-//			return root;
-//		}
-//		public IMap LoadAssembly(Assembly assembly,string nameSpace)
-//		{
-//		}
 		public IMap NamespaceContents(Assembly assembly,string nameSpace)
 		{			
 			IMap root=new NormalMap();
@@ -1820,19 +1789,6 @@ namespace Meta
 			Interpreter.loadedAssemblies.Add(assembly.Location); // TODO: make this a function
 			return root;
 		}
-//		public IMap NamespaceContents(Assembly assembly,string nameSpace)
-//		{			
-//			IMap assemblyContent=LoadAssembly(assembly,nameSpace);
-//			IMap selected=assemblyContent;
-//			if(nameSpace!=null)
-//			{
-//				foreach(string subString in nameSpace.Split('.'))
-//				{
-//					selected=selected[subString];
-//				}
-//			}
-//			return selected.Clone();
-//		}
 		public void Load()
 		{
 			cache=new ListDictionary();
@@ -1851,11 +1807,7 @@ namespace Meta
 		public ListDictionary cache;
 		public override bool ContainsKey(IMap key)
 		{
-			if(cache==null)
-			{
-				Load();
-			}
-			return cache.Contains(key);
+			return Cache.Contains(key);
 		}
 	}
 	public class Transform
