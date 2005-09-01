@@ -451,8 +451,8 @@ public class ScrollingTextBox: RichTextBox
 
 
 		Graphics graphics=this.CreateGraphics();
-		MessageBox.Show(DirectoryStrategy.SerializeValue((IMap)debugValue));
-		graphics.DrawString(DirectoryStrategy.SerializeValue((IMap)debugValue),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
+		MessageBox.Show(Serialize.Value((IMap)debugValue));
+		graphics.DrawString(Serialize.Value((IMap)debugValue),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
 //		graphics.DrawString(debugValue.ToString(),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
 		////		MessageBox.Show(debugValue.ToString());
 //		string x=this.Text;

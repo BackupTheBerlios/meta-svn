@@ -260,7 +260,8 @@ namespace Meta
 	{
 		public abstract IMap Detect(string text);
 	}
-	public class Filters // TODO: put into one monster-method?, or use delegates
+	
+	public class Filters
 	{
 		public class DecimalFilter: Filter
 		{
@@ -735,7 +736,7 @@ namespace Meta
 			}
 			else
 			{
-				message+=DirectoryStrategy.SerializeKey(key);
+				message+=Serialize.Key(key);
 			}
 			if(this is KeyDoesNotExistException)
 			{
@@ -1231,9 +1232,6 @@ namespace Meta
 		public NormalMap(double fraction):this(new HybridDictionaryStrategy(fraction))
 		{
 		}
-//		public NormalMap(string namespaceName,Hashtable subNamespaces,ArrayList assemblies):this(new NamespaceStrategy(namespaceName,subNamespaces,assemblies))
-//		{
-//		}
 		public NormalMap(string text):this(new StringStrategy(text))
 		{
 		}
@@ -1474,64 +1472,67 @@ namespace Meta
 		{
 			Directory.CreateDirectory(Path.GetDirectoryName(path));
 			File.Create(path).Close();
-			string text=SerializeValue(meta).Trim(new char[]{'\n'});
+			string text=Meta.Serialize.Value(meta).Trim(new char[]{'\n'});
 			if(text=="\"\"")
 			{
 				text="";
 			}
 			Helper.WriteFile(path,text);
 		}
-		public static string SerializeKey(IMap key)
+	}
+	public class Serialize
+	{
+		public static string Key(IMap key)
 		{
-			return SerializeKey(key,"");
+			return Key(key,"");
 		}
-		private static string SerializeKey(IMap key,string indentation)
+		private static string Key(IMap key,string indentation)
 		{
 			string text;
 			if(key.IsString)
 			{
-				text=SerializeStringKey(key,indentation);
+				text=StringKey(key,indentation);
 			}
 			else if(key.IsInteger)
 			{
-				text=SerializeIntegerKey(key);
+				text=IntegerKey(key);
 			} 
 			else
 			{
-				text=SerializeMapKey(key,indentation);
+				text=MapKey(key,indentation);
 			}
 			return text;			
 		}
-		public static string SerializeValue(IMap val)
+		public static string Value(IMap val)
 		{
-			return SerializeValue(val,"");
+			return Value(val,"");
 		}
-		private static string SerializeValue(IMap val,string indentation)
+		private static string Value(IMap val,string indentation)
 		{
 			string text;
 			if(val.IsString)
 			{
-				text=SerializeStringValue(val,indentation);
+				text=StringValue(val,indentation);
 			}
 			else if(val.IsInteger)
 			{
-				text=SerializeIntegerValue(val);
+				text=IntegerValue(val);
 			}
 			else
 			{
-				text=SerializeMapValue(val,indentation);
+				text=MapValue(val,indentation);
 			}
 			return text;
 		}
-		private static string SerializeIntegerKey(IMap number)
+		private static string IntegerKey(IMap number)
 		{
 			return number.Integer.ToString();
 		}
-		private static string SerializeIntegerValue(IMap number)
+		private static string IntegerValue(IMap number)
 		{
 			return literalDelimiter+number.ToString()+literalDelimiter;
 		}
-		private static string SerializeStringKey(IMap key,string indentation)
+		private static string StringKey(IMap key,string indentation)
 		{
 			string text;
 			if(IsLiteralKey(key.String))
@@ -1540,11 +1541,11 @@ namespace Meta
 			}
 			else
 			{
-				text=leftBracket + SerializeStringValue(key,indentation) + rightBracket;
+				text=leftBracket + StringValue(key,indentation) + rightBracket;
 			}
 			return text;
 		}
-		private static string SerializeStringValue(IMap val,string indentation)
+		private static string StringValue(IMap val,string indentation)
 		{
 			string text;
 			if(Literal.Filter(val.String).IsString)
@@ -1590,21 +1591,21 @@ namespace Meta
 			}
 			else
 			{
-				text=SerializeMapValue(val,indentation);
+				text=MapValue(val,indentation);
 			}
 			return text;
 		}
 		// TODO: put this into another class
-		private static string SerializeMapKey(IMap map,string indentation)
+		private static string MapKey(IMap map,string indentation)
 		{
-			return indentation + leftBracket + newLine + SerializeMapValue(map,indentation) + rightBracket;
+			return indentation + leftBracket + newLine + MapValue(map,indentation) + rightBracket;
 		}
-		private static string SerializeMapValue(IMap map,string indentation)
+		private static string MapValue(IMap map,string indentation)
 		{
 			string text=newLine;
 			foreach(DictionaryEntry entry in map)
 			{
-				text+=indentation + SerializeKey((IMap)entry.Key,indentation)	+ "=" + SerializeValue((IMap)entry.Value,indentation+'\t');
+				text+=indentation + Key((IMap)entry.Key,indentation)	+ "=" + Value((IMap)entry.Value,indentation+'\t');
 				if(!text.EndsWith(newLine))
 				{
 					text+=newLine;
@@ -1682,10 +1683,10 @@ namespace Meta
 
 	public class NamespaceStrategy: NormalStrategy
 	{
-//		public override MapStrategy Clone()
-//		{
-//			return new NamespaceStrategy(FullName,cache,assemblies);
-//		}
+		public override MapStrategy Clone()
+		{
+			return new NamespaceStrategy(FullName,cache,namespaces,assemblies);
+		}
 
 		public override Integer Integer
 		{
@@ -1750,11 +1751,10 @@ namespace Meta
 			}
 		}
 		private string fullName;
-//		public void AddAssembly(Assembly assembly)
-//		{
-//			assemblies.Add(assembly);
-//		}
-		private ArrayList assemblies=new ArrayList();
+		private ArrayList assemblies;
+		private Hashtable namespaces;
+		private ListDictionary cache;
+
 		public ArrayList Assemblies
 		{
 			get
@@ -1769,18 +1769,18 @@ namespace Meta
 				return namespaces;
 			}
 		}
-		private Hashtable namespaces=new Hashtable();
-//		public Hashtable namespaces=new Hashtable();
-
 		public NamespaceStrategy(string fullName)
 		{
 			this.fullName=fullName;
+			this.assemblies=new ArrayList();
+			this.namespaces=new Hashtable();
 		}
-		public NamespaceStrategy(string fullName,ListDictionary cache,ArrayList assemblies)
+		public NamespaceStrategy(string fullName,ListDictionary cache,Hashtable namespaces,ArrayList assemblies)
 		{
 			this.fullName=fullName;
 			this.cache=cache;
 			this.assemblies=assemblies;
+			this.namespaces=namespaces;
 		}
 		public void Load()
 		{
@@ -1801,7 +1801,6 @@ namespace Meta
 				cache[new NormalMap((string)entry.Key)]=(IMap)entry.Value;
 			}
 		}
-		public ListDictionary cache;
 	}
 	public class Transform
 	{
