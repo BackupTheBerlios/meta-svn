@@ -1279,9 +1279,6 @@ namespace Meta
 			{
 				if(!assembly.FullName.StartsWith("Microsoft.mshtml"))
 				{
-//					CachedAssembly cachedAssembly=new CachedAssembly(assembly);
-//					CachedAssembly cachedAssembly=new CachedAssembly(assembly);
-
 					foreach(string namespaceName in NamespacesFromAssembly(assembly))
 					{
 						NamespaceStrategy currentNamespace=(NamespaceStrategy)rootNamespace.strategy;
@@ -1743,7 +1740,6 @@ namespace Meta
 					Load();
 				}
 				return new ArrayList(cache.Keys);
-//				return cache.Keys;
 			}
 		}
 		public override int Count
@@ -1762,95 +1758,20 @@ namespace Meta
 		{
 			cachedAssemblies.Add(assembly);
 		}
-//		public void AddAssembly(CachedAssembly assembly)
-//		{
-//			cachedAssemblies.Add(assembly);
-//		}
 		public ArrayList cachedAssemblies=new ArrayList();
 		public Hashtable namespaces=new Hashtable();
 
-		// TODO: actually use those arguments
 		public NamespaceStrategy(string fullName,Hashtable subNamespaces,ArrayList assemblies)
 		{
 			this.fullName=fullName;
 		}
-//
-//		public IMap LoadAssembly()
-//		{
-//			IMap root=new NormalMap();
-//			foreach(Type type in assembly.GetExportedTypes())
-//			{
-//				if(type.DeclaringType==null) 
-//				{
-//					IMap current=root;
-//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
-//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
-//					{
-//						if(!current.ContainsKey(subName)) 
-//						{
-//							current[subName]=new NormalMap();
-//						}
-//						current=current[subName];
-//					}
-//					current[type.Name]=new DotNetClass(type);
-//				}
-//			}
-//			Interpreter.loadedAssemblies.Add(assembly.Location);
-//			return root;
-//		}
-//
-//		public IMap NamespaceContents(string nameSpace)
-//		{
-//			if(assemblyContent==null)
-//			{
-//				assemblyContent=LoadAssembly();
-//			}
-//			IMap selected=assemblyContent;
-//			if(nameSpace!="")
-//			{
-//				foreach(string subString in nameSpace.Split('.'))
-//				{
-//					selected=selected[subString];
-//					//					selected=selected[new NormalMap(subString)];
-//				}
-//			}
-//			return selected.Clone();
-//			//			return selected;
-//		}
-
-//		public IMap LoadAssembly()
-//		{
-//			IMap root=new NormalMap();
-//			foreach(Type type in assembly.GetExportedTypes())
-//			{
-//				if(type.DeclaringType==null) 
-//				{
-//					IMap current=root;
-//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
-//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
-//					{
-//						if(!current.ContainsKey(subName)) 
-//						{
-//							current[subName]=new NormalMap();
-//						}
-//						current=current[subName];
-//					}
-//					current[type.Name]=new DotNetClass(type);
-//				}
-//			}
-//			Interpreter.loadedAssemblies.Add(assembly.Location);
-//			return root;
-//		}
-
 		// TODO: use null for root namespace
 		public IMap LoadAssembly(Assembly assembly,string nameSpace)
-//			public IMap LoadAssembly(Assembly assembly)
 		{
 			IMap root=new NormalMap();
 			foreach(Type type in assembly.GetExportedTypes())
 			{
 				if(type.DeclaringType==null && ((type.Namespace==null && nameSpace=="") || (nameSpace!="" && type.Namespace.StartsWith(nameSpace)))) 
-//				if(type.DeclaringType==null) 
 				{
 					IMap current=root;
 					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
@@ -1869,33 +1790,21 @@ namespace Meta
 			return root;
 		}
 		public IMap NamespaceContents(Assembly assembly,string nameSpace)
-		{
-//		{
-//			if(assemblyContent==null)
-//			{
-//				assemblyContent=LoadAssembly();
-//			}
-			
+		{			
 			IMap assemblyContent=LoadAssembly(assembly,nameSpace);
-//			IMap assemblyContent=LoadAssembly(assembly);
-			//			IMap assemblyContent=LoadAssembly();
 			IMap selected=assemblyContent;
 			if(nameSpace!="")
 			{
 				foreach(string subString in nameSpace.Split('.'))
 				{
 					selected=selected[subString];
-					//					selected=selected[new NormalMap(subString)];
 				}
 			}
 			return selected.Clone();
-			//			return selected;
 		}
 		public void Load()
 		{
 			cache=new ListDictionary();
-//			cache=new NameValueCollection();
-			//			cache=new NormalMap();
 			foreach(Assembly cachedAssembly in cachedAssemblies)
 			{
 				foreach(DictionaryEntry entry in NamespaceContents(cachedAssembly,fullName))
@@ -1903,33 +1812,12 @@ namespace Meta
 					cache[entry.Key]=entry.Value;
 				}
 			}
-//			//			cache=new NormalMap();
-//			foreach(CachedAssembly cachedAssembly in cachedAssemblies)
-//			{
-//				foreach(DictionaryEntry entry in cachedAssembly.NamespaceContents(fullName))
-//				{
-//					cache[entry.Key]=entry.Value;
-//				}
-//			}
 			foreach(DictionaryEntry entry in namespaces)
 			{
 				cache[new NormalMap((string)entry.Key)]=(IMap)entry.Value;
 			}
 		}
-//		public void Load()
-//		{
-//			cache=new NormalMap();
-//			foreach(CachedAssembly cachedAssembly in cachedAssemblies)
-//			{
-//				cache=Interpreter.Merge(cache,cachedAssembly.NamespaceContents(fullName));
-//			}
-//			foreach(DictionaryEntry entry in namespaces)
-//			{
-//				cache[new NormalMap((string)entry.Key)]=(IMap)entry.Value;
-//			}
-//		}
 		public ListDictionary cache;
-//		public IMap cache;
 		public override bool ContainsKey(IMap key)
 		{
 			if(cache==null)
@@ -1937,89 +1825,8 @@ namespace Meta
 				Load();
 			}
 			return cache.Contains(key);
-//			return cache.ContainsKey(key);
-			//			return cache.ContainsKey(key);
 		}
 	}
-	// TODO: remove this class completely, doesnt make sense to cache that stuff, not at all
-	// at least i havent got any numbers indicating this, rather the contrary
-//	public class CachedAssembly
-//	{
-//		// TODO: refactor
-////		public IMap NamespaceContents(string nameSpace)
-////		{
-////			IMap root=new NormalMap();
-////			foreach(Type type in assembly.GetExportedTypes())
-////			{
-////				if(type.DeclaringType==null && type.FullName.StartsWith(nameSpace)) 
-////				{
-////					IMap current=root;
-////					string restName=type.FullName.Remove(0,nameSpace.Length);
-////					ArrayList subNames=new ArrayList(restName.Split('.'));
-////					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
-////					{
-////						if(!current.ContainsKey(subName))
-////						{
-////							current[subName]=new NormalMap();
-////						}
-////						current=current[subName];
-////					}
-////					current[type.Name]=new DotNetClass(type);
-////				}
-////			}
-////			Interpreter.loadedAssemblies.Add(assembly.Location);
-////			return root;
-////		}
-//
-//		public IMap LoadAssembly()
-//		{
-//			IMap root=new NormalMap();
-//			foreach(Type type in assembly.GetExportedTypes())
-//			{
-//				if(type.DeclaringType==null) 
-//				{
-//					IMap current=root;
-//					ArrayList subNames=new ArrayList(type.FullName.Split('.'));
-//					foreach(string subName in subNames.GetRange(0,subNames.Count-1)) 
-//					{
-//						if(!current.ContainsKey(subName)) 
-//						{
-//							current[subName]=new NormalMap();
-//						}
-//						current=current[subName];
-//					}
-//					current[type.Name]=new DotNetClass(type);
-//				}
-//			}
-//			Interpreter.loadedAssemblies.Add(assembly.Location);
-//			return root;
-//		}
-//		private Assembly assembly;
-//		public CachedAssembly(Assembly assembly)
-//		{
-//			this.assembly=assembly;
-//		}
-//
-//		public IMap NamespaceContents(string nameSpace)
-//		{
-//			if(assemblyContent==null)
-//			{
-//				assemblyContent=LoadAssembly();
-//			}
-//			IMap selected=assemblyContent;
-//			if(nameSpace!="")
-//			{
-//				foreach(string subString in nameSpace.Split('.'))
-//				{
-//					selected=selected[subString];
-////					selected=selected[new NormalMap(subString)];
-//				}
-//			}
-//			return selected.Clone();
-////			return selected;
-//		}
-//		private IMap assemblyContent;
-//	}
 	public class Transform
 	{
 		public static object ToDotNet(IMap meta) 
@@ -2859,27 +2666,14 @@ namespace Meta
 				return keys;
 			}
 		}
-//		public override ArrayList Keys
-//		{
-//			get
-//			{
-//				return keys;
-//			}
-//		}
-//		private ArrayList keys=new ArrayList();
 		private string text;
 		public StringStrategy(StringStrategy clone)
 		{
 			this.text=clone.text;
-//			this.keys=(ArrayList)clone.keys.Clone();
 		}
 		public StringStrategy(string text)
 		{
 			this.text=text;
-//			for(int i=1;i<=text.Length;i++)
-//			{ 
-//				keys.Add(new NormalMap(new Integer(i)));			
-//			}
 		}
 		public override int Count
 		{
