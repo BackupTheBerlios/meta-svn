@@ -77,7 +77,8 @@ namespace Meta
 			{
 				breakPoint=value;
 			}
-		}// TODO: rename all the debugging stuff
+		}
+		// TODO: refactor the debugging stuff
 		private static BreakPoint breakPoint;
 
 		public virtual bool Stop() // TODO: refactor
@@ -868,6 +869,7 @@ namespace Meta
 		{
 			get
 			{
+//				return IsInteger && this.ContainsKey(NumberKeys.Denominator) && this[NumberKeys.Denominator].IsInteger;
 				return this.ContainsKey(NumberKeys.Numerator) && this[NumberKeys.Numerator].IsInteger && this.ContainsKey(NumberKeys.Denominator) && this[NumberKeys.Denominator].IsInteger;
 			}
 		}

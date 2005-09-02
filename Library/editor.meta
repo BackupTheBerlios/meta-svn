@@ -85,9 +85,27 @@ commands=
 				editBox.RealLine
 				editBox.Column
 		Meta.Interpreter.ReverseDebug""
+modifierKeys=
+	AltControl=bitwise.Or
+		Keys.Alt
+		Keys.Control
+	AltShift=bitwise.Or
+		Keys.Alt
+		Keys.Shift
+	AltControlShift=bitwise.Or
+		Keys.Alt
+		Keys.Control
+		Keys.Shift
+	ControlShift=bitwise.Or
+		Keys.Control
+		Keys.Shift
 keyBindings=
 	[Keys.Escape]=!editBox.StopInteractiveSearch""
 	[Keys.F5]=!commands.Run""
+	[Keys.Control]=
+		[Keys.S]=!commands.Save""
+		[Keys.I]=!editBox.StartInteractiveSearch""
+		[Keys.F]=!editBox.FindAndReplace""
 	[Keys.Alt]=
 		[Keys.K]=!editBox.MoveLineDown""
 		[Keys.L]=!editBox.MoveLineUp""
@@ -95,25 +113,14 @@ keyBindings=
 		[Keys.J]=!editBox.MoveCharLeft""
 		[Keys.U]=!editBox.MoveLineStart""
 		[Keys.OemSemicolon]=!editBox.MoveLineEnd""
-	[bitwise.Or
-		Keys.Alt
-		Keys.Control
-	]=
+	[modifierKeys.AltControl]=
 		[Keys.J]=!editBox.MoveWordLeft""
 		[Keys.Oemtilde]=!editBox.MoveWordRight""
-	[bitwise.Or
-		Keys.Alt
-		Keys.Control
-		Keys.Shift
-	]=
+	[modifierKeys.AltControlShift]=
 		[Keys.J]=!editBox.SelectWordLeft""
 		[Keys.Oemtilde]=!editBox.SelectWordRight""
 		[Keys.K]=!editBox.SelectLineUp""
 		[Keys.J]=!editBox.SelectLineDown""
-	[Keys.Control]=
-		[Keys.S]=!commands.Save""
-		[Keys.I]=!editBox.StartInteractiveSearch""
-		[Keys.F]=!editBox.FindAndReplace""
 editBox=
 	editBox=ScrollingTextBox""
 	editBox.ShowSelectionMargin="1"
@@ -142,9 +149,6 @@ editBox=
 						e.KeyCode
 					then=!keyBindings.[e.KeyCode]""
 	this=editBox
-	//SetText=!
-	//	dotNet.Text:arg
-//editBox=EditBox""
 form=
 	form=Form""
 	form.Text="Meta Edit"

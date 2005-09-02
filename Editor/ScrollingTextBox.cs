@@ -69,7 +69,6 @@ public class ScrollingTextBox: RichTextBox
 		this.WordWrap = false;
 		this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ScrollingTextBox_KeyDown);
 		this.Resize += new System.EventHandler(this.ScrollingTextBox_Resize);
-		this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScrollingTextBox_MouseDown);
 		this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ScrollingTextBox_KeyPress);
 		this.TextChanged += new System.EventHandler(this.ScrollingTextBox_TextChanged);
 		this.Layout += new System.Windows.Forms.LayoutEventHandler(this.ScrollingTextBox_Layout);
@@ -342,6 +341,8 @@ public class ScrollingTextBox: RichTextBox
 	{
 		return index+emptyLines.Length;
 	}
+
+
 	public void MoveDocumentEnd()
 	{
 		SelectionStart=IndexFromRealIndex(RealText.Length-1);
@@ -360,14 +361,6 @@ public class ScrollingTextBox: RichTextBox
 	{
 		Select(SelectionStart,1);
 		SelectedText="";
-	}
-
-	private void ScrollingTextBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e) 
-	{
-		if(e.Delta!=0) 
-		{
-			int asdf=0;
-		}
 	}
 	public void MoveLineEnd()
 	{
