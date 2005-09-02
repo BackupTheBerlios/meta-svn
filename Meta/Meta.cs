@@ -61,7 +61,7 @@ namespace Meta
 	public class NumberKeys
 	{
 		public static readonly IMap Denominator="denominator";
-		public static readonly IMap Numerator="numerator";
+		public static readonly IMap Numerator="numerator"; // TODO: get rid of this
 		public static readonly IMap Negative="negative";
 		public static readonly IMap EmptyMap=new NormalMap();
 	}

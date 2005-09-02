@@ -143,47 +143,34 @@ EditBox=!
 							then=!keyBindings.[e.KeyCode]""
 	SetText=!
 		dotNet.Text:arg
-Window=!
-	dotNet=Form""
-	dotNet.Text=arg.title
-	dotNet.Font=arg.font
-	controls=arg.controls
-	dotNet.Controls.AddRange Apply
-		!arg.value.dotNet
-		arg.controls
-	dotNet.WindowState=arg.WindowState
-	InitSubMenuItem=!Init
-		MenuItem""
-		=
-			Text=arg.key
-			Click=arg.value
-	InitMenuItem=!
-		menuItem=MenuItem 
-			arg.key
-			Apply
-				InitSubMenuItem
-				arg.value
-		this=menuItem
-	dotNet.Menu=MainMenu Apply
-		InitMenuItem
-		arg.menu
 editBox=EditBox""
-window=Window
-	title="Meta EditBox"
+form=
+	form=Form""
+	form.Text="Meta Edit"
+	form.Font=Font
+		"Courier New"
+		"10"
+	//form.Controls.Add
+	//	editBox
+	form.WindowState=FormWindowState.Maximized
 	menu=
 		File=
 			["Open..."]=commands.OpenFile
 			["Save"]=commands.Save
 			["Save as..."]=commands.SaveAs
-			["Close"]=!window.dotNet.Close""
+			["Close"]=!form.Close""
 		Program=
 			Start=RunProgram
 			Continue=ContinueProgram
 			Reverse=ReverseProgram
-	font=Font
-		"Courier New"
-		"10"
-	WindowState=FormWindowState.Maximized
-	controls=
-		editBox
-window.dotNet.ShowDialog""
+	form.Menu=MainMenu Apply
+		!MenuItem 
+			arg.key
+			Apply
+				!MenuItem
+					arg.key
+					arg.value
+				arg.value
+		menu
+	this=form
+form.ShowDialog""
