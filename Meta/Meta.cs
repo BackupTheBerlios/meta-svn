@@ -768,6 +768,13 @@ namespace Meta
 	}
 	public abstract class IMap: ICallable, IEnumerable
 	{	
+		public bool IsFunction
+		{
+			get
+			{
+				return ContainsKey(CodeKeys.Run);
+			}
+		}
 		public static implicit operator IMap(bool boolean)
 		{
 			return new NormalMap(new Integer(boolean?1:0));
@@ -1830,7 +1837,7 @@ namespace Meta
 		{
 			object dotNet=null;
 			if((target.IsSubclassOf(typeof(Delegate))
-				||target.Equals(typeof(Delegate))))
+				||target.Equals(typeof(Delegate)))&& meta.IsFunction) // TODO: why Equals(typeof(Delegate))
 			{
 				MethodInfo invoke=target.GetMethod("Invoke",BindingFlags.Instance
 					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
@@ -2175,9 +2182,13 @@ namespace Meta
 		}
 		public override IMap Call(IMap argument)
 		{
+			if(this.targetType!=null && this.targetType.Name=="MenuItem" && argument.Array.Count==2)
+			{
+				int asdf=0;
+			}
 			object result=null;
 
-			ArrayList oneArgumentMethods=new ArrayList();
+			ArrayList oneArgumentMethods=new ArrayList();// TODO: remove this
 			foreach(MethodBase method in overloadedMethods)
 			{
 				if(method.GetParameters().Length==1)
@@ -2375,7 +2386,7 @@ namespace Meta
 		}
 		private string name;
 		protected object target;
-		protected Type targetType;
+		protected Type targetType; // TODO: rename
 
 		public MethodBase[] overloadedMethods;
 	}

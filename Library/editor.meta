@@ -7,113 +7,112 @@ this=map.Merge
 	System.IO
 	System.Windows.Forms
 	System.Drawing
-ChooseOpenFile=!
-	dialog=OpenFileDialog""
-	dialog.ShowDialog""
-	this=dialog.FileName
-ChooseSaveFile=!
-	dialog=SaveFileDialog""
-	dialog.ShowDialog""
-	this=dialog.FileName
-SaveAs=!
-	SaveAsFileName=ChooseSaveFile""
-	If
-		Not Equal
-			SaveAsFileName
-			""
-		then=!
-			fileName:SaveAsFileName
-			WriteFile
-				fileName
-				editor.dotNet.RealText
-WriteFile=!
-	writer=StreamWriter arg.1
-	writer.Write arg.2
-	writer.Close""
+choose=
+	OpenFile=!
+		dialog=OpenFileDialog""
+		dialog.ShowDialog""
+		this=dialog.FileName
+	SaveFile=!
+		dialog=SaveFileDialog""
+		dialog.ShowDialog""
+		this=dialog.FileName
+file=
+	Write=!
+		writer=StreamWriter arg.1
+		writer.Write arg.2
+		writer.Close""
+	Read=!
+		reader=StreamReader arg
+		result=reader.ReadToEnd""
+		reader.Close""
+		this=result
 fileName=""
-Save=!If
-	Equal
-		fileName
-		""
-	then=!SaveAs""
-	else=!WriteFile
-		fileName
-		editor.dotNet.RealText
-ReadFile=!
-	reader=StreamReader arg
-	result=reader.ReadToEnd""
-	reader.Close""
-	this=result
-OpenFile=!
-	openFileName=ChooseOpenFile""
-	If
-		Not Equal
-			openFileName
+commands=
+	SaveAs=!
+		saveAs=choose.SaveFile""
+		If
+			Not Equal
+				saveAs
+				""
+			then=!
+				fileName:saveAs
+				file.Write
+					fileName
+					editBox.dotNet.RealText
+	Save=!If
+		Equal
+			fileName
 			""
-		then=!
-			fileName:openFileName
-			editor.dotNet.RealText:ReadFile fileName
+		then=!commands.SaveAs""
+		else=!file.Write
+			fileName
+			editBox.dotNet.RealText
+	OpenFile=!
+		openFileName=choose.OpenFile""
+		If
+			Not Equal
+				openFileName
+				""
+			then=!
+				fileName:openFileName
+				editBox.dotNet.RealText:file.Read fileName
 keyBindings=
-	[Keys.Escape]=!editor.dotNet.StopInteractiveSearch""
+	[Keys.Escape]=!editBox.dotNet.StopInteractiveSearch""
 	[Keys.Alt]=
-		[Keys.K]=!editor.dotNet.MoveLineDown""
-		[Keys.L]=!editor.dotNet.MoveLineUp""
-		[Keys.Oemtilde]=!editor.dotNet.MoveCharRight""
-		[Keys.J]=!editor.dotNet.MoveCharLeft""
-	[BitwiseOr
+		[Keys.K]=!editBox.dotNet.MoveLineDown""
+		[Keys.L]=!editBox.dotNet.MoveLineUp""
+		[Keys.Oemtilde]=!editBox.dotNet.MoveCharRight""
+		[Keys.J]=!editBox.dotNet.MoveCharLeft""
+	[bitwise.Or
 		Keys.Alt
 		Keys.Control
 	]=
-		[Keys.J]=!editor.dotNet.MoveWordLeft""
-		[Keys.Oemtilde]=!editor.dotNet.MoveWordRight""
-	[BitwiseOr
+		[Keys.J]=!editBox.dotNet.MoveWordLeft""
+		[Keys.Oemtilde]=!editBox.dotNet.MoveWordRight""
+	[bitwise.Or
 		Keys.Alt
 		Keys.Control
 		Keys.Shift
 	]=
-		[Keys.J]=!editor.dotNet.SelectWordLeft""
-		[Keys.Oemtilde]=!editor.dotNet.SelectWordRight""
-		[Keys.K]=!editor.dotNet.SelectLineUp""
-		[Keys.J]=!editor.dotNet.SelectLineDown""
+		[Keys.J]=!editBox.dotNet.SelectWordLeft""
+		[Keys.Oemtilde]=!editBox.dotNet.SelectWordRight""
+		[Keys.K]=!editBox.dotNet.SelectLineUp""
+		[Keys.J]=!editBox.dotNet.SelectLineDown""
 	[Keys.F5]=!RunProgram""
 	[Keys.Control]=
-		[Keys.S]=!Save""
-		[Keys.I]=!editor.dotNet.StartInteractiveSearch""
-		[Keys.F]=!editor.dotNet.FindAndReplace""
+		[Keys.S]=!commands.Save""
+		[Keys.I]=!editBox.dotNet.StartInteractiveSearch""
+		[Keys.F]=!editBox.dotNet.FindAndReplace""
 RunProgram=!
-	Save""
-	// use fileName here
-	System.Console.WriteLine editor.dotNet.RealLine
-	System.Console.WriteLine editor.dotNet.Column
+	commands.Save""
 	Meta.Expression.BreakPoint:Meta.BreakPoint
-		//"c:\_projectsupportmaterial\meta\editor\editor.meta"
 		fileName
 		Meta.Position
-			editor.dotNet.RealLine
-			editor.dotNet.Column
-	Meta.Interpreter.DebugBreak:!editor.dotNet.ShowDebugValue Meta.Interpreter.DebugValue
+			editBox.dotNet.RealLine
+			editBox.dotNet.Column
+	Meta.Interpreter.DebugBreak:!editBox.dotNet.ShowDebugValue Meta.Interpreter.DebugValue
 	Meta.Interpreter.StartDebug fileName
 ContinueProgram=!
 	// factor out the setting of the breakpoint
-	System.Console.WriteLine editor.dotNet.RealLine
-	System.Console.WriteLine editor.dotNet.Column
+	System.Console.WriteLine editBox.dotNet.RealLine
+	System.Console.WriteLine editBox.dotNet.Column
 	Meta.Expression.BreakPoint:Meta.BreakPoint
 		fileName
 		Meta.Position
-			editor.dotNet.RealLine
-			editor.dotNet.Column
+			editBox.dotNet.RealLine
+			editBox.dotNet.Column
 	Meta.Interpreter.ContinueDebug""
 ReverseProgram=!
 	// factor out the setting of the breakpoint
-	System.Console.WriteLine editor.dotNet.RealLine
-	System.Console.WriteLine editor.dotNet.Column
+	System.Console.WriteLine editBox.dotNet.RealLine
+	System.Console.WriteLine editBox.dotNet.Column
 	Meta.Expression.BreakPoint:Meta.BreakPoint
 		fileName
 		Meta.Position
-			editor.dotNet.RealLine
-			editor.dotNet.Column
+			editBox.dotNet.RealLine
+			editBox.dotNet.Column
 	Meta.Interpreter.ReverseDebug""
-Editor=!
+EditBox=!
 	dotNet=Init
 		ScrollingTextBox""
 		=
@@ -145,48 +144,38 @@ Editor=!
 	SetText=!
 		dotNet.Text:arg
 Window=!
-	form=Form""
-	form.Text=arg.title
-	form.Font=arg.font
-	dotNets=arg.dotNets
-	form.Controls.AddRange Apply
+	dotNet=Form""
+	dotNet.Text=arg.title
+	dotNet.Font=arg.font
+	controls=arg.controls
+	dotNet.Controls.AddRange Apply
 		!arg.value.dotNet
-		arg.dotNets
-	form.WindowState=arg.WindowState
+		arg.controls
+	dotNet.WindowState=arg.WindowState
 	InitSubMenuItem=!Init
 		MenuItem""
 		=
 			Text=arg.key
 			Click=arg.value
 	InitMenuItem=!
-		menuItem=MenuItem""
-		menuItem.Text=arg.key
-		menuItem.MenuItems.AddRange Apply
-			InitSubMenuItem
-			arg.value
+		menuItem=MenuItem 
+			arg.key
+			Apply
+				InitSubMenuItem
+				arg.value
 		this=menuItem
-	// TODO: refactor this, use constructor
-	form.Menu=
-		menu=MainMenu""
-		menu.MenuItems.AddRange Apply
-			InitMenuItem
-			arg.menu
-		this=menu
-	Show=!
-		form.ShowDialog""
-	Close=!form.Close""
-editor=Editor""
-// rename this to something less stupid
-abc="5"
-abc="x"
+	dotNet.Menu=MainMenu Apply
+		InitMenuItem
+		arg.menu
+editBox=EditBox""
 window=Window
-	title="Meta Editor"
+	title="Meta EditBox"
 	menu=
 		File=
-			["Open..."]=!OpenFile""
-			["Save"]=Save
-			["Save as..."]=SaveAs
-			["Close"]=!window.Close""
+			["Open..."]=commands.OpenFile
+			["Save"]=commands.Save
+			["Save as..."]=commands.SaveAs
+			["Close"]=!window.dotNet.Close""
 		Program=
 			Start=RunProgram
 			Continue=ContinueProgram
@@ -194,10 +183,7 @@ window=Window
 	font=Font
 		"Courier New"
 		"10"
-	opacity=
-		numerator="10"
-		denominator="10"
 	WindowState=FormWindowState.Maximized
-	dotNets=
-		editor
-window.Show""
+	controls=
+		editBox
+window.dotNet.ShowDialog""

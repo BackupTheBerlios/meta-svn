@@ -210,6 +210,18 @@ public class math
 	{
 		return x.Integer>y.Integer;
 	}
+	public class bitwise
+	{
+		public static NormalMap Or(params NormalMap[] integers)
+		{
+			Integer result=new Integer(0);
+			foreach(NormalMap i in integers)
+			{
+				result|=i.Integer;
+			}
+			return new NormalMap(result);
+		}	
+	}
 	public static NormalMap BitwiseOr(params NormalMap[] integers)
 	{
 		Integer result=new Integer(0);
