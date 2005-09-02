@@ -208,7 +208,8 @@ public class ScrollingTextBox: RichTextBox
 		}
 		public void Find()
 		{
-			int start=textBox.SelectionStart+1;
+			int start=textBox.SelectionStart;
+//			int start=textBox.SelectionStart+1;
 			if(textBox.Find(text,start,RichTextBoxFinds.None)==-1)
 			{
 				textBox.Find(text,0,RichTextBoxFinds.None);
@@ -288,6 +289,7 @@ public class ScrollingTextBox: RichTextBox
 	}
 	public void StopInteractiveSearch()
 	{
+		this.Cursor=Cursors.Default;
 		interactiveSearch.Stop();
 	}
 
@@ -439,10 +441,12 @@ public class ScrollingTextBox: RichTextBox
 	{
 		if(interactiveSearch.Active)
 		{
+			SelectionStart++;
 			interactiveSearch.Find();
 		}
 		else
 		{
+			this.Cursor=Cursors.PanSouth;
 			interactiveSearch.Start();
 		}
 	}

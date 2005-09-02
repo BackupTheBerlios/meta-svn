@@ -2182,6 +2182,10 @@ namespace Meta
 		}
 		public override IMap Call(IMap argument)
 		{
+			if(this.name=="AddRange")
+			{
+				int asdf=0;
+			}
 			if(this.targetType!=null && this.targetType.Name=="MenuItem" && argument.Array.Count==2)
 			{
 				int asdf=0;

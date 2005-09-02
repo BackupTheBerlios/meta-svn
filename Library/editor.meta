@@ -38,7 +38,7 @@ commands=
 				fileName:saveAs
 				file.Write
 					fileName
-					editBox.dotNet.RealText
+					editBox.RealText
 	Save=!If
 		Equal
 			fileName
@@ -46,8 +46,8 @@ commands=
 		then=!commands.SaveAs""
 		else=!file.Write
 			fileName
-			editBox.dotNet.RealText
-	OpenFile=!
+			editBox.RealText
+	Open=!
 		openFileName=choose.OpenFile""
 		If
 			Not Equal
@@ -55,114 +55,113 @@ commands=
 				""
 			then=!
 				fileName:openFileName
-				editBox.dotNet.RealText:file.Read fileName
+				editBox.RealText:file.Read fileName
+	Run=!
+		commands.Save""
+		Meta.Expression.BreakPoint:Meta.BreakPoint
+			fileName
+			Meta.Position
+				editBox.RealLine
+				editBox.Column
+		Meta.Interpreter.DebugBreak:!editBox.ShowDebugValue Meta.Interpreter.DebugValue
+		Meta.Interpreter.StartDebug fileName
+	Continue=!
+		// factor out the setting of the breakpoint
+		System.Console.WriteLine editBox.RealLine
+		System.Console.WriteLine editBox.Column
+		Meta.Expression.BreakPoint:Meta.BreakPoint
+			fileName
+			Meta.Position
+				editBox.RealLine
+				editBox.Column
+		Meta.Interpreter.ContinueDebug""
+	Reverse=!
+		// factor out the setting of the breakpoint
+		System.Console.WriteLine editBox.RealLine
+		System.Console.WriteLine editBox.Column
+		Meta.Expression.BreakPoint:Meta.BreakPoint
+			fileName
+			Meta.Position
+				editBox.RealLine
+				editBox.Column
+		Meta.Interpreter.ReverseDebug""
 keyBindings=
-	[Keys.Escape]=!editBox.dotNet.StopInteractiveSearch""
+	[Keys.Escape]=!editBox.StopInteractiveSearch""
+	[Keys.F5]=!commands.Run""
 	[Keys.Alt]=
-		[Keys.K]=!editBox.dotNet.MoveLineDown""
-		[Keys.L]=!editBox.dotNet.MoveLineUp""
-		[Keys.Oemtilde]=!editBox.dotNet.MoveCharRight""
-		[Keys.J]=!editBox.dotNet.MoveCharLeft""
+		[Keys.K]=!editBox.MoveLineDown""
+		[Keys.L]=!editBox.MoveLineUp""
+		[Keys.Oemtilde]=!editBox.MoveCharRight""
+		[Keys.J]=!editBox.MoveCharLeft""
 	[bitwise.Or
 		Keys.Alt
 		Keys.Control
 	]=
-		[Keys.J]=!editBox.dotNet.MoveWordLeft""
-		[Keys.Oemtilde]=!editBox.dotNet.MoveWordRight""
+		[Keys.J]=!editBox.MoveWordLeft""
+		[Keys.Oemtilde]=!editBox.MoveWordRight""
 	[bitwise.Or
 		Keys.Alt
 		Keys.Control
 		Keys.Shift
 	]=
-		[Keys.J]=!editBox.dotNet.SelectWordLeft""
-		[Keys.Oemtilde]=!editBox.dotNet.SelectWordRight""
-		[Keys.K]=!editBox.dotNet.SelectLineUp""
-		[Keys.J]=!editBox.dotNet.SelectLineDown""
-	[Keys.F5]=!RunProgram""
+		[Keys.J]=!editBox.SelectWordLeft""
+		[Keys.Oemtilde]=!editBox.SelectWordRight""
+		[Keys.K]=!editBox.SelectLineUp""
+		[Keys.J]=!editBox.SelectLineDown""
 	[Keys.Control]=
 		[Keys.S]=!commands.Save""
-		[Keys.I]=!editBox.dotNet.StartInteractiveSearch""
-		[Keys.F]=!editBox.dotNet.FindAndReplace""
-RunProgram=!
-	commands.Save""
-	Meta.Expression.BreakPoint:Meta.BreakPoint
-		fileName
-		Meta.Position
-			editBox.dotNet.RealLine
-			editBox.dotNet.Column
-	Meta.Interpreter.DebugBreak:!editBox.dotNet.ShowDebugValue Meta.Interpreter.DebugValue
-	Meta.Interpreter.StartDebug fileName
-ContinueProgram=!
-	// factor out the setting of the breakpoint
-	System.Console.WriteLine editBox.dotNet.RealLine
-	System.Console.WriteLine editBox.dotNet.Column
-	Meta.Expression.BreakPoint:Meta.BreakPoint
-		fileName
-		Meta.Position
-			editBox.dotNet.RealLine
-			editBox.dotNet.Column
-	Meta.Interpreter.ContinueDebug""
-ReverseProgram=!
-	// factor out the setting of the breakpoint
-	System.Console.WriteLine editBox.dotNet.RealLine
-	System.Console.WriteLine editBox.dotNet.Column
-	Meta.Expression.BreakPoint:Meta.BreakPoint
-		fileName
-		Meta.Position
-			editBox.dotNet.RealLine
-			editBox.dotNet.Column
-	Meta.Interpreter.ReverseDebug""
-EditBox=!
-	dotNet=Init
-		ScrollingTextBox""
-		=
-			ShowSelectionMargin="1"
-			AcceptsTab="1"
-			Dock=DockStyle.Fill
-			ScrollBars=RichTextBoxScrollBars.ForcedBoth
-			KeyDown=!
-				e=arg.2
-				// maybe this should be the other way round ???
+		[Keys.I]=!editBox.StartInteractiveSearch""
+		[Keys.F]=!editBox.FindAndReplace""
+editBox=
+	editBox=ScrollingTextBox""
+	editBox.ShowSelectionMargin="1"
+	editBox.AcceptsTab="1"
+	editBox.Dock=DockStyle.Fill
+	editBox.ScrollBars=RichTextBoxScrollBars.ForcedBoth
+	editBox.KeyDown=!
+		e=arg.2
+		// maybe this should be the other way round ???
+		If
+			ContainsKey
+				keyBindings
+				e.Modifiers
+			then=!
+				subKey=keyBindings.[e.Modifiers]
+				If
+					ContainsKey
+						subKey
+						e.KeyCode
+					then=!
+						subKey.[e.KeyCode]""
+			else=!
 				If
 					ContainsKey
 						keyBindings
-						e.Modifiers
-					then=!
-						subKey=keyBindings.[e.Modifiers]
-						If
-							ContainsKey
-								subKey
-								e.KeyCode
-							then=!
-								subKey.[e.KeyCode]""
-					else=!
-						If
-							ContainsKey
-								keyBindings
-								e.KeyCode
-							then=!keyBindings.[e.KeyCode]""
-	SetText=!
-		dotNet.Text:arg
-editBox=EditBox""
+						e.KeyCode
+					then=!keyBindings.[e.KeyCode]""
+	this=editBox
+	//SetText=!
+	//	dotNet.Text:arg
+//editBox=EditBox""
 form=
 	form=Form""
 	form.Text="Meta Edit"
 	form.Font=Font
 		"Courier New"
 		"10"
-	//form.Controls.Add
-	//	editBox
+	form.Controls.AddRange
+		editBox
 	form.WindowState=FormWindowState.Maximized
 	menu=
 		File=
-			["Open..."]=commands.OpenFile
+			["Open..."]=commands.Open
 			["Save"]=commands.Save
 			["Save as..."]=commands.SaveAs
 			["Close"]=!form.Close""
 		Program=
-			Start=RunProgram
-			Continue=ContinueProgram
-			Reverse=ReverseProgram
+			Start=commands.Run
+			Continue=commands.Continue
+			Reverse=commands.Reverse
 	form.Menu=MainMenu Apply
 		!MenuItem 
 			arg.key
