@@ -19,9 +19,9 @@ public class ScrollingTextBox: RichTextBox
 		this.HorzScrollValueChanged+=new ScrollEventHandler(ScrollingTextBox_HorzScrollValueChanged);
 		this.VertScrollValueChanged+=new ScrollEventHandler(ScrollingTextBox_VertScrollValueChanged);
 		this.replace=new FindAndReplace(this);
-		keyBindings[Keys.Control|Keys.I]=new Function(StartInteractiveSearch);
-		keyBindings[Keys.Alt|Keys.X]=new Function(Test);
-		keyBindings[Keys.Escape]=new Function(StopInteractiveSearch);
+//		keyBindings[Keys.Control|Keys.I]=new Function(StartInteractiveSearch);
+//		keyBindings[Keys.Alt|Keys.X]=new Function(Test);
+//		keyBindings[Keys.Escape]=new Function(StopInteractiveSearch);
 		for(int i=0;i<25;i++)
 		{
 			emptyLines+="\n";
@@ -31,10 +31,10 @@ public class ScrollingTextBox: RichTextBox
 		timer.Tick+=new EventHandler(timer_Tick);
 		timer.Start();
 	}
-	public void Test()
-	{
-		DrawValue(new Rectangle(400,400,100,100),"hello, everybody, clap your hands!!!!!!!!!!!!!!");
-	}
+//	public void Test()
+//	{
+//		DrawValue(new Rectangle(400,400,100,100),"hello, everybody, clap your hands!!!!!!!!!!!!!!");
+//	}
 	public void DrawValue(Rectangle rectangle,string text)
 	{
 		Graphics graphics=this.CreateGraphics();
@@ -97,18 +97,18 @@ public class ScrollingTextBox: RichTextBox
 	// copied from: http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/horizontalThread/b142ab4621009180/2d7ab486ca1f4d43?q=richtextbox+scrolling&rnum=8&hl=en#2d7ab486ca1f4d43
 	const int WM_VSCROLL = 0x0115;
 	const int WM_MOUSEWHEEL = 0x020a;
-	readonly IntPtr SB_LINEUP = new IntPtr( 0 );
-	readonly IntPtr SB_LINEDOWN = new IntPtr( 1 );
-	readonly IntPtr SB_PAGEUP = new IntPtr( 2 );
-	readonly IntPtr SB_PAGEDOWN = new IntPtr( 3 );
-	readonly IntPtr SB_TOP = new IntPtr( 6 );
-	readonly IntPtr SB_BOTTOM = new IntPtr( 7 );
+//	readonly IntPtr SB_LINEUP = new IntPtr( 0 );
+//	readonly IntPtr SB_LINEDOWN = new IntPtr( 1 );
+//	readonly IntPtr SB_PAGEUP = new IntPtr( 2 );
+//	readonly IntPtr SB_PAGEDOWN = new IntPtr( 3 );
+//	readonly IntPtr SB_TOP = new IntPtr( 6 );
+//	readonly IntPtr SB_BOTTOM = new IntPtr( 7 );
 
 	const int WM_HSCROLL = 0x0114;
-	readonly IntPtr SB_LINELEFT = new IntPtr( 0 );
-	readonly IntPtr SB_LINERIGHT = new IntPtr( 1 );
-	readonly IntPtr SB_LEFT = new IntPtr( 6 );
-	readonly IntPtr SB_RIGHT = new IntPtr( 7 );
+//	readonly IntPtr SB_LINELEFT = new IntPtr( 0 );
+//	readonly IntPtr SB_LINERIGHT = new IntPtr( 1 );
+//	readonly IntPtr SB_LEFT = new IntPtr( 6 );
+//	readonly IntPtr SB_RIGHT = new IntPtr( 7 );
 
 
 	protected void ScrollVertical( IntPtr ScrollInstruction )  // get rid of this stuff
@@ -153,7 +153,6 @@ public class ScrollingTextBox: RichTextBox
 			{
 				if(e.KeyChar.Equals((char)Keys.Enter)) 
 				{
-					//int iTabs=GetTabs(GetLeftLine());
 					string sTabs="";
 					for(int i=0;i<iTabs;i++) 
 					{
@@ -255,19 +254,13 @@ public class ScrollingTextBox: RichTextBox
 			return GetPositionFromCharIndex(SelectionStart);
 		}
 	}
-	protected override void OnPaintBackground(PaintEventArgs pevent)
-	{
-		base.OnPaintBackground (pevent);
-	}
-	protected override void OnNotifyMessage(Message m)
-	{
-		base.OnNotifyMessage (m);
-	}
-
-
-//	protected override void OnPaint(PaintEventArgs e)
+//	protected override void OnPaintBackground(PaintEventArgs pevent)
 //	{
-//		base.OnPaint(e);
+//		base.OnPaintBackground (pevent);
+//	}
+//	protected override void OnNotifyMessage(Message m)
+//	{
+//		base.OnNotifyMessage (m);
 //	}
 
 	Info info;//=new Info("hello!!!!!!!!!\n\n\nhello!!!!!!!!");
@@ -286,53 +279,28 @@ public class ScrollingTextBox: RichTextBox
 //		string x=this.Text;
 //		int asdf=0;
 	}
-	public void StopInteractiveSearch()
-	{
-		this.Cursor=Cursors.IBeam;
-		interactiveSearch.Stop();
-	}
 
+	public int ColumnFromScrollColumn(int iLine,int iScrollColumn)  // sucks, sucks, sucks, too many invalid line and column numbers
+	{
+		string sLine=Lines[iLine];
+		int iColumn=0;
+		int iScrollCounter=0;
+		foreach(char c in sLine) 
+		{
+			iScrollCounter++;
+			if(c=='\t') 
+			{
+				iScrollCounter+=5;
+			}
+			iColumn++;
+		}
+		iColumn+=iScrollColumn-iScrollCounter;
+		return iColumn;
+	}
 	static int iTabs=0;
 
 	Hashtable keyBindings=new Hashtable();
 	public delegate void Function();
-
-	public void DeleteWordRight()
-	{
-		
-	}
-	public void DeleteWordLeft()
-	{
-
-	}
-	public void MoveWordLeft()
-	{
-		if(!Char.IsLetter(CurrentCharacter))
-		{
-			MoveCharLeft();
-		}
-		else
-		{
-			while(Char.IsLetter(CurrentCharacter))
-			{
-				MoveCharLeft(); // TODO: überschreiben, um Abstürze zu vermeiden ??
-			}
-		}
-	}
-	public void MoveWordRight()
-	{
-		if(!Char.IsLetter(CurrentCharacter))
-		{
-			MoveCharRight();
-		}
-		else
-		{
-			while(Char.IsLetter(CurrentCharacter))
-			{
-				MoveCharRight(); // TODO: überschreiben, um Abstürze zu vermeiden ??
-			}
-		}
-	}
 	private int RealIndexFromIndex(int index)
 	{
 		return index-emptyLines.Length;
@@ -341,7 +309,6 @@ public class ScrollingTextBox: RichTextBox
 	{
 		return index+emptyLines.Length;
 	}
-
 
 	public void MoveDocumentEnd()
 	{
@@ -373,6 +340,8 @@ public class ScrollingTextBox: RichTextBox
 		MoveTo(start);
 	}
 
+
+	// TODO: implement
 	public void SelectLineDown()
 	{
 	}
@@ -388,14 +357,54 @@ public class ScrollingTextBox: RichTextBox
 	public void SelectWordLeft()
 	{
 	}
+	public void SelectWordRight()
+	{
+	}
+	public void DeleteWordRight()
+	{		
+	}
+	public void DeleteWordLeft()
+	{
+	}
+	
+	public void StopInteractiveSearch()
+	{
+		this.Cursor=Cursors.IBeam;
+		interactiveSearch.Stop();
+	}
+	public void MoveWordRight()
+	{
+		if(!Char.IsLetter(CurrentCharacter))
+		{
+			MoveCharRight();
+		}
+		else
+		{
+			while(Char.IsLetter(CurrentCharacter))
+			{
+				MoveCharRight(); // TODO: überschreiben, um Abstürze zu vermeiden ??
+			}
+		}
+	}
 	public void MoveLineDown() 
 	{
 		MoveCursor(Line+1,GetScrollColumn());
 	}
-	public void SelectWordRight()
-	{
-	}
 
+	public void MoveWordLeft()
+	{
+		if(!Char.IsLetter(CurrentCharacter))
+		{
+			MoveCharLeft();
+		}
+		else
+		{
+			while(Char.IsLetter(CurrentCharacter))
+			{
+				MoveCharLeft(); // TODO: überschreiben, um Abstürze zu vermeiden ??
+			}
+		}
+	}
 	public void MoveLineUp() 
 	{
 		MoveCursor(Line-1,GetScrollColumn());
@@ -409,24 +418,7 @@ public class ScrollingTextBox: RichTextBox
 	{
 		SelectionStart++;
 	}
-	public int ColumnFromScrollColumn(int iLine,int iScrollColumn)  // sucks, sucks, sucks, too many invalid line and column numbers
-	{
-		string sLine=Lines[iLine];
-		int iColumn=0;
-		int iScrollCounter=0;
-		foreach(char c in sLine) 
-		{
-			iScrollCounter++;
-			if(c=='\t') 
-			{
-				iScrollCounter+=5;
-			}
-			iColumn++;
-		}
-		iColumn+=iScrollColumn-iScrollCounter;
-		return iColumn;
-	}
-	FindAndReplace replace;
+
 	public void FindAndReplace()
 	{
 		replace.Owner=FindForm();
@@ -445,6 +437,12 @@ public class ScrollingTextBox: RichTextBox
 			interactiveSearch.Start();
 		}
 	}
+
+
+
+
+	FindAndReplace replace;
+
 	public void MoveCursor(int line,int scrollColumn) 
 	{
 		if(Lines.Length!=0)
