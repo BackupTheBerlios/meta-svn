@@ -291,15 +291,15 @@ namespace Meta
 			public override IMap Detect(string text)
 			{
 				IMap result=null;
-				int pointPos=text.IndexOf("/");
-				if(pointPos!=-1)
+				int slashPos=text.IndexOf("/");
+				if(slashPos!=-1)
 				{
-					if(text.IndexOf("/",pointPos+1)==-1)
+					if(text.IndexOf("/",slashPos+1)==-1)
 					{
-						Integer numerator=IntegerFilter.ParseInteger(text.Substring(0,text.Length-pointPos-2));
+						Integer numerator=IntegerFilter.ParseInteger(text.Substring(0,slashPos));
 						if(numerator!=null)
 						{
-							Integer denominator=IntegerFilter.ParseInteger(text.Substring(pointPos+1,text.Length-pointPos-1));
+							Integer denominator=IntegerFilter.ParseInteger(text.Substring(slashPos+1,text.Length-slashPos-1));
 							if(denominator!=null)
 							{
 								result=new NormalMap();
@@ -396,6 +396,10 @@ namespace Meta
 		public IMap literal=null;
 		public static IMap Filter(string text)
 		{
+			if(text=="1/3")
+			{
+				int asdf=0;
+			}
 			foreach(Filter recognition in recognitions)
 			{
 				IMap recognized=recognition.Detect(text);

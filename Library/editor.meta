@@ -93,6 +93,8 @@ keyBindings=
 		[Keys.L]=!editBox.MoveLineUp""
 		[Keys.Oemtilde]=!editBox.MoveCharRight""
 		[Keys.J]=!editBox.MoveCharLeft""
+		[Keys.U]=!editBox.MoveLineStart""
+		[Keys.OemSemicolon]=!editBox.MoveLineEnd""
 	[bitwise.Or
 		Keys.Alt
 		Keys.Control
@@ -163,7 +165,7 @@ form=
 			Continue=commands.Continue
 			Reverse=commands.Reverse
 	form.Menu=MainMenu Apply
-		!MenuItem 
+		!MenuItem
 			arg.key
 			Apply
 				!MenuItem

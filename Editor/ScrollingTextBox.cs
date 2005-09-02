@@ -289,7 +289,7 @@ public class ScrollingTextBox: RichTextBox
 	}
 	public void StopInteractiveSearch()
 	{
-		this.Cursor=Cursors.Default;
+		this.Cursor=Cursors.IBeam;
 		interactiveSearch.Stop();
 	}
 
@@ -342,11 +342,11 @@ public class ScrollingTextBox: RichTextBox
 	{
 		return index+emptyLines.Length;
 	}
-	public void MoveEndOfDocument()
+	public void MoveDocumentEnd()
 	{
 		SelectionStart=IndexFromRealIndex(RealText.Length-1);
 	}
-	public void MoveStartOfDocument()
+	public void MoveDocumentStart()
 	{
 		SelectionStart=IndexFromRealIndex(0);
 	}
@@ -371,11 +371,13 @@ public class ScrollingTextBox: RichTextBox
 	}
 	public void MoveLineEnd()
 	{
-		MoveTo(GetLinesLength(Line));
+		MoveTo(GetLinesLength(Line)+Lines[Line].Length);
 	}
 	public void MoveLineStart()
 	{
-		MoveTo(GetLinesLength(Line));
+		int start=GetLinesLength(Line);
+		start+=this.GetTabs(Lines[Line]);
+		MoveTo(start);
 	}
 
 	public void SelectLineDown()

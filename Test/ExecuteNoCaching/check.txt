@@ -103,6 +103,11 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
+    "bitwise"
+  Value (DotNetClass):
+    "math+bitwise"
+Entry (DictionaryEntry)
+  Key (NormalMap):
     "persistantDeleteTest"
   Value (NormalMap):
     ""
@@ -1985,7 +1990,7 @@ Entry (DictionaryEntry)
         "100"
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "fractionText"
+    "fractionTest"
   Value (NormalMap):
     Entry (DictionaryEntry)
       Key (NormalMap):
