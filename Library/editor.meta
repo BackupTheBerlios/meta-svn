@@ -7,8 +7,6 @@ this=map.Merge
 	System.IO
 	System.Windows.Forms
 	System.Drawing
-//Meta.Interpreter.Test:!Console.WriteLine "At least this works"
-//Meta.Expression.DebugBreak:!Console.WriteLine "Yipiiiiiieeeheheheeheheheh"
 ChooseOpenFile=!
 	dialog=OpenFileDialog""
 	dialog.ShowDialog""
@@ -27,7 +25,7 @@ SaveAs=!
 			fileName:SaveAsFileName
 			WriteFile
 				fileName
-				editor.control.RealText
+				editor.dotNet.RealText
 WriteFile=!
 	writer=StreamWriter arg.1
 	writer.Write arg.2
@@ -40,7 +38,7 @@ Save=!If
 	then=!SaveAs""
 	else=!WriteFile
 		fileName
-		editor.control.RealText
+		editor.dotNet.RealText
 ReadFile=!
 	reader=StreamReader arg
 	result=reader.ReadToEnd""
@@ -54,69 +52,69 @@ OpenFile=!
 			""
 		then=!
 			fileName:openFileName
-			editor.control.RealText:ReadFile fileName
+			editor.dotNet.RealText:ReadFile fileName
 keyBindings=
-	[Keys.Escape]=!editor.control.StopInteractiveSearch""
+	[Keys.Escape]=!editor.dotNet.StopInteractiveSearch""
 	[Keys.Alt]=
-		[Keys.K]=!editor.control.MoveLineDown""
-		[Keys.L]=!editor.control.MoveLineUp""
-		[Keys.Oemtilde]=!editor.control.MoveCharRight""
-		[Keys.J]=!editor.control.MoveCharLeft""
+		[Keys.K]=!editor.dotNet.MoveLineDown""
+		[Keys.L]=!editor.dotNet.MoveLineUp""
+		[Keys.Oemtilde]=!editor.dotNet.MoveCharRight""
+		[Keys.J]=!editor.dotNet.MoveCharLeft""
 	[BitwiseOr
 		Keys.Alt
 		Keys.Control
 	]=
-		[Keys.J]=!editor.control.MoveWordLeft""
-		[Keys.Oemtilde]=!editor.control.MoveWordRight""
+		[Keys.J]=!editor.dotNet.MoveWordLeft""
+		[Keys.Oemtilde]=!editor.dotNet.MoveWordRight""
 	[BitwiseOr
 		Keys.Alt
 		Keys.Control
 		Keys.Shift
 	]=
-		[Keys.J]=!editor.control.SelectWordLeft""
-		[Keys.Oemtilde]=!editor.control.SelectWordRight""
-		[Keys.K]=!editor.control.SelectLineUp""
-		[Keys.J]=!editor.control.SelectLineDown""
+		[Keys.J]=!editor.dotNet.SelectWordLeft""
+		[Keys.Oemtilde]=!editor.dotNet.SelectWordRight""
+		[Keys.K]=!editor.dotNet.SelectLineUp""
+		[Keys.J]=!editor.dotNet.SelectLineDown""
 	[Keys.F5]=!RunProgram""
 	[Keys.Control]=
 		[Keys.S]=!Save""
-		[Keys.I]=!editor.control.StartInteractiveSearch""
-		[Keys.F]=!editor.control.FindAndReplace""
+		[Keys.I]=!editor.dotNet.StartInteractiveSearch""
+		[Keys.F]=!editor.dotNet.FindAndReplace""
 RunProgram=!
 	Save""
 	// use fileName here
-	System.Console.WriteLine editor.control.RealLine
-	System.Console.WriteLine editor.control.Column
+	System.Console.WriteLine editor.dotNet.RealLine
+	System.Console.WriteLine editor.dotNet.Column
 	Meta.Expression.BreakPoint:Meta.BreakPoint
 		//"c:\_projectsupportmaterial\meta\editor\editor.meta"
 		fileName
 		Meta.Position
-			editor.control.RealLine
-			editor.control.Column
-	Meta.Interpreter.DebugBreak:!editor.control.ShowDebugValue Meta.Interpreter.DebugValue
+			editor.dotNet.RealLine
+			editor.dotNet.Column
+	Meta.Interpreter.DebugBreak:!editor.dotNet.ShowDebugValue Meta.Interpreter.DebugValue
 	Meta.Interpreter.StartDebug fileName
 ContinueProgram=!
 	// factor out the setting of the breakpoint
-	System.Console.WriteLine editor.control.RealLine
-	System.Console.WriteLine editor.control.Column
+	System.Console.WriteLine editor.dotNet.RealLine
+	System.Console.WriteLine editor.dotNet.Column
 	Meta.Expression.BreakPoint:Meta.BreakPoint
 		fileName
 		Meta.Position
-			editor.control.RealLine
-			editor.control.Column
+			editor.dotNet.RealLine
+			editor.dotNet.Column
 	Meta.Interpreter.ContinueDebug""
 ReverseProgram=!
 	// factor out the setting of the breakpoint
-	System.Console.WriteLine editor.control.RealLine
-	System.Console.WriteLine editor.control.Column
+	System.Console.WriteLine editor.dotNet.RealLine
+	System.Console.WriteLine editor.dotNet.Column
 	Meta.Expression.BreakPoint:Meta.BreakPoint
 		fileName
 		Meta.Position
-			editor.control.RealLine
-			editor.control.Column
+			editor.dotNet.RealLine
+			editor.dotNet.Column
 	Meta.Interpreter.ReverseDebug""
 Editor=!
-	control=Init
+	dotNet=Init
 		ScrollingTextBox""
 		=
 			ShowSelectionMargin="1"
@@ -145,15 +143,15 @@ Editor=!
 								e.KeyCode
 							then=!keyBindings.[e.KeyCode]""
 	SetText=!
-		control.Text:arg
+		dotNet.Text:arg
 Window=!
 	form=Form""
 	form.Text=arg.title
 	form.Font=arg.font
-	controls=arg.controls
+	dotNets=arg.dotNets
 	form.Controls.AddRange Apply
-		!arg.value.control
-		arg.controls
+		!arg.value.dotNet
+		arg.dotNets
 	form.WindowState=arg.WindowState
 	InitSubMenuItem=!Init
 		MenuItem""
@@ -200,6 +198,6 @@ window=Window
 		numerator="10"
 		denominator="10"
 	WindowState=FormWindowState.Maximized
-	controls=
+	dotNets=
 		editor
 window.Show""
