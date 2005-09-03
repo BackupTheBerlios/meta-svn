@@ -16,12 +16,7 @@ public class ScrollingTextBox: RichTextBox
 	public ScrollingTextBox() 
 	{
 		InitializeComponent();
-		this.HorzScrollValueChanged+=new ScrollEventHandler(ScrollingTextBox_HorzScrollValueChanged);
-		this.VertScrollValueChanged+=new ScrollEventHandler(ScrollingTextBox_VertScrollValueChanged);
 		this.replace=new FindAndReplace(this);
-//		keyBindings[Keys.Control|Keys.I]=new Function(StartInteractiveSearch);
-//		keyBindings[Keys.Alt|Keys.X]=new Function(Test);
-//		keyBindings[Keys.Escape]=new Function(StopInteractiveSearch);
 		for(int i=0;i<25;i++)
 		{
 			emptyLines+="\n";
@@ -31,15 +26,13 @@ public class ScrollingTextBox: RichTextBox
 		timer.Tick+=new EventHandler(timer_Tick);
 		timer.Start();
 	}
-//	public void Test()
-//	{
-//		DrawValue(new Rectangle(400,400,100,100),"hello, everybody, clap your hands!!!!!!!!!!!!!!");
-//	}
 	public void DrawValue(Rectangle rectangle,string text)
 	{
 		Graphics graphics=this.CreateGraphics();
 		graphics.DrawString(text,this.Font,Brushes.Red,rectangle);
 	}
+
+
 
 	string emptyLines;
 	protected string TopMargin
@@ -71,8 +64,6 @@ public class ScrollingTextBox: RichTextBox
 		this.Resize += new System.EventHandler(this.ScrollingTextBox_Resize);
 		this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ScrollingTextBox_KeyPress);
 		this.TextChanged += new System.EventHandler(this.ScrollingTextBox_TextChanged);
-		this.Layout += new System.Windows.Forms.LayoutEventHandler(this.ScrollingTextBox_Layout);
-		this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ScrollingTextBox_MouseMove);
 		this.SelectionChanged += new System.EventHandler(this.ScrollingTextBox_SelectionChanged);
 
 	}
@@ -97,19 +88,8 @@ public class ScrollingTextBox: RichTextBox
 	// copied from: http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/horizontalThread/b142ab4621009180/2d7ab486ca1f4d43?q=richtextbox+scrolling&rnum=8&hl=en#2d7ab486ca1f4d43
 	const int WM_VSCROLL = 0x0115;
 	const int WM_MOUSEWHEEL = 0x020a;
-//	readonly IntPtr SB_LINEUP = new IntPtr( 0 );
-//	readonly IntPtr SB_LINEDOWN = new IntPtr( 1 );
-//	readonly IntPtr SB_PAGEUP = new IntPtr( 2 );
-//	readonly IntPtr SB_PAGEDOWN = new IntPtr( 3 );
-//	readonly IntPtr SB_TOP = new IntPtr( 6 );
-//	readonly IntPtr SB_BOTTOM = new IntPtr( 7 );
 
 	const int WM_HSCROLL = 0x0114;
-//	readonly IntPtr SB_LINELEFT = new IntPtr( 0 );
-//	readonly IntPtr SB_LINERIGHT = new IntPtr( 1 );
-//	readonly IntPtr SB_LEFT = new IntPtr( 6 );
-//	readonly IntPtr SB_RIGHT = new IntPtr( 7 );
-
 
 	protected void ScrollVertical( IntPtr ScrollInstruction )  // get rid of this stuff
 	{
@@ -125,6 +105,8 @@ public class ScrollingTextBox: RichTextBox
 			IntPtr.Zero );
 		this.DefWndProc( ref msg );
 	}
+
+
 
 	private void ScrollingTextBox_Resize(object sender, System.EventArgs e) 
 	{
@@ -207,7 +189,6 @@ public class ScrollingTextBox: RichTextBox
 		public void Find()
 		{
 			int start=textBox.SelectionStart;
-//			int start=textBox.SelectionStart+1;
 			if(textBox.Find(text,start,RichTextBoxFinds.None)==-1)
 			{
 				textBox.Find(text,0,RichTextBoxFinds.None);
@@ -216,14 +197,14 @@ public class ScrollingTextBox: RichTextBox
 		public void Stop()
 		{
 			active=false;
-			text="";	// TODO: move all the shortcuts into Meta
+			text="";
 		}
 		private RichTextBox textBox;
 		public InteractiveSearch(RichTextBox textBox)
 		{
 			this.textBox=textBox;
 		}
-        private int startLine;
+//        private int startLine;
 		
 	}
 	private System.Windows.Forms.Timer timer=new System.Windows.Forms.Timer();
@@ -231,6 +212,13 @@ public class ScrollingTextBox: RichTextBox
 	private void timer_Tick(object sender, EventArgs e)
 	{
 		DrawInfo();
+	}
+	protected void DrawInfo() // get back into the correct thread!!!!!!!!!!
+	{
+		if(info!=null)
+		{
+			info.Draw(this.CreateGraphics(),CursorPosition);
+		}
 	}
 	public class Info
 	{
@@ -254,30 +242,12 @@ public class ScrollingTextBox: RichTextBox
 			return GetPositionFromCharIndex(SelectionStart);
 		}
 	}
-//	protected override void OnPaintBackground(PaintEventArgs pevent)
-//	{
-//		base.OnPaintBackground (pevent);
-//	}
-//	protected override void OnNotifyMessage(Message m)
-//	{
-//		base.OnNotifyMessage (m);
-//	}
-
 	Info info;//=new Info("hello!!!!!!!!!\n\n\nhello!!!!!!!!");
 	public void ShowDebugValue(object debugValue)
 	{
-		//info=new Info(DirectoryStrategy.Serialize(debugValue));// add some real serialization here!!!!!
-//		int asdf=0;
-
-
-
 		Graphics graphics=this.CreateGraphics();
 		MessageBox.Show(Serialize.Value((IMap)debugValue));
 		graphics.DrawString(Serialize.Value((IMap)debugValue),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
-//		graphics.DrawString(debugValue.ToString(),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
-		////		MessageBox.Show(debugValue.ToString());
-//		string x=this.Text;
-//		int asdf=0;
 	}
 
 	public int ColumnFromScrollColumn(int iLine,int iScrollColumn)  // sucks, sucks, sucks, too many invalid line and column numbers
@@ -367,20 +337,16 @@ public class ScrollingTextBox: RichTextBox
 	{
 	}
 	
-	public void StopInteractiveSearch()
-	{
-		this.Cursor=Cursors.IBeam;
-		interactiveSearch.Stop();
-	}
+
 	public void MoveWordRight()
 	{
-		if(!Char.IsLetter(CurrentCharacter))
+		if(!Char.IsLetter(Character))
 		{
 			MoveCharRight();
 		}
 		else
 		{
-			while(Char.IsLetter(CurrentCharacter))
+			while(Char.IsLetter(Character))
 			{
 				MoveCharRight(); // TODO: überschreiben, um Abstürze zu vermeiden ??
 			}
@@ -393,13 +359,13 @@ public class ScrollingTextBox: RichTextBox
 
 	public void MoveWordLeft()
 	{
-		if(!Char.IsLetter(CurrentCharacter))
+		if(!Char.IsLetter(Character))
 		{
 			MoveCharLeft();
 		}
 		else
 		{
-			while(Char.IsLetter(CurrentCharacter))
+			while(Char.IsLetter(Character))
 			{
 				MoveCharLeft(); // TODO: überschreiben, um Abstürze zu vermeiden ??
 			}
@@ -424,6 +390,11 @@ public class ScrollingTextBox: RichTextBox
 		replace.Owner=FindForm();
 		replace.Show();
 	}
+	public void StopInteractiveSearch()
+	{
+		this.Cursor=Cursors.IBeam;
+		interactiveSearch.Stop();
+	}
 	public void StartInteractiveSearch()
 	{
 		if(interactiveSearch.Active)
@@ -441,7 +412,6 @@ public class ScrollingTextBox: RichTextBox
 
 
 
-	FindAndReplace replace;
 
 	public void MoveCursor(int line,int scrollColumn) 
 	{
@@ -525,14 +495,7 @@ public class ScrollingTextBox: RichTextBox
 		[DllImport("user32")] public static extern short GetKeyState(int nVirtKey);
 
 	}
-	void MoveUp()
-	{
-		MoveCursor(Line-1,Column);
-	}
-	void MoveDown() 
-	{
-		MoveCursor(Line+1,Column);
-	}
+
 
 	string GetLineText() 
 	{
@@ -587,6 +550,8 @@ public class ScrollingTextBox: RichTextBox
 			Text=emptyLines+value+emptyLines;
 		}
 	}
+	private FindAndReplace replace;
+
 	// copied from: http://www.thecodeproject.com/cs/miscctrl/SyntaxHighlighting.asp
 	private unsafe void SetScrollPos(Win32.POINT point)  // only this scrolling function is really needed
 	{
@@ -599,23 +564,13 @@ public class ScrollingTextBox: RichTextBox
 	{
 		SelectionStart=position;
 	}
-	public char CurrentCharacter
+	public char Character
 	{
 		get
 		{
 			return Text[SelectionStart];
 		}
 	}
-	public class Value:Form
-	{
-		private Label label;
-		public Value(string text)
-		{
-			this.label=new Label();
-			label.Text=text;
-		}
-	}
-
 
 	int GetMiddle() 
 	{
@@ -646,13 +601,7 @@ public class ScrollingTextBox: RichTextBox
 		}
 
 	}
-	protected void DrawInfo() // get back into the correct thread!!!!!!!!!!
-	{
-		if(info!=null)
-		{
-			info.Draw(this.CreateGraphics(),CursorPosition);
-		}
-	}
+
 	private void ScrollingTextBox_SelectionChanged(object sender, System.EventArgs e) 
 	{
 		ScrollToMiddle(); // make this method more general!!!!!
@@ -661,26 +610,19 @@ public class ScrollingTextBox: RichTextBox
 	{
 		ScrollToMiddle();
 	}
-	// copied from http://www.thecodeproject.com/cs/miscctrl/SyntaxHighlighting.asp
 
-	/// <summary>
-	/// Horizontal scroll position has changed event
-	/// </summary>
-	public event ScrollEventHandler HorzScrollValueChanged;
-
-	/// <summary>
-	/// Vertical scroll position has changed event
-	/// </summary>
-	public event ScrollEventHandler VertScrollValueChanged;
 	
-	/// <summary>
-	/// Intercept scroll messages to send notifications
-	/// </summary>
-	/// <param name="m">Message parameters</param>
+
+	protected void MoveCaretToMiddle() 
+	{
+		this.SetSelectionStartNoScroll(GetCharIndexFromPosition(new Point(this.Size.Width/2,this.Height/2)));
+	}
+
+
+
+
 	protected override void WndProc(ref Message m) 
 	{
-		// Let the control process the message
-
 		if(m.Msg == WM_MOUSEWHEEL) 
 		{
 			if(m.WParam.ToInt32()>IntPtr.Zero.ToInt32()) 
@@ -691,92 +633,14 @@ public class ScrollingTextBox: RichTextBox
 			{
 				MoveCursor(Line+3,GetScrollColumn());
 			}
-			ScrollToMiddle();
-			return;
 		}
-		// Was this a horizontal scroll message?
-		if ( m.Msg == WM_HSCROLL ) 
-		{
-			if ( HorzScrollValueChanged != null ) 
-			{
-				uint wParam = (uint)m.WParam.ToInt32();
-				HorzScrollValueChanged( this, 
-					new ScrollEventArgs( 
-					GetEventType( wParam & 0xffff), (int)(wParam >> 16) ) );
-			}
-		} 
-			// or a vertical scroll message?
-		else if ( m.Msg == WM_VSCROLL ) 
-		{
-			if ( VertScrollValueChanged != null ) 
-			{
-				uint wParam = (uint)m.WParam.ToInt32();
-				VertScrollValueChanged( this, 
-					new ScrollEventArgs( 
-					GetEventType( wParam & 0xffff), (int)(wParam >> 16) ) );
-			}
-		}
-		base.WndProc (ref m);
-	}
-
-	// Based on SB_* constants
-	private static ScrollEventType [] _events =
-		new ScrollEventType[] {
-								  ScrollEventType.SmallDecrement,
-								  ScrollEventType.SmallIncrement,
-								  ScrollEventType.LargeDecrement,
-								  ScrollEventType.LargeIncrement,
-								  ScrollEventType.ThumbPosition,
-								  ScrollEventType.ThumbTrack,
-								  ScrollEventType.First,
-								  ScrollEventType.Last,
-								  ScrollEventType.EndScroll
-							  };
-	/// <summary>
-	/// Decode the type of scroll message
-	/// </summary>
-	/// <param name="wParam">Lower word of scroll notification</param>
-	/// <returns></returns>
-	private ScrollEventType GetEventType( uint wParam ) 
-	{
-		if ( wParam < _events.Length )
-			return _events[wParam];
 		else
-			return ScrollEventType.EndScroll;
-	}
-
-	protected void MoveCaretToMiddle() 
-	{
-		this.SetSelectionStartNoScroll(
-			GetCharIndexFromPosition(new Point(this.Size.Width/2,this.Height/2)));
-	}
-	private void ScrollingTextBox_HorzScrollValueChanged(object sender, ScrollEventArgs e) 
-	{
-		this.MoveCaretToMiddle();
-	}
-
-	private void ScrollingTextBox_VertScrollValueChanged(object sender, ScrollEventArgs e) 
-	{
-		this.MoveCaretToMiddle();
-	}
-	private void ScrollingTextBox_MouseWheel(object sender, MouseEventArgs e) 
-	{
-	}
-	protected override void OnMouseWheel(MouseEventArgs e) 
-	{
-	}
-
-	private void ScrollingTextBox_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e) 
-	{
-	}
-
-	private void ScrollingTextBox_Paint(object sender, PaintEventArgs e)
-	{
-		int asdf=0;
-	}
-
-	private void ScrollingTextBox_Layout(object sender, System.Windows.Forms.LayoutEventArgs e)
-	{
-		int asdf=0;
+		{
+			if ( m.Msg == WM_HSCROLL || m.Msg == WM_VSCROLL ) 
+			{
+				this.MoveCaretToMiddle();
+			}
+			base.WndProc (ref m);
+		}
 	}
 }
