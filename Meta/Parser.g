@@ -92,8 +92,8 @@ EQUAL:
 HASH:
 	'#';
 	
-EXCLAMATION_MARK:
-	'!';
+//EXCLAMATION_MARK:
+//	'!';
 
 COLON:
   ':';
@@ -418,30 +418,30 @@ key:
 	}
 	;
 statement:
-    (key EQUAL)=>
-    (
-      key
-      EQUAL!
-      expression
-      {
-					#statement=#([STATEMENT],#statement);
-      }
-    )
-    |
     (key COLON)=>
     (
       key
       COLON!
       expression
       {
-					#statement=#([STATEMENT_SEARCH],#statement);
+					#statement=#([STATEMENT],#statement);
       }
     )
+    //|
+    //(key COLON)=>
+    //(
+    //  key
+    //  COLON!
+    //  expression
+    //  {
+	//				#statement=#([STATEMENT_SEARCH],#statement);
+    //  }
+    //)
     |
     (
 			// TODO: remove one branch, should not be indeterminate
       (
-        (EQUAL!)?
+        (COLON!)?
         expression
         {
             //Counters.counter++;
@@ -485,7 +485,7 @@ call:
     #delayedExpressionOnly=#([DELAYED_EXPRESSION_ONLY], #delayedExpressionOnly);
   };*/
 fullDelayed:
-	EXCLAMATION_MARK!
+	EQUAL!
 	delayedImplementation
 	{
 		#fullDelayed=#([MAP],#fullDelayed);

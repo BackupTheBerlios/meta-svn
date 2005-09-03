@@ -1635,7 +1635,7 @@ namespace Meta
 			string text=newLine;
 			foreach(DictionaryEntry entry in map)
 			{
-				text+=indentation + Key((Map)entry.Key,indentation)	+ "=" + Value((Map)entry.Value,indentation+'\t');
+				text+=indentation + Key((Map)entry.Key,indentation)	+ ":" + Value((Map)entry.Value,indentation+'\t');
 				if(!text.EndsWith(newLine))
 				{
 					text+=newLine;

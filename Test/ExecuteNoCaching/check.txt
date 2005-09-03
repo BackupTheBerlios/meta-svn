@@ -2214,7 +2214,7 @@ Entry (DictionaryEntry)
         "aLongText"
       Value (NormalMap):
         "
-hello word!
+hello world!
 hello!
 "
 Entry (DictionaryEntry)
