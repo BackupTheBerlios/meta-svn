@@ -17,14 +17,12 @@ this=map.Merge
 	parent
 	=
 		"AssignedToCurrent"
-//Meta.Interpreter.DebugBreak:!System.Console.Write Meta.Interpreter.DebugValue
 unicodeText="äaba"
 this=map.Merge
 	parent
 	logic
 	map
 	math
-//run "hello"
 testSubDir.x:""
 persistantDeleteTest=testSubDir.x
 testSubDir.x:
