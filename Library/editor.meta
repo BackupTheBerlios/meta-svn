@@ -11,11 +11,11 @@ choose=
 	OpenFile=!
 		dialog=OpenFileDialog""
 		dialog.ShowDialog""
-		this=dialog.FileName
+		this=dialog.FileName.get""
 	SaveFile=!
 		dialog=SaveFileDialog""
 		dialog.ShowDialog""
-		this=dialog.FileName
+		this=dialog.FileName.get""
 file=
 	Write=!
 		writer=StreamWriter arg.1
@@ -27,6 +27,8 @@ file=
 		reader.Close""
 		this=result
 fileName=""
+SetFileName=!
+	parent.parent.fileName=arg
 commands=
 	SaveAs=!
 		saveAs=choose.SaveFile""
@@ -35,10 +37,10 @@ commands=
 				saveAs
 				""
 			then=!
-				fileName:saveAs
+				SetFileName saveAs
 				file.Write
 					fileName
-					editBox.RealText
+					editBox.RealText.get""
 	Save=!If
 		Equal
 			fileName
@@ -46,7 +48,7 @@ commands=
 		then=!commands.SaveAs""
 		else=!file.Write
 			fileName
-			editBox.RealText
+			editBox.RealText.get""
 	Open=!
 		openFileName=choose.OpenFile""
 		If
@@ -54,36 +56,41 @@ commands=
 				openFileName
 				""
 			then=!
-				fileName:openFileName
-				editBox.RealText:file.Read fileName
+				SetFileName openFileName
+				editBox.RealText.set
+					file.Read fileName
 	Run=!
 		commands.Save""
-		Meta.Expression.BreakPoint:Meta.BreakPoint
-			fileName
-			Meta.Position
-				editBox.RealLine
-				editBox.Column
-		Meta.Interpreter.DebugBreak:!editBox.ShowDebugValue Meta.Interpreter.DebugValue
+		Meta.Expression.BreakPoint.set
+			Meta.BreakPoint
+				fileName
+				Meta.Position
+					editBox.RealLine.get""
+					editBox.Column.get""
+		Meta.Interpreter.DebugBreak.set
+			!editBox.ShowDebugValue Meta.Interpreter.DebugValue
 		Meta.Interpreter.StartDebug fileName
 	Continue=!
 		// factor out the setting of the breakpoint
-		System.Console.WriteLine editBox.RealLine
-		System.Console.WriteLine editBox.Column
-		Meta.Expression.BreakPoint:Meta.BreakPoint
-			fileName
-			Meta.Position
-				editBox.RealLine
-				editBox.Column
+		System.Console.WriteLine editBox.RealLine.get""
+		System.Console.WriteLine editBox.Column.get""
+		Meta.Expression.BreakPoint.set
+			Meta.BreakPoint
+				fileName
+				Meta.Position
+					editBox.RealLine.get""
+					editBox.Column.get""
 		Meta.Interpreter.ContinueDebug""
 	Reverse=!
 		// factor out the setting of the breakpoint
-		System.Console.WriteLine editBox.RealLine
-		System.Console.WriteLine editBox.Column
-		Meta.Expression.BreakPoint:Meta.BreakPoint
-			fileName
-			Meta.Position
-				editBox.RealLine
-				editBox.Column
+		System.Console.WriteLine editBox.RealLine.get""
+		System.Console.WriteLine editBox.Column.get""
+		Meta.Expression.BreakPoint.set
+			Meta.BreakPoint
+				fileName
+				Meta.Position
+					editBox.RealLine.get""
+					editBox.Column.get""
 		Meta.Interpreter.ReverseDebug""
 modifierKeys=
 	AltControl=bitwise.Or
@@ -127,10 +134,14 @@ keyBindings=
 		[Keys.J]=!editBox.SelectLineDown""
 editBox=
 	editBox=ScrollingTextBox""
-	editBox.ShowSelectionMargin="1"
-	editBox.AcceptsTab="1"
-	editBox.Dock=DockStyle.Fill
-	editBox.ScrollBars=RichTextBoxScrollBars.ForcedBoth
+	editBox.ShowSelectionMargin.set
+		"1"
+	editBox.AcceptsTab.set
+		"1"
+	editBox.Dock.set
+		DockStyle.Fill
+	editBox.ScrollBars.set
+		RichTextBoxScrollBars.ForcedBoth
 	editBox.KeyDown=!
 		e=arg.2
 		// maybe this should be the other way round ???
@@ -155,13 +166,17 @@ editBox=
 	this=editBox
 form=
 	form=Form""
-	form.Text="Meta Edit"
-	form.Font=Font
-		"Courier New"
-		"10"
-	form.Controls.AddRange
+	form.Text.set
+		"Meta Edit"
+	form.Font.set
+		Font
+			"Courier New"
+			"10"
+	controls=form.Controls.get""
+	controls.AddRange
 		editBox
-	form.WindowState=FormWindowState.Maximized
+	form.WindowState.set
+		FormWindowState.Maximized
 	menu=
 		File=
 			["Open..."]=commands.Open
@@ -172,14 +187,15 @@ form=
 			Start=commands.Run
 			Continue=commands.Continue
 			Reverse=commands.Reverse
-	form.Menu=MainMenu Apply
-		!MenuItem
-			arg.key
-			Apply
-				!MenuItem
-					arg.key
+	form.Menu.set
+		MainMenu Apply
+			!MenuItem
+				arg.key
+				Apply
+					!MenuItem
+						arg.key
+						arg.value
 					arg.value
-				arg.value
-		menu
+			menu
 	this=form
 form.ShowDialog""

@@ -111,6 +111,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "Copy (3) of editor.meta"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "Copy of Copy of Copy of editor.meta"
                     BuildAction = "None"
                 />
