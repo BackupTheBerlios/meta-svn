@@ -103,11 +103,15 @@
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "Copy of Copy of Copy of editor.meta"
+                    RelPath = "Copy (2) of Copy of Copy of editor.meta"
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "Copy of Copy of editor.meta"
+                    RelPath = "Copy (2) of editor.meta"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Copy of Copy of Copy of editor.meta"
                     BuildAction = "None"
                 />
                 <File
@@ -122,6 +126,10 @@
                     RelPath = "Library.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "tests.meta"
+                    BuildAction = "None"
                 />
             </Include>
         </Files>

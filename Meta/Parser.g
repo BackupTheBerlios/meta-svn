@@ -393,7 +393,7 @@ expression:
 		|search
   );
 
-//TODO: rename IMap to program, or something like that
+//TODO: rename Map to program, or something like that
 map:
   {
     Counters.autokey.Push(0);
@@ -594,7 +594,7 @@ options {
     ASTLabelType = "MetaAST";
 }
 expression
-  returns[IMap result]
+  returns[Map result]
   {
     result=null;//new NormalMap();
   }:
@@ -609,11 +609,11 @@ expression
   )
   ;
 key
-	returns[IMap result]
+	returns[Map result]
 	{
 		int counter=1;
 		result=new NormalMap();
-		IMap e=null;
+		Map e=null;
 	}:
 	#(KEY
 		(
@@ -626,36 +626,36 @@ key
 	)
 	;
 statement
-	returns[IMap statement]
+	returns[Map statement]
 	{
 		statement=new NormalMap();
-		//IMap key=null;
-		IMap val=null;
-		IMap k=null;
+		//Map key=null;
+		Map val=null;
+		Map k=null;
 	}:
 	#(STATEMENT
 		k=key
 		val=expression
 		{
-			//IMap statement=new NormalMap();
+			//Map statement=new NormalMap();
 			statement[CodeKeys.Key]=k;
 			statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 		}
 	)
 	;
 statementSearch // maybe somehow combine this with "statement", if possible, not sure if tree has lookahead at all, didn't seem to work in one rule
-	returns[IMap statement]
+	returns[Map statement]
 	{
 		statement=new NormalMap();
-		//IMap key=null;
-		IMap val=null;
-		IMap k=null;
+		//Map key=null;
+		Map val=null;
+		Map k=null;
 	}:
 	#(STATEMENT_SEARCH
 		k=key
 		val=expression
 		{
-			//IMap statement=new NormalMap();
+			//Map statement=new NormalMap();
 			statement[CodeKeys.Key]=k;
 			statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
 		}
@@ -665,12 +665,12 @@ statementSearch // maybe somehow combine this with "statement", if possible, not
 	}
 	;
 map
-  returns[IMap result]
+  returns[Map result]
   {
     result=new NormalMap();
     result.Extent=#map.Extent;
-    IMap statements=new NormalMap();
-    IMap s=null;
+    Map statements=new NormalMap();
+    Map s=null;
     int counter=1;
   }:
   #(MAP
@@ -687,13 +687,13 @@ map
   };
 
 call
-  returns [IMap result]
+  returns [Map result]
   {
     result=new NormalMap();
     result.Extent=#call.Extent;
-    IMap call=new NormalMap();
-    IMap delayed=new NormalMap();
-    IMap argument=new NormalMap();
+    Map call=new NormalMap();
+    Map delayed=new NormalMap();
+    Map argument=new NormalMap();
   }:
   #(CALL
     (
@@ -710,12 +710,12 @@ call
   );
 
 select
-  returns [IMap result]
+  returns [Map result]
   {
     result=new NormalMap();
     result.Extent=#select.Extent;
-    IMap selection=new NormalMap();
-    IMap key=null;
+    Map selection=new NormalMap();
+    Map key=null;
     int counter=1;
   }: 
   #(SELECT
@@ -735,12 +735,12 @@ select
 
 
 search
-	returns [IMap result]
+	returns [Map result]
 	{
 		result=new NormalMap();
-		IMap lookupResult=null;
+		Map lookupResult=null;
 		result.Extent=#search.Extent;
-		IMap e=null;
+		Map e=null;
 	}:
 	#(SEARCH e=expression)
 	{
@@ -751,7 +751,7 @@ search
 // TODO: somewhat unlogical that literal doesn't build a higher AST in the first place,
 // if there was also a parser rule for Literal, then we could match an AST instead of a token here
 literal
-  returns [IMap result]
+  returns [Map result]
   {
     result=new NormalMap();
     result.Extent=#literal.Extent;
@@ -763,12 +763,12 @@ literal
 
 //TODO: is this even needed anymore?
 delayed
-    returns[IMap result]
+    returns[Map result]
     {
         result=new NormalMap();
         result.Extent=#delayed.Extent;
-        IMap mExpression;
-        //IMap CodeKeys.Run=new NormalMap();
+        Map mExpression;
+        //Map CodeKeys.Run=new NormalMap();
     }:
     #(FUNCTION mExpression=expression)
     {
@@ -779,10 +779,10 @@ delayed
     };
 
 /*delayedExpressionOnly
-    returns[IMap result]
+    returns[Map result]
     {
         result=new NormalMap();
-        IMap mExpression=null;
+        Map mExpression=null;
     }:
     #(DELAYED_EXPRESSION_ONLY mExpression=expression)
     {

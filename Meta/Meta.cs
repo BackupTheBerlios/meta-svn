@@ -39,31 +39,31 @@ namespace Meta
 
 	public class CodeKeys
 	{
-		public readonly static IMap Literal="literal";
-		public readonly static IMap Run="run";
-		public readonly static IMap Call="call";
-		public readonly static IMap Function="function";
-		public readonly static IMap Argument="argument";
-		public static readonly IMap Select="select";
-		public static readonly IMap Search="search";
-		public static readonly IMap Key="key";
-		public static readonly IMap Program="program";
-		public static readonly IMap Delayed="delayed";
-		public static readonly IMap Lookup="lookup";
-		public static readonly IMap Value="value";
+		public readonly static Map Literal="literal";
+		public readonly static Map Run="run";
+		public readonly static Map Call="call";
+		public readonly static Map Function="function";
+		public readonly static Map Argument="argument";
+		public static readonly Map Select="select";
+		public static readonly Map Search="search";
+		public static readonly Map Key="key";
+		public static readonly Map Program="program";
+		public static readonly Map Delayed="delayed";
+		public static readonly Map Lookup="lookup";
+		public static readonly Map Value="value";
 	}
 	public class SpecialKeys
 	{
-		public static readonly IMap Parent="parent";
-		public static readonly IMap Arg="arg";
-		public static readonly IMap This="this";
+		public static readonly Map Parent="parent";
+		public static readonly Map Arg="arg";
+		public static readonly Map This="this";
 	}
 	public class NumberKeys
 	{
-		public static readonly IMap Denominator="denominator";
-		public static readonly IMap Numerator="numerator"; // TODO: get rid of this
-		public static readonly IMap Negative="negative";
-		public static readonly IMap EmptyMap=new NormalMap();
+		public static readonly Map Denominator="denominator";
+		public static readonly Map Numerator="numerator"; // TODO: get rid of this
+		public static readonly Map Negative="negative";
+		public static readonly Map EmptyMap=new NormalMap();
 	}
 	public abstract class Expression
 	{
@@ -93,9 +93,9 @@ namespace Meta
 			}
 			return stop;
 		}
-		public IMap Evaluate(IMap parent)
+		public Map Evaluate(Map parent)
 		{
-			IMap result=EvaluateImplementation(parent);
+			Map result=EvaluateImplementation(parent);
 			if(Stop())
 			{
 				Interpreter.CallDebug(result);
@@ -103,7 +103,7 @@ namespace Meta
 			return result;
 		}
 
-		public abstract IMap EvaluateImplementation(IMap parent);
+		public abstract Map EvaluateImplementation(Map parent);
 		Extent extent;
 		public Extent Extent
 		{
@@ -125,7 +125,7 @@ namespace Meta
 			return argument.Stop();
 		}
 
-		public override IMap EvaluateImplementation(IMap parent)
+		public override Map EvaluateImplementation(Map parent)
 		{
 			object function=callable.Evaluate(parent);
 			if(function is ICallable)
@@ -134,7 +134,7 @@ namespace Meta
 			}
 			throw new MetaException("Object to be called is not callable.",this.Extent);
 		}
-		public Call(IMap code)
+		public Call(Map code)
 		{
 			this.callable=code[CodeKeys.Function].GetExpression();
 			this.argument=code[CodeKeys.Argument].GetExpression();
@@ -149,14 +149,14 @@ namespace Meta
 			return false;
 		}
 
-		public readonly IMap delayed;
-		public Delayed(IMap code)
+		public readonly Map delayed;
+		public Delayed(Map code)
 		{
 			this.delayed=code;
 		}
-		public override IMap EvaluateImplementation(IMap parent)
+		public override Map EvaluateImplementation(Map parent)
 		{
-			IMap result=delayed;
+			Map result=delayed;
 			result.Parent=parent;
 			return result;
 		}
@@ -178,13 +178,13 @@ namespace Meta
 			}
 			return stop;
 		}
-		public override IMap EvaluateImplementation(IMap parent)
+		public override Map EvaluateImplementation(Map parent)
 		{
-			IMap local=new NormalMap();
+			Map local=new NormalMap();
 			Evaluate(parent,ref local);
 			return local;
 		}
-		public void Evaluate(IMap parent,ref IMap local)
+		public void Evaluate(Map parent,ref Map local)
 		{
 			local.Parent=parent;
 			for(int i=0;i<statements.Count && i>=0;)
@@ -221,10 +221,10 @@ namespace Meta
 				}
 			}
 		}
-		public Program(IMap code)
+		public Program(Map code)
 		{
 			object a=code.Array;
-			foreach(IMap statement in code.Array)
+			foreach(Map statement in code.Array)
 			{
 				this.statements.Add(new Statement(statement));
 			}
@@ -259,16 +259,16 @@ namespace Meta
 
 	public abstract class Filter
 	{
-		public abstract IMap Detect(string text);
+		public abstract Map Detect(string text);
 	}
 	
 	public class Filters
 	{
 		public class DecimalFilter: Filter
 		{
-			public override IMap Detect(string text)
+			public override Map Detect(string text)
 			{
-				IMap result=null;
+				Map result=null;
 				int pointPos=text.IndexOf(".");
 				if(pointPos!=-1)
 				{
@@ -289,9 +289,9 @@ namespace Meta
 		}
 		public class FractionFilter: Filter
 		{
-			public override IMap Detect(string text)
+			public override Map Detect(string text)
 			{
-				IMap result=null;
+				Map result=null;
 				int slashPos=text.IndexOf("/");
 				if(slashPos!=-1)
 				{
@@ -348,9 +348,9 @@ namespace Meta
 				}
 				return result;
 			}
-			public override IMap Detect(string text)
+			public override Map Detect(string text)
 			{ 
-				IMap recognized;
+				Map recognized;
 				Integer integer=ParseInteger(text);
 				if(integer!=null)
 				{
@@ -365,7 +365,7 @@ namespace Meta
 		}
 		public class StringFilter:Filter
 		{
-			public override IMap Detect(string text)
+			public override Map Detect(string text)
 			{
 				return new NormalMap(text);
 			}
@@ -386,16 +386,16 @@ namespace Meta
 			return false;
 		}
 
-		public override IMap EvaluateImplementation(IMap parent)
+		public override Map EvaluateImplementation(Map parent)
 		{
 			return literal;
 		}
-		public Literal(IMap code)
+		public Literal(Map code)
 		{
 			this.literal=Filter((string)code.String);
 		}
-		public IMap literal=null;
-		public static IMap Filter(string text)
+		public Map literal=null;
+		public static Map Filter(string text)
 		{
 			if(text=="1/3")
 			{
@@ -403,7 +403,7 @@ namespace Meta
 			}
 			foreach(Filter recognition in recognitions)
 			{
-				IMap recognized=recognition.Detect(text);
+				Map recognized=recognition.Detect(text);
 				if(recognized!=null)
 				{
 					return recognized;
@@ -414,15 +414,15 @@ namespace Meta
 	}
 	public class Search: Expression
 	{
-		public Search(IMap code)
+		public Search(Map code)
 		{
 			this.search=code.GetExpression();
 		}
 		public Expression search;
-		public override IMap EvaluateImplementation(IMap parent)
+		public override Map EvaluateImplementation(Map parent)
 		{
-			IMap key=search.Evaluate(parent);
-			IMap selected=parent;
+			Map key=search.Evaluate(parent);
+			Map selected=parent;
 			while(!selected.ContainsKey(key))
 			{
 				selected=selected.Parent;
@@ -438,21 +438,21 @@ namespace Meta
 	{
 		public ArrayList keys=new ArrayList();
 		public Expression firstKey;
-		public Select(IMap code)
+		public Select(Map code)
 		{
-			firstKey=((IMap)code.Array[0]).GetExpression();
-			foreach(IMap key in code.Array.GetRange(1,code.Array.Count-1))
+			firstKey=((Map)code.Array[0]).GetExpression();
+			foreach(Map key in code.Array.GetRange(1,code.Array.Count-1))
 			{
 				keys.Add(key.GetExpression());
 			}
 		}
-		public override IMap EvaluateImplementation(IMap parent)
+		public override Map EvaluateImplementation(Map parent)
 		{
-			IMap selected=firstKey.Evaluate(parent);
+			Map selected=firstKey.Evaluate(parent);
 			for(int i=0;i<keys.Count;i++)
 			{
-				IMap key=((Expression)keys[i]).Evaluate(parent);
-				IMap selection=selected[key];
+				Map key=((Expression)keys[i]).Evaluate(parent);
+				Map selection=selected[key];
 				if(selection==null)
 				{
 					object test=selected[key];
@@ -465,9 +465,9 @@ namespace Meta
 	}
 	public class Statement
 	{
-		private IMap replaceValue;
-		private IMap replaceMap;
-		private IMap replaceKey;
+		private Map replaceValue;
+		private Map replaceMap;
+		private Map replaceKey;
 		public bool Undo()
 		{
 			if(replaceMap!=null) // TODO: handle "this" specially
@@ -493,14 +493,14 @@ namespace Meta
 			}
 			return stopReverse;
 		}
-		public void Realize(ref IMap parent)
+		public void Realize(ref Map parent)
 		{
-			IMap selected=parent;
-			IMap key;
+			Map selected=parent;
+			Map key;
 			
 			if(searchFirst)
 			{
-				IMap firstKey=((Expression)keys[0]).Evaluate(parent); 
+				Map firstKey=((Expression)keys[0]).Evaluate(parent); 
 				if(firstKey.Equals(new NormalMap("instanceEventChanged")))
 				{
 					int asdf=0;
@@ -517,15 +517,15 @@ namespace Meta
 			for(int i=0;i<keys.Count-1;i++)
 			{
 				key=((Expression)keys[i]).Evaluate(parent);
-				IMap selection=selected[key];
+				Map selection=selected[key];
 				if(selection==null)
 				{
 					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
 				}
 				selected=selection;
 			}
-			IMap lastKey=((Expression)keys[keys.Count-1]).Evaluate(parent);
-			IMap val=expression.Evaluate(parent);
+			Map lastKey=((Expression)keys[keys.Count-1]).Evaluate(parent);
+			Map val=expression.Evaluate(parent);
 			if(lastKey.Equals(SpecialKeys.This))
 			{
 				val.Parent=parent.Parent;
@@ -547,13 +547,13 @@ namespace Meta
 				selected[lastKey]=val;
 			}
 		}
-		public Statement(IMap code) 
+		public Statement(Map code) 
 		{
 			if(code.ContainsKey(CodeKeys.Search))
 			{
 				searchFirst=true;
 			}
-			foreach(IMap key in code[CodeKeys.Key].Array)
+			foreach(Map key in code[CodeKeys.Key].Array)
 			{
 				keys.Add(key.GetExpression());
 			}
@@ -592,32 +592,32 @@ namespace Meta
 			}
 		}
 
-		public static IMap Merge(params IMap[] arkvlToMerge)
+		public static Map Merge(params Map[] arkvlToMerge)
 		{
 			return MergeCollection(arkvlToMerge);
 		}
-		public static IMap MergeCollection(ICollection collection)
+		public static Map MergeCollection(ICollection collection)
 		{
-			IMap result=new NormalMap();
-			foreach(IMap current in collection)
+			Map result=new NormalMap();
+			foreach(Map current in collection)
 			{
 				foreach(DictionaryEntry entry in current)
 				{
-					result[(IMap)entry.Key]=(IMap)entry.Value;
+					result[(Map)entry.Key]=(Map)entry.Value;
 				}
 			}
 			return result;
 		}
-		public static IMap Run(string fileName,IMap argument)
+		public static Map Run(string fileName,Map argument)
 		{
-			IMap program=Interpreter.Compile(fileName);
+			Map program=Interpreter.Compile(fileName);
 			return CallProgram(program,argument,GetPersistantMaps(fileName));
 		}
-		public static IMap GetPersistantMaps(string fileName)
+		public static Map GetPersistantMaps(string fileName)
 		{
 			DirectoryInfo directory=new DirectoryInfo(Path.GetDirectoryName(fileName));
-			IMap root=new PersistantMap(directory);
-			IMap current=root;
+			Map root=new PersistantMap(directory);
+			Map current=root;
 			while(true)
 			{
 				if(String.Compare(directory.FullName,Interpreter.LibraryPath.FullName,true)==0)
@@ -630,19 +630,19 @@ namespace Meta
 			}
 			return root;
 		}
-		public static IMap RunWithoutLibrary(string fileName,IMap argument)
+		public static Map RunWithoutLibrary(string fileName,Map argument)
 		{
-			IMap program=Compile(fileName);
+			Map program=Compile(fileName);
 			return CallProgram(program,argument,null);
 		}
-		public static IMap CallProgram(IMap program,IMap argument,IMap current)
+		public static Map CallProgram(Map program,Map argument,Map current)
 		{
-			IMap callable=new NormalMap();
+			Map callable=new NormalMap();
 			callable[CodeKeys.Run]=program;
 			callable.Parent=current;
 			return callable.Call(argument);
 		}
-		public static IMap Compile(string fileName)
+		public static Map Compile(string fileName)
 		{
 			return (new MetaTreeParser()).map(ParseToAst(fileName));
 		}
@@ -686,7 +686,7 @@ namespace Meta
 		}
 		static Interpreter()
 		{
-			Assembly metaAssembly=Assembly.GetAssembly(typeof(IMap));
+			Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
 		}
 		public static DirectoryInfo LibraryPath
 		{
@@ -724,15 +724,15 @@ namespace Meta
 	}
 	public class MapException:ApplicationException
 	{
-		IMap map;
-		public MapException(IMap map,string message):base(message)
+		Map map;
+		public MapException(Map map,string message):base(message)
 		{
 			this.map=map;
 		}
 	}
 	public abstract class KeyException:MetaException
 	{ 
-		public KeyException(IMap key,Extent extent):base(extent)
+		public KeyException(Map key,Extent extent):base(extent)
 		{
 			message="Key ";
 			if(key.IsString)
@@ -755,23 +755,23 @@ namespace Meta
 	}
 	public class KeyNotFoundException:KeyException
 	{
-		public KeyNotFoundException(IMap key,Extent extent):base(key,extent)
+		public KeyNotFoundException(Map key,Extent extent):base(key,extent)
 		{
 		}
 	}
 	public class KeyDoesNotExistException:KeyException
 	{
 		private object selected;
-		public KeyDoesNotExistException(IMap key,Extent extent,object selected):base(key,extent)
+		public KeyDoesNotExistException(Map key,Extent extent,object selected):base(key,extent)
 		{
 			this.selected=selected;
 		}
 	}
 	public interface ICallable
 	{
-		IMap Call(IMap argument);
+		Map Call(Map argument);
 	}
-	public abstract class IMap: ICallable, IEnumerable
+	public abstract class Map: ICallable, IEnumerable
 	{	
 		public bool IsFunction
 		{
@@ -780,60 +780,60 @@ namespace Meta
 				return ContainsKey(CodeKeys.Run);
 			}
 		}
-		public static implicit operator IMap(bool boolean)
+		public static implicit operator Map(bool boolean)
 		{
 			return new NormalMap(new Integer(boolean?1:0));
 		}
-		public static implicit operator IMap(char character)
+		public static implicit operator Map(char character)
 		{
 			return new NormalMap(new Integer(character));
 		}
-		public static implicit operator IMap(byte integer)
+		public static implicit operator Map(byte integer)
 		{
 			return new NormalMap(new Integer(integer));
 		}
-		public static implicit operator IMap(sbyte integer)
+		public static implicit operator Map(sbyte integer)
 		{
 			return new NormalMap(new Integer(integer));
 		}
-		public static implicit operator IMap(uint integer)
+		public static implicit operator Map(uint integer)
 		{
 			return new NormalMap(new Integer(integer));
 		}
-		public static implicit operator IMap(ushort integer)
-		{
-			return new NormalMap(new Integer(integer));
-		}
-
-
-		public static implicit operator IMap(int integer)
-		{
-			return new NormalMap(new Integer(integer));
-		}
-		public static implicit operator IMap(long integer)
-		{
-			return new NormalMap(new Integer(integer));
-		}
-		public static implicit operator IMap(ulong integer)
+		public static implicit operator Map(ushort integer)
 		{
 			return new NormalMap(new Integer(integer));
 		}
 
 
-		public static implicit operator IMap(double number)
+		public static implicit operator Map(int integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+		public static implicit operator Map(long integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+		public static implicit operator Map(ulong integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+
+
+		public static implicit operator Map(double number)
 		{
 			return new NormalMap(number);
 		}
-		public static implicit operator IMap(float number)
+		public static implicit operator Map(float number)
 		{
 			return new NormalMap(number);
 		}
-		public static implicit operator IMap(decimal number)
+		public static implicit operator Map(decimal number)
 		{
 			return new NormalMap(Convert.ToDouble(number));
 		}
 
-		public static implicit operator IMap(string text)
+		public static implicit operator Map(string text)
 		{
 			return new NormalMap(text);
 		}
@@ -900,7 +900,7 @@ namespace Meta
 		{
 			get;
 		}
-		public IMap Argument
+		public Map Argument
 		{
 			get
 			{
@@ -911,7 +911,7 @@ namespace Meta
 				arg=value;
 			}
 		}
-		IMap arg=null;
+		Map arg=null;
 		public virtual bool IsString
 		{
 			get
@@ -919,10 +919,10 @@ namespace Meta
 				return String!=null;
 			}
 		}
-		public static string GetString(IMap map)
+		public static string GetString(Map map)
 		{
 			string text="";
-			foreach(IMap key in map.Keys)
+			foreach(Map key in map.Keys)
 			{
 				if(key.Integer!=null && map[key].Integer!=null)
 				{
@@ -949,7 +949,7 @@ namespace Meta
 				return GetString(this);
 			}
 		}
-		public virtual IMap Parent
+		public virtual Map Parent
 		{
 			get
 			{
@@ -972,7 +972,7 @@ namespace Meta
 			get
 			{
 				ArrayList array=new ArrayList();
-				foreach(IMap key in this.Keys) // TODO: need to sort the keys, by integer?? or require that keys are already sorted
+				foreach(Map key in this.Keys) // TODO: need to sort the keys, by integer?? or require that keys are already sorted
 				{
 					if(key.IsInteger)
 					{
@@ -982,16 +982,16 @@ namespace Meta
 				return array;
 			}
 		}
-		public abstract IMap this[IMap key] 
+		public abstract Map this[Map key] 
 		{
 			get;
 			set;
 		}
-		public virtual IMap Call(IMap argument)
+		public virtual Map Call(Map argument)
 		{
 			Argument=argument;
 			Expression function=(Expression)this[CodeKeys.Run].GetExpression();
-			IMap result;
+			Map result;
 			result=function.Evaluate(this);
 			return result;
 		}
@@ -999,7 +999,7 @@ namespace Meta
 		{
 			get;
 		}
-		public abstract IMap Clone();
+		public abstract Map Clone();
 		public virtual Expression GetExpression()
 		{
 			Expression expression;
@@ -1034,7 +1034,7 @@ namespace Meta
 			((Expression)expression).Extent=this.Extent;
 			return expression;
 		}
-		public bool ContainsKey(IMap key)
+		public bool ContainsKey(Map key)
 		{
 			bool containsKey;
 			if(key.Equals(SpecialKeys.Arg))
@@ -1055,7 +1055,7 @@ namespace Meta
 			}
 			return containsKey;
 		}
-		protected virtual bool ContainsKeyImplementation(IMap key)
+		protected virtual bool ContainsKeyImplementation(Map key)
 		{
 			return Keys.Contains(key);
 		}
@@ -1066,7 +1066,7 @@ namespace Meta
 		public override int GetHashCode() 
 		{
 			int hash=0;
-			foreach(IMap key in this.Keys)
+			foreach(Map key in this.Keys)
 			{
 				unchecked
 				{
@@ -1086,14 +1086,14 @@ namespace Meta
 			{
 				extent=value;
 			}
-		}		private IMap parent;
+		}		private Map parent;
 	}
 	
-	public abstract class StrategyMap: IMap, ISerializeSpecial
+	public abstract class StrategyMap: Map, ISerializeSpecial
 	{
 		public void InitFromStrategy(MapStrategy clone)
 		{
-			foreach(IMap key in clone.Keys)
+			foreach(Map key in clone.Keys)
 			{
 				this[key]=clone[key];
 			}
@@ -1127,11 +1127,11 @@ namespace Meta
 				return strategy.Array;
 			}
 		}
-		public override IMap this[IMap key] 
+		public override Map this[Map key] 
 		{
 			get
 			{
-				IMap result;
+				Map result;
 				if(key.Equals(SpecialKeys.Parent))
 				{
 					result=Parent;
@@ -1161,7 +1161,7 @@ namespace Meta
 					}
 					else
 					{
-						IMap val;
+						Map val;
 						val=value.Clone();
 						val.Parent=this;
 						strategy[key]=val;
@@ -1169,7 +1169,7 @@ namespace Meta
 				}
 			}
 		}
-		public override IMap Call(IMap argument)
+		public override Map Call(Map argument)
 		{
 			return strategy.Call(argument);
 		}
@@ -1180,14 +1180,14 @@ namespace Meta
 				return strategy.Keys;
 			}
 		}
-		public override IMap Clone()
+		public override Map Clone()
 		{
-			IMap clone=strategy.CloneMap();
+			Map clone=strategy.CloneMap();
 			clone.Parent=Parent;
 			clone.Extent=Extent;
 			return clone;
 		}
-		protected override bool ContainsKeyImplementation(IMap key)
+		protected override bool ContainsKeyImplementation(Map key)
 		{
 			return strategy.ContainsKey(key);
 		}
@@ -1251,7 +1251,7 @@ namespace Meta
 	}
 	public class PersistantMap:StrategyMap
 	{
-		public override IMap Clone()
+		public override Map Clone()
 		{
 			return base.Clone();
 		}
@@ -1306,7 +1306,7 @@ namespace Meta
 			}
 			return new NormalMap(root);
 		}
-		protected IMap cachedAssemblyInfo=new NormalMap();
+		protected Map cachedAssemblyInfo=new NormalMap();
 		protected NormalMap cache=new NormalMap();
 	}
 	public class GAC: AssemblyStrategy
@@ -1318,7 +1318,7 @@ namespace Meta
 				return null;
 			}
 		}
-		public override IMap this[IMap key]
+		public override Map this[Map key]
 		{
 			get
 			{
@@ -1361,7 +1361,7 @@ namespace Meta
 		{
 			cache=NamespacesFromAssemblies(GlobalAssemblyCache.Assemblies);
 		}
-		public static IMap library=new PersistantMap(new GAC());
+		public static Map library=new PersistantMap(new GAC());
 	}
 	public class DirectoryStrategy:AssemblyStrategy
 	{
@@ -1436,11 +1436,11 @@ namespace Meta
 				return null;
 			}
 		}
-		public override IMap this[IMap key]
+		public override Map this[Map key]
 		{
 			get
 			{
-				IMap val;
+				Map val;
 				if(key.IsString && ValidName(key.String))
 				{
 					string path=Path.Combine(directory.FullName,key.String);
@@ -1481,7 +1481,7 @@ namespace Meta
 				}
 			}
 		}
-		public static void SaveToFile(IMap meta,string path)
+		public static void SaveToFile(Map meta,string path)
 		{
 			Directory.CreateDirectory(Path.GetDirectoryName(path));
 			File.Create(path).Close();
@@ -1495,11 +1495,11 @@ namespace Meta
 	}
 	public class Serialize
 	{
-		public static string Key(IMap key)
+		public static string Key(Map key)
 		{
 			return Key(key,"");
 		}
-		private static string Key(IMap key,string indentation)
+		private static string Key(Map key,string indentation)
 		{
 			string text;
 			if(key.IsString)
@@ -1516,11 +1516,11 @@ namespace Meta
 			}
 			return text;			
 		}
-		public static string Value(IMap val)
+		public static string Value(Map val)
 		{
 			return Value(val,"");
 		}
-		private static string Value(IMap val,string indentation)
+		private static string Value(Map val,string indentation)
 		{
 			string text;
 			if(val.IsString)
@@ -1537,15 +1537,15 @@ namespace Meta
 			}
 			return text;
 		}
-		private static string IntegerKey(IMap number)
+		private static string IntegerKey(Map number)
 		{
 			return number.Integer.ToString();
 		}
-		private static string IntegerValue(IMap number)
+		private static string IntegerValue(Map number)
 		{
 			return literalDelimiter+number.ToString()+literalDelimiter;
 		}
-		private static string StringKey(IMap key,string indentation)
+		private static string StringKey(Map key,string indentation)
 		{
 			string text;
 			if(IsLiteralKey(key.String))
@@ -1558,7 +1558,7 @@ namespace Meta
 			}
 			return text;
 		}
-		private static string StringValue(IMap val,string indentation)
+		private static string StringValue(Map val,string indentation)
 		{
 			string text;
 			if(Literal.Filter(val.String).IsString)
@@ -1609,16 +1609,16 @@ namespace Meta
 			return text;
 		}
 		// TODO: put this into another class
-		private static string MapKey(IMap map,string indentation)
+		private static string MapKey(Map map,string indentation)
 		{
 			return indentation + leftBracket + newLine + MapValue(map,indentation) + rightBracket;
 		}
-		private static string MapValue(IMap map,string indentation)
+		private static string MapValue(Map map,string indentation)
 		{
 			string text=newLine;
 			foreach(DictionaryEntry entry in map)
 			{
-				text+=indentation + Key((IMap)entry.Key,indentation)	+ "=" + Value((IMap)entry.Value,indentation+'\t');
+				text+=indentation + Key((Map)entry.Key,indentation)	+ "=" + Value((Map)entry.Value,indentation+'\t');
 				if(!text.EndsWith(newLine))
 				{
 					text+=newLine;
@@ -1668,26 +1668,26 @@ namespace Meta
 				return GetMap().Integer;
 			}
 		}
-		private IMap GetMap()
+		private Map GetMap()
 		{
-			IMap data=Interpreter.RunWithoutLibrary(this.file.FullName,new NormalMap());
+			Map data=Interpreter.RunWithoutLibrary(this.file.FullName,new NormalMap());
 			data.Parent=this.map;
 			return data;
 		}
-		private void SaveMap(IMap map)
+		private void SaveMap(Map map)
 		{
 			DirectoryStrategy.SaveToFile(map,file.FullName);
 		}
-		public override IMap this[IMap key]
+		public override Map this[Map key]
 		{
 			get
 			{
-				IMap data=GetMap();
+				Map data=GetMap();
 				return data[key];
 			}
 			set
 			{
-				IMap data=GetMap();
+				Map data=GetMap();
 				data[key]=value;
 				SaveMap(data);
 			}
@@ -1726,15 +1726,15 @@ namespace Meta
 				return cache;
 			}
 		}
-		public override bool ContainsKey(IMap key)
+		public override bool ContainsKey(Map key)
 		{
 			return Cache.Contains(key);
 		}
-		public override IMap this[IMap key]
+		public override Map this[Map key]
 		{
 			get
 			{
-				return (IMap)Cache[key];
+				return (Map)Cache[key];
 			}
 			set
 			{
@@ -1811,13 +1811,13 @@ namespace Meta
 			}
 			foreach(DictionaryEntry entry in namespaces)
 			{
-				cache[new NormalMap((string)entry.Key)]=(IMap)entry.Value;
+				cache[new NormalMap((string)entry.Key)]=(Map)entry.Value;
 			}
 		}
 	}
 	public class Transform
 	{
-		public static object ToDotNet(IMap meta) 
+		public static object ToDotNet(Map meta) 
 		{
 			object dotNet;
 			if(meta.IsInteger)
@@ -1834,12 +1834,12 @@ namespace Meta
 			}
 			return dotNet;
 		}
-		public static object ToDotNet(IMap meta,Type target)
+		public static object ToDotNet(Map meta,Type target)
 		{
 			bool isConverted;
 			return ToDotNet(meta,target,out isConverted);
 		}
-		public static object ToDotNet(IMap meta,Type target,out bool isConverted)
+		public static object ToDotNet(Map meta,Type target,out bool isConverted)
 		{
 			object dotNet=null;
 			if((target.IsSubclassOf(typeof(Delegate))
@@ -2017,17 +2017,17 @@ namespace Meta
 			}
 			return dotNet;
 		}
-		private static bool IsIntegerInRange(IMap meta,Integer minValue,Integer maxValue)
+		private static bool IsIntegerInRange(Map meta,Integer minValue,Integer maxValue)
 		{
 			return meta.IsInteger && meta.Integer>=minValue && meta.Integer<=maxValue;
 		}
-		private static bool IsFractionInRange(IMap meta,double minValue,double maxValue)
+		private static bool IsFractionInRange(Map meta,double minValue,double maxValue)
 		{
 			return meta.IsFraction && meta.Fraction>=minValue && meta.Fraction<=maxValue;
 		}
-		public static IMap ToMeta(object dotNet)
+		public static Map ToMeta(object dotNet)
 		{
-			IMap meta;
+			Map meta;
 			if(dotNet==null)
 			{
 				meta=null;
@@ -2071,9 +2071,9 @@ namespace Meta
 						{
 							meta=(int)Convert.ToInt32((Enum)dotNet);
 						}
-						else if(dotNet is IMap)
+						else if(dotNet is Map)
 						{
-							meta=(IMap)dotNet;
+							meta=(Map)dotNet;
 						}
 						else
 						{
@@ -2109,8 +2109,8 @@ namespace Meta
 	}
 	public class MapEnumerator: IEnumerator
 	{
-		private IMap map; 
-		public MapEnumerator(IMap map)
+		private Map map; 
+		public MapEnumerator(Map map)
 		{
 			this.map=map;
 		}
@@ -2118,7 +2118,7 @@ namespace Meta
 		{
 			get
 			{
-				return new DictionaryEntry(map.Keys[index],map[(IMap)map.Keys[index]]);
+				return new DictionaryEntry(map.Keys[index],map[(Map)map.Keys[index]]);
 			}
 		}
 		public bool MoveNext()
@@ -2133,7 +2133,7 @@ namespace Meta
 		private int index=-1;
 	}
 	public delegate object DelegateCreatedForGenericDelegates();
-	public class DotNetMethod: IMap,ICallable
+	public class DotNetMethod: Map,ICallable
 	{
 		public override Integer Integer
 		{
@@ -2143,7 +2143,7 @@ namespace Meta
 			}
 		}
 
-		public override IMap Clone()
+		public override Map Clone()
 		{
 			return new DotNetMethod(this.name,this.target,this.targetType);
 		}
@@ -2154,7 +2154,7 @@ namespace Meta
 				return new ArrayList();
 			}
 		}
-		public override IMap this[IMap key]
+		public override Map this[Map key]
 		{
 			get
 			{
@@ -2186,7 +2186,7 @@ namespace Meta
 				return result;
 			}
 		}
-		public override IMap Call(IMap argument)
+		public override Map Call(Map argument)
 		{
 			if(this.name=="AddRange")
 			{
@@ -2233,7 +2233,7 @@ namespace Meta
 				{
 					if(argument.Array.Count==method.GetParameters().Length)
 					{ 
-						if(argument.Array.Count==((IMap)argument).Keys.Count)
+						if(argument.Array.Count==((Map)argument).Keys.Count)
 						{ 
 							rightNumberArgumentMethods.Add(method);
 						}
@@ -2250,7 +2250,7 @@ namespace Meta
 					ParameterInfo[] arPrmtifParameters=method.GetParameters();// TODO: rename
 					for(int i=0;argumentsMatched && i<arPrmtifParameters.Length;i++)
 					{
-						arguments.Add(Transform.ToDotNet((IMap)argument.Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
+						arguments.Add(Transform.ToDotNet((Map)argument.Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
 					}
 					if(argumentsMatched)
 					{
@@ -2273,7 +2273,7 @@ namespace Meta
 			}
 			return Transform.ToMeta(result);
 		}
-		public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,IMap code)
+		public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,Map code)
 		{
 			CSharpCodeProvider codeProvider=new CSharpCodeProvider();
 			ICodeCompiler compiler=codeProvider.CreateCompiler();
@@ -2290,7 +2290,7 @@ namespace Meta
 			source+="public class EventHandlerContainer{public "+returnType+" EventHandlerMethod";
 			int counter=1;
 			string argumentList="(";
-			string argumentBuiling="IMap arg=new NormalMap();";
+			string argumentBuiling="Map arg=new NormalMap();";
 			if(method!=null)
 			{
 				foreach(ParameterInfo parameter in method.GetParameters())
@@ -2307,7 +2307,7 @@ namespace Meta
 			argumentList+=")";
 			source+=argumentList+"{";
 			source+=argumentBuiling;
-			source+="IMap result=callable.Call(arg);";
+			source+="Map result=callable.Call(arg);";
 			if(method!=null)
 			{
 				if(!method.ReturnType.Equals(typeof(void)))
@@ -2322,15 +2322,15 @@ namespace Meta
 				source+=" result;";
 			}
 			source+="}";
-			source+="private IMap callable;";
-			source+="public EventHandlerContainer(IMap callable) {this.callable=callable;}}";
-			string metaDllLocation=Assembly.GetAssembly(typeof(IMap)).Location;
+			source+="private Map callable;";
+			source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
+			string metaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
 			ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
 			assemblyNames.AddRange(Interpreter.loadedAssemblies);
 			CompilerParameters compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 			CompilerResults compilerResults=compiler.CompileAssemblyFromSource(compilerParameters,source);
 			Type containerType=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
-			object container=containerType.GetConstructor(new Type[]{typeof(IMap)}).Invoke(new object[] {code});
+			object container=containerType.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {code});
 			if(method==null)
 			{
 				delegateType=typeof(DelegateCreatedForGenericDelegates);
@@ -2417,7 +2417,7 @@ namespace Meta
 			}
 		}
 
-		public override IMap Clone()
+		public override Map Clone()
 		{
 			return new DotNetClass(type);
 		}
@@ -2426,7 +2426,7 @@ namespace Meta
 		{
 			this.constructor=new DotNetMethod(this.type);
 		}
-		public override IMap Call(IMap argument)
+		public override Map Call(Map argument)
 		{
 			return constructor.Call(argument);
 		}
@@ -2455,7 +2455,7 @@ namespace Meta
 		{
 			return obj.ToString();
 		}
-		public override IMap Clone()
+		public override Map Clone()
 		{
 			return new DotNetObject(obj);
 		}
@@ -2485,11 +2485,11 @@ namespace Meta
 				}
 			}
 		}
-		public virtual IMap Call(IMap argument)
+		public virtual Map Call(Map argument)
 		{
 			map.Argument=argument;
 			Expression function=(Expression)this[CodeKeys.Run].GetExpression();
-			IMap result;
+			Map result;
 			result=function.Evaluate(map);
 			return result;
 		}
@@ -2498,9 +2498,9 @@ namespace Meta
 		{
 			return null;
 		}
-		public virtual IMap CloneMap() // TODO: move into IMap
+		public virtual Map CloneMap() // TODO: move into Map
 		{
-			IMap clone;
+			Map clone;
 			NormalStrategy strategy=(NormalStrategy)this.Clone();
 			if(strategy!=null)
 			{
@@ -2509,7 +2509,7 @@ namespace Meta
 			else
 			{
 				clone=new NormalMap();
-				foreach(IMap key in Keys)
+				foreach(Map key in Keys)
 				{
 					clone[key]=this[key];
 				}
@@ -2539,20 +2539,20 @@ namespace Meta
 				return Keys.Count;
 			}
 		}
-		public abstract IMap this[IMap key] 
+		public abstract Map this[Map key] 
 		{
 			get;
 			set;
 		}
 
-		public virtual bool ContainsKey(IMap key)
+		public virtual bool ContainsKey(Map key)
 		{
 			return Keys.Contains(key);
 		}
 		public override int GetHashCode()
 		{
 			int hash=0;
-			foreach(IMap key in this.Keys)
+			foreach(Map key in this.Keys)
 			{
 				unchecked
 				{
@@ -2579,7 +2579,7 @@ namespace Meta
 			else
 			{
 				isEqual=true;
-				foreach(IMap key in this.Keys) 
+				foreach(Map key in this.Keys) 
 				{
 					if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy)[key].Equals(this[key]))
 					{
@@ -2678,7 +2678,7 @@ namespace Meta
 				return text.Length;
 			}
 		}
-		public override IMap this[IMap key]
+		public override Map this[Map key]
 		{
 			get
 			{
@@ -2700,7 +2700,7 @@ namespace Meta
 				map.strategy[key]=value;
 			}
 		}
-		public override bool ContainsKey(IMap key) 
+		public override bool ContainsKey(Map key) 
 		{
 			if(key.IsInteger)
 			{
@@ -2792,7 +2792,7 @@ namespace Meta
 				}
 				else
 				{
-					foreach(IMap val in this.Array)
+					foreach(Map val in this.Array)
 					{
 						if(val.IsInteger)
 						{
@@ -2830,11 +2830,11 @@ namespace Meta
 				return dictionary.Count;
 			}
 		}
-		public override IMap this[IMap key] 
+		public override Map this[Map key] 
 		{
 			get
 			{
-				return (IMap)dictionary[key];
+				return (Map)dictionary[key];
 			}
 			set
 			{
@@ -2845,12 +2845,12 @@ namespace Meta
 				dictionary[key]=value;
 			}
 		}
-		public override bool ContainsKey(IMap key) 
+		public override bool ContainsKey(Map key) 
 		{
 			return dictionary.Contains(key);
 		}
 	}
-	public abstract class DotNetContainer: IMap, ISerializeSpecial
+	public abstract class DotNetContainer: Map, ISerializeSpecial
 	{
 		public void Serialize(string indentation, string[] functions, StringBuilder stringBuilder)
 		{
@@ -2861,7 +2861,7 @@ namespace Meta
 			get
 			{
 				ArrayList array=new ArrayList();
-				foreach(IMap key in Keys)
+				foreach(Map key in Keys)
 				{
 					if(key.IsInteger)
 					{
@@ -2871,7 +2871,7 @@ namespace Meta
 				return array;
 			}
 		}
-		protected override bool ContainsKeyImplementation(IMap key)
+		protected override bool ContainsKeyImplementation(Map key)
 		{
 			if(key.IsString)
 			{
@@ -2883,7 +2883,7 @@ namespace Meta
 				}
 			}
 			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
-			IMap argument=new NormalMap();
+			Map argument=new NormalMap();
 			argument[1]=key;
 			try
 			{
@@ -2909,11 +2909,11 @@ namespace Meta
 				return MTable.Count;
 			}
 		}
-		public override IMap this[IMap key] 
+		public override Map this[Map key] 
 		{
 			get
 			{
-				IMap result;
+				Map result;
 				if(key.IsString && type.GetMember(key.String,bindingFlags).Length>0)
 				{
 					string text=key.String;
@@ -2966,7 +2966,7 @@ namespace Meta
 				else
 				{
 					DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
-					IMap argument=new NormalMap();
+					Map argument=new NormalMap();
 					argument[1]=key;
 					try
 					{
@@ -3040,7 +3040,7 @@ namespace Meta
 				else
 				{
 					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type);
-					IMap argument=new NormalMap();
+					Map argument=new NormalMap();
 					argument[1]=key;
 					argument[2]=value;
 					try
@@ -3058,7 +3058,7 @@ namespace Meta
 		{
 			return indent;
 		}
-		public Delegate CreateEventDelegate(string name,IMap code)
+		public Delegate CreateEventDelegate(string name,Map code)
 		{
 			EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
 				BindingFlags.Static|BindingFlags.Instance);
@@ -3200,11 +3200,11 @@ namespace Meta
 				return keys;
 			}
 		}
-		public override IMap this[IMap key]
+		public override Map this[Map key]
 		{
 			get
 			{
-				IMap result;
+				Map result;
 				if(key.Equals(NumberKeys.EmptyMap))
 				{
 					if(number==0)
@@ -3247,7 +3247,7 @@ namespace Meta
 			{
 				if(key.Equals(NumberKeys.EmptyMap))
 				{
-					IMap map=value;// TODO: remove
+					Map map=value;// TODO: remove
 				}
 				else if(key.Equals(NumberKeys.Negative))
 				{
@@ -3270,7 +3270,7 @@ namespace Meta
 				}
 			}
 		}
-		private void Panic(IMap key,IMap val)
+		private void Panic(Map key,Map val)
 		{
 			map.strategy=this.Clone();
 			map.strategy[key]=val;

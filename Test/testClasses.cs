@@ -82,25 +82,25 @@ namespace testClasses
 		}
 	}
 	public class NamedNoConversion:TestClass { //refactor
-		public NamedNoConversion(IMap arg) 
+		public NamedNoConversion(Map arg) 
 		{
-			IMap def=new NormalMap();
+			Map def=new NormalMap();
 			def[1]="null";
 			def["y"]="null";
 			def["p2"]="null";
-			arg=(IMap)Interpreter.Merge(def,arg);
+			arg=(Map)Interpreter.Merge(def,arg);
 
 			this.x=arg[1].String;
 			this.y=arg["y"].String;
 			this.z=arg["p2"].String;
 		}
-		public string Concatenate(IMap arg) 
+		public string Concatenate(Map arg) 
 		{
-			IMap def=new NormalMap();
+			Map def=new NormalMap();
 			def[1]="null";
 			def["b"]="null";
 			def["c"]="null";
-			arg=(IMap)Interpreter.Merge(def,arg);
+			arg=(Map)Interpreter.Merge(def,arg);
 			return arg[1].String+arg["b"].String+arg["c"].String+
 				this.x+this.y+this.z;
 		}

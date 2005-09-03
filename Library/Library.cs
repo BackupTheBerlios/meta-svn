@@ -12,23 +12,23 @@ public class map
 	{
 		public static int line=0;
 	}
-	public static bool ContainsKey(IMap map,IMap key) 
+	public static bool ContainsKey(Map map,Map key) 
 	{
 		string a="";
 		return map.ContainsKey(key);
 	}
-	public static int Length(IMap map) 
+	public static int Length(Map map) 
 	{
 		return map.Count;
 	}
-	public static IMap TrimStart(IMap arg)  // TODO: remove this completely
+	public static Map TrimStart(Map arg)  // TODO: remove this completely
 	{
-		IMap map=arg[1];
+		Map map=arg[1];
 		object obj=arg[2];
 
-		IMap result=new NormalMap();
+		Map result=new NormalMap();
 		int counter=1;
-		foreach(IMap o in map.Array) 
+		foreach(Map o in map.Array) 
 		{
 			if(obj.Equals(o)) 
 			{
@@ -42,7 +42,7 @@ public class map
 		}
 		return result;
 	}
-	//	public static int CountStart(IMap map,object obj) { // TODO: dumb name
+	//	public static int CountStart(Map map,object obj) { // TODO: dumb name
 	//		int count=0;
 	//		foreach(object o in map.Array) {
 	//			if(obj.Equals(o)) {
@@ -54,25 +54,25 @@ public class map
 	//		}
 	//		return count;
 	//	}
-	public static IMap Keys(IMap map) 
+	public static Map Keys(Map map) 
 	{
 		int i=1;
-		IMap keys=new NormalMap();
+		Map keys=new NormalMap();
 		foreach(DictionaryEntry entry in map) 
 		{
-			keys[i]=(IMap)entry.Key;
+			keys[i]=(Map)entry.Key;
 			i++;
 		}
 		return keys;
 	}
-	public static IMap Join(IMap arg) 
+	public static Map Join(Map arg) 
 	{ // rename to "append"
 		ArrayList maps=arg.Array;
 		int i=1;
-		IMap combined=new NormalMap();
-		foreach(IMap map in maps) 
+		Map combined=new NormalMap();
+		foreach(Map map in maps) 
 		{ // TODO: eigentlich nur die Arrays verwenden
-			foreach(IMap val in map.Array) 
+			foreach(Map val in map.Array) 
 			{
 				combined[i]=val;
 				i++;
@@ -80,24 +80,24 @@ public class map
 		}
 		return combined;
 	}
-	public static IMap Merge(IMap arg) // TODO: replace all Maps with IMaps
+	public static Map Merge(Map arg) // TODO: replace all Maps with Maps
 	{
 		return Interpreter.MergeCollection(arg.Array);
 	}
-	public static object Init(object obj,IMap map) 
+	public static object Init(object obj,Map map) 
 	{ // make merge general enough to replace this
 		DotNetObject DotNetObject=new DotNetObject(obj);
 		foreach(DictionaryEntry entry in map) 
 		{
-			DotNetObject[(IMap)entry.Key]=(IMap)entry.Value;
+			DotNetObject[(Map)entry.Key]=(Map)entry.Value;
 		}
 		return obj;
 	}
-	public static IMap Remove(object oToRemove,IMap mArray)
+	public static Map Remove(object oToRemove,Map mArray)
 	{
-		IMap mResult=new NormalMap();
+		Map mResult=new NormalMap();
 		int iCounter=1;
-		foreach(IMap oIntegerKeyValue in mArray.Array)
+		foreach(Map oIntegerKeyValue in mArray.Array)
 		{
 			if(!oIntegerKeyValue.Equals(oToRemove))
 			{
@@ -107,24 +107,24 @@ public class map
 		}
 		return mResult;
 	}
-	public static IMap Foreach(IMap mArray,IMap mFunction) // TODO: use MapInfos here
+	public static Map Foreach(Map mArray,Map mFunction) // TODO: use MapInfos here
 	{
-		IMap mResult=new NormalMap();
+		Map mResult=new NormalMap();
 		int iCounter=1;
-		foreach(IMap oIntegerKeyValue in mArray.Array)
+		foreach(Map oIntegerKeyValue in mArray.Array)
 		{
 			mResult[iCounter]=mFunction.Call(oIntegerKeyValue);
 			iCounter++;
 		}
 		return mResult;
 	}
-	public static IMap Apply(IMap mFunction,IMap mArray) // TODO: use MapInfo
+	public static Map Apply(Map mFunction,Map mArray) // TODO: use MapInfo
 	{ // switch this the arguments around
-		IMap mResult=new NormalMap();
+		Map mResult=new NormalMap();
 		int counter=1;
-		foreach(IMap oKey in mArray.Keys) 
+		foreach(Map oKey in mArray.Keys) 
 		{
-			IMap mArgument=new NormalMap();
+			Map mArgument=new NormalMap();
 			mArgument["key"]=oKey;
 			mArgument["value"]=mArray[oKey];
 			mResult[counter]=mFunction.Call(mArgument);
@@ -132,11 +132,11 @@ public class map
 		}
 		return mResult;
 	}
-	public static object If(IMap argM) 
+	public static object If(Map argM) 
 	{
 		bool conditionB=(bool)Convert.ToBoolean(Meta.Transform.ToDotNet(argM[1]));//,typeof(bool));
-		IMap thenF=argM["then"];
-		IMap elseF=argM["else"];
+		Map thenF=argM["then"];
+		Map elseF=argM["else"];
 		if(conditionB) 
 		{
 			return thenF.Call(new NormalMap());
@@ -161,7 +161,7 @@ public class logic
 	{
 		return !a;
 	}
-	public static bool And(IMap arg) 
+	public static bool And(Map arg) 
 	{
 		foreach(bool val in arg.Array) 
 		{
@@ -172,7 +172,7 @@ public class logic
 		}
 		return true;
 	}
-	public static bool Or(IMap arg) 
+	public static bool Or(Map arg) 
 	{
 		foreach(bool val in arg.Array) 
 		{
@@ -186,27 +186,27 @@ public class logic
 }
 public class math
 {
-	public static IMap Add(IMap x,IMap y) // TODO: decide whether to use native types in library or not, and apply everywhere
+	public static Map Add(Map x,Map y) // TODO: decide whether to use native types in library or not, and apply everywhere
 	{
 		return new NormalMap(x.Integer+y.Integer);
 	}
-	public static IMap Subtract(IMap x,IMap y) 
+	public static Map Subtract(Map x,Map y) 
 	{
 		return new NormalMap(x.Integer-y.Integer);		
 	}
-	public static IMap Multiply(IMap x,IMap y) 
+	public static Map Multiply(Map x,Map y) 
 	{
 		return new NormalMap(x.Integer*y.Integer);
 	}
-	public static IMap Divide(IMap x,IMap y) 
+	public static Map Divide(Map x,Map y) 
 	{
 		return new NormalMap(x.Integer/y.Integer);
 	}
-	public static bool Smaller(IMap x,IMap y) 
+	public static bool Smaller(Map x,Map y) 
 	{
 		return x.Integer<y.Integer;
 	}
-	public static bool Greater(IMap x,IMap y) 
+	public static bool Greater(Map x,Map y) 
 	{
 		return x.Integer>y.Integer;
 	}

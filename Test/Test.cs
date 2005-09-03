@@ -48,7 +48,7 @@ namespace Test
 					throw new ApplicationException("File "+file+" not found.");
 				}
 
-				IMap result=Interpreter.Run(file,new NormalMap());
+				Map result=Interpreter.Run(file,new NormalMap());
 				if(result.IsString)
 				{
 					Console.Write("Content-Type: text/html\n\n");
@@ -152,7 +152,7 @@ namespace Test
 		}
 		public class CompileToMap:TestCase 
 		{
-			public static IMap map;
+			public static Map map;
 			public override object Run() 
 			{
 				map=Interpreter.Compile(Path.Combine(
@@ -182,7 +182,7 @@ namespace Test
 				{
 					file.Delete();
 				}
-				IMap argument=new NormalMap();
+				Map argument=new NormalMap();
 				argument[1]="first arg";
 				argument[2]="second=arg";
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
@@ -192,7 +192,7 @@ namespace Test
 //		{
 //			public override object Run() 
 //			{
-//				IMap argument=new NormalMap();
+//				Map argument=new NormalMap();
 //				argument[1]="first arg";
 //				argument[2]="second=arg";
 //				Meta.GAC.library=new PersistantMap(new Meta.GAC());

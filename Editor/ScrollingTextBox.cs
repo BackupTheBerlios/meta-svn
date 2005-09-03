@@ -246,8 +246,8 @@ public class ScrollingTextBox: RichTextBox
 	public void ShowDebugValue(object debugValue)
 	{
 		Graphics graphics=this.CreateGraphics();
-		MessageBox.Show(Serialize.Value((IMap)debugValue));
-		graphics.DrawString(Serialize.Value((IMap)debugValue),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
+		MessageBox.Show(Serialize.Value((Map)debugValue));
+		graphics.DrawString(Serialize.Value((Map)debugValue),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
 	}
 
 	public int ColumnFromScrollColumn(int iLine,int iScrollColumn)  // sucks, sucks, sucks, too many invalid line and column numbers
