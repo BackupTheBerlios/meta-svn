@@ -1,9 +1,9 @@
 Extent (Extent):
   End (Position):
     Column (Int32):
-      "7"
+      "39"
     Line (Int32):
-      "330"
+      "323"
   FileName (String):
     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
   Start (Position):
@@ -887,9 +887,9 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "11"
+            "24"
           Line (Int32):
-            "39"
+            "40"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
@@ -933,7 +933,7 @@ statements (ArrayList):
               literal (NormalMap):
                 "2"
         Entry (Statement)
-          expression (Search):
+          expression (Program):
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -947,94 +947,80 @@ statements (ArrayList):
                   "4"
                 Line (Int32):
                   "38"
-            search (Program):
-              Extent (Extent):
-                End (Position):
-                  Column (Int32):
-                    "11"
-                  Line (Int32):
-                    "39"
-                FileName (String):
-                  "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                Start (Position):
-                  Column (Int32):
-                    "4"
-                  Line (Int32):
-                    "38"
-              statements (ArrayList):
-                Entry (Statement)
-                  expression (Program):
-                    Extent (Extent):
-                      End (Position):
-                        Column (Int32):
-                          "11"
-                        Line (Int32):
-                          "39"
-                      FileName (String):
-                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                      Start (Position):
-                        Column (Int32):
-                          "5"
-                        Line (Int32):
-                          "39"
-                    statements (ArrayList):
-                      Entry (Statement)
-                        expression (Literal):
+            statements (ArrayList):
+              Entry (Statement)
+                expression (Program):
+                  Extent (Extent):
+                    End (Position):
+                      Column (Int32):
+                        "11"
+                      Line (Int32):
+                        "39"
+                    FileName (String):
+                      "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                    Start (Position):
+                      Column (Int32):
+                        "5"
+                      Line (Int32):
+                        "39"
+                  statements (ArrayList):
+                    Entry (Statement)
+                      expression (Literal):
+                        Extent (Extent):
+                          End (Position):
+                            Column (Int32):
+                              "11"
+                            Line (Int32):
+                              "39"
+                          FileName (String):
+                            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                          Start (Position):
+                            Column (Int32):
+                              "9"
+                            Line (Int32):
+                              "39"
+                        literal (NormalMap):
+                          ""
+                      keys (ArrayList):
+                        Entry (Literal)
                           Extent (Extent):
                             End (Position):
                               Column (Int32):
-                                "11"
+                                "7"
                               Line (Int32):
                                 "39"
                             FileName (String):
                               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                             Start (Position):
                               Column (Int32):
-                                "9"
+                                "5"
                               Line (Int32):
                                 "39"
                           literal (NormalMap):
                             ""
-                        keys (ArrayList):
-                          Entry (Literal)
-                            Extent (Extent):
-                              End (Position):
-                                Column (Int32):
-                                  "7"
-                                Line (Int32):
-                                  "39"
-                              FileName (String):
-                                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                              Start (Position):
-                                Column (Int32):
-                                  "5"
-                                Line (Int32):
-                                  "39"
-                            literal (NormalMap):
-                              ""
-                  keys (ArrayList):
-                    Entry (Literal)
-                      Extent (Extent):
-                        End (Position):
-                          Column (Int32):
-                            "6"
-                          Line (Int32):
-                            "38"
-                        FileName (String):
-                          "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                        Start (Position):
-                          Column (Int32):
-                            "4"
-                          Line (Int32):
-                            "38"
-                      literal (NormalMap):
-                        ""
+                keys (ArrayList):
+                  Entry (Literal)
+                    Extent (Extent):
+                      End (Position):
+                        Column (Int32):
+                          "6"
+                        Line (Int32):
+                          "38"
+                      FileName (String):
+                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                      Start (Position):
+                        Column (Int32):
+                          "4"
+                        Line (Int32):
+                          "38"
+                    literal (NormalMap):
+                      ""
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
                 End (Position):
                   Column (Int32):
-                    "10"
+                    "14"
                   Line (Int32):
                     "37"
                 FileName (String):
@@ -1044,6 +1030,68 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "37"
+              literal (NormalMap):
+                "hashTestData"
+        Entry (Statement)
+          expression (Search):
+            Extent (Extent):
+              End (Position):
+                Column (Int32):
+                  "24"
+                Line (Int32):
+                  "40"
+              FileName (String):
+                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+              Start (Position):
+                Column (Int32):
+                  "12"
+                Line (Int32):
+                  "40"
+            search (Search):
+              Extent (Extent):
+                End (Position):
+                  Column (Int32):
+                    "24"
+                  Line (Int32):
+                    "40"
+                FileName (String):
+                  "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                Start (Position):
+                  Column (Int32):
+                    "12"
+                  Line (Int32):
+                    "40"
+              search (Literal):
+                Extent (Extent):
+                  End (Position):
+                    Column (Int32):
+                      "24"
+                    Line (Int32):
+                      "40"
+                  FileName (String):
+                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                  Start (Position):
+                    Column (Int32):
+                      "12"
+                    Line (Int32):
+                      "40"
+                literal (NormalMap):
+                  "hashTestData"
+          keys (ArrayList):
+            Entry (Literal)
+              Extent (Extent):
+                End (Position):
+                  Column (Int32):
+                    "10"
+                  Line (Int32):
+                    "40"
+                FileName (String):
+                  "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                Start (Position):
+                  Column (Int32):
+                    "2"
+                  Line (Int32):
+                    "40"
               literal (NormalMap):
                 "hashTest"
     keys (ArrayList):
@@ -13801,263 +13849,3 @@ Schwaenzchen in die Hoeh.
               "323"
         literal (NormalMap):
           "docFunctionResult"
-  Entry (Statement)
-    expression (Literal):
-      Extent (Extent):
-        End (Position):
-          Column (Int32):
-            "10"
-          Line (Int32):
-            "327"
-        FileName (String):
-          "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-        Start (Position):
-          Column (Int32):
-            "3"
-          Line (Int32):
-            "327"
-      literal (NormalMap):
-        "hello"
-    keys (ArrayList):
-      Entry (Call)
-        argument (Program):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "7"
-              Line (Int32):
-                "326"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "2"
-              Line (Int32):
-                "325"
-          statements (ArrayList):
-            Entry (Statement)
-              expression (Literal):
-                Extent (Extent):
-                  End (Position):
-                    Column (Int32):
-                      "7"
-                    Line (Int32):
-                      "325"
-                  FileName (String):
-                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                  Start (Position):
-                    Column (Int32):
-                      "4"
-                    Line (Int32):
-                      "325"
-                literal (NormalMap):
-                  "1"
-              keys (ArrayList):
-                Entry (Literal)
-                  Extent (Extent):
-                    End (Position):
-                      Column (Int32):
-                        "3"
-                      Line (Int32):
-                        "325"
-                    FileName (String):
-                      "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                    Start (Position):
-                      Column (Int32):
-                        "2"
-                      Line (Int32):
-                        "325"
-                  literal (NormalMap):
-                    "x"
-            Entry (Statement)
-              expression (Literal):
-                Extent (Extent):
-                  End (Position):
-                    Column (Int32):
-                      "7"
-                    Line (Int32):
-                      "326"
-                  FileName (String):
-                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                  Start (Position):
-                    Column (Int32):
-                      "4"
-                    Line (Int32):
-                      "326"
-                literal (NormalMap):
-                  "2"
-              keys (ArrayList):
-                Entry (Literal)
-                  Extent (Extent):
-                    End (Position):
-                      Column (Int32):
-                        "3"
-                      Line (Int32):
-                        "326"
-                    FileName (String):
-                      "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                    Start (Position):
-                      Column (Int32):
-                        "2"
-                      Line (Int32):
-                        "326"
-                  literal (NormalMap):
-                    "y"
-        callable (Search):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "11"
-              Line (Int32):
-                "324"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "2"
-              Line (Int32):
-                "324"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "11"
-                Line (Int32):
-                  "324"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "2"
-                Line (Int32):
-                  "324"
-            literal (NormalMap):
-              "returnArg"
-        Extent (Extent):
-          End (Position):
-            Column (Int32):
-              "7"
-            Line (Int32):
-              "326"
-          FileName (String):
-            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-          Start (Position):
-            Column (Int32):
-              "2"
-            Line (Int32):
-              "324"
-  Entry (Statement)
-    expression (Search):
-      Extent (Extent):
-        End (Position):
-          Column (Int32):
-            "7"
-          Line (Int32):
-            "330"
-        FileName (String):
-          "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-        Start (Position):
-          Column (Int32):
-            "2"
-          Line (Int32):
-            "329"
-      search (Program):
-        Extent (Extent):
-          End (Position):
-            Column (Int32):
-              "7"
-            Line (Int32):
-              "330"
-          FileName (String):
-            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-          Start (Position):
-            Column (Int32):
-              "2"
-            Line (Int32):
-              "329"
-        statements (ArrayList):
-          Entry (Statement)
-            expression (Literal):
-              Extent (Extent):
-                End (Position):
-                  Column (Int32):
-                    "7"
-                  Line (Int32):
-                    "329"
-                FileName (String):
-                  "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                Start (Position):
-                  Column (Int32):
-                    "4"
-                  Line (Int32):
-                    "329"
-              literal (NormalMap):
-                "1"
-            keys (ArrayList):
-              Entry (Literal)
-                Extent (Extent):
-                  End (Position):
-                    Column (Int32):
-                      "3"
-                    Line (Int32):
-                      "329"
-                  FileName (String):
-                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                  Start (Position):
-                    Column (Int32):
-                      "2"
-                    Line (Int32):
-                      "329"
-                literal (NormalMap):
-                  "x"
-          Entry (Statement)
-            expression (Literal):
-              Extent (Extent):
-                End (Position):
-                  Column (Int32):
-                    "7"
-                  Line (Int32):
-                    "330"
-                FileName (String):
-                  "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                Start (Position):
-                  Column (Int32):
-                    "4"
-                  Line (Int32):
-                    "330"
-              literal (NormalMap):
-                "2"
-            keys (ArrayList):
-              Entry (Literal)
-                Extent (Extent):
-                  End (Position):
-                    Column (Int32):
-                      "3"
-                    Line (Int32):
-                      "330"
-                  FileName (String):
-                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                  Start (Position):
-                    Column (Int32):
-                      "2"
-                    Line (Int32):
-                      "330"
-                literal (NormalMap):
-                  "y"
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          End (Position):
-            Column (Int32):
-              "27"
-            Line (Int32):
-              "328"
-          FileName (String):
-            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-          Start (Position):
-            Column (Int32):
-              "1"
-            Line (Int32):
-              "328"
-        literal (NormalMap):
-          "functionAndMapInLookupTest"

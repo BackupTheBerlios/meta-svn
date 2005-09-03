@@ -928,8 +928,6 @@ _loop115_breakloop:			;
 				match(SPACES);
 				break;
 			}
-			case INDENT:
-			case EXCLAMATION_MARK:
 			case LBRACKET:
 			case LITERAL_KEY:
 			case LITERAL:
@@ -943,11 +941,50 @@ _loop115_breakloop:			;
 			 }
 		}
 		{
-			expression();
-			if (0 == inputState.guessing)
+			bool synPredMatched149 = false;
+			if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 			{
-				astFactory.addASTChild(currentAST, (AST)returnAST);
+				int _m149 = mark();
+				synPredMatched149 = true;
+				inputState.guessing++;
+				try {
+					{
+						select();
+					}
+				}
+				catch (RecognitionException)
+				{
+					synPredMatched149 = false;
+				}
+				rewind(_m149);
+				inputState.guessing--;
 			}
+			if ( synPredMatched149 )
+			{
+				select();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+			}
+			else if ((LA(1)==LITERAL)) {
+				MetaAST tmp16_AST = null;
+				tmp16_AST = (MetaAST) astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, (AST)tmp16_AST);
+				match(LITERAL);
+			}
+			else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
+				search();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+			}
+			else
+			{
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			
 		}
 		{
 			switch ( LA(1) )

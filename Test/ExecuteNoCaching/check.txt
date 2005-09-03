@@ -122,6 +122,19 @@ Entry (DictionaryEntry)
         "correct hash content"
     Entry (DictionaryEntry)
       Key (NormalMap):
+        "hashTestData"
+      Value (NormalMap):
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            ""
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                ""
+              Value (NormalMap):
+                ""
+    Entry (DictionaryEntry)
+      Key (NormalMap):
         "hashTest"
       Value (NormalMap):
         "correct hash content"
@@ -2687,24 +2700,5 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (NormalMap):
     "docFunctionResult"
-  Value (NormalMap):
-    "hello"
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    Entry (DictionaryEntry)
-      Key (NormalMap):
-        "x"
-      Value (NormalMap):
-        "1"
-    Entry (DictionaryEntry)
-      Key (NormalMap):
-        "y"
-      Value (NormalMap):
-        "2"
-  Value (NormalMap):
-    "hello"
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    "functionAndMapInLookupTest"
   Value (NormalMap):
     "hello"

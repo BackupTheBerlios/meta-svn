@@ -557,7 +557,12 @@ squareBracketLookup:
 		LBRACKET!  
 		(SPACES!)?
 		(
-			expression
+			(select)=>
+			select
+			|LITERAL
+			|search
+
+			//expression
 		)
 		(SPACES!)?
 		(ENDLINE!)? // TODO: this is an ugly hack???, maybe not needed anymore, because implemented in call??

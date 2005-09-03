@@ -34,10 +34,10 @@ testSubDir.x:
 		y="world"
 integerHashTest=
 	2="correct hash content"
-	hashTest=[
+	hashTestData=
 		[""]=
 			[""]=""
-	]
+	hashTest=[hashTestData]
 persistenceTest=testSubDir
 interpreter.line:"5"
 literalEscapeTest=
@@ -321,11 +321,3 @@ documentedFunction=
 	doc="This function returns 'hello ."
 	#"hello"
 docFunctionResult=documentedFunction""
-[returnArg
-	x="1"
-	y="2"
-]="hello"
-functionAndMapInLookupTest=[
-	x="1"
-	y="2"
-]
