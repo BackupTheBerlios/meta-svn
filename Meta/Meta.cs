@@ -3541,12 +3541,18 @@ namespace Meta
 						case MetaLexerTokenTypes.LITERAL:
 							string indentation="";
 							for(int i=0;i<indentationDepth+1;i++)
+//								for(int i=0;i<indentationDepth+1;i++)
 							{
 								indentation+='\t';
 							}
 							string text=token.getText();
+							if(text.IndexOf("Alle meine En")!=-1)
+							{
+								int asdf=0;
+							}
 							text=text.Replace(Environment.NewLine,"\n");
 							string[] lines=text.Split('\n');
+
 							string result="";
 							for(int i=0;i<lines.Length;i++)
 							{
@@ -3563,6 +3569,7 @@ namespace Meta
 									result+=Environment.NewLine;
 								}
 							}
+
 							token.setText(result);
 							tokenBuffer.Enqueue(token);
 							break;

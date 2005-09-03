@@ -405,7 +405,7 @@ Entry (DictionaryEntry)
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "literal"
+                "program"
               Value (NormalMap):
                 ""
     Entry (DictionaryEntry)
@@ -700,7 +700,7 @@ Entry (DictionaryEntry)
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
-                                            "literal"
+                                            "program"
                                           Value (NormalMap):
                                             ""
                                 Entry (DictionaryEntry)
@@ -725,7 +725,7 @@ Entry (DictionaryEntry)
                                                   Value (NormalMap):
                                                     Entry (DictionaryEntry)
                                                       Key (NormalMap):
-                                                        "literal"
+                                                        "program"
                                                       Value (NormalMap):
                                                         ""
                                             Entry (DictionaryEntry)
@@ -734,7 +734,7 @@ Entry (DictionaryEntry)
                                               Value (NormalMap):
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
-                                                    "literal"
+                                                    "program"
                                                   Value (NormalMap):
                                                     ""
                 Entry (DictionaryEntry)
@@ -2096,7 +2096,7 @@ Entry (DictionaryEntry)
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "program"
                           Value (NormalMap):
                             ""
                 Entry (DictionaryEntry)
@@ -2610,7 +2610,7 @@ Entry (DictionaryEntry)
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "literal"
+                "program"
               Value (NormalMap):
                 ""
     Entry (DictionaryEntry)
@@ -2674,7 +2674,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -4236,7 +4236,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -4470,7 +4470,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -4685,7 +4685,7 @@ Entry (DictionaryEntry)
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
-                                            "literal"
+                                            "program"
                                           Value (NormalMap):
                                             ""
     Entry (DictionaryEntry)
@@ -4758,7 +4758,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -4903,7 +4903,7 @@ Entry (DictionaryEntry)
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
-                                            "literal"
+                                            "program"
                                           Value (NormalMap):
                                             ""
     Entry (DictionaryEntry)
@@ -4976,7 +4976,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -5527,7 +5527,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -5789,7 +5789,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -5975,7 +5975,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -6131,7 +6131,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -6263,7 +6263,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -6565,7 +6565,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -7054,7 +7054,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -7856,7 +7856,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -8084,7 +8084,7 @@ Entry (DictionaryEntry)
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "literal"
+                "program"
               Value (NormalMap):
                 ""
     Entry (DictionaryEntry)
@@ -8211,7 +8211,7 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -8802,7 +8802,7 @@ hello!
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -8995,7 +8995,7 @@ hello!
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -9171,7 +9171,7 @@ Schwaenzchen in die Hoeh."
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""
     Entry (DictionaryEntry)
@@ -9246,7 +9246,7 @@ Schwaenzchen in die Hoeh."
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "4"
+                    "5"
         Entry (DictionaryEntry)
           Key (NormalMap):
             "value"
@@ -9331,7 +9331,7 @@ Schwaenzchen in die Hoeh."
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "literal"
+                "program"
               Value (NormalMap):
                 ""
     Entry (DictionaryEntry)
@@ -10264,7 +10264,7 @@ Schwaenzchen in die Hoeh."
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "literal"
+                                "program"
                               Value (NormalMap):
                                 ""
     Entry (DictionaryEntry)
@@ -10392,6 +10392,6 @@ Schwaenzchen in die Hoeh."
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "program"
                       Value (NormalMap):
                         ""

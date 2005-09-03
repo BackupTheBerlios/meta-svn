@@ -97,6 +97,9 @@ HASH:
 
 COLON:
   ':';
+  
+STAR:
+  '*';
 
 LBRACKET:
   '[';
@@ -386,27 +389,30 @@ expression:
     |(select)=>
     select
     |map
+    |emptyMap
     |fullDelayed
     //|delayedExpressionOnly
     //|delayed
     |LITERAL
 		|search
   );
+emptyMap:
+	STAR
+	{
+	  #emptyMap=#([MAP], #emptyMap);
+	};
 
-//TODO: rename Map to program, or something like that
 map:
   {
     Counters.autokey.Push(0);
   }
+	INDENT!
+	(statement|delayed)? // TODO: maybe put delayed into statement??? Would make sense, I think, since it's essentially the same
 	(
-	  INDENT!
-	  (statement|delayed)? // TODO: maybe put delayed into statement??? Would make sense, I think, since it's essentially the same
-	  (
-	    ENDLINE!
-	    (delayed|statement)
-	  )*
-	  DEDENT!
-	)
+	ENDLINE!
+	(delayed|statement)
+	)*
+	DEDENT!
 	{
 	  Counters.autokey.Pop();
 	  #map=#([MAP], #map);
@@ -560,6 +566,7 @@ squareBracketLookup:
 			(select)=>
 			select
 			|LITERAL
+			|emptyMap
 			|search
 
 			//expression

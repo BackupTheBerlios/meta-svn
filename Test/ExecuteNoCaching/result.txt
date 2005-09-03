@@ -119,15 +119,7 @@ Entry (DictionaryEntry)
       Key (NormalMap):
         "hashTestData"
       Value (NormalMap):
-        Entry (DictionaryEntry)
-          Key (NormalMap):
-            ""
-          Value (NormalMap):
-            Entry (DictionaryEntry)
-              Key (NormalMap):
-                ""
-              Value (NormalMap):
-                ""
+        "2"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "hashTest"
@@ -2255,9 +2247,9 @@ Entry (DictionaryEntry)
     Entry (String)
       "schwimmen auf dem See,"
     Entry (String)
-      "bwuhahaha"
+      "Köpfchen in das Wasser,"
     Entry (String)
-      "Schwaenzchen in die Hoeh."
+      "bwuhahaha"
 Entry (DictionaryEntry)
   Key (NormalMap):
     "alleMeineText"

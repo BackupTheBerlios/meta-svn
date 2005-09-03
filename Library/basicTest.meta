@@ -23,7 +23,7 @@ this:map.Merge
 	logic
 	map
 	math
-parent.parent.testSubDir.x:""
+parent.parent.testSubDir.x:*
 persistantDeleteTest:testSubDir.x
 parent.parent.testSubDir.x:
 	a:"b"
@@ -33,8 +33,8 @@ parent.parent.testSubDir.x:
 integerHashTest:
 	2:"correct hash content"
 	hashTestData:
-		[""]:
-			[""]:""
+		[*]:
+			[*]:*
 	hashTest:[hashTestData]
 persistenceTest:testSubDir
 literalEscapeTest:
@@ -84,7 +84,7 @@ lookedUpLongSymbol:["long key symbol"]
 object:
 	a:"default"
 	autoSearch:"default"
-	b:""
+	b:*
 	SetA:=
 		parent.parent.a:"c"
 		parent.parent.autoSearch:"changed"
@@ -99,8 +99,8 @@ object:
 		#
 			this.a:"b"
 a:"default"
-b:""
-aSet:object.SetA""
+b:*
+aSet:object.SetA*
 bSet:object.SetB
 	value:
 		x:"7"
@@ -147,21 +147,21 @@ this:map.Merge
 	testClasses
 TestClass.NestedClass.field:"5"
 nestedClassTest:TestClass.NestedClass.field
-testClass:TestClass""
+testClass:TestClass*
 testClass.floatValue:"1/3"
 testClass.doubleValue:"1/3"
 testClass.decimalValue:"1/3"
 TestClass.boolTest:"1"
 boolTest:TestClass.boolTest
-memberTest:MemberTest""
+memberTest:MemberTest*
 MemberTest.classField:"a"
 memberTest.instanceField:"b"
 MemberTest.ClassProperty.set
-	memberTest.InstanceProperty.get""
-classPropertyValue:MemberTest.ClassProperty.get""
+	memberTest.InstanceProperty.get*
+classPropertyValue:MemberTest.ClassProperty.get*
 memberTest.InstanceProperty.set
-	MemberTest.ClassProperty.get""
-instancePropertyValue:memberTest.InstanceProperty.get""
+	MemberTest.ClassProperty.get*
+instancePropertyValue:memberTest.InstanceProperty.get*
 interceptedSymbol:"/hello/"
 positionalNoConversion:PositionalNoConversion
 	"m"
@@ -177,7 +177,7 @@ namedNoConversion:NamedNoConversion
 namedNoConversionConcatenated:namedNoConversion.Concatenate
 	c:"t"
 	"r"
-indexerNoConversion:IndexerNoConversion""
+indexerNoConversion:IndexerNoConversion*
 indexerNoConversion.abc:"hihi"
 indexerNoConversionIndexed:indexerNoConversion.abc
 interceptedSymbol2:"1"
@@ -185,22 +185,22 @@ k:"hello"
 xyz:"w"
 literalFunction:
 	#"5"
-literalFunctionResult:literalFunction""
+literalFunctionResult:literalFunction*
 function:
 	#
 		this:"simple function this"
 callFunction:
 	#function
-callFunctionResult:callFunction""
+callFunctionResult:callFunction*
 delayedFunction:
 	#
 		#
 			x:"y"
-delayedFunctionResult:delayedFunction ""
+delayedFunctionResult:delayedFunction *
 value:"xyz"
 selectionFunction:
 	#value
-selectionFunctionResult:selectionFunction ""
+selectionFunctionResult:selectionFunction *
 bigInteger:"89383838383832839123497123047217340712340720347072304702340720347"
 upperLevel:"unchanged"
 SetUpperLevel:=
@@ -208,7 +208,7 @@ SetUpperLevel:=
 ChangeUpperLevel:
 	#
 		SetUpperLevel "changed"
-ChangeUpperLevel""
+ChangeUpperLevel*
 staticEventChanged:"0"
 ChangeStaticEvent:=
 	parent.parent.staticEventChanged:arg
@@ -219,7 +219,7 @@ TestClass.staticEvent:
 staticEvent:TestClass.staticEvent
 TestClass.TakeDelegate
 	#"resultFromDelegate"
-resultFromDelegate:TestClass.GetResultFromDelegate""
+resultFromDelegate:TestClass.GetResultFromDelegate*
 staticEventResult:TestClass.staticEvent testClass
 instanceEventChanged:"0"
 testClass.instanceEvent:
@@ -241,7 +241,7 @@ firstIfBranches:
 		#"then"
 	0:
 		#"else"
-firstIf:firstIfBranches.[firstIfCondition]""
+firstIf:firstIfBranches.[firstIfCondition]*
 bigNumber:"50020202029029233344"
 secondSwitch:"unchanged"
 secondSwitchCases:
@@ -249,11 +249,11 @@ secondSwitchCases:
 	2:"two"
 	3:"three"
 secondSwitch:secondSwitchCases.3
-emptyMap:""
+emptyMap:*
 emptyFunction:
 	#
 		x:"hello"
-emptyFunctionResult:emptyFunction""
+emptyFunctionResult:emptyFunction*
 font:System.Drawing.Font
 	"Courier New"
 	2:"10/1"
@@ -271,23 +271,23 @@ x:
 ored:BitwiseOr
 	"20"
 	System.Windows.Forms.Keys.Tab
-arrayList:System.Collections.ArrayList""
+arrayList:System.Collections.ArrayList*
 arrayList.Add "hello"
 arrayListResult:arrayList.0
-textBox:System.Windows.Forms.TextBox""
+textBox:System.Windows.Forms.TextBox*
 textBox.Text.set
 	"
-Alle meine Entchen,
-schwimmen auf dem See,
-schwimmen auf dem See,
-Köpfchen in das Wasser,
-Schwaenzchen in die Hoeh."
-lines:textBox.Lines.get""
+		Alle meine Entchen,
+		schwimmen auf dem See,
+		schwimmen auf dem See,
+		Köpfchen in das Wasser,
+		Schwaenzchen in die Hoeh."
+lines:textBox.Lines.get*
 alleMeineText:lines.1
-lines.4:"bwuhahaha"
+lines.5:"bwuhahaha"
 tabText:"			hello"
 escapedText:"\'\n\\\t"
-whileCounter:""
+whileCounter:*
 loop:
 	#
 		whileDecision:Smaller
@@ -318,8 +318,8 @@ returnArg:
 myArg:
 	#
 		hello:"world"
-funcReturnTest:returnArg myArg""
+funcReturnTest:returnArg myArg*
 documentedFunction:
 	doc:"This function returns 'hello ."
 	#"hello"
-docFunctionResult:documentedFunction""
+docFunctionResult:documentedFunction*

@@ -1,7 +1,7 @@
 Extent (Extent):
   End (Position):
     Column (Int32):
-      "39"
+      "38"
     Line (Int32):
       "325"
   FileName (String):
@@ -570,11 +570,11 @@ statements (ArrayList):
         literal (NormalMap):
           "this"
   Entry (Statement)
-    expression (Literal):
+    expression (Program):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "30"
+            "29"
           Line (Int32):
             "26"
         FileName (String):
@@ -584,8 +584,7 @@ statements (ArrayList):
             "28"
           Line (Int32):
             "26"
-      literal (NormalMap):
-        ""
+      statements (ArrayList):
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -1001,7 +1000,7 @@ statements (ArrayList):
             Extent (Extent):
               End (Position):
                 Column (Int32):
-                  "11"
+                  "9"
                 Line (Int32):
                   "37"
               FileName (String):
@@ -1017,7 +1016,7 @@ statements (ArrayList):
                   Extent (Extent):
                     End (Position):
                       Column (Int32):
-                        "11"
+                        "9"
                       Line (Int32):
                         "37"
                     FileName (String):
@@ -1029,28 +1028,27 @@ statements (ArrayList):
                         "37"
                   statements (ArrayList):
                     Entry (Statement)
-                      expression (Literal):
+                      expression (Program):
                         Extent (Extent):
                           End (Position):
                             Column (Int32):
-                              "11"
+                              "9"
                             Line (Int32):
                               "37"
                           FileName (String):
                             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                           Start (Position):
                             Column (Int32):
-                              "9"
+                              "8"
                             Line (Int32):
                               "37"
-                        literal (NormalMap):
-                          ""
+                        statements (ArrayList):
                       keys (ArrayList):
-                        Entry (Literal)
+                        Entry (Program)
                           Extent (Extent):
                             End (Position):
                               Column (Int32):
-                                "7"
+                                "6"
                               Line (Int32):
                                 "37"
                             FileName (String):
@@ -1060,14 +1058,13 @@ statements (ArrayList):
                                 "5"
                               Line (Int32):
                                 "37"
-                          literal (NormalMap):
-                            ""
+                          statements (ArrayList):
                 keys (ArrayList):
-                  Entry (Literal)
+                  Entry (Program)
                     Extent (Extent):
                       End (Position):
                         Column (Int32):
-                          "6"
+                          "5"
                         Line (Int32):
                           "36"
                       FileName (String):
@@ -1077,8 +1074,7 @@ statements (ArrayList):
                           "4"
                         Line (Int32):
                           "36"
-                    literal (NormalMap):
-                      ""
+                    statements (ArrayList):
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -2996,11 +2992,11 @@ statements (ArrayList):
               literal (NormalMap):
                 "autoSearch"
         Entry (Statement)
-          expression (Literal):
+          expression (Program):
             Extent (Extent):
               End (Position):
                 Column (Int32):
-                  "6"
+                  "5"
                 Line (Int32):
                   "87"
               FileName (String):
@@ -3010,8 +3006,7 @@ statements (ArrayList):
                   "4"
                 Line (Int32):
                   "87"
-            literal (NormalMap):
-              ""
+            statements (ArrayList):
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -3615,11 +3610,11 @@ statements (ArrayList):
         literal (NormalMap):
           "a"
   Entry (Statement)
-    expression (Literal):
+    expression (Program):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "5"
+            "4"
           Line (Int32):
             "102"
         FileName (String):
@@ -3629,8 +3624,7 @@ statements (ArrayList):
             "3"
           Line (Int32):
             "102"
-      literal (NormalMap):
-        ""
+      statements (ArrayList):
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -3650,11 +3644,11 @@ statements (ArrayList):
           "b"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "19"
+              "18"
             Line (Int32):
               "103"
           FileName (String):
@@ -3664,8 +3658,7 @@ statements (ArrayList):
               "17"
             Line (Int32):
               "103"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Select):
         Extent (Extent):
           End (Position):
@@ -3730,7 +3723,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "19"
+            "18"
           Line (Int32):
             "103"
         FileName (String):
@@ -5814,11 +5807,11 @@ statements (ArrayList):
           "nestedClassTest"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "22"
+              "21"
             Line (Int32):
               "150"
           FileName (String):
@@ -5828,8 +5821,7 @@ statements (ArrayList):
               "20"
             Line (Int32):
               "150"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Search):
         Extent (Extent):
           End (Position):
@@ -5863,7 +5855,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "22"
+            "21"
           Line (Int32):
             "150"
         FileName (String):
@@ -6198,11 +6190,11 @@ statements (ArrayList):
           "boolTest"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "24"
+              "23"
             Line (Int32):
               "156"
           FileName (String):
@@ -6212,8 +6204,7 @@ statements (ArrayList):
               "22"
             Line (Int32):
               "156"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Search):
         Extent (Extent):
           End (Position):
@@ -6247,7 +6238,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "24"
+            "23"
           Line (Int32):
             "156"
         FileName (String):
@@ -6380,7 +6371,7 @@ statements (ArrayList):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "35"
+              "34"
             Line (Int32):
               "160"
           FileName (String):
@@ -6393,11 +6384,11 @@ statements (ArrayList):
         statements (ArrayList):
           Entry (Statement)
             expression (Call):
-              argument (Literal):
+              argument (Program):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
-                      "35"
+                      "34"
                     Line (Int32):
                       "160"
                   FileName (String):
@@ -6407,8 +6398,7 @@ statements (ArrayList):
                       "33"
                     Line (Int32):
                       "160"
-                literal (NormalMap):
-                  ""
+                statements (ArrayList):
               callable (Select):
                 Extent (Extent):
                   End (Position):
@@ -6489,7 +6479,7 @@ statements (ArrayList):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
-                    "35"
+                    "34"
                   Line (Int32):
                     "160"
                 FileName (String):
@@ -6504,7 +6494,7 @@ statements (ArrayList):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
-                      "35"
+                      "34"
                     Line (Int32):
                       "160"
                   FileName (String):
@@ -6596,7 +6586,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "35"
+            "34"
           Line (Int32):
             "160"
         FileName (String):
@@ -6611,7 +6601,7 @@ statements (ArrayList):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "35"
+              "34"
             Line (Int32):
               "160"
           FileName (String):
@@ -6625,11 +6615,11 @@ statements (ArrayList):
           "3"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "50"
+              "49"
             Line (Int32):
               "161"
           FileName (String):
@@ -6639,8 +6629,7 @@ statements (ArrayList):
               "48"
             Line (Int32):
               "161"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Select):
         Extent (Extent):
           End (Position):
@@ -6721,7 +6710,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "50"
+            "49"
           Line (Int32):
             "161"
         FileName (String):
@@ -6754,7 +6743,7 @@ statements (ArrayList):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "32"
+              "31"
             Line (Int32):
               "163"
           FileName (String):
@@ -6767,11 +6756,11 @@ statements (ArrayList):
         statements (ArrayList):
           Entry (Statement)
             expression (Call):
-              argument (Literal):
+              argument (Program):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
-                      "32"
+                      "31"
                     Line (Int32):
                       "163"
                   FileName (String):
@@ -6781,8 +6770,7 @@ statements (ArrayList):
                       "30"
                     Line (Int32):
                       "163"
-                literal (NormalMap):
-                  ""
+                statements (ArrayList):
               callable (Select):
                 Extent (Extent):
                   End (Position):
@@ -6863,7 +6851,7 @@ statements (ArrayList):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
-                    "32"
+                    "31"
                   Line (Int32):
                     "163"
                 FileName (String):
@@ -6878,7 +6866,7 @@ statements (ArrayList):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
-                      "32"
+                      "31"
                     Line (Int32):
                       "163"
                   FileName (String):
@@ -6970,7 +6958,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "32"
+            "31"
           Line (Int32):
             "163"
         FileName (String):
@@ -6985,7 +6973,7 @@ statements (ArrayList):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "32"
+              "31"
             Line (Int32):
               "163"
           FileName (String):
@@ -6999,11 +6987,11 @@ statements (ArrayList):
           "4"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "56"
+              "55"
             Line (Int32):
               "164"
           FileName (String):
@@ -7013,8 +7001,7 @@ statements (ArrayList):
               "54"
             Line (Int32):
               "164"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Select):
         Extent (Extent):
           End (Position):
@@ -7095,7 +7082,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "56"
+            "55"
           Line (Int32):
             "164"
         FileName (String):
@@ -7868,11 +7855,11 @@ statements (ArrayList):
           "namedNoConversionConcatenated"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "42"
+              "41"
             Line (Int32):
               "180"
           FileName (String):
@@ -7882,8 +7869,7 @@ statements (ArrayList):
               "40"
             Line (Int32):
               "180"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Search):
         Extent (Extent):
           End (Position):
@@ -7917,7 +7903,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "42"
+            "41"
           Line (Int32):
             "180"
         FileName (String):
@@ -8248,11 +8234,11 @@ statements (ArrayList):
           "literalFunction"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "40"
+              "39"
             Line (Int32):
               "188"
           FileName (String):
@@ -8262,8 +8248,7 @@ statements (ArrayList):
               "38"
             Line (Int32):
               "188"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Search):
         Extent (Extent):
           End (Position):
@@ -8297,7 +8282,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "40"
+            "39"
           Line (Int32):
             "188"
         FileName (String):
@@ -8497,11 +8482,11 @@ statements (ArrayList):
           "callFunction"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "34"
+              "33"
             Line (Int32):
               "194"
           FileName (String):
@@ -8511,8 +8496,7 @@ statements (ArrayList):
               "32"
             Line (Int32):
               "194"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Search):
         Extent (Extent):
           End (Position):
@@ -8546,7 +8530,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "34"
+            "33"
           Line (Int32):
             "194"
         FileName (String):
@@ -8700,11 +8684,11 @@ statements (ArrayList):
           "delayedFunction"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "41"
+              "40"
             Line (Int32):
               "199"
           FileName (String):
@@ -8714,8 +8698,7 @@ statements (ArrayList):
               "39"
             Line (Int32):
               "199"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Search):
         Extent (Extent):
           End (Position):
@@ -8749,7 +8732,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "41"
+            "40"
           Line (Int32):
             "199"
         FileName (String):
@@ -8887,11 +8870,11 @@ statements (ArrayList):
           "selectionFunction"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "45"
+              "44"
             Line (Int32):
               "203"
           FileName (String):
@@ -8901,8 +8884,7 @@ statements (ArrayList):
               "43"
             Line (Int32):
               "203"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Search):
         Extent (Extent):
           End (Position):
@@ -8936,7 +8918,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "45"
+            "44"
           Line (Int32):
             "203"
         FileName (String):
@@ -9268,11 +9250,11 @@ statements (ArrayList):
           "ChangeUpperLevel"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "19"
+              "18"
             Line (Int32):
               "211"
           FileName (String):
@@ -9282,8 +9264,7 @@ statements (ArrayList):
               "17"
             Line (Int32):
               "211"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Search):
         Extent (Extent):
           End (Position):
@@ -9317,7 +9298,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "19"
+            "18"
           Line (Int32):
             "211"
         FileName (String):
@@ -9332,7 +9313,7 @@ statements (ArrayList):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "19"
+              "18"
             Line (Int32):
               "211"
           FileName (String):
@@ -9903,11 +9884,11 @@ statements (ArrayList):
           "6"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "53"
+              "52"
             Line (Int32):
               "222"
           FileName (String):
@@ -9917,8 +9898,7 @@ statements (ArrayList):
               "51"
             Line (Int32):
               "222"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Select):
         Extent (Extent):
           End (Position):
@@ -9983,7 +9963,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "53"
+            "52"
           Line (Int32):
             "222"
         FileName (String):
@@ -11046,11 +11026,11 @@ statements (ArrayList):
           "firstIfBranches"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "45"
+              "44"
             Line (Int32):
               "244"
           FileName (String):
@@ -11060,8 +11040,7 @@ statements (ArrayList):
               "43"
             Line (Int32):
               "244"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Select):
         Extent (Extent):
           End (Position):
@@ -11140,7 +11119,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "45"
+            "44"
           Line (Int32):
             "244"
         FileName (String):
@@ -11450,11 +11429,11 @@ statements (ArrayList):
         literal (NormalMap):
           "secondSwitch"
   Entry (Statement)
-    expression (Literal):
+    expression (Program):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "12"
+            "11"
           Line (Int32):
             "252"
         FileName (String):
@@ -11464,8 +11443,7 @@ statements (ArrayList):
             "10"
           Line (Int32):
             "252"
-      literal (NormalMap):
-        ""
+      statements (ArrayList):
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -11581,11 +11559,11 @@ statements (ArrayList):
           "emptyFunction"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "36"
+              "35"
             Line (Int32):
               "256"
           FileName (String):
@@ -11595,8 +11573,7 @@ statements (ArrayList):
               "34"
             Line (Int32):
               "256"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Search):
         Extent (Extent):
           End (Position):
@@ -11630,7 +11607,7 @@ statements (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "36"
+            "35"
           Line (Int32):
             "256"
         FileName (String):
@@ -12479,11 +12456,11 @@ hello!
           "ored"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "41"
+              "40"
             Line (Int32):
               "274"
           FileName (String):
@@ -12493,8 +12470,7 @@ hello!
               "39"
             Line (Int32):
               "274"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Select):
         Extent (Extent):
           End (Position):
@@ -12575,7 +12551,7 @@ hello!
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "41"
+            "40"
           Line (Int32):
             "274"
         FileName (String):
@@ -12792,11 +12768,11 @@ hello!
           "arrayListResult"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "39"
+              "38"
             Line (Int32):
               "277"
           FileName (String):
@@ -12806,8 +12782,7 @@ hello!
               "37"
             Line (Int32):
               "277"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Select):
         Extent (Extent):
           End (Position):
@@ -12904,7 +12879,7 @@ hello!
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "39"
+            "38"
           Line (Int32):
             "277"
         FileName (String):
@@ -12937,7 +12912,7 @@ hello!
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "27"
+              "29"
             Line (Int32):
               "284"
           FileName (String):
@@ -12953,7 +12928,7 @@ hello!
               Extent (Extent):
                 End (Position):
                   Column (Int32):
-                    "27"
+                    "29"
                   Line (Int32):
                     "284"
                 FileName (String):
@@ -12975,7 +12950,7 @@ Schwaenzchen in die Hoeh."
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
-                      "27"
+                      "29"
                     Line (Int32):
                       "284"
                   FileName (String):
@@ -13067,7 +13042,7 @@ Schwaenzchen in die Hoeh."
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "27"
+            "29"
           Line (Int32):
             "284"
         FileName (String):
@@ -13082,7 +13057,7 @@ Schwaenzchen in die Hoeh."
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "27"
+              "29"
             Line (Int32):
               "284"
           FileName (String):
@@ -13096,11 +13071,11 @@ Schwaenzchen in die Hoeh."
           "8"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "26"
+              "25"
             Line (Int32):
               "285"
           FileName (String):
@@ -13110,8 +13085,7 @@ Schwaenzchen in die Hoeh."
               "24"
             Line (Int32):
               "285"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Select):
         Extent (Extent):
           End (Position):
@@ -13192,7 +13166,7 @@ Schwaenzchen in die Hoeh."
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "26"
+            "25"
           Line (Int32):
             "285"
         FileName (String):
@@ -13347,7 +13321,7 @@ Schwaenzchen in die Hoeh."
             Line (Int32):
               "287"
         literal (NormalMap):
-          "4"
+          "5"
   Entry (Statement)
     expression (Literal):
       Extent (Extent):
@@ -13417,11 +13391,11 @@ Schwaenzchen in die Hoeh."
         literal (NormalMap):
           "escapedText"
   Entry (Statement)
-    expression (Literal):
+    expression (Program):
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "16"
+            "15"
           Line (Int32):
             "290"
         FileName (String):
@@ -13431,8 +13405,7 @@ Schwaenzchen in die Hoeh."
             "14"
           Line (Int32):
             "290"
-      literal (NormalMap):
-        ""
+      statements (ArrayList):
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -14460,11 +14433,11 @@ Schwaenzchen in die Hoeh."
   Entry (Statement)
     expression (Call):
       argument (Call):
-        argument (Literal):
+        argument (Program):
           Extent (Extent):
             End (Position):
               Column (Int32):
-                "33"
+                "32"
               Line (Int32):
                 "321"
             FileName (String):
@@ -14474,8 +14447,7 @@ Schwaenzchen in die Hoeh."
                 "31"
               Line (Int32):
                 "321"
-          literal (NormalMap):
-            ""
+          statements (ArrayList):
         callable (Search):
           Extent (Extent):
             End (Position):
@@ -14509,7 +14481,7 @@ Schwaenzchen in die Hoeh."
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "33"
+              "32"
             Line (Int32):
               "321"
           FileName (String):
@@ -14552,7 +14524,7 @@ Schwaenzchen in die Hoeh."
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "33"
+            "32"
           Line (Int32):
             "321"
         FileName (String):
@@ -14686,11 +14658,11 @@ Schwaenzchen in die Hoeh."
           "documentedFunction"
   Entry (Statement)
     expression (Call):
-      argument (Literal):
+      argument (Program):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "39"
+              "38"
             Line (Int32):
               "325"
           FileName (String):
@@ -14700,8 +14672,7 @@ Schwaenzchen in die Hoeh."
               "37"
             Line (Int32):
               "325"
-        literal (NormalMap):
-          ""
+        statements (ArrayList):
       callable (Search):
         Extent (Extent):
           End (Position):
@@ -14735,7 +14706,7 @@ Schwaenzchen in die Hoeh."
       Extent (Extent):
         End (Position):
           Column (Int32):
-            "39"
+            "38"
           Line (Int32):
             "325"
         FileName (String):
