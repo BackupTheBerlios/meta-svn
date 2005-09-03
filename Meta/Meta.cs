@@ -1524,6 +1524,12 @@ namespace Meta
 		}
 		public static string Value(Map val)
 		{
+//			string x=Value(val,"");
+//			if(x=="\"")
+//			{
+//				int asdf=0;
+//			}
+//			return x;
 			return Value(val,"");
 		}
 		private static string Value(Map val,string indentation)
@@ -2920,7 +2926,11 @@ namespace Meta
 			get
 			{
 				Map result;
-				if(key.IsString && type.GetMember(key.String,bindingFlags).Length>0)
+				if(key.Equals(SpecialKeys.Parent))
+				{
+					result=Parent;
+				}
+				else if(key.IsString && type.GetMember(key.String,bindingFlags).Length>0)
 				{
 					string text=key.String;
 					MemberInfo[] members=type.GetMember(text,bindingFlags);
@@ -3022,6 +3032,7 @@ namespace Meta
 					}
 					else if(member is EventInfo)
 					{
+						value.Parent=this;
 						((EventInfo)member).AddEventHandler(obj,CreateEventDelegate(text,value));
 					}
 					else if(member is MethodBase)

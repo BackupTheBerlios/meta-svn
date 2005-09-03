@@ -90,11 +90,11 @@ object=
 	autoSearch="default"
 	b=""
 	SetA=!
-		a:"c"
-		autoSearch:"changed"
+		parent.parent.a="c"
+		parent.parent.autoSearch="changed"
 	SetB=
 		#
-			b.1:arg.value
+			parent.parent.b.1=arg.value
 			this="changed"
 	x=
 		a="b"
@@ -203,14 +203,18 @@ selectionFunction=
 selectionFunctionResult=selectionFunction ""
 bigInteger="89383838383832839123497123047217340712340720347072304702340720347"
 upperLevel="unchanged"
+SetUpperLevel=!
+	parent.parent.upperLevel=arg
 ChangeUpperLevel=
 	#
-		upperLevel:"changed"
+		SetUpperLevel "changed"
 ChangeUpperLevel""
 staticEventChanged="0"
+ChangeStaticEvent=!
+	parent.parent.staticEventChanged=arg
 TestClass.staticEvent=
 	#
-		staticEventChanged:"1"
+		ChangeStaticEvent "1"
 		this=arg.1
 staticEvent=TestClass.staticEvent
 TestClass.TakeDelegate
@@ -220,7 +224,7 @@ staticEventResult=TestClass.staticEvent testClass
 instanceEventChanged="0"
 testClass.instanceEvent=
 	#
-		instanceEventChanged:"1"
+		parent.parent.parent.instanceEventChanged="1"
 		this=arg.1
 instanceEvent=testClass.instanceEvent
 instanceEventResult=testClass.instanceEvent

@@ -652,6 +652,24 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
+                                "parent"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "2"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "parent"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "3"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
                                 "a"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -662,11 +680,6 @@ Entry (DictionaryEntry)
                             "literal"
                           Value (NormalMap):
                             "c"
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "search"
-                      Value (NormalMap):
-                        "1"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -683,6 +696,24 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
+                                "parent"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "2"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "parent"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "3"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
                                 "autoSearch"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -693,11 +724,6 @@ Entry (DictionaryEntry)
                             "literal"
                           Value (NormalMap):
                             "changed"
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "search"
-                      Value (NormalMap):
-                        "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "SetB"
@@ -726,10 +752,28 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "b"
+                                "parent"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "parent"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "3"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "b"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "4"
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
@@ -766,11 +810,6 @@ Entry (DictionaryEntry)
                                     "literal"
                                   Value (NormalMap):
                                     "value"
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "search"
-                      Value (NormalMap):
-                        "1"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -1757,6 +1796,66 @@ Entry (DictionaryEntry)
     "changed"
 Entry (DictionaryEntry)
   Key (NormalMap):
+    "SetUpperLevel"
+  Value (NormalMap):
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "run"
+      Value (NormalMap):
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "program"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "1"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "key"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "1"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "literal"
+                          Value (NormalMap):
+                            "parent"
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "2"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "literal"
+                          Value (NormalMap):
+                            "parent"
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "3"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "literal"
+                          Value (NormalMap):
+                            "upperLevel"
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "value"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "search"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "literal"
+                          Value (NormalMap):
+                            "arg"
+Entry (DictionaryEntry)
+  Key (NormalMap):
     "ChangeUpperLevel"
   Value (NormalMap):
     Entry (DictionaryEntry)
@@ -1783,31 +1882,107 @@ Entry (DictionaryEntry)
                           Key (NormalMap):
                             "literal"
                           Value (NormalMap):
-                            "upperLevel"
+                            "1"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "value"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "call"
                       Value (NormalMap):
-                        "changed"
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "search"
-                  Value (NormalMap):
-                    "1"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "function"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "search"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "literal"
+                                  Value (NormalMap):
+                                    "SetUpperLevel"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "argument"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "changed"
 Entry (DictionaryEntry)
   Key (NormalMap):
     "3"
   Value (NormalMap):
-    ""
+    " "
 Entry (DictionaryEntry)
   Key (NormalMap):
     "staticEventChanged"
   Value (NormalMap):
     "1"
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "ChangeStaticEvent"
+  Value (NormalMap):
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "run"
+      Value (NormalMap):
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "program"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "1"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "key"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "1"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "literal"
+                          Value (NormalMap):
+                            "parent"
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "2"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "literal"
+                          Value (NormalMap):
+                            "parent"
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "3"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "literal"
+                          Value (NormalMap):
+                            "staticEventChanged"
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "value"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "search"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "literal"
+                          Value (NormalMap):
+                            "arg"
 Entry (DictionaryEntry)
   Key (NormalMap):
     "staticEvent"
