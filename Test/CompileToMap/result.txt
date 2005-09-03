@@ -817,46 +817,6 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "interpreter"
-            Entry (DictionaryEntry)
-              Key (NormalMap):
-                "2"
-              Value (NormalMap):
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "literal"
-                  Value (NormalMap):
-                    "line"
-        Entry (DictionaryEntry)
-          Key (NormalMap):
-            "value"
-          Value (NormalMap):
-            Entry (DictionaryEntry)
-              Key (NormalMap):
-                "literal"
-              Value (NormalMap):
-                "5"
-        Entry (DictionaryEntry)
-          Key (NormalMap):
-            "search"
-          Value (NormalMap):
-            "1"
-    Entry (DictionaryEntry)
-      Key (NormalMap):
-        "10"
-      Value (NormalMap):
-        Entry (DictionaryEntry)
-          Key (NormalMap):
-            "key"
-          Value (NormalMap):
-            Entry (DictionaryEntry)
-              Key (NormalMap):
-                "1"
-              Value (NormalMap):
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "literal"
-                  Value (NormalMap):
                     "literalEscapeTest"
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -998,54 +958,7 @@ Entry (DictionaryEntry)
                             "as"'"'"'"'"'"'"'"'df"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "11"
-      Value (NormalMap):
-        Entry (DictionaryEntry)
-          Key (NormalMap):
-            "key"
-          Value (NormalMap):
-            Entry (DictionaryEntry)
-              Key (NormalMap):
-                "1"
-              Value (NormalMap):
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "literal"
-                  Value (NormalMap):
-                    "nestedClassTest"
-        Entry (DictionaryEntry)
-          Key (NormalMap):
-            "value"
-          Value (NormalMap):
-            Entry (DictionaryEntry)
-              Key (NormalMap):
-                "select"
-              Value (NormalMap):
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "1"
-                  Value (NormalMap):
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "search"
-                      Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "interpreter"
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "2"
-                  Value (NormalMap):
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "literal"
-                      Value (NormalMap):
-                        "line"
-    Entry (DictionaryEntry)
-      Key (NormalMap):
-        "12"
+        "10"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1193,7 +1106,7 @@ Entry (DictionaryEntry)
                                                     "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "13"
+        "11"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1372,7 +1285,7 @@ Entry (DictionaryEntry)
                                                 "3"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "14"
+        "12"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1626,7 +1539,7 @@ Entry (DictionaryEntry)
                                                     "it is false"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "15"
+        "13"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1805,7 +1718,7 @@ Entry (DictionaryEntry)
                                                 "hello"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "16"
+        "14"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1831,7 +1744,7 @@ Entry (DictionaryEntry)
                 "ImpliedAutokey"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "17"
+        "15"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1857,7 +1770,7 @@ Entry (DictionaryEntry)
                 "Autokey"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "18"
+        "16"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1904,7 +1817,7 @@ Entry (DictionaryEntry)
                         "Collections"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "19"
+        "17"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1951,7 +1864,7 @@ Entry (DictionaryEntry)
                         "CSharp"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "20"
+        "18"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1981,7 +1894,7 @@ Entry (DictionaryEntry)
                     "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "21"
+        "19"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2032,7 +1945,7 @@ Entry (DictionaryEntry)
                             "a"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "22"
+        "20"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2062,7 +1975,7 @@ Entry (DictionaryEntry)
                 "Object"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "23"
+        "21"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2088,7 +2001,7 @@ Entry (DictionaryEntry)
                 "NormalSymbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "24"
+        "22"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2114,7 +2027,7 @@ Entry (DictionaryEntry)
                 "LookupSymbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "25"
+        "23"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2140,7 +2053,7 @@ Entry (DictionaryEntry)
                 "LookupExtendedSymbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "26"
+        "24"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2174,7 +2087,7 @@ Entry (DictionaryEntry)
                         "aMap"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "27"
+        "25"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2204,7 +2117,7 @@ Entry (DictionaryEntry)
                     "normal symbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "28"
+        "26"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2234,7 +2147,7 @@ Entry (DictionaryEntry)
                     "lookupSymbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "29"
+        "27"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2264,7 +2177,7 @@ Entry (DictionaryEntry)
                     "long key symbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "30"
+        "28"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2790,7 +2703,7 @@ Entry (DictionaryEntry)
                                                         "b"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "31"
+        "29"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2816,7 +2729,7 @@ Entry (DictionaryEntry)
                 "default"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "32"
+        "30"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2842,7 +2755,7 @@ Entry (DictionaryEntry)
                 ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "33"
+        "31"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2906,7 +2819,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "34"
+        "32"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3046,7 +2959,7 @@ Entry (DictionaryEntry)
                                                 "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "35"
+        "33"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3130,7 +3043,7 @@ Entry (DictionaryEntry)
                                                 "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "36"
+        "34"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3254,7 +3167,7 @@ Entry (DictionaryEntry)
                                     "c"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "37"
+        "35"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3378,7 +3291,7 @@ Entry (DictionaryEntry)
                                     "z"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "38"
+        "36"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3589,7 +3502,7 @@ Entry (DictionaryEntry)
                                                                                     "3"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "39"
+        "37"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3775,7 +3688,7 @@ Entry (DictionaryEntry)
                                                 "x"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "40"
+        "38"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3847,7 +3760,7 @@ Entry (DictionaryEntry)
                                     "haha"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "41"
+        "39"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3952,7 +3865,7 @@ Entry (DictionaryEntry)
                                                         "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "42"
+        "40"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4011,7 +3924,7 @@ Entry (DictionaryEntry)
                                     "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "43"
+        "41"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4083,7 +3996,7 @@ Entry (DictionaryEntry)
                                     "z"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "44"
+        "42"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4198,7 +4111,7 @@ Entry (DictionaryEntry)
                                     "yz"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "45"
+        "43"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4319,6 +4232,106 @@ Entry (DictionaryEntry)
                                         "literal"
                                       Value (NormalMap):
                                         "testClasses"
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "44"
+      Value (NormalMap):
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "key"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "1"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "literal"
+                  Value (NormalMap):
+                    "TestClass"
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "2"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "literal"
+                  Value (NormalMap):
+                    "NestedClass"
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "3"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "literal"
+                  Value (NormalMap):
+                    "field"
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "value"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "literal"
+              Value (NormalMap):
+                "5"
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "45"
+      Value (NormalMap):
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "key"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "1"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "literal"
+                  Value (NormalMap):
+                    "nestedClassTest"
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "value"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "select"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "1"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "search"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "literal"
+                          Value (NormalMap):
+                            "TestClass"
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "2"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "literal"
+                      Value (NormalMap):
+                        "NestedClass"
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "3"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "literal"
+                      Value (NormalMap):
+                        "field"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "46"

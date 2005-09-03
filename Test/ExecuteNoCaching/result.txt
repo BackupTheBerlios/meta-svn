@@ -26,11 +26,6 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "interpreter"
-  Value (DotNetClass):
-    "map+interpreter"
-Entry (DictionaryEntry)
-  Key (NormalMap):
     "If"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
@@ -222,11 +217,6 @@ Entry (DictionaryEntry)
         "5"
       Value (NormalMap):
         "as"'"'"'"'"'"'"'"'df"
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    "nestedClassTest"
-  Value (NormalMap):
-    "5"
 Entry (DictionaryEntry)
   Key (NormalMap):
     "applyMethod"
@@ -1419,6 +1409,11 @@ Entry (DictionaryEntry)
     "IndexerNoConversion"
   Value (DotNetClass):
     "testClasses.IndexerNoConversion"
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "nestedClassTest"
+  Value (NormalMap):
+    "5"
 Entry (DictionaryEntry)
   Key (NormalMap):
     "testClass"

@@ -8,10 +8,6 @@ using Meta;
 
 public class map 
 {
-	public class interpreter  // TODO: rename, only used for testing purposes
-	{
-		public static int line=0;
-	}
 	public static bool ContainsKey(Map map,Map key) 
 	{
 		string a="";

@@ -46,6 +46,10 @@ namespace testClasses
 	public delegate int IntEvent (int intArg);
 	public delegate object NormalEvent (object sender);
 	public class TestClass {
+		public class NestedClass// TODO: rename, only used for testing purposes
+		{
+			public static int field=0;
+		}
 		public TestClass(){
 		}
 		public event IntEvent instanceEvent;

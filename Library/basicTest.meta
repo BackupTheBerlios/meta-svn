@@ -37,14 +37,12 @@ integerHashTest=
 			[""]=""
 	hashTest=[hashTestData]
 persistenceTest=testSubDir
-interpreter.line:"5"
 literalEscapeTest=
 	1="'asdf'"
 	2="'"asdf"'"
 	3="'"as"'df"'"
 	4="'"'as"'"df'"'"
 	5="'"'"'"'"'"'"'"'"as"'"'"'"'"'"'"'"'df"'"'"'"'"'"'"'"'"
-nestedClassTest=interpreter.line
 applyMethod=!Add
 	arg.value
 	"1"
@@ -151,6 +149,8 @@ concatenate=map.Join
 this=map.Merge
 	parent
 	testClasses
+TestClass.NestedClass.field="5"
+nestedClassTest=TestClass.NestedClass.field
 testClass=TestClass""
 testClass.floatValue="1/3"
 testClass.doubleValue="1/3"

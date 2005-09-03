@@ -1224,70 +1224,20 @@ statements (ArrayList):
         literal (NormalMap):
           "persistenceTest"
   Entry (Statement)
-    expression (Literal):
-      Extent (Extent):
-        End (Position):
-          Column (Int32):
-            "21"
-          Line (Int32):
-            "40"
-        FileName (String):
-          "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-        Start (Position):
-          Column (Int32):
-            "18"
-          Line (Int32):
-            "40"
-      literal (NormalMap):
-        "5"
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          End (Position):
-            Column (Int32):
-              "12"
-            Line (Int32):
-              "40"
-          FileName (String):
-            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-          Start (Position):
-            Column (Int32):
-              "1"
-            Line (Int32):
-              "40"
-        literal (NormalMap):
-          "interpreter"
-      Entry (Literal)
-        Extent (Extent):
-          End (Position):
-            Column (Int32):
-              "17"
-            Line (Int32):
-              "40"
-          FileName (String):
-            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-          Start (Position):
-            Column (Int32):
-              "13"
-            Line (Int32):
-              "40"
-        literal (NormalMap):
-          "line"
-  Entry (Statement)
     expression (Program):
       Extent (Extent):
         End (Position):
           Column (Int32):
             "58"
           Line (Int32):
-            "46"
+            "45"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "2"
           Line (Int32):
-            "42"
+            "41"
       statements (ArrayList):
         Entry (Statement)
           expression (Literal):
@@ -1296,14 +1246,14 @@ statements (ArrayList):
                 Column (Int32):
                   "12"
                 Line (Int32):
-                  "42"
+                  "41"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "42"
+                  "41"
             literal (NormalMap):
               "asdf"
           keys (ArrayList):
@@ -1313,14 +1263,14 @@ statements (ArrayList):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "42"
+                    "41"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "42"
+                    "41"
               literal (NormalMap):
                 "1"
         Entry (Statement)
@@ -1330,14 +1280,14 @@ statements (ArrayList):
                 Column (Int32):
                   "14"
                 Line (Int32):
-                  "43"
+                  "42"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "43"
+                  "42"
             literal (NormalMap):
               "asdf"
           keys (ArrayList):
@@ -1347,14 +1297,14 @@ statements (ArrayList):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "43"
+                    "42"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "43"
+                    "42"
               literal (NormalMap):
                 "2"
         Entry (Statement)
@@ -1364,14 +1314,14 @@ statements (ArrayList):
                 Column (Int32):
                   "16"
                 Line (Int32):
-                  "44"
+                  "43"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "44"
+                  "43"
             literal (NormalMap):
               "as"'df"
           keys (ArrayList):
@@ -1381,14 +1331,14 @@ statements (ArrayList):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "44"
+                    "43"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "44"
+                    "43"
               literal (NormalMap):
                 "3"
         Entry (Statement)
@@ -1398,14 +1348,14 @@ statements (ArrayList):
                 Column (Int32):
                   "19"
                 Line (Int32):
-                  "45"
+                  "44"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "45"
+                  "44"
             literal (NormalMap):
               "as"'"df"
           keys (ArrayList):
@@ -1415,14 +1365,14 @@ statements (ArrayList):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "45"
+                    "44"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "45"
+                    "44"
               literal (NormalMap):
                 "4"
         Entry (Statement)
@@ -1432,14 +1382,14 @@ statements (ArrayList):
                 Column (Int32):
                   "58"
                 Line (Int32):
-                  "46"
+                  "45"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "46"
+                  "45"
             literal (NormalMap):
               "as"'"'"'"'"'"'"'"'df"
           keys (ArrayList):
@@ -1449,14 +1399,14 @@ statements (ArrayList):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "46"
+                    "45"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "46"
+                    "45"
               literal (NormalMap):
                 "5"
     keys (ArrayList):
@@ -1466,95 +1416,16 @@ statements (ArrayList):
             Column (Int32):
               "18"
             Line (Int32):
-              "41"
+              "40"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "41"
+              "40"
         literal (NormalMap):
           "literalEscapeTest"
-  Entry (Statement)
-    expression (Select):
-      Extent (Extent):
-        End (Position):
-          Column (Int32):
-            "33"
-          Line (Int32):
-            "47"
-        FileName (String):
-          "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-        Start (Position):
-          Column (Int32):
-            "17"
-          Line (Int32):
-            "47"
-      firstKey (Search):
-        Extent (Extent):
-          End (Position):
-            Column (Int32):
-              "28"
-            Line (Int32):
-              "47"
-          FileName (String):
-            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-          Start (Position):
-            Column (Int32):
-              "17"
-            Line (Int32):
-              "47"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "28"
-              Line (Int32):
-                "47"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "17"
-              Line (Int32):
-                "47"
-          literal (NormalMap):
-            "interpreter"
-      keys (ArrayList):
-        Entry (Literal)
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "33"
-              Line (Int32):
-                "47"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "29"
-              Line (Int32):
-                "47"
-          literal (NormalMap):
-            "line"
-    keys (ArrayList):
-      Entry (Literal)
-        Extent (Extent):
-          End (Position):
-            Column (Int32):
-              "16"
-            Line (Int32):
-              "47"
-          FileName (String):
-            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-          Start (Position):
-            Column (Int32):
-              "1"
-            Line (Int32):
-              "47"
-        literal (NormalMap):
-          "nestedClassTest"
   Entry (Statement)
     expression (Program):
       Extent (Extent):
@@ -1562,14 +1433,14 @@ statements (ArrayList):
           Column (Int32):
             "5"
           Line (Int32):
-            "50"
+            "48"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "14"
           Line (Int32):
-            "48"
+            "46"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -1677,14 +1548,14 @@ statements (ArrayList):
                 Column (Int32):
                   "5"
                 Line (Int32):
-                  "50"
+                  "48"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "14"
                 Line (Int32):
-                  "48"
+                  "46"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -1692,14 +1563,14 @@ statements (ArrayList):
                   Column (Int32):
                     "5"
                   Line (Int32):
-                    "50"
+                    "48"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "14"
                   Line (Int32):
-                    "48"
+                    "46"
               literal (NormalMap):
                 "run"
     keys (ArrayList):
@@ -1709,14 +1580,14 @@ statements (ArrayList):
             Column (Int32):
               "12"
             Line (Int32):
-              "48"
+              "46"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "48"
+              "46"
         literal (NormalMap):
           "applyMethod"
   Entry (Statement)
@@ -1727,14 +1598,14 @@ statements (ArrayList):
             Column (Int32):
               "6"
             Line (Int32):
-              "56"
+              "54"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "52"
+              "50"
         statements (ArrayList):
           Entry (Statement)
             expression (Search):
@@ -1743,28 +1614,28 @@ statements (ArrayList):
                   Column (Int32):
                     "13"
                   Line (Int32):
-                    "52"
+                    "50"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "52"
+                    "50"
               search (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
                       "13"
                     Line (Int32):
-                      "52"
+                      "50"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "52"
+                      "50"
                 literal (NormalMap):
                   "applyMethod"
             keys (ArrayList):
@@ -1774,14 +1645,14 @@ statements (ArrayList):
                     Column (Int32):
                       "13"
                     Line (Int32):
-                      "52"
+                      "50"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "52"
+                      "50"
                 literal (NormalMap):
                   "1"
           Entry (Statement)
@@ -1791,14 +1662,14 @@ statements (ArrayList):
                   Column (Int32):
                     "6"
                   Line (Int32):
-                    "56"
+                    "54"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "54"
+                    "52"
               statements (ArrayList):
                 Entry (Statement)
                   expression (Literal):
@@ -1807,14 +1678,14 @@ statements (ArrayList):
                         Column (Int32):
                           "6"
                         Line (Int32):
-                          "54"
+                          "52"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "3"
                         Line (Int32):
-                          "54"
+                          "52"
                     literal (NormalMap):
                       "1"
                   keys (ArrayList):
@@ -1824,14 +1695,14 @@ statements (ArrayList):
                           Column (Int32):
                             "6"
                           Line (Int32):
-                            "54"
+                            "52"
                         FileName (String):
                           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                         Start (Position):
                           Column (Int32):
                             "3"
                           Line (Int32):
-                            "54"
+                            "52"
                       literal (NormalMap):
                         "1"
                 Entry (Statement)
@@ -1841,14 +1712,14 @@ statements (ArrayList):
                         Column (Int32):
                           "6"
                         Line (Int32):
-                          "55"
+                          "53"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "3"
                         Line (Int32):
-                          "55"
+                          "53"
                     literal (NormalMap):
                       "2"
                   keys (ArrayList):
@@ -1858,14 +1729,14 @@ statements (ArrayList):
                           Column (Int32):
                             "6"
                           Line (Int32):
-                            "55"
+                            "53"
                         FileName (String):
                           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                         Start (Position):
                           Column (Int32):
                             "3"
                           Line (Int32):
-                            "55"
+                            "53"
                       literal (NormalMap):
                         "2"
                 Entry (Statement)
@@ -1875,14 +1746,14 @@ statements (ArrayList):
                         Column (Int32):
                           "6"
                         Line (Int32):
-                          "56"
+                          "54"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "3"
                         Line (Int32):
-                          "56"
+                          "54"
                     literal (NormalMap):
                       "3"
                   keys (ArrayList):
@@ -1892,14 +1763,14 @@ statements (ArrayList):
                           Column (Int32):
                             "6"
                           Line (Int32):
-                            "56"
+                            "54"
                         FileName (String):
                           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                         Start (Position):
                           Column (Int32):
                             "3"
                           Line (Int32):
-                            "56"
+                            "54"
                       literal (NormalMap):
                         "3"
             keys (ArrayList):
@@ -1909,14 +1780,14 @@ statements (ArrayList):
                     Column (Int32):
                       "6"
                     Line (Int32):
-                      "56"
+                      "54"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "3"
                     Line (Int32):
-                      "54"
+                      "52"
                 literal (NormalMap):
                   "2"
       callable (Search):
@@ -1925,28 +1796,28 @@ statements (ArrayList):
             Column (Int32):
               "16"
             Line (Int32):
-              "51"
+              "49"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "11"
             Line (Int32):
-              "51"
+              "49"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "16"
               Line (Int32):
-                "51"
+                "49"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "11"
               Line (Int32):
-                "51"
+                "49"
           literal (NormalMap):
             "Apply"
       Extent (Extent):
@@ -1954,14 +1825,14 @@ statements (ArrayList):
           Column (Int32):
             "6"
           Line (Int32):
-            "56"
+            "54"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "11"
           Line (Int32):
-            "51"
+            "49"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -1969,14 +1840,14 @@ statements (ArrayList):
             Column (Int32):
               "10"
             Line (Int32):
-              "51"
+              "49"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "51"
+              "49"
         literal (NormalMap):
           "applyTest"
   Entry (Statement)
@@ -1987,14 +1858,14 @@ statements (ArrayList):
             Column (Int32):
               "17"
             Line (Int32):
-              "64"
+              "62"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "58"
+              "56"
         statements (ArrayList):
           Entry (Statement)
             expression (Call):
@@ -2004,14 +1875,14 @@ statements (ArrayList):
                     Column (Int32):
                       "6"
                     Line (Int32):
-                      "60"
+                      "58"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "3"
                     Line (Int32):
-                      "59"
+                      "57"
                 statements (ArrayList):
                   Entry (Statement)
                     expression (Literal):
@@ -2020,14 +1891,14 @@ statements (ArrayList):
                           Column (Int32):
                             "6"
                           Line (Int32):
-                            "59"
+                            "57"
                         FileName (String):
                           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                         Start (Position):
                           Column (Int32):
                             "3"
                           Line (Int32):
-                            "59"
+                            "57"
                       literal (NormalMap):
                         "1"
                     keys (ArrayList):
@@ -2037,14 +1908,14 @@ statements (ArrayList):
                             Column (Int32):
                               "6"
                             Line (Int32):
-                              "59"
+                              "57"
                           FileName (String):
                             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                           Start (Position):
                             Column (Int32):
                               "3"
                             Line (Int32):
-                              "59"
+                              "57"
                         literal (NormalMap):
                           "1"
                   Entry (Statement)
@@ -2054,14 +1925,14 @@ statements (ArrayList):
                           Column (Int32):
                             "6"
                           Line (Int32):
-                            "60"
+                            "58"
                         FileName (String):
                           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                         Start (Position):
                           Column (Int32):
                             "3"
                           Line (Int32):
-                            "60"
+                            "58"
                       literal (NormalMap):
                         "1"
                     keys (ArrayList):
@@ -2071,14 +1942,14 @@ statements (ArrayList):
                             Column (Int32):
                               "6"
                             Line (Int32):
-                              "60"
+                              "58"
                           FileName (String):
                             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                           Start (Position):
                             Column (Int32):
                               "3"
                             Line (Int32):
-                              "60"
+                              "58"
                         literal (NormalMap):
                           "2"
               callable (Search):
@@ -2087,28 +1958,28 @@ statements (ArrayList):
                     Column (Int32):
                       "7"
                     Line (Int32):
-                      "58"
+                      "56"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "58"
+                      "56"
                 search (Literal):
                   Extent (Extent):
                     End (Position):
                       Column (Int32):
                         "7"
                       Line (Int32):
-                        "58"
+                        "56"
                     FileName (String):
                       "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "2"
                       Line (Int32):
-                        "58"
+                        "56"
                   literal (NormalMap):
                     "Equal"
               Extent (Extent):
@@ -2116,14 +1987,14 @@ statements (ArrayList):
                   Column (Int32):
                     "6"
                   Line (Int32):
-                    "60"
+                    "58"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "58"
+                    "56"
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
@@ -2131,14 +2002,14 @@ statements (ArrayList):
                     Column (Int32):
                       "6"
                     Line (Int32):
-                      "60"
+                      "58"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "58"
+                      "56"
                 literal (NormalMap):
                   "1"
           Entry (Statement)
@@ -2148,14 +2019,14 @@ statements (ArrayList):
                   Column (Int32):
                     "16"
                   Line (Int32):
-                    "62"
+                    "60"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "4"
                   Line (Int32):
-                    "62"
+                    "60"
               statements (ArrayList):
                 Entry (Statement)
                   expression (Delayed):
@@ -2170,14 +2041,14 @@ statements (ArrayList):
                         Column (Int32):
                           "16"
                         Line (Int32):
-                          "62"
+                          "60"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "4"
                         Line (Int32):
-                          "62"
+                          "60"
                   keys (ArrayList):
                     Entry (Literal)
                       Extent (Extent):
@@ -2185,14 +2056,14 @@ statements (ArrayList):
                           Column (Int32):
                             "16"
                           Line (Int32):
-                            "62"
+                            "60"
                         FileName (String):
                           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                         Start (Position):
                           Column (Int32):
                             "4"
                           Line (Int32):
-                            "62"
+                            "60"
                       literal (NormalMap):
                         "run"
             keys (ArrayList):
@@ -2202,14 +2073,14 @@ statements (ArrayList):
                     Column (Int32):
                       "6"
                     Line (Int32):
-                      "61"
+                      "59"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "61"
+                      "59"
                 literal (NormalMap):
                   "then"
           Entry (Statement)
@@ -2219,14 +2090,14 @@ statements (ArrayList):
                   Column (Int32):
                     "17"
                   Line (Int32):
-                    "64"
+                    "62"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "4"
                   Line (Int32):
-                    "64"
+                    "62"
               statements (ArrayList):
                 Entry (Statement)
                   expression (Delayed):
@@ -2241,14 +2112,14 @@ statements (ArrayList):
                         Column (Int32):
                           "17"
                         Line (Int32):
-                          "64"
+                          "62"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "4"
                         Line (Int32):
-                          "64"
+                          "62"
                   keys (ArrayList):
                     Entry (Literal)
                       Extent (Extent):
@@ -2256,14 +2127,14 @@ statements (ArrayList):
                           Column (Int32):
                             "17"
                           Line (Int32):
-                            "64"
+                            "62"
                         FileName (String):
                           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                         Start (Position):
                           Column (Int32):
                             "4"
                           Line (Int32):
-                            "64"
+                            "62"
                       literal (NormalMap):
                         "run"
             keys (ArrayList):
@@ -2273,14 +2144,14 @@ statements (ArrayList):
                     Column (Int32):
                       "6"
                     Line (Int32):
-                      "63"
+                      "61"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "63"
+                      "61"
                 literal (NormalMap):
                   "else"
       callable (Search):
@@ -2289,28 +2160,28 @@ statements (ArrayList):
             Column (Int32):
               "10"
             Line (Int32):
-              "57"
+              "55"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "8"
             Line (Int32):
-              "57"
+              "55"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "10"
               Line (Int32):
-                "57"
+                "55"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "8"
               Line (Int32):
-                "57"
+                "55"
           literal (NormalMap):
             "If"
       Extent (Extent):
@@ -2318,14 +2189,14 @@ statements (ArrayList):
           Column (Int32):
             "17"
           Line (Int32):
-            "64"
+            "62"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "8"
           Line (Int32):
-            "57"
+            "55"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -2333,14 +2204,14 @@ statements (ArrayList):
             Column (Int32):
               "7"
             Line (Int32):
-              "57"
+              "55"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "57"
+              "55"
         literal (NormalMap):
           "ifTest"
   Entry (Statement)
@@ -2351,14 +2222,14 @@ statements (ArrayList):
             Column (Int32):
               "15"
             Line (Int32):
-              "68"
+              "66"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "66"
+              "64"
         statements (ArrayList):
           Entry (Statement)
             expression (Call):
@@ -2368,14 +2239,14 @@ statements (ArrayList):
                     Column (Int32):
                       "29"
                     Line (Int32):
-                      "66"
+                      "64"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "27"
                     Line (Int32):
-                      "66"
+                      "64"
                 literal (NormalMap):
                   ""
               callable (Select):
@@ -2384,42 +2255,42 @@ statements (ArrayList):
                     Column (Int32):
                       "27"
                     Line (Int32):
-                      "66"
+                      "64"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "66"
+                      "64"
                 firstKey (Search):
                   Extent (Extent):
                     End (Position):
                       Column (Int32):
                         "8"
                       Line (Int32):
-                        "66"
+                        "64"
                     FileName (String):
                       "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "2"
                       Line (Int32):
-                        "66"
+                        "64"
                   search (Literal):
                     Extent (Extent):
                       End (Position):
                         Column (Int32):
                           "8"
                         Line (Int32):
-                          "66"
+                          "64"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "2"
                         Line (Int32):
-                          "66"
+                          "64"
                     literal (NormalMap):
                       "System"
                 keys (ArrayList):
@@ -2429,14 +2300,14 @@ statements (ArrayList):
                         Column (Int32):
                           "16"
                         Line (Int32):
-                          "66"
+                          "64"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "9"
                         Line (Int32):
-                          "66"
+                          "64"
                     literal (NormalMap):
                       "Windows"
                   Entry (Literal)
@@ -2445,14 +2316,14 @@ statements (ArrayList):
                         Column (Int32):
                           "22"
                         Line (Int32):
-                          "66"
+                          "64"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "17"
                         Line (Int32):
-                          "66"
+                          "64"
                     literal (NormalMap):
                       "Forms"
                   Entry (Literal)
@@ -2461,14 +2332,14 @@ statements (ArrayList):
                         Column (Int32):
                           "27"
                         Line (Int32):
-                          "66"
+                          "64"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "23"
                         Line (Int32):
-                          "66"
+                          "64"
                     literal (NormalMap):
                       "Form"
               Extent (Extent):
@@ -2476,14 +2347,14 @@ statements (ArrayList):
                   Column (Int32):
                     "29"
                   Line (Int32):
-                    "66"
+                    "64"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "66"
+                    "64"
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
@@ -2491,14 +2362,14 @@ statements (ArrayList):
                     Column (Int32):
                       "29"
                     Line (Int32):
-                      "66"
+                      "64"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "66"
+                      "64"
                 literal (NormalMap):
                   "1"
           Entry (Statement)
@@ -2508,14 +2379,14 @@ statements (ArrayList):
                   Column (Int32):
                     "15"
                   Line (Int32):
-                    "68"
+                    "66"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "68"
+                    "66"
               statements (ArrayList):
                 Entry (Statement)
                   expression (Literal):
@@ -2524,14 +2395,14 @@ statements (ArrayList):
                         Column (Int32):
                           "15"
                         Line (Int32):
-                          "68"
+                          "66"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "8"
                         Line (Int32):
-                          "68"
+                          "66"
                     literal (NormalMap):
                       "hello"
                   keys (ArrayList):
@@ -2541,14 +2412,14 @@ statements (ArrayList):
                           Column (Int32):
                             "7"
                           Line (Int32):
-                            "68"
+                            "66"
                         FileName (String):
                           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                         Start (Position):
                           Column (Int32):
                             "3"
                           Line (Int32):
-                            "68"
+                            "66"
                       literal (NormalMap):
                         "Text"
             keys (ArrayList):
@@ -2558,14 +2429,14 @@ statements (ArrayList):
                     Column (Int32):
                       "15"
                     Line (Int32):
-                      "68"
+                      "66"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "3"
                     Line (Int32):
-                      "68"
+                      "66"
                 literal (NormalMap):
                   "2"
       callable (Search):
@@ -2574,28 +2445,28 @@ statements (ArrayList):
             Column (Int32):
               "10"
             Line (Int32):
-              "65"
+              "63"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "6"
             Line (Int32):
-              "65"
+              "63"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "10"
               Line (Int32):
-                "65"
+                "63"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "6"
               Line (Int32):
-                "65"
+                "63"
           literal (NormalMap):
             "Init"
       Extent (Extent):
@@ -2603,14 +2474,14 @@ statements (ArrayList):
           Column (Int32):
             "15"
           Line (Int32):
-            "68"
+            "66"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "6"
           Line (Int32):
-            "65"
+            "63"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -2618,14 +2489,14 @@ statements (ArrayList):
             Column (Int32):
               "5"
             Line (Int32):
-              "65"
+              "63"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "65"
+              "63"
         literal (NormalMap):
           "form"
   Entry (Statement)
@@ -2635,14 +2506,14 @@ statements (ArrayList):
           Column (Int32):
             "17"
           Line (Int32):
-            "69"
+            "67"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "1"
           Line (Int32):
-            "69"
+            "67"
       literal (NormalMap):
         "ImpliedAutokey"
     keys (ArrayList):
@@ -2652,14 +2523,14 @@ statements (ArrayList):
             Column (Int32):
               "17"
             Line (Int32):
-              "69"
+              "67"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "69"
+              "67"
         literal (NormalMap):
           "1"
   Entry (Statement)
@@ -2669,14 +2540,14 @@ statements (ArrayList):
           Column (Int32):
             "11"
           Line (Int32):
-            "70"
+            "68"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "2"
           Line (Int32):
-            "70"
+            "68"
       literal (NormalMap):
         "Autokey"
     keys (ArrayList):
@@ -2686,14 +2557,14 @@ statements (ArrayList):
             Column (Int32):
               "11"
             Line (Int32):
-              "70"
+              "68"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "70"
+              "68"
         literal (NormalMap):
           "2"
   Entry (Statement)
@@ -2703,42 +2574,42 @@ statements (ArrayList):
           Column (Int32):
             "27"
           Line (Int32):
-            "71"
+            "69"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "9"
           Line (Int32):
-            "71"
+            "69"
       firstKey (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "15"
             Line (Int32):
-              "71"
+              "69"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "9"
             Line (Int32):
-              "71"
+              "69"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "15"
               Line (Int32):
-                "71"
+                "69"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "9"
               Line (Int32):
-                "71"
+                "69"
           literal (NormalMap):
             "System"
       keys (ArrayList):
@@ -2748,14 +2619,14 @@ statements (ArrayList):
               Column (Int32):
                 "27"
               Line (Int32):
-                "71"
+                "69"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "16"
               Line (Int32):
-                "71"
+                "69"
           literal (NormalMap):
             "Collections"
     keys (ArrayList):
@@ -2765,14 +2636,14 @@ statements (ArrayList):
             Column (Int32):
               "8"
             Line (Int32):
-              "71"
+              "69"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "71"
+              "69"
         literal (NormalMap):
           "gacTest"
   Entry (Statement)
@@ -2782,42 +2653,42 @@ statements (ArrayList):
           Column (Int32):
             "29"
           Line (Int32):
-            "72"
+            "70"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "13"
           Line (Int32):
-            "72"
+            "70"
       firstKey (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "22"
             Line (Int32):
-              "72"
+              "70"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "13"
             Line (Int32):
-              "72"
+              "70"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "22"
               Line (Int32):
-                "72"
+                "70"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "13"
               Line (Int32):
-                "72"
+                "70"
           literal (NormalMap):
             "Microsoft"
       keys (ArrayList):
@@ -2827,14 +2698,14 @@ statements (ArrayList):
               Column (Int32):
                 "29"
               Line (Int32):
-                "72"
+                "70"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "23"
               Line (Int32):
-                "72"
+                "70"
           literal (NormalMap):
             "CSharp"
     keys (ArrayList):
@@ -2844,14 +2715,14 @@ statements (ArrayList):
             Column (Int32):
               "12"
             Line (Int32):
-              "72"
+              "70"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "72"
+              "70"
         literal (NormalMap):
           "lazyGACTest"
   Entry (Statement)
@@ -2861,28 +2732,28 @@ statements (ArrayList):
           Column (Int32):
             "25"
           Line (Int32):
-            "74"
+            "72"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "22"
           Line (Int32):
-            "74"
+            "72"
       search (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "25"
             Line (Int32):
-              "74"
+              "72"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "22"
             Line (Int32):
-              "74"
+              "72"
         literal (NormalMap):
           "arg"
     keys (ArrayList):
@@ -2892,14 +2763,14 @@ statements (ArrayList):
             Column (Int32):
               "21"
             Line (Int32):
-              "74"
+              "72"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "74"
+              "72"
         literal (NormalMap):
           "commandLineArguments"
   Entry (Statement)
@@ -2909,14 +2780,14 @@ statements (ArrayList):
           Column (Int32):
             "11"
           Line (Int32):
-            "81"
+            "79"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "81"
+            "79"
       statements (ArrayList):
         Entry (Statement)
           expression (Literal):
@@ -2925,14 +2796,14 @@ statements (ArrayList):
                 Column (Int32):
                   "11"
                 Line (Int32):
-                  "81"
+                  "79"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "8"
                 Line (Int32):
-                  "81"
+                  "79"
             literal (NormalMap):
               "a"
           keys (ArrayList):
@@ -2942,14 +2813,14 @@ statements (ArrayList):
                   Column (Int32):
                     "6"
                   Line (Int32):
-                    "81"
+                    "79"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "81"
+                    "79"
               literal (NormalMap):
                 "a"
     keys (ArrayList):
@@ -2959,14 +2830,14 @@ statements (ArrayList):
             Column (Int32):
               "5"
             Line (Int32):
-              "80"
+              "78"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "80"
+              "78"
         literal (NormalMap):
           "aMap"
   Entry (Statement)
@@ -2976,14 +2847,14 @@ statements (ArrayList):
           Column (Int32):
             "16"
           Line (Int32):
-            "82"
+            "80"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "8"
           Line (Int32):
-            "82"
+            "80"
       literal (NormalMap):
         "Object"
     keys (ArrayList):
@@ -2993,28 +2864,28 @@ statements (ArrayList):
             Column (Int32):
               "6"
             Line (Int32):
-              "82"
+              "80"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "82"
+              "80"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "6"
               Line (Int32):
-                "82"
+                "80"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "2"
               Line (Int32):
-                "82"
+                "80"
           literal (NormalMap):
             "aMap"
   Entry (Statement)
@@ -3024,14 +2895,14 @@ statements (ArrayList):
           Column (Int32):
             "33"
           Line (Int32):
-            "83"
+            "81"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "19"
           Line (Int32):
-            "83"
+            "81"
       literal (NormalMap):
         "NormalSymbol"
     keys (ArrayList):
@@ -3041,14 +2912,14 @@ statements (ArrayList):
             Column (Int32):
               "17"
             Line (Int32):
-              "83"
+              "81"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "83"
+              "81"
         literal (NormalMap):
           "normal symbol"
   Entry (Statement)
@@ -3058,14 +2929,14 @@ statements (ArrayList):
           Column (Int32):
             "28"
           Line (Int32):
-            "84"
+            "82"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "14"
           Line (Int32):
-            "84"
+            "82"
       literal (NormalMap):
         "LookupSymbol"
     keys (ArrayList):
@@ -3075,14 +2946,14 @@ statements (ArrayList):
             Column (Int32):
               "13"
             Line (Int32):
-              "84"
+              "82"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "84"
+              "82"
         literal (NormalMap):
           "lookupSymbol"
   Entry (Statement)
@@ -3092,14 +2963,14 @@ statements (ArrayList):
           Column (Int32):
             "43"
           Line (Int32):
-            "85"
+            "83"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "21"
           Line (Int32):
-            "85"
+            "83"
       literal (NormalMap):
         "LookupExtendedSymbol"
     keys (ArrayList):
@@ -3109,14 +2980,14 @@ statements (ArrayList):
             Column (Int32):
               "19"
             Line (Int32):
-              "85"
+              "83"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "85"
+              "83"
         literal (NormalMap):
           "long key symbol"
   Entry (Statement)
@@ -3126,42 +2997,42 @@ statements (ArrayList):
           Column (Int32):
             "18"
           Line (Int32):
-            "86"
+            "84"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "14"
           Line (Int32):
-            "86"
+            "84"
       search (Search):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "18"
             Line (Int32):
-              "86"
+              "84"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "14"
             Line (Int32):
-              "86"
+              "84"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "18"
               Line (Int32):
-                "86"
+                "84"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "14"
               Line (Int32):
-                "86"
+                "84"
           literal (NormalMap):
             "aMap"
     keys (ArrayList):
@@ -3171,14 +3042,14 @@ statements (ArrayList):
             Column (Int32):
               "12"
             Line (Int32):
-              "86"
+              "84"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "86"
+              "84"
         literal (NormalMap):
           "lookedUpMap"
   Entry (Statement)
@@ -3188,28 +3059,28 @@ statements (ArrayList):
           Column (Int32):
             "38"
           Line (Int32):
-            "87"
+            "85"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "23"
           Line (Int32):
-            "87"
+            "85"
       search (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "38"
             Line (Int32):
-              "87"
+              "85"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "23"
             Line (Int32):
-              "87"
+              "85"
         literal (NormalMap):
           "normal symbol"
     keys (ArrayList):
@@ -3219,14 +3090,14 @@ statements (ArrayList):
             Column (Int32):
               "21"
             Line (Int32):
-              "87"
+              "85"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "87"
+              "85"
         literal (NormalMap):
           "lookedUpNormalSymbol"
   Entry (Statement)
@@ -3236,28 +3107,28 @@ statements (ArrayList):
           Column (Int32):
             "28"
           Line (Int32):
-            "88"
+            "86"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "16"
           Line (Int32):
-            "88"
+            "86"
       search (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "28"
             Line (Int32):
-              "88"
+              "86"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "16"
             Line (Int32):
-              "88"
+              "86"
         literal (NormalMap):
           "lookupSymbol"
     keys (ArrayList):
@@ -3267,14 +3138,14 @@ statements (ArrayList):
             Column (Int32):
               "15"
             Line (Int32):
-              "88"
+              "86"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "88"
+              "86"
         literal (NormalMap):
           "lookedUpSymbol"
   Entry (Statement)
@@ -3284,28 +3155,28 @@ statements (ArrayList):
           Column (Int32):
             "38"
           Line (Int32):
-            "89"
+            "87"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "21"
           Line (Int32):
-            "89"
+            "87"
       search (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
               "38"
             Line (Int32):
-              "89"
+              "87"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "21"
             Line (Int32):
-              "89"
+              "87"
         literal (NormalMap):
           "long key symbol"
     keys (ArrayList):
@@ -3315,14 +3186,14 @@ statements (ArrayList):
             Column (Int32):
               "19"
             Line (Int32):
-              "89"
+              "87"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "89"
+              "87"
         literal (NormalMap):
           "lookedUpLongSymbol"
   Entry (Statement)
@@ -3332,14 +3203,14 @@ statements (ArrayList):
           Column (Int32):
             "14"
           Line (Int32):
-            "106"
+            "104"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "2"
           Line (Int32):
-            "91"
+            "89"
       statements (ArrayList):
         Entry (Statement)
           expression (Literal):
@@ -3348,14 +3219,14 @@ statements (ArrayList):
                 Column (Int32):
                   "13"
                 Line (Int32):
-                  "91"
+                  "89"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "91"
+                  "89"
             literal (NormalMap):
               "default"
           keys (ArrayList):
@@ -3365,14 +3236,14 @@ statements (ArrayList):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "91"
+                    "89"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "91"
+                    "89"
               literal (NormalMap):
                 "a"
         Entry (Statement)
@@ -3382,14 +3253,14 @@ statements (ArrayList):
                 Column (Int32):
                   "22"
                 Line (Int32):
-                  "92"
+                  "90"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "13"
                 Line (Int32):
-                  "92"
+                  "90"
             literal (NormalMap):
               "default"
           keys (ArrayList):
@@ -3399,14 +3270,14 @@ statements (ArrayList):
                   Column (Int32):
                     "12"
                   Line (Int32):
-                    "92"
+                    "90"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "92"
+                    "90"
               literal (NormalMap):
                 "autoSearch"
         Entry (Statement)
@@ -3416,14 +3287,14 @@ statements (ArrayList):
                 Column (Int32):
                   "6"
                 Line (Int32):
-                  "93"
+                  "91"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "93"
+                  "91"
             literal (NormalMap):
               ""
           keys (ArrayList):
@@ -3433,14 +3304,14 @@ statements (ArrayList):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "93"
+                    "91"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "93"
+                    "91"
               literal (NormalMap):
                 "b"
         Entry (Statement)
@@ -3450,14 +3321,14 @@ statements (ArrayList):
                 Column (Int32):
                   "23"
                 Line (Int32):
-                  "96"
+                  "94"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "95"
+                  "93"
             statements (ArrayList):
               Entry (Statement)
                 expression (Delayed):
@@ -3533,14 +3404,14 @@ statements (ArrayList):
                       Column (Int32):
                         "23"
                       Line (Int32):
-                        "96"
+                        "94"
                     FileName (String):
                       "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "3"
                       Line (Int32):
-                        "95"
+                        "93"
                 keys (ArrayList):
                   Entry (Literal)
                     Extent (Extent):
@@ -3548,14 +3419,14 @@ statements (ArrayList):
                         Column (Int32):
                           "23"
                         Line (Int32):
-                          "96"
+                          "94"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "3"
                         Line (Int32):
-                          "95"
+                          "93"
                     literal (NormalMap):
                       "run"
           keys (ArrayList):
@@ -3565,14 +3436,14 @@ statements (ArrayList):
                   Column (Int32):
                     "6"
                   Line (Int32):
-                    "94"
+                    "92"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "94"
+                    "92"
               literal (NormalMap):
                 "SetA"
         Entry (Statement)
@@ -3582,14 +3453,14 @@ statements (ArrayList):
                 Column (Int32):
                   "18"
                 Line (Int32):
-                  "100"
+                  "98"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "99"
+                  "97"
             statements (ArrayList):
               Entry (Statement)
                 expression (Delayed):
@@ -3690,14 +3561,14 @@ statements (ArrayList):
                       Column (Int32):
                         "18"
                       Line (Int32):
-                        "100"
+                        "98"
                     FileName (String):
                       "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "4"
                       Line (Int32):
-                        "99"
+                        "97"
                 keys (ArrayList):
                   Entry (Literal)
                     Extent (Extent):
@@ -3705,14 +3576,14 @@ statements (ArrayList):
                         Column (Int32):
                           "18"
                         Line (Int32):
-                          "100"
+                          "98"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "4"
                         Line (Int32):
-                          "99"
+                          "97"
                     literal (NormalMap):
                       "run"
           keys (ArrayList):
@@ -3722,14 +3593,14 @@ statements (ArrayList):
                   Column (Int32):
                     "6"
                   Line (Int32):
-                    "97"
+                    "95"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "97"
+                    "95"
               literal (NormalMap):
                 "SetB"
         Entry (Statement)
@@ -3739,14 +3610,14 @@ statements (ArrayList):
                 Column (Int32):
                   "8"
                 Line (Int32):
-                  "103"
+                  "101"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "102"
+                  "100"
             statements (ArrayList):
               Entry (Statement)
                 expression (Literal):
@@ -3755,14 +3626,14 @@ statements (ArrayList):
                       Column (Int32):
                         "8"
                       Line (Int32):
-                        "102"
+                        "100"
                     FileName (String):
                       "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "5"
                       Line (Int32):
-                        "102"
+                        "100"
                   literal (NormalMap):
                     "b"
                 keys (ArrayList):
@@ -3772,14 +3643,14 @@ statements (ArrayList):
                         Column (Int32):
                           "4"
                         Line (Int32):
-                          "102"
+                          "100"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "3"
                         Line (Int32):
-                          "102"
+                          "100"
                     literal (NormalMap):
                       "a"
               Entry (Statement)
@@ -3789,14 +3660,14 @@ statements (ArrayList):
                       Column (Int32):
                         "8"
                       Line (Int32):
-                        "103"
+                        "101"
                     FileName (String):
                       "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "5"
                       Line (Int32):
-                        "103"
+                        "101"
                   literal (NormalMap):
                     "d"
                 keys (ArrayList):
@@ -3806,14 +3677,14 @@ statements (ArrayList):
                         Column (Int32):
                           "4"
                         Line (Int32):
-                          "103"
+                          "101"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "3"
                         Line (Int32):
-                          "103"
+                          "101"
                     literal (NormalMap):
                       "c"
           keys (ArrayList):
@@ -3823,14 +3694,14 @@ statements (ArrayList):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "101"
+                    "99"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "101"
+                    "99"
               literal (NormalMap):
                 "x"
         Entry (Statement)
@@ -3840,14 +3711,14 @@ statements (ArrayList):
                 Column (Int32):
                   "14"
                 Line (Int32):
-                  "106"
+                  "104"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "4"
                 Line (Int32):
-                  "106"
+                  "104"
             statements (ArrayList):
               Entry (Statement)
                 expression (Delayed):
@@ -3896,14 +3767,14 @@ statements (ArrayList):
                       Column (Int32):
                         "14"
                       Line (Int32):
-                        "106"
+                        "104"
                     FileName (String):
                       "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                     Start (Position):
                       Column (Int32):
                         "4"
                       Line (Int32):
-                        "106"
+                        "104"
                 keys (ArrayList):
                   Entry (Literal)
                     Extent (Extent):
@@ -3911,14 +3782,14 @@ statements (ArrayList):
                         Column (Int32):
                           "14"
                         Line (Int32):
-                          "106"
+                          "104"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "4"
                         Line (Int32):
-                          "106"
+                          "104"
                     literal (NormalMap):
                       "run"
           keys (ArrayList):
@@ -3928,14 +3799,14 @@ statements (ArrayList):
                   Column (Int32):
                     "14"
                   Line (Int32):
-                    "106"
+                    "104"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "4"
                   Line (Int32):
-                    "106"
+                    "104"
               literal (NormalMap):
                 "1"
     keys (ArrayList):
@@ -3945,14 +3816,14 @@ statements (ArrayList):
             Column (Int32):
               "7"
             Line (Int32):
-              "90"
+              "88"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "90"
+              "88"
         literal (NormalMap):
           "object"
   Entry (Statement)
@@ -3962,14 +3833,14 @@ statements (ArrayList):
           Column (Int32):
             "12"
           Line (Int32):
-            "107"
+            "105"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "107"
+            "105"
       literal (NormalMap):
         "default"
     keys (ArrayList):
@@ -3979,14 +3850,14 @@ statements (ArrayList):
             Column (Int32):
               "2"
             Line (Int32):
-              "107"
+              "105"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "107"
+              "105"
         literal (NormalMap):
           "a"
   Entry (Statement)
@@ -3996,14 +3867,14 @@ statements (ArrayList):
           Column (Int32):
             "5"
           Line (Int32):
-            "108"
+            "106"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "108"
+            "106"
       literal (NormalMap):
         ""
     keys (ArrayList):
@@ -4013,14 +3884,14 @@ statements (ArrayList):
             Column (Int32):
               "2"
             Line (Int32):
-              "108"
+              "106"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "108"
+              "106"
         literal (NormalMap):
           "b"
   Entry (Statement)
@@ -4031,14 +3902,14 @@ statements (ArrayList):
             Column (Int32):
               "19"
             Line (Int32):
-              "109"
+              "107"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "17"
             Line (Int32):
-              "109"
+              "107"
         literal (NormalMap):
           ""
       callable (Select):
@@ -4047,42 +3918,42 @@ statements (ArrayList):
             Column (Int32):
               "17"
             Line (Int32):
-              "109"
+              "107"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "6"
             Line (Int32):
-              "109"
+              "107"
         firstKey (Search):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "12"
               Line (Int32):
-                "109"
+                "107"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "6"
               Line (Int32):
-                "109"
+                "107"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "12"
                 Line (Int32):
-                  "109"
+                  "107"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "6"
                 Line (Int32):
-                  "109"
+                  "107"
             literal (NormalMap):
               "object"
         keys (ArrayList):
@@ -4092,14 +3963,14 @@ statements (ArrayList):
                 Column (Int32):
                   "17"
                 Line (Int32):
-                  "109"
+                  "107"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "13"
                 Line (Int32):
-                  "109"
+                  "107"
             literal (NormalMap):
               "SetA"
       Extent (Extent):
@@ -4107,14 +3978,14 @@ statements (ArrayList):
           Column (Int32):
             "19"
           Line (Int32):
-            "109"
+            "107"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "6"
           Line (Int32):
-            "109"
+            "107"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -4122,14 +3993,14 @@ statements (ArrayList):
             Column (Int32):
               "5"
             Line (Int32):
-              "109"
+              "107"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "109"
+              "107"
         literal (NormalMap):
           "aSet"
   Entry (Statement)
@@ -4140,14 +4011,14 @@ statements (ArrayList):
             Column (Int32):
               "8"
             Line (Int32):
-              "113"
+              "111"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "111"
+              "109"
         statements (ArrayList):
           Entry (Statement)
             expression (Program):
@@ -4156,14 +4027,14 @@ statements (ArrayList):
                   Column (Int32):
                     "8"
                   Line (Int32):
-                    "113"
+                    "111"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "112"
+                    "110"
               statements (ArrayList):
                 Entry (Statement)
                   expression (Literal):
@@ -4172,14 +4043,14 @@ statements (ArrayList):
                         Column (Int32):
                           "8"
                         Line (Int32):
-                          "112"
+                          "110"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "5"
                         Line (Int32):
-                          "112"
+                          "110"
                     literal (NormalMap):
                       "7"
                   keys (ArrayList):
@@ -4189,14 +4060,14 @@ statements (ArrayList):
                           Column (Int32):
                             "4"
                           Line (Int32):
-                            "112"
+                            "110"
                         FileName (String):
                           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                         Start (Position):
                           Column (Int32):
                             "3"
                           Line (Int32):
-                            "112"
+                            "110"
                       literal (NormalMap):
                         "x"
                 Entry (Statement)
@@ -4206,14 +4077,14 @@ statements (ArrayList):
                         Column (Int32):
                           "8"
                         Line (Int32):
-                          "113"
+                          "111"
                       FileName (String):
                         "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                       Start (Position):
                         Column (Int32):
                           "5"
                         Line (Int32):
-                          "113"
+                          "111"
                     literal (NormalMap):
                       "1"
                   keys (ArrayList):
@@ -4223,14 +4094,14 @@ statements (ArrayList):
                           Column (Int32):
                             "4"
                           Line (Int32):
-                            "113"
+                            "111"
                         FileName (String):
                           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                         Start (Position):
                           Column (Int32):
                             "3"
                           Line (Int32):
-                            "113"
+                            "111"
                       literal (NormalMap):
                         "z"
             keys (ArrayList):
@@ -4240,14 +4111,14 @@ statements (ArrayList):
                     Column (Int32):
                       "7"
                     Line (Int32):
-                      "111"
+                      "109"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "111"
+                      "109"
                 literal (NormalMap):
                   "value"
       callable (Select):
@@ -4256,42 +4127,42 @@ statements (ArrayList):
             Column (Int32):
               "17"
             Line (Int32):
-              "110"
+              "108"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "6"
             Line (Int32):
-              "110"
+              "108"
         firstKey (Search):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "12"
               Line (Int32):
-                "110"
+                "108"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "6"
               Line (Int32):
-                "110"
+                "108"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "12"
                 Line (Int32):
-                  "110"
+                  "108"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "6"
                 Line (Int32):
-                  "110"
+                  "108"
             literal (NormalMap):
               "object"
         keys (ArrayList):
@@ -4301,14 +4172,14 @@ statements (ArrayList):
                 Column (Int32):
                   "17"
                 Line (Int32):
-                  "110"
+                  "108"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "13"
                 Line (Int32):
-                  "110"
+                  "108"
             literal (NormalMap):
               "SetB"
       Extent (Extent):
@@ -4316,14 +4187,14 @@ statements (ArrayList):
           Column (Int32):
             "8"
           Line (Int32):
-            "113"
+            "111"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "6"
           Line (Int32):
-            "110"
+            "108"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -4331,14 +4202,14 @@ statements (ArrayList):
             Column (Int32):
               "5"
             Line (Int32):
-              "110"
+              "108"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "110"
+              "108"
         literal (NormalMap):
           "bSet"
   Entry (Statement)
@@ -4348,14 +4219,14 @@ statements (ArrayList):
           Column (Int32):
             "11"
           Line (Int32):
-            "116"
+            "114"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "116"
+            "114"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -4399,14 +4270,14 @@ statements (ArrayList):
                 Column (Int32):
                   "11"
                 Line (Int32):
-                  "116"
+                  "114"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "116"
+                  "114"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -4414,14 +4285,14 @@ statements (ArrayList):
                   Column (Int32):
                     "11"
                   Line (Int32):
-                    "116"
+                    "114"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "116"
+                    "114"
               literal (NormalMap):
                 "run"
     keys (ArrayList):
@@ -4431,14 +4302,14 @@ statements (ArrayList):
             Column (Int32):
               "17"
             Line (Int32):
-              "114"
+              "112"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "114"
+              "112"
         literal (NormalMap):
           "ReturnEverything"
   Entry (Statement)
@@ -4449,14 +4320,14 @@ statements (ArrayList):
             Column (Int32):
               "5"
             Line (Int32):
-              "120"
+              "118"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "118"
+              "116"
         statements (ArrayList):
           Entry (Statement)
             expression (Literal):
@@ -4465,14 +4336,14 @@ statements (ArrayList):
                   Column (Int32):
                     "5"
                   Line (Int32):
-                    "118"
+                    "116"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "118"
+                    "116"
               literal (NormalMap):
                 "a"
             keys (ArrayList):
@@ -4482,14 +4353,14 @@ statements (ArrayList):
                     Column (Int32):
                       "5"
                     Line (Int32):
-                      "118"
+                      "116"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "118"
+                      "116"
                 literal (NormalMap):
                   "1"
           Entry (Statement)
@@ -4499,14 +4370,14 @@ statements (ArrayList):
                   Column (Int32):
                     "5"
                   Line (Int32):
-                    "119"
+                    "117"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "119"
+                    "117"
               literal (NormalMap):
                 "b"
             keys (ArrayList):
@@ -4516,14 +4387,14 @@ statements (ArrayList):
                     Column (Int32):
                       "5"
                     Line (Int32):
-                      "119"
+                      "117"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "119"
+                      "117"
                 literal (NormalMap):
                   "2"
           Entry (Statement)
@@ -4533,14 +4404,14 @@ statements (ArrayList):
                   Column (Int32):
                     "5"
                   Line (Int32):
-                    "120"
+                    "118"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "120"
+                    "118"
               literal (NormalMap):
                 "c"
             keys (ArrayList):
@@ -4550,14 +4421,14 @@ statements (ArrayList):
                     Column (Int32):
                       "5"
                     Line (Int32):
-                      "120"
+                      "118"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "120"
+                      "118"
                 literal (NormalMap):
                   "3"
       callable (Search):
@@ -4566,28 +4437,28 @@ statements (ArrayList):
             Column (Int32):
               "36"
             Line (Int32):
-              "117"
+              "115"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "20"
             Line (Int32):
-              "117"
+              "115"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "36"
               Line (Int32):
-                "117"
+                "115"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "20"
               Line (Int32):
-                "117"
+                "115"
           literal (NormalMap):
             "ReturnEverything"
       Extent (Extent):
@@ -4595,14 +4466,14 @@ statements (ArrayList):
           Column (Int32):
             "5"
           Line (Int32):
-            "120"
+            "118"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "20"
           Line (Int32):
-            "117"
+            "115"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -4610,14 +4481,14 @@ statements (ArrayList):
             Column (Int32):
               "19"
             Line (Int32):
-              "117"
+              "115"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "117"
+              "115"
         literal (NormalMap):
           "everythingReturned"
   Entry (Statement)
@@ -4628,14 +4499,14 @@ statements (ArrayList):
             Column (Int32):
               "5"
             Line (Int32):
-              "124"
+              "122"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "122"
+              "120"
         statements (ArrayList):
           Entry (Statement)
             expression (Literal):
@@ -4644,14 +4515,14 @@ statements (ArrayList):
                   Column (Int32):
                     "5"
                   Line (Int32):
-                    "122"
+                    "120"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "122"
+                    "120"
               literal (NormalMap):
                 "x"
             keys (ArrayList):
@@ -4661,14 +4532,14 @@ statements (ArrayList):
                     Column (Int32):
                       "5"
                     Line (Int32):
-                      "122"
+                      "120"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "122"
+                      "120"
                 literal (NormalMap):
                   "1"
           Entry (Statement)
@@ -4678,14 +4549,14 @@ statements (ArrayList):
                   Column (Int32):
                     "5"
                   Line (Int32):
-                    "123"
+                    "121"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "123"
+                    "121"
               literal (NormalMap):
                 "y"
             keys (ArrayList):
@@ -4695,14 +4566,14 @@ statements (ArrayList):
                     Column (Int32):
                       "5"
                     Line (Int32):
-                      "123"
+                      "121"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "123"
+                      "121"
                 literal (NormalMap):
                   "2"
           Entry (Statement)
@@ -4712,14 +4583,14 @@ statements (ArrayList):
                   Column (Int32):
                     "5"
                   Line (Int32):
-                    "124"
+                    "122"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "124"
+                    "122"
               literal (NormalMap):
                 "z"
             keys (ArrayList):
@@ -4729,14 +4600,14 @@ statements (ArrayList):
                     Column (Int32):
                       "5"
                     Line (Int32):
-                      "124"
+                      "122"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "124"
+                      "122"
                 literal (NormalMap):
                   "3"
       callable (Search):
@@ -4745,28 +4616,28 @@ statements (ArrayList):
             Column (Int32):
               "36"
             Line (Int32):
-              "121"
+              "119"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "20"
             Line (Int32):
-              "121"
+              "119"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "36"
               Line (Int32):
-                "121"
+                "119"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "20"
               Line (Int32):
-                "121"
+                "119"
           literal (NormalMap):
             "ReturnEverything"
       Extent (Extent):
@@ -4774,14 +4645,14 @@ statements (ArrayList):
           Column (Int32):
             "5"
           Line (Int32):
-            "124"
+            "122"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "20"
           Line (Int32):
-            "121"
+            "119"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -4789,14 +4660,14 @@ statements (ArrayList):
             Column (Int32):
               "19"
             Line (Int32):
-              "121"
+              "119"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "121"
+              "119"
         literal (NormalMap):
           "variableAsArgument"
   Entry (Statement)
@@ -4806,14 +4677,14 @@ statements (ArrayList):
           Column (Int32):
             "9"
           Line (Int32):
-            "132"
+            "130"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "127"
+            "125"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -4984,14 +4855,14 @@ statements (ArrayList):
                 Column (Int32):
                   "9"
                 Line (Int32):
-                  "132"
+                  "130"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "127"
+                  "125"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -4999,14 +4870,14 @@ statements (ArrayList):
                   Column (Int32):
                     "9"
                   Line (Int32):
-                    "132"
+                    "130"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "127"
+                    "125"
               literal (NormalMap):
                 "run"
     keys (ArrayList):
@@ -5016,14 +4887,14 @@ statements (ArrayList):
             Column (Int32):
               "15"
             Line (Int32):
-              "125"
+              "123"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "125"
+              "123"
         literal (NormalMap):
           "ReturnFunction"
   Entry (Statement)
@@ -5033,14 +4904,14 @@ statements (ArrayList):
           Column (Int32):
             "9"
           Line (Int32):
-            "138"
+            "136"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "135"
+            "133"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -5186,14 +5057,14 @@ statements (ArrayList):
                 Column (Int32):
                   "9"
                 Line (Int32):
-                  "138"
+                  "136"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "135"
+                  "133"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -5201,14 +5072,14 @@ statements (ArrayList):
                   Column (Int32):
                     "9"
                   Line (Int32):
-                    "138"
+                    "136"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "135"
+                    "133"
               literal (NormalMap):
                 "run"
     keys (ArrayList):
@@ -5218,14 +5089,14 @@ statements (ArrayList):
             Column (Int32):
               "11"
             Line (Int32):
-              "133"
+              "131"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "133"
+              "131"
         literal (NormalMap):
           "SetCurrent"
   Entry (Statement)
@@ -5236,14 +5107,14 @@ statements (ArrayList):
             Column (Int32):
               "15"
             Line (Int32):
-              "140"
+              "138"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "140"
+              "138"
         statements (ArrayList):
           Entry (Statement)
             expression (Literal):
@@ -5252,14 +5123,14 @@ statements (ArrayList):
                   Column (Int32):
                     "15"
                   Line (Int32):
-                    "140"
+                    "138"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "9"
                   Line (Int32):
-                    "140"
+                    "138"
               literal (NormalMap):
                 "haha"
             keys (ArrayList):
@@ -5269,14 +5140,14 @@ statements (ArrayList):
                     Column (Int32):
                       "8"
                     Line (Int32):
-                      "140"
+                      "138"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "140"
+                      "138"
                 literal (NormalMap):
                   "symbol"
       callable (Search):
@@ -5285,28 +5156,28 @@ statements (ArrayList):
             Column (Int32):
               "19"
             Line (Int32):
-              "139"
+              "137"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "9"
             Line (Int32):
-              "139"
+              "137"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "19"
               Line (Int32):
-                "139"
+                "137"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "9"
               Line (Int32):
-                "139"
+                "137"
           literal (NormalMap):
             "SetCurrent"
       Extent (Extent):
@@ -5314,14 +5185,14 @@ statements (ArrayList):
           Column (Int32):
             "15"
           Line (Int32):
-            "140"
+            "138"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "9"
           Line (Int32):
-            "139"
+            "137"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -5329,14 +5200,14 @@ statements (ArrayList):
             Column (Int32):
               "8"
             Line (Int32):
-              "139"
+              "137"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "139"
+              "137"
         literal (NormalMap):
           "thisSet"
   Entry (Statement)
@@ -5346,14 +5217,14 @@ statements (ArrayList):
           Column (Int32):
             "18"
           Line (Int32):
-            "143"
+            "141"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "143"
+            "141"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -5418,14 +5289,14 @@ statements (ArrayList):
                 Column (Int32):
                   "18"
                 Line (Int32):
-                  "143"
+                  "141"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "143"
+                  "141"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -5433,14 +5304,14 @@ statements (ArrayList):
                   Column (Int32):
                     "18"
                   Line (Int32):
-                    "143"
+                    "141"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "143"
+                    "141"
               literal (NormalMap):
                 "run"
     keys (ArrayList):
@@ -5450,14 +5321,14 @@ statements (ArrayList):
             Column (Int32):
               "11"
             Line (Int32):
-              "141"
+              "139"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "141"
+              "139"
         literal (NormalMap):
           "FirstLevel"
   Entry (Statement)
@@ -5467,14 +5338,14 @@ statements (ArrayList):
           Column (Int32):
             "6"
           Line (Int32):
-            "145"
+            "143"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "3"
           Line (Int32):
-            "145"
+            "143"
       statements (ArrayList):
         Entry (Statement)
           expression (Delayed):
@@ -5493,14 +5364,14 @@ statements (ArrayList):
                 Column (Int32):
                   "6"
                 Line (Int32):
-                  "145"
+                  "143"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "3"
                 Line (Int32):
-                  "145"
+                  "143"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -5508,14 +5379,14 @@ statements (ArrayList):
                   Column (Int32):
                     "6"
                   Line (Int32):
-                    "145"
+                    "143"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "3"
                   Line (Int32):
-                    "145"
+                    "143"
               literal (NormalMap):
                 "run"
     keys (ArrayList):
@@ -5525,14 +5396,14 @@ statements (ArrayList):
             Column (Int32):
               "12"
             Line (Int32):
-              "144"
+              "142"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "144"
+              "142"
         literal (NormalMap):
           "SecondLevel"
   Entry (Statement)
@@ -5543,14 +5414,14 @@ statements (ArrayList):
             Column (Int32):
               "7"
             Line (Int32):
-              "147"
+              "145"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "147"
+              "145"
         statements (ArrayList):
           Entry (Statement)
             expression (Literal):
@@ -5559,14 +5430,14 @@ statements (ArrayList):
                   Column (Int32):
                     "7"
                   Line (Int32):
-                    "147"
+                    "145"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "4"
                   Line (Int32):
-                    "147"
+                    "145"
               literal (NormalMap):
                 "z"
             keys (ArrayList):
@@ -5576,14 +5447,14 @@ statements (ArrayList):
                     Column (Int32):
                       "3"
                     Line (Int32):
-                      "147"
+                      "145"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "147"
+                      "145"
                 literal (NormalMap):
                   "a"
       callable (Search):
@@ -5592,28 +5463,28 @@ statements (ArrayList):
             Column (Int32):
               "19"
             Line (Int32):
-              "146"
+              "144"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "9"
             Line (Int32):
-              "146"
+              "144"
         search (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "19"
               Line (Int32):
-                "146"
+                "144"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "9"
               Line (Int32):
-                "146"
+                "144"
           literal (NormalMap):
             "FirstLevel"
       Extent (Extent):
@@ -5621,14 +5492,14 @@ statements (ArrayList):
           Column (Int32):
             "7"
           Line (Int32):
-            "147"
+            "145"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "9"
           Line (Int32):
-            "146"
+            "144"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -5636,14 +5507,14 @@ statements (ArrayList):
             Column (Int32):
               "8"
             Line (Int32):
-              "146"
+              "144"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "146"
+              "144"
         literal (NormalMap):
           "argTest"
   Entry (Statement)
@@ -5654,14 +5525,14 @@ statements (ArrayList):
             Column (Int32):
               "6"
             Line (Int32):
-              "150"
+              "148"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "149"
+              "147"
         statements (ArrayList):
           Entry (Statement)
             expression (Literal):
@@ -5670,14 +5541,14 @@ statements (ArrayList):
                   Column (Int32):
                     "5"
                   Line (Int32):
-                    "149"
+                    "147"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "149"
+                    "147"
               literal (NormalMap):
                 "x"
             keys (ArrayList):
@@ -5687,14 +5558,14 @@ statements (ArrayList):
                     Column (Int32):
                       "5"
                     Line (Int32):
-                      "149"
+                      "147"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "149"
+                      "147"
                 literal (NormalMap):
                   "1"
           Entry (Statement)
@@ -5704,14 +5575,14 @@ statements (ArrayList):
                   Column (Int32):
                     "6"
                   Line (Int32):
-                    "150"
+                    "148"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "150"
+                    "148"
               literal (NormalMap):
                 "yz"
             keys (ArrayList):
@@ -5721,14 +5592,14 @@ statements (ArrayList):
                     Column (Int32):
                       "6"
                     Line (Int32):
-                      "150"
+                      "148"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "150"
+                      "148"
                 literal (NormalMap):
                   "2"
       callable (Select):
@@ -5737,42 +5608,42 @@ statements (ArrayList):
             Column (Int32):
               "21"
             Line (Int32):
-              "148"
+              "146"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "13"
             Line (Int32):
-              "148"
+              "146"
         firstKey (Search):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "16"
               Line (Int32):
-                "148"
+                "146"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "13"
               Line (Int32):
-                "148"
+                "146"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "16"
                 Line (Int32):
-                  "148"
+                  "146"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "13"
                 Line (Int32):
-                  "148"
+                  "146"
             literal (NormalMap):
               "map"
         keys (ArrayList):
@@ -5782,14 +5653,14 @@ statements (ArrayList):
                 Column (Int32):
                   "21"
                 Line (Int32):
-                  "148"
+                  "146"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "17"
                 Line (Int32):
-                  "148"
+                  "146"
             literal (NormalMap):
               "Join"
       Extent (Extent):
@@ -5797,14 +5668,14 @@ statements (ArrayList):
           Column (Int32):
             "6"
           Line (Int32):
-            "150"
+            "148"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "13"
           Line (Int32):
-            "148"
+            "146"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -5812,14 +5683,14 @@ statements (ArrayList):
             Column (Int32):
               "12"
             Line (Int32):
-              "148"
+              "146"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "148"
+              "146"
         literal (NormalMap):
           "concatenate"
   Entry (Statement)
@@ -5830,14 +5701,14 @@ statements (ArrayList):
             Column (Int32):
               "13"
             Line (Int32):
-              "153"
+              "151"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "2"
             Line (Int32):
-              "152"
+              "150"
         statements (ArrayList):
           Entry (Statement)
             expression (Search):
@@ -5846,28 +5717,28 @@ statements (ArrayList):
                   Column (Int32):
                     "8"
                   Line (Int32):
-                    "152"
+                    "150"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "152"
+                    "150"
               search (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
                       "8"
                     Line (Int32):
-                      "152"
+                      "150"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "152"
+                      "150"
                 literal (NormalMap):
                   "parent"
             keys (ArrayList):
@@ -5877,14 +5748,14 @@ statements (ArrayList):
                     Column (Int32):
                       "8"
                     Line (Int32):
-                      "152"
+                      "150"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "152"
+                      "150"
                 literal (NormalMap):
                   "1"
           Entry (Statement)
@@ -5894,28 +5765,28 @@ statements (ArrayList):
                   Column (Int32):
                     "13"
                   Line (Int32):
-                    "153"
+                    "151"
                 FileName (String):
                   "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                 Start (Position):
                   Column (Int32):
                     "2"
                   Line (Int32):
-                    "153"
+                    "151"
               search (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
                       "13"
                     Line (Int32):
-                      "153"
+                      "151"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "153"
+                      "151"
                 literal (NormalMap):
                   "testClasses"
             keys (ArrayList):
@@ -5925,14 +5796,14 @@ statements (ArrayList):
                     Column (Int32):
                       "13"
                     Line (Int32):
-                      "153"
+                      "151"
                   FileName (String):
                     "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
                   Start (Position):
                     Column (Int32):
                       "2"
                     Line (Int32):
-                      "153"
+                      "151"
                 literal (NormalMap):
                   "2"
       callable (Select):
@@ -5941,42 +5812,42 @@ statements (ArrayList):
             Column (Int32):
               "15"
             Line (Int32):
-              "151"
+              "149"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "6"
             Line (Int32):
-              "151"
+              "149"
         firstKey (Search):
           Extent (Extent):
             End (Position):
               Column (Int32):
                 "9"
               Line (Int32):
-                "151"
+                "149"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (Position):
               Column (Int32):
                 "6"
               Line (Int32):
-                "151"
+                "149"
           search (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
                   "9"
                 Line (Int32):
-                  "151"
+                  "149"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "6"
                 Line (Int32):
-                  "151"
+                  "149"
             literal (NormalMap):
               "map"
         keys (ArrayList):
@@ -5986,14 +5857,14 @@ statements (ArrayList):
                 Column (Int32):
                   "15"
                 Line (Int32):
-                  "151"
+                  "149"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (Position):
                 Column (Int32):
                   "10"
                 Line (Int32):
-                  "151"
+                  "149"
             literal (NormalMap):
               "Merge"
       Extent (Extent):
@@ -6001,14 +5872,14 @@ statements (ArrayList):
           Column (Int32):
             "13"
           Line (Int32):
-            "153"
+            "151"
         FileName (String):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (Position):
           Column (Int32):
             "6"
           Line (Int32):
-            "151"
+            "149"
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -6016,16 +5887,177 @@ statements (ArrayList):
             Column (Int32):
               "5"
             Line (Int32):
-              "151"
+              "149"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (Position):
             Column (Int32):
               "1"
             Line (Int32):
-              "151"
+              "149"
         literal (NormalMap):
           "this"
+  Entry (Statement)
+    expression (Literal):
+      Extent (Extent):
+        End (Position):
+          Column (Int32):
+            "32"
+          Line (Int32):
+            "152"
+        FileName (String):
+          "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+        Start (Position):
+          Column (Int32):
+            "29"
+          Line (Int32):
+            "152"
+      literal (NormalMap):
+        "5"
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "10"
+            Line (Int32):
+              "152"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "1"
+            Line (Int32):
+              "152"
+        literal (NormalMap):
+          "TestClass"
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "22"
+            Line (Int32):
+              "152"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "11"
+            Line (Int32):
+              "152"
+        literal (NormalMap):
+          "NestedClass"
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "28"
+            Line (Int32):
+              "152"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "23"
+            Line (Int32):
+              "152"
+        literal (NormalMap):
+          "field"
+  Entry (Statement)
+    expression (Select):
+      Extent (Extent):
+        End (Position):
+          Column (Int32):
+            "44"
+          Line (Int32):
+            "153"
+        FileName (String):
+          "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+        Start (Position):
+          Column (Int32):
+            "17"
+          Line (Int32):
+            "153"
+      firstKey (Search):
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "26"
+            Line (Int32):
+              "153"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "17"
+            Line (Int32):
+              "153"
+        search (Literal):
+          Extent (Extent):
+            End (Position):
+              Column (Int32):
+                "26"
+              Line (Int32):
+                "153"
+            FileName (String):
+              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+            Start (Position):
+              Column (Int32):
+                "17"
+              Line (Int32):
+                "153"
+          literal (NormalMap):
+            "TestClass"
+      keys (ArrayList):
+        Entry (Literal)
+          Extent (Extent):
+            End (Position):
+              Column (Int32):
+                "38"
+              Line (Int32):
+                "153"
+            FileName (String):
+              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+            Start (Position):
+              Column (Int32):
+                "27"
+              Line (Int32):
+                "153"
+          literal (NormalMap):
+            "NestedClass"
+        Entry (Literal)
+          Extent (Extent):
+            End (Position):
+              Column (Int32):
+                "44"
+              Line (Int32):
+                "153"
+            FileName (String):
+              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+            Start (Position):
+              Column (Int32):
+                "39"
+              Line (Int32):
+                "153"
+          literal (NormalMap):
+            "field"
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "16"
+            Line (Int32):
+              "153"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "1"
+            Line (Int32):
+              "153"
+        literal (NormalMap):
+          "nestedClassTest"
   Entry (Statement)
     expression (Call):
       argument (Literal):
