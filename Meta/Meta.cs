@@ -425,6 +425,11 @@ namespace Meta
 			Map selected=parent;
 			while(!selected.ContainsKey(key))
 			{
+				if(selected.Parent==null)
+				{
+					selected.ContainsKey(key);
+					throw new KeyNotFoundException(key,this.Extent);
+				}
 				selected=selected.Parent;
 				if(selected==null)
 				{
@@ -2608,15 +2613,15 @@ namespace Meta
 			}
 		}
 
-		public override int GetHashCode()
-		{
-			int hash=0;
-			for(int i=0;i<text.Length;i++)
-			{
-				hash+=(i+1)*text[i];
-			}
-			return hash;
-		}
+//		public override int GetHashCode()
+//		{
+//			int hash=0;
+//			for(int i=0;i<text.Length;i++)
+//			{
+//				hash+=(i+1)*text[i];
+//			}
+//			return hash;
+//		}
 		public override bool Equals(object strategy)
 		{
 			bool isEqual;

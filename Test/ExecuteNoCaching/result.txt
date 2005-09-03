@@ -26,11 +26,16 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "Merge"
+    "interpreter"
+  Value (DotNetClass):
+    "map+interpreter"
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "If"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "Keys"
+    "Apply"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
@@ -38,7 +43,7 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "Length"
+    "Remove"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
@@ -46,12 +51,7 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "interpreter"
-  Value (DotNetClass):
-    "map+interpreter"
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    "Apply"
+    "Merge"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
@@ -59,11 +59,7 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "ContainsKey"
-  Value (DotNetMethod):
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    "Remove"
+    "Keys"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
@@ -71,7 +67,11 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "If"
+    "Length"
+  Value (DotNetMethod):
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "ContainsKey"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
@@ -2023,6 +2023,11 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (NormalMap):
     "helloh"
+  Value (NormalMap):
+    "hi"
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "stringStrategyHashTest"
   Value (NormalMap):
     "hi"
 Entry (DictionaryEntry)

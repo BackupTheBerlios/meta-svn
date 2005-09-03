@@ -11410,6 +11410,68 @@ statements (ArrayList):
         literal (NormalMap):
           "helloh"
   Entry (Statement)
+    expression (Search):
+      Extent (Extent):
+        End (Position):
+          Column (Int32):
+            "35"
+          Line (Int32):
+            "261"
+        FileName (String):
+          "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+        Start (Position):
+          Column (Int32):
+            "25"
+          Line (Int32):
+            "261"
+      search (Search):
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "35"
+            Line (Int32):
+              "261"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "25"
+            Line (Int32):
+              "261"
+        search (Literal):
+          Extent (Extent):
+            End (Position):
+              Column (Int32):
+                "35"
+              Line (Int32):
+                "261"
+            FileName (String):
+              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+            Start (Position):
+              Column (Int32):
+                "25"
+              Line (Int32):
+                "261"
+          literal (NormalMap):
+            "stringTest"
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "23"
+            Line (Int32):
+              "261"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "1"
+            Line (Int32):
+              "261"
+        literal (NormalMap):
+          "stringStrategyHashTest"
+  Entry (Statement)
     expression (Program):
       Extent (Extent):
         End (Position):
