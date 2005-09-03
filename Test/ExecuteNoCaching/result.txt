@@ -1983,7 +1983,11 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (NormalMap):
     "staticEvent"
-  Value (DotNetMethod):
+  Value (Event):
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "add"
+      Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
     "resultFromDelegate"
@@ -2007,7 +2011,11 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (NormalMap):
     "instanceEvent"
-  Value (DotNetMethod):
+  Value (Event):
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "add"
+      Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
     "instanceEventResult"
@@ -2222,7 +2230,7 @@ Entry (DictionaryEntry)
       "hello"
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "7"
+    "9"
   Value (NormalMap):
     "0"
 Entry (DictionaryEntry)

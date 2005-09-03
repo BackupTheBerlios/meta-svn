@@ -60,6 +60,8 @@ namespace Meta
 	}
 	public class DotNetKeys
 	{
+		public static readonly Map Add="add";
+		public static readonly Map Remove="remove";
 		public static readonly Map Get="get";
 		public static readonly Map Set="set";
 	}
@@ -2867,6 +2869,88 @@ namespace Meta
 			return dictionary.Contains(key);
 		}
 	}
+	public class Event:Map
+	{
+		EventInfo eventInfo;
+		object obj;
+		Type type;
+		public Event(EventInfo eventInfo,object obj,Type type)
+		{
+			this.eventInfo=eventInfo;
+			this.obj=obj;
+			this.type=type;
+		}
+		// TODO: refactor
+		public override Map Call(Map argument)
+		{
+			Map result;
+			try
+			{
+				Delegate eventDelegate=(Delegate)type.GetField(eventInfo.Name,BindingFlags.Public|
+					BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
+				if(eventDelegate!=null)
+				{
+					DotNetMethod invoke=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+					// TODO: use GetRaiseMethod???
+					result=invoke.Call(argument); 
+				}
+				else
+				{
+					result=null;
+				}
+			}
+			catch(Exception e)
+			{
+				result=null;
+			}
+			return result;
+		}
+
+		public override Map Clone()
+		{
+			return new Event(eventInfo,obj,type);
+		}
+		public override Integer Integer
+		{
+			get
+			{
+				return null;
+			}
+		}
+		public override ArrayList Keys
+		{
+			get
+			{
+				ArrayList keys=new ArrayList();
+				if(eventInfo.GetAddMethod()!=null)
+				{
+					keys.Add(DotNetKeys.Add);
+				}
+
+				return keys;
+			}
+		}
+		public override Map this[Map key]
+		{
+			get
+			{
+				Map val;
+				if(key.Equals(DotNetKeys.Add))
+				{
+					val=new DotNetMethod(eventInfo.GetAddMethod().Name,obj,type);
+				}
+				else
+				{
+					val=null;
+				}
+				return val;
+			}
+			set
+			{
+				throw new ApplicationException("Cannot assign in event "+eventInfo.Name+".");
+			}
+		}
+	}
 	public class Property:Map
 	{
 		PropertyInfo property;
@@ -2930,6 +3014,7 @@ namespace Meta
 			}
 		}
 	}
+	// TODO: rename?
 	public abstract class DotNetContainer: Map, ISerializeSpecial
 	{
 		public void Serialize(string indentation, string[] functions, StringBuilder stringBuilder)
@@ -2993,7 +3078,7 @@ namespace Meta
 		{
 			get
 			{
-				Map result;
+				Map result; // TODO: remove
 				if(key.Equals(SpecialKeys.Parent))
 				{
 					result=Parent;
@@ -3012,30 +3097,52 @@ namespace Meta
 					}
 					else if(members[0] is PropertyInfo)
 					{
-						result=new Property(type.GetProperty(text),this.obj,type);
+						result=new Property(type.GetProperty(text),this.obj,type);// TODO: set parent here, too
 //						result=Transform.ToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
 						//						result=Transform.ToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
 					}
 					else if(members[0] is EventInfo)
 					{
-						try
-						{
-							Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
-								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
-							if(eventDelegate!=null)
-							{
-								result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
-							}
-							else
-							{
-								result=null;
-							}
-						}
-						catch
-						{
-							result=null;
-						}
+						result=new Event(((EventInfo)members[0]),obj,type);
+						result.Parent=this;
+//						try
+//						{
+//							Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
+//								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
+//							if(eventDelegate!=null)
+//							{
+//								result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+//							}
+//							else
+//							{
+//								result=null;
+//							}
+//						}
+//						catch
+//						{
+//							result=null;
+//						}
 					}
+//					else if(members[0] is EventInfo)
+//					{
+//						try
+//						{
+//							Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
+//								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
+//							if(eventDelegate!=null)
+//							{
+//								result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+//							}
+//							else
+//							{
+//								result=null;
+//							}
+//						}
+//						catch
+//						{
+//							result=null;
+//						}
+//					}
 					else if(members[0] is Type)
 					{
 						result=new DotNetClass((Type)members[0]);
@@ -3105,9 +3212,15 @@ namespace Meta
 					}
 					else if(member is EventInfo)
 					{
-						value.Parent=this;
-						((EventInfo)member).AddEventHandler(obj,CreateEventDelegate(text,value));
+						throw new ApplicationException("Cannot set event "+member.Name+" directly. Use its add method instead.");
+//						value.Parent=this;
+//						((EventInfo)member).AddEventHandler(obj,CreateEventDelegate(text,value));
 					}
+//					else if(member is EventInfo)
+//					{
+//						value.Parent=this;
+//						((EventInfo)member).AddEventHandler(obj,CreateEventDelegate(text,value));
+//					}
 					else if(member is MethodBase)
 					{
 						throw new ApplicationException("Cannot assign to method "+member.Name+".");
