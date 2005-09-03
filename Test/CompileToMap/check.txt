@@ -371,10 +371,28 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "testSubDir"
+                    "parent"
             Entry (DictionaryEntry)
               Key (NormalMap):
                 "2"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "literal"
+                  Value (NormalMap):
+                    "parent"
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "3"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "literal"
+                  Value (NormalMap):
+                    "testSubDir"
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "4"
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
@@ -390,11 +408,6 @@ Entry (DictionaryEntry)
                 "literal"
               Value (NormalMap):
                 ""
-        Entry (DictionaryEntry)
-          Key (NormalMap):
-            "search"
-          Value (NormalMap):
-            "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "5"
@@ -458,10 +471,28 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "testSubDir"
+                    "parent"
             Entry (DictionaryEntry)
               Key (NormalMap):
                 "2"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "literal"
+                  Value (NormalMap):
+                    "parent"
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "3"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "literal"
+                  Value (NormalMap):
+                    "testSubDir"
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "4"
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
@@ -579,11 +610,6 @@ Entry (DictionaryEntry)
                                         "literal"
                                       Value (NormalMap):
                                         "world"
-        Entry (DictionaryEntry)
-          Key (NormalMap):
-            "search"
-          Value (NormalMap):
-            "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "7"

@@ -23,9 +23,9 @@ this=map.Merge
 	logic
 	map
 	math
-testSubDir.x:""
+parent.parent.testSubDir.x=""
 persistantDeleteTest=testSubDir.x
-testSubDir.x:
+parent.parent.testSubDir.x=
 	a="b"
 	x=
 		x="hello"

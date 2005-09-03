@@ -525,6 +525,7 @@ namespace Meta
 				Map selection=selected[key];
 				if(selection==null)
 				{
+					object x=selected[key];
 					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
 				}
 				selected=selection;
