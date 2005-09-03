@@ -1553,185 +1553,6 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "form"
-        Entry (DictionaryEntry)
-          Key (NormalMap):
-            "value"
-          Value (NormalMap):
-            Entry (DictionaryEntry)
-              Key (NormalMap):
-                "call"
-              Value (NormalMap):
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "function"
-                  Value (NormalMap):
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "search"
-                      Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "Init"
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "argument"
-                  Value (NormalMap):
-                    Entry (DictionaryEntry)
-                      Key (NormalMap):
-                        "program"
-                      Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "1"
-                          Value (NormalMap):
-                            Entry (DictionaryEntry)
-                              Key (NormalMap):
-                                "key"
-                              Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "1"
-                                  Value (NormalMap):
-                                    Entry (DictionaryEntry)
-                                      Key (NormalMap):
-                                        "literal"
-                                      Value (NormalMap):
-                                        "1"
-                            Entry (DictionaryEntry)
-                              Key (NormalMap):
-                                "value"
-                              Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "call"
-                                  Value (NormalMap):
-                                    Entry (DictionaryEntry)
-                                      Key (NormalMap):
-                                        "function"
-                                      Value (NormalMap):
-                                        Entry (DictionaryEntry)
-                                          Key (NormalMap):
-                                            "select"
-                                          Value (NormalMap):
-                                            Entry (DictionaryEntry)
-                                              Key (NormalMap):
-                                                "1"
-                                              Value (NormalMap):
-                                                Entry (DictionaryEntry)
-                                                  Key (NormalMap):
-                                                    "search"
-                                                  Value (NormalMap):
-                                                    Entry (DictionaryEntry)
-                                                      Key (NormalMap):
-                                                        "literal"
-                                                      Value (NormalMap):
-                                                        "System"
-                                            Entry (DictionaryEntry)
-                                              Key (NormalMap):
-                                                "2"
-                                              Value (NormalMap):
-                                                Entry (DictionaryEntry)
-                                                  Key (NormalMap):
-                                                    "literal"
-                                                  Value (NormalMap):
-                                                    "Windows"
-                                            Entry (DictionaryEntry)
-                                              Key (NormalMap):
-                                                "3"
-                                              Value (NormalMap):
-                                                Entry (DictionaryEntry)
-                                                  Key (NormalMap):
-                                                    "literal"
-                                                  Value (NormalMap):
-                                                    "Forms"
-                                            Entry (DictionaryEntry)
-                                              Key (NormalMap):
-                                                "4"
-                                              Value (NormalMap):
-                                                Entry (DictionaryEntry)
-                                                  Key (NormalMap):
-                                                    "literal"
-                                                  Value (NormalMap):
-                                                    "Form"
-                                    Entry (DictionaryEntry)
-                                      Key (NormalMap):
-                                        "argument"
-                                      Value (NormalMap):
-                                        Entry (DictionaryEntry)
-                                          Key (NormalMap):
-                                            "literal"
-                                          Value (NormalMap):
-                                            ""
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "2"
-                          Value (NormalMap):
-                            Entry (DictionaryEntry)
-                              Key (NormalMap):
-                                "key"
-                              Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "1"
-                                  Value (NormalMap):
-                                    Entry (DictionaryEntry)
-                                      Key (NormalMap):
-                                        "literal"
-                                      Value (NormalMap):
-                                        "2"
-                            Entry (DictionaryEntry)
-                              Key (NormalMap):
-                                "value"
-                              Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "program"
-                                  Value (NormalMap):
-                                    Entry (DictionaryEntry)
-                                      Key (NormalMap):
-                                        "1"
-                                      Value (NormalMap):
-                                        Entry (DictionaryEntry)
-                                          Key (NormalMap):
-                                            "key"
-                                          Value (NormalMap):
-                                            Entry (DictionaryEntry)
-                                              Key (NormalMap):
-                                                "1"
-                                              Value (NormalMap):
-                                                Entry (DictionaryEntry)
-                                                  Key (NormalMap):
-                                                    "literal"
-                                                  Value (NormalMap):
-                                                    "Text"
-                                        Entry (DictionaryEntry)
-                                          Key (NormalMap):
-                                            "value"
-                                          Value (NormalMap):
-                                            Entry (DictionaryEntry)
-                                              Key (NormalMap):
-                                                "literal"
-                                              Value (NormalMap):
-                                                "hello"
-    Entry (DictionaryEntry)
-      Key (NormalMap):
-        "14"
-      Value (NormalMap):
-        Entry (DictionaryEntry)
-          Key (NormalMap):
-            "key"
-          Value (NormalMap):
-            Entry (DictionaryEntry)
-              Key (NormalMap):
-                "1"
-              Value (NormalMap):
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "literal"
-                  Value (NormalMap):
                     "1"
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1744,7 +1565,7 @@ Entry (DictionaryEntry)
                 "ImpliedAutokey"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "15"
+        "14"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1770,7 +1591,7 @@ Entry (DictionaryEntry)
                 "Autokey"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "16"
+        "15"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1817,7 +1638,7 @@ Entry (DictionaryEntry)
                         "Collections"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "17"
+        "16"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1864,7 +1685,7 @@ Entry (DictionaryEntry)
                         "CSharp"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "18"
+        "17"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1894,7 +1715,7 @@ Entry (DictionaryEntry)
                     "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "19"
+        "18"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1945,7 +1766,7 @@ Entry (DictionaryEntry)
                             "a"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "20"
+        "19"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -1975,7 +1796,7 @@ Entry (DictionaryEntry)
                 "Object"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "21"
+        "20"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2001,7 +1822,7 @@ Entry (DictionaryEntry)
                 "NormalSymbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "22"
+        "21"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2027,7 +1848,7 @@ Entry (DictionaryEntry)
                 "LookupSymbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "23"
+        "22"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2053,7 +1874,7 @@ Entry (DictionaryEntry)
                 "LookupExtendedSymbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "24"
+        "23"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2087,7 +1908,7 @@ Entry (DictionaryEntry)
                         "aMap"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "25"
+        "24"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2117,7 +1938,7 @@ Entry (DictionaryEntry)
                     "normal symbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "26"
+        "25"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2147,7 +1968,7 @@ Entry (DictionaryEntry)
                     "lookupSymbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "27"
+        "26"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2177,7 +1998,7 @@ Entry (DictionaryEntry)
                     "long key symbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "28"
+        "27"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2742,7 +2563,7 @@ Entry (DictionaryEntry)
                                                         "b"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "29"
+        "28"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2768,7 +2589,7 @@ Entry (DictionaryEntry)
                 "default"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "30"
+        "29"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2794,7 +2615,7 @@ Entry (DictionaryEntry)
                 ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "31"
+        "30"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2858,7 +2679,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "32"
+        "31"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -2998,7 +2819,7 @@ Entry (DictionaryEntry)
                                                 "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "33"
+        "32"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3082,7 +2903,7 @@ Entry (DictionaryEntry)
                                                 "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "34"
+        "33"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3206,7 +3027,7 @@ Entry (DictionaryEntry)
                                     "c"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "35"
+        "34"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3330,7 +3151,7 @@ Entry (DictionaryEntry)
                                     "z"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "36"
+        "35"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3541,7 +3362,7 @@ Entry (DictionaryEntry)
                                                                                     "3"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "37"
+        "36"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3727,7 +3548,7 @@ Entry (DictionaryEntry)
                                                 "x"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "38"
+        "37"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3799,7 +3620,7 @@ Entry (DictionaryEntry)
                                     "haha"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "39"
+        "38"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3904,7 +3725,7 @@ Entry (DictionaryEntry)
                                                         "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "40"
+        "39"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -3963,7 +3784,7 @@ Entry (DictionaryEntry)
                                     "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "41"
+        "40"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4035,7 +3856,7 @@ Entry (DictionaryEntry)
                                     "z"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "42"
+        "41"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4150,7 +3971,7 @@ Entry (DictionaryEntry)
                                     "yz"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "43"
+        "42"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4273,7 +4094,7 @@ Entry (DictionaryEntry)
                                         "testClasses"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "44"
+        "43"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4317,7 +4138,7 @@ Entry (DictionaryEntry)
                 "5"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "45"
+        "44"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4373,7 +4194,7 @@ Entry (DictionaryEntry)
                         "field"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "46"
+        "45"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4420,7 +4241,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "47"
+        "46"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4455,7 +4276,7 @@ Entry (DictionaryEntry)
                 "1/3"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "48"
+        "47"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4490,7 +4311,7 @@ Entry (DictionaryEntry)
                 "1/3"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "49"
+        "48"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4525,7 +4346,7 @@ Entry (DictionaryEntry)
                 "1/3"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "50"
+        "49"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4560,7 +4381,7 @@ Entry (DictionaryEntry)
                 "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "51"
+        "50"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4607,7 +4428,7 @@ Entry (DictionaryEntry)
                         "boolTest"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "52"
+        "51"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4654,7 +4475,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "53"
+        "52"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4689,7 +4510,7 @@ Entry (DictionaryEntry)
                 "a"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "54"
+        "53"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4724,6 +4545,151 @@ Entry (DictionaryEntry)
                 "b"
     Entry (DictionaryEntry)
       Key (NormalMap):
+        "54"
+      Value (NormalMap):
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "key"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "1"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "literal"
+                  Value (NormalMap):
+                    "3"
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "value"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "call"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "function"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "select"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "1"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "search"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "literal"
+                                  Value (NormalMap):
+                                    "MemberTest"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "2"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "ClassProperty"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "3"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "set"
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "argument"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "program"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "1"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "key"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "1"
+                                  Value (NormalMap):
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "literal"
+                                      Value (NormalMap):
+                                        "1"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "value"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "call"
+                                  Value (NormalMap):
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "function"
+                                      Value (NormalMap):
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "select"
+                                          Value (NormalMap):
+                                            Entry (DictionaryEntry)
+                                              Key (NormalMap):
+                                                "1"
+                                              Value (NormalMap):
+                                                Entry (DictionaryEntry)
+                                                  Key (NormalMap):
+                                                    "search"
+                                                  Value (NormalMap):
+                                                    Entry (DictionaryEntry)
+                                                      Key (NormalMap):
+                                                        "literal"
+                                                      Value (NormalMap):
+                                                        "memberTest"
+                                            Entry (DictionaryEntry)
+                                              Key (NormalMap):
+                                                "2"
+                                              Value (NormalMap):
+                                                Entry (DictionaryEntry)
+                                                  Key (NormalMap):
+                                                    "literal"
+                                                  Value (NormalMap):
+                                                    "InstanceProperty"
+                                            Entry (DictionaryEntry)
+                                              Key (NormalMap):
+                                                "3"
+                                              Value (NormalMap):
+                                                Entry (DictionaryEntry)
+                                                  Key (NormalMap):
+                                                    "literal"
+                                                  Value (NormalMap):
+                                                    "get"
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "argument"
+                                      Value (NormalMap):
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            ""
+    Entry (DictionaryEntry)
+      Key (NormalMap):
         "55"
       Value (NormalMap):
         Entry (DictionaryEntry)
@@ -4738,46 +4704,63 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "MemberTest"
-            Entry (DictionaryEntry)
-              Key (NormalMap):
-                "2"
-              Value (NormalMap):
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "literal"
-                  Value (NormalMap):
-                    "ClassProperty"
+                    "classPropertyValue"
         Entry (DictionaryEntry)
           Key (NormalMap):
             "value"
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "select"
+                "call"
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "1"
+                    "function"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "memberTest"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "search"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "literal"
+                                  Value (NormalMap):
+                                    "MemberTest"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "2"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "ClassProperty"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "3"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "get"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "2"
+                    "argument"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "literal"
                       Value (NormalMap):
-                        "InstanceProperty"
+                        ""
     Entry (DictionaryEntry)
       Key (NormalMap):
         "56"
@@ -4794,49 +4777,211 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "memberTest"
-            Entry (DictionaryEntry)
-              Key (NormalMap):
-                "2"
-              Value (NormalMap):
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "literal"
-                  Value (NormalMap):
-                    "InstanceProperty"
+                    "4"
         Entry (DictionaryEntry)
           Key (NormalMap):
             "value"
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "select"
+                "call"
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "1"
+                    "function"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "MemberTest"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "search"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "literal"
+                                  Value (NormalMap):
+                                    "memberTest"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "2"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "InstanceProperty"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "3"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "set"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "2"
+                    "argument"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "program"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "1"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "key"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "1"
+                                  Value (NormalMap):
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "literal"
+                                      Value (NormalMap):
+                                        "1"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "value"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "call"
+                                  Value (NormalMap):
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "function"
+                                      Value (NormalMap):
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "select"
+                                          Value (NormalMap):
+                                            Entry (DictionaryEntry)
+                                              Key (NormalMap):
+                                                "1"
+                                              Value (NormalMap):
+                                                Entry (DictionaryEntry)
+                                                  Key (NormalMap):
+                                                    "search"
+                                                  Value (NormalMap):
+                                                    Entry (DictionaryEntry)
+                                                      Key (NormalMap):
+                                                        "literal"
+                                                      Value (NormalMap):
+                                                        "MemberTest"
+                                            Entry (DictionaryEntry)
+                                              Key (NormalMap):
+                                                "2"
+                                              Value (NormalMap):
+                                                Entry (DictionaryEntry)
+                                                  Key (NormalMap):
+                                                    "literal"
+                                                  Value (NormalMap):
+                                                    "ClassProperty"
+                                            Entry (DictionaryEntry)
+                                              Key (NormalMap):
+                                                "3"
+                                              Value (NormalMap):
+                                                Entry (DictionaryEntry)
+                                                  Key (NormalMap):
+                                                    "literal"
+                                                  Value (NormalMap):
+                                                    "get"
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "argument"
+                                      Value (NormalMap):
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            ""
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "57"
+      Value (NormalMap):
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "key"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "1"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "literal"
+                  Value (NormalMap):
+                    "instancePropertyValue"
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "value"
+          Value (NormalMap):
+            Entry (DictionaryEntry)
+              Key (NormalMap):
+                "call"
+              Value (NormalMap):
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "function"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "select"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "1"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "search"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "literal"
+                                  Value (NormalMap):
+                                    "memberTest"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "2"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "InstanceProperty"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "3"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "get"
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "argument"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "literal"
                       Value (NormalMap):
-                        "ClassProperty"
+                        ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "57"
+        "58"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4862,7 +5007,7 @@ Entry (DictionaryEntry)
                 "/hello/"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "58"
+        "59"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -4986,7 +5131,7 @@ Entry (DictionaryEntry)
                                     "o"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "59"
+        "60"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5127,7 +5272,7 @@ Entry (DictionaryEntry)
                                     "t"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "60"
+        "61"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5225,7 +5370,7 @@ Entry (DictionaryEntry)
                                     "n"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "61"
+        "62"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5340,7 +5485,7 @@ Entry (DictionaryEntry)
                                     "r"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "62"
+        "63"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5387,7 +5532,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "63"
+        "64"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5422,7 +5567,7 @@ Entry (DictionaryEntry)
                 "hihi"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "64"
+        "65"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5469,7 +5614,7 @@ Entry (DictionaryEntry)
                         "abc"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "65"
+        "66"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5495,7 +5640,7 @@ Entry (DictionaryEntry)
                 "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "66"
+        "67"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5521,7 +5666,7 @@ Entry (DictionaryEntry)
                 "hello"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "67"
+        "68"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5547,7 +5692,7 @@ Entry (DictionaryEntry)
                 "w"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "68"
+        "69"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5602,7 +5747,7 @@ Entry (DictionaryEntry)
                                 "5"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "69"
+        "70"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5649,7 +5794,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "70"
+        "71"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5729,7 +5874,7 @@ Entry (DictionaryEntry)
                                             "simple function this"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "71"
+        "72"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5788,7 +5933,7 @@ Entry (DictionaryEntry)
                                     "function"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "72"
+        "73"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5835,7 +5980,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "73"
+        "74"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5944,7 +6089,7 @@ Entry (DictionaryEntry)
                                                             "y"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "74"
+        "75"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -5991,7 +6136,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "75"
+        "76"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6017,7 +6162,7 @@ Entry (DictionaryEntry)
                 "xyz"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "76"
+        "77"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6076,7 +6221,7 @@ Entry (DictionaryEntry)
                                     "value"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "77"
+        "78"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6123,7 +6268,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "78"
+        "79"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6149,7 +6294,7 @@ Entry (DictionaryEntry)
                 "89383838383832839123497123047217340712340720347072304702340720347"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "79"
+        "80"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6175,7 +6320,7 @@ Entry (DictionaryEntry)
                 "unchanged"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "80"
+        "81"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6277,7 +6422,7 @@ Entry (DictionaryEntry)
                                                 "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "81"
+        "82"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6378,7 +6523,7 @@ Entry (DictionaryEntry)
                                                     "changed"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "82"
+        "83"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6392,7 +6537,7 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "3"
+                    "5"
         Entry (DictionaryEntry)
           Key (NormalMap):
             "value"
@@ -6425,7 +6570,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "83"
+        "84"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6451,7 +6596,7 @@ Entry (DictionaryEntry)
                 "0"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "84"
+        "85"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6553,7 +6698,7 @@ Entry (DictionaryEntry)
                                                 "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "85"
+        "86"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6710,7 +6855,7 @@ Entry (DictionaryEntry)
                                                     "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "86"
+        "87"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6757,7 +6902,7 @@ Entry (DictionaryEntry)
                         "staticEvent"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "87"
+        "88"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6771,7 +6916,7 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "4"
+                    "6"
         Entry (DictionaryEntry)
           Key (NormalMap):
             "value"
@@ -6850,7 +6995,7 @@ Entry (DictionaryEntry)
                                         "resultFromDelegate"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "88"
+        "89"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6914,7 +7059,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "89"
+        "90"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -6982,7 +7127,7 @@ Entry (DictionaryEntry)
                             "testClass"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "90"
+        "91"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7008,7 +7153,7 @@ Entry (DictionaryEntry)
                 "0"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "91"
+        "92"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7171,7 +7316,7 @@ Entry (DictionaryEntry)
                                                     "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "92"
+        "93"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7218,7 +7363,7 @@ Entry (DictionaryEntry)
                         "instanceEvent"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "93"
+        "94"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7307,7 +7452,7 @@ Entry (DictionaryEntry)
                                     "5"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "94"
+        "95"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7333,7 +7478,7 @@ Entry (DictionaryEntry)
                 "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "95"
+        "96"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7359,7 +7504,7 @@ Entry (DictionaryEntry)
                 "2"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "96"
+        "97"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7385,7 +7530,7 @@ Entry (DictionaryEntry)
                 "unchanged"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "97"
+        "98"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7411,7 +7556,7 @@ Entry (DictionaryEntry)
                 "unchanged"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "98"
+        "99"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7513,7 +7658,7 @@ Entry (DictionaryEntry)
                                         "one"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "99"
+        "100"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7648,7 +7793,7 @@ Entry (DictionaryEntry)
                                             "else"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "100"
+        "101"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7716,7 +7861,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "101"
+        "102"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7742,7 +7887,7 @@ Entry (DictionaryEntry)
                 "50020202029029233344"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "102"
+        "103"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7768,7 +7913,7 @@ Entry (DictionaryEntry)
                 "unchanged"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "103"
+        "104"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7871,7 +8016,7 @@ Entry (DictionaryEntry)
                             "three"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "104"
+        "105"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7918,7 +8063,7 @@ Entry (DictionaryEntry)
                         "3"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "105"
+        "106"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -7944,7 +8089,7 @@ Entry (DictionaryEntry)
                 ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "106"
+        "107"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8024,7 +8169,7 @@ Entry (DictionaryEntry)
                                             "hello"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "107"
+        "108"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8071,7 +8216,7 @@ Entry (DictionaryEntry)
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "108"
+        "109"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8195,7 +8340,7 @@ Entry (DictionaryEntry)
                                     "10/1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "109"
+        "110"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8221,7 +8366,7 @@ Entry (DictionaryEntry)
                 "50.23"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "110"
+        "111"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8247,7 +8392,7 @@ Entry (DictionaryEntry)
                 "4/52"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "111"
+        "112"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8273,7 +8418,7 @@ Entry (DictionaryEntry)
                 "hello"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "112"
+        "113"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8329,7 +8474,7 @@ Entry (DictionaryEntry)
                         "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "113"
+        "114"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8355,7 +8500,7 @@ Entry (DictionaryEntry)
                 "hi"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "114"
+        "115"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8389,7 +8534,7 @@ Entry (DictionaryEntry)
                         "stringTest"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "115"
+        "116"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8443,7 +8588,7 @@ hello!
 "
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "116"
+        "117"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8589,7 +8734,7 @@ hello!
                                             "Tab"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "117"
+        "118"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8662,7 +8807,7 @@ hello!
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "118"
+        "119"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8676,7 +8821,7 @@ hello!
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "5"
+                    "7"
         Entry (DictionaryEntry)
           Key (NormalMap):
             "value"
@@ -8726,7 +8871,7 @@ hello!
                         "hello"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "119"
+        "120"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8773,7 +8918,7 @@ hello!
                         "0"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "120"
+        "121"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8855,7 +9000,7 @@ hello!
                         ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "121"
+        "122"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8869,34 +9014,96 @@ hello!
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "textBox"
-            Entry (DictionaryEntry)
-              Key (NormalMap):
-                "2"
-              Value (NormalMap):
-                Entry (DictionaryEntry)
-                  Key (NormalMap):
-                    "literal"
-                  Value (NormalMap):
-                    "Text"
+                    "8"
         Entry (DictionaryEntry)
           Key (NormalMap):
             "value"
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "literal"
+                "call"
               Value (NormalMap):
-                "
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "function"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "select"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "1"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "search"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "literal"
+                                  Value (NormalMap):
+                                    "textBox"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "2"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "Text"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "3"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "set"
+                Entry (DictionaryEntry)
+                  Key (NormalMap):
+                    "argument"
+                  Value (NormalMap):
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "program"
+                      Value (NormalMap):
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "1"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "key"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "1"
+                                  Value (NormalMap):
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "literal"
+                                      Value (NormalMap):
+                                        "1"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "value"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "literal"
+                                  Value (NormalMap):
+                                    "
 Alle meine Entchen,
 schwimmen auf dem See,
 schwimmen auf dem See,
 Köpfchen in das Wasser,
-Schwaenzchen in die Hoeh.
-"
+Schwaenzchen in die Hoeh."
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "122"
+        "123"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8917,33 +9124,59 @@ Schwaenzchen in die Hoeh.
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "select"
+                "call"
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "1"
+                    "function"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "textBox"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "search"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "literal"
+                                  Value (NormalMap):
+                                    "textBox"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "2"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "Lines"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "3"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "get"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "2"
+                    "argument"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "literal"
                       Value (NormalMap):
-                        "Lines"
+                        ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "123"
+        "124"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -8990,7 +9223,7 @@ Schwaenzchen in die Hoeh.
                         "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "124"
+        "125"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9025,7 +9258,7 @@ Schwaenzchen in die Hoeh.
                 "bwuhahaha"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "125"
+        "126"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9051,7 +9284,7 @@ Schwaenzchen in die Hoeh.
                 "			hello"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "126"
+        "127"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9077,7 +9310,7 @@ Schwaenzchen in die Hoeh.
                 "\'\n\\\t"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "127"
+        "128"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9103,7 +9336,7 @@ Schwaenzchen in die Hoeh.
                 ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "128"
+        "129"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9567,7 +9800,7 @@ Schwaenzchen in die Hoeh.
                                                         "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "129"
+        "130"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9614,7 +9847,7 @@ Schwaenzchen in die Hoeh.
                         "3"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "130"
+        "131"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9698,7 +9931,7 @@ Schwaenzchen in die Hoeh.
                                                 "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "131"
+        "132"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9745,7 +9978,7 @@ Schwaenzchen in die Hoeh.
                         "1"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "132"
+        "133"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9829,7 +10062,7 @@ Schwaenzchen in die Hoeh.
                                                 "functionResult"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "133"
+        "134"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9888,7 +10121,7 @@ Schwaenzchen in die Hoeh.
                                     "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "134"
+        "135"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -9968,7 +10201,7 @@ Schwaenzchen in die Hoeh.
                                             "world"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "135"
+        "136"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -10036,7 +10269,7 @@ Schwaenzchen in die Hoeh.
                                 ""
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "136"
+        "137"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):
@@ -10117,7 +10350,7 @@ Schwaenzchen in die Hoeh.
                                 "hello"
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "137"
+        "138"
       Value (NormalMap):
         Entry (DictionaryEntry)
           Key (NormalMap):

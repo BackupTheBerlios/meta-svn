@@ -60,10 +60,6 @@ ifTest=If
 		#"it is true"
 	else=
 		#"it is false"
-form=Init
-	System.Windows.Forms.Form""
-	=
-		Text="hello"
 "ImpliedAutokey"
 ="Autokey"
 gacTest=System.Collections
@@ -160,8 +156,12 @@ boolTest=TestClass.boolTest
 memberTest=MemberTest""
 MemberTest.classField="a"
 memberTest.instanceField="b"
-MemberTest.ClassProperty=memberTest.InstanceProperty
-memberTest.InstanceProperty=MemberTest.ClassProperty
+MemberTest.ClassProperty.set
+	memberTest.InstanceProperty.get""
+classPropertyValue=MemberTest.ClassProperty.get""
+memberTest.InstanceProperty.set
+	MemberTest.ClassProperty.get""
+instancePropertyValue=memberTest.InstanceProperty.get""
 interceptedSymbol="/hello/"
 positionalNoConversion=PositionalNoConversion
 	"m"
@@ -275,14 +275,14 @@ arrayList=System.Collections.ArrayList""
 arrayList.Add "hello"
 arrayListResult=arrayList.0
 textBox=System.Windows.Forms.TextBox""
-textBox.Text="
-	Alle meine Entchen,
-	schwimmen auf dem See,
-	schwimmen auf dem See,
-	Köpfchen in das Wasser,
-	Schwaenzchen in die Hoeh.
+textBox.Text.set
 	"
-lines=textBox.Lines
+Alle meine Entchen,
+schwimmen auf dem See,
+schwimmen auf dem See,
+Köpfchen in das Wasser,
+Schwaenzchen in die Hoeh."
+lines=textBox.Lines.get""
 alleMeineText=lines.1
 lines.4="bwuhahaha"
 tabText="			hello"

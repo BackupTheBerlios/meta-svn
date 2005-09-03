@@ -58,6 +58,11 @@ namespace Meta
 		public static readonly Map Arg="arg";
 		public static readonly Map This="this";
 	}
+	public class DotNetKeys
+	{
+		public static readonly Map Get="get";
+		public static readonly Map Set="set";
+	}
 	public class NumberKeys
 	{
 		public static readonly Map Denominator="denominator";
@@ -2407,7 +2412,7 @@ namespace Meta
 			}
 		}
 		private string name;
-		protected object target;
+		protected object target; // TODO: rename
 		protected Type targetType; // TODO: rename
 
 		public MethodBase[] overloadedMethods;
@@ -2862,6 +2867,69 @@ namespace Meta
 			return dictionary.Contains(key);
 		}
 	}
+	public class Property:Map
+	{
+		PropertyInfo property;
+		object obj;
+		Type type;
+		public Property(PropertyInfo property,object obj,Type type)
+		{
+			this.property=property;
+			this.obj=obj;
+			this.type=type;
+		}
+		public override Map Clone()
+		{
+			return new Property(property,obj,type);
+		}
+		public override Integer Integer
+		{
+			get
+			{
+				return null;
+			}
+		}
+		public override ArrayList Keys
+		{
+			get
+			{
+				ArrayList keys=new ArrayList();
+				if(property.GetGetMethod()!=null)
+				{
+					keys.Add(DotNetKeys.Get);
+				}
+				if(property.GetSetMethod()!=null)
+				{
+					keys.Add(DotNetKeys.Set);
+				}
+				return keys;
+			}
+		}
+		public override Map this[Map key]
+		{
+			get
+			{
+				Map val;
+				if(key.Equals(DotNetKeys.Get))
+				{
+					val=new DotNetMethod(property.GetGetMethod().Name,obj,type);
+				}
+				else if(key.Equals(DotNetKeys.Set))
+				{
+					val=new DotNetMethod(property.GetSetMethod().Name,obj,type);
+				}
+				else
+				{
+					val=null;
+				}
+				return val;
+			}
+			set
+			{
+				throw new ApplicationException("Cannot assign in property "+property.Name+".");
+			}
+		}
+	}
 	public abstract class DotNetContainer: Map, ISerializeSpecial
 	{
 		public void Serialize(string indentation, string[] functions, StringBuilder stringBuilder)
@@ -2944,7 +3012,9 @@ namespace Meta
 					}
 					else if(members[0] is PropertyInfo)
 					{
-						result=Transform.ToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
+						result=new Property(type.GetProperty(text),this.obj,type);
+//						result=Transform.ToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
+						//						result=Transform.ToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
 					}
 					else if(members[0] is EventInfo)
 					{
@@ -3017,18 +3087,21 @@ namespace Meta
 					}
 					else if(member is PropertyInfo)
 					{
-						PropertyInfo property=(PropertyInfo)member;
-						bool isConverted;
-						object val=Transform.ToDotNet(value,property.PropertyType,out isConverted);
-						if(isConverted)
-						{
-							property.SetValue(obj,val,new object[]{});
-						}
-						else
-						{
-							throw new ApplicationException("Property "+property.Name+"could not be assigned because the value cannot be converted.");
-						}
-						return;
+						throw new ApplicationException("Cannot set property "+member.Name+" directly. Use its set method instead.");
+//						
+						int asdf=0;
+						//PropertyInfo property=(PropertyInfo)member;
+//						bool isConverted;
+//						object val=Transform.ToDotNet(value,property.PropertyType,out isConverted);
+//						if(isConverted)
+//						{
+//							property.SetValue(obj,val,new object[]{});
+//						}
+//						else
+//						{
+//							throw new ApplicationException("Property "+property.Name+"could not be assigned because the value cannot be converted.");
+//						}
+//						return;
 					}
 					else if(member is EventInfo)
 					{
@@ -3071,6 +3144,156 @@ namespace Meta
 				}
 			}
 		}
+//		public override Map this[Map key] 
+//		{
+//			get
+//			{
+//				Map result;
+//				if(key.Equals(SpecialKeys.Parent))
+//				{
+//					result=Parent;
+//				}
+//				else if(key.IsString && type.GetMember(key.String,bindingFlags).Length>0)
+//				{
+//					string text=key.String;
+//					MemberInfo[] members=type.GetMember(text,bindingFlags);
+//					if(members[0] is MethodBase)
+//					{
+//						result=new DotNetMethod(text,obj,type);
+//					}
+//					else if(members[0] is FieldInfo)
+//					{
+//						result=Transform.ToMeta(type.GetField(text).GetValue(obj));
+//					}
+//					else if(members[0] is PropertyInfo)
+//					{
+//						result=Transform.ToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
+//					}
+//					else if(members[0] is EventInfo)
+//					{
+//						try
+//						{
+//							Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
+//								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
+//							if(eventDelegate!=null)
+//							{
+//								result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+//							}
+//							else
+//							{
+//								result=null;
+//							}
+//						}
+//						catch
+//						{
+//							result=null;
+//						}
+//					}
+//					else if(members[0] is Type)
+//					{
+//						result=new DotNetClass((Type)members[0]);
+//					}
+//					else
+//					{
+//						result=null;
+//					}
+//				}
+//				else if(this.obj!=null && key.IsInteger && this.type.IsArray)
+//				{
+//					result=Transform.ToMeta(((Array)obj).GetValue(key.Integer.Int32));
+//				}
+//				else
+//				{
+//					DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
+//					Map argument=new NormalMap();
+//					argument[1]=key;
+//					try
+//					{
+//						result=Transform.ToMeta(indexer.Call(argument));
+//					}
+//					catch(Exception e)
+//					{
+//						result=null;
+//					}
+//				}
+//				return result;
+//			}
+//			set
+//			{
+//				if(key.IsString && type.GetMember(key.String,bindingFlags).Length!=0)
+//				{
+//					string text=key.String;
+//					MemberInfo member=type.GetMember(text,bindingFlags)[0];
+//					if(member is FieldInfo)
+//					{
+//						FieldInfo field=(FieldInfo)member;
+//						bool isConverted;
+//						object val=Transform.ToDotNet(value,field.FieldType,out isConverted);
+//						if(isConverted)
+//						{
+//							field.SetValue(obj,val);
+//						}
+//						else
+//						{
+//							throw new ApplicationException("Field "+field.Name+"could not be assigned because the value cannot be converted.");
+//						}
+//					}
+//					else if(member is PropertyInfo)
+//					{
+//						PropertyInfo property=(PropertyInfo)member;
+//						bool isConverted;
+//						object val=Transform.ToDotNet(value,property.PropertyType,out isConverted);
+//						if(isConverted)
+//						{
+//							property.SetValue(obj,val,new object[]{});
+//						}
+//						else
+//						{
+//							throw new ApplicationException("Property "+property.Name+"could not be assigned because the value cannot be converted.");
+//						}
+//						return;
+//					}
+//					else if(member is EventInfo)
+//					{
+//						value.Parent=this;
+//						((EventInfo)member).AddEventHandler(obj,CreateEventDelegate(text,value));
+//					}
+//					else if(member is MethodBase)
+//					{
+//						throw new ApplicationException("Cannot assign to method "+member.Name+".");
+//					}					 
+//					else
+//					{
+//						throw new ApplicationException("Could not assign "+text+" .");
+//					}
+//				}
+//				else if(obj!=null && key.IsInteger && type.IsArray)
+//				{
+//					bool isConverted; 
+//					object converted=Transform.ToDotNet(value,type.GetElementType(),out isConverted);
+//					if(isConverted)
+//					{
+//						((Array)obj).SetValue(converted,key.Integer.Int32);
+//						return;
+//					}
+//				}
+//				else
+//				{
+//					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type);
+//					Map argument=new NormalMap();
+//					argument[1]=key;
+//					argument[2]=value;
+//					try
+//					{
+//						indexer.Call(argument);
+//					}
+//					catch(Exception e)
+//					{
+//						throw new ApplicationException("Cannot set "+Transform.ToDotNet(key).ToString()+".");
+//					}
+//				}
+//			}
+//		}
 		public string Serialize(string indent,string[] functions)
 		{
 			return indent;
