@@ -2152,6 +2152,9 @@ namespace Meta
 		private int index=-1;
 	}
 	public delegate object DelegateCreatedForGenericDelegates();
+	public class MetaLibrary
+	{
+	}
 	public class DotNetMethod: Map,ICallable
 	{
 		public override Integer Integer
@@ -2205,44 +2208,48 @@ namespace Meta
 				return result;
 			}
 		}
+
 		public override Map Call(Map argument)
 		{
-			if(this.name=="AddRange")
-			{
-				int asdf=0;
-			}
-			if(this.targetType!=null && this.targetType.Name=="MenuItem" && argument.Array.Count==2)
-			{
-				int asdf=0;
-			}
+//			if(this.name=="AddRange")
+//			{
+//				int asdf=0;
+//			}
+//			if(this.targetType!=null && this.targetType.Name=="MenuItem" && argument.Array.Count==2)
+//			{
+//				int asdf=0;
+//			}
 			object result=null;
-
-			ArrayList oneArgumentMethods=new ArrayList();// TODO: remove this
-			foreach(MethodBase method in overloadedMethods)
-			{
-				if(method.GetParameters().Length==1)
-				{ 
-					oneArgumentMethods.Add(method);
-				}
-			}
 			bool isExecuted=false;
-			oneArgumentMethods.Sort(new ArgumentComparer());
-			foreach(MethodBase method in oneArgumentMethods)
+
+			if(targetType.IsSubclassOf(typeof(MetaLibrary)))
 			{
-				bool isConverted;
-				object parameter=Transform.ToDotNet(argument,method.GetParameters()[0].ParameterType,out isConverted);
-				if(isConverted)
+				ArrayList oneArgumentMethods=new ArrayList();// TODO: remove this
+				foreach(MethodBase method in overloadedMethods)
 				{
-					if(method is ConstructorInfo)
-					{
-						result=((ConstructorInfo)method).Invoke(new object[] {parameter});
+					if(method.GetParameters().Length==1)
+					{ 
+						oneArgumentMethods.Add(method);
 					}
-					else
+				}
+				oneArgumentMethods.Sort(new ArgumentComparer());
+				foreach(MethodBase method in oneArgumentMethods)
+				{
+					bool isConverted;
+					object parameter=Transform.ToDotNet(argument,method.GetParameters()[0].ParameterType,out isConverted);
+					if(isConverted)
 					{
-						result=method.Invoke(target,new object[] {parameter});
+						if(method is ConstructorInfo)
+						{
+							result=((ConstructorInfo)method).Invoke(new object[] {parameter});
+						}
+						else
+						{
+							result=method.Invoke(target,new object[] {parameter});
+						}
+						isExecuted=true;
+						break;
 					}
-					isExecuted=true;
-					break;
 				}
 			}
 			if(!isExecuted)
@@ -2260,7 +2267,7 @@ namespace Meta
 				}
 				if(rightNumberArgumentMethods.Count==0)
 				{
-					throw new ApplicationException("Method "+this.name+": No methods with the right number of arguments.");
+					throw new ApplicationException("Method "+this.targetType.Name+"."+this.name+": No methods with the right number of arguments.");
 				}
 				foreach(MethodBase method in rightNumberArgumentMethods)
 				{

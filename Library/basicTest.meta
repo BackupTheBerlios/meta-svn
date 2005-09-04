@@ -172,11 +172,13 @@ positionalNoConversionConcatenated:positionalNoConversion.Concatenate
 	"s"
 	"t"
 namedNoConversion:NamedNoConversion
-	"m"
-	y:"n"
+	:
+		"m"
+		y:"n"
 namedNoConversionConcatenated:namedNoConversion.Concatenate
-	c:"t"
-	"r"
+	:
+		c:"t"
+		"r"
 indexerNoConversion:IndexerNoConversion*
 indexerNoConversion.abc:"hihi"
 indexerNoConversionIndexed:indexerNoConversion.abc
@@ -219,9 +221,11 @@ TestClass.staticEvent.add
 			this:arg.1
 staticEvent:TestClass.staticEvent
 TestClass.TakeDelegate
-	#"resultFromDelegate"
+	:
+		#"resultFromDelegate"
 resultFromDelegate:TestClass.GetResultFromDelegate*
-staticEventResult:TestClass.staticEvent testClass
+staticEventResult:TestClass.staticEvent 
+	testClass
 instanceEventChanged:"0"
 testClass.instanceEvent.add
 	:
@@ -274,7 +278,8 @@ ored:BitwiseOr
 	"20"
 	System.Windows.Forms.Keys.Tab
 arrayList:System.Collections.ArrayList*
-arrayList.Add "hello"
+arrayList.Add 
+	"hello"
 arrayListResult:arrayList.0
 textBox:System.Windows.Forms.TextBox*
 textBox.Text.set

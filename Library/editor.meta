@@ -142,27 +142,28 @@ editBox:
 		DockStyle.Fill
 	editBox.ScrollBars.set
 		RichTextBoxScrollBars.ForcedBoth
-	editBox.KeyDown:=
-		e:arg.2
-		// maybe this should be the other way round ???
-		If
-			ContainsKey
-				keyBindings
-				e.Modifiers
-			then:=
-				subKey:keyBindings.[e.Modifiers]
-				If
-					ContainsKey
-						subKey
-						e.KeyCode
-					then:=
-						subKey.[e.KeyCode]""
-			else:=
-				If
-					ContainsKey
-						keyBindings
-						e.KeyCode
-					then:=keyBindings.[e.KeyCode]""
+	editBox.KeyDown.add
+		=
+			e:arg.2
+			// maybe this should be the other way round ???
+			If
+				ContainsKey
+					keyBindings
+					e.Modifiers
+				then:=
+					subKey:keyBindings.[e.Modifiers]
+					If
+						ContainsKey
+							subKey
+							e.KeyCode
+						then:=
+							subKey.[e.KeyCode]""
+				else:=
+					If
+						ContainsKey
+							keyBindings
+							e.KeyCode
+						then:=keyBindings.[e.KeyCode]""
 	this:editBox
 form:
 	form:Form""

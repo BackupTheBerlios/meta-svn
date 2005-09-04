@@ -6,7 +6,7 @@ using System.Threading;
 using Meta;
 
 
-public class map 
+public class map:MetaLibrary
 {
 	public static bool ContainsKey(Map map,Map key) 
 	{
@@ -147,7 +147,7 @@ public class map
 		}		
 	}
 }
-public class logic
+public class logic:MetaLibrary
 {
 	public static bool Equal(object a,object b) 
 	{
@@ -180,7 +180,7 @@ public class logic
 		return false;
 	}
 }
-public class math
+public class math:MetaLibrary
 {
 	public static Map Add(Map x,Map y) // TODO: decide whether to use native types in library or not, and apply everywhere
 	{
