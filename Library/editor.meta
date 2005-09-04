@@ -154,8 +154,6 @@ editBox:
 	editBox.KeyDown.add
 		:
 			#
-				System.Console.WriteLine
-					"key was pressed"
 				e:arg.2
 				// maybe this should be the other way round ???
 				modifiers:e.Modifiers.get*

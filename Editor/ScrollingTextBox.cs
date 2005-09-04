@@ -363,6 +363,7 @@ public class ScrollingTextBox: RichTextBox
 	// TODO: bugfix
 	public void MoveWordRight()
 	{
+//		for(int i=Column;i<Line
 		if(!Char.IsLetter(Character))
 		{
 			MoveCharRight();
@@ -374,17 +375,30 @@ public class ScrollingTextBox: RichTextBox
 				MoveCharRight(); // TODO: überschreiben, um Abstürze zu vermeiden ??
 			}
 		}
+//		if(!Char.IsLetter(Character))
+//		{
+//			MoveCharRight();
+//		}
+//		else
+//		{
+//			while(Char.IsLetter(Character))
+//			{
+//				MoveCharRight(); // TODO: überschreiben, um Abstürze zu vermeiden ??
+//			}
+//		}
 	}
 	// TODO: refactor
 	public void MoveWordLeft()
 	{
-		if(!Char.IsLetter(Character))
+		if(!Char.IsLetter(Text[SelectionStart-1]))
+//			if(!Char.IsLetter(Character))
 		{
 			MoveCharLeft();
 		}
 		else
 		{
-			while(Char.IsLetter(Character))
+			while(Char.IsLetter(Text[SelectionStart-1]))
+//				while(Char.IsLetter(Character))
 			{
 				MoveCharLeft(); // TODO: überschreiben, um Abstürze zu vermeiden ??
 			}
@@ -548,6 +562,7 @@ public class ScrollingTextBox: RichTextBox
 			return Line-emptyLines.Length+1; // why +1? Where is the bug?
 		}
 	}
+	// TODO: rename to Row
 	public int Line  // use Position class here, and Line class!!!!!!!! //// rename to UnrealLine , or so
 	{
 		get
