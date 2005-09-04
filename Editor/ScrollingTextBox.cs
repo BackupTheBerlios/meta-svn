@@ -388,10 +388,14 @@ public class ScrollingTextBox: RichTextBox
 		}
 		else
 		{
-			while(Char.IsLetter(Character))
+			int i=Column;
+			while(Char.IsLetter(Lines[Line][i]))
+				//				while(Char.IsLetter(Character))
 			{
-				MoveCharRight(); // TODO: überschreiben, um Abstürze zu vermeiden ??
+				i++;
+				//				MoveCharLeft(); // TODO: überschreiben, um Abstürze zu vermeiden ??
 			}
+			MoveHorizontal(i);
 		}
 //		if(!Char.IsLetter(Character))
 //		{
@@ -409,18 +413,34 @@ public class ScrollingTextBox: RichTextBox
 	public void MoveWordLeft()
 	{
 		if(!Char.IsLetter(Text[SelectionStart-1]))
-//			if(!Char.IsLetter(Character))
+			//			if(!Char.IsLetter(Character))
 		{
 			MoveCharLeft();
 		}
 		else
 		{
-			while(Char.IsLetter(Text[SelectionStart-1]))
-//				while(Char.IsLetter(Character))
+			int i=Column;
+			while(Char.IsLetter(Lines[Line][i-1]))
+				//				while(Char.IsLetter(Character))
 			{
-				MoveCharLeft(); // TODO: überschreiben, um Abstürze zu vermeiden ??
+				i--;
+//				MoveCharLeft(); // TODO: überschreiben, um Abstürze zu vermeiden ??
 			}
+			MoveHorizontal(i);
 		}
+//		if(!Char.IsLetter(Text[SelectionStart-1]))
+////			if(!Char.IsLetter(Character))
+//		{
+//			MoveCharLeft();
+//		}
+//		else
+//		{
+//			while(Char.IsLetter(Text[SelectionStart-1]))
+////				while(Char.IsLetter(Character))
+//			{
+//				MoveCharLeft(); // TODO: überschreiben, um Abstürze zu vermeiden ??
+//			}
+//		}
 	}
 	public void MoveCharLeft() 
 	{

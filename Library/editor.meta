@@ -86,7 +86,7 @@ commands:
 	Reverse:=
 		SetBreakPoint*
 		Meta.Interpreter.ReverseDebug*
-modifierKeys:
+Modifiers:
 	AltControl:bitwise.Or
 		Keys.Alt
 		Keys.Control
@@ -122,12 +122,12 @@ shortcuts:
 		[Keys.OemSemicolon]:=editBox.MoveLineEnd*
 		[Keys.N]:=editBox.DeleteBackward*
 		[Keys.M]:=editBox.DeleteForward*
-	[modifierKeys.AltControl]:
+	[Modifiers.AltControl]:
 		[Keys.J]:=editBox.MoveWordLeft*
 		[Keys.Oemtilde]:=editBox.MoveWordRight*
 		[Keys.OemSemicolon]:=editBox.MoveDocumentEnd*
 		[Keys.U]:=editBox.MoveDocumentStart*
-	[modifierKeys.AltControlShift]:
+	[Modifiers.AltControlShift]:
 		[Keys.J]:=editBox.SelectWordLeft*
 		[Keys.Oemtilde]:=editBox.SelectWordRight*
 		[Keys.K]:=editBox.SelectLineUp*
@@ -161,12 +161,17 @@ editBox:
 								keyCode
 							then:=
 								subKey.[keyCode]*
+								e.Handled.set
+									"1"
 					else:=
 						If
 							ContainsKey
 								shortcuts
 								keyCode
-							then:=shortcuts.[keyCode]*
+							then:=
+								shortcuts.[keyCode]*
+								e.Handled.set
+									"1"
 	this:editBox
 form:
 	form:Form*
