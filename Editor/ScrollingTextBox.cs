@@ -683,11 +683,13 @@ public class ScrollingTextBox: RichTextBox
 		{
 			if(m.WParam.ToInt32()>IntPtr.Zero.ToInt32()) 
 			{
-				MoveCursor(Line-3,GetScrollColumn());
+				MoveLineRelative(-3);
+//				MoveCursor(Line-3,GetScrollColumn());
 			}
 			else if(m.WParam.ToInt32()<IntPtr.Zero.ToInt32()) 
 			{
-				MoveCursor(Line+3,GetScrollColumn());
+				MoveLineRelative(3);
+//				MoveCursor(Line+3,GetScrollColumn());
 			}
 		}
 		else

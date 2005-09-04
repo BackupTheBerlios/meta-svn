@@ -139,7 +139,7 @@ SecondLevel:
 	#arg
 argTest:FirstLevel
 	a:"z"
-concatenate:map.Join
+concatenate:map.Append
 	"x"
 	"yz"
 this:map.Merge

@@ -61,7 +61,7 @@ public class map:MetaLibrary
 		}
 		return keys;
 	}
-	public static Map Join(Map arg) 
+	public static Map Append(Map arg) 
 	{ // rename to "append"
 		ArrayList maps=arg.Array;
 		int i=1;

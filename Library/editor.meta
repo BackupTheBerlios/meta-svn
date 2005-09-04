@@ -32,6 +32,10 @@ file:
 fileName:*
 SetFileName:=
 	parent.parent.fileName:arg
+	form.Text.set
+		Append
+			"Meta Edit - "			
+			fileName
 commands:
 	SaveAs:=
 		saveAs:choose.SaveFile*
