@@ -78,6 +78,7 @@ public class ScrollingTextBox: RichTextBox
 		string sLeft=sLine.Substring(0,iColumn);
 		return sLeft;
 	}
+	// TODO: make property
 	int GetScrollColumn() 
 	{ 
 		int iColumn=Column;
@@ -252,7 +253,7 @@ public class ScrollingTextBox: RichTextBox
 	public int ColumnFromScrollColumn(int line,int scrollColumn)
 	{
 		int i=0;
-		for(;scrollColumn>0 && Lines[line].Length>i+1;scrollColumn--,i++)
+		for(;scrollColumn>0 && Lines[line].Length>i;scrollColumn--,i++)
 		{
 			if(Lines[line][i]=='\t')
 			{
@@ -324,16 +325,7 @@ public class ScrollingTextBox: RichTextBox
 		Select(SelectionStart,1);
 		SelectedText="";
 	}
-	public void MoveLineEnd()
-	{
-		MoveTo(GetLinesLength(Line)+Lines[Line].Length);
-	}
-	public void MoveLineStart()
-	{
-		int start=GetLinesLength(Line);
-		start+=this.GetTabs(Lines[Line]);
-		MoveTo(start);
-	}
+
 
 
 	// TODO: implement
@@ -363,6 +355,56 @@ public class ScrollingTextBox: RichTextBox
 	}
 	
 
+
+	private static int lastColumn=-1;
+//	protected void DealWithColumn()
+//	{
+//		if(lastColumn==-1)
+//		{
+//			lastColumn=GetScrollColumn();
+//		}
+//	}
+//	protected void MoveLineRelative(int lineDifference)
+//	{
+//		if(lastColumn==-1)
+//		{
+//			lastColumn=GetScrollColumn();
+//		}
+//		MoveCursor(Line+lineDifference,lastColumn);
+//	}
+	protected void MoveLineRelative(int lineDifference)
+	{
+		MoveLine(Line+lineDifference);
+//		MoveCursor(Line+lineDifference,lastColumn);
+	}
+	protected void MoveLine(int line)
+	{
+		if(lastColumn==-1)
+		{
+			lastColumn=GetScrollColumn();
+		}
+		MoveCursor(line,lastColumn);
+	}
+	public void MoveLineDown() 
+	{
+		MoveLineRelative(1);
+//		MoveCursor(Line+1,GetScrollColumn());
+	}
+	public void MoveLineUp() 
+	{
+		MoveLineRelative(-1);
+//		MoveCursor(Line-1,GetScrollColumn());
+	}
+	public void MoveLineEnd()
+	{
+		MoveTo(GetLinesLength(Line)+Lines[Line].Length);
+	}
+	public void MoveLineStart()
+	{
+		int start=GetLinesLength(Line);
+		start+=this.GetTabs(Lines[Line]);
+		MoveTo(start);
+	}
 	public void MoveWordRight()
 	{
 		if(!Char.IsLetter(Character))
@@ -377,11 +419,6 @@ public class ScrollingTextBox: RichTextBox
 			}
 		}
 	}
-	public void MoveLineDown() 
-	{
-		MoveCursor(Line+1,GetScrollColumn());
-	}
-
 	public void MoveWordLeft()
 	{
 		if(!Char.IsLetter(Character))
@@ -396,11 +433,6 @@ public class ScrollingTextBox: RichTextBox
 			}
 		}
 	}
-	public void MoveLineUp() 
-	{
-		MoveCursor(Line-1,GetScrollColumn());
-	}
-
 	public void MoveCharLeft() 
 	{
 		SelectionStart--;
