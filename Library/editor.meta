@@ -9,89 +9,98 @@ this:map.Merge
 	System.Drawing
 choose:
 	OpenFile:=
-		dialog:OpenFileDialog""
-		dialog.ShowDialog""
-		this:dialog.FileName.get""
+		dialog:OpenFileDialog*
+		dialog.ShowDialog*
+		this:dialog.FileName.get*
 	SaveFile:=
-		dialog:SaveFileDialog""
-		dialog.ShowDialog""
-		this:dialog.FileName.get""
+		dialog:SaveFileDialog*
+		dialog.ShowDialog*
+		this:dialog.FileName.get*
 file:
 	Write:=
-		writer:StreamWriter arg.1
-		writer.Write arg.2
-		writer.Close""
+		writer:StreamWriter
+			arg.1
+		writer.Write
+			arg.2
+		writer.Close*
 	Read:=
-		reader:StreamReader arg
-		result:reader.ReadToEnd""
-		reader.Close""
+		reader:StreamReader
+			arg
+		result:reader.ReadToEnd*
+		reader.Close*
 		this:result
-fileName:""
+fileName:*
 SetFileName:=
 	parent.parent.fileName:arg
 commands:
 	SaveAs:=
-		saveAs:choose.SaveFile""
+		saveAs:choose.SaveFile*
 		If
 			Not Equal
 				saveAs
-				""
+				*
 			then:=
 				SetFileName saveAs
 				file.Write
 					fileName
-					editBox.RealText.get""
+					editBox.RealText.get*
 	Save:=If
 		Equal
 			fileName
-			""
-		then:=commands.SaveAs""
+			*
+		then:=commands.SaveAs*
 		else:=file.Write
 			fileName
-			editBox.RealText.get""
+			editBox.RealText.get*
 	Open:=
-		openFileName:choose.OpenFile""
+		openFileName:choose.OpenFile*
 		If
 			Not Equal
 				openFileName
-				""
+				*
 			then:=
 				SetFileName openFileName
 				editBox.RealText.set
 					file.Read fileName
 	Run:=
-		commands.Save""
+		commands.Save*
 		Meta.Expression.BreakPoint.set
 			Meta.BreakPoint
 				fileName
 				Meta.Position
-					editBox.RealLine.get""
-					editBox.Column.get""
-		Meta.Interpreter.DebugBreak.set
-			=editBox.ShowDebugValue Meta.Interpreter.DebugValue
-		Meta.Interpreter.StartDebug fileName
+					editBox.RealLine.get*
+					editBox.Column.get*
+		Meta.Interpreter.DebugBreak.add
+			=editBox.ShowDebugValue
+				Meta.Interpreter.DebugValue
+		Meta.Interpreter.StartDebug
+			fileName
 	Continue:=
 		// factor out the setting of the breakpoint
-		System.Console.WriteLine editBox.RealLine.get""
-		System.Console.WriteLine editBox.Column.get""
+		System.Console.WriteLine
+			editBox.RealLine.get*
+		System.Console.WriteLine
+			editBox.Column.get*
 		Meta.Expression.BreakPoint.set
 			Meta.BreakPoint
 				fileName
 				Meta.Position
-					editBox.RealLine.get""
-					editBox.Column.get""
-		Meta.Interpreter.ContinueDebug""
+					editBox.RealLine.get*
+					editBox.Column.get*
+		Meta.Interpreter.ContinueDebug*
 	Reverse:=
 		// factor out the setting of the breakpoint
-		System.Console.WriteLine editBox.RealLine.get""
-		System.Console.WriteLine editBox.Column.get""
+		System.Console.WriteLine
+			editBox.RealLine.get*
+		System.Console.WriteLine
+			editBox.Column.get*
 		Meta.Expression.BreakPoint.set
 			Meta.BreakPoint
 				fileName
 				Meta.Position
-					editBox.RealLine.get""
-					editBox.Column.get""
-		Meta.Interpreter.ReverseDebug""
+					editBox.RealLine.get*
+					editBox.Column.get*
+		Meta.Interpreter.ReverseDebug*
 modifierKeys:
 	AltControl:bitwise.Or
 		Keys.Alt
@@ -107,33 +116,33 @@ modifierKeys:
 		Keys.Control
 		Keys.Shift
 keyBindings:
-	[Keys.Escape]:=editBox.StopInteractiveSearch""
-	[Keys.F5]:=commands.Run""
+	[Keys.Escape]:=editBox.StopInteractiveSearch*
+	[Keys.F5]:=commands.Run*
 	[Keys.Control]:
-		[Keys.S]:=commands.Save""
-		[Keys.I]:=editBox.StartInteractiveSearch""
-		[Keys.F]:=editBox.FindAndReplace""
+		[Keys.S]:=commands.Save*
+		[Keys.I]:=editBox.StartInteractiveSearch*
+		[Keys.F]:=editBox.FindAndReplace*
 	[Keys.Alt]:
-		[Keys.K]:=editBox.MoveLineDown""
-		[Keys.L]:=editBox.MoveLineUp""
-		[Keys.Oemtilde]:=editBox.MoveCharRight""
-		[Keys.J]:=editBox.MoveCharLeft""
-		[Keys.U]:=editBox.MoveLineStart""
-		[Keys.OemSemicolon]:=editBox.MoveLineEnd""
-		[Keys.N]:=editBox.DeleteBackward""
-		[Keys.M]:=editBox.DeleteForward""
+		[Keys.K]:=editBox.MoveLineDown*
+		[Keys.L]:=editBox.MoveLineUp*
+		[Keys.Oemtilde]:=editBox.MoveCharRight*
+		[Keys.J]:=editBox.MoveCharLeft*
+		[Keys.U]:=editBox.MoveLineStart*
+		[Keys.OemSemicolon]:=editBox.MoveLineEnd*
+		[Keys.N]:=editBox.DeleteBackward*
+		[Keys.M]:=editBox.DeleteForward*
 	[modifierKeys.AltControl]:
-		[Keys.J]:=editBox.MoveWordLeft""
-		[Keys.Oemtilde]:=editBox.MoveWordRight""
-		[Keys.OemSemicolon]:=editBox.MoveDocumentEnd""
-		[Keys.U]:=editBox.MoveDocumentStart""
+		[Keys.J]:=editBox.MoveWordLeft*
+		[Keys.Oemtilde]:=editBox.MoveWordRight*
+		[Keys.OemSemicolon]:=editBox.MoveDocumentEnd*
+		[Keys.U]:=editBox.MoveDocumentStart*
 	[modifierKeys.AltControlShift]:
-		[Keys.J]:=editBox.SelectWordLeft""
-		[Keys.Oemtilde]:=editBox.SelectWordRight""
-		[Keys.K]:=editBox.SelectLineUp""
-		[Keys.J]:=editBox.SelectLineDown""
+		[Keys.J]:=editBox.SelectWordLeft*
+		[Keys.Oemtilde]:=editBox.SelectWordRight*
+		[Keys.K]:=editBox.SelectLineUp*
+		[Keys.J]:=editBox.SelectLineDown*
 editBox:
-	editBox:ScrollingTextBox""
+	editBox:ScrollingTextBox*
 	editBox.ShowSelectionMargin.set
 		"1"
 	editBox.AcceptsTab.set
@@ -143,39 +152,45 @@ editBox:
 	editBox.ScrollBars.set
 		RichTextBoxScrollBars.ForcedBoth
 	editBox.KeyDown.add
-		=
-			e:arg.2
-			// maybe this should be the other way round ???
-			If
-				ContainsKey
-					keyBindings
-					e.Modifiers
-				then:=
-					subKey:keyBindings.[e.Modifiers]
-					If
-						ContainsKey
-							subKey
-							e.KeyCode
-						then:=
-							subKey.[e.KeyCode]""
-				else:=
-					If
-						ContainsKey
-							keyBindings
-							e.KeyCode
-						then:=keyBindings.[e.KeyCode]""
+		:
+			#
+				System.Console.WriteLine
+					"key was pressed"
+				e:arg.2
+				// maybe this should be the other way round ???
+				modifiers:e.Modifiers.get*
+				keyCode:e.KeyCode.get*
+				If
+					ContainsKey
+						keyBindings
+						modifiers
+					then:=
+						subKey:keyBindings.[modifiers]
+						If
+							ContainsKey
+								subKey
+								keyCode
+							then:=
+								subKey.[keyCode]*
+					else:=
+						If
+							ContainsKey
+								keyBindings
+								keyCode
+							then:=keyBindings.[keyCode]*
 	this:editBox
 form:
-	form:Form""
+	form:Form*
 	form.Text.set
 		"Meta Edit"
 	form.Font.set
 		Font
 			"Courier New"
 			"10"
-	controls:form.Controls.get""
+	controls:form.Controls.get*
 	controls.AddRange
-		editBox
+		:
+			editBox
 	form.WindowState.set
 		FormWindowState.Maximized
 	menu:
@@ -183,20 +198,21 @@ form:
 			["Open..."]:commands.Open
 			["Save"]:commands.Save
 			["Save as..."]:commands.SaveAs
-			["Close"]:=form.Close""
+			["Close"]:=form.Close*
 		Program:
 			Start:commands.Run
 			Continue:commands.Continue
 			Reverse:commands.Reverse
 	form.Menu.set
-		MainMenu Apply
-			=MenuItem
-				arg.key
-				Apply
-					=MenuItem
-						arg.key
+		MainMenu 
+			Apply
+				=MenuItem
+					arg.key
+					Apply
+						=MenuItem
+							arg.key
+							arg.value
 						arg.value
-					arg.value
-			menu
+				menu
 	this:form
-form.ShowDialog""
+form.ShowDialog*

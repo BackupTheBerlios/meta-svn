@@ -395,6 +395,10 @@ namespace Meta
 
 		public override Map EvaluateImplementation(Map parent)
 		{
+			if(this.literal.IsString && this.literal.String.IndexOf("key")!=-1)
+			{
+				int asdf=0;
+			}
 			return literal;
 		}
 		public Literal(Map code)
@@ -2211,10 +2215,10 @@ namespace Meta
 
 		public override Map Call(Map argument)
 		{
-//			if(this.name=="AddRange")
-//			{
-//				int asdf=0;
-//			}
+			if(this.name.StartsWith("Invoke"))
+			{
+				int asdf=0;
+			}
 //			if(this.targetType!=null && this.targetType.Name=="MenuItem" && argument.Array.Count==2)
 //			{
 //				int asdf=0;
