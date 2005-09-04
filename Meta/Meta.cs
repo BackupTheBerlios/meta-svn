@@ -3071,16 +3071,37 @@ namespace Meta
 		{
 			get
 			{
-				return new ArrayList(MTable.Keys);
+				ArrayList keys=new ArrayList();
+				foreach(MemberInfo member in this.type.GetMembers(bindingFlags))
+				{
+					keys.Add(new NormalMap(member.Name));
+				}
+				// TODO: not sure this is even necessary
+//				if(obj!=null && obj is IEnumerable && !(obj is String))
+//				{ 
+//					foreach(object entry in (IEnumerable)obj)
+//					{
+//						if(entry is DictionaryEntry)
+//						{
+//							table[Transform.ToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+//						}
+//						else
+//						{
+//							table[counter]=entry;
+//							counter++;
+//						}
+//					}
+//				}
+				return keys;
 			}
 		}
-		public override int Count 
-		{
-			get
-			{
-				return MTable.Count;
-			}
-		}
+//		public override int Count 
+//		{
+//			get
+//			{
+//				//return MTable.Count;
+//			}
+//		}
 		public override Map this[Map key] 
 		{
 			get
@@ -3427,56 +3448,56 @@ namespace Meta
 			Delegate eventDelegate=DotNetMethod.CreateDelegateFromCode(eventInfo.EventHandlerType,invoke,code);
 			return eventDelegate;
 		}
-		private IDictionary MTable
-		{ 
-			get
-			{
-				HybridDictionary table=new HybridDictionary();
-				foreach(FieldInfo field in type.GetFields(bindingFlags))
-				{
-					table[new NormalMap(field.Name)]=field.GetValue(obj);
-				}
-				foreach(MethodInfo invoke in type.GetMethods(bindingFlags)) 
-				{
-					if(!invoke.IsSpecialName)
-					{
-						table[new NormalMap(invoke.Name)]=new DotNetMethod(invoke.Name,obj,type);
-					}
-				}
-				foreach(PropertyInfo property in type.GetProperties(bindingFlags))
-				{
-					if(property.Name!="Item" && property.Name!="Chars")
-					{
-						table[new NormalMap(property.Name)]=property.GetValue(obj,new object[]{});
-					}
-				}
-				foreach(EventInfo eventInfo in type.GetEvents(bindingFlags))
-				{
-					table[new NormalMap(eventInfo.Name)]=new DotNetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
-				}
-				foreach(Type nestedType in type.GetNestedTypes(bindingFlags))
-				{ 
-					table[new NormalMap(nestedType.Name)]=new DotNetClass(nestedType);
-				}
-				int counter=1;
-				if(obj!=null && obj is IEnumerable && !(obj is String))
-				{ 
-					foreach(object entry in (IEnumerable)obj)
-					{
-						if(entry is DictionaryEntry)
-						{
-							table[Transform.ToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
-						}
-						else
-						{
-							table[counter]=entry;
-							counter++;
-						}
-					}
-				}
-				return table;
-			}
-		}
+//		private IDictionary MTable
+//		{ 
+//			get
+//			{
+//				HybridDictionary table=new HybridDictionary();
+//				foreach(FieldInfo field in type.GetFields(bindingFlags))
+//				{
+//					table[new NormalMap(field.Name)]=field.GetValue(obj);
+//				}
+//				foreach(MethodInfo invoke in type.GetMethods(bindingFlags)) 
+//				{
+//					if(!invoke.IsSpecialName)
+//					{
+//						table[new NormalMap(invoke.Name)]=new DotNetMethod(invoke.Name,obj,type);
+//					}
+//				}
+//				foreach(PropertyInfo property in type.GetProperties(bindingFlags))
+//				{
+//					if(property.Name!="Item" && property.Name!="Chars")
+//					{
+//						table[new NormalMap(property.Name)]=property.GetValue(obj,new object[]{});
+//					}
+//				}
+//				foreach(EventInfo eventInfo in type.GetEvents(bindingFlags))
+//				{
+//					table[new NormalMap(eventInfo.Name)]=new DotNetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
+//				}
+//				foreach(Type nestedType in type.GetNestedTypes(bindingFlags))
+//				{ 
+//					table[new NormalMap(nestedType.Name)]=new DotNetClass(nestedType);
+//				}
+//				int counter=1;
+//				if(obj!=null && obj is IEnumerable && !(obj is String))
+//				{ 
+//					foreach(object entry in (IEnumerable)obj)
+//					{
+//						if(entry is DictionaryEntry)
+//						{
+//							table[Transform.ToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
+//						}
+//						else
+//						{
+//							table[counter]=entry;
+//							counter++;
+//						}
+//					}
+//				}
+//				return table;
+//			}
+//		}
 		public DotNetContainer(object obj,Type type)
 		{
 			if(obj==null)

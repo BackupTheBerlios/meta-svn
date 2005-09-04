@@ -26,39 +26,7 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "If"
-  Value (DotNetMethod):
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    "Apply"
-  Value (DotNetMethod):
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    "Foreach"
-  Value (DotNetMethod):
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    "Remove"
-  Value (DotNetMethod):
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    "Init"
-  Value (DotNetMethod):
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    "Merge"
-  Value (DotNetMethod):
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    "Join"
-  Value (DotNetMethod):
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    "Keys"
-  Value (DotNetMethod):
-Entry (DictionaryEntry)
-  Key (NormalMap):
-    "TrimStart"
+    "ContainsKey"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
@@ -66,7 +34,39 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "ContainsKey"
+    "TrimStart"
+  Value (DotNetMethod):
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "Keys"
+  Value (DotNetMethod):
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "Join"
+  Value (DotNetMethod):
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "Merge"
+  Value (DotNetMethod):
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "Init"
+  Value (DotNetMethod):
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "Remove"
+  Value (DotNetMethod):
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "Foreach"
+  Value (DotNetMethod):
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "Apply"
+  Value (DotNetMethod):
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "If"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):

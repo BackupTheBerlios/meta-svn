@@ -249,24 +249,49 @@ public class ScrollingTextBox: RichTextBox
 		MessageBox.Show(Serialize.Value((Map)debugValue));
 		graphics.DrawString(Serialize.Value((Map)debugValue),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
 	}
-
-	public int ColumnFromScrollColumn(int iLine,int iScrollColumn)  // sucks, sucks, sucks, too many invalid line and column numbers
+	public int ColumnFromScrollColumn(int line,int scrollColumn)
 	{
-		string sLine=Lines[iLine];
-		int iColumn=0;
-		int iScrollCounter=0;
-		foreach(char c in sLine) 
+		int i=0;
+		for(;scrollColumn>0 && Lines[line].Length>i+1;scrollColumn--,i++)
 		{
-			iScrollCounter++;
-			if(c=='\t') 
+			if(Lines[line][i]=='\t')
 			{
-				iScrollCounter+=5;
+				scrollColumn-=5;
 			}
-			iColumn++;
 		}
-		iColumn+=iScrollColumn-iScrollCounter;
-		return iColumn;
+		return i;
+//		string sLine=Lines[iLine];
+//		int iColumn=0;
+//		int iScrollCounter=0;
+//		foreach(char c in sLine) 
+//		{
+//			iScrollCounter++;
+//			if(c=='\t') 
+//			{
+//				iScrollCounter+=5;
+//			}
+//			iColumn++;
+//		}
+//		iColumn+=iScrollColumn-iScrollCounter;
+//		return iColumn;
 	}
+//	public int ColumnFromScrollColumn(int iLine,int iScrollColumn)
+//	{
+//		string sLine=Lines[iLine];
+//		int iColumn=0;
+//		int iScrollCounter=0;
+//		foreach(char c in sLine) 
+//		{
+//			iScrollCounter++;
+//			if(c=='\t') 
+//			{
+//				iScrollCounter+=5;
+//			}
+//			iColumn++;
+//		}
+//		iColumn+=iScrollColumn-iScrollCounter;
+//		return iColumn;
+//	}
 	static int iTabs=0;
 
 	Hashtable keyBindings=new Hashtable();

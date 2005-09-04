@@ -206,7 +206,7 @@ public class math:MetaLibrary
 	{
 		return x.Integer>y.Integer;
 	}
-	public class bitwise
+	public class bitwise:MetaLibrary
 	{
 		public static NormalMap Or(params NormalMap[] integers)
 		{
