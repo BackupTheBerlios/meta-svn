@@ -5353,7 +5353,7 @@ statements (ArrayList):
         Extent (Extent):
           End (Position):
             Column (Int32):
-              "21"
+              "23"
             Line (Int32):
               "142"
           FileName (String):
@@ -5398,7 +5398,7 @@ statements (ArrayList):
             Extent (Extent):
               End (Position):
                 Column (Int32):
-                  "21"
+                  "23"
                 Line (Int32):
                   "142"
               FileName (String):
@@ -5409,7 +5409,7 @@ statements (ArrayList):
                 Line (Int32):
                   "142"
             literal (NormalMap):
-              "Join"
+              "Append"
       Extent (Extent):
         End (Position):
           Column (Int32):

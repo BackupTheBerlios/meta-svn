@@ -42,7 +42,7 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "Join"
+    "Append"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):

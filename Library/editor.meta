@@ -76,7 +76,7 @@ commands:
 					editBox.Column.get*
 		Meta.Interpreter.DebugBreak.add
 			=editBox.ShowDebugValue
-				Meta.Interpreter.DebugValue
+				Meta.Interpreter.DebugValue.get*
 		Meta.Interpreter.StartDebug
 			fileName
 	Continue:=

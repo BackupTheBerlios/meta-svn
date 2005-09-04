@@ -2191,6 +2191,7 @@ namespace Meta
 				throw new ApplicationException("Cannot set key in DotNetMethod");
 			}
 		}
+		// TODO: verallgemeinern auf beliebig viele Argument
 		public class ArgumentComparer: IComparer
 		{
 			public int Compare(object x, object y)
@@ -2200,8 +2201,10 @@ namespace Meta
 				MethodBase second=(MethodBase)y;
 				ParameterInfo[] firstParameters=first.GetParameters();
 				ParameterInfo[] secondParameters=second.GetParameters();
-				if(firstParameters.Length==1 && firstParameters[0].ParameterType==typeof(string)
-					&& !(secondParameters.Length==1 && secondParameters[0].ParameterType==typeof(string)))
+				if(firstParameters.Length>=1 && firstParameters[0].ParameterType==typeof(string)
+//				if(firstParameters.Length==1 && firstParameters[0].ParameterType==typeof(string)
+					&& !(secondParameters.Length>=1 && secondParameters[0].ParameterType==typeof(string)))
+//					&& !(secondParameters.Length==1 && secondParameters[0].ParameterType==typeof(string)))
 				{
 					result=-1;
 				}
@@ -2211,7 +2214,119 @@ namespace Meta
 				}
 				return result;
 			}
+//			private static int GetPrimitiveTypePriority(Type type)
+//			{
+//				int priority;
+//				switch(Type.GetTypeCode(type))
+//				{
+//					case TypeCode.String:
+//						break;
+//					case TypeCode.DateTime:
+//						break;
+//					case TypeCode.Boolean:
+//						break;
+//					case TypeCode.Char:
+//						break;
+//					case TypeCode.Byte:
+//						break;
+//					case TypeCode.DBNull:
+//						break;
+//					case TypeCode.Decimal:
+//						break;
+//					case TypeCode.Double:
+//						break;
+//					case TypeCode.Int16:
+//						break;
+//					case TypeCode.Int32:
+//						break;
+//					case TypeCode.Int64:
+//						break;
+//					case TypeCode.SByte:
+//						break;
+//					case TypeCode.Single:
+//						break;
+//					case TypeCode.UInt16:
+//						break;
+//					case TypeCode.UInt32:
+//						break;
+//					case TypeCode.UInt64:
+//						break;
+//
+//				}
+//			}
+//			private static int ComparePrimitiveParameters(Type a,Type b)
+//			{
+//			}
+//			private static int CompareParameter(Type a,Type b)
+//			{
+//				int compared;
+//				if(a.Equals(b))
+//				{
+//					compared=0;
+//				}
+//				else if(a.IsSubclassOf(b))
+//				{
+//					compared=-1;
+//				}
+//				else if(b.IsSubclassOf(a))
+//				{
+//					compared=1;
+//				}
+//				else if(a.IsPrimitive && !b.IsPrimitive)
+//				{
+//					compared=-1;
+//				}
+//				else if(b.IsPrimitive && !a.IsPrimitive)
+//				{
+//					compared=1;
+//				}
+//				else if(a.IsPrimitive && b.IsPrimitive)
+//				{
+//					compared=ComparePrimitiveParameters(a,b);
+//				}
+//				else
+//				{
+//					compared=a.FullName.CompareTo(b.FullName); // last resort, sort by name
+//				}
+//			}
+//			public int Compare(object a, object b)
+//			{
+//				int compared=0;
+//				ParameterInfo[] first=((MethodBase)a).GetParameters();
+//				ParameterInfo[] second=((MethodBase)b).GetParameters();
+//				for(int i=0;i<first.Length && compared==0;i++)
+//				{
+//					compared=CompareParameter(first[i].ParameterType,second[i].ParameterType);
+//				}
+//				if(compared==0)
+//				{
+//					throw new ApplicationException("Could not sort parameters!");
+//				}
+//				return compared;
+//			}
+
 		}
+//		public class ArgumentComparer: IComparer
+//		{
+//			public int Compare(object x, object y)
+//			{
+//				int result;
+//				MethodBase first=(MethodBase)x;
+//				MethodBase second=(MethodBase)y;
+//				ParameterInfo[] firstParameters=first.GetParameters();
+//				ParameterInfo[] secondParameters=second.GetParameters();
+//				if(firstParameters.Length==1 && firstParameters[0].ParameterType==typeof(string)
+//					&& !(secondParameters.Length==1 && secondParameters[0].ParameterType==typeof(string)))
+//				{
+//					result=-1;
+//				}
+//				else
+//				{
+//					result=0;
+//				}
+//				return result;
+//			}
+//		}
 
 		public override Map Call(Map argument)
 		{
@@ -2273,6 +2388,7 @@ namespace Meta
 				{
 					throw new ApplicationException("Method "+this.targetType.Name+"."+this.name+": No methods with the right number of arguments.");
 				}
+				rightNumberArgumentMethods.Sort(new ArgumentComparer());
 				foreach(MethodBase method in rightNumberArgumentMethods)
 				{
 					ArrayList arguments=new ArrayList();

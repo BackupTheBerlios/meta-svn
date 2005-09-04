@@ -562,7 +562,7 @@ public class ScrollingTextBox: RichTextBox
 			return Line-emptyLines.Length+1; // why +1? Where is the bug?
 		}
 	}
-	// TODO: rename to Row
+	// TODO: rename to Row?
 	public int Line  // use Position class here, and Line class!!!!!!!! //// rename to UnrealLine , or so
 	{
 		get
@@ -581,13 +581,6 @@ public class ScrollingTextBox: RichTextBox
 			SelectionStart=GetLinesLength(Line)+value;
 		}
 	}
-//	public int Column
-//	{
-//		get
-//		{
-//			return SelectionStart-LinesLength;
-//		}
-//	}
 	public string RealText
 	{
 		get
@@ -627,7 +620,6 @@ public class ScrollingTextBox: RichTextBox
 			return Text[SelectionStart];
 		}
 	}
-
 	int GetMiddle() 
 	{
 		return GetCharIndexFromPosition(new Point(this.Size.Width/2,this.Size.Height/2));
@@ -639,7 +631,7 @@ public class ScrollingTextBox: RichTextBox
 		SelectionStart=selectionStart;
 		this.dontScroll=false;
 	}
-	// implement proper tabstops sometime: http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/thread/1ef28b955bd06981/27f324e4a1b722d4?q=c%23+control+i+richtextbox+tab&rnum=5&hl=en#27f324e4a1b722d4
+	// TODO: implement proper tabstops, see http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/thread/1ef28b955bd06981/27f324e4a1b722d4?q=c%23+control+i+richtextbox+tab&rnum=5&hl=en#27f324e4a1b722d4
 	void ScrollToMiddle() 
 	{
 		if(!dontScroll) 
@@ -657,7 +649,6 @@ public class ScrollingTextBox: RichTextBox
 		}
 
 	}
-
 	private void ScrollingTextBox_SelectionChanged(object sender, System.EventArgs e) 
 	{
 		ScrollToMiddle(); // make this method more general!!!!!
@@ -666,17 +657,10 @@ public class ScrollingTextBox: RichTextBox
 	{
 		ScrollToMiddle();
 	}
-
-	
-
 	protected void MoveCaretToMiddle() 
 	{
 		this.SetSelectionStartNoScroll(GetCharIndexFromPosition(new Point(this.Size.Width/2,this.Height/2)));
 	}
-
-
-
-
 	protected override void WndProc(ref Message m) 
 	{
 		if(m.Msg == WM_MOUSEWHEEL) 
@@ -684,12 +668,10 @@ public class ScrollingTextBox: RichTextBox
 			if(m.WParam.ToInt32()>IntPtr.Zero.ToInt32()) 
 			{
 				MoveLineRelative(-3);
-//				MoveCursor(Line-3,GetScrollColumn());
 			}
 			else if(m.WParam.ToInt32()<IntPtr.Zero.ToInt32()) 
 			{
 				MoveLineRelative(3);
-//				MoveCursor(Line+3,GetScrollColumn());
 			}
 		}
 		else

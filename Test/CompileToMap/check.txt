@@ -3908,7 +3908,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "Join"
+                                "Append"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
