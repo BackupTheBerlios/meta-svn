@@ -24,7 +24,7 @@ public class ScrollingTextBox: RichTextBox
 		interactiveSearch=new InteractiveSearch((RichTextBox)this);
 		timer.Interval=50;
 		timer.Tick+=new EventHandler(timer_Tick);
-		timer.Start();
+//		timer.Start();
 	}
 	public void DrawValue(Rectangle rectangle,string text)
 	{
@@ -64,6 +64,7 @@ public class ScrollingTextBox: RichTextBox
 		this.Resize += new System.EventHandler(this.ScrollingTextBox_Resize);
 		this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ScrollingTextBox_KeyPress);
 		this.TextChanged += new System.EventHandler(this.ScrollingTextBox_TextChanged);
+		this.Layout += new System.Windows.Forms.LayoutEventHandler(this.ScrollingTextBox_Layout);
 		this.SelectionChanged += new System.EventHandler(this.ScrollingTextBox_SelectionChanged);
 
 	}
@@ -218,24 +219,39 @@ public class ScrollingTextBox: RichTextBox
 	{
 		if(info!=null)
 		{
-			info.Draw(this.CreateGraphics(),CursorPosition);
+			info.Draw(this.CreateGraphics());//,CursorPosition);
 		}
 	}
 	public class Info
 	{
 		private string text;
 		private Font font=new Font("Courier New",10.0f);
-		public Info(string text)
+		public Info(string text,Point position)
 		{
+			this.position=position;
 			this.text=text;
 		}
-		public void Draw(Graphics graphics,Point position)
+		Point position;
+		public void Draw(Graphics graphics)//,Point position)
 		{
-			graphics.DrawString(text,font,Brushes.Red,position);			
+			graphics.DrawString(text,font,Brushes.Red,position);
+			size=graphics.MeasureString(text,font);
 		}
-
-
+		SizeF size=new SizeF(0,0);
+		public Rectangle Rectangle
+		{
+			get
+			{
+				return new Rectangle(position,size.ToSize());
+			}
+		}
 	}
+	protected override void OnPaint(PaintEventArgs e)
+	{
+		base.OnPaint (e);
+		DrawInfo();
+	}
+
 	public Point CursorPosition
 	{
 		get
@@ -247,8 +263,10 @@ public class ScrollingTextBox: RichTextBox
 	public void ShowDebugValue(object debugValue)
 	{
 		Graphics graphics=this.CreateGraphics();
-		MessageBox.Show(Serialize.Value((Map)debugValue));
-		graphics.DrawString(Serialize.Value((Map)debugValue),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
+//		MessageBox.Show(Serialize.Value((Map)debugValue));
+		info=new Info(Serialize.Value((Map)debugValue),CursorPosition);
+		DrawInfo();
+//		graphics.DrawString(Serialize.Value((Map)debugValue),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
 	}
 	public int ColumnFromScrollColumn(int line,int scrollColumn)
 	{
@@ -348,15 +366,15 @@ public class ScrollingTextBox: RichTextBox
 	}
 	public void MoveLineEnd()
 	{
-		MoveHorizontalRelative(Lines[Line].Length-1);
+		MoveHorizontal(Lines[Line].Length);
 //		MoveTo(GetLinesLength(Line)+Lines[Line].Length);
 	}
 	public void MoveLineStart()
 	{
 //		int start=GetLinesLength(Line);
 //		start+=this.GetTabs(Lines[Line]);
-		int start=this.GetTabs(Lines[Line]);
-		MoveHorizontal(start);
+//		int start=this.GetTabs();
+		MoveHorizontal(GetTabs(Lines[Line]));
 //		MoveTo(start);
 	}
 	// TODO: refactor
@@ -424,7 +442,6 @@ public class ScrollingTextBox: RichTextBox
 		lastColumn=-1;
 		Column=column;
 	}
-
 
 
 
@@ -661,6 +678,7 @@ public class ScrollingTextBox: RichTextBox
 	{
 		this.SetSelectionStartNoScroll(GetCharIndexFromPosition(new Point(this.Size.Width/2,this.Height/2)));
 	}
+	public const int WM_PAINT = 0xF;
 	protected override void WndProc(ref Message m) 
 	{
 		if(m.Msg == WM_MOUSEWHEEL) 
@@ -674,13 +692,31 @@ public class ScrollingTextBox: RichTextBox
 				MoveLineRelative(3);
 			}
 		}
+
 		else
 		{
 			if ( m.Msg == WM_HSCROLL || m.Msg == WM_VSCROLL ) 
 			{
 				this.MoveCaretToMiddle();
 			}
+			if(m.Msg == WM_PAINT)
+			{
+				if(info!=null)
+				{
+					Invalidate();
+//					Invalidate(info.Rectangle);
+				}
+			}	
 			base.WndProc (ref m);
+			if(m.Msg == WM_PAINT)
+			{
+				DrawInfo();
+			}	
 		}
+	}
+
+	private void ScrollingTextBox_Layout(object sender, System.Windows.Forms.LayoutEventArgs e)
+	{
+		int asdf=0;
 	}
 }

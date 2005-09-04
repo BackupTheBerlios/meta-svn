@@ -85,7 +85,6 @@ namespace Meta
 				breakPoint=value;
 			}
 		}
-		// TODO: refactor the debugging stuff
 		private static BreakPoint breakPoint;
 
 		public virtual bool HasBreakPoint() // TODO: refactor
@@ -127,9 +126,12 @@ namespace Meta
 	}
 	public class Call: Expression
 	{
-		public override bool HasBreakPoint() // TODO: this wont work
+		public override bool HasBreakPoint()
 		{
-			return argument.HasBreakPoint();
+			return false;
+//			return BreakPoint..Position.Equals(argument.Extent.End);
+//			return BreakPoint.Position.Equals(argument.Extent.End);
+			//			return argument.HasBreakPoint();
 		}
 
 		public override Map EvaluateImplementation(Map parent)
@@ -245,6 +247,9 @@ namespace Meta
 			this.fileName=fileName;
 			this.position=position;
 		}
+
+
+
 		public string FileName
 		{
 			get
@@ -252,6 +257,7 @@ namespace Meta
 				return fileName;
 			}
 		}
+		// TODO: rename to Location
 		public Position Position
 		{
 			get
@@ -591,7 +597,6 @@ namespace Meta
 //				}
 			}
 		}
-
 		public static Map Merge(params Map[] arkvlToMerge)
 		{
 			return MergeCollection(arkvlToMerge);
@@ -607,6 +612,10 @@ namespace Meta
 				}
 			}
 			return result;
+		}
+		public static Map Run(string fileName)
+		{
+			return Run(fileName,new NormalMap());
 		}
 		public static Map Run(string fileName,Map argument)
 		{
@@ -3763,6 +3772,14 @@ namespace Meta
 			this.line=line;
 			this.column=column;
 
+		}
+		public override int GetHashCode()
+		{
+			return base.GetHashCode ();
+		}
+		public override bool Equals(object obj)
+		{
+			return obj is Position && ((Position)obj).Line==Line && ((Position)obj).Column==Column;
 		}
 		public int Line
 		{

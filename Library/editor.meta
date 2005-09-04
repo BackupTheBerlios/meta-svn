@@ -36,6 +36,12 @@ SetFileName:=
 		Append
 			"Meta Edit - "			
 			fileName
+SetBreakPoint:=Meta.Expression.BreakPoint.set
+	Meta.BreakPoint
+		fileName
+		Meta.Position
+			editBox.RealLine.get*
+			editBox.Column.get*
 commands:
 	SaveAs:=
 		saveAs:choose.SaveFile*
@@ -68,42 +74,17 @@ commands:
 					file.Read fileName
 	Run:=
 		commands.Save*
-		Meta.Expression.BreakPoint.set
-			Meta.BreakPoint
-				fileName
-				Meta.Position
-					editBox.RealLine.get*
-					editBox.Column.get*
+		SetBreakPoint*
 		Meta.Interpreter.DebugBreak.add
 			=editBox.ShowDebugValue
 				Meta.Interpreter.DebugValue.get*
 		Meta.Interpreter.StartDebug
 			fileName
 	Continue:=
-		// factor out the setting of the breakpoint
-		System.Console.WriteLine
-			editBox.RealLine.get*
-		System.Console.WriteLine
-			editBox.Column.get*
-		Meta.Expression.BreakPoint.set
-			Meta.BreakPoint
-				fileName
-				Meta.Position
-					editBox.RealLine.get*
-					editBox.Column.get*
+		SetBreakPoint*
 		Meta.Interpreter.ContinueDebug*
 	Reverse:=
-		// factor out the setting of the breakpoint
-		System.Console.WriteLine
-			editBox.RealLine.get*
-		System.Console.WriteLine
-			editBox.Column.get*
-		Meta.Expression.BreakPoint.set
-			Meta.BreakPoint
-				fileName
-				Meta.Position
-					editBox.RealLine.get*
-					editBox.Column.get*
+		SetBreakPoint*
 		Meta.Interpreter.ReverseDebug*
 modifierKeys:
 	AltControl:bitwise.Or
@@ -119,13 +100,19 @@ modifierKeys:
 	ControlShift:bitwise.Or
 		Keys.Control
 		Keys.Shift
-keyBindings:
+shortcuts:
 	[Keys.Escape]:=editBox.StopInteractiveSearch*
 	[Keys.F5]:=commands.Run*
+	[Keys.Up]:=editBox.MoveLineUp*
+	[Keys.Down]:=editBox.MoveLineDown*
+	[Keys.Left]:=editBox.MoveCharLeft*
+	[Keys.Right]:=editBox.MoveCharRight*
 	[Keys.Control]:
 		[Keys.S]:=commands.Save*
 		[Keys.I]:=editBox.StartInteractiveSearch*
 		[Keys.F]:=editBox.FindAndReplace*
+		[Keys.Left]:=editBox.MoveWordLeft*
+		[Keys.Right]:=editBox.MoveWordRight*
 	[Keys.Alt]:
 		[Keys.K]:=editBox.MoveLineDown*
 		[Keys.L]:=editBox.MoveLineUp*
@@ -164,10 +151,10 @@ editBox:
 				keyCode:e.KeyCode.get*
 				If
 					ContainsKey
-						keyBindings
+						shortcuts
 						modifiers
 					then:=
-						subKey:keyBindings.[modifiers]
+						subKey:shortcuts.[modifiers]
 						If
 							ContainsKey
 								subKey
@@ -177,9 +164,9 @@ editBox:
 					else:=
 						If
 							ContainsKey
-								keyBindings
+								shortcuts
 								keyCode
-							then:=keyBindings.[keyCode]*
+							then:=shortcuts.[keyCode]*
 	this:editBox
 form:
 	form:Form*
@@ -206,7 +193,7 @@ form:
 			Continue:commands.Continue
 			Reverse:commands.Reverse
 	form.Menu.set
-		MainMenu 
+		MainMenu
 			Apply
 				=MenuItem
 					arg.key
