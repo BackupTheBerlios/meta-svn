@@ -88,7 +88,7 @@ namespace Meta
 		// TODO: refactor the debugging stuff
 		private static BreakPoint breakPoint;
 
-		public virtual bool Stop() // TODO: refactor
+		public virtual bool HasBreakPoint() // TODO: refactor
 		{
 			bool stop=false;
 			if(BreakPoint!=null)
@@ -103,7 +103,7 @@ namespace Meta
 		public Map Evaluate(Map parent)
 		{
 			Map result=EvaluateImplementation(parent);
-			if(Stop())
+			if(HasBreakPoint())
 			{
 				Interpreter.CallDebug(result);
 			}
@@ -127,9 +127,9 @@ namespace Meta
 	}
 	public class Call: Expression
 	{
-		public override bool Stop()
+		public override bool HasBreakPoint() // TODO: this wont work
 		{
-			return argument.Stop();
+			return argument.HasBreakPoint();
 		}
 
 		public override Map EvaluateImplementation(Map parent)
@@ -151,7 +151,7 @@ namespace Meta
 	}
 	public class Delayed: Expression
 	{
-		public override bool Stop()
+		public override bool HasBreakPoint()
 		{
 			return false;
 		}
@@ -168,12 +168,12 @@ namespace Meta
 			return result;
 		}
 	}
-	public class ReverseException:ApplicationException
-	{
-	}
+//	public class ReverseException:ApplicationException
+//	{
+//	}
 	public class Program: Expression
 	{
-		public override bool Stop()
+		public override bool HasBreakPoint()
 		{
 			bool stop=false;
 			if(BreakPoint!=null)
@@ -196,28 +196,28 @@ namespace Meta
 			local.Parent=parent;
 			for(int i=0;i<statements.Count && i>=0;)
 			{
-				if(Interpreter.reverseDebug)
-				{
-					// Statement should have separate Stop() function
-					// this sucks, its really not good, refactor
-					bool stopReverse=((Statement)statements[i]).Undo();
-					if(stopReverse)
-					{
-						Interpreter.reverseDebug=false;
-						continue;
-					}
-				}
-				else
-				{
-					try
-					{
+//				if(Interpreter.reverseDebug)
+//				{
+//					// Statement should have separate Stop() function
+//					// this sucks, its really not good, refactor
+////					bool stopReverse=((Statement)statements[i]).Undo();
+//					if(stopReverse)
+//					{
+//						Interpreter.reverseDebug=false;
+//						continue;
+//					}
+//				}
+//				else
+//				{
+//					try
+//					{
 						((Statement)statements[i]).Realize(ref local);
-					}
-					catch(ReverseException e)
-					{
-						int asdf=0;
-					}	
-				}
+//					}
+//					catch(ReverseException e)
+//					{
+//						int asdf=0;
+//					}	
+//				}
 				if(Interpreter.reverseDebug)
 				{
 					i--;
@@ -388,7 +388,7 @@ namespace Meta
 				recognitions.Add((Filter)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 			}
 		}
-		public override bool Stop()
+		public override bool HasBreakPoint()
 		{
 			return false;
 		}
@@ -481,55 +481,37 @@ namespace Meta
 	}
 	public class Statement
 	{
-		private Map replaceValue;
-		private Map replaceMap;
-		private Map replaceKey;
-		public bool Undo()
-		{
-			if(replaceMap!=null) // TODO: handle "this" specially
-			{
-				replaceMap[replaceKey]=replaceValue;
-			}
-
-			bool stopReverse=false;
-			if(this.expression.Stop())
-			{
-				stopReverse=true;
-			}
-			else
-			{
-				foreach(Expression key in keys)
-				{
-					if(key.Stop())
-					{
-						stopReverse=true;
-						break;
-					}
-				}
-			}
-			return stopReverse;
-		}
+//		private Map oldValue;
+//		private Map replaceMap;
+//		private Map replaceKey;
+//		public bool Undo()
+//		{
+//			if(replaceMap!=null) // TODO: handle "this" specially
+//			{
+//				replaceMap[replaceKey]=oldValue;
+//			}
+//			bool stopReverse=false;
+//			if(this.expression.HasBreakPoint())
+//			{
+//				stopReverse=true;
+//			}
+//			else
+//			{
+//				foreach(Expression key in keys)
+//				{
+//					if(key.HasBreakPoint())
+//					{
+//						stopReverse=true;
+//						break;
+//					}
+//				}
+//			}
+//			return stopReverse;
+//		}
 		public void Realize(ref Map parent)
 		{
 			Map selected=parent;
 			Map key;
-			
-			if(searchFirst)
-			{
-				Map firstKey=((Expression)keys[0]).Evaluate(parent); 
-				if(firstKey.Equals(new NormalMap("instanceEventChanged")))
-				{
-					int asdf=0;
-				}
-				while(!selected.ContainsKey(firstKey))
-				{
-					selected=(selected).Parent;
-					if(selected==null)
-					{
-						throw new KeyNotFoundException(firstKey,((Expression)keys[0]).Extent);
-					}
-				}
-			}
 			for(int i=0;i<keys.Count-1;i++)
 			{
 				key=((Expression)keys[i]).Evaluate(parent);
@@ -550,16 +532,17 @@ namespace Meta
 			}
 			else
 			{
-				if(selected.ContainsKey(lastKey))
-				{
-					replaceValue=selected[lastKey];
-				}
-				else
-				{
-					replaceValue=null;
-				}
-				replaceMap=selected;
-				replaceKey=lastKey;
+//				if(selected.ContainsKey(lastKey))
+//				{
+//					oldValue=selected[lastKey];
+//				}
+//				else
+//				{
+//					oldValue=null;
+//				}
+
+//				replaceMap=selected;
+//				replaceKey=lastKey;
 
 				selected[lastKey]=val;
 			}
@@ -602,10 +585,10 @@ namespace Meta
 			{
 				DebugBreak();
 				Thread.CurrentThread.Suspend();
-				if(reverseDebug)
-				{
-					throw new ReverseException();
-				}
+//				if(reverseDebug)
+//				{
+//					throw new ReverseException();
+//				}
 			}
 		}
 
@@ -2306,38 +2289,8 @@ namespace Meta
 //			}
 
 		}
-//		public class ArgumentComparer: IComparer
-//		{
-//			public int Compare(object x, object y)
-//			{
-//				int result;
-//				MethodBase first=(MethodBase)x;
-//				MethodBase second=(MethodBase)y;
-//				ParameterInfo[] firstParameters=first.GetParameters();
-//				ParameterInfo[] secondParameters=second.GetParameters();
-//				if(firstParameters.Length==1 && firstParameters[0].ParameterType==typeof(string)
-//					&& !(secondParameters.Length==1 && secondParameters[0].ParameterType==typeof(string)))
-//				{
-//					result=-1;
-//				}
-//				else
-//				{
-//					result=0;
-//				}
-//				return result;
-//			}
-//		}
-
 		public override Map Call(Map argument)
 		{
-			if(this.name.StartsWith("Invoke"))
-			{
-				int asdf=0;
-			}
-//			if(this.targetType!=null && this.targetType.Name=="MenuItem" && argument.Array.Count==2)
-//			{
-//				int asdf=0;
-//			}
 			object result=null;
 			bool isExecuted=false;
 
@@ -2753,16 +2706,6 @@ namespace Meta
 				return null;
 			}
 		}
-
-//		public override int GetHashCode()
-//		{
-//			int hash=0;
-//			for(int i=0;i<text.Length;i++)
-//			{
-//				hash+=(i+1)*text[i];
-//			}
-//			return hash;
-//		}
 		public override bool Equals(object strategy)
 		{
 			bool isEqual;
@@ -2795,7 +2738,6 @@ namespace Meta
 				return text;
 			}
 		}
-		// TODO: could be further optimized, maybe with ArrayList.GetRange()
 		public override ArrayList Keys
 		{
 			get
@@ -3196,7 +3138,7 @@ namespace Meta
 				{
 					keys.Add(new NormalMap(member.Name));
 				}
-				// TODO: not sure this is even necessary
+				// TODO: add this back in
 //				if(obj!=null && obj is IEnumerable && !(obj is String))
 //				{ 
 //					foreach(object entry in (IEnumerable)obj)
@@ -3215,13 +3157,6 @@ namespace Meta
 				return keys;
 			}
 		}
-//		public override int Count 
-//		{
-//			get
-//			{
-//				//return MTable.Count;
-//			}
-//		}
 		public override Map this[Map key] 
 		{
 			get
@@ -3246,51 +3181,12 @@ namespace Meta
 					else if(members[0] is PropertyInfo)
 					{
 						result=new Property(type.GetProperty(text),this.obj,type);// TODO: set parent here, too
-//						result=Transform.ToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
-						//						result=Transform.ToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
 					}
 					else if(members[0] is EventInfo)
 					{
 						result=new Event(((EventInfo)members[0]),obj,type);
 						result.Parent=this;
-//						try
-//						{
-//							Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
-//								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
-//							if(eventDelegate!=null)
-//							{
-//								result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
-//							}
-//							else
-//							{
-//								result=null;
-//							}
-//						}
-//						catch
-//						{
-//							result=null;
-//						}
 					}
-//					else if(members[0] is EventInfo)
-//					{
-//						try
-//						{
-//							Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
-//								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
-//							if(eventDelegate!=null)
-//							{
-//								result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
-//							}
-//							else
-//							{
-//								result=null;
-//							}
-//						}
-//						catch
-//						{
-//							result=null;
-//						}
-//					}
 					else if(members[0] is Type)
 					{
 						result=new DotNetClass((Type)members[0]);
@@ -3343,32 +3239,11 @@ namespace Meta
 					else if(member is PropertyInfo)
 					{
 						throw new ApplicationException("Cannot set property "+member.Name+" directly. Use its set method instead.");
-//						
-						int asdf=0;
-						//PropertyInfo property=(PropertyInfo)member;
-//						bool isConverted;
-//						object val=Transform.ToDotNet(value,property.PropertyType,out isConverted);
-//						if(isConverted)
-//						{
-//							property.SetValue(obj,val,new object[]{});
-//						}
-//						else
-//						{
-//							throw new ApplicationException("Property "+property.Name+"could not be assigned because the value cannot be converted.");
-//						}
-//						return;
 					}
 					else if(member is EventInfo)
 					{
 						throw new ApplicationException("Cannot set event "+member.Name+" directly. Use its add method instead.");
-//						value.Parent=this;
-//						((EventInfo)member).AddEventHandler(obj,CreateEventDelegate(text,value));
 					}
-//					else if(member is EventInfo)
-//					{
-//						value.Parent=this;
-//						((EventInfo)member).AddEventHandler(obj,CreateEventDelegate(text,value));
-//					}
 					else if(member is MethodBase)
 					{
 						throw new ApplicationException("Cannot assign to method "+member.Name+".");
@@ -3405,156 +3280,6 @@ namespace Meta
 				}
 			}
 		}
-//		public override Map this[Map key] 
-//		{
-//			get
-//			{
-//				Map result;
-//				if(key.Equals(SpecialKeys.Parent))
-//				{
-//					result=Parent;
-//				}
-//				else if(key.IsString && type.GetMember(key.String,bindingFlags).Length>0)
-//				{
-//					string text=key.String;
-//					MemberInfo[] members=type.GetMember(text,bindingFlags);
-//					if(members[0] is MethodBase)
-//					{
-//						result=new DotNetMethod(text,obj,type);
-//					}
-//					else if(members[0] is FieldInfo)
-//					{
-//						result=Transform.ToMeta(type.GetField(text).GetValue(obj));
-//					}
-//					else if(members[0] is PropertyInfo)
-//					{
-//						result=Transform.ToMeta(type.GetProperty(text).GetValue(obj,new object[]{}));
-//					}
-//					else if(members[0] is EventInfo)
-//					{
-//						try
-//						{
-//							Delegate eventDelegate=(Delegate)type.GetField(text,BindingFlags.Public|
-//								BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
-//							if(eventDelegate!=null)
-//							{
-//								result=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
-//							}
-//							else
-//							{
-//								result=null;
-//							}
-//						}
-//						catch
-//						{
-//							result=null;
-//						}
-//					}
-//					else if(members[0] is Type)
-//					{
-//						result=new DotNetClass((Type)members[0]);
-//					}
-//					else
-//					{
-//						result=null;
-//					}
-//				}
-//				else if(this.obj!=null && key.IsInteger && this.type.IsArray)
-//				{
-//					result=Transform.ToMeta(((Array)obj).GetValue(key.Integer.Int32));
-//				}
-//				else
-//				{
-//					DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
-//					Map argument=new NormalMap();
-//					argument[1]=key;
-//					try
-//					{
-//						result=Transform.ToMeta(indexer.Call(argument));
-//					}
-//					catch(Exception e)
-//					{
-//						result=null;
-//					}
-//				}
-//				return result;
-//			}
-//			set
-//			{
-//				if(key.IsString && type.GetMember(key.String,bindingFlags).Length!=0)
-//				{
-//					string text=key.String;
-//					MemberInfo member=type.GetMember(text,bindingFlags)[0];
-//					if(member is FieldInfo)
-//					{
-//						FieldInfo field=(FieldInfo)member;
-//						bool isConverted;
-//						object val=Transform.ToDotNet(value,field.FieldType,out isConverted);
-//						if(isConverted)
-//						{
-//							field.SetValue(obj,val);
-//						}
-//						else
-//						{
-//							throw new ApplicationException("Field "+field.Name+"could not be assigned because the value cannot be converted.");
-//						}
-//					}
-//					else if(member is PropertyInfo)
-//					{
-//						PropertyInfo property=(PropertyInfo)member;
-//						bool isConverted;
-//						object val=Transform.ToDotNet(value,property.PropertyType,out isConverted);
-//						if(isConverted)
-//						{
-//							property.SetValue(obj,val,new object[]{});
-//						}
-//						else
-//						{
-//							throw new ApplicationException("Property "+property.Name+"could not be assigned because the value cannot be converted.");
-//						}
-//						return;
-//					}
-//					else if(member is EventInfo)
-//					{
-//						value.Parent=this;
-//						((EventInfo)member).AddEventHandler(obj,CreateEventDelegate(text,value));
-//					}
-//					else if(member is MethodBase)
-//					{
-//						throw new ApplicationException("Cannot assign to method "+member.Name+".");
-//					}					 
-//					else
-//					{
-//						throw new ApplicationException("Could not assign "+text+" .");
-//					}
-//				}
-//				else if(obj!=null && key.IsInteger && type.IsArray)
-//				{
-//					bool isConverted; 
-//					object converted=Transform.ToDotNet(value,type.GetElementType(),out isConverted);
-//					if(isConverted)
-//					{
-//						((Array)obj).SetValue(converted,key.Integer.Int32);
-//						return;
-//					}
-//				}
-//				else
-//				{
-//					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type);
-//					Map argument=new NormalMap();
-//					argument[1]=key;
-//					argument[2]=value;
-//					try
-//					{
-//						indexer.Call(argument);
-//					}
-//					catch(Exception e)
-//					{
-//						throw new ApplicationException("Cannot set "+Transform.ToDotNet(key).ToString()+".");
-//					}
-//				}
-//			}
-//		}
 		public string Serialize(string indent,string[] functions)
 		{
 			return indent;
@@ -3568,56 +3293,6 @@ namespace Meta
 			Delegate eventDelegate=DotNetMethod.CreateDelegateFromCode(eventInfo.EventHandlerType,invoke,code);
 			return eventDelegate;
 		}
-//		private IDictionary MTable
-//		{ 
-//			get
-//			{
-//				HybridDictionary table=new HybridDictionary();
-//				foreach(FieldInfo field in type.GetFields(bindingFlags))
-//				{
-//					table[new NormalMap(field.Name)]=field.GetValue(obj);
-//				}
-//				foreach(MethodInfo invoke in type.GetMethods(bindingFlags)) 
-//				{
-//					if(!invoke.IsSpecialName)
-//					{
-//						table[new NormalMap(invoke.Name)]=new DotNetMethod(invoke.Name,obj,type);
-//					}
-//				}
-//				foreach(PropertyInfo property in type.GetProperties(bindingFlags))
-//				{
-//					if(property.Name!="Item" && property.Name!="Chars")
-//					{
-//						table[new NormalMap(property.Name)]=property.GetValue(obj,new object[]{});
-//					}
-//				}
-//				foreach(EventInfo eventInfo in type.GetEvents(bindingFlags))
-//				{
-//					table[new NormalMap(eventInfo.Name)]=new DotNetMethod(eventInfo.GetAddMethod().Name,this.obj,this.type);
-//				}
-//				foreach(Type nestedType in type.GetNestedTypes(bindingFlags))
-//				{ 
-//					table[new NormalMap(nestedType.Name)]=new DotNetClass(nestedType);
-//				}
-//				int counter=1;
-//				if(obj!=null && obj is IEnumerable && !(obj is String))
-//				{ 
-//					foreach(object entry in (IEnumerable)obj)
-//					{
-//						if(entry is DictionaryEntry)
-//						{
-//							table[Transform.ToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
-//						}
-//						else
-//						{
-//							table[counter]=entry;
-//							counter++;
-//						}
-//					}
-//				}
-//				return table;
-//			}
-//		}
 		public DotNetContainer(object obj,Type type)
 		{
 			if(obj==null)
@@ -3802,7 +3477,6 @@ namespace Meta
 						case MetaLexerTokenTypes.LITERAL:
 							string indentation="";
 							for(int i=0;i<indentationDepth+1;i++)
-//								for(int i=0;i<indentationDepth+1;i++)
 							{
 								indentation+='\t';
 							}
