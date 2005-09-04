@@ -261,38 +261,7 @@ public class ScrollingTextBox: RichTextBox
 			}
 		}
 		return i;
-//		string sLine=Lines[iLine];
-//		int iColumn=0;
-//		int iScrollCounter=0;
-//		foreach(char c in sLine) 
-//		{
-//			iScrollCounter++;
-//			if(c=='\t') 
-//			{
-//				iScrollCounter+=5;
-//			}
-//			iColumn++;
-//		}
-//		iColumn+=iScrollColumn-iScrollCounter;
-//		return iColumn;
 	}
-//	public int ColumnFromScrollColumn(int iLine,int iScrollColumn)
-//	{
-//		string sLine=Lines[iLine];
-//		int iColumn=0;
-//		int iScrollCounter=0;
-//		foreach(char c in sLine) 
-//		{
-//			iScrollCounter++;
-//			if(c=='\t') 
-//			{
-//				iScrollCounter+=5;
-//			}
-//			iColumn++;
-//		}
-//		iColumn+=iScrollColumn-iScrollCounter;
-//		return iColumn;
-//	}
 	static int iTabs=0;
 
 	Hashtable keyBindings=new Hashtable();
@@ -357,25 +326,9 @@ public class ScrollingTextBox: RichTextBox
 
 
 	private static int lastColumn=-1;
-//	protected void DealWithColumn()
-//	{
-//		if(lastColumn==-1)
-//		{
-//			lastColumn=GetScrollColumn();
-//		}
-//	}
-//	protected void MoveLineRelative(int lineDifference)
-//	{
-//		if(lastColumn==-1)
-//		{
-//			lastColumn=GetScrollColumn();
-//		}
-//		MoveCursor(Line+lineDifference,lastColumn);
-//	}
 	protected void MoveLineRelative(int lineDifference)
 	{
 		MoveLine(Line+lineDifference);
-//		MoveCursor(Line+lineDifference,lastColumn);
 	}
 	protected void MoveLine(int line)
 	{
@@ -388,23 +341,26 @@ public class ScrollingTextBox: RichTextBox
 	public void MoveLineDown() 
 	{
 		MoveLineRelative(1);
-//		MoveCursor(Line+1,GetScrollColumn());
 	}
 	public void MoveLineUp() 
 	{
 		MoveLineRelative(-1);
-//		MoveCursor(Line-1,GetScrollColumn());
 	}
 	public void MoveLineEnd()
 	{
-		MoveTo(GetLinesLength(Line)+Lines[Line].Length);
+		MoveHorizontalRelative(Lines[Line].Length-1);
+//		MoveTo(GetLinesLength(Line)+Lines[Line].Length);
 	}
 	public void MoveLineStart()
 	{
-		int start=GetLinesLength(Line);
-		start+=this.GetTabs(Lines[Line]);
-		MoveTo(start);
+//		int start=GetLinesLength(Line);
+//		start+=this.GetTabs(Lines[Line]);
+		int start=this.GetTabs(Lines[Line]);
+		MoveHorizontal(start);
+//		MoveTo(start);
 	}
+	// TODO: refactor
+	// TODO: bugfix
 	public void MoveWordRight()
 	{
 		if(!Char.IsLetter(Character))
@@ -419,6 +375,7 @@ public class ScrollingTextBox: RichTextBox
 			}
 		}
 	}
+	// TODO: refactor
 	public void MoveWordLeft()
 	{
 		if(!Char.IsLetter(Character))
@@ -435,12 +392,28 @@ public class ScrollingTextBox: RichTextBox
 	}
 	public void MoveCharLeft() 
 	{
-		SelectionStart--;
+		MoveHorizontalRelative(-1);
+//		SelectionStart--;
 	}
 	public void MoveCharRight() 
 	{
-		SelectionStart++;
+		MoveHorizontalRelative(1);
+//		SelectionStart++;
 	}
+	public void MoveHorizontalRelative(int columnDifference)
+	{
+		MoveHorizontal(Column+columnDifference);
+	}
+	// TODO: put this into Column.set
+	public void MoveHorizontal(int column)
+	{
+		lastColumn=-1;
+		Column=column;
+	}
+
+
+
+
 
 	public void FindAndReplace()
 	{
@@ -588,7 +561,18 @@ public class ScrollingTextBox: RichTextBox
 		{
 			return SelectionStart-LinesLength;
 		}
+		set
+		{
+			SelectionStart=GetLinesLength(Line)+value;
+		}
 	}
+//	public int Column
+//	{
+//		get
+//		{
+//			return SelectionStart-LinesLength;
+//		}
+//	}
 	public string RealText
 	{
 		get
