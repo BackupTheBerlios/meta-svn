@@ -346,6 +346,7 @@ using System.Windows.Forms;
 		private void ShowMessageBox(string text)
 		{
 			MessageBox.Show(this.FindForm(),text,"Meta Editor",MessageBoxButtons.OK,MessageBoxIcon.Information);
+//			MessageBox.Show(this.FindForm(),text,"Meta Editor",MessageBoxButtons.OK,MessageBoxIcon.Information);
 		}
 		private void replaceAll_Click(object sender, System.EventArgs e)
 		{

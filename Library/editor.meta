@@ -94,7 +94,6 @@ Modifiers:
 	ShiftAlt:bitwise.Or
 		Keys.Alt
 		Keys.Shift
-	// TODO: rename to a more logical order
 	ControlShiftAlt:bitwise.Or
 		Keys.Alt
 		Keys.Control
@@ -111,6 +110,8 @@ shortcuts:
 	[Keys.Right]:=editBox.MoveCharRight*
 	[Keys.Home]:=editBox.MoveLineStart*
 	[Keys.End]:=editBox.MoveLineEnd*
+	[Keys.Tab]:=editBox.IncreaseSelectionIndent*
+combos:
 	[Keys.Control]:
 		[Keys.S]:=commands.Save*
 		[Keys.I]:=editBox.StartInteractiveSearch*
@@ -130,6 +131,8 @@ shortcuts:
 		[Keys.OemSemicolon]:=editBox.MoveLineEnd*
 		[Keys.N]:=editBox.DeleteBackward*
 		[Keys.M]:=editBox.DeleteForward*
+	[Keys.Shift]:
+		[Keys.Tab]:=editBox.DecreaseSelectionIndent*
 	[Modifiers.ShiftAlt]:
 		[Keys.J]:=editBox.SelectCharLeft*
 		[Keys.Oemtilde]:=editBox.SelectCharRight*
@@ -164,10 +167,10 @@ editBox:
 				keyCode:e.KeyCode.get*
 				If
 					ContainsKey
-						shortcuts
+						combos
 						modifiers
 					then:=
-						subKey:shortcuts.[modifiers]
+						subKey:combos.[modifiers]
 						If
 							ContainsKey
 								subKey

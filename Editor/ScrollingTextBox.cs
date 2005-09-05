@@ -24,7 +24,8 @@ public class ScrollingTextBox: RichTextBox
 		interactiveSearch=new InteractiveSearch((RichTextBox)this);
 		timer.Interval=50;
 		timer.Tick+=new EventHandler(timer_Tick);
-//		timer.Start();
+		replace.Closing+=new CancelEventHandler(replace_Closing);
+		//		timer.Start();
 	}
 	public void DrawValue(Rectangle rectangle,string text)
 	{
@@ -126,11 +127,24 @@ public class ScrollingTextBox: RichTextBox
 	bool wasControlITab=false;
 	private void ScrollingTextBox_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e) 
 	{
-		if(!(e.KeyChar=='\t'&&wasControlITab)) // ignore Ctrl+I, which inserts a tab
+		if(e.KeyChar=='\t' && wasControlITab) // ignore Ctrl+I, which inserts a tab
+		{
+			wasControlITab=false;
+			e.Handled=true;
+		}
+		else if(e.KeyChar=='µ')
+		{
+			e.Handled=true;
+		}
+		else
 		{
 			if(interactiveSearch.Active)
 			{
 				interactiveSearch.OnKeyPress(e.KeyChar);
+				e.Handled=true;
+			}
+			else if(e.KeyChar.Equals('\t')) // TODO: do i need more exceptions???, all of them?
+			{
 				e.Handled=true;
 			}
 			else
@@ -146,11 +160,6 @@ public class ScrollingTextBox: RichTextBox
 				}
 			}
 		}
-		else
-		{
-			wasControlITab=false;
-			e.Handled=true;
-		}
 	}
 	private void ScrollingTextBox_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e) 
 	{
@@ -158,16 +167,31 @@ public class ScrollingTextBox: RichTextBox
 		{
 			wasControlITab=true;
 		}
-		if(keyBindings.ContainsKey(e.KeyData))
-		{
-			((Function)keyBindings[e.KeyData])();
-			e.Handled=true;
-		}
+//		if(e.KeyCode==Keys.Tab)
+//		{
+//			int asdf=0;
+//			e.Handled=true;
+//		}
+//		if(keyBindings.ContainsKey(e.KeyData))
+//		{
+//			((Function)keyBindings[e.KeyData])();
+//			e.Handled=true;
+//		}
 		iTabs=GetTabs(GetLeftLine());
 	}
 	private InteractiveSearch interactiveSearch;
+
 	public class InteractiveSearch
 	{
+		public void DeleteCharLeft()
+		{
+			if(text.Length!=0)
+			{
+				text=text.Remove(text.Length-1,1);
+			}
+			textBox.SelectionStart=startPosition;
+			Find();
+		}
 		public void OnKeyPress(char keyChar)
 		{
 			text+=keyChar;
@@ -186,6 +210,7 @@ public class ScrollingTextBox: RichTextBox
 		public void Start()
 		{
 			active=true; 
+			startPosition=textBox.SelectionStart;
 			text="";
 		}
 		public void Find()
@@ -207,7 +232,7 @@ public class ScrollingTextBox: RichTextBox
 		{
 			this.textBox=textBox;
 		}
-//        private int startLine;
+		//        private int startLine;
 		
 	}
 	private System.Windows.Forms.Timer timer=new System.Windows.Forms.Timer();
@@ -264,10 +289,10 @@ public class ScrollingTextBox: RichTextBox
 	public void ShowDebugValue(object debugValue)
 	{
 		Graphics graphics=this.CreateGraphics();
-//		MessageBox.Show(Serialize.Value((Map)debugValue));
+		//		MessageBox.Show(Serialize.Value((Map)debugValue));
 		info=new Info(Serialize.Value((Map)debugValue),CursorPosition);
 		DrawInfo();
-//		graphics.DrawString(Serialize.Value((Map)debugValue),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
+		//		graphics.DrawString(Serialize.Value((Map)debugValue),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
 	}
 	public int ColumnFromScrollColumn(int line,int scrollColumn)
 	{
@@ -283,7 +308,7 @@ public class ScrollingTextBox: RichTextBox
 	}
 	static int iTabs=0;
 
-	Hashtable keyBindings=new Hashtable();
+//	Hashtable keyBindings=new Hashtable();
 	public delegate void Function();
 	private int RealIndexFromIndex(int index)
 	{
@@ -319,21 +344,29 @@ public class ScrollingTextBox: RichTextBox
 	public void MoveDocumentEnd()
 	{
 		MoveCursor(LineFromRealLine(RealLines.Length-1),RealLines[RealLines.Length-1].Length);
-//		MoveCursor(Lines.Length,1000);
+		//		MoveCursor(Lines.Length,1000);
 		//		SelectionStart=IndexFromRealIndex(RealText.Length-1);
 	}
 	public void MoveDocumentStart()
 	{
 		MoveCursor(LineFromRealLine(0),0);
-//		SelectionStart=IndexFromRealIndex(0);
+		//		SelectionStart=IndexFromRealIndex(0);
 	}
 
-	public void DeleteBackward()
+	public void DeleteCharLeft()
 	{
-		Select(SelectionStart-1,1);
-		SelectedText="";
+		if(interactiveSearch.Active)
+		{
+			interactiveSearch.DeleteCharLeft();
+		}
+		else
+		{
+			Select(SelectionStart-1,1);
+			SelectedText="";
+		}
 	}
-	public void DeleteForward()
+	public void DeleteCharRight()
+		//		public void DeleteCharRight()
 	{
 		Select(SelectionStart,1);
 		SelectedText="";
@@ -363,11 +396,26 @@ public class ScrollingTextBox: RichTextBox
 	{
 	}
 
+	// TODO: maybe call SuspendWindowUpdate somewhere else????, maybe in Meta-code?
 	public void DeleteWordRight()
-	{		
+	{
+		SuspendWindowUpdate();
+		int start=SelectionStart;
+		MoveWordRight();
+		int end=SelectionStart;
+		Select(start,end-start);
+		SelectedText="";
+		ResumeWindowUpdate();
 	}
 	public void DeleteWordLeft()
 	{
+		SuspendWindowUpdate();
+        int end=SelectionStart+SelectedText.Length;
+		MoveWordLeft();
+		int start=SelectionStart;
+		Select(start,end-start);
+		SelectedText="";
+		ResumeWindowUpdate();
 	}
 	
 
@@ -385,6 +433,21 @@ public class ScrollingTextBox: RichTextBox
 		}
 		MoveCursor(line,lastColumn);
 	}
+	public int LinesPerPage
+	{
+		get
+		{
+			return Convert.ToInt32(((double)this.Height/(double)this.Font.Height)/3.3);
+		}
+	}
+	public void MovePageDown()
+	{
+		MoveLineRelative(LinesPerPage);
+	}
+	public void MovePageUp()
+	{
+		MoveLineRelative(-LinesPerPage);
+	}
 	public void MoveLineDown() 
 	{
 		MoveLineRelative(1);
@@ -396,7 +459,69 @@ public class ScrollingTextBox: RichTextBox
 	public void MoveLineEnd()
 	{
 		MoveHorizontal(Lines[Line].Length);
-//		MoveTo(GetLinesLength(Line)+Lines[Line].Length);
+		//		MoveTo(GetLinesLength(Line)+Lines[Line].Length);
+	}
+	public void IncreaseSelectionIndent()
+	{
+		SuspendWindowUpdate();
+		int selectionStart=SelectionStart;
+		int selectionEnd=selectionStart+SelectedText.Length;
+		int lastLine=GetLineFromCharIndex(selectionEnd-1);
+		int startLine=Line;
+		for(int line=startLine;line<=lastLine;line++)
+		{
+			Select(GetLinesLength(line)+GetTabs(Lines[line]),0);
+			SelectedText="\t";
+		}
+		if(selectionStart==selectionEnd)
+		{
+			Select(selectionStart+1,0);
+		}
+		else
+		{
+			Select(selectionStart,selectionEnd-selectionStart+(lastLine-startLine)+1);
+		}
+//		SelectionStart=selectionStart;
+		ResumeWindowUpdate();
+	}
+	[DllImport("user32.dll")]
+	public static extern bool LockWindowUpdate(IntPtr hWndLock);
+
+
+	public void SuspendWindowUpdate()
+	{
+		LockWindowUpdate(Handle);
+	}
+	public void ResumeWindowUpdate()
+	{
+		LockWindowUpdate(IntPtr.Zero);
+	}
+	public void DecreaseSelectionIndent()
+	{
+		SuspendWindowUpdate();
+		int selectionStart=SelectionStart;
+		int selectionEnd=selectionStart+SelectedText.Length;
+		int removedTabs=0;
+		int lastLine=GetLineFromCharIndex(selectionEnd-1);
+		int startLine=Line;
+		for(int line=startLine;line<=lastLine;line++)
+		{
+			if(GetTabs(Lines[line])>0)
+			{
+				removedTabs++;
+				Select(GetLinesLength(line)+GetTabs(Lines[line])-1,1);
+				SelectedText="";
+			}
+		}
+		int length=selectionEnd-selectionStart-removedTabs;
+		if(length<0)
+		{
+			length=0;
+		}
+		Select(selectionStart,length);
+		ResumeWindowUpdate();
+
+			//change colors and stuff in the RichTextBox
 	}
 	public void MoveLineStart()
 	{
@@ -427,7 +552,7 @@ public class ScrollingTextBox: RichTextBox
 		else
 		{
 			int i=Column;
-			while(Char.IsLetter(Lines[Line][i]))
+			while(i<Lines[Line].Length && Char.IsLetter(Lines[Line][i]))
 				//				while(Char.IsLetter(Character))
 			{
 				i++;
@@ -495,6 +620,8 @@ public class ScrollingTextBox: RichTextBox
 		MoveHorizontal(Column+columnDifference);
 	}
 	// TODO: put this into Column.set
+
+	// TODO: rename to MoveChar
 	public void MoveHorizontal(int column)
 	{
 		lastColumn=-1;
@@ -506,7 +633,7 @@ public class ScrollingTextBox: RichTextBox
 
 	public void FindAndReplace()
 	{
-		replace.Owner=FindForm();
+		replace.Owner=this.FindForm();
 		replace.Show();
 	}
 	public void StopInteractiveSearch()
@@ -564,6 +691,7 @@ public class ScrollingTextBox: RichTextBox
 			SelectionStart=newStart;
 		}
 	}
+	// TODO: rename
 	int GetLinesLength(int iLine) 
 	{
 		iLine=iLine<Lines.Length?iLine:Lines.Length-1;
@@ -746,6 +874,14 @@ public class ScrollingTextBox: RichTextBox
 		this.SetSelectionStartNoScroll(GetCharIndexFromPosition(new Point(this.Size.Width/2,this.Height/2)));
 	}
 	public const int WM_PAINT = 0xF;
+	public const int WM_LBUTTONDBLCLK = 0x203;
+	public const int WM_LBUTTONDOWN = 0x201;
+	public const int WM_LBUTTONUP = 0x202;
+
+	public int GetColumnFromCharIndex(int charIndex)
+	{
+		return charIndex-GetLinesLength(GetLineFromCharIndex(charIndex));
+	}
 	protected override void WndProc(ref Message m) 
 	{
 		if(m.Msg == WM_MOUSEWHEEL) 
@@ -759,7 +895,16 @@ public class ScrollingTextBox: RichTextBox
 				MoveLineRelative(3);
 			}
 		}
-
+//		else if(m.Msg == WM_LBUTTONDOWN)
+//		{
+//			int charIndex=this.GetCharIndexFromPosition(Control.MousePosition);
+//			MoveCursor(GetLineFromCharIndex(charIndex),GetColumnFromCharIndex(charIndex));
+//		}
+//		else if(m.Msg == WM_LBUTTONUP)
+//		{
+//			int charIndex=this.GetCharIndexFromPosition(Control.MousePosition);
+//			MoveCursor(GetLineFromCharIndex(charIndex),GetColumnFromCharIndex(charIndex));
+//		}
 		else
 		{
 			if ( m.Msg == WM_HSCROLL || m.Msg == WM_VSCROLL ) 
@@ -771,7 +916,7 @@ public class ScrollingTextBox: RichTextBox
 				if(info!=null)
 				{
 					Invalidate();
-//					Invalidate(info.Rectangle);
+					//					Invalidate(info.Rectangle);
 				}
 			}	
 			base.WndProc (ref m);
@@ -785,5 +930,11 @@ public class ScrollingTextBox: RichTextBox
 	private void ScrollingTextBox_Layout(object sender, System.Windows.Forms.LayoutEventArgs e)
 	{
 		int asdf=0;
+	}
+
+	private void replace_Closing(object sender, CancelEventArgs e)
+	{
+		// because of stupid bug, where editor doesnt have focus after replacing all
+		this.FindForm().BringToFront();
 	}
 }
