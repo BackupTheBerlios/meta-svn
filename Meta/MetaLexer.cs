@@ -63,7 +63,7 @@ namespace Meta.Parser
 		public const int SAME_INDENT = 15;
 		public const int STATEMENT_SEARCH = 16;
 		public const int EQUAL = 17;
-		public const int HASH = 18;
+		public const int APOSTROPHE = 18;
 		public const int COLON = 19;
 		public const int STAR = 20;
 		public const int LBRACKET = 21;
@@ -143,9 +143,9 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
-						case '#':
+						case '\'':
 						{
-							mHASH(true);
+							mAPOSTROPHE(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -239,12 +239,12 @@ tryAgain:
 		returnToken_ = _token;
 	}
 	
-	public void mHASH(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+	public void mAPOSTROPHE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
-		_ttype = HASH;
+		_ttype = APOSTROPHE;
 		
-		match('#');
+		match('\'');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);

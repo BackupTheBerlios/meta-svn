@@ -72,6 +72,9 @@ commands:
 				SetFileName openFileName
 				editBox.RealText.set
 					file.Read fileName
+				editBox.MoveRealCursor
+					"0"
+					"0"
 	Run:=
 		commands.Save*
 		SetBreakPoint*
@@ -172,7 +175,7 @@ editBox:
 		RichTextBoxScrollBars.ForcedBoth
 	editBox.KeyDown.add
 		:
-			#
+			'
 				e:arg.2
 				// maybe this should be the other way round ???
 				modifiers:e.Modifiers.get*
@@ -188,7 +191,9 @@ editBox:
 								subKey
 								keyCode
 							then:=
+								editBox.SuspendWindowUpdate*
 								subKey.[keyCode]*
+								editBox.ResumeWindowUpdate*
 								e.Handled.set
 									"1"
 					else:=

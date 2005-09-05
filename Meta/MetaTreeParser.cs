@@ -55,7 +55,7 @@ namespace Meta.Parser
 		public const int SAME_INDENT = 15;
 		public const int STATEMENT_SEARCH = 16;
 		public const int EQUAL = 17;
-		public const int HASH = 18;
+		public const int APOSTROPHE = 18;
 		public const int COLON = 19;
 		public const int STAR = 20;
 		public const int LBRACKET = 21;
@@ -507,7 +507,7 @@ _loop154_breakloop:		;
 		@"""SAME_INDENT""",
 		@"""STATEMENT_SEARCH""",
 		@"""EQUAL""",
-		@"""HASH""",
+		@"""APOSTROPHE""",
 		@"""COLON""",
 		@"""STAR""",
 		@"""LBRACKET""",

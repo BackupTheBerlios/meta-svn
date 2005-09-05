@@ -89,8 +89,10 @@ tokens
 EQUAL:
   '=';
 
-HASH:
-	'#';
+//HASH:
+//	'#';
+APOSTROPHE:
+	'\'';
 	
 //EXCLAMATION_MARK:
 //	'!';
@@ -498,7 +500,8 @@ fullDelayed:
 	}
 	;
 delayed:
-  HASH!
+  //HASH!
+  APOSTROPHE!
 	delayedImplementation
 	;
 // TODO: rename to better reflect the new function

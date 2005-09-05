@@ -103,6 +103,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "Copy of basicTest.meta"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "editor.meta"
                     BuildAction = "None"
                 />

@@ -412,14 +412,14 @@ public class ScrollingTextBox: RichTextBox
 
 	public void SelectWordLeft()
 	{
-		SuspendWindowUpdate();
+//		SuspendWindowUpdate();
 		int end=SelectionEnd;
 //		int end=SelectionStart+SelectedText.Length;
 		//		SelectionStart=SelectionStart+SelectedText.Length;
 		MoveWordLeft();
 		int start=SelectionStart;//+SelectedText.Length;
 		Select(start,end-start);
-		ResumeWindowUpdate();
+//		ResumeWindowUpdate();
 	}
 	public int SelectionEnd
 	{
@@ -431,36 +431,35 @@ public class ScrollingTextBox: RichTextBox
 	// TODO: maybe add SelectionEnd property
 	public void SelectWordRight()
 	{
-		SuspendWindowUpdate();
+//		SuspendWindowUpdate();
 		int start=SelectionStart;
 		SelectionStart=SelectionEnd;
 //		SelectionStart=SelectionStart+SelectedText.Length;
 		MoveWordRight();
 		int end=SelectionStart;
 		Select(start,end-start);
-		ResumeWindowUpdate();
+//		ResumeWindowUpdate();
 	}
 
-	// TODO: maybe call SuspendWindowUpdate somewhere else????, maybe in Meta-code?
 	public void DeleteWordRight()
 	{
-		SuspendWindowUpdate();
+//		SuspendWindowUpdate();
 		int start=SelectionStart;
 		MoveWordRight();
 		int end=SelectionStart;
 		Select(start,end-start);
 		SelectedText="";
-		ResumeWindowUpdate();
+//		ResumeWindowUpdate();
 	}
 	public void DeleteWordLeft()
 	{
-		SuspendWindowUpdate();
+//		SuspendWindowUpdate();
         int end=SelectionStart+SelectedText.Length;
 		MoveWordLeft();
 		int start=SelectionStart;
 		Select(start,end-start);
 		SelectedText="";
-		ResumeWindowUpdate();
+//		ResumeWindowUpdate();
 	}
 	
 
@@ -508,10 +507,14 @@ public class ScrollingTextBox: RichTextBox
 	}
 	public void IncreaseSelectionIndent()
 	{
-		SuspendWindowUpdate();
+//		SuspendWindowUpdate();
 		int selectionStart=SelectionStart;
 		int selectionEnd=selectionStart+SelectedText.Length;
-		int lastLine=GetLineFromCharIndex(selectionEnd-1);
+		if(selectionEnd>selectionStart)
+		{
+			selectionEnd--;
+		}
+		int lastLine=GetLineFromCharIndex(selectionEnd);
 		int startLine=Line;
 		for(int line=startLine;line<=lastLine;line++)
 		{
@@ -527,11 +530,12 @@ public class ScrollingTextBox: RichTextBox
 			Select(selectionStart,selectionEnd-selectionStart+(lastLine-startLine)+1);
 		}
 //		SelectionStart=selectionStart;
-		ResumeWindowUpdate();
+//		ResumeWindowUpdate();
 	}
 	[DllImport("user32.dll")]
 	public static extern bool LockWindowUpdate(IntPtr hWndLock);
 
+	///use SendMessage instead of LockWindowUpdate, see http://weblogs.asp.net/jdanforth/archive/2004/03/12/88458.aspx
 
 	public void SuspendWindowUpdate()
 	{
@@ -543,7 +547,7 @@ public class ScrollingTextBox: RichTextBox
 	}
 	public void DecreaseSelectionIndent()
 	{
-		SuspendWindowUpdate();
+//		SuspendWindowUpdate();
 		int selectionStart=SelectionStart;
 		int selectionEnd=selectionStart+SelectedText.Length;
 		int removedTabs=0;
@@ -564,7 +568,7 @@ public class ScrollingTextBox: RichTextBox
 			length=0;
 		}
 		Select(selectionStart,length);
-		ResumeWindowUpdate();
+//		ResumeWindowUpdate();
 
 			//change colors and stuff in the RichTextBox
 	}
@@ -670,6 +674,7 @@ public class ScrollingTextBox: RichTextBox
 	public void MoveHorizontal(int column)
 	{
 		lastColumn=-1;
+//		MoveCursor(Line,column);
 		Column=column;
 	}
 
@@ -698,6 +703,10 @@ public class ScrollingTextBox: RichTextBox
 			this.Cursor=Cursors.PanSouth;
 			interactiveSearch.Start();
 		}
+	}
+	public void MoveRealCursor(int line,int scrollColumn)
+	{
+		MoveCursor(LineFromRealLine(line),scrollColumn);
 	}
 
 
@@ -733,7 +742,8 @@ public class ScrollingTextBox: RichTextBox
 			{
 				newStart=Text.Length-1;
 			}
-			SelectionStart=newStart;
+			Select(newStart,0);
+//			SelectionStart=newStart;
 		}
 	}
 	// TODO: rename

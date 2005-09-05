@@ -92,7 +92,7 @@ namespace Meta.Parser
 		public const int SAME_INDENT = 15;
 		public const int STATEMENT_SEARCH = 16;
 		public const int EQUAL = 17;
-		public const int HASH = 18;
+		public const int APOSTROPHE = 18;
 		public const int COLON = 19;
 		public const int STAR = 20;
 		public const int LBRACKET = 21;
@@ -455,7 +455,7 @@ _loop137_breakloop:		;
 				}
 				break;
 			}
-			case HASH:
+			case APOSTROPHE:
 			{
 				delayed();
 				if (0 == inputState.guessing)
@@ -484,7 +484,7 @@ _loop137_breakloop:		;
 					{
 						switch ( LA(1) )
 						{
-						case HASH:
+						case APOSTROPHE:
 						{
 							delayed();
 							if (0 == inputState.guessing)
@@ -760,7 +760,7 @@ _loop112_breakloop:			;
 		ASTPair currentAST = new ASTPair();
 		MetaAST delayed_AST = null;
 		
-		match(HASH);
+		match(APOSTROPHE);
 		delayedImplementation();
 		if (0 == inputState.guessing)
 		{
@@ -1093,7 +1093,7 @@ _loop115_breakloop:			;
 		@"""SAME_INDENT""",
 		@"""STATEMENT_SEARCH""",
 		@"""EQUAL""",
-		@"""HASH""",
+		@"""APOSTROPHE""",
 		@"""COLON""",
 		@"""STAR""",
 		@"""LBRACKET""",

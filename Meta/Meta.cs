@@ -1628,19 +1628,68 @@ namespace Meta
 		{
 			return indentation + leftBracket + newLine + MapValue(map,indentation) + rightBracket;
 		}
+		// TODO: add special serialization for code
+//		private static string Code(Map map,string indentation)
+//		{
+//			if(map.ContainsKey(CodeKeys.Call))
+//			{
+//			}
+//			else if(map.ContainsKey(CodeKeys.Delayed))
+//			{
+//			}
+//			else if(map.ContainsKey(CodeKeys.Literal))
+//			{
+//			}
+//			else if(map.ContainsKey(CodeKeys.Select))
+//			{
+//			}
+//			else if(map.ContainsKey(CodeKeys.Program))
+//			{
+//			}
+//		}
+		// TODO: put all the special characters somewhere else, no magic constants
 		private static string MapValue(Map map,string indentation)
 		{
-			string text=newLine;
-			foreach(DictionaryEntry entry in map)
-			{
-				text+=indentation + Key((Map)entry.Key,indentation)	+ ":" + Value((Map)entry.Value,indentation+'\t');
-				if(!text.EndsWith(newLine))
+			string text;
+//			if(map.Count==1 && map.ContainsKey(CodeKeys.Run))
+//			{
+//				text="="+Code(map[CodeKeys.Run],indentation);
+//			}
+//			else
+//			{
+				text=newLine;
+				//			string text=newLine;
+				foreach(DictionaryEntry entry in map)
 				{
-					text+=newLine;
+//					if(entry.Key.Equals(CodeKeys.Run))
+//					{
+//						text+=indentation+"#\n"+Value((Map)entry.Value,indentation);
+//					}
+//					else
+//					{
+						text+=indentation + Key((Map)entry.Key,indentation)	+ ":" + Value((Map)entry.Value,indentation+'\t');
+//					}
+					if(!text.EndsWith(newLine))
+					{
+						text+=newLine;
+					}
 				}
-			}
+//			}
 			return text;
 		}
+//		private static string MapValue(Map map,string indentation)
+//		{
+//			string text=newLine;
+//			foreach(DictionaryEntry entry in map)
+//			{
+//				text+=indentation + Key((Map)entry.Key,indentation)	+ ":" + Value((Map)entry.Value,indentation+'\t');
+//				if(!text.EndsWith(newLine))
+//				{
+//					text+=newLine;
+//				}
+//			}
+//			return text;
+//		}
 		private const string leftBracket="[";
 		private const string rightBracket="]";
 		private const string newLine="\n";
