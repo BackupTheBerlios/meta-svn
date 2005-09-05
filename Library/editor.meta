@@ -218,8 +218,8 @@ form:
 	controls.AddRange
 		:
 			editBox
-	form.WindowState.set
-		FormWindowState.Maximized
+	//form.WindowState.set
+	//	FormWindowState.Maximized
 	menu:
 		File:
 			["Open..."]:commands.Open

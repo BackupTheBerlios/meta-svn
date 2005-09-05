@@ -110,18 +110,53 @@ public class ScrollingTextBox: RichTextBox
 	}
 
 
-
+	private int[] tabStops=new int[32];
+//	private int tabWidth;
+//	private const int tabWidth=30;
 	private void ScrollingTextBox_Resize(object sender, System.EventArgs e) 
 	{
 		if(SelectionStart!=-1) 
 		{ 
-			// TODO: refactor
+			SuspendWindowUpdate();// TODO: refactor
 			int selectionStart=SelectionStart;
 			SelectAll();
 			double width=Convert.ToDouble(this.Size.Width)/2.618f;
 			double height=Convert.ToDouble(this.Size.Height)/2.618f;
 			SelectionIndent=Convert.ToInt32(width);
+			SelectAll();
+
+//			string text="aaaa";
+//
+//			Graphics graphics=CreateGraphics();
+//
+//			System.Drawing.StringFormat format  = new System.Drawing.StringFormat ();
+//			System.Drawing.RectangleF   rect    = new System.Drawing.RectangleF(0, 0,
+//				1000, 1000);
+//			System.Drawing.CharacterRange[] ranges  = 
+//									   {
+//											   new System.Drawing.CharacterRange(0, 
+//										   text.Length) };
+//			System.Drawing.Region[]         regions = new System.Drawing.Region[1];
+//
+//			format.SetMeasurableCharacterRanges (ranges);
+//
+//			regions = graphics.MeasureCharacterRanges (text, Font, rect, format);
+//			rect    = regions[0].GetBounds (graphics);
+
+//			int tabWidth=(int)(rect.Right + 1.0f);
+
+			int tabWidth=30;
+//			int tabWidth=Convert.ToInt32(this.CreateGraphics().MeasureString("aaaa",this.Font).Width);
+
+			int firstTabStop=Convert.ToInt32(width)%tabWidth;
+			for(int i = 0; i < tabStops.Length; i++)
+			{
+				tabStops[i] = i*tabWidth+firstTabStop;
+			}
+			//int[] tabs=SelectionTabs;
+			SelectionTabs=tabStops;
 			Select(selectionStart,0);
+			ResumeWindowUpdate();
 		}
 	}
 	bool wasControlITab=false;
