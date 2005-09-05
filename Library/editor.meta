@@ -88,13 +88,13 @@ commands:
 		Meta.Interpreter.ReverseDebug*
 // TODO: maybe nest the modifiers inside each other?
 Modifiers:
-	ControlAlt:bitwise.Or
+	AltControl:bitwise.Or
 		Keys.Alt
 		Keys.Control
-	ShiftAlt:bitwise.Or
+	AltShift:bitwise.Or
 		Keys.Alt
 		Keys.Shift
-	ControlShiftAlt:bitwise.Or
+	AltControlShift:bitwise.Or
 		Keys.Alt
 		Keys.Control
 		Keys.Shift
@@ -129,23 +129,28 @@ combos:
 		[Keys.J]:=editBox.MoveCharLeft*
 		[Keys.U]:=editBox.MoveLineStart*
 		[Keys.OemSemicolon]:=editBox.MoveLineEnd*
-		[Keys.N]:=editBox.DeleteBackward*
-		[Keys.M]:=editBox.DeleteForward*
+		[Keys.N]:=editBox.DeleteCharLeft*
+		[Keys.M]:=editBox.DeleteCharRight*
 	[Keys.Shift]:
 		[Keys.Tab]:=editBox.DecreaseSelectionIndent*
-	[Modifiers.ShiftAlt]:
+		[Keys.Left]:=editBox.SelectCharLeft*
+		[Keys.Right]:=editBox.SelectCharRight*
+	[Modifiers.ControlShift]:
+		[Keys.Left]:=editBox.SelectWordLeft*
+		[Keys.Right]:=editBox.SelectWordRight*
+	[Modifiers.AltShift]:
 		[Keys.J]:=editBox.SelectCharLeft*
 		[Keys.Oemtilde]:=editBox.SelectCharRight*
 		[Keys.L]:=editBox.SelectLineUp*
 		[Keys.K]:=editBox.SelectLineDown*
-	[Modifiers.ControlAlt]:
+	[Modifiers.AltControl]:
 		[Keys.J]:=editBox.MoveWordLeft*
 		[Keys.Oemtilde]:=editBox.MoveWordRight*
 		[Keys.OemSemicolon]:=editBox.MoveDocumentEnd*
 		[Keys.U]:=editBox.MoveDocumentStart*
 		[Keys.N]:=editBox.DeleteWordLeft*
 		[Keys.M]:=editBox.DeleteWordRight*
-	[Modifiers.ControlShiftAlt]:
+	[Modifiers.AltControlShift]:
 		[Keys.J]:=editBox.SelectWordLeft*
 		[Keys.Oemtilde]:=editBox.SelectWordRight*
 editBox:
