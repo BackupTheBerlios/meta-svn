@@ -111,6 +111,10 @@ shortcuts:
 	[Keys.Home]:=editBox.MoveLineStart*
 	[Keys.End]:=editBox.MoveLineEnd*
 	[Keys.Tab]:=editBox.IncreaseSelectionIndent*
+	[Keys.Back]:=editBox.DeleteCharLeft*
+	[Keys.Delete]:=editBox.DeleteCharRight*
+	[Keys.PageUp]:=editBox.MovePageUp*
+	[Keys.PageDown]:=editBox.MovePageDown*
 combos:
 	[Keys.Control]:
 		[Keys.S]:=commands.Save*
@@ -150,6 +154,8 @@ combos:
 		[Keys.U]:=editBox.MoveDocumentStart*
 		[Keys.N]:=editBox.DeleteWordLeft*
 		[Keys.M]:=editBox.DeleteWordRight*
+		[Keys.L]:=editBox.MovePageUp*
+		[Keys.K]:=editBox.MovePageDown*
 	[Modifiers.AltControlShift]:
 		[Keys.J]:=editBox.SelectWordLeft*
 		[Keys.Oemtilde]:=editBox.SelectWordRight*

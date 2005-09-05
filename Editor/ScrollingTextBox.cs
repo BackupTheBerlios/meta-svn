@@ -361,15 +361,29 @@ public class ScrollingTextBox: RichTextBox
 		}
 		else
 		{
-			Select(SelectionStart-1,1);
-			SelectedText="";
+			if(SelectedText.Length==0)
+			{
+				Select(SelectionStart-1,1);
+				SelectedText="";
+			}
+			else
+			{
+				SelectedText="";
+			}
 		}
 	}
 	public void DeleteCharRight()
 		//		public void DeleteCharRight()
 	{
-		Select(SelectionStart,1);
-		SelectedText="";
+		if(SelectedText.Length==0)
+		{
+			Select(SelectionStart,1);
+			SelectedText="";
+		}
+		else
+		{
+			SelectedText="";
+		}
 	}
 
 
