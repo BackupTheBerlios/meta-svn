@@ -382,18 +382,45 @@ public class ScrollingTextBox: RichTextBox
 	{
 	}
 
+	// TODO: write safe wrappers for all Selection stuff, and all movement stuff, so bounds checking is in one place
 	public void SelectCharLeft()
 	{
+        Select(SelectionStart-1,SelectionLength+1);
 	}
 	public void SelectCharRight()
 	{
+		Select(SelectionStart,SelectionLength+1);
 	}
 
 	public void SelectWordLeft()
 	{
+		SuspendWindowUpdate();
+		int end=SelectionEnd;
+//		int end=SelectionStart+SelectedText.Length;
+		//		SelectionStart=SelectionStart+SelectedText.Length;
+		MoveWordLeft();
+		int start=SelectionStart;//+SelectedText.Length;
+		Select(start,end-start);
+		ResumeWindowUpdate();
 	}
+	public int SelectionEnd
+	{
+		get
+		{
+			return SelectionStart+SelectedText.Length;
+		}
+	}
+	// TODO: maybe add SelectionEnd property
 	public void SelectWordRight()
 	{
+		SuspendWindowUpdate();
+		int start=SelectionStart;
+		SelectionStart=SelectionEnd;
+//		SelectionStart=SelectionStart+SelectedText.Length;
+		MoveWordRight();
+		int end=SelectionStart;
+		Select(start,end-start);
+		ResumeWindowUpdate();
 	}
 
 	// TODO: maybe call SuspendWindowUpdate somewhere else????, maybe in Meta-code?
