@@ -34,7 +34,7 @@ SetFileName:=
 	parent.parent.fileName:arg
 	form.Text.set
 		Append
-			"Meta Edit - "			
+			"Meta Edit - "
 			fileName
 SetBreakPoint:=Meta.Expression.BreakPoint.set
 	Meta.BreakPoint
@@ -86,14 +86,16 @@ commands:
 	Reverse:=
 		SetBreakPoint*
 		Meta.Interpreter.ReverseDebug*
+// TODO: maybe nest the modifiers inside each other?
 Modifiers:
-	AltControl:bitwise.Or
+	ControlAlt:bitwise.Or
 		Keys.Alt
 		Keys.Control
-	AltShift:bitwise.Or
+	ShiftAlt:bitwise.Or
 		Keys.Alt
 		Keys.Shift
-	AltControlShift:bitwise.Or
+	// TODO: rename to a more logical order
+	ControlShiftAlt:bitwise.Or
 		Keys.Alt
 		Keys.Control
 		Keys.Shift
@@ -107,12 +109,18 @@ shortcuts:
 	[Keys.Down]:=editBox.MoveLineDown*
 	[Keys.Left]:=editBox.MoveCharLeft*
 	[Keys.Right]:=editBox.MoveCharRight*
+	[Keys.Home]:=editBox.MoveLineStart*
+	[Keys.End]:=editBox.MoveLineEnd*
 	[Keys.Control]:
 		[Keys.S]:=commands.Save*
 		[Keys.I]:=editBox.StartInteractiveSearch*
-		[Keys.F]:=editBox.FindAndReplace*
+		[Keys.H]:=editBox.FindAndReplace*
 		[Keys.Left]:=editBox.MoveWordLeft*
 		[Keys.Right]:=editBox.MoveWordRight*
+		[Keys.Back]:=editBox.DeleteWordLeft*
+		[Keys.Delete]:=editBox.DeleteWordRight*
+		[Keys.Home]:=editBox.MoveDocumentStart*
+		[Keys.End]:=editBox.MoveDocumentEnd*
 	[Keys.Alt]:
 		[Keys.K]:=editBox.MoveLineDown*
 		[Keys.L]:=editBox.MoveLineUp*
@@ -122,16 +130,21 @@ shortcuts:
 		[Keys.OemSemicolon]:=editBox.MoveLineEnd*
 		[Keys.N]:=editBox.DeleteBackward*
 		[Keys.M]:=editBox.DeleteForward*
-	[Modifiers.AltControl]:
+	[Modifiers.ShiftAlt]:
+		[Keys.J]:=editBox.SelectCharLeft*
+		[Keys.Oemtilde]:=editBox.SelectCharRight*
+		[Keys.L]:=editBox.SelectLineUp*
+		[Keys.K]:=editBox.SelectLineDown*
+	[Modifiers.ControlAlt]:
 		[Keys.J]:=editBox.MoveWordLeft*
 		[Keys.Oemtilde]:=editBox.MoveWordRight*
 		[Keys.OemSemicolon]:=editBox.MoveDocumentEnd*
 		[Keys.U]:=editBox.MoveDocumentStart*
-	[Modifiers.AltControlShift]:
+		[Keys.N]:=editBox.DeleteWordLeft*
+		[Keys.M]:=editBox.DeleteWordRight*
+	[Modifiers.ControlShiftAlt]:
 		[Keys.J]:=editBox.SelectWordLeft*
 		[Keys.Oemtilde]:=editBox.SelectWordRight*
-		[Keys.K]:=editBox.SelectLineUp*
-		[Keys.J]:=editBox.SelectLineDown*
 editBox:
 	editBox:ScrollingTextBox*
 	editBox.ShowSelectionMargin.set

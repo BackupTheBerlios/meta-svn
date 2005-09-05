@@ -199,6 +199,7 @@ public class ScrollingTextBox: RichTextBox
 		public void Stop()
 		{
 			active=false;
+			textBox.Select(textBox.SelectionStart,0);
 			text="";
 		}
 		private RichTextBox textBox;
@@ -292,14 +293,39 @@ public class ScrollingTextBox: RichTextBox
 	{
 		return index+emptyLines.Length;
 	}
+	public string[] RealLines
+	{
+		get
+		{
+			ArrayList realLines=new ArrayList(Lines).GetRange(LineFromRealLine(0),Lines.Length-BottomMargin.Length-TopMargin.Length);
+			return (string[])realLines.ToArray(typeof(string));
+		}
+	}
+	public int RealLineFromLine(int line)
+	{
+		int realLine=line-TopMargin.Length;
+		if(realLine<0)
+		{
+			realLine=0;
+		}
+		return realLine;
+	}
+	public int LineFromRealLine(int realLine)
+	{
+		return realLine+TopMargin.Length;
+	}
 
+	// TODO: put RealLines transformation into MoveCursor
 	public void MoveDocumentEnd()
 	{
-		SelectionStart=IndexFromRealIndex(RealText.Length-1);
+		MoveCursor(LineFromRealLine(RealLines.Length-1),RealLines[RealLines.Length-1].Length);
+//		MoveCursor(Lines.Length,1000);
+		//		SelectionStart=IndexFromRealIndex(RealText.Length-1);
 	}
 	public void MoveDocumentStart()
 	{
-		SelectionStart=IndexFromRealIndex(0);
+		MoveCursor(LineFromRealLine(0),0);
+//		SelectionStart=IndexFromRealIndex(0);
 	}
 
 	public void DeleteBackward()
@@ -322,18 +348,21 @@ public class ScrollingTextBox: RichTextBox
 	public void SelectLineUp()
 	{
 	}
+
 	public void SelectCharLeft()
 	{
 	}
 	public void SelectCharRight()
 	{
 	}
+
 	public void SelectWordLeft()
 	{
 	}
 	public void SelectWordRight()
 	{
 	}
+
 	public void DeleteWordRight()
 	{		
 	}
@@ -374,7 +403,16 @@ public class ScrollingTextBox: RichTextBox
 //		int start=GetLinesLength(Line);
 //		start+=this.GetTabs(Lines[Line]);
 //		int start=this.GetTabs();
-		MoveHorizontal(GetTabs(Lines[Line]));
+		int column=GetTabs(Lines[Line]);
+		if(column!=Column)
+		{
+			MoveHorizontal(column);
+		}
+		else
+		{
+			MoveHorizontal(0);
+		}
+		
 //		MoveTo(start);
 	}
 	// TODO: refactor
@@ -494,6 +532,7 @@ public class ScrollingTextBox: RichTextBox
 
 
 
+	// TODO: use this everywhere, never use MoveTo
 	public void MoveCursor(int line,int scrollColumn) 
 	{
 		if(Lines.Length!=0)
@@ -502,9 +541,17 @@ public class ScrollingTextBox: RichTextBox
 			{
 				line=0;
 			}
-			else if(line>Lines.Length-1)
+//			else if(line>Lines.Length-1)
+//			{
+//				line=Lines.Length-1;
+//			}
+			else if(line>Lines.Length-1-BottomMargin.Length)
 			{
-				line=Lines.Length-1;
+				line=Lines.Length-1-BottomMargin.Length;
+			}
+			else if(line<TopMargin.Length)
+			{
+				line=TopMargin.Length;
 			}
 			int lineLength=GetLinesLength(line);
 			int columns=ColumnFromScrollColumn(line,scrollColumn);
