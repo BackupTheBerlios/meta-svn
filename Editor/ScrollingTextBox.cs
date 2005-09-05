@@ -140,8 +140,12 @@ public class ScrollingTextBox: RichTextBox
 		{
 			if(interactiveSearch.Active)
 			{
-				interactiveSearch.OnKeyPress(e.KeyChar);
-				e.Handled=true;
+				// TODO: why is this necessary?
+				if(e.KeyChar!=(char)Keys.Back)
+				{
+					interactiveSearch.OnKeyPress(e.KeyChar);
+					e.Handled=true;
+				}
 			}
 			else if(e.KeyChar.Equals('\t')) // TODO: do i need more exceptions???, all of them?
 			{
@@ -681,7 +685,7 @@ public class ScrollingTextBox: RichTextBox
 	{
 		this.Cursor=Cursors.IBeam;
 		interactiveSearch.Stop();
-	}
+	}// TODO: refactor
 	public void StartInteractiveSearch()
 	{
 		if(interactiveSearch.Active)

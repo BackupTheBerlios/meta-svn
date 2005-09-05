@@ -117,6 +117,7 @@ shortcuts:
 	[Keys.PageDown]:=editBox.MovePageDown*
 combos:
 	[Keys.Control]:
+		[Keys.O]:=commands.Open*
 		[Keys.S]:=commands.Save*
 		[Keys.I]:=editBox.StartInteractiveSearch*
 		[Keys.H]:=editBox.FindAndReplace*
