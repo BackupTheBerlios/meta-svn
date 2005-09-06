@@ -379,7 +379,6 @@ select:
 	}
 ;
 
-
 function:
 	EQUAL!
 	delayedImplementation
@@ -387,7 +386,6 @@ function:
 		#function=#([PROGRAM],#function);
 	}
 ;
-
 
 // TODO: refactor, rename
 delayedImplementation:
@@ -428,7 +426,7 @@ lookup:
 literalLookup:
 	token:LITERAL_KEY
 	{
-		// $setType generates compile error here, so type must be set explicitly
+		// $setType generates compile error here, set type explicitly
 		token_AST.setType(LITERAL);
 	}
 ;
