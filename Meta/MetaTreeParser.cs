@@ -77,12 +77,9 @@ namespace Meta.Parser
 		
 	public Map  expression(AST _t) //throws RecognitionException
 {
-		Map result;
+		Map code;
 		
 		MetaAST expression_AST_in = (MetaAST)_t;
-		
-				result=null;
-			
 		
 		{
 			if (null == _t)
@@ -91,37 +88,37 @@ namespace Meta.Parser
 			{
 			case CALL:
 			{
-				result=call(_t);
+				code=call(_t);
 				_t = retTree_;
 				break;
 			}
 			case PROGRAM:
 			{
-				result=map(_t);
+				code=program(_t);
 				_t = retTree_;
 				break;
 			}
 			case SELECT:
 			{
-				result=select(_t);
+				code=select(_t);
 				_t = retTree_;
 				break;
 			}
 			case SEARCH:
 			{
-				result=search(_t);
+				code=search(_t);
 				_t = retTree_;
 				break;
 			}
 			case LITERAL:
 			{
-				result=literal(_t);
+				code=literal(_t);
 				_t = retTree_;
 				break;
 			}
 			case FUNCTION:
 			{
-				result=delayed(_t);
+				code=delayed(_t);
 				_t = retTree_;
 				break;
 			}
@@ -132,56 +129,56 @@ namespace Meta.Parser
 			 }
 		}
 		retTree_ = _t;
-		return result;
+		return code;
 	}
 	
 	public Map  call(AST _t) //throws RecognitionException
 {
-		Map result;
+		Map code;
 		
 		MetaAST call_AST_in = (MetaAST)_t;
 		
-		result=new NormalMap();
-		result.Extent=call_AST_in.Extent;
-		Map call=new NormalMap();
-		Map delayed=new NormalMap();
-		Map argument=new NormalMap();
-		
+				code=new NormalMap();
+				code.Extent=call_AST_in.Extent;
+				Map callCode=new NormalMap();
+				Map functionCode;
+				Map argumentCode;
+			
 		
 		AST __t155 = _t;
 		MetaAST tmp16_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,CALL);
 		_t = _t.getFirstChild();
 		{
-			delayed=expression(_t);
+			functionCode=expression(_t);
 			_t = retTree_;
 		}
 		{
-			argument=expression(_t);
+			argumentCode=expression(_t);
 			_t = retTree_;
 		}
 		
-		call[CodeKeys.Function]=delayed;
-		call[CodeKeys.Argument]=argument;
-		result[CodeKeys.Call]=call;
-		
+					callCode[CodeKeys.Function]=functionCode;
+					callCode[CodeKeys.Argument]=argumentCode;
+					code[CodeKeys.Call]=callCode;
+				
 		_t = __t155;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
-		return result;
+		return code;
 	}
 	
-	public Map  map(AST _t) //throws RecognitionException
+	public Map  program(AST _t) //throws RecognitionException
 {
-		Map result;
+		Map code;
 		
-		MetaAST map_AST_in = (MetaAST)_t;
+		MetaAST program_AST_in = (MetaAST)_t;
 		
-				result=new NormalMap();
-				result.Extent=map_AST_in.Extent;
-				Map statements=new NormalMap();
-				Map s=null;
-				int counter=1;
+				code=new NormalMap();
+				code.Extent=program_AST_in.Extent;
+				Map programCode=new NormalMap();
+				Map statementCode;
+				int statementNumber=1;
 			
 		
 		AST __t150 = _t;
@@ -196,13 +193,13 @@ namespace Meta.Parser
 				if ((_t.Type==STATEMENT))
 				{
 					{
-						s=statement(_t);
+						statementCode=statement(_t);
 						_t = retTree_;
 					}
 					
-										statements[counter]=s;					
-										counter++;
-									
+									programCode[statementNumber]=statementCode;
+									statementNumber++;
+								
 				}
 				else
 				{
@@ -215,151 +212,144 @@ _loop153_breakloop:			;
 		_t = __t150;
 		_t = _t.getNextSibling();
 		
-				result[CodeKeys.Program]=statements;
+				code[CodeKeys.Program]=programCode;
 			
 		retTree_ = _t;
-		return result;
+		return code;
 	}
 	
 	public Map  select(AST _t) //throws RecognitionException
 {
-		Map result;
+		Map code;
 		
 		MetaAST select_AST_in = (MetaAST)_t;
 		
-		result=new NormalMap();
-		result.Extent=select_AST_in.Extent;
-		Map selection=new NormalMap();
-		Map key=null;
-		int counter=1;
-		
+				code=new NormalMap();
+				code.Extent=select_AST_in.Extent;
+				Map selectCode=new NormalMap();
+				Map keyCode;
+				int counter=1;
+			
 		
 		AST __t159 = _t;
 		MetaAST tmp18_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SELECT);
 		_t = _t.getFirstChild();
+		{ // ( ... )+
+		int _cnt161=0;
+		for (;;)
 		{
-			{ // ( ... )+
-			int _cnt162=0;
-			for (;;)
+			if (_t == null)
+				_t = ASTNULL;
+			if ((tokenSet_0_.member(_t.Type)))
 			{
-				if (_t == null)
-					_t = ASTNULL;
-				if ((tokenSet_0_.member(_t.Type)))
-				{
-					key=expression(_t);
-					_t = retTree_;
-					
-					selection[counter]=key;
-					counter++;
-					
-				}
-				else
-				{
-					if (_cnt162 >= 1) { goto _loop162_breakloop; } else { throw new NoViableAltException(_t);; }
-				}
+				keyCode=expression(_t);
+				_t = retTree_;
 				
-				_cnt162++;
+								selectCode[counter]=keyCode;
+								counter++;
+							
 			}
-_loop162_breakloop:			;
-			}    // ( ... )+
+			else
+			{
+				if (_cnt161 >= 1) { goto _loop161_breakloop; } else { throw new NoViableAltException(_t);; }
+			}
+			
+			_cnt161++;
 		}
+_loop161_breakloop:		;
+		}    // ( ... )+
 		_t = __t159;
 		_t = _t.getNextSibling();
 		
-		result[CodeKeys.Select]=selection;
-		
+				code[CodeKeys.Select]=selectCode;
+			
 		retTree_ = _t;
-		return result;
+		return code;
 	}
 	
 	public Map  search(AST _t) //throws RecognitionException
 {
-		Map result;
+		Map code;
 		
 		MetaAST search_AST_in = (MetaAST)_t;
 		
-				result=new NormalMap();
-				Map lookupResult=null;
-				result.Extent=search_AST_in.Extent;
-				Map e=null;
+				code=new NormalMap();
+				code.Extent=search_AST_in.Extent;
+				Map searchCode;
 			
 		
-		AST __t164 = _t;
+		AST __t163 = _t;
 		MetaAST tmp19_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SEARCH);
 		_t = _t.getFirstChild();
-		e=expression(_t);
+		searchCode=expression(_t);
 		_t = retTree_;
-		_t = __t164;
+		_t = __t163;
 		_t = _t.getNextSibling();
 		
-				result[CodeKeys.Search]=e;
+				code[CodeKeys.Search]=searchCode;
 			
 		retTree_ = _t;
-		return result;
+		return code;
 	}
 	
 	public Map  literal(AST _t) //throws RecognitionException
 {
-		Map result;
+		Map code;
 		
 		MetaAST literal_AST_in = (MetaAST)_t;
 		MetaAST token = null;
 		
-		result=new NormalMap();
-		result.Extent=literal_AST_in.Extent;
-		
+				code=new NormalMap();
+				code.Extent=literal_AST_in.Extent;
+			
 		
 		token = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,LITERAL);
 		_t = _t.getNextSibling();
 		
-		result[CodeKeys.Literal]=new NormalMap(token.getText());
-		
+				code[CodeKeys.Literal]=new NormalMap(token.getText());
+			
 		retTree_ = _t;
-		return result;
+		return code;
 	}
 	
 	public Map  delayed(AST _t) //throws RecognitionException
 {
-		Map result;
+		Map code;
 		
 		MetaAST delayed_AST_in = (MetaAST)_t;
 		
-		result=new NormalMap();
-		result.Extent=delayed_AST_in.Extent;
-		Map mExpression;
-		//Map CodeKeys.Run=new NormalMap();
+		code=new NormalMap();
+		code.Extent=delayed_AST_in.Extent;
+		Map delayedCode;
 		
 		
-		AST __t167 = _t;
+		AST __t165 = _t;
 		MetaAST tmp20_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,FUNCTION);
 		_t = _t.getFirstChild();
-		mExpression=expression(_t);
+		delayedCode=expression(_t);
 		_t = retTree_;
-		_t = __t167;
+		_t = __t165;
 		_t = _t.getNextSibling();
 		
-						//CodeKeys.Run[CodeKeys.Run]=mExpression;
-		result[CodeKeys.Delayed]=mExpression;
-		//				CodeKeys.Run[CodeKeys.Run]=mExpression;
-		//        result[CodeKeys.Delayed]=CodeKeys.Run;
+		code[CodeKeys.Delayed]=delayedCode;
 		
 		retTree_ = _t;
-		return result;
+		return code;
 	}
 	
-	public Map  key(AST _t) //throws RecognitionException
+	public Map  statementKeys(AST _t) //throws RecognitionException
 {
-		Map result;
+		Map code;
 		
-		MetaAST key_AST_in = (MetaAST)_t;
+		MetaAST statementKeys_AST_in = (MetaAST)_t;
 		
-				int counter=1;
-				result=new NormalMap();
-				Map e=null;
+				code=new NormalMap();
+				Map keyCode;
+				int keyNumber=1;
 			
 		
 		AST __t144 = _t;
@@ -374,11 +364,11 @@ _loop162_breakloop:			;
 				_t = ASTNULL;
 			if ((tokenSet_0_.member(_t.Type)))
 			{
-				e=expression(_t);
+				keyCode=expression(_t);
 				_t = retTree_;
 				
-								result[counter]=e;
-								counter++;
+								code[keyNumber]=keyCode;
+								keyNumber++;
 							
 			}
 			else
@@ -393,36 +383,36 @@ _loop146_breakloop:		;
 		_t = __t144;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
-		return result;
+		return code;
 	}
 	
 	public Map  statement(AST _t) //throws RecognitionException
 {
-		Map statement;
+		Map code;
 		
 		MetaAST statement_AST_in = (MetaAST)_t;
 		
-				statement=new NormalMap();
-				Map valueCode=null;
-				Map keyCode=null;
+				code=new NormalMap();
+				Map keyCode;
+				Map valueCode;
 			
 		
 		AST __t148 = _t;
 		MetaAST tmp22_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,STATEMENT);
 		_t = _t.getFirstChild();
-		keyCode=key(_t);
+		keyCode=statementKeys(_t);
 		_t = retTree_;
 		valueCode=expression(_t);
 		_t = retTree_;
 		
-					statement[CodeKeys.Key]=keyCode;
-					statement[CodeKeys.Value]=valueCode;
+					code[CodeKeys.Key]=keyCode;
+					code[CodeKeys.Value]=valueCode;
 				
 		_t = __t148;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
-		return statement;
+		return code;
 	}
 	
 	public new MetaAST getAST()

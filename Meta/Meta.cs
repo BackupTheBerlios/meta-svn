@@ -653,7 +653,7 @@ namespace Meta
 		}
 		public static Map Compile(string fileName)
 		{
-			return (new MetaTreeParser()).map(ParseToAst(fileName));
+			return (new MetaTreeParser()).program(ParseToAst(fileName));
 		}
 		public static AST ParseToAst(string fileName) 
 		{

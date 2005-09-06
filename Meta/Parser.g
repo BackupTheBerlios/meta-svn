@@ -451,14 +451,14 @@ fullDelayed:
 ;
 
 delayed:
-  APOSTROPHE!
+	APOSTROPHE!
 	delayedImplementation
-	;
+;
 
-// TODO: rename to better reflect the new function
+// TODO: refactor, rename
 delayedImplementation:
-  expression
-  {
+	expression
+	{
   
 		// TODO: refactor
 		MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
@@ -473,7 +473,7 @@ delayedImplementation:
 		MetaAST runAst=new MetaAST(runToken);
 		runAst.setText("run"); // could we get rid of this, maybe, run isn't used anywhere else anymore, also it's a bad keyword to use (far too common)
 		#delayedImplementation=#([STATEMENT],#([KEY],runAst),#([FUNCTION], #delayedImplementation));
-  }
+	}
 ;
 	
 select:
@@ -492,7 +492,7 @@ search:
 	{
 		#search=#([SEARCH],#search);
 	}
-	;
+;
 	
 lookup: 
 	(
@@ -542,181 +542,166 @@ normalLookup:
 } 
 
 class MetaTreeParser extends TreeParser;
-options {
+options 
+{
     defaultErrorHandler=false;
     ASTLabelType = "MetaAST";
 }
+
 expression
-	returns[Map result]
-	{
-		result=null;
-	}:
+	returns[Map code]:
 	(
-		result=call
-		|result=map
-		|result=select
-		|result=search
-		|result=literal
-		|result=delayed
+		code=call
+		|code=program
+		|code=select
+		|code=search
+		|code=literal
+		|code=delayed
 	)
 ;
-key
-	returns[Map result]
+
+statementKeys
+	returns[Map code]
 	{
-		int counter=1;
-		result=new NormalMap();
-		Map e=null;
+		code=new NormalMap();
+		Map keyCode;
+		int keyNumber=1;
 	}:
 	#(KEY
 		(
-			e=expression
+			keyCode=expression
 			{
-				result[counter]=e;
-				counter++;
+				code[keyNumber]=keyCode;
+				keyNumber++;
 			}
 		)+
 	)
 ;
 
 statement
-	returns[Map statement]
+	returns[Map code]
 	{
-		statement=new NormalMap();
-		Map valueCode=null;
-		Map keyCode=null;
+		code=new NormalMap();
+		Map keyCode;
+		Map valueCode;
 	}:
 	#(STATEMENT
-		keyCode=key
+		keyCode=statementKeys
 		valueCode=expression
 		{
-			statement[CodeKeys.Key]=keyCode;
-			statement[CodeKeys.Value]=valueCode;
+			code[CodeKeys.Key]=keyCode;
+			code[CodeKeys.Value]=valueCode;
 		}
 	)
 ;
 
-map
-	returns[Map result]
+program
+	returns[Map code]
 	{
-		result=new NormalMap();
-		result.Extent=#map.Extent;
-		Map statements=new NormalMap();
-		Map s=null;
-		int counter=1;
+		code=new NormalMap();
+		code.Extent=#program.Extent;
+		Map programCode=new NormalMap();
+		Map statementCode;
+		int statementNumber=1;
 	}:
 	#(PROGRAM
-			(
-				(s=statement)
-				{
-					statements[counter]=s;					
-					counter++;
-				}
-			)*
+		(
+			(statementCode=statement)
+			{
+				programCode[statementNumber]=statementCode;
+				statementNumber++;
+			}
+		)*
 	)
 	{
-		result[CodeKeys.Program]=statements;
-	};
+		code[CodeKeys.Program]=programCode;
+	}
+;
 
 call
-  returns [Map result]
-  {
-    result=new NormalMap();
-    result.Extent=#call.Extent;
-    Map call=new NormalMap();
-    Map delayed=new NormalMap();
-    Map argument=new NormalMap();
-  }:
-  #(CALL
-    (
-      delayed=expression
-    )
-    (
-      argument=expression
-    )
-    {
-      call[CodeKeys.Function]=delayed;
-      call[CodeKeys.Argument]=argument;
-      result[CodeKeys.Call]=call;
-    }
-  );
+	returns [Map code]
+	{
+		code=new NormalMap();
+		code.Extent=#call.Extent;
+		Map callCode=new NormalMap();
+		Map functionCode;
+		Map argumentCode;
+	}:
+	#(CALL
+		(
+			functionCode=expression
+		)
+		(
+			argumentCode=expression
+		)
+		{
+			callCode[CodeKeys.Function]=functionCode;
+			callCode[CodeKeys.Argument]=argumentCode;
+			code[CodeKeys.Call]=callCode;
+		}
+	)
+;
 
 select
-  returns [Map result]
-  {
-    result=new NormalMap();
-    result.Extent=#select.Extent;
-    Map selection=new NormalMap();
-    Map key=null;
-    int counter=1;
-  }: 
-  #(SELECT
-    (
-      (
-        key=expression
-        {
-          selection[counter]=key;
-          counter++;
-        }
-      )+
-    )
-  )
-  {
-    result[CodeKeys.Select]=selection;
-  };
+	returns [Map code]
+	{
+		code=new NormalMap();
+		code.Extent=#select.Extent;
+		Map selectCode=new NormalMap();
+		Map keyCode;
+		int counter=1;
+	}: 
+	#(SELECT
+		(
+			keyCode=expression
+			{
+				selectCode[counter]=keyCode;
+				counter++;
+			}
+		)+
+	)
+	{
+		code[CodeKeys.Select]=selectCode;
+	}
+;
 
 
 search
-	returns [Map result]
+	returns [Map code]
 	{
-		result=new NormalMap();
-		Map lookupResult=null;
-		result.Extent=#search.Extent;
-		Map e=null;
+		code=new NormalMap();
+		code.Extent=#search.Extent;
+		Map searchCode;
 	}:
-	#(SEARCH e=expression)
+	#(SEARCH searchCode=expression)
 	{
-		result[CodeKeys.Search]=e;
+		code[CodeKeys.Search]=searchCode;
 	}
-	;
- 
-// TODO: somewhat unlogical that literal doesn't build a higher AST in the first place,
-// if there was also a parser rule for Literal, then we could match an AST instead of a token here
-literal
-  returns [Map result]
-  {
-    result=new NormalMap();
-    result.Extent=#literal.Extent;
-  }:
-  token:LITERAL
-  {
-    result[CodeKeys.Literal]=new NormalMap(token.getText());
-  };
+;
 
-//TODO: is this even needed anymore?
+
 delayed
-    returns[Map result]
+    returns[Map code]
     {
-        result=new NormalMap();
-        result.Extent=#delayed.Extent;
-        Map mExpression;
-        //Map CodeKeys.Run=new NormalMap();
+        code=new NormalMap();
+        code.Extent=#delayed.Extent;
+        Map delayedCode;
     }:
-    #(FUNCTION mExpression=expression)
+    #(FUNCTION delayedCode=expression)
     {
-				//CodeKeys.Run[CodeKeys.Run]=mExpression;
-        result[CodeKeys.Delayed]=mExpression;
-//				CodeKeys.Run[CodeKeys.Run]=mExpression;
-//        result[CodeKeys.Delayed]=CodeKeys.Run;
-    };
+        code[CodeKeys.Delayed]=delayedCode;
+    }
+;
 
-/*delayedExpressionOnly
-    returns[Map result]
-    {
-        result=new NormalMap();
-        Map mExpression=null;
-    }:
-    #(DELAYED_EXPRESSION_ONLY mExpression=expression)
-    {
-			result[CodeKeys.Delayed]=mExpression;
-			//result.Extent=#delayedExpressionOnly.Extent;
-    };*/
+ 
+literal
+	returns [Map code]
+	{
+		code=new NormalMap();
+		code.Extent=#literal.Extent;
+	}:
+	token:LITERAL
+	{
+		code[CodeKeys.Literal]=new NormalMap(token.getText());
+	}
+;
