@@ -38,11 +38,11 @@ integerHashTest:
 	hashTest:[hashTestData]
 persistenceTest:testSubDir
 literalEscapeTest:
-	1:"'asdf'"
-	2:"'"asdf"'"
-	3:"'"as"'df"'"
-	4:"'"'as"'"df'"'"
-	5:"'"'"'"'"'"'"'"'"as"'"'"'"'"'"'"'"'df"'"'"'"'"'"'"'"'"
+	1:"@asdf@"
+	2:"@"asdf"@"
+	3:"@"as"@df"@"
+	4:"@"@as"@"df@"@"
+	5:"@"@"@"@"@"@"@"@"as"@"@"@"@"@"@"@"@df"@"@"@"@"@"@"@"@"
 applyMethod:=Add
 	arg.value
 	"1"

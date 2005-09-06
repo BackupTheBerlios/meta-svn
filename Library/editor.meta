@@ -242,4 +242,3 @@ form:
 						arg.value
 				menu
 	this:form
-form.ShowDialog*

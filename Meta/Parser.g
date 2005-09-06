@@ -46,40 +46,31 @@ options
 }
 tokens
 {
-  // created by Lexer:
+  // imaginary token created by the Lexer:
   INDENTATION;
-  // created by IndentParser:        
+  // imaginary tokens created by the IndentParser:        
   INDENT;                 
   ENDLINE;            
   DEDENT;
-  // created by Parser:              
-  MAP; // should really be called PROGRAM
+  // imaginary tokens created by the Parser:              
+  PROGRAM;
   FUNCTION; 
   STATEMENT; 
   CALL;
   SELECT;
   SEARCH;
   KEY;
-  //DELAYED_EXPRESSION_ONLY; // TODO: rename
   SAME_INDENT;
-  //EMPTY_LINE; // TODO: reintroduce, as delimiter between two maps
-  STATEMENT_SEARCH;
 }
 {
-    /**
-     * Construct a token of the given type, augmenting it with end position
-     * and file name information based on the shared input state of the
-     * instance.
-     *
-     * @param t the token type for the result
-     * @return non-null; the newly-constructed token 
-     */
+	// add information about location to tokens
     protected override Token makeToken (int t)
     {
         MetaToken tok = (MetaToken) base.makeToken (t);
         ((ExtentLexerSharedInputState) inputState).annotate (tok);
         return tok;
     }
+    // count tab as on character
 	public override void tab()
 	{
 		setColumn(getColumn()+1);
@@ -89,13 +80,9 @@ tokens
 EQUAL:
   '=';
 
-//HASH:
-//	'#';
+
 APOSTROPHE:
 	'\'';
-	
-//EXCLAMATION_MARK:
-//	'!';
 
 COLON:
   ':';
@@ -113,12 +100,10 @@ POINT:
   '.';
 
 // fix the exact characters allowed
-// rename to LOOKUP_LITERAL
 LITERAL_KEY: // TODO: review the list of forbidden characters, do the same for serialization
   ( 
 		~(
-			'@'
-			|' '
+			' '
 			|'\t'
 			|'\r'
 			|'\n'
@@ -127,14 +112,10 @@ LITERAL_KEY: // TODO: review the list of forbidden characters, do the same for s
 			|'/'
 			|'\''
 			|'"'
-			|'('
-			|')'
 			|'['
 			|']'
 			|'*'
 			|':'
-			|'#'
-			|'!'
 		)
 	)+
 	;
@@ -143,11 +124,11 @@ LITERAL_START:
 	(
 		"\""
 		(
-			("'")=>
+			("@")=>
 			(
-				"'"
+				"@"
 				(options{greedy=true;}:
-					"\"'"
+					"\"@"
 				)*
 				(
 					("\"")=>
@@ -170,13 +151,13 @@ LITERAL_END:
 	(
 		(
 			(
-				("\'")=> // optional '
-				("\'"!)
+				("@")=> // optional
+				("@"!)
 				|
 				"" 
 			)
 			(options{greedy=true;}:
-				"\"'"!
+				"\"@"!
 			)*
 		)
 		LITERAL_VERY_END
@@ -401,7 +382,7 @@ expression:
 emptyMap:
 	STAR
 	{
-	  #emptyMap=#([MAP], #emptyMap);
+	  #emptyMap=#([PROGRAM], #emptyMap);
 	};
 
 map:
@@ -417,7 +398,7 @@ map:
 	DEDENT!
 	{
 	  Counters.autokey.Pop();
-	  #map=#([MAP], #map);
+	  #map=#([PROGRAM], #map);
 	};
 key:
 	lookup (POINT! lookup)*
@@ -496,7 +477,7 @@ fullDelayed:
 	EQUAL!
 	delayedImplementation
 	{
-		#fullDelayed=#([MAP],#fullDelayed);
+		#fullDelayed=#([PROGRAM],#fullDelayed);
 	}
 	;
 delayed:
@@ -683,7 +664,7 @@ map
     Map s=null;
     int counter=1;
   }:
-  #(MAP
+  #(PROGRAM
     (
 			(s=statement|s=statementSearch)
 			{

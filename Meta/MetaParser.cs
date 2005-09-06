@@ -82,7 +82,7 @@ namespace Meta.Parser
 		public const int INDENT = 5;
 		public const int ENDLINE = 6;
 		public const int DEDENT = 7;
-		public const int MAP = 8;
+		public const int PROGRAM = 8;
 		public const int FUNCTION = 9;
 		public const int STATEMENT = 10;
 		public const int CALL = 11;
@@ -90,24 +90,24 @@ namespace Meta.Parser
 		public const int SEARCH = 13;
 		public const int KEY = 14;
 		public const int SAME_INDENT = 15;
-		public const int STATEMENT_SEARCH = 16;
-		public const int EQUAL = 17;
-		public const int APOSTROPHE = 18;
-		public const int COLON = 19;
-		public const int STAR = 20;
-		public const int LBRACKET = 21;
-		public const int RBRACKET = 22;
-		public const int POINT = 23;
-		public const int LITERAL_KEY = 24;
-		public const int LITERAL_START = 25;
-		public const int LITERAL_END = 26;
-		public const int LITERAL_VERY_END = 27;
-		public const int LITERAL = 28;
-		public const int LINE = 29;
-		public const int SPACE = 30;
-		public const int NEWLINE = 31;
-		public const int NEWLINE_KEEP_TEXT = 32;
-		public const int SPACES = 33;
+		public const int EQUAL = 16;
+		public const int APOSTROPHE = 17;
+		public const int COLON = 18;
+		public const int STAR = 19;
+		public const int LBRACKET = 20;
+		public const int RBRACKET = 21;
+		public const int POINT = 22;
+		public const int LITERAL_KEY = 23;
+		public const int LITERAL_START = 24;
+		public const int LITERAL_END = 25;
+		public const int LITERAL_VERY_END = 26;
+		public const int LITERAL = 27;
+		public const int LINE = 28;
+		public const int SPACE = 29;
+		public const int NEWLINE = 30;
+		public const int NEWLINE_KEEP_TEXT = 31;
+		public const int SPACES = 32;
+		public const int STATEMENT_SEARCH = 33;
 		
 		
 		protected void initialize()
@@ -529,7 +529,7 @@ _loop112_breakloop:			;
 			map_AST = (MetaAST)currentAST.root;
 			
 				  Counters.autokey.Pop();
-				  map_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(MAP)).add((AST)map_AST));
+				  map_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(PROGRAM)).add((AST)map_AST));
 				
 			currentAST.root = map_AST;
 			if ( (null != map_AST) && (null != map_AST.getFirstChild()) )
@@ -557,7 +557,7 @@ _loop112_breakloop:			;
 		{
 			emptyMap_AST = (MetaAST)currentAST.root;
 			
-				  emptyMap_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(MAP)).add((AST)emptyMap_AST));
+				  emptyMap_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(PROGRAM)).add((AST)emptyMap_AST));
 				
 			currentAST.root = emptyMap_AST;
 			if ( (null != emptyMap_AST) && (null != emptyMap_AST.getFirstChild()) )
@@ -587,7 +587,7 @@ _loop112_breakloop:			;
 		{
 			fullDelayed_AST = (MetaAST)currentAST.root;
 			
-					fullDelayed_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(MAP)).add((AST)fullDelayed_AST));
+					fullDelayed_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(PROGRAM)).add((AST)fullDelayed_AST));
 				
 			currentAST.root = fullDelayed_AST;
 			if ( (null != fullDelayed_AST) && (null != fullDelayed_AST.getFirstChild()) )
@@ -1083,7 +1083,7 @@ _loop115_breakloop:			;
 		@"""INDENT""",
 		@"""ENDLINE""",
 		@"""DEDENT""",
-		@"""MAP""",
+		@"""PROGRAM""",
 		@"""FUNCTION""",
 		@"""STATEMENT""",
 		@"""CALL""",
@@ -1091,7 +1091,6 @@ _loop115_breakloop:			;
 		@"""SEARCH""",
 		@"""KEY""",
 		@"""SAME_INDENT""",
-		@"""STATEMENT_SEARCH""",
 		@"""EQUAL""",
 		@"""APOSTROPHE""",
 		@"""COLON""",
@@ -1108,12 +1107,13 @@ _loop115_breakloop:			;
 		@"""SPACE""",
 		@"""NEWLINE""",
 		@"""NEWLINE_KEEP_TEXT""",
-		@"""SPACES"""
+		@"""SPACES""",
+		@"""STATEMENT_SEARCH"""
 	};
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 289013792L, 0L};
+		long[] data = { 144506912L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());

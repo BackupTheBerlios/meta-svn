@@ -903,7 +903,7 @@ Entry (DictionaryEntry)
                           Key (NormalMap):
                             "literal"
                           Value (NormalMap):
-                            "as"'df"
+                            "as"@df"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "4"
@@ -929,7 +929,7 @@ Entry (DictionaryEntry)
                           Key (NormalMap):
                             "literal"
                           Value (NormalMap):
-                            "as"'"df"
+                            "as"@"df"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "5"
@@ -955,7 +955,7 @@ Entry (DictionaryEntry)
                           Key (NormalMap):
                             "literal"
                           Value (NormalMap):
-                            "as"'"'"'"'"'"'"'"'df"
+                            "as"@"@"@"@"@"@"@"@df"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "10"

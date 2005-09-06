@@ -1319,7 +1319,7 @@ statements (ArrayList):
                 Line (Int32):
                   "43"
             literal (NormalMap):
-              "as"'df"
+              "as"@df"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -1353,7 +1353,7 @@ statements (ArrayList):
                 Line (Int32):
                   "44"
             literal (NormalMap):
-              "as"'"df"
+              "as"@"df"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -1387,7 +1387,7 @@ statements (ArrayList):
                 Line (Int32):
                   "45"
             literal (NormalMap):
-              "as"'"'"'"'"'"'"'"'df"
+              "as"@"@"@"@"@"@"@"@df"
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):

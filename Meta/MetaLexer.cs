@@ -53,7 +53,7 @@ namespace Meta.Parser
 		public const int INDENT = 5;
 		public const int ENDLINE = 6;
 		public const int DEDENT = 7;
-		public const int MAP = 8;
+		public const int PROGRAM = 8;
 		public const int FUNCTION = 9;
 		public const int STATEMENT = 10;
 		public const int CALL = 11;
@@ -61,40 +61,34 @@ namespace Meta.Parser
 		public const int SEARCH = 13;
 		public const int KEY = 14;
 		public const int SAME_INDENT = 15;
-		public const int STATEMENT_SEARCH = 16;
-		public const int EQUAL = 17;
-		public const int APOSTROPHE = 18;
-		public const int COLON = 19;
-		public const int STAR = 20;
-		public const int LBRACKET = 21;
-		public const int RBRACKET = 22;
-		public const int POINT = 23;
-		public const int LITERAL_KEY = 24;
-		public const int LITERAL_START = 25;
-		public const int LITERAL_END = 26;
-		public const int LITERAL_VERY_END = 27;
-		public const int LITERAL = 28;
-		public const int LINE = 29;
-		public const int SPACE = 30;
-		public const int NEWLINE = 31;
-		public const int NEWLINE_KEEP_TEXT = 32;
-		public const int SPACES = 33;
+		public const int EQUAL = 16;
+		public const int APOSTROPHE = 17;
+		public const int COLON = 18;
+		public const int STAR = 19;
+		public const int LBRACKET = 20;
+		public const int RBRACKET = 21;
+		public const int POINT = 22;
+		public const int LITERAL_KEY = 23;
+		public const int LITERAL_START = 24;
+		public const int LITERAL_END = 25;
+		public const int LITERAL_VERY_END = 26;
+		public const int LITERAL = 27;
+		public const int LINE = 28;
+		public const int SPACE = 29;
+		public const int NEWLINE = 30;
+		public const int NEWLINE_KEEP_TEXT = 31;
+		public const int SPACES = 32;
+		public const int STATEMENT_SEARCH = 33;
 		
 		
-    /**
-     * Construct a token of the given type, augmenting it with end position
-     * and file name information based on the shared input state of the
-     * instance.
-     *
-     * @param t the token type for the result
-     * @return non-null; the newly-constructed token 
-     */
+	// add information about location to tokens
     protected override Token makeToken (int t)
     {
         MetaToken tok = (MetaToken) base.makeToken (t);
         ((ExtentLexerSharedInputState) inputState).annotate (tok);
         return tok;
     }
+    // count tab as on character
 	public override void tab()
 	{
 		setColumn(getColumn()+1);
@@ -364,14 +358,14 @@ _loop11_breakloop:		;
 			match("\"");
 			{
 				bool synPredMatched16 = false;
-				if (((LA(1)=='\'') && ((LA(2) >= '\u0000' && LA(2) <= '\ufffe'))))
+				if (((LA(1)=='@') && ((LA(2) >= '\u0000' && LA(2) <= '\ufffe'))))
 				{
 					int _m16 = mark();
 					synPredMatched16 = true;
 					inputState.guessing++;
 					try {
 						{
-							match("'");
+							match("@");
 						}
 					}
 					catch (RecognitionException)
@@ -384,13 +378,13 @@ _loop11_breakloop:		;
 				if ( synPredMatched16 )
 				{
 					{
-						match("'");
+						match("@");
 						{    // ( ... )*
 							for (;;)
 							{
-								if ((LA(1)=='"') && (LA(2)=='\''))
+								if ((LA(1)=='"') && (LA(2)=='@'))
 								{
-									match("\"'");
+									match("\"@");
 								}
 								else
 								{
@@ -471,12 +465,12 @@ _loop19_breakloop:							;
 				{
 					switch ( LA(1) )
 					{
-					case '\'':
+					case '@':
 					{
 						{
 							int _saveIndex = 0;
 							_saveIndex = text.Length;
-							match("\'");
+							match("@");
 							text.Length = _saveIndex;
 						}
 						break;
@@ -495,11 +489,11 @@ _loop19_breakloop:							;
 				{    // ( ... )*
 					for (;;)
 					{
-						if ((LA(1)=='"') && (LA(2)=='\''))
+						if ((LA(1)=='"') && (LA(2)=='@'))
 						{
 							int _saveIndex = 0;
 							_saveIndex = text.Length;
-							match("\"'");
+							match("\"@");
 							text.Length = _saveIndex;
 						}
 						else
@@ -1228,8 +1222,8 @@ _loop93_breakloop:						;
 	private static long[] mk_tokenSet_0_()
 	{
 		long[] data = new long[2048];
-		data[0]=-2594292802359666177L;
-		data[1]=-671088642L;
+		data[0]=-2594289460875109889L;
+		data[1]=-671088641L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
 		for (int i = 1024; i<=2047; i++) { data[i]=0L; }
