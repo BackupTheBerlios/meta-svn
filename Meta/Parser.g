@@ -42,12 +42,12 @@ options
 {
 	k=2;
 	charVocabulary='\u0000'..'\uFFFE';
-	//charVocabulary='\u0003'..'\u0008'|'\u0010'..'\ufffe';
 }
 tokens
 {
-  // imaginary token created by the Lexer:
+  // imaginary tokens created by the Lexer:
   INDENTATION;
+  SPACES;
   // imaginary tokens created by the IndentParser:        
   INDENT;                 
   ENDLINE;            
@@ -63,14 +63,14 @@ tokens
   SAME_INDENT;
 }
 {
-	// add information about location to tokens
+	// add extent information to tokens
     protected override Token makeToken (int t)
     {
         MetaToken tok = (MetaToken) base.makeToken (t);
         ((ExtentLexerSharedInputState) inputState).annotate (tok);
         return tok;
     }
-    // count tab as on character
+    // override default tab handling
 	public override void tab()
 	{
 		setColumn(getColumn()+1);
@@ -139,7 +139,7 @@ LITERAL_START:
 			"" // optional
 		)
 		{
-			Counters.LastLiteralStart=text.ToString();
+			Counters.SetLiteralEnd(text.ToString());
 			$setText("");
 		}
 	)
@@ -309,38 +309,30 @@ NEWLINE_KEEP_TEXT:
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+// TODO: refactor
   using antlr;
   using System.Collections;
+  // rename
   class Counters
   {
 	public static bool IsLiteralEnd(MetaLexer lexer)
 	{
-		bool matched=true;
-		for(int i=0;i<Counters.NextLiteralEnd.Length;i++)
+		bool isLiteralEnd=true;
+		for(int i=0;i<Counters.literalEnd.Length;i++)
 		{
-			if(lexer.LA(i+1)!=Counters.NextLiteralEnd[i])
+			if(lexer.LA(i+1)!=Counters.literalEnd[i])
 			{
-				matched=false;
+				isLiteralEnd=false;
 				break;
 			}
 		}
-		return matched;
+		return isLiteralEnd;
 	}
-	public static string LastLiteralStart
+	public static void SetLiteralEnd(string literalStart)
 	{
-		set
-		{
-			nextLiteralEnd=Helper.ReverseString(value);
-		}
+		literalEnd=Helper.ReverseString(literalStart);
 	}
-	public static string NextLiteralEnd
-	{
-		get
-		{
-			return nextLiteralEnd;
-		}
-	}
-	public static string nextLiteralEnd;
+	public static string literalEnd;
     public static Stack autokey=new Stack();
   }
 }
@@ -349,53 +341,149 @@ options {
 	buildAST = true;
 	k=1;
 	ASTLabelType = "MetaAST";
-
-  defaultErrorHandler=false;
+	defaultErrorHandler=false;
 }
-expression:
-  (
-	(call)=>call
-    |(select)=>select
-    |emptyMap
-    |LITERAL
-    |map
-	|fullDelayed
-	|search
-  );
-emptyMap:
-	STAR
-	{
-	  #emptyMap=#([PROGRAM], #emptyMap);
-	};
 
-map:
-	{
-		Counters.autokey.Push(0);
-	}
-	INDENT!
-	(statement|delayed)? // TODO: maybe put delayed into statement??? Would make sense, I think, since it's essentially the same
+expression:
 	(
-	ENDLINE!
-	(delayed|statement)
-	)*
-	DEDENT!
-	{
-	  Counters.autokey.Pop();
-	  #map=#([PROGRAM], #map);
-	}
+		(call)=>call
+		|(select)=>select
+		|function
+		|search
+		|map
+		|LITERAL
+	)
 ;
 
-key:
-	lookup 
+call:
+	(
+		(select)=>
+		select
+		|search
+	)
+	// TODO: only allow one space
+	(SPACES!)?
+	(
+		expression
+	)
+	{
+		#call=#([CALL],#call);
+	}
+;
+	
+select:
+	search
 	(
 		POINT! 
 		lookup
-	)*
+	)+
 	{
-		#key=#([KEY],#key);
+		#select=#([SELECT],#select);
 	}
 ;
 
+
+function:
+	EQUAL!
+	delayedImplementation
+	{
+		#function=#([PROGRAM],#function);
+	}
+;
+
+
+// TODO: refactor, rename
+delayedImplementation:
+	expression
+	{
+  
+		// TODO: refactor
+		MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
+		
+		runToken.setLine(#delayedImplementation.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
+		runToken.setColumn(#delayedImplementation.Extent.Start.Column); 
+		runToken.FileName=#delayedImplementation.Extent.FileName;
+		runToken.EndLine=#delayedImplementation.Extent.End.Line;
+		runToken.EndColumn=#delayedImplementation.Extent.End.Column;
+
+		
+		MetaAST runAst=new MetaAST(runToken);
+		runAst.setText("run"); // could we get rid of this, maybe, run isn't used anywhere else anymore, also it's a bad keyword to use (far too common)
+		#delayedImplementation=#([STATEMENT],#([KEY],runAst),#([FUNCTION], #delayedImplementation));
+	}
+;
+
+search:
+	lookup
+	{
+		#search=#([SEARCH],#search);
+	}
+;
+
+// TODO: combine???	
+lookup: 
+	(
+		normalLookup
+		|literalLookup
+	)
+;
+
+literalLookup:
+	token:LITERAL_KEY
+	{
+		// $setType generates compile error here, so type must be set explicitly
+		token_AST.setType(LITERAL);
+	}
+;
+
+normalLookup:
+	LBRACKET!  
+	(
+		(select)=>
+		select
+		|LITERAL
+		|search
+		|emptyMap
+	)
+	RBRACKET!
+;
+
+
+map:
+	emptyMap
+	|
+	(
+		{
+			Counters.autokey.Push(0);
+		}
+		INDENT!
+		(
+			statement
+			|delayed
+		)? // TODO: maybe put delayed into statement??? Would make sense, I think, since it's essentially the same
+		(
+			ENDLINE!
+			(
+				delayed
+				|statement
+			)
+		)*
+		DEDENT!
+		{
+			Counters.autokey.Pop();
+			#map=#([PROGRAM], #map);
+		}
+	)
+;
+
+emptyMap:
+	STAR
+	{
+		#emptyMap=#([PROGRAM], #emptyMap);
+	}
+;
+
+// TODO: refactor
 statement:
     (key COLON)=>
     (
@@ -427,98 +515,20 @@ statement:
     )
 ;
 
-call:
+key:
+	lookup 
 	(
-		(select)=>
-		select
-		|search
-	)
-	(SPACES!)?
-	(
-		expression
-	)
+		POINT! 
+		lookup
+	)*
 	{
-		#call=#([CALL],#call);
-	}
-;
-
-fullDelayed:
-	EQUAL!
-	delayedImplementation
-	{
-		#fullDelayed=#([PROGRAM],#fullDelayed);
+		#key=#([KEY],#key);
 	}
 ;
 
 delayed:
 	APOSTROPHE!
 	delayedImplementation
-;
-
-// TODO: refactor, rename
-delayedImplementation:
-	expression
-	{
-  
-		// TODO: refactor
-		MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
-		
-		runToken.setLine(#delayedImplementation.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
-		runToken.setColumn(#delayedImplementation.Extent.Start.Column); 
-		runToken.FileName=#delayedImplementation.Extent.FileName;
-		runToken.EndLine=#delayedImplementation.Extent.End.Line;
-		runToken.EndColumn=#delayedImplementation.Extent.End.Column;
-
-		
-		MetaAST runAst=new MetaAST(runToken);
-		runAst.setText("run"); // could we get rid of this, maybe, run isn't used anywhere else anymore, also it's a bad keyword to use (far too common)
-		#delayedImplementation=#([STATEMENT],#([KEY],runAst),#([FUNCTION], #delayedImplementation));
-	}
-;
-	
-select:
-	search
-	(
-		POINT! 
-		lookup
-	)+
-	{
-		#select=#([SELECT],#select);
-	}
-;
-
-search:
-	lookup
-	{
-		#search=#([SEARCH],#search);
-	}
-;
-	
-lookup: 
-	(
-		normalLookup
-		|literalLookup
-	)
-;
-
-literalLookup:
-	token:LITERAL_KEY
-	{
-		// $setType generates compile error here, so type must be set explicitly
-		token_AST.setType(LITERAL);
-	}
-;
-
-normalLookup:
-	LBRACKET!  
-	(
-		(select)=>
-		select
-		|LITERAL
-		|search
-		|emptyMap
-	)
-	RBRACKET!
 ;
 
 {
@@ -665,7 +675,6 @@ select
 	}
 ;
 
-
 search
 	returns [Map code]
 	{
@@ -679,7 +688,6 @@ search
 	}
 ;
 
-
 delayed
     returns[Map code]
     {
@@ -692,7 +700,6 @@ delayed
         code[CodeKeys.Delayed]=delayedCode;
     }
 ;
-
  
 literal
 	returns [Map code]

@@ -39,38 +39,30 @@ namespace Meta.Parser
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+// TODO: refactor
   using antlr;
   using System.Collections;
+  // rename
   class Counters
   {
 	public static bool IsLiteralEnd(MetaLexer lexer)
 	{
-		bool matched=true;
-		for(int i=0;i<Counters.NextLiteralEnd.Length;i++)
+		bool isLiteralEnd=true;
+		for(int i=0;i<Counters.literalEnd.Length;i++)
 		{
-			if(lexer.LA(i+1)!=Counters.NextLiteralEnd[i])
+			if(lexer.LA(i+1)!=Counters.literalEnd[i])
 			{
-				matched=false;
+				isLiteralEnd=false;
 				break;
 			}
 		}
-		return matched;
+		return isLiteralEnd;
 	}
-	public static string LastLiteralStart
+	public static void SetLiteralEnd(string literalStart)
 	{
-		set
-		{
-			nextLiteralEnd=Helper.ReverseString(value);
-		}
+		literalEnd=Helper.ReverseString(literalStart);
 	}
-	public static string NextLiteralEnd
-	{
-		get
-		{
-			return nextLiteralEnd;
-		}
-	}
-	public static string nextLiteralEnd;
+	public static string literalEnd;
     public static Stack autokey=new Stack();
   }
 
@@ -79,33 +71,33 @@ namespace Meta.Parser
 		public const int EOF = 1;
 		public const int NULL_TREE_LOOKAHEAD = 3;
 		public const int INDENTATION = 4;
-		public const int INDENT = 5;
-		public const int ENDLINE = 6;
-		public const int DEDENT = 7;
-		public const int PROGRAM = 8;
-		public const int FUNCTION = 9;
-		public const int STATEMENT = 10;
-		public const int CALL = 11;
-		public const int SELECT = 12;
-		public const int SEARCH = 13;
-		public const int KEY = 14;
-		public const int SAME_INDENT = 15;
-		public const int EQUAL = 16;
-		public const int APOSTROPHE = 17;
-		public const int COLON = 18;
-		public const int STAR = 19;
-		public const int LBRACKET = 20;
-		public const int RBRACKET = 21;
-		public const int POINT = 22;
-		public const int LITERAL_KEY = 23;
-		public const int LITERAL_START = 24;
-		public const int LITERAL_END = 25;
-		public const int LITERAL_VERY_END = 26;
-		public const int LITERAL = 27;
-		public const int LINE = 28;
-		public const int NEWLINE = 29;
-		public const int NEWLINE_KEEP_TEXT = 30;
-		public const int SPACES = 31;
+		public const int SPACES = 5;
+		public const int INDENT = 6;
+		public const int ENDLINE = 7;
+		public const int DEDENT = 8;
+		public const int PROGRAM = 9;
+		public const int FUNCTION = 10;
+		public const int STATEMENT = 11;
+		public const int CALL = 12;
+		public const int SELECT = 13;
+		public const int SEARCH = 14;
+		public const int KEY = 15;
+		public const int SAME_INDENT = 16;
+		public const int EQUAL = 17;
+		public const int APOSTROPHE = 18;
+		public const int COLON = 19;
+		public const int STAR = 20;
+		public const int LBRACKET = 21;
+		public const int RBRACKET = 22;
+		public const int POINT = 23;
+		public const int LITERAL_KEY = 24;
+		public const int LITERAL_START = 25;
+		public const int LITERAL_END = 26;
+		public const int LITERAL_VERY_END = 27;
+		public const int LITERAL = 28;
+		public const int LINE = 29;
+		public const int NEWLINE = 30;
+		public const int NEWLINE_KEEP_TEXT = 31;
 		
 		
 		protected void initialize()
@@ -148,9 +140,19 @@ namespace Meta.Parser
 		{
 			switch ( LA(1) )
 			{
+			case EQUAL:
+			{
+				function();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+				break;
+			}
+			case INDENT:
 			case STAR:
 			{
-				emptyMap();
+				map();
 				if (0 == inputState.guessing)
 				{
 					astFactory.addASTChild(currentAST, (AST)returnAST);
@@ -163,24 +165,6 @@ namespace Meta.Parser
 				tmp1_AST = (MetaAST) astFactory.create(LT(1));
 				astFactory.addASTChild(currentAST, (AST)tmp1_AST);
 				match(LITERAL);
-				break;
-			}
-			case INDENT:
-			{
-				map();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
-			case EQUAL:
-			{
-				fullDelayed();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
 				break;
 			}
 			default:
@@ -262,11 +246,11 @@ namespace Meta.Parser
 		MetaAST call_AST = null;
 		
 		{
-			bool synPredMatched124 = false;
+			bool synPredMatched109 = false;
 			if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 			{
-				int _m124 = mark();
-				synPredMatched124 = true;
+				int _m109 = mark();
+				synPredMatched109 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -275,12 +259,12 @@ namespace Meta.Parser
 				}
 				catch (RecognitionException)
 				{
-					synPredMatched124 = false;
+					synPredMatched109 = false;
 				}
-				rewind(_m124);
+				rewind(_m109);
 				inputState.guessing--;
 			}
-			if ( synPredMatched124 )
+			if ( synPredMatched109 )
 			{
 				select();
 				if (0 == inputState.guessing)
@@ -361,7 +345,7 @@ namespace Meta.Parser
 			astFactory.addASTChild(currentAST, (AST)returnAST);
 		}
 		{ // ( ... )+
-		int _cnt132=0;
+		int _cnt114=0;
 		for (;;)
 		{
 			if ((LA(1)==POINT))
@@ -375,12 +359,12 @@ namespace Meta.Parser
 			}
 			else
 			{
-				if (_cnt132 >= 1) { goto _loop132_breakloop; } else { throw new NoViableAltException(LT(1), getFilename());; }
+				if (_cnt114 >= 1) { goto _loop114_breakloop; } else { throw new NoViableAltException(LT(1), getFilename());; }
 			}
 			
-			_cnt132++;
+			_cnt114++;
 		}
-_loop132_breakloop:		;
+_loop114_breakloop:		;
 		}    // ( ... )+
 		if (0==inputState.guessing)
 		{
@@ -399,159 +383,12 @@ _loop132_breakloop:		;
 		returnAST = select_AST;
 	}
 	
-	public void emptyMap() //throws RecognitionException, TokenStreamException
+	public void function() //throws RecognitionException, TokenStreamException
 {
 		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
-		MetaAST emptyMap_AST = null;
-		
-		MetaAST tmp4_AST = null;
-		tmp4_AST = (MetaAST) astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, (AST)tmp4_AST);
-		match(STAR);
-		if (0==inputState.guessing)
-		{
-			emptyMap_AST = (MetaAST)currentAST.root;
-			
-				  emptyMap_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(PROGRAM)).add((AST)emptyMap_AST));
-				
-			currentAST.root = emptyMap_AST;
-			if ( (null != emptyMap_AST) && (null != emptyMap_AST.getFirstChild()) )
-				currentAST.child = emptyMap_AST.getFirstChild();
-			else
-				currentAST.child = emptyMap_AST;
-			currentAST.advanceChildToEnd();
-		}
-		emptyMap_AST = (MetaAST)currentAST.root;
-		returnAST = emptyMap_AST;
-	}
-	
-	public void map() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST map_AST = null;
-		
-		if (0==inputState.guessing)
-		{
-			
-					Counters.autokey.Push(0);
-				
-		}
-		match(INDENT);
-		{
-			switch ( LA(1) )
-			{
-			case INDENT:
-			case EQUAL:
-			case COLON:
-			case STAR:
-			case LBRACKET:
-			case LITERAL_KEY:
-			case LITERAL:
-			{
-				statement();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
-			case APOSTROPHE:
-			{
-				delayed();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
-			case ENDLINE:
-			case DEDENT:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			 }
-		}
-		{    // ( ... )*
-			for (;;)
-			{
-				if ((LA(1)==ENDLINE))
-				{
-					match(ENDLINE);
-					{
-						switch ( LA(1) )
-						{
-						case APOSTROPHE:
-						{
-							delayed();
-							if (0 == inputState.guessing)
-							{
-								astFactory.addASTChild(currentAST, (AST)returnAST);
-							}
-							break;
-						}
-						case INDENT:
-						case EQUAL:
-						case COLON:
-						case STAR:
-						case LBRACKET:
-						case LITERAL_KEY:
-						case LITERAL:
-						{
-							statement();
-							if (0 == inputState.guessing)
-							{
-								astFactory.addASTChild(currentAST, (AST)returnAST);
-							}
-							break;
-						}
-						default:
-						{
-							throw new NoViableAltException(LT(1), getFilename());
-						}
-						 }
-					}
-				}
-				else
-				{
-					goto _loop111_breakloop;
-				}
-				
-			}
-_loop111_breakloop:			;
-		}    // ( ... )*
-		match(DEDENT);
-		if (0==inputState.guessing)
-		{
-			map_AST = (MetaAST)currentAST.root;
-			
-				  Counters.autokey.Pop();
-				  map_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(PROGRAM)).add((AST)map_AST));
-				
-			currentAST.root = map_AST;
-			if ( (null != map_AST) && (null != map_AST.getFirstChild()) )
-				currentAST.child = map_AST.getFirstChild();
-			else
-				currentAST.child = map_AST;
-			currentAST.advanceChildToEnd();
-		}
-		map_AST = (MetaAST)currentAST.root;
-		returnAST = map_AST;
-	}
-	
-	public void fullDelayed() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST fullDelayed_AST = null;
+		MetaAST function_AST = null;
 		
 		match(EQUAL);
 		delayedImplementation();
@@ -561,19 +398,19 @@ _loop111_breakloop:			;
 		}
 		if (0==inputState.guessing)
 		{
-			fullDelayed_AST = (MetaAST)currentAST.root;
+			function_AST = (MetaAST)currentAST.root;
 			
-					fullDelayed_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(PROGRAM)).add((AST)fullDelayed_AST));
+					function_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(PROGRAM)).add((AST)function_AST));
 				
-			currentAST.root = fullDelayed_AST;
-			if ( (null != fullDelayed_AST) && (null != fullDelayed_AST.getFirstChild()) )
-				currentAST.child = fullDelayed_AST.getFirstChild();
+			currentAST.root = function_AST;
+			if ( (null != function_AST) && (null != function_AST.getFirstChild()) )
+				currentAST.child = function_AST.getFirstChild();
 			else
-				currentAST.child = fullDelayed_AST;
+				currentAST.child = function_AST;
 			currentAST.advanceChildToEnd();
 		}
-		fullDelayed_AST = (MetaAST)currentAST.root;
-		returnAST = fullDelayed_AST;
+		function_AST = (MetaAST)currentAST.root;
+		returnAST = function_AST;
 	}
 	
 	public void search() //throws RecognitionException, TokenStreamException
@@ -605,6 +442,353 @@ _loop111_breakloop:			;
 		returnAST = search_AST;
 	}
 	
+	public void map() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST map_AST = null;
+		
+		switch ( LA(1) )
+		{
+		case STAR:
+		{
+			emptyMap();
+			if (0 == inputState.guessing)
+			{
+				astFactory.addASTChild(currentAST, (AST)returnAST);
+			}
+			map_AST = (MetaAST)currentAST.root;
+			break;
+		}
+		case INDENT:
+		{
+			{
+				if (0==inputState.guessing)
+				{
+					
+								Counters.autokey.Push(0);
+							
+				}
+				match(INDENT);
+				{
+					switch ( LA(1) )
+					{
+					case INDENT:
+					case EQUAL:
+					case COLON:
+					case STAR:
+					case LBRACKET:
+					case LITERAL_KEY:
+					case LITERAL:
+					{
+						statement();
+						if (0 == inputState.guessing)
+						{
+							astFactory.addASTChild(currentAST, (AST)returnAST);
+						}
+						break;
+					}
+					case APOSTROPHE:
+					{
+						delayed();
+						if (0 == inputState.guessing)
+						{
+							astFactory.addASTChild(currentAST, (AST)returnAST);
+						}
+						break;
+					}
+					case ENDLINE:
+					case DEDENT:
+					{
+						break;
+					}
+					default:
+					{
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					 }
+				}
+				{    // ( ... )*
+					for (;;)
+					{
+						if ((LA(1)==ENDLINE))
+						{
+							match(ENDLINE);
+							{
+								switch ( LA(1) )
+								{
+								case APOSTROPHE:
+								{
+									delayed();
+									if (0 == inputState.guessing)
+									{
+										astFactory.addASTChild(currentAST, (AST)returnAST);
+									}
+									break;
+								}
+								case INDENT:
+								case EQUAL:
+								case COLON:
+								case STAR:
+								case LBRACKET:
+								case LITERAL_KEY:
+								case LITERAL:
+								{
+									statement();
+									if (0 == inputState.guessing)
+									{
+										astFactory.addASTChild(currentAST, (AST)returnAST);
+									}
+									break;
+								}
+								default:
+								{
+									throw new NoViableAltException(LT(1), getFilename());
+								}
+								 }
+							}
+						}
+						else
+						{
+							goto _loop130_breakloop;
+						}
+						
+					}
+_loop130_breakloop:					;
+				}    // ( ... )*
+				match(DEDENT);
+				if (0==inputState.guessing)
+				{
+					map_AST = (MetaAST)currentAST.root;
+					
+								Counters.autokey.Pop();
+								map_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(PROGRAM)).add((AST)map_AST));
+							
+					currentAST.root = map_AST;
+					if ( (null != map_AST) && (null != map_AST.getFirstChild()) )
+						currentAST.child = map_AST.getFirstChild();
+					else
+						currentAST.child = map_AST;
+					currentAST.advanceChildToEnd();
+				}
+			}
+			map_AST = (MetaAST)currentAST.root;
+			break;
+		}
+		default:
+		{
+			throw new NoViableAltException(LT(1), getFilename());
+		}
+		 }
+		returnAST = map_AST;
+	}
+	
+	public void lookup() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST lookup_AST = null;
+		
+		{
+			switch ( LA(1) )
+			{
+			case LBRACKET:
+			{
+				normalLookup();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+				break;
+			}
+			case LITERAL_KEY:
+			{
+				literalLookup();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			 }
+		}
+		lookup_AST = (MetaAST)currentAST.root;
+		returnAST = lookup_AST;
+	}
+	
+	public void delayedImplementation() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST delayedImplementation_AST = null;
+		
+		expression();
+		if (0 == inputState.guessing)
+		{
+			astFactory.addASTChild(currentAST, (AST)returnAST);
+		}
+		if (0==inputState.guessing)
+		{
+			delayedImplementation_AST = (MetaAST)currentAST.root;
+			
+			
+					// TODO: refactor
+					MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
+					
+					runToken.setLine(delayedImplementation_AST.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
+					runToken.setColumn(delayedImplementation_AST.Extent.Start.Column); 
+					runToken.FileName=delayedImplementation_AST.Extent.FileName;
+					runToken.EndLine=delayedImplementation_AST.Extent.End.Line;
+					runToken.EndColumn=delayedImplementation_AST.Extent.End.Column;
+			
+					
+					MetaAST runAst=new MetaAST(runToken);
+					runAst.setText("run"); // could we get rid of this, maybe, run isn't used anywhere else anymore, also it's a bad keyword to use (far too common)
+					delayedImplementation_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(KEY)).add((AST)runAst))).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(FUNCTION)).add((AST)delayedImplementation_AST))));
+				
+			currentAST.root = delayedImplementation_AST;
+			if ( (null != delayedImplementation_AST) && (null != delayedImplementation_AST.getFirstChild()) )
+				currentAST.child = delayedImplementation_AST.getFirstChild();
+			else
+				currentAST.child = delayedImplementation_AST;
+			currentAST.advanceChildToEnd();
+		}
+		delayedImplementation_AST = (MetaAST)currentAST.root;
+		returnAST = delayedImplementation_AST;
+	}
+	
+	public void normalLookup() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST normalLookup_AST = null;
+		
+		match(LBRACKET);
+		{
+			switch ( LA(1) )
+			{
+			case LITERAL:
+			{
+				MetaAST tmp9_AST = null;
+				tmp9_AST = (MetaAST) astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, (AST)tmp9_AST);
+				match(LITERAL);
+				break;
+			}
+			case STAR:
+			{
+				emptyMap();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+				break;
+			}
+			default:
+				bool synPredMatched124 = false;
+				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
+				{
+					int _m124 = mark();
+					synPredMatched124 = true;
+					inputState.guessing++;
+					try {
+						{
+							select();
+						}
+					}
+					catch (RecognitionException)
+					{
+						synPredMatched124 = false;
+					}
+					rewind(_m124);
+					inputState.guessing--;
+				}
+				if ( synPredMatched124 )
+				{
+					select();
+					if (0 == inputState.guessing)
+					{
+						astFactory.addASTChild(currentAST, (AST)returnAST);
+					}
+				}
+				else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
+					search();
+					if (0 == inputState.guessing)
+					{
+						astFactory.addASTChild(currentAST, (AST)returnAST);
+					}
+				}
+			else
+			{
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			break; }
+		}
+		match(RBRACKET);
+		normalLookup_AST = (MetaAST)currentAST.root;
+		returnAST = normalLookup_AST;
+	}
+	
+	public void literalLookup() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST literalLookup_AST = null;
+		Token  token = null;
+		MetaAST token_AST = null;
+		
+		token = LT(1);
+		token_AST = (MetaAST) astFactory.create(token);
+		astFactory.addASTChild(currentAST, (AST)token_AST);
+		match(LITERAL_KEY);
+		if (0==inputState.guessing)
+		{
+			
+					// $setType generates compile error here, so type must be set explicitly
+					token_AST.setType(LITERAL);
+				
+		}
+		literalLookup_AST = (MetaAST)currentAST.root;
+		returnAST = literalLookup_AST;
+	}
+	
+	public void emptyMap() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		MetaAST emptyMap_AST = null;
+		
+		MetaAST tmp11_AST = null;
+		tmp11_AST = (MetaAST) astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, (AST)tmp11_AST);
+		match(STAR);
+		if (0==inputState.guessing)
+		{
+			emptyMap_AST = (MetaAST)currentAST.root;
+			
+					emptyMap_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(PROGRAM)).add((AST)emptyMap_AST));
+				
+			currentAST.root = emptyMap_AST;
+			if ( (null != emptyMap_AST) && (null != emptyMap_AST.getFirstChild()) )
+				currentAST.child = emptyMap_AST.getFirstChild();
+			else
+				currentAST.child = emptyMap_AST;
+			currentAST.advanceChildToEnd();
+		}
+		emptyMap_AST = (MetaAST)currentAST.root;
+		returnAST = emptyMap_AST;
+	}
+	
 	public void statement() //throws RecognitionException, TokenStreamException
 {
 		
@@ -612,11 +796,11 @@ _loop111_breakloop:			;
 		ASTPair currentAST = new ASTPair();
 		MetaAST statement_AST = null;
 		
-		bool synPredMatched117 = false;
+		bool synPredMatched134 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m117 = mark();
-			synPredMatched117 = true;
+			int _m134 = mark();
+			synPredMatched134 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -626,12 +810,12 @@ _loop111_breakloop:			;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched117 = false;
+				synPredMatched134 = false;
 			}
-			rewind(_m117);
+			rewind(_m134);
 			inputState.guessing--;
 		}
-		if ( synPredMatched117 )
+		if ( synPredMatched134 )
 		{
 			{
 				key();
@@ -769,11 +953,11 @@ _loop111_breakloop:			;
 				}
 				else
 				{
-					goto _loop114_breakloop;
+					goto _loop140_breakloop;
 				}
 				
 			}
-_loop114_breakloop:			;
+_loop140_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -790,183 +974,6 @@ _loop114_breakloop:			;
 		}
 		key_AST = (MetaAST)currentAST.root;
 		returnAST = key_AST;
-	}
-	
-	public void lookup() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST lookup_AST = null;
-		
-		{
-			switch ( LA(1) )
-			{
-			case LBRACKET:
-			{
-				normalLookup();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
-			case LITERAL_KEY:
-			{
-				literalLookup();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			 }
-		}
-		lookup_AST = (MetaAST)currentAST.root;
-		returnAST = lookup_AST;
-	}
-	
-	public void delayedImplementation() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST delayedImplementation_AST = null;
-		
-		expression();
-		if (0 == inputState.guessing)
-		{
-			astFactory.addASTChild(currentAST, (AST)returnAST);
-		}
-		if (0==inputState.guessing)
-		{
-			delayedImplementation_AST = (MetaAST)currentAST.root;
-			
-			
-					// TODO: refactor
-					MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
-					
-					runToken.setLine(delayedImplementation_AST.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
-					runToken.setColumn(delayedImplementation_AST.Extent.Start.Column); 
-					runToken.FileName=delayedImplementation_AST.Extent.FileName;
-					runToken.EndLine=delayedImplementation_AST.Extent.End.Line;
-					runToken.EndColumn=delayedImplementation_AST.Extent.End.Column;
-			
-					
-					MetaAST runAst=new MetaAST(runToken);
-					runAst.setText("run"); // could we get rid of this, maybe, run isn't used anywhere else anymore, also it's a bad keyword to use (far too common)
-					delayedImplementation_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(KEY)).add((AST)runAst))).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(FUNCTION)).add((AST)delayedImplementation_AST))));
-				
-			currentAST.root = delayedImplementation_AST;
-			if ( (null != delayedImplementation_AST) && (null != delayedImplementation_AST.getFirstChild()) )
-				currentAST.child = delayedImplementation_AST.getFirstChild();
-			else
-				currentAST.child = delayedImplementation_AST;
-			currentAST.advanceChildToEnd();
-		}
-		delayedImplementation_AST = (MetaAST)currentAST.root;
-		returnAST = delayedImplementation_AST;
-	}
-	
-	public void normalLookup() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST normalLookup_AST = null;
-		
-		match(LBRACKET);
-		{
-			switch ( LA(1) )
-			{
-			case LITERAL:
-			{
-				MetaAST tmp14_AST = null;
-				tmp14_AST = (MetaAST) astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, (AST)tmp14_AST);
-				match(LITERAL);
-				break;
-			}
-			case STAR:
-			{
-				emptyMap();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
-			default:
-				bool synPredMatched140 = false;
-				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
-				{
-					int _m140 = mark();
-					synPredMatched140 = true;
-					inputState.guessing++;
-					try {
-						{
-							select();
-						}
-					}
-					catch (RecognitionException)
-					{
-						synPredMatched140 = false;
-					}
-					rewind(_m140);
-					inputState.guessing--;
-				}
-				if ( synPredMatched140 )
-				{
-					select();
-					if (0 == inputState.guessing)
-					{
-						astFactory.addASTChild(currentAST, (AST)returnAST);
-					}
-				}
-				else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
-					search();
-					if (0 == inputState.guessing)
-					{
-						astFactory.addASTChild(currentAST, (AST)returnAST);
-					}
-				}
-			else
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			break; }
-		}
-		match(RBRACKET);
-		normalLookup_AST = (MetaAST)currentAST.root;
-		returnAST = normalLookup_AST;
-	}
-	
-	public void literalLookup() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST literalLookup_AST = null;
-		Token  token = null;
-		MetaAST token_AST = null;
-		
-		token = LT(1);
-		token_AST = (MetaAST) astFactory.create(token);
-		astFactory.addASTChild(currentAST, (AST)token_AST);
-		match(LITERAL_KEY);
-		if (0==inputState.guessing)
-		{
-			
-					// $setType generates compile error here, so type must be set explicitly
-					token_AST.setType(LITERAL);
-				
-		}
-		literalLookup_AST = (MetaAST)currentAST.root;
-		returnAST = literalLookup_AST;
 	}
 	
 	public new MetaAST getAST()
@@ -993,6 +1000,7 @@ _loop114_breakloop:			;
 		@"""<2>""",
 		@"""NULL_TREE_LOOKAHEAD""",
 		@"""INDENTATION""",
+		@"""SPACES""",
 		@"""INDENT""",
 		@"""ENDLINE""",
 		@"""DEDENT""",
@@ -1018,13 +1026,12 @@ _loop114_breakloop:			;
 		@"""LITERAL""",
 		@"""LINE""",
 		@"""NEWLINE""",
-		@"""NEWLINE_KEEP_TEXT""",
-		@"""SPACES"""
+		@"""NEWLINE_KEEP_TEXT"""
 	};
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 144506912L, 0L};
+		long[] data = { 289013824L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());
