@@ -63,6 +63,24 @@ tokens
   SAME_INDENT;
 }
 {
+	public static bool IsLiteralEnd(MetaLexer lexer)
+	{
+		bool isLiteralEnd=true;
+		for(int i=0;i<literalEnd.Length;i++)
+		{
+			if(lexer.LA(i+1)!=literalEnd[i])
+			{
+				isLiteralEnd=false;
+				break;
+			}
+		}
+		return isLiteralEnd;
+	}
+	public static void SetLiteralEnd(string literalStart)
+	{
+		literalEnd=Helper.ReverseString(literalStart);
+	}
+	public static string literalEnd;
 	// add extent information to tokens
     protected override Token makeToken (int t)
     {
@@ -139,7 +157,7 @@ LITERAL_START:
 			"" // optional
 		)
 		{
-			Counters.SetLiteralEnd(text.ToString());
+			SetLiteralEnd(text.ToString());
 			$setText("");
 		}
 	)
@@ -169,7 +187,7 @@ LITERAL:
 	(
 		LITERAL_START
 		(options{greedy=true;}:
-			{!Counters.IsLiteralEnd(this)}?
+			{!IsLiteralEnd(this)}?
 			(
 				(~
 					(
@@ -309,32 +327,8 @@ NEWLINE_KEEP_TEXT:
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-// TODO: refactor
-  using antlr;
-  using System.Collections;
-  // rename
-  class Counters
-  {
-	public static bool IsLiteralEnd(MetaLexer lexer)
-	{
-		bool isLiteralEnd=true;
-		for(int i=0;i<Counters.literalEnd.Length;i++)
-		{
-			if(lexer.LA(i+1)!=Counters.literalEnd[i])
-			{
-				isLiteralEnd=false;
-				break;
-			}
-		}
-		return isLiteralEnd;
-	}
-	public static void SetLiteralEnd(string literalStart)
-	{
-		literalEnd=Helper.ReverseString(literalStart);
-	}
-	public static string literalEnd;
-    public static Stack autokey=new Stack();
-  }
+using System.Collections;
+
 }
 class MetaParser extends Parser;
 options {
@@ -342,6 +336,9 @@ options {
 	k=1;
 	ASTLabelType = "MetaAST";
 	defaultErrorHandler=false;
+}
+{
+    private static Stack autokeys=new Stack();
 }
 
 expression:
@@ -454,7 +451,7 @@ map:
 	|
 	(
 		{
-			Counters.autokey.Push(0);
+			autokeys.Push(0);
 		}
 		INDENT!
 		(
@@ -470,7 +467,7 @@ map:
 		)*
 		DEDENT!
 		{
-			Counters.autokey.Pop();
+			autokeys.Pop();
 			#map=#([PROGRAM], #map);
 		}
 	)
@@ -499,7 +496,7 @@ statement:
         (COLON!)?
         expression
         {
-            Counters.autokey.Push((int)Counters.autokey.Pop()+1); 
+            autokeys.Push((int)autokeys.Pop()+1); 
 
 			// TODO: Simplify!!, use astFactory
 			MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
@@ -509,7 +506,7 @@ statement:
 			autokeyToken.EndLine=#statement.Extent.End.Line;
 			autokeyToken.EndColumn=#statement.Extent.End.Column;
 			MetaAST autokeyAst=new MetaAST(autokeyToken);
-			autokeyAst.setText(Counters.autokey.Peek().ToString());
+			autokeyAst.setText(autokeys.Peek().ToString());
             #statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
         }
     )

@@ -79,6 +79,24 @@ namespace Meta.Parser
 		public const int NEWLINE_KEEP_TEXT = 31;
 		
 		
+	public static bool IsLiteralEnd(MetaLexer lexer)
+	{
+		bool isLiteralEnd=true;
+		for(int i=0;i<literalEnd.Length;i++)
+		{
+			if(lexer.LA(i+1)!=literalEnd[i])
+			{
+				isLiteralEnd=false;
+				break;
+			}
+		}
+		return isLiteralEnd;
+	}
+	public static void SetLiteralEnd(string literalStart)
+	{
+		literalEnd=Helper.ReverseString(literalStart);
+	}
+	public static string literalEnd;
 	// add extent information to tokens
     protected override Token makeToken (int t)
     {
@@ -440,7 +458,7 @@ _loop19_breakloop:							;
 			if (0==inputState.guessing)
 			{
 				
-							Counters.SetLiteralEnd(text.ToString());
+							SetLiteralEnd(text.ToString());
 							text.Length = _begin; text.Append("");
 						
 			}
@@ -540,7 +558,7 @@ _loop32_breakloop:					;
 			{    // ( ... )*
 				for (;;)
 				{
-					if ((((LA(1) >= '\u0000' && LA(1) <= '\ufffe')) && ((LA(2) >= '\u0000' && LA(2) <= '\ufffe')))&&(!Counters.IsLiteralEnd(this)))
+					if ((((LA(1) >= '\u0000' && LA(1) <= '\ufffe')) && ((LA(2) >= '\u0000' && LA(2) <= '\ufffe')))&&(!IsLiteralEnd(this)))
 					{
 						{
 							if ((tokenSet_1_.member(LA(1))))

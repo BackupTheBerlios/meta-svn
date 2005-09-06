@@ -39,32 +39,8 @@ namespace Meta.Parser
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-// TODO: refactor
-  using antlr;
-  using System.Collections;
-  // rename
-  class Counters
-  {
-	public static bool IsLiteralEnd(MetaLexer lexer)
-	{
-		bool isLiteralEnd=true;
-		for(int i=0;i<Counters.literalEnd.Length;i++)
-		{
-			if(lexer.LA(i+1)!=Counters.literalEnd[i])
-			{
-				isLiteralEnd=false;
-				break;
-			}
-		}
-		return isLiteralEnd;
-	}
-	public static void SetLiteralEnd(string literalStart)
-	{
-		literalEnd=Helper.ReverseString(literalStart);
-	}
-	public static string literalEnd;
-    public static Stack autokey=new Stack();
-  }
+using System.Collections;
+
 
 	public 	class MetaParser : antlr.LLkParser
 	{
@@ -99,6 +75,8 @@ namespace Meta.Parser
 		public const int NEWLINE = 30;
 		public const int NEWLINE_KEEP_TEXT = 31;
 		
+		
+    private static Stack autokeys=new Stack();
 		
 		protected void initialize()
 		{
@@ -467,7 +445,7 @@ _loop114_breakloop:		;
 				if (0==inputState.guessing)
 				{
 					
-								Counters.autokey.Push(0);
+								autokeys.Push(0);
 							
 				}
 				match(INDENT);
@@ -562,7 +540,7 @@ _loop130_breakloop:					;
 				{
 					map_AST = (MetaAST)currentAST.root;
 					
-								Counters.autokey.Pop();
+								autokeys.Pop();
 								map_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(PROGRAM)).add((AST)map_AST));
 							
 					currentAST.root = map_AST;
@@ -879,7 +857,7 @@ _loop130_breakloop:					;
 				{
 					statement_AST = (MetaAST)currentAST.root;
 					
-					Counters.autokey.Push((int)Counters.autokey.Pop()+1); 
+					autokeys.Push((int)autokeys.Pop()+1); 
 					
 								// TODO: Simplify!!, use astFactory
 								MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
@@ -889,7 +867,7 @@ _loop130_breakloop:					;
 								autokeyToken.EndLine=statement_AST.Extent.End.Line;
 								autokeyToken.EndColumn=statement_AST.Extent.End.Column;
 								MetaAST autokeyAst=new MetaAST(autokeyToken);
-								autokeyAst.setText(Counters.autokey.Peek().ToString());
+								autokeyAst.setText(autokeys.Peek().ToString());
 					statement_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(KEY)).add((AST)autokeyAst))).add((AST)statement_AST));
 					
 					currentAST.root = statement_AST;
