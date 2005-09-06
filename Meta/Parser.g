@@ -78,8 +78,7 @@ tokens
 }
 
 EQUAL:
-  '=';
-
+	'=';
 
 APOSTROPHE:
 	'\'';
@@ -88,20 +87,19 @@ COLON:
   ':';
   
 STAR:
-  '*';
+	'*';
 
 LBRACKET:
-  '[';
+	'[';
 
 RBRACKET:
-  ']';
+	']';
 
 POINT:
-  '.';
+	'.';
 
-// fix the exact characters allowed
-LITERAL_KEY: // TODO: review the list of forbidden characters, do the same for serialization
-  ( 
+LITERAL_KEY:
+	( 
 		~(
 			' '
 			|'\t'
@@ -118,7 +116,7 @@ LITERAL_KEY: // TODO: review the list of forbidden characters, do the same for s
 			|':'
 		)
 	)+
-	;
+;
 protected
 LITERAL_START:
 	(
@@ -161,12 +159,12 @@ LITERAL_END:
 			)*
 		)
 		LITERAL_VERY_END
-	)
-;
+	);
+// separate rule because of code generation bug
 protected
 LITERAL_VERY_END:
-		'\"'!
-;
+		'\"'!;
+		
 LITERAL:
 	(
 		LITERAL_START
@@ -184,18 +182,9 @@ LITERAL:
 		)*
 		LITERAL_END
 	)
-  ;
-//protected
-//LITERAL_END:
-//	{Counters.IsLiteralEnd(this)}? {$setText(Counters.NextLiteralEnd);}
-//	|""
-//;
-//SPACES:
-//  (' ')+ ;//{_ttype=Token.SKIP;}
-  
- 
-  
-LINE		// everything in one rule because of indeterminisms
+;
+
+LINE		// everything in one rule to avoid indeterminisms
   {
     const int endOfFileValue=65535;
   }:
@@ -278,13 +267,8 @@ LINE		// everything in one rule because of indeterminisms
 	(' '|'\t')+
 	{
 		$setType(MetaLexerTokenTypes.SPACES);
-	}  	
-	; 
-
- 
-protected   
-SPACE:  // subrule because of ANTLR bug that results in uncompilable code, maybe remove? TODO: remove
-  '\t'!;
+	}
+; 
 
 protected
 NEWLINE:
@@ -294,7 +278,8 @@ NEWLINE:
   )
   {
     newline();
-  };
+  }
+;
 
 protected
 NEWLINE_KEEP_TEXT:
@@ -304,7 +289,8 @@ NEWLINE_KEEP_TEXT:
   )
   {
     newline();
-  };
+  }
+;
 
 {
 //	Meta is a programming language.
@@ -368,16 +354,13 @@ options {
 }
 expression:
   (
-		(call)=>call  // TODO: this sucks, is slow, and complicated
-    |(select)=>
-    select
-    |map
+	(call)=>call
+    |(select)=>select
     |emptyMap
-    |fullDelayed
-    //|delayedExpressionOnly
-    //|delayed
     |LITERAL
-		|search
+    |map
+	|fullDelayed
+	|search
   );
 emptyMap:
 	STAR
@@ -386,9 +369,9 @@ emptyMap:
 	};
 
 map:
-  {
-    Counters.autokey.Push(0);
-  }
+	{
+		Counters.autokey.Push(0);
+	}
 	INDENT!
 	(statement|delayed)? // TODO: maybe put delayed into statement??? Would make sense, I think, since it's essentially the same
 	(
@@ -399,98 +382,85 @@ map:
 	{
 	  Counters.autokey.Pop();
 	  #map=#([PROGRAM], #map);
-	};
+	}
+;
+
 key:
-	lookup (POINT! lookup)*
+	lookup 
+	(
+		POINT! 
+		lookup
+	)*
 	{
 		#key=#([KEY],#key);
 	}
-	;
+;
+
 statement:
     (key COLON)=>
     (
-      key
-      COLON!
-      expression
-      {
-					#statement=#([STATEMENT],#statement);
-      }
+		key
+		COLON!
+		expression
+		{
+			#statement=#([STATEMENT],#statement);
+		}
     )
-    //|
-    //(key COLON)=>
-    //(
-    //  key
-    //  COLON!
-    //  expression
-    //  {
-	//				#statement=#([STATEMENT_SEARCH],#statement);
-    //  }
-    //)
     |
     (
-			// TODO: remove one branch, should not be indeterminate
-      (
         (COLON!)?
         expression
         {
-            //Counters.counter++;
             Counters.autokey.Push((int)Counters.autokey.Pop()+1); 
 
-					// TODO: Simplify!!, use astFactory
-				    MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
-				    autokeyToken.setLine(#statement.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
-				    autokeyToken.setColumn(#statement.Extent.Start.Column); 
-				    autokeyToken.FileName=#statement.Extent.FileName;
-				    autokeyToken.EndLine=#statement.Extent.End.Line;
-				    autokeyToken.EndColumn=#statement.Extent.End.Column;
-				    MetaAST autokeyAst=new MetaAST(autokeyToken);
-				    autokeyAst.setText(Counters.autokey.Peek().ToString());
+			// TODO: Simplify!!, use astFactory
+			MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
+			autokeyToken.setLine(#statement.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
+			autokeyToken.setColumn(#statement.Extent.Start.Column); 
+			autokeyToken.FileName=#statement.Extent.FileName;
+			autokeyToken.EndLine=#statement.Extent.End.Line;
+			autokeyToken.EndColumn=#statement.Extent.End.Column;
+			MetaAST autokeyAst=new MetaAST(autokeyToken);
+			autokeyAst.setText(Counters.autokey.Peek().ToString());
             #statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
         }
-      )
     )
-    ;
+;
+
 call:
-		(
-			(
-				(select)=>
-				select
-				|search // TODO: maybe add some more stuff like: map, literal, call, here, too, think about what is necessary for this to work and think about why to keep the separation between the two call versions
-			)
-			(SPACES!)?
-			(
-				expression
-			)
-		)
-	
-  {
-    #call=#([CALL],#call);
-  };
-    
-/*delayedExpressionOnly:
-  HASH!
-  expression
-  {
-    #delayedExpressionOnly=#([DELAYED_EXPRESSION_ONLY], #delayedExpressionOnly);
-  };*/
+	(
+		(select)=>
+		select
+		|search
+	)
+	(SPACES!)?
+	(
+		expression
+	)
+	{
+		#call=#([CALL],#call);
+	}
+;
+
 fullDelayed:
 	EQUAL!
 	delayedImplementation
 	{
 		#fullDelayed=#([PROGRAM],#fullDelayed);
 	}
-	;
+;
+
 delayed:
-  //HASH!
   APOSTROPHE!
 	delayedImplementation
 	;
+
 // TODO: rename to better reflect the new function
 delayedImplementation:
   expression
   {
   
-		// TODO: Simplify this, factor this out into a method? Add some functionality for this stuff? Maybe to MetAST?
+		// TODO: refactor
 		MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
 		
 		runToken.setLine(#delayedImplementation.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
@@ -498,27 +468,24 @@ delayedImplementation:
 		runToken.FileName=#delayedImplementation.Extent.FileName;
 		runToken.EndLine=#delayedImplementation.Extent.End.Line;
 		runToken.EndColumn=#delayedImplementation.Extent.End.Column;
-		
+
 		
 		MetaAST runAst=new MetaAST(runToken);
 		runAst.setText("run"); // could we get rid of this, maybe, run isn't used anywhere else anymore, also it's a bad keyword to use (far too common)
-    //#statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
 		#delayedImplementation=#([STATEMENT],#([KEY],runAst),#([FUNCTION], #delayedImplementation));
-    //#delayedImplementation=#([FUNCTION], #delayedImplementation);
-  };
-
-
+  }
+;
 	
 select:
+	search
 	(
-		search
-	)
-	(ENDLINE!)?
-	(POINT! lookup)+
+		POINT! 
+		lookup
+	)+
 	{
 		#select=#([SELECT],#select);
 	}
-	;
+;
 
 search:
 	lookup
@@ -529,36 +496,30 @@ search:
 	
 lookup: 
 	(
-		squareBracketLookup
-		|literalKey
+		normalLookup
+		|literalLookup
 	)
-	;
+;
 
-// TODO: pull up subrule
-literalKey:
-  token:LITERAL_KEY
-  {
-		token_AST.setType(LITERAL); // ugly hack, shouldn't there be a standard way to do this?
-    //#literalKey=#([LITERAL,token.getText()]);
-  };
+literalLookup:
+	token:LITERAL_KEY
+	{
+		// $setType generates compile error here, so type must be set explicitly
+		token_AST.setType(LITERAL);
+	}
+;
 
-// TODO: pull up subrule
-squareBracketLookup:
-		LBRACKET!  
-		(SPACES!)?
-		(
-			(select)=>
-			select
-			|LITERAL
-			|emptyMap
-			|search
-
-			//expression
-		)
-		(SPACES!)?
-		(ENDLINE!)? // TODO: this is an ugly hack???, maybe not needed anymore, because implemented in call??
-		RBRACKET!
-	;
+normalLookup:
+	LBRACKET!  
+	(
+		(select)=>
+		select
+		|LITERAL
+		|search
+		|emptyMap
+	)
+	RBRACKET!
+;
 
 {
 //	Meta is a programming language.
@@ -576,29 +537,29 @@ squareBracketLookup:
 //	You should have received a copy of the GNU General Public License
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-  
-  
-}      
+
+
+} 
+
 class MetaTreeParser extends TreeParser;
 options {
     defaultErrorHandler=false;
     ASTLabelType = "MetaAST";
 }
 expression
-  returns[Map result]
-  {
-    result=null;//new NormalMap();
-  }:
-  (
-    result=call
-    |result=map
-    |result=select
-    |result=search
-    |result=literal
-    |result=delayed
-    //|result=delayedExpressionOnly
-  )
-  ;
+	returns[Map result]
+	{
+		result=null;
+	}:
+	(
+		result=call
+		|result=map
+		|result=select
+		|result=search
+		|result=literal
+		|result=delayed
+	)
+;
 key
 	returns[Map result]
 	{
@@ -615,67 +576,46 @@ key
 			}
 		)+
 	)
-	;
+;
+
 statement
 	returns[Map statement]
 	{
 		statement=new NormalMap();
-		//Map key=null;
-		Map val=null;
-		Map k=null;
+		Map valueCode=null;
+		Map keyCode=null;
 	}:
 	#(STATEMENT
-		k=key
-		val=expression
+		keyCode=key
+		valueCode=expression
 		{
-			//Map statement=new NormalMap();
-			statement[CodeKeys.Key]=k;
-			statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
+			statement[CodeKeys.Key]=keyCode;
+			statement[CodeKeys.Value]=valueCode;
 		}
 	)
-	;
-statementSearch // maybe somehow combine this with "statement", if possible, not sure if tree has lookahead at all, didn't seem to work in one rule
-	returns[Map statement]
-	{
-		statement=new NormalMap();
-		//Map key=null;
-		Map val=null;
-		Map k=null;
-	}:
-	#(STATEMENT_SEARCH
-		k=key
-		val=expression
-		{
-			//Map statement=new NormalMap();
-			statement[CodeKeys.Key]=k;
-			statement[CodeKeys.Value]=val;// TODO: Add Extent to statements, too?
-		}
-	)
-	{
-		statement[CodeKeys.Search]=1;
-	}
-	;
+;
+
 map
-  returns[Map result]
-  {
-    result=new NormalMap();
-    result.Extent=#map.Extent;
-    Map statements=new NormalMap();
-    Map s=null;
-    int counter=1;
-  }:
-  #(PROGRAM
-    (
-			(s=statement|s=statementSearch)
-			{
-				statements[counter]=s;					
-				counter++;
-			}
-    )*
-  )
-  {
-    result[CodeKeys.Program]=statements;
-  };
+	returns[Map result]
+	{
+		result=new NormalMap();
+		result.Extent=#map.Extent;
+		Map statements=new NormalMap();
+		Map s=null;
+		int counter=1;
+	}:
+	#(PROGRAM
+			(
+				(s=statement)
+				{
+					statements[counter]=s;					
+					counter++;
+				}
+			)*
+	)
+	{
+		result[CodeKeys.Program]=statements;
+	};
 
 call
   returns [Map result]

@@ -74,11 +74,9 @@ namespace Meta.Parser
 		public const int LITERAL_VERY_END = 26;
 		public const int LITERAL = 27;
 		public const int LINE = 28;
-		public const int SPACE = 29;
-		public const int NEWLINE = 30;
-		public const int NEWLINE_KEEP_TEXT = 31;
-		public const int SPACES = 32;
-		public const int STATEMENT_SEARCH = 33;
+		public const int NEWLINE = 29;
+		public const int NEWLINE_KEEP_TEXT = 30;
+		public const int SPACES = 31;
 		
 		
 	// add information about location to tokens
@@ -1193,23 +1191,6 @@ _loop93_breakloop:						;
 			newline();
 			
 		}
-		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
-		{
-			_token = makeToken(_ttype);
-			_token.setText(text.ToString(_begin, text.Length-_begin));
-		}
-		returnToken_ = _token;
-	}
-	
-	protected void mSPACE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
-{
-		int _ttype; Token _token=null; int _begin=text.Length;
-		_ttype = SPACE;
-		
-		int _saveIndex = 0;
-		_saveIndex = text.Length;
-		match('\t');
-		text.Length = _saveIndex;
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);

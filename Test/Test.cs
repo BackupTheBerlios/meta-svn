@@ -134,6 +134,7 @@ namespace Test
 					Console.ReadLine();
 				}
 			}
+			Console.ReadLine();
 		}
 	}
 	public class Tests 

@@ -31,11 +31,9 @@ namespace Meta.Parser
 		public const int LITERAL_VERY_END = 26;
 		public const int LITERAL = 27;
 		public const int LINE = 28;
-		public const int SPACE = 29;
-		public const int NEWLINE = 30;
-		public const int NEWLINE_KEEP_TEXT = 31;
-		public const int SPACES = 32;
-		public const int STATEMENT_SEARCH = 33;
+		public const int NEWLINE = 29;
+		public const int NEWLINE_KEEP_TEXT = 30;
+		public const int SPACES = 31;
 		
 	}
 }
