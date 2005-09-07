@@ -49,16 +49,15 @@ tokens
   INDENTATION;
   SPACES;
   // imaginary tokens created by the IndentParser:        
-  INDENT;                 
-  ENDLINE;            
-  DEDENT;
+  INDENT;
+  ENDLINE;// TODO: rename to  NEWLINE, or something more abstract, maybe NEXT_STATEMENT, or STATEMENT_END
+  DEDENT; // TODO: maybe rename too?
   // imaginary tokens created by the Parser:              
   PROGRAM;
   FUNCTION; 
   STATEMENT; 
   CALL;
   SELECT;
-//  SEARCH;
   KEY;
   SAME_INDENT;
 }
@@ -344,9 +343,8 @@ options {
 expression:
 	(
 		(call)=>call
-		|(select)=>select // Optimize, prefer function????
+		|select
 		|function
-		//|search
 		|map
 		|LITERAL
 	)
@@ -354,9 +352,7 @@ expression:
 
 call:
 	(
-		(select)=>
 		select
-		//|search
 	)
 	// TODO: only allow one space
 	(SPACES!)?
@@ -369,7 +365,6 @@ call:
 ;
 	
 select:
-	//search
 	lookup
 	(
 		POINT! 
@@ -409,13 +404,6 @@ delayedImplementation:
 	}
 ;
 
-/*search:
-	lookup
-	{
-		#search=#([SEARCH],#search);
-	}
-;*/
-
 // TODO: combine???	
 lookup: 
 	(
@@ -435,10 +423,8 @@ literalLookup:
 normalLookup:
 	LBRACKET!  
 	(
-		(select)=>
 		select
 		|LITERAL
-		//|search
 		|emptyMap
 	)
 	RBRACKET!

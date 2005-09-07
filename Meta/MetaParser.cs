@@ -171,43 +171,23 @@ using System.Collections;
 						astFactory.addASTChild(currentAST, (AST)returnAST);
 					}
 				}
-				else {
-					bool synPredMatched105 = false;
-					if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
+				else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
+					select();
+					if (0 == inputState.guessing)
 					{
-						int _m105 = mark();
-						synPredMatched105 = true;
-						inputState.guessing++;
-						try {
-							{
-								select();
-							}
-						}
-						catch (RecognitionException)
-						{
-							synPredMatched105 = false;
-						}
-						rewind(_m105);
-						inputState.guessing--;
+						astFactory.addASTChild(currentAST, (AST)returnAST);
 					}
-					if ( synPredMatched105 )
-					{
-						select();
-						if (0 == inputState.guessing)
-						{
-							astFactory.addASTChild(currentAST, (AST)returnAST);
-						}
-					}
-				else
-				{
-					throw new NoViableAltException(LT(1), getFilename());
 				}
-				}break; }
+			else
+			{
+				throw new NoViableAltException(LT(1), getFilename());
 			}
-			expression_AST = (MetaAST)currentAST.root;
-			returnAST = expression_AST;
+			break; }
 		}
-		
+		expression_AST = (MetaAST)currentAST.root;
+		returnAST = expression_AST;
+	}
+	
 	public void call() //throws RecognitionException, TokenStreamException
 {
 		
@@ -295,11 +275,11 @@ using System.Collections;
 				}
 				else
 				{
-					goto _loop114_breakloop;
+					goto _loop110_breakloop;
 				}
 				
 			}
-_loop114_breakloop:			;
+_loop110_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -457,11 +437,11 @@ _loop114_breakloop:			;
 						}
 						else
 						{
-							goto _loop129_breakloop;
+							goto _loop123_breakloop;
 						}
 						
 					}
-_loop129_breakloop:					;
+_loop123_breakloop:					;
 				}    // ( ... )*
 				match(DEDENT);
 				if (0==inputState.guessing)
@@ -678,11 +658,11 @@ _loop129_breakloop:					;
 		ASTPair currentAST = new ASTPair();
 		MetaAST statement_AST = null;
 		
-		bool synPredMatched133 = false;
+		bool synPredMatched127 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m133 = mark();
-			synPredMatched133 = true;
+			int _m127 = mark();
+			synPredMatched127 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -692,12 +672,12 @@ _loop129_breakloop:					;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched133 = false;
+				synPredMatched127 = false;
 			}
-			rewind(_m133);
+			rewind(_m127);
 			inputState.guessing--;
 		}
-		if ( synPredMatched133 )
+		if ( synPredMatched127 )
 		{
 			{
 				key();
@@ -835,11 +815,11 @@ _loop129_breakloop:					;
 				}
 				else
 				{
-					goto _loop139_breakloop;
+					goto _loop133_breakloop;
 				}
 				
 			}
-_loop139_breakloop:			;
+_loop133_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
