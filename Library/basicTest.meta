@@ -36,6 +36,10 @@ integerHashTest:
 		[*]:
 			[*]:*
 	hashTest:[hashTestData]
+//integerIncrementTest="5"
+//integerIncrementTest.0=integerIncrementTest
+//integerDecrementTest="5"
+//integerDecrementTest=integerDecrementTest.0
 persistenceTest:testSubDir
 literalEscapeTest:
 	1:"@asdf@"
@@ -188,11 +192,11 @@ xyz:"w"
 literalFunction:
 	'"5"
 literalFunctionResult:literalFunction*
-function:
+someFunction:
 	'
 		this:"simple function this"
 callFunction:
-	'function
+	'someFunction
 callFunctionResult:callFunction*
 delayedFunction:
 	'

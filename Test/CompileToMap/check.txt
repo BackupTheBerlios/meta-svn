@@ -29,7 +29,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -199,7 +199,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -997,7 +997,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -1012,7 +1012,7 @@ Entry (DictionaryEntry)
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "function"
+                                    "callable"
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
@@ -1131,7 +1131,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -1310,7 +1310,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -1356,7 +1356,7 @@ Entry (DictionaryEntry)
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "function"
+                                        "callable"
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
@@ -1468,7 +1468,7 @@ Entry (DictionaryEntry)
                                                   Key (NormalMap):
                                                     "literal"
                                                   Value (NormalMap):
-                                                    "run"
+                                                    "function"
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
                                             "value"
@@ -1523,7 +1523,7 @@ Entry (DictionaryEntry)
                                                   Key (NormalMap):
                                                     "literal"
                                                   Value (NormalMap):
-                                                    "run"
+                                                    "function"
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
                                             "value"
@@ -2140,7 +2140,7 @@ Entry (DictionaryEntry)
                                           Key (NormalMap):
                                             "literal"
                                           Value (NormalMap):
-                                            "run"
+                                            "function"
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
                                     "value"
@@ -2282,7 +2282,7 @@ Entry (DictionaryEntry)
                                           Key (NormalMap):
                                             "literal"
                                           Value (NormalMap):
-                                            "run"
+                                            "function"
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
                                     "value"
@@ -2513,7 +2513,7 @@ Entry (DictionaryEntry)
                                           Key (NormalMap):
                                             "literal"
                                           Value (NormalMap):
-                                            "run"
+                                            "function"
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
                                     "value"
@@ -2640,7 +2640,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -2704,7 +2704,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -2858,7 +2858,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -2928,7 +2928,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -3052,7 +3052,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -3190,7 +3190,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -3244,7 +3244,7 @@ Entry (DictionaryEntry)
                                                           Key (NormalMap):
                                                             "literal"
                                                           Value (NormalMap):
-                                                            "run"
+                                                            "function"
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
                                                     "value"
@@ -3401,7 +3401,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -3573,7 +3573,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -3659,7 +3659,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -3699,7 +3699,7 @@ Entry (DictionaryEntry)
                                           Value (NormalMap):
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
-                                                "function"
+                                                "callable"
                                               Value (NormalMap):
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
@@ -3764,7 +3764,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -3809,7 +3809,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -3881,7 +3881,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -3996,7 +3996,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -4219,7 +4219,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -4453,7 +4453,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -4570,7 +4570,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -4642,7 +4642,7 @@ Entry (DictionaryEntry)
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "function"
+                                        "callable"
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
@@ -4715,7 +4715,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -4788,7 +4788,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -4860,7 +4860,7 @@ Entry (DictionaryEntry)
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "function"
+                                        "callable"
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
@@ -4933,7 +4933,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -5032,7 +5032,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -5156,7 +5156,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -5297,7 +5297,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -5420,7 +5420,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -5560,7 +5560,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -5781,7 +5781,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -5822,7 +5822,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -5858,7 +5858,7 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "function"
+                    "someFunction"
         Entry (DictionaryEntry)
           Key (NormalMap):
             "value"
@@ -5883,7 +5883,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -5963,7 +5963,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -5980,7 +5980,7 @@ Entry (DictionaryEntry)
                                   Key (NormalMap):
                                     "literal"
                                   Value (NormalMap):
-                                    "function"
+                                    "someFunction"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "73"
@@ -6008,7 +6008,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -6069,7 +6069,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -6098,7 +6098,7 @@ Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "literal"
                                               Value (NormalMap):
-                                                "run"
+                                                "function"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "value"
@@ -6164,7 +6164,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -6251,7 +6251,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -6296,7 +6296,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -6409,7 +6409,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -6511,7 +6511,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -6551,7 +6551,7 @@ Entry (DictionaryEntry)
                                           Value (NormalMap):
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
-                                                "function"
+                                                "callable"
                                               Value (NormalMap):
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
@@ -6598,7 +6598,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -6685,7 +6685,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -6773,7 +6773,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -6859,7 +6859,7 @@ Entry (DictionaryEntry)
                                                   Key (NormalMap):
                                                     "literal"
                                                   Value (NormalMap):
-                                                    "run"
+                                                    "function"
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
                                             "value"
@@ -6899,7 +6899,7 @@ Entry (DictionaryEntry)
                                                               Value (NormalMap):
                                                                 Entry (DictionaryEntry)
                                                                   Key (NormalMap):
-                                                                    "function"
+                                                                    "callable"
                                                                   Value (NormalMap):
                                                                     Entry (DictionaryEntry)
                                                                       Key (NormalMap):
@@ -7040,7 +7040,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -7117,7 +7117,7 @@ Entry (DictionaryEntry)
                                                   Key (NormalMap):
                                                     "literal"
                                                   Value (NormalMap):
-                                                    "run"
+                                                    "function"
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
                                             "value"
@@ -7158,7 +7158,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -7222,7 +7222,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -7341,7 +7341,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -7427,7 +7427,7 @@ Entry (DictionaryEntry)
                                                   Key (NormalMap):
                                                     "literal"
                                                   Value (NormalMap):
-                                                    "run"
+                                                    "function"
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
                                             "value"
@@ -7614,7 +7614,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -7807,7 +7807,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -7948,7 +7948,7 @@ Entry (DictionaryEntry)
                                           Key (NormalMap):
                                             "literal"
                                           Value (NormalMap):
-                                            "run"
+                                            "function"
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
                                     "value"
@@ -8003,7 +8003,7 @@ Entry (DictionaryEntry)
                                           Key (NormalMap):
                                             "literal"
                                           Value (NormalMap):
-                                            "run"
+                                            "function"
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
                                     "value"
@@ -8044,7 +8044,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -8354,7 +8354,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -8420,7 +8420,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -8467,7 +8467,7 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -8839,7 +8839,7 @@ hello!
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -8985,7 +8985,7 @@ hello!
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -9058,7 +9058,7 @@ hello!
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -9194,7 +9194,7 @@ hello!
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -9276,7 +9276,7 @@ hello!
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -9379,7 +9379,7 @@ Schwaenzchen in die Hoeh."
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -9626,7 +9626,7 @@ Schwaenzchen in die Hoeh."
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -9666,7 +9666,7 @@ Schwaenzchen in die Hoeh."
                                           Value (NormalMap):
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
-                                                "function"
+                                                "callable"
                                               Value (NormalMap):
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
@@ -9807,7 +9807,7 @@ Schwaenzchen in die Hoeh."
                                                                       Key (NormalMap):
                                                                         "literal"
                                                                       Value (NormalMap):
-                                                                        "run"
+                                                                        "function"
                                                             Entry (DictionaryEntry)
                                                               Key (NormalMap):
                                                                 "value"
@@ -9822,7 +9822,7 @@ Schwaenzchen in die Hoeh."
                                                                       Value (NormalMap):
                                                                         Entry (DictionaryEntry)
                                                                           Key (NormalMap):
-                                                                            "function"
+                                                                            "callable"
                                                                           Value (NormalMap):
                                                                             Entry (DictionaryEntry)
                                                                               Key (NormalMap):
@@ -9843,7 +9843,7 @@ Schwaenzchen in die Hoeh."
                                                                               Value (NormalMap):
                                                                                 Entry (DictionaryEntry)
                                                                                   Key (NormalMap):
-                                                                                    "function"
+                                                                                    "callable"
                                                                                   Value (NormalMap):
                                                                                     Entry (DictionaryEntry)
                                                                                       Key (NormalMap):
@@ -9959,7 +9959,7 @@ Schwaenzchen in die Hoeh."
                                                                       Key (NormalMap):
                                                                         "literal"
                                                                       Value (NormalMap):
-                                                                        "run"
+                                                                        "function"
                                                             Entry (DictionaryEntry)
                                                               Key (NormalMap):
                                                                 "value"
@@ -10004,7 +10004,7 @@ Schwaenzchen in die Hoeh."
                                           Value (NormalMap):
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
-                                                "function"
+                                                "callable"
                                               Value (NormalMap):
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
@@ -10076,7 +10076,7 @@ Schwaenzchen in die Hoeh."
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -10137,7 +10137,7 @@ Schwaenzchen in die Hoeh."
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -10207,7 +10207,7 @@ Schwaenzchen in die Hoeh."
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -10268,7 +10268,7 @@ Schwaenzchen in die Hoeh."
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -10297,7 +10297,7 @@ Schwaenzchen in die Hoeh."
                                               Key (NormalMap):
                                                 "literal"
                                               Value (NormalMap):
-                                                "run"
+                                                "function"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "value"
@@ -10352,7 +10352,7 @@ Schwaenzchen in die Hoeh."
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -10411,7 +10411,7 @@ Schwaenzchen in die Hoeh."
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -10477,7 +10477,7 @@ Schwaenzchen in die Hoeh."
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
@@ -10498,7 +10498,7 @@ Schwaenzchen in die Hoeh."
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "function"
+                            "callable"
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
@@ -10585,7 +10585,7 @@ Schwaenzchen in die Hoeh."
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "run"
+                                "function"
                     Entry (DictionaryEntry)
                       Key (NormalMap):
                         "value"
@@ -10626,7 +10626,7 @@ Schwaenzchen in die Hoeh."
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "function"
+                    "callable"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):

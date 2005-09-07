@@ -59,7 +59,7 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
+			//args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
 //			args[0]=@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta";
 			//			args[0]=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
 			//args=new string[]{@"C:\_ProectSupportMaterial\Meta\library\function.meta"};
@@ -168,8 +168,7 @@ namespace Test
 					Test.path,filename)).GetExpression();
 			}
 		}
-//		// should execute twice, once without caching, once with
-		public class ExecuteNoCaching:TestCase // TODO: combine with above, only result must be the same, a third file is needed, only one check file!!! ???
+		public class Execute:TestCase
 		{
 			public override object Run()
 			{
@@ -188,17 +187,5 @@ namespace Test
 				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
-//		public class Execute:TestCase 
-//		{
-//			public override object Run() 
-//			{
-//				Map argument=new NormalMap();
-//				argument[1]="first arg";
-//				argument[2]="second=arg";
-//				Meta.GAC.library=new PersistantMap(new Meta.GAC());
-//				//				GAC.library=new GAC();
-//				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
-//			}
-//		}
 	}
 }

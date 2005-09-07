@@ -39,11 +39,11 @@ namespace Meta
 
 	public class CodeKeys
 	{
-		public readonly static Map Literal="literal";
-		public readonly static Map Run="run";
-		public readonly static Map Call="call";
-		public readonly static Map Function="function";
-		public readonly static Map Argument="argument";
+		public static readonly Map Literal="literal";
+		public static readonly Map Run="function";
+		public static readonly Map Call="call";
+		public static readonly Map Function="callable";
+		public static readonly Map Argument="argument";
 		public static readonly Map Select="select";
 		public static readonly Map Search="search";
 		public static readonly Map Key="key";

@@ -628,7 +628,7 @@ _loop130_breakloop:					;
 			
 					
 					MetaAST runAst=new MetaAST(runToken);
-					runAst.setText("run"); // could we get rid of this, maybe, run isn't used anywhere else anymore, also it's a bad keyword to use (far too common)
+					runAst.setText(CodeKeys.Run.String);//"run"); // could we get rid of this, maybe, run isn't used anywhere else anymore, also it's a bad keyword to use (far too common)
 					delayedImplementation_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(KEY)).add((AST)runAst))).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(FUNCTION)).add((AST)delayedImplementation_AST))));
 				
 			currentAST.root = delayedImplementation_AST;
@@ -731,7 +731,7 @@ _loop130_breakloop:					;
 		if (0==inputState.guessing)
 		{
 			
-					// $setType generates compile error here, so type must be set explicitly
+					// $setType generates compile error here, set type explicitly
 					token_AST.setType(LITERAL);
 				
 		}
