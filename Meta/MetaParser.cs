@@ -56,24 +56,23 @@ using System.Collections;
 		public const int STATEMENT = 11;
 		public const int CALL = 12;
 		public const int SELECT = 13;
-		public const int SEARCH = 14;
-		public const int KEY = 15;
-		public const int SAME_INDENT = 16;
-		public const int EQUAL = 17;
-		public const int APOSTROPHE = 18;
-		public const int COLON = 19;
-		public const int STAR = 20;
-		public const int LBRACKET = 21;
-		public const int RBRACKET = 22;
-		public const int POINT = 23;
-		public const int LITERAL_KEY = 24;
-		public const int LITERAL_START = 25;
-		public const int LITERAL_END = 26;
-		public const int LITERAL_VERY_END = 27;
-		public const int LITERAL = 28;
-		public const int LINE = 29;
-		public const int NEWLINE = 30;
-		public const int NEWLINE_KEEP_TEXT = 31;
+		public const int KEY = 14;
+		public const int SAME_INDENT = 15;
+		public const int EQUAL = 16;
+		public const int APOSTROPHE = 17;
+		public const int COLON = 18;
+		public const int STAR = 19;
+		public const int LBRACKET = 20;
+		public const int RBRACKET = 21;
+		public const int POINT = 22;
+		public const int LITERAL_KEY = 23;
+		public const int LITERAL_START = 24;
+		public const int LITERAL_END = 25;
+		public const int LITERAL_VERY_END = 26;
+		public const int LITERAL = 27;
+		public const int LINE = 28;
+		public const int NEWLINE = 29;
+		public const int NEWLINE_KEEP_TEXT = 30;
 		
 		
     private static Stack autokeys=new Stack();
@@ -199,13 +198,6 @@ using System.Collections;
 							astFactory.addASTChild(currentAST, (AST)returnAST);
 						}
 					}
-					else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
-						search();
-						if (0 == inputState.guessing)
-						{
-							astFactory.addASTChild(currentAST, (AST)returnAST);
-						}
-					}
 				else
 				{
 					throw new NoViableAltException(LT(1), getFilename());
@@ -224,44 +216,11 @@ using System.Collections;
 		MetaAST call_AST = null;
 		
 		{
-			bool synPredMatched109 = false;
-			if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
+			select();
+			if (0 == inputState.guessing)
 			{
-				int _m109 = mark();
-				synPredMatched109 = true;
-				inputState.guessing++;
-				try {
-					{
-						select();
-					}
-				}
-				catch (RecognitionException)
-				{
-					synPredMatched109 = false;
-				}
-				rewind(_m109);
-				inputState.guessing--;
+				astFactory.addASTChild(currentAST, (AST)returnAST);
 			}
-			if ( synPredMatched109 )
-			{
-				select();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-			}
-			else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
-				search();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-			}
-			else
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			
 		}
 		{
 			switch ( LA(1) )
@@ -317,33 +276,31 @@ using System.Collections;
 		ASTPair currentAST = new ASTPair();
 		MetaAST select_AST = null;
 		
-		search();
+		lookup();
 		if (0 == inputState.guessing)
 		{
 			astFactory.addASTChild(currentAST, (AST)returnAST);
 		}
-		{ // ( ... )+
-		int _cnt114=0;
-		for (;;)
-		{
-			if ((LA(1)==POINT))
+		{    // ( ... )*
+			for (;;)
 			{
-				match(POINT);
-				lookup();
-				if (0 == inputState.guessing)
+				if ((LA(1)==POINT))
 				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
+					match(POINT);
+					lookup();
+					if (0 == inputState.guessing)
+					{
+						astFactory.addASTChild(currentAST, (AST)returnAST);
+					}
 				}
+				else
+				{
+					goto _loop114_breakloop;
+				}
+				
 			}
-			else
-			{
-				if (_cnt114 >= 1) { goto _loop114_breakloop; } else { throw new NoViableAltException(LT(1), getFilename());; }
-			}
-			
-			_cnt114++;
-		}
-_loop114_breakloop:		;
-		}    // ( ... )+
+_loop114_breakloop:			;
+		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
 			select_AST = (MetaAST)currentAST.root;
@@ -389,35 +346,6 @@ _loop114_breakloop:		;
 		}
 		function_AST = (MetaAST)currentAST.root;
 		returnAST = function_AST;
-	}
-	
-	public void search() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST search_AST = null;
-		
-		lookup();
-		if (0 == inputState.guessing)
-		{
-			astFactory.addASTChild(currentAST, (AST)returnAST);
-		}
-		if (0==inputState.guessing)
-		{
-			search_AST = (MetaAST)currentAST.root;
-			
-					search_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(SEARCH)).add((AST)search_AST));
-				
-			currentAST.root = search_AST;
-			if ( (null != search_AST) && (null != search_AST.getFirstChild()) )
-				currentAST.child = search_AST.getFirstChild();
-			else
-				currentAST.child = search_AST;
-			currentAST.advanceChildToEnd();
-		}
-		search_AST = (MetaAST)currentAST.root;
-		returnAST = search_AST;
 	}
 	
 	public void map() //throws RecognitionException, TokenStreamException
@@ -529,11 +457,11 @@ _loop114_breakloop:		;
 						}
 						else
 						{
-							goto _loop130_breakloop;
+							goto _loop129_breakloop;
 						}
 						
 					}
-_loop130_breakloop:					;
+_loop129_breakloop:					;
 				}    // ( ... )*
 				match(DEDENT);
 				if (0==inputState.guessing)
@@ -653,6 +581,16 @@ _loop130_breakloop:					;
 		{
 			switch ( LA(1) )
 			{
+			case LBRACKET:
+			case LITERAL_KEY:
+			{
+				select();
+				if (0 == inputState.guessing)
+				{
+					astFactory.addASTChild(currentAST, (AST)returnAST);
+				}
+				break;
+			}
 			case LITERAL:
 			{
 				MetaAST tmp9_AST = null;
@@ -671,44 +609,10 @@ _loop130_breakloop:					;
 				break;
 			}
 			default:
-				bool synPredMatched124 = false;
-				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
-				{
-					int _m124 = mark();
-					synPredMatched124 = true;
-					inputState.guessing++;
-					try {
-						{
-							select();
-						}
-					}
-					catch (RecognitionException)
-					{
-						synPredMatched124 = false;
-					}
-					rewind(_m124);
-					inputState.guessing--;
-				}
-				if ( synPredMatched124 )
-				{
-					select();
-					if (0 == inputState.guessing)
-					{
-						astFactory.addASTChild(currentAST, (AST)returnAST);
-					}
-				}
-				else if ((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)) {
-					search();
-					if (0 == inputState.guessing)
-					{
-						astFactory.addASTChild(currentAST, (AST)returnAST);
-					}
-				}
-			else
 			{
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-			break; }
+			 }
 		}
 		match(RBRACKET);
 		normalLookup_AST = (MetaAST)currentAST.root;
@@ -774,11 +678,11 @@ _loop130_breakloop:					;
 		ASTPair currentAST = new ASTPair();
 		MetaAST statement_AST = null;
 		
-		bool synPredMatched134 = false;
+		bool synPredMatched133 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m134 = mark();
-			synPredMatched134 = true;
+			int _m133 = mark();
+			synPredMatched133 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -788,12 +692,12 @@ _loop130_breakloop:					;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched134 = false;
+				synPredMatched133 = false;
 			}
-			rewind(_m134);
+			rewind(_m133);
 			inputState.guessing--;
 		}
-		if ( synPredMatched134 )
+		if ( synPredMatched133 )
 		{
 			{
 				key();
@@ -931,11 +835,11 @@ _loop130_breakloop:					;
 				}
 				else
 				{
-					goto _loop140_breakloop;
+					goto _loop139_breakloop;
 				}
 				
 			}
-_loop140_breakloop:			;
+_loop139_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -969,7 +873,7 @@ _loop140_breakloop:			;
 	}
 	static public void initializeASTFactory( ASTFactory factory )
 	{
-		factory.setMaxNodeType(31);
+		factory.setMaxNodeType(30);
 	}
 	
 	public static readonly string[] tokenNames_ = new string[] {
@@ -987,7 +891,6 @@ _loop140_breakloop:			;
 		@"""STATEMENT""",
 		@"""CALL""",
 		@"""SELECT""",
-		@"""SEARCH""",
 		@"""KEY""",
 		@"""SAME_INDENT""",
 		@"""EQUAL""",
@@ -1009,7 +912,7 @@ _loop140_breakloop:			;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 289013824L, 0L};
+		long[] data = { 144506944L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());

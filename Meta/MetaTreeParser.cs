@@ -51,24 +51,23 @@ namespace Meta.Parser
 		public const int STATEMENT = 11;
 		public const int CALL = 12;
 		public const int SELECT = 13;
-		public const int SEARCH = 14;
-		public const int KEY = 15;
-		public const int SAME_INDENT = 16;
-		public const int EQUAL = 17;
-		public const int APOSTROPHE = 18;
-		public const int COLON = 19;
-		public const int STAR = 20;
-		public const int LBRACKET = 21;
-		public const int RBRACKET = 22;
-		public const int POINT = 23;
-		public const int LITERAL_KEY = 24;
-		public const int LITERAL_START = 25;
-		public const int LITERAL_END = 26;
-		public const int LITERAL_VERY_END = 27;
-		public const int LITERAL = 28;
-		public const int LINE = 29;
-		public const int NEWLINE = 30;
-		public const int NEWLINE_KEEP_TEXT = 31;
+		public const int KEY = 14;
+		public const int SAME_INDENT = 15;
+		public const int EQUAL = 16;
+		public const int APOSTROPHE = 17;
+		public const int COLON = 18;
+		public const int STAR = 19;
+		public const int LBRACKET = 20;
+		public const int RBRACKET = 21;
+		public const int POINT = 22;
+		public const int LITERAL_KEY = 23;
+		public const int LITERAL_START = 24;
+		public const int LITERAL_END = 25;
+		public const int LITERAL_VERY_END = 26;
+		public const int LITERAL = 27;
+		public const int LINE = 28;
+		public const int NEWLINE = 29;
+		public const int NEWLINE_KEEP_TEXT = 30;
 		
 		public MetaTreeParser()
 		{
@@ -101,12 +100,6 @@ namespace Meta.Parser
 			case SELECT:
 			{
 				code=select(_t);
-				_t = retTree_;
-				break;
-			}
-			case SEARCH:
-			{
-				code=search(_t);
 				_t = retTree_;
 				break;
 			}
@@ -145,7 +138,7 @@ namespace Meta.Parser
 				Map argumentCode;
 			
 		
-		AST __t156 = _t;
+		AST __t155 = _t;
 		MetaAST tmp16_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,CALL);
 		_t = _t.getFirstChild();
@@ -162,7 +155,7 @@ namespace Meta.Parser
 					callCode[CodeKeys.Argument]=argumentCode;
 					code[CodeKeys.Call]=callCode;
 				
-		_t = __t156;
+		_t = __t155;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return code;
@@ -181,7 +174,7 @@ namespace Meta.Parser
 				int statementNumber=1;
 			
 		
-		AST __t151 = _t;
+		AST __t150 = _t;
 		MetaAST tmp17_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,PROGRAM);
 		_t = _t.getFirstChild();
@@ -203,13 +196,13 @@ namespace Meta.Parser
 				}
 				else
 				{
-					goto _loop154_breakloop;
+					goto _loop153_breakloop;
 				}
 				
 			}
-_loop154_breakloop:			;
+_loop153_breakloop:			;
 		}    // ( ... )*
-		_t = __t151;
+		_t = __t150;
 		_t = _t.getNextSibling();
 		
 				code[CodeKeys.Program]=programCode;
@@ -231,12 +224,12 @@ _loop154_breakloop:			;
 				int counter=1;
 			
 		
-		AST __t160 = _t;
+		AST __t159 = _t;
 		MetaAST tmp18_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SELECT);
 		_t = _t.getFirstChild();
 		{ // ( ... )+
-		int _cnt162=0;
+		int _cnt161=0;
 		for (;;)
 		{
 			if (_t == null)
@@ -252,43 +245,17 @@ _loop154_breakloop:			;
 			}
 			else
 			{
-				if (_cnt162 >= 1) { goto _loop162_breakloop; } else { throw new NoViableAltException(_t);; }
+				if (_cnt161 >= 1) { goto _loop161_breakloop; } else { throw new NoViableAltException(_t);; }
 			}
 			
-			_cnt162++;
+			_cnt161++;
 		}
-_loop162_breakloop:		;
+_loop161_breakloop:		;
 		}    // ( ... )+
-		_t = __t160;
+		_t = __t159;
 		_t = _t.getNextSibling();
 		
 				code[CodeKeys.Select]=selectCode;
-			
-		retTree_ = _t;
-		return code;
-	}
-	
-	public Map  search(AST _t) //throws RecognitionException
-{
-		Map code;
-		
-		MetaAST search_AST_in = (MetaAST)_t;
-		
-				code=new NormalMap();
-				code.Extent=search_AST_in.Extent;
-				Map searchCode;
-			
-		
-		AST __t164 = _t;
-		MetaAST tmp19_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
-		match((AST)_t,SEARCH);
-		_t = _t.getFirstChild();
-		searchCode=expression(_t);
-		_t = retTree_;
-		_t = __t164;
-		_t = _t.getNextSibling();
-		
-				code[CodeKeys.Search]=searchCode;
 			
 		retTree_ = _t;
 		return code;
@@ -326,13 +293,13 @@ _loop162_breakloop:		;
 		Map delayedCode;
 		
 		
-		AST __t166 = _t;
-		MetaAST tmp20_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
+		AST __t163 = _t;
+		MetaAST tmp19_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,FUNCTION);
 		_t = _t.getFirstChild();
 		delayedCode=expression(_t);
 		_t = retTree_;
-		_t = __t166;
+		_t = __t163;
 		_t = _t.getNextSibling();
 		
 		code[CodeKeys.Delayed]=delayedCode;
@@ -352,12 +319,12 @@ _loop162_breakloop:		;
 				int keyNumber=1;
 			
 		
-		AST __t145 = _t;
-		MetaAST tmp21_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
+		AST __t144 = _t;
+		MetaAST tmp20_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,KEY);
 		_t = _t.getFirstChild();
 		{ // ( ... )+
-		int _cnt147=0;
+		int _cnt146=0;
 		for (;;)
 		{
 			if (_t == null)
@@ -373,14 +340,14 @@ _loop162_breakloop:		;
 			}
 			else
 			{
-				if (_cnt147 >= 1) { goto _loop147_breakloop; } else { throw new NoViableAltException(_t);; }
+				if (_cnt146 >= 1) { goto _loop146_breakloop; } else { throw new NoViableAltException(_t);; }
 			}
 			
-			_cnt147++;
+			_cnt146++;
 		}
-_loop147_breakloop:		;
+_loop146_breakloop:		;
 		}    // ( ... )+
-		_t = __t145;
+		_t = __t144;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return code;
@@ -397,8 +364,8 @@ _loop147_breakloop:		;
 				Map valueCode;
 			
 		
-		AST __t149 = _t;
-		MetaAST tmp22_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
+		AST __t148 = _t;
+		MetaAST tmp21_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,STATEMENT);
 		_t = _t.getFirstChild();
 		keyCode=statementKeys(_t);
@@ -409,7 +376,7 @@ _loop147_breakloop:		;
 					code[CodeKeys.Key]=keyCode;
 					code[CodeKeys.Value]=valueCode;
 				
-		_t = __t149;
+		_t = __t148;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return code;
@@ -436,7 +403,6 @@ _loop147_breakloop:		;
 		@"""STATEMENT""",
 		@"""CALL""",
 		@"""SELECT""",
-		@"""SEARCH""",
 		@"""KEY""",
 		@"""SAME_INDENT""",
 		@"""EQUAL""",
@@ -458,7 +424,7 @@ _loop147_breakloop:		;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 268465664L, 0L};
+		long[] data = { 134231552L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());

@@ -429,16 +429,65 @@ namespace Meta
 			return null;
 		}
 	}
-	public class Search: Expression
+//	public class Search: Expression
+//	{
+//		public Search(Map code)
+//		{
+//			this.search=code.GetExpression();
+//		}
+//		public Expression search;
+//		public override Map EvaluateImplementation(Map parent)
+//		{
+//			Map key=search.Evaluate(parent);
+//			Map selected=parent;
+//			while(!selected.ContainsKey(key))
+//			{
+//				if(selected.Parent==null)
+//				{
+//					selected.ContainsKey(key);
+//					throw new KeyNotFoundException(key,this.Extent);
+//				}
+//				selected=selected.Parent;
+//				if(selected==null)
+//				{
+//					throw new KeyNotFoundException(key,this.Extent);
+//				}
+//			}
+//			return selected[key];
+//		}
+//	}
+	public class Select: Expression
 	{
-		public Search(Map code)
+		public ArrayList keys=new ArrayList(); // TODO: rename to subKeys
+		public Expression firstKey;
+		public Select(Map code)
 		{
-			this.search=code.GetExpression();
+			firstKey=((Map)code.Array[0]).GetExpression();
+			foreach(Map key in code.Array.GetRange(1,code.Array.Count-1))
+			{
+				keys.Add(key.GetExpression());
+			}
 		}
-		public Expression search;
 		public override Map EvaluateImplementation(Map parent)
 		{
-			Map key=search.Evaluate(parent);
+			Map selected=FindFirstKey(parent);//(firstKey.Evaluate(parent));
+//			Map selected=firstKey.Evaluate(parent);
+			for(int i=0;i<keys.Count;i++)
+			{
+				Map key=((Expression)keys[i]).Evaluate(parent);
+				Map selection=selected[key];
+				if(selection==null)
+				{
+					object test=selected[key];
+					throw new KeyDoesNotExistException(key,this.Extent,selected);
+				}
+				selected=selection;
+			}
+			return selected;
+		}
+		public Map FindFirstKey(Map parent)
+		{
+			Map key=firstKey.Evaluate(parent);
 			Map selected=parent;
 			while(!selected.ContainsKey(key))
 			{
@@ -455,35 +504,6 @@ namespace Meta
 			}
 			return selected[key];
 		}
-	}
-	public class Select: Expression
-	{
-		public ArrayList keys=new ArrayList();
-		public Expression firstKey;
-		public Select(Map code)
-		{
-			firstKey=((Map)code.Array[0]).GetExpression();
-			foreach(Map key in code.Array.GetRange(1,code.Array.Count-1))
-			{
-				keys.Add(key.GetExpression());
-			}
-		}
-		public override Map EvaluateImplementation(Map parent)
-		{
-			Map selected=firstKey.Evaluate(parent);
-			for(int i=0;i<keys.Count;i++)
-			{
-				Map key=((Expression)keys[i]).Evaluate(parent);
-				Map selection=selected[key];
-				if(selection==null)
-				{
-					object test=selected[key];
-					throw new KeyDoesNotExistException(key,this.Extent,selected);
-				}
-				selected=selection;
-			}
-			return selected;
-		}	
 	}
 	public class Statement
 	{
@@ -1028,10 +1048,10 @@ namespace Meta
 			{
 				expression=new Literal(this[CodeKeys.Literal]);
 			}
-			else if(this.ContainsKey(CodeKeys.Search))
-			{
-				expression=new Search(this[CodeKeys.Search]);
-			}
+//			else if(this.ContainsKey(CodeKeys.Search))
+//			{
+//				expression=new Search(this[CodeKeys.Search]);
+//			}
 			else if(this.ContainsKey(CodeKeys.Select))
 			{
 				expression=new Select(this[CodeKeys.Select]);

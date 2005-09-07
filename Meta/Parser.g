@@ -58,7 +58,7 @@ tokens
   STATEMENT; 
   CALL;
   SELECT;
-  SEARCH;
+//  SEARCH;
   KEY;
   SAME_INDENT;
 }
@@ -344,9 +344,9 @@ options {
 expression:
 	(
 		(call)=>call
-		|(select)=>select
+		|(select)=>select // Optimize, prefer function????
 		|function
-		|search
+		//|search
 		|map
 		|LITERAL
 	)
@@ -356,7 +356,7 @@ call:
 	(
 		(select)=>
 		select
-		|search
+		//|search
 	)
 	// TODO: only allow one space
 	(SPACES!)?
@@ -369,11 +369,12 @@ call:
 ;
 	
 select:
-	search
+	//search
+	lookup
 	(
 		POINT! 
 		lookup
-	)+
+	)*
 	{
 		#select=#([SELECT],#select);
 	}
@@ -408,12 +409,12 @@ delayedImplementation:
 	}
 ;
 
-search:
+/*search:
 	lookup
 	{
 		#search=#([SEARCH],#search);
 	}
-;
+;*/
 
 // TODO: combine???	
 lookup: 
@@ -437,7 +438,7 @@ normalLookup:
 		(select)=>
 		select
 		|LITERAL
-		|search
+		//|search
 		|emptyMap
 	)
 	RBRACKET!
@@ -559,7 +560,7 @@ expression
 		code=call
 		|code=program
 		|code=select
-		|code=search
+		//|code=search
 		|code=literal
 		|code=delayed
 	)
@@ -670,7 +671,7 @@ select
 	}
 ;
 
-search
+/*search
 	returns [Map code]
 	{
 		code=new NormalMap();
@@ -681,7 +682,7 @@ search
 	{
 		code[CodeKeys.Search]=searchCode;
 	}
-;
+;*/
 
 delayed
     returns[Map code]
