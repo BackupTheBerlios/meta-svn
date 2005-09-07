@@ -36,10 +36,10 @@ integerHashTest:
 		[*]:
 			[*]:*
 	hashTest:[hashTestData]
-//integerIncrementTest="5"
-//integerIncrementTest.0=integerIncrementTest
-//integerDecrementTest="5"
-//integerDecrementTest=integerDecrementTest.0
+integerIncrementTest:"5"
+integerIncrementTest.0:integerIncrementTest
+integerDecrementTest:"5"
+integerDecrementTest:integerDecrementTest.0
 persistenceTest:testSubDir
 literalEscapeTest:
 	1:"@asdf@"

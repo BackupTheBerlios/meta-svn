@@ -1137,6 +1137,204 @@ statements (ArrayList):
         literal (NormalMap):
           "integerHashTest"
   Entry (Statement)
+    expression (Literal):
+      Extent (Extent):
+        End (Position):
+          Column (Int32):
+            "25"
+          Line (Int32):
+            "39"
+        FileName (String):
+          "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+        Start (Position):
+          Column (Int32):
+            "22"
+          Line (Int32):
+            "39"
+      literal (NormalMap):
+        "5"
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "21"
+            Line (Int32):
+              "39"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "1"
+            Line (Int32):
+              "39"
+        literal (NormalMap):
+          "integerIncrementTest"
+  Entry (Statement)
+    expression (Select):
+      Extent (Extent):
+        End (Position):
+          Column (Int32):
+            "44"
+          Line (Int32):
+            "40"
+        FileName (String):
+          "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+        Start (Position):
+          Column (Int32):
+            "24"
+          Line (Int32):
+            "40"
+      firstKey (Literal):
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "44"
+            Line (Int32):
+              "40"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "24"
+            Line (Int32):
+              "40"
+        literal (NormalMap):
+          "integerIncrementTest"
+      keys (ArrayList):
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "21"
+            Line (Int32):
+              "40"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "1"
+            Line (Int32):
+              "40"
+        literal (NormalMap):
+          "integerIncrementTest"
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "23"
+            Line (Int32):
+              "40"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "22"
+            Line (Int32):
+              "40"
+        literal (NormalMap):
+          "0"
+  Entry (Statement)
+    expression (Literal):
+      Extent (Extent):
+        End (Position):
+          Column (Int32):
+            "25"
+          Line (Int32):
+            "41"
+        FileName (String):
+          "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+        Start (Position):
+          Column (Int32):
+            "22"
+          Line (Int32):
+            "41"
+      literal (NormalMap):
+        "5"
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "21"
+            Line (Int32):
+              "41"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "1"
+            Line (Int32):
+              "41"
+        literal (NormalMap):
+          "integerDecrementTest"
+  Entry (Statement)
+    expression (Select):
+      Extent (Extent):
+        End (Position):
+          Column (Int32):
+            "44"
+          Line (Int32):
+            "42"
+        FileName (String):
+          "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+        Start (Position):
+          Column (Int32):
+            "22"
+          Line (Int32):
+            "42"
+      firstKey (Literal):
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "42"
+            Line (Int32):
+              "42"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "22"
+            Line (Int32):
+              "42"
+        literal (NormalMap):
+          "integerDecrementTest"
+      keys (ArrayList):
+        Entry (Literal)
+          Extent (Extent):
+            End (Position):
+              Column (Int32):
+                "44"
+              Line (Int32):
+                "42"
+            FileName (String):
+              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+            Start (Position):
+              Column (Int32):
+                "43"
+              Line (Int32):
+                "42"
+          literal (NormalMap):
+            "0"
+    keys (ArrayList):
+      Entry (Literal)
+        Extent (Extent):
+          End (Position):
+            Column (Int32):
+              "21"
+            Line (Int32):
+              "42"
+          FileName (String):
+            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+          Start (Position):
+            Column (Int32):
+              "1"
+            Line (Int32):
+              "42"
+        literal (NormalMap):
+          "integerDecrementTest"
+  Entry (Statement)
     expression (Select):
       Extent (Extent):
         End (Position):

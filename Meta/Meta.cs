@@ -1120,7 +1120,7 @@ namespace Meta
 	
 	public abstract class StrategyMap: Map, ISerializeSpecial
 	{
-		public void InitFromStrategy(MapStrategy clone)
+		public void InitFromStrategy(MapStrategy clone) // TODO: no deep clonging necessary??
 		{
 			foreach(Map key in clone.Keys)
 			{
@@ -3501,7 +3501,7 @@ namespace Meta
 			{
 				if(key.Equals(NumberKeys.EmptyMap))
 				{
-					Map map=value;// TODO: remove
+					Panic(key,value);
 				}
 				else if(key.Equals(NumberKeys.Negative))
 				{
@@ -3520,14 +3520,18 @@ namespace Meta
 				}
 				else
 				{
-					Panic(key,value);
+					Panic(key,value); // TODO: dont do assignment in panic, do it here
 				}
 			}
 		}
 		private void Panic(Map key,Map val)
 		{
-			map.strategy=this.Clone();
+			map.strategy=new HybridDictionaryStrategy();
+			map.strategy.map=map;
+			map.InitFromStrategy(this);
 			map.strategy[key]=val;
+//			map.strategy=this.Clone();
+			//map.strategy[NumberKeys.Negative]=this[NumberKeys.Negative];
 		}
 	}
 	namespace Parser 

@@ -127,6 +127,16 @@ Entry (DictionaryEntry)
         "correct hash content"
 Entry (DictionaryEntry)
   Key (NormalMap):
+    "integerIncrementTest"
+  Value (NormalMap):
+    "6"
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "integerDecrementTest"
+  Value (NormalMap):
+    "4"
+Entry (DictionaryEntry)
+  Key (NormalMap):
     "persistenceTest"
   Value (NormalMap):
     Entry (DictionaryEntry)
