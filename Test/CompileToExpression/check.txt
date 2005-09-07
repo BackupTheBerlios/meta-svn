@@ -30,7 +30,7 @@ statements (ArrayList):
               "17"
         statements (ArrayList):
           Entry (Statement)
-            expression (Search):
+            expression (Select):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -44,7 +44,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "17"
-              search (Literal):
+              firstKey (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -60,6 +60,7 @@ statements (ArrayList):
                       "17"
                 literal (NormalMap):
                   "parent"
+              keys (ArrayList):
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
@@ -158,7 +159,7 @@ statements (ArrayList):
               "6"
             Line (Int32):
               "16"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -172,22 +173,8 @@ statements (ArrayList):
                 "6"
               Line (Int32):
                 "16"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "9"
-                Line (Int32):
-                  "16"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "6"
-                Line (Int32):
-                  "16"
-            literal (NormalMap):
-              "map"
+          literal (NormalMap):
+            "map"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -287,7 +274,7 @@ statements (ArrayList):
               "22"
         statements (ArrayList):
           Entry (Statement)
-            expression (Search):
+            expression (Select):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -301,7 +288,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "22"
-              search (Literal):
+              firstKey (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -317,6 +304,7 @@ statements (ArrayList):
                       "22"
                 literal (NormalMap):
                   "parent"
+              keys (ArrayList):
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
@@ -335,7 +323,7 @@ statements (ArrayList):
                 literal (NormalMap):
                   "1"
           Entry (Statement)
-            expression (Search):
+            expression (Select):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -349,7 +337,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "23"
-              search (Literal):
+              firstKey (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -365,6 +353,7 @@ statements (ArrayList):
                       "23"
                 literal (NormalMap):
                   "logic"
+              keys (ArrayList):
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
@@ -383,7 +372,7 @@ statements (ArrayList):
                 literal (NormalMap):
                   "2"
           Entry (Statement)
-            expression (Search):
+            expression (Select):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -397,7 +386,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "24"
-              search (Literal):
+              firstKey (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -413,6 +402,7 @@ statements (ArrayList):
                       "24"
                 literal (NormalMap):
                   "map"
+              keys (ArrayList):
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
@@ -431,7 +421,7 @@ statements (ArrayList):
                 literal (NormalMap):
                   "3"
           Entry (Statement)
-            expression (Search):
+            expression (Select):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -445,7 +435,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "25"
-              search (Literal):
+              firstKey (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -461,6 +451,7 @@ statements (ArrayList):
                       "25"
                 literal (NormalMap):
                   "math"
+              keys (ArrayList):
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
@@ -492,7 +483,7 @@ statements (ArrayList):
               "6"
             Line (Int32):
               "21"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -506,22 +497,8 @@ statements (ArrayList):
                 "6"
               Line (Int32):
                 "21"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "9"
-                Line (Int32):
-                  "21"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "6"
-                Line (Int32):
-                  "21"
-            literal (NormalMap):
-              "map"
+          literal (NormalMap):
+            "map"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -665,7 +642,7 @@ statements (ArrayList):
             "22"
           Line (Int32):
             "27"
-      firstKey (Search):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -679,22 +656,8 @@ statements (ArrayList):
               "22"
             Line (Int32):
               "27"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "32"
-              Line (Int32):
-                "27"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "22"
-              Line (Int32):
-                "27"
-          literal (NormalMap):
-            "testSubDir"
+        literal (NormalMap):
+          "testSubDir"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -1093,7 +1056,7 @@ statements (ArrayList):
               literal (NormalMap):
                 "hashTestData"
         Entry (Statement)
-          expression (Search):
+          expression (Select):
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -1107,7 +1070,7 @@ statements (ArrayList):
                   "12"
                 Line (Int32):
                   "38"
-            search (Search):
+            firstKey (Select):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -1121,7 +1084,7 @@ statements (ArrayList):
                     "12"
                   Line (Int32):
                     "38"
-              search (Literal):
+              firstKey (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -1137,6 +1100,8 @@ statements (ArrayList):
                       "38"
                 literal (NormalMap):
                   "hashTestData"
+              keys (ArrayList):
+            keys (ArrayList):
           keys (ArrayList):
             Entry (Literal)
               Extent (Extent):
@@ -1172,7 +1137,7 @@ statements (ArrayList):
         literal (NormalMap):
           "integerHashTest"
   Entry (Statement)
-    expression (Search):
+    expression (Select):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -1186,7 +1151,7 @@ statements (ArrayList):
             "17"
           Line (Int32):
             "43"
-      search (Literal):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -1202,6 +1167,7 @@ statements (ArrayList):
               "43"
         literal (NormalMap):
           "testSubDir"
+      keys (ArrayList):
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -1451,13 +1417,17 @@ statements (ArrayList):
                     Value (NormalMap):
                       Entry (DictionaryEntry)
                         Key (NormalMap):
-                          "search"
+                          "select"
                         Value (NormalMap):
                           Entry (DictionaryEntry)
                             Key (NormalMap):
-                              "literal"
+                              "1"
                             Value (NormalMap):
-                              "Add"
+                              Entry (DictionaryEntry)
+                                Key (NormalMap):
+                                  "literal"
+                                Value (NormalMap):
+                                  "Add"
                   Entry (DictionaryEntry)
                     Key (NormalMap):
                       "argument"
@@ -1497,13 +1467,9 @@ statements (ArrayList):
                                         Value (NormalMap):
                                           Entry (DictionaryEntry)
                                             Key (NormalMap):
-                                              "search"
+                                              "literal"
                                             Value (NormalMap):
-                                              Entry (DictionaryEntry)
-                                                Key (NormalMap):
-                                                  "literal"
-                                                Value (NormalMap):
-                                                  "arg"
+                                              "arg"
                                       Entry (DictionaryEntry)
                                         Key (NormalMap):
                                           "2"
@@ -1604,7 +1570,7 @@ statements (ArrayList):
               "54"
         statements (ArrayList):
           Entry (Statement)
-            expression (Search):
+            expression (Select):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -1618,7 +1584,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "54"
-              search (Literal):
+              firstKey (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -1634,6 +1600,7 @@ statements (ArrayList):
                       "54"
                 literal (NormalMap):
                   "applyMethod"
+              keys (ArrayList):
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
@@ -1786,7 +1753,7 @@ statements (ArrayList):
                       "56"
                 literal (NormalMap):
                   "2"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -1800,7 +1767,7 @@ statements (ArrayList):
               "11"
             Line (Int32):
               "53"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -1816,6 +1783,7 @@ statements (ArrayList):
                 "53"
           literal (NormalMap):
             "Apply"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -1948,7 +1916,7 @@ statements (ArrayList):
                               "62"
                         literal (NormalMap):
                           "2"
-              callable (Search):
+              callable (Select):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -1962,7 +1930,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "60"
-                search (Literal):
+                firstKey (Literal):
                   Extent (Extent):
                     End (Position):
                       Column (Int32):
@@ -1978,6 +1946,7 @@ statements (ArrayList):
                         "60"
                   literal (NormalMap):
                     "Equal"
+                keys (ArrayList):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -2150,7 +2119,7 @@ statements (ArrayList):
                       "65"
                 literal (NormalMap):
                   "else"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -2164,7 +2133,7 @@ statements (ArrayList):
               "8"
             Line (Int32):
               "59"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -2180,6 +2149,7 @@ statements (ArrayList):
                 "59"
           literal (NormalMap):
             "If"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -2293,7 +2263,7 @@ statements (ArrayList):
             "9"
           Line (Int32):
             "69"
-      firstKey (Search):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -2307,22 +2277,8 @@ statements (ArrayList):
               "9"
             Line (Int32):
               "69"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "15"
-              Line (Int32):
-                "69"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "9"
-              Line (Int32):
-                "69"
-          literal (NormalMap):
-            "System"
+        literal (NormalMap):
+          "System"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -2372,7 +2328,7 @@ statements (ArrayList):
             "13"
           Line (Int32):
             "70"
-      firstKey (Search):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -2386,22 +2342,8 @@ statements (ArrayList):
               "13"
             Line (Int32):
               "70"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "22"
-              Line (Int32):
-                "70"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "13"
-              Line (Int32):
-                "70"
-          literal (NormalMap):
-            "Microsoft"
+        literal (NormalMap):
+          "Microsoft"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -2437,7 +2379,7 @@ statements (ArrayList):
         literal (NormalMap):
           "lazyGACTest"
   Entry (Statement)
-    expression (Search):
+    expression (Select):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -2451,7 +2393,7 @@ statements (ArrayList):
             "22"
           Line (Int32):
             "72"
-      search (Literal):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -2467,6 +2409,7 @@ statements (ArrayList):
               "72"
         literal (NormalMap):
           "arg"
+      keys (ArrayList):
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -2569,7 +2512,7 @@ statements (ArrayList):
       literal (NormalMap):
         "Object"
     keys (ArrayList):
-      Entry (Search)
+      Entry (Select)
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -2583,7 +2526,7 @@ statements (ArrayList):
               "2"
             Line (Int32):
               "80"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -2599,6 +2542,7 @@ statements (ArrayList):
                 "80"
           literal (NormalMap):
             "aMap"
+        keys (ArrayList):
   Entry (Statement)
     expression (Literal):
       Extent (Extent):
@@ -2702,7 +2646,7 @@ statements (ArrayList):
         literal (NormalMap):
           "long key symbol"
   Entry (Statement)
-    expression (Search):
+    expression (Select):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -2716,7 +2660,7 @@ statements (ArrayList):
             "14"
           Line (Int32):
             "84"
-      search (Search):
+      firstKey (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -2730,7 +2674,7 @@ statements (ArrayList):
               "14"
             Line (Int32):
               "84"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -2746,6 +2690,8 @@ statements (ArrayList):
                 "84"
           literal (NormalMap):
             "aMap"
+        keys (ArrayList):
+      keys (ArrayList):
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -2764,7 +2710,7 @@ statements (ArrayList):
         literal (NormalMap):
           "lookedUpMap"
   Entry (Statement)
-    expression (Search):
+    expression (Select):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -2778,7 +2724,7 @@ statements (ArrayList):
             "23"
           Line (Int32):
             "85"
-      search (Literal):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -2794,6 +2740,7 @@ statements (ArrayList):
               "85"
         literal (NormalMap):
           "normal symbol"
+      keys (ArrayList):
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -2812,7 +2759,7 @@ statements (ArrayList):
         literal (NormalMap):
           "lookedUpNormalSymbol"
   Entry (Statement)
-    expression (Search):
+    expression (Select):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -2826,7 +2773,7 @@ statements (ArrayList):
             "16"
           Line (Int32):
             "86"
-      search (Literal):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -2842,6 +2789,7 @@ statements (ArrayList):
               "86"
         literal (NormalMap):
           "lookupSymbol"
+      keys (ArrayList):
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -2860,7 +2808,7 @@ statements (ArrayList):
         literal (NormalMap):
           "lookedUpSymbol"
   Entry (Statement)
-    expression (Search):
+    expression (Select):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -2874,7 +2822,7 @@ statements (ArrayList):
             "21"
           Line (Int32):
             "87"
-      search (Literal):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -2890,6 +2838,7 @@ statements (ArrayList):
               "87"
         literal (NormalMap):
           "long key symbol"
+      keys (ArrayList):
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -3263,13 +3212,9 @@ statements (ArrayList):
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
-                                            "search"
+                                            "literal"
                                           Value (NormalMap):
-                                            Entry (DictionaryEntry)
-                                              Key (NormalMap):
-                                                "literal"
-                                              Value (NormalMap):
-                                                "arg"
+                                            "arg"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "2"
@@ -3673,7 +3618,7 @@ statements (ArrayList):
               "6"
             Line (Int32):
               "107"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -3687,22 +3632,8 @@ statements (ArrayList):
                 "6"
               Line (Int32):
                 "107"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "12"
-                Line (Int32):
-                  "107"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "6"
-                Line (Int32):
-                  "107"
-            literal (NormalMap):
-              "object"
+          literal (NormalMap):
+            "object"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -3882,7 +3813,7 @@ statements (ArrayList):
               "6"
             Line (Int32):
               "108"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -3896,22 +3827,8 @@ statements (ArrayList):
                 "6"
               Line (Int32):
                 "108"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "12"
-                Line (Int32):
-                  "108"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "6"
-                Line (Int32):
-                  "108"
-            literal (NormalMap):
-              "object"
+          literal (NormalMap):
+            "object"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -4005,13 +3922,17 @@ statements (ArrayList):
                         Value (NormalMap):
                           Entry (DictionaryEntry)
                             Key (NormalMap):
-                              "search"
+                              "select"
                             Value (NormalMap):
                               Entry (DictionaryEntry)
                                 Key (NormalMap):
-                                  "literal"
+                                  "1"
                                 Value (NormalMap):
-                                  "arg"
+                                  Entry (DictionaryEntry)
+                                    Key (NormalMap):
+                                      "literal"
+                                    Value (NormalMap):
+                                      "arg"
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -4178,7 +4099,7 @@ statements (ArrayList):
                       "118"
                 literal (NormalMap):
                   "3"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -4192,7 +4113,7 @@ statements (ArrayList):
               "20"
             Line (Int32):
               "115"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -4208,6 +4129,7 @@ statements (ArrayList):
                 "115"
           literal (NormalMap):
             "ReturnEverything"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -4357,7 +4279,7 @@ statements (ArrayList):
                       "122"
                 literal (NormalMap):
                   "3"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -4371,7 +4293,7 @@ statements (ArrayList):
               "20"
             Line (Int32):
               "119"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -4387,6 +4309,7 @@ statements (ArrayList):
                 "119"
           literal (NormalMap):
             "ReturnEverything"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -4715,13 +4638,17 @@ statements (ArrayList):
                                     Value (NormalMap):
                                       Entry (DictionaryEntry)
                                         Key (NormalMap):
-                                          "search"
+                                          "select"
                                         Value (NormalMap):
                                           Entry (DictionaryEntry)
                                             Key (NormalMap):
-                                              "literal"
+                                              "1"
                                             Value (NormalMap):
-                                              "arg"
+                                              Entry (DictionaryEntry)
+                                                Key (NormalMap):
+                                                  "literal"
+                                                Value (NormalMap):
+                                                  "arg"
                               Entry (DictionaryEntry)
                                 Key (NormalMap):
                                   "2"
@@ -4753,13 +4680,9 @@ statements (ArrayList):
                                             Value (NormalMap):
                                               Entry (DictionaryEntry)
                                                 Key (NormalMap):
-                                                  "search"
+                                                  "literal"
                                                 Value (NormalMap):
-                                                  Entry (DictionaryEntry)
-                                                    Key (NormalMap):
-                                                      "literal"
-                                                    Value (NormalMap):
-                                                      "arg"
+                                                  "arg"
                                           Entry (DictionaryEntry)
                                             Key (NormalMap):
                                               "2"
@@ -4792,13 +4715,17 @@ statements (ArrayList):
                         Value (NormalMap):
                           Entry (DictionaryEntry)
                             Key (NormalMap):
-                              "search"
+                              "select"
                             Value (NormalMap):
                               Entry (DictionaryEntry)
                                 Key (NormalMap):
-                                  "literal"
+                                  "1"
                                 Value (NormalMap):
-                                  "x"
+                                  Entry (DictionaryEntry)
+                                    Key (NormalMap):
+                                      "literal"
+                                    Value (NormalMap):
+                                      "x"
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -4897,7 +4824,7 @@ statements (ArrayList):
                       "138"
                 literal (NormalMap):
                   "symbol"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -4911,7 +4838,7 @@ statements (ArrayList):
               "9"
             Line (Int32):
               "137"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -4927,6 +4854,7 @@ statements (ArrayList):
                 "137"
           literal (NormalMap):
             "SetCurrent"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -5011,26 +4939,34 @@ statements (ArrayList):
                                 Value (NormalMap):
                                   Entry (DictionaryEntry)
                                     Key (NormalMap):
-                                      "search"
+                                      "select"
                                     Value (NormalMap):
                                       Entry (DictionaryEntry)
                                         Key (NormalMap):
-                                          "literal"
+                                          "1"
                                         Value (NormalMap):
-                                          "SecondLevel"
+                                          Entry (DictionaryEntry)
+                                            Key (NormalMap):
+                                              "literal"
+                                            Value (NormalMap):
+                                              "SecondLevel"
                               Entry (DictionaryEntry)
                                 Key (NormalMap):
                                   "argument"
                                 Value (NormalMap):
                                   Entry (DictionaryEntry)
                                     Key (NormalMap):
-                                      "search"
+                                      "select"
                                     Value (NormalMap):
                                       Entry (DictionaryEntry)
                                         Key (NormalMap):
-                                          "literal"
+                                          "1"
                                         Value (NormalMap):
-                                          "arg"
+                                          Entry (DictionaryEntry)
+                                            Key (NormalMap):
+                                              "literal"
+                                            Value (NormalMap):
+                                              "arg"
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -5099,13 +5035,17 @@ statements (ArrayList):
             delayed (NormalMap):
               Entry (DictionaryEntry)
                 Key (NormalMap):
-                  "search"
+                  "select"
                 Value (NormalMap):
                   Entry (DictionaryEntry)
                     Key (NormalMap):
-                      "literal"
+                      "1"
                     Value (NormalMap):
-                      "arg"
+                      Entry (DictionaryEntry)
+                        Key (NormalMap):
+                          "literal"
+                        Value (NormalMap):
+                          "arg"
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -5204,7 +5144,7 @@ statements (ArrayList):
                       "145"
                 literal (NormalMap):
                   "a"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -5218,7 +5158,7 @@ statements (ArrayList):
               "9"
             Line (Int32):
               "144"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -5234,6 +5174,7 @@ statements (ArrayList):
                 "144"
           literal (NormalMap):
             "FirstLevel"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -5363,7 +5304,7 @@ statements (ArrayList):
               "13"
             Line (Int32):
               "146"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -5377,22 +5318,8 @@ statements (ArrayList):
                 "13"
               Line (Int32):
                 "146"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "16"
-                Line (Int32):
-                  "146"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "13"
-                Line (Int32):
-                  "146"
-            literal (NormalMap):
-              "map"
+          literal (NormalMap):
+            "map"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -5458,7 +5385,7 @@ statements (ArrayList):
               "150"
         statements (ArrayList):
           Entry (Statement)
-            expression (Search):
+            expression (Select):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -5472,7 +5399,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "150"
-              search (Literal):
+              firstKey (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -5488,6 +5415,7 @@ statements (ArrayList):
                       "150"
                 literal (NormalMap):
                   "parent"
+              keys (ArrayList):
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
@@ -5506,7 +5434,7 @@ statements (ArrayList):
                 literal (NormalMap):
                   "1"
           Entry (Statement)
-            expression (Search):
+            expression (Select):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -5520,7 +5448,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "151"
-              search (Literal):
+              firstKey (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -5536,6 +5464,7 @@ statements (ArrayList):
                       "151"
                 literal (NormalMap):
                   "testClasses"
+              keys (ArrayList):
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
@@ -5567,7 +5496,7 @@ statements (ArrayList):
               "6"
             Line (Int32):
               "149"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -5581,22 +5510,8 @@ statements (ArrayList):
                 "6"
               Line (Int32):
                 "149"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "9"
-                Line (Int32):
-                  "149"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "6"
-                Line (Int32):
-                  "149"
-            literal (NormalMap):
-              "map"
+          literal (NormalMap):
+            "map"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -5725,7 +5640,7 @@ statements (ArrayList):
             "17"
           Line (Int32):
             "153"
-      firstKey (Search):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -5739,22 +5654,8 @@ statements (ArrayList):
               "17"
             Line (Int32):
               "153"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "26"
-              Line (Int32):
-                "153"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "17"
-              Line (Int32):
-                "153"
-          literal (NormalMap):
-            "TestClass"
+        literal (NormalMap):
+          "TestClass"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -5822,7 +5723,7 @@ statements (ArrayList):
             Line (Int32):
               "154"
         statements (ArrayList):
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -5836,7 +5737,7 @@ statements (ArrayList):
               "11"
             Line (Int32):
               "154"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -5852,6 +5753,7 @@ statements (ArrayList):
                 "154"
           literal (NormalMap):
             "TestClass"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -6124,7 +6026,7 @@ statements (ArrayList):
             "10"
           Line (Int32):
             "159"
-      firstKey (Search):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -6138,22 +6040,8 @@ statements (ArrayList):
               "10"
             Line (Int32):
               "159"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "19"
-              Line (Int32):
-                "159"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "10"
-              Line (Int32):
-                "159"
-          literal (NormalMap):
-            "TestClass"
+        literal (NormalMap):
+          "TestClass"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -6205,7 +6093,7 @@ statements (ArrayList):
             Line (Int32):
               "160"
         statements (ArrayList):
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -6219,7 +6107,7 @@ statements (ArrayList):
               "12"
             Line (Int32):
               "160"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -6235,6 +6123,7 @@ statements (ArrayList):
                 "160"
           literal (NormalMap):
             "MemberTest"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -6413,7 +6302,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "164"
-                firstKey (Search):
+                firstKey (Literal):
                   Extent (Extent):
                     End (Position):
                       Column (Int32):
@@ -6427,22 +6316,8 @@ statements (ArrayList):
                         "2"
                       Line (Int32):
                         "164"
-                  search (Literal):
-                    Extent (Extent):
-                      End (Position):
-                        Column (Int32):
-                          "12"
-                        Line (Int32):
-                          "164"
-                      FileName (String):
-                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                      Start (Position):
-                        Column (Int32):
-                          "2"
-                        Line (Int32):
-                          "164"
-                    literal (NormalMap):
-                      "memberTest"
+                  literal (NormalMap):
+                    "memberTest"
                 keys (ArrayList):
                   Entry (Literal)
                     Extent (Extent):
@@ -6520,7 +6395,7 @@ statements (ArrayList):
               "1"
             Line (Int32):
               "163"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -6534,22 +6409,8 @@ statements (ArrayList):
                 "1"
               Line (Int32):
                 "163"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "11"
-                Line (Int32):
-                  "163"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "1"
-                Line (Int32):
-                  "163"
-            literal (NormalMap):
-              "MemberTest"
+          literal (NormalMap):
+            "MemberTest"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -6644,7 +6505,7 @@ statements (ArrayList):
               "20"
             Line (Int32):
               "165"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -6658,22 +6519,8 @@ statements (ArrayList):
                 "20"
               Line (Int32):
                 "165"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "30"
-                Line (Int32):
-                  "165"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "20"
-                Line (Int32):
-                  "165"
-            literal (NormalMap):
-              "MemberTest"
+          literal (NormalMap):
+            "MemberTest"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -6785,7 +6632,7 @@ statements (ArrayList):
                       "2"
                     Line (Int32):
                       "167"
-                firstKey (Search):
+                firstKey (Literal):
                   Extent (Extent):
                     End (Position):
                       Column (Int32):
@@ -6799,22 +6646,8 @@ statements (ArrayList):
                         "2"
                       Line (Int32):
                         "167"
-                  search (Literal):
-                    Extent (Extent):
-                      End (Position):
-                        Column (Int32):
-                          "12"
-                        Line (Int32):
-                          "167"
-                      FileName (String):
-                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                      Start (Position):
-                        Column (Int32):
-                          "2"
-                        Line (Int32):
-                          "167"
-                    literal (NormalMap):
-                      "MemberTest"
+                  literal (NormalMap):
+                    "MemberTest"
                 keys (ArrayList):
                   Entry (Literal)
                     Extent (Extent):
@@ -6892,7 +6725,7 @@ statements (ArrayList):
               "1"
             Line (Int32):
               "166"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -6906,22 +6739,8 @@ statements (ArrayList):
                 "1"
               Line (Int32):
                 "166"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "11"
-                Line (Int32):
-                  "166"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "1"
-                Line (Int32):
-                  "166"
-            literal (NormalMap):
-              "memberTest"
+          literal (NormalMap):
+            "memberTest"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -7016,7 +6835,7 @@ statements (ArrayList):
               "23"
             Line (Int32):
               "168"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -7030,22 +6849,8 @@ statements (ArrayList):
                 "23"
               Line (Int32):
                 "168"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "33"
-                Line (Int32):
-                  "168"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "23"
-                Line (Int32):
-                  "168"
-            literal (NormalMap):
-              "memberTest"
+          literal (NormalMap):
+            "memberTest"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -7262,7 +7067,7 @@ statements (ArrayList):
                       "173"
                 literal (NormalMap):
                   "3"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -7276,7 +7081,7 @@ statements (ArrayList):
               "24"
             Line (Int32):
               "170"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -7292,6 +7097,7 @@ statements (ArrayList):
                 "170"
           literal (NormalMap):
             "PositionalNoConversion"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -7455,7 +7261,7 @@ statements (ArrayList):
               "36"
             Line (Int32):
               "174"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -7469,22 +7275,8 @@ statements (ArrayList):
                 "36"
               Line (Int32):
                 "174"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "58"
-                Line (Int32):
-                  "174"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "36"
-                Line (Int32):
-                  "174"
-            literal (NormalMap):
-              "positionalNoConversion"
+          literal (NormalMap):
+            "positionalNoConversion"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -7650,7 +7442,7 @@ statements (ArrayList):
                       "180"
                 literal (NormalMap):
                   "1"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -7664,7 +7456,7 @@ statements (ArrayList):
               "19"
             Line (Int32):
               "178"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -7680,6 +7472,7 @@ statements (ArrayList):
                 "178"
           literal (NormalMap):
             "NamedNoConversion"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -7842,7 +7635,7 @@ statements (ArrayList):
               "31"
             Line (Int32):
               "182"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -7856,22 +7649,8 @@ statements (ArrayList):
                 "31"
               Line (Int32):
                 "182"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "48"
-                Line (Int32):
-                  "182"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "31"
-                Line (Int32):
-                  "182"
-            literal (NormalMap):
-              "namedNoConversion"
+          literal (NormalMap):
+            "namedNoConversion"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -7936,7 +7715,7 @@ statements (ArrayList):
             Line (Int32):
               "186"
         statements (ArrayList):
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -7950,7 +7729,7 @@ statements (ArrayList):
               "21"
             Line (Int32):
               "186"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -7966,6 +7745,7 @@ statements (ArrayList):
                 "186"
           literal (NormalMap):
             "IndexerNoConversion"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -8061,7 +7841,7 @@ statements (ArrayList):
             "28"
           Line (Int32):
             "188"
-      firstKey (Search):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -8075,22 +7855,8 @@ statements (ArrayList):
               "28"
             Line (Int32):
               "188"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "47"
-              Line (Int32):
-                "188"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "28"
-              Line (Int32):
-                "188"
-          literal (NormalMap):
-            "indexerNoConversion"
+        literal (NormalMap):
+          "indexerNoConversion"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -8315,7 +8081,7 @@ statements (ArrayList):
             Line (Int32):
               "194"
         statements (ArrayList):
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -8329,7 +8095,7 @@ statements (ArrayList):
               "23"
             Line (Int32):
               "194"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -8345,6 +8111,7 @@ statements (ArrayList):
                 "194"
           literal (NormalMap):
             "literalFunction"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -8492,13 +8259,17 @@ statements (ArrayList):
             delayed (NormalMap):
               Entry (DictionaryEntry)
                 Key (NormalMap):
-                  "search"
+                  "select"
                 Value (NormalMap):
                   Entry (DictionaryEntry)
                     Key (NormalMap):
-                      "literal"
+                      "1"
                     Value (NormalMap):
-                      "someFunction"
+                      Entry (DictionaryEntry)
+                        Key (NormalMap):
+                          "literal"
+                        Value (NormalMap):
+                          "someFunction"
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -8563,7 +8334,7 @@ statements (ArrayList):
             Line (Int32):
               "200"
         statements (ArrayList):
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -8577,7 +8348,7 @@ statements (ArrayList):
               "20"
             Line (Int32):
               "200"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -8593,6 +8364,7 @@ statements (ArrayList):
                 "200"
           literal (NormalMap):
             "callFunction"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -8765,7 +8537,7 @@ statements (ArrayList):
             Line (Int32):
               "205"
         statements (ArrayList):
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -8779,7 +8551,7 @@ statements (ArrayList):
               "23"
             Line (Int32):
               "205"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -8795,6 +8567,7 @@ statements (ArrayList):
                 "205"
           literal (NormalMap):
             "delayedFunction"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -8880,13 +8653,17 @@ statements (ArrayList):
             delayed (NormalMap):
               Entry (DictionaryEntry)
                 Key (NormalMap):
-                  "search"
+                  "select"
                 Value (NormalMap):
                   Entry (DictionaryEntry)
                     Key (NormalMap):
-                      "literal"
+                      "1"
                     Value (NormalMap):
-                      "value"
+                      Entry (DictionaryEntry)
+                        Key (NormalMap):
+                          "literal"
+                        Value (NormalMap):
+                          "value"
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -8951,7 +8728,7 @@ statements (ArrayList):
             Line (Int32):
               "209"
         statements (ArrayList):
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -8965,7 +8742,7 @@ statements (ArrayList):
               "25"
             Line (Int32):
               "209"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -8981,6 +8758,7 @@ statements (ArrayList):
                 "209"
           literal (NormalMap):
             "selectionFunction"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -9143,13 +8921,17 @@ statements (ArrayList):
                         Value (NormalMap):
                           Entry (DictionaryEntry)
                             Key (NormalMap):
-                              "search"
+                              "select"
                             Value (NormalMap):
                               Entry (DictionaryEntry)
                                 Key (NormalMap):
-                                  "literal"
+                                  "1"
                                 Value (NormalMap):
-                                  "arg"
+                                  Entry (DictionaryEntry)
+                                    Key (NormalMap):
+                                      "literal"
+                                    Value (NormalMap):
+                                      "arg"
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -9251,13 +9033,17 @@ statements (ArrayList):
                                 Value (NormalMap):
                                   Entry (DictionaryEntry)
                                     Key (NormalMap):
-                                      "search"
+                                      "select"
                                     Value (NormalMap):
                                       Entry (DictionaryEntry)
                                         Key (NormalMap):
-                                          "literal"
+                                          "1"
                                         Value (NormalMap):
-                                          "SetUpperLevel"
+                                          Entry (DictionaryEntry)
+                                            Key (NormalMap):
+                                              "literal"
+                                            Value (NormalMap):
+                                              "SetUpperLevel"
                               Entry (DictionaryEntry)
                                 Key (NormalMap):
                                   "argument"
@@ -9331,7 +9117,7 @@ statements (ArrayList):
             Line (Int32):
               "217"
         statements (ArrayList):
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -9345,7 +9131,7 @@ statements (ArrayList):
               "1"
             Line (Int32):
               "217"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -9361,6 +9147,7 @@ statements (ArrayList):
                 "217"
           literal (NormalMap):
             "ChangeUpperLevel"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -9489,13 +9276,17 @@ statements (ArrayList):
                         Value (NormalMap):
                           Entry (DictionaryEntry)
                             Key (NormalMap):
-                              "search"
+                              "select"
                             Value (NormalMap):
                               Entry (DictionaryEntry)
                                 Key (NormalMap):
-                                  "literal"
+                                  "1"
                                 Value (NormalMap):
-                                  "arg"
+                                  Entry (DictionaryEntry)
+                                    Key (NormalMap):
+                                      "literal"
+                                    Value (NormalMap):
+                                      "arg"
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -9614,13 +9405,17 @@ statements (ArrayList):
                                         Value (NormalMap):
                                           Entry (DictionaryEntry)
                                             Key (NormalMap):
-                                              "search"
+                                              "select"
                                             Value (NormalMap):
                                               Entry (DictionaryEntry)
                                                 Key (NormalMap):
-                                                  "literal"
+                                                  "1"
                                                 Value (NormalMap):
-                                                  "ChangeStaticEvent"
+                                                  Entry (DictionaryEntry)
+                                                    Key (NormalMap):
+                                                      "literal"
+                                                    Value (NormalMap):
+                                                      "ChangeStaticEvent"
                                       Entry (DictionaryEntry)
                                         Key (NormalMap):
                                           "argument"
@@ -9661,13 +9456,9 @@ statements (ArrayList):
                                         Value (NormalMap):
                                           Entry (DictionaryEntry)
                                             Key (NormalMap):
-                                              "search"
+                                              "literal"
                                             Value (NormalMap):
-                                              Entry (DictionaryEntry)
-                                                Key (NormalMap):
-                                                  "literal"
-                                                Value (NormalMap):
-                                                  "arg"
+                                              "arg"
                                       Entry (DictionaryEntry)
                                         Key (NormalMap):
                                           "2"
@@ -9738,7 +9529,7 @@ statements (ArrayList):
               "1"
             Line (Int32):
               "221"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -9752,22 +9543,8 @@ statements (ArrayList):
                 "1"
               Line (Int32):
                 "221"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "10"
-                Line (Int32):
-                  "221"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "1"
-                Line (Int32):
-                  "221"
-            literal (NormalMap):
-              "TestClass"
+          literal (NormalMap):
+            "TestClass"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -9846,7 +9623,7 @@ statements (ArrayList):
             "13"
           Line (Int32):
             "226"
-      firstKey (Search):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -9860,22 +9637,8 @@ statements (ArrayList):
               "13"
             Line (Int32):
               "226"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "22"
-              Line (Int32):
-                "226"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "13"
-              Line (Int32):
-                "226"
-          literal (NormalMap):
-            "TestClass"
+        literal (NormalMap):
+          "TestClass"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -10012,7 +9775,7 @@ statements (ArrayList):
               "1"
             Line (Int32):
               "227"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -10026,22 +9789,8 @@ statements (ArrayList):
                 "1"
               Line (Int32):
                 "227"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "10"
-                Line (Int32):
-                  "227"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "1"
-                Line (Int32):
-                  "227"
-            literal (NormalMap):
-              "TestClass"
+          literal (NormalMap):
+            "TestClass"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -10120,7 +9869,7 @@ statements (ArrayList):
               "20"
             Line (Int32):
               "230"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -10134,22 +9883,8 @@ statements (ArrayList):
                 "20"
               Line (Int32):
                 "230"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "29"
-                Line (Int32):
-                  "230"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "20"
-                Line (Int32):
-                  "230"
-            literal (NormalMap):
-              "TestClass"
+          literal (NormalMap):
+            "TestClass"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -10215,7 +9950,7 @@ statements (ArrayList):
               "232"
         statements (ArrayList):
           Entry (Statement)
-            expression (Search):
+            expression (Select):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -10229,7 +9964,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "232"
-              search (Literal):
+              firstKey (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -10245,6 +9980,7 @@ statements (ArrayList):
                       "232"
                 literal (NormalMap):
                   "testClass"
+              keys (ArrayList):
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
@@ -10276,7 +10012,7 @@ statements (ArrayList):
               "19"
             Line (Int32):
               "231"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -10290,22 +10026,8 @@ statements (ArrayList):
                 "19"
               Line (Int32):
                 "231"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "28"
-                Line (Int32):
-                  "231"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "19"
-                Line (Int32):
-                  "231"
-            literal (NormalMap):
-              "TestClass"
+          literal (NormalMap):
+            "TestClass"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -10511,13 +10233,9 @@ statements (ArrayList):
                                         Value (NormalMap):
                                           Entry (DictionaryEntry)
                                             Key (NormalMap):
-                                              "search"
+                                              "literal"
                                             Value (NormalMap):
-                                              Entry (DictionaryEntry)
-                                                Key (NormalMap):
-                                                  "literal"
-                                                Value (NormalMap):
-                                                  "arg"
+                                              "arg"
                                       Entry (DictionaryEntry)
                                         Key (NormalMap):
                                           "2"
@@ -10588,7 +10306,7 @@ statements (ArrayList):
               "1"
             Line (Int32):
               "234"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -10602,22 +10320,8 @@ statements (ArrayList):
                 "1"
               Line (Int32):
                 "234"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "10"
-                Line (Int32):
-                  "234"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "1"
-                Line (Int32):
-                  "234"
-            literal (NormalMap):
-              "testClass"
+          literal (NormalMap):
+            "testClass"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -10696,7 +10400,7 @@ statements (ArrayList):
             "15"
           Line (Int32):
             "239"
-      firstKey (Search):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -10710,22 +10414,8 @@ statements (ArrayList):
               "15"
             Line (Int32):
               "239"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "24"
-              Line (Int32):
-                "239"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "15"
-              Line (Int32):
-                "239"
-          literal (NormalMap):
-            "testClass"
+        literal (NormalMap):
+          "testClass"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -10825,7 +10515,7 @@ statements (ArrayList):
               "21"
             Line (Int32):
               "240"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -10839,22 +10529,8 @@ statements (ArrayList):
                 "21"
               Line (Int32):
                 "240"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "30"
-                Line (Int32):
-                  "240"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "21"
-                Line (Int32):
-                  "240"
-            literal (NormalMap):
-              "testClass"
+          literal (NormalMap):
+            "testClass"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -11090,7 +10766,7 @@ statements (ArrayList):
                 literal (NormalMap):
                   "1"
           Entry (Statement)
-            expression (Search):
+            expression (Select):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -11104,7 +10780,7 @@ statements (ArrayList):
                     "2"
                   Line (Int32):
                     "248"
-              search (Literal):
+              firstKey (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -11120,6 +10796,7 @@ statements (ArrayList):
                       "248"
                 literal (NormalMap):
                   "one"
+              keys (ArrayList):
             keys (ArrayList):
               Entry (Literal)
                 Extent (Extent):
@@ -11137,7 +10814,7 @@ statements (ArrayList):
                       "248"
                 literal (NormalMap):
                   "2"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -11151,7 +10828,7 @@ statements (ArrayList):
               "18"
             Line (Int32):
               "246"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -11167,6 +10844,7 @@ statements (ArrayList):
                 "246"
           literal (NormalMap):
             "Equal"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -11403,7 +11081,7 @@ statements (ArrayList):
               "9"
             Line (Int32):
               "254"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -11417,24 +11095,10 @@ statements (ArrayList):
                 "9"
               Line (Int32):
                 "254"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "24"
-                Line (Int32):
-                  "254"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "9"
-                Line (Int32):
-                  "254"
-            literal (NormalMap):
-              "firstIfBranches"
+          literal (NormalMap):
+            "firstIfBranches"
         keys (ArrayList):
-          Entry (Search)
+          Entry (Select)
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -11448,7 +11112,7 @@ statements (ArrayList):
                   "26"
                 Line (Int32):
                   "254"
-            search (Literal):
+            firstKey (Literal):
               Extent (Extent):
                 End (Position):
                   Column (Int32):
@@ -11464,6 +11128,7 @@ statements (ArrayList):
                     "254"
               literal (NormalMap):
                 "firstIfCondition"
+            keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -11712,7 +11377,7 @@ statements (ArrayList):
             "14"
           Line (Int32):
             "261"
-      firstKey (Search):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -11726,22 +11391,8 @@ statements (ArrayList):
               "14"
             Line (Int32):
               "261"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "31"
-              Line (Int32):
-                "261"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "14"
-              Line (Int32):
-                "261"
-          literal (NormalMap):
-            "secondSwitchCases"
+        literal (NormalMap):
+          "secondSwitchCases"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -11922,7 +11573,7 @@ statements (ArrayList):
             Line (Int32):
               "266"
         statements (ArrayList):
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -11936,7 +11587,7 @@ statements (ArrayList):
               "21"
             Line (Int32):
               "266"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -11952,6 +11603,7 @@ statements (ArrayList):
                 "266"
           literal (NormalMap):
             "emptyFunction"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -12090,7 +11742,7 @@ statements (ArrayList):
               "6"
             Line (Int32):
               "267"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -12104,22 +11756,8 @@ statements (ArrayList):
                 "6"
               Line (Int32):
                 "267"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "12"
-                Line (Int32):
-                  "267"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "6"
-                Line (Int32):
-                  "267"
-            literal (NormalMap):
-              "System"
+          literal (NormalMap):
+            "System"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -12318,7 +11956,7 @@ statements (ArrayList):
             "14"
           Line (Int32):
             "273"
-      firstKey (Search):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -12332,22 +11970,8 @@ statements (ArrayList):
               "14"
             Line (Int32):
               "273"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "24"
-              Line (Int32):
-                "273"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "14"
-              Line (Int32):
-                "273"
-          literal (NormalMap):
-            "stringTest"
+        literal (NormalMap):
+          "stringTest"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -12433,7 +12057,7 @@ statements (ArrayList):
         literal (NormalMap):
           "helloh"
   Entry (Statement)
-    expression (Search):
+    expression (Select):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -12447,7 +12071,7 @@ statements (ArrayList):
             "25"
           Line (Int32):
             "275"
-      search (Search):
+      firstKey (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -12461,7 +12085,7 @@ statements (ArrayList):
               "25"
             Line (Int32):
               "275"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -12477,6 +12101,8 @@ statements (ArrayList):
                 "275"
           literal (NormalMap):
             "stringTest"
+        keys (ArrayList):
+      keys (ArrayList):
     keys (ArrayList):
       Entry (Literal)
         Extent (Extent):
@@ -12630,7 +12256,7 @@ hello!
                     "2"
                   Line (Int32):
                     "283"
-              firstKey (Search):
+              firstKey (Literal):
                 Extent (Extent):
                   End (Position):
                     Column (Int32):
@@ -12644,22 +12270,8 @@ hello!
                       "2"
                     Line (Int32):
                       "283"
-                search (Literal):
-                  Extent (Extent):
-                    End (Position):
-                      Column (Int32):
-                        "8"
-                      Line (Int32):
-                        "283"
-                    FileName (String):
-                      "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-                    Start (Position):
-                      Column (Int32):
-                        "2"
-                      Line (Int32):
-                        "283"
-                  literal (NormalMap):
-                    "System"
+                literal (NormalMap):
+                  "System"
               keys (ArrayList):
                 Entry (Literal)
                   Extent (Extent):
@@ -12742,7 +12354,7 @@ hello!
                       "283"
                 literal (NormalMap):
                   "2"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -12756,7 +12368,7 @@ hello!
               "6"
             Line (Int32):
               "281"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -12772,6 +12384,7 @@ hello!
                 "281"
           literal (NormalMap):
             "BitwiseOr"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -12833,7 +12446,7 @@ hello!
               "11"
             Line (Int32):
               "284"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -12847,22 +12460,8 @@ hello!
                 "11"
               Line (Int32):
                 "284"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "17"
-                Line (Int32):
-                  "284"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "11"
-                Line (Int32):
-                  "284"
-            literal (NormalMap):
-              "System"
+          literal (NormalMap):
+            "System"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -12991,7 +12590,7 @@ hello!
               "1"
             Line (Int32):
               "285"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -13005,22 +12604,8 @@ hello!
                 "1"
               Line (Int32):
                 "285"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "10"
-                Line (Int32):
-                  "285"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "1"
-                Line (Int32):
-                  "285"
-            literal (NormalMap):
-              "arrayList"
+          literal (NormalMap):
+            "arrayList"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -13083,7 +12668,7 @@ hello!
             "17"
           Line (Int32):
             "287"
-      firstKey (Search):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -13097,22 +12682,8 @@ hello!
               "17"
             Line (Int32):
               "287"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "26"
-              Line (Int32):
-                "287"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "17"
-              Line (Int32):
-                "287"
-          literal (NormalMap):
-            "arrayList"
+        literal (NormalMap):
+          "arrayList"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -13178,7 +12749,7 @@ hello!
               "9"
             Line (Int32):
               "288"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -13192,22 +12763,8 @@ hello!
                 "9"
               Line (Int32):
                 "288"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "15"
-                Line (Int32):
-                  "288"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "9"
-                Line (Int32):
-                  "288"
-            literal (NormalMap):
-              "System"
+          literal (NormalMap):
+            "System"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -13357,7 +12914,7 @@ Schwaenzchen in die Hoeh."
               "1"
             Line (Int32):
               "289"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -13371,22 +12928,8 @@ Schwaenzchen in die Hoeh."
                 "1"
               Line (Int32):
                 "289"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "8"
-                Line (Int32):
-                  "289"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "1"
-                Line (Int32):
-                  "289"
-            literal (NormalMap):
-              "textBox"
+          literal (NormalMap):
+            "textBox"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -13481,7 +13024,7 @@ Schwaenzchen in die Hoeh."
               "7"
             Line (Int32):
               "296"
-        firstKey (Search):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -13495,22 +13038,8 @@ Schwaenzchen in die Hoeh."
                 "7"
               Line (Int32):
                 "296"
-          search (Literal):
-            Extent (Extent):
-              End (Position):
-                Column (Int32):
-                  "14"
-                Line (Int32):
-                  "296"
-              FileName (String):
-                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-              Start (Position):
-                Column (Int32):
-                  "7"
-                Line (Int32):
-                  "296"
-            literal (NormalMap):
-              "textBox"
+          literal (NormalMap):
+            "textBox"
         keys (ArrayList):
           Entry (Literal)
             Extent (Extent):
@@ -13589,7 +13118,7 @@ Schwaenzchen in die Hoeh."
             "15"
           Line (Int32):
             "297"
-      firstKey (Search):
+      firstKey (Literal):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -13603,22 +13132,8 @@ Schwaenzchen in die Hoeh."
               "15"
             Line (Int32):
               "297"
-        search (Literal):
-          Extent (Extent):
-            End (Position):
-              Column (Int32):
-                "20"
-              Line (Int32):
-                "297"
-            FileName (String):
-              "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-            Start (Position):
-              Column (Int32):
-                "15"
-              Line (Int32):
-                "297"
-          literal (NormalMap):
-            "lines"
+        literal (NormalMap):
+          "lines"
       keys (ArrayList):
         Entry (Literal)
           Extent (Extent):
@@ -13858,13 +13373,17 @@ Schwaenzchen in die Hoeh."
                                 Value (NormalMap):
                                   Entry (DictionaryEntry)
                                     Key (NormalMap):
-                                      "search"
+                                      "select"
                                     Value (NormalMap):
                                       Entry (DictionaryEntry)
                                         Key (NormalMap):
-                                          "literal"
+                                          "1"
                                         Value (NormalMap):
-                                          "Smaller"
+                                          Entry (DictionaryEntry)
+                                            Key (NormalMap):
+                                              "literal"
+                                            Value (NormalMap):
+                                              "Smaller"
                               Entry (DictionaryEntry)
                                 Key (NormalMap):
                                   "argument"
@@ -13896,13 +13415,17 @@ Schwaenzchen in die Hoeh."
                                             Value (NormalMap):
                                               Entry (DictionaryEntry)
                                                 Key (NormalMap):
-                                                  "search"
+                                                  "select"
                                                 Value (NormalMap):
                                                   Entry (DictionaryEntry)
                                                     Key (NormalMap):
-                                                      "literal"
+                                                      "1"
                                                     Value (NormalMap):
-                                                      "arg"
+                                                      Entry (DictionaryEntry)
+                                                        Key (NormalMap):
+                                                          "literal"
+                                                        Value (NormalMap):
+                                                          "arg"
                                       Entry (DictionaryEntry)
                                         Key (NormalMap):
                                           "2"
@@ -14014,13 +13537,17 @@ Schwaenzchen in die Hoeh."
                                                             Value (NormalMap):
                                                               Entry (DictionaryEntry)
                                                                 Key (NormalMap):
-                                                                  "search"
+                                                                  "select"
                                                                 Value (NormalMap):
                                                                   Entry (DictionaryEntry)
                                                                     Key (NormalMap):
-                                                                      "literal"
+                                                                      "1"
                                                                     Value (NormalMap):
-                                                                      "loop"
+                                                                      Entry (DictionaryEntry)
+                                                                        Key (NormalMap):
+                                                                          "literal"
+                                                                        Value (NormalMap):
+                                                                          "loop"
                                                           Entry (DictionaryEntry)
                                                             Key (NormalMap):
                                                               "argument"
@@ -14035,13 +13562,17 @@ Schwaenzchen in die Hoeh."
                                                                     Value (NormalMap):
                                                                       Entry (DictionaryEntry)
                                                                         Key (NormalMap):
-                                                                          "search"
+                                                                          "select"
                                                                         Value (NormalMap):
                                                                           Entry (DictionaryEntry)
                                                                             Key (NormalMap):
-                                                                              "literal"
+                                                                              "1"
                                                                             Value (NormalMap):
-                                                                              "Add"
+                                                                              Entry (DictionaryEntry)
+                                                                                Key (NormalMap):
+                                                                                  "literal"
+                                                                                Value (NormalMap):
+                                                                                  "Add"
                                                                   Entry (DictionaryEntry)
                                                                     Key (NormalMap):
                                                                       "argument"
@@ -14073,13 +13604,17 @@ Schwaenzchen in die Hoeh."
                                                                                 Value (NormalMap):
                                                                                   Entry (DictionaryEntry)
                                                                                     Key (NormalMap):
-                                                                                      "search"
+                                                                                      "select"
                                                                                     Value (NormalMap):
                                                                                       Entry (DictionaryEntry)
                                                                                         Key (NormalMap):
-                                                                                          "literal"
+                                                                                          "1"
                                                                                         Value (NormalMap):
-                                                                                          "arg"
+                                                                                          Entry (DictionaryEntry)
+                                                                                            Key (NormalMap):
+                                                                                              "literal"
+                                                                                            Value (NormalMap):
+                                                                                              "arg"
                                                                           Entry (DictionaryEntry)
                                                                             Key (NormalMap):
                                                                               "2"
@@ -14158,13 +13693,17 @@ Schwaenzchen in die Hoeh."
                                                     Value (NormalMap):
                                                       Entry (DictionaryEntry)
                                                         Key (NormalMap):
-                                                          "search"
+                                                          "select"
                                                         Value (NormalMap):
                                                           Entry (DictionaryEntry)
                                                             Key (NormalMap):
-                                                              "literal"
+                                                              "1"
                                                             Value (NormalMap):
-                                                              "arg"
+                                                              Entry (DictionaryEntry)
+                                                                Key (NormalMap):
+                                                                  "literal"
+                                                                Value (NormalMap):
+                                                                  "arg"
                   Entry (DictionaryEntry)
                     Key (NormalMap):
                       "3"
@@ -14204,39 +13743,43 @@ Schwaenzchen in die Hoeh."
                                         Value (NormalMap):
                                           Entry (DictionaryEntry)
                                             Key (NormalMap):
-                                              "search"
+                                              "literal"
                                             Value (NormalMap):
-                                              Entry (DictionaryEntry)
-                                                Key (NormalMap):
-                                                  "literal"
-                                                Value (NormalMap):
-                                                  "whileBranches"
+                                              "whileBranches"
                                       Entry (DictionaryEntry)
                                         Key (NormalMap):
                                           "2"
                                         Value (NormalMap):
                                           Entry (DictionaryEntry)
                                             Key (NormalMap):
-                                              "search"
+                                              "select"
                                             Value (NormalMap):
                                               Entry (DictionaryEntry)
                                                 Key (NormalMap):
-                                                  "literal"
+                                                  "1"
                                                 Value (NormalMap):
-                                                  "whileDecision"
+                                                  Entry (DictionaryEntry)
+                                                    Key (NormalMap):
+                                                      "literal"
+                                                    Value (NormalMap):
+                                                      "whileDecision"
                               Entry (DictionaryEntry)
                                 Key (NormalMap):
                                   "argument"
                                 Value (NormalMap):
                                   Entry (DictionaryEntry)
                                     Key (NormalMap):
-                                      "search"
+                                      "select"
                                     Value (NormalMap):
                                       Entry (DictionaryEntry)
                                         Key (NormalMap):
-                                          "literal"
+                                          "1"
                                         Value (NormalMap):
-                                          "arg"
+                                          Entry (DictionaryEntry)
+                                            Key (NormalMap):
+                                              "literal"
+                                            Value (NormalMap):
+                                              "arg"
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -14302,7 +13845,7 @@ Schwaenzchen in die Hoeh."
               "316"
         literal (NormalMap):
           "3"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -14316,7 +13859,7 @@ Schwaenzchen in die Hoeh."
               "14"
             Line (Int32):
               "316"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -14332,6 +13875,7 @@ Schwaenzchen in die Hoeh."
                 "316"
           literal (NormalMap):
             "loop"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -14408,13 +13952,17 @@ Schwaenzchen in die Hoeh."
                         Value (NormalMap):
                           Entry (DictionaryEntry)
                             Key (NormalMap):
-                              "search"
+                              "select"
                             Value (NormalMap):
                               Entry (DictionaryEntry)
                                 Key (NormalMap):
-                                  "literal"
+                                  "1"
                                 Value (NormalMap):
-                                  "arg"
+                                  Entry (DictionaryEntry)
+                                    Key (NormalMap):
+                                      "literal"
+                                    Value (NormalMap):
+                                      "arg"
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -14480,7 +14028,7 @@ Schwaenzchen in die Hoeh."
               "323"
         literal (NormalMap):
           "1"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -14494,7 +14042,7 @@ Schwaenzchen in die Hoeh."
               "19"
             Line (Int32):
               "323"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -14510,6 +14058,7 @@ Schwaenzchen in die Hoeh."
                 "323"
           literal (NormalMap):
             "returnInMap"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -14661,13 +14210,17 @@ Schwaenzchen in die Hoeh."
             delayed (NormalMap):
               Entry (DictionaryEntry)
                 Key (NormalMap):
-                  "search"
+                  "select"
                 Value (NormalMap):
                   Entry (DictionaryEntry)
                     Key (NormalMap):
-                      "literal"
+                      "1"
                     Value (NormalMap):
-                      "arg"
+                      Entry (DictionaryEntry)
+                        Key (NormalMap):
+                          "literal"
+                        Value (NormalMap):
+                          "arg"
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -14829,7 +14382,7 @@ Schwaenzchen in die Hoeh."
               Line (Int32):
                 "332"
           statements (ArrayList):
-        callable (Search):
+        callable (Select):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -14843,7 +14396,7 @@ Schwaenzchen in die Hoeh."
                 "26"
               Line (Int32):
                 "332"
-          search (Literal):
+          firstKey (Literal):
             Extent (Extent):
               End (Position):
                 Column (Int32):
@@ -14859,6 +14412,7 @@ Schwaenzchen in die Hoeh."
                   "332"
             literal (NormalMap):
               "myArg"
+          keys (ArrayList):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -14872,7 +14426,7 @@ Schwaenzchen in die Hoeh."
               "26"
             Line (Int32):
               "332"
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -14886,7 +14440,7 @@ Schwaenzchen in die Hoeh."
               "16"
             Line (Int32):
               "332"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -14902,6 +14456,7 @@ Schwaenzchen in die Hoeh."
                 "332"
           literal (NormalMap):
             "returnArg"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):
@@ -15054,7 +14609,7 @@ Schwaenzchen in die Hoeh."
             Line (Int32):
               "336"
         statements (ArrayList):
-      callable (Search):
+      callable (Select):
         Extent (Extent):
           End (Position):
             Column (Int32):
@@ -15068,7 +14623,7 @@ Schwaenzchen in die Hoeh."
               "19"
             Line (Int32):
               "336"
-        search (Literal):
+        firstKey (Literal):
           Extent (Extent):
             End (Position):
               Column (Int32):
@@ -15084,6 +14639,7 @@ Schwaenzchen in die Hoeh."
                 "336"
           literal (NormalMap):
             "documentedFunction"
+        keys (ArrayList):
       Extent (Extent):
         End (Position):
           Column (Int32):

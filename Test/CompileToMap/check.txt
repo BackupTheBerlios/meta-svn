@@ -41,13 +41,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "map"
+                                "map"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -88,13 +84,17 @@ Entry (DictionaryEntry)
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "search"
+                                    "select"
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "literal"
+                                        "1"
                                       Value (NormalMap):
-                                        "parent"
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            "parent"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -211,13 +211,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "map"
+                                "map"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -258,13 +254,17 @@ Entry (DictionaryEntry)
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "search"
+                                    "select"
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "literal"
+                                        "1"
                                       Value (NormalMap):
-                                        "parent"
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            "parent"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -288,13 +288,17 @@ Entry (DictionaryEntry)
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "search"
+                                    "select"
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "literal"
+                                        "1"
                                       Value (NormalMap):
-                                        "logic"
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            "logic"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "3"
@@ -318,13 +322,17 @@ Entry (DictionaryEntry)
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "search"
+                                    "select"
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "literal"
+                                        "1"
                                       Value (NormalMap):
-                                        "map"
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            "map"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "4"
@@ -348,13 +356,17 @@ Entry (DictionaryEntry)
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "search"
+                                    "select"
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "literal"
+                                        "1"
                                       Value (NormalMap):
-                                        "math"
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            "math"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "4"
@@ -439,13 +451,9 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "literal"
                       Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "testSubDir"
+                        "testSubDir"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -760,17 +768,25 @@ Entry (DictionaryEntry)
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "search"
+                            "select"
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "1"
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "literal"
+                                    "select"
                                   Value (NormalMap):
-                                    "hashTestData"
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "1"
+                                      Value (NormalMap):
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            "hashTestData"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "8"
@@ -794,13 +810,17 @@ Entry (DictionaryEntry)
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "search"
+                "select"
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "literal"
+                    "1"
                   Value (NormalMap):
-                    "testSubDir"
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "literal"
+                      Value (NormalMap):
+                        "testSubDir"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "9"
@@ -1016,13 +1036,17 @@ Entry (DictionaryEntry)
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "search"
+                                        "select"
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
-                                            "literal"
+                                            "1"
                                           Value (NormalMap):
-                                            "Add"
+                                            Entry (DictionaryEntry)
+                                              Key (NormalMap):
+                                                "literal"
+                                              Value (NormalMap):
+                                                "Add"
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
                                     "argument"
@@ -1062,13 +1086,9 @@ Entry (DictionaryEntry)
                                                       Value (NormalMap):
                                                         Entry (DictionaryEntry)
                                                           Key (NormalMap):
-                                                            "search"
+                                                            "literal"
                                                           Value (NormalMap):
-                                                            Entry (DictionaryEntry)
-                                                              Key (NormalMap):
-                                                                "literal"
-                                                              Value (NormalMap):
-                                                                "arg"
+                                                            "arg"
                                                     Entry (DictionaryEntry)
                                                       Key (NormalMap):
                                                         "2"
@@ -1135,13 +1155,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "Apply"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "Apply"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -1173,13 +1197,17 @@ Entry (DictionaryEntry)
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "search"
+                                    "select"
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "literal"
+                                        "1"
                                       Value (NormalMap):
-                                        "applyMethod"
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            "applyMethod"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -1314,13 +1342,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "If"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "If"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -1360,13 +1392,17 @@ Entry (DictionaryEntry)
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
-                                            "search"
+                                            "select"
                                           Value (NormalMap):
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
-                                                "literal"
+                                                "1"
                                               Value (NormalMap):
-                                                "Equal"
+                                                Entry (DictionaryEntry)
+                                                  Key (NormalMap):
+                                                    "literal"
+                                                  Value (NormalMap):
+                                                    "Equal"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "argument"
@@ -1620,13 +1656,9 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "literal"
                       Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "System"
+                        "System"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -1667,13 +1699,9 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "literal"
                       Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "Microsoft"
+                        "Microsoft"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -1706,13 +1734,17 @@ Entry (DictionaryEntry)
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "search"
+                "select"
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "literal"
+                    "1"
                   Value (NormalMap):
-                    "arg"
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "literal"
+                      Value (NormalMap):
+                        "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "18"
@@ -1778,13 +1810,17 @@ Entry (DictionaryEntry)
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "search"
+                    "select"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "1"
                       Value (NormalMap):
-                        "aMap"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "literal"
+                          Value (NormalMap):
+                            "aMap"
         Entry (DictionaryEntry)
           Key (NormalMap):
             "value"
@@ -1895,17 +1931,25 @@ Entry (DictionaryEntry)
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "search"
+                "select"
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "search"
+                    "1"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "select"
                       Value (NormalMap):
-                        "aMap"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "1"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "aMap"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "24"
@@ -1929,13 +1973,17 @@ Entry (DictionaryEntry)
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "search"
+                "select"
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "literal"
+                    "1"
                   Value (NormalMap):
-                    "normal symbol"
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "literal"
+                      Value (NormalMap):
+                        "normal symbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "25"
@@ -1959,13 +2007,17 @@ Entry (DictionaryEntry)
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "search"
+                "select"
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "literal"
+                    "1"
                   Value (NormalMap):
-                    "lookupSymbol"
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "literal"
+                      Value (NormalMap):
+                        "lookupSymbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "26"
@@ -1989,13 +2041,17 @@ Entry (DictionaryEntry)
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "search"
+                "select"
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "literal"
+                    "1"
                   Value (NormalMap):
-                    "long key symbol"
+                    Entry (DictionaryEntry)
+                      Key (NormalMap):
+                        "literal"
+                      Value (NormalMap):
+                        "long key symbol"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "27"
@@ -2353,13 +2409,9 @@ Entry (DictionaryEntry)
                                                           Value (NormalMap):
                                                             Entry (DictionaryEntry)
                                                               Key (NormalMap):
-                                                                "search"
+                                                                "literal"
                                                               Value (NormalMap):
-                                                                Entry (DictionaryEntry)
-                                                                  Key (NormalMap):
-                                                                    "literal"
-                                                                  Value (NormalMap):
-                                                                    "arg"
+                                                                "arg"
                                                         Entry (DictionaryEntry)
                                                           Key (NormalMap):
                                                             "2"
@@ -2652,13 +2704,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "object"
+                                "object"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -2716,13 +2764,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "object"
+                                "object"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -2894,13 +2938,17 @@ Entry (DictionaryEntry)
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
-                                            "search"
+                                            "select"
                                           Value (NormalMap):
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
-                                                "literal"
+                                                "1"
                                               Value (NormalMap):
-                                                "arg"
+                                                Entry (DictionaryEntry)
+                                                  Key (NormalMap):
+                                                    "literal"
+                                                  Value (NormalMap):
+                                                    "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "33"
@@ -2932,13 +2980,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "ReturnEverything"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "ReturnEverything"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -3056,13 +3108,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "ReturnEverything"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "ReturnEverything"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -3462,13 +3518,17 @@ Entry (DictionaryEntry)
                                                   Value (NormalMap):
                                                     Entry (DictionaryEntry)
                                                       Key (NormalMap):
-                                                        "search"
+                                                        "select"
                                                       Value (NormalMap):
                                                         Entry (DictionaryEntry)
                                                           Key (NormalMap):
-                                                            "literal"
+                                                            "1"
                                                           Value (NormalMap):
-                                                            "arg"
+                                                            Entry (DictionaryEntry)
+                                                              Key (NormalMap):
+                                                                "literal"
+                                                              Value (NormalMap):
+                                                                "arg"
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "2"
@@ -3500,13 +3560,9 @@ Entry (DictionaryEntry)
                                                           Value (NormalMap):
                                                             Entry (DictionaryEntry)
                                                               Key (NormalMap):
-                                                                "search"
+                                                                "literal"
                                                               Value (NormalMap):
-                                                                Entry (DictionaryEntry)
-                                                                  Key (NormalMap):
-                                                                    "literal"
-                                                                  Value (NormalMap):
-                                                                    "arg"
+                                                                "arg"
                                                         Entry (DictionaryEntry)
                                                           Key (NormalMap):
                                                             "2"
@@ -3539,13 +3595,17 @@ Entry (DictionaryEntry)
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
-                                            "search"
+                                            "select"
                                           Value (NormalMap):
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
-                                                "literal"
+                                                "1"
                                               Value (NormalMap):
-                                                "x"
+                                                Entry (DictionaryEntry)
+                                                  Key (NormalMap):
+                                                    "literal"
+                                                  Value (NormalMap):
+                                                    "x"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "37"
@@ -3577,13 +3637,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "SetCurrent"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "SetCurrent"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -3703,26 +3767,34 @@ Entry (DictionaryEntry)
                                               Value (NormalMap):
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
-                                                    "search"
+                                                    "select"
                                                   Value (NormalMap):
                                                     Entry (DictionaryEntry)
                                                       Key (NormalMap):
-                                                        "literal"
+                                                        "1"
                                                       Value (NormalMap):
-                                                        "SecondLevel"
+                                                        Entry (DictionaryEntry)
+                                                          Key (NormalMap):
+                                                            "literal"
+                                                          Value (NormalMap):
+                                                            "SecondLevel"
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "argument"
                                               Value (NormalMap):
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
-                                                    "search"
+                                                    "select"
                                                   Value (NormalMap):
                                                     Entry (DictionaryEntry)
                                                       Key (NormalMap):
-                                                        "literal"
+                                                        "1"
                                                       Value (NormalMap):
-                                                        "arg"
+                                                        Entry (DictionaryEntry)
+                                                          Key (NormalMap):
+                                                            "literal"
+                                                          Value (NormalMap):
+                                                            "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "39"
@@ -3775,13 +3847,17 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "select"
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "literal"
+                                    "1"
                                   Value (NormalMap):
-                                    "arg"
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "literal"
+                                      Value (NormalMap):
+                                        "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "40"
@@ -3813,13 +3889,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "FirstLevel"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "FirstLevel"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -3893,13 +3973,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "map"
+                                "map"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -4008,13 +4084,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "map"
+                                "map"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -4055,13 +4127,17 @@ Entry (DictionaryEntry)
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "search"
+                                    "select"
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "literal"
+                                        "1"
                                       Value (NormalMap):
-                                        "parent"
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            "parent"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -4085,13 +4161,17 @@ Entry (DictionaryEntry)
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "search"
+                                    "select"
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "literal"
+                                        "1"
                                       Value (NormalMap):
-                                        "testClasses"
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            "testClasses"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "43"
@@ -4167,13 +4247,9 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "literal"
                       Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "TestClass"
+                        "TestClass"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -4223,13 +4299,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "TestClass"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "TestClass"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -4410,13 +4490,9 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "literal"
                       Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "TestClass"
+                        "TestClass"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -4457,13 +4533,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "MemberTest"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "MemberTest"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -4582,13 +4662,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "MemberTest"
+                                "MemberTest"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -4654,13 +4730,9 @@ Entry (DictionaryEntry)
                                               Value (NormalMap):
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
-                                                    "search"
+                                                    "literal"
                                                   Value (NormalMap):
-                                                    Entry (DictionaryEntry)
-                                                      Key (NormalMap):
-                                                        "literal"
-                                                      Value (NormalMap):
-                                                        "memberTest"
+                                                    "memberTest"
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "2"
@@ -4727,13 +4799,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "MemberTest"
+                                "MemberTest"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -4800,13 +4868,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "memberTest"
+                                "memberTest"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -4872,13 +4936,9 @@ Entry (DictionaryEntry)
                                               Value (NormalMap):
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
-                                                    "search"
+                                                    "literal"
                                                   Value (NormalMap):
-                                                    Entry (DictionaryEntry)
-                                                      Key (NormalMap):
-                                                        "literal"
-                                                      Value (NormalMap):
-                                                        "MemberTest"
+                                                    "MemberTest"
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "2"
@@ -4945,13 +5005,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "memberTest"
+                                "memberTest"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -5036,13 +5092,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "PositionalNoConversion"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "PositionalNoConversion"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -5168,13 +5228,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "positionalNoConversion"
+                                "positionalNoConversion"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -5301,13 +5357,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "NamedNoConversion"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "NamedNoConversion"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -5432,13 +5492,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "namedNoConversion"
+                                "namedNoConversion"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -5564,13 +5620,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "IndexerNoConversion"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "IndexerNoConversion"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -5646,13 +5706,9 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "literal"
                       Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "indexerNoConversion"
+                        "indexerNoConversion"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -5826,13 +5882,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "literalFunction"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "literalFunction"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -5974,13 +6034,17 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "select"
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "literal"
+                                    "1"
                                   Value (NormalMap):
-                                    "someFunction"
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "literal"
+                                      Value (NormalMap):
+                                        "someFunction"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "73"
@@ -6012,13 +6076,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "callFunction"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "callFunction"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -6168,13 +6236,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "delayedFunction"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "delayedFunction"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -6262,13 +6334,17 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "select"
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "literal"
+                                    "1"
                                   Value (NormalMap):
-                                    "value"
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "literal"
+                                      Value (NormalMap):
+                                        "value"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "78"
@@ -6300,13 +6376,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "selectionFunction"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "selectionFunction"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -6463,13 +6543,17 @@ Entry (DictionaryEntry)
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
-                                            "search"
+                                            "select"
                                           Value (NormalMap):
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
-                                                "literal"
+                                                "1"
                                               Value (NormalMap):
-                                                "arg"
+                                                Entry (DictionaryEntry)
+                                                  Key (NormalMap):
+                                                    "literal"
+                                                  Value (NormalMap):
+                                                    "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "82"
@@ -6555,13 +6639,17 @@ Entry (DictionaryEntry)
                                               Value (NormalMap):
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
-                                                    "search"
+                                                    "select"
                                                   Value (NormalMap):
                                                     Entry (DictionaryEntry)
                                                       Key (NormalMap):
-                                                        "literal"
+                                                        "1"
                                                       Value (NormalMap):
-                                                        "SetUpperLevel"
+                                                        Entry (DictionaryEntry)
+                                                          Key (NormalMap):
+                                                            "literal"
+                                                          Value (NormalMap):
+                                                            "SetUpperLevel"
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "argument"
@@ -6602,13 +6690,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "ChangeUpperLevel"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "ChangeUpperLevel"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -6739,13 +6831,17 @@ Entry (DictionaryEntry)
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
-                                            "search"
+                                            "select"
                                           Value (NormalMap):
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
-                                                "literal"
+                                                "1"
                                               Value (NormalMap):
-                                                "arg"
+                                                Entry (DictionaryEntry)
+                                                  Key (NormalMap):
+                                                    "literal"
+                                                  Value (NormalMap):
+                                                    "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "86"
@@ -6785,13 +6881,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "TestClass"
+                                "TestClass"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -6903,13 +6995,17 @@ Entry (DictionaryEntry)
                                                                   Value (NormalMap):
                                                                     Entry (DictionaryEntry)
                                                                       Key (NormalMap):
-                                                                        "search"
+                                                                        "select"
                                                                       Value (NormalMap):
                                                                         Entry (DictionaryEntry)
                                                                           Key (NormalMap):
-                                                                            "literal"
+                                                                            "1"
                                                                           Value (NormalMap):
-                                                                            "ChangeStaticEvent"
+                                                                            Entry (DictionaryEntry)
+                                                                              Key (NormalMap):
+                                                                                "literal"
+                                                                              Value (NormalMap):
+                                                                                "ChangeStaticEvent"
                                                                 Entry (DictionaryEntry)
                                                                   Key (NormalMap):
                                                                     "argument"
@@ -6950,13 +7046,9 @@ Entry (DictionaryEntry)
                                                                   Value (NormalMap):
                                                                     Entry (DictionaryEntry)
                                                                       Key (NormalMap):
-                                                                        "search"
+                                                                        "literal"
                                                                       Value (NormalMap):
-                                                                        Entry (DictionaryEntry)
-                                                                          Key (NormalMap):
-                                                                            "literal"
-                                                                          Value (NormalMap):
-                                                                            "arg"
+                                                                        "arg"
                                                                 Entry (DictionaryEntry)
                                                                   Key (NormalMap):
                                                                     "2"
@@ -6997,13 +7089,9 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "literal"
                       Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "TestClass"
+                        "TestClass"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -7052,13 +7140,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "TestClass"
+                                "TestClass"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -7170,13 +7254,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "TestClass"
+                                "TestClass"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -7234,13 +7314,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "TestClass"
+                                "TestClass"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -7281,13 +7357,17 @@ Entry (DictionaryEntry)
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "search"
+                                    "select"
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "literal"
+                                        "1"
                                       Value (NormalMap):
-                                        "testClass"
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            "testClass"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "91"
@@ -7353,13 +7433,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "testClass"
+                                "testClass"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -7524,13 +7600,9 @@ Entry (DictionaryEntry)
                                                                   Value (NormalMap):
                                                                     Entry (DictionaryEntry)
                                                                       Key (NormalMap):
-                                                                        "search"
+                                                                        "literal"
                                                                       Value (NormalMap):
-                                                                        Entry (DictionaryEntry)
-                                                                          Key (NormalMap):
-                                                                            "literal"
-                                                                          Value (NormalMap):
-                                                                            "arg"
+                                                                        "arg"
                                                                 Entry (DictionaryEntry)
                                                                   Key (NormalMap):
                                                                     "2"
@@ -7571,13 +7643,9 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "literal"
                       Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "testClass"
+                        "testClass"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -7626,13 +7694,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "testClass"
+                                "testClass"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -7811,13 +7875,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "Equal"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "Equal"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -7875,13 +7943,17 @@ Entry (DictionaryEntry)
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "search"
+                                    "select"
                                   Value (NormalMap):
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
-                                        "literal"
+                                        "1"
                                       Value (NormalMap):
-                                        "one"
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            "one"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "100"
@@ -8056,26 +8128,26 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "firstIfBranches"
+                                "firstIfBranches"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "select"
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "literal"
+                                    "1"
                                   Value (NormalMap):
-                                    "firstIfCondition"
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "literal"
+                                      Value (NormalMap):
+                                        "firstIfCondition"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -8271,13 +8343,9 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "literal"
                       Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "secondSwitchCases"
+                        "secondSwitchCases"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -8424,13 +8492,17 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "emptyFunction"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "emptyFunction"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -8479,13 +8551,9 @@ Entry (DictionaryEntry)
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "System"
+                                "System"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -8682,13 +8750,9 @@ Entry (DictionaryEntry)
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "literal"
                       Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "stringTest"
+                        "stringTest"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -8747,17 +8811,25 @@ Entry (DictionaryEntry)
           Value (NormalMap):
             Entry (DictionaryEntry)
               Key (NormalMap):
-                "search"
+                "select"
               Value (NormalMap):
                 Entry (DictionaryEntry)
                   Key (NormalMap):
-                    "search"
+                    "1"
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "literal"
+                        "select"
                       Value (NormalMap):
-                        "stringTest"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "1"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "stringTest"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "116"
@@ -8843,13 +8915,17 @@ hello!
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "BitwiseOr"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "BitwiseOr"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -8915,13 +8991,9 @@ hello!
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
-                                            "search"
+                                            "literal"
                                           Value (NormalMap):
-                                            Entry (DictionaryEntry)
-                                              Key (NormalMap):
-                                                "literal"
-                                              Value (NormalMap):
-                                                "System"
+                                            "System"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "2"
@@ -8997,13 +9069,9 @@ hello!
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "System"
+                                "System"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -9070,13 +9138,9 @@ hello!
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "arrayList"
+                                "arrayList"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -9151,13 +9215,9 @@ hello!
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "literal"
                       Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "arrayList"
+                        "arrayList"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -9206,13 +9266,9 @@ hello!
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "System"
+                                "System"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -9288,13 +9344,9 @@ hello!
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "textBox"
+                                "textBox"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -9391,13 +9443,9 @@ Schwaenzchen in die Hoeh."
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "literal"
                               Value (NormalMap):
-                                Entry (DictionaryEntry)
-                                  Key (NormalMap):
-                                    "literal"
-                                  Value (NormalMap):
-                                    "textBox"
+                                "textBox"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
@@ -9456,13 +9504,9 @@ Schwaenzchen in die Hoeh."
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "literal"
                       Value (NormalMap):
-                        Entry (DictionaryEntry)
-                          Key (NormalMap):
-                            "literal"
-                          Value (NormalMap):
-                            "lines"
+                        "lines"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "2"
@@ -9670,13 +9714,17 @@ Schwaenzchen in die Hoeh."
                                               Value (NormalMap):
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
-                                                    "search"
+                                                    "select"
                                                   Value (NormalMap):
                                                     Entry (DictionaryEntry)
                                                       Key (NormalMap):
-                                                        "literal"
+                                                        "1"
                                                       Value (NormalMap):
-                                                        "Smaller"
+                                                        Entry (DictionaryEntry)
+                                                          Key (NormalMap):
+                                                            "literal"
+                                                          Value (NormalMap):
+                                                            "Smaller"
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "argument"
@@ -9708,13 +9756,17 @@ Schwaenzchen in die Hoeh."
                                                           Value (NormalMap):
                                                             Entry (DictionaryEntry)
                                                               Key (NormalMap):
-                                                                "search"
+                                                                "select"
                                                               Value (NormalMap):
                                                                 Entry (DictionaryEntry)
                                                                   Key (NormalMap):
-                                                                    "literal"
+                                                                    "1"
                                                                   Value (NormalMap):
-                                                                    "arg"
+                                                                    Entry (DictionaryEntry)
+                                                                      Key (NormalMap):
+                                                                        "literal"
+                                                                      Value (NormalMap):
+                                                                        "arg"
                                                     Entry (DictionaryEntry)
                                                       Key (NormalMap):
                                                         "2"
@@ -9826,13 +9878,17 @@ Schwaenzchen in die Hoeh."
                                                                           Value (NormalMap):
                                                                             Entry (DictionaryEntry)
                                                                               Key (NormalMap):
-                                                                                "search"
+                                                                                "select"
                                                                               Value (NormalMap):
                                                                                 Entry (DictionaryEntry)
                                                                                   Key (NormalMap):
-                                                                                    "literal"
+                                                                                    "1"
                                                                                   Value (NormalMap):
-                                                                                    "loop"
+                                                                                    Entry (DictionaryEntry)
+                                                                                      Key (NormalMap):
+                                                                                        "literal"
+                                                                                      Value (NormalMap):
+                                                                                        "loop"
                                                                         Entry (DictionaryEntry)
                                                                           Key (NormalMap):
                                                                             "argument"
@@ -9847,13 +9903,17 @@ Schwaenzchen in die Hoeh."
                                                                                   Value (NormalMap):
                                                                                     Entry (DictionaryEntry)
                                                                                       Key (NormalMap):
-                                                                                        "search"
+                                                                                        "select"
                                                                                       Value (NormalMap):
                                                                                         Entry (DictionaryEntry)
                                                                                           Key (NormalMap):
-                                                                                            "literal"
+                                                                                            "1"
                                                                                           Value (NormalMap):
-                                                                                            "Add"
+                                                                                            Entry (DictionaryEntry)
+                                                                                              Key (NormalMap):
+                                                                                                "literal"
+                                                                                              Value (NormalMap):
+                                                                                                "Add"
                                                                                 Entry (DictionaryEntry)
                                                                                   Key (NormalMap):
                                                                                     "argument"
@@ -9885,13 +9945,17 @@ Schwaenzchen in die Hoeh."
                                                                                               Value (NormalMap):
                                                                                                 Entry (DictionaryEntry)
                                                                                                   Key (NormalMap):
-                                                                                                    "search"
+                                                                                                    "select"
                                                                                                   Value (NormalMap):
                                                                                                     Entry (DictionaryEntry)
                                                                                                       Key (NormalMap):
-                                                                                                        "literal"
+                                                                                                        "1"
                                                                                                       Value (NormalMap):
-                                                                                                        "arg"
+                                                                                                        Entry (DictionaryEntry)
+                                                                                                          Key (NormalMap):
+                                                                                                            "literal"
+                                                                                                          Value (NormalMap):
+                                                                                                            "arg"
                                                                                         Entry (DictionaryEntry)
                                                                                           Key (NormalMap):
                                                                                             "2"
@@ -9970,13 +10034,17 @@ Schwaenzchen in die Hoeh."
                                                                   Value (NormalMap):
                                                                     Entry (DictionaryEntry)
                                                                       Key (NormalMap):
-                                                                        "search"
+                                                                        "select"
                                                                       Value (NormalMap):
                                                                         Entry (DictionaryEntry)
                                                                           Key (NormalMap):
-                                                                            "literal"
+                                                                            "1"
                                                                           Value (NormalMap):
-                                                                            "arg"
+                                                                            Entry (DictionaryEntry)
+                                                                              Key (NormalMap):
+                                                                                "literal"
+                                                                              Value (NormalMap):
+                                                                                "arg"
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
                                     "3"
@@ -10016,39 +10084,43 @@ Schwaenzchen in die Hoeh."
                                                       Value (NormalMap):
                                                         Entry (DictionaryEntry)
                                                           Key (NormalMap):
-                                                            "search"
+                                                            "literal"
                                                           Value (NormalMap):
-                                                            Entry (DictionaryEntry)
-                                                              Key (NormalMap):
-                                                                "literal"
-                                                              Value (NormalMap):
-                                                                "whileBranches"
+                                                            "whileBranches"
                                                     Entry (DictionaryEntry)
                                                       Key (NormalMap):
                                                         "2"
                                                       Value (NormalMap):
                                                         Entry (DictionaryEntry)
                                                           Key (NormalMap):
-                                                            "search"
+                                                            "select"
                                                           Value (NormalMap):
                                                             Entry (DictionaryEntry)
                                                               Key (NormalMap):
-                                                                "literal"
+                                                                "1"
                                                               Value (NormalMap):
-                                                                "whileDecision"
+                                                                Entry (DictionaryEntry)
+                                                                  Key (NormalMap):
+                                                                    "literal"
+                                                                  Value (NormalMap):
+                                                                    "whileDecision"
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "argument"
                                               Value (NormalMap):
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
-                                                    "search"
+                                                    "select"
                                                   Value (NormalMap):
                                                     Entry (DictionaryEntry)
                                                       Key (NormalMap):
-                                                        "literal"
+                                                        "1"
                                                       Value (NormalMap):
-                                                        "arg"
+                                                        Entry (DictionaryEntry)
+                                                          Key (NormalMap):
+                                                            "literal"
+                                                          Value (NormalMap):
+                                                            "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "130"
@@ -10080,13 +10152,17 @@ Schwaenzchen in die Hoeh."
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "loop"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "loop"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -10173,13 +10249,17 @@ Schwaenzchen in die Hoeh."
                                       Value (NormalMap):
                                         Entry (DictionaryEntry)
                                           Key (NormalMap):
-                                            "search"
+                                            "select"
                                           Value (NormalMap):
                                             Entry (DictionaryEntry)
                                               Key (NormalMap):
-                                                "literal"
+                                                "1"
                                               Value (NormalMap):
-                                                "arg"
+                                                Entry (DictionaryEntry)
+                                                  Key (NormalMap):
+                                                    "literal"
+                                                  Value (NormalMap):
+                                                    "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "132"
@@ -10211,13 +10291,17 @@ Schwaenzchen in die Hoeh."
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "returnInMap"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "returnInMap"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -10363,13 +10447,17 @@ Schwaenzchen in die Hoeh."
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "select"
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "literal"
+                                    "1"
                                   Value (NormalMap):
-                                    "arg"
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "literal"
+                                      Value (NormalMap):
+                                        "arg"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "135"
@@ -10481,13 +10569,17 @@ Schwaenzchen in die Hoeh."
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "returnArg"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "returnArg"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -10502,13 +10594,17 @@ Schwaenzchen in die Hoeh."
                           Value (NormalMap):
                             Entry (DictionaryEntry)
                               Key (NormalMap):
-                                "search"
+                                "select"
                               Value (NormalMap):
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
-                                    "literal"
+                                    "1"
                                   Value (NormalMap):
-                                    "myArg"
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "literal"
+                                      Value (NormalMap):
+                                        "myArg"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "argument"
@@ -10630,13 +10726,17 @@ Schwaenzchen in die Hoeh."
                   Value (NormalMap):
                     Entry (DictionaryEntry)
                       Key (NormalMap):
-                        "search"
+                        "select"
                       Value (NormalMap):
                         Entry (DictionaryEntry)
                           Key (NormalMap):
-                            "literal"
+                            "1"
                           Value (NormalMap):
-                            "documentedFunction"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "literal"
+                              Value (NormalMap):
+                                "documentedFunction"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
