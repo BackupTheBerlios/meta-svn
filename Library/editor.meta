@@ -80,7 +80,7 @@ commands:
 		SetBreakPoint*
 		Meta.Interpreter.DebugBreak.add
 			=editBox.ShowDebugValue
-				Meta.Interpreter.DebugValue.get*
+				Meta.Interpreter.DisplayValue.get*
 		Meta.Interpreter.StartDebug
 			fileName
 	Continue:=
@@ -242,3 +242,4 @@ form:
 						arg.value
 				menu
 	this:form
+form.ShowDialog*

@@ -325,10 +325,10 @@ public class ScrollingTextBox: RichTextBox
 		}
 	}
 	Info info;//=new Info("hello!!!!!!!!!\n\n\nhello!!!!!!!!");
-	public void ShowDebugValue(object debugValue)
+	public void ShowDebugValue(Map debugValue)
 	{
 		Graphics graphics=this.CreateGraphics();
-		//		MessageBox.Show(Serialize.Value((Map)debugValue));
+		MessageBox.Show(Serialize.Value((Map)debugValue));
 		info=new Info(Serialize.Value((Map)debugValue),CursorPosition);
 		DrawInfo();
 		//		graphics.DrawString(Serialize.Value((Map)debugValue),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));

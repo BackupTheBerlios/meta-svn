@@ -68,7 +68,7 @@ namespace Meta
 	public class NumberKeys
 	{
 		public static readonly Map Denominator="denominator";
-		public static readonly Map Numerator="numerator"; // TODO: get rid of this
+		public static readonly Map Numerator="numerator";
 		public static readonly Map Negative="negative";
 		public static readonly Map EmptyMap=new NormalMap();
 	}
@@ -86,32 +86,16 @@ namespace Meta
 			}
 		}
 		private static BreakPoint breakPoint;
-
-		public virtual bool HasBreakPoint() // TODO: refactor
-		{
-			bool stop=false;
-			if(BreakPoint!=null)
-			{
-				if(BreakPoint.Position.ContainedIn(Extent.Start,Extent.End))
-				{
-					stop=true;
-				}
-			}
-			return stop;
-		}
 		public Map Evaluate(Map parent)
 		{
 			Map result=EvaluateImplementation(parent);
-			if(HasBreakPoint())
-			{
-				Interpreter.CallDebug(result);
-			}
+			Interpreter.DisplayValue=result;
 			return result;
 		}
 
 		public abstract Map EvaluateImplementation(Map parent);
-		Extent extent;
-		public Extent Extent
+		SourceArea extent;
+		public SourceArea SourceArea
 		{
 			get
 			{
@@ -126,14 +110,6 @@ namespace Meta
 	}
 	public class Call: Expression
 	{
-		public override bool HasBreakPoint()
-		{
-			return false;
-//			return BreakPoint..Position.Equals(argument.Extent.End);
-//			return BreakPoint.Position.Equals(argument.Extent.End);
-			//			return argument.HasBreakPoint();
-		}
-
 		public override Map EvaluateImplementation(Map parent)
 		{
 			object function=callable.Evaluate(parent);
@@ -141,7 +117,7 @@ namespace Meta
 			{
 				return ((ICallable)function).Call(argument.Evaluate(parent));
 			}
-			throw new MetaException("Object to be called is not callable.",this.Extent);
+			throw new MetaException("Object to be called is not callable.",this.SourceArea);
 		}
 		public Call(Map code)
 		{
@@ -153,11 +129,6 @@ namespace Meta
 	}
 	public class Delayed: Expression
 	{
-		public override bool HasBreakPoint()
-		{
-			return false;
-		}
-
 		public readonly Map delayed;
 		public Delayed(Map code)
 		{
@@ -170,23 +141,8 @@ namespace Meta
 			return result;
 		}
 	}
-//	public class ReverseException:ApplicationException
-//	{
-//	}
 	public class Program: Expression
 	{
-		public override bool HasBreakPoint()
-		{
-			bool stop=false;
-			if(BreakPoint!=null)
-			{
-				if(BreakPoint.Position.Line==Extent.End.Line+1 && BreakPoint.Position.Column==1)
-				{
-					stop=true;
-				}
-			}
-			return stop;
-		}
 		public override Map EvaluateImplementation(Map parent)
 		{
 			Map local=new NormalMap();
@@ -196,38 +152,9 @@ namespace Meta
 		public void Evaluate(Map parent,ref Map local)
 		{
 			local.Parent=parent;
-			for(int i=0;i<statements.Count && i>=0;)
+			for(int i=0;i<statements.Count && i>=0;i++)
 			{
-//				if(Interpreter.reverseDebug)
-//				{
-//					// Statement should have separate Stop() function
-//					// this sucks, its really not good, refactor
-////					bool stopReverse=((Statement)statements[i]).Undo();
-//					if(stopReverse)
-//					{
-//						Interpreter.reverseDebug=false;
-//						continue;
-//					}
-//				}
-//				else
-//				{
-//					try
-//					{
-						((Statement)statements[i]).Realize(ref local);
-//					}
-//					catch(ReverseException e)
-//					{
-//						int asdf=0;
-//					}	
-//				}
-				if(Interpreter.reverseDebug)
-				{
-					i--;
-				}
-				else
-				{
-					i++;
-				}
+				((Statement)statements[i]).Realize(ref local);
 			}
 		}
 		public Program(Map code)
@@ -242,7 +169,7 @@ namespace Meta
 	}
 	public class BreakPoint
 	{
-		public BreakPoint(string fileName,Position position)
+		public BreakPoint(string fileName,SourcePosition position)
 		{
 			this.fileName=fileName;
 			this.position=position;
@@ -257,16 +184,14 @@ namespace Meta
 				return fileName;
 			}
 		}
-		// TODO: rename to Location
-		public Position Position
+		public SourcePosition Position
 		{
 			get
 			{
 				return position;
 			}
 		}
-
-		private Position position;
+		private SourcePosition position;
 		string fileName;
 	}
 
@@ -394,17 +319,8 @@ namespace Meta
 				recognitions.Add((Filter)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
 			}
 		}
-		public override bool HasBreakPoint()
-		{
-			return false;
-		}
-
 		public override Map EvaluateImplementation(Map parent)
 		{
-			if(this.literal.IsString && this.literal.String.IndexOf("key")!=-1)
-			{
-				int asdf=0;
-			}
 			return literal;
 		}
 		public Literal(Map code)
@@ -414,10 +330,6 @@ namespace Meta
 		public Map literal=null;
 		public static Map Filter(string text)
 		{
-			if(text=="1/3")
-			{
-				int asdf=0;
-			}
 			foreach(Filter recognition in recognitions)
 			{
 				Map recognized=recognition.Detect(text);
@@ -429,37 +341,10 @@ namespace Meta
 			return null;
 		}
 	}
-//	public class Search: Expression
-//	{
-//		public Search(Map code)
-//		{
-//			this.search=code.GetExpression();
-//		}
-//		public Expression search;
-//		public override Map EvaluateImplementation(Map parent)
-//		{
-//			Map key=search.Evaluate(parent);
-//			Map selected=parent;
-//			while(!selected.ContainsKey(key))
-//			{
-//				if(selected.Parent==null)
-//				{
-//					selected.ContainsKey(key);
-//					throw new KeyNotFoundException(key,this.Extent);
-//				}
-//				selected=selected.Parent;
-//				if(selected==null)
-//				{
-//					throw new KeyNotFoundException(key,this.Extent);
-//				}
-//			}
-//			return selected[key];
-//		}
-//	}
 	public class Select: Expression
 	{
 		public ArrayList keys=new ArrayList(); // TODO: rename to subKeys
-		public Expression firstKey;
+		public Expression firstKey; // TODO: integrate into normal keys???
 		public Select(Map code)
 		{
 			firstKey=((Map)code.Array[0]).GetExpression();
@@ -470,16 +355,20 @@ namespace Meta
 		}
 		public override Map EvaluateImplementation(Map parent)
 		{
-			Map selected=FindFirstKey(parent);//(firstKey.Evaluate(parent));
-//			Map selected=firstKey.Evaluate(parent);
+			Map selected=FindFirstKey(parent);
 			for(int i=0;i<keys.Count;i++)
 			{
 				Map key=((Expression)keys[i]).Evaluate(parent);
 				Map selection=selected[key];
+				Interpreter.DisplayValue=selection;
+				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).SourceArea))
+				{
+					Interpreter.CallDebug();
+				}
 				if(selection==null)
 				{
 					object test=selected[key];
-					throw new KeyDoesNotExistException(key,this.Extent,selected);
+					throw new KeyDoesNotExistException(key,this.SourceArea,selected);
 				}
 				selected=selection;
 			}
@@ -494,46 +383,25 @@ namespace Meta
 				if(selected.Parent==null)
 				{
 					selected.ContainsKey(key);
-					throw new KeyNotFoundException(key,this.Extent);
+					throw new KeyNotFoundException(key,this.SourceArea);
 				}
 				selected=selected.Parent;
 				if(selected==null)
 				{
-					throw new KeyNotFoundException(key,this.Extent);
+					throw new KeyNotFoundException(key,this.SourceArea);
 				}
 			}
-			return selected[key];
+			Map val=selected[key];
+			Interpreter.DisplayValue=val;
+			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(firstKey.SourceArea))
+			{
+				Interpreter.CallDebug();
+			}
+			return val;
 		}
 	}
 	public class Statement
 	{
-//		private Map oldValue;
-//		private Map replaceMap;
-//		private Map replaceKey;
-//		public bool Undo()
-//		{
-//			if(replaceMap!=null) // TODO: handle "this" specially
-//			{
-//				replaceMap[replaceKey]=oldValue;
-//			}
-//			bool stopReverse=false;
-//			if(this.expression.HasBreakPoint())
-//			{
-//				stopReverse=true;
-//			}
-//			else
-//			{
-//				foreach(Expression key in keys)
-//				{
-//					if(key.HasBreakPoint())
-//					{
-//						stopReverse=true;
-//						break;
-//					}
-//				}
-//			}
-//			return stopReverse;
-//		}
 		public void Realize(ref Map parent)
 		{
 			Map selected=parent;
@@ -545,11 +413,19 @@ namespace Meta
 				if(selection==null)
 				{
 					object x=selected[key];
-					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
+					throw new KeyDoesNotExistException(key,((Expression)keys[i]).SourceArea,selected);
 				}
 				selected=selection;
+				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).SourceArea))
+				{
+					Interpreter.CallDebug();
+				}
 			}
 			Map lastKey=((Expression)keys[keys.Count-1]).Evaluate(parent);
+			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).SourceArea))
+			{
+				Interpreter.CallDebug();
+			}
 			Map val=expression.Evaluate(parent);
 			if(lastKey.Equals(SpecialKeys.This))
 			{
@@ -558,27 +434,11 @@ namespace Meta
 			}
 			else
 			{
-//				if(selected.ContainsKey(lastKey))
-//				{
-//					oldValue=selected[lastKey];
-//				}
-//				else
-//				{
-//					oldValue=null;
-//				}
-
-//				replaceMap=selected;
-//				replaceKey=lastKey;
-
 				selected[lastKey]=val;
 			}
 		}
 		public Statement(Map code) 
 		{
-			if(code.ContainsKey(CodeKeys.Search))
-			{
-				searchFirst=true;
-			}
 			foreach(Map key in code[CodeKeys.Key].Array)
 			{
 				keys.Add(key.GetExpression());
@@ -587,34 +447,30 @@ namespace Meta
 		}
 		public ArrayList keys=new ArrayList();
 		public Expression expression;
-		
-		bool searchFirst=false;
 	}
 	public class Interpreter
 	{
-
-		private static object debugValue="";
-		public static object DebugValue
+		private static Map displayValue="";
+		public static Map DisplayValue
 		{
 			get
 			{
-				return debugValue;
+				return displayValue;
+			}
+			set
+			{
+				displayValue=value;
 			}
 		}
 		public static event MethodInvoker DebugBreak;
 
-		public static bool reverseDebug=false;
-		public static void CallDebug(object stuff)
+		
+		public static void CallDebug()
 		{
-			debugValue=stuff;
 			if(DebugBreak!=null)
 			{
 				DebugBreak();
 				Thread.CurrentThread.Suspend();
-//				if(reverseDebug)
-//				{
-//					throw new ReverseException();
-//				}
 			}
 		}
 		public static Map Merge(params Map[] arkvlToMerge)
@@ -678,7 +534,7 @@ namespace Meta
 		public static AST ParseToAst(string fileName) 
 		{
 			FileStream file=new FileStream(fileName, FileMode.Open,FileAccess.Read, FileShare.ReadWrite); 
-			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(file,fileName); 
+			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(file,fileName); 
 			MetaLexer metaLexer = new MetaLexer(sharedInputState);
 	
 			metaLexer.setTokenObjectClass("MetaToken");
@@ -705,12 +561,10 @@ namespace Meta
 		private static Thread debugThread;
 		public static void ContinueDebug()
 		{
-			reverseDebug=false;
 			debugThread.Resume();
 		}
 		public static void ReverseDebug()
 		{
-			reverseDebug=true;
 			debugThread.Resume();
 		}
 		static Interpreter()
@@ -729,20 +583,20 @@ namespace Meta
 	public class MetaException:ApplicationException
 	{
 		protected string message="";
-		public MetaException(Extent extent)
+		public MetaException(SourceArea extent)
 		{
 			this.extent=extent;
 		}
-		public MetaException(string message,Extent extent)
+		public MetaException(string message,SourceArea extent)
 		{
 			this.extent=extent;
 			this.message=message;
 		}
-		public MetaException(Exception exception,Extent extent):base(exception.Message,exception)
+		public MetaException(Exception exception,SourceArea extent):base(exception.Message,exception)
 		{
 			this.extent=extent;
 		}
-		Extent extent;
+		SourceArea extent;
 		public override string Message
 		{
 			get
@@ -761,7 +615,7 @@ namespace Meta
 	}
 	public abstract class KeyException:MetaException
 	{ 
-		public KeyException(Map key,Extent extent):base(extent)
+		public KeyException(Map key,SourceArea extent):base(extent)
 		{
 			message="Key ";
 			if(key.IsString)
@@ -784,14 +638,14 @@ namespace Meta
 	}
 	public class KeyNotFoundException:KeyException
 	{
-		public KeyNotFoundException(Map key,Extent extent):base(key,extent)
+		public KeyNotFoundException(Map key,SourceArea extent):base(key,extent)
 		{
 		}
 	}
 	public class KeyDoesNotExistException:KeyException
 	{
 		private object selected;
-		public KeyDoesNotExistException(Map key,Extent extent,object selected):base(key,extent)
+		public KeyDoesNotExistException(Map key,SourceArea extent,object selected):base(key,extent)
 		{
 			this.selected=selected;
 		}
@@ -898,7 +752,6 @@ namespace Meta
 		{
 			get
 			{
-//				return IsInteger && this.ContainsKey(NumberKeys.Denominator) && this[NumberKeys.Denominator].IsInteger;
 				return this.ContainsKey(NumberKeys.Numerator) && this[NumberKeys.Numerator].IsInteger && this.ContainsKey(NumberKeys.Denominator) && this[NumberKeys.Denominator].IsInteger;
 			}
 		}
@@ -1048,10 +901,6 @@ namespace Meta
 			{
 				expression=new Literal(this[CodeKeys.Literal]);
 			}
-//			else if(this.ContainsKey(CodeKeys.Search))
-//			{
-//				expression=new Search(this[CodeKeys.Search]);
-//			}
 			else if(this.ContainsKey(CodeKeys.Select))
 			{
 				expression=new Select(this[CodeKeys.Select]);
@@ -1060,7 +909,7 @@ namespace Meta
 			{
 				throw new ApplicationException("Cannot compile non-code map.");
 			}
-			((Expression)expression).Extent=this.Extent;
+			((Expression)expression).SourceArea=this.SourceArea;
 			return expression;
 		}
 		public bool ContainsKey(Map key)
@@ -1104,8 +953,8 @@ namespace Meta
 			}
 			return hash;
 		}
-		Extent extent;
-		public Extent Extent
+		SourceArea extent;
+		public SourceArea SourceArea
 		{
 			get
 			{
@@ -1213,7 +1062,7 @@ namespace Meta
 		{
 			Map clone=strategy.CloneMap();
 			clone.Parent=Parent;
-			clone.Extent=Extent;
+			clone.SourceArea=SourceArea;
 			return clone;
 		}
 		protected override bool ContainsKeyImplementation(Map key)
@@ -1420,10 +1269,6 @@ namespace Meta
 				return new ArrayList();
 			}
 		}
-//		public override MapStrategy Clone()
-//		{
-//			return base.Clone ();
-//		}
 		private DirectoryInfo directory;
 		public override ArrayList Keys
 		{
@@ -1522,6 +1367,8 @@ namespace Meta
 			Helper.WriteFile(path,text);
 		}
 	}
+	// TODO: refactor magic constants
+	// TODO: maybe put serialization into classes themselves
 	public class Serialize
 	{
 		public static string Key(Map key)
@@ -1547,12 +1394,6 @@ namespace Meta
 		}
 		public static string Value(Map val)
 		{
-//			string x=Value(val,"");
-//			if(x=="\"")
-//			{
-//				int asdf=0;
-//			}
-//			return x;
 			return Value(val,"");
 		}
 		private static string Value(Map val,string indentation)
@@ -1643,30 +1484,12 @@ namespace Meta
 			}
 			return text;
 		}
-		// TODO: put this into another class
 		private static string MapKey(Map map,string indentation)
 		{
 			return indentation + leftBracket + newLine + MapValue(map,indentation) + rightBracket;
 		}
 		// TODO: add special serialization for code
-//		private static string Code(Map map,string indentation)
-//		{
-//			if(map.ContainsKey(CodeKeys.Call))
-//			{
-//			}
-//			else if(map.ContainsKey(CodeKeys.Delayed))
-//			{
-//			}
-//			else if(map.ContainsKey(CodeKeys.Literal))
-//			{
-//			}
-//			else if(map.ContainsKey(CodeKeys.Select))
-//			{
-//			}
-//			else if(map.ContainsKey(CodeKeys.Program))
-//			{
-//			}
-//		}
+
 		// TODO: put all the special characters somewhere else, no magic constants
 		private static string MapValue(Map map,string indentation)
 		{
@@ -1697,19 +1520,6 @@ namespace Meta
 //			}
 			return text;
 		}
-//		private static string MapValue(Map map,string indentation)
-//		{
-//			string text=newLine;
-//			foreach(DictionaryEntry entry in map)
-//			{
-//				text+=indentation + Key((Map)entry.Key,indentation)	+ ":" + Value((Map)entry.Value,indentation+'\t');
-//				if(!text.EndsWith(newLine))
-//				{
-//					text+=newLine;
-//				}
-//			}
-//			return text;
-//		}
 		private const string leftBracket="[";
 		private const string rightBracket="]";
 		private const string newLine="\n";
@@ -1891,7 +1701,7 @@ namespace Meta
 						cache[new NormalMap(type.Name)]=new DotNetClass(type);
 					}
 				}
-				Interpreter.loadedAssemblies.Add(assembly.Location); // TODO: make this a function
+				Interpreter.loadedAssemblies.Add(assembly.Location);
 			}
 			foreach(DictionaryEntry entry in namespaces)
 			{
@@ -1927,7 +1737,7 @@ namespace Meta
 		{
 			object dotNet=null;
 			if((target.IsSubclassOf(typeof(Delegate))
-				||target.Equals(typeof(Delegate)))&& meta.IsFunction) // TODO: why Equals(typeof(Delegate))
+				||target.Equals(typeof(Delegate)))&& meta.IsFunction)
 			{
 				MethodInfo invoke=target.GetMethod("Invoke",BindingFlags.Instance
 					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
@@ -1958,7 +1768,7 @@ namespace Meta
 			}
 			else if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
 			{ 
-				dotNet=Enum.ToObject(target,meta.Integer.Int32); // TODO: pick underlying type dynamically, maybe have an object-number in Integer
+				dotNet=Enum.ToObject(target,meta.Integer.Int32); // TODO: support other underlying types
 			}
 			else 
 			{
@@ -1978,7 +1788,6 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Byte:
-						 // TODO: overload this some??
 						if(IsIntegerInRange(meta,new Integer(Byte.MinValue),new Integer(Byte.MaxValue)))
 						{
 							dotNet=Convert.ToByte(meta.Integer.Int32);
@@ -2232,7 +2041,7 @@ namespace Meta
 
 		public override Map Clone()
 		{
-			return new DotNetMethod(this.name,this.target,this.targetType);
+			return new DotNetMethod(this.name,this.obj,this.type);
 		}
 		public override ArrayList Keys
 		{
@@ -2252,7 +2061,7 @@ namespace Meta
 				throw new ApplicationException("Cannot set key in DotNetMethod");
 			}
 		}
-		// TODO: verallgemeinern auf beliebig viele Argument
+		// TODO: properly support sorting of multiple argument methods
 		public class ArgumentComparer: IComparer
 		{
 			public int Compare(object x, object y)
@@ -2263,9 +2072,7 @@ namespace Meta
 				ParameterInfo[] firstParameters=first.GetParameters();
 				ParameterInfo[] secondParameters=second.GetParameters();
 				if(firstParameters.Length>=1 && firstParameters[0].ParameterType==typeof(string)
-//				if(firstParameters.Length==1 && firstParameters[0].ParameterType==typeof(string)
 					&& !(secondParameters.Length>=1 && secondParameters[0].ParameterType==typeof(string)))
-//					&& !(secondParameters.Length==1 && secondParameters[0].ParameterType==typeof(string)))
 				{
 					result=-1;
 				}
@@ -2372,9 +2179,9 @@ namespace Meta
 			object result=null;
 			bool isExecuted=false;
 
-			if(targetType.IsSubclassOf(typeof(MetaLibrary)))
+			if(type.IsSubclassOf(typeof(MetaLibrary)))
 			{
-				ArrayList oneArgumentMethods=new ArrayList();// TODO: remove this
+				ArrayList oneArgumentMethods=new ArrayList();
 				foreach(MethodBase method in overloadedMethods)
 				{
 					if(method.GetParameters().Length==1)
@@ -2395,7 +2202,7 @@ namespace Meta
 						}
 						else
 						{
-							result=method.Invoke(target,new object[] {parameter});
+							result=method.Invoke(obj,new object[] {parameter});
 						}
 						isExecuted=true;
 						break;
@@ -2417,17 +2224,17 @@ namespace Meta
 				}
 				if(rightNumberArgumentMethods.Count==0)
 				{
-					throw new ApplicationException("Method "+this.targetType.Name+"."+this.name+": No methods with the right number of arguments.");
+					throw new ApplicationException("Method "+this.type.Name+"."+this.name+": No methods with the right number of arguments.");
 				}
 				rightNumberArgumentMethods.Sort(new ArgumentComparer());
 				foreach(MethodBase method in rightNumberArgumentMethods)
 				{
 					ArrayList arguments=new ArrayList();
 					bool argumentsMatched=true;
-					ParameterInfo[] arPrmtifParameters=method.GetParameters();// TODO: rename
-					for(int i=0;argumentsMatched && i<arPrmtifParameters.Length;i++)
+					ParameterInfo[] parameters=method.GetParameters();
+					for(int i=0;argumentsMatched && i<parameters.Length;i++)
 					{
-						arguments.Add(Transform.ToDotNet((Map)argument.Array[i],arPrmtifParameters[i].ParameterType,out argumentsMatched));
+						arguments.Add(Transform.ToDotNet((Map)argument.Array[i],parameters[i].ParameterType,out argumentsMatched));
 					}
 					if(argumentsMatched)
 					{
@@ -2437,7 +2244,7 @@ namespace Meta
 						}
 						else
 						{
-							result=method.Invoke(target,arguments.ToArray());
+							result=method.Invoke(obj,arguments.ToArray());
 						}
 						isExecuted=true;
 						break;
@@ -2516,36 +2323,36 @@ namespace Meta
 				container,"EventHandlerMethod");
 			return result;
 		}
-		private void Initialize(string name,object target,Type targetType)
+		private void Initialize(string name,object obj,Type type)
 		{
 			this.name=name;
-			this.target=target;
-			this.targetType=targetType;
+			this.obj=obj;
+			this.type=type;
 			ArrayList methods;
 			if(name==".ctor")
 			{
-				methods=new ArrayList(targetType.GetConstructors());
+				methods=new ArrayList(type.GetConstructors());
 			}
 			else
 			{
-				methods=new ArrayList(targetType.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+				methods=new ArrayList(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
 			}
 			overloadedMethods=(MethodBase[])methods.ToArray(typeof(MethodBase));
 		}
-		public DotNetMethod(string name,object target,Type targetType)
+		public DotNetMethod(string name,object obj,Type type)
 		{
-			this.Initialize(name,target,targetType);
+			this.Initialize(name,obj,type);
 		}
-		public DotNetMethod(Type targetType)
+		public DotNetMethod(Type type)
 		{
-			this.Initialize(".ctor",null,targetType);
+			this.Initialize(".ctor",null,type);
 		}
 		public override bool Equals(object toCompare)
 		{
 			if(toCompare is DotNetMethod)
 			{
 				DotNetMethod DotNetMethod=(DotNetMethod)toCompare;
-				if(DotNetMethod.target==target && DotNetMethod.name.Equals(name) && DotNetMethod.targetType.Equals(targetType))
+				if(DotNetMethod.obj==obj && DotNetMethod.name.Equals(name) && DotNetMethod.type.Equals(type))
 				{
 					return true;
 				}
@@ -2563,17 +2370,17 @@ namespace Meta
 		{
 			unchecked
 			{
-				int hash=name.GetHashCode()*targetType.GetHashCode();
-				if(target!=null)
+				int hash=name.GetHashCode()*type.GetHashCode();
+				if(obj!=null)
 				{
-					hash=hash*target.GetHashCode();
+					hash=hash*obj.GetHashCode();
 				}
 				return hash;
 			}
 		}
 		private string name;
-		protected object target; // TODO: rename
-		protected Type targetType; // TODO: rename
+		protected object obj; // TODO: rename
+		protected Type type; // TODO: rename
 
 		public MethodBase[] overloadedMethods;
 	}
@@ -2675,7 +2482,7 @@ namespace Meta
 		{
 			return null;
 		}
-		public virtual Map CloneMap() // TODO: move into Map
+		public virtual Map CloneMap() // TODO: move into Map??
 		{
 			Map clone;
 			NormalStrategy strategy=(NormalStrategy)this.Clone();
@@ -2784,6 +2591,11 @@ namespace Meta
 				return null;
 			}
 		}
+		public override int GetHashCode()
+		{
+			return base.GetHashCode ();
+		}
+
 		public override bool Equals(object strategy)
 		{
 			bool isEqual;
@@ -3161,7 +2973,6 @@ namespace Meta
 			}
 		}
 	}
-	// TODO: rename?
 	public abstract class DotNetContainer: Map, ISerializeSpecial
 	{
 		public void Serialize(string indentation, string[] functions, StringBuilder stringBuilder)
@@ -3239,10 +3050,10 @@ namespace Meta
 		{
 			get
 			{
-				Map result; // TODO: remove
+				Map val;
 				if(key.Equals(SpecialKeys.Parent))
 				{
-					result=Parent;
+					val=Parent;
 				}
 				else if(key.IsString && type.GetMember(key.String,bindingFlags).Length>0)
 				{
@@ -3250,33 +3061,33 @@ namespace Meta
 					MemberInfo[] members=type.GetMember(text,bindingFlags);
 					if(members[0] is MethodBase)
 					{
-						result=new DotNetMethod(text,obj,type);
+						val=new DotNetMethod(text,obj,type);
 					}
 					else if(members[0] is FieldInfo)
 					{
-						result=Transform.ToMeta(type.GetField(text).GetValue(obj));
+						val=Transform.ToMeta(type.GetField(text).GetValue(obj));
 					}
 					else if(members[0] is PropertyInfo)
 					{
-						result=new Property(type.GetProperty(text),this.obj,type);// TODO: set parent here, too
+						val=new Property(type.GetProperty(text),this.obj,type);// TODO: set parent here, too
 					}
 					else if(members[0] is EventInfo)
 					{
-						result=new Event(((EventInfo)members[0]),obj,type);
-						result.Parent=this;
+						val=new Event(((EventInfo)members[0]),obj,type);
+						val.Parent=this;
 					}
 					else if(members[0] is Type)
 					{
-						result=new DotNetClass((Type)members[0]);
+						val=new DotNetClass((Type)members[0]);
 					}
 					else
 					{
-						result=null;
+						val=null;
 					}
 				}
 				else if(this.obj!=null && key.IsInteger && this.type.IsArray)
 				{
-					result=Transform.ToMeta(((Array)obj).GetValue(key.Integer.Int32));
+					val=Transform.ToMeta(((Array)obj).GetValue(key.Integer.Int32));
 				}
 				else
 				{
@@ -3285,14 +3096,14 @@ namespace Meta
 					argument[1]=key;
 					try
 					{
-						result=Transform.ToMeta(indexer.Call(argument));
+						val=Transform.ToMeta(indexer.Call(argument));
 					}
 					catch(Exception e)
 					{
-						result=null;
+						val=null;
 					}
 				}
-				return result;
+				return val;
 			}
 			set
 			{
@@ -3524,6 +3335,7 @@ namespace Meta
 				}
 			}
 		}
+		// TODO: rename, refactor, make general function, extract assignment
 		private void Panic(Map key,Map val)
 		{
 			map.strategy=new HybridDictionaryStrategy();
@@ -3832,15 +3644,27 @@ namespace Meta
 			}
 		}
 	}
-	public class Position 
+	public class SourcePosition
 	{
-		public bool ContainedIn(Position start,Position end)
+		public static bool operator <(SourcePosition a,SourcePosition b)
+		{
+			return a.Line<b.Line || (a.Line==b.Line && a.Column<b.Column);
+		}
+		public static bool operator >(SourcePosition a,SourcePosition b)
+		{
+			return a.Line>b.Line || (a.Line==b.Line && a.Column>b.Column);
+		}
+		public bool IsBetween(SourceArea extent)
+		{
+			return IsBetween(extent.Start,extent.End);
+		}
+		public bool IsBetween(SourcePosition start,SourcePosition end)
 		{
 			return Line>=start.Line && Line<=end.Line && Column>=start.Column && Column<=end.Column;
 		}
 		private int line;
 		private int column;
-		public Position(int line,int column)
+		public SourcePosition(int line,int column)
 		{
 			this.line=line;
 			this.column=column;
@@ -3852,7 +3676,7 @@ namespace Meta
 		}
 		public override bool Equals(object obj)
 		{
-			return obj is Position && ((Position)obj).Line==Line && ((Position)obj).Column==Column;
+			return obj is SourcePosition && ((SourcePosition)obj).Line==Line && ((SourcePosition)obj).Column==Column;
 		}
 		public int Line
 		{
@@ -3877,14 +3701,14 @@ namespace Meta
 			}
 		}
 	}
-	public class Extent
+	public class SourceArea
 	{
 		public static ArrayList GetEvents(string fileName,int firstLine,int lastLine)
 		{
 			ArrayList result=new ArrayList();
-			foreach(DictionaryEntry entry in Extents)
+			foreach(DictionaryEntry entry in SourceAreas)
 			{
-				Extent extent=(Extent)entry.Value;
+				SourceArea extent=(SourceArea)entry.Value;
 				if(extent.FileName==fileName && extent.Start.Line>=firstLine && extent.End.Line<=lastLine)
 				{
 					result.Add(extent);
@@ -3892,7 +3716,7 @@ namespace Meta
 			}
 			return result;
 		}
-		public static Hashtable Extents
+		public static Hashtable SourceAreas
 		{
 			get
 			{
@@ -3903,9 +3727,9 @@ namespace Meta
 		public override bool Equals(object obj)
 		{	
 			bool isEqual=false;
-			if(obj is Extent)
+			if(obj is SourceArea)
 			{
-				Extent extent=(Extent)obj;
+				SourceArea extent=(SourceArea)obj;
 				if(
 					extent.Start.Line==Start.Line && 
 					extent.Start.Column==Start.Column && 
@@ -3926,22 +3750,22 @@ namespace Meta
 			}
 		}
 
-		public Position Start
+		public SourcePosition Start
 		{
 			get
 			{
 				return start;
 			}
 		}
-		public Position End
+		public SourcePosition End
 		{
 			get
 			{
 				return end;
 			}
 		}
-		private Position start;
-		private Position end;
+		private SourcePosition start;
+		private SourcePosition end;
 		public string FileName
 		{
 			get
@@ -3954,21 +3778,21 @@ namespace Meta
 			}
 		}
 		string fileName;
-		public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+		public SourceArea(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
 		{
-			this.start=new Position(startLine,startColumn);
-			this.end=new Position(endLine,endColumn);
+			this.start=new SourcePosition(startLine,startColumn);
+			this.end=new SourcePosition(endLine,endColumn);
 			this.fileName=fileName;
 
 		}
-		public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+		public SourceArea CreateSourceArea(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
 		{
-			Extent extent=new Extent(startLine,startColumn,endLine,endColumn,fileName);
+			SourceArea extent=new SourceArea(startLine,startColumn,endLine,endColumn,fileName);
 			if(!extents.ContainsKey(extent))
 			{
 				extents.Add(extent,extent);
 			}
-			return (Extent)extents[extent];
+			return (SourceArea)extents[extent];
 		}
 	}
 }

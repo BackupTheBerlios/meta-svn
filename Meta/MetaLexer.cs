@@ -96,11 +96,11 @@ namespace Meta.Parser
 		literalEnd=Helper.ReverseString(literalStart);
 	}
 	public static string literalEnd;
-	// add extent information to tokens
+	// add SourceArea information to tokens
     protected override Token makeToken (int t)
     {
         MetaToken tok = (MetaToken) base.makeToken (t);
-        ((ExtentLexerSharedInputState) inputState).annotate (tok);
+        ((SourceAreaLexerSharedInputState) inputState).annotate (tok);
         return tok;
     }
     // override default tab handling

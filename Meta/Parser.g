@@ -84,7 +84,7 @@ tokens
     protected override Token makeToken (int t)
     {
         MetaToken tok = (MetaToken) base.makeToken (t);
-        ((ExtentLexerSharedInputState) inputState).annotate (tok);
+        ((SourceAreaLexerSharedInputState) inputState).annotate (tok);
         return tok;
     }
     // override default tab handling
@@ -391,11 +391,11 @@ delayedImplementation:
 		// TODO: refactor
 		MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
 		
-		runToken.setLine(#delayedImplementation.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
-		runToken.setColumn(#delayedImplementation.Extent.Start.Column); 
-		runToken.FileName=#delayedImplementation.Extent.FileName;
-		runToken.EndLine=#delayedImplementation.Extent.End.Line;
-		runToken.EndColumn=#delayedImplementation.Extent.End.Column;
+		runToken.setLine(#delayedImplementation.SourceArea.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
+		runToken.setColumn(#delayedImplementation.SourceArea.Start.Column); 
+		runToken.FileName=#delayedImplementation.SourceArea.FileName;
+		runToken.EndLine=#delayedImplementation.SourceArea.End.Line;
+		runToken.EndColumn=#delayedImplementation.SourceArea.End.Column;
 
 		
 		MetaAST runAst=new MetaAST(runToken);
@@ -485,11 +485,11 @@ statement:
 
 			// TODO: Simplify!!, use astFactory
 			MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
-			autokeyToken.setLine(#statement.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
-			autokeyToken.setColumn(#statement.Extent.Start.Column); 
-			autokeyToken.FileName=#statement.Extent.FileName;
-			autokeyToken.EndLine=#statement.Extent.End.Line;
-			autokeyToken.EndColumn=#statement.Extent.End.Column;
+			autokeyToken.setLine(#statement.SourceArea.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
+			autokeyToken.setColumn(#statement.SourceArea.Start.Column); 
+			autokeyToken.FileName=#statement.SourceArea.FileName;
+			autokeyToken.EndLine=#statement.SourceArea.End.Line;
+			autokeyToken.EndColumn=#statement.SourceArea.End.Column;
 			MetaAST autokeyAst=new MetaAST(autokeyToken);
 			autokeyAst.setText(autokeys.Peek().ToString());
             #statement=#([STATEMENT],#([KEY],autokeyAst),#statement);
@@ -591,7 +591,7 @@ program
 	returns[Map code]
 	{
 		code=new NormalMap();
-		code.Extent=#program.Extent;
+		code.SourceArea=#program.SourceArea;
 		Map programCode=new NormalMap();
 		Map statementCode;
 		int statementNumber=1;
@@ -614,7 +614,7 @@ call
 	returns [Map code]
 	{
 		code=new NormalMap();
-		code.Extent=#call.Extent;
+		code.SourceArea=#call.SourceArea;
 		Map callCode=new NormalMap();
 		Map functionCode;
 		Map argumentCode;
@@ -638,7 +638,7 @@ select
 	returns [Map code]
 	{
 		code=new NormalMap();
-		code.Extent=#select.Extent;
+		code.SourceArea=#select.SourceArea;
 		Map selectCode=new NormalMap();
 		Map keyCode;
 		int counter=1;
@@ -661,7 +661,7 @@ select
 	returns [Map code]
 	{
 		code=new NormalMap();
-		code.Extent=#search.Extent;
+		code.SourceArea=#search.SourceArea;
 		Map searchCode;
 	}:
 	#(SEARCH searchCode=expression)
@@ -674,7 +674,7 @@ delayed
     returns[Map code]
     {
         code=new NormalMap();
-        code.Extent=#delayed.Extent;
+        code.SourceArea=#delayed.SourceArea;
         Map delayedCode;
     }:
     #(FUNCTION delayedCode=expression)
@@ -687,7 +687,7 @@ literal
 	returns [Map code]
 	{
 		code=new NormalMap();
-		code.Extent=#literal.Extent;
+		code.SourceArea=#literal.SourceArea;
 	}:
 	token:LITERAL
 	{

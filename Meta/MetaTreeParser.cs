@@ -132,7 +132,7 @@ namespace Meta.Parser
 		MetaAST call_AST_in = (MetaAST)_t;
 		
 				code=new NormalMap();
-				code.Extent=call_AST_in.Extent;
+				code.SourceArea=call_AST_in.SourceArea;
 				Map callCode=new NormalMap();
 				Map functionCode;
 				Map argumentCode;
@@ -168,7 +168,7 @@ namespace Meta.Parser
 		MetaAST program_AST_in = (MetaAST)_t;
 		
 				code=new NormalMap();
-				code.Extent=program_AST_in.Extent;
+				code.SourceArea=program_AST_in.SourceArea;
 				Map programCode=new NormalMap();
 				Map statementCode;
 				int statementNumber=1;
@@ -218,7 +218,7 @@ _loop147_breakloop:			;
 		MetaAST select_AST_in = (MetaAST)_t;
 		
 				code=new NormalMap();
-				code.Extent=select_AST_in.Extent;
+				code.SourceArea=select_AST_in.SourceArea;
 				Map selectCode=new NormalMap();
 				Map keyCode;
 				int counter=1;
@@ -269,7 +269,7 @@ _loop155_breakloop:		;
 		MetaAST token = null;
 		
 				code=new NormalMap();
-				code.Extent=literal_AST_in.Extent;
+				code.SourceArea=literal_AST_in.SourceArea;
 			
 		
 		token = (_t==ASTNULL) ? null : (MetaAST)_t;
@@ -289,7 +289,7 @@ _loop155_breakloop:		;
 		MetaAST delayed_AST_in = (MetaAST)_t;
 		
 		code=new NormalMap();
-		code.Extent=delayed_AST_in.Extent;
+		code.SourceArea=delayed_AST_in.SourceArea;
 		Map delayedCode;
 		
 		

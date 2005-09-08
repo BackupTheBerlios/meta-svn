@@ -27,7 +27,7 @@ using LexerSharedInputState = antlr.LexerSharedInputState;
 /// </summary>
 /// <author>  Dan Bornstein, danfuzz@milk.com
 /// </author>
-public class ExtentLexerSharedInputState:LexerSharedInputState
+public class SourceAreaLexerSharedInputState:LexerSharedInputState
 {
 	/// <summary> Get the current line of this instance.
 	/// 
@@ -81,7 +81,7 @@ public class ExtentLexerSharedInputState:LexerSharedInputState
 	/// </param>
 	/// <param name="name">null-ok; the file name to associate with this instance
 	/// </param>
-	public ExtentLexerSharedInputState(System.IO.Stream s, System.String name):base(s)
+	public SourceAreaLexerSharedInputState(System.IO.Stream s, System.String name):base(s)
 	{
 		fileName = name;
 	}
@@ -92,7 +92,7 @@ public class ExtentLexerSharedInputState:LexerSharedInputState
 	/// </summary>
 	/// <param name="s">the input stream to use
 	/// </param>
-	public ExtentLexerSharedInputState(System.IO.Stream s):this(s, null)
+	public SourceAreaLexerSharedInputState(System.IO.Stream s):this(s, null)
 	{
 	}
 	
@@ -101,7 +101,7 @@ public class ExtentLexerSharedInputState:LexerSharedInputState
 	/// </summary>
 	/// <param name="name">non-null; the name of the file to use
 	/// </param>
-	public ExtentLexerSharedInputState(System.String name):this(new System.IO.FileStream(name, System.IO.FileMode.Open, System.IO.FileAccess.Read), name)
+	public SourceAreaLexerSharedInputState(System.String name):this(new System.IO.FileStream(name, System.IO.FileMode.Open, System.IO.FileAccess.Read), name)
 	{
 	}
 	

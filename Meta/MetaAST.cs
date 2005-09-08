@@ -25,9 +25,9 @@ using Meta.Parser;
 using System.Collections;
 using Meta;
 
-//public class Extent 
+//public class SourceArea 
 //{ // TODO: Rename to something more sensible
-//	public static Hashtable Extents
+//	public static Hashtable SourceAreas
 //	{
 //		get
 //		{
@@ -38,9 +38,9 @@ using Meta;
 //	public override bool Equals(object obj)
 //	{	
 //		bool isEqual=false;
-//		if(obj is Extent)
+//		if(obj is SourceArea)
 //		{
-//			Extent extent=(Extent)obj;
+//			SourceArea extent=(SourceArea)obj;
 //			if(
 //				extent.StartLine==StartLine && 
 //				extent.StartColumn==StartColumn && 
@@ -122,7 +122,7 @@ using Meta;
 //	int startColumn;
 //	int endColumn;
 //	string fileName;
-//	public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+//	public SourceArea(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
 //	{
 //		this.startLine=startLine;
 //		this.startColumn=startColumn;
@@ -131,14 +131,14 @@ using Meta;
 //		this.fileName=fileName;
 //
 //	}
-//	public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+//	public SourceArea CreateSourceArea(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
 //	{
-//		Extent extent=new Extent(startLine,startColumn,endLine,endColumn,fileName);
+//		SourceArea extent=new SourceArea(startLine,startColumn,endLine,endColumn,fileName);
 //		if(!extents.ContainsKey(extent))
 //		{
 //			extents.Add(extent,extent);
 //		}
-//		return (Extent)extents[extent]; // return the unique extent not the extent itself 
+//		return (SourceArea)extents[extent]; // return the unique extent not the extent itself 
 //	}
 //
 //	//	public int StartLine {
@@ -180,7 +180,7 @@ using Meta;
 public class MetaAST:CommonAST
 {
 	/* Read the extent of this AST from the corresponding token. */
-	public Extent Extent 
+	public SourceArea SourceArea 
 	{
 		get 
 		{
@@ -191,11 +191,11 @@ public class MetaAST:CommonAST
 			//((MetaToken)this.token).setFromMetaAST(this); 
 			if(extent==null) 
 			{
-				extent=new Extent(System.Int32.MaxValue,System.Int32.MaxValue,
+				extent=new SourceArea(System.Int32.MaxValue,System.Int32.MaxValue,
 					System.Int32.MinValue,System.Int32.MinValue,null);
-				//				extent=new Extent(System.Int32.MaxValue,System.Int32.MaxValue,
+				//				extent=new SourceArea(System.Int32.MaxValue,System.Int32.MaxValue,
 				//					System.Int32.MinValue,System.Int32.MinValue,null);
-				DetermineExtent(extent,this);
+				DetermineSourceArea(extent,this);
 			}
 			return extent;
 		}
@@ -208,7 +208,7 @@ public class MetaAST:CommonAST
 			return MetaParser.tokenNames_[this.Type];
 		}
 	}
-	Extent extent;
+	SourceArea extent;
 	//UPGRADE_NOTE: Respective javadoc comments were merged.  It should be changed in order to comply with .NET documentation conventions.
 	/// <summary> Get the token text for this instance. If there is no token associated
 	/// with this instance, then this returns the empty string 
@@ -395,8 +395,8 @@ public class MetaAST:CommonAST
 		Type=tok.Type;
 		if(tok.getLine()!=0) 
 		{
-			extent=Extent.CreateExtent(tok.getLine(),tok.getColumn(),((MetaToken)tok).EndLine,((MetaToken)tok).EndColumn,((MetaToken)tok).FileName);
-			//			extent=new Extent(tok.getLine(),tok.getColumn(),((MetaToken)tok).EndLine,((MetaToken)tok).EndColumn,((MetaToken)tok).FileName);
+			extent=SourceArea.CreateSourceArea(tok.getLine(),tok.getColumn(),((MetaToken)tok).EndLine,((MetaToken)tok).EndColumn,((MetaToken)tok).FileName);
+			//			extent=new SourceArea(tok.getLine(),tok.getColumn(),((MetaToken)tok).EndLine,((MetaToken)tok).EndColumn,((MetaToken)tok).FileName);
 		}
 		else 
 		{
@@ -436,33 +436,33 @@ public class MetaAST:CommonAST
 	{
 		initialize(ast.Type, ast.getText());
 	}
-	private static void DetermineExtent(Extent result,MetaAST ast) 
+	private static void DetermineSourceArea(SourceArea result,MetaAST ast) 
 	{
-		if (ast.Extent.Start.Line < result.Start.Line) 
+		if (ast.SourceArea.Start.Line < result.Start.Line) 
 		{
-			result.Start.Line=ast.Extent.Start.Line;
-			result.Start.Column=ast.Extent.Start.Column;
-			result.FileName=ast.Extent.FileName;
+			result.Start.Line=ast.SourceArea.Start.Line;
+			result.Start.Column=ast.SourceArea.Start.Column;
+			result.FileName=ast.SourceArea.FileName;
 		}
-		else if ((ast.Extent.Start.Line == result.Start.Line) && (ast.Extent.Start.Column < result.Start.Column)) 
+		else if ((ast.SourceArea.Start.Line == result.Start.Line) && (ast.SourceArea.Start.Column < result.Start.Column)) 
 		{
-			result.Start.Column=ast.Extent.Start.Column;
-			result.FileName = ast.Extent.FileName;
+			result.Start.Column=ast.SourceArea.Start.Column;
+			result.FileName = ast.SourceArea.FileName;
 		}
 
-		if (ast.Extent.End.Line > result.End.Line) 
+		if (ast.SourceArea.End.Line > result.End.Line) 
 		{
-			result.End.Line = ast.Extent.End.Line;
-			result.End.Column = ast.Extent.End.Column;
+			result.End.Line = ast.SourceArea.End.Line;
+			result.End.Column = ast.SourceArea.End.Column;
 		}
-		else if ((ast.Extent.End.Line == result.End.Line) && (ast.Extent.End.Column > result.End.Column)) 
+		else if ((ast.SourceArea.End.Line == result.End.Line) && (ast.SourceArea.End.Column > result.End.Column)) 
 		{
-			result.End.Column = ast.Extent.End.Column;
+			result.End.Column = ast.SourceArea.End.Column;
 		}
 
 		for(MetaAST child = (MetaAST) ast.getFirstChild();child != null;child = (MetaAST) child.getNextSibling())
 		{
-			DetermineExtent(result, child);
+			DetermineSourceArea(result, child);
 		}
 	}
 }
