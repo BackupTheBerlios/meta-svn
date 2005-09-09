@@ -8,6 +8,7 @@ this:map.Merge
 	System.Windows.Forms
 	System.Drawing
 choose:
+	// TODO: rename dialog to openFileDialog
 	OpenFile:=
 		dialog:OpenFileDialog*
 		dialog.ShowDialog*
@@ -39,9 +40,11 @@ SetFileName:=
 SetBreakPoint:=Meta.Expression.BreakPoint.set
 	Meta.BreakPoint
 		fileName
-		Meta.Position
+		Meta.SourcePosition
 			editBox.RealLine.get*
 			editBox.Column.get*
+SetBreakPoint:=
+	asdjfasdf
 commands:
 	SaveAs:=
 		saveAs:choose.SaveFile*
@@ -78,9 +81,9 @@ commands:
 	Run:=
 		commands.Save*
 		SetBreakPoint*
-		Meta.Interpreter.DebugBreak.add
+		Meta.Interpreter.Break.add
 			=editBox.ShowDebugValue
-				Meta.Interpreter.DisplayValue.get*
+				arg.1
 		Meta.Interpreter.StartDebug
 			fileName
 	Continue:=
@@ -106,6 +109,7 @@ Modifiers:
 		Keys.Shift
 shortcuts:
 	[Keys.Escape]:=editBox.StopInteractiveSearch*
+	[Keys.F5]:=commands.Run*
 	[Keys.F5]:=commands.Run*
 	[Keys.Up]:=editBox.MoveLineUp*
 	[Keys.Down]:=editBox.MoveLineDown*

@@ -130,7 +130,8 @@ public class map:MetaLibrary
 	}
 	public static object If(Map argM) 
 	{
-		bool conditionB=(bool)Convert.ToBoolean(Meta.Transform.ToDotNet(argM[1]));//,typeof(bool));
+		bool conditionB=argM[1].Boolean;//,typeof(bool));
+//		bool conditionB=(bool)Convert.ToBoolean(Meta.Transform.ToDotNet(argM[1]));//,typeof(bool));
 		Map thenF=argM["then"];
 		Map elseF=argM["else"];
 		if(conditionB) 

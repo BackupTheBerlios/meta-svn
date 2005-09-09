@@ -89,7 +89,7 @@ namespace Meta
 		public Map Evaluate(Map parent)
 		{
 			Map result=EvaluateImplementation(parent);
-			Interpreter.DisplayValue=result;
+//			Interpreter.DisplayValue=result;
 			return result;
 		}
 
@@ -360,10 +360,10 @@ namespace Meta
 			{
 				Map key=((Expression)keys[i]).Evaluate(parent);
 				Map selection=selected[key];
-				Interpreter.DisplayValue=selection;
+//				Interpreter.DisplayValue=selection;
 				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).SourceArea))
 				{
-					Interpreter.CallDebug();
+					Interpreter.CallBreak(selection);
 				}
 				if(selection==null)
 				{
@@ -392,10 +392,10 @@ namespace Meta
 				}
 			}
 			Map val=selected[key];
-			Interpreter.DisplayValue=val;
+//			Interpreter.DisplayValue=val;
 			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(firstKey.SourceArea))
 			{
-				Interpreter.CallDebug();
+				Interpreter.CallBreak(val);
 			}
 			return val;
 		}
@@ -418,14 +418,15 @@ namespace Meta
 				selected=selection;
 				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).SourceArea))
 				{
-					Interpreter.CallDebug();
+					Interpreter.CallBreak(selected);
 				}
 			}
 			Map lastKey=((Expression)keys[keys.Count-1]).Evaluate(parent);
-			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).SourceArea))
-			{
-				Interpreter.CallDebug();
-			}
+			// TODO: peek at next statement
+//			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).SourceArea))
+//			{
+//				Interpreter.CallBreak();
+//			}
 			Map val=expression.Evaluate(parent);
 			if(lastKey.Equals(SpecialKeys.This))
 			{
@@ -450,29 +451,37 @@ namespace Meta
 	}
 	public class Interpreter
 	{
-		private static Map displayValue="";
-		public static Map DisplayValue
-		{
-			get
-			{
-				return displayValue;
-			}
-			set
-			{
-				displayValue=value;
-			}
-		}
-		public static event MethodInvoker DebugBreak;
+//		private static Map displayValue="";
+//		public static Map DisplayValue
+//		{
+//			get
+//			{
+//				return displayValue;
+//			}
+//			set
+//			{
+//				displayValue=value;
+//			}
+//		}
+		public static event DebugBreak Break;
 
-		
-		public static void CallDebug()
+		public delegate void DebugBreak(Map data);
+		public static void CallBreak(Map data)
 		{
-			if(DebugBreak!=null)
+			if(Break!=null)
 			{
-				DebugBreak();
+				Break(data);
 				Thread.CurrentThread.Suspend();
 			}
-		}
+		}		
+//		public static void CallDebug()
+//		{
+//			if(DebugBreak!=null)
+//			{
+//				DebugBreak();
+//				Thread.CurrentThread.Suspend();
+//			}
+//		}
 		public static Map Merge(params Map[] arkvlToMerge)
 		{
 			return MergeCollection(arkvlToMerge);
@@ -1711,23 +1720,23 @@ namespace Meta
 	}
 	public class Transform
 	{
-		public static object ToDotNet(Map meta) 
-		{
-			object dotNet;
-			if(meta.IsInteger)
-			{
-				dotNet=meta.Integer.Int32;
-			}
-			else if(meta.IsString)
-			{
-				dotNet=meta.String;
-			}
-			else
-			{
-				dotNet=meta;
-			}
-			return dotNet;
-		}
+//		public static object ToDotNet(Map meta) 
+//		{
+//			object dotNet;
+//			if(meta.IsInteger)
+//			{
+//				dotNet=meta.Integer.Int32;
+//			}
+//			else if(meta.IsString)
+//			{
+//				dotNet=meta.String;
+//			}
+//			else
+//			{
+//				dotNet=meta;
+//			}
+//			return dotNet;
+//		}
 		public static object ToDotNet(Map meta,Type target)
 		{
 			bool isConverted;
@@ -3164,7 +3173,8 @@ namespace Meta
 					}
 					catch(Exception e)
 					{
-						throw new ApplicationException("Cannot set "+Transform.ToDotNet(key).ToString()+".");
+						throw new ApplicationException("Cannot set "+Meta.Serialize.Key(key)+".");
+//						throw new ApplicationException("Cannot set "+Transform.ToDotNet(key).ToString()+".");
 					}
 				}
 			}
@@ -3343,7 +3353,7 @@ namespace Meta
 			map.InitFromStrategy(this);
 			map.strategy[key]=val;
 //			map.strategy=this.Clone();
-			//map.strategy[NumberKeys.Negative]=this[NumberKeys.Negative];
+//			map.strategy[NumberKeys.Negative]=this[NumberKeys.Negative];
 		}
 	}
 	namespace Parser 
@@ -3375,10 +3385,6 @@ namespace Meta
 								indentation+='\t';
 							}
 							string text=token.getText();
-							if(text.IndexOf("Alle meine En")!=-1)
-							{
-								int asdf=0;
-							}
 							text=text.Replace(Environment.NewLine,"\n");
 							string[] lines=text.Split('\n');
 
