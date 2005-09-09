@@ -542,8 +542,9 @@ namespace Meta
 		}
 		public static AST ParseToAst(string fileName) 
 		{
-			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
-//			FileStream file=new FileStream(fileName, FileMode.Open,FileAccess.Read, FileShare.ReadWrite); 
+			StringReader stringReader=new StringReader("\n"+Helper.ReadFile(fileName));
+//			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
+			//			FileStream file=new FileStream(fileName, FileMode.Open,FileAccess.Read, FileShare.ReadWrite); 
 
 			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(stringReader,fileName); 
 //			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(file,fileName); 
@@ -3401,7 +3402,7 @@ namespace Meta
 			public IndentationStream(TokenStream tokenStream) 
 			{
 				this.tokenStream=tokenStream;
-				Indent(0,new Token());
+//				Indent(0,new Token());
 			}
 			public Token nextToken() 
 			{
