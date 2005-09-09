@@ -62,24 +62,25 @@ tokens
   SAME_INDENT;
 }
 {
-	public static bool IsLiteralEnd(MetaLexer lexer)
+	public static bool LiteralEnd(MetaLexer lexer)
 	{
-		bool isLiteralEnd=true;
+		bool LiteralEnd=true;
 		for(int i=0;i<literalEnd.Length;i++)
 		{
 			if(lexer.LA(i+1)!=literalEnd[i])
 			{
-				isLiteralEnd=false;
+				LiteralEnd=false;
 				break;
 			}
 		}
-		return isLiteralEnd;
+		return LiteralEnd;
 	}
 	public static void SetLiteralEnd(string literalStart)
 	{
 		literalEnd=Helper.ReverseString(literalStart);
 	}
-	public static string literalEnd;
+	private static string literalEnd;
+	
 	// add extent information to tokens
     protected override Token makeToken (int t)
     {
@@ -87,6 +88,7 @@ tokens
         ((SourceAreaLexerSharedInputState) inputState).annotate (tok);
         return tok;
     }
+    
     // override default tab handling
 	public override void tab()
 	{
@@ -134,6 +136,7 @@ LITERAL_KEY:
 		)
 	)+
 ;
+
 protected
 LITERAL_START:
 	(
@@ -161,6 +164,7 @@ LITERAL_START:
 		}
 	)
 ;
+
 protected
 LITERAL_END:
 	(
@@ -176,8 +180,10 @@ LITERAL_END:
 			)*
 		)
 		LITERAL_VERY_END
-	);
-// separate rule because of code generation bug
+	)
+;
+
+// separate rule only because of code generation bug
 protected
 LITERAL_VERY_END:
 		'\"'!;
@@ -185,8 +191,9 @@ LITERAL_VERY_END:
 LITERAL:
 	(
 		LITERAL_START
-		(options{greedy=true;}:
-			{!IsLiteralEnd(this)}?
+		(
+			options{greedy=true;}:
+			{!LiteralEnd(this)}?
 			(
 				(~
 					(
@@ -280,8 +287,7 @@ LINE		// everything in one rule to avoid indeterminisms
 		_ttype=MetaLexerTokenTypes.INDENTATION;
 	}
 	|
-	//((' '|'\t')+)=>
-	(' '|'\t')+
+	(' ')+
 	{
 		$setType(MetaLexerTokenTypes.SPACES);
 	}

@@ -14462,14 +14462,14 @@ Schwaenzchen in die Hoeh."
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "35"
+              "34"
             Line (Int32):
               "328"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (SourcePosition):
             Column (Int32):
-              "32"
+              "31"
             Line (Int32):
               "328"
       callable (Select):
@@ -14506,7 +14506,7 @@ Schwaenzchen in die Hoeh."
       SourceArea (SourceArea):
         End (SourcePosition):
           Column (Int32):
-            "35"
+            "34"
           Line (Int32):
             "328"
         FileName (String):

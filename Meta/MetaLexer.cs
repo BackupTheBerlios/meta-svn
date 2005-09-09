@@ -78,31 +78,33 @@ namespace Meta.Parser
 		public const int NEWLINE_KEEP_TEXT = 30;
 		
 		
-	public static bool IsLiteralEnd(MetaLexer lexer)
+	public static bool LiteralEnd(MetaLexer lexer)
 	{
-		bool isLiteralEnd=true;
+		bool LiteralEnd=true;
 		for(int i=0;i<literalEnd.Length;i++)
 		{
 			if(lexer.LA(i+1)!=literalEnd[i])
 			{
-				isLiteralEnd=false;
+				LiteralEnd=false;
 				break;
 			}
 		}
-		return isLiteralEnd;
+		return LiteralEnd;
 	}
 	public static void SetLiteralEnd(string literalStart)
 	{
 		literalEnd=Helper.ReverseString(literalStart);
 	}
-	public static string literalEnd;
-	// add SourceArea information to tokens
+	private static string literalEnd;
+	
+	// add extent information to tokens
     protected override Token makeToken (int t)
     {
         MetaToken tok = (MetaToken) base.makeToken (t);
         ((SourceAreaLexerSharedInputState) inputState).annotate (tok);
         return tok;
     }
+    
     // override default tab handling
 	public override void tab()
 	{
@@ -557,7 +559,7 @@ _loop32_breakloop:					;
 			{    // ( ... )*
 				for (;;)
 				{
-					if ((((LA(1) >= '\u0000' && LA(1) <= '\ufffe')) && ((LA(2) >= '\u0000' && LA(2) <= '\ufffe')))&&(!IsLiteralEnd(this)))
+					if ((((LA(1) >= '\u0000' && LA(1) <= '\ufffe')) && ((LA(2) >= '\u0000' && LA(2) <= '\ufffe')))&&(!LiteralEnd(this)))
 					{
 						{
 							if ((tokenSet_1_.member(LA(1))))
@@ -1121,28 +1123,20 @@ _loop91_breakloop:								;
 								
 						}
 					}
-					else if ((LA(1)=='\t'||LA(1)==' ') && (true)) {
+					else if ((LA(1)==' ') && (true)) {
 						{ // ( ... )+
 						int _cnt93=0;
 						for (;;)
 						{
-							switch ( LA(1) )
-							{
-							case ' ':
+							if ((LA(1)==' '))
 							{
 								match(' ');
-								break;
 							}
-							case '\t':
-							{
-								match('\t');
-								break;
-							}
-							default:
+							else
 							{
 								if (_cnt93 >= 1) { goto _loop93_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
 							}
-							break; }
+							
 							_cnt93++;
 						}
 _loop93_breakloop:						;
