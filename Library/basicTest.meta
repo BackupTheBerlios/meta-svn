@@ -36,6 +36,11 @@ integerHashTest:
 		[*]:
 			[*]:*
 	hashTest:[hashTestData]
+negativeInteger:"-100"
+negativeInteger.x:"hello"
+subtractionTest:math.Subtract
+	"-100"
+	"1000"
 integerIncrementTest:"5"
 integerIncrementTest.0:integerIncrementTest
 integerDecrementTest:"5"

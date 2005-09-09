@@ -127,6 +127,30 @@ Entry (DictionaryEntry)
         "correct hash content"
 Entry (DictionaryEntry)
   Key (NormalMap):
+    "negativeInteger"
+  Value (NormalMap):
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        ""
+      Value (NormalMap):
+        "-99"
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "negative"
+      Value (NormalMap):
+        ""
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "x"
+      Value (NormalMap):
+        "hello"
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "subtractionTest"
+  Value (NormalMap):
+    "-1100"
+Entry (DictionaryEntry)
+  Key (NormalMap):
     "integerIncrementTest"
   Value (NormalMap):
     "6"
