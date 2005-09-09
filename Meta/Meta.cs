@@ -672,6 +672,10 @@ namespace Meta
 				return ContainsKey(CodeKeys.Run);
 			}
 		}
+		public static implicit operator Map(Integer integer)
+		{
+			return new NormalMap(integer);
+		}
 		public static implicit operator Map(bool boolean)
 		{
 			return new NormalMap(new Integer(boolean?1:0));
@@ -3284,21 +3288,11 @@ namespace Meta
 				{
 					if(number==0)
 					{
-						result=0;
+						result=null;
 					}
 					else
 					{
-						Integer newInteger;
-						Integer absoluteOfNewInteger=number.abs()-1;
-						if(number>0)
-						{
-							newInteger=absoluteOfNewInteger;
-						}
-						else
-						{
-							newInteger=-absoluteOfNewInteger;
-						}
-						result=new NormalMap(newInteger);
+						result=number.abs()-1;
 					}
 				}
 				else if(key.Equals(NumberKeys.Negative))
@@ -3318,6 +3312,47 @@ namespace Meta
 				}
 				return result;
 			}
+//			get
+//			{
+//				Map result;
+//				if(key.Equals(NumberKeys.EmptyMap))
+//				{
+//					if(number==0)
+//					{
+//						result=0;
+//					}
+//					else
+//					{
+//						Integer newInteger;
+//						Integer absoluteOfNewInteger=number.abs()-1;
+//						if(number>0)
+//						{
+//							newInteger=absoluteOfNewInteger;
+//						}
+//						else
+//						{
+//							newInteger=-absoluteOfNewInteger;
+//						}
+//						result=new NormalMap(newInteger);
+//					}
+//				}
+//				else if(key.Equals(NumberKeys.Negative))
+//				{
+//					if(number<0)
+//					{
+//						result=new NormalMap();
+//					}
+//					else
+//					{
+//						result=null;
+//					}
+//				}
+//				else
+//				{
+//					result=null;
+//				}
+//				return result;
+//			}
 			set
 			{
 				if(key.Equals(NumberKeys.EmptyMap))
