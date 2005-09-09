@@ -47,7 +47,7 @@ using System.Collections;
 		public const int EOF = 1;
 		public const int NULL_TREE_LOOKAHEAD = 3;
 		public const int INDENTATION = 4;
-		public const int SPACES = 5;
+		public const int SPACE = 5;
 		public const int INDENT = 6;
 		public const int ENDLINE = 7;
 		public const int DEDENT = 8;
@@ -145,11 +145,11 @@ using System.Collections;
 				break;
 			}
 			default:
-				bool synPredMatched103 = false;
+				bool synPredMatched102 = false;
 				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 				{
-					int _m103 = mark();
-					synPredMatched103 = true;
+					int _m102 = mark();
+					synPredMatched102 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -158,12 +158,12 @@ using System.Collections;
 					}
 					catch (RecognitionException)
 					{
-						synPredMatched103 = false;
+						synPredMatched102 = false;
 					}
-					rewind(_m103);
+					rewind(_m102);
 					inputState.guessing--;
 				}
-				if ( synPredMatched103 )
+				if ( synPredMatched102 )
 				{
 					call();
 					if (0 == inputState.guessing)
@@ -205,9 +205,9 @@ using System.Collections;
 		{
 			switch ( LA(1) )
 			{
-			case SPACES:
+			case SPACE:
 			{
-				match(SPACES);
+				match(SPACE);
 				break;
 			}
 			case INDENT:
@@ -275,11 +275,11 @@ using System.Collections;
 				}
 				else
 				{
-					goto _loop110_breakloop;
+					goto _loop109_breakloop;
 				}
 				
 			}
-_loop110_breakloop:			;
+_loop109_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -437,11 +437,11 @@ _loop110_breakloop:			;
 						}
 						else
 						{
-							goto _loop123_breakloop;
+							goto _loop122_breakloop;
 						}
 						
 					}
-_loop123_breakloop:					;
+_loop122_breakloop:					;
 				}    // ( ... )*
 				match(DEDENT);
 				if (0==inputState.guessing)
@@ -658,11 +658,11 @@ _loop123_breakloop:					;
 		ASTPair currentAST = new ASTPair();
 		MetaAST statement_AST = null;
 		
-		bool synPredMatched127 = false;
+		bool synPredMatched126 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m127 = mark();
-			synPredMatched127 = true;
+			int _m126 = mark();
+			synPredMatched126 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -672,12 +672,12 @@ _loop123_breakloop:					;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched127 = false;
+				synPredMatched126 = false;
 			}
-			rewind(_m127);
+			rewind(_m126);
 			inputState.guessing--;
 		}
-		if ( synPredMatched127 )
+		if ( synPredMatched126 )
 		{
 			{
 				key();
@@ -815,11 +815,11 @@ _loop123_breakloop:					;
 				}
 				else
 				{
-					goto _loop133_breakloop;
+					goto _loop132_breakloop;
 				}
 				
 			}
-_loop133_breakloop:			;
+_loop132_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -862,7 +862,7 @@ _loop133_breakloop:			;
 		@"""<2>""",
 		@"""NULL_TREE_LOOKAHEAD""",
 		@"""INDENTATION""",
-		@"""SPACES""",
+		@"""SPACE""",
 		@"""INDENT""",
 		@"""ENDLINE""",
 		@"""DEDENT""",

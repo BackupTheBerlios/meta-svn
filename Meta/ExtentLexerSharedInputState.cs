@@ -16,6 +16,7 @@
 
 
 using System;
+using System.IO;
 using LexerSharedInputState = antlr.LexerSharedInputState;
 
 /// <summary> Extension of {@link LexerSharedInputState} that is aware of
@@ -82,10 +83,17 @@ public class SourceAreaLexerSharedInputState:LexerSharedInputState
 	/// <param name="name">null-ok; the file name to associate with this instance
 	/// </param>
 	public SourceAreaLexerSharedInputState(System.IO.Stream s, System.String name):base(s)
+//		public SourceAreaLexerSharedInputState(System.IO.Stream s, System.String name):base(s)
 	{
 		fileName = name;
 	}
-	
+
+	public SourceAreaLexerSharedInputState(TextReader textReader, System.String name):base(textReader)
+		//		public SourceAreaLexerSharedInputState(System.IO.Stream s, System.String name):base(s)
+	{
+		fileName = name;
+	}
+
 	/// <summary> Construct an instance. The file name is set to <code>null</code>
 	/// initially.
 	/// 

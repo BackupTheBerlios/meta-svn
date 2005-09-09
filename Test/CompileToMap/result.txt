@@ -171,7 +171,7 @@ Entry (DictionaryEntry)
               Key (NormalMap):
                 "literal"
               Value (NormalMap):
-                "Ã¤aba"
+                "äaba"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "3"
@@ -9712,7 +9712,7 @@ hello!
 Alle meine Entchen,
 schwimmen auf dem See,
 schwimmen auf dem See,
-KÃ¶pfchen in das Wasser,
+Köpfchen in das Wasser,
 Schwaenzchen in die Hoeh."
     Entry (DictionaryEntry)
       Key (NormalMap):

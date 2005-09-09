@@ -7,7 +7,7 @@ Entry (DictionaryEntry)
   Key (NormalMap):
     "unicodeText"
   Value (NormalMap):
-    "Ã¤aba"
+    "äaba"
 Entry (DictionaryEntry)
   Key (NormalMap):
     "Equal"
@@ -2325,7 +2325,7 @@ Entry (DictionaryEntry)
     Entry (String)
       "schwimmen auf dem See,"
     Entry (String)
-      "KÃ¶pfchen in das Wasser,"
+      "Köpfchen in das Wasser,"
     Entry (String)
       "bwuhahaha"
 Entry (DictionaryEntry)

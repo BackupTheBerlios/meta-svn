@@ -50,7 +50,7 @@ namespace Meta.Parser
 		public const int EOF = 1;
 		public const int NULL_TREE_LOOKAHEAD = 3;
 		public const int INDENTATION = 4;
-		public const int SPACES = 5;
+		public const int SPACE = 5;
 		public const int INDENT = 6;
 		public const int ENDLINE = 7;
 		public const int DEDENT = 8;
@@ -1124,27 +1124,13 @@ _loop91_breakloop:								;
 						}
 					}
 					else if ((LA(1)==' ') && (true)) {
-						{ // ( ... )+
-						int _cnt93=0;
-						for (;;)
 						{
-							if ((LA(1)==' '))
-							{
-								match(' ');
-							}
-							else
-							{
-								if (_cnt93 >= 1) { goto _loop93_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
-							}
-							
-							_cnt93++;
+							match(' ');
 						}
-_loop93_breakloop:						;
-						}    // ( ... )+
 						if (0==inputState.guessing)
 						{
 							
-									_ttype = MetaLexerTokenTypes.SPACES;
+									_ttype = MetaLexerTokenTypes.SPACE;
 								
 						}
 					}
@@ -1169,6 +1155,14 @@ _loop93_breakloop:						;
 		{
 			switch ( LA(1) )
 			{
+			case '\n':
+			{
+				int _saveIndex = 0;
+				_saveIndex = text.Length;
+				match('\n');
+				text.Length = _saveIndex;
+				break;
+			}
 			case '\r':
 			{
 				{
@@ -1180,14 +1174,6 @@ _loop93_breakloop:						;
 					match('\n');
 					text.Length = _saveIndex;
 				}
-				break;
-			}
-			case '\n':
-			{
-				int _saveIndex = 0;
-				_saveIndex = text.Length;
-				match('\n');
-				text.Length = _saveIndex;
 				break;
 			}
 			default:

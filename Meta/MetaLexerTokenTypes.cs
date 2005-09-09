@@ -7,7 +7,7 @@ namespace Meta.Parser
 		public const int EOF = 1;
 		public const int NULL_TREE_LOOKAHEAD = 3;
 		public const int INDENTATION = 4;
-		public const int SPACES = 5;
+		public const int SPACE = 5;
 		public const int INDENT = 6;
 		public const int ENDLINE = 7;
 		public const int DEDENT = 8;

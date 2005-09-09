@@ -42,7 +42,7 @@ namespace Meta.Parser
 		public const int EOF = 1;
 		public const int NULL_TREE_LOOKAHEAD = 3;
 		public const int INDENTATION = 4;
-		public const int SPACES = 5;
+		public const int SPACE = 5;
 		public const int INDENT = 6;
 		public const int ENDLINE = 7;
 		public const int DEDENT = 8;
@@ -138,7 +138,7 @@ namespace Meta.Parser
 				Map argumentCode;
 			
 		
-		AST __t149 = _t;
+		AST __t148 = _t;
 		MetaAST tmp16_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,CALL);
 		_t = _t.getFirstChild();
@@ -155,7 +155,7 @@ namespace Meta.Parser
 					callCode[CodeKeys.Argument]=argumentCode;
 					code[CodeKeys.Call]=callCode;
 				
-		_t = __t149;
+		_t = __t148;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return code;
@@ -174,7 +174,7 @@ namespace Meta.Parser
 				int statementNumber=1;
 			
 		
-		AST __t144 = _t;
+		AST __t143 = _t;
 		MetaAST tmp17_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,PROGRAM);
 		_t = _t.getFirstChild();
@@ -196,13 +196,13 @@ namespace Meta.Parser
 				}
 				else
 				{
-					goto _loop147_breakloop;
+					goto _loop146_breakloop;
 				}
 				
 			}
-_loop147_breakloop:			;
+_loop146_breakloop:			;
 		}    // ( ... )*
-		_t = __t144;
+		_t = __t143;
 		_t = _t.getNextSibling();
 		
 				code[CodeKeys.Program]=programCode;
@@ -224,12 +224,12 @@ _loop147_breakloop:			;
 				int counter=1;
 			
 		
-		AST __t153 = _t;
+		AST __t152 = _t;
 		MetaAST tmp18_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SELECT);
 		_t = _t.getFirstChild();
 		{ // ( ... )+
-		int _cnt155=0;
+		int _cnt154=0;
 		for (;;)
 		{
 			if (_t == null)
@@ -245,14 +245,14 @@ _loop147_breakloop:			;
 			}
 			else
 			{
-				if (_cnt155 >= 1) { goto _loop155_breakloop; } else { throw new NoViableAltException(_t);; }
+				if (_cnt154 >= 1) { goto _loop154_breakloop; } else { throw new NoViableAltException(_t);; }
 			}
 			
-			_cnt155++;
+			_cnt154++;
 		}
-_loop155_breakloop:		;
+_loop154_breakloop:		;
 		}    // ( ... )+
-		_t = __t153;
+		_t = __t152;
 		_t = _t.getNextSibling();
 		
 				code[CodeKeys.Select]=selectCode;
@@ -293,13 +293,13 @@ _loop155_breakloop:		;
 		Map delayedCode;
 		
 		
-		AST __t157 = _t;
+		AST __t156 = _t;
 		MetaAST tmp19_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,FUNCTION);
 		_t = _t.getFirstChild();
 		delayedCode=expression(_t);
 		_t = retTree_;
-		_t = __t157;
+		_t = __t156;
 		_t = _t.getNextSibling();
 		
 		code[CodeKeys.Delayed]=delayedCode;
@@ -319,12 +319,12 @@ _loop155_breakloop:		;
 				int keyNumber=1;
 			
 		
-		AST __t138 = _t;
+		AST __t137 = _t;
 		MetaAST tmp20_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,KEY);
 		_t = _t.getFirstChild();
 		{ // ( ... )+
-		int _cnt140=0;
+		int _cnt139=0;
 		for (;;)
 		{
 			if (_t == null)
@@ -340,14 +340,14 @@ _loop155_breakloop:		;
 			}
 			else
 			{
-				if (_cnt140 >= 1) { goto _loop140_breakloop; } else { throw new NoViableAltException(_t);; }
+				if (_cnt139 >= 1) { goto _loop139_breakloop; } else { throw new NoViableAltException(_t);; }
 			}
 			
-			_cnt140++;
+			_cnt139++;
 		}
-_loop140_breakloop:		;
+_loop139_breakloop:		;
 		}    // ( ... )+
-		_t = __t138;
+		_t = __t137;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return code;
@@ -364,7 +364,7 @@ _loop140_breakloop:		;
 				Map valueCode;
 			
 		
-		AST __t142 = _t;
+		AST __t141 = _t;
 		MetaAST tmp21_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,STATEMENT);
 		_t = _t.getFirstChild();
@@ -376,7 +376,7 @@ _loop140_breakloop:		;
 					code[CodeKeys.Key]=keyCode;
 					code[CodeKeys.Value]=valueCode;
 				
-		_t = __t142;
+		_t = __t141;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return code;
@@ -394,7 +394,7 @@ _loop140_breakloop:		;
 		@"""<2>""",
 		@"""NULL_TREE_LOOKAHEAD""",
 		@"""INDENTATION""",
-		@"""SPACES""",
+		@"""SPACE""",
 		@"""INDENT""",
 		@"""ENDLINE""",
 		@"""DEDENT""",

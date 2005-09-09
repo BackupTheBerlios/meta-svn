@@ -47,7 +47,7 @@ tokens
 {
   // imaginary tokens created by the Lexer:
   INDENTATION;
-  SPACES;
+  SPACE;
   // imaginary tokens created by the IndentParser:        
   INDENT;
   ENDLINE;// TODO: rename to  NEWLINE, or something more abstract, maybe NEXT_STATEMENT, or STATEMENT_END
@@ -214,7 +214,17 @@ LINE		// everything in one rule to avoid indeterminisms
   }:
 	// comments
 	(
-		('\t')* NEWLINE ('\t')* "//" (~('\n'|'\r'))* NEWLINE  // TODO: get away from the NEWLINE stuff here, then rename newline to SAME_INDENT
+		('\t')* 
+		NEWLINE 
+		('\t')* 
+		"//" 
+		(
+			~(
+				'\n'
+				|'\r'
+			)
+		)*
+		NEWLINE  
 	)=>
 	(
 		('\t')*
@@ -232,7 +242,7 @@ LINE		// everything in one rule to avoid indeterminisms
 		$setType(Token.SKIP);
 	}
 		
-	// comments										 
+	// comments									 
 	|
 	(
 		('\t')*
@@ -260,7 +270,8 @@ LINE		// everything in one rule to avoid indeterminisms
 	{
 		$setType(Token.SKIP);
 	}
-	|(
+	|
+	(
 		('\t'!|' '!)* 
 		NEWLINE
 		('\t'!|' '!)* 
@@ -276,28 +287,37 @@ LINE		// everything in one rule to avoid indeterminisms
 	}
 	// indentation
 	|
-	(('\t'!|' '!)*
-		NEWLINE)=>
 	(
-		('\t'!|' '!)* // throw away tabs and spaces at the end of old line
+		(
+			'\t'!
+			|' '!
+		)*
 		NEWLINE
-		('\t')* // keep tabs at the beginning of the new line
+	)=>
+	(
+		(
+			'\t'!
+			|' '!
+		)* 
+		NEWLINE
+		('\t')*
 	)
 	{
 		_ttype=MetaLexerTokenTypes.INDENTATION;
 	}
 	|
-	(' ')+
+	// single space
+	(' ')
 	{
-		$setType(MetaLexerTokenTypes.SPACES);
+		$setType(MetaLexerTokenTypes.SPACE);
 	}
-; 
+;
 
 protected
 NEWLINE:
   (
-    ('\r'! '\n'!)
-    |'\n'!
+    '\n'!
+    |('\r'! '\n'!)
   )
   {
     newline();
@@ -361,7 +381,7 @@ call:
 		select
 	)
 	// TODO: only allow one space
-	(SPACES!)?
+	(SPACE!)?
 	(
 		expression
 	)

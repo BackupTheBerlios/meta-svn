@@ -542,8 +542,11 @@ namespace Meta
 		}
 		public static AST ParseToAst(string fileName) 
 		{
-			FileStream file=new FileStream(fileName, FileMode.Open,FileAccess.Read, FileShare.ReadWrite); 
-			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(file,fileName); 
+			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
+//			FileStream file=new FileStream(fileName, FileMode.Open,FileAccess.Read, FileShare.ReadWrite); 
+
+			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(stringReader,fileName); 
+//			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(file,fileName); 
 			MetaLexer metaLexer = new MetaLexer(sharedInputState);
 	
 			metaLexer.setTokenObjectClass("MetaToken");
@@ -553,7 +556,7 @@ namespace Meta
 			metaParser.setASTNodeClass("MetaAST");
 			metaParser.map();
 			AST ast=metaParser.getAST();
-			file.Close();
+//			file.Close();
 			return ast;
 		}
 		private static void ExecuteInThread()
@@ -3511,13 +3514,13 @@ namespace Meta
 		}
 		public static void WriteFile(string fileName,string text)
 		{
-			StreamWriter writer=new StreamWriter(fileName);
+			StreamWriter writer=new StreamWriter(fileName,false,Encoding.Default);
 			writer.Write(text);
 			writer.Close();
 		}
 		public static string ReadFile(string fileName)
 		{
-			StreamReader reader=new StreamReader(fileName);
+			StreamReader reader=new StreamReader(fileName,Encoding.Default);
 			string result=reader.ReadToEnd();
 			reader.Close();
 			return result;
