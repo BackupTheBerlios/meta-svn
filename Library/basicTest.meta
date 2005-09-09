@@ -72,6 +72,8 @@ ifTest:If
 "ImpliedAutokey"
 :"Autokey"
 gacTest:System.Collections
+
+	//some comment
 lazyGACTest:Microsoft.CSharp
 //metaLibTest:metaLib
 commandLineArguments:arg
