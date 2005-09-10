@@ -65,9 +65,13 @@ namespace Meta.Parser
 		public const int LITERAL_END = 25;
 		public const int LITERAL_VERY_END = 26;
 		public const int LITERAL = 27;
-		public const int LINE = 28;
-		public const int NEWLINE = 29;
-		public const int NEWLINE_KEEP_TEXT = 30;
+		public const int COMMENT = 28;
+		public const int REST_OF_LINE = 29;
+		public const int LINE = 30;
+		public const int WHITESPACE = 31;
+		public const int BOF = 32;
+		public const int NEWLINE = 33;
+		public const int NEWLINE_KEEP_TEXT = 34;
 		
 		public MetaTreeParser()
 		{
@@ -138,7 +142,7 @@ namespace Meta.Parser
 				Map argumentCode;
 			
 		
-		AST __t148 = _t;
+		AST __t129 = _t;
 		MetaAST tmp16_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,CALL);
 		_t = _t.getFirstChild();
@@ -155,7 +159,7 @@ namespace Meta.Parser
 					callCode[CodeKeys.Argument]=argumentCode;
 					code[CodeKeys.Call]=callCode;
 				
-		_t = __t148;
+		_t = __t129;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return code;
@@ -174,7 +178,7 @@ namespace Meta.Parser
 				int statementNumber=1;
 			
 		
-		AST __t143 = _t;
+		AST __t124 = _t;
 		MetaAST tmp17_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,PROGRAM);
 		_t = _t.getFirstChild();
@@ -196,13 +200,13 @@ namespace Meta.Parser
 				}
 				else
 				{
-					goto _loop146_breakloop;
+					goto _loop127_breakloop;
 				}
 				
 			}
-_loop146_breakloop:			;
+_loop127_breakloop:			;
 		}    // ( ... )*
-		_t = __t143;
+		_t = __t124;
 		_t = _t.getNextSibling();
 		
 				code[CodeKeys.Program]=programCode;
@@ -224,12 +228,12 @@ _loop146_breakloop:			;
 				int counter=1;
 			
 		
-		AST __t152 = _t;
+		AST __t133 = _t;
 		MetaAST tmp18_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SELECT);
 		_t = _t.getFirstChild();
 		{ // ( ... )+
-		int _cnt154=0;
+		int _cnt135=0;
 		for (;;)
 		{
 			if (_t == null)
@@ -245,14 +249,14 @@ _loop146_breakloop:			;
 			}
 			else
 			{
-				if (_cnt154 >= 1) { goto _loop154_breakloop; } else { throw new NoViableAltException(_t);; }
+				if (_cnt135 >= 1) { goto _loop135_breakloop; } else { throw new NoViableAltException(_t);; }
 			}
 			
-			_cnt154++;
+			_cnt135++;
 		}
-_loop154_breakloop:		;
+_loop135_breakloop:		;
 		}    // ( ... )+
-		_t = __t152;
+		_t = __t133;
 		_t = _t.getNextSibling();
 		
 				code[CodeKeys.Select]=selectCode;
@@ -293,13 +297,13 @@ _loop154_breakloop:		;
 		Map delayedCode;
 		
 		
-		AST __t156 = _t;
+		AST __t137 = _t;
 		MetaAST tmp19_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,FUNCTION);
 		_t = _t.getFirstChild();
 		delayedCode=expression(_t);
 		_t = retTree_;
-		_t = __t156;
+		_t = __t137;
 		_t = _t.getNextSibling();
 		
 		code[CodeKeys.Delayed]=delayedCode;
@@ -319,12 +323,12 @@ _loop154_breakloop:		;
 				int keyNumber=1;
 			
 		
-		AST __t137 = _t;
+		AST __t118 = _t;
 		MetaAST tmp20_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,KEY);
 		_t = _t.getFirstChild();
 		{ // ( ... )+
-		int _cnt139=0;
+		int _cnt120=0;
 		for (;;)
 		{
 			if (_t == null)
@@ -340,14 +344,14 @@ _loop154_breakloop:		;
 			}
 			else
 			{
-				if (_cnt139 >= 1) { goto _loop139_breakloop; } else { throw new NoViableAltException(_t);; }
+				if (_cnt120 >= 1) { goto _loop120_breakloop; } else { throw new NoViableAltException(_t);; }
 			}
 			
-			_cnt139++;
+			_cnt120++;
 		}
-_loop139_breakloop:		;
+_loop120_breakloop:		;
 		}    // ( ... )+
-		_t = __t137;
+		_t = __t118;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return code;
@@ -364,7 +368,7 @@ _loop139_breakloop:		;
 				Map valueCode;
 			
 		
-		AST __t141 = _t;
+		AST __t122 = _t;
 		MetaAST tmp21_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,STATEMENT);
 		_t = _t.getFirstChild();
@@ -376,7 +380,7 @@ _loop139_breakloop:		;
 					code[CodeKeys.Key]=keyCode;
 					code[CodeKeys.Value]=valueCode;
 				
-		_t = __t141;
+		_t = __t122;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return code;
@@ -417,7 +421,11 @@ _loop139_breakloop:		;
 		@"""LITERAL_END""",
 		@"""LITERAL_VERY_END""",
 		@"""LITERAL""",
+		@"""COMMENT""",
+		@"""REST_OF_LINE""",
 		@"""LINE""",
+		@"""WHITESPACE""",
+		@"""BOF""",
 		@"""NEWLINE""",
 		@"""NEWLINE_KEEP_TEXT"""
 	};

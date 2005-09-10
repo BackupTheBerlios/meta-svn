@@ -73,9 +73,13 @@ namespace Meta.Parser
 		public const int LITERAL_END = 25;
 		public const int LITERAL_VERY_END = 26;
 		public const int LITERAL = 27;
-		public const int LINE = 28;
-		public const int NEWLINE = 29;
-		public const int NEWLINE_KEEP_TEXT = 30;
+		public const int COMMENT = 28;
+		public const int REST_OF_LINE = 29;
+		public const int LINE = 30;
+		public const int WHITESPACE = 31;
+		public const int BOF = 32;
+		public const int NEWLINE = 33;
+		public const int NEWLINE_KEEP_TEXT = 34;
 		
 		
 	public static bool LiteralEnd(MetaLexer lexer)
@@ -639,6 +643,50 @@ _loop40_breakloop:				;
 		returnToken_ = _token;
 	}
 	
+	protected void mCOMMENT(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; Token _token=null; int _begin=text.Length;
+		_ttype = COMMENT;
+		
+		match("//");
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+		{
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
+		}
+		returnToken_ = _token;
+	}
+	
+	protected void mREST_OF_LINE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; Token _token=null; int _begin=text.Length;
+		_ttype = REST_OF_LINE;
+		
+		{    // ( ... )*
+			for (;;)
+			{
+				if ((tokenSet_1_.member(LA(1))))
+				{
+					{
+						match(tokenSet_1_);
+					}
+				}
+				else
+				{
+					goto _loop45_breakloop;
+				}
+				
+			}
+_loop45_breakloop:			;
+		}    // ( ... )*
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+		{
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
+		}
+		returnToken_ = _token;
+	}
+	
 	public void mLINE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
@@ -648,63 +696,45 @@ _loop40_breakloop:				;
 		
 		
 		bool synPredMatched50 = false;
-		if (((LA(1)=='\t'||LA(1)=='\n'||LA(1)=='\r') && (tokenSet_2_.member(LA(2)))))
+		if (((tokenSet_2_.member(LA(1))) && (tokenSet_3_.member(LA(2)))))
 		{
 			int _m50 = mark();
 			synPredMatched50 = true;
 			inputState.guessing++;
 			try {
 				{
-					{    // ( ... )*
-						for (;;)
+					{
+						switch ( LA(1) )
 						{
-							if ((LA(1)=='\t'))
-							{
-								match('\t');
-							}
-							else
-							{
-								goto _loop44_breakloop;
-							}
-							
-						}
-_loop44_breakloop:						;
-					}    // ( ... )*
-					mNEWLINE(false);
-					{    // ( ... )*
-						for (;;)
+						case '\n':  case '\r':
 						{
-							if ((LA(1)=='\t'))
-							{
-								match('\t');
-							}
-							else
-							{
-								goto _loop46_breakloop;
-							}
-							
+							mNEWLINE(false);
+							break;
 						}
-_loop46_breakloop:						;
-					}    // ( ... )*
-					match("//");
-					{    // ( ... )*
-						for (;;)
+						case '\t':  case ' ':  case '/':
 						{
-							if ((tokenSet_1_.member(LA(1))))
-							{
-								{
-									match(tokenSet_1_);
-								}
-							}
-							else
-							{
-								goto _loop49_breakloop;
-							}
-							
+							mBOF(false);
+							break;
 						}
-_loop49_breakloop:						;
-					}    // ( ... )*
-					mNEWLINE(false);
+						default:
+						{
+							throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
+						}
+						 }
+					}
+					mWHITESPACE(false);
+					mCOMMENT(false);
+					mREST_OF_LINE(false);
+					{
+						if ((LA(1)=='\n'||LA(1)=='\r'))
+						{
+							mNEWLINE(false);
+						}
+						else {
+							mEOF(false);
+						}
+						
+					}
 				}
 			}
 			catch (RecognitionException)
@@ -717,55 +747,28 @@ _loop49_breakloop:						;
 		if ( synPredMatched50 )
 		{
 			{
-				{    // ( ... )*
-					for (;;)
+				{
+					switch ( LA(1) )
 					{
-						if ((LA(1)=='\t'))
-						{
-							match('\t');
-						}
-						else
-						{
-							goto _loop53_breakloop;
-						}
-						
-					}
-_loop53_breakloop:					;
-				}    // ( ... )*
-				mNEWLINE(false);
-				{    // ( ... )*
-					for (;;)
+					case '\n':  case '\r':
 					{
-						if ((LA(1)=='\t'))
-						{
-							match('\t');
-						}
-						else
-						{
-							goto _loop55_breakloop;
-						}
-						
+						mNEWLINE(false);
+						break;
 					}
-_loop55_breakloop:					;
-				}    // ( ... )*
-				match("//");
-				{    // ( ... )*
-					for (;;)
+					case '\t':  case ' ':  case '/':
 					{
-						if ((tokenSet_1_.member(LA(1))))
-						{
-							{
-								match(tokenSet_1_);
-							}
-						}
-						else
-						{
-							goto _loop58_breakloop;
-						}
-						
+						mBOF(false);
+						break;
 					}
-_loop58_breakloop:					;
-				}    // ( ... )*
+					default:
+					{
+						throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
+					}
+					 }
+				}
+				mWHITESPACE(false);
+				mCOMMENT(false);
+				mREST_OF_LINE(false);
 			}
 			if (0==inputState.guessing)
 			{
@@ -775,14 +778,71 @@ _loop58_breakloop:					;
 			}
 		}
 		else {
-			bool synPredMatched65 = false;
-			if (((LA(1)=='\t'||LA(1)=='/') && (LA(2)=='\t'||LA(2)=='/')))
+			bool synPredMatched55 = false;
+			if (((LA(1)=='\n'||LA(1)=='\r') && (true)))
 			{
-				int _m65 = mark();
-				synPredMatched65 = true;
+				int _m55 = mark();
+				synPredMatched55 = true;
 				inputState.guessing++;
 				try {
 					{
+						mNEWLINE(false);
+						mWHITESPACE(false);
+						{
+							if ((LA(1)=='\n'||LA(1)=='\r'))
+							{
+								mNEWLINE(false);
+							}
+							else {
+								mEOF(false);
+							}
+							
+						}
+					}
+				}
+				catch (RecognitionException)
+				{
+					synPredMatched55 = false;
+				}
+				rewind(_m55);
+				inputState.guessing--;
+			}
+			if ( synPredMatched55 )
+			{
+				{
+					mNEWLINE(false);
+					mWHITESPACE(false);
+				}
+				if (0==inputState.guessing)
+				{
+					
+							_ttype = Token.SKIP;
+						
+				}
+			}
+			else {
+				bool synPredMatched58 = false;
+				if (((LA(1)=='\n'||LA(1)=='\r') && (true)))
+				{
+					int _m58 = mark();
+					synPredMatched58 = true;
+					inputState.guessing++;
+					try {
+						{
+							mNEWLINE(false);
+						}
+					}
+					catch (RecognitionException)
+					{
+						synPredMatched58 = false;
+					}
+					rewind(_m58);
+					inputState.guessing--;
+				}
+				if ( synPredMatched58 )
+				{
+					{
+						mNEWLINE(false);
 						{    // ( ... )*
 							for (;;)
 							{
@@ -798,332 +858,35 @@ _loop58_breakloop:					;
 							}
 _loop61_breakloop:							;
 						}    // ( ... )*
-						match("//");
-						{    // ( ... )*
-							for (;;)
-							{
-								if ((tokenSet_1_.member(LA(1))))
-								{
-									{
-										match(tokenSet_1_);
-									}
-								}
-								else
-								{
-									goto _loop64_breakloop;
-								}
-								
-							}
-_loop64_breakloop:							;
-						}    // ( ... )*
-						mNEWLINE(false);
-					}
-				}
-				catch (RecognitionException)
-				{
-					synPredMatched65 = false;
-				}
-				rewind(_m65);
-				inputState.guessing--;
-			}
-			if ( synPredMatched65 )
-			{
-				{
-					{    // ( ... )*
-						for (;;)
-						{
-							if ((LA(1)=='\t'))
-							{
-								match('\t');
-							}
-							else
-							{
-								goto _loop68_breakloop;
-							}
-							
-						}
-_loop68_breakloop:						;
-					}    // ( ... )*
-					match("//");
-					{    // ( ... )*
-						for (;;)
-						{
-							if ((tokenSet_1_.member(LA(1))))
-							{
-								{
-									match(tokenSet_1_);
-								}
-							}
-							else
-							{
-								goto _loop71_breakloop;
-							}
-							
-						}
-_loop71_breakloop:						;
-					}    // ( ... )*
-					mNEWLINE(false);
-				}
-				if (0==inputState.guessing)
-				{
-					
-							_ttype = Token.SKIP;
-						
-				}
-			}
-			else {
-				bool synPredMatched77 = false;
-				if (((tokenSet_3_.member(LA(1))) && (true)))
-				{
-					int _m77 = mark();
-					synPredMatched77 = true;
-					inputState.guessing++;
-					try {
-						{
-							{    // ( ... )*
-								for (;;)
-								{
-									switch ( LA(1) )
-									{
-									case '\t':
-									{
-										int _saveIndex = 0;
-										_saveIndex = text.Length;
-										match('\t');
-										text.Length = _saveIndex;
-										break;
-									}
-									case ' ':
-									{
-										int _saveIndex = 0;
-										_saveIndex = text.Length;
-										match(' ');
-										text.Length = _saveIndex;
-										break;
-									}
-									default:
-									{
-										goto _loop74_breakloop;
-									}
-									 }
-								}
-_loop74_breakloop:								;
-							}    // ( ... )*
-							mNEWLINE(false);
-							{    // ( ... )*
-								for (;;)
-								{
-									switch ( LA(1) )
-									{
-									case '\t':
-									{
-										int _saveIndex = 0;
-										_saveIndex = text.Length;
-										match('\t');
-										text.Length = _saveIndex;
-										break;
-									}
-									case ' ':
-									{
-										int _saveIndex = 0;
-										_saveIndex = text.Length;
-										match(' ');
-										text.Length = _saveIndex;
-										break;
-									}
-									default:
-									{
-										goto _loop76_breakloop;
-									}
-									 }
-								}
-_loop76_breakloop:								;
-							}    // ( ... )*
-							mNEWLINE(false);
-						}
-					}
-					catch (RecognitionException)
-					{
-						synPredMatched77 = false;
-					}
-					rewind(_m77);
-					inputState.guessing--;
-				}
-				if ( synPredMatched77 )
-				{
-					{
-						{    // ( ... )*
-							for (;;)
-							{
-								switch ( LA(1) )
-								{
-								case '\t':
-								{
-									int _saveIndex = 0;
-									_saveIndex = text.Length;
-									match('\t');
-									text.Length = _saveIndex;
-									break;
-								}
-								case ' ':
-								{
-									int _saveIndex = 0;
-									_saveIndex = text.Length;
-									match(' ');
-									text.Length = _saveIndex;
-									break;
-								}
-								default:
-								{
-									goto _loop80_breakloop;
-								}
-								 }
-							}
-_loop80_breakloop:							;
-						}    // ( ... )*
-						mNEWLINE(false);
-						{    // ( ... )*
-							for (;;)
-							{
-								switch ( LA(1) )
-								{
-								case '\t':
-								{
-									int _saveIndex = 0;
-									_saveIndex = text.Length;
-									match('\t');
-									text.Length = _saveIndex;
-									break;
-								}
-								case ' ':
-								{
-									int _saveIndex = 0;
-									_saveIndex = text.Length;
-									match(' ');
-									text.Length = _saveIndex;
-									break;
-								}
-								default:
-								{
-									goto _loop82_breakloop;
-								}
-								 }
-							}
-_loop82_breakloop:							;
-						}    // ( ... )*
 					}
 					if (0==inputState.guessing)
 					{
 						
-								_ttype = Token.SKIP;
+								_ttype=MetaLexerTokenTypes.INDENTATION;
 							
 					}
 				}
 				else {
-					bool synPredMatched86 = false;
-					if (((tokenSet_3_.member(LA(1))) && (true)))
+					bool synPredMatched63 = false;
+					if (((LA(1)==' ') && (true)))
 					{
-						int _m86 = mark();
-						synPredMatched86 = true;
+						int _m63 = mark();
+						synPredMatched63 = true;
 						inputState.guessing++;
 						try {
 							{
-								{    // ( ... )*
-									for (;;)
-									{
-										switch ( LA(1) )
-										{
-										case '\t':
-										{
-											int _saveIndex = 0;
-											_saveIndex = text.Length;
-											match('\t');
-											text.Length = _saveIndex;
-											break;
-										}
-										case ' ':
-										{
-											int _saveIndex = 0;
-											_saveIndex = text.Length;
-											match(' ');
-											text.Length = _saveIndex;
-											break;
-										}
-										default:
-										{
-											goto _loop85_breakloop;
-										}
-										 }
-									}
-_loop85_breakloop:									;
-								}    // ( ... )*
-								mNEWLINE(false);
+								match(' ');
 							}
 						}
 						catch (RecognitionException)
 						{
-							synPredMatched86 = false;
+							synPredMatched63 = false;
 						}
-						rewind(_m86);
+						rewind(_m63);
 						inputState.guessing--;
 					}
-					if ( synPredMatched86 )
+					if ( synPredMatched63 )
 					{
-						{
-							{    // ( ... )*
-								for (;;)
-								{
-									switch ( LA(1) )
-									{
-									case '\t':
-									{
-										int _saveIndex = 0;
-										_saveIndex = text.Length;
-										match('\t');
-										text.Length = _saveIndex;
-										break;
-									}
-									case ' ':
-									{
-										int _saveIndex = 0;
-										_saveIndex = text.Length;
-										match(' ');
-										text.Length = _saveIndex;
-										break;
-									}
-									default:
-									{
-										goto _loop89_breakloop;
-									}
-									 }
-								}
-_loop89_breakloop:								;
-							}    // ( ... )*
-							mNEWLINE(false);
-							{    // ( ... )*
-								for (;;)
-								{
-									if ((LA(1)=='\t'))
-									{
-										match('\t');
-									}
-									else
-									{
-										goto _loop91_breakloop;
-									}
-									
-								}
-_loop91_breakloop:								;
-							}    // ( ... )*
-						}
-						if (0==inputState.guessing)
-						{
-							
-									_ttype=MetaLexerTokenTypes.INDENTATION;
-								
-						}
-					}
-					else if ((LA(1)==' ') && (true)) {
 						{
 							match(' ');
 						}
@@ -1131,6 +894,47 @@ _loop91_breakloop:								;
 						{
 							
 									_ttype = MetaLexerTokenTypes.SPACE;
+								
+						}
+					}
+					else if ((LA(1)=='\t'||LA(1)==' ') && (true)) {
+						{
+							{ // ( ... )+
+							int _cnt67=0;
+							for (;;)
+							{
+								switch ( LA(1) )
+								{
+								case '\t':
+								{
+									int _saveIndex = 0;
+									_saveIndex = text.Length;
+									match('\t');
+									text.Length = _saveIndex;
+									break;
+								}
+								case ' ':
+								{
+									int _saveIndex = 0;
+									_saveIndex = text.Length;
+									match(' ');
+									text.Length = _saveIndex;
+									break;
+								}
+								default:
+								{
+									if (_cnt67 >= 1) { goto _loop67_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
+								}
+								break; }
+								_cnt67++;
+							}
+_loop67_breakloop:							;
+							}    // ( ... )+
+						}
+						if (0==inputState.guessing)
+						{
+							
+									_ttype = Token.SKIP;
 								
 						}
 					}
@@ -1152,42 +956,116 @@ _loop91_breakloop:								;
 		int _ttype; Token _token=null; int _begin=text.Length;
 		_ttype = NEWLINE;
 		
+		const int endOfFile=65535;
+		
+		
 		{
-			switch ( LA(1) )
 			{
-			case '\n':
-			{
-				int _saveIndex = 0;
-				_saveIndex = text.Length;
-				match('\n');
-				text.Length = _saveIndex;
-				break;
-			}
-			case '\r':
-			{
+				switch ( LA(1) )
+				{
+				case '\n':
 				{
 					int _saveIndex = 0;
 					_saveIndex = text.Length;
-					match('\r');
-					text.Length = _saveIndex;
-					_saveIndex = text.Length;
 					match('\n');
 					text.Length = _saveIndex;
+					break;
 				}
-				break;
+				case '\r':
+				{
+					{
+						int _saveIndex = 0;
+						_saveIndex = text.Length;
+						match('\r');
+						text.Length = _saveIndex;
+						_saveIndex = text.Length;
+						match('\n');
+						text.Length = _saveIndex;
+					}
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
+				}
+				 }
 			}
-			default:
+			if (0==inputState.guessing)
 			{
-				throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
+				
+							newline();
+						
 			}
-			 }
 		}
-		if (0==inputState.guessing)
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
-			
-			newline();
-			
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
 		}
+		returnToken_ = _token;
+	}
+	
+	protected void mBOF(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; Token _token=null; int _begin=text.Length;
+		_ttype = BOF;
+		
+		if (!(this.getLine()==1 && this.getColumn()==1))
+		  throw new SemanticException("this.getLine()==1 && this.getColumn()==1");
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+		{
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
+		}
+		returnToken_ = _token;
+	}
+	
+	protected void mWHITESPACE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; Token _token=null; int _begin=text.Length;
+		_ttype = WHITESPACE;
+		
+		{    // ( ... )*
+			for (;;)
+			{
+				switch ( LA(1) )
+				{
+				case '\t':
+				{
+					match('\t');
+					break;
+				}
+				case ' ':
+				{
+					match(' ');
+					break;
+				}
+				default:
+				{
+					goto _loop70_breakloop;
+				}
+				 }
+			}
+_loop70_breakloop:			;
+		}    // ( ... )*
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+		{
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
+		}
+		returnToken_ = _token;
+	}
+	
+	protected void mEOF(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; Token _token=null; int _begin=text.Length;
+		_ttype = Token.EOF_TYPE;
+		//TODO:rename
+		const int endOfFile=65535;
+		
+		
+		if (!(LA(1)==endOfFile))
+		  throw new SemanticException("LA(1)==endOfFile");
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);
@@ -1221,7 +1099,7 @@ _loop91_breakloop:								;
 	private static long[] mk_tokenSet_2_()
 	{
 		long[] data = new long[1025];
-		data[0]=140737488365056L;
+		data[0]=140741783332352L;
 		for (int i = 1; i<=1024; i++) { data[i]=0L; }
 		return data;
 	}
@@ -1229,7 +1107,7 @@ _loop91_breakloop:								;
 	private static long[] mk_tokenSet_3_()
 	{
 		long[] data = new long[1025];
-		data[0]=4294977024L;
+		data[0]=140741783324160L;
 		for (int i = 1; i<=1024; i++) { data[i]=0L; }
 		return data;
 	}

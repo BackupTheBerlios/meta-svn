@@ -542,8 +542,9 @@ namespace Meta
 		}
 		public static AST ParseToAst(string fileName) 
 		{
-			StringReader stringReader=new StringReader("\n"+Helper.ReadFile(fileName));
-//			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
+			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
+//			StringReader stringReader=new StringReader("\n"+Helper.ReadFile(fileName)+"\n");
+			//			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
 			//			FileStream file=new FileStream(fileName, FileMode.Open,FileAccess.Read, FileShare.ReadWrite); 
 
 			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(stringReader,fileName); 
@@ -3584,7 +3585,7 @@ namespace Meta
 				}
 			}
 			private bool CompareResult(string path,object toSerialize,string[] functions)
-			{
+			{				
 				System.IO.Directory.CreateDirectory(path);
 				if(!File.Exists(Path.Combine(path,"check.txt")))
 				{

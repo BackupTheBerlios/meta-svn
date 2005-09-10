@@ -70,9 +70,13 @@ using System.Collections;
 		public const int LITERAL_END = 25;
 		public const int LITERAL_VERY_END = 26;
 		public const int LITERAL = 27;
-		public const int LINE = 28;
-		public const int NEWLINE = 29;
-		public const int NEWLINE_KEEP_TEXT = 30;
+		public const int COMMENT = 28;
+		public const int REST_OF_LINE = 29;
+		public const int LINE = 30;
+		public const int WHITESPACE = 31;
+		public const int BOF = 32;
+		public const int NEWLINE = 33;
+		public const int NEWLINE_KEEP_TEXT = 34;
 		
 		
     private static Stack autokeys=new Stack();
@@ -145,11 +149,11 @@ using System.Collections;
 				break;
 			}
 			default:
-				bool synPredMatched102 = false;
+				bool synPredMatched83 = false;
 				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 				{
-					int _m102 = mark();
-					synPredMatched102 = true;
+					int _m83 = mark();
+					synPredMatched83 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -158,12 +162,12 @@ using System.Collections;
 					}
 					catch (RecognitionException)
 					{
-						synPredMatched102 = false;
+						synPredMatched83 = false;
 					}
-					rewind(_m102);
+					rewind(_m83);
 					inputState.guessing--;
 				}
-				if ( synPredMatched102 )
+				if ( synPredMatched83 )
 				{
 					call();
 					if (0 == inputState.guessing)
@@ -275,11 +279,11 @@ using System.Collections;
 				}
 				else
 				{
-					goto _loop109_breakloop;
+					goto _loop90_breakloop;
 				}
 				
 			}
-_loop109_breakloop:			;
+_loop90_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -437,11 +441,11 @@ _loop109_breakloop:			;
 						}
 						else
 						{
-							goto _loop122_breakloop;
+							goto _loop103_breakloop;
 						}
 						
 					}
-_loop122_breakloop:					;
+_loop103_breakloop:					;
 				}    // ( ... )*
 				match(DEDENT);
 				if (0==inputState.guessing)
@@ -658,11 +662,11 @@ _loop122_breakloop:					;
 		ASTPair currentAST = new ASTPair();
 		MetaAST statement_AST = null;
 		
-		bool synPredMatched126 = false;
+		bool synPredMatched107 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m126 = mark();
-			synPredMatched126 = true;
+			int _m107 = mark();
+			synPredMatched107 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -672,12 +676,12 @@ _loop122_breakloop:					;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched126 = false;
+				synPredMatched107 = false;
 			}
-			rewind(_m126);
+			rewind(_m107);
 			inputState.guessing--;
 		}
-		if ( synPredMatched126 )
+		if ( synPredMatched107 )
 		{
 			{
 				key();
@@ -815,11 +819,11 @@ _loop122_breakloop:					;
 				}
 				else
 				{
-					goto _loop132_breakloop;
+					goto _loop113_breakloop;
 				}
 				
 			}
-_loop132_breakloop:			;
+_loop113_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -853,7 +857,7 @@ _loop132_breakloop:			;
 	}
 	static public void initializeASTFactory( ASTFactory factory )
 	{
-		factory.setMaxNodeType(30);
+		factory.setMaxNodeType(34);
 	}
 	
 	public static readonly string[] tokenNames_ = new string[] {
@@ -885,7 +889,11 @@ _loop132_breakloop:			;
 		@"""LITERAL_END""",
 		@"""LITERAL_VERY_END""",
 		@"""LITERAL""",
+		@"""COMMENT""",
+		@"""REST_OF_LINE""",
 		@"""LINE""",
+		@"""WHITESPACE""",
+		@"""BOF""",
 		@"""NEWLINE""",
 		@"""NEWLINE_KEEP_TEXT"""
 	};

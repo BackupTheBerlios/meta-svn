@@ -207,98 +207,58 @@ LITERAL:
 		LITERAL_END
 	)
 ;
+protected
+COMMENT:
+	"//";
+
+protected
+REST_OF_LINE:
+	(
+		~(
+			'\n'
+			|'\r'
+		)
+	)*
+;
 
 LINE		// everything in one rule to avoid indeterminisms
   {
     const int endOfFileValue=65535;
   }:
-	// comments
 	(
-		('\t')* 
-		NEWLINE 
-		('\t')* 
-		"//" 
-		(
-			~(
-				'\n'
-				|'\r'
-			)
-		)*
-		NEWLINE  
+		(NEWLINE|BOF)
+		WHITESPACE
+		COMMENT
+		REST_OF_LINE
+		(NEWLINE|EOF)  
 	)=>
 	(
-		('\t')*
-		NEWLINE
-		('\t')*
-		"//"
-		(
-			~(
-				'\n'
-				|'\r'
-			)
-		)*
-	)
-	{
-		$setType(Token.SKIP);
-	}
-		
-	// comments									 
-	|
-	(
-		('\t')*
-		"//"
-		(
-			~(
-				'\n'
-				|'\r'
-			)
-		)*
-		NEWLINE
-	)=>
-	(
-		('\t')*
-		"//"
-		(
-			~(
-				'\n'
-				|'\r'
-			)
-		)*		// TODO: factor out common stuff
-		NEWLINE
-		//
+		(NEWLINE|BOF)
+		WHITESPACE
+		COMMENT
+		REST_OF_LINE
 	)
 	{
 		$setType(Token.SKIP);
 	}
 	|
 	(
-		('\t'!|' '!)* 
 		NEWLINE
-		('\t'!|' '!)* 
-		NEWLINE
+		WHITESPACE
+		(NEWLINE|EOF)
 	)=>
 	(
-		('\t'!|' '!)* 
 		NEWLINE
-		('\t'!|' '!)* 
+		WHITESPACE
 	)
 	{
 		$setType(Token.SKIP);
 	}
-	// indentation
 	|
 	(
-		(
-			'\t'!
-			|' '!
-		)*
-		NEWLINE
+		NEWLINE // TODO: maybe BOF is sufficient
 	)=>
-	(
-		(
-			'\t'!
-			|' '!
-		)* 
+	( 
 		NEWLINE
 		('\t')*
 	)
@@ -306,22 +266,52 @@ LINE		// everything in one rule to avoid indeterminisms
 		_ttype=MetaLexerTokenTypes.INDENTATION;
 	}
 	|
-	// single space
+	(' ')=>
 	(' ')
 	{
 		$setType(MetaLexerTokenTypes.SPACE);
 	}
+	|
+	(
+		(
+			'\t'!
+			|' '!
+		)+
+	)
+	{
+		$setType(Token.SKIP);
+	}
 ;
 
 protected
-NEWLINE:
+WHITESPACE:
+	('\t'|' ')*;
+
+protected
+BOF: // TODO: rename
+	{this.getLine()==1 && this.getColumn()==1}?;
+
+protected 
+EOF{ //TODO:rename
+    const int endOfFile=65535;
+  }:
+  {LA(1)==endOfFile}?;
+
+protected
+NEWLINE  
+	{
+    const int endOfFile=65535;
+  }:
   (
-    '\n'!
-    |('\r'! '\n'!)
-  )
-  {
-    newline();
-  }
+		(
+			'\n'!
+			|('\r'! '\n'!)
+		)
+		{
+			newline();
+		}
+	)
+
 ;
 
 protected
