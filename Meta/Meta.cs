@@ -3403,7 +3403,7 @@ namespace Meta
 			public IndentationStream(TokenStream tokenStream) 
 			{
 				this.tokenStream=tokenStream;
-//				Indent(0,new Token());
+				Indent(0,new Token());
 			}
 			public Token nextToken() 
 			{
