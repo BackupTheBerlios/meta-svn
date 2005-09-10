@@ -326,3 +326,4 @@ documentedFunction:
 	doc:"This function returns 'hello ."
 	'"hello"
 docFunctionResult:documentedFunction*
+// end comment
