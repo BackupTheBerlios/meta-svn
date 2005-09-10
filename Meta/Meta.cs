@@ -2719,12 +2719,14 @@ namespace Meta
 				{
 					number=0;
 				}
-				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative))) && this.ContainsKey(NumberKeys.EmptyMap))
+				//else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) &&  this[NumberKeys.Negative]==new NormalMap(new Integer(1)) && this.ContainsKey(NumberKeys.EmptyMap)
+				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) && this[NumberKeys.Negative]==new NormalMap(new Integer(1)))) && this.ContainsKey(NumberKeys.EmptyMap))
 				{
 					if(this[NumberKeys.EmptyMap].Integer!=null)
 					{
 						number=this[NumberKeys.EmptyMap].Integer+1;
-						if(this.ContainsKey(NumberKeys.Negative))
+						if(this[NumberKeys.Negative]==new NormalMap(new Integer(1)))
+//							if(this.ContainsKey(NumberKeys.Negative))
 						{
 							number=-number;
 						}
@@ -3304,7 +3306,8 @@ namespace Meta
 				{
 					if(number<0)
 					{
-						result=new NormalMap();
+						result=new NormalMap(new Integer(1));
+//						result=new NormalMap();
 					}
 					else
 					{
@@ -3370,7 +3373,8 @@ namespace Meta
 					{
 						number=number.abs();
 					}
-					else if(value.Equals(NumberKeys.EmptyMap))
+					else if(value.Equals(new NormalMap(new Integer(1))))
+//					else if(value.Equals(NumberKeys.EmptyMap))
 					{
 						number=-number.abs();
 					}
