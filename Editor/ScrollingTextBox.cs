@@ -85,7 +85,8 @@ public class ScrollingTextBox: RichTextBox
 	{ 
 		int iColumn=Column;
 		int iTabs=GetTabs(GetLeftLine());
-		int iScrollLine=iTabs*5+iColumn;
+		int iScrollLine=iTabs*4+iColumn; // TODO: make 4 a const used everywhere
+//		int iScrollLine=iTabs*5+iColumn;
 		return iScrollLine;
 	}
 	// copied from: http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/horizontalThread/b142ab4621009180/2d7ab486ca1f4d43?q=richtextbox+scrolling&rnum=8&hl=en#2d7ab486ca1f4d43
@@ -145,7 +146,7 @@ public class ScrollingTextBox: RichTextBox
 
 //			int tabWidth=(int)(rect.Right + 1.0f);
 
-			int tabWidth=30;
+			int tabWidth=32;
 //			int tabWidth=Convert.ToInt32(this.CreateGraphics().MeasureString("aaaa",this.Font).Width);
 
 			int firstTabStop=Convert.ToInt32(width)%tabWidth;
@@ -340,7 +341,7 @@ public class ScrollingTextBox: RichTextBox
 		{
 			if(Lines[line][i]=='\t')
 			{
-				scrollColumn-=5;
+				scrollColumn-=3;
 			}
 		}
 		return i;
@@ -972,6 +973,16 @@ public class ScrollingTextBox: RichTextBox
 	{
 		return charIndex-GetLinesLength(GetLineFromCharIndex(charIndex));
 	}
+//	protected static int GetLowOrderWord(int x)
+//	{
+//		return x & 0xffff; 
+//	}
+//	protected static short GetHighOrderWord(int x)
+//	{
+//		return (x >> 16) & 0xffff;
+//	}
+//	short pshtHighWord = (pintNumber >> 16) & 0xffff;
+//	short pshtLowWord = pintNumber & 0xffff; 
 	protected override void WndProc(ref Message m) 
 	{
 		if(m.Msg == WM_MOUSEWHEEL) 
@@ -985,11 +996,13 @@ public class ScrollingTextBox: RichTextBox
 				MoveLineRelative(3);
 			}
 		}
-//		else if(m.Msg == WM_LBUTTONDOWN)
-//		{
+		else if(m.Msg == WM_LBUTTONDOWN)
+		{
+			Point mousePos=new Point((int)m.LParam);
+			int charIndex=this.GetCharIndexFromPosition(mousePos);
 //			int charIndex=this.GetCharIndexFromPosition(Control.MousePosition);
-//			MoveCursor(GetLineFromCharIndex(charIndex),GetColumnFromCharIndex(charIndex));
-//		}
+			MoveCursor(GetLineFromCharIndex(charIndex),GetColumnFromCharIndex(charIndex));
+		}
 //		else if(m.Msg == WM_LBUTTONUP)
 //		{
 //			int charIndex=this.GetCharIndexFromPosition(Control.MousePosition);
