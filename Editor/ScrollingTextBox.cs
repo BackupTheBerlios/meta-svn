@@ -455,8 +455,35 @@ public class ScrollingTextBox: RichTextBox
 //		{
 //		}
 //	}
-	public class LayoutPosition
+
+	// TODO: Character Column can only exist with a CharacterLine!!!!
+	public struct LayoutPosition
 	{
+		public LayoutLine Line
+		{
+			get
+			{
+				return line;
+			}
+		}
+		public LayoutColumn Column
+		{
+			get
+			{
+				return column;
+			}
+		}
+		// TODO: maybe introduce LineDifference, ColumnDifference?? or is that too complicated
+		public LayoutPosition MoveLine(int difference)
+		{
+			// TODO: maybe overload plus, minus operator and so on, 
+			// but usually this is too much magic and not that useful
+			return new LayoutPosition(line.Move(difference),column);
+		}
+		public LayoutPosition MoveColumn(int difference)
+		{
+			return new LayoutPosition(line,column.Move(difference));
+		}
 		private LayoutLine line;
 		private LayoutColumn column;
 		public LayoutPosition(LayoutLine line,LayoutColumn column)
@@ -464,35 +491,91 @@ public class ScrollingTextBox: RichTextBox
 			this.line=line;
 			this.column=column;
 		}
-		public static implicit operator CharacterPosition(LayoutPosition position)
+
+//		private int GetLinesLength(int iLine) 
+//		{
+//			iLine=iLine<Lines.Length?iLine:Lines.Length-1;
+//			if(iLine<0) 
+//			{
+//				return 0;
+//			}
+//			int count=0;
+//			ArrayList lines=new ArrayList(Lines);
+//			foreach(string s in lines.GetRange(0,iLine)) 
+//			{
+//				count+=s.Length+1;
+//			}
+//			return count;
+//		}
+		public int CharIndex
 		{
-			// TODO: make an overloaded constructor for CharacterPosition
-			return new CharacterPosition(position.line.CharacterLine,position.line.CharacterLine.CharacterColumnFromLayoutColumn(position.column));
+			get
+			{
+				return CharacterPosition.CharIndex;
+			}
 		}
+		public CharacterPosition CharacterPosition
+		{
+			get
+			{
+				// TODO: make an overloaded constructor for CharacterPosition
+				return new CharacterPosition(line.CharacterLine,line.CharacterLine.CharacterColumnFromLayoutColumn(column));
+			}
+		}
+//		public static implicit operator CharacterPosition(LayoutPosition position)
+//		{
+//			// TODO: make an overloaded constructor for CharacterPosition
+//			return new CharacterPosition(position.line.CharacterLine,position.line.CharacterLine.CharacterColumnFromLayoutColumn(position.column));
+//		}
 		// TODO: maybe force a column to always know its line??? doesnt make sense
 	}
 	// TODO: rename ScrollingTextBox to MetaEdit or so
 	// TODO: make ScrollingTextBox HAVE a RichTextBox not BE a RichTextBox because
 	// the interface is too cluttered
 
-	public class CharacterPosition
+	public struct CharacterPosition
 	{
+		public int CharIndex
+		{
+			get
+			{
+				return line.CharIndex+column.CharIndex;
+			}
+		}
 		private CharacterLine line;
 		private CharacterColumn column;
+		public CharacterPosition(int line,int column)
+		{
+			this.line=new CharacterLine(line);
+			this.column=new CharacterColumn(column);
+		}
 		public CharacterPosition(CharacterLine line,CharacterColumn column)
 		{
 			this.line=line;
 			this.column=column;
 		}
-		public static implicit operator LayoutPosition(CharacterPosition position)
+
+		public LayoutPosition LayoutPosition
 		{
-			return new LayoutPosition(position.line.LayoutLine,position.line.LayoutColumnFromCharacterColumn(position.column));
+			get
+			{
+				return new LayoutPosition(line.LayoutLine,line.LayoutColumnFromCharacterColumn(column));
+			}
 		}
+
+//		public static implicit operator LayoutPosition(CharacterPosition position)
+//		{
+//			return new LayoutPosition(position.line.LayoutLine,position.line.LayoutColumnFromCharacterColumn(position.column));
+//		}
 	}
 
 
-	public class LayoutColumn
+	public struct LayoutColumn
 	{
+		public LayoutColumn Move(int difference)
+		{
+			return new LayoutColumn(layoutColumn+difference);
+		}
 		private int layoutColumn;
 		public LayoutColumn(int layoutColumn)
 		{
@@ -510,8 +593,16 @@ public class ScrollingTextBox: RichTextBox
 //			return 
 //		}
 	}
-	public class CharacterColumn
+	public struct CharacterColumn
 	{
+		// TODO: not really necessary
+		public int CharIndex
+		{
+			get
+			{
+				return Column;
+			}
+		}
 		private int characterColumn;
 		public CharacterColumn(int characterColumn)
 		{
@@ -525,8 +616,20 @@ public class ScrollingTextBox: RichTextBox
 			}
 		}
 	}
-	public class LayoutLine
+	public struct LayoutLine
 	{
+		public LayoutColumn LastColumn
+		{
+			get
+			{
+				return CharacterLine.LayoutColumnFromCharacterColumn(new CharacterColumn(CharacterLine.Text.Length));
+			}
+		}
+		public LayoutLine Move(int difference)
+		{
+			// TODO: do some checking here
+			return new LayoutLine(layoutLine+difference);
+		}
 		private int layoutLine;
 		public LayoutLine(int layoutLine)
 		{
@@ -551,8 +654,27 @@ public class ScrollingTextBox: RichTextBox
 //			return new CharacterLine(line.layoutLine-TopMargin.Length);
 //		}
 	}
-	public class CharacterLine
+	public struct CharacterLine
 	{
+		public int CharIndex
+		{
+			get
+			{
+//
+//				iLine=iLine<Lines.Length?iLine:Lines.Length-1;
+//				if(Line<0) 
+//				{
+//					return 0;
+//				}
+				int count=0;
+				ArrayList lines=new ArrayList(scrollingTextBox.Lines);
+				foreach(string s in lines.GetRange(0,Line)) 
+				{
+					count+=s.Length+1;
+				}
+				return count;
+			}
+		}
 		private int ColumnFromScrollColumn(int line,int scrollColumn)
 		{
 			int i=0;
@@ -579,7 +701,7 @@ public class ScrollingTextBox: RichTextBox
 				return new LayoutLine(Line-TopMargin.Length);
 			}
 		}
-		private string Text
+		public string Text
 		{
 			get
 			{
@@ -596,13 +718,21 @@ public class ScrollingTextBox: RichTextBox
 		}
 		public LayoutColumn LayoutColumnFromCharacterColumn(CharacterColumn characterColumn)
 		{
-			return new LayoutColumn(ColumnFromScrollColumn(characterLine,characterColumn.Column));
+			return new LayoutColumn(characterColumn.Column+Tabs*(tabWidth-1));
 		}
 		public CharacterColumn CharacterColumnFromLayoutColumn(LayoutColumn layoutColumn)
 		{
-			return new CharacterColumn(layoutColumn.Column+Tabs*(tabWidth-1));
+			return new CharacterColumn(ColumnFromScrollColumn(characterLine,layoutColumn.Column));
 		}
-		private const int tabWidth=3;
+//		public LayoutColumn LayoutColumnFromCharacterColumn(CharacterColumn characterColumn)
+//		{
+//			return new LayoutColumn(ColumnFromScrollColumn(characterLine,characterColumn.Column));
+//		}
+//		public CharacterColumn CharacterColumnFromLayoutColumn(LayoutColumn layoutColumn)
+//		{
+//			return new CharacterColumn(layoutColumn.Column+Tabs*(tabWidth-1));
+//		}
+		private const int tabWidth=4;
 		private int characterLine;
 		public CharacterLine(int characterLine)
 		{
@@ -620,22 +750,49 @@ public class ScrollingTextBox: RichTextBox
 //			}
 //		}
 	}
-
-
-	public void Select(LayoutLine line,LayoutColumn column)
+	private LayoutPosition Position
 	{
+		get
+		{
+			// TODO: implicit casts would be useful, maybe, but maybe not, will not used widely enough
+			return new CharacterPosition(Line,Column).LayoutPosition;
+		}
+	}
+	// TODO: introduce Selection class
+	private LayoutPosition EndPosition
+	{
+		get
+		{
+			CharacterLine line=new CharacterLine(GetLineFromCharIndex(SelectionStart+SelectionLength));
+			CharacterColumn column=new CharacterColumn(SelectionStart+SelectionLength-GetLinesLength(line.Line));
+			return new CharacterPosition(line,column).LayoutPosition;
+		}
+	}
+	 
+
+
+	public void Select(LayoutPosition start,LayoutPosition end)
+	{
+		Select(start.CharIndex,end.CharIndex-start.CharIndex);
 	}
 	// TODO: selection start must be able to be on left or on right side of selection
 	public void SelectLineDown()
 	{
-		Select(SelectionStart,GetLinesLength(Line+1)-SelectionStart);
+		Select(Position,EndPosition.MoveLine(1));
 	}
 	// TODO: wrap select, use Columns, Lines, ScrollColumns
 	public void SelectLineUp()
 	{
+		Select(Position.MoveLine(-1),EndPosition);
 	}
+	// TODO: put commands into their own classes
+
+	// TODO: selection cannot move beyond boundaries
 	public void SelectLineEnd()
 	{
+		Select(Position,new LayoutPosition(EndPosition.Line,EndPosition.Line.LastColumn));
+//		Select(new LayoutPosition(Position.Line,Position.Line.LastColumn),EndPosition);
+//		Select(new LayoutPosition(Position.Line,Position.Line.LastColumn),EndPosition);
 	}
 	public void SelectLineStart()
 	{
