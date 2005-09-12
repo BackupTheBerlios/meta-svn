@@ -25,8 +25,11 @@ public class ScrollingTextBox: RichTextBox
 		timer.Interval=50;
 		timer.Tick+=new EventHandler(timer_Tick);
 		replace.Closing+=new CancelEventHandler(replace_Closing);
+		// TODO: implement some proper singleton mechanism???
+		scrollingTextBox=this;
 		//		timer.Start();
 	}
+	private static ScrollingTextBox scrollingTextBox;
 	public void DrawValue(Rectangle rectangle,string text)
 	{
 		Graphics graphics=this.CreateGraphics();
@@ -35,8 +38,8 @@ public class ScrollingTextBox: RichTextBox
 
 
 
-	string emptyLines;
-	protected string TopMargin
+	static string emptyLines;
+	protected static string TopMargin
 	{
 		get
 		{
@@ -425,14 +428,216 @@ public class ScrollingTextBox: RichTextBox
 			SelectedText="";
 		}
 	}
+//	public class LayoutPosition
+//	{
+//		private int line;
+//		private int column;
+//		public LayoutPosition(int line,int column)
+//		{
+//			this.line=line;
+//			this.column=column;
+//		}
+//		public static implicit operator CharacterPosition(LayoutPosition position)
+//		{
+//			return new CharacterPosition(position.line
+//		}
+//	}
+//	public class CharacterPosition
+//	{
+//		private int line;
+//		private int column;
+//		public CharacterPosition(int line,int column)
+//		{
+//			this.line=line;
+//			this.column=column;
+//		}
+//		public static implicit operator LayoutPosition(CharacterPosition position)
+//		{
+//		}
+//	}
+	public class LayoutPosition
+	{
+		private LayoutLine line;
+		private LayoutColumn column;
+		public LayoutPosition(LayoutLine line,LayoutColumn column)
+		{
+			this.line=line;
+			this.column=column;
+		}
+		public static implicit operator CharacterPosition(LayoutPosition position)
+		{
+			// TODO: make an overloaded constructor for CharacterPosition
+			return new CharacterPosition(position.line.CharacterLine,position.line.CharacterLine.CharacterColumnFromLayoutColumn(position.column));
+		}
+		// TODO: maybe force a column to always know its line??? doesnt make sense
+	}
+	// TODO: rename ScrollingTextBox to MetaEdit or so
+	// TODO: make ScrollingTextBox HAVE a RichTextBox not BE a RichTextBox because
+	// the interface is too cluttered
+
+	public class CharacterPosition
+	{
+		private CharacterLine line;
+		private CharacterColumn column;
+		public CharacterPosition(CharacterLine line,CharacterColumn column)
+		{
+			this.line=line;
+			this.column=column;
+		}
+		public static implicit operator LayoutPosition(CharacterPosition position)
+		{
+			return new LayoutPosition(position.line.LayoutLine,position.line.LayoutColumnFromCharacterColumn(position.column));
+		}
+	}
 
 
+	public class LayoutColumn
+	{
+		private int layoutColumn;
+		public LayoutColumn(int layoutColumn)
+		{
+			this.layoutColumn=layoutColumn;
+		}
+		public int Column
+		{
+			get
+			{
+				return layoutColumn;
+			}
+		}
+//		public static implicit operator CharacterColumn(LayoutColumn column)
+//		{
+//			return 
+//		}
+	}
+	public class CharacterColumn
+	{
+		private int characterColumn;
+		public CharacterColumn(int characterColumn)
+		{
+			this.characterColumn=characterColumn;
+		}
+		public int Column
+		{
+			get
+			{
+				return characterColumn;
+			}
+		}
+	}
+	public class LayoutLine
+	{
+		private int layoutLine;
+		public LayoutLine(int layoutLine)
+		{
+			this.layoutLine=layoutLine;
+		}
+		public int Line
+		{
+			get
+			{
+				return layoutLine;
+			}
+		}
+		public CharacterLine CharacterLine
+		{
+			get
+			{
+				return new CharacterLine(Line+TopMargin.Length);
+			}
+		}
+//		public static implicit operator CharacterLine(LayoutLine line)
+//		{
+//			return new CharacterLine(line.layoutLine-TopMargin.Length);
+//		}
+	}
+	public class CharacterLine
+	{
+		private int ColumnFromScrollColumn(int line,int scrollColumn)
+		{
+			int i=0;
+			for(;scrollColumn>0 && Text.Length>i;scrollColumn--,i++)
+			{
+				if(Text[i]=='\t')
+				{
+					scrollColumn-=3;
+				}
+			}
+			return i;
+		}
+		public int Line
+		{
+			get
+			{
+				return characterLine;
+			}
+		}
+		public LayoutLine LayoutLine
+		{
+			get
+			{
+				return new LayoutLine(Line-TopMargin.Length);
+			}
+		}
+		private string Text
+		{
+			get
+			{
+				return scrollingTextBox.Lines[Line];
+			}
+		}
+		private int Tabs
+		{
+			get
+			{
+				return Text.Length-Text.TrimStart('\t').Length;
+//				return Text.Substring(0,Text.Length-Text.TrimStart('\t').Length);
+			}
+		}
+		public LayoutColumn LayoutColumnFromCharacterColumn(CharacterColumn characterColumn)
+		{
+			return new LayoutColumn(ColumnFromScrollColumn(characterLine,characterColumn.Column));
+		}
+		public CharacterColumn CharacterColumnFromLayoutColumn(LayoutColumn layoutColumn)
+		{
+			return new CharacterColumn(layoutColumn.Column+Tabs*(tabWidth-1));
+		}
+		private const int tabWidth=3;
+		private int characterLine;
+		public CharacterLine(int characterLine)
+		{
+			this.characterLine=characterLine;
+		}
+		public static explicit operator int(CharacterLine line)
+		{
+			return line.characterLine;
+		}
+//		public int Value
+//		{
+//			get
+//			{
+//				return characterLine;
+//			}
+//		}
+	}
 
-	// TODO: implement
-	public void SelectLineDown()
+
+	public void Select(LayoutLine line,LayoutColumn column)
 	{
 	}
+	// TODO: selection start must be able to be on left or on right side of selection
+	public void SelectLineDown()
+	{
+		Select(SelectionStart,GetLinesLength(Line+1)-SelectionStart);
+	}
+	// TODO: wrap select, use Columns, Lines, ScrollColumns
 	public void SelectLineUp()
+	{
+	}
+	public void SelectLineEnd()
+	{
+	}
+	public void SelectLineStart()
 	{
 	}
 
@@ -709,7 +914,7 @@ public class ScrollingTextBox: RichTextBox
 	// TODO: rename to MoveChar
 	public void MoveHorizontal(int column)
 	{
-		lastColumn=-1;
+//		lastColumn=-1;
 		MoveCursorRealColumn(Line, column);
 //		Column=column;
 	}
@@ -779,6 +984,11 @@ public class ScrollingTextBox: RichTextBox
 			}
 			int lineLength=GetLinesLength(line);
 			int columns=column;//ColumnFromScrollColumn(line,scrollColumn);
+
+			if(Column!=column)
+			{
+				lastColumn=-1;
+			}
 //			int columns=ColumnFromScrollColumn(line,scrollColumn);
 			int actualColumns=Lines[line].Length;
 			int newStart=lineLength+columns;
@@ -1041,7 +1251,7 @@ public class ScrollingTextBox: RichTextBox
 			Point mousePos=new Point((int)m.LParam);
 			int charIndex=this.GetCharIndexFromPosition(mousePos);
 //			int charIndex=this.GetCharIndexFromPosition(Control.MousePosition);
-			MoveCursor(GetLineFromCharIndex(charIndex),GetColumnFromCharIndex(charIndex));
+			MoveCursorRealColumn(GetLineFromCharIndex(charIndex),GetColumnFromCharIndex(charIndex));
 		}
 //		else if(m.Msg == WM_LBUTTONUP)
 //		{

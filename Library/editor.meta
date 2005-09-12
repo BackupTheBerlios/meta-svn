@@ -155,6 +155,8 @@ combos:
 		[Keys.Oemtilde]:=editBox.SelectCharRight*
 		[Keys.L]:=editBox.SelectLineUp*
 		[Keys.K]:=editBox.SelectLineDown*
+		[Keys.OemSemicolon]:=editBox.SelectLineEnd*
+		[Keys.U]:=editBox.SelectLineStart*
 	[Modifiers.AltControl]:
 		[Keys.J]:=editBox.MoveWordLeft*
 		[Keys.Oemtilde]:=editBox.MoveWordRight*
