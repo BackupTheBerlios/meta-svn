@@ -85,7 +85,7 @@ public class ScrollingTextBox: RichTextBox
 	{ 
 		int iColumn=Column;
 		int iTabs=GetTabs(GetLeftLine());
-		int iScrollLine=iTabs*4+iColumn; // TODO: make 4 a const used everywhere
+		int iScrollLine=iTabs*3+iColumn; // TODO: make 4 a const used everywhere
 //		int iScrollLine=iTabs*5+iColumn;
 		return iScrollLine;
 	}
@@ -710,8 +710,8 @@ public class ScrollingTextBox: RichTextBox
 	public void MoveHorizontal(int column)
 	{
 		lastColumn=-1;
-//		MoveCursor(Line,column);
-		Column=column;
+		MoveCursorRealColumn(Line, column);
+//		Column=column;
 	}
 
 
@@ -748,9 +748,16 @@ public class ScrollingTextBox: RichTextBox
 
 
 
-
+	// TODO: introduce classes Column, ScrollColumn etc.
+	public void MoveCursor(int line,int scrollColumn)
+	{
+		if(Lines.Length!=0)
+		{
+			MoveCursorRealColumn(line,ColumnFromScrollColumn(line,scrollColumn));
+		}
+	}
 	// TODO: use this everywhere, never use MoveTo
-	public void MoveCursor(int line,int scrollColumn) 
+	public void MoveCursorRealColumn(int line,int column) 
 	{
 		if(Lines.Length!=0)
 		{
@@ -758,10 +765,10 @@ public class ScrollingTextBox: RichTextBox
 			{
 				line=0;
 			}
-//			else if(line>Lines.Length-1)
-//			{
-//				line=Lines.Length-1;
-//			}
+				//			else if(line>Lines.Length-1)
+				//			{
+				//				line=Lines.Length-1;
+				//			}
 			else if(line>Lines.Length-1-BottomMargin.Length)
 			{
 				line=Lines.Length-1-BottomMargin.Length;
@@ -771,7 +778,8 @@ public class ScrollingTextBox: RichTextBox
 				line=TopMargin.Length;
 			}
 			int lineLength=GetLinesLength(line);
-			int columns=ColumnFromScrollColumn(line,scrollColumn);
+			int columns=column;//ColumnFromScrollColumn(line,scrollColumn);
+//			int columns=ColumnFromScrollColumn(line,scrollColumn);
 			int actualColumns=Lines[line].Length;
 			int newStart=lineLength+columns;
 			if(newStart>=Text.Length) 
@@ -779,9 +787,41 @@ public class ScrollingTextBox: RichTextBox
 				newStart=Text.Length-1;
 			}
 			Select(newStart,0);
-//			SelectionStart=newStart;
+			//			SelectionStart=newStart;
 		}
 	}
+//	public void MoveCursor(int line,int scrollColumn) 
+//	{
+//		if(Lines.Length!=0)
+//		{
+//			if(line<0)
+//			{
+//				line=0;
+//			}
+////			else if(line>Lines.Length-1)
+////			{
+////				line=Lines.Length-1;
+////			}
+//			else if(line>Lines.Length-1-BottomMargin.Length)
+//			{
+//				line=Lines.Length-1-BottomMargin.Length;
+//			}
+//			else if(line<TopMargin.Length)
+//			{
+//				line=TopMargin.Length;
+//			}
+//			int lineLength=GetLinesLength(line);
+//			int columns=ColumnFromScrollColumn(line,scrollColumn);
+//			int actualColumns=Lines[line].Length;
+//			int newStart=lineLength+columns;
+//			if(newStart>=Text.Length) 
+//			{
+//				newStart=Text.Length-1;
+//			}
+//			Select(newStart,0);
+////			SelectionStart=newStart;
+//		}
+//	}
 	// TODO: rename
 	int GetLinesLength(int iLine) 
 	{
