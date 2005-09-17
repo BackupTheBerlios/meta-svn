@@ -27,6 +27,9 @@ public class ScrollingTextBox: RichTextBox
 		replace.Closing+=new CancelEventHandler(replace_Closing);
 		// TODO: implement some proper singleton mechanism???
 		scrollingTextBox=this;
+//		RealText="";
+//		MoveCursor(0,0);
+//		MoveCursor(0,0);
 		//		timer.Start();
 	}
 	private static ScrollingTextBox scrollingTextBox;
@@ -787,12 +790,9 @@ public class ScrollingTextBox: RichTextBox
 	}
 	// TODO: put commands into their own classes
 
-	// TODO: selection cannot move beyond boundaries
 	public void SelectLineEnd()
 	{
 		Select(Position,new LayoutPosition(EndPosition.Line,EndPosition.Line.LastColumn));
-//		Select(new LayoutPosition(Position.Line,Position.Line.LastColumn),EndPosition);
-//		Select(new LayoutPosition(Position.Line,Position.Line.LastColumn),EndPosition);
 	}
 	public void SelectLineStart()
 	{
@@ -810,14 +810,12 @@ public class ScrollingTextBox: RichTextBox
 
 	public void SelectWordLeft()
 	{
-//		SuspendWindowUpdate();
 		int end=SelectionEnd;
 //		int end=SelectionStart+SelectedText.Length;
 		//		SelectionStart=SelectionStart+SelectedText.Length;
 		MoveWordLeft();
 		int start=SelectionStart;//+SelectedText.Length;
 		Select(start,end-start);
-//		ResumeWindowUpdate();
 	}
 	public int SelectionEnd
 	{
@@ -829,35 +827,29 @@ public class ScrollingTextBox: RichTextBox
 	// TODO: maybe add SelectionEnd property
 	public void SelectWordRight()
 	{
-//		SuspendWindowUpdate();
 		int start=SelectionStart;
 		SelectionStart=SelectionEnd;
 //		SelectionStart=SelectionStart+SelectedText.Length;
 		MoveWordRight();
 		int end=SelectionStart;
 		Select(start,end-start);
-//		ResumeWindowUpdate();
 	}
 
 	public void DeleteWordRight()
 	{
-//		SuspendWindowUpdate();
 		int start=SelectionStart;
 		MoveWordRight();
 		int end=SelectionStart;
 		Select(start,end-start);
 		SelectedText="";
-//		ResumeWindowUpdate();
 	}
 	public void DeleteWordLeft()
 	{
-//		SuspendWindowUpdate();
         int end=SelectionStart+SelectedText.Length;
 		MoveWordLeft();
 		int start=SelectionStart;
 		Select(start,end-start);
 		SelectedText="";
-//		ResumeWindowUpdate();
 	}
 	
 
@@ -1407,14 +1399,17 @@ public class ScrollingTextBox: RichTextBox
 		{
 			Point mousePos=new Point((int)m.LParam);
 			int charIndex=this.GetCharIndexFromPosition(mousePos);
-//			int charIndex=this.GetCharIndexFromPosition(Control.MousePosition);
+			//			int charIndex=this.GetCharIndexFromPosition(Control.MousePosition);
 			MoveCursorRealColumn(GetLineFromCharIndex(charIndex),GetColumnFromCharIndex(charIndex));
 		}
-//		else if(m.Msg == WM_LBUTTONUP)
-//		{
-//			int charIndex=this.GetCharIndexFromPosition(Control.MousePosition);
-//			MoveCursor(GetLineFromCharIndex(charIndex),GetColumnFromCharIndex(charIndex));
-//		}
+		else if(m.Msg==WM_LBUTTONDBLCLK)
+		{
+		}
+			//		else if(m.Msg == WM_LBUTTONUP)
+			//		{
+			//			int charIndex=this.GetCharIndexFromPosition(Control.MousePosition);
+			//			MoveCursor(GetLineFromCharIndex(charIndex),GetColumnFromCharIndex(charIndex));
+			//		}
 		else
 		{
 			if ( m.Msg == WM_HSCROLL || m.Msg == WM_VSCROLL ) 
