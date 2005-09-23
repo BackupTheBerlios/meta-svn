@@ -13,12 +13,12 @@
 //	You should have received a copy of the GNU General Public License
 //	along with this program; if not, write to the Free Software
 //	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-this:map.Merge
+this:map.Combination
 	parent
 	:
 		"AssignedToCurrent"
 unicodeText:"äaba"
-this:map.Merge
+this:map.Combination
 	parent
 	logic
 	map
@@ -38,9 +38,9 @@ integerHashTest:
 	hashTest:[hashTestData]
 negativeInteger:"-100"
 negativeInteger.x:"hello"
-subtractionTest:math.Subtract
+subtractionTest:math.Sum
 	"-100"
-	"1000"
+	Opposite "1000"
 integerIncrementTest:"5"
 integerIncrementTest.0:integerIncrementTest
 integerDecrementTest:"5"
@@ -52,23 +52,32 @@ literalEscapeTest:
 	3:"@"as"@df"@"
 	4:"@"@as"@"df@"@"
 	5:"@"@"@"@"@"@"@"@"as"@"@"@"@"@"@"@"@df"@"@"@"@"@"@"@"@"
-applyMethod:=Add
-	arg.value
+applyMethod:=Sum
+	arg
 	"1"
-applyTest:Apply
-	applyMethod
-	:
+applyTest:Application
+	function:applyMethod
+	array:
 		"1"
 		"2"
 		"3"
-ifTest:If
-	Equal
-		"1"
-		"1"
-	then:
+ifTestCondition:Equality
+	"1"
+	"1"
+ifTestCases:
+	1:
 		'"it is true"
-	else:
+	0:
 		'"it is false"
+ifTest:ifTestCases.[ifTestCondition]*
+//ifTest:If
+//	condition:Equal
+//		"1"
+//		"1"
+//	then:
+//		'"it is true"
+//	else:
+//		'"it is false"
 "ImpliedAutokey"
 :"Autokey"
 gacTest:System.Collections
@@ -150,10 +159,10 @@ SecondLevel:
 	'arg
 argTest:FirstLevel
 	a:"z"
-concatenate:map.Append
+concatenate:array.Concatenation
 	"x"
 	"yz"
-this:map.Merge
+this:map.Combination
 	parent
 	testClasses
 TestClass.NestedClass.field:"5"
@@ -250,7 +259,7 @@ one:"1"
 two:"2"
 firstIf:"unchanged"
 secondIf:"unchanged"
-firstIfCondition:Equal
+firstIfCondition:Equality
 	"1"
 	one
 firstIfBranches:
@@ -285,7 +294,7 @@ x:
 		hello world!
 		hello!
 		"
-ored:BitwiseOr
+ored:bitwise.Disjunction
 	"20"
 	System.Windows.Forms.Keys.Tab
 arrayList:System.Collections.ArrayList*
@@ -308,12 +317,12 @@ escapedText:"\'\n\\\t"
 whileCounter:*
 loop:
 	'
-		whileDecision:Smaller
+		whileDecision:Negation Equality
 			arg
 			"10"
 		whileBranches:
 			1:
-				'loop Add
+				'loop Sum
 					arg
 					"1"
 				 

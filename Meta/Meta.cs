@@ -2220,7 +2220,14 @@ namespace Meta
 						}
 						else
 						{
-							result=method.Invoke(obj,new object[] {parameter});
+							try
+							{
+								result=method.Invoke(obj,new object[] {parameter});
+							}
+							catch(TargetInvocationException e)
+							{
+								throw e.InnerException;
+							}
 						}
 						isExecuted=true;
 						break;

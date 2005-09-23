@@ -1,4 +1,4 @@
-this:map.Merge
+this:map.Combination
 	parent
 	logic
 	map
@@ -34,7 +34,7 @@ fileName:*
 SetFileName:=
 	parent.parent.fileName:arg
 	form.Text.set
-		Append
+		Concatenation
 			"Meta Edit - "
 			fileName
 SetBreakPoint:=Meta.Expression.BreakPoint.set
@@ -49,7 +49,7 @@ commands:
 	SaveAs:=
 		saveAs:choose.SaveFile*
 		If
-			Not Equal
+			Negation Equality
 				saveAs
 				*
 			then:=
@@ -58,7 +58,7 @@ commands:
 					fileName
 					editBox.RealText.get*
 	Save:=If
-		Equal
+		Equality
 			fileName
 			*
 		then:=commands.SaveAs*
@@ -68,7 +68,7 @@ commands:
 	Open:=
 		openFileName:choose.OpenFile*
 		If
-			Not Equal
+			Negation Equality
 				openFileName
 				*
 			then:=
@@ -94,17 +94,17 @@ commands:
 		Meta.Interpreter.ReverseDebug*
 // TODO: maybe nest the modifiers inside each other?
 Modifiers:
-	AltControl:bitwise.Or
+	AltControl:bitwise.Disjunction
 		Keys.Alt
 		Keys.Control
-	AltShift:bitwise.Or
+	AltShift:bitwise.Disjunction
 		Keys.Alt
 		Keys.Shift
-	AltControlShift:bitwise.Or
+	AltControlShift:bitwise.Disjunction
 		Keys.Alt
 		Keys.Control
 		Keys.Shift
-	ControlShift:bitwise.Or
+	ControlShift:bitwise.Disjunction
 		Keys.Control
 		Keys.Shift
 shortcuts:
@@ -187,9 +187,13 @@ editBox:
 				modifiers:e.Modifiers.get*
 				keyCode:e.KeyCode.get*
 				If
-					ContainsKey
-						combos
-						modifiers
+					condition:map.Containment
+						map:combos
+						key:modifiers
+				If
+					Containment
+						map:combos
+						key:modifiers
 					then:=
 						subKey:combos.[modifiers]
 						If
@@ -238,14 +242,14 @@ form:
 			Reverse:commands.Reverse
 	form.Menu.set
 		MainMenu
-			Apply
-				=MenuItem
+			Application
+				function:=MenuItem
 					arg.key
-					Apply
-						=MenuItem
+					Application
+						function:=MenuItem
 							arg.key
 							arg.value
-						arg.value
-				menu
+						array:arg.value
+				array:menu
 	this:form
 form.ShowDialog*
