@@ -1,12 +1,13 @@
 this:map.Merging
-	parent
-	logic
-	map
-	math
 	System
 	System.IO
 	System.Windows.Forms
 	System.Drawing
+	parent
+	logic
+	map
+	math
+	array
 choose:
 	// TODO: rename dialog to openFileDialog
 	OpenFile:=
@@ -48,36 +49,42 @@ SetBreakPoint:=
 commands:
 	SaveAs:=
 		saveAs:choose.SaveFile*
-		If
-			Negation Equality
-				saveAs
-				*
-			then:=
+		hasName:Negation Equality
+			saveAs
+			*
+		cases:
+			0:=*
+			1:=
 				SetFileName saveAs
 				file.Write
 					fileName
 					editBox.RealText.get*
-	Save:=If
-		Equality
+		cases.[hasName]*
+	Save:=
+		hasName:Negation Equality
 			fileName
 			*
-		then:=commands.SaveAs*
-		else:=file.Write
-			fileName
-			editBox.RealText.get*
+		cases:
+			1:=commands.SaveAs*
+			0:=file.Write
+				fileName
+				editBox.RealText.get*
+		cases.[hasName]*
 	Open:=
 		openFileName:choose.OpenFile*
-		If
-			Negation Equality
-				openFileName
-				*
-			then:=
+		hasName:Negation Equality
+			openFileName
+			*
+		cases:
+			0:=*
+			1:=
 				SetFileName openFileName
 				editBox.RealText.set
 					file.Read fileName
 				editBox.MoveRealCursor
 					"0"
 					"0"
+		cases.[hasName]*
 	Run:=
 		commands.Save*
 		SetBreakPoint*
@@ -92,8 +99,8 @@ commands:
 	Reverse:=
 		SetBreakPoint*
 		Meta.Interpreter.ReverseDebug*
-// TODO: maybe nest the modifiers inside each other?
-Modifiers:
+CombinedModifierKeys:
+	this:System.Windows.Forms
 	AltControl:bitwise.Disjunction
 		Keys.Alt
 		Keys.Control
@@ -107,22 +114,27 @@ Modifiers:
 	ControlShift:bitwise.Disjunction
 		Keys.Control
 		Keys.Shift
-shortcuts:
-	[Keys.Escape]:=editBox.StopInteractiveSearch*
-	[Keys.F5]:=commands.Run*
-	[Keys.F5]:=commands.Run*
-	[Keys.Up]:=editBox.MoveLineUp*
-	[Keys.Down]:=editBox.MoveLineDown*
-	[Keys.Left]:=editBox.MoveCharLeft*
-	[Keys.Right]:=editBox.MoveCharRight*
-	[Keys.Home]:=editBox.MoveLineStart*
-	[Keys.End]:=editBox.MoveLineEnd*
-	[Keys.Tab]:=editBox.IncreaseSelectionIndent*
-	[Keys.Back]:=editBox.DeleteCharLeft*
-	[Keys.Delete]:=editBox.DeleteCharRight*
-	[Keys.PageUp]:=editBox.MovePageUp*
-	[Keys.PageDown]:=editBox.MovePageDown*
-combos:
+shortcutCombinations:
+	this:System.Windows.Forms
+	[Keys.None]:=
+		[Keys.Escape]:=editBox.StopInteractiveSearch*
+		[Keys.F5]:=commands.Run*
+		[Keys.F5]:=commands.Run*
+		[Keys.Up]:=editBox.MoveLineUp*
+		[Keys.Down]:=editBox.MoveLineDown*
+		[Keys.Left]:=editBox.MoveCharLeft*
+		[Keys.Right]:=editBox.MoveCharRight*
+		[Keys.Home]:=editBox.MoveLineStart*
+		[Keys.End]:=editBox.MoveLineEnd*
+		[Keys.Tab]:=editBox.IncreaseSelectionIndent*
+		[Keys.Back]:=editBox.DeleteCharLeft*
+		[Keys.Delete]:=editBox.DeleteCharRight*
+		[Keys.PageUp]:=editBox.MovePageUp*
+		[Keys.PageDown]:=editBox.MovePageDown*
+	[Keys.Shift]:
+		[Keys.Tab]:=editBox.DecreaseSelectionIndent*
+		[Keys.Left]:=editBox.SelectCharLeft*
+		[Keys.Right]:=editBox.SelectCharRight*
 	[Keys.Control]:
 		[Keys.O]:=commands.Open*
 		[Keys.S]:=commands.Save*
@@ -143,21 +155,17 @@ combos:
 		[Keys.OemSemicolon]:=editBox.MoveLineEnd*
 		[Keys.N]:=editBox.DeleteCharLeft*
 		[Keys.M]:=editBox.DeleteCharRight*
-	[Keys.Shift]:
-		[Keys.Tab]:=editBox.DecreaseSelectionIndent*
-		[Keys.Left]:=editBox.SelectCharLeft*
-		[Keys.Right]:=editBox.SelectCharRight*
-	[Modifiers.ControlShift]:
+	[CombinedModifierKeys.ControlShift]:
 		[Keys.Left]:=editBox.SelectWordLeft*
 		[Keys.Right]:=editBox.SelectWordRight*
-	[Modifiers.AltShift]:
+	[CombinedModifierKeys.AltShift]:
 		[Keys.J]:=editBox.SelectCharLeft*
 		[Keys.Oemtilde]:=editBox.SelectCharRight*
 		[Keys.L]:=editBox.SelectLineUp*
 		[Keys.K]:=editBox.SelectLineDown*
 		[Keys.OemSemicolon]:=editBox.SelectLineEnd*
 		[Keys.U]:=editBox.SelectLineStart*
-	[Modifiers.AltControl]:
+	[CombinedModifierKeys.AltControl]:
 		[Keys.J]:=editBox.MoveWordLeft*
 		[Keys.Oemtilde]:=editBox.MoveWordRight*
 		[Keys.OemSemicolon]:=editBox.MoveDocumentEnd*
@@ -166,7 +174,7 @@ combos:
 		[Keys.M]:=editBox.DeleteWordRight*
 		[Keys.L]:=editBox.MovePageUp*
 		[Keys.K]:=editBox.MovePageDown*
-	[Modifiers.AltControlShift]:
+	[CombinedModifierKeys.AltControlShift]:
 		[Keys.J]:=editBox.SelectWordLeft*
 		[Keys.Oemtilde]:=editBox.SelectWordRight*
 editBox:
@@ -181,47 +189,24 @@ editBox:
 		RichTextBoxScrollBars.ForcedBoth
 	editBox.KeyDown.add
 		:
+			// annoying
 			'
-				e:arg.2
-				// maybe this should be the other way round ???
-				modifiers=e.Modifiers.get*
-				keyCode=e.KeyCode.get*
-				keys.[modifiers].[keyCode]*
-				keys.[modifiers].[keyCode]*
-				
-				not everything can be a boolean, but an empty map can be everything
-				
-				
-				keys.[e.Modifiers.get*].[e.KeyCode.get*]*
-				
-				
-				
-				
-				If
-					Containment
-						map:combos
-						key:modifiers
-					then:=
-						subKey:combos.[modifiers]
-						If
-							ContainsKey
-								subKey
-								keyCode
-							then:=
-								editBox.SuspendWindowUpdate*
-								subKey.[keyCode]*
-								editBox.ResumeWindowUpdate*
-								e.Handled.set
-									"1"
-					else:=
-						If
-							ContainsKey
-								shortcuts
-								keyCode
-							then:=
-								shortcuts.[keyCode]*
-								e.Handled.set
-									"1"
+				eventArgs:arg.2
+				modifier:eventArgs.Modifiers.get*
+				key:eventArgs.KeyCode.get*
+				shortcuts:shortcutCombinations.[modifier]
+				exists:Containment
+					map:shortcuts
+					key:key
+				cases:
+					1:=
+						editBox.SuspendWindowUpdate*
+						shortcuts.[key]*
+						editBox.ResumeWindowUpdate*
+						eventArgs.Handled.set
+							"1"
+					0:=*
+				cases.[exists]*
 	this:editBox
 form:
 	form:Form*
@@ -250,13 +235,15 @@ form:
 	form.Menu.set
 		MainMenu
 			Application
-				function:=MenuItem
-					arg.key
-					Application
-						function:=MenuItem
-							arg.key
-							arg.value
-						array:arg.value
-				array:menu
+				array:Keys menu
+				function:=
+					topKey:arg
+					this:MenuItem
+						topKey
+						Application
+							array:Keys menu.[topKey]
+							function:=MenuItem
+								arg
+								menu.[topKey].[arg]
 	this:form
 form.ShowDialog*

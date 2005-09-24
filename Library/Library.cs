@@ -24,9 +24,28 @@ public class array:MetaLibrary
 		}
 		return array;
 	}
+
+	/// <summary>
+	/// Returns an array that is created by applying a "function" to every element of an "array".
+	/// </summary>
+	public static Map Application(Map arg)
+	{
+		// TODO: ensure "function" is callable, maybe?
+		Argument.ContainsKey(arg,"function");
+		Argument.ContainsKey(arg,"array");
+		Map application=new NormalMap();
+		int counter=1;
+		foreach(Map element in arg["array"].Array)
+		{
+			application[counter]=arg["function"].Call(element);
+			counter++;
+		}
+		return application;
+	}
 }
 public class map:MetaLibrary
 {
+
 	/// <summary>
 	/// Returns a boolean value indicating whether a "map" contains a "key".
 	/// </summary>
@@ -59,23 +78,6 @@ public class map:MetaLibrary
 		return Interpreter.MergeCollection(arg.Array);
 	}
 
-	/// <summary>
-	/// Returns an array that is created by applying a "function" to every element of an "array".
-	/// </summary>
-	public static Map Application(Map arg)
-	{
-		// TODO: ensure "function" is callable, maybe?
-		Argument.ContainsKey(arg,"function");
-		Argument.ContainsKey(arg,"array");
-		Map application=new NormalMap();
-		int counter=1;
-		foreach(Map element in arg["array"].Array)
-		{
-			application[counter]=arg["function"].Call(element);
-			counter++;
-		}
-		return application;
-	}
 	/// <summary>
 	/// Returns a boolean value indicating whether all arguments are identical to each other.
 	/// </summary>
@@ -178,9 +180,9 @@ public class math:MetaLibrary
 public class bitwise:MetaLibrary
 {
 	/// <summary>
-	/// Returns the bitwise or of all arguments.
+	/// Returns the bitwise disjunction of all arguments.
 	/// </summary>
-	public static Map BitwiseOr(Map arg)
+	public static Map Disjunction(Map arg)
 	{
 		Argument.IntegerArray(arg);
 		Integer or=0;

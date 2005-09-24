@@ -23,6 +23,7 @@ this:map.Merging
 	logic
 	map
 	math
+	array
 parent.parent.testSubDir.x:*
 persistantDeleteTest:testSubDir.x
 parent.parent.testSubDir.x:
@@ -294,7 +295,7 @@ x:
 		hello world!
 		hello!
 		"
-ored:bitwise.BitwiseOr
+ored:bitwise.Disjunction
 	"20"
 	System.Windows.Forms.Keys.Tab
 arrayList:System.Collections.ArrayList*

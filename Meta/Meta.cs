@@ -1645,6 +1645,7 @@ namespace Meta
 		public override MapStrategy Clone()
 		{
 			return new NamespaceStrategy(FullName,cache,namespaces,assemblies);
+//			return new NamespaceStrategy(FullName,cache,namespaces,assemblies);
 		}
 
 		public override Integer Integer
@@ -1684,8 +1685,14 @@ namespace Meta
 			}
 			set
 			{
+				// TODO: make an overload for initalization with map, maybe
+				map.strategy=new HybridDictionaryStrategy();
+				map.strategy.map=map;
+				map.InitFromStrategy(this);
+				map.strategy[key]=value;
+
 				// TODO: should this be possible??? I think so
-				throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
+//				throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
 			}
 		}
 		public override ArrayList Keys

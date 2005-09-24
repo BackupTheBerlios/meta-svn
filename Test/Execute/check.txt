@@ -34,10 +34,6 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "Application"
-  Value (DotNetMethod):
-Entry (DictionaryEntry)
-  Key (NormalMap):
     "Equality"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
@@ -51,6 +47,14 @@ Entry (DictionaryEntry)
 Entry (DictionaryEntry)
   Key (NormalMap):
     "Product"
+  Value (DotNetMethod):
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "Concatenation"
+  Value (DotNetMethod):
+Entry (DictionaryEntry)
+  Key (NormalMap):
+    "Application"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):

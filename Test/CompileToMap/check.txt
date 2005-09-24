@@ -367,6 +367,40 @@ Entry (DictionaryEntry)
                                             "literal"
                                           Value (NormalMap):
                                             "math"
+                        Entry (DictionaryEntry)
+                          Key (NormalMap):
+                            "5"
+                          Value (NormalMap):
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "key"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "1"
+                                  Value (NormalMap):
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "literal"
+                                      Value (NormalMap):
+                                        "5"
+                            Entry (DictionaryEntry)
+                              Key (NormalMap):
+                                "value"
+                              Value (NormalMap):
+                                Entry (DictionaryEntry)
+                                  Key (NormalMap):
+                                    "select"
+                                  Value (NormalMap):
+                                    Entry (DictionaryEntry)
+                                      Key (NormalMap):
+                                        "1"
+                                      Value (NormalMap):
+                                        Entry (DictionaryEntry)
+                                          Key (NormalMap):
+                                            "literal"
+                                          Value (NormalMap):
+                                            "array"
     Entry (DictionaryEntry)
       Key (NormalMap):
         "4"
@@ -9303,7 +9337,7 @@ hello!
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "BitwiseOr"
+                                "Disjunction"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
