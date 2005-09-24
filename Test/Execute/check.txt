@@ -58,6 +58,24 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
+    "internetTest"
+  Value (NormalMap):
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "textFromServer"
+      Value (NormalMap):
+        "someText"
+    Entry (DictionaryEntry)
+      Key (NormalMap):
+        "someMapFromServer"
+      Value (NormalMap):
+        Entry (DictionaryEntry)
+          Key (NormalMap):
+            "subMapFromServer"
+          Value (NormalMap):
+            "text"
+Entry (DictionaryEntry)
+  Key (NormalMap):
     "persistantDeleteTest"
   Value (NormalMap):
     ""

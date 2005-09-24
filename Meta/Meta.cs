@@ -33,6 +33,7 @@ using antlr.collections;
 using Meta.Parser;
 using Meta.TestingFramework;
 using System.Text.RegularExpressions;
+using System.Net;
 
 namespace Meta
 {
@@ -504,7 +505,7 @@ namespace Meta
 		}
 		public static Map Run(string fileName,Map argument)
 		{
-			Map program=Interpreter.Compile(fileName);
+			Map program=Interpreter.Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
 			return CallProgram(program,argument,GetPersistantMaps(fileName));
 		}
 		public static Map GetPersistantMaps(string fileName)
@@ -516,7 +517,7 @@ namespace Meta
 			{
 				if(String.Compare(directory.FullName,Interpreter.LibraryPath.FullName,true)==0)
 				{
-					current.Parent=GAC.library;
+					current.Parent=GAC.singleton;
 					break;
 				}
 				current.Parent=new PersistantMap(directory.Parent);
@@ -524,11 +525,21 @@ namespace Meta
 			}
 			return root;
 		}
-		public static Map RunWithoutLibrary(string fileName,Map argument)
+		// TODO: this is so pointless, i dont know
+		public static Map RunWithoutLibrary(string fileName,TextReader textReader)
 		{
-			Map program=Compile(fileName);
-			return CallProgram(program,argument,null);
+			Map program=Compile(fileName, textReader);
+			return CallProgram(program,new NormalMap(),null);
 		}
+		public static Map RunWithoutLibrary(string fileName)
+		{
+			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
+		}
+//		public static Map RunWithoutLibrary(string fileName,Map argument)
+//		{
+//			Map program=Compile(fileName, new StringReader(Helper.ReadFile(fileName)));
+//			return CallProgram(program,argument,null);
+//		}
 		public static Map CallProgram(Map program,Map argument,Map current)
 		{
 			Map callable=new NormalMap();
@@ -538,17 +549,30 @@ namespace Meta
 		}
 		public static Map Compile(string fileName)
 		{
-			return (new MetaTreeParser()).program(ParseToAst(fileName));
+			return Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
 		}
-		public static AST ParseToAst(string fileName) 
+		public static Map Compile(string fileName,TextReader textReader)
 		{
-			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
-//			StringReader stringReader=new StringReader("\n"+Helper.ReadFile(fileName)+"\n");
-			//			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
-			//			FileStream file=new FileStream(fileName, FileMode.Open,FileAccess.Read, FileShare.ReadWrite); 
+			return (new MetaTreeParser()).program(ParseToAst(fileName,textReader));
+		}
+//		public static Map Compile(string fileName)
+//		{
+//			return
+//		}
+//		public static Map Compile(string fileName)
+//		{
+//			return (new MetaTreeParser()).program(ParseToAst(fileName));
+//		}
+		public static AST ParseToAst(string fileName)
+		{
+			return ParseToAst(fileName,new StringReader(Helper.ReadFile(fileName)));
+		}
+		// TODO: refactor, why is this so complicated
+		public static AST ParseToAst(string fileName,TextReader reader) 
+		{
+//			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
 
-			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(stringReader,fileName); 
-//			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(file,fileName); 
+			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(reader,fileName); 
 			MetaLexer metaLexer = new MetaLexer(sharedInputState);
 	
 			metaLexer.setTokenObjectClass("MetaToken");
@@ -558,9 +582,30 @@ namespace Meta
 			metaParser.setASTNodeClass("MetaAST");
 			metaParser.map();
 			AST ast=metaParser.getAST();
-//			file.Close();
+			//			file.Close();
 			return ast;
 		}
+//		public static AST ParseToAst(string fileName) 
+//		{
+//			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
+////			StringReader stringReader=new StringReader("\n"+Helper.ReadFile(fileName)+"\n");
+//			//			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
+//			//			FileStream file=new FileStream(fileName, FileMode.Open,FileAccess.Read, FileShare.ReadWrite); 
+//
+//			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(stringReader,fileName); 
+////			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(file,fileName); 
+//			MetaLexer metaLexer = new MetaLexer(sharedInputState);
+//	
+//			metaLexer.setTokenObjectClass("MetaToken");
+//	
+//			MetaParser metaParser = new MetaParser(new IndentationStream(metaLexer));
+//
+//			metaParser.setASTNodeClass("MetaAST");
+//			metaParser.map();
+//			AST ast=metaParser.getAST();
+////			file.Close();
+//			return ast;
+//		}
 		private static void ExecuteInThread()
 		{
 			Interpreter.Run(executeFileName,new NormalMap());
@@ -1300,11 +1345,125 @@ namespace Meta
 				return new ArrayList();
 			}
 		}
-		public GAC()
+		private GAC()
 		{
 			cache=NamespacesFromAssemblies(GlobalAssemblyCache.Assemblies);
 		}
-		public static Map library=new PersistantMap(new GAC());
+		static GAC()
+		{
+			GAC gac=new GAC();
+			gac.cache["web"]=Web.singleton;
+			singleton=new PersistantMap(gac);
+//			singleton.Parent=Web.singleton;
+		}
+		public static Map singleton;
+//		public static Map singleton=new PersistantMap(new GAC(new Web));
+	}
+
+	public class RemoteStrategy:NormalStrategy
+	{
+		// TODO: there should be a default implementation for this
+		public override ArrayList Array
+		{
+			get
+			{
+				throw new ApplicationException("not implemented.");
+			}
+		}
+		// TODO: shouldnt be a property, there should be a default implementation for all this stuff
+		public override Integer Integer
+		{
+			get
+			{
+				return null;
+			}
+		}
+		public override ArrayList Keys
+		{
+			get
+			{
+				return null;
+			}
+		}
+		public override Map this[Map key]
+		{
+			get
+			{
+				if(!key.IsString)
+				{
+					throw new ApplicationException("key is not a string");
+				}
+				WebClient webClient=new WebClient();
+				Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
+//				webClient.DownloadFile(fullPath.ToString(),@"C:\downloadedFile.txt");
+				Stream stream=webClient.OpenRead(fullPath.ToString());
+				StreamReader streamReader=new StreamReader(stream);
+//				Interpreter Interpreter.ParseToAst(fullPath,stream).
+				return Interpreter.RunWithoutLibrary(fullPath.ToString(),streamReader);
+
+
+			}
+			set
+			{
+				throw new ApplicationException("Cannot set key in remote map.");
+			}
+		}
+
+
+
+
+
+		private string address;
+		public RemoteStrategy(string address)
+		{
+			this.address=address;
+		}
+
+	}
+	public class Web:Map
+	{
+		// TODO: should definitely be IEnumerable, so Web can return something too
+		public override ArrayList Keys
+		{
+			get
+			{
+				return new ArrayList();
+			}
+		}
+
+		public override Map this[Map key]
+		{
+			get
+			{
+				// TODO: use the Argument checking stuff here too, or something similar
+				if(!key.IsString)
+				{
+					throw new ApplicationException("need a string here");
+				}
+				// TODO: maybe check the host name here
+				return new NormalMap(new RemoteStrategy(key.GetString()));
+			}
+			set
+			{
+				throw new ApplicationException("Cannot set key in Web.");
+			}
+		}
+
+
+		public override Integer GetInteger()
+		{
+			return null;
+		}
+
+		public override Map Clone()
+		{
+			return this;
+		}
+
+		private Web()
+		{
+		}
+		public static Web singleton=new Web();
 	}
 	public class DirectoryStrategy:AssemblyStrategy
 	{
@@ -1629,7 +1788,8 @@ namespace Meta
 		}
 		private Map GetMap()
 		{
-			Map data=Interpreter.RunWithoutLibrary(this.file.FullName,new NormalMap());
+			Map data=Interpreter.RunWithoutLibrary(this.file.FullName);
+//			Map data=Interpreter.RunWithoutLibrary(this.file.FullName,new NormalMap());
 			data.Parent=this.map;
 			return data;
 		}

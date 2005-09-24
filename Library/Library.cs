@@ -203,7 +203,7 @@ public class bitwise:MetaLibrary
 
 
 
-class Argument
+public class Argument
 {
 	public static void ContainsKey(Map map,Map key)
 	{
@@ -253,4 +253,5 @@ class Argument
 			}
 		}
 	}
+
 }
