@@ -325,7 +325,7 @@ namespace Meta
 		}
 		public Literal(Map code)
 		{
-			this.literal=Filter((string)code.String);
+			this.literal=Filter((string)code.GetString());
 		}
 		public Map literal=null;
 		public static Map Filter(string text)
@@ -634,7 +634,7 @@ namespace Meta
 			message="Key ";
 			if(key.IsString)
 			{
-				message+=key.String;
+				message+=key.GetString();
 			}
 			else
 			{
@@ -670,6 +670,7 @@ namespace Meta
 	}
 	public abstract class Map: ICallable, IEnumerable
 	{	
+		// TODO: not really accurate
 		public bool IsFunction
 		{
 			get
@@ -677,95 +678,53 @@ namespace Meta
 				return ContainsKey(CodeKeys.Run);
 			}
 		}
-		public static implicit operator Map(Integer integer)
-		{
-			return new NormalMap(integer);
-		}
-		public static implicit operator Map(bool boolean)
-		{
-			return new NormalMap(new Integer(boolean?1:0));
-		}
-		public static implicit operator Map(char character)
-		{
-			return new NormalMap(new Integer(character));
-		}
-		public static implicit operator Map(byte integer)
-		{
-			return new NormalMap(new Integer(integer));
-		}
-		public static implicit operator Map(sbyte integer)
-		{
-			return new NormalMap(new Integer(integer));
-		}
-		public static implicit operator Map(uint integer)
-		{
-			return new NormalMap(new Integer(integer));
-		}
-		public static implicit operator Map(ushort integer)
-		{
-			return new NormalMap(new Integer(integer));
-		}
-
-
-		public static implicit operator Map(int integer)
-		{
-			return new NormalMap(new Integer(integer));
-		}
-		public static implicit operator Map(long integer)
-		{
-			return new NormalMap(new Integer(integer));
-		}
-		public static implicit operator Map(ulong integer)
-		{
-			return new NormalMap(new Integer(integer));
-		}
-
-
-		public static implicit operator Map(double number)
-		{
-			return new NormalMap(number);
-		}
-		public static implicit operator Map(float number)
-		{
-			return new NormalMap(number);
-		}
-		public static implicit operator Map(decimal number)
-		{
-			return new NormalMap(Convert.ToDouble(number));
-		}
-
-		public static implicit operator Map(string text)
-		{
-			return new NormalMap(text);
-		}
-
 		public virtual bool IsBoolean
 		{
 			get
 			{
-				return IsInteger && (Integer==0 || Integer==1);
+				return IsInteger && (GetInteger()==0 || GetInteger()==1);
 			}
 		}
-		public virtual bool Boolean
+		// TODO: throw exceptions here? or maybe not?
+		// TODO: change this to a method!!
+		public virtual bool GetBoolean()
 		{
-			get
+			bool boolean;
+			if(GetInteger()==0)
 			{
-				bool boolean;
-				if(Integer==0)
-				{
-					boolean=false;
-				}
-				else if(Integer==1)
-				{
-					boolean=true;
-				}
-				else
-				{
-					throw new ApplicationException("Map is not a boolean.");
-				}
-				return boolean;
+				boolean=false;
 			}
+			else if(GetInteger()==1)
+			{
+				boolean=true;
+			}
+			else
+			{
+				// TODO: Throw another exception here
+				throw new ApplicationException("Map is not a boolean.");
+			}
+			return boolean;
 		}
+//		public virtual bool Boolean
+//		{
+//			get
+//			{
+//				bool boolean;
+//				if(Integer==0)
+//				{
+//					boolean=false;
+//				}
+//				else if(Integer==1)
+//				{
+//					boolean=true;
+//				}
+//				else
+//				{
+//					throw new ApplicationException("Map is not a boolean.");
+//				}
+//				return boolean;
+//			}
+//		}
 		public virtual bool IsFraction
 		{
 			get
@@ -773,33 +732,49 @@ namespace Meta
 				return this.ContainsKey(NumberKeys.Numerator) && this[NumberKeys.Numerator].IsInteger && this.ContainsKey(NumberKeys.Denominator) && this[NumberKeys.Denominator].IsInteger;
 			}
 		}
-		public virtual double Fraction
+		// TODO: change this to a real fraction class
+		public virtual double GetFraction()
 		{
-			get
+			double fraction;
+			if(IsFraction)
 			{
-				double fraction;
-				if(IsFraction)
-				{
-					fraction=((double)(this["numerator"]).Integer.LongValue())/((double)(this["denominator"]).Integer.LongValue());
-				}
-				else
-				{
-					throw new ApplicationException("Map is not a fraction");
-				}
-				return fraction;
+				fraction=((double)(this["numerator"]).GetInteger().LongValue())/((double)(this["denominator"]).GetInteger().LongValue());
 			}
+			else
+			{
+				throw new ApplicationException("Map is not a fraction");
+			}
+			return fraction;
 		}
+//		public virtual double Fraction
+//		{
+//			get
+//			{
+//				double fraction;
+//				if(IsFraction)
+//				{
+//					fraction=((double)(this["numerator"]).Integer.LongValue())/((double)(this["denominator"]).Integer.LongValue());
+//				}
+//				else
+//				{
+//					throw new ApplicationException("Map is not a fraction");
+//				}
+//				return fraction;
+//			}
+//		}
 		public virtual bool IsInteger
 		{
 			get
 			{
-				return Integer!=null;
+				// TODO: this is incorrect, GetInteger should throw if it isnt an integer
+				return GetInteger()!=null;
 			}
 		}
-		public abstract Integer Integer
-		{
-			get;
-		}
+		public abstract Integer GetInteger();
+//		public abstract Integer Integer
+//		{
+//			get;
+//		}
 		public Map Argument
 		{
 			get
@@ -816,7 +791,8 @@ namespace Meta
 		{
 			get
 			{
-				return String!=null;
+				// TODO: incorrect, GetString should throw if it isnt a string
+				return GetString()!=null;
 			}
 		}
 		public static string GetString(Map map)
@@ -824,11 +800,11 @@ namespace Meta
 			string text="";
 			foreach(Map key in map.Keys)
 			{
-				if(key.Integer!=null && map[key].Integer!=null)
+				if(key.GetInteger()!=null && map[key].GetInteger()!=null)
 				{
 					try
 					{
-						text+=Convert.ToChar(map[key].Integer.Int32);
+						text+=Convert.ToChar(map[key].GetInteger().Int32);
 					}
 					catch
 					{
@@ -842,12 +818,9 @@ namespace Meta
 			}
 			return text;
 		}
-		public virtual string String
+		public virtual string GetString()
 		{
-			get
-			{
-				return GetString(this);
-			}
+			return GetString(this);
 		}
 		public virtual Map Parent
 		{
@@ -982,7 +955,74 @@ namespace Meta
 			{
 				extent=value;
 			}
-		}		private Map parent;
+		}
+		private Map parent;
+
+
+
+
+
+		public static implicit operator Map(Integer integer)
+		{
+			return new NormalMap(integer);
+		}
+		public static implicit operator Map(bool boolean)
+		{
+			return new NormalMap(new Integer(boolean?1:0));
+		}
+		public static implicit operator Map(char character)
+		{
+			return new NormalMap(new Integer(character));
+		}
+		public static implicit operator Map(byte integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+		public static implicit operator Map(sbyte integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+		public static implicit operator Map(uint integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+		public static implicit operator Map(ushort integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+
+
+		public static implicit operator Map(int integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+		public static implicit operator Map(long integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+		public static implicit operator Map(ulong integer)
+		{
+			return new NormalMap(new Integer(integer));
+		}
+
+
+		public static implicit operator Map(double number)
+		{
+			return new NormalMap(number);
+		}
+		public static implicit operator Map(float number)
+		{
+			return new NormalMap(number);
+		}
+		public static implicit operator Map(decimal number)
+		{
+			return new NormalMap(Convert.ToDouble(number));
+		}
+
+		public static implicit operator Map(string text)
+		{
+			return new NormalMap(text);
+		}
 	}
 	
 	public abstract class StrategyMap: Map, ISerializeSpecial
@@ -994,19 +1034,13 @@ namespace Meta
 				this[key]=clone[key];
 			}
 		}
-		public override Integer Integer
+		public override Integer GetInteger()
 		{
-			get
-			{
-				return strategy.Integer;
-			}
+			return strategy.Integer;
 		}
-		public override string String
+		public override string GetString()
 		{
-			get
-			{
-				return strategy.String;
-			}
+			return strategy.String;
 		}
 
 		public override int Count
@@ -1333,9 +1367,9 @@ namespace Meta
 			get
 			{
 				Map val;
-				if(key.IsString && ValidName(key.String))
+				if(key.IsString && ValidName(key.GetString()))
 				{
-					string path=Path.Combine(directory.FullName,key.String);
+					string path=Path.Combine(directory.FullName,key.GetString());
 					FileInfo file=new FileInfo(path+".meta");
 					DirectoryInfo subDirectory=new DirectoryInfo(path);
 					if(file.Exists)
@@ -1363,9 +1397,9 @@ namespace Meta
 			}
 			set
 			{
-				if(key.IsString && ValidName(key.String))
+				if(key.IsString && ValidName(key.GetString()))
 				{
-					SaveToFile(value,Path.Combine(directory.FullName,key.String+".meta"));
+					SaveToFile(value,Path.Combine(directory.FullName,key.GetString()+".meta"));
 				}
 				else
 				{
@@ -1433,7 +1467,7 @@ namespace Meta
 		}
 		private static string IntegerKey(Map number)
 		{
-			return number.Integer.ToString();
+			return number.GetInteger().ToString();
 		}
 		private static string IntegerValue(Map number)
 		{
@@ -1442,9 +1476,9 @@ namespace Meta
 		private static string StringKey(Map key,string indentation)
 		{
 			string text;
-			if(IsLiteralKey(key.String))
+			if(IsLiteralKey(key.GetString()))
 			{
-				text=key.String;
+				text=key.GetString();
 			}
 			else
 			{
@@ -1455,10 +1489,10 @@ namespace Meta
 		private static string StringValue(Map val,string indentation)
 		{
 			string text;
-			if(Literal.Filter(val.String).IsString)
+			if(Literal.Filter(val.GetString()).IsString)
 			{
 				string longestEscape="\"";
-				foreach(Match match in Regex.Matches(val.String,"(')?(\"')*\""))
+				foreach(Match match in Regex.Matches(val.GetString(),"(')?(\"')*\""))
 				{
 					if(match.ToString().Length>longestEscape.Length)
 					{
@@ -1466,14 +1500,14 @@ namespace Meta
 					}
 				}
 				int delimiterLength=longestEscape.Length;
-				if(val.String.StartsWith("\""))
+				if(val.GetString().StartsWith("\""))
 				{
 					if(delimiterLength%2==0)
 					{
 						delimiterLength++;
 					}
 				}
-				else if(val.String.StartsWith("'"))
+				else if(val.GetString().StartsWith("'"))
 				{
 					if(delimiterLength%2==1)
 					{
@@ -1494,7 +1528,7 @@ namespace Meta
 				}
 
 				string endDelimiter=Helper.ReverseString(startDelimiter);
-				text=startDelimiter+val.String+endDelimiter;
+				text=startDelimiter+val.GetString()+endDelimiter;
 			}
 			else
 			{
@@ -1577,7 +1611,7 @@ namespace Meta
 		{
 			get
 			{
-				return GetMap().Integer;
+				return GetMap().GetInteger();
 			}
 		}
 		private Map GetMap()
@@ -1786,7 +1820,7 @@ namespace Meta
 			}
 			else if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
 			{ 
-				dotNet=Enum.ToObject(target,meta.Integer.Int32); // TODO: support other underlying types
+				dotNet=Enum.ToObject(target,meta.GetInteger().Int32); // TODO: support other underlying types
 			}
 			else 
 			{
@@ -1795,11 +1829,11 @@ namespace Meta
 					case TypeCode.Boolean:
 						if(IsIntegerInRange(meta,0,1))
 						{
-							if(meta.Integer==0)
+							if(meta.GetInteger()==0)
 							{
 								dotNet=false;
 							}
-							else if(meta.Integer==1)
+							else if(meta.GetInteger()==1)
 							{
 								dotNet=true;
 							}
@@ -1808,20 +1842,20 @@ namespace Meta
 					case TypeCode.Byte:
 						if(IsIntegerInRange(meta,new Integer(Byte.MinValue),new Integer(Byte.MaxValue)))
 						{
-							dotNet=Convert.ToByte(meta.Integer.Int32);
+							dotNet=Convert.ToByte(meta.GetInteger().Int32);
 						}
 						break;
 					case TypeCode.Char:
 						if(IsIntegerInRange(meta,(int)Char.MinValue,(int)Char.MaxValue))
 						{
-							dotNet=Convert.ToChar(meta.Integer.LongValue());
+							dotNet=Convert.ToChar(meta.GetInteger().LongValue());
 						}
 						break;
 					case TypeCode.DateTime:
 						isConverted=false;
 						break;
 					case TypeCode.DBNull:
-						if(meta.IsInteger && meta.Integer==0)
+						if(meta.IsInteger && meta.GetInteger()==0)
 						{
 							dotNet=DBNull.Value;
 						}
@@ -1829,39 +1863,39 @@ namespace Meta
 					case TypeCode.Decimal:
 						if(IsIntegerInRange(meta,Helper.IntegerFromDouble((double)decimal.MinValue),Helper.IntegerFromDouble((double)decimal.MaxValue)))
 						{
-							dotNet=(decimal)(meta.Integer.LongValue());
+							dotNet=(decimal)(meta.GetInteger().LongValue());
 						}
 						else if(IsFractionInRange(meta,(double)decimal.MinValue,(double)decimal.MaxValue))
 						{
-							dotNet=(decimal)meta.Fraction;
+							dotNet=(decimal)meta.GetFraction();
 						}
 						break;
 					case TypeCode.Double:
 						if(IsIntegerInRange(meta,Helper.IntegerFromDouble(double.MinValue),Helper.IntegerFromDouble(double.MaxValue)))
 						{
-							dotNet=(double)(meta.Integer.LongValue());
+							dotNet=(double)(meta.GetInteger().LongValue());
 						}
 						else if(IsFractionInRange(meta,double.MinValue,double.MaxValue))
 						{
-							dotNet=meta.Fraction;
+							dotNet=meta.GetFraction();
 						}
 						break;
 					case TypeCode.Int16:
 						if(IsIntegerInRange(meta,Int16.MinValue,Int16.MaxValue))
 						{
-							dotNet=Convert.ToInt16(meta.Integer.LongValue());
+							dotNet=Convert.ToInt16(meta.GetInteger().LongValue());
 						}
 						break;
 					case TypeCode.Int32:
 						if(IsIntegerInRange(meta,Int32.MinValue,Int32.MaxValue))
 						{
-							dotNet=meta.Integer.Int32;
+							dotNet=meta.GetInteger().Int32;
 						}
 						break;
 					case TypeCode.Int64:
 						if(IsIntegerInRange(meta,Int64.MinValue,Int64.MaxValue))
 						{
-							dotNet=Convert.ToInt64(meta.Integer.LongValue());
+							dotNet=Convert.ToInt64(meta.GetInteger().LongValue());
 						}
 						break;
 					case TypeCode.Object:
@@ -1877,41 +1911,41 @@ namespace Meta
 					case TypeCode.SByte:
 						if(IsIntegerInRange(meta,SByte.MinValue,SByte.MaxValue))
 						{
-							dotNet=Convert.ToSByte(meta.Integer.LongValue());
+							dotNet=Convert.ToSByte(meta.GetInteger().LongValue());
 						}
 						break;
 					case TypeCode.Single:
 						if(IsIntegerInRange(meta,Helper.IntegerFromDouble(Single.MinValue),Helper.IntegerFromDouble(Single.MaxValue)))
 						{
-							dotNet=(float)meta.Integer.LongValue();
+							dotNet=(float)meta.GetInteger().LongValue();
 						}
 						else if(IsFractionInRange(meta,Single.MinValue,Single.MaxValue))
 						{
-							dotNet=(float)meta.Fraction;
+							dotNet=(float)meta.GetFraction();
 						}
 						break;
 					case TypeCode.String:
 						if(meta.IsString)
 						{
-							dotNet=meta.String;
+							dotNet=meta.GetString();
 						}
 						break;
 					case TypeCode.UInt16:
 						if(IsIntegerInRange(meta,new Integer(UInt16.MinValue),new Integer(UInt16.MaxValue)))
 						{
-							dotNet=Convert.ToUInt16(meta.Integer.LongValue());
+							dotNet=Convert.ToUInt16(meta.GetInteger().LongValue());
 						}
 						break;
 					case TypeCode.UInt32:
 						if(IsIntegerInRange(meta,UInt32.MinValue,UInt32.MaxValue))
 						{
-							dotNet=Convert.ToUInt32(meta.Integer.LongValue());
+							dotNet=Convert.ToUInt32(meta.GetInteger().LongValue());
 						}
 						break;
 					case TypeCode.UInt64:
 						if(IsIntegerInRange(meta,UInt64.MinValue,UInt64.MaxValue))
 						{
-							dotNet=Convert.ToUInt64(meta.Integer.LongValue());
+							dotNet=Convert.ToUInt64(meta.GetInteger().LongValue());
 						}
 						break;
 					default:
@@ -1930,11 +1964,11 @@ namespace Meta
 		}
 		private static bool IsIntegerInRange(Map meta,Integer minValue,Integer maxValue)
 		{
-			return meta.IsInteger && meta.Integer>=minValue && meta.Integer<=maxValue;
+			return meta.IsInteger && meta.GetInteger()>=minValue && meta.GetInteger()<=maxValue;
 		}
 		private static bool IsFractionInRange(Map meta,double minValue,double maxValue)
 		{
-			return meta.IsFraction && meta.Fraction>=minValue && meta.Fraction<=maxValue;
+			return meta.IsFraction && meta.GetFraction()>=minValue && meta.GetFraction()<=maxValue;
 		}
 		public static Map ToMeta(object dotNet)
 		{
@@ -2049,13 +2083,18 @@ namespace Meta
 	}
 	public class DotNetMethod: Map,ICallable
 	{
-		public override Integer Integer
+		public override Integer GetInteger()
 		{
-			get
-			{
-				return null;
-			}
+			// TODO: throw exception, make this the default implementation?, no better not
+			return null;
 		}
+//		public override Integer Integer
+//		{
+//			get
+//			{
+//				return null;
+//			}
+//		}
 
 		public override Map Clone()
 		{
@@ -2418,13 +2457,18 @@ namespace Meta
 				return type;
 			}
 		}
-		public override Integer Integer
+		public override Integer GetInteger()
 		{
-			get
-			{
-				return null;
-			}
+			// TODO: Throw exception
+			return null;
 		}
+//		public override Integer Integer
+//		{
+//			get
+//			{
+//				return null;
+//			}
+//		}
 
 		public override Map Clone()
 		{
@@ -2450,13 +2494,18 @@ namespace Meta
 				return obj;
 			}
 		}
-		public override Integer Integer
+		public override Integer GetInteger()
 		{
-			get
-			{
-				return null;
-			}
+			// TODO: throw exception
+			return null;
 		}
+//		public override Integer Integer
+//		{
+//			get
+//			{
+//				return null;
+//			}
+//		}
 		public DotNetObject(object target):base(target,target.GetType())
 		{
 		}
@@ -2687,7 +2736,7 @@ namespace Meta
 			{
 				if(key.IsInteger)
 				{
-					int iInteger=key.Integer.Int32;
+					int iInteger=key.GetInteger().Int32;
 					if(iInteger>0 && iInteger<=this.Count)
 					{
 						return text[iInteger-1];
@@ -2707,7 +2756,7 @@ namespace Meta
 		{
 			if(key.IsInteger)
 			{
-				return key.Integer>0 && key.Integer<=this.Count;
+				return key.GetInteger()>0 && key.GetInteger()<=this.Count;
 			}
 			else
 			{
@@ -2729,9 +2778,9 @@ namespace Meta
 				//else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) &&  this[NumberKeys.Negative]==new NormalMap(new Integer(1)) && this.ContainsKey(NumberKeys.EmptyMap)
 				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) && this[NumberKeys.Negative]==new NormalMap(new Integer(1)))) && this.ContainsKey(NumberKeys.EmptyMap))
 				{
-					if(this[NumberKeys.EmptyMap].Integer!=null)
+					if(this[NumberKeys.EmptyMap].GetInteger()!=null)
 					{
-						number=this[NumberKeys.EmptyMap].Integer+1;
+						number=this[NumberKeys.EmptyMap].GetInteger()+1;
 						if(this[NumberKeys.Negative]==new NormalMap(new Integer(1)))
 //							if(this.ContainsKey(NumberKeys.Negative))
 						{
@@ -2803,7 +2852,7 @@ namespace Meta
 						{
 							try
 							{
-								text+=Convert.ToChar(val.Integer.Int32);
+								text+=Convert.ToChar(val.GetInteger().Int32);
 							}
 							catch
 							{
@@ -2896,13 +2945,18 @@ namespace Meta
 		{
 			return new Event(eventInfo,obj,type);
 		}
-		public override Integer Integer
+		public override Integer GetInteger()
 		{
-			get
-			{
-				return null;
-			}
+			// TODO: throw exception
+			return null;
 		}
+//		public override Integer Integer
+//		{
+//			get
+//			{
+//				return null;
+//			}
+//		}
 		public override ArrayList Keys
 		{
 			get
@@ -2952,12 +3006,10 @@ namespace Meta
 		{
 			return new Property(property,obj,type);
 		}
-		public override Integer Integer
+		public override Integer GetInteger()
 		{
-			get
-			{
-				return null;
-			}
+			// TODO: throw exception
+			return null;
 		}
 		public override ArrayList Keys
 		{
@@ -3025,8 +3077,8 @@ namespace Meta
 		{
 			if(key.IsString)
 			{
-				string text=key.String;
-				if(type.GetMember(key.String,
+				string text=key.GetString();
+				if(type.GetMember(key.GetString(),
 					BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0)
 				{
 					return true;
@@ -3082,9 +3134,9 @@ namespace Meta
 				{
 					val=Parent;
 				}
-				else if(key.IsString && type.GetMember(key.String,bindingFlags).Length>0)
+				else if(key.IsString && type.GetMember(key.GetString(),bindingFlags).Length>0)
 				{
-					string text=key.String;
+					string text=key.GetString();
 					MemberInfo[] members=type.GetMember(text,bindingFlags);
 					if(members[0] is MethodBase)
 					{
@@ -3114,7 +3166,7 @@ namespace Meta
 				}
 				else if(this.obj!=null && key.IsInteger && this.type.IsArray)
 				{
-					val=Transform.ToMeta(((Array)obj).GetValue(key.Integer.Int32));
+					val=Transform.ToMeta(((Array)obj).GetValue(key.GetInteger().Int32));
 				}
 				else
 				{
@@ -3134,9 +3186,9 @@ namespace Meta
 			}
 			set
 			{
-				if(key.IsString && type.GetMember(key.String,bindingFlags).Length!=0)
+				if(key.IsString && type.GetMember(key.GetString(),bindingFlags).Length!=0)
 				{
-					string text=key.String;
+					string text=key.GetString();
 					MemberInfo member=type.GetMember(text,bindingFlags)[0];
 					if(member is FieldInfo)
 					{
@@ -3175,7 +3227,7 @@ namespace Meta
 					object converted=Transform.ToDotNet(value,type.GetElementType(),out isConverted);
 					if(isConverted)
 					{
-						((Array)obj).SetValue(converted,key.Integer.Int32);
+						((Array)obj).SetValue(converted,key.GetInteger().Int32);
 						return;
 					}
 				}

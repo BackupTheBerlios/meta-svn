@@ -52,7 +52,7 @@ namespace Test
 				if(result.IsString)
 				{
 					Console.Write("Content-Type: text/html\n\n");
-					Console.Write(result.String);
+					Console.Write(result.GetString());
 				}
 			}
 		}

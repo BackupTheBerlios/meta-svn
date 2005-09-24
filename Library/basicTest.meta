@@ -294,7 +294,7 @@ x:
 		hello world!
 		hello!
 		"
-ored:bitwise.Disjunction
+ored:bitwise.BitwiseOr
 	"20"
 	System.Windows.Forms.Keys.Tab
 arrayList:System.Collections.ArrayList*

@@ -12918,11 +12918,11 @@ hello!
         keys (ArrayList):
           Entry (Literal)
             literal (NormalMap):
-              "Disjunction"
+              "BitwiseOr"
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "25"
+                  "23"
                 Line (Int32):
                   "297"
               FileName (String):
@@ -12935,7 +12935,7 @@ hello!
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "25"
+              "23"
             Line (Int32):
               "297"
           FileName (String):

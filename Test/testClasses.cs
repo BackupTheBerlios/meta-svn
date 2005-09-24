@@ -94,9 +94,9 @@ namespace testClasses
 			def["p2"]="null";
 			arg=(Map)Interpreter.Merge(def,arg);
 
-			this.x=arg[1].String;
-			this.y=arg["y"].String;
-			this.z=arg["p2"].String;
+			this.x=arg[1].GetString();
+			this.y=arg["y"].GetString();
+			this.z=arg["p2"].GetString();
 		}
 		public string Concatenate(Map arg) 
 		{
@@ -105,7 +105,7 @@ namespace testClasses
 			def["b"]="null";
 			def["c"]="null";
 			arg=(Map)Interpreter.Merge(def,arg);
-			return arg[1].String+arg["b"].String+arg["c"].String+
+			return arg[1].GetString()+arg["b"].GetString()+arg["c"].GetString()+
 				this.x+this.y+this.z;
 		}
 	}

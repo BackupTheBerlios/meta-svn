@@ -9303,7 +9303,7 @@ hello!
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "Disjunction"
+                                "BitwiseOr"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"

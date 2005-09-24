@@ -89,6 +89,11 @@
                     Project = "{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -114,6 +119,11 @@
                     RelPath = "Library.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "test2.meta"
+                    SubType = "Form"
+                    BuildAction = "None"
                 />
             </Include>
         </Files>

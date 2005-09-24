@@ -184,12 +184,19 @@ editBox:
 			'
 				e:arg.2
 				// maybe this should be the other way round ???
-				modifiers:e.Modifiers.get*
-				keyCode:e.KeyCode.get*
-				If
-					condition:map.Containment
-						map:combos
-						key:modifiers
+				modifiers=e.Modifiers.get*
+				keyCode=e.KeyCode.get*
+				keys.[modifiers].[keyCode]*
+				keys.[modifiers].[keyCode]*
+				
+				not everything can be a boolean, but an empty map can be everything
+				
+				
+				keys.[e.Modifiers.get*].[e.KeyCode.get*]*
+				
+				
+				
+				
 				If
 					Containment
 						map:combos

@@ -101,7 +101,7 @@ public class logic:MetaLibrary
 	public static Map Negation(Map arg)
 	{
 		Argument.Boolean(arg);
-		return !arg.Boolean;
+		return !arg.GetBoolean();
 	}
 	/// <summary>
 	/// Returns the logical conjunction of all arguments.
@@ -112,7 +112,7 @@ public class logic:MetaLibrary
 		bool and=true;
 		foreach(Map map in arg.Array)
 		{
-			if(!map.Boolean)
+			if(!map.GetBoolean())
 			{
 				and=false;
 				break;
@@ -129,7 +129,7 @@ public class logic:MetaLibrary
 		bool or=false;
 		foreach(Map map in arg.Array)
 		{
-			if(map.Boolean)
+			if(map.GetBoolean())
 			{
 				or=true;
 				break;
@@ -149,7 +149,7 @@ public class math:MetaLibrary
 		Integer sum=0;
 		foreach(Map map in arg.Array)
 		{
-			sum+=map.Integer;
+			sum+=map.GetInteger();
 		}
 		return sum;
 	}
@@ -159,7 +159,7 @@ public class math:MetaLibrary
 	public static Map Opposite(Map arg)
 	{
 		Argument.Integer(arg);
-		return -arg.Integer;
+		return -arg.GetInteger();
 	}
 	/// <summary>
 	/// Returns the product of all arguments.
@@ -170,7 +170,7 @@ public class math:MetaLibrary
 		Integer product=1;
 		foreach(Map map in arg.Array)
 		{
-			product*=map.Integer;
+			product*=map.GetInteger();
 		}
 		return product;
 	}
@@ -178,15 +178,15 @@ public class math:MetaLibrary
 public class bitwise:MetaLibrary
 {
 	/// <summary>
-	/// Returns the bitwise disjunction of all arguments.
+	/// Returns the bitwise or of all arguments.
 	/// </summary>
-	public static Map Disjunction(Map arg)
+	public static Map BitwiseOr(Map arg)
 	{
 		Argument.IntegerArray(arg);
 		Integer or=0;
 		foreach(Map map in arg.Array)
 		{
-			or|=map.Integer;
+			or|=map.GetInteger();
 		}
 		return or;
 	}
