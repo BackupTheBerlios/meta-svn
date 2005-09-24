@@ -177,12 +177,12 @@ boolTest:TestClass.boolTest
 memberTest:MemberTest*
 MemberTest.classField:"a"
 memberTest.instanceField:"b"
-MemberTest.ClassProperty.set
-	memberTest.InstanceProperty.get*
-classPropertyValue:MemberTest.ClassProperty.get*
-memberTest.InstanceProperty.set
-	MemberTest.ClassProperty.get*
-instancePropertyValue:memberTest.InstanceProperty.get*
+MemberTest.ClassProperty.Set
+	memberTest.InstanceProperty.Get*
+classPropertyValue:MemberTest.ClassProperty.Get*
+memberTest.InstanceProperty.Set
+	MemberTest.ClassProperty.Get*
+instancePropertyValue:memberTest.InstanceProperty.Get*
 interceptedSymbol:"/hello/"
 positionalNoConversion:PositionalNoConversion
 	"m"
@@ -235,7 +235,7 @@ ChangeUpperLevel*
 staticEventChanged:"0"
 ChangeStaticEvent:=
 	parent.parent.staticEventChanged:arg
-TestClass.staticEvent.add
+TestClass.staticEvent.Add
 	:
 		'
 			ChangeStaticEvent "1"
@@ -248,7 +248,7 @@ resultFromDelegate:TestClass.GetResultFromDelegate*
 staticEventResult:TestClass.staticEvent 
 	testClass
 instanceEventChanged:"0"
-testClass.instanceEvent.add
+testClass.instanceEvent.Add
 	:
 		'
 			parent.parent.parent.instanceEventChanged:"1"
@@ -303,14 +303,14 @@ arrayList.Add
 	"hello"
 arrayListResult:arrayList.0
 textBox:System.Windows.Forms.TextBox*
-textBox.Text.set
+textBox.Text.Set
 	"
 		Alle meine Entchen,
 		schwimmen auf dem See,
 		schwimmen auf dem See,
 		Köpfchen in das Wasser,
 		Schwaenzchen in die Hoeh."
-lines:textBox.Lines.get*
+lines:textBox.Lines.Get*
 alleMeineText:lines.1
 lines.5:"bwuhahaha"
 tabText:"			hello"

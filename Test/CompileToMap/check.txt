@@ -5085,7 +5085,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "set"
+                                "Set"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -5153,7 +5153,7 @@ Entry (DictionaryEntry)
                                                   Key (NormalMap):
                                                     "literal"
                                                   Value (NormalMap):
-                                                    "get"
+                                                    "Get"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "argument"
@@ -5222,7 +5222,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "get"
+                                "Get"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -5291,7 +5291,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "set"
+                                "Set"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -5359,7 +5359,7 @@ Entry (DictionaryEntry)
                                                   Key (NormalMap):
                                                     "literal"
                                                   Value (NormalMap):
-                                                    "get"
+                                                    "Get"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "argument"
@@ -5428,7 +5428,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "get"
+                                "Get"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -7304,7 +7304,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "add"
+                                "Add"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -7856,7 +7856,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "add"
+                                "Add"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -9776,7 +9776,7 @@ hello!
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "set"
+                                "Set"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -9875,7 +9875,7 @@ Schwaenzchen in die Hoeh."
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "get"
+                                "Get"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"

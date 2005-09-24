@@ -6917,7 +6917,7 @@ statements (ArrayList):
                           "181"
                   Entry (Literal)
                     literal (NormalMap):
-                      "get"
+                      "Get"
                     SourceArea (SourceArea):
                       End (SourcePosition):
                         Column (Int32):
@@ -7010,7 +7010,7 @@ statements (ArrayList):
                   "180"
           Entry (Literal)
             literal (NormalMap):
-              "set"
+              "Set"
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
@@ -7120,7 +7120,7 @@ statements (ArrayList):
                   "182"
           Entry (Literal)
             literal (NormalMap):
-              "get"
+              "Get"
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
@@ -7247,7 +7247,7 @@ statements (ArrayList):
                           "184"
                   Entry (Literal)
                     literal (NormalMap):
-                      "get"
+                      "Get"
                     SourceArea (SourceArea):
                       End (SourcePosition):
                         Column (Int32):
@@ -7340,7 +7340,7 @@ statements (ArrayList):
                   "183"
           Entry (Literal)
             literal (NormalMap):
-              "set"
+              "Set"
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
@@ -7450,7 +7450,7 @@ statements (ArrayList):
                   "185"
           Entry (Literal)
             literal (NormalMap):
-              "get"
+              "Get"
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
@@ -10144,7 +10144,7 @@ statements (ArrayList):
                   "238"
           Entry (Literal)
             literal (NormalMap):
-              "add"
+              "Add"
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
@@ -10921,7 +10921,7 @@ statements (ArrayList):
                   "251"
           Entry (Literal)
             literal (NormalMap):
-              "add"
+              "Add"
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
@@ -13545,7 +13545,7 @@ Schwaenzchen in die Hoeh."
                   "306"
           Entry (Literal)
             literal (NormalMap):
-              "set"
+              "Set"
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
@@ -13655,7 +13655,7 @@ Schwaenzchen in die Hoeh."
                   "313"
           Entry (Literal)
             literal (NormalMap):
-              "get"
+              "Get"
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):

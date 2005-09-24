@@ -55,15 +55,15 @@ namespace Meta
 	public class SpecialKeys
 	{
 		public static readonly Map Parent="parent";
-		public static readonly Map Arg="arg";
+		public static readonly Map Arg="arg"; // change this
 		public static readonly Map This="this";
 	}
 	public class DotNetKeys
 	{
-		public static readonly Map Add="add";
-		public static readonly Map Remove="remove";
-		public static readonly Map Get="get";
-		public static readonly Map Set="set";
+		public static readonly Map Add="Add";
+		public static readonly Map Remove="Remove";
+		public static readonly Map Get="Get";
+		public static readonly Map Set="Set";
 	}
 	public class NumberKeys
 	{

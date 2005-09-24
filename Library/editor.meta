@@ -13,11 +13,11 @@ choose:
 	OpenFile:=
 		dialog:OpenFileDialog*
 		dialog.ShowDialog*
-		this:dialog.FileName.get*
+		this:dialog.FileName.Get*
 	SaveFile:=
 		dialog:SaveFileDialog*
 		dialog.ShowDialog*
-		this:dialog.FileName.get*
+		this:dialog.FileName.Get*
 file:
 	Write:=
 		writer:StreamWriter
@@ -34,16 +34,16 @@ file:
 fileName:*
 SetFileName:=
 	parent.parent.fileName:arg
-	form.Text.set
+	form.Text.Set
 		Concatenation
 			"Meta Edit - "
 			fileName
-SetBreakPoint:=Meta.Expression.BreakPoint.set
+SetBreakPoint:=Meta.Expression.BreakPoint.Set
 	Meta.BreakPoint
 		fileName
 		Meta.SourcePosition
-			editBox.RealLine.get*
-			editBox.Column.get*
+			editBox.RealLine.Get*
+			editBox.Column.Get*
 SetBreakPoint:=
 	asdjfasdf
 commands:
@@ -58,7 +58,7 @@ commands:
 				SetFileName saveAs
 				file.Write
 					fileName
-					editBox.RealText.get*
+					editBox.RealText.Get*
 		cases.[hasName]*
 	Save:=
 		hasName:Negation Equality
@@ -68,7 +68,7 @@ commands:
 			1:=commands.SaveAs*
 			0:=file.Write
 				fileName
-				editBox.RealText.get*
+				editBox.RealText.Get*
 		cases.[hasName]*
 	Open:=
 		openFileName:choose.OpenFile*
@@ -79,7 +79,7 @@ commands:
 			0:=*
 			1:=
 				SetFileName openFileName
-				editBox.RealText.set
+				editBox.RealText.Set
 					file.Read fileName
 				editBox.MoveRealCursor
 					"0"
@@ -88,7 +88,7 @@ commands:
 	Run:=
 		commands.Save*
 		SetBreakPoint*
-		Meta.Interpreter.Break.add
+		Meta.Interpreter.Break.Add
 			=editBox.ShowDebugValue
 				arg.1
 		Meta.Interpreter.StartDebug
@@ -179,21 +179,21 @@ shortcutCombinations:
 		[Keys.Oemtilde]:=editBox.SelectWordRight*
 editBox:
 	editBox:ScrollingTextBox*
-	editBox.ShowSelectionMargin.set
+	editBox.ShowSelectionMargin.Set
 		"1"
-	editBox.AcceptsTab.set
+	editBox.AcceptsTab.Set
 		"1"
-	editBox.Dock.set
+	editBox.Dock.Set
 		DockStyle.Fill
-	editBox.ScrollBars.set
+	editBox.ScrollBars.Set
 		RichTextBoxScrollBars.ForcedBoth
-	editBox.KeyDown.add
+	editBox.KeyDown.Add
 		:
 			// annoying
 			'
 				eventArgs:arg.2
-				modifier:eventArgs.Modifiers.get*
-				key:eventArgs.KeyCode.get*
+				modifier:eventArgs.Modifiers.Get*
+				key:eventArgs.KeyCode.Get*
 				shortcuts:shortcutCombinations.[modifier]
 				exists:Containment
 					map:shortcuts
@@ -203,24 +203,24 @@ editBox:
 						editBox.SuspendWindowUpdate*
 						shortcuts.[key]*
 						editBox.ResumeWindowUpdate*
-						eventArgs.Handled.set
+						eventArgs.Handled.Set
 							"1"
 					0:=*
 				cases.[exists]*
 	this:editBox
 form:
 	form:Form*
-	form.Text.set
+	form.Text.Set
 		"Meta Edit"
-	form.Font.set
+	form.Font.Set
 		Font
 			"Courier New"
 			"10"
-	controls:form.Controls.get*
+	controls:form.Controls.Get*
 	controls.AddRange
 		:
 			editBox
-	//form.WindowState.set
+	//form.WindowState.Set
 	//	FormWindowState.Maximized
 	menu:
 		File:
@@ -232,7 +232,7 @@ form:
 			Start:commands.Run
 			Continue:commands.Continue
 			Reverse:commands.Reverse
-	form.Menu.set
+	form.Menu.Set
 		MainMenu
 			Application
 				array:Keys menu

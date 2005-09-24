@@ -2037,7 +2037,7 @@ Entry (DictionaryEntry)
   Value (Event):
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "add"
+        "Add"
       Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
@@ -2065,7 +2065,7 @@ Entry (DictionaryEntry)
   Value (Event):
     Entry (DictionaryEntry)
       Key (NormalMap):
-        "add"
+        "Add"
       Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
