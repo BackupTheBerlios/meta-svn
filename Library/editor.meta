@@ -1,4 +1,4 @@
-this:map.Merging
+current:map.Merging
 	System
 	System.IO
 	System.Windows.Forms
@@ -13,11 +13,11 @@ choose:
 	OpenFile:=
 		dialog:OpenFileDialog*
 		dialog.ShowDialog*
-		this:dialog.FileName.Get*
+		current:dialog.FileName.Get*
 	SaveFile:=
 		dialog:SaveFileDialog*
 		dialog.ShowDialog*
-		this:dialog.FileName.Get*
+		current:dialog.FileName.Get*
 file:
 	Write:=
 		writer:StreamWriter
@@ -30,7 +30,7 @@ file:
 			arg
 		result:reader.ReadToEnd*
 		reader.Close*
-		this:result
+		current:result
 fileName:*
 SetFileName:=
 	parent.parent.fileName:arg
@@ -100,7 +100,7 @@ commands:
 		SetBreakPoint*
 		Meta.Interpreter.ReverseDebug*
 CombinedModifierKeys:
-	this:System.Windows.Forms
+	current:System.Windows.Forms
 	AltControl:bitwise.Disjunction
 		Keys.Alt
 		Keys.Control
@@ -115,7 +115,7 @@ CombinedModifierKeys:
 		Keys.Control
 		Keys.Shift
 shortcutCombinations:
-	this:System.Windows.Forms
+	current:System.Windows.Forms
 	[Keys.None]:=
 		[Keys.Escape]:=editBox.StopInteractiveSearch*
 		[Keys.F5]:=commands.Run*
@@ -207,7 +207,7 @@ editBox:
 							"1"
 					0:=*
 				cases.[exists]*
-	this:editBox
+	current:editBox
 form:
 	form:Form*
 	form.Text.Set
@@ -238,12 +238,12 @@ form:
 				array:Keys menu
 				function:=
 					topKey:arg
-					this:MenuItem
+					current:MenuItem
 						topKey
 						Application
 							array:Keys menu.[topKey]
 							function:=MenuItem
 								arg
 								menu.[topKey].[arg]
-	this:form
+	current:form
 form.ShowDialog*

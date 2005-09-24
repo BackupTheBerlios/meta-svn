@@ -152,14 +152,14 @@ statements (ArrayList):
           SourceArea (SourceArea):
             End (SourcePosition):
               Column (Int32):
-                "9"
+                "12"
               Line (Int32):
                 "16"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (SourcePosition):
               Column (Int32):
-                "6"
+                "9"
               Line (Int32):
                 "16"
         keys (ArrayList):
@@ -169,27 +169,27 @@ statements (ArrayList):
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "17"
+                  "20"
                 Line (Int32):
                   "16"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (SourcePosition):
                 Column (Int32):
-                  "10"
+                  "13"
                 Line (Int32):
                   "16"
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "17"
+              "20"
             Line (Int32):
               "16"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (SourcePosition):
             Column (Int32):
-              "6"
+              "9"
             Line (Int32):
               "16"
       SourceArea (SourceArea):
@@ -202,17 +202,17 @@ statements (ArrayList):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (SourcePosition):
           Column (Int32):
-            "6"
+            "9"
           Line (Int32):
             "16"
     keys (ArrayList):
       Entry (Literal)
         literal (NormalMap):
-          "this"
+          "current"
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "5"
+              "8"
             Line (Int32):
               "16"
           FileName (String):
@@ -525,14 +525,14 @@ statements (ArrayList):
           SourceArea (SourceArea):
             End (SourcePosition):
               Column (Int32):
-                "9"
+                "12"
               Line (Int32):
                 "21"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (SourcePosition):
               Column (Int32):
-                "6"
+                "9"
               Line (Int32):
                 "21"
         keys (ArrayList):
@@ -542,27 +542,27 @@ statements (ArrayList):
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "17"
+                  "20"
                 Line (Int32):
                   "21"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (SourcePosition):
                 Column (Int32):
-                  "10"
+                  "13"
                 Line (Int32):
                   "21"
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "17"
+              "20"
             Line (Int32):
               "21"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (SourcePosition):
             Column (Int32):
-              "6"
+              "9"
             Line (Int32):
               "21"
       SourceArea (SourceArea):
@@ -575,17 +575,17 @@ statements (ArrayList):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (SourcePosition):
           Column (Int32):
-            "6"
+            "9"
           Line (Int32):
             "21"
     keys (ArrayList):
       Entry (Literal)
         literal (NormalMap):
-          "this"
+          "current"
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "5"
+              "8"
             Line (Int32):
               "21"
           FileName (String):
@@ -3535,7 +3535,7 @@ statements (ArrayList):
       SourceArea (SourceArea):
         End (SourcePosition):
           Column (Int32):
-            "14"
+            "17"
           Line (Int32):
             "122"
         FileName (String):
@@ -3810,7 +3810,7 @@ statements (ArrayList):
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "18"
+                  "21"
                 Line (Int32):
                   "116"
               FileName (String):
@@ -3914,7 +3914,7 @@ statements (ArrayList):
                                       Key (NormalMap):
                                         "literal"
                                       Value (NormalMap):
-                                        "this"
+                                        "current"
                             Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "value"
@@ -3927,7 +3927,7 @@ statements (ArrayList):
                   SourceArea (SourceArea):
                     End (SourcePosition):
                       Column (Int32):
-                        "18"
+                        "21"
                       Line (Int32):
                         "116"
                     FileName (String):
@@ -3944,7 +3944,7 @@ statements (ArrayList):
                     SourceArea (SourceArea):
                       End (SourcePosition):
                         Column (Int32):
-                          "18"
+                          "21"
                         Line (Int32):
                           "116"
                       FileName (String):
@@ -4077,7 +4077,7 @@ statements (ArrayList):
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "14"
+                  "17"
                 Line (Int32):
                   "122"
               FileName (String):
@@ -4111,7 +4111,7 @@ statements (ArrayList):
                                       Key (NormalMap):
                                         "literal"
                                       Value (NormalMap):
-                                        "this"
+                                        "current"
                                 Entry (DictionaryEntry)
                                   Key (NormalMap):
                                     "2"
@@ -4133,7 +4133,7 @@ statements (ArrayList):
                   SourceArea (SourceArea):
                     End (SourcePosition):
                       Column (Int32):
-                        "14"
+                        "17"
                       Line (Int32):
                         "122"
                     FileName (String):
@@ -4150,7 +4150,7 @@ statements (ArrayList):
                     SourceArea (SourceArea):
                       End (SourcePosition):
                         Column (Int32):
-                          "14"
+                          "17"
                         Line (Int32):
                           "122"
                       FileName (String):
@@ -4167,7 +4167,7 @@ statements (ArrayList):
               SourceArea (SourceArea):
                 End (SourcePosition):
                   Column (Int32):
-                    "14"
+                    "17"
                   Line (Int32):
                     "122"
                 FileName (String):
@@ -4555,7 +4555,7 @@ statements (ArrayList):
       SourceArea (SourceArea):
         End (SourcePosition):
           Column (Int32):
-            "17"
+            "20"
           Line (Int32):
             "132"
         FileName (String):
@@ -4589,7 +4589,7 @@ statements (ArrayList):
                                 Key (NormalMap):
                                   "literal"
                                 Value (NormalMap):
-                                  "this"
+                                  "current"
                       Entry (DictionaryEntry)
                         Key (NormalMap):
                           "value"
@@ -4610,7 +4610,7 @@ statements (ArrayList):
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "17"
+                  "20"
                 Line (Int32):
                   "132"
               FileName (String):
@@ -4627,7 +4627,7 @@ statements (ArrayList):
               SourceArea (SourceArea):
                 End (SourcePosition):
                   Column (Int32):
-                    "17"
+                    "20"
                   Line (Int32):
                     "132"
                 FileName (String):
@@ -5053,7 +5053,7 @@ statements (ArrayList):
                                 Key (NormalMap):
                                   "literal"
                                 Value (NormalMap):
-                                  "this"
+                                  "current"
                       Entry (DictionaryEntry)
                         Key (NormalMap):
                           "value"
@@ -5107,7 +5107,7 @@ statements (ArrayList):
                                                             Key (NormalMap):
                                                               "literal"
                                                             Value (NormalMap):
-                                                              "this"
+                                                              "current"
                                                   Entry (DictionaryEntry)
                                                     Key (NormalMap):
                                                       "value"
@@ -5246,7 +5246,7 @@ statements (ArrayList):
       SourceArea (SourceArea):
         End (SourcePosition):
           Column (Int32):
-            "9"
+            "12"
           Line (Int32):
             "154"
         FileName (String):
@@ -5280,7 +5280,7 @@ statements (ArrayList):
                                 Key (NormalMap):
                                   "literal"
                                 Value (NormalMap):
-                                  "this"
+                                  "current"
                       Entry (DictionaryEntry)
                         Key (NormalMap):
                           "value"
@@ -5382,7 +5382,7 @@ statements (ArrayList):
                                 Key (NormalMap):
                                   "literal"
                                 Value (NormalMap):
-                                  "this"
+                                  "current"
                       Entry (DictionaryEntry)
                         Key (NormalMap):
                           "value"
@@ -5403,7 +5403,7 @@ statements (ArrayList):
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "9"
+                  "12"
                 Line (Int32):
                   "154"
               FileName (String):
@@ -5420,7 +5420,7 @@ statements (ArrayList):
               SourceArea (SourceArea):
                 End (SourcePosition):
                   Column (Int32):
-                    "9"
+                    "12"
                   Line (Int32):
                     "154"
                 FileName (String):
@@ -6163,14 +6163,14 @@ statements (ArrayList):
           SourceArea (SourceArea):
             End (SourcePosition):
               Column (Int32):
-                "9"
+                "12"
               Line (Int32):
                 "167"
             FileName (String):
               "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
             Start (SourcePosition):
               Column (Int32):
-                "6"
+                "9"
               Line (Int32):
                 "167"
         keys (ArrayList):
@@ -6180,27 +6180,27 @@ statements (ArrayList):
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "17"
+                  "20"
                 Line (Int32):
                   "167"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (SourcePosition):
                 Column (Int32):
-                  "10"
+                  "13"
                 Line (Int32):
                   "167"
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "17"
+              "20"
             Line (Int32):
               "167"
           FileName (String):
             "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
           Start (SourcePosition):
             Column (Int32):
-              "6"
+              "9"
             Line (Int32):
               "167"
       SourceArea (SourceArea):
@@ -6213,17 +6213,17 @@ statements (ArrayList):
           "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
         Start (SourcePosition):
           Column (Int32):
-            "6"
+            "9"
           Line (Int32):
             "167"
     keys (ArrayList):
       Entry (Literal)
         literal (NormalMap):
-          "this"
+          "current"
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "5"
+              "8"
             Line (Int32):
               "167"
           FileName (String):
@@ -8821,7 +8821,7 @@ statements (ArrayList):
       SourceArea (SourceArea):
         End (SourcePosition):
           Column (Int32):
-            "30"
+            "33"
           Line (Int32):
             "215"
         FileName (String):
@@ -8855,7 +8855,7 @@ statements (ArrayList):
                                 Key (NormalMap):
                                   "literal"
                                 Value (NormalMap):
-                                  "this"
+                                  "current"
                       Entry (DictionaryEntry)
                         Key (NormalMap):
                           "value"
@@ -8868,7 +8868,7 @@ statements (ArrayList):
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "30"
+                  "33"
                 Line (Int32):
                   "215"
               FileName (String):
@@ -8885,7 +8885,7 @@ statements (ArrayList):
               SourceArea (SourceArea):
                 End (SourcePosition):
                   Column (Int32):
-                    "30"
+                    "33"
                   Line (Int32):
                     "215"
                 FileName (String):
@@ -10014,7 +10014,7 @@ statements (ArrayList):
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "20"
+              "23"
             Line (Int32):
               "243"
           FileName (String):
@@ -10030,7 +10030,7 @@ statements (ArrayList):
               SourceArea (SourceArea):
                 End (SourcePosition):
                   Column (Int32):
-                    "20"
+                    "23"
                   Line (Int32):
                     "243"
                 FileName (String):
@@ -10115,7 +10115,7 @@ statements (ArrayList):
                                         Key (NormalMap):
                                           "literal"
                                         Value (NormalMap):
-                                          "this"
+                                          "current"
                               Entry (DictionaryEntry)
                                 Key (NormalMap):
                                   "value"
@@ -10145,7 +10145,7 @@ statements (ArrayList):
                     SourceArea (SourceArea):
                       End (SourcePosition):
                         Column (Int32):
-                          "20"
+                          "23"
                         Line (Int32):
                           "243"
                       FileName (String):
@@ -10162,7 +10162,7 @@ statements (ArrayList):
                       SourceArea (SourceArea):
                         End (SourcePosition):
                           Column (Int32):
-                            "20"
+                            "23"
                           Line (Int32):
                             "243"
                         FileName (String):
@@ -10179,7 +10179,7 @@ statements (ArrayList):
                 SourceArea (SourceArea):
                   End (SourcePosition):
                     Column (Int32):
-                      "20"
+                      "23"
                     Line (Int32):
                       "243"
                   FileName (String):
@@ -10255,7 +10255,7 @@ statements (ArrayList):
       SourceArea (SourceArea):
         End (SourcePosition):
           Column (Int32):
-            "20"
+            "23"
           Line (Int32):
             "243"
         FileName (String):
@@ -10272,7 +10272,7 @@ statements (ArrayList):
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "20"
+              "23"
             Line (Int32):
               "243"
           FileName (String):
@@ -10789,7 +10789,7 @@ statements (ArrayList):
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "20"
+              "23"
             Line (Int32):
               "256"
           FileName (String):
@@ -10805,7 +10805,7 @@ statements (ArrayList):
               SourceArea (SourceArea):
                 End (SourcePosition):
                   Column (Int32):
-                    "20"
+                    "23"
                   Line (Int32):
                     "256"
                 FileName (String):
@@ -10892,7 +10892,7 @@ statements (ArrayList):
                                         Key (NormalMap):
                                           "literal"
                                         Value (NormalMap):
-                                          "this"
+                                          "current"
                               Entry (DictionaryEntry)
                                 Key (NormalMap):
                                   "value"
@@ -10922,7 +10922,7 @@ statements (ArrayList):
                     SourceArea (SourceArea):
                       End (SourcePosition):
                         Column (Int32):
-                          "20"
+                          "23"
                         Line (Int32):
                           "256"
                       FileName (String):
@@ -10939,7 +10939,7 @@ statements (ArrayList):
                       SourceArea (SourceArea):
                         End (SourcePosition):
                           Column (Int32):
-                            "20"
+                            "23"
                           Line (Int32):
                             "256"
                         FileName (String):
@@ -10956,7 +10956,7 @@ statements (ArrayList):
                 SourceArea (SourceArea):
                   End (SourcePosition):
                     Column (Int32):
-                      "20"
+                      "23"
                     Line (Int32):
                       "256"
                   FileName (String):
@@ -11032,7 +11032,7 @@ statements (ArrayList):
       SourceArea (SourceArea):
         End (SourcePosition):
           Column (Int32):
-            "20"
+            "23"
           Line (Int32):
             "256"
         FileName (String):
@@ -11049,7 +11049,7 @@ statements (ArrayList):
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "20"
+              "23"
             Line (Int32):
               "256"
           FileName (String):
@@ -14014,7 +14014,7 @@ Schwaenzchen in die Hoeh."
       SourceArea (SourceArea):
         End (SourcePosition):
           Column (Int32):
-            "47"
+            "50"
           Line (Int32):
             "333"
         FileName (String):
@@ -14435,7 +14435,7 @@ Schwaenzchen in die Hoeh."
                                 Key (NormalMap):
                                   "literal"
                                 Value (NormalMap):
-                                  "this"
+                                  "current"
                       Entry (DictionaryEntry)
                         Key (NormalMap):
                           "value"
@@ -14498,7 +14498,7 @@ Schwaenzchen in die Hoeh."
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "47"
+                  "50"
                 Line (Int32):
                   "333"
               FileName (String):
@@ -14515,7 +14515,7 @@ Schwaenzchen in die Hoeh."
               SourceArea (SourceArea):
                 End (SourcePosition):
                   Column (Int32):
-                    "47"
+                    "50"
                   Line (Int32):
                     "333"
                 FileName (String):

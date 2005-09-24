@@ -18,7 +18,7 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "this"
+                    "current"
         Entry (DictionaryEntry)
           Key (NormalMap):
             "value"
@@ -188,7 +188,7 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "this"
+                    "current"
         Entry (DictionaryEntry)
           Key (NormalMap):
             "value"
@@ -2892,7 +2892,7 @@ Entry (DictionaryEntry)
                                                           Key (NormalMap):
                                                             "literal"
                                                           Value (NormalMap):
-                                                            "this"
+                                                            "current"
                                                 Entry (DictionaryEntry)
                                                   Key (NormalMap):
                                                     "value"
@@ -3049,7 +3049,7 @@ Entry (DictionaryEntry)
                                                           Key (NormalMap):
                                                             "literal"
                                                           Value (NormalMap):
-                                                            "this"
+                                                            "current"
                                                     Entry (DictionaryEntry)
                                                       Key (NormalMap):
                                                         "2"
@@ -3386,7 +3386,7 @@ Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "literal"
                                               Value (NormalMap):
-                                                "this"
+                                                "current"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "value"
@@ -3730,7 +3730,7 @@ Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "literal"
                                               Value (NormalMap):
-                                                "this"
+                                                "current"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "value"
@@ -3784,7 +3784,7 @@ Entry (DictionaryEntry)
                                                                           Key (NormalMap):
                                                                             "literal"
                                                                           Value (NormalMap):
-                                                                            "this"
+                                                                            "current"
                                                                 Entry (DictionaryEntry)
                                                                   Key (NormalMap):
                                                                     "value"
@@ -3941,7 +3941,7 @@ Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "literal"
                                               Value (NormalMap):
-                                                "this"
+                                                "current"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "value"
@@ -4043,7 +4043,7 @@ Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "literal"
                                               Value (NormalMap):
-                                                "this"
+                                                "current"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "value"
@@ -4516,7 +4516,7 @@ Entry (DictionaryEntry)
                   Key (NormalMap):
                     "literal"
                   Value (NormalMap):
-                    "this"
+                    "current"
         Entry (DictionaryEntry)
           Key (NormalMap):
             "value"
@@ -6427,7 +6427,7 @@ Entry (DictionaryEntry)
                                               Key (NormalMap):
                                                 "literal"
                                               Value (NormalMap):
-                                                "this"
+                                                "current"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "value"
@@ -7486,7 +7486,7 @@ Entry (DictionaryEntry)
                                                                   Key (NormalMap):
                                                                     "literal"
                                                                   Value (NormalMap):
-                                                                    "this"
+                                                                    "current"
                                                         Entry (DictionaryEntry)
                                                           Key (NormalMap):
                                                             "value"
@@ -8040,7 +8040,7 @@ Entry (DictionaryEntry)
                                                                   Key (NormalMap):
                                                                     "literal"
                                                                   Value (NormalMap):
-                                                                    "this"
+                                                                    "current"
                                                         Entry (DictionaryEntry)
                                                           Key (NormalMap):
                                                             "value"
@@ -10550,7 +10550,7 @@ Schwaenzchen in die Hoeh."
                                               Key (NormalMap):
                                                 "literal"
                                               Value (NormalMap):
-                                                "this"
+                                                "current"
                                     Entry (DictionaryEntry)
                                       Key (NormalMap):
                                         "value"

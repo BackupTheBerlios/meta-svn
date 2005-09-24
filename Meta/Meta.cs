@@ -57,7 +57,7 @@ namespace Meta
 	{
 		public static readonly Map Parent="parent";
 		public static readonly Map Parameter="parameter"; // change this
-		public static readonly Map This="this";
+		public static readonly Map Current="current";
 	}
 	public class DotNetKeys
 	{
@@ -403,7 +403,7 @@ namespace Meta
 	}
 	public class Statement
 	{
-		public void Realize(ref Map parent)
+		public void Realize(ref Map parent) // TODO: rename parent to current
 		{
 			Map selected=parent;
 			Map key;
@@ -429,7 +429,7 @@ namespace Meta
 //				Interpreter.CallBreak();
 //			}
 			Map val=expression.Evaluate(parent);
-			if(lastKey.Equals(SpecialKeys.This))
+			if(lastKey.Equals(SpecialKeys.Current))
 			{
 				val.Parent=parent.Parent;
 				parent=val;
@@ -971,7 +971,7 @@ namespace Meta
 			{
 				containsKey=this.Parent!=null;
 			}
-			else if(key.Equals(SpecialKeys.This))
+			else if(key.Equals(SpecialKeys.Current))
 			{
 				containsKey=true;
 			}
@@ -1128,7 +1128,7 @@ namespace Meta
 				{
 					result=Parameter;
 				}
-				else if(key.Equals(SpecialKeys.This))
+				else if(key.Equals(SpecialKeys.Current))
 				{
 					result=this;
 				}
@@ -1143,7 +1143,7 @@ namespace Meta
 				if(value!=null)
 				{
 					isHashCached=false;
-					if(key.Equals(SpecialKeys.This))
+					if(key.Equals(SpecialKeys.Current))
 					{
 						this.strategy=((NormalMap)value).strategy.Clone();
 					}
