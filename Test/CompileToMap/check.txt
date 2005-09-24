@@ -52,7 +52,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "Combination"
+                                "Merging"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -222,7 +222,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "Combination"
+                                "Merging"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"
@@ -4464,7 +4464,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "Combination"
+                                "Merging"
                 Entry (DictionaryEntry)
                   Key (NormalMap):
                     "argument"

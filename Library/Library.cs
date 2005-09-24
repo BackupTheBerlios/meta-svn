@@ -52,9 +52,9 @@ public class map:MetaLibrary
 	}
 
     /// <summary>
-    /// Returns the combination of all arguments.
+    /// Returns the merging of all arguments.
     /// </summary>
-	public static Map Combination(Map arg)
+	public static Map Merging(Map arg)
 	{
 		return Interpreter.MergeCollection(arg.Array);
 	}

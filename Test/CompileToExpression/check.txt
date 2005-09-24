@@ -165,11 +165,11 @@ statements (ArrayList):
         keys (ArrayList):
           Entry (Literal)
             literal (NormalMap):
-              "Combination"
+              "Merging"
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "21"
+                  "17"
                 Line (Int32):
                   "16"
               FileName (String):
@@ -182,7 +182,7 @@ statements (ArrayList):
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "21"
+              "17"
             Line (Int32):
               "16"
           FileName (String):
@@ -489,11 +489,11 @@ statements (ArrayList):
         keys (ArrayList):
           Entry (Literal)
             literal (NormalMap):
-              "Combination"
+              "Merging"
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "21"
+                  "17"
                 Line (Int32):
                   "21"
               FileName (String):
@@ -506,7 +506,7 @@ statements (ArrayList):
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "21"
+              "17"
             Line (Int32):
               "21"
           FileName (String):
@@ -6046,11 +6046,11 @@ statements (ArrayList):
         keys (ArrayList):
           Entry (Literal)
             literal (NormalMap):
-              "Combination"
+              "Merging"
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "21"
+                  "17"
                 Line (Int32):
                   "165"
               FileName (String):
@@ -6063,7 +6063,7 @@ statements (ArrayList):
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "21"
+              "17"
             Line (Int32):
               "165"
           FileName (String):

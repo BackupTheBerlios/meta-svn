@@ -30,7 +30,7 @@ Entry (DictionaryEntry)
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
-    "Combination"
+    "Merging"
   Value (DotNetMethod):
 Entry (DictionaryEntry)
   Key (NormalMap):
