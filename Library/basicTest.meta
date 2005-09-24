@@ -54,7 +54,7 @@ literalEscapeTest:
 	4:"@"@as"@"df@"@"
 	5:"@"@"@"@"@"@"@"@"as"@"@"@"@"@"@"@"@df"@"@"@"@"@"@"@"@"
 applyMethod:=Sum
-	arg
+	parameter
 	"1"
 applyTest:Application
 	function:applyMethod
@@ -86,7 +86,7 @@ gacTest:System.Collections
 	//some comment
 lazyGACTest:Microsoft.CSharp
 //metaLibTest:metaLib
-commandLineArguments:arg
+commandLineArguments:parameter
 //libraryAssemblyTest:testClasses
 	//	asdfasdf	fff
 //thisIsInAComment'
@@ -111,7 +111,7 @@ object:
 		parent.parent.autoSearch:"changed"
 	SetB:
 		'
-			parent.parent.b.1:arg.value
+			parent.parent.b.1:parameter.value
 			this:"changed"
 	x:
 		a:"b"
@@ -128,7 +128,7 @@ bSet:object.SetB
 		z:"1"
 ReturnEverything:
 	'
-		this:arg
+		this:parameter
 everythingReturned:ReturnEverything
 	"a"
 	"b"
@@ -148,16 +148,16 @@ ReturnFunction:
 SetCurrent:
 	'
 		this:
-			arg:arg
-			x:arg.symbol
+			parameter:parameter
+			x:parameter.symbol
 		this:x
 thisSet:SetCurrent
 	symbol:"haha"
 FirstLevel:
 	'
-		SecondLevel arg
+		SecondLevel parameter
 SecondLevel:
-	'arg
+	'parameter
 argTest:FirstLevel
 	a:"z"
 concatenate:array.Concatenation
@@ -227,19 +227,19 @@ selectionFunctionResult:selectionFunction *
 bigInteger:"89383838383832839123497123047217340712340720347072304702340720347"
 upperLevel:"unchanged"
 SetUpperLevel:=
-	parent.parent.upperLevel:arg
+	parent.parent.upperLevel:parameter
 ChangeUpperLevel:
 	'
 		SetUpperLevel "changed"
 ChangeUpperLevel*
 staticEventChanged:"0"
 ChangeStaticEvent:=
-	parent.parent.staticEventChanged:arg
+	parent.parent.staticEventChanged:parameter
 TestClass.staticEvent.Add
 	:
 		'
 			ChangeStaticEvent "1"
-			this:arg.1
+			this:parameter.1
 staticEvent:TestClass.staticEvent
 TestClass.TakeDelegate
 	:
@@ -252,7 +252,7 @@ testClass.instanceEvent.Add
 	:
 		'
 			parent.parent.parent.instanceEventChanged:"1"
-			this:arg.1
+			this:parameter.1
 instanceEvent:testClass.instanceEvent
 instanceEventResult:testClass.instanceEvent
 	"5"
@@ -319,30 +319,30 @@ whileCounter:*
 loop:
 	'
 		whileDecision:Negation Equality
-			arg
+			parameter
 			"10"
 		whileBranches:
 			1:
 				'loop Sum
-					arg
+					parameter
 					"1"
 				 
 			0:
-				'arg
-		this:whileBranches.[whileDecision] arg
+				'parameter
+		this:whileBranches.[whileDecision] parameter
 whileCounter:loop "3"
 
 	
 returnInMap:
 					
 	'
-		result:arg
+		result:parameter
 literalAsArgument:returnInMap "1"				   
 returnFunction:
 	'
 		'"functionResult"
 returnArg:
-	'arg
+	'parameter
 myArg:
 	'
 		hello:"world"

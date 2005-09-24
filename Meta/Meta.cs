@@ -55,7 +55,7 @@ namespace Meta
 	public class SpecialKeys
 	{
 		public static readonly Map Parent="parent";
-		public static readonly Map Arg="arg"; // change this
+		public static readonly Map Parameter="parameter"; // change this
 		public static readonly Map This="this";
 	}
 	public class DotNetKeys
@@ -775,18 +775,30 @@ namespace Meta
 //		{
 //			get;
 //		}
-		public Map Argument
+		public Map Parameter
 		{
 			get
 			{
-				return arg;
+				return parameter;
 			}
 			set
 			{ 
-				arg=value;
+				parameter=value;
 			}
 		}
-		Map arg=null;
+//		public Map Argument
+//		{
+//			get
+//			{
+//				return arg;
+//			}
+//			set
+//			{ 
+//				arg=value;
+//			}
+//		}
+		Map parameter=null;
+//		Map arg=null;
 		public virtual bool IsString
 		{
 			get
@@ -862,7 +874,7 @@ namespace Meta
 		}
 		public virtual Map Call(Map argument)
 		{
-			Argument=argument;
+			Parameter=argument;
 			Expression function=(Expression)this[CodeKeys.Run].GetExpression();
 			Map result;
 			result=function.Evaluate(this);
@@ -906,9 +918,9 @@ namespace Meta
 		public bool ContainsKey(Map key)
 		{
 			bool containsKey;
-			if(key.Equals(SpecialKeys.Arg))
+			if(key.Equals(SpecialKeys.Parameter))
 			{
-				containsKey=this.Argument!=null;
+				containsKey=this.Parameter!=null;
 			}
 			else if(key.Equals(SpecialKeys.Parent))
 			{
@@ -1061,14 +1073,15 @@ namespace Meta
 		{
 			get
 			{
+				// TODO: rename to val, we could even use value
 				Map result;
 				if(key.Equals(SpecialKeys.Parent))
 				{
 					result=Parent;
 				}
-				else if(key.Equals(SpecialKeys.Arg))
+				else if(key.Equals(SpecialKeys.Parameter))
 				{
-					result=Argument;
+					result=Parameter;
 				}
 				else if(key.Equals(SpecialKeys.This))
 				{
@@ -2552,7 +2565,7 @@ namespace Meta
 		}
 		public virtual Map Call(Map argument)
 		{
-			map.Argument=argument;
+			map.Parameter=argument;
 			Expression function=(Expression)this[CodeKeys.Run].GetExpression();
 			Map result;
 			result=function.Evaluate(map);
