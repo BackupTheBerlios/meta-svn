@@ -363,7 +363,7 @@ expression:
 	(
 		(call)=>call
 		|select
-		|function
+		//|function
 		|map
 		|LITERAL
 	)
@@ -394,13 +394,13 @@ select:
 	}
 ;
 
-function:
+/*function:
 	EQUAL!
 	delayedImplementation
 	{
 		#function=#([PROGRAM],#function);
 	}
-;
+;*/
 
 // TODO: refactor, rename
 delayedImplementation:

@@ -121,15 +121,6 @@ using System.Collections;
 		{
 			switch ( LA(1) )
 			{
-			case EQUAL:
-			{
-				function();
-				if (0 == inputState.guessing)
-				{
-					astFactory.addASTChild(currentAST, (AST)returnAST);
-				}
-				break;
-			}
 			case INDENT:
 			case STAR:
 			{
@@ -215,7 +206,6 @@ using System.Collections;
 				break;
 			}
 			case INDENT:
-			case EQUAL:
 			case STAR:
 			case LBRACKET:
 			case LITERAL_KEY:
@@ -302,36 +292,6 @@ _loop90_breakloop:			;
 		returnAST = select_AST;
 	}
 	
-	public void function() //throws RecognitionException, TokenStreamException
-{
-		
-		returnAST = null;
-		ASTPair currentAST = new ASTPair();
-		MetaAST function_AST = null;
-		
-		match(EQUAL);
-		delayedImplementation();
-		if (0 == inputState.guessing)
-		{
-			astFactory.addASTChild(currentAST, (AST)returnAST);
-		}
-		if (0==inputState.guessing)
-		{
-			function_AST = (MetaAST)currentAST.root;
-			
-					function_AST=(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(PROGRAM)).add((AST)function_AST));
-				
-			currentAST.root = function_AST;
-			if ( (null != function_AST) && (null != function_AST.getFirstChild()) )
-				currentAST.child = function_AST.getFirstChild();
-			else
-				currentAST.child = function_AST;
-			currentAST.advanceChildToEnd();
-		}
-		function_AST = (MetaAST)currentAST.root;
-		returnAST = function_AST;
-	}
-	
 	public void map() //throws RecognitionException, TokenStreamException
 {
 		
@@ -365,7 +325,6 @@ _loop90_breakloop:			;
 					switch ( LA(1) )
 					{
 					case INDENT:
-					case EQUAL:
 					case COLON:
 					case STAR:
 					case LBRACKET:
@@ -418,7 +377,6 @@ _loop90_breakloop:			;
 									break;
 								}
 								case INDENT:
-								case EQUAL:
 								case COLON:
 								case STAR:
 								case LBRACKET:
@@ -441,11 +399,11 @@ _loop90_breakloop:			;
 						}
 						else
 						{
-							goto _loop103_breakloop;
+							goto _loop102_breakloop;
 						}
 						
 					}
-_loop103_breakloop:					;
+_loop102_breakloop:					;
 				}    // ( ... )*
 				match(DEDENT);
 				if (0==inputState.guessing)
@@ -577,9 +535,9 @@ _loop103_breakloop:					;
 			}
 			case LITERAL:
 			{
-				MetaAST tmp9_AST = null;
-				tmp9_AST = (MetaAST) astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, (AST)tmp9_AST);
+				MetaAST tmp8_AST = null;
+				tmp8_AST = (MetaAST) astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, (AST)tmp8_AST);
 				match(LITERAL);
 				break;
 			}
@@ -634,9 +592,9 @@ _loop103_breakloop:					;
 		ASTPair currentAST = new ASTPair();
 		MetaAST emptyMap_AST = null;
 		
-		MetaAST tmp11_AST = null;
-		tmp11_AST = (MetaAST) astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, (AST)tmp11_AST);
+		MetaAST tmp10_AST = null;
+		tmp10_AST = (MetaAST) astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, (AST)tmp10_AST);
 		match(STAR);
 		if (0==inputState.guessing)
 		{
@@ -662,11 +620,11 @@ _loop103_breakloop:					;
 		ASTPair currentAST = new ASTPair();
 		MetaAST statement_AST = null;
 		
-		bool synPredMatched107 = false;
+		bool synPredMatched106 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m107 = mark();
-			synPredMatched107 = true;
+			int _m106 = mark();
+			synPredMatched106 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -676,12 +634,12 @@ _loop103_breakloop:					;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched107 = false;
+				synPredMatched106 = false;
 			}
-			rewind(_m107);
+			rewind(_m106);
 			inputState.guessing--;
 		}
-		if ( synPredMatched107 )
+		if ( synPredMatched106 )
 		{
 			{
 				key();
@@ -722,7 +680,6 @@ _loop103_breakloop:					;
 						break;
 					}
 					case INDENT:
-					case EQUAL:
 					case STAR:
 					case LBRACKET:
 					case LITERAL_KEY:
@@ -819,11 +776,11 @@ _loop103_breakloop:					;
 				}
 				else
 				{
-					goto _loop113_breakloop;
+					goto _loop112_breakloop;
 				}
 				
 			}
-_loop113_breakloop:			;
+_loop112_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -900,7 +857,7 @@ _loop113_breakloop:			;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 144506944L, 0L};
+		long[] data = { 144441408L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());

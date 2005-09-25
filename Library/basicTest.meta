@@ -54,9 +54,10 @@ literalEscapeTest:
 	3:"@"as"@df"@"
 	4:"@"@as"@"df@"@"
 	5:"@"@"@"@"@"@"@"@"as"@"@"@"@"@"@"@"@df"@"@"@"@"@"@"@"@"
-applyMethod:=Sum
-	parameter
-	"1"
+applyMethod:
+	|Sum
+		parameter
+		"1"
 applyTest:Application
 	function:applyMethod
 	array:
@@ -107,9 +108,10 @@ object:
 	a:"default"
 	autoSearch:"default"
 	b:*
-	SetA:=
-		parent.parent.a:"c"
-		parent.parent.autoSearch:"changed"
+	SetA:
+		|
+			parent.parent.a:"c"
+			parent.parent.autoSearch:"changed"
 	SetB:
 		|
 			parent.parent.b.1:parameter.value
@@ -227,15 +229,17 @@ selectionFunction:
 selectionFunctionResult:selectionFunction *
 bigInteger:"89383838383832839123497123047217340712340720347072304702340720347"
 upperLevel:"unchanged"
-SetUpperLevel:=
-	parent.parent.upperLevel:parameter
+SetUpperLevel:
+	|
+		parent.parent.upperLevel:parameter
 ChangeUpperLevel:
 	|
 		SetUpperLevel "changed"
 ChangeUpperLevel*
 staticEventChanged:"0"
-ChangeStaticEvent:=
-	parent.parent.staticEventChanged:parameter
+ChangeStaticEvent:
+	|
+		parent.parent.staticEventChanged:parameter
 TestClass.staticEvent.Add
 	:
 		|
