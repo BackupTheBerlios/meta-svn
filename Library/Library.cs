@@ -95,7 +95,7 @@ public class map:MetaLibrary
 		return equal;
 	}
 }
-public class logic:MetaLibrary
+public class boolean:MetaLibrary
 {
 	/// <summary>
 	/// Returns the logical negation of its argument.
@@ -140,7 +140,7 @@ public class logic:MetaLibrary
 		return or;
 	}
 }
-public class math:MetaLibrary
+public class number:MetaLibrary
 {
 	/// <summary>
 	/// Returns the sum of all arguments.
@@ -177,6 +177,7 @@ public class math:MetaLibrary
 		return product;
 	}
 }
+
 public class bitwise:MetaLibrary
 {
 	/// <summary>
@@ -193,6 +194,7 @@ public class bitwise:MetaLibrary
 		return or;
 	}
 }
+
 
 
 
