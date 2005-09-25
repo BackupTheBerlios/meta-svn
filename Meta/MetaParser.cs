@@ -60,23 +60,22 @@ using System.Collections;
 		public const int SAME_INDENT = 15;
 		public const int EQUAL = 16;
 		public const int BAR = 17;
-		public const int COLON = 18;
-		public const int STAR = 19;
-		public const int LBRACKET = 20;
-		public const int RBRACKET = 21;
-		public const int POINT = 22;
-		public const int LITERAL_KEY = 23;
-		public const int LITERAL_START = 24;
-		public const int LITERAL_END = 25;
-		public const int LITERAL_VERY_END = 26;
-		public const int LITERAL = 27;
-		public const int COMMENT = 28;
-		public const int REST_OF_LINE = 29;
-		public const int LINE = 30;
-		public const int WHITESPACE = 31;
-		public const int BOF = 32;
-		public const int NEWLINE = 33;
-		public const int NEWLINE_KEEP_TEXT = 34;
+		public const int STAR = 18;
+		public const int LBRACKET = 19;
+		public const int RBRACKET = 20;
+		public const int POINT = 21;
+		public const int LITERAL_KEY = 22;
+		public const int LITERAL_START = 23;
+		public const int LITERAL_END = 24;
+		public const int LITERAL_VERY_END = 25;
+		public const int LITERAL = 26;
+		public const int COMMENT = 27;
+		public const int REST_OF_LINE = 28;
+		public const int LINE = 29;
+		public const int WHITESPACE = 30;
+		public const int BOF = 31;
+		public const int NEWLINE = 32;
+		public const int NEWLINE_KEEP_TEXT = 33;
 		
 		
     private static Stack autokeys=new Stack();
@@ -140,11 +139,11 @@ using System.Collections;
 				break;
 			}
 			default:
-				bool synPredMatched69 = false;
+				bool synPredMatched68 = false;
 				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 				{
-					int _m69 = mark();
-					synPredMatched69 = true;
+					int _m68 = mark();
+					synPredMatched68 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -153,12 +152,12 @@ using System.Collections;
 					}
 					catch (RecognitionException)
 					{
-						synPredMatched69 = false;
+						synPredMatched68 = false;
 					}
-					rewind(_m69);
+					rewind(_m68);
 					inputState.guessing--;
 				}
-				if ( synPredMatched69 )
+				if ( synPredMatched68 )
 				{
 					call();
 					if (0 == inputState.guessing)
@@ -269,11 +268,11 @@ using System.Collections;
 				}
 				else
 				{
-					goto _loop76_breakloop;
+					goto _loop75_breakloop;
 				}
 				
 			}
-_loop76_breakloop:			;
+_loop75_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -325,7 +324,7 @@ _loop76_breakloop:			;
 					switch ( LA(1) )
 					{
 					case INDENT:
-					case COLON:
+					case EQUAL:
 					case STAR:
 					case LBRACKET:
 					case LITERAL_KEY:
@@ -377,7 +376,7 @@ _loop76_breakloop:			;
 									break;
 								}
 								case INDENT:
-								case COLON:
+								case EQUAL:
 								case STAR:
 								case LBRACKET:
 								case LITERAL_KEY:
@@ -399,11 +398,11 @@ _loop76_breakloop:			;
 						}
 						else
 						{
-							goto _loop88_breakloop;
+							goto _loop87_breakloop;
 						}
 						
 					}
-_loop88_breakloop:					;
+_loop87_breakloop:					;
 				}    // ( ... )*
 				match(DEDENT);
 				if (0==inputState.guessing)
@@ -620,26 +619,26 @@ _loop88_breakloop:					;
 		ASTPair currentAST = new ASTPair();
 		MetaAST statement_AST = null;
 		
-		bool synPredMatched92 = false;
+		bool synPredMatched91 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m92 = mark();
-			synPredMatched92 = true;
+			int _m91 = mark();
+			synPredMatched91 = true;
 			inputState.guessing++;
 			try {
 				{
 					key();
-					match(COLON);
+					match(EQUAL);
 				}
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched92 = false;
+				synPredMatched91 = false;
 			}
-			rewind(_m92);
+			rewind(_m91);
 			inputState.guessing--;
 		}
-		if ( synPredMatched92 )
+		if ( synPredMatched91 )
 		{
 			{
 				key();
@@ -647,7 +646,7 @@ _loop88_breakloop:					;
 				{
 					astFactory.addASTChild(currentAST, (AST)returnAST);
 				}
-				match(COLON);
+				match(EQUAL);
 				expression();
 				if (0 == inputState.guessing)
 				{
@@ -674,9 +673,9 @@ _loop88_breakloop:					;
 				{
 					switch ( LA(1) )
 					{
-					case COLON:
+					case EQUAL:
 					{
-						match(COLON);
+						match(EQUAL);
 						break;
 					}
 					case INDENT:
@@ -776,11 +775,11 @@ _loop88_breakloop:					;
 				}
 				else
 				{
-					goto _loop98_breakloop;
+					goto _loop97_breakloop;
 				}
 				
 			}
-_loop98_breakloop:			;
+_loop97_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -814,7 +813,7 @@ _loop98_breakloop:			;
 	}
 	static public void initializeASTFactory( ASTFactory factory )
 	{
-		factory.setMaxNodeType(34);
+		factory.setMaxNodeType(33);
 	}
 	
 	public static readonly string[] tokenNames_ = new string[] {
@@ -836,7 +835,6 @@ _loop98_breakloop:			;
 		@"""SAME_INDENT""",
 		@"""EQUAL""",
 		@"""BAR""",
-		@"""COLON""",
 		@"""STAR""",
 		@"""LBRACKET""",
 		@"""RBRACKET""",
@@ -857,7 +855,7 @@ _loop98_breakloop:			;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 144441408L, 0L};
+		long[] data = { 72155200L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());

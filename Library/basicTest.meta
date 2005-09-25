@@ -13,301 +13,301 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program; if not, write to the Free Software
 #	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-current:map.Merging
+current=map.Merging
 	parent
-	:
+	=
 		<AssignedToCurrent>
-unicodeText:<äaba>
-current:map.Merging
+unicodeText=<äaba>
+current=map.Merging
 	parent
 	logic
 	map
 	math
 	array
-internetTest:web.localhost.test
-parent.parent.testSubDir.x:*
-persistantDeleteTest:testSubDir.x
-parent.parent.testSubDir.x:
-	a:<b>
-	x:
-		x:<hello>
-		y:<world>
-integerHashTest:
-	2:<correct hash content>
-	hashTestData:
-		[*]:
-			[*]:*
-	hashTest:[hashTestData]
-negativeInteger:<-100>
-negativeInteger.x:<hello>
-subtractionTest:math.Sum
+internetTest=web.localhost.test
+parent.parent.testSubDir.x=*
+persistantDeleteTest=testSubDir.x
+parent.parent.testSubDir.x=
+	a=<b>
+	x=
+		x=<hello>
+		y=<world>
+integerHashTest=
+	2=<correct hash content>
+	hashTestData=
+		[*]=
+			[*]=*
+	hashTest=[hashTestData]
+negativeInteger=<-100>
+negativeInteger.x=<hello>
+subtractionTest=math.Sum
 	<-100>
 	Opposite <1000>
-integerIncrementTest:<5>
-integerIncrementTest.0:integerIncrementTest
-integerDecrementTest:<5>
-integerDecrementTest:integerDecrementTest.0
-persistenceTest:testSubDir
-literalEscapeTest:
-	1:\<asdf>\
-	2:\\<asdf>\\
-	3:\\<as>\df>\\
-	4:\\\<as>\\df>\\\
-	5:\\\\\\\\\\\\\\\\\<as>\\\\\\\\\\\\\\\\df>\\\\\\\\\\\\\\\\\
-applyMethod:
+integerIncrementTest=<5>
+integerIncrementTest.0=integerIncrementTest
+integerDecrementTest=<5>
+integerDecrementTest=integerDecrementTest.0
+persistenceTest=testSubDir
+literalEscapeTest=
+	1=\<asdf>\
+	2=\\<asdf>\\
+	3=\\<as>\df>\\
+	4=\\\<as>\\df>\\\
+	5=\\\\\\\\\\\\\\\\\<as>\\\\\\\\\\\\\\\\df>\\\\\\\\\\\\\\\\\
+applyMethod=
 	|Sum
 		parameter
 		<1>
-applyTest:Application
-	function:applyMethod
-	array:
+applyTest=Application
+	function=applyMethod
+	array=
 		<1>
 		<2>
 		<3>
-ifTestCondition:Equality
+ifTestCondition=Equality
 	<1>
 	<1>
-ifTestCases:
-	1:
+ifTestCases=
+	1=
 		|<it is true>
-	0:
+	0=
 		|<it is false>
-ifTest:ifTestCases.[ifTestCondition]*
-#ifTest:If
-#	condition:Equal
+ifTest=ifTestCases.[ifTestCondition]*
+#ifTest=If
+#	condition=Equal
 #		<1>
 #		<1>
-#	then:
+#	then=
 #		|<it is true>
-#	else:
+#	else=
 #		|<it is false>
 <ImpliedAutokey>
-:<Autokey>
-gacTest:System.Collections
+=<Autokey>
+gacTest=System.Collections
 
 	#some comment
-lazyGACTest:Microsoft.CSharp
-#metaLibTest:metaLib
-commandLineArguments:parameter
-#libraryAssemblyTest:testClasses
+lazyGACTest=Microsoft.CSharp
+#metaLibTest=metaLib
+commandLineArguments=parameter
+#libraryAssemblyTest=testClasses
 	#	asdfasdf	fff
 #thisIsInAComment|
 	#  still comment
 # some more comment
-aMap:
-	[<a>]:<a>
-[aMap]:<Object>
-[<normal symbol>]:<NormalSymbol>
-lookupSymbol:<LookupSymbol>
-[<long key symbol>]:<LookupExtendedSymbol>
-lookedUpMap:[aMap]
-lookedUpNormalSymbol:[<normal symbol>]
-lookedUpSymbol:lookupSymbol
-lookedUpLongSymbol:[<long key symbol>]
-object:
-	a:<default>
-	autoSearch:<default>
-	b:*
-	SetA:
+aMap=
+	[<a>]=<a>
+[aMap]=<Object>
+[<normal symbol>]=<NormalSymbol>
+lookupSymbol=<LookupSymbol>
+[<long key symbol>]=<LookupExtendedSymbol>
+lookedUpMap=[aMap]
+lookedUpNormalSymbol=[<normal symbol>]
+lookedUpSymbol=lookupSymbol
+lookedUpLongSymbol=[<long key symbol>]
+object=
+	a=<default>
+	autoSearch=<default>
+	b=*
+	SetA=
 		|
-			parent.parent.a:<c>
-			parent.parent.autoSearch:<changed>
-	SetB:
+			parent.parent.a=<c>
+			parent.parent.autoSearch=<changed>
+	SetB=
 		|
-			parent.parent.b.1:parameter.value
-			current:<changed>
-	x:
-		a:<b>
-		c:<d>
-	:
+			parent.parent.b.1=parameter.value
+			current=<changed>
+	x=
+		a=<b>
+		c=<d>
+	=
 		|
-			current.a:<b>
-a:<default>
-b:*
-aSet:object.SetA*
-bSet:object.SetB
-	value:
-		x:<7>
-		z:<1>
-ReturnEverything:
+			current.a=<b>
+a=<default>
+b=*
+aSet=object.SetA*
+bSet=object.SetB
+	value=
+		x=<7>
+		z=<1>
+ReturnEverything=
 	|
-		current:parameter
-everythingReturned:ReturnEverything
+		current=parameter
+everythingReturned=ReturnEverything
 	<a>
 	<b>
 	<c>
-variableAsArgument:ReturnEverything
+variableAsArgument=ReturnEverything
 	<x>
 	<y>
 	<z>
-ReturnFunction:
+ReturnFunction=
 	|
-		current:
+		current=
 			|
-				current:
+				current=
 					<1>
 					<2>
 					<3>
-SetCurrent:
+SetCurrent=
 	|
-		current:
-			parameter:parameter
-			x:parameter.symbol
-		current:x
-thisSet:SetCurrent
-	symbol:<haha>
-FirstLevel:
+		current=
+			parameter=parameter
+			x=parameter.symbol
+		current=x
+thisSet=SetCurrent
+	symbol=<haha>
+FirstLevel=
 	|
 		SecondLevel parameter
-SecondLevel:
+SecondLevel=
 	|parameter
-argTest:FirstLevel
-	a:<z>
-concatenate:array.Concatenation
+argTest=FirstLevel
+	a=<z>
+concatenate=array.Concatenation
 	<x>
 	<yz>
-current:map.Merging
+current=map.Merging
 	parent
 	testClasses
-TestClass.NestedClass.field:<5>
-nestedClassTest:TestClass.NestedClass.field
-testClass:TestClass*
-testClass.floatValue:<1/3>
-testClass.doubleValue:<1/3>
-testClass.decimalValue:<1/3>
-TestClass.boolTest:<1>
-boolTest:TestClass.boolTest
-memberTest:MemberTest*
-MemberTest.classField:<a>
-memberTest.instanceField:<b>
+TestClass.NestedClass.field=<5>
+nestedClassTest=TestClass.NestedClass.field
+testClass=TestClass*
+testClass.floatValue=<1/3>
+testClass.doubleValue=<1/3>
+testClass.decimalValue=<1/3>
+TestClass.boolTest=<1>
+boolTest=TestClass.boolTest
+memberTest=MemberTest*
+MemberTest.classField=<a>
+memberTest.instanceField=<b>
 MemberTest.ClassProperty.Set
 	memberTest.InstanceProperty.Get*
-classPropertyValue:MemberTest.ClassProperty.Get*
+classPropertyValue=MemberTest.ClassProperty.Get*
 memberTest.InstanceProperty.Set
 	MemberTest.ClassProperty.Get*
-instancePropertyValue:memberTest.InstanceProperty.Get*
-interceptedSymbol:</hello/>
-positionalNoConversion:PositionalNoConversion
+instancePropertyValue=memberTest.InstanceProperty.Get*
+interceptedSymbol=</hello/>
+positionalNoConversion=PositionalNoConversion
 	<m>
 	<n>
 	<o>
-positionalNoConversionConcatenated:positionalNoConversion.Concatenate
+positionalNoConversionConcatenated=positionalNoConversion.Concatenate
 	<r>
 	<s>
 	<t>
-namedNoConversion:NamedNoConversion
-	:
+namedNoConversion=NamedNoConversion
+	=
 		<m>
-		y:<n>
-namedNoConversionConcatenated:namedNoConversion.Concatenate
-	:
-		c:<t>
+		y=<n>
+namedNoConversionConcatenated=namedNoConversion.Concatenate
+	=
+		c=<t>
 		<r>
-indexerNoConversion:IndexerNoConversion*
-indexerNoConversion.abc:<hihi>
-indexerNoConversionIndexed:indexerNoConversion.abc
-interceptedSymbol2:<1>
-k:<hello>
-xyz:<w>
-literalFunction:
+indexerNoConversion=IndexerNoConversion*
+indexerNoConversion.abc=<hihi>
+indexerNoConversionIndexed=indexerNoConversion.abc
+interceptedSymbol2=<1>
+k=<hello>
+xyz=<w>
+literalFunction=
 	|<5>
-literalFunctionResult:literalFunction*
-someFunction:
+literalFunctionResult=literalFunction*
+someFunction=
 	|
-		current:<simple function this>
-callFunction:
+		current=<simple function this>
+callFunction=
 	|someFunction
-callFunctionResult:callFunction*
-delayedFunction:
+callFunctionResult=callFunction*
+delayedFunction=
 	|
 		|
-			x:<y>
-delayedFunctionResult:delayedFunction *
-value:<xyz>
-selectionFunction:
+			x=<y>
+delayedFunctionResult=delayedFunction *
+value=<xyz>
+selectionFunction=
 	|value
-selectionFunctionResult:selectionFunction *
-bigInteger:<89383838383832839123497123047217340712340720347072304702340720347>
-upperLevel:<unchanged>
-SetUpperLevel:
+selectionFunctionResult=selectionFunction *
+bigInteger=<89383838383832839123497123047217340712340720347072304702340720347>
+upperLevel=<unchanged>
+SetUpperLevel=
 	|
-		parent.parent.upperLevel:parameter
-ChangeUpperLevel:
+		parent.parent.upperLevel=parameter
+ChangeUpperLevel=
 	|
 		SetUpperLevel <changed>
 ChangeUpperLevel*
-staticEventChanged:<0>
-ChangeStaticEvent:
+staticEventChanged=<0>
+ChangeStaticEvent=
 	|
-		parent.parent.staticEventChanged:parameter
+		parent.parent.staticEventChanged=parameter
 TestClass.staticEvent.Add
-	:
+	=
 		|
 			ChangeStaticEvent <1>
-			current:parameter.1
-staticEvent:TestClass.staticEvent
+			current=parameter.1
+staticEvent=TestClass.staticEvent
 TestClass.TakeDelegate
-	:
+	=
 		|<resultFromDelegate>
-resultFromDelegate:TestClass.GetResultFromDelegate*
-staticEventResult:TestClass.staticEvent 
+resultFromDelegate=TestClass.GetResultFromDelegate*
+staticEventResult=TestClass.staticEvent 
 	testClass
-instanceEventChanged:<0>
+instanceEventChanged=<0>
 testClass.instanceEvent.Add
-	:
+	=
 		|
-			parent.parent.parent.instanceEventChanged:<1>
-			current:parameter.1
-instanceEvent:testClass.instanceEvent
-instanceEventResult:testClass.instanceEvent
+			parent.parent.parent.instanceEventChanged=<1>
+			current=parameter.1
+instanceEvent=testClass.instanceEvent
+instanceEventResult=testClass.instanceEvent
 	<5>
-one:<1>
-two:<2>
-firstIf:<unchanged>
-secondIf:<unchanged>
-firstIfCondition:Equality
+one=<1>
+two=<2>
+firstIf=<unchanged>
+secondIf=<unchanged>
+firstIfCondition=Equality
 	<1>
 	one
-firstIfBranches:
-	1:
+firstIfBranches=
+	1=
 		|<then>
-	0:
+	0=
 		|<else>
-firstIf:firstIfBranches.[firstIfCondition]*
-bigNumber:<50020202029029233344>
-secondSwitch:<unchanged>
-secondSwitchCases:
-	1:<one>
-	2:<two>
-	3:<three>
-secondSwitch:secondSwitchCases.3
-emptyMap:*
-emptyFunction:
+firstIf=firstIfBranches.[firstIfCondition]*
+bigNumber=<50020202029029233344>
+secondSwitch=<unchanged>
+secondSwitchCases=
+	1=<one>
+	2=<two>
+	3=<three>
+secondSwitch=secondSwitchCases.3
+emptyMap=*
+emptyFunction=
 	|
-		x:<hello>
-emptyFunctionResult:emptyFunction*
-font:System.Drawing.Font
+		x=<hello>
+emptyFunctionResult=emptyFunction*
+font=System.Drawing.Font
 	<Courier New>
-	2:<10/1>
-decimalTest:<50.23>
-fractionTest:<4/52>
-stringTest:<hello>
-stringTest.6:stringTest.1
-helloh:<hi>
-stringStrategyHashTest:[stringTest]
-x:
-	aLongText:<
+	2=<10/1>
+decimalTest=<50.23>
+fractionTest=<4/52>
+stringTest=<hello>
+stringTest.6=stringTest.1
+helloh=<hi>
+stringStrategyHashTest=[stringTest]
+x=
+	aLongText=<
 		hello world!
 		hello!
 		>
-ored:bitwise.Disjunction
+ored=bitwise.Disjunction
 	<20>
 	System.Windows.Forms.Keys.Tab
-arrayList:System.Collections.ArrayList*
+arrayList=System.Collections.ArrayList*
 arrayList.Add 
 	<hello>
-arrayListResult:arrayList.0
-textBox:System.Windows.Forms.TextBox*
+arrayListResult=arrayList.0
+textBox=System.Windows.Forms.TextBox*
 textBox.Text.Set
 	<
 		Alle meine Entchen,
@@ -315,45 +315,45 @@ textBox.Text.Set
 		schwimmen auf dem See,
 		Köpfchen in das Wasser,
 		Schwaenzchen in die Hoeh.>
-lines:textBox.Lines.Get*
-alleMeineText:lines.1
-lines.5:<bwuhahaha>
-tabText:<			hello>
-escapedText:<\'\n\\\t>
-whileCounter:*
-loop:
+lines=textBox.Lines.Get*
+alleMeineText=lines.1
+lines.5=<bwuhahaha>
+tabText=<			hello>
+escapedText=<\'\n\\\t>
+whileCounter=*
+loop=
 	|
-		whileDecision:Negation Equality
+		whileDecision=Negation Equality
 			parameter
 			<10>
-		whileBranches:
-			1:
+		whileBranches=
+			1=
 				|loop Sum
 					parameter
 					<1>
 				 
-			0:
+			0=
 				|parameter
-		current:whileBranches.[whileDecision] parameter
-whileCounter:loop <3>
+		current=whileBranches.[whileDecision] parameter
+whileCounter=loop <3>
 
 	
-returnInMap:
+returnInMap=
 					
 	|
-		result:parameter
-literalAsArgument:returnInMap <1>				   
-returnFunction:
+		result=parameter
+literalAsArgument=returnInMap <1>				   
+returnFunction=
 	|
 		|<functionResult>
-returnArg:
+returnArg=
 	|parameter
-myArg:
+myArg=
 	|
-		hello:<world>
-funcReturnTest:returnArg myArg*
-documentedFunction:
-	doc:<This function returns 'hello .>
+		hello=<world>
+funcReturnTest=returnArg myArg*
+documentedFunction=
+	doc=<This function returns 'hello .>
 	|<hello>
-docFunctionResult:documentedFunction*
+docFunctionResult=documentedFunction*
 # end comment

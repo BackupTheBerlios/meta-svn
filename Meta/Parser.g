@@ -103,8 +103,8 @@ EQUAL:
 BAR:
 	'|';
 
-COLON:
-  ':';
+//COLON:
+//  ':';
   
 STAR:
 	'*';
@@ -128,8 +128,6 @@ LITERAL_KEY:
 			|'\n'
 			|'='
 			|'.'
-			|'/'
-			|'\''
 			|'\\'
 			|'<'
 			|'>'
@@ -139,7 +137,6 @@ LITERAL_KEY:
 			|'['
 			|']'
 			|'*'
-			|':'
 		)
 	)+
 ;
@@ -526,10 +523,10 @@ emptyMap:
 
 // TODO: refactor
 statement:
-    (key COLON)=>
+    (key EQUAL)=>
     (
 		key
-		COLON!
+		EQUAL!
 		expression
 		{
 			#statement=#([STATEMENT],#statement);
@@ -537,7 +534,7 @@ statement:
     )
     |
     (
-        (COLON!)?
+        (EQUAL!)?
         expression
         {
             autokeys.Push((int)autokeys.Pop()+1); 

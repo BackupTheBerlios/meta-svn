@@ -1793,8 +1793,9 @@ namespace Meta
 //					}
 //					else
 //					{
-						text+=indentation + Key((Map)entry.Key,indentation)	+ ":" + Value((Map)entry.Value,indentation+'\t');
-//					}
+					text+=indentation + Key((Map)entry.Key,indentation)	+ assignment + Value((Map)entry.Value,indentation+'\t');
+//					text+=indentation + Key((Map)entry.Key,indentation)	+ ":" + Value((Map)entry.Value,indentation+'\t');
+					//					}
 					if(!text.EndsWith(newLine))
 					{
 						text+=newLine;
@@ -1808,6 +1809,7 @@ namespace Meta
 		private const string newLine="\n";
 		// TODO: keep these Literals somewhere else, or use those from ANTLR somehow
 		private const string literalStartDelimiter="<";
+		private const string assignment="=";
 		private const string literalEndDelimiter=">";
 //		private const string literalDelimiter="\"";
 
