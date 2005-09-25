@@ -97,7 +97,8 @@ namespace Meta.Parser
 	}
 	public static void SetLiteralEnd(string literalStart)
 	{
-		literalEnd=Helper.ReverseString(literalStart);
+		literalEnd=">"+literalStart.Remove(literalStart.Length-1,1);
+		//literalEnd=Helper.ReverseString(literalStart);
 	}
 	private static string literalEnd;
 	
@@ -194,7 +195,7 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
-						case '"':
+						case '<':  case '\\':
 						{
 							mLITERAL(true);
 							theRetToken = returnToken_;
@@ -375,98 +376,28 @@ _loop11_breakloop:		;
 		int _ttype; Token _token=null; int _begin=text.Length;
 		_ttype = LITERAL_START;
 		
-		{
-			match("\"");
+		{    // ( ... )*
+			for (;;)
 			{
-				bool synPredMatched16 = false;
-				if (((LA(1)=='@') && ((LA(2) >= '\u0000' && LA(2) <= '\ufffe'))))
+				if ((LA(1)=='\\'))
 				{
-					int _m16 = mark();
-					synPredMatched16 = true;
-					inputState.guessing++;
-					try {
-						{
-							match("@");
-						}
-					}
-					catch (RecognitionException)
-					{
-						synPredMatched16 = false;
-					}
-					rewind(_m16);
-					inputState.guessing--;
-				}
-				if ( synPredMatched16 )
-				{
-					{
-						match("@");
-						{    // ( ... )*
-							for (;;)
-							{
-								if ((LA(1)=='"') && (LA(2)=='@'))
-								{
-									match("\"@");
-								}
-								else
-								{
-									goto _loop19_breakloop;
-								}
-								
-							}
-_loop19_breakloop:							;
-						}    // ( ... )*
-						{
-							bool synPredMatched22 = false;
-							if (((LA(1)=='"') && ((LA(2) >= '\u0000' && LA(2) <= '\ufffe'))))
-							{
-								int _m22 = mark();
-								synPredMatched22 = true;
-								inputState.guessing++;
-								try {
-									{
-										match("\"");
-									}
-								}
-								catch (RecognitionException)
-								{
-									synPredMatched22 = false;
-								}
-								rewind(_m22);
-								inputState.guessing--;
-							}
-							if ( synPredMatched22 )
-							{
-								{
-									match("\"");
-								}
-							}
-							else if (((LA(1) >= '\u0000' && LA(1) <= '\ufffe')) && (true)) {
-								match("");
-							}
-							else
-							{
-								throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
-							}
-							
-						}
-					}
-				}
-				else if (((LA(1) >= '\u0000' && LA(1) <= '\ufffe')) && (true)) {
-					match("");
+					match('\\');
 				}
 				else
 				{
-					throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
+					goto _loop14_breakloop;
 				}
 				
 			}
-			if (0==inputState.guessing)
-			{
+_loop14_breakloop:			;
+		}    // ( ... )*
+		match('<');
+		if (0==inputState.guessing)
+		{
+			
+					SetLiteralEnd(text.ToString());
+					text.Length = _begin; text.Append("");
 				
-							SetLiteralEnd(text.ToString());
-							text.Length = _begin; text.Append("");
-						
-			}
 		}
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -481,52 +412,26 @@ _loop19_breakloop:							;
 		int _ttype; Token _token=null; int _begin=text.Length;
 		_ttype = LITERAL_END;
 		
+		int _saveIndex = 0;
+		_saveIndex = text.Length;
+		match('>');
+		text.Length = _saveIndex;
 		{
-			{
+			{    // ( ... )*
+				for (;;)
 				{
-					switch ( LA(1) )
+					if ((LA(1)=='\\'))
 					{
-					case '@':
-					{
-						{
-							int _saveIndex = 0;
-							_saveIndex = text.Length;
-							match("@");
-							text.Length = _saveIndex;
-						}
-						break;
+						match('\\');
 					}
-					case '"':
+					else
 					{
-						match("");
-						break;
+						goto _loop18_breakloop;
 					}
-					default:
-					{
-						throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
-					}
-					 }
+					
 				}
-				{    // ( ... )*
-					for (;;)
-					{
-						if ((LA(1)=='"') && (LA(2)=='@'))
-						{
-							int _saveIndex = 0;
-							_saveIndex = text.Length;
-							match("\"@");
-							text.Length = _saveIndex;
-						}
-						else
-						{
-							goto _loop32_breakloop;
-						}
-						
-					}
-_loop32_breakloop:					;
-				}    // ( ... )*
-			}
-			mLITERAL_VERY_END(false);
+_loop18_breakloop:				;
+			}    // ( ... )*
 		}
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -559,7 +464,10 @@ _loop32_breakloop:					;
 		_ttype = LITERAL;
 		
 		{
+			int _saveIndex = 0;
+			_saveIndex = text.Length;
 			mLITERAL_START(false);
+			text.Length = _saveIndex;
 			{    // ( ... )*
 				for (;;)
 				{
@@ -586,13 +494,15 @@ _loop32_breakloop:					;
 					}
 					else
 					{
-						goto _loop40_breakloop;
+						goto _loop26_breakloop;
 					}
 					
 				}
-_loop40_breakloop:				;
+_loop26_breakloop:				;
 			}    // ( ... )*
+			_saveIndex = text.Length;
 			mLITERAL_END(false);
+			text.Length = _saveIndex;
 		}
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -673,11 +583,11 @@ _loop40_breakloop:				;
 				}
 				else
 				{
-					goto _loop45_breakloop;
+					goto _loop31_breakloop;
 				}
 				
 			}
-_loop45_breakloop:			;
+_loop31_breakloop:			;
 		}    // ( ... )*
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -695,11 +605,11 @@ _loop45_breakloop:			;
 		const int endOfFileValue=65535;
 		
 		
-		bool synPredMatched50 = false;
+		bool synPredMatched36 = false;
 		if (((tokenSet_2_.member(LA(1))) && (true)))
 		{
-			int _m50 = mark();
-			synPredMatched50 = true;
+			int _m36 = mark();
+			synPredMatched36 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -739,12 +649,12 @@ _loop45_breakloop:			;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched50 = false;
+				synPredMatched36 = false;
 			}
-			rewind(_m50);
+			rewind(_m36);
 			inputState.guessing--;
 		}
-		if ( synPredMatched50 )
+		if ( synPredMatched36 )
 		{
 			{
 				{
@@ -778,11 +688,11 @@ _loop45_breakloop:			;
 			}
 		}
 		else {
-			bool synPredMatched55 = false;
+			bool synPredMatched41 = false;
 			if (((LA(1)=='\n'||LA(1)=='\r') && (true)))
 			{
-				int _m55 = mark();
-				synPredMatched55 = true;
+				int _m41 = mark();
+				synPredMatched41 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -802,12 +712,12 @@ _loop45_breakloop:			;
 				}
 				catch (RecognitionException)
 				{
-					synPredMatched55 = false;
+					synPredMatched41 = false;
 				}
-				rewind(_m55);
+				rewind(_m41);
 				inputState.guessing--;
 			}
-			if ( synPredMatched55 )
+			if ( synPredMatched41 )
 			{
 				{
 					mNEWLINE(false);
@@ -821,11 +731,11 @@ _loop45_breakloop:			;
 				}
 			}
 			else {
-				bool synPredMatched58 = false;
+				bool synPredMatched44 = false;
 				if (((LA(1)=='\n'||LA(1)=='\r') && (true)))
 				{
-					int _m58 = mark();
-					synPredMatched58 = true;
+					int _m44 = mark();
+					synPredMatched44 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -834,12 +744,12 @@ _loop45_breakloop:			;
 					}
 					catch (RecognitionException)
 					{
-						synPredMatched58 = false;
+						synPredMatched44 = false;
 					}
-					rewind(_m58);
+					rewind(_m44);
 					inputState.guessing--;
 				}
-				if ( synPredMatched58 )
+				if ( synPredMatched44 )
 				{
 					{
 						mNEWLINE(false);
@@ -852,11 +762,11 @@ _loop45_breakloop:			;
 								}
 								else
 								{
-									goto _loop61_breakloop;
+									goto _loop47_breakloop;
 								}
 								
 							}
-_loop61_breakloop:							;
+_loop47_breakloop:							;
 						}    // ( ... )*
 					}
 					if (0==inputState.guessing)
@@ -867,11 +777,11 @@ _loop61_breakloop:							;
 					}
 				}
 				else {
-					bool synPredMatched63 = false;
+					bool synPredMatched49 = false;
 					if (((LA(1)==' ') && (true)))
 					{
-						int _m63 = mark();
-						synPredMatched63 = true;
+						int _m49 = mark();
+						synPredMatched49 = true;
 						inputState.guessing++;
 						try {
 							{
@@ -880,12 +790,12 @@ _loop61_breakloop:							;
 						}
 						catch (RecognitionException)
 						{
-							synPredMatched63 = false;
+							synPredMatched49 = false;
 						}
-						rewind(_m63);
+						rewind(_m49);
 						inputState.guessing--;
 					}
-					if ( synPredMatched63 )
+					if ( synPredMatched49 )
 					{
 						{
 							match(' ');
@@ -900,7 +810,7 @@ _loop61_breakloop:							;
 					else if ((LA(1)=='\t'||LA(1)==' ') && (true)) {
 						{
 							{ // ( ... )+
-							int _cnt67=0;
+							int _cnt53=0;
 							for (;;)
 							{
 								switch ( LA(1) )
@@ -923,12 +833,12 @@ _loop61_breakloop:							;
 								}
 								default:
 								{
-									if (_cnt67 >= 1) { goto _loop67_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
+									if (_cnt53 >= 1) { goto _loop53_breakloop; } else { throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());; }
 								}
 								break; }
-								_cnt67++;
+								_cnt53++;
 							}
-_loop67_breakloop:							;
+_loop53_breakloop:							;
 							}    // ( ... )+
 						}
 						if (0==inputState.guessing)
@@ -1042,11 +952,11 @@ _loop67_breakloop:							;
 				}
 				default:
 				{
-					goto _loop70_breakloop;
+					goto _loop56_breakloop;
 				}
 				 }
 			}
-_loop70_breakloop:			;
+_loop56_breakloop:			;
 		}    // ( ... )*
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -1078,8 +988,8 @@ _loop70_breakloop:			;
 	private static long[] mk_tokenSet_0_()
 	{
 		long[] data = new long[2048];
-		data[0]=-2594289495234848257L;
-		data[1]=-1152921505277935617L;
+		data[0]=-8358897018269083137L;
+		data[1]=-1152921505546371073L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
 		for (int i = 1024; i<=2047; i++) { data[i]=0L; }

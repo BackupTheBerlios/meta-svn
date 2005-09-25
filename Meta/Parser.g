@@ -77,7 +77,8 @@ tokens
 	}
 	public static void SetLiteralEnd(string literalStart)
 	{
-		literalEnd=Helper.ReverseString(literalStart);
+		literalEnd=">"+literalStart.Remove(literalStart.Length-1,1);
+		//literalEnd=Helper.ReverseString(literalStart);
 	}
 	private static string literalEnd;
 	
@@ -129,6 +130,9 @@ LITERAL_KEY:
 			|'.'
 			|'/'
 			|'\''
+			|'\\'
+			|'<'
+			|'>'
 			|'|'
 			|'#'
 			|'"'
@@ -141,6 +145,16 @@ LITERAL_KEY:
 ;
 
 protected
+LITERAL_START:
+	('\\')*
+	'<'
+	{
+		SetLiteralEnd(text.ToString());
+		$setText("");
+	}
+;
+
+/*protected
 LITERAL_START:
 	(
 		"\""
@@ -166,9 +180,15 @@ LITERAL_START:
 			$setText("");
 		}
 	)
-;
+;*/
 
 protected
+LITERAL_END:
+	'>'!
+	(('\\')*)!
+;
+
+/*protected
 LITERAL_END:
 	(
 		(
@@ -184,14 +204,34 @@ LITERAL_END:
 		)
 		LITERAL_VERY_END
 	)
-;
+;*/
 
 // separate rule only because of code generation bug
 protected
 LITERAL_VERY_END:
 		'\"'!;
-		
+
 LITERAL:
+	(
+		LITERAL_START!
+		(
+			options{greedy=true;}:
+			{!LiteralEnd(this)}?
+			(
+				(~
+					(
+						'\n'
+						|'\r'
+					)
+				)
+				|NEWLINE_KEEP_TEXT
+			)
+		)*
+		LITERAL_END!
+	)
+;
+		
+/*LITERAL:
 	(
 		LITERAL_START
 		(
@@ -209,7 +249,7 @@ LITERAL:
 		)*
 		LITERAL_END
 	)
-;
+;*/
 protected
 COMMENT:
 	"#";

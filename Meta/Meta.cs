@@ -1583,7 +1583,8 @@ namespace Meta
 		{
 			Directory.CreateDirectory(Path.GetDirectoryName(path));
 			File.Create(path).Close();
-			string text=Meta.Serialize.Value(meta).Trim(new char[]{'\n'});
+			string text=Meta.Serialize.MapValue(meta,"").Trim(new char[]{'\n'});
+//			string text=Meta.Serialize.Value(meta).Trim(new char[]{'\n'});
 			if(text=="\"\"")
 			{
 				text="";
@@ -1643,7 +1644,7 @@ namespace Meta
 		}
 		private static string IntegerValue(Map number)
 		{
-			return literalDelimiter+number.ToString()+literalDelimiter;
+			return literalStartDelimiter+number.ToString()+literalEndDelimiter;
 		}
 		private static string StringKey(Map key,string indentation)
 		{
@@ -1658,49 +1659,57 @@ namespace Meta
 			}
 			return text;
 		}
+		// TODO: properly test this
 		private static string StringValue(Map val,string indentation)
 		{
 			string text;
 			if(Literal.Filter(val.GetString()).IsString)
 			{
-				string longestEscape="\"";
-				foreach(Match match in Regex.Matches(val.GetString(),"(')?(\"')*\""))
+				int longest=0;
+				foreach(Match match in Regex.Matches(val.GetString(),"(>)?(\\\\)*"))
+//					foreach(Match match in Regex.Matches(val.GetString(),"(')?(\"')*\""))
 				{
-					if(match.ToString().Length>longestEscape.Length)
+					if(match.ToString().Length>longest)
 					{
-						longestEscape=match.ToString();
+						longest=match.Length;
 					}
 				}
-				int delimiterLength=longestEscape.Length;
-				if(val.GetString().StartsWith("\""))
+				string escape="";
+				for(int i=0;i<longest;i++)
 				{
-					if(delimiterLength%2==0)
-					{
-						delimiterLength++;
-					}
+					escape+='\\';
 				}
-				else if(val.GetString().StartsWith("'"))
-				{
-					if(delimiterLength%2==1)
-					{
-						delimiterLength++;
-					}
-				}
-				string startDelimiter="";
-				for(int i=0;i<delimiterLength;i++)
-				{
-					if(i%2==0)
-					{
-						startDelimiter+="\"";
-					}
-					else
-					{
-						startDelimiter+="'";
-					}
-				}
-
-				string endDelimiter=Helper.ReverseString(startDelimiter);
-				text=startDelimiter+val.GetString()+endDelimiter;
+				text=escape+literalStartDelimiter+val.GetString()+literalEndDelimiter+escape;
+//				int delimiterLength=longestEscape.Length;
+//				if(val.GetString().StartsWith("\""))
+//				{
+//					if(delimiterLength%2==0)
+//					{
+//						delimiterLength++;
+//					}
+//				}
+//				else if(val.GetString().StartsWith("'"))
+//				{
+//					if(delimiterLength%2==1)
+//					{
+//						delimiterLength++;
+//					}
+//				}
+//				string startDelimiter="";
+//				for(int i=0;i<delimiterLength;i++)
+//				{
+//					if(i%2==0)
+//					{
+//						startDelimiter+="\"";
+//					}
+//					else
+//					{
+//						startDelimiter+="'";
+//					}
+//				}
+//
+//				string endDelimiter=Helper.ReverseString(startDelimiter);
+//				text=startDelimiter+val.GetString()+endDelimiter;
 			}
 			else
 			{
@@ -1708,6 +1717,56 @@ namespace Meta
 			}
 			return text;
 		}
+//		private static string StringValue(Map val,string indentation)
+//		{
+//			string text;
+//			if(Literal.Filter(val.GetString()).IsString)
+//			{
+//				string longestEscape="\"";
+//				foreach(Match match in Regex.Matches(val.GetString(),"(')?(\"')*\""))
+//				{
+//					if(match.ToString().Length>longestEscape.Length)
+//					{
+//						longestEscape=match.ToString();
+//					}
+//				}
+//				int delimiterLength=longestEscape.Length;
+//				if(val.GetString().StartsWith("\""))
+//				{
+//					if(delimiterLength%2==0)
+//					{
+//						delimiterLength++;
+//					}
+//				}
+//				else if(val.GetString().StartsWith("'"))
+//				{
+//					if(delimiterLength%2==1)
+//					{
+//						delimiterLength++;
+//					}
+//				}
+//				string startDelimiter="";
+//				for(int i=0;i<delimiterLength;i++)
+//				{
+//					if(i%2==0)
+//					{
+//						startDelimiter+="\"";
+//					}
+//					else
+//					{
+//						startDelimiter+="'";
+//					}
+//				}
+//
+//				string endDelimiter=Helper.ReverseString(startDelimiter);
+//				text=startDelimiter+val.GetString()+endDelimiter;
+//			}
+//			else
+//			{
+//				text=MapValue(val,indentation);
+//			}
+//			return text;
+//		}
 		private static string MapKey(Map map,string indentation)
 		{
 			return indentation + leftBracket + newLine + MapValue(map,indentation) + rightBracket;
@@ -1715,7 +1774,7 @@ namespace Meta
 		// TODO: add special serialization for code
 
 		// TODO: put all the special characters somewhere else, no magic constants
-		private static string MapValue(Map map,string indentation)
+		public static string MapValue(Map map,string indentation)
 		{
 			string text;
 //			if(map.Count==1 && map.ContainsKey(CodeKeys.Run))
@@ -1747,7 +1806,10 @@ namespace Meta
 		private const string leftBracket="[";
 		private const string rightBracket="]";
 		private const string newLine="\n";
-		private const string literalDelimiter="\"";
+		// TODO: keep these Literals somewhere else, or use those from ANTLR somehow
+		private const string literalStartDelimiter="<";
+		private const string literalEndDelimiter=">";
+//		private const string literalDelimiter="\"";
 
 		private static bool IsLiteralKey(string text)
 		{

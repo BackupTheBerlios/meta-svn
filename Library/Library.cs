@@ -216,7 +216,7 @@ public class Argument
 	{
 		if(!arg.IsInteger)
 		{
-			throw new ApplicationException("arg is not an integers");
+			throw new ApplicationException("arg is not an integer");
 		}
 	}
 	public static void IntegerArray(Map arg)
