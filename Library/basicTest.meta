@@ -1,18 +1,18 @@
-//	Meta is a programming language.
-//	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
-//
-//	This program is free software; you can redistribute it and/or
-//	modify it under the terms of the GNU General Public License version 2
-//	as published by the Free Software Foundation.
-//
-//	This program is distributed in the hope that it will be useful,
-//	but WITHOUT ANY WARRANTY; without even the implied warranty of
-//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//	GNU General Public License for more details.
-//
-//	You should have received a copy of the GNU General Public License
-//	along with this program; if not, write to the Free Software
-//	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#	Meta is a programming language.
+#	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
+#
+#	This program is free software; you can redistribute it and/or
+#	modify it under the terms of the GNU General Public License version 2
+#	as published by the Free Software Foundation.
+#
+#	This program is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+#
+#	You should have received a copy of the GNU General Public License
+#	along with this program; if not, write to the Free Software
+#	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 current:map.Merging
 	parent
 	:
@@ -72,27 +72,27 @@ ifTestCases:
 	0:
 		'"it is false"
 ifTest:ifTestCases.[ifTestCondition]*
-//ifTest:If
-//	condition:Equal
-//		"1"
-//		"1"
-//	then:
-//		'"it is true"
-//	else:
-//		'"it is false"
+#ifTest:If
+#	condition:Equal
+#		"1"
+#		"1"
+#	then:
+#		'"it is true"
+#	else:
+#		'"it is false"
 "ImpliedAutokey"
 :"Autokey"
 gacTest:System.Collections
 
-	//some comment
+	#some comment
 lazyGACTest:Microsoft.CSharp
-//metaLibTest:metaLib
+#metaLibTest:metaLib
 commandLineArguments:parameter
-//libraryAssemblyTest:testClasses
-	//	asdfasdf	fff
-//thisIsInAComment'
-	//  still comment
-// some more comment
+#libraryAssemblyTest:testClasses
+	#	asdfasdf	fff
+#thisIsInAComment'
+	#  still comment
+# some more comment
 aMap:
 	["a"]:"a"
 [aMap]:"Object"
@@ -352,4 +352,4 @@ documentedFunction:
 	doc:"This function returns 'hello ."
 	'"hello"
 docFunctionResult:documentedFunction*
-// end comment
+# end comment

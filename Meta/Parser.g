@@ -128,6 +128,7 @@ LITERAL_KEY:
 			|'.'
 			|'/'
 			|'\''
+			|'#'
 			|'"'
 			|'['
 			|']'
@@ -209,7 +210,7 @@ LITERAL:
 ;
 protected
 COMMENT:
-	"//";
+	"#";
 
 protected
 REST_OF_LINE:

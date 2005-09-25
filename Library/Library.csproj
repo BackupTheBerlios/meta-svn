@@ -125,6 +125,10 @@
                     SubType = "Form"
                     BuildAction = "None"
                 />
+                <File
+                    RelPath = "testEditor2.meta"
+                    BuildAction = "None"
+                />
             </Include>
         </Files>
     </CSHARP>
