@@ -642,6 +642,10 @@ namespace Meta
 	public class MetaException:ApplicationException
 	{
 		protected string message="";
+		public MetaException(string message)
+		{
+			this.message=message;
+		}
 		public MetaException(SourceArea extent)
 		{
 			this.extent=extent;
@@ -704,6 +708,9 @@ namespace Meta
 	public class KeyDoesNotExistException:KeyException
 	{
 		private object selected;
+		public KeyDoesNotExistException(Map key):base(key,null)
+		{
+		}
 		public KeyDoesNotExistException(Map key,SourceArea extent,object selected):base(key,extent)
 		{
 			this.selected=selected;
@@ -1135,6 +1142,10 @@ namespace Meta
 				else
 				{
 					result=strategy[key];
+				}
+				if(result==null)
+				{
+					throw new MetaException("Key "+Meta.Serialize.Value(key)+" does not exist.");
 				}
 				return result;
 			}
@@ -2355,7 +2366,8 @@ namespace Meta
 		{
 			get
 			{
-				return null;
+				throw new KeyDoesNotExistException(key);
+//				return null;
 			}
 			set
 			{
@@ -3225,7 +3237,7 @@ namespace Meta
 				}
 				else
 				{
-					val=null;
+					throw new KeyDoesNotExistException(key);
 				}
 				return val;
 			}
@@ -3286,7 +3298,12 @@ namespace Meta
 				}
 				else
 				{
-					val=null;
+					// TODO: add extent in the code that called this stuff
+					// dont know how to do this yet
+					// TODO: maybe add info about where this was looked up, must be a map
+					// maybe in caller too though
+					throw new KeyDoesNotExistException(key);
+//					val=null;
 				}
 				return val;
 			}
@@ -3426,6 +3443,7 @@ namespace Meta
 						val=null;
 					}
 				}
+				// TODO: was ist wenn Wert null ist??
 				return val;
 			}
 			set

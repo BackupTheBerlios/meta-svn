@@ -326,11 +326,11 @@ statements (ArrayList):
             expression (Select):
               firstKey (Literal):
                 literal (NormalMap):
-                  "logic"
+                  "boolean"
                 SourceArea (SourceArea):
                   End (SourcePosition):
                     Column (Int32):
-                      "7"
+                      "9"
                     Line (Int32):
                       "23"
                   FileName (String):
@@ -344,7 +344,7 @@ statements (ArrayList):
               SourceArea (SourceArea):
                 End (SourcePosition):
                   Column (Int32):
-                    "7"
+                    "9"
                   Line (Int32):
                     "23"
                 FileName (String):
@@ -361,7 +361,7 @@ statements (ArrayList):
                 SourceArea (SourceArea):
                   End (SourcePosition):
                     Column (Int32):
-                      "7"
+                      "9"
                     Line (Int32):
                       "23"
                   FileName (String):
@@ -424,11 +424,11 @@ statements (ArrayList):
             expression (Select):
               firstKey (Literal):
                 literal (NormalMap):
-                  "math"
+                  "number"
                 SourceArea (SourceArea):
                   End (SourcePosition):
                     Column (Int32):
-                      "6"
+                      "8"
                     Line (Int32):
                       "25"
                   FileName (String):
@@ -442,7 +442,7 @@ statements (ArrayList):
               SourceArea (SourceArea):
                 End (SourcePosition):
                   Column (Int32):
-                    "6"
+                    "8"
                   Line (Int32):
                     "25"
                 FileName (String):
@@ -459,7 +459,7 @@ statements (ArrayList):
                 SourceArea (SourceArea):
                   End (SourcePosition):
                     Column (Int32):
-                      "6"
+                      "8"
                     Line (Int32):
                       "25"
                   FileName (String):
@@ -1483,11 +1483,11 @@ statements (ArrayList):
       callable (Select):
         firstKey (Literal):
           literal (NormalMap):
-            "math"
+            "number"
           SourceArea (SourceArea):
             End (SourcePosition):
               Column (Int32):
-                "21"
+                "23"
               Line (Int32):
                 "43"
             FileName (String):
@@ -1504,20 +1504,20 @@ statements (ArrayList):
             SourceArea (SourceArea):
               End (SourcePosition):
                 Column (Int32):
-                  "25"
+                  "27"
                 Line (Int32):
                   "43"
               FileName (String):
                 "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
               Start (SourcePosition):
                 Column (Int32):
-                  "22"
+                  "24"
                 Line (Int32):
                   "43"
         SourceArea (SourceArea):
           End (SourcePosition):
             Column (Int32):
-              "25"
+              "27"
             Line (Int32):
               "43"
           FileName (String):

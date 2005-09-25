@@ -298,7 +298,7 @@ Entry (DictionaryEntry)
                                           Key (NormalMap):
                                             "literal"
                                           Value (NormalMap):
-                                            "logic"
+                                            "boolean"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "3"
@@ -366,7 +366,7 @@ Entry (DictionaryEntry)
                                           Key (NormalMap):
                                             "literal"
                                           Value (NormalMap):
-                                            "math"
+                                            "number"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "5"
@@ -975,7 +975,7 @@ Entry (DictionaryEntry)
                               Key (NormalMap):
                                 "literal"
                               Value (NormalMap):
-                                "math"
+                                "number"
                         Entry (DictionaryEntry)
                           Key (NormalMap):
                             "2"
