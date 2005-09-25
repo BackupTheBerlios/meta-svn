@@ -54,7 +54,7 @@ namespace Meta.Parser
 		public const int KEY = 14;
 		public const int SAME_INDENT = 15;
 		public const int EQUAL = 16;
-		public const int APOSTROPHE = 17;
+		public const int BAR = 17;
 		public const int COLON = 18;
 		public const int STAR = 19;
 		public const int LBRACKET = 20;
@@ -410,7 +410,7 @@ _loop120_breakloop:		;
 		@"""KEY""",
 		@"""SAME_INDENT""",
 		@"""EQUAL""",
-		@"""APOSTROPHE""",
+		@"""BAR""",
 		@"""COLON""",
 		@"""STAR""",
 		@"""LBRACKET""",

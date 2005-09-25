@@ -62,7 +62,7 @@ namespace Meta.Parser
 		public const int KEY = 14;
 		public const int SAME_INDENT = 15;
 		public const int EQUAL = 16;
-		public const int APOSTROPHE = 17;
+		public const int BAR = 17;
 		public const int COLON = 18;
 		public const int STAR = 19;
 		public const int LBRACKET = 20;
@@ -158,9 +158,9 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
-						case '\'':
+						case '|':
 						{
-							mAPOSTROPHE(true);
+							mBAR(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -254,12 +254,12 @@ tryAgain:
 		returnToken_ = _token;
 	}
 	
-	public void mAPOSTROPHE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+	public void mBAR(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; Token _token=null; int _begin=text.Length;
-		_ttype = APOSTROPHE;
+		_ttype = BAR;
 		
-		match('\'');
+		match('|');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);
@@ -1079,7 +1079,7 @@ _loop70_breakloop:			;
 	{
 		long[] data = new long[2048];
 		data[0]=-2594289495234848257L;
-		data[1]=-671088641L;
+		data[1]=-1152921505277935617L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
 		for (int i = 1024; i<=2047; i++) { data[i]=0L; }

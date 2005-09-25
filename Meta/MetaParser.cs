@@ -59,7 +59,7 @@ using System.Collections;
 		public const int KEY = 14;
 		public const int SAME_INDENT = 15;
 		public const int EQUAL = 16;
-		public const int APOSTROPHE = 17;
+		public const int BAR = 17;
 		public const int COLON = 18;
 		public const int STAR = 19;
 		public const int LBRACKET = 20;
@@ -379,7 +379,7 @@ _loop90_breakloop:			;
 						}
 						break;
 					}
-					case APOSTROPHE:
+					case BAR:
 					{
 						delayed();
 						if (0 == inputState.guessing)
@@ -408,7 +408,7 @@ _loop90_breakloop:			;
 							{
 								switch ( LA(1) )
 								{
-								case APOSTROPHE:
+								case BAR:
 								{
 									delayed();
 									if (0 == inputState.guessing)
@@ -783,7 +783,7 @@ _loop103_breakloop:					;
 		ASTPair currentAST = new ASTPair();
 		MetaAST delayed_AST = null;
 		
-		match(APOSTROPHE);
+		match(BAR);
 		delayedImplementation();
 		if (0 == inputState.guessing)
 		{
@@ -878,7 +878,7 @@ _loop113_breakloop:			;
 		@"""KEY""",
 		@"""SAME_INDENT""",
 		@"""EQUAL""",
-		@"""APOSTROPHE""",
+		@"""BAR""",
 		@"""COLON""",
 		@"""STAR""",
 		@"""LBRACKET""",

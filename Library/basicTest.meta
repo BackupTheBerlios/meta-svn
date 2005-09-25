@@ -68,18 +68,18 @@ ifTestCondition:Equality
 	"1"
 ifTestCases:
 	1:
-		'"it is true"
+		|"it is true"
 	0:
-		'"it is false"
+		|"it is false"
 ifTest:ifTestCases.[ifTestCondition]*
 #ifTest:If
 #	condition:Equal
 #		"1"
 #		"1"
 #	then:
-#		'"it is true"
+#		|"it is true"
 #	else:
-#		'"it is false"
+#		|"it is false"
 "ImpliedAutokey"
 :"Autokey"
 gacTest:System.Collections
@@ -90,7 +90,7 @@ lazyGACTest:Microsoft.CSharp
 commandLineArguments:parameter
 #libraryAssemblyTest:testClasses
 	#	asdfasdf	fff
-#thisIsInAComment'
+#thisIsInAComment|
 	#  still comment
 # some more comment
 aMap:
@@ -111,14 +111,14 @@ object:
 		parent.parent.a:"c"
 		parent.parent.autoSearch:"changed"
 	SetB:
-		'
+		|
 			parent.parent.b.1:parameter.value
 			current:"changed"
 	x:
 		a:"b"
 		c:"d"
 	:
-		'
+		|
 			current.a:"b"
 a:"default"
 b:*
@@ -128,7 +128,7 @@ bSet:object.SetB
 		x:"7"
 		z:"1"
 ReturnEverything:
-	'
+	|
 		current:parameter
 everythingReturned:ReturnEverything
 	"a"
@@ -139,15 +139,15 @@ variableAsArgument:ReturnEverything
 	"y"
 	"z"
 ReturnFunction:
-	'
+	|
 		current:
-			'
+			|
 				current:
 					"1"
 					"2"
 					"3"
 SetCurrent:
-	'
+	|
 		current:
 			parameter:parameter
 			x:parameter.symbol
@@ -155,10 +155,10 @@ SetCurrent:
 thisSet:SetCurrent
 	symbol:"haha"
 FirstLevel:
-	'
+	|
 		SecondLevel parameter
 SecondLevel:
-	'parameter
+	|parameter
 argTest:FirstLevel
 	a:"z"
 concatenate:array.Concatenation
@@ -208,29 +208,29 @@ interceptedSymbol2:"1"
 k:"hello"
 xyz:"w"
 literalFunction:
-	'"5"
+	|"5"
 literalFunctionResult:literalFunction*
 someFunction:
-	'
+	|
 		current:"simple function this"
 callFunction:
-	'someFunction
+	|someFunction
 callFunctionResult:callFunction*
 delayedFunction:
-	'
-		'
+	|
+		|
 			x:"y"
 delayedFunctionResult:delayedFunction *
 value:"xyz"
 selectionFunction:
-	'value
+	|value
 selectionFunctionResult:selectionFunction *
 bigInteger:"89383838383832839123497123047217340712340720347072304702340720347"
 upperLevel:"unchanged"
 SetUpperLevel:=
 	parent.parent.upperLevel:parameter
 ChangeUpperLevel:
-	'
+	|
 		SetUpperLevel "changed"
 ChangeUpperLevel*
 staticEventChanged:"0"
@@ -238,20 +238,20 @@ ChangeStaticEvent:=
 	parent.parent.staticEventChanged:parameter
 TestClass.staticEvent.Add
 	:
-		'
+		|
 			ChangeStaticEvent "1"
 			current:parameter.1
 staticEvent:TestClass.staticEvent
 TestClass.TakeDelegate
 	:
-		'"resultFromDelegate"
+		|"resultFromDelegate"
 resultFromDelegate:TestClass.GetResultFromDelegate*
 staticEventResult:TestClass.staticEvent 
 	testClass
 instanceEventChanged:"0"
 testClass.instanceEvent.Add
 	:
-		'
+		|
 			parent.parent.parent.instanceEventChanged:"1"
 			current:parameter.1
 instanceEvent:testClass.instanceEvent
@@ -266,9 +266,9 @@ firstIfCondition:Equality
 	one
 firstIfBranches:
 	1:
-		'"then"
+		|"then"
 	0:
-		'"else"
+		|"else"
 firstIf:firstIfBranches.[firstIfCondition]*
 bigNumber:"50020202029029233344"
 secondSwitch:"unchanged"
@@ -279,7 +279,7 @@ secondSwitchCases:
 secondSwitch:secondSwitchCases.3
 emptyMap:*
 emptyFunction:
-	'
+	|
 		x:"hello"
 emptyFunctionResult:emptyFunction*
 font:System.Drawing.Font
@@ -318,38 +318,38 @@ tabText:"			hello"
 escapedText:"\'\n\\\t"
 whileCounter:*
 loop:
-	'
+	|
 		whileDecision:Negation Equality
 			parameter
 			"10"
 		whileBranches:
 			1:
-				'loop Sum
+				|loop Sum
 					parameter
 					"1"
 				 
 			0:
-				'parameter
+				|parameter
 		current:whileBranches.[whileDecision] parameter
 whileCounter:loop "3"
 
 	
 returnInMap:
 					
-	'
+	|
 		result:parameter
 literalAsArgument:returnInMap "1"				   
 returnFunction:
-	'
-		'"functionResult"
+	|
+		|"functionResult"
 returnArg:
-	'parameter
+	|parameter
 myArg:
-	'
+	|
 		hello:"world"
 funcReturnTest:returnArg myArg*
 documentedFunction:
 	doc:"This function returns 'hello ."
-	'"hello"
+	|"hello"
 docFunctionResult:documentedFunction*
 # end comment

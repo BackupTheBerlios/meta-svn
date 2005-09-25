@@ -99,8 +99,8 @@ tokens
 EQUAL:
 	'=';
 
-APOSTROPHE:
-	'\'';
+BAR:
+	'|';
 
 COLON:
   ':';
@@ -117,6 +117,7 @@ RBRACKET:
 POINT:
 	'.';
 
+// TODO: invert the rules instead of the characters themselves
 LITERAL_KEY:
 	( 
 		~(
@@ -128,6 +129,7 @@ LITERAL_KEY:
 			|'.'
 			|'/'
 			|'\''
+			|'|'
 			|'#'
 			|'"'
 			|'['
@@ -526,7 +528,7 @@ key:
 ;
 
 delayed:
-	APOSTROPHE!
+	BAR!
 	delayedImplementation
 ;
 
