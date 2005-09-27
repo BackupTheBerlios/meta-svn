@@ -506,7 +506,9 @@ namespace Meta
 		public static Map Run(string fileName,Map argument)
 		{
 			Map program=Interpreter.Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
-			return CallProgram(program,argument,GetPersistantMaps(fileName));
+			program=CallProgram(program,new NormalMap(),null);
+			program.Parent=GetPersistantMaps(fileName);
+			return program.Call(argument);
 		}
 		public static Map GetPersistantMaps(string fileName)
 		{
@@ -526,10 +528,14 @@ namespace Meta
 			return root;
 		}
 		// TODO: this is so pointless, i dont know
+		// TODO: rename
 		public static Map RunWithoutLibrary(string fileName,TextReader textReader)
 		{
 			Map program=Compile(fileName, textReader);
+			// TODO: refactor
 			return CallProgram(program,new NormalMap(),null);
+//			return program.Call(new NormalMap());
+//			return CallProgram(CallProgram(program,new NormalMap(),null),new NormalMap(),null);
 		}
 		public static Map RunWithoutLibrary(string fileName)
 		{
