@@ -95,8 +95,8 @@ namespace Meta
 		}
 
 		public abstract Map EvaluateImplementation(Map parent);
-		SourceArea extent;
-		public SourceArea SourceArea
+		Extent extent;
+		public Extent Extent
 		{
 			get
 			{
@@ -118,7 +118,7 @@ namespace Meta
 			{
 				return ((ICallable)function).Call(argument.Evaluate(parent));
 			}
-			throw new MetaException("Object to be called is not callable.",this.SourceArea);
+			throw new MetaException("Object to be called is not callable.",this.Extent);
 		}
 		public Call(Map code)
 		{
@@ -362,14 +362,15 @@ namespace Meta
 				Map key=((Expression)keys[i]).Evaluate(parent);
 				Map selection=selected[key];
 //				Interpreter.DisplayValue=selection;
-				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).SourceArea))
+				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).Extent))
 				{
 					Interpreter.CallBreak(selection);
 				}
 				if(selection==null)
 				{
 					object test=selected[key];
-					throw new KeyDoesNotExistException(key,this.SourceArea,selected);
+					Throw.KeyDoesNotExist(key,this.Extent);
+//					throw new KeyDoesNotExistException(key,this.Extent,selected);
 				}
 				selected=selection;
 			}
@@ -381,24 +382,66 @@ namespace Meta
 			Map selected=parent;
 			while(!selected.ContainsKey(key))
 			{
-				if(selected.Parent==null)
-				{
-					selected.ContainsKey(key);
-					throw new KeyNotFoundException(key,this.SourceArea);
-				}
+//				if(selected.Parent==null)
+//				{
+//					selected.ContainsKey(key);
+////					throw new KeyNotFoundException(key,this.Extent);
+//				}
 				selected=selected.Parent;
 				if(selected==null)
 				{
-					throw new KeyNotFoundException(key,this.SourceArea);
+					Throw.KeyNotFound(key,this.Extent);
+//					throw new KeyNotFoundException(key,this.Extent);
 				}
 			}
 			Map val=selected[key];
 //			Interpreter.DisplayValue=val;
-			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(firstKey.SourceArea))
+			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(firstKey.Extent))
 			{
 				Interpreter.CallBreak(val);
 			}
 			return val;
+		}
+	}
+
+	public class MetaException:ApplicationException
+	{
+//		public MetaException(string message)
+//		{
+//			this.message=message;
+//		}
+//		public MetaException(Extent extent)
+//		{
+//			this.extent=extent;
+//		}
+		public MetaException(string message,Extent extent)
+		{
+			this.extent=extent;
+			this.message=message;
+		}
+//		public MetaException(Exception exception,Extent extent):base(exception.Message,exception)
+//		{
+//			this.extent=extent;
+//		}
+		private Extent extent;
+		private string message="";
+//		public override string Message
+//		{
+//			get
+//			{
+//				return message+" In file "+extent.FileName+", line: "+extent.Start.Line+", column: "+extent.Start.Column+".";
+//			}
+//		}
+	}
+	public class Throw
+	{
+		public static void KeyDoesNotExist(Map key,Extent extent)
+		{
+			throw new MetaException("The key "+Serialize.Value(key)+" does not exist.",extent);
+		}
+		public static void KeyNotFound(Map key,Extent extent)
+		{
+			throw new MetaException("The key "+Serialize.Value(key)+" could not be found.",extent);
 		}
 	}
 	public class Statement
@@ -414,17 +457,18 @@ namespace Meta
 				if(selection==null)
 				{
 					object x=selected[key];
-					throw new KeyDoesNotExistException(key,((Expression)keys[i]).SourceArea,selected);
+					Throw.KeyDoesNotExist(key,((Expression)keys[i]).Extent);
+//					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
 				}
 				selected=selection;
-				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).SourceArea))
+				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).Extent))
 				{
 					Interpreter.CallBreak(selected);
 				}
 			}
 			Map lastKey=((Expression)keys[keys.Count-1]).Evaluate(parent);
 			// TODO: peek at next statement
-//			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).SourceArea))
+//			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).Extent))
 //			{
 //				Interpreter.CallBreak();
 //			}
@@ -578,7 +622,7 @@ namespace Meta
 		{
 //			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
 
-			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(reader,fileName); 
+			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(reader,fileName); 
 			MetaLexer metaLexer = new MetaLexer(sharedInputState);
 	
 			metaLexer.setTokenObjectClass("MetaToken");
@@ -598,8 +642,8 @@ namespace Meta
 //			//			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
 //			//			FileStream file=new FileStream(fileName, FileMode.Open,FileAccess.Read, FileShare.ReadWrite); 
 //
-//			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(stringReader,fileName); 
-////			SourceAreaLexerSharedInputState sharedInputState = new SourceAreaLexerSharedInputState(file,fileName); 
+//			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(stringReader,fileName); 
+////			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(file,fileName); 
 //			MetaLexer metaLexer = new MetaLexer(sharedInputState);
 //	
 //			metaLexer.setTokenObjectClass("MetaToken");
@@ -644,83 +688,6 @@ namespace Meta
 			}
 		}
 		public static ArrayList loadedAssemblies=new ArrayList();
-	}
-	public class MetaException:ApplicationException
-	{
-		protected string message="";
-		public MetaException(string message)
-		{
-			this.message=message;
-		}
-		public MetaException(SourceArea extent)
-		{
-			this.extent=extent;
-		}
-		public MetaException(string message,SourceArea extent)
-		{
-			this.extent=extent;
-			this.message=message;
-		}
-		public MetaException(Exception exception,SourceArea extent):base(exception.Message,exception)
-		{
-			this.extent=extent;
-		}
-		SourceArea extent;
-		public override string Message
-		{
-			get
-			{
-				return message+" In file "+extent.FileName+", line: "+extent.Start.Line+", column: "+extent.Start.Column+".";
-			}
-		}
-	}
-	public class MapException:ApplicationException
-	{
-		Map map;
-		public MapException(Map map,string message):base(message)
-		{
-			this.map=map;
-		}
-	}
-	public abstract class KeyException:MetaException
-	{ 
-		public KeyException(Map key,SourceArea extent):base(extent)
-		{
-			message="Key ";
-			if(key.IsString)
-			{
-				message+=key.GetString();
-			}
-			else
-			{
-				message+=Serialize.Key(key);
-			}
-			if(this is KeyDoesNotExistException)
-			{
-				message+=" does not exist.";
-			}
-			else if(this is KeyNotFoundException)
-			{
-				message+=" not found.";
-			}
-		}
-	}
-	public class KeyNotFoundException:KeyException
-	{
-		public KeyNotFoundException(Map key,SourceArea extent):base(key,extent)
-		{
-		}
-	}
-	public class KeyDoesNotExistException:KeyException
-	{
-		private object selected;
-		public KeyDoesNotExistException(Map key):base(key,null)
-		{
-		}
-		public KeyDoesNotExistException(Map key,SourceArea extent,object selected):base(key,extent)
-		{
-			this.selected=selected;
-		}
 	}
 	public interface ICallable
 	{
@@ -970,7 +937,7 @@ namespace Meta
 			{
 				throw new ApplicationException("Cannot compile non-code map.");
 			}
-			((Expression)expression).SourceArea=this.SourceArea;
+			((Expression)expression).Extent=this.Extent;
 			return expression;
 		}
 		public bool ContainsKey(Map key)
@@ -1014,8 +981,8 @@ namespace Meta
 			}
 			return hash;
 		}
-		SourceArea extent;
-		public SourceArea SourceArea
+		Extent extent;
+		public Extent Extent
 		{
 			get
 			{
@@ -1149,10 +1116,10 @@ namespace Meta
 				{
 					result=strategy[key];
 				}
-				if(result==null)
-				{
-					throw new MetaException("Key "+Meta.Serialize.Value(key)+" does not exist.");
-				}
+//				if(result==null)
+//				{
+//					throw new MetaException("Key "+Meta.Serialize.Value(key)+" does not exist.");
+//				}
 				return result;
 			}
 			set
@@ -1189,7 +1156,7 @@ namespace Meta
 		{
 			Map clone=strategy.CloneMap();
 			clone.Parent=Parent;
-			clone.SourceArea=SourceArea;
+			clone.Extent=Extent;
 			return clone;
 		}
 		protected override bool ContainsKeyImplementation(Map key)
@@ -2372,8 +2339,8 @@ namespace Meta
 		{
 			get
 			{
-				throw new KeyDoesNotExistException(key);
-//				return null;
+//				throw new KeyDoesNotExistException(key);
+				return null;
 			}
 			set
 			{
@@ -3243,7 +3210,8 @@ namespace Meta
 				}
 				else
 				{
-					throw new KeyDoesNotExistException(key);
+					val=null;
+//					throw new KeyDoesNotExistException(key);
 				}
 				return val;
 			}
@@ -3308,8 +3276,8 @@ namespace Meta
 					// dont know how to do this yet
 					// TODO: maybe add info about where this was looked up, must be a map
 					// maybe in caller too though
-					throw new KeyDoesNotExistException(key);
-//					val=null;
+//					throw new KeyDoesNotExistException(key);
+					val=null;
 				}
 				return val;
 			}
@@ -4031,7 +3999,7 @@ namespace Meta
 		{
 			return a.Line>b.Line || (a.Line==b.Line && a.Column>b.Column);
 		}
-		public bool IsBetween(SourceArea extent)
+		public bool IsBetween(Extent extent)
 		{
 			return IsBetween(extent.Start,extent.End);
 		}
@@ -4078,14 +4046,14 @@ namespace Meta
 			}
 		}
 	}
-	public class SourceArea
+	public class Extent
 	{
 		public static ArrayList GetEvents(string fileName,int firstLine,int lastLine)
 		{
 			ArrayList result=new ArrayList();
-			foreach(DictionaryEntry entry in SourceAreas)
+			foreach(DictionaryEntry entry in Extents)
 			{
-				SourceArea extent=(SourceArea)entry.Value;
+				Extent extent=(Extent)entry.Value;
 				if(extent.FileName==fileName && extent.Start.Line>=firstLine && extent.End.Line<=lastLine)
 				{
 					result.Add(extent);
@@ -4093,7 +4061,7 @@ namespace Meta
 			}
 			return result;
 		}
-		public static Hashtable SourceAreas
+		public static Hashtable Extents
 		{
 			get
 			{
@@ -4104,9 +4072,9 @@ namespace Meta
 		public override bool Equals(object obj)
 		{	
 			bool isEqual=false;
-			if(obj is SourceArea)
+			if(obj is Extent)
 			{
-				SourceArea extent=(SourceArea)obj;
+				Extent extent=(Extent)obj;
 				if(
 					extent.Start.Line==Start.Line && 
 					extent.Start.Column==Start.Column && 
@@ -4155,21 +4123,21 @@ namespace Meta
 			}
 		}
 		string fileName;
-		public SourceArea(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+		public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
 		{
 			this.start=new SourcePosition(startLine,startColumn);
 			this.end=new SourcePosition(endLine,endColumn);
 			this.fileName=fileName;
 
 		}
-		public SourceArea CreateSourceArea(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+		public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
 		{
-			SourceArea extent=new SourceArea(startLine,startColumn,endLine,endColumn,fileName);
+			Extent extent=new Extent(startLine,startColumn,endLine,endColumn,fileName);
 			if(!extents.ContainsKey(extent))
 			{
 				extents.Add(extent,extent);
 			}
-			return (SourceArea)extents[extent];
+			return (Extent)extents[extent];
 		}
 	}
 }

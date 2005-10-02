@@ -28,7 +28,7 @@ using LexerSharedInputState = antlr.LexerSharedInputState;
 /// </summary>
 /// <author>  Dan Bornstein, danfuzz@milk.com
 /// </author>
-public class SourceAreaLexerSharedInputState:LexerSharedInputState
+public class ExtentLexerSharedInputState:LexerSharedInputState
 {
 	/// <summary> Get the current line of this instance.
 	/// 
@@ -82,14 +82,14 @@ public class SourceAreaLexerSharedInputState:LexerSharedInputState
 	/// </param>
 	/// <param name="name">null-ok; the file name to associate with this instance
 	/// </param>
-	public SourceAreaLexerSharedInputState(System.IO.Stream s, System.String name):base(s)
-//		public SourceAreaLexerSharedInputState(System.IO.Stream s, System.String name):base(s)
+	public ExtentLexerSharedInputState(System.IO.Stream s, System.String name):base(s)
+//		public ExtentLexerSharedInputState(System.IO.Stream s, System.String name):base(s)
 	{
 		fileName = name;
 	}
 
-	public SourceAreaLexerSharedInputState(TextReader textReader, System.String name):base(textReader)
-		//		public SourceAreaLexerSharedInputState(System.IO.Stream s, System.String name):base(s)
+	public ExtentLexerSharedInputState(TextReader textReader, System.String name):base(textReader)
+		//		public ExtentLexerSharedInputState(System.IO.Stream s, System.String name):base(s)
 	{
 		fileName = name;
 	}
@@ -100,7 +100,7 @@ public class SourceAreaLexerSharedInputState:LexerSharedInputState
 	/// </summary>
 	/// <param name="s">the input stream to use
 	/// </param>
-	public SourceAreaLexerSharedInputState(System.IO.Stream s):this(s, null)
+	public ExtentLexerSharedInputState(System.IO.Stream s):this(s, null)
 	{
 	}
 	
@@ -109,7 +109,7 @@ public class SourceAreaLexerSharedInputState:LexerSharedInputState
 	/// </summary>
 	/// <param name="name">non-null; the name of the file to use
 	/// </param>
-	public SourceAreaLexerSharedInputState(System.String name):this(new System.IO.FileStream(name, System.IO.FileMode.Open, System.IO.FileAccess.Read), name)
+	public ExtentLexerSharedInputState(System.String name):this(new System.IO.FileStream(name, System.IO.FileMode.Open, System.IO.FileAccess.Read), name)
 	{
 	}
 	

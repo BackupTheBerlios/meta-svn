@@ -25,7 +25,7 @@
 		map
 		number
 		array
-	internetTest=web.localhost.test
+	'internetTest=web.localhost.test
 	parent.parent.testSubDir.x=*
 	persistantDeleteTest=testSubDir.x
 	parent.parent.testSubDir.x=

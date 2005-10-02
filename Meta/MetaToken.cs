@@ -37,7 +37,7 @@ using CommonToken = antlr.CommonToken;
 /// </author>
 /// 
 
-// TODO: Make MetaToken use SourceArea, too
+// TODO: Make MetaToken use Extent, too
 public class MetaToken:CommonToken
 {
 	//UPGRADE_NOTE: Respective javadoc comments were merged.  It should be changed in order to comply with .NET documentation conventions.

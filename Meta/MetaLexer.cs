@@ -105,7 +105,7 @@ namespace Meta.Parser
     protected override Token makeToken (int t)
     {
         MetaToken tok = (MetaToken) base.makeToken (t);
-        ((SourceAreaLexerSharedInputState) inputState).annotate (tok);
+        ((ExtentLexerSharedInputState) inputState).annotate (tok);
         return tok;
     }
     

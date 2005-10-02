@@ -489,11 +489,11 @@ _loop87_breakloop:					;
 					// TODO: refactor
 					MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
 					
-					runToken.setLine(delayedImplementation_AST.SourceArea.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
-					runToken.setColumn(delayedImplementation_AST.SourceArea.Start.Column); 
-					runToken.FileName=delayedImplementation_AST.SourceArea.FileName;
-					runToken.EndLine=delayedImplementation_AST.SourceArea.End.Line;
-					runToken.EndColumn=delayedImplementation_AST.SourceArea.End.Column;
+					runToken.setLine(delayedImplementation_AST.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
+					runToken.setColumn(delayedImplementation_AST.Extent.Start.Column); 
+					runToken.FileName=delayedImplementation_AST.Extent.FileName;
+					runToken.EndLine=delayedImplementation_AST.Extent.End.Line;
+					runToken.EndColumn=delayedImplementation_AST.Extent.End.Column;
 			
 					
 					MetaAST runAst=new MetaAST(runToken);
@@ -705,11 +705,11 @@ _loop87_breakloop:					;
 					
 								// TODO: Simplify!!, use astFactory
 								MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
-								autokeyToken.setLine(statement_AST.SourceArea.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
-								autokeyToken.setColumn(statement_AST.SourceArea.Start.Column); 
-								autokeyToken.FileName=statement_AST.SourceArea.FileName;
-								autokeyToken.EndLine=statement_AST.SourceArea.End.Line;
-								autokeyToken.EndColumn=statement_AST.SourceArea.End.Column;
+								autokeyToken.setLine(statement_AST.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
+								autokeyToken.setColumn(statement_AST.Extent.Start.Column); 
+								autokeyToken.FileName=statement_AST.Extent.FileName;
+								autokeyToken.EndLine=statement_AST.Extent.End.Line;
+								autokeyToken.EndColumn=statement_AST.Extent.End.Column;
 								MetaAST autokeyAst=new MetaAST(autokeyToken);
 								autokeyAst.setText(autokeys.Peek().ToString());
 					statement_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(KEY)).add((AST)autokeyAst))).add((AST)statement_AST));
