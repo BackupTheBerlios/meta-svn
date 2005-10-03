@@ -31,14 +31,14 @@ public class ScrollingTextBox: RichTextBox
 
 
 	private static string emptyLines;
-	protected static string TopMargin
+	public string TopMargin
 	{
 		get
 		{
 			return emptyLines;
 		}
 	}
-	protected string BottomMargin
+	public string BottomMargin
 	{
 		get
 		{
@@ -132,7 +132,7 @@ public class ScrollingTextBox: RichTextBox
 				if(e.KeyChar.Equals((char)Keys.Enter)) 
 				{
 					string sTabs="";
-					for(int i=0;i<Line.Tabs;i++) 
+					for(int i=0;i<Lines[Line.Index-1].Tabs;i++) 
 //						for(int i=0;i<iTabs;i++) 
 					{
 						sTabs+='\t';
@@ -254,19 +254,33 @@ public class ScrollingTextBox: RichTextBox
 	{
 		return realLine+TopMargin.Length;
 	}
-	protected new Line[] Lines
+	protected new LineCollection Lines
 	{
 		get
 		{
-			ArrayList lines=new ArrayList();
-			for(int i=0;i<base.Lines.Length-TopMargin.Length-BottomMargin.Length;i++)
-//				for(int i=0;i<RealLines.Length;i++)
-			{
-				lines.Add(new Line(i,this));
-			}
-			return (Line[])lines.ToArray(typeof(Line));
+			return new LineCollection(this);
+//			ArrayList lines=new ArrayList();
+//			for(int i=0;i<base.Lines.Length-TopMargin.Length-BottomMargin.Length;i++)
+//				//				for(int i=0;i<RealLines.Length;i++)
+//			{
+//				lines.Add(new Line(i,this));
+//			}
+//			return (Line[])lines.ToArray(typeof(Line));
 		}
 	}
+//	protected new Line[] Lines
+//	{
+//		get
+//		{
+//			ArrayList lines=new ArrayList();
+//			for(int i=0;i<base.Lines.Length-TopMargin.Length-BottomMargin.Length;i++)
+////				for(int i=0;i<RealLines.Length;i++)
+//			{
+//				lines.Add(new Line(i,this));
+//			}
+//			return (Line[])lines.ToArray(typeof(Line));
+//		}
+//	}
 
 	// TODO: put RealLines transformation into MoveCursor
 	public void MoveDocumentEnd()
@@ -338,7 +352,7 @@ public class ScrollingTextBox: RichTextBox
 	}
 	public void SelectLineStart()
 	{
-		SelectAbsolute(0,Line.Index);
+		SelectAbsolute(Line.Tabs,Line.Index);
 	}
 	public void SelectCharLeft()
 	{
@@ -351,25 +365,10 @@ public class ScrollingTextBox: RichTextBox
 	private Point GetNextWordPosition()
 	{
 		return GetWordPosition(1);
-//		int column=Column;
-//		int line=Line.Index;
-//		while(true)
-//		{
-//
-//			if(column>=Line.Length)
-//			{
-//				line++;
-//				column=0;
-//				break;
-//			}
-//			if(!Char.IsLetterOrDigit(Lines[line].Text[column+1]))
-//			{
-//				column++;
-//				break;
-//			}
-//			column++;
-//		}
-//		return new Point(column,line);
+	}
+	private Point GetPreviousWordPosition()
+	{
+		return GetWordPosition(-1);
 	}
 	private Point GetWordPosition(int direction)
 	{
@@ -398,25 +397,6 @@ public class ScrollingTextBox: RichTextBox
 		// TODO: SelectionStart isnt really accurate, use our own selectionstart
 		return new Point(GetColumnFromCharIndex(index),RealLineFromLine(GetLineFromCharIndex(index)));
 	}
-	// combine with above
-	private Point GetPreviousWordPosition()
-	{
-		return GetWordPosition(-1);
-//		int column=Column;
-//		int line=Line.Index;
-//		do
-//		{
-//			column--;
-//			if(column<=0)
-//			{
-//				line--;
-//				column=Lines[line].Length-1;
-//				break;
-//			}
-//		}
-//		while(Char.IsLetterOrDigit(Lines[line].Text[column]));
-//		return new Point(column,line);
-	}
 	public void SelectWordLeft()
 	{
 		Point position=GetPreviousWordPosition();
@@ -438,9 +418,14 @@ public class ScrollingTextBox: RichTextBox
 		SelectedText="";
 	}
 	private static int lastColumn=-1;
+
 	public void MoveRelative(int column,int line)
 	{
 		MoveAbsolute(Column+column,Line.Index+line);
+	}
+	public void MoveAbsolute(Point move)
+	{
+		MoveAbsolute(move.X,move.Y);
 	}
 	public void MoveAbsolute(int column,int line)
 	{
@@ -458,13 +443,21 @@ public class ScrollingTextBox: RichTextBox
 	{
 		MoveRelative(0,-GetLinesPerPage());
 	}
+	private Point MoveLine(int direction)
+	{
+		Line newLine=Lines[Line.Index+direction];
+		int newCol=newLine.Tabs+(Column-Line.Tabs);
+		return new Point(newCol,newLine.Index);
+	}
 	public void MoveLineDown() 
 	{
-		MoveRelative(0,1);
+		MoveAbsolute(MoveLine(1));
+//		MoveRelative(0,1);
 	}
 	public void MoveLineUp() 
 	{
-		MoveRelative(0,-1);
+		MoveAbsolute(MoveLine(-1));
+//		MoveRelative(0,-1);
 	}
 	public void MoveLineEnd()
 	{
@@ -473,14 +466,14 @@ public class ScrollingTextBox: RichTextBox
 
 	public void MoveLineStart()
 	{
-		if(Line.Tabs!=Column)
-		{
+//		if(Line.Tabs!=Column)
+//		{
+//			MoveAbsolute(Line.Tabs,Line.Index);
+//		}
+//		else
+//		{
 			MoveAbsolute(Line.Tabs,Line.Index);
-		}
-		else
-		{
-			MoveAbsolute(0,Line.Index);
-		}
+//		}
 	}
 	public void MoveWordRight()
 	{
@@ -711,11 +704,13 @@ public class ScrollingTextBox: RichTextBox
 		{
 			if(m.WParam.ToInt32()>IntPtr.Zero.ToInt32()) 
 			{
-				MoveRelative(0,-3);
+				MoveAbsolute(MoveLine(-3));
+//				MoveRelative(0,-3);
 			}
 			else if(m.WParam.ToInt32()<IntPtr.Zero.ToInt32()) 
 			{
-				MoveRelative(0,3);
+				MoveAbsolute(MoveLine(3));
+//				MoveRelative(0,3);
 			}
 		}
 		else if(m.Msg == Win32.WM_LBUTTONDOWN)
@@ -826,6 +821,37 @@ public class Win32
 	[DllImport("user32")] public static extern int SendMessage(HWND hwnd, int wMsg, int wParam, IntPtr lParam);
 	[DllImport("user32")] public static extern int PostMessage(HWND hwnd, int wMsg, int wParam, int lParam);
 	[DllImport("user32")] public static extern short GetKeyState(int nVirtKey);
+}
+// maybe put this into ScrollingTextBox
+public class LineCollection
+{
+	public LineCollection(ScrollingTextBox textBox)
+	{
+		this.textBox=textBox;
+	}
+	private ScrollingTextBox textBox;
+	public int Length
+	{
+		get
+		{
+			return ((RichTextBox)textBox).Lines.Length-textBox.TopMargin.Length-textBox.BottomMargin.Length;
+		}
+	}
+	public Line this[int index]
+	{
+		get
+		{
+			if(index<0)
+			{
+				index=0;
+			}
+			else if(index>=Length)
+			{
+				index=Length-1;
+			}
+			return new Line(index,textBox);
+		}
+	}
 }
 public class Line
 {
