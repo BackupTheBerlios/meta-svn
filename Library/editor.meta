@@ -99,9 +99,9 @@
 							SetFileName openFileName
 							editBox.RealText.Set
 								file.Read fileName
-							editBox.MoveRealCursor
-								<0>
-								<0>
+							'editBox.MoveRealCursor
+							'	<0>
+							'	<0>
 				cases.[hasName]*
 		Run=
 			|

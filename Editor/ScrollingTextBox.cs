@@ -16,32 +16,21 @@ public class ScrollingTextBox: RichTextBox
 	public ScrollingTextBox() 
 	{
 		InitializeComponent();
-		this.replace=new FindAndReplace(this);
+		textBox=this;
 		for(int i=0;i<25;i++)
 		{
 			emptyLines+="\n";
 		}
-		interactiveSearch=new InteractiveSearch((RichTextBox)this);
-		timer.Interval=50;
-		timer.Tick+=new EventHandler(timer_Tick);
-		replace.Closing+=new CancelEventHandler(replace_Closing);
-		// TODO: implement some proper singleton mechanism???
-		scrollingTextBox=this;
-//		RealText="";
-//		MoveCursor(0,0);
-//		MoveCursor(0,0);
-		//		timer.Start();
+//		this.interactiveSearch=new InteractiveSearch((RichTextBox)this);
+		this.replace=new FindAndReplace(this);
+		this.timer.Interval=50;
+		this.timer.Tick+=new EventHandler(timer_Tick);
+		this.replace.Closing+=new CancelEventHandler(replace_Closing);
 	}
-	private static ScrollingTextBox scrollingTextBox;
-	public void DrawValue(Rectangle rectangle,string text)
-	{
-		Graphics graphics=this.CreateGraphics();
-		graphics.DrawString(text,this.Font,Brushes.Red,rectangle);
-	}
+	private static ScrollingTextBox textBox;
 
 
-
-	static string emptyLines;
+	private static string emptyLines;
 	protected static string TopMargin
 	{
 		get
@@ -71,55 +60,25 @@ public class ScrollingTextBox: RichTextBox
 		this.Resize += new System.EventHandler(this.ScrollingTextBox_Resize);
 		this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ScrollingTextBox_KeyPress);
 		this.TextChanged += new System.EventHandler(this.ScrollingTextBox_TextChanged);
-		this.Layout += new System.Windows.Forms.LayoutEventHandler(this.ScrollingTextBox_Layout);
 		this.SelectionChanged += new System.EventHandler(this.ScrollingTextBox_SelectionChanged);
 
 	}
+
+
 	int GetTabs(string line) 
 	{
 		return line.Length-line.TrimStart('\t').Length;
 	}
-	string GetLeftLine() 
-	{
-		int iColumn=Column;
-		string sLine=GetLineText();
-		string sLeft=sLine.Substring(0,iColumn);
-		return sLeft;
-	}
-	// TODO: make property
-	int GetScrollColumn() 
-	{ 
-		int iColumn=Column;
-		int iTabs=GetTabs(GetLeftLine());
-		int iScrollLine=iTabs*3+iColumn; // TODO: make 4 a const used everywhere
-//		int iScrollLine=iTabs*5+iColumn;
-		return iScrollLine;
-	}
-	// copied from: http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/horizontalThread/b142ab4621009180/2d7ab486ca1f4d43?q=richtextbox+scrolling&rnum=8&hl=en#2d7ab486ca1f4d43
-	const int WM_VSCROLL = 0x0115;
-	const int WM_MOUSEWHEEL = 0x020a;
 
-	const int WM_HSCROLL = 0x0114;
-
-	protected void ScrollVertical( IntPtr ScrollInstruction )  // get rid of this stuff
-	{
-		System.Windows.Forms.Message msg =
-			Message.Create( this.Handle, WM_VSCROLL, ScrollInstruction,
-			IntPtr.Zero );
-		this.DefWndProc( ref msg );
-	}
-	protected void scrollWidthorizontal( IntPtr ScrollInstruction ) 
-	{
-		System.Windows.Forms.Message msg =
-			Message.Create( this.Handle, WM_HSCROLL, ScrollInstruction,
-			IntPtr.Zero );
-		this.DefWndProc( ref msg );
-	}
-
+//	int GetScrollColumn() 
+//	{ 
+//		int iColumn=Column;
+//		int iTabs=GetTabs(Line.Left);
+//		int iScrollLine=iTabs*3+iColumn; // TODO: make 4 a const used everywhere
+//		return iScrollLine;
+//	}
 
 	private int[] tabStops=new int[32];
-//	private int tabWidth;
-//	private const int tabWidth=30;
 	private void ScrollingTextBox_Resize(object sender, System.EventArgs e) 
 	{
 		if(SelectionStart!=-1) 
@@ -131,50 +90,26 @@ public class ScrollingTextBox: RichTextBox
 			double height=Convert.ToDouble(this.Size.Height)/2.618f;
 			SelectionIndent=Convert.ToInt32(width);
 			SelectAll();
-
-//			string text="aaaa";
-//
-//			Graphics graphics=CreateGraphics();
-//
-//			System.Drawing.StringFormat format  = new System.Drawing.StringFormat ();
-//			System.Drawing.RectangleF   rect    = new System.Drawing.RectangleF(0, 0,
-//				1000, 1000);
-//			System.Drawing.CharacterRange[] ranges  = 
-//									   {
-//											   new System.Drawing.CharacterRange(0, 
-//										   text.Length) };
-//			System.Drawing.Region[]         regions = new System.Drawing.Region[1];
-//
-//			format.SetMeasurableCharacterRanges (ranges);
-//
-//			regions = graphics.MeasureCharacterRanges (text, Font, rect, format);
-//			rect    = regions[0].GetBounds (graphics);
-
-//			int tabWidth=(int)(rect.Right + 1.0f);
-
 			int tabWidth=32;
-//			int tabWidth=Convert.ToInt32(this.CreateGraphics().MeasureString("aaaa",this.Font).Width);
-
 			int firstTabStop=Convert.ToInt32(width)%tabWidth;
 			for(int i = 0; i < tabStops.Length; i++)
 			{
 				tabStops[i] = i*tabWidth+firstTabStop;
 			}
-			//int[] tabs=SelectionTabs;
 			SelectionTabs=tabStops;
 			Select(selectionStart,0);
 			ResumeWindowUpdate();
 		}
 	}
-	bool wasControlITab=false;
+	private bool wasControlITab=false;
 	private void ScrollingTextBox_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e) 
 	{
-		if(e.KeyChar=='\t' && wasControlITab) // ignore Ctrl+I, which inserts a tab
+		if(e.KeyChar=='\t' && wasControlITab) // ignore Ctrl+I, which would insert a tab
 		{
 			wasControlITab=false;
 			e.Handled=true;
 		}
-		else if(e.KeyChar=='µ')
+		else if(e.KeyChar=='µ') // ignore 'µ', which is Ctrl+Alt+M
 		{
 			e.Handled=true;
 		}
@@ -182,14 +117,13 @@ public class ScrollingTextBox: RichTextBox
 		{
 			if(interactiveSearch.Active)
 			{
-				// TODO: why is this necessary?
 				if(e.KeyChar!=(char)Keys.Back)
 				{
 					interactiveSearch.OnKeyPress(e.KeyChar);
 					e.Handled=true;
 				}
 			}
-			else if(e.KeyChar.Equals('\t')) // TODO: do i need more exceptions???, all of them?
+			else if(e.KeyChar.Equals('\t'))
 			{
 				e.Handled=true;
 			}
@@ -198,7 +132,8 @@ public class ScrollingTextBox: RichTextBox
 				if(e.KeyChar.Equals((char)Keys.Enter)) 
 				{
 					string sTabs="";
-					for(int i=0;i<iTabs;i++) 
+					for(int i=0;i<Line.Tabs;i++) 
+//						for(int i=0;i<iTabs;i++) 
 					{
 						sTabs+='\t';
 					}
@@ -213,20 +148,611 @@ public class ScrollingTextBox: RichTextBox
 		{
 			wasControlITab=true;
 		}
-//		if(e.KeyCode==Keys.Tab)
-//		{
-//			int asdf=0;
-//			e.Handled=true;
-//		}
-//		if(keyBindings.ContainsKey(e.KeyData))
-//		{
-//			((Function)keyBindings[e.KeyData])();
-//			e.Handled=true;
-//		}
-		iTabs=GetTabs(GetLeftLine());
+//		iTabs=GetTabs(Line.Left);
 	}
-	private InteractiveSearch interactiveSearch;
+	private InteractiveSearch interactiveSearch=new InteractiveSearch();
 
+
+
+	private System.Windows.Forms.Timer timer=new System.Windows.Forms.Timer();
+	private void timer_Tick(object sender, EventArgs e)
+	{
+		DrawInfo();
+	}
+	protected void DrawInfo() // get back into the correct thread!!!!!!!!!!
+	{
+		if(info!=null)
+		{
+			info.Draw(this.CreateGraphics());//,CursorPosition);
+		}
+	}
+	public class Info
+	{
+		private string text;
+		private Font font=new Font("Courier New",10.0f);
+		public Info(string text,Point position)
+		{
+			this.position=position;
+			this.text=text;
+		}
+		Point position;
+		public void Draw(Graphics graphics)//,Point position)
+		{
+			graphics.DrawString(text,font,Brushes.Red,position);
+			size=graphics.MeasureString(text,font);
+		}
+		SizeF size=new SizeF(0,0);
+		public Rectangle Rectangle
+		{
+			get
+			{
+				return new Rectangle(position,size.ToSize());
+			}
+		}
+	}
+	protected override void OnPaint(PaintEventArgs e)
+	{
+		base.OnPaint (e);
+		DrawInfo();
+	}
+//	public Point CursorPosition
+//	{
+//		get
+//		{
+//			return GetPositionFromCharIndex(SelectionStart);
+//		}
+//	}
+	Info info;
+	public void ShowDebugValue(Map debugValue)
+	{
+		Graphics graphics=this.CreateGraphics();
+		MessageBox.Show(Serialize.Value((Map)debugValue));
+//		info=new Info(Serialize.Value((Map)debugValue),CursorPosition);
+		DrawInfo();
+	}
+//	public int ColumnFromScrollColumn(int line,int scrollColumn)
+//	{
+//		int i=0;
+//		for(;scrollColumn>0 && Lines[line].Length>i;scrollColumn--,i++)
+//		{
+//			if(Lines[line][i]=='\t')
+//			{
+//				scrollColumn-=3;
+//			}
+//		}
+//		return i;
+//	}
+//	static int iTabs=0;
+
+//	private int RealIndexFromIndex(int index)
+//	{
+//		return index-emptyLines.Length;
+//	}
+//	private int IndexFromRealIndex(int index)
+//	{
+//		return index+emptyLines.Length;
+//	}
+//	public string[] RealLines
+//	{
+//		get
+//		{
+//			ArrayList realLines=new ArrayList(Lines).GetRange(TopMargin.Length,base.Lines.Length-BottomMargin.Length-TopMargin.Length);
+//			return (string[])realLines.ToArray(typeof(string));
+//		}
+//	}
+	// TODO: switch Line and RealLine around
+	public int RealLineFromLine(int line)
+	{
+		int realLine=line-TopMargin.Length;
+		if(realLine<0)
+		{
+			realLine=0;
+		}
+		return realLine;
+	}
+	public int LineFromRealLine(int realLine)
+	{
+		return realLine+TopMargin.Length;
+	}
+	protected new Line[] Lines
+	{
+		get
+		{
+			ArrayList lines=new ArrayList();
+			for(int i=0;i<base.Lines.Length-TopMargin.Length-BottomMargin.Length;i++)
+//				for(int i=0;i<RealLines.Length;i++)
+			{
+				lines.Add(new Line(i,this));
+			}
+			return (Line[])lines.ToArray(typeof(Line));
+		}
+	}
+
+	// TODO: put RealLines transformation into MoveCursor
+	public void MoveDocumentEnd()
+	{
+		MoveAbsolute(Lines[Lines.Length-1].Length,Lines.Length-1);
+	}
+	public void MoveDocumentStart()
+	{
+		MoveAbsolute(0,0);
+	}
+
+	public void DeleteCharLeft()
+	{
+		if(interactiveSearch.Active)
+		{
+			interactiveSearch.DeleteCharLeft();
+		}
+		else
+		{
+			if(SelectedText.Length==0)
+			{
+				Select(SelectionStart-1,1);
+			}
+			SelectedText="";
+		}
+	}
+	public void DeleteCharRight()
+	{
+		if(SelectedText.Length==0)
+		{
+			Select(SelectionStart,1);// TODO: use SelectRelative?
+		}
+		SelectedText="";
+	}
+	public void SelectRelative(int column, int line)
+	{
+		SelectAbsolute(Column+column,Line.Index+line);
+	}
+	private int selectStart;
+	public void SelectAbsolute(int column,int line)
+	{
+		if(SelectionLength==0)
+		{
+			selectStart=SelectionStart;
+		}
+		int selectionDiff=GetLinesLength(LineFromRealLine(line))+column-selectStart;
+		int start;
+		if(selectionDiff>0)
+		{
+			start=selectStart;
+		}
+		else
+		{
+			start=selectStart+selectionDiff;
+		}
+		base.Select(start,Math.Abs(selectionDiff));
+	}
+	public void SelectLineDown()
+	{
+		SelectRelative(0,1);
+	}
+	public void SelectLineUp()
+	{
+		SelectRelative(0,-1);
+	}
+	public void SelectLineEnd()
+	{
+		SelectAbsolute(Line.Length,Line.Index);
+	}
+	public void SelectLineStart()
+	{
+		SelectAbsolute(0,Line.Index);
+	}
+	public void SelectCharLeft()
+	{
+		SelectRelative(-1,0);
+	}
+	public void SelectCharRight()
+	{
+		Select(1,0);
+	}
+	private Point GetNextWordPosition()
+	{
+		return GetWordPosition(1);
+//		int column=Column;
+//		int line=Line.Index;
+//		while(true)
+//		{
+//
+//			if(column>=Line.Length)
+//			{
+//				line++;
+//				column=0;
+//				break;
+//			}
+//			if(!Char.IsLetterOrDigit(Lines[line].Text[column+1]))
+//			{
+//				column++;
+//				break;
+//			}
+//			column++;
+//		}
+//		return new Point(column,line);
+	}
+	private Point GetWordPosition(int direction)
+	{
+		int moved=0;
+		while(true)
+		{
+			int next=SelectionStart+moved;
+			if(direction<0)
+			{
+				next-=1;
+			}
+			if(!Char.IsLetterOrDigit(this.Text[next]))
+			{
+				break;
+			}
+			else
+			{
+				moved+=direction;
+			}
+		}
+		if(moved==0)
+		{
+			moved+=direction;
+		}
+		int index=SelectionStart+moved;
+		// TODO: SelectionStart isnt really accurate, use our own selectionstart
+		return new Point(GetColumnFromCharIndex(index),RealLineFromLine(GetLineFromCharIndex(index)));
+	}
+	// combine with above
+	private Point GetPreviousWordPosition()
+	{
+		return GetWordPosition(-1);
+//		int column=Column;
+//		int line=Line.Index;
+//		do
+//		{
+//			column--;
+//			if(column<=0)
+//			{
+//				line--;
+//				column=Lines[line].Length-1;
+//				break;
+//			}
+//		}
+//		while(Char.IsLetterOrDigit(Lines[line].Text[column]));
+//		return new Point(column,line);
+	}
+	public void SelectWordLeft()
+	{
+		Point position=GetPreviousWordPosition();
+		SelectAbsolute(position.X,position.Y);
+	}
+	public void SelectWordRight()
+	{
+		Point position=GetNextWordPosition();
+		SelectAbsolute(position.X,position.Y);
+	}
+	public void DeleteWordRight()
+	{
+		SelectWordRight();
+		SelectedText="";
+	}
+	public void DeleteWordLeft()
+	{
+		SelectWordLeft();
+		SelectedText="";
+	}
+	private static int lastColumn=-1;
+	public void MoveRelative(int column,int line)
+	{
+		MoveAbsolute(Column+column,Line.Index+line);
+	}
+	public void MoveAbsolute(int column,int line)
+	{
+		Select(GetLinesLength(LineFromRealLine(line))+column,0);
+	}
+	private int GetLinesPerPage()
+	{
+		return Convert.ToInt32(((double)this.Height/(double)this.Font.Height)/3.3);
+	}
+	public void MovePageDown()
+	{
+		MoveRelative(0,GetLinesPerPage());
+	}
+	public void MovePageUp()
+	{
+		MoveRelative(0,-GetLinesPerPage());
+	}
+	public void MoveLineDown() 
+	{
+		MoveRelative(0,1);
+	}
+	public void MoveLineUp() 
+	{
+		MoveRelative(0,-1);
+	}
+	public void MoveLineEnd()
+	{
+		MoveAbsolute(Line.Length,Line.Index);
+	}
+
+	public void MoveLineStart()
+	{
+		if(Line.Tabs!=Column)
+		{
+			MoveAbsolute(Line.Tabs,Line.Index);
+		}
+		else
+		{
+			MoveAbsolute(0,Line.Index);
+		}
+	}
+	public void MoveWordRight()
+	{
+		Point position=GetNextWordPosition();
+		MoveAbsolute(position.X,position.Y);
+	}
+	// TODO: refactor
+	public void MoveWordLeft()
+	{
+		Point position=GetPreviousWordPosition();
+		MoveAbsolute(position.X,position.Y);
+	}
+	public void MoveCharLeft() 
+	{
+		MoveRelative(-1,0);
+	}
+	public void MoveCharRight() 
+	{
+		MoveRelative(1,0);
+	}
+
+
+	public void FindAndReplace()
+	{
+		replace.Owner=this.FindForm();
+		replace.Show();
+	}
+	public void StopInteractiveSearch()
+	{
+		this.Cursor=Cursors.IBeam;
+		interactiveSearch.Stop();
+	}
+	public void StartInteractiveSearch()
+	{
+		if(interactiveSearch.Active)
+		{
+			SelectionStart++;
+			interactiveSearch.Find();
+		}
+		else
+		{
+			this.Cursor=Cursors.PanSouth;
+			interactiveSearch.Start();
+		}
+	}
+//	public void IncreaseSelectionIndent()
+//	{
+//		int selectionStart=SelectionStart;
+//		int selectionEnd=selectionStart+SelectedText.Length;
+//		if(selectionEnd>selectionStart)
+//		{
+//			selectionEnd--;
+//		}
+//		int lastLine=GetLineFromCharIndex(selectionEnd);
+//		int startLine=Line.Index;
+//		for(int line=startLine;line<=lastLine;line++)
+//		{
+//			Select(GetLinesLength(line)+GetTabs(Lines[line]),0);
+//			SelectedText="\t";
+//		}
+//		if(selectionStart==selectionEnd)
+//		{
+//			Select(selectionStart+1,0);
+//		}
+//		else
+//		{
+//			Select(selectionStart,selectionEnd-selectionStart+(lastLine-startLine)+1);
+//		}
+//	}
+//	public void DecreaseSelectionIndent()
+//	{
+//		int selectionStart=SelectionStart;
+//		int selectionEnd=selectionStart+SelectedText.Length;
+//		int removedTabs=0;
+//		int lastLine=GetLineFromCharIndex(selectionEnd-1);
+//		int startLine=Line.Index;
+//		for(int line=startLine;line<=lastLine;line++)
+//		{
+//			if(GetTabs(Lines[line])>0)
+//			{
+//				removedTabs++;
+//				Select(GetLinesLength(line)+GetTabs(Lines[line])-1,1);
+//				SelectedText="";
+//			}
+//		}
+//		int length=selectionEnd-selectionStart-removedTabs;
+//		if(length<0)
+//		{
+//			length=0;
+//		}
+//		Select(selectionStart,length);
+//	}
+
+	[DllImport("user32.dll")]
+	public static extern bool LockWindowUpdate(IntPtr hWndLock);
+
+
+	public void SuspendWindowUpdate()
+	{
+		LockWindowUpdate(Handle);
+	}
+	public void ResumeWindowUpdate()
+	{
+		LockWindowUpdate(IntPtr.Zero);
+	}
+
+	// put this into Line?
+	int GetLinesLength(int iLine) 
+	{
+		iLine=iLine<base.Lines.Length?iLine:base.Lines.Length-1;
+		if(iLine<0) 
+		{
+			return 0;
+		}
+		int count=0;
+		ArrayList lines=new ArrayList(base.Lines);
+		foreach(string s in lines.GetRange(0,iLine)) 
+		{
+			count+=s.Length+1;
+		}
+		return count;
+	}
+
+	public Line Line
+	{
+		get
+		{
+			// SelectionStart ist nicht korrekt, muss die Cursor-Position sein
+			return new Line(RealLineFromLine(GetLineFromCharIndex(SelectionStart)),this);
+		}
+	}
+	public int Column
+	{
+		get
+		{
+			int column=SelectionStart-GetLinesLength(LineFromRealLine(Line.Index));
+			if(column<0)
+			{
+				column=0;
+			}
+			return column;
+		}
+		set
+		{
+			SelectionStart=GetLinesLength(Line.Index)+value;
+		}
+	}
+	public string RealText
+	{
+		get
+		{
+			string text="";
+			foreach(string line in base.Lines)
+			{
+				text+=line.TrimEnd(' ')+Environment.NewLine;
+			}
+			text=text.TrimStart(null);
+			text=text.TrimEnd(null);
+			return text.Replace(emptyLines,"");
+		}
+		set
+		{
+			Text=emptyLines+value+emptyLines;
+		}
+	}
+	private FindAndReplace replace;
+
+	// copied from: http://www.thecodeproject.com/cs/miscctrl/SyntaxHighlighting.asp
+	private unsafe void SetScrollPos(Win32.POINT point)  // only this scrolling function is really needed
+	{
+		IntPtr ptr = new IntPtr(&point);
+		Win32.SendMessage(Handle, Win32.EM_SETSCROLLPOS, 0, ptr);
+	}
+
+	private bool suspendScroll=false;
+
+	// TODO: get rid of this function
+	private void SetSelectionStartNoScroll(int selectionStart)  // what is that?
+	{
+		this.suspendScroll=true;
+		SelectionStart=selectionStart;
+		this.suspendScroll=false;
+	}
+	// TODO: implement proper tabstops, see http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/thread/1ef28b955bd06981/27f324e4a1b722d4?q=c%23+control+i+richtextbox+tab&rnum=5&hl=en#27f324e4a1b722d4
+	void ScrollToMiddle() 
+	{
+		if(!suspendScroll) 
+		{
+			Win32.POINT point=new Win32.POINT();
+			//		int colC=Column;
+			int lineL=LineFromRealLine(Line.Index);
+			string lineS=Line.Text;
+//			string lineS=GetLineText();
+			Graphics graphics=this.CreateGraphics();
+			SizeF sizeF=graphics.MeasureString(Line.Left.Replace("\t","aaaaa").Replace(" ","a"),Font,new PointF(0.0f,0.0f),(StringFormat)StringFormat.GenericTypographic.Clone());
+			point.x=(int)sizeF.Width; // this sucks, can't we scroll the rest, too
+			point.y=(int)((this.Font.Height+1.0)*(float)lineL-(float)this.Size.Height/1.618f); // -1.0 is magic number, don't know why
+			// TODO: check out this stuff: http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/thread/1ef28b955bd06981/27f324e4a1b722d4?q=c%23+control+i+richtextbox+tab&rnum=5&hl=en#27f324e4a1b722d4
+			SetScrollPos(point);
+		}
+
+	}
+	private void ScrollingTextBox_SelectionChanged(object sender, System.EventArgs e) 
+	{
+		ScrollToMiddle();
+	}
+
+	private void ScrollingTextBox_TextChanged(object sender, System.EventArgs e)
+	{
+		ScrollToMiddle();
+	}
+
+
+	protected void MoveCaretToMiddle() 
+	{
+		this.SetSelectionStartNoScroll(GetCharIndexFromPosition(new Point(this.Size.Width/2,this.Height/2)));
+	}
+	public int GetColumnFromCharIndex(int charIndex)
+	{
+		return charIndex-GetLinesLength(GetLineFromCharIndex(charIndex));
+	}
+
+
+
+	protected override void WndProc(ref Message m) 
+	{
+		if(m.Msg == Win32.WM_MOUSEWHEEL) 
+		{
+			if(m.WParam.ToInt32()>IntPtr.Zero.ToInt32()) 
+			{
+				MoveRelative(0,-3);
+			}
+			else if(m.WParam.ToInt32()<IntPtr.Zero.ToInt32()) 
+			{
+				MoveRelative(0,3);
+			}
+		}
+		else if(m.Msg == Win32.WM_LBUTTONDOWN)
+		{
+			Point mousePos=new Point((int)m.LParam);
+			int charIndex=this.GetCharIndexFromPosition(mousePos);
+			MoveAbsolute(charIndex-GetLinesLength(GetLineFromCharIndex(charIndex)),RealLineFromLine(GetLineFromCharIndex(charIndex)));
+		}
+		else if(m.Msg==Win32.WM_LBUTTONDBLCLK)
+		{
+		}
+		else
+		{
+			if ( m.Msg == Win32.WM_HSCROLL || m.Msg == Win32.WM_VSCROLL ) 
+			{
+				this.MoveCaretToMiddle();
+			}
+			if(m.Msg == Win32.WM_PAINT)
+			{
+				if(info!=null)
+				{
+					Invalidate();
+				}
+			}	
+			base.WndProc (ref m);
+			if(m.Msg == Win32.WM_PAINT)
+			{
+//				DrawInfo();
+			}	
+		}
+	}
+
+	private void replace_Closing(object sender, CancelEventArgs e)
+	{
+		// because of stupid bug, where editor doesnt have focus after replacing all
+		this.FindForm().BringToFront();
+	}
 	public class InteractiveSearch
 	{
 		public void DeleteCharLeft()
@@ -273,1173 +799,79 @@ public class ScrollingTextBox: RichTextBox
 			textBox.Select(textBox.SelectionStart,0);
 			text="";
 		}
-		private RichTextBox textBox;
-		public InteractiveSearch(RichTextBox textBox)
-		{
-			this.textBox=textBox;
-		}
-		//        private int startLine;
-		
 	}
-	private System.Windows.Forms.Timer timer=new System.Windows.Forms.Timer();
+}
+public class Win32 
+{
+	// copied from: http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/horizontalThread/b142ab4621009180/2d7ab486ca1f4d43?q=richtextbox+scrolling&rnum=8&hl=en#2d7ab486ca1f4d43
+	public const int WM_VSCROLL = 0x0115;
+	public const int WM_MOUSEWHEEL = 0x020a;
 
-	private void timer_Tick(object sender, EventArgs e)
-	{
-		DrawInfo();
-	}
-	protected void DrawInfo() // get back into the correct thread!!!!!!!!!!
-	{
-		if(info!=null)
-		{
-			info.Draw(this.CreateGraphics());//,CursorPosition);
-		}
-	}
-	public class Info
-	{
-		private string text;
-		private Font font=new Font("Courier New",10.0f);
-		public Info(string text,Point position)
-		{
-			this.position=position;
-			this.text=text;
-		}
-		Point position;
-		public void Draw(Graphics graphics)//,Point position)
-		{
-			graphics.DrawString(text,font,Brushes.Red,position);
-			size=graphics.MeasureString(text,font);
-		}
-		SizeF size=new SizeF(0,0);
-		public Rectangle Rectangle
-		{
-			get
-			{
-				return new Rectangle(position,size.ToSize());
-			}
-		}
-	}
-	protected override void OnPaint(PaintEventArgs e)
-	{
-		base.OnPaint (e);
-		DrawInfo();
-	}
+	public const int WM_HSCROLL = 0x0114;
 
-	public Point CursorPosition
-	{
-		get
-		{
-			return GetPositionFromCharIndex(SelectionStart);
-		}
-	}
-	Info info;//=new Info("hello!!!!!!!!!\n\n\nhello!!!!!!!!");
-	public void ShowDebugValue(Map debugValue)
-	{
-		Graphics graphics=this.CreateGraphics();
-		MessageBox.Show(Serialize.Value((Map)debugValue));
-		info=new Info(Serialize.Value((Map)debugValue),CursorPosition);
-		DrawInfo();
-		//		graphics.DrawString(Serialize.Value((Map)debugValue),this.Font,Brushes.Red,this.GetPositionFromCharIndex(this.SelectionStart));
-	}
-	public int ColumnFromScrollColumn(int line,int scrollColumn)
-	{
-		int i=0;
-		for(;scrollColumn>0 && Lines[line].Length>i;scrollColumn--,i++)
-		{
-			if(Lines[line][i]=='\t')
-			{
-				scrollColumn-=3;
-			}
-		}
-		return i;
-	}
-	static int iTabs=0;
-
-//	Hashtable keyBindings=new Hashtable();
-	public delegate void Function();
-	private int RealIndexFromIndex(int index)
-	{
-		return index-emptyLines.Length;
-	}
-	private int IndexFromRealIndex(int index)
-	{
-		return index+emptyLines.Length;
-	}
-	public string[] RealLines
-	{
-		get
-		{
-			ArrayList realLines=new ArrayList(Lines).GetRange(LineFromRealLine(0),Lines.Length-BottomMargin.Length-TopMargin.Length);
-			return (string[])realLines.ToArray(typeof(string));
-		}
-	}
-	public int RealLineFromLine(int line)
-	{
-		int realLine=line-TopMargin.Length;
-		if(realLine<0)
-		{
-			realLine=0;
-		}
-		return realLine;
-	}
-	public int LineFromRealLine(int realLine)
-	{
-		return realLine+TopMargin.Length;
-	}
-
-	// TODO: put RealLines transformation into MoveCursor
-	public void MoveDocumentEnd()
-	{
-		MoveCursor(LineFromRealLine(RealLines.Length-1),RealLines[RealLines.Length-1].Length);
-		//		MoveCursor(Lines.Length,1000);
-		//		SelectionStart=IndexFromRealIndex(RealText.Length-1);
-	}
-	public void MoveDocumentStart()
-	{
-		MoveCursor(LineFromRealLine(0),0);
-		//		SelectionStart=IndexFromRealIndex(0);
-	}
-
-	public void DeleteCharLeft()
-	{
-		if(interactiveSearch.Active)
-		{
-			interactiveSearch.DeleteCharLeft();
-		}
-		else
-		{
-			if(SelectedText.Length==0)
-			{
-				Select(SelectionStart-1,1);
-				SelectedText="";
-			}
-			else
-			{
-				SelectedText="";
-			}
-		}
-	}
-	public void DeleteCharRight()
-		//		public void DeleteCharRight()
-	{
-		if(SelectedText.Length==0)
-		{
-			Select(SelectionStart,1);
-			SelectedText="";
-		}
-		else
-		{
-			SelectedText="";
-		}
-	}
-//	public class LayoutPosition
-//	{
-//		private int line;
-//		private int column;
-//		public LayoutPosition(int line,int column)
-//		{
-//			this.line=line;
-//			this.column=column;
-//		}
-//		public static implicit operator CharacterPosition(LayoutPosition position)
-//		{
-//			return new CharacterPosition(position.line
-//		}
-//	}
-//	public class CharacterPosition
-//	{
-//		private int line;
-//		private int column;
-//		public CharacterPosition(int line,int column)
-//		{
-//			this.line=line;
-//			this.column=column;
-//		}
-//		public static implicit operator LayoutPosition(CharacterPosition position)
-//		{
-//		}
-//	}
-
-	// TODO: Character Column can only exist with a CharacterLine!!!!
-	public struct LayoutPosition
-	{
-		public LayoutLine Line
-		{
-			get
-			{
-				return line;
-			}
-		}
-		public LayoutColumn Column
-		{
-			get
-			{
-				return column;
-			}
-		}
-		// TODO: maybe introduce LineDifference, ColumnDifference?? or is that too complicated
-		public LayoutPosition MoveLine(int difference)
-		{
-			// TODO: maybe overload plus, minus operator and so on, 
-			// but usually this is too much magic and not that useful
-			return new LayoutPosition(line.Move(difference),column);
-		}
-		public LayoutPosition MoveColumn(int difference)
-		{
-			return new LayoutPosition(line,column.Move(difference));
-		}
-		private LayoutLine line;
-		private LayoutColumn column;
-		public LayoutPosition(LayoutLine line,LayoutColumn column)
-		{
-			this.line=line;
-			this.column=column;
-		}
-
-//		private int GetLinesLength(int iLine) 
-//		{
-//			iLine=iLine<Lines.Length?iLine:Lines.Length-1;
-//			if(iLine<0) 
-//			{
-//				return 0;
-//			}
-//			int count=0;
-//			ArrayList lines=new ArrayList(Lines);
-//			foreach(string s in lines.GetRange(0,iLine)) 
-//			{
-//				count+=s.Length+1;
-//			}
-//			return count;
-//		}
-		public int CharIndex
-		{
-			get
-			{
-				return CharacterPosition.CharIndex;
-			}
-		}
-		public CharacterPosition CharacterPosition
-		{
-			get
-			{
-				// TODO: make an overloaded constructor for CharacterPosition
-				return new CharacterPosition(line.CharacterLine,line.CharacterLine.CharacterColumnFromLayoutColumn(column));
-			}
-		}
-//		public static implicit operator CharacterPosition(LayoutPosition position)
-//		{
-//			// TODO: make an overloaded constructor for CharacterPosition
-//			return new CharacterPosition(position.line.CharacterLine,position.line.CharacterLine.CharacterColumnFromLayoutColumn(position.column));
-//		}
-		// TODO: maybe force a column to always know its line??? doesnt make sense
-	}
-	// TODO: rename ScrollingTextBox to MetaEdit or so
-	// TODO: make ScrollingTextBox HAVE a RichTextBox not BE a RichTextBox because
-	// the interface is too cluttered
-
-	public struct CharacterPosition
-	{
-		public int CharIndex
-		{
-			get
-			{
-				return line.CharIndex+column.CharIndex;
-			}
-		}
-		private CharacterLine line;
-		private CharacterColumn column;
-		public CharacterPosition(int line,int column)
-		{
-			this.line=new CharacterLine(line);
-			this.column=new CharacterColumn(column);
-		}
-		public CharacterPosition(CharacterLine line,CharacterColumn column)
-		{
-			this.line=line;
-			this.column=column;
-		}
-
-		public LayoutPosition LayoutPosition
-		{
-			get
-			{
-				return new LayoutPosition(line.LayoutLine,line.LayoutColumnFromCharacterColumn(column));
-			}
-		}
-
-//		public static implicit operator LayoutPosition(CharacterPosition position)
-//		{
-//			return new LayoutPosition(position.line.LayoutLine,position.line.LayoutColumnFromCharacterColumn(position.column));
-//		}
-	}
-
-
-	public struct LayoutColumn
-	{
-		public LayoutColumn Move(int difference)
-		{
-			return new LayoutColumn(layoutColumn+difference);
-		}
-		private int layoutColumn;
-		public LayoutColumn(int layoutColumn)
-		{
-			this.layoutColumn=layoutColumn;
-		}
-		public int Column
-		{
-			get
-			{
-				return layoutColumn;
-			}
-		}
-//		public static implicit operator CharacterColumn(LayoutColumn column)
-//		{
-//			return 
-//		}
-	}
-	public struct CharacterColumn
-	{
-		// TODO: not really necessary
-		public int CharIndex
-		{
-			get
-			{
-				return Column;
-			}
-		}
-		private int characterColumn;
-		public CharacterColumn(int characterColumn)
-		{
-			this.characterColumn=characterColumn;
-		}
-		public int Column
-		{
-			get
-			{
-				return characterColumn;
-			}
-		}
-	}
-	public struct LayoutLine
-	{
-		public LayoutColumn LastColumn
-		{
-			get
-			{
-				return CharacterLine.LayoutColumnFromCharacterColumn(new CharacterColumn(CharacterLine.Text.Length));
-			}
-		}
-		public LayoutLine Move(int difference)
-		{
-			// TODO: do some checking here
-			return new LayoutLine(layoutLine+difference);
-		}
-		private int layoutLine;
-		public LayoutLine(int layoutLine)
-		{
-			this.layoutLine=layoutLine;
-		}
-		public int Line
-		{
-			get
-			{
-				return layoutLine;
-			}
-		}
-		public CharacterLine CharacterLine
-		{
-			get
-			{
-				return new CharacterLine(Line+TopMargin.Length);
-			}
-		}
-//		public static implicit operator CharacterLine(LayoutLine line)
-//		{
-//			return new CharacterLine(line.layoutLine-TopMargin.Length);
-//		}
-	}
-	public struct CharacterLine
-	{
-		public int CharIndex
-		{
-			get
-			{
-//
-//				iLine=iLine<Lines.Length?iLine:Lines.Length-1;
-//				if(Line<0) 
-//				{
-//					return 0;
-//				}
-				int count=0;
-				ArrayList lines=new ArrayList(scrollingTextBox.Lines);
-				foreach(string s in lines.GetRange(0,Line)) 
-				{
-					count+=s.Length+1;
-				}
-				return count;
-			}
-		}
-		private int ColumnFromScrollColumn(int line,int scrollColumn)
-		{
-			int i=0;
-			for(;scrollColumn>0 && Text.Length>i;scrollColumn--,i++)
-			{
-				if(Text[i]=='\t')
-				{
-					scrollColumn-=3;
-				}
-			}
-			return i;
-		}
-		public int Line
-		{
-			get
-			{
-				return characterLine;
-			}
-		}
-		public LayoutLine LayoutLine
-		{
-			get
-			{
-				return new LayoutLine(Line-TopMargin.Length);
-			}
-		}
-		public string Text
-		{
-			get
-			{
-				return scrollingTextBox.Lines[Line];
-			}
-		}
-		private int Tabs
-		{
-			get
-			{
-				return Text.Length-Text.TrimStart('\t').Length;
-//				return Text.Substring(0,Text.Length-Text.TrimStart('\t').Length);
-			}
-		}
-		public LayoutColumn LayoutColumnFromCharacterColumn(CharacterColumn characterColumn)
-		{
-			return new LayoutColumn(characterColumn.Column+Tabs*(tabWidth-1));
-		}
-		public CharacterColumn CharacterColumnFromLayoutColumn(LayoutColumn layoutColumn)
-		{
-			return new CharacterColumn(ColumnFromScrollColumn(characterLine,layoutColumn.Column));
-		}
-//		public LayoutColumn LayoutColumnFromCharacterColumn(CharacterColumn characterColumn)
-//		{
-//			return new LayoutColumn(ColumnFromScrollColumn(characterLine,characterColumn.Column));
-//		}
-//		public CharacterColumn CharacterColumnFromLayoutColumn(LayoutColumn layoutColumn)
-//		{
-//			return new CharacterColumn(layoutColumn.Column+Tabs*(tabWidth-1));
-//		}
-		private const int tabWidth=4;
-		private int characterLine;
-		public CharacterLine(int characterLine)
-		{
-			this.characterLine=characterLine;
-		}
-		public static explicit operator int(CharacterLine line)
-		{
-			return line.characterLine;
-		}
-//		public int Value
-//		{
-//			get
-//			{
-//				return characterLine;
-//			}
-//		}
-	}
-	private LayoutPosition Position
-	{
-		get
-		{
-			// TODO: implicit casts would be useful, maybe, but maybe not, will not used widely enough
-			return new CharacterPosition(Line,Column).LayoutPosition;
-		}
-	}
-	// TODO: introduce Selection class
-	private LayoutPosition EndPosition
-	{
-		get
-		{
-			CharacterLine line=new CharacterLine(GetLineFromCharIndex(SelectionStart+SelectionLength));
-			CharacterColumn column=new CharacterColumn(SelectionStart+SelectionLength-GetLinesLength(line.Line));
-			return new CharacterPosition(line,column).LayoutPosition;
-		}
-	}
-	 
-
-
-	public void Select(LayoutPosition start,LayoutPosition end)
-	{
-		Select(start.CharIndex,end.CharIndex-start.CharIndex);
-	}
-	// TODO: selection start must be able to be on left or on right side of selection
-	public void SelectLineDown()
-	{
-		Select(Position,EndPosition.MoveLine(1));
-	}
-	// TODO: wrap select, use Columns, Lines, ScrollColumns
-	public void SelectLineUp()
-	{
-		Select(Position.MoveLine(-1),EndPosition);
-	}
-	// TODO: put commands into their own classes
-
-	public void SelectLineEnd()
-	{
-		Select(Position,new LayoutPosition(EndPosition.Line,EndPosition.Line.LastColumn));
-	}
-	public void SelectLineStart()
-	{
-	}
-
-	// TODO: write safe wrappers for all Selection stuff, and all movement stuff, so bounds checking is in one place
-	public void SelectCharLeft()
-	{
-        Select(SelectionStart-1,SelectionLength+1);
-	}
-	public void SelectCharRight()
-	{
-		Select(SelectionStart,SelectionLength+1);
-	}
-
-	public void SelectWordLeft()
-	{
-		int end=SelectionEnd;
-//		int end=SelectionStart+SelectedText.Length;
-		//		SelectionStart=SelectionStart+SelectedText.Length;
-		MoveWordLeft();
-		int start=SelectionStart;//+SelectedText.Length;
-		Select(start,end-start);
-	}
-	public int SelectionEnd
-	{
-		get
-		{
-			return SelectionStart+SelectedText.Length;
-		}
-	}
-	// TODO: maybe add SelectionEnd property
-	public void SelectWordRight()
-	{
-		int start=SelectionStart;
-		SelectionStart=SelectionEnd;
-//		SelectionStart=SelectionStart+SelectedText.Length;
-		MoveWordRight();
-		int end=SelectionStart;
-		Select(start,end-start);
-	}
-
-	public void DeleteWordRight()
-	{
-		int start=SelectionStart;
-		MoveWordRight();
-		int end=SelectionStart;
-		Select(start,end-start);
-		SelectedText="";
-	}
-	public void DeleteWordLeft()
-	{
-        int end=SelectionStart+SelectedText.Length;
-		MoveWordLeft();
-		int start=SelectionStart;
-		Select(start,end-start);
-		SelectedText="";
-	}
-	
-
-
-	private static int lastColumn=-1;
-	protected void MoveLineRelative(int lineDifference)
-	{
-		MoveLine(Line+lineDifference);
-	}
-	protected void MoveLine(int line)
-	{
-		if(lastColumn==-1)
-		{
-			lastColumn=GetScrollColumn();
-		}
-		MoveCursor(line,lastColumn);
-	}
-	public int LinesPerPage
-	{
-		get
-		{
-			return Convert.ToInt32(((double)this.Height/(double)this.Font.Height)/3.3);
-		}
-	}
-	public void MovePageDown()
-	{
-		MoveLineRelative(LinesPerPage);
-	}
-	public void MovePageUp()
-	{
-		MoveLineRelative(-LinesPerPage);
-	}
-	public void MoveLineDown() 
-	{
-		MoveLineRelative(1);
-	}
-	public void MoveLineUp() 
-	{
-		MoveLineRelative(-1);
-	}
-	public void MoveLineEnd()
-	{
-		MoveHorizontal(Lines[Line].Length);
-		//		MoveTo(GetLinesLength(Line)+Lines[Line].Length);
-	}
-	public void IncreaseSelectionIndent()
-	{
-//		SuspendWindowUpdate();
-		int selectionStart=SelectionStart;
-		int selectionEnd=selectionStart+SelectedText.Length;
-		if(selectionEnd>selectionStart)
-		{
-			selectionEnd--;
-		}
-		int lastLine=GetLineFromCharIndex(selectionEnd);
-		int startLine=Line;
-		for(int line=startLine;line<=lastLine;line++)
-		{
-			Select(GetLinesLength(line)+GetTabs(Lines[line]),0);
-			SelectedText="\t";
-		}
-		if(selectionStart==selectionEnd)
-		{
-			Select(selectionStart+1,0);
-		}
-		else
-		{
-			Select(selectionStart,selectionEnd-selectionStart+(lastLine-startLine)+1);
-		}
-//		SelectionStart=selectionStart;
-//		ResumeWindowUpdate();
-	}
-	[DllImport("user32.dll")]
-	public static extern bool LockWindowUpdate(IntPtr hWndLock);
-
-	///use SendMessage instead of LockWindowUpdate, see http://weblogs.asp.net/jdanforth/archive/2004/03/12/88458.aspx
-
-	public void SuspendWindowUpdate()
-	{
-		LockWindowUpdate(Handle);
-	}
-	public void ResumeWindowUpdate()
-	{
-		LockWindowUpdate(IntPtr.Zero);
-	}
-	public void DecreaseSelectionIndent()
-	{
-//		SuspendWindowUpdate();
-		int selectionStart=SelectionStart;
-		int selectionEnd=selectionStart+SelectedText.Length;
-		int removedTabs=0;
-		int lastLine=GetLineFromCharIndex(selectionEnd-1);
-		int startLine=Line;
-		for(int line=startLine;line<=lastLine;line++)
-		{
-			if(GetTabs(Lines[line])>0)
-			{
-				removedTabs++;
-				Select(GetLinesLength(line)+GetTabs(Lines[line])-1,1);
-				SelectedText="";
-			}
-		}
-		int length=selectionEnd-selectionStart-removedTabs;
-		if(length<0)
-		{
-			length=0;
-		}
-		Select(selectionStart,length);
-//		ResumeWindowUpdate();
-
-			//change colors and stuff in the RichTextBox
-	}
-	public void MoveLineStart()
-	{
-//		int start=GetLinesLength(Line);
-//		start+=this.GetTabs(Lines[Line]);
-//		int start=this.GetTabs();
-		int column=GetTabs(Lines[Line]);
-		if(column!=Column)
-		{
-			MoveHorizontal(column);
-		}
-		else
-		{
-			MoveHorizontal(0);
-		}
-		
-//		MoveTo(start);
-	}
-	// TODO: refactor
-	// TODO: bugfix
-	public void MoveWordRight()
-	{
-//		for(int i=Column;i<Line
-		if(!Char.IsLetter(Character))
-		{
-			MoveCharRight();
-		}
-		else
-		{
-			int i=Column;
-			while(i<Lines[Line].Length && Char.IsLetter(Lines[Line][i]))
-				//				while(Char.IsLetter(Character))
-			{
-				i++;
-				//				MoveCharLeft(); // TODO: überschreiben, um Abstürze zu vermeiden ??
-			}
-			MoveHorizontal(i);
-		}
-//		if(!Char.IsLetter(Character))
-//		{
-//			MoveCharRight();
-//		}
-//		else
-//		{
-//			while(Char.IsLetter(Character))
-//			{
-//				MoveCharRight(); // TODO: überschreiben, um Abstürze zu vermeiden ??
-//			}
-//		}
-	}
-	// TODO: refactor
-	public void MoveWordLeft()
-	{
-		if(!Char.IsLetter(Text[SelectionStart-1]))
-			//			if(!Char.IsLetter(Character))
-		{
-			MoveCharLeft();
-		}
-		else
-		{
-			int i=Column;
-			while(Char.IsLetter(Lines[Line][i-1]))
-				//				while(Char.IsLetter(Character))
-			{
-				i--;
-//				MoveCharLeft(); // TODO: überschreiben, um Abstürze zu vermeiden ??
-			}
-			MoveHorizontal(i);
-		}
-//		if(!Char.IsLetter(Text[SelectionStart-1]))
-////			if(!Char.IsLetter(Character))
-//		{
-//			MoveCharLeft();
-//		}
-//		else
-//		{
-//			while(Char.IsLetter(Text[SelectionStart-1]))
-////				while(Char.IsLetter(Character))
-//			{
-//				MoveCharLeft(); // TODO: überschreiben, um Abstürze zu vermeiden ??
-//			}
-//		}
-	}
-	public void MoveCharLeft() 
-	{
-		MoveHorizontalRelative(-1);
-//		SelectionStart--;
-	}
-	public void MoveCharRight() 
-	{
-		MoveHorizontalRelative(1);
-//		SelectionStart++;
-	}
-	public void MoveHorizontalRelative(int columnDifference)
-	{
-		MoveHorizontal(Column+columnDifference);
-	}
-	// TODO: put this into Column.set
-
-	// TODO: rename to MoveChar
-	public void MoveHorizontal(int column)
-	{
-//		lastColumn=-1;
-		MoveCursorRealColumn(Line, column);
-//		Column=column;
-	}
-
-
-
-
-	public void FindAndReplace()
-	{
-		replace.Owner=this.FindForm();
-		replace.Show();
-	}
-	public void StopInteractiveSearch()
-	{
-		this.Cursor=Cursors.IBeam;
-		interactiveSearch.Stop();
-	}// TODO: refactor
-	public void StartInteractiveSearch()
-	{
-		if(interactiveSearch.Active)
-		{
-			SelectionStart++;
-			interactiveSearch.Find();
-		}
-		else
-		{
-			this.Cursor=Cursors.PanSouth;
-			interactiveSearch.Start();
-		}
-	}
-	public void MoveRealCursor(int line,int scrollColumn)
-	{
-		MoveCursor(LineFromRealLine(line),scrollColumn);
-	}
-
-
-
-
-	// TODO: introduce classes Column, ScrollColumn etc.
-	public void MoveCursor(int line,int scrollColumn)
-	{
-		if(Lines.Length!=0)
-		{
-			MoveCursorRealColumn(line,ColumnFromScrollColumn(line,scrollColumn));
-		}
-	}
-	// TODO: use this everywhere, never use MoveTo
-	public void MoveCursorRealColumn(int line,int column) 
-	{
-		if(Lines.Length!=0)
-		{
-			if(line<0)
-			{
-				line=0;
-			}
-				//			else if(line>Lines.Length-1)
-				//			{
-				//				line=Lines.Length-1;
-				//			}
-			else if(line>Lines.Length-1-BottomMargin.Length)
-			{
-				line=Lines.Length-1-BottomMargin.Length;
-			}
-			else if(line<TopMargin.Length)
-			{
-				line=TopMargin.Length;
-			}
-			int lineLength=GetLinesLength(line);
-			int columns=column;//ColumnFromScrollColumn(line,scrollColumn);
-
-			if(Column!=column)
-			{
-				lastColumn=-1;
-			}
-//			int columns=ColumnFromScrollColumn(line,scrollColumn);
-			int actualColumns=Lines[line].Length;
-			int newStart=lineLength+columns;
-			if(newStart>=Text.Length) 
-			{
-				newStart=Text.Length-1;
-			}
-			Select(newStart,0);
-			//			SelectionStart=newStart;
-		}
-	}
-//	public void MoveCursor(int line,int scrollColumn) 
-//	{
-//		if(Lines.Length!=0)
-//		{
-//			if(line<0)
-//			{
-//				line=0;
-//			}
-////			else if(line>Lines.Length-1)
-////			{
-////				line=Lines.Length-1;
-////			}
-//			else if(line>Lines.Length-1-BottomMargin.Length)
-//			{
-//				line=Lines.Length-1-BottomMargin.Length;
-//			}
-//			else if(line<TopMargin.Length)
-//			{
-//				line=TopMargin.Length;
-//			}
-//			int lineLength=GetLinesLength(line);
-//			int columns=ColumnFromScrollColumn(line,scrollColumn);
-//			int actualColumns=Lines[line].Length;
-//			int newStart=lineLength+columns;
-//			if(newStart>=Text.Length) 
-//			{
-//				newStart=Text.Length-1;
-//			}
-//			Select(newStart,0);
-////			SelectionStart=newStart;
-//		}
-//	}
-	// TODO: rename
-	int GetLinesLength(int iLine) 
-	{
-		iLine=iLine<Lines.Length?iLine:Lines.Length-1;
-		if(iLine<0) 
-		{
-			return 0;
-		}
-		int count=0;
-		ArrayList lines=new ArrayList(Lines);
-		foreach(string s in lines.GetRange(0,iLine)) 
-		{
-			count+=s.Length+1;
-		}
-		return count;
-	}
-	int LinesLength
-	{
-		get
-		{
-			return GetLinesLength(GetLineFromCharIndex(SelectionStart));
-		}
-	}
-
-	// copied from: http://www.thecodeproject.com/cs/miscctrl/SyntaxHighlighting.asp
-	public class Win32 
-	{
-		private Win32() 
-		{
-		}
-
-		public const int WM_USER = 0x400;
-		public const int WM_PAINT = 0xF;
-		public const int WM_KEYDOWN = 0x100;
-		public const int WM_KEYUP = 0x101;
-		public const int WM_CHAR = 0x102;
-
-		public const int EM_GETSCROLLPOS  =       (WM_USER + 221);
-		public const int EM_SETSCROLLPOS  =       (WM_USER + 222);
-
-		public const int VK_CONTROL = 0x11;
-		public const int VK_UP = 0x26;
-		public const int VK_DOWN = 0x28;
-		public const int VK_NUMLOCK = 0x90;
-
-		public const short KS_ON = 0x01;
-		public const short KS_KEYDOWN = 0x80;
-
-		[StructLayout(LayoutKind.Sequential)]
-			public struct POINT 
-		{
-			public int x;
-			public int y;
-		}
-
-		[DllImport("user32")] public static extern int SendMessage(HWND hwnd, int wMsg, int wParam, IntPtr lParam);
-		[DllImport("user32")] public static extern int PostMessage(HWND hwnd, int wMsg, int wParam, int lParam);
-		[DllImport("user32")] public static extern short GetKeyState(int nVirtKey);
-
-	}
-
-
-	string GetLineText() 
-	{
-		int lineL=Line;
-		string lineS;
-		if(lineL<Lines.Length)
-		{
-			lineS=Lines[lineL];
-		}
-		else
-		{
-			lineS="";
-		}
-		return lineS;
-	}
-	public int RealLine
-	{
-		get
-		{
-			return Line-emptyLines.Length+1; // why +1? Where is the bug?
-		}
-	}
-	// TODO: rename to Row?
-	public int Line  // use Position class here, and Line class!!!!!!!! //// rename to UnrealLine , or so
-	{
-		get
-		{
-			return GetLineFromCharIndex(SelectionStart);
-		}
-	}
-	public int Column
-	{
-		get
-		{
-			return SelectionStart-LinesLength;
-		}
-		set
-		{
-			SelectionStart=GetLinesLength(Line)+value;
-		}
-	}
-	public string RealText
-	{
-		get
-		{
-			string text="";
-			foreach(string line in Lines)
-			{
-				text+=line.TrimEnd(' ')+Environment.NewLine;
-			}
-			text=text.TrimStart(null);
-			text=text.TrimEnd(null);
-			return text.Replace(emptyLines,"");
-		}
-		set
-		{
-			Text=emptyLines+value+emptyLines;
-		}
-	}
-	private FindAndReplace replace;
-
-	// copied from: http://www.thecodeproject.com/cs/miscctrl/SyntaxHighlighting.asp
-	private unsafe void SetScrollPos(Win32.POINT point)  // only this scrolling function is really needed
-	{
-		IntPtr ptr = new IntPtr(&point);
-		Win32.SendMessage(Handle, Win32.EM_SETSCROLLPOS, 0, ptr);
-
-	}
-
-	protected void MoveTo(int position)
-	{
-		SelectionStart=position;
-	}
-	public char Character
-	{
-		get
-		{
-			return Text[SelectionStart];
-		}
-	}
-	int GetMiddle() 
-	{
-		return GetCharIndexFromPosition(new Point(this.Size.Width/2,this.Size.Height/2));
-	}
-	private bool dontScroll=false;
-	private void SetSelectionStartNoScroll(int selectionStart)  // what is that?
-	{
-		this.dontScroll=true;
-		SelectionStart=selectionStart;
-		this.dontScroll=false;
-	}
-	// TODO: implement proper tabstops, see http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/thread/1ef28b955bd06981/27f324e4a1b722d4?q=c%23+control+i+richtextbox+tab&rnum=5&hl=en#27f324e4a1b722d4
-	void ScrollToMiddle() 
-	{
-		if(!dontScroll) 
-		{
-			Win32.POINT point=new Win32.POINT();
-			//		int colC=Column;
-			int lineL=Line;
-			string lineS=GetLineText();
-			Graphics graphics=this.CreateGraphics();
-			SizeF sizeF=graphics.MeasureString(GetLeftLine().Replace("\t","aaaaa").Replace(" ","a"),Font,new PointF(0.0f,0.0f),(StringFormat)StringFormat.GenericTypographic.Clone());
-			point.x=(int)sizeF.Width; // this sucks, can't we scroll the rest, too
-			point.y=(int)((this.Font.Height+1.0)*(float)lineL-(float)this.Size.Height/1.618f); // -1.0 is magic number, don't know why
-			// TODO: check out this stuff: http://groups-beta.google.com/group/microsoft.public.dotnet.languages.csharp/browse_frm/thread/1ef28b955bd06981/27f324e4a1b722d4?q=c%23+control+i+richtextbox+tab&rnum=5&hl=en#27f324e4a1b722d4
-			SetScrollPos(point);
-		}
-
-	}
-	private void ScrollingTextBox_SelectionChanged(object sender, System.EventArgs e) 
-	{
-		ScrollToMiddle(); // make this method more general!!!!!
-	}
-	private void ScrollingTextBox_TextChanged(object sender, System.EventArgs e)
-	{
-		ScrollToMiddle();
-	}
-	protected void MoveCaretToMiddle() 
-	{
-		this.SetSelectionStartNoScroll(GetCharIndexFromPosition(new Point(this.Size.Width/2,this.Height/2)));
-	}
-	public const int WM_PAINT = 0xF;
 	public const int WM_LBUTTONDBLCLK = 0x203;
 	public const int WM_LBUTTONDOWN = 0x201;
-	public const int WM_LBUTTONUP = 0x202;
 
-	public int GetColumnFromCharIndex(int charIndex)
+
+	public const int WM_USER = 0x400;
+	public const int WM_PAINT = 0xF;
+	public const int EM_SETSCROLLPOS  =       (WM_USER + 222);
+
+	[StructLayout(LayoutKind.Sequential)]
+		public struct POINT 
 	{
-		return charIndex-GetLinesLength(GetLineFromCharIndex(charIndex));
+		public int x;
+		public int y;
 	}
-//	protected static int GetLowOrderWord(int x)
-//	{
-//		return x & 0xffff; 
-//	}
-//	protected static short GetHighOrderWord(int x)
-//	{
-//		return (x >> 16) & 0xffff;
-//	}
-//	short pshtHighWord = (pintNumber >> 16) & 0xffff;
-//	short pshtLowWord = pintNumber & 0xffff; 
-	protected override void WndProc(ref Message m) 
+	[DllImport("user32")] public static extern int SendMessage(HWND hwnd, int wMsg, int wParam, IntPtr lParam);
+	[DllImport("user32")] public static extern int PostMessage(HWND hwnd, int wMsg, int wParam, int lParam);
+	[DllImport("user32")] public static extern short GetKeyState(int nVirtKey);
+}
+public class Line
+{
+	public int Tabs
 	{
-		if(m.Msg == WM_MOUSEWHEEL) 
+		get
 		{
-			if(m.WParam.ToInt32()>IntPtr.Zero.ToInt32()) 
-			{
-				MoveLineRelative(-3);
-			}
-			else if(m.WParam.ToInt32()<IntPtr.Zero.ToInt32()) 
-			{
-				MoveLineRelative(3);
-			}
-		}
-		else if(m.Msg == WM_LBUTTONDOWN)
-		{
-			Point mousePos=new Point((int)m.LParam);
-			int charIndex=this.GetCharIndexFromPosition(mousePos);
-			//			int charIndex=this.GetCharIndexFromPosition(Control.MousePosition);
-			MoveCursorRealColumn(GetLineFromCharIndex(charIndex),GetColumnFromCharIndex(charIndex));
-		}
-		else if(m.Msg==WM_LBUTTONDBLCLK)
-		{
-		}
-			//		else if(m.Msg == WM_LBUTTONUP)
-			//		{
-			//			int charIndex=this.GetCharIndexFromPosition(Control.MousePosition);
-			//			MoveCursor(GetLineFromCharIndex(charIndex),GetColumnFromCharIndex(charIndex));
-			//		}
-		else
-		{
-			if ( m.Msg == WM_HSCROLL || m.Msg == WM_VSCROLL ) 
-			{
-				this.MoveCaretToMiddle();
-			}
-			if(m.Msg == WM_PAINT)
-			{
-				if(info!=null)
-				{
-					Invalidate();
-					//					Invalidate(info.Rectangle);
-				}
-			}	
-			base.WndProc (ref m);
-			if(m.Msg == WM_PAINT)
-			{
-				DrawInfo();
-			}	
+			return Text.Length-Text.TrimStart('\t').Length;
 		}
 	}
-
-	private void ScrollingTextBox_Layout(object sender, System.Windows.Forms.LayoutEventArgs e)
+	private ScrollingTextBox textBox;
+	private int index;
+	public Line(int index,ScrollingTextBox textBox)
 	{
-		int asdf=0;
+		this.index=index;
+		this.textBox=textBox;
 	}
-
-	private void replace_Closing(object sender, CancelEventArgs e)
+	public int Index
 	{
-		// because of stupid bug, where editor doesnt have focus after replacing all
-		this.FindForm().BringToFront();
+		get
+		{
+			return index;
+		}
+	}
+	public int Length
+	{
+		get
+		{
+			return Text.Length;
+		}
+	}
+	public string Text
+	{
+		get
+		{
+			return ((RichTextBox)textBox).Lines[textBox.LineFromRealLine(index)];
+		}
+	}
+	public string Left
+	{
+		get
+		{
+			int iColumn=textBox.Column;
+			string sLine=Text;
+			string sLeft=sLine.Substring(0,iColumn);
+			return sLeft;
+		}
 	}
 }

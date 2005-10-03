@@ -2533,11 +2533,25 @@ namespace Meta
 					{
 						if(method is ConstructorInfo)
 						{
-							result=((ConstructorInfo)method).Invoke(arguments.ToArray());
+							try
+							{
+								result=((ConstructorInfo)method).Invoke(arguments.ToArray());
+							}
+							catch(Exception e)
+							{
+								throw e.InnerException;
+							}
 						}
 						else
 						{
-							result=method.Invoke(obj,arguments.ToArray());
+							try
+							{
+								result=method.Invoke(obj,arguments.ToArray());
+							}
+							catch(Exception e)
+							{
+								throw e.InnerException;
+							}
 						}
 						isExecuted=true;
 						break;
