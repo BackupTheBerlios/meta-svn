@@ -10,6 +10,7 @@ public class array:MetaLibrary
 	/// <summary>
 	/// Returns the concatenation of all arguments.
 	/// </summary>
+	/// // TODO: rename to Catenation or Linking
 	public static Map Concatenation(Map arg) 
 	{
 		Integer i=1;
@@ -47,7 +48,7 @@ public class map:MetaLibrary
 {
 
 	/// <summary>
-	/// Returns a boolean value indicating whether a "map" contains a "key".
+	/// Determines whether a "map" contains a "key".
 	/// </summary>
 	public static bool Containment(Map arg) 
 	{
@@ -79,7 +80,7 @@ public class map:MetaLibrary
 	}
 
 	/// <summary>
-	/// Returns a boolean value indicating whether all arguments are identical to each other.
+	/// Determines whether all arguments are identical to each other.
 	/// </summary>
 	public static Map Equality(Map arg) 
 	{

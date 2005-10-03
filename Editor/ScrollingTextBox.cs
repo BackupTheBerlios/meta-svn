@@ -16,18 +16,19 @@ public class ScrollingTextBox: RichTextBox
 	public ScrollingTextBox() 
 	{
 		InitializeComponent();
-		textBox=this;
+//		textBox=this;
 		for(int i=0;i<25;i++)
 		{
 			emptyLines+="\n";
 		}
 //		this.interactiveSearch=new InteractiveSearch((RichTextBox)this);
+		this.interactiveSearch=new InteractiveSearch(this);
 		this.replace=new FindAndReplace(this);
 		this.timer.Interval=50;
 		this.timer.Tick+=new EventHandler(timer_Tick);
 		this.replace.Closing+=new CancelEventHandler(replace_Closing);
 	}
-	private static ScrollingTextBox textBox;
+//	private static ScrollingTextBox textBox;
 
 
 	private static string emptyLines;
@@ -150,7 +151,7 @@ public class ScrollingTextBox: RichTextBox
 		}
 //		iTabs=GetTabs(Line.Left);
 	}
-	private InteractiveSearch interactiveSearch=new InteractiveSearch();
+	private InteractiveSearch interactiveSearch;//=new InteractiveSearch();
 
 
 
@@ -423,6 +424,13 @@ public class ScrollingTextBox: RichTextBox
 	{
 		MoveAbsolute(Column+column,Line.Index+line);
 	}
+	public int LineIndex
+	{
+		get
+		{
+			return Line.Index;
+		}
+	}
 	public void MoveAbsolute(Point move)
 	{
 		MoveAbsolute(move.X,move.Y);
@@ -518,6 +526,10 @@ public class ScrollingTextBox: RichTextBox
 			this.Cursor=Cursors.PanSouth;
 			interactiveSearch.Start();
 		}
+	}
+	public void IncreaseSelectionIndent()
+	{
+		SelectedText="\t";
 	}
 //	public void IncreaseSelectionIndent()
 //	{
@@ -750,6 +762,11 @@ public class ScrollingTextBox: RichTextBox
 	}
 	public class InteractiveSearch
 	{
+		private ScrollingTextBox textBox;
+		public InteractiveSearch(ScrollingTextBox textBox)
+		{
+			this.textBox=textBox;
+		}
 		public void DeleteCharLeft()
 		{
 			if(text.Length!=0)

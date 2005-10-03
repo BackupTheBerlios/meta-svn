@@ -120,9 +120,17 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "html.meta"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "Library.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "newtest.meta"
+                    BuildAction = "None"
                 />
                 <File
                     RelPath = "test2.meta"

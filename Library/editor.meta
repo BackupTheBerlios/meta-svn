@@ -50,11 +50,10 @@
 			Meta.BreakPoint
 				fileName
 				Meta.SourcePosition
-					editBox.RealLine.Get*
+					Sum
+						editBox.LineIndex.Get*
+						<1>
 					editBox.Column.Get*
-	SetBreakPoint=
-		|
-			asdjfasdf
 	commands=
 		SaveAs=
 			|
@@ -78,9 +77,9 @@
 					fileName
 					*
 				cases=
-					1=
-						|commands.SaveAs*
 					0=
+						|commands.SaveAs*
+					1=
 						|file.Write
 							fileName
 							editBox.RealText.Get*
@@ -99,9 +98,9 @@
 							SetFileName openFileName
 							editBox.RealText.Set
 								file.Read fileName
-							'editBox.MoveRealCursor
-							'	<0>
-							'	<0>
+							editBox.MoveAbsolute
+								<0>
+								<0>
 				cases.[hasName]*
 		Run=
 			|
@@ -168,8 +167,8 @@
 			[Keys.PageDown]=
 				|editBox.MovePageDown*
 		[Keys.Shift]=
-			[Keys.Tab]=
-				|editBox.DecreaseSelectionIndent*
+			'[Keys.Tab]=
+			'	|editBox.DecreaseSelectionIndent*
 			[Keys.Left]=
 				|editBox.SelectCharLeft*
 			[Keys.Right]=
@@ -264,7 +263,6 @@
 			RichTextBoxScrollBars.ForcedBoth
 		editBox.KeyDown.Add
 			=
-				' annoying
 				|
 					eventArgs=parameter.2
 					modifier=eventArgs.Modifiers.Get*
