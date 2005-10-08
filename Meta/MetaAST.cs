@@ -24,6 +24,7 @@ using antlr;
 using Meta.Parser;
 using System.Collections;
 using Meta;
+using Meta.TestingFramework;
 
 //public class Extent 
 //{ // TODO: Rename to something more sensible
@@ -180,6 +181,7 @@ using Meta;
 public class MetaAST:CommonAST
 {
 	/* Read the extent of this AST from the corresponding token. */
+	[Serialize]
 	public Extent Extent 
 	{
 		get 
@@ -201,6 +203,7 @@ public class MetaAST:CommonAST
 		}
 	}
 	// this is called AType so it is shown in the serialization first
+	[Serialize]
 	public string AType
 	{
 		get 

@@ -59,7 +59,7 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
+//			args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
 //			args[0]=@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta";
 			//			args[0]=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
 			//args=new string[]{@"C:\_ProectSupportMaterial\Meta\library\function.meta"};

@@ -34,6 +34,7 @@ using Meta.Parser;
 using Meta.TestingFramework;
 using System.Text.RegularExpressions;
 using System.Net;
+using Meta.TestingFramework;
 
 namespace Meta
 {
@@ -96,6 +97,7 @@ namespace Meta
 
 		public abstract Map EvaluateImplementation(Map parent);
 		Extent extent;
+		[Serialize]
 		public Extent Extent
 		{
 			get
@@ -125,11 +127,14 @@ namespace Meta
 			this.callable=code[CodeKeys.Function].GetExpression();
 			this.argument=code[CodeKeys.Argument].GetExpression();
 		}
+		[Serialize]
 		public Expression argument;
+		[Serialize]
 		public Expression callable;
 	}
 	public class Delayed: Expression
 	{
+		[Serialize]
 		public readonly Map delayed;
 		public Delayed(Map code)
 		{
@@ -166,6 +171,7 @@ namespace Meta
 				this.statements.Add(new Statement(statement));
 			}
 		}
+		[Serialize]
 		public readonly ArrayList statements=new ArrayList();
 	}
 	public class BreakPoint
@@ -328,6 +334,7 @@ namespace Meta
 		{
 			this.literal=Filter((string)code.GetString());
 		}
+		[Serialize]
 		public Map literal=null;
 		public static Map Filter(string text)
 		{
@@ -344,7 +351,9 @@ namespace Meta
 	}
 	public class Select: Expression
 	{
+		[Serialize]
 		public ArrayList keys=new ArrayList(); // TODO: rename to subKeys
+		[Serialize]
 		public Expression firstKey; // TODO: integrate into normal keys???
 		public Select(Map code)
 		{
@@ -467,6 +476,19 @@ namespace Meta
 				}
 			}
 			Map lastKey=((Expression)keys[keys.Count-1]).Evaluate(parent);
+			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).Extent))
+			{
+				Map oldValue;
+				if(selected.ContainsKey(lastKey))
+				{
+					oldValue=selected[lastKey];
+				}
+				else
+				{
+					oldValue=new NormalMap("<null>");
+				}
+				Interpreter.CallBreak(oldValue);
+			}
 			// TODO: peek at next statement
 //			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).Extent))
 //			{
@@ -491,7 +513,9 @@ namespace Meta
 			}
 			this.expression=code[CodeKeys.Value].GetExpression();
 		}
+		[Serialize]
 		public ArrayList keys=new ArrayList();
+		[Serialize]
 		public Expression expression;
 	}
 	public class Interpreter
@@ -800,6 +824,7 @@ namespace Meta
 //		{
 //			get;
 //		}
+		// TODO: make this a function
 		public Map Parameter
 		{
 			get
@@ -994,10 +1019,6 @@ namespace Meta
 			}
 		}
 		private Map parent;
-
-
-
-
 
 		public static implicit operator Map(Integer integer)
 		{
@@ -3953,9 +3974,10 @@ namespace Meta
 					members.Sort(new MemberInfoComparer());
 					foreach(MemberInfo member in members) 
 					{
-						if(member.Name!="Item") 
+						// ugly hack
+						if(member.Name!="Item" && member.Name!="SyncRoot") 
 						{
-							if(member.GetCustomAttributes(typeof(DontSerializeFieldOrPropertyAttribute),false).Length==0) 
+							if(Assembly.GetAssembly(member.DeclaringType)!=Assembly.GetExecutingAssembly() || member is MethodInfo || member.GetCustomAttributes(typeof(SerializeAttribute),false).Length==1) 
 							{				
 								if(toSerialize.GetType().Namespace!="System.Windows.Forms")
 								{ 
@@ -3990,7 +4012,7 @@ namespace Meta
 			}
 		}
 		[AttributeUsage(AttributeTargets.Field|AttributeTargets.Property)]
-		public class DontSerializeFieldOrPropertyAttribute:Attribute
+		public class SerializeAttribute:Attribute
 		{
 		}
 		[AttributeUsage(AttributeTargets.Class)]
@@ -4037,6 +4059,7 @@ namespace Meta
 		{
 			return obj is SourcePosition && ((SourcePosition)obj).Line==Line && ((SourcePosition)obj).Column==Column;
 		}
+		[Serialize]
 		public int Line
 		{
 			get
@@ -4048,6 +4071,7 @@ namespace Meta
 				line=value;
 			}
 		}
+		[Serialize]
 		public int Column
 		{
 			get
@@ -4109,6 +4133,7 @@ namespace Meta
 			}
 		}
 
+		[Serialize]
 		public SourcePosition Start
 		{
 			get
@@ -4116,6 +4141,7 @@ namespace Meta
 				return start;
 			}
 		}
+		[Serialize]
 		public SourcePosition End
 		{
 			get
@@ -4125,6 +4151,7 @@ namespace Meta
 		}
 		private SourcePosition start;
 		private SourcePosition end;
+		[Serialize]
 		public string FileName
 		{
 			get
