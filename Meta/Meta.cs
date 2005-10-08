@@ -682,7 +682,14 @@ namespace Meta
 //		}
 		private static void ExecuteInThread()
 		{
-			Interpreter.Run(executeFileName,new NormalMap());
+			try
+			{
+				Interpreter.Run(executeFileName,new NormalMap());
+			}
+			catch(Exception e)
+			{
+				MessageBox.Show(e.ToString());
+			}
 		}
 		private static string executeFileName="";
 		public static void StartDebug(string fileName)

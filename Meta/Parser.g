@@ -447,11 +447,11 @@ delayedImplementation:
 		// TODO: refactor
 		MetaToken runToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
 		
-		runToken.setLine(#delayedImplementation.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
-		runToken.setColumn(#delayedImplementation.Extent.Start.Column); 
-		runToken.FileName=#delayedImplementation.Extent.FileName;
-		runToken.EndLine=#delayedImplementation.Extent.End.Line;
-		runToken.EndColumn=#delayedImplementation.Extent.End.Column;
+		//runToken.setLine(#delayedImplementation.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
+		//runToken.setColumn(#delayedImplementation.Extent.Start.Column); 
+		//runToken.FileName=#delayedImplementation.Extent.FileName;
+		//runToken.EndLine=#delayedImplementation.Extent.End.Line;
+		//runToken.EndColumn=#delayedImplementation.Extent.End.Column;
 
 		
 		MetaAST runAst=new MetaAST(runToken);

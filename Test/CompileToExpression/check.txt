@@ -3991,16 +3991,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "7"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "61"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "59"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -5295,16 +5295,16 @@ statements (ArrayList):
                                                 Extent (Extent):
                                                   End (SourcePosition):
                                                     Column (Int32):
-                                                      "17"
+                                                      "-2147483648"
                                                     Line (Int32):
-                                                      "73"
-                                                  FileName (String):
-                                                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                      "-2147483648"
+                                                  FileName:
+                                                    null
                                                   Start (SourcePosition):
                                                     Column (Int32):
-                                                      "5"
+                                                      "2147483647"
                                                     Line (Int32):
-                                                      "73"
+                                                      "2147483647"
                                             Extent:
                                               null
                                         Entry (DictionaryEntry)
@@ -5457,16 +5457,16 @@ statements (ArrayList):
                                                 Extent (Extent):
                                                   End (SourcePosition):
                                                     Column (Int32):
-                                                      "18"
+                                                      "-2147483648"
                                                     Line (Int32):
-                                                      "75"
-                                                  FileName (String):
-                                                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                      "-2147483648"
+                                                  FileName:
+                                                    null
                                                   Start (SourcePosition):
                                                     Column (Int32):
-                                                      "5"
+                                                      "2147483647"
                                                     Line (Int32):
-                                                      "75"
+                                                      "2147483647"
                                             Extent:
                                               null
                                         Entry (DictionaryEntry)
@@ -7493,16 +7493,16 @@ statements (ArrayList):
                                                 Extent (Extent):
                                                   End (SourcePosition):
                                                     Column (Int32):
-                                                      "39"
+                                                      "-2147483648"
                                                     Line (Int32):
-                                                      "115"
-                                                  FileName (String):
-                                                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                      "-2147483648"
+                                                  FileName:
+                                                    null
                                                   Start (SourcePosition):
                                                     Column (Int32):
-                                                      "5"
+                                                      "2147483647"
                                                     Line (Int32):
-                                                      "114"
+                                                      "2147483647"
                                             Extent:
                                               null
                                         Entry (DictionaryEntry)
@@ -7910,16 +7910,16 @@ statements (ArrayList):
                                                 Extent (Extent):
                                                   End (SourcePosition):
                                                     Column (Int32):
-                                                      "22"
+                                                      "-2147483648"
                                                     Line (Int32):
-                                                      "119"
-                                                  FileName (String):
-                                                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                      "-2147483648"
+                                                  FileName:
+                                                    null
                                                   Start (SourcePosition):
                                                     Column (Int32):
-                                                      "5"
+                                                      "2147483647"
                                                     Line (Int32):
-                                                      "118"
+                                                      "2147483647"
                                             Extent:
                                               null
                                         Entry (DictionaryEntry)
@@ -8569,16 +8569,16 @@ statements (ArrayList):
                                                 Extent (Extent):
                                                   End (SourcePosition):
                                                     Column (Int32):
-                                                      "18"
+                                                      "-2147483648"
                                                     Line (Int32):
-                                                      "125"
-                                                  FileName (String):
-                                                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                      "-2147483648"
+                                                  FileName:
+                                                    null
                                                   Start (SourcePosition):
                                                     Column (Int32):
-                                                      "5"
+                                                      "2147483647"
                                                     Line (Int32):
-                                                      "125"
+                                                      "2147483647"
                                             Extent:
                                               null
                                         Entry (DictionaryEntry)
@@ -9569,16 +9569,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "21"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "135"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "135"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -10567,16 +10567,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "10"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "151"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "146"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -10681,16 +10681,16 @@ statements (ArrayList):
                                                                 Extent (Extent):
                                                                   End (SourcePosition):
                                                                     Column (Int32):
-                                                                      "10"
+                                                                      "-2147483648"
                                                                     Line (Int32):
-                                                                      "151"
-                                                                  FileName (String):
-                                                                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                                      "-2147483648"
+                                                                  FileName:
+                                                                    null
                                                                   Start (SourcePosition):
                                                                     Column (Int32):
-                                                                      "6"
+                                                                      "2147483647"
                                                                     Line (Int32):
-                                                                      "148"
+                                                                      "2147483647"
                                                             Extent:
                                                               null
                                                         Entry (DictionaryEntry)
@@ -11176,16 +11176,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "13"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "157"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "154"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -11958,16 +11958,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "25"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "162"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "162"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -12300,16 +12300,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "13"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "164"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "164"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -18193,16 +18193,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "7"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "214"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "214"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -18509,16 +18509,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "34"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "218"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "218"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -18742,16 +18742,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "16"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "220"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "220"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -19085,16 +19085,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "10"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "225"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "5"
+                                          "2147483647"
                                         Line (Int32):
-                                          "225"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -19145,16 +19145,16 @@ statements (ArrayList):
                                                     Extent (Extent):
                                                       End (SourcePosition):
                                                         Column (Int32):
-                                                          "10"
+                                                          "-2147483648"
                                                         Line (Int32):
-                                                          "225"
-                                                      FileName (String):
-                                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                          "-2147483648"
+                                                      FileName:
+                                                        null
                                                       Start (SourcePosition):
                                                         Column (Int32):
-                                                          "5"
+                                                          "2147483647"
                                                         Line (Int32):
-                                                          "225"
+                                                          "2147483647"
                                                 Extent:
                                                   null
                                             Entry (DictionaryEntry)
@@ -19634,16 +19634,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "9"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "229"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "229"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -20121,16 +20121,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "38"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "235"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "235"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -20437,16 +20437,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "27"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "238"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "238"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -20978,16 +20978,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "46"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "243"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "243"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -21471,16 +21471,16 @@ statements (ArrayList):
                                                         Extent (Extent):
                                                           End (SourcePosition):
                                                             Column (Int32):
-                                                              "24"
+                                                              "-2147483648"
                                                             Line (Int32):
-                                                              "248"
-                                                          FileName (String):
-                                                            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                              "-2147483648"
+                                                          FileName:
+                                                            null
                                                           Start (SourcePosition):
                                                             Column (Int32):
-                                                              "5"
+                                                              "2147483647"
                                                             Line (Int32):
-                                                              "247"
+                                                              "2147483647"
                                                     Extent:
                                                       null
                                                 Entry (DictionaryEntry)
@@ -22221,16 +22221,16 @@ statements (ArrayList):
                                                         Extent (Extent):
                                                           End (SourcePosition):
                                                             Column (Int32):
-                                                              "25"
+                                                              "-2147483648"
                                                             Line (Int32):
-                                                              "252"
-                                                          FileName (String):
-                                                            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                              "-2147483648"
+                                                          FileName:
+                                                            null
                                                           Start (SourcePosition):
                                                             Column (Int32):
-                                                              "5"
+                                                              "2147483647"
                                                             Line (Int32):
-                                                              "252"
+                                                              "2147483647"
                                                     Extent:
                                                       null
                                                 Entry (DictionaryEntry)
@@ -23126,16 +23126,16 @@ statements (ArrayList):
                                                         Extent (Extent):
                                                           End (SourcePosition):
                                                             Column (Int32):
-                                                              "24"
+                                                              "-2147483648"
                                                             Line (Int32):
-                                                              "261"
-                                                          FileName (String):
-                                                            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                              "-2147483648"
+                                                          FileName:
+                                                            null
                                                           Start (SourcePosition):
                                                             Column (Int32):
-                                                              "5"
+                                                              "2147483647"
                                                             Line (Int32):
-                                                              "260"
+                                                              "2147483647"
                                                     Extent:
                                                       null
                                                 Entry (DictionaryEntry)
@@ -24648,16 +24648,16 @@ statements (ArrayList):
                                                 Extent (Extent):
                                                   End (SourcePosition):
                                                     Column (Int32):
-                                                      "11"
+                                                      "-2147483648"
                                                     Line (Int32):
-                                                      "274"
-                                                  FileName (String):
-                                                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                      "-2147483648"
+                                                  FileName:
+                                                    null
                                                   Start (SourcePosition):
                                                     Column (Int32):
-                                                      "5"
+                                                      "2147483647"
                                                     Line (Int32):
-                                                      "274"
+                                                      "2147483647"
                                             Extent:
                                               null
                                         Entry (DictionaryEntry)
@@ -24810,16 +24810,16 @@ statements (ArrayList):
                                                 Extent (Extent):
                                                   End (SourcePosition):
                                                     Column (Int32):
-                                                      "11"
+                                                      "-2147483648"
                                                     Line (Int32):
-                                                      "276"
-                                                  FileName (String):
-                                                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                      "-2147483648"
+                                                  FileName:
+                                                    null
                                                   Start (SourcePosition):
                                                     Column (Int32):
-                                                      "5"
+                                                      "2147483647"
                                                     Line (Int32):
-                                                      "276"
+                                                      "2147483647"
                                             Extent:
                                               null
                                         Entry (DictionaryEntry)
@@ -25828,16 +25828,16 @@ statements (ArrayList):
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "13"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "288"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "288"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -29514,16 +29514,16 @@ Schwaenzchen in die Hoeh."
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "51"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "338"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "327"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -30088,16 +30088,16 @@ Schwaenzchen in die Hoeh."
                                                                             Extent (Extent):
                                                                               End (SourcePosition):
                                                                                 Column (Int32):
-                                                                                  "10"
+                                                                                  "-2147483648"
                                                                                 Line (Int32):
-                                                                                  "334"
-                                                                              FileName (String):
-                                                                                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                                                  "-2147483648"
+                                                                              FileName:
+                                                                                null
                                                                               Start (SourcePosition):
                                                                                 Column (Int32):
-                                                                                  "7"
+                                                                                  "2147483647"
                                                                                 Line (Int32):
-                                                                                  "332"
+                                                                                  "2147483647"
                                                                         Extent:
                                                                           null
                                                                     Entry (DictionaryEntry)
@@ -30584,16 +30584,16 @@ Schwaenzchen in die Hoeh."
                                                                             Extent (Extent):
                                                                               End (SourcePosition):
                                                                                 Column (Int32):
-                                                                                  "16"
+                                                                                  "-2147483648"
                                                                                 Line (Int32):
-                                                                                  "337"
-                                                                              FileName (String):
-                                                                                "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                                                  "-2147483648"
+                                                                              FileName:
+                                                                                null
                                                                               Start (SourcePosition):
                                                                                 Column (Int32):
-                                                                                  "7"
+                                                                                  "2147483647"
                                                                                 Line (Int32):
-                                                                                  "337"
+                                                                                  "2147483647"
                                                                         Extent:
                                                                           null
                                                                     Entry (DictionaryEntry)
@@ -31227,16 +31227,16 @@ Schwaenzchen in die Hoeh."
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "20"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "345"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "345"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -31641,16 +31641,16 @@ Schwaenzchen in die Hoeh."
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "21"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "349"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "5"
+                                          "2147483647"
                                         Line (Int32):
-                                          "349"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -31701,16 +31701,16 @@ Schwaenzchen in die Hoeh."
                                                     Extent (Extent):
                                                       End (SourcePosition):
                                                         Column (Int32):
-                                                          "21"
+                                                          "-2147483648"
                                                         Line (Int32):
-                                                          "349"
-                                                      FileName (String):
-                                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                          "-2147483648"
+                                                      FileName:
+                                                        null
                                                       Start (SourcePosition):
                                                         Column (Int32):
-                                                          "5"
+                                                          "2147483647"
                                                         Line (Int32):
-                                                          "349"
+                                                          "2147483647"
                                                 Extent:
                                                   null
                                             Entry (DictionaryEntry)
@@ -31893,16 +31893,16 @@ Schwaenzchen in die Hoeh."
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "13"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "351"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "351"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -32082,16 +32082,16 @@ Schwaenzchen in die Hoeh."
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "17"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "354"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "354"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -32623,16 +32623,16 @@ Schwaenzchen in die Hoeh."
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "11"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "358"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "4"
+                                          "2147483647"
                                         Line (Int32):
-                                          "358"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -32888,16 +32888,16 @@ Schwaenzchen in die Hoeh."
         Extent (Extent):
           End (SourcePosition):
             Column (Int32):
-              "39"
+              "-2147483648"
             Line (Int32):
-              "359"
-          FileName (String):
-            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+              "-2147483648"
+          FileName:
+            null
           Start (SourcePosition):
             Column (Int32):
-              "2"
+              "2147483647"
             Line (Int32):
-              "17"
+              "2147483647"
         literal (NormalMap):
           "function"
           Extent:

@@ -2403,16 +2403,16 @@ Entry (DictionaryEntry)
                                     Extent (Extent):
                                       End (SourcePosition):
                                         Column (Int32):
-                                          "10"
+                                          "-2147483648"
                                         Line (Int32):
-                                          "151"
-                                      FileName (String):
-                                        "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                          "-2147483648"
+                                      FileName:
+                                        null
                                       Start (SourcePosition):
                                         Column (Int32):
-                                          "6"
+                                          "2147483647"
                                         Line (Int32):
-                                          "148"
+                                          "2147483647"
                                 Extent:
                                   null
                             Entry (DictionaryEntry)
@@ -4104,16 +4104,16 @@ Entry (DictionaryEntry)
                         Extent (Extent):
                           End (SourcePosition):
                             Column (Int32):
-                              "10"
+                              "-2147483648"
                             Line (Int32):
-                              "225"
-                          FileName (String):
-                            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                              "-2147483648"
+                          FileName:
+                            null
                           Start (SourcePosition):
                             Column (Int32):
-                              "5"
+                              "2147483647"
                             Line (Int32):
-                              "225"
+                              "2147483647"
                     Extent:
                       null
                 Entry (DictionaryEntry)
@@ -6177,16 +6177,16 @@ Entry (DictionaryEntry)
                                                 Extent (Extent):
                                                   End (SourcePosition):
                                                     Column (Int32):
-                                                      "10"
+                                                      "-2147483648"
                                                     Line (Int32):
-                                                      "334"
-                                                  FileName (String):
-                                                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                      "-2147483648"
+                                                  FileName:
+                                                    null
                                                   Start (SourcePosition):
                                                     Column (Int32):
-                                                      "7"
+                                                      "2147483647"
                                                     Line (Int32):
-                                                      "332"
+                                                      "2147483647"
                                             Extent:
                                               null
                                         Entry (DictionaryEntry)
@@ -6673,16 +6673,16 @@ Entry (DictionaryEntry)
                                                 Extent (Extent):
                                                   End (SourcePosition):
                                                     Column (Int32):
-                                                      "16"
+                                                      "-2147483648"
                                                     Line (Int32):
-                                                      "337"
-                                                  FileName (String):
-                                                    "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                                                      "-2147483648"
+                                                  FileName:
+                                                    null
                                                   Start (SourcePosition):
                                                     Column (Int32):
-                                                      "7"
+                                                      "2147483647"
                                                     Line (Int32):
-                                                      "337"
+                                                      "2147483647"
                                             Extent:
                                               null
                                         Entry (DictionaryEntry)
@@ -7247,16 +7247,16 @@ Entry (DictionaryEntry)
                         Extent (Extent):
                           End (SourcePosition):
                             Column (Int32):
-                              "21"
+                              "-2147483648"
                             Line (Int32):
-                              "349"
-                          FileName (String):
-                            "C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
+                              "-2147483648"
+                          FileName:
+                            null
                           Start (SourcePosition):
                             Column (Int32):
-                              "5"
+                              "2147483647"
                             Line (Int32):
-                              "349"
+                              "2147483647"
                     Extent:
                       null
                 Entry (DictionaryEntry)

@@ -437,6 +437,10 @@ public class ScrollingTextBox: RichTextBox
 	}
 	public void MoveAbsolute(int column,int line)
 	{
+		if(column>Lines[line].Length)
+		{
+			column=Lines[line].Length;
+		}
 		Select(GetLinesLength(LineFromRealLine(line))+column,0);
 	}
 	private int GetLinesPerPage()
