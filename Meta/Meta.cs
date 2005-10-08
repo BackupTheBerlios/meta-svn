@@ -3950,16 +3950,24 @@ namespace Meta
 				{
 					stringBuilder.Append(indent+"\""+toSerialize.ToString()+"\""+"\n");
 				}
-				else if(toSerialize is IEnumerable)
-				{
-					foreach(object entry in (IEnumerable)toSerialize)
-					{
-						stringBuilder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
-						Serialize(entry,indent+"  ",methods,stringBuilder);
-					}
-				}
+//				else if(toSerialize is IEnumerable)
+//				{
+//					foreach(object entry in (IEnumerable)toSerialize)
+//					{
+//						stringBuilder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
+//						Serialize(entry,indent+"  ",methods,stringBuilder);
+//					}
+//				}
 				else
 				{
+					if(toSerialize is IEnumerable)
+					{
+						foreach(object entry in (IEnumerable)toSerialize)
+						{
+							stringBuilder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
+							Serialize(entry,indent+"  ",methods,stringBuilder);
+						}
+					}
 					ArrayList members=new ArrayList();
 					members.AddRange(toSerialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
 					members.AddRange(toSerialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));

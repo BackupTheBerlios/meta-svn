@@ -11230,3 +11230,23 @@ Schwaenzchen in die Hoeh."
               "17"
         literal (NormalMap):
           "function"
+      Capacity (Int32):
+        "16"
+      Count (Int32):
+        "1"
+      IsFixedSize (Boolean):
+        "False"
+      IsReadOnly (Boolean):
+        "False"
+      IsSynchronized (Boolean):
+        "False"
+  Capacity (Int32):
+    "16"
+  Count (Int32):
+    "1"
+  IsFixedSize (Boolean):
+    "False"
+  IsReadOnly (Boolean):
+    "False"
+  IsSynchronized (Boolean):
+    "False"

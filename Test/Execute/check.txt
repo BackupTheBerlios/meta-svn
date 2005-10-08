@@ -2279,6 +2279,16 @@ Entry (DictionaryEntry)
   Value (DotNetObject):
     Entry (NormalMap)
       "hello"
+    Capacity (Int32):
+      "16"
+    Count (Int32):
+      "1"
+    IsFixedSize (Boolean):
+      "False"
+    IsReadOnly (Boolean):
+      "False"
+    IsSynchronized (Boolean):
+      "False"
 Entry (DictionaryEntry)
   Key (NormalMap):
     "9"
@@ -2309,6 +2319,18 @@ Entry (DictionaryEntry)
       "Köpfchen in das Wasser,"
     Entry (String)
       "bwuhahaha"
+    IsFixedSize (Boolean):
+      "True"
+    IsReadOnly (Boolean):
+      "False"
+    IsSynchronized (Boolean):
+      "False"
+    Length (Int32):
+      "6"
+    LongLength (Int64):
+      "6"
+    Rank (Int32):
+      "1"
 Entry (DictionaryEntry)
   Key (NormalMap):
     "alleMeineText"
