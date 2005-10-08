@@ -1007,6 +1007,7 @@ namespace Meta
 			return hash;
 		}
 		Extent extent;
+		[Serialize]
 		public Extent Extent
 		{
 			get
@@ -3941,26 +3942,24 @@ namespace Meta
 				{
 					stringBuilder.Append(indent+"null\n");
 				}
-				else if(toSerialize is ISerializeSpecial)
-				{
-					((ISerializeSpecial)toSerialize).Serialize(indent,methods,stringBuilder);
-				}
+				// this is the problem, ignores the rest of the serialization, get rid of this
+//				else if(toSerialize is ISerializeSpecial)
+//				{
+//					((ISerializeSpecial)toSerialize).Serialize(indent,methods,stringBuilder);
+//				}
+//				else if(toSerialize is string || toSerialize.GetType().IsPrimitive)
 				else if(toSerialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
 					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) 
 				{
 					stringBuilder.Append(indent+"\""+toSerialize.ToString()+"\""+"\n");
 				}
-//				else if(toSerialize is IEnumerable)
-//				{
-//					foreach(object entry in (IEnumerable)toSerialize)
-//					{
-//						stringBuilder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
-//						Serialize(entry,indent+"  ",methods,stringBuilder);
-//					}
-//				}
 				else
 				{
-					if(toSerialize is IEnumerable)
+					if(toSerialize is ISerializeSpecial)
+					{
+						((ISerializeSpecial)toSerialize).Serialize(indent,methods,stringBuilder);
+					}
+					else if(toSerialize is IEnumerable)
 					{
 						foreach(object entry in (IEnumerable)toSerialize)
 						{
@@ -3973,7 +3972,7 @@ namespace Meta
 					members.AddRange(toSerialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
 					foreach(string method in methods)
 					{
-						MethodInfo methodInfo=toSerialize.GetType().GetMethod(method,BindingFlags.Public|BindingFlags.Instance);
+						MethodInfo methodInfo=toSerialize.GetType().GetMethod(method,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance);
 						if(methodInfo!=null)
 						{ 
 							members.Add(methodInfo);
