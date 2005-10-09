@@ -154,7 +154,7 @@ namespace Meta.Parser
 			_t = retTree_;
 		}
 		
-					callCode[CodeKeys.Function]=functionCode;
+					callCode[CodeKeys.Callable]=functionCode;
 					callCode[CodeKeys.Argument]=argumentCode;
 					code[CodeKeys.Call]=callCode;
 				
@@ -305,7 +305,7 @@ _loop119_breakloop:		;
 		_t = __t121;
 		_t = _t.getNextSibling();
 		
-		code[CodeKeys.Delayed]=delayedCode;
+		code[CodeKeys.Code]=delayedCode;
 		
 		retTree_ = _t;
 		return code;

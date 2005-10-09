@@ -497,7 +497,7 @@ _loop87_breakloop:					;
 			
 					
 					MetaAST runAst=new MetaAST(runToken);
-					runAst.setText(CodeKeys.Run.GetString());//"run"); // could we get rid of this, maybe, run isn't used anywhere else anymore, also it's a bad keyword to use (far too common)
+					runAst.setText(CodeKeys.Function.GetString());//"run"); // could we get rid of this, maybe, run isn't used anywhere else anymore, also it's a bad keyword to use (far too common)
 					delayedImplementation_AST=(MetaAST)astFactory.make( (new ASTArray(3)).add((AST)(MetaAST) astFactory.create(STATEMENT)).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(KEY)).add((AST)runAst))).add((AST)(MetaAST)astFactory.make( (new ASTArray(2)).add((AST)(MetaAST) astFactory.create(FUNCTION)).add((AST)delayedImplementation_AST))));
 				
 			currentAST.root = delayedImplementation_AST;

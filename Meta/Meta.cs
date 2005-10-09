@@ -34,7 +34,6 @@ using Meta.Parser;
 using Meta.TestingFramework;
 using System.Text.RegularExpressions;
 using System.Net;
-using Meta.TestingFramework;
 
 namespace Meta
 {
@@ -42,15 +41,16 @@ namespace Meta
 	public class CodeKeys
 	{
 		public static readonly Map Literal="literal";
-		public static readonly Map Run="function";
+
+		public static readonly Map Function="function";
 		public static readonly Map Call="call";
-		public static readonly Map Function="callable"; // TODO: rename
+		public static readonly Map Callable="callable"; // TODO: rename
 		public static readonly Map Argument="argument";
 		public static readonly Map Select="select";
 		public static readonly Map Search="search";
 		public static readonly Map Key="key";
 		public static readonly Map Program="program";
-		public static readonly Map Delayed="delayed";
+		public static readonly Map Code="code";
 		public static readonly Map Lookup="lookup";
 		public static readonly Map Value="value";
 	}
@@ -126,7 +126,7 @@ namespace Meta
 //		}
 //		public Call(Map code)
 //		{
-//			this.callable=code[CodeKeys.Function].GetExpression();
+//			this.callable=code[CodeKeys.Callable].GetExpression();
 //			this.argument=code[CodeKeys.Argument].GetExpression();
 //		}
 //		[Serialize]
@@ -542,9 +542,9 @@ namespace Meta
 			{
 				val=Call(code[CodeKeys.Call],context);
 			}
-			else if(code.ContainsKey(CodeKeys.Delayed))
+			else if(code.ContainsKey(CodeKeys.Code))
 			{ 
-				val=Delayed(code[CodeKeys.Delayed],context);
+				val=Delayed(code[CodeKeys.Code],context);
 			}
 			else if(code.ContainsKey(CodeKeys.Program))
 			{
@@ -566,7 +566,7 @@ namespace Meta
 		}
 		public static Map Call(Map code,Map context)
 		{
-			object function=Interpreter.Evaluate(code[CodeKeys.Function],context);
+			object function=Interpreter.Evaluate(code[CodeKeys.Callable],context);
 			if(function is ICallable)
 			{
 				return ((ICallable)function).Call(Evaluate(code[CodeKeys.Argument],context));
@@ -807,7 +807,7 @@ namespace Meta
 		public static Map CallProgram(Map program,Map argument,Map current)
 		{
 			Map callable=new NormalMap();
-			callable[CodeKeys.Run]=program;
+			callable[CodeKeys.Function]=program;
 			callable.Parent=current;
 			return callable.Call(argument);
 		}
@@ -937,7 +937,7 @@ namespace Meta
 		{
 			get
 			{
-				return ContainsKey(CodeKeys.Run);
+				return ContainsKey(CodeKeys.Function);
 			}
 		}
 		public virtual bool IsBoolean
@@ -1138,13 +1138,13 @@ namespace Meta
 		public virtual Map Call(Map argument)
 		{
 			this.Parameter=argument;
-			Map function=this[CodeKeys.Run];
+			Map function=this[CodeKeys.Function];
 			Map result;
 			result=Interpreter.Evaluate(function,this);
 			//			result=function.Evaluate(map);
 			return result;
 //			Parameter=argument;
-//			Expression function=(Expression)this[CodeKeys.Run].GetExpression();
+//			Expression function=(Expression)this[CodeKeys.Function].GetExpression();
 //			Map result;
 //			result=function.Evaluate(this);
 //			return result;
@@ -1161,9 +1161,9 @@ namespace Meta
 //			{
 //				expression=new Call(this[CodeKeys.Call]);
 //			}
-//			else if(this.ContainsKey(CodeKeys.Delayed))
+//			else if(this.ContainsKey(CodeKeys.Code))
 //			{ 
-//				expression=new Delayed(this[CodeKeys.Delayed]);
+//				expression=new Delayed(this[CodeKeys.Code]);
 //			}
 //			else if(this.ContainsKey(CodeKeys.Program))
 //			{
@@ -2002,9 +2002,9 @@ namespace Meta
 		public static string MapValue(Map map,string indentation)
 		{
 			string text;
-//			if(map.Count==1 && map.ContainsKey(CodeKeys.Run))
+//			if(map.Count==1 && map.ContainsKey(CodeKeys.Function))
 //			{
-//				text="="+Code(map[CodeKeys.Run],indentation);
+//				text="="+Code(map[CodeKeys.Function],indentation);
 //			}
 //			else
 //			{
@@ -2012,7 +2012,7 @@ namespace Meta
 				//			string text=newLine;
 				foreach(DictionaryEntry entry in map)
 				{
-//					if(entry.Key.Equals(CodeKeys.Run))
+//					if(entry.Key.Equals(CodeKeys.Function))
 //					{
 //						text+=indentation+"#\n"+Value((Map)entry.Value,indentation);
 //					}
@@ -3031,7 +3031,7 @@ namespace Meta
 		public virtual Map Call(Map argument)
 		{
 			map.Parameter=argument;
-			Map function=this[CodeKeys.Run];
+			Map function=this[CodeKeys.Function];
 			Map result;
 			result=Interpreter.Evaluate(function,map);
 //			result=function.Evaluate(map);
@@ -4093,6 +4093,8 @@ namespace Meta
 			return result;
 		}
 	}
+	// TODO: use tab instead of two spaces for indentation
+	// TODO: serialize members before IEnumerable
 	namespace TestingFramework
 	{
 		public interface ISerializeSpecial
@@ -4314,7 +4316,7 @@ namespace Meta
 	}
 	public class Extent
 	{
-		public static ArrayList GetEvents(string fileName,int firstLine,int lastLine)
+		public static ArrayList GetExtents(string fileName,int firstLine,int lastLine)
 		{
 			ArrayList result=new ArrayList();
 			foreach(DictionaryEntry entry in Extents)
