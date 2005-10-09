@@ -57,7 +57,7 @@ namespace Meta
 	public class SpecialKeys
 	{
 		public static readonly Map Parent="parent";
-		public static readonly Map Parameter="parameter"; // change this
+		public static readonly Map Parameter="parameter";
 		public static readonly Map Current="current";
 	}
 	public class DotNetKeys
@@ -74,151 +74,18 @@ namespace Meta
 		public static readonly Map Negative="negative";
 		public static readonly Map EmptyMap=new NormalMap();
 	}
-//	public abstract class Filter
-//	{
-//		public abstract Map Detect(string text);
-//	}
-	// TODO: remove implicit indexer stuff, use explicit indexed property
-	// TODO: rename
-//	public class Filters
-//	{
-//		public class DecimalFilter: Filter
-//		{
-//			public override Map Detect(string text)
-//			{
-//				Map result=null;
-//				int pointPos=text.IndexOf(".");
-//				if(pointPos!=-1)
-//				{
-//					if(text.IndexOf(".",pointPos+1)==-1)
-//					{
-//						Integer numerator=IntegerFilter.ParseInteger(text.Replace(".",""));
-//						if(numerator!=null)
-//						{
-//							Integer denominator=Convert.ToInt32(Math.Pow(10,text.Length-pointPos-1));
-//							result=new NormalMap();
-//							result[NumberKeys.Numerator]=new NormalMap(numerator);
-//							result[NumberKeys.Denominator]=new NormalMap(denominator);
-//						}
-//					}
-//				}
-//				return result;
-//			}
-//		}
-//		public class FractionFilter: Filter
-//		{
-//			public override Map Detect(string text)
-//			{
-//				Map result=null;
-//				int slashPos=text.IndexOf("/");
-//				if(slashPos!=-1)
-//				{
-//					if(text.IndexOf("/",slashPos+1)==-1)
-//					{
-//						Integer numerator=IntegerFilter.ParseInteger(text.Substring(0,slashPos));
-//						if(numerator!=null)
-//						{
-//							Integer denominator=IntegerFilter.ParseInteger(text.Substring(slashPos+1,text.Length-slashPos-1));
-//							if(denominator!=null)
-//							{
-//								result=new NormalMap();
-//								result[NumberKeys.Numerator]=new NormalMap(numerator);
-//								result[NumberKeys.Denominator]=new NormalMap(denominator);
-//							}
-//						}
-//					}
-//				}
-//				return result;
-//			}
-//		}
-//		public class IntegerFilter: Filter 
-//		{
-////			public static Integer ParseInteger(string text)
-////			{
-////
-////				Integer result=new Integer(0);
-////				if(text.Equals(""))
-////				{
-////					result=null;
-////				}
-////				else
-////				{
-////					int index=0;
-////					if(text[0]=='-')
-////					{
-////						index++;
-////					}
-////					for(;index<text.Length;index++)
-////					{
-////						if(char.IsDigit(text[index]))
-////						{
-////							result=result*10+(text[index]-'0');
-////						}
-////						else
-////						{
-////							return null;
-////						}
-////					}
-////					if(text[0]=='-')
-////					{
-////						result=-result;
-////					}
-////				}
-////				return result;
-////			}
-//			public override Map Detect(string text)
-//			{ 
-//				Map recognized;
-//				Integer integer=ParseInteger(text);
-//				if(integer!=null)
-//				{
-//					recognized=new NormalMap(integer);
-//				}
-//				else
-//				{
-//					recognized=null;
-//				}
-//				return recognized;
-//			}
-//		}
-//		public class StringFilter:Filter
-//		{
-//			public override Map Detect(string text)
-//			{
-//				return new NormalMap(text);
-//			}
-//		}
-//	}
 
 
 	public class MetaException:ApplicationException
 	{
-//		public MetaException(string message)
-//		{
-//			this.message=message;
-//		}
-//		public MetaException(Extent extent)
-//		{
-//			this.extent=extent;
-//		}
 		public MetaException(string message,Extent extent)
 		{
 			this.extent=extent;
 			this.message=message;
 		}
-//		public MetaException(Exception exception,Extent extent):base(exception.Message,exception)
-//		{
-//			this.extent=extent;
-//		}
 		private Extent extent;
 		private string message="";
-//		public override string Message
-//		{
-//			get
-//			{
-//				return message+" In file "+extent.FileName+", line: "+extent.Start.Line+", column: "+extent.Start.Column+".";
-//			}
-//		}
+
 	}
 	public class Throw
 	{
@@ -369,20 +236,8 @@ namespace Meta
 		public static Map Literal(Map code,Map context)
 		{
 			return code;
-			//return Filter((string)code.GetString());;
 		}
-//		public static Map Filter(string text) // TODO: get rid of this completely, integrate into Parser
-//		{
-//			foreach(Filter recognition in recognitions)
-//			{
-//				Map recognized=recognition.Detect(text);
-//				if(recognized!=null)
-//				{
-//					return recognized;
-//				}
-//			}
-//			return null;
-//		}
+
 		public static Map Select(Map code,Map context)
 		{
 			Map selected=FindFirstKey(code,context);
@@ -390,7 +245,6 @@ namespace Meta
 			{
 				Map key=Evaluate((Map)code.Array[i],context);
 				Map selection=selected[key];
-				//				Interpreter.DisplayValue=selection;
 				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[i]).Extent))
 				{
 					Interpreter.CallBreak(selection);
@@ -399,32 +253,24 @@ namespace Meta
 				{
 					object test=selected[key];
 					Throw.KeyDoesNotExist(key,key.Extent);
-					//					throw new KeyDoesNotExistException(key,this.Extent,selected);
 				}
 				selected=selection;
 			}
 			return selected;
-		}// TODO: everything has an extent
+		}
 		private static Map FindFirstKey(Map code,Map context)
 		{
 			Map key=Evaluate((Map)code.Array[0],context);
 			Map selected=context;
 			while(!selected.ContainsKey(key))
 			{
-				//				if(selected.Parent==null)
-				//				{
-				//					selected.ContainsKey(key);
-				////					throw new KeyNotFoundException(key,this.Extent);
-				//				}
 				selected=selected.Parent;
 				if(selected==null)
 				{
 					Throw.KeyNotFound(key,key.Extent);
-					//					throw new KeyNotFoundException(key,this.Extent);
 				}
 			}
 			Map val=selected[key];
-			//			Interpreter.DisplayValue=val;
 			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[0]).Extent))
 			{
 				Interpreter.CallBreak(val);
@@ -443,7 +289,6 @@ namespace Meta
 				{
 					object x=selected[key];
 					Throw.KeyDoesNotExist(key,((Map)code[CodeKeys.Key].Array[i]).Extent);
-					//					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
 				}
 				selected=selection;
 				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
@@ -465,11 +310,6 @@ namespace Meta
 				}
 				Interpreter.CallBreak(oldValue);
 			}
-			// TODO: peek at next statement
-			//			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).Extent))
-			//			{
-			//				Interpreter.CallBreak();
-			//			}
 			
 			Map val=Evaluate(code[CodeKeys.Value],context);
 			if(lastKey.Equals(SpecialKeys.Current))
@@ -482,19 +322,6 @@ namespace Meta
 				selected[lastKey]=val;
 			}
 		}
-
-//		private static Map displayValue="";
-//		public static Map DisplayValue
-//		{
-//			get
-//			{
-//				return displayValue;
-//			}
-//			set
-//			{
-//				displayValue=value;
-//			}
-//		}
 		public static event DebugBreak Break;
 
 		public delegate void DebugBreak(Map data);
@@ -505,15 +332,7 @@ namespace Meta
 				Break(data);
 				Thread.CurrentThread.Suspend();
 			}
-		}		
-//		public static void CallDebug()
-//		{
-//			if(DebugBreak!=null)
-//			{
-//				DebugBreak();
-//				Thread.CurrentThread.Suspend();
-//			}
-//		}
+		}
 		public static Map Merge(params Map[] arkvlToMerge)
 		{
 			return MergeCollection(arkvlToMerge);
@@ -558,25 +377,15 @@ namespace Meta
 			}
 			return root;
 		}
-		// TODO: this is so pointless, i dont know
-		// TODO: rename
 		public static Map RunWithoutLibrary(string fileName,TextReader textReader)
 		{
 			Map program=Compile(fileName, textReader);
-			// TODO: refactor
 			return CallProgram(program,new NormalMap(),null);
-//			return program.Call(new NormalMap());
-//			return CallProgram(CallProgram(program,new NormalMap(),null),new NormalMap(),null);
 		}
 		public static Map RunWithoutLibrary(string fileName)
 		{
 			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
 		}
-//		public static Map RunWithoutLibrary(string fileName,Map argument)
-//		{
-//			Map program=Compile(fileName, new StringReader(Helper.ReadFile(fileName)));
-//			return CallProgram(program,argument,null);
-//		}
 		public static Map CallProgram(Map program,Map argument,Map current)
 		{
 			Map callable=new NormalMap();
@@ -592,23 +401,12 @@ namespace Meta
 		{
 			return (new MetaTreeParser()).program(ParseToAst(fileName,textReader));
 		}
-//		public static Map Compile(string fileName)
-//		{
-//			return
-//		}
-//		public static Map Compile(string fileName)
-//		{
-//			return (new MetaTreeParser()).program(ParseToAst(fileName));
-//		}
 		public static AST ParseToAst(string fileName)
 		{
 			return ParseToAst(fileName,new StringReader(Helper.ReadFile(fileName)));
 		}
-		// TODO: refactor, why is this so complicated
 		public static AST ParseToAst(string fileName,TextReader reader) 
 		{
-//			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
-
 			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(reader,fileName); 
 			MetaLexer metaLexer = new MetaLexer(sharedInputState);
 	
@@ -619,30 +417,8 @@ namespace Meta
 			metaParser.setASTNodeClass("MetaAST");
 			metaParser.map();
 			AST ast=metaParser.getAST();
-			//			file.Close();
 			return ast;
 		}
-//		public static AST ParseToAst(string fileName) 
-//		{
-//			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
-////			StringReader stringReader=new StringReader("\n"+Helper.ReadFile(fileName)+"\n");
-//			//			StringReader stringReader=new StringReader(Helper.ReadFile(fileName));
-//			//			FileStream file=new FileStream(fileName, FileMode.Open,FileAccess.Read, FileShare.ReadWrite); 
-//
-//			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(stringReader,fileName); 
-////			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(file,fileName); 
-//			MetaLexer metaLexer = new MetaLexer(sharedInputState);
-//	
-//			metaLexer.setTokenObjectClass("MetaToken");
-//	
-//			MetaParser metaParser = new MetaParser(new IndentationStream(metaLexer));
-//
-//			metaParser.setASTNodeClass("MetaAST");
-//			metaParser.map();
-//			AST ast=metaParser.getAST();
-////			file.Close();
-//			return ast;
-//		}
 		private static void ExecuteInThread()
 		{
 			try
@@ -685,10 +461,6 @@ namespace Meta
 		static Interpreter()
 		{
 			Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
-//			foreach(Type recognition in typeof(Filters).GetNestedTypes())
-//			{
-//				recognitions.Add((Filter)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-//			}
 		}
 		public static DirectoryInfo LibraryPath
 		{
@@ -740,26 +512,6 @@ namespace Meta
 			}
 			return boolean;
 		}
-//		public virtual bool Boolean
-//		{
-//			get
-//			{
-//				bool boolean;
-//				if(Integer==0)
-//				{
-//					boolean=false;
-//				}
-//				else if(Integer==1)
-//				{
-//					boolean=true;
-//				}
-//				else
-//				{
-//					throw new ApplicationException("Map is not a boolean.");
-//				}
-//				return boolean;
-//			}
-//		}
 		public virtual bool IsFraction
 		{
 			get
@@ -767,7 +519,6 @@ namespace Meta
 				return this.ContainsKey(NumberKeys.Numerator) && this[NumberKeys.Numerator].IsInteger && this.ContainsKey(NumberKeys.Denominator) && this[NumberKeys.Denominator].IsInteger;
 			}
 		}
-		// TODO: change this to a real fraction class
 		public virtual double GetFraction()
 		{
 			double fraction;
@@ -781,22 +532,6 @@ namespace Meta
 			}
 			return fraction;
 		}
-//		public virtual double Fraction
-//		{
-//			get
-//			{
-//				double fraction;
-//				if(IsFraction)
-//				{
-//					fraction=((double)(this["numerator"]).Integer.LongValue())/((double)(this["denominator"]).Integer.LongValue());
-//				}
-//				else
-//				{
-//					throw new ApplicationException("Map is not a fraction");
-//				}
-//				return fraction;
-//			}
-//		}
 		public virtual bool IsInteger
 		{
 			get
@@ -806,11 +541,6 @@ namespace Meta
 			}
 		}
 		public abstract Integer GetInteger();
-//		public abstract Integer Integer
-//		{
-//			get;
-//		}
-		// TODO: make this a function
 		public Map Parameter
 		{
 			get
@@ -822,24 +552,11 @@ namespace Meta
 				parameter=value;
 			}
 		}
-//		public Map Argument
-//		{
-//			get
-//			{
-//				return arg;
-//			}
-//			set
-//			{ 
-//				arg=value;
-//			}
-//		}
 		Map parameter=null;
-//		Map arg=null;
 		public virtual bool IsString
 		{
 			get
 			{
-				// TODO: incorrect, GetString should throw if it isnt a string
 				return GetString()!=null;
 			}
 		}
@@ -908,55 +625,20 @@ namespace Meta
 			get;
 			set;
 		}
+		// TODO: remove duplication in MapStrategy?
 		public virtual Map Call(Map argument)
 		{
 			this.Parameter=argument;
 			Map function=this[CodeKeys.Function];
 			Map result;
 			result=Interpreter.Evaluate(function,this);
-			//			result=function.Evaluate(map);
 			return result;
-//			Parameter=argument;
-//			Expression function=(Expression)this[CodeKeys.Function].GetExpression();
-//			Map result;
-//			result=function.Evaluate(this);
-//			return result;
 		}
 		public abstract ArrayList Keys
 		{
 			get;
 		}
 		public abstract Map Clone();
-//		public virtual Expression GetExpression()
-//		{
-//			Expression expression;
-//			if(this.ContainsKey(CodeKeys.Call))
-//			{
-//				expression=new Call(this[CodeKeys.Call]);
-//			}
-//			else if(this.ContainsKey(CodeKeys.Code))
-//			{ 
-//				expression=new Delayed(this[CodeKeys.Code]);
-//			}
-//			else if(this.ContainsKey(CodeKeys.Program))
-//			{
-//				expression=new Program(this[CodeKeys.Program]);
-//			}
-//			else if(this.ContainsKey(CodeKeys.Literal))
-//			{
-//				expression=new Literal(this[CodeKeys.Literal]);
-//			}
-//			else if(this.ContainsKey(CodeKeys.Select))
-//			{
-//				expression=new Select(this[CodeKeys.Select]);
-//			}
-//			else
-//			{
-//				throw new ApplicationException("Cannot compile non-code map.");
-//			}
-//			((Expression)expression).Extent=this.Extent;
-//			return expression;
-//		}
 		public bool ContainsKey(Map key)
 		{
 			bool containsKey;
@@ -1075,10 +757,11 @@ namespace Meta
 			return new NormalMap(text);
 		}
 	}
-	
+
 	public abstract class StrategyMap: Map, ISerializeSpecial
 	{
-		public void InitFromStrategy(MapStrategy clone) // TODO: no deep clonging necessary??
+		// TODO: no deep cloning necessary??
+		public void InitFromStrategy(MapStrategy clone) 
 		{
 			foreach(Map key in clone.Keys)
 			{
@@ -1112,29 +795,28 @@ namespace Meta
 		{
 			get
 			{
-				// TODO: rename to val, we could even use value
-				Map result;
+				Map val;
 				if(key.Equals(SpecialKeys.Parent))
 				{
-					result=Parent;
+					val=Parent;
 				}
 				else if(key.Equals(SpecialKeys.Parameter))
 				{
-					result=Parameter;
+					val=Parameter;
 				}
 				else if(key.Equals(SpecialKeys.Current))
 				{
-					result=this;
+					val=this;
 				}
 				else
 				{
-					result=strategy[key];
+					val=strategy[key];
 				}
-//				if(result==null)
+//				if(val==null)
 //				{
 //					throw new MetaException("Key "+Meta.Serialize.Value(key)+" does not exist.");
 //				}
-				return result;
+				return val;
 			}
 			set
 			{
@@ -1352,15 +1034,12 @@ namespace Meta
 			GAC gac=new GAC();
 			gac.cache["web"]=Web.singleton;
 			singleton=new PersistantMap(gac);
-//			singleton.Parent=Web.singleton;
 		}
 		public static Map singleton;
-//		public static Map singleton=new PersistantMap(new GAC(new Web));
 	}
 
 	public class RemoteStrategy:NormalStrategy
 	{
-		// TODO: there should be a default implementation for this
 		public override ArrayList Array
 		{
 			get
@@ -1368,7 +1047,6 @@ namespace Meta
 				throw new ApplicationException("not implemented.");
 			}
 		}
-		// TODO: shouldnt be a property, there should be a default implementation for all this stuff
 		public override Integer Integer
 		{
 			get
@@ -1393,34 +1071,23 @@ namespace Meta
 				}
 				WebClient webClient=new WebClient();
 				Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
-//				webClient.DownloadFile(fullPath.ToString(),@"C:\downloadedFile.txt");
 				Stream stream=webClient.OpenRead(fullPath.ToString());
 				StreamReader streamReader=new StreamReader(stream);
-//				Interpreter Interpreter.ParseToAst(fullPath,stream).
 				return Interpreter.RunWithoutLibrary(fullPath.ToString(),streamReader);
-
-
 			}
 			set
 			{
 				throw new ApplicationException("Cannot set key in remote map.");
 			}
 		}
-
-
-
-
-
 		private string address;
 		public RemoteStrategy(string address)
 		{
 			this.address=address;
 		}
-
 	}
 	public class Web:Map
 	{
-		// TODO: should definitely be IEnumerable, so Web can return something too
 		public override ArrayList Keys
 		{
 			get
@@ -1428,7 +1095,6 @@ namespace Meta
 				return new ArrayList();
 			}
 		}
-
 		public override Map this[Map key]
 		{
 			get
@@ -1446,8 +1112,6 @@ namespace Meta
 				throw new ApplicationException("Cannot set key in Web.");
 			}
 		}
-
-
 		public override Integer GetInteger()
 		{
 			return null;
@@ -1582,7 +1246,6 @@ namespace Meta
 			Directory.CreateDirectory(Path.GetDirectoryName(path));
 			File.Create(path).Close();
 			string text=Meta.Serialize.MapValue(meta,"").Trim(new char[]{'\n'});
-//			string text=Meta.Serialize.Value(meta).Trim(new char[]{'\n'});
 			if(text=="\"\"")
 			{
 				text="";
@@ -1590,9 +1253,6 @@ namespace Meta
 			Helper.WriteFile(path,text);
 		}
 	}
-	// TODO: refactor magic constants
-	// TODO: serialize negative numbers correctly, serialize fractionals correctly
-	// TODO: serialize empty maps as *
 	public class Serialize
 	{
 		public static string Key(Map key)
@@ -1658,7 +1318,6 @@ namespace Meta
 			}
 			return text;
 		}
-		// TODO: properly test this
 		private static string StringValue(Map val,string indentation)
 		{
 			string text;
@@ -1666,7 +1325,6 @@ namespace Meta
 			{
 				int longest=0;
 				foreach(Match match in Regex.Matches(val.GetString(),"(>)?(\\\\)*"))
-//					foreach(Match match in Regex.Matches(val.GetString(),"(')?(\"')*\""))
 				{
 					if(match.ToString().Length>longest)
 					{
@@ -1679,36 +1337,6 @@ namespace Meta
 					escape+='\\';
 				}
 				text=escape+literalStartDelimiter+val.GetString()+literalEndDelimiter+escape;
-//				int delimiterLength=longestEscape.Length;
-//				if(val.GetString().StartsWith("\""))
-//				{
-//					if(delimiterLength%2==0)
-//					{
-//						delimiterLength++;
-//					}
-//				}
-//				else if(val.GetString().StartsWith("'"))
-//				{
-//					if(delimiterLength%2==1)
-//					{
-//						delimiterLength++;
-//					}
-//				}
-//				string startDelimiter="";
-//				for(int i=0;i<delimiterLength;i++)
-//				{
-//					if(i%2==0)
-//					{
-//						startDelimiter+="\"";
-//					}
-//					else
-//					{
-//						startDelimiter+="'";
-//					}
-//				}
-//
-//				string endDelimiter=Helper.ReverseString(startDelimiter);
-//				text=startDelimiter+val.GetString()+endDelimiter;
 			}
 			else
 			{
@@ -1716,90 +1344,22 @@ namespace Meta
 			}
 			return text;
 		}
-//		private static string StringValue(Map val,string indentation)
-//		{
-//			string text;
-//			if(Literal.Filter(val.GetString()).IsString)
-//			{
-//				string longestEscape="\"";
-//				foreach(Match match in Regex.Matches(val.GetString(),"(')?(\"')*\""))
-//				{
-//					if(match.ToString().Length>longestEscape.Length)
-//					{
-//						longestEscape=match.ToString();
-//					}
-//				}
-//				int delimiterLength=longestEscape.Length;
-//				if(val.GetString().StartsWith("\""))
-//				{
-//					if(delimiterLength%2==0)
-//					{
-//						delimiterLength++;
-//					}
-//				}
-//				else if(val.GetString().StartsWith("'"))
-//				{
-//					if(delimiterLength%2==1)
-//					{
-//						delimiterLength++;
-//					}
-//				}
-//				string startDelimiter="";
-//				for(int i=0;i<delimiterLength;i++)
-//				{
-//					if(i%2==0)
-//					{
-//						startDelimiter+="\"";
-//					}
-//					else
-//					{
-//						startDelimiter+="'";
-//					}
-//				}
-//
-//				string endDelimiter=Helper.ReverseString(startDelimiter);
-//				text=startDelimiter+val.GetString()+endDelimiter;
-//			}
-//			else
-//			{
-//				text=MapValue(val,indentation);
-//			}
-//			return text;
-//		}
 		private static string MapKey(Map map,string indentation)
 		{
 			return indentation + leftBracket + newLine + MapValue(map,indentation) + rightBracket;
 		}
-		// TODO: add special serialization for code
-
 		public static string MapValue(Map map,string indentation)
 		{
 			string text;
-//			if(map.Count==1 && map.ContainsKey(CodeKeys.Function))
-//			{
-//				text="="+Code(map[CodeKeys.Function],indentation);
-//			}
-//			else
-//			{
-				text=newLine;
-				//			string text=newLine;
-				foreach(DictionaryEntry entry in map)
+			text=newLine;
+			foreach(DictionaryEntry entry in map)
+			{
+				text+=indentation + Key((Map)entry.Key,indentation)	+ assignment + Value((Map)entry.Value,indentation+'\t');
+				if(!text.EndsWith(newLine))
 				{
-//					if(entry.Key.Equals(CodeKeys.Function))
-//					{
-//						text+=indentation+"#\n"+Value((Map)entry.Value,indentation);
-//					}
-//					else
-//					{
-					text+=indentation + Key((Map)entry.Key,indentation)	+ assignment + Value((Map)entry.Value,indentation+'\t');
-//					text+=indentation + Key((Map)entry.Key,indentation)	+ ":" + Value((Map)entry.Value,indentation+'\t');
-					//					}
-					if(!text.EndsWith(newLine))
-					{
-						text+=newLine;
-					}
+					text+=newLine;
 				}
-//			}
+			}
 			return text;
 		}
 		private const string leftBracket="[";
@@ -1808,7 +1368,6 @@ namespace Meta
 		private const string literalStartDelimiter="<";
 		private const string assignment="=";
 		private const string literalEndDelimiter=">";
-//		private const string literalDelimiter="\"";
 
 		private static bool IsLiteralKey(string text)
 		{
@@ -1850,7 +1409,6 @@ namespace Meta
 		private Map GetMap()
 		{
 			Map data=Interpreter.RunWithoutLibrary(this.file.FullName);
-//			Map data=Interpreter.RunWithoutLibrary(this.file.FullName,new NormalMap());
 			data.Parent=this.map;
 			return data;
 		}
@@ -1879,7 +1437,6 @@ namespace Meta
 		public override MapStrategy Clone()
 		{
 			return new NamespaceStrategy(FullName,cache,namespaces,assemblies);
-//			return new NamespaceStrategy(FullName,cache,namespaces,assemblies);
 		}
 
 		public override Integer Integer
@@ -2003,23 +1560,6 @@ namespace Meta
 	}
 	public class Transform
 	{
-//		public static object ToDotNet(Map meta) 
-//		{
-//			object dotNet;
-//			if(meta.IsInteger)
-//			{
-//				dotNet=meta.Integer.Int32;
-//			}
-//			else if(meta.IsString)
-//			{
-//				dotNet=meta.String;
-//			}
-//			else
-//			{
-//				dotNet=meta;
-//			}
-//			return dotNet;
-//		}
 		public static object ToDotNet(Map meta,Type target)
 		{
 			bool isConverted;
@@ -2328,14 +1868,6 @@ namespace Meta
 			// TODO: throw exception, make this the default implementation?, no better not
 			return null;
 		}
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				return null;
-//			}
-//		}
-
 		public override Map Clone()
 		{
 			return new DotNetMethod(this.name,this.obj,this.type);
@@ -2717,14 +2249,6 @@ namespace Meta
 			// TODO: Throw exception
 			return null;
 		}
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				return null;
-//			}
-//		}
-
 		public override Map Clone()
 		{
 			return new DotNetClass(type);
@@ -2754,13 +2278,6 @@ namespace Meta
 			// TODO: throw exception
 			return null;
 		}
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				return null;
-//			}
-//		}
 		public DotNetObject(object target):base(target,target.GetType())
 		{
 		}
@@ -2805,7 +2322,6 @@ namespace Meta
 			Map function=this[CodeKeys.Function];
 			Map result;
 			result=Interpreter.Evaluate(function,map);
-//			result=function.Evaluate(map);
 			return result;
 		}
 		public StrategyMap map;
@@ -3032,14 +2548,12 @@ namespace Meta
 				{
 					number=0;
 				}
-				//else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) &&  this[NumberKeys.Negative]==new NormalMap(new Integer(1)) && this.ContainsKey(NumberKeys.EmptyMap)
 				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) && this[NumberKeys.Negative]==new NormalMap(new Integer(1)))) && this.ContainsKey(NumberKeys.EmptyMap))
 				{
 					if(this[NumberKeys.EmptyMap].GetInteger()!=null)
 					{
 						number=this[NumberKeys.EmptyMap].GetInteger()+1;
 						if(this[NumberKeys.Negative]==new NormalMap(new Integer(1)))
-//							if(this.ContainsKey(NumberKeys.Negative))
 						{
 							number=-number;
 						}
@@ -3207,13 +2721,6 @@ namespace Meta
 			// TODO: throw exception
 			return null;
 		}
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				return null;
-//			}
-//		}
 		public override ArrayList Keys
 		{
 			get
@@ -3369,22 +2876,6 @@ namespace Meta
 				{
 					keys.Add(new NormalMap(member.Name));
 				}
-				// TODO: add this back in
-//				if(obj!=null && obj is IEnumerable && !(obj is String))
-//				{ 
-//					foreach(object entry in (IEnumerable)obj)
-//					{
-//						if(entry is DictionaryEntry)
-//						{
-//							table[Transform.ToMeta(((DictionaryEntry)entry).Key)]=((DictionaryEntry)entry).Value;
-//						}
-//						else
-//						{
-//							table[counter]=entry;
-//							counter++;
-//						}
-//					}
-//				}
 				return keys;
 			}
 		}
@@ -3630,7 +3121,6 @@ namespace Meta
 					if(number<0)
 					{
 						result=new NormalMap(new Integer(1));
-//						result=new NormalMap();
 					}
 					else
 					{
@@ -3643,47 +3133,6 @@ namespace Meta
 				}
 				return result;
 			}
-//			get
-//			{
-//				Map result;
-//				if(key.Equals(NumberKeys.EmptyMap))
-//				{
-//					if(number==0)
-//					{
-//						result=0;
-//					}
-//					else
-//					{
-//						Integer newInteger;
-//						Integer absoluteOfNewInteger=number.abs()-1;
-//						if(number>0)
-//						{
-//							newInteger=absoluteOfNewInteger;
-//						}
-//						else
-//						{
-//							newInteger=-absoluteOfNewInteger;
-//						}
-//						result=new NormalMap(newInteger);
-//					}
-//				}
-//				else if(key.Equals(NumberKeys.Negative))
-//				{
-//					if(number<0)
-//					{
-//						result=new NormalMap();
-//					}
-//					else
-//					{
-//						result=null;
-//					}
-//				}
-//				else
-//				{
-//					result=null;
-//				}
-//				return result;
-//			}
 			set
 			{
 				if(key.Equals(NumberKeys.EmptyMap))
@@ -3697,7 +3146,6 @@ namespace Meta
 						number=number.abs();
 					}
 					else if(value.Equals(new NormalMap(new Integer(1))))
-//					else if(value.Equals(NumberKeys.EmptyMap))
 					{
 						number=-number.abs();
 					}
@@ -3719,8 +3167,6 @@ namespace Meta
 			map.strategy.map=map;
 			map.InitFromStrategy(this);
 			map.strategy[key]=val;
-//			map.strategy=this.Clone();
-//			map.strategy[NumberKeys.Negative]=this[NumberKeys.Negative];
 		}
 	}
 	namespace Parser 
@@ -3905,7 +3351,7 @@ namespace Meta
 					{
 						output+=" succeeded";
 					}
-					output=output + indentationText + timespan.TotalSeconds.ToString() + " s";
+					output=output + "  " + timespan.TotalSeconds.ToString() + " s";
 					Console.WriteLine(output);
 				}
 				if(isWaitAtEnd)
@@ -3936,12 +3382,6 @@ namespace Meta
 				{
 					stringBuilder.Append(indent+"null\n");
 				}
-				// this is the problem, ignores the rest of the serialization, get rid of this
-//				else if(toSerialize is ISerializeSpecial)
-//				{
-//					((ISerializeSpecial)toSerialize).Serialize(indent,methods,stringBuilder);
-//				}
-//				else if(toSerialize is string || toSerialize.GetType().IsPrimitive)
 				else if(toSerialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
 					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) 
 				{
