@@ -341,6 +341,7 @@ namespace Meta
 	{
 		public abstract Map Detect(string text);
 	}
+	// TODO: remove implicit indexer stuff, use explicit indexed property
 	// TODO: rename
 	public class Filters
 	{
@@ -550,6 +551,7 @@ namespace Meta
 			{
 				val=Program(code[CodeKeys.Program],context);
 			}
+			// TODO: combine the three forms of literals into one
 			else if(code.ContainsKey(CodeKeys.Literal))
 			{
 				val=Literal(code[CodeKeys.Literal],context);
@@ -596,7 +598,8 @@ namespace Meta
 		public static ArrayList recognitions=new ArrayList();
 		public static Map Literal(Map code,Map context)
 		{
-			return Filter((string)code.GetString());;
+			return code;
+			//return Filter((string)code.GetString());;
 		}
 		public static Map Filter(string text) // TODO: get rid of this completely, integrate into Parser
 		{
@@ -631,7 +634,7 @@ namespace Meta
 				selected=selection;
 			}
 			return selected;
-		}
+		}// TODO: everything has an extent
 		private static Map FindFirstKey(Map code,Map context)
 		{
 			Map key=Evaluate((Map)code.Array[0],context);
@@ -1818,7 +1821,8 @@ namespace Meta
 		}
 	}
 	// TODO: refactor magic constants
-	// TODO: maybe put serialization into classes themselves
+	// TODO: serialize negative numbers correctly, serialize fractionals correctly
+	// TODO: serialize empty maps as *
 	public class Serialize
 	{
 		public static string Key(Map key)
@@ -3694,7 +3698,7 @@ namespace Meta
 						}
 						else
 						{
-							throw new ApplicationException("Field "+field.Name+"could not be assigned because the value cannot be converted.");
+							throw new ApplicationException("Field "+field.Name+" could not be assigned because the value cannot be converted.");
 						}
 					}
 					else if(member is PropertyInfo)

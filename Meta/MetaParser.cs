@@ -69,13 +69,14 @@ using System.Collections;
 		public const int LITERAL_END = 24;
 		public const int LITERAL_VERY_END = 25;
 		public const int LITERAL = 26;
-		public const int COMMENT = 27;
-		public const int REST_OF_LINE = 28;
-		public const int LINE = 29;
-		public const int WHITESPACE = 30;
-		public const int BOF = 31;
-		public const int NEWLINE = 32;
-		public const int NEWLINE_KEEP_TEXT = 33;
+		public const int INTEGER = 27;
+		public const int COMMENT = 28;
+		public const int REST_OF_LINE = 29;
+		public const int LINE = 30;
+		public const int WHITESPACE = 31;
+		public const int BOF = 32;
+		public const int NEWLINE = 33;
+		public const int NEWLINE_KEEP_TEXT = 34;
 		
 		
     private static Stack autokeys=new Stack();
@@ -138,12 +139,20 @@ using System.Collections;
 				match(LITERAL);
 				break;
 			}
+			case INTEGER:
+			{
+				MetaAST tmp2_AST = null;
+				tmp2_AST = (MetaAST) astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, (AST)tmp2_AST);
+				match(INTEGER);
+				break;
+			}
 			default:
-				bool synPredMatched68 = false;
+				bool synPredMatched71 = false;
 				if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 				{
-					int _m68 = mark();
-					synPredMatched68 = true;
+					int _m71 = mark();
+					synPredMatched71 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -152,12 +161,12 @@ using System.Collections;
 					}
 					catch (RecognitionException)
 					{
-						synPredMatched68 = false;
+						synPredMatched71 = false;
 					}
-					rewind(_m68);
+					rewind(_m71);
 					inputState.guessing--;
 				}
-				if ( synPredMatched68 )
+				if ( synPredMatched71 )
 				{
 					call();
 					if (0 == inputState.guessing)
@@ -209,6 +218,7 @@ using System.Collections;
 			case LBRACKET:
 			case LITERAL_KEY:
 			case LITERAL:
+			case INTEGER:
 			{
 				break;
 			}
@@ -268,11 +278,11 @@ using System.Collections;
 				}
 				else
 				{
-					goto _loop75_breakloop;
+					goto _loop78_breakloop;
 				}
 				
 			}
-_loop75_breakloop:			;
+_loop78_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -329,6 +339,7 @@ _loop75_breakloop:			;
 					case LBRACKET:
 					case LITERAL_KEY:
 					case LITERAL:
+					case INTEGER:
 					{
 						statement();
 						if (0 == inputState.guessing)
@@ -381,6 +392,7 @@ _loop75_breakloop:			;
 								case LBRACKET:
 								case LITERAL_KEY:
 								case LITERAL:
+								case INTEGER:
 								{
 									statement();
 									if (0 == inputState.guessing)
@@ -398,11 +410,11 @@ _loop75_breakloop:			;
 						}
 						else
 						{
-							goto _loop87_breakloop;
+							goto _loop90_breakloop;
 						}
 						
 					}
-_loop87_breakloop:					;
+_loop90_breakloop:					;
 				}    // ( ... )*
 				match(DEDENT);
 				if (0==inputState.guessing)
@@ -534,10 +546,18 @@ _loop87_breakloop:					;
 			}
 			case LITERAL:
 			{
-				MetaAST tmp8_AST = null;
-				tmp8_AST = (MetaAST) astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, (AST)tmp8_AST);
+				MetaAST tmp9_AST = null;
+				tmp9_AST = (MetaAST) astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, (AST)tmp9_AST);
 				match(LITERAL);
+				break;
+			}
+			case INTEGER:
+			{
+				MetaAST tmp10_AST = null;
+				tmp10_AST = (MetaAST) astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, (AST)tmp10_AST);
+				match(INTEGER);
 				break;
 			}
 			case STAR:
@@ -591,9 +611,9 @@ _loop87_breakloop:					;
 		ASTPair currentAST = new ASTPair();
 		MetaAST emptyMap_AST = null;
 		
-		MetaAST tmp10_AST = null;
-		tmp10_AST = (MetaAST) astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, (AST)tmp10_AST);
+		MetaAST tmp12_AST = null;
+		tmp12_AST = (MetaAST) astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, (AST)tmp12_AST);
 		match(STAR);
 		if (0==inputState.guessing)
 		{
@@ -619,11 +639,11 @@ _loop87_breakloop:					;
 		ASTPair currentAST = new ASTPair();
 		MetaAST statement_AST = null;
 		
-		bool synPredMatched91 = false;
+		bool synPredMatched94 = false;
 		if (((LA(1)==LBRACKET||LA(1)==LITERAL_KEY)))
 		{
-			int _m91 = mark();
-			synPredMatched91 = true;
+			int _m94 = mark();
+			synPredMatched94 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -633,12 +653,12 @@ _loop87_breakloop:					;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched91 = false;
+				synPredMatched94 = false;
 			}
-			rewind(_m91);
+			rewind(_m94);
 			inputState.guessing--;
 		}
-		if ( synPredMatched91 )
+		if ( synPredMatched94 )
 		{
 			{
 				key();
@@ -683,6 +703,7 @@ _loop87_breakloop:					;
 					case LBRACKET:
 					case LITERAL_KEY:
 					case LITERAL:
+					case INTEGER:
 					{
 						break;
 					}
@@ -704,7 +725,7 @@ _loop87_breakloop:					;
 					autokeys.Push((int)autokeys.Pop()+1); 
 					
 								// TODO: Simplify!!, use astFactory
-								MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
+								MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.INTEGER); // TODO: Factor out with below
 								autokeyToken.setLine(statement_AST.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
 								autokeyToken.setColumn(statement_AST.Extent.Start.Column); 
 								autokeyToken.FileName=statement_AST.Extent.FileName;
@@ -775,11 +796,11 @@ _loop87_breakloop:					;
 				}
 				else
 				{
-					goto _loop97_breakloop;
+					goto _loop100_breakloop;
 				}
 				
 			}
-_loop97_breakloop:			;
+_loop100_breakloop:			;
 		}    // ( ... )*
 		if (0==inputState.guessing)
 		{
@@ -813,7 +834,7 @@ _loop97_breakloop:			;
 	}
 	static public void initializeASTFactory( ASTFactory factory )
 	{
-		factory.setMaxNodeType(33);
+		factory.setMaxNodeType(34);
 	}
 	
 	public static readonly string[] tokenNames_ = new string[] {
@@ -844,6 +865,7 @@ _loop97_breakloop:			;
 		@"""LITERAL_END""",
 		@"""LITERAL_VERY_END""",
 		@"""LITERAL""",
+		@"""INTEGER""",
 		@"""COMMENT""",
 		@"""REST_OF_LINE""",
 		@"""LINE""",
@@ -855,7 +877,7 @@ _loop97_breakloop:			;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = { 72155200L, 0L};
+		long[] data = { 206372928L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());

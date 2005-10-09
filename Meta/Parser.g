@@ -137,6 +137,16 @@ LITERAL_KEY:
 			|'['
 			|']'
 			|'*'
+			|'0' // TODO: should be allowed, maybe not as first character
+			|'1'
+			|'2'
+			|'3'
+			|'4'
+			|'5'
+			|'6'
+			|'7'
+			|'8'
+			|'9'
 		)
 	)+
 ;
@@ -226,6 +236,20 @@ LITERAL:
 		)*
 		LITERAL_END!
 	)
+;
+INTEGER:
+	(
+		'0'
+		|'1'
+		|'2'
+		|'3'
+		|'4'
+		|'5'
+		|'6'
+		|'7'
+		|'8'
+		|'9'
+	)+
 ;
 		
 /*LITERAL:
@@ -403,6 +427,7 @@ expression:
 		//|function
 		|map
 		|LITERAL
+		|INTEGER
 	)
 ;
 
@@ -481,6 +506,7 @@ normalLookup:
 	(
 		select
 		|LITERAL
+		|INTEGER
 		|emptyMap
 	)
 	RBRACKET!
@@ -540,7 +566,7 @@ statement:
             autokeys.Push((int)autokeys.Pop()+1); 
 
 			// TODO: Simplify!!, use astFactory
-			MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.LITERAL); // TODO: Factor out with below
+			MetaToken autokeyToken=new MetaToken(MetaLexerTokenTypes.INTEGER); // TODO: Factor out with below
 			autokeyToken.setLine(#statement.Extent.Start.Line); // TODO: Not sure this is the best way to do it, or if it's even correct
 			autokeyToken.setColumn(#statement.Extent.Start.Column); 
 			autokeyToken.FileName=#statement.Extent.FileName;
@@ -604,6 +630,7 @@ expression
 		|code=select
 		//|code=search
 		|code=literal
+		|code=integer
 		|code=delayed
 	)
 ;
@@ -737,6 +764,17 @@ delayed
     {
         code[CodeKeys.Code]=delayedCode;
     }
+;
+integer
+	returns [Map code]
+	{
+		code=new NormalMap();
+		code.Extent=#integer.Extent;
+	}:
+	token:INTEGER
+	{
+		code[CodeKeys.Literal]=new NormalMap(Meta.Filters.IntegerFilter.ParseInteger(token.getText()));
+	}
 ;
  
 literal

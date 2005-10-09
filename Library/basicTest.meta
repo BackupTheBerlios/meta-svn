@@ -34,50 +34,50 @@
 			x=<hello>
 			y=<world>
 	integerHashTest=
-		2=<correct hash content>
+		[2]=<correct hash content>
 		hashTestData=
 			[*]=
 				[*]=*
 		hashTest=[hashTestData]
-	negativeInteger=<-100>
+	negativeInteger=100
 	negativeInteger.x=<hello>
 	subtractionTest=number.Sum
-		<-100>
-		Opposite <1000>
-	integerIncrementTest=<5>
-	integerIncrementTest.0=integerIncrementTest
-	integerDecrementTest=<5>
-	integerDecrementTest=integerDecrementTest.0
+		100
+		Opposite 1000
+	integerIncrementTest=5
+	integerIncrementTest.[0]=integerIncrementTest
+	integerDecrementTest=5
+	integerDecrementTest=integerDecrementTest.[0]
 	persistenceTest=testSubDir
 	literalEscapeTest=
-		1=\<asdf>\
-		2=\\<asdf>\\
-		3=\\<as>\df>\\
-		4=\\\<as>\\df>\\\
-		5=\\\\\\\\\\\\\\\\\<as>\\\\\\\\\\\\\\\\df>\\\\\\\\\\\\\\\\\
+		[1]=\<asdf>\
+		[2]=\\<asdf>\\
+		[3]=\\<as>\df>\\
+		[4]=\\\<as>\\df>\\\
+		[5]=\\\\\\\\\\\\\\\\\<as>\\\\\\\\\\\\\\\\df>\\\\\\\\\\\\\\\\\
 	applyMethod=
 		|Sum
 			parameter
-			<1>
+			1
 	applyTest=Application
 		function=applyMethod
 		array=
-			<1>
-			<2>
-			<3>
+			1
+			2
+			3
 	ifTestCondition=Equality
-		<1>
-		<1>
+		1
+		1
 	ifTestCases=
-		1=
+		[1]=
 			|<it is true>
-		0=
+		[*]=
 			|<it is false>
 	ifTest=ifTestCases.[ifTestCondition]*
 	'ifTest=If
 	'	condition=Equal
-	'		<1>
-	'		<1>
+	'		1
+	'		1
 	'	then=
 	'		|<it is true>
 	'	else=
@@ -115,7 +115,7 @@
 				parent.parent.autoSearch=<changed>
 		SetB=
 			|
-				parent.parent.b.1=parameter.value
+				parent.parent.b.[1]=parameter.value
 				current=<changed>
 		x=
 			a=<b>
@@ -128,8 +128,8 @@
 	aSet=object.SetA*
 	bSet=object.SetB
 		value=
-			x=<7>
-			z=<1>
+			x=7
+			z=1
 	ReturnEverything=
 		|
 			current=parameter
@@ -146,9 +146,9 @@
 			current=
 				|
 					current=
-						<1>
-						<2>
-						<3>
+						1
+						2
+						3
 	SetCurrent=
 		|
 			current=
@@ -170,13 +170,19 @@
 	current=map.Merging
 		parent
 		testClasses
-	TestClass.NestedClass.field=<5>
+	TestClass.NestedClass.field=5
 	nestedClassTest=TestClass.NestedClass.field
 	testClass=TestClass*
-	testClass.floatValue=<1/3>
-	testClass.doubleValue=<1/3>
-	testClass.decimalValue=<1/3>
-	TestClass.boolTest=<1>
+	testClass.floatValue=
+		numerator=1
+		denominator=3
+	testClass.doubleValue=
+		numerator=1
+		denominator=3
+	testClass.decimalValue=
+		numerator=1
+		denominator=3
+	TestClass.boolTest=1
 	boolTest=TestClass.boolTest
 	memberTest=MemberTest*
 	MemberTest.classField=<a>
@@ -207,11 +213,11 @@
 	indexerNoConversion=IndexerNoConversion*
 	indexerNoConversion.abc=<hihi>
 	indexerNoConversionIndexed=indexerNoConversion.abc
-	interceptedSymbol2=<1>
+	interceptedSymbolTwo=1
 	k=<hello>
 	xyz=<w>
 	literalFunction=
-		|<5>
+		|5
 	literalFunctionResult=literalFunction*
 	someFunction=
 		|
@@ -228,7 +234,7 @@
 	selectionFunction=
 		|value
 	selectionFunctionResult=selectionFunction *
-	bigInteger=<89383838383832839123497123047217340712340720347072304702340720347>
+	bigInteger=89383838383832839123497123047217340712340720347072304702340720347
 	upperLevel=<unchanged>
 	SetUpperLevel=
 		|
@@ -237,15 +243,15 @@
 		|
 			SetUpperLevel <changed>
 	ChangeUpperLevel*
-	staticEventChanged=<0>
+	staticEventChanged=*
 	ChangeStaticEvent=
 		|
 			parent.parent.staticEventChanged=parameter
 	TestClass.staticEvent.Add
 		=
 			|
-				ChangeStaticEvent <1>
-				current=parameter.1
+				ChangeStaticEvent 1
+				current=parameter.[1]
 	staticEvent=TestClass.staticEvent
 	TestClass.TakeDelegate
 		=
@@ -253,35 +259,35 @@
 	resultFromDelegate=TestClass.GetResultFromDelegate*
 	staticEventResult=TestClass.staticEvent 
 		testClass
-	instanceEventChanged=<0>
+	instanceEventChanged=*
 	testClass.instanceEvent.Add
 		=
 			|
-				parent.parent.parent.instanceEventChanged=<1>
-				current=parameter.1
+				parent.parent.parent.instanceEventChanged=1
+				current=parameter.[1]
 	instanceEvent=testClass.instanceEvent
 	instanceEventResult=testClass.instanceEvent
-		<5>
-	one=<1>
-	two=<2>
+		5
+	one=1
+	two=2
 	firstIf=<unchanged>
 	secondIf=<unchanged>
 	firstIfCondition=Equality
-		<1>
+		1
 		one
 	firstIfBranches=
-		1=
+		[1]=
 			|<then>
-		0=
+		[*]=
 			|<else>
 	firstIf=firstIfBranches.[firstIfCondition]*
-	bigNumber=<50020202029029233344>
+	bigNumber=50020202029029233344
 	secondSwitch=<unchanged>
 	secondSwitchCases=
-		1=<one>
-		2=<two>
-		3=<three>
-	secondSwitch=secondSwitchCases.3
+		[1]=<one>
+		[2]=<two>
+		[3]=<three>
+	secondSwitch=secondSwitchCases.[3]
 	emptyMap=*
 	emptyFunction=
 		|
@@ -289,11 +295,17 @@
 	emptyFunctionResult=emptyFunction*
 	font=System.Drawing.Font
 		<Courier New>
-		2=<10/1>
-	decimalTest=<50.23>
-	fractionTest=<4/52>
+		[2]=
+			numerator=10
+			denominator=1
+	decimalTest=
+		numerator=5023
+		denominator=100
+	fractionTest=
+		numerator=4
+		denominator=52
 	stringTest=<hello>
-	stringTest.6=stringTest.1
+	stringTest.[6]=stringTest.[1]
 	helloh=<hi>
 	stringStrategyHashTest=[stringTest]
 	x=
@@ -302,12 +314,12 @@
 			hello!
 			>
 	ored=bitwise.Disjunction
-		<20>
+		20
 		System.Windows.Forms.Keys.Tab
 	arrayList=System.Collections.ArrayList*
 	arrayList.Add 
 		<hello>
-	arrayListResult=arrayList.0
+	arrayListResult=arrayList.[*]
 	textBox=System.Windows.Forms.TextBox*
 	textBox.Text.Set
 		<
@@ -317,8 +329,8 @@
 			Köpfchen in das Wasser,
 			Schwaenzchen in die Hoeh.>
 	lines=textBox.Lines.Get*
-	alleMeineText=lines.1
-	lines.5=<bwuhahaha>
+	alleMeineText=lines.[1]
+	lines.[5]=<bwuhahaha>
 	tabText=<			hello>
 	escapedText=<\'\n\\\t>
 	whileCounter=*
@@ -326,24 +338,24 @@
 		|
 			whileDecision=Negation Equality
 				parameter
-				<10>
+				10
 			whileBranches=
-				1=
+				[1]=
 					|loop Sum
 						parameter
-						<1>
+						1
 					 
-				0=
+				[*]=
 					|parameter
 			current=whileBranches.[whileDecision] parameter
-	whileCounter=loop <3>
+	whileCounter=loop 3
 
 		
 	returnInMap=
 						
 		|
 			result=parameter
-	literalAsArgument=returnInMap <1>				   
+	literalAsArgument=returnInMap 1				   
 	returnFunction=
 		|
 			|<functionResult>
