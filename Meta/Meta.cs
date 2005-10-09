@@ -2002,7 +2002,6 @@ namespace Meta
 		}
 		// TODO: add special serialization for code
 
-		// TODO: put all the special characters somewhere else, no magic constants
 		public static string MapValue(Map map,string indentation)
 		{
 			string text;
@@ -2036,7 +2035,6 @@ namespace Meta
 		private const string leftBracket="[";
 		private const string rightBracket="]";
 		private const string newLine="\n";
-		// TODO: keep these Literals somewhere else, or use those from ANTLR somehow
 		private const string literalStartDelimiter="<";
 		private const string assignment="=";
 		private const string literalEndDelimiter=">";
@@ -2157,7 +2155,6 @@ namespace Meta
 				map.InitFromStrategy(this);
 				map.strategy[key]=value;
 
-				// TODO: should this be possible??? I think so
 //				throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
 			}
 		}
@@ -2931,8 +2928,8 @@ namespace Meta
 			}
 		}
 		private string name;
-		protected object obj; // TODO: rename
-		protected Type type; // TODO: rename
+		protected object obj;
+		protected Type type;
 
 		public MethodBase[] overloadedMethods;
 	}
@@ -3027,7 +3024,7 @@ namespace Meta
 				foreach(object entry in map)
 				{
 					stringBuilder.Append(indentation+"Entry ("+entry.GetType().Name+")\n");
-					ExecuteTests.Serialize(entry,indentation+"  ",functions,stringBuilder);
+					ExecuteTests.Serialize(entry,indentation+ExecuteTests.indentationText,functions,stringBuilder);
 				}
 			}
 		}
@@ -4097,7 +4094,6 @@ namespace Meta
 			return result;
 		}
 	}
-	// TODO: use tab instead of two spaces for indentation
 	// TODO: serialize members before IEnumerable
 	namespace TestingFramework
 	{
@@ -4111,6 +4107,7 @@ namespace Meta
 		}
 		public class ExecuteTests
 		{	
+			public const string indentationText="\t";
 			public ExecuteTests(Type testContainerType,string fnResults)
 			{ 
 				bool isWaitAtEnd=false;
@@ -4138,7 +4135,7 @@ namespace Meta
 					{
 						output+=" succeeded";
 					}
-					output=output + "  " + timespan.TotalSeconds.ToString() + " s";
+					output=output + indentationText + timespan.TotalSeconds.ToString() + " s";
 					Console.WriteLine(output);
 				}
 				if(isWaitAtEnd)
@@ -4182,18 +4179,6 @@ namespace Meta
 				}
 				else
 				{
-					if(toSerialize is ISerializeSpecial)
-					{
-						((ISerializeSpecial)toSerialize).Serialize(indent,methods,stringBuilder);
-					}
-					else if(toSerialize is IEnumerable)
-					{
-						foreach(object entry in (IEnumerable)toSerialize)
-						{
-							stringBuilder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
-							Serialize(entry,indent+"  ",methods,stringBuilder);
-						}
-					}
 					ArrayList members=new ArrayList();
 					members.AddRange(toSerialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
 					members.AddRange(toSerialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
@@ -4224,9 +4209,21 @@ namespace Meta
 										stringBuilder.Append(" ("+val.GetType().Name+")");
 									}
 									stringBuilder.Append(":\n");
-									Serialize(val,indent+"  ",methods,stringBuilder);
+									Serialize(val,indent+indentationText,methods,stringBuilder);
 								}
 							}
+						}
+					}
+					if(toSerialize is ISerializeSpecial)
+					{
+						((ISerializeSpecial)toSerialize).Serialize(indent,methods,stringBuilder);
+					}
+					else if(toSerialize is IEnumerable)
+					{
+						foreach(object entry in (IEnumerable)toSerialize)
+						{
+							stringBuilder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
+							Serialize(entry,indent+indentationText,methods,stringBuilder);
 						}
 					}
 				}
