@@ -50,7 +50,6 @@ namespace Meta
 		public static readonly Map Search="search";
 		public static readonly Map Key="key";
 		public static readonly Map Program="program";
-		public static readonly Map Code="code";
 		public static readonly Map Lookup="lookup";
 		public static readonly Map Value="value";
 	}
@@ -128,6 +127,7 @@ namespace Meta
 	}
 	public class Interpreter
 	{
+		private static bool reverse=false;
 		public static Integer ParseInteger(string text)
 		{
 
@@ -172,7 +172,7 @@ namespace Meta
 				breakPoint=value;
 			}
 		}
-		private static BreakPoint breakPoint;
+		private static BreakPoint breakPoint=new BreakPoint("",new SourcePosition(0,0));
 		public static Map Evaluate(Map code,Map context)
 		{
 			Map val;
@@ -180,15 +180,10 @@ namespace Meta
 			{
 				val=Call(code[CodeKeys.Call],context);
 			}
-//			else if(code.ContainsKey(CodeKeys.Code))
-//			{ 
-//				val=Delayed(code[CodeKeys.Code],context);
-//			}
 			else if(code.ContainsKey(CodeKeys.Program))
 			{
 				val=Program(code[CodeKeys.Program],context);
 			}
-			// TODO: combine the three forms of literals into one
 			else if(code.ContainsKey(CodeKeys.Literal))
 			{
 				val=Literal(code[CodeKeys.Literal],context);
@@ -206,30 +201,93 @@ namespace Meta
 		public static Map Call(Map code,Map context)
 		{
 			object function=Interpreter.Evaluate(code[CodeKeys.Callable],context);
-			if(function is ICallable)
+			if(! (function is ICallable))
 			{
-				return ((ICallable)function).Call(Evaluate(code[CodeKeys.Argument],context));
+				throw new MetaException("Object to be called is not callable.",code.Extent);
 			}
-			throw new MetaException("Object to be called is not callable.",code.Extent);
+			Map argument=Evaluate(code[CodeKeys.Argument],context);
+			return ((ICallable)function).Call(argument);
 		}
-//		public static Map Delayed(Map code,Map context)
-//		{
-//			Map result=code;
-//			result.Parent=context;
-//			return result;
-//		}
 		public static Map Program(Map code,Map context)
 		{
 			Map local=new NormalMap();
 			Program(code,context,ref local);
 			return local;
 		}
+		private static bool Reverse
+		{
+			get
+			{
+				return reverse && Thread.CurrentThread==debugThread;
+			}
+		}
+		private static bool ResumeAfterReverse(Map code)
+		{
+			return code.Extent.End.Smaller(BreakPoint.Position);
+		}
 		private static void Program(Map code,Map context,ref Map local)
 		{
 			local.Parent=context;
 			for(int i=0;i<code.Array.Count && i>=0;i++)
 			{
+				if(Reverse)
+				{
+					if(!ResumeAfterReverse((Map)code.Array[i]))
+					{
+						i-=2;
+						continue;
+					}
+					else
+					{
+						reverse=false;
+					}
+				}
 				Statement((Map)code.Array[i],ref local);
+			}
+		}
+		public static void Statement(Map code,ref Map context)
+		{
+			Map selected=context;
+			Map key;
+			for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
+			{
+				key=Evaluate((Map)code[CodeKeys.Key].Array[i],context);
+				Map selection=selected[key];
+				if(selection==null)
+				{
+					object x=selected[key];
+					Throw.KeyDoesNotExist(key,((Map)code[CodeKeys.Key].Array[i]).Extent);
+				}
+				selected=selection;
+				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
+				{
+					Interpreter.CallBreak(selected);
+				}
+			}
+			Map lastKey=Evaluate((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context);
+			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
+			{
+				Map oldValue;
+				if(selected.ContainsKey(lastKey))
+				{
+					oldValue=selected[lastKey];
+				}
+				else
+				{
+					oldValue=new NormalMap("<null>");
+				}
+				Interpreter.CallBreak(oldValue);
+			}
+			
+			Map val=Evaluate(code[CodeKeys.Value],context);
+			if(lastKey.Equals(SpecialKeys.Current))
+			{
+				val.Parent=context.Parent;
+				context=val;
+			}
+			else
+			{
+				selected[lastKey]=val;
 			}
 		}
 		public static ArrayList recognitions=new ArrayList();
@@ -277,51 +335,7 @@ namespace Meta
 			}
 			return val;
 		}
-		public static void Statement(Map code,ref Map context)
-		{
-			Map selected=context;
-			Map key;
-			for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
-			{
-				key=Evaluate((Map)code[CodeKeys.Key].Array[i],context);
-				Map selection=selected[key];
-				if(selection==null)
-				{
-					object x=selected[key];
-					Throw.KeyDoesNotExist(key,((Map)code[CodeKeys.Key].Array[i]).Extent);
-				}
-				selected=selection;
-				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
-				{
-					Interpreter.CallBreak(selected);
-				}
-			}
-			Map lastKey=Evaluate((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context);
-			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
-			{
-				Map oldValue;
-				if(selected.ContainsKey(lastKey))
-				{
-					oldValue=selected[lastKey];
-				}
-				else
-				{
-					oldValue=new NormalMap("<null>");
-				}
-				Interpreter.CallBreak(oldValue);
-			}
-			
-			Map val=Evaluate(code[CodeKeys.Value],context);
-			if(lastKey.Equals(SpecialKeys.Current))
-			{
-				val.Parent=context.Parent;
-				context=val;
-			}
-			else
-			{
-				selected[lastKey]=val;
-			}
-		}
+
 		public static event DebugBreak Break;
 
 		public delegate void DebugBreak(Map data);
@@ -456,7 +470,11 @@ namespace Meta
 		}
 		public static void ReverseDebug()
 		{
-			debugThread.Resume();
+			if(debugThread!=null)
+			{
+				reverse=true;
+				debugThread.Resume();
+			}
 		}
 		static Interpreter()
 		{
@@ -3468,14 +3486,22 @@ namespace Meta
 	}
 	public class SourcePosition
 	{
-		public static bool operator <(SourcePosition a,SourcePosition b)
+		public bool Smaller(SourcePosition other)
 		{
-			return a.Line<b.Line || (a.Line==b.Line && a.Column<b.Column);
+			return this.Line<other.Line || (this.Line==other.Line && this.Column<other.Column);
 		}
-		public static bool operator >(SourcePosition a,SourcePosition b)
+		public bool Greater(SourcePosition other)
 		{
-			return a.Line>b.Line || (a.Line==b.Line && a.Column>b.Column);
+			return this.Line>other.Line || (this.Line==other.Line && this.Column>other.Column);
 		}
+//		public static bool operator <(SourcePosition a,SourcePosition b)
+//		{
+//			return a.Line<b.Line || (a.Line==b.Line && a.Column<b.Column);
+//		}
+//		public static bool operator >(SourcePosition a,SourcePosition b)
+//		{
+//			return a.Line>b.Line || (a.Line==b.Line && a.Column>b.Column);
+//		}
 		public bool IsBetween(Extent extent)
 		{
 			return IsBetween(extent.Start,extent.End);

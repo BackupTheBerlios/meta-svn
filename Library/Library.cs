@@ -177,6 +177,24 @@ public class number:MetaLibrary
 		}
 		return product;
 	}
+	/// <summary>
+	/// Determines whether the first number is greater than the second number
+	/// </summary>
+	public static Map Greater(Map parameter)
+	{
+		Argument.IntegerArray(parameter);
+		Argument.ExactArrayCount(parameter,2);
+		return parameter[1].GetInteger()>parameter[2].GetInteger();
+	}
+	/// <summary>
+	/// Determines whether the first number is smaller than the second number
+	/// </summary>
+	public static Map Smaller(Map parameter)
+	{
+		Argument.IntegerArray(parameter);
+		Argument.ExactArrayCount(parameter,2);
+		return parameter[1].GetInteger()<parameter[2].GetInteger();
+	}
 }
 
 public class bitwise:MetaLibrary
@@ -205,7 +223,7 @@ public class bitwise:MetaLibrary
 
 
 
-
+// TODO: rename to Parameter
 public class Argument
 {
 	public static void ContainsKey(Map map,Map key)
@@ -232,7 +250,14 @@ public class Argument
 			}
 		}
 	}
-	public static void MinimalCount(Map arg,int count)
+	public static void ExactArrayCount(Map parameter,int count)
+	{
+		if(parameter.Array.Count!=count)
+		{
+			throw new ApplicationException("did not pass array of length "+count.ToString()+" to function");
+		}
+	}
+	public static void MinimalArrayCount(Map arg,int count)
 	{
 		if(arg.Array.Count<count)
 		{

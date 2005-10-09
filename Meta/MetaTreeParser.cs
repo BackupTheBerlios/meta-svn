@@ -148,7 +148,7 @@ namespace Meta.Parser
 				Map argumentCode;
 			
 		
-		AST __t116 = _t;
+		AST __t117 = _t;
 		MetaAST tmp17_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,CALL);
 		_t = _t.getFirstChild();
@@ -165,7 +165,7 @@ namespace Meta.Parser
 					callCode[CodeKeys.Argument]=argumentCode;
 					code[CodeKeys.Call]=callCode;
 				
-		_t = __t116;
+		_t = __t117;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return code;
@@ -184,7 +184,7 @@ namespace Meta.Parser
 				int statementNumber=1;
 			
 		
-		AST __t111 = _t;
+		AST __t112 = _t;
 		MetaAST tmp18_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,PROGRAM);
 		_t = _t.getFirstChild();
@@ -206,13 +206,13 @@ namespace Meta.Parser
 				}
 				else
 				{
-					goto _loop114_breakloop;
+					goto _loop115_breakloop;
 				}
 				
 			}
-_loop114_breakloop:			;
+_loop115_breakloop:			;
 		}    // ( ... )*
-		_t = __t111;
+		_t = __t112;
 		_t = _t.getNextSibling();
 		
 				code[CodeKeys.Program]=programCode;
@@ -234,12 +234,12 @@ _loop114_breakloop:			;
 				int counter=1;
 			
 		
-		AST __t120 = _t;
+		AST __t121 = _t;
 		MetaAST tmp19_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,SELECT);
 		_t = _t.getFirstChild();
 		{ // ( ... )+
-		int _cnt122=0;
+		int _cnt123=0;
 		for (;;)
 		{
 			if (_t == null)
@@ -255,14 +255,14 @@ _loop114_breakloop:			;
 			}
 			else
 			{
-				if (_cnt122 >= 1) { goto _loop122_breakloop; } else { throw new NoViableAltException(_t);; }
+				if (_cnt123 >= 1) { goto _loop123_breakloop; } else { throw new NoViableAltException(_t);; }
 			}
 			
-			_cnt122++;
+			_cnt123++;
 		}
-_loop122_breakloop:		;
+_loop123_breakloop:		;
 		}    // ( ... )+
-		_t = __t120;
+		_t = __t121;
 		_t = _t.getNextSibling();
 		
 				code[CodeKeys.Select]=selectCode;
@@ -324,13 +324,13 @@ _loop122_breakloop:		;
 		Map delayedCode;
 		
 		
-		AST __t124 = _t;
+		AST __t125 = _t;
 		MetaAST tmp20_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,FUNCTION);
 		_t = _t.getFirstChild();
 		delayedCode=expression(_t);
 		_t = retTree_;
-		_t = __t124;
+		_t = __t125;
 		_t = _t.getNextSibling();
 		
 		code[CodeKeys.Literal]=delayedCode;
@@ -350,12 +350,12 @@ _loop122_breakloop:		;
 				int keyNumber=1;
 			
 		
-		AST __t105 = _t;
+		AST __t106 = _t;
 		MetaAST tmp21_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,KEY);
 		_t = _t.getFirstChild();
 		{ // ( ... )+
-		int _cnt107=0;
+		int _cnt108=0;
 		for (;;)
 		{
 			if (_t == null)
@@ -371,14 +371,14 @@ _loop122_breakloop:		;
 			}
 			else
 			{
-				if (_cnt107 >= 1) { goto _loop107_breakloop; } else { throw new NoViableAltException(_t);; }
+				if (_cnt108 >= 1) { goto _loop108_breakloop; } else { throw new NoViableAltException(_t);; }
 			}
 			
-			_cnt107++;
+			_cnt108++;
 		}
-_loop107_breakloop:		;
+_loop108_breakloop:		;
 		}    // ( ... )+
-		_t = __t105;
+		_t = __t106;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return code;
@@ -395,7 +395,7 @@ _loop107_breakloop:		;
 				Map valueCode;
 			
 		
-		AST __t109 = _t;
+		AST __t110 = _t;
 		MetaAST tmp22_AST_in = (_t==ASTNULL) ? null : (MetaAST)_t;
 		match((AST)_t,STATEMENT);
 		_t = _t.getFirstChild();
@@ -406,8 +406,9 @@ _loop107_breakloop:		;
 		
 					code[CodeKeys.Key]=keyCode;
 					code[CodeKeys.Value]=valueCode;
+					code.Extent=statement_AST_in.Extent;
 				
-		_t = __t109;
+		_t = __t110;
 		_t = _t.getNextSibling();
 		retTree_ = _t;
 		return code;

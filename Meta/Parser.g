@@ -120,7 +120,34 @@ POINT:
 
 // TODO: invert the rules instead of the characters themselves
 LITERAL_KEY:
-	( 
+	~(
+		' '
+		|'\t'
+		|'\r'
+		|'\n'
+		|'='
+		|'.'
+		|'\\'
+		|'<'
+		|'>'
+		|'|'
+		|'\''
+		|'"'
+		|'['
+		|']'
+		|'*'
+		|'0'
+		|'1'
+		|'2'
+		|'3'
+		|'4'
+		|'5'
+		|'6'
+		|'7'
+		|'8'
+		|'9'
+	)
+	(
 		~(
 			' '
 			|'\t'
@@ -137,18 +164,9 @@ LITERAL_KEY:
 			|'['
 			|']'
 			|'*'
-			|'0' // TODO: should be allowed, maybe not as first character
-			|'1'
-			|'2'
-			|'3'
-			|'4'
-			|'5'
-			|'6'
-			|'7'
-			|'8'
-			|'9'
+
 		)
-	)+
+	)*
 ;
 
 protected
@@ -666,6 +684,7 @@ statement
 		{
 			code[CodeKeys.Key]=keyCode;
 			code[CodeKeys.Value]=valueCode;
+			code.Extent=#statement.Extent;
 		}
 	)
 ;

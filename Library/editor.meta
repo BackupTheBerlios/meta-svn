@@ -9,6 +9,7 @@
 		map
 		number
 		array
+		Meta
 	choose=
 		' TODO: rename dialog to openFileDialog
 		OpenFile=
@@ -26,9 +27,9 @@
 		Write=
 			|
 				writer=StreamWriter
-					parameter.1
+					parameter.[1]
 				writer.Write
-					parameter.2
+					parameter.[2]
 				writer.Close*
 		Read=
 			|
@@ -46,13 +47,13 @@
 					<Meta Edit - >
 					fileName
 	SetBreakPoint=
-		|Meta.Expression.BreakPoint.Set
+		|Meta.Interpreter.BreakPoint.Set
 			Meta.BreakPoint
 				fileName
 				Meta.SourcePosition
 					Sum
 						editBox.LineIndex.Get*
-						<1>
+						1
 					editBox.Column.Get*
 	commands=
 		SaveAs=
@@ -62,9 +63,9 @@
 					saveAs
 					*
 				cases=
-					0=
+					[*]=
 						|*
-					1=
+					[1]=
 						|
 							SetFileName saveAs
 							file.Write
@@ -77,9 +78,9 @@
 					fileName
 					*
 				cases=
-					0=
+					[*]=
 						|commands.SaveAs*
-					1=
+					[1]=
 						|file.Write
 							fileName
 							editBox.RealText.Get*
@@ -91,16 +92,16 @@
 					openFileName
 					*
 				cases=
-					0=
+					[*]=
 						|*
-					1=
+					[1]=
 						|
 							SetFileName openFileName
 							editBox.RealText.Set
 								file.Read fileName
 							editBox.MoveAbsolute
-								<0>
-								<0>
+								*
+								*
 				cases.[hasName]*
 		Run=
 			|
@@ -109,7 +110,7 @@
 				Meta.Interpreter.Break.Add
 					=
 						|editBox.ShowDebugValue
-							parameter.1
+							parameter.[1]
 				Meta.Interpreter.StartDebug
 					fileName
 		Continue=
@@ -256,20 +257,32 @@
 	editBox=
 		editBox=ScrollingTextBox*
 		editBox.ShowSelectionMargin.Set
-			<1>
+			1
 		editBox.AcceptsTab.Set
-			<1>
+			1
 		editBox.Dock.Set
 			DockStyle.Fill
 		editBox.ScrollBars.Set
 			RichTextBoxScrollBars.ForcedBoth
 		editBox.Moved.Add
 			=
-				|commands.Continue*
+				|
+					cases=
+						[*]=
+							|commands.Reverse*
+						[1]=
+							|commands.Continue*
+					breakpoint=Meta.Interpreter.BreakPoint.Get*
+					position=breakpoint.Position.Get*
+					line=position.Line.Get*
+					forward=Smaller
+						line
+						editBox.LineIndex.Get*
+					cases.[forward]*
 		editBox.KeyDown.Add
 			=
 				|
-					eventArgs=parameter.2
+					eventArgs=parameter.[2]
 					modifier=eventArgs.Modifiers.Get*
 					key=eventArgs.KeyCode.Get*
 					shortcuts=shortcutCombinations.[modifier]
@@ -277,14 +290,14 @@
 						map=shortcuts
 						key=key
 					cases=
-						1=
+						[1]=
 							|
 								editBox.SuspendWindowUpdate*
 								shortcuts.[key]*
 								editBox.ResumeWindowUpdate*
 								eventArgs.Handled.Set
-									<1>
-						0=
+									1
+						[*]=
 							|*
 					cases.[exists]*
 		current=editBox
@@ -295,7 +308,7 @@
 		form.Font.Set
 			Font
 				<Courier New>
-				<10>
+				10
 		controls=form.Controls.Get*
 		controls.AddRange
 			=
