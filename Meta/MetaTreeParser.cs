@@ -333,7 +333,7 @@ _loop122_breakloop:		;
 		_t = __t124;
 		_t = _t.getNextSibling();
 		
-		code[CodeKeys.Code]=delayedCode;
+		code[CodeKeys.Literal]=delayedCode;
 		
 		retTree_ = _t;
 		return code;

@@ -54,7 +54,7 @@ tokens
   DEDENT; // TODO: maybe rename too?
   // imaginary tokens created by the Parser:              
   PROGRAM;
-  FUNCTION; 
+  FUNCTION;  // remove
   STATEMENT; 
   CALL;
   SELECT;
@@ -762,7 +762,7 @@ delayed
     }:
     #(FUNCTION delayedCode=expression)
     {
-        code[CodeKeys.Code]=delayedCode;
+        code[CodeKeys.Literal]=delayedCode;
     }
 ;
 integer

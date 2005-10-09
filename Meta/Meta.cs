@@ -180,10 +180,10 @@ namespace Meta
 			{
 				val=Call(code[CodeKeys.Call],context);
 			}
-			else if(code.ContainsKey(CodeKeys.Code))
-			{ 
-				val=Delayed(code[CodeKeys.Code],context);
-			}
+//			else if(code.ContainsKey(CodeKeys.Code))
+//			{ 
+//				val=Delayed(code[CodeKeys.Code],context);
+//			}
 			else if(code.ContainsKey(CodeKeys.Program))
 			{
 				val=Program(code[CodeKeys.Program],context);
@@ -212,12 +212,12 @@ namespace Meta
 			}
 			throw new MetaException("Object to be called is not callable.",code.Extent);
 		}
-		public static Map Delayed(Map code,Map context)
-		{
-			Map result=code;
-			result.Parent=context;
-			return result;
-		}
+//		public static Map Delayed(Map code,Map context)
+//		{
+//			Map result=code;
+//			result.Parent=context;
+//			return result;
+//		}
 		public static Map Program(Map code,Map context)
 		{
 			Map local=new NormalMap();

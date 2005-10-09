@@ -2467,7 +2467,7 @@ Entry (DictionaryEntry)
 																	Key (NormalMap):
 																		Extent:
 																			null
-																		"code"
+																		"literal"
 																	Value (NormalMap):
 																		Extent (Extent):
 																			End (SourcePosition):
@@ -4151,7 +4151,7 @@ Entry (DictionaryEntry)
 											Key (NormalMap):
 												Extent:
 													null
-												"code"
+												"literal"
 											Value (NormalMap):
 												Extent (Extent):
 													End (SourcePosition):
@@ -6258,7 +6258,7 @@ Entry (DictionaryEntry)
 																							Key (NormalMap):
 																								Extent:
 																									null
-																								"code"
+																								"literal"
 																							Value (NormalMap):
 																								Extent (Extent):
 																									End (SourcePosition):
@@ -6754,7 +6754,7 @@ Entry (DictionaryEntry)
 																							Key (NormalMap):
 																								Extent:
 																									null
-																								"code"
+																								"literal"
 																							Value (NormalMap):
 																								Extent (Extent):
 																									End (SourcePosition):
@@ -7294,7 +7294,7 @@ Entry (DictionaryEntry)
 											Key (NormalMap):
 												Extent:
 													null
-												"code"
+												"literal"
 											Value (NormalMap):
 												Extent (Extent):
 													End (SourcePosition):
