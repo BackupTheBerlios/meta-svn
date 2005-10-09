@@ -307,7 +307,7 @@ _loop122_breakloop:		;
 		match((AST)_t,INTEGER);
 		_t = _t.getNextSibling();
 		
-				code[CodeKeys.Literal]=new NormalMap(Meta.Filters.IntegerFilter.ParseInteger(token.getText()));
+				code[CodeKeys.Literal]=new NormalMap(Interpreter.ParseInteger(token.getText()));
 			
 		retTree_ = _t;
 		return code;

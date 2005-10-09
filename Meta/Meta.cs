@@ -44,7 +44,7 @@ namespace Meta
 
 		public static readonly Map Function="function";
 		public static readonly Map Call="call";
-		public static readonly Map Callable="callable"; // TODO: rename
+		public static readonly Map Callable="callable";
 		public static readonly Map Argument="argument";
 		public static readonly Map Select="select";
 		public static readonly Map Search="search";
@@ -74,384 +74,121 @@ namespace Meta
 		public static readonly Map Negative="negative";
 		public static readonly Map EmptyMap=new NormalMap();
 	}
-
-
-//	public abstract class Expression
+//	public abstract class Filter
 //	{
-//		public static BreakPoint BreakPoint
-//		{
-//			get
-//			{
-//				return breakPoint;
-//			}
-//			set
-//			{
-//				breakPoint=value;
-//			}
-//		}
-//		private static BreakPoint breakPoint;
-//		public Map Evaluate(Map parent)
-//		{
-//			Map result=EvaluateImplementation(parent);
-////			Interpreter.DisplayValue=result;
-//			return result;
-//		}
-//
-//		public abstract Map EvaluateImplementation(Map parent);
-//		Extent extent;
-//		[Serialize]
-//		public Extent Extent
-//		{
-//			get
-//			{
-//
-//				return extent;
-//			}
-//			set
-//			{
-//				extent=value;
-//			}
-//		}
+//		public abstract Map Detect(string text);
 //	}
-//	public class Call: Expression
+	// TODO: remove implicit indexer stuff, use explicit indexed property
+	// TODO: rename
+//	public class Filters
 //	{
-//		public override Map EvaluateImplementation(Map parent)
+//		public class DecimalFilter: Filter
 //		{
-//			object function=callable.Evaluate(parent);
-//			if(function is ICallable)
+//			public override Map Detect(string text)
 //			{
-//				return ((ICallable)function).Call(argument.Evaluate(parent));
-//			}
-//			throw new MetaException("Object to be called is not callable.",this.Extent);
-//		}
-//		public Call(Map code)
-//		{
-//			this.callable=code[CodeKeys.Callable].GetExpression();
-//			this.argument=code[CodeKeys.Argument].GetExpression();
-//		}
-//		[Serialize]
-//		public Expression argument;
-//		[Serialize]
-//		public Expression callable;
-//	}
-//	public class Delayed: Expression
-//	{
-//		[Serialize]
-//		public readonly Map delayed;
-//		public Delayed(Map code)
-//		{
-//			this.delayed=code;
-//		}
-//		public override Map EvaluateImplementation(Map parent)
-//		{
-//			Map result=delayed;
-//			result.Parent=parent;
-//			return result;
-//		}
-//	}
-//	public class Program: Expression
-//	{
-//		public override Map EvaluateImplementation(Map parent)
-//		{
-//			Map local=new NormalMap();
-//			Evaluate(parent,ref local);
-//			return local;
-//		}
-//		public void Evaluate(Map parent,ref Map local)
-//		{
-//			local.Parent=parent;
-//			for(int i=0;i<statements.Count && i>=0;i++)
-//			{
-//				((Statement)statements[i]).Realize(ref local);
-//			}
-//		}
-//		public Program(Map code)
-//		{
-//			object a=code.Array;
-//			foreach(Map statement in code.Array)
-//			{
-//				this.statements.Add(new Statement(statement));
-//			}
-//		}
-//		[Serialize]
-//		public readonly ArrayList statements=new ArrayList();
-//	}
-//	public class Literal: Expression
-//	{
-//		public static ArrayList recognitions=new ArrayList();
-//		static Literal()
-//		{
-//			foreach(Type recognition in typeof(Filters).GetNestedTypes())
-//			{
-//				recognitions.Add((Filter)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-//			}
-//		}
-//		public override Map EvaluateImplementation(Map parent)
-//		{
-//			return literal;
-//		}
-//		public Literal(Map code)
-//		{
-//			this.literal=Filter((string)code.GetString());
-//		}
-//		[Serialize]
-//		public Map literal=null;
-//		public static Map Filter(string text)
-//		{
-//			foreach(Filter recognition in recognitions)
-//			{
-//				Map recognized=recognition.Detect(text);
-//				if(recognized!=null)
+//				Map result=null;
+//				int pointPos=text.IndexOf(".");
+//				if(pointPos!=-1)
 //				{
-//					return recognized;
+//					if(text.IndexOf(".",pointPos+1)==-1)
+//					{
+//						Integer numerator=IntegerFilter.ParseInteger(text.Replace(".",""));
+//						if(numerator!=null)
+//						{
+//							Integer denominator=Convert.ToInt32(Math.Pow(10,text.Length-pointPos-1));
+//							result=new NormalMap();
+//							result[NumberKeys.Numerator]=new NormalMap(numerator);
+//							result[NumberKeys.Denominator]=new NormalMap(denominator);
+//						}
+//					}
 //				}
-//			}
-//			return null;
-//		}
-//	}
-//	public class Select: Expression
-//	{
-//		[Serialize]
-//		public ArrayList keys=new ArrayList(); // TODO: rename to subKeys
-//		[Serialize]
-//		public Expression firstKey; // TODO: integrate into normal keys???
-//		public Select(Map code)
-//		{
-//			firstKey=((Map)code.Array[0]).GetExpression();
-//			foreach(Map key in code.Array.GetRange(1,code.Array.Count-1))
-//			{
-//				keys.Add(key.GetExpression());
+//				return result;
 //			}
 //		}
-//		public override Map EvaluateImplementation(Map parent)
+//		public class FractionFilter: Filter
 //		{
-//			Map selected=FindFirstKey(parent);
-//			for(int i=0;i<keys.Count;i++)
+//			public override Map Detect(string text)
 //			{
-//				Map key=((Expression)keys[i]).Evaluate(parent);
-//				Map selection=selected[key];
-//				//				Interpreter.DisplayValue=selection;
-//				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).Extent))
+//				Map result=null;
+//				int slashPos=text.IndexOf("/");
+//				if(slashPos!=-1)
 //				{
-//					Interpreter.CallBreak(selection);
+//					if(text.IndexOf("/",slashPos+1)==-1)
+//					{
+//						Integer numerator=IntegerFilter.ParseInteger(text.Substring(0,slashPos));
+//						if(numerator!=null)
+//						{
+//							Integer denominator=IntegerFilter.ParseInteger(text.Substring(slashPos+1,text.Length-slashPos-1));
+//							if(denominator!=null)
+//							{
+//								result=new NormalMap();
+//								result[NumberKeys.Numerator]=new NormalMap(numerator);
+//								result[NumberKeys.Denominator]=new NormalMap(denominator);
+//							}
+//						}
+//					}
 //				}
-//				if(selection==null)
-//				{
-//					object test=selected[key];
-//					Throw.KeyDoesNotExist(key,this.Extent);
-//					//					throw new KeyDoesNotExistException(key,this.Extent,selected);
-//				}
-//				selected=selection;
+//				return result;
 //			}
-//			return selected;
 //		}
-//		public Map FindFirstKey(Map parent)
+//		public class IntegerFilter: Filter 
 //		{
-//			Map key=firstKey.Evaluate(parent);
-//			Map selected=parent;
-//			while(!selected.ContainsKey(key))
-//			{
-//				//				if(selected.Parent==null)
-//				//				{
-//				//					selected.ContainsKey(key);
-//				////					throw new KeyNotFoundException(key,this.Extent);
-//				//				}
-//				selected=selected.Parent;
-//				if(selected==null)
+////			public static Integer ParseInteger(string text)
+////			{
+////
+////				Integer result=new Integer(0);
+////				if(text.Equals(""))
+////				{
+////					result=null;
+////				}
+////				else
+////				{
+////					int index=0;
+////					if(text[0]=='-')
+////					{
+////						index++;
+////					}
+////					for(;index<text.Length;index++)
+////					{
+////						if(char.IsDigit(text[index]))
+////						{
+////							result=result*10+(text[index]-'0');
+////						}
+////						else
+////						{
+////							return null;
+////						}
+////					}
+////					if(text[0]=='-')
+////					{
+////						result=-result;
+////					}
+////				}
+////				return result;
+////			}
+//			public override Map Detect(string text)
+//			{ 
+//				Map recognized;
+//				Integer integer=ParseInteger(text);
+//				if(integer!=null)
 //				{
-//					Throw.KeyNotFound(key,this.Extent);
-//					//					throw new KeyNotFoundException(key,this.Extent);
-//				}
-//			}
-//			Map val=selected[key];
-//			//			Interpreter.DisplayValue=val;
-//			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(firstKey.Extent))
-//			{
-//				Interpreter.CallBreak(val);
-//			}
-//			return val;
-//		}
-//	}
-//	public class Statement
-//	{
-//		public void Realize(ref Map parent) // TODO: rename parent to current
-//		{
-//			Map selected=parent;
-//			Map key;
-//			for(int i=0;i<keys.Count-1;i++)
-//			{
-//				key=((Expression)keys[i]).Evaluate(parent);
-//				Map selection=selected[key];
-//				if(selection==null)
-//				{
-//					object x=selected[key];
-//					Throw.KeyDoesNotExist(key,((Expression)keys[i]).Extent);
-//					//					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
-//				}
-//				selected=selection;
-//				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).Extent))
-//				{
-//					Interpreter.CallBreak(selected);
-//				}
-//			}
-//			Map lastKey=((Expression)keys[keys.Count-1]).Evaluate(parent);
-//			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).Extent))
-//			{
-//				Map oldValue;
-//				if(selected.ContainsKey(lastKey))
-//				{
-//					oldValue=selected[lastKey];
+//					recognized=new NormalMap(integer);
 //				}
 //				else
 //				{
-//					oldValue=new NormalMap("<null>");
+//					recognized=null;
 //				}
-//				Interpreter.CallBreak(oldValue);
-//			}
-//			// TODO: peek at next statement
-//			//			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).Extent))
-//			//			{
-//			//				Interpreter.CallBreak();
-//			//			}
-//			Map val=expression.Evaluate(parent);
-//			if(lastKey.Equals(SpecialKeys.Current))
-//			{
-//				val.Parent=parent.Parent;
-//				parent=val;
-//			}
-//			else
-//			{
-//				selected[lastKey]=val;
+//				return recognized;
 //			}
 //		}
-//		public Statement(Map code) 
+//		public class StringFilter:Filter
 //		{
-//			foreach(Map key in code[CodeKeys.Key].Array)
+//			public override Map Detect(string text)
 //			{
-//				keys.Add(key.GetExpression());
+//				return new NormalMap(text);
 //			}
-//			this.expression=code[CodeKeys.Value].GetExpression();
 //		}
-//		[Serialize]
-//		public ArrayList keys=new ArrayList();
-//		[Serialize]
-//		public Expression expression;
 //	}
-	public abstract class Filter
-	{
-		public abstract Map Detect(string text);
-	}
-	// TODO: remove implicit indexer stuff, use explicit indexed property
-	// TODO: rename
-	public class Filters
-	{
-		public class DecimalFilter: Filter
-		{
-			public override Map Detect(string text)
-			{
-				Map result=null;
-				int pointPos=text.IndexOf(".");
-				if(pointPos!=-1)
-				{
-					if(text.IndexOf(".",pointPos+1)==-1)
-					{
-						Integer numerator=IntegerFilter.ParseInteger(text.Replace(".",""));
-						if(numerator!=null)
-						{
-							Integer denominator=Convert.ToInt32(Math.Pow(10,text.Length-pointPos-1));
-							result=new NormalMap();
-							result[NumberKeys.Numerator]=new NormalMap(numerator);
-							result[NumberKeys.Denominator]=new NormalMap(denominator);
-						}
-					}
-				}
-				return result;
-			}
-		}
-		public class FractionFilter: Filter
-		{
-			public override Map Detect(string text)
-			{
-				Map result=null;
-				int slashPos=text.IndexOf("/");
-				if(slashPos!=-1)
-				{
-					if(text.IndexOf("/",slashPos+1)==-1)
-					{
-						Integer numerator=IntegerFilter.ParseInteger(text.Substring(0,slashPos));
-						if(numerator!=null)
-						{
-							Integer denominator=IntegerFilter.ParseInteger(text.Substring(slashPos+1,text.Length-slashPos-1));
-							if(denominator!=null)
-							{
-								result=new NormalMap();
-								result[NumberKeys.Numerator]=new NormalMap(numerator);
-								result[NumberKeys.Denominator]=new NormalMap(denominator);
-							}
-						}
-					}
-				}
-				return result;
-			}
-		}
-		public class IntegerFilter: Filter 
-		{
-			public static Integer ParseInteger(string text)
-			{
-
-				Integer result=new Integer(0);
-				if(text.Equals(""))
-				{
-					result=null;
-				}
-				else
-				{
-					int index=0;
-					if(text[0]=='-')
-					{
-						index++;
-					}
-					for(;index<text.Length;index++)
-					{
-						if(char.IsDigit(text[index]))
-						{
-							result=result*10+(text[index]-'0');
-						}
-						else
-						{
-							return null;
-						}
-					}
-					if(text[0]=='-')
-					{
-						result=-result;
-					}
-				}
-				return result;
-			}
-			public override Map Detect(string text)
-			{ 
-				Map recognized;
-				Integer integer=ParseInteger(text);
-				if(integer!=null)
-				{
-					recognized=new NormalMap(integer);
-				}
-				else
-				{
-					recognized=null;
-				}
-				return recognized;
-			}
-		}
-		public class StringFilter:Filter
-		{
-			public override Map Detect(string text)
-			{
-				return new NormalMap(text);
-			}
-		}
-	}
 
 
 	public class MetaException:ApplicationException
@@ -524,6 +261,39 @@ namespace Meta
 	}
 	public class Interpreter
 	{
+		public static Integer ParseInteger(string text)
+		{
+
+			Integer result=new Integer(0);
+			if(text.Equals(""))
+			{
+				result=null;
+			}
+			else
+			{
+				int index=0;
+				if(text[0]=='-')
+				{
+					index++;
+				}
+				for(;index<text.Length;index++)
+				{
+					if(char.IsDigit(text[index]))
+					{
+						result=result*10+(text[index]-'0');
+					}
+					else
+					{
+						return null;
+					}
+				}
+				if(text[0]=='-')
+				{
+					result=-result;
+				}
+			}
+			return result;
+		}
 		public static BreakPoint BreakPoint
 		{
 			get
@@ -601,18 +371,18 @@ namespace Meta
 			return code;
 			//return Filter((string)code.GetString());;
 		}
-		public static Map Filter(string text) // TODO: get rid of this completely, integrate into Parser
-		{
-			foreach(Filter recognition in recognitions)
-			{
-				Map recognized=recognition.Detect(text);
-				if(recognized!=null)
-				{
-					return recognized;
-				}
-			}
-			return null;
-		}
+//		public static Map Filter(string text) // TODO: get rid of this completely, integrate into Parser
+//		{
+//			foreach(Filter recognition in recognitions)
+//			{
+//				Map recognized=recognition.Detect(text);
+//				if(recognized!=null)
+//				{
+//					return recognized;
+//				}
+//			}
+//			return null;
+//		}
 		public static Map Select(Map code,Map context)
 		{
 			Map selected=FindFirstKey(code,context);
@@ -915,10 +685,10 @@ namespace Meta
 		static Interpreter()
 		{
 			Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
-			foreach(Type recognition in typeof(Filters).GetNestedTypes())
-			{
-				recognitions.Add((Filter)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-			}
+//			foreach(Type recognition in typeof(Filters).GetNestedTypes())
+//			{
+//				recognitions.Add((Filter)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+//			}
 		}
 		public static DirectoryInfo LibraryPath
 		{
@@ -1892,7 +1662,7 @@ namespace Meta
 		private static string StringValue(Map val,string indentation)
 		{
 			string text;
-			if(Interpreter.Filter(val.GetString()).IsString)
+			if(val.IsString)
 			{
 				int longest=0;
 				foreach(Match match in Regex.Matches(val.GetString(),"(>)?(\\\\)*"))

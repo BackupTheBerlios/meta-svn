@@ -773,7 +773,7 @@ integer
 	}:
 	token:INTEGER
 	{
-		code[CodeKeys.Literal]=new NormalMap(Meta.Filters.IntegerFilter.ParseInteger(token.getText()));
+		code[CodeKeys.Literal]=new NormalMap(Interpreter.ParseInteger(token.getText()));
 	}
 ;
  
