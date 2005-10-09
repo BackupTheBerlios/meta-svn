@@ -44,7 +44,7 @@ namespace Meta
 		public static readonly Map Literal="literal";
 		public static readonly Map Run="function";
 		public static readonly Map Call="call";
-		public static readonly Map Function="callable";
+		public static readonly Map Function="callable"; // TODO: rename
 		public static readonly Map Argument="argument";
 		public static readonly Map Select="select";
 		public static readonly Map Search="search";
@@ -74,139 +74,274 @@ namespace Meta
 		public static readonly Map Negative="negative";
 		public static readonly Map EmptyMap=new NormalMap();
 	}
-	public abstract class Expression
-	{
-		public static BreakPoint BreakPoint
-		{
-			get
-			{
-				return breakPoint;
-			}
-			set
-			{
-				breakPoint=value;
-			}
-		}
-		private static BreakPoint breakPoint;
-		public Map Evaluate(Map parent)
-		{
-			Map result=EvaluateImplementation(parent);
-//			Interpreter.DisplayValue=result;
-			return result;
-		}
-
-		public abstract Map EvaluateImplementation(Map parent);
-		Extent extent;
-		[Serialize]
-		public Extent Extent
-		{
-			get
-			{
-
-				return extent;
-			}
-			set
-			{
-				extent=value;
-			}
-		}
-	}
-	public class Call: Expression
-	{
-		public override Map EvaluateImplementation(Map parent)
-		{
-			object function=callable.Evaluate(parent);
-			if(function is ICallable)
-			{
-				return ((ICallable)function).Call(argument.Evaluate(parent));
-			}
-			throw new MetaException("Object to be called is not callable.",this.Extent);
-		}
-		public Call(Map code)
-		{
-			this.callable=code[CodeKeys.Function].GetExpression();
-			this.argument=code[CodeKeys.Argument].GetExpression();
-		}
-		[Serialize]
-		public Expression argument;
-		[Serialize]
-		public Expression callable;
-	}
-	public class Delayed: Expression
-	{
-		[Serialize]
-		public readonly Map delayed;
-		public Delayed(Map code)
-		{
-			this.delayed=code;
-		}
-		public override Map EvaluateImplementation(Map parent)
-		{
-			Map result=delayed;
-			result.Parent=parent;
-			return result;
-		}
-	}
-	public class Program: Expression
-	{
-		public override Map EvaluateImplementation(Map parent)
-		{
-			Map local=new NormalMap();
-			Evaluate(parent,ref local);
-			return local;
-		}
-		public void Evaluate(Map parent,ref Map local)
-		{
-			local.Parent=parent;
-			for(int i=0;i<statements.Count && i>=0;i++)
-			{
-				((Statement)statements[i]).Realize(ref local);
-			}
-		}
-		public Program(Map code)
-		{
-			object a=code.Array;
-			foreach(Map statement in code.Array)
-			{
-				this.statements.Add(new Statement(statement));
-			}
-		}
-		[Serialize]
-		public readonly ArrayList statements=new ArrayList();
-	}
-	public class BreakPoint
-	{
-		public BreakPoint(string fileName,SourcePosition position)
-		{
-			this.fileName=fileName;
-			this.position=position;
-		}
 
 
-
-		public string FileName
-		{
-			get
-			{
-				return fileName;
-			}
-		}
-		public SourcePosition Position
-		{
-			get
-			{
-				return position;
-			}
-		}
-		private SourcePosition position;
-		string fileName;
-	}
-
+//	public abstract class Expression
+//	{
+//		public static BreakPoint BreakPoint
+//		{
+//			get
+//			{
+//				return breakPoint;
+//			}
+//			set
+//			{
+//				breakPoint=value;
+//			}
+//		}
+//		private static BreakPoint breakPoint;
+//		public Map Evaluate(Map parent)
+//		{
+//			Map result=EvaluateImplementation(parent);
+////			Interpreter.DisplayValue=result;
+//			return result;
+//		}
+//
+//		public abstract Map EvaluateImplementation(Map parent);
+//		Extent extent;
+//		[Serialize]
+//		public Extent Extent
+//		{
+//			get
+//			{
+//
+//				return extent;
+//			}
+//			set
+//			{
+//				extent=value;
+//			}
+//		}
+//	}
+//	public class Call: Expression
+//	{
+//		public override Map EvaluateImplementation(Map parent)
+//		{
+//			object function=callable.Evaluate(parent);
+//			if(function is ICallable)
+//			{
+//				return ((ICallable)function).Call(argument.Evaluate(parent));
+//			}
+//			throw new MetaException("Object to be called is not callable.",this.Extent);
+//		}
+//		public Call(Map code)
+//		{
+//			this.callable=code[CodeKeys.Function].GetExpression();
+//			this.argument=code[CodeKeys.Argument].GetExpression();
+//		}
+//		[Serialize]
+//		public Expression argument;
+//		[Serialize]
+//		public Expression callable;
+//	}
+//	public class Delayed: Expression
+//	{
+//		[Serialize]
+//		public readonly Map delayed;
+//		public Delayed(Map code)
+//		{
+//			this.delayed=code;
+//		}
+//		public override Map EvaluateImplementation(Map parent)
+//		{
+//			Map result=delayed;
+//			result.Parent=parent;
+//			return result;
+//		}
+//	}
+//	public class Program: Expression
+//	{
+//		public override Map EvaluateImplementation(Map parent)
+//		{
+//			Map local=new NormalMap();
+//			Evaluate(parent,ref local);
+//			return local;
+//		}
+//		public void Evaluate(Map parent,ref Map local)
+//		{
+//			local.Parent=parent;
+//			for(int i=0;i<statements.Count && i>=0;i++)
+//			{
+//				((Statement)statements[i]).Realize(ref local);
+//			}
+//		}
+//		public Program(Map code)
+//		{
+//			object a=code.Array;
+//			foreach(Map statement in code.Array)
+//			{
+//				this.statements.Add(new Statement(statement));
+//			}
+//		}
+//		[Serialize]
+//		public readonly ArrayList statements=new ArrayList();
+//	}
+//	public class Literal: Expression
+//	{
+//		public static ArrayList recognitions=new ArrayList();
+//		static Literal()
+//		{
+//			foreach(Type recognition in typeof(Filters).GetNestedTypes())
+//			{
+//				recognitions.Add((Filter)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+//			}
+//		}
+//		public override Map EvaluateImplementation(Map parent)
+//		{
+//			return literal;
+//		}
+//		public Literal(Map code)
+//		{
+//			this.literal=Filter((string)code.GetString());
+//		}
+//		[Serialize]
+//		public Map literal=null;
+//		public static Map Filter(string text)
+//		{
+//			foreach(Filter recognition in recognitions)
+//			{
+//				Map recognized=recognition.Detect(text);
+//				if(recognized!=null)
+//				{
+//					return recognized;
+//				}
+//			}
+//			return null;
+//		}
+//	}
+//	public class Select: Expression
+//	{
+//		[Serialize]
+//		public ArrayList keys=new ArrayList(); // TODO: rename to subKeys
+//		[Serialize]
+//		public Expression firstKey; // TODO: integrate into normal keys???
+//		public Select(Map code)
+//		{
+//			firstKey=((Map)code.Array[0]).GetExpression();
+//			foreach(Map key in code.Array.GetRange(1,code.Array.Count-1))
+//			{
+//				keys.Add(key.GetExpression());
+//			}
+//		}
+//		public override Map EvaluateImplementation(Map parent)
+//		{
+//			Map selected=FindFirstKey(parent);
+//			for(int i=0;i<keys.Count;i++)
+//			{
+//				Map key=((Expression)keys[i]).Evaluate(parent);
+//				Map selection=selected[key];
+//				//				Interpreter.DisplayValue=selection;
+//				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).Extent))
+//				{
+//					Interpreter.CallBreak(selection);
+//				}
+//				if(selection==null)
+//				{
+//					object test=selected[key];
+//					Throw.KeyDoesNotExist(key,this.Extent);
+//					//					throw new KeyDoesNotExistException(key,this.Extent,selected);
+//				}
+//				selected=selection;
+//			}
+//			return selected;
+//		}
+//		public Map FindFirstKey(Map parent)
+//		{
+//			Map key=firstKey.Evaluate(parent);
+//			Map selected=parent;
+//			while(!selected.ContainsKey(key))
+//			{
+//				//				if(selected.Parent==null)
+//				//				{
+//				//					selected.ContainsKey(key);
+//				////					throw new KeyNotFoundException(key,this.Extent);
+//				//				}
+//				selected=selected.Parent;
+//				if(selected==null)
+//				{
+//					Throw.KeyNotFound(key,this.Extent);
+//					//					throw new KeyNotFoundException(key,this.Extent);
+//				}
+//			}
+//			Map val=selected[key];
+//			//			Interpreter.DisplayValue=val;
+//			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(firstKey.Extent))
+//			{
+//				Interpreter.CallBreak(val);
+//			}
+//			return val;
+//		}
+//	}
+//	public class Statement
+//	{
+//		public void Realize(ref Map parent) // TODO: rename parent to current
+//		{
+//			Map selected=parent;
+//			Map key;
+//			for(int i=0;i<keys.Count-1;i++)
+//			{
+//				key=((Expression)keys[i]).Evaluate(parent);
+//				Map selection=selected[key];
+//				if(selection==null)
+//				{
+//					object x=selected[key];
+//					Throw.KeyDoesNotExist(key,((Expression)keys[i]).Extent);
+//					//					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
+//				}
+//				selected=selection;
+//				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).Extent))
+//				{
+//					Interpreter.CallBreak(selected);
+//				}
+//			}
+//			Map lastKey=((Expression)keys[keys.Count-1]).Evaluate(parent);
+//			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).Extent))
+//			{
+//				Map oldValue;
+//				if(selected.ContainsKey(lastKey))
+//				{
+//					oldValue=selected[lastKey];
+//				}
+//				else
+//				{
+//					oldValue=new NormalMap("<null>");
+//				}
+//				Interpreter.CallBreak(oldValue);
+//			}
+//			// TODO: peek at next statement
+//			//			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).Extent))
+//			//			{
+//			//				Interpreter.CallBreak();
+//			//			}
+//			Map val=expression.Evaluate(parent);
+//			if(lastKey.Equals(SpecialKeys.Current))
+//			{
+//				val.Parent=parent.Parent;
+//				parent=val;
+//			}
+//			else
+//			{
+//				selected[lastKey]=val;
+//			}
+//		}
+//		public Statement(Map code) 
+//		{
+//			foreach(Map key in code[CodeKeys.Key].Array)
+//			{
+//				keys.Add(key.GetExpression());
+//			}
+//			this.expression=code[CodeKeys.Value].GetExpression();
+//		}
+//		[Serialize]
+//		public ArrayList keys=new ArrayList();
+//		[Serialize]
+//		public Expression expression;
+//	}
 	public abstract class Filter
 	{
 		public abstract Map Detect(string text);
 	}
-	
+	// TODO: rename
 	public class Filters
 	{
 		public class DecimalFilter: Filter
@@ -316,102 +451,7 @@ namespace Meta
 			}
 		}
 	}
-	public class Literal: Expression
-	{
-		public static ArrayList recognitions=new ArrayList();
-		static Literal()
-		{
-			foreach(Type recognition in typeof(Filters).GetNestedTypes())
-			{
-				recognitions.Add((Filter)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
-			}
-		}
-		public override Map EvaluateImplementation(Map parent)
-		{
-			return literal;
-		}
-		public Literal(Map code)
-		{
-			this.literal=Filter((string)code.GetString());
-		}
-		[Serialize]
-		public Map literal=null;
-		public static Map Filter(string text)
-		{
-			foreach(Filter recognition in recognitions)
-			{
-				Map recognized=recognition.Detect(text);
-				if(recognized!=null)
-				{
-					return recognized;
-				}
-			}
-			return null;
-		}
-	}
-	public class Select: Expression
-	{
-		[Serialize]
-		public ArrayList keys=new ArrayList(); // TODO: rename to subKeys
-		[Serialize]
-		public Expression firstKey; // TODO: integrate into normal keys???
-		public Select(Map code)
-		{
-			firstKey=((Map)code.Array[0]).GetExpression();
-			foreach(Map key in code.Array.GetRange(1,code.Array.Count-1))
-			{
-				keys.Add(key.GetExpression());
-			}
-		}
-		public override Map EvaluateImplementation(Map parent)
-		{
-			Map selected=FindFirstKey(parent);
-			for(int i=0;i<keys.Count;i++)
-			{
-				Map key=((Expression)keys[i]).Evaluate(parent);
-				Map selection=selected[key];
-//				Interpreter.DisplayValue=selection;
-				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).Extent))
-				{
-					Interpreter.CallBreak(selection);
-				}
-				if(selection==null)
-				{
-					object test=selected[key];
-					Throw.KeyDoesNotExist(key,this.Extent);
-//					throw new KeyDoesNotExistException(key,this.Extent,selected);
-				}
-				selected=selection;
-			}
-			return selected;
-		}
-		public Map FindFirstKey(Map parent)
-		{
-			Map key=firstKey.Evaluate(parent);
-			Map selected=parent;
-			while(!selected.ContainsKey(key))
-			{
-//				if(selected.Parent==null)
-//				{
-//					selected.ContainsKey(key);
-////					throw new KeyNotFoundException(key,this.Extent);
-//				}
-				selected=selected.Parent;
-				if(selected==null)
-				{
-					Throw.KeyNotFound(key,this.Extent);
-//					throw new KeyNotFoundException(key,this.Extent);
-				}
-			}
-			Map val=selected[key];
-//			Interpreter.DisplayValue=val;
-			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(firstKey.Extent))
-			{
-				Interpreter.CallBreak(val);
-			}
-			return val;
-		}
-	}
+
 
 	public class MetaException:ApplicationException
 	{
@@ -453,30 +493,193 @@ namespace Meta
 			throw new MetaException("The key "+Serialize.Value(key)+" could not be found.",extent);
 		}
 	}
-	public class Statement
+
+	public class BreakPoint
 	{
-		public void Realize(ref Map parent) // TODO: rename parent to current
+		public BreakPoint(string fileName,SourcePosition position)
 		{
-			Map selected=parent;
-			Map key;
-			for(int i=0;i<keys.Count-1;i++)
+			this.fileName=fileName;
+			this.position=position;
+		}
+
+
+
+		public string FileName
+		{
+			get
 			{
-				key=((Expression)keys[i]).Evaluate(parent);
+				return fileName;
+			}
+		}
+		public SourcePosition Position
+		{
+			get
+			{
+				return position;
+			}
+		}
+		private SourcePosition position;
+		string fileName;
+	}
+	public class Interpreter
+	{
+		public static BreakPoint BreakPoint
+		{
+			get
+			{
+				return breakPoint;
+			}
+			set
+			{
+				breakPoint=value;
+			}
+		}
+		private static BreakPoint breakPoint;
+		public static Map Evaluate(Map code,Map context)
+		{
+			Map val;
+			if(code.ContainsKey(CodeKeys.Call))
+			{
+				val=Call(code[CodeKeys.Call],context);
+			}
+			else if(code.ContainsKey(CodeKeys.Delayed))
+			{ 
+				val=Delayed(code[CodeKeys.Delayed],context);
+			}
+			else if(code.ContainsKey(CodeKeys.Program))
+			{
+				val=Program(code[CodeKeys.Program],context);
+			}
+			else if(code.ContainsKey(CodeKeys.Literal))
+			{
+				val=Literal(code[CodeKeys.Literal],context);
+			}
+			else if(code.ContainsKey(CodeKeys.Select))
+			{
+				val=Select(code[CodeKeys.Select],context);
+			}
+			else
+			{
+				throw new ApplicationException("Cannot compile map.");
+			}
+			return val;
+		}
+		public static Map Call(Map code,Map context)
+		{
+			object function=Interpreter.Evaluate(code[CodeKeys.Function],context);
+			if(function is ICallable)
+			{
+				return ((ICallable)function).Call(Evaluate(code[CodeKeys.Argument],context));
+			}
+			throw new MetaException("Object to be called is not callable.",code.Extent);
+		}
+		public static Map Delayed(Map code,Map context)
+		{
+			Map result=code;
+			result.Parent=context;
+			return result;
+		}
+		public static Map Program(Map code,Map context)
+		{
+			Map local=new NormalMap();
+			Program(code,context,ref local);
+			return local;
+		}
+		private static void Program(Map code,Map context,ref Map local)
+		{
+			local.Parent=context;
+			for(int i=0;i<code.Array.Count && i>=0;i++)
+			{
+				Statement((Map)code.Array[i],ref local);
+			}
+		}
+		public static ArrayList recognitions=new ArrayList();
+		public static Map Literal(Map code,Map context)
+		{
+			return Filter((string)code.GetString());;
+		}
+		public static Map Filter(string text) // TODO: get rid of this completely, integrate into Parser
+		{
+			foreach(Filter recognition in recognitions)
+			{
+				Map recognized=recognition.Detect(text);
+				if(recognized!=null)
+				{
+					return recognized;
+				}
+			}
+			return null;
+		}
+		public static Map Select(Map code,Map context)
+		{
+			Map selected=FindFirstKey(code,context);
+			for(int i=1;i<code.Array.Count;i++)
+			{
+				Map key=Evaluate((Map)code.Array[i],context);
+				Map selection=selected[key];
+				//				Interpreter.DisplayValue=selection;
+				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[i]).Extent))
+				{
+					Interpreter.CallBreak(selection);
+				}
+				if(selection==null)
+				{
+					object test=selected[key];
+					Throw.KeyDoesNotExist(key,key.Extent);
+					//					throw new KeyDoesNotExistException(key,this.Extent,selected);
+				}
+				selected=selection;
+			}
+			return selected;
+		}
+		private static Map FindFirstKey(Map code,Map context)
+		{
+			Map key=Evaluate((Map)code.Array[0],context);
+			Map selected=context;
+			while(!selected.ContainsKey(key))
+			{
+				//				if(selected.Parent==null)
+				//				{
+				//					selected.ContainsKey(key);
+				////					throw new KeyNotFoundException(key,this.Extent);
+				//				}
+				selected=selected.Parent;
+				if(selected==null)
+				{
+					Throw.KeyNotFound(key,key.Extent);
+					//					throw new KeyNotFoundException(key,this.Extent);
+				}
+			}
+			Map val=selected[key];
+			//			Interpreter.DisplayValue=val;
+			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[0]).Extent))
+			{
+				Interpreter.CallBreak(val);
+			}
+			return val;
+		}
+		public static void Statement(Map code,ref Map context)
+		{
+			Map selected=context;
+			Map key;
+			for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
+			{
+				key=Evaluate((Map)code[CodeKeys.Key].Array[i],context);
 				Map selection=selected[key];
 				if(selection==null)
 				{
 					object x=selected[key];
-					Throw.KeyDoesNotExist(key,((Expression)keys[i]).Extent);
-//					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
+					Throw.KeyDoesNotExist(key,((Map)code[CodeKeys.Key].Array[i]).Extent);
+					//					throw new KeyDoesNotExistException(key,((Expression)keys[i]).Extent,selected);
 				}
 				selected=selection;
-				if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[i]).Extent))
+				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
 				{
 					Interpreter.CallBreak(selected);
 				}
 			}
-			Map lastKey=((Expression)keys[keys.Count-1]).Evaluate(parent);
-			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).Extent))
+			Map lastKey=Evaluate((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context);
+			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
 			{
 				Map oldValue;
 				if(selected.ContainsKey(lastKey))
@@ -490,36 +693,23 @@ namespace Meta
 				Interpreter.CallBreak(oldValue);
 			}
 			// TODO: peek at next statement
-//			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).Extent))
-//			{
-//				Interpreter.CallBreak();
-//			}
-			Map val=expression.Evaluate(parent);
+			//			if(Expression.BreakPoint!=null && Expression.BreakPoint.Position.IsBetween(((Expression)keys[keys.Count-1]).Extent))
+			//			{
+			//				Interpreter.CallBreak();
+			//			}
+			
+			Map val=Evaluate(code[CodeKeys.Value],context);
 			if(lastKey.Equals(SpecialKeys.Current))
 			{
-				val.Parent=parent.Parent;
-				parent=val;
+				val.Parent=context.Parent;
+				context=val;
 			}
 			else
 			{
 				selected[lastKey]=val;
 			}
 		}
-		public Statement(Map code) 
-		{
-			foreach(Map key in code[CodeKeys.Key].Array)
-			{
-				keys.Add(key.GetExpression());
-			}
-			this.expression=code[CodeKeys.Value].GetExpression();
-		}
-		[Serialize]
-		public ArrayList keys=new ArrayList();
-		[Serialize]
-		public Expression expression;
-	}
-	public class Interpreter
-	{
+
 //		private static Map displayValue="";
 //		public static Map DisplayValue
 //		{
@@ -699,9 +889,21 @@ namespace Meta
 			debugThread.Start();
 		}
 		private static Thread debugThread;
+		public static void StopDebug()
+		{
+			if(debugThread!=null)
+			{
+				debugThread.Resume();
+				debugThread.Abort();
+				debugThread=null;
+			}
+		}
 		public static void ContinueDebug()
 		{
-			debugThread.Resume();
+			if(debugThread!=null)
+			{
+				debugThread.Resume();
+			}
 		}
 		public static void ReverseDebug()
 		{
@@ -710,6 +912,10 @@ namespace Meta
 		static Interpreter()
 		{
 			Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
+			foreach(Type recognition in typeof(Filters).GetNestedTypes())
+			{
+				recognitions.Add((Filter)recognition.GetConstructor(new Type[]{}).Invoke(new object[]{}));
+			}
 		}
 		public static DirectoryInfo LibraryPath
 		{
@@ -931,47 +1137,53 @@ namespace Meta
 		}
 		public virtual Map Call(Map argument)
 		{
-			Parameter=argument;
-			Expression function=(Expression)this[CodeKeys.Run].GetExpression();
+			this.Parameter=argument;
+			Map function=this[CodeKeys.Run];
 			Map result;
-			result=function.Evaluate(this);
+			result=Interpreter.Evaluate(function,this);
+			//			result=function.Evaluate(map);
 			return result;
+//			Parameter=argument;
+//			Expression function=(Expression)this[CodeKeys.Run].GetExpression();
+//			Map result;
+//			result=function.Evaluate(this);
+//			return result;
 		}
 		public abstract ArrayList Keys
 		{
 			get;
 		}
 		public abstract Map Clone();
-		public virtual Expression GetExpression()
-		{
-			Expression expression;
-			if(this.ContainsKey(CodeKeys.Call))
-			{
-				expression=new Call(this[CodeKeys.Call]);
-			}
-			else if(this.ContainsKey(CodeKeys.Delayed))
-			{ 
-				expression=new Delayed(this[CodeKeys.Delayed]);
-			}
-			else if(this.ContainsKey(CodeKeys.Program))
-			{
-				expression=new Program(this[CodeKeys.Program]);
-			}
-			else if(this.ContainsKey(CodeKeys.Literal))
-			{
-				expression=new Literal(this[CodeKeys.Literal]);
-			}
-			else if(this.ContainsKey(CodeKeys.Select))
-			{
-				expression=new Select(this[CodeKeys.Select]);
-			}
-			else
-			{
-				throw new ApplicationException("Cannot compile non-code map.");
-			}
-			((Expression)expression).Extent=this.Extent;
-			return expression;
-		}
+//		public virtual Expression GetExpression()
+//		{
+//			Expression expression;
+//			if(this.ContainsKey(CodeKeys.Call))
+//			{
+//				expression=new Call(this[CodeKeys.Call]);
+//			}
+//			else if(this.ContainsKey(CodeKeys.Delayed))
+//			{ 
+//				expression=new Delayed(this[CodeKeys.Delayed]);
+//			}
+//			else if(this.ContainsKey(CodeKeys.Program))
+//			{
+//				expression=new Program(this[CodeKeys.Program]);
+//			}
+//			else if(this.ContainsKey(CodeKeys.Literal))
+//			{
+//				expression=new Literal(this[CodeKeys.Literal]);
+//			}
+//			else if(this.ContainsKey(CodeKeys.Select))
+//			{
+//				expression=new Select(this[CodeKeys.Select]);
+//			}
+//			else
+//			{
+//				throw new ApplicationException("Cannot compile non-code map.");
+//			}
+//			((Expression)expression).Extent=this.Extent;
+//			return expression;
+//		}
 		public bool ContainsKey(Map key)
 		{
 			bool containsKey;
@@ -1676,7 +1888,7 @@ namespace Meta
 		private static string StringValue(Map val,string indentation)
 		{
 			string text;
-			if(Literal.Filter(val.GetString()).IsString)
+			if(Interpreter.Filter(val.GetString()).IsString)
 			{
 				int longest=0;
 				foreach(Match match in Regex.Matches(val.GetString(),"(>)?(\\\\)*"))
@@ -2815,12 +3027,14 @@ namespace Meta
 				}
 			}
 		}
+		// i dont understand this
 		public virtual Map Call(Map argument)
 		{
 			map.Parameter=argument;
-			Expression function=(Expression)this[CodeKeys.Run].GetExpression();
+			Map function=this[CodeKeys.Run];
 			Map result;
-			result=function.Evaluate(map);
+			result=Interpreter.Evaluate(function,map);
+//			result=function.Evaluate(map);
 			return result;
 		}
 		public StrategyMap map;

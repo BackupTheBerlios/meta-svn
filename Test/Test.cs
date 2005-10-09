@@ -160,14 +160,14 @@ namespace Test
 				return map;
 			}
 		}
-		public class CompileToExpression:TestCase 
-		{
-			public override object Run() 
-			{
-				return Interpreter.Compile(Path.Combine(
-					Test.path,filename)).GetExpression();
-			}
-		}
+//		public class CompileToExpression:TestCase 
+//		{
+//			public override object Run() 
+//			{
+//				return Interpreter.Compile(Path.Combine(
+//					Test.path,filename)).GetExpression();
+//			}
+//		}
 		public class Execute:TestCase
 		{
 			public override object Run()

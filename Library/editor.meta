@@ -120,6 +120,8 @@
 			|
 				SetBreakPoint*
 				Meta.Interpreter.ReverseDebug*
+		Stop=
+			|Meta.Interpreter.StopDebug*
 	CombinedModifierKeys=
 		current=System.Windows.Forms
 		AltControl=bitwise.Disjunction
@@ -261,6 +263,9 @@
 			DockStyle.Fill
 		editBox.ScrollBars.Set
 			RichTextBoxScrollBars.ForcedBoth
+		editBox.Moved.Add
+			=
+				|commands.Continue*
 		editBox.KeyDown.Add
 			=
 				|
@@ -304,10 +309,11 @@
 				[<Save as...>]=commands.SaveAs
 				[<Close>]=
 					|form.Close*
-			Program=
+			Debug=
 				Start=commands.Run
 				Continue=commands.Continue
 				Reverse=commands.Reverse
+				Stop=commands.Stop
 		form.Menu.Set
 			MainMenu
 				Application
