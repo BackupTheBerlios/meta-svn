@@ -11,7 +11,7 @@
 		array
 		Meta
 	choose=
-		' TODO: rename dialog to openFileDialog
+		# TODO: rename dialog to openFileDialog
 		OpenFile=
 			|
 				dialog=OpenFileDialog*
@@ -23,7 +23,7 @@
 				dialog.ShowDialog*
 				current=dialog.FileName.Get*
 	file=
-		' TODO: use keyword arguments
+		# TODO: use keyword arguments
 		Write=
 			|
 				writer=StreamWriter
@@ -170,8 +170,8 @@
 			[Keys.PageDown]=
 				|editBox.MovePageDown*
 		[Keys.Shift]=
-			'[Keys.Tab]=
-			'	|editBox.DecreaseSelectionIndent*
+			#[Keys.Tab]=
+			#	|editBox.DecreaseSelectionIndent*
 			[Keys.Left]=
 				|editBox.SelectCharLeft*
 			[Keys.Right]=
@@ -316,8 +316,8 @@
 		controls.AddRange
 			=
 				editBox
-		'form.WindowState.Set
-		'	FormWindowState.Maximized
+		#form.WindowState.Set
+		#	FormWindowState.Maximized
 		menu=
 			File=
 				["Open..."]=commands.Open

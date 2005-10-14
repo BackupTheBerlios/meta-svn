@@ -204,7 +204,7 @@ tryAgain:
 							break;
 						}
 						case '\t':  case '\n':  case '\r':  case ' ':
-						case '\'':
+						case '#':
 						{
 							mLINE(true);
 							theRetToken = returnToken_;
@@ -625,7 +625,7 @@ _loop29_breakloop:		;
 		int _ttype; Token _token=null; int _begin=text.Length;
 		_ttype = COMMENT;
 		
-		match("'");
+		match('#');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);
@@ -688,7 +688,7 @@ _loop34_breakloop:			;
 							mNEWLINE(false);
 							break;
 						}
-						case '\t':  case ' ':  case '\'':
+						case '\t':  case ' ':  case '#':
 						{
 							mBOF(false);
 							break;
@@ -732,7 +732,7 @@ _loop34_breakloop:			;
 						mNEWLINE(false);
 						break;
 					}
-					case '\t':  case ' ':  case '\'':
+					case '\t':  case ' ':  case '#':
 					{
 						mBOF(false);
 						break;
@@ -1055,7 +1055,7 @@ _loop59_breakloop:			;
 	private static long[] mk_tokenSet_0_()
 	{
 		long[] data = new long[2048];
-		data[0]=-2593867248410043905L;
+		data[0]=-2593866733013968385L;
 		data[1]=-1152921505546371073L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
@@ -1066,7 +1066,7 @@ _loop59_breakloop:			;
 	private static long[] mk_tokenSet_1_()
 	{
 		long[] data = new long[2048];
-		data[0]=-2305918347235042817L;
+		data[0]=-2305917831838967297L;
 		data[1]=-1152921505546371073L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
@@ -1087,7 +1087,7 @@ _loop59_breakloop:			;
 	private static long[] mk_tokenSet_3_()
 	{
 		long[] data = new long[1025];
-		data[0]=554050790912L;
+		data[0]=38654715392L;
 		for (int i = 1; i<=1024; i++) { data[i]=0L; }
 		return data;
 	}

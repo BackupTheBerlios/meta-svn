@@ -33614,7 +33614,7 @@ Schwaenzchen in die Hoeh."
 																																																																																																																																														getNextSibling:
 																																																																																																																																															null
 																																																																																																																																														getText (String):
-																																																																																																																																															"\'\n\\\t"
+																																																																																																																																															"\#\n\\\t"
 																																																																																																																																														Type (Int32):
 																																																																																																																																															"26"
 																																																																																																																																													getText (String):
@@ -37210,7 +37210,7 @@ Schwaenzchen in die Hoeh."
 																																																																																																																																																											getNextSibling:
 																																																																																																																																																												null
 																																																																																																																																																											getText (String):
-																																																																																																																																																												"This function returns 'hello ."
+																																																																																																																																																												"This function returns #hello ."
 																																																																																																																																																											Type (Int32):
 																																																																																																																																																												"26"
 																																																																																																																																																										getText (String):

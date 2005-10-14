@@ -33548,7 +33548,7 @@ Schwaenzchen in die Hoeh."
 															Value (NormalMap):
 																Extent:
 																	null
-																"\'\n\\\t"
+																"\#\n\\\t"
 										Entry (DictionaryEntry)
 											Key (NormalMap):
 												Extent:
@@ -37130,7 +37130,7 @@ Schwaenzchen in die Hoeh."
 																					Value (NormalMap):
 																						Extent:
 																							null
-																						"This function returns 'hello ."
+																						"This function returns #hello ."
 																Entry (DictionaryEntry)
 																	Key (NormalMap):
 																		Extent:

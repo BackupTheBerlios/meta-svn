@@ -129,7 +129,7 @@ LITERAL_KEY:
 		|'.'
 		|'\\'
 		|'|'
-		|'\''
+		|'#'
 		|'"'
 		|'['
 		|']'
@@ -155,7 +155,7 @@ LITERAL_KEY:
 			|'.'
 			|'\\'
 			|'|'
-			|'\''
+			|'#'
 			|'"'
 			|'['
 			|']'
@@ -287,7 +287,7 @@ INTEGER:
 ;*/
 protected
 COMMENT:
-	"'";
+	'#';
 
 protected
 REST_OF_LINE:
