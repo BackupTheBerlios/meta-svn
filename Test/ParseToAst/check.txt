@@ -4252,7 +4252,7 @@ getFirstChild (MetaAST):
 																											getNextSibling:
 																												null
 																											getText (String):
-																												"as>\df"
+																												"as"\df"
 																											Type (Int32):
 																												"26"
 																										getText (String):
@@ -4336,7 +4336,7 @@ getFirstChild (MetaAST):
 																												getNextSibling:
 																													null
 																												getText (String):
-																													"as>\\df"
+																													"as"\\df"
 																												Type (Int32):
 																													"26"
 																											getText (String):
@@ -4420,7 +4420,7 @@ getFirstChild (MetaAST):
 																													getNextSibling:
 																														null
 																													getText (String):
-																														"as>\\\\\\\\\\\\\\\\df"
+																														"as"\\\\\\\\\\\\\\\\df"
 																													Type (Int32):
 																														"26"
 																												getText (String):

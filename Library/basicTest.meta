@@ -1,5 +1,5 @@
 '	Meta is a programming language.
-'	Copyright (C) 2004 Christian Staudenmeyer <christianstaudenmeyer@web.de>
+'	Copyright (C) 2004 Christian Staudenmeyer "christianstaudenmeyer@web.de"
 '
 '	This program is free software; you can redistribute it and/or
 '	modify it under the terms of the GNU General Public License version 2
@@ -17,8 +17,8 @@
 	current=map.Merging
 		parent
 		=
-			<AssignedToCurrent>
-	unicodeText=<äaba>
+			"AssignedToCurrent"
+	unicodeText="äaba"
 	current=map.Merging
 		parent
 		boolean
@@ -29,18 +29,18 @@
 	parent.parent.testSubDir.x=*
 	persistantDeleteTest=testSubDir.x
 	parent.parent.testSubDir.x=
-		a=<b>
+		a="b"
 		x=
-			x=<hello>
-			y=<world>
+			x="hello"
+			y="world"
 	integerHashTest=
-		[2]=<correct hash content>
+		[2]="correct hash content"
 		hashTestData=
 			[*]=
 				[*]=*
 		hashTest=[hashTestData]
 	negativeInteger=100
-	negativeInteger.x=<hello>
+	negativeInteger.x="hello"
 	subtractionTest=number.Sum
 		100
 		Opposite 1000
@@ -50,11 +50,11 @@
 	integerDecrementTest=integerDecrementTest.[0]
 	persistenceTest=testSubDir
 	literalEscapeTest=
-		[1]=\<asdf>\
-		[2]=\\<asdf>\\
-		[3]=\\<as>\df>\\
-		[4]=\\\<as>\\df>\\\
-		[5]=\\\\\\\\\\\\\\\\\<as>\\\\\\\\\\\\\\\\df>\\\\\\\\\\\\\\\\\
+		[1]=\"asdf"\
+		[2]=\\"asdf"\\
+		[3]=\\"as"\df"\\
+		[4]=\\\"as"\\df"\\\
+		[5]=\\\\\\\\\\\\\\\\\"as"\\\\\\\\\\\\\\\\df"\\\\\\\\\\\\\\\\\
 	applyMethod=
 		|Sum
 			parameter
@@ -70,20 +70,20 @@
 		1
 	ifTestCases=
 		[1]=
-			|<it is true>
+			|"it is true"
 		[*]=
-			|<it is false>
+			|"it is false"
 	ifTest=ifTestCases.[ifTestCondition]*
 	'ifTest=If
 	'	condition=Equal
 	'		1
 	'		1
 	'	then=
-	'		|<it is true>
+	'		|"it is true"
 	'	else=
-	'		|<it is false>
-	<ImpliedAutokey>
-	=<Autokey>
+	'		|"it is false"
+	"ImpliedAutokey"
+	="Autokey"
 	gacTest=System.Collections
 
 		'some comment
@@ -96,34 +96,34 @@
 		'  still comment
 	' some more comment
 	aMap=
-		[<a>]=<a>
-	[aMap]=<Object>
-	[<normal symbol>]=<NormalSymbol>
-	lookupSymbol=<LookupSymbol>
-	[<long key symbol>]=<LookupExtendedSymbol>
+		["a"]="a"
+	[aMap]="Object"
+	["normal symbol"]="NormalSymbol"
+	lookupSymbol="LookupSymbol"
+	["long key symbol"]="LookupExtendedSymbol"
 	lookedUpMap=[aMap]
-	lookedUpNormalSymbol=[<normal symbol>]
+	lookedUpNormalSymbol=["normal symbol"]
 	lookedUpSymbol=lookupSymbol
-	lookedUpLongSymbol=[<long key symbol>]
+	lookedUpLongSymbol=["long key symbol"]
 	object=
-		a=<default>
-		autoSearch=<default>
+		a="default"
+		autoSearch="default"
 		b=*
 		SetA=
 			|
-				parent.parent.a=<c>
-				parent.parent.autoSearch=<changed>
+				parent.parent.a="c"
+				parent.parent.autoSearch="changed"
 		SetB=
 			|
 				parent.parent.b.[1]=parameter.value
-				current=<changed>
+				current="changed"
 		x=
-			a=<b>
-			c=<d>
+			a="b"
+			c="d"
 		=
 			|
-				current.a=<b>
-	a=<default>
+				current.a="b"
+	a="default"
 	b=*
 	aSet=object.SetA*
 	bSet=object.SetB
@@ -134,13 +134,13 @@
 		|
 			current=parameter
 	everythingReturned=ReturnEverything
-		<a>
-		<b>
-		<c>
+		"a"
+		"b"
+		"c"
 	variableAsArgument=ReturnEverything
-		<x>
-		<y>
-		<z>
+		"x"
+		"y"
+		"z"
 	ReturnFunction=
 		|
 			current=
@@ -156,17 +156,17 @@
 				x=parameter.symbol
 			current=x
 	thisSet=SetCurrent
-		symbol=<haha>
+		symbol="haha"
 	FirstLevel=
 		|
 			SecondLevel parameter
 	SecondLevel=
 		|parameter
 	argTest=FirstLevel
-		a=<z>
+		a="z"
 	concatenate=array.Concatenation
-		<x>
-		<yz>
+		"x"
+		"yz"
 	current=map.Merging
 		parent
 		testClasses
@@ -185,63 +185,63 @@
 	TestClass.boolTest=1
 	boolTest=TestClass.boolTest
 	memberTest=MemberTest*
-	MemberTest.classField=<a>
-	memberTest.instanceField=<b>
+	MemberTest.classField="a"
+	memberTest.instanceField="b"
 	MemberTest.ClassProperty.Set
 		memberTest.InstanceProperty.Get*
 	classPropertyValue=MemberTest.ClassProperty.Get*
 	memberTest.InstanceProperty.Set
 		MemberTest.ClassProperty.Get*
 	instancePropertyValue=memberTest.InstanceProperty.Get*
-	interceptedSymbol=</hello/>
+	interceptedSymbol="/hello/"
 	positionalNoConversion=PositionalNoConversion
-		<m>
-		<n>
-		<o>
+		"m"
+		"n"
+		"o"
 	positionalNoConversionConcatenated=positionalNoConversion.Concatenate
-		<r>
-		<s>
-		<t>
+		"r"
+		"s"
+		"t"
 	namedNoConversion=NamedNoConversion
 		=
-			<m>
-			y=<n>
+			"m"
+			y="n"
 	namedNoConversionConcatenated=namedNoConversion.Concatenate
 		=
-			c=<t>
-			<r>
+			c="t"
+			"r"
 	indexerNoConversion=IndexerNoConversion*
-	indexerNoConversion.abc=<hihi>
+	indexerNoConversion.abc="hihi"
 	indexerNoConversionIndexed=indexerNoConversion.abc
 	interceptedSymbolTwo=1
-	k=<hello>
-	xyz=<w>
+	k="hello"
+	xyz="w"
 	literalFunction=
 		|5
 	literalFunctionResult=literalFunction*
 	someFunction=
 		|
-			current=<simple function this>
+			current="simple function this"
 	callFunction=
 		|someFunction
 	callFunctionResult=callFunction*
 	delayedFunction=
 		|
 			|
-				x=<y>
+				x="y"
 	delayedFunctionResult=delayedFunction *
-	value=<xyz>
+	value="xyz"
 	selectionFunction=
 		|value
 	selectionFunctionResult=selectionFunction *
 	bigInteger=89383838383832839123497123047217340712340720347072304702340720347
-	upperLevel=<unchanged>
+	upperLevel="unchanged"
 	SetUpperLevel=
 		|
 			parent.parent.upperLevel=parameter
 	ChangeUpperLevel=
 		|
-			SetUpperLevel <changed>
+			SetUpperLevel "changed"
 	ChangeUpperLevel*
 	staticEventChanged=*
 	ChangeStaticEvent=
@@ -255,7 +255,7 @@
 	staticEvent=TestClass.staticEvent
 	TestClass.TakeDelegate
 		=
-			|<resultFromDelegate>
+			|"resultFromDelegate"
 	resultFromDelegate=TestClass.GetResultFromDelegate*
 	staticEventResult=TestClass.staticEvent 
 		testClass
@@ -270,31 +270,31 @@
 		5
 	one=1
 	two=2
-	firstIf=<unchanged>
-	secondIf=<unchanged>
+	firstIf="unchanged"
+	secondIf="unchanged"
 	firstIfCondition=Equality
 		1
 		one
 	firstIfBranches=
 		[1]=
-			|<then>
+			|"then"
 		[*]=
-			|<else>
+			|"else"
 	firstIf=firstIfBranches.[firstIfCondition]*
 	bigNumber=50020202029029233344
-	secondSwitch=<unchanged>
+	secondSwitch="unchanged"
 	secondSwitchCases=
-		[1]=<one>
-		[2]=<two>
-		[3]=<three>
+		[1]="one"
+		[2]="two"
+		[3]="three"
 	secondSwitch=secondSwitchCases.[3]
 	emptyMap=*
 	emptyFunction=
 		|
-			x=<hello>
+			x="hello"
 	emptyFunctionResult=emptyFunction*
 	font=System.Drawing.Font
-		<Courier New>
+		"Courier New"
 		[2]=
 			numerator=10
 			denominator=1
@@ -304,35 +304,35 @@
 	fractionTest=
 		numerator=4
 		denominator=52
-	stringTest=<hello>
+	stringTest="hello"
 	stringTest.[6]=stringTest.[1]
-	helloh=<hi>
+	helloh="hi"
 	stringStrategyHashTest=[stringTest]
 	x=
-		aLongText=<
+		aLongText="
 			hello world!
 			hello!
-			>
+			"
 	ored=bitwise.Disjunction
 		20
 		System.Windows.Forms.Keys.Tab
 	arrayList=System.Collections.ArrayList*
 	arrayList.Add 
-		<hello>
+		"hello"
 	arrayListResult=arrayList.[*]
 	textBox=System.Windows.Forms.TextBox*
 	textBox.Text.Set
-		<
+		"
 			Alle meine Entchen,
 			schwimmen auf dem See,
 			schwimmen auf dem See,
 			Köpfchen in das Wasser,
-			Schwaenzchen in die Hoeh.>
+			Schwaenzchen in die Hoeh."
 	lines=textBox.Lines.Get*
 	alleMeineText=lines.[1]
-	lines.[5]=<bwuhahaha>
-	tabText=<			hello>
-	escapedText=<\'\n\\\t>
+	lines.[5]="bwuhahaha"
+	tabText="			hello"
+	escapedText="\'\n\\\t"
 	whileCounter=*
 	loop=
 		|
@@ -358,15 +358,15 @@
 	literalAsArgument=returnInMap 1				   
 	returnFunction=
 		|
-			|<functionResult>
+			|"functionResult"
 	returnArg=
 		|parameter
 	myArg=
 		|
-			hello=<world>
+			hello="world"
 	funcReturnTest=returnArg myArg*
 	documentedFunction=
-		doc=<This function returns 'hello .>
-		|<hello>
+		doc="This function returns 'hello ."
+		|"hello"
 	docFunctionResult=documentedFunction*
 	' end comment

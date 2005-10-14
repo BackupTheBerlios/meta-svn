@@ -15,6 +15,7 @@ using System.Xml;
 
 public class ScrollingTextBox: RichTextBox
 {
+	public event EventHandler Changed;
 	public ScrollingTextBox() 
 	{
 		InitializeComponent();
@@ -712,6 +713,7 @@ public class ScrollingTextBox: RichTextBox
 
 	private void ScrollingTextBox_TextChanged(object sender, System.EventArgs e)
 	{
+		Changed(null,null);
 		ScrollToMiddle();
 	}
 

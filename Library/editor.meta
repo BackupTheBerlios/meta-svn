@@ -44,7 +44,7 @@
 			parent.parent.fileName=parameter
 			form.Text.Set
 				Concatenation
-					<Meta Edit - >
+					"Meta Edit - "
 					fileName
 	SetBreakPoint=
 		|Meta.Interpreter.BreakPoint.Set
@@ -279,6 +279,9 @@
 						line
 						editBox.LineIndex.Get*
 					cases.[forward]*
+		editBox.Changed.Add
+			=
+				|editBox.*
 		editBox.KeyDown.Add
 			=
 				|
@@ -304,10 +307,10 @@
 	form=
 		form=Form*
 		form.Text.Set
-			<Meta Edit>
+			"Meta Edit"
 		form.Font.Set
 			Font
-				<Courier New>
+				"Courier New"
 				10
 		controls=form.Controls.Get*
 		controls.AddRange
@@ -317,10 +320,10 @@
 		'	FormWindowState.Maximized
 		menu=
 			File=
-				[<Open...>]=commands.Open
-				[<Save>]=commands.Save
-				[<Save as...>]=commands.SaveAs
-				[<Close>]=
+				["Open..."]=commands.Open
+				["Save"]=commands.Save
+				["Save as..."]=commands.SaveAs
+				["Close"]=
 					|form.Close*
 			Debug=
 				Start=commands.Run

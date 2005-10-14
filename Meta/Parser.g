@@ -77,7 +77,7 @@ tokens
 	}
 	public static void SetLiteralEnd(string literalStart)
 	{
-		literalEnd=">"+literalStart.Remove(literalStart.Length-1,1);
+		literalEnd="\""+literalStart.Remove(literalStart.Length-1,1);
 		//literalEnd=Helper.ReverseString(literalStart);
 	}
 	private static string literalEnd;
@@ -128,8 +128,6 @@ LITERAL_KEY:
 		|'='
 		|'.'
 		|'\\'
-		|'<'
-		|'>'
 		|'|'
 		|'\''
 		|'"'
@@ -156,8 +154,6 @@ LITERAL_KEY:
 			|'='
 			|'.'
 			|'\\'
-			|'<'
-			|'>'
 			|'|'
 			|'\''
 			|'"'
@@ -172,7 +168,7 @@ LITERAL_KEY:
 protected
 LITERAL_START:
 	('\\')*
-	'<'
+	'"'
 	{
 		SetLiteralEnd(text.ToString());
 		$setText("");
@@ -209,7 +205,7 @@ LITERAL_START:
 
 protected
 LITERAL_END:
-	'>'!
+	'"'!
 	(('\\')*)!
 ;
 

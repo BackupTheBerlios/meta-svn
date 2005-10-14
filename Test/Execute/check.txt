@@ -364,7 +364,7 @@ Entry (DictionaryEntry)
 			Value (NormalMap):
 				Extent:
 					null
-				"as>\df"
+				"as"\df"
 		Entry (DictionaryEntry)
 			Key (NormalMap):
 				Extent:
@@ -373,7 +373,7 @@ Entry (DictionaryEntry)
 			Value (NormalMap):
 				Extent:
 					null
-				"as>\\df"
+				"as"\\df"
 		Entry (DictionaryEntry)
 			Key (NormalMap):
 				Extent:
@@ -382,7 +382,7 @@ Entry (DictionaryEntry)
 			Value (NormalMap):
 				Extent:
 					null
-				"as>\\\\\\\\\\\\\\\\df"
+				"as"\\\\\\\\\\\\\\\\df"
 Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:

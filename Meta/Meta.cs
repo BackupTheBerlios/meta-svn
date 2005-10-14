@@ -1264,6 +1264,7 @@ namespace Meta
 			Directory.CreateDirectory(Path.GetDirectoryName(path));
 			File.Create(path).Close();
 			string text=Meta.Serialize.MapValue(meta,"").Trim(new char[]{'\n'});
+			// TODO: use constants here
 			if(text=="\"\"")
 			{
 				text="";
@@ -1383,9 +1384,10 @@ namespace Meta
 		private const string leftBracket="[";
 		private const string rightBracket="]";
 		private const string newLine="\n";
-		private const string literalStartDelimiter="<";
+		private const string literalStartDelimiter="\"";
 		private const string assignment="=";
-		private const string literalEndDelimiter=">";
+//		private const string assignment="=";
+		private const string literalEndDelimiter="\"";
 
 		private static bool IsLiteralKey(string text)
 		{
@@ -3276,6 +3278,7 @@ namespace Meta
 			protected int indentationDepth=-1;
 		}
 	}
+	// TODO: rename
 	public class Helper
 	{
 		public static Integer IntegerFromDouble(double val)

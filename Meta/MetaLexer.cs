@@ -97,7 +97,7 @@ namespace Meta.Parser
 	}
 	public static void SetLiteralEnd(string literalStart)
 	{
-		literalEnd=">"+literalStart.Remove(literalStart.Length-1,1);
+		literalEnd="\""+literalStart.Remove(literalStart.Length-1,1);
 		//literalEnd=Helper.ReverseString(literalStart);
 	}
 	private static string literalEnd;
@@ -189,7 +189,7 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
-						case '<':  case '\\':
+						case '"':  case '\\':
 						{
 							mLITERAL(true);
 							theRetToken = returnToken_;
@@ -380,7 +380,7 @@ _loop11_breakloop:			;
 			}
 _loop14_breakloop:			;
 		}    // ( ... )*
-		match('<');
+		match('"');
 		if (0==inputState.guessing)
 		{
 			
@@ -403,7 +403,7 @@ _loop14_breakloop:			;
 		
 		int _saveIndex = 0;
 		_saveIndex = text.Length;
-		match('>');
+		match('"');
 		text.Length = _saveIndex;
 		{
 			{    // ( ... )*
@@ -1055,7 +1055,7 @@ _loop59_breakloop:			;
 	private static long[] mk_tokenSet_0_()
 	{
 		long[] data = new long[2048];
-		data[0]=-8358474771444278785L;
+		data[0]=-2593867248410043905L;
 		data[1]=-1152921505546371073L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
@@ -1066,7 +1066,7 @@ _loop59_breakloop:			;
 	private static long[] mk_tokenSet_1_()
 	{
 		long[] data = new long[2048];
-		data[0]=-8070525870269277697L;
+		data[0]=-2305918347235042817L;
 		data[1]=-1152921505546371073L;
 		for (int i = 2; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
