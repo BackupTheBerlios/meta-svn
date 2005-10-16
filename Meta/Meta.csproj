@@ -94,8 +94,18 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Copy (2) of Meta.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Copy (2) of Parser.g"
                     BuildAction = "None"
+                />
+                <File
+                    RelPath = "Copy of Meta.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Copy of Parser.g"

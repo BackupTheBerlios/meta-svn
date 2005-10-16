@@ -279,9 +279,9 @@
 						line
 						editBox.LineIndex.Get*
 					cases.[forward]*
-		editBox.Changed.Add
-			=
-				|editBox.*
+		#editBox.Changed.Add
+		#	=
+		#		|editBox.*
 		editBox.KeyDown.Add
 			=
 				|

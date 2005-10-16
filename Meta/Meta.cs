@@ -3651,4 +3651,677 @@ namespace Meta
 			return (Extent)extents[extent];
 		}
 	}
+	public class MetaCustomParser
+	{
+		private string text;
+		private int index;
+		public MetaCustomParser(string text)
+		{
+			this.index=0;
+			this.text=text;
+		}
+		private bool TryConsume(string characters)
+		{
+			bool consumed;
+			if(text.Substring(index,characters.Length)==characters)
+			{
+				consumed=true;
+				index+=characters.Length;
+			}
+			else
+			{
+				consumed=false;
+			}
+			return consumed;
+		}
+		private string Rest
+		{
+			get
+			{
+				return text.Substring(index);
+			}
+		}
+		private bool TryConsume(char character)
+		{
+			bool consumed;
+			if(index<text.Length && text[index]==character)
+			{
+				index++;
+				consumed=true;
+			}
+			else
+			{
+				consumed=false;
+			}
+			return consumed;
+		}
+		public char endOfFileChar=(char)65535;
+		private char Look(int count)
+		{
+			char character;
+			int i=index+count;
+			if(i<text.Length)
+			{
+				character=text[index+count];
+			}
+			else
+			{
+				character=endOfFileChar;
+			}
+			return character;
+		}
+		private char Look()
+		{
+			return Look(0);
+		}
+		private void Consume(string characters)
+		{
+			foreach(char character in characters)
+			{
+				Consume(character);
+			}
+		}
+		private void Consume(char character)
+		{
+			if(!TryConsume(character))
+			{
+				throw new ApplicationException("Unexpected token "+text[index]+" ,expected "+character);
+			}
+		}
+		public const char indentationChar='\t';
+		private int indentationCount=-1;
+		private bool Indentation()
+		{
+			string indentationString="\n"+"".PadLeft(indentationCount+1,indentationChar);
+			bool isIndentation;
+			if(TryConsume(indentationString))
+			{
+				indentationCount++;
+				isIndentation=true;
+			}
+			else if(isStartOfFile)
+			{
+				isStartOfFile=false;
+				indentationCount++;
+				isIndentation=true;
+			}
+			else
+			{
+				isIndentation=false;
+			}
+			return isIndentation;
+		}
+
+		private bool Dedentation()
+		{
+			int indent=0;
+			while(Look(indent)==indentationChar)
+			{
+				indent++;
+			}
+			bool isDedentation;
+			if(indent<indentationCount)
+			{
+				Consume(indentationChar);
+				isDedentation=true;
+				indentationCount--;
+			}
+			else
+			{
+				isDedentation=false;
+			}
+			return isDedentation;
+		}
+//		private bool Dedentation()
+//		{
+//			int indent=0;
+//			while(Look(indent)==indentationChar)
+//			{
+//				indent++;
+//			}
+//			bool isDedentation;
+//			if(indent>0)
+//			{
+//				isDedentation=true;
+//				indentationCount=indent;
+//			}
+//			else
+//			{
+//				isDedentation=false;
+//			}
+//			return isDedentation;
+//		}
+		public const char commentChar='#';
+
+		private bool Comment()
+		{
+			bool isComment;
+			if(TryConsume(commentChar))
+			{
+				isComment=true;
+				while(Look()!='\n')
+				{
+					Consume();
+				}
+			}
+			else
+			{
+				isComment=false;
+			}
+			return isComment;
+		}
+		private void Consume()
+		{
+			Consume(Look());
+		}
+		public const char functionChar='|';
+		public const char stringChar='\"';
+		private Map Expression()
+		{
+			Map expression=Integer();
+			if(expression==null)
+			{
+				expression=String();
+				if(expression==null)
+				{
+					expression=Program();
+					if(expression==null)
+					{
+						Map select=Select();
+						if(select!=null)
+						{
+							Map call=Call(select);
+							if(call!=null)
+							{
+								expression=call;
+							}
+							else
+							{
+								expression=select;
+							}
+						}
+						else
+						{
+							expression=null;
+						}
+					}
+				}
+			}
+			return expression;
+		}
+		private int Line
+		{
+			get
+			{
+				return text.Substring(0,index).Split('\n').Length;
+			}
+		}
+		private Map Call(Map select)
+		{
+			Map call;
+			TryConsume(callChar);
+			Map argument=Expression();
+			if(argument!=null)
+			{
+				call=new NormalMap();
+				call[CodeKeys.Callable]=select;
+				call[CodeKeys.Argument]=argument;
+			}
+			else
+			{
+				call=null;
+			}
+			return call;
+		}
+		bool isStartOfFile=true;
+		// TODO: what is CodeKeys.Function good for?
+		public Map Program()
+		{
+			Map program;
+			if(TryConsume(emptyMapChar))
+			{
+				program=new NormalMap();
+				program[CodeKeys.Program]=new NormalMap();
+			}
+			else
+			{
+				if(Indentation())
+				{
+					program=new NormalMap();
+					int counter=1;
+					int defaultKey=1;
+					Map statements=new NormalMap();
+					while(Look()!=endOfFileChar)
+					{
+						if(!Comment())
+						{
+							Map statement=Function();
+							if(statement==null)
+							{
+								statement=Statement(ref defaultKey);
+							}
+							statements[counter]=statement;
+							counter++;
+
+							TryConsume('\n');
+							while(Comment())
+							{
+								TryConsume('\n');
+							}
+							string newIndentation=GetIndentation();
+							if(newIndentation.Length<indentationCount)
+							{
+								indentationCount--; // TODO: make this local variable???
+								break;
+							}
+							else if(newIndentation.Length==indentationCount)
+							{
+								Consume(newIndentation);
+							}
+							else
+							{
+								throw new ApplicationException("incorrect indentation");
+							}		
+
+						}
+						else
+						{
+							TryConsume('\n');
+						}
+
+					}
+					// TODO: combine???
+					program[CodeKeys.Program]=statements;
+				}
+				else
+				{
+					program=null;
+				}
+			}
+			return program;
+		}
+		private string GetIndentation()
+		{
+			int i=0;
+			string indentation="";
+			while(Look(i)==indentationChar)
+			{
+				indentation+=Look(i);
+				i++;
+			}
+			return indentation;
+		}
+//		public Map Program()
+//		{
+//			Map program;
+//			if(TryConsume(emptyMapChar))
+//			{
+//				program=new NormalMap();
+//			}
+//			else
+//			{
+//				if(Indentation())
+//				{
+//					program=new NormalMap();
+//					int counter=1;
+//					int defaultKey=1;
+//					while(true)
+//					{
+//						if(!Comment())
+//						{
+//							Map statement=Function();
+//							if(statement==null)
+//							{
+//								statement=Statement(ref defaultKey);
+//							}
+//							program[counter]=statement;
+//							counter++;
+//						}
+//						Consume('\n');
+//						SameIndentation();
+//						if(Dedentation())
+//						{
+//							break;
+//						}
+//					}
+//				}
+//				else
+//				{
+//					program=null;
+//				}
+//			}
+//			return program;
+//		}
+		private void SameIndentation()
+		{
+			string sameIndentationString="".PadLeft(indentationCount,indentationChar);
+			TryConsume(sameIndentationString);
+		}
+		private bool LookAny(char[] any)
+		{
+			return !LookExcept(any);
+		}
+		public char[] integerChars=new char[] {'0','1','2','3','4','5','6','7','8','9'};
+		public char[] firstIntegerChars=new char[] {'1','2','3','4','5','6','7','8','9'};
+		private char ConsumeGet()
+		{
+			char character=Look();
+			Consume(character);
+			return character;
+		}
+		private Map Integer()
+		{
+			Map integer;
+			if(LookAny(firstIntegerChars))
+			{
+				string integerString="";
+				integerString+=ConsumeGet();
+				while(true)
+				{
+					if(LookAny(integerChars)) // should be one function
+					{
+						integerString+=ConsumeGet();
+					}
+					else
+					{
+						break;
+					}
+				}
+				integer=new NormalMap(Interpreter.ParseInteger(integerString));
+			}
+			else
+			{
+				integer=null;
+			}
+			return integer;
+		}
+		private Map String()
+		{
+			Map @string;
+			if(TryConsume(stringChar))
+			{
+				string stringText="";
+				while(LookExcept(new char[] {stringChar})) // factor this out
+				{
+					stringText+=Look();
+					Consume(Look());
+				}
+				Consume(stringChar);
+				@string=new NormalMap(stringText);
+			}
+			else
+			{
+				@string=null;
+			}
+			return @string;
+		}
+		public const char lookupStartChar='[';
+		public const char lookupEndChar=']';
+		public char[] lookupStringForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*',};
+		private Map LookupString()
+		{
+			string lookupString="";
+			while(LookExcept(lookupStringForbiddenChars))
+			{
+				lookupString+=Look();
+				Consume(Look());
+			}
+			Map lookup;
+			if(lookupString.Length>0)
+			{
+				lookup=new NormalMap(lookupString);
+			}
+			else
+			{
+				lookup=null;
+			}
+			return lookup;
+		}
+		private bool LookExcept(char[] exceptions)
+		{
+			ArrayList list=new ArrayList(exceptions);
+			list.Add(endOfFileChar);
+			return Look().ToString().IndexOfAny((char[])list.ToArray(typeof(char)))==-1;
+		}
+		private Map LookupAnything()
+		{
+			Map lookupAnything;
+			if(TryConsume(lookupStartChar)) // separate into TryConsume and Consume, only try, and throw
+			{
+				lookupAnything=Expression();
+				Consume(lookupEndChar);
+			}
+			else
+			{
+				lookupAnything=null;
+			}
+			return lookupAnything;
+		}
+
+		public const char emptyMapChar='*';
+		private Map Lookup()
+		{
+			Map lookup=LookupString();
+			if(lookup==null)
+			{
+				lookup=LookupAnything();
+			}
+			return lookup;
+		}
+		const char callChar=' ';
+		const char selectChar='.';
+		private Map Select(Map keys)
+		{
+			Map select;
+			if(keys!=null)
+			{
+				select=new NormalMap();
+				select[CodeKeys.Select]=keys;
+			}
+			else
+			{
+				select=null;
+			}
+			return select;
+		}
+		private Map Select()
+		{
+			return Select(Keys());
+		}
+//		private Map Select()
+//		{
+//			Map keys=Keys();
+//			Map select;
+//			if(keys!=null)
+//			{
+//				select=new NormalMap();
+//				select[CodeKeys.Select]=keys;
+//			}
+//			else
+//			{
+//				select=null;
+//			}
+//			return select;
+//		}
+		private Map Keys()
+		{
+			Map lookups=new NormalMap();
+			int counter=1;
+			Map lookup;
+			while(true)
+			{
+				lookup=Lookup();
+				if(lookup!=null)
+				{
+					lookups[counter]=lookup;
+					counter++;
+				}
+				else
+				{
+					break;
+				}
+				if(!TryConsume(selectChar))
+				{
+					break;
+				}
+			}
+			Map keys;
+			if(counter>1)
+			{
+				keys=lookups;
+			}
+			else
+			{
+				keys=null;
+			}
+			return keys;
+		}
+//		private Map Select()
+//		{
+//			Map lookups=new NormalMap();
+//			int counter=1;
+//			Map lookup;
+//			while(true)
+//			{
+//				lookup=Lookup();
+//				if(lookup!=null)
+//				{
+//					lookups[counter]=lookup;
+//					counter++;
+//				}
+//				else
+//				{
+//					break;
+//				}
+//				if(!TryConsume(selectChar))
+//				{
+//					break;
+//				}
+//			}
+//			Map select;
+//			if(counter>1)
+//			{
+//				select=lookups;
+//			}
+//			else
+//			{
+//				select=null;
+//			}
+//			return select;
+//		}
+		public Map Function()
+		{
+			Map function=null;
+			if(TryConsume(functionChar))
+			{
+				Map expression=Expression();
+				if(expression!=null)
+				{
+					function=new NormalMap();
+					function[CodeKeys.Key]=CreateDefaultKey(CodeKeys.Function);
+					function[CodeKeys.Literal]=expression;
+				}
+			}
+			return function;
+		}
+		const char statementChar='=';
+		public Map Statement(ref int count)
+		{
+			Map key=Keys();
+//			Map key;
+			Map val;
+			if(key!=null && TryConsume(statementChar))
+			{
+//				key=select;
+				val=Expression();
+			}
+			else
+			{
+				TryConsume(statementChar);
+				if(key!=null)
+				{
+					Map select=Select(key);
+					Map call=Call(select);
+					if(call!=null)
+					{
+						val=call;
+					}
+					else
+					{
+						val=select;
+					}
+				}
+				else
+				{
+					val=Expression();
+				}
+				key=CreateDefaultKey(new NormalMap(new Integer(count)));
+			}
+			Map statement=new NormalMap();
+			statement[CodeKeys.Key]=key;
+			statement[CodeKeys.Value]=val;
+			return statement;
+		}
+//		public Map Statement(ref int count)
+//		{
+//			Map select=Select();
+//			Map key;
+//			Map val;
+//			if(select!=null) && TryConsume(statementChar))
+//			{
+//				key=select;
+//				val=Expression();
+//			}
+//			else
+//			{
+//				TryConsume(statementChar);
+//				if(select!=null)
+//				{
+//					val=select;
+//				}
+//				else
+//				{
+//					val=Expression();
+//				}
+//				key=CreateDefaultKey(new NormalMap(new Integer(count)));
+//			}
+//			Map statement=new NormalMap();
+//			statement[CodeKeys.Key]=key;
+//			statement[CodeKeys.Value]=val;
+//			return statement;
+//		}
+//		public Map Statement(ref int count)
+//		{
+//			Map statement;
+//			// check for same indent here
+//			Map expression=Expression();
+//			statement=new NormalMap();
+//			Map key;
+//			Map val;
+//			if(TryConsume(statementChar))
+//			{
+//				key=expression;
+//				val=Expression();
+//			}
+//			else
+//			{
+//				key=CreateDefaultKey(new NormalMap(new Integer(count)));
+//				val=expression;
+//				count++;
+//			}
+//			statement[CodeKeys.Key]=key;
+//			statement[CodeKeys.Value]=val;
+//			return statement;
+//		}
+		private Map CreateDefaultKey(Map literal)
+		{
+			Map key=new NormalMap();
+			Map select=new NormalMap();
+			Map firstKey=new NormalMap();
+			firstKey[CodeKeys.Literal]=literal;
+			select[1]=firstKey;
+			key[CodeKeys.Select]=select;
+			return key;
+		}
+	}
 }

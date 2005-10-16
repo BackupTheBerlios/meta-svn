@@ -108,38 +108,13 @@
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "Copy of basicTest.meta"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "Copy of editor.meta"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "editor.meta"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "html.meta"
                     BuildAction = "None"
                 />
                 <File
                     RelPath = "Library.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "newtest.meta"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "test2.meta"
-                    SubType = "Form"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "testEditor2.meta"
-                    BuildAction = "None"
                 />
             </Include>
         </Files>

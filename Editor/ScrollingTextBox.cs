@@ -447,14 +447,33 @@ public class ScrollingTextBox: RichTextBox
 	{
 		MoveAbsolute(move.X,move.Y);
 	}
+//	int oldColumn=0;
+//	int oldLine=0;
 	public void MoveAbsolute(int column,int line)
 	{
+//		oldColumn=Column;
+//		oldLine=Line.Index;
 		if(column>Lines[line].Length)
 		{
 			column=Lines[line].Length;
 		}
-		Select(GetLinesLength(LineFromRealLine(line))+column,0);
-		Moved(null,null);
+		bool pauseDebugging;
+		int newSelection=GetLinesLength(LineFromRealLine(line))+column;
+		int start=Math.Min(SelectionStart,newSelection);
+		int end=Math.Max(SelectionStart,newSelection);
+		string crossedText=Text.Substring(start,end-start);
+		if(crossedText.IndexOf("|")!=-1)
+		{
+			pauseDebugging=true;
+		}
+		else
+		{
+			pauseDebugging=false;
+		}
+		// generalize this for different movement types, maybe, selection shoul
+		// calll Moved, too maybe
+		Select(newSelection,0);
+		Moved(pauseDebugging,null);
 	}
 	public event EventHandler Moved;
 	private int GetLinesPerPage()
@@ -713,7 +732,10 @@ public class ScrollingTextBox: RichTextBox
 
 	private void ScrollingTextBox_TextChanged(object sender, System.EventArgs e)
 	{
-		Changed(null,null);
+		if(Changed!=null)
+		{
+			Changed(null,null);
+		}
 		ScrollToMiddle();
 	}
 

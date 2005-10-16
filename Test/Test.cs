@@ -60,11 +60,7 @@ namespace Test
 		public static void Main(string[] args) 
 		{
 //			args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
-//			args[0]=@"C:\_ProjectSupportMaterial\Meta\Editor\editor.meta";
-			//			args[0]=new string[]{@"C:\_ProjectSupportMaterial\Editor\editor.meta"};
-			//args=new string[]{@"C:\_ProectSupportMaterial\Meta\library\function.meta"};
-			//args=new string[]{@"C:\Dokumente und Einstellungen\Christian\Desktop\editor.meta"};
-			//args=new string[]{@"..\..\basicTest.meta"};
+
 
 			Hashtable options=new Hashtable();
 			string fileName="";
@@ -141,25 +137,37 @@ namespace Test
 		private static string filename=@"C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta";
 		//private static string filename=@"basicTest.meta";
 		// TODO:make it possible to choose between different tests on command line, and whether to test at all
-		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-			public class ParseToAst:TestCase 
-		{
-			public override object Run() 
-			{
-				return Interpreter.ParseToAst(Path.Combine(
-					Test.path,filename));
-			}
-		}
+//		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
+//			public class ParseToAst:TestCase 
+//		{
+//			public override object Run() 
+//			{
+//				return Interpreter.ParseToAst(Path.Combine(
+//					Test.path,filename));
+//			}
+//		}
 		public class CompileToMap:TestCase 
 		{
 			public static Map map;
 			public override object Run() 
 			{
-				map=Interpreter.Compile(Path.Combine(
-					Test.path,filename));
+				MetaCustomParser parser=new MetaCustomParser(Helper.ReadFile(filename));
+				map=parser.Program();
+//				map=Interpreter.Compile(Path.Combine(
+//					Test.path,filename));
 				return map;
 			}
 		}
+//		public class CompileToMap:TestCase 
+//		{
+//			public static Map map;
+//			public override object Run() 
+//			{
+//				map=Interpreter.Compile(Path.Combine(
+//					Test.path,filename));
+//				return map;
+//			}
+//		}
 //		public class CompileToExpression:TestCase 
 //		{
 //			public override object Run() 
@@ -168,24 +176,26 @@ namespace Test
 //					Test.path,filename)).GetExpression();
 //			}
 //		}
-		public class Execute:TestCase
-		{
-			public override object Run()
-			{
-				string cachePath=@"C:\_ProjectSupportMaterial\Meta\cachedAssemblyInfo.meta";
-				if(File.Exists(cachePath))
-				{
-					File.Delete(cachePath);
-				}
-				foreach(FileInfo file in Helper.FindFiles(Interpreter.LibraryPath,"cachedAssemblyInfo.meta"))
-				{
-					file.Delete();
-				}
-				Map argument=new NormalMap();
-				argument[1]="first arg";
-				argument[2]="second=arg";
-				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
-			}
-		}
+
+
+//		public class Execute:TestCase
+//		{
+//			public override object Run()
+//			{
+//				string cachePath=@"C:\_ProjectSupportMaterial\Meta\cachedAssemblyInfo.meta";
+//				if(File.Exists(cachePath))
+//				{
+//					File.Delete(cachePath);
+//				}
+//				foreach(FileInfo file in Helper.FindFiles(Interpreter.LibraryPath,"cachedAssemblyInfo.meta"))
+//				{
+//					file.Delete();
+//				}
+//				Map argument=new NormalMap();
+//				argument[1]="first arg";
+//				argument[2]="second=arg";
+//				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
+//			}
+//		}
 	}
 }

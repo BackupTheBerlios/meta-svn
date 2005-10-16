@@ -25,7 +25,7 @@
 		map
 		number
 		array
-	#internetTest=web.localhost.test
+#	internetTest=web.localhost.test
 	parent.parent.testSubDir.x=*
 	persistantDeleteTest=testSubDir.x
 	parent.parent.testSubDir.x=
@@ -49,12 +49,12 @@
 	integerDecrementTest=5
 	integerDecrementTest=integerDecrementTest.[0]
 	persistenceTest=testSubDir
-	literalEscapeTest=
-		[1]=\"asdf"\
-		[2]=\\"asdf"\\
-		[3]=\\"as"\df"\\
-		[4]=\\\"as"\\df"\\\
-		[5]=\\\\\\\\\\\\\\\\\"as"\\\\\\\\\\\\\\\\df"\\\\\\\\\\\\\\\\\
+#	literalEscapeTest=
+#		[1]=\"asdf"\
+#		[2]=\\"asdf"\\
+#		[3]=\\"as"\df"\\
+#		[4]=\\\"as"\\df"\\\
+#		[5]=\\\\\\\\\\\\\\\\\"as"\\\\\\\\\\\\\\\\df"\\\\\\\\\\\\\\\\\
 	applyMethod=
 		|Sum
 			parameter
@@ -74,27 +74,27 @@
 		[*]=
 			|"it is false"
 	ifTest=ifTestCases.[ifTestCondition]*
-	#ifTest=If
-	#	condition=Equal
-	#		1
-	#		1
-	#	then=
-	#		|"it is true"
-	#	else=
-	#		|"it is false"
+#		ifTest=If
+#		condition=Equal
+#			1
+#			1
+#		then=
+#			|"it is true"
+#		else=
+#			|"it is false"
 	"ImpliedAutokey"
 	="Autokey"
 	gacTest=System.Collections
-
-		#some comment
+#
+#		some comment
 	lazyGACTest=Microsoft.CSharp
-	#metaLibTest=metaLib
+#	metaLibTest=metaLib
 	commandLineArguments=parameter
-	#libraryAssemblyTest=testClasses
-		#	asdfasdf	fff
-	#thisIsInAComment|
-		#  still comment
-	# some more comment
+#	libraryAssemblyTest=testClasses
+#		asdfasdf	fff
+#	thisIsInAComment|
+#		still comment
+#	some more comment
 	aMap=
 		["a"]="a"
 	[aMap]="Object"
@@ -344,29 +344,8 @@
 					|loop Sum
 						parameter
 						1
-					 
+#					 
 				[*]=
 					|parameter
 			current=whileBranches.[whileDecision] parameter
 	whileCounter=loop 3
-
-		
-	returnInMap=
-						
-		|
-			result=parameter
-	literalAsArgument=returnInMap 1				   
-	returnFunction=
-		|
-			|"functionResult"
-	returnArg=
-		|parameter
-	myArg=
-		|
-			hello="world"
-	funcReturnTest=returnArg myArg*
-	documentedFunction=
-		doc="This function returns #hello ."
-		|"hello"
-	docFunctionResult=documentedFunction*
-	# end comment
