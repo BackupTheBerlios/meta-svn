@@ -45,9 +45,9 @@
 		100
 		Opposite 1000
 	integerIncrementTest=5
-	integerIncrementTest.[0]=integerIncrementTest
+	integerIncrementTest.[*]=integerIncrementTest
 	integerDecrementTest=5
-	integerDecrementTest=integerDecrementTest.[0]
+	integerDecrementTest=integerDecrementTest.[*]
 	persistenceTest=testSubDir
 #	literalEscapeTest=
 #		[1]=\"asdf"\

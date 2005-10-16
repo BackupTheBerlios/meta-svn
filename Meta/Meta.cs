@@ -698,8 +698,8 @@ namespace Meta
 			}
 			return hash;
 		}
-		Extent extent;
-		[Serialize]
+		Extent extent=new Extent(0,0,0,0,"");
+//		[Serialize]
 		public Extent Extent
 		{
 			get
@@ -3856,6 +3856,13 @@ namespace Meta
 				return text.Substring(0,index).Split('\n').Length;
 			}
 		}
+		private int Column
+		{
+			get
+			{
+				return index-text.Substring(0,index).LastIndexOf('\n');
+			}
+		}
 		private Map Call(Map select)
 		{
 			Map call;
@@ -3864,8 +3871,10 @@ namespace Meta
 			if(argument!=null)
 			{
 				call=new NormalMap();
-				call[CodeKeys.Callable]=select;
-				call[CodeKeys.Argument]=argument;
+				Map callCode=new NormalMap();
+				callCode[CodeKeys.Callable]=select;
+				callCode[CodeKeys.Argument]=argument;
+				call[CodeKeys.Call]=callCode;
 			}
 			else
 			{
@@ -3881,6 +3890,7 @@ namespace Meta
 			if(TryConsume(emptyMapChar))
 			{
 				program=new NormalMap();
+//				program.Extent
 				program[CodeKeys.Program]=new NormalMap();
 			}
 			else
@@ -4027,7 +4037,9 @@ namespace Meta
 						break;
 					}
 				}
-				integer=new NormalMap(Interpreter.ParseInteger(integerString));
+				Map literal=new NormalMap(Interpreter.ParseInteger(integerString));
+				integer=new NormalMap();
+				integer[CodeKeys.Literal]=literal;
 			}
 			else
 			{
@@ -4035,6 +4047,7 @@ namespace Meta
 			}
 			return integer;
 		}
+		// maybe combine literals
 		private Map String()
 		{
 			Map @string;
@@ -4047,7 +4060,31 @@ namespace Meta
 					Consume(Look());
 				}
 				Consume(stringChar);
-				@string=new NormalMap(stringText);
+//				@string=new NormalMap(stringText);
+				ArrayList lines=new ArrayList();
+				string[] originalLines=stringText.Split('\n');
+				string realText;
+//				string realText=(string)originalLines[0]+'\n';
+				for(int i=0;i<originalLines.Length;i++)
+				{
+					if(i==0)
+					{
+						lines.Add(originalLines[i]);
+					}
+					else
+					{
+						lines.Add(originalLines[i].Remove(0,Math.Min(indentationCount+1,originalLines[i].Length-originalLines[i].TrimStart(indentationChar).Length)));
+					}
+				}
+//				string realText=(string)originalLines[0]+'\n';
+//				foreach(string line in originalLines.GetRange(1,originalLines.Count-1))
+//				{
+//					lines.Add(line.Remove(0,Math.Min(indentationCount+1,line.Length-line.TrimStart(indentationChar).Length)));
+//				}
+				realText=string.Join("\n",(string[])lines.ToArray(typeof(string)));
+				Map literal=new NormalMap(realText);
+				@string=new NormalMap();
+				@string[CodeKeys.Literal]=literal;
 			}
 			else
 			{
@@ -4057,19 +4094,28 @@ namespace Meta
 		}
 		public const char lookupStartChar='[';
 		public const char lookupEndChar=']';
-		public char[] lookupStringForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*',};
+		public char[] lookupStringForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*'};
+		public char[] lookupStringFirstForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*','0','1','2','3','4','5','6','7','8','9'};
 		private Map LookupString()
 		{
 			string lookupString="";
-			while(LookExcept(lookupStringForbiddenChars))
+			if(LookExcept(lookupStringFirstForbiddenChars))
 			{
-				lookupString+=Look();
-				Consume(Look());
+				while(LookExcept(lookupStringForbiddenChars))
+				{
+					lookupString+=Look();
+					Consume(Look());
+				}
+			}
+			else
+			{
+				int asdf=0;
 			}
 			Map lookup;
 			if(lookupString.Length>0)
 			{
-				lookup=new NormalMap(lookupString);
+				lookup=new NormalMap();
+				lookup[CodeKeys.Literal]=new NormalMap(lookupString);
 			}
 			else
 			{
@@ -4088,6 +4134,10 @@ namespace Meta
 			Map lookupAnything;
 			if(TryConsume(lookupStartChar)) // separate into TryConsume and Consume, only try, and throw
 			{
+//				if(Rest.IndexOf("integerInc")<40)
+//				{
+//					int asdf=0;
+//				}
 				lookupAnything=Expression();
 				Consume(lookupEndChar);
 			}
@@ -4219,7 +4269,9 @@ namespace Meta
 				{
 					function=new NormalMap();
 					function[CodeKeys.Key]=CreateDefaultKey(CodeKeys.Function);
-					function[CodeKeys.Literal]=expression;
+					Map literal=new NormalMap();
+					literal[CodeKeys.Literal]=expression;
+					function[CodeKeys.Value]=literal;
 				}
 			}
 			return function;
@@ -4256,6 +4308,7 @@ namespace Meta
 					val=Expression();
 				}
 				key=CreateDefaultKey(new NormalMap(new Integer(count)));
+				count++;
 			}
 			Map statement=new NormalMap();
 			statement[CodeKeys.Key]=key;
@@ -4316,11 +4369,11 @@ namespace Meta
 		private Map CreateDefaultKey(Map literal)
 		{
 			Map key=new NormalMap();
-			Map select=new NormalMap();
+//			Map select=new NormalMap();
 			Map firstKey=new NormalMap();
 			firstKey[CodeKeys.Literal]=literal;
-			select[1]=firstKey;
-			key[CodeKeys.Select]=select;
+//			select[1]=firstKey;
+			key[1]=firstKey;
 			return key;
 		}
 	}
