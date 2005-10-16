@@ -3865,6 +3865,7 @@ namespace Meta
 		}
 		private Map Call(Map select)
 		{
+
 			Map call;
 			TryConsume(callChar);
 			Map argument=Expression();
@@ -3884,6 +3885,12 @@ namespace Meta
 		}
 		bool isStartOfFile=true;
 		// TODO: what is CodeKeys.Function good for?
+		private void Whitespace()
+		{
+			while(TryConsume('\t') || TryConsume(' '))
+			{
+			}
+		}
 		public Map Program()
 		{
 			Map program;
@@ -3906,6 +3913,10 @@ namespace Meta
 						if(!Comment())
 						{
 							Map statement=Function();
+							if(Rest.IndexOf("returnInMap")<40)
+							{
+								int asdf=0;
+							}
 							if(statement==null)
 							{
 								statement=Statement(ref defaultKey);
@@ -3913,7 +3924,9 @@ namespace Meta
 							statements[counter]=statement;
 							counter++;
 
-							TryConsume('\n');
+							//Whitespace();
+
+							TryConsume('\n'); // this should not be eaten
 							while(Comment())
 							{
 								TryConsume('\n');
@@ -4261,6 +4274,10 @@ namespace Meta
 //		}
 		public Map Function()
 		{
+			if(Rest.IndexOf("returnFunction")<100)
+			{
+				int asdf=0;
+			}
 			Map function=null;
 			if(TryConsume(functionChar))
 			{

@@ -349,3 +349,24 @@
 					|parameter
 			current=whileBranches.[whileDecision] parameter
 	whileCounter=loop 3
+#
+#		
+#
+	returnInMap=
+		|
+			result=parameter
+	literalAsArgument=returnInMap 1
+	returnFunction=
+		|
+			|"functionResult"
+	returnArg=
+		|parameter
+	myArg=
+		|
+			hello="world"
+	funcReturnTest=returnArg myArg*
+	documentedFunction=
+		doc="This function returns #hello ."
+		|"hello"
+	docFunctionResult=documentedFunction*
+#	end comment
