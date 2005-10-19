@@ -178,24 +178,24 @@ namespace Test
 //		}
 
 
-//		public class Execute:TestCase
-//		{
-//			public override object Run()
-//			{
-//				string cachePath=@"C:\_ProjectSupportMaterial\Meta\cachedAssemblyInfo.meta";
-//				if(File.Exists(cachePath))
-//				{
-//					File.Delete(cachePath);
-//				}
-//				foreach(FileInfo file in Helper.FindFiles(Interpreter.LibraryPath,"cachedAssemblyInfo.meta"))
-//				{
-//					file.Delete();
-//				}
-//				Map argument=new NormalMap();
-//				argument[1]="first arg";
-//				argument[2]="second=arg";
-//				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
-//			}
-//		}
+		public class Execute:TestCase
+		{
+			public override object Run()
+			{
+				string cachePath=@"C:\_ProjectSupportMaterial\Meta\cachedAssemblyInfo.meta";
+				if(File.Exists(cachePath))
+				{
+					File.Delete(cachePath);
+				}
+				foreach(FileInfo file in Helper.FindFiles(Interpreter.LibraryPath,"cachedAssemblyInfo.meta"))
+				{
+					file.Delete();
+				}
+				Map argument=new NormalMap();
+				argument[1]="first arg";
+				argument[2]="second=arg";
+				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
+			}
+		}
 	}
 }

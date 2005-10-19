@@ -369,7 +369,8 @@ namespace Meta
 		}
 		public static Map Run(string fileName,Map argument)
 		{
-			Map program=Interpreter.Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
+			Map program=Interpreter.Compile(fileName);//,new StringReader(Helper.ReadFile(fileName)));
+//			Map program=Interpreter.Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
 			program=CallProgram(program,new NormalMap(),null);
 			program.Parent=GetPersistantMaps(fileName);
 			return program.Call(argument);
@@ -413,7 +414,8 @@ namespace Meta
 		}
 		public static Map Compile(string fileName,TextReader textReader)
 		{
-			return (new MetaTreeParser()).program(ParseToAst(fileName,textReader));
+			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();//(new MetaTreeParser()).program(ParseToAst(fileName,textReader));
+//			return (new MetaTreeParser()).program(ParseToAst(fileName,textReader));
 		}
 		public static AST ParseToAst(string fileName)
 		{
@@ -3507,12 +3509,22 @@ namespace Meta
 //		}
 		public bool IsBetween(Extent extent)
 		{
-			return IsBetween(extent.Start,extent.End);
+			return false;
+//			return IsBetween(extent.Start,extent.End);
 		}
+//		public bool IsBetween(Extent extent)
+//		{
+//			return IsBetween(extent.Start,extent.End);
+//		}
 		public bool IsBetween(SourcePosition start,SourcePosition end)
 		{
-			return Line>=start.Line && Line<=end.Line && Column>=start.Column && Column<=end.Column;
+			return false;
+//			return Line>=start.Line && Line<=end.Line && Column>=start.Column && Column<=end.Column;
 		}
+//		public bool IsBetween(SourcePosition start,SourcePosition end)
+//		{
+//			return Line>=start.Line && Line<=end.Line && Column>=start.Column && Column<=end.Column;
+//		}
 		private int line;
 		private int column;
 		public SourcePosition(int line,int column)
@@ -3658,6 +3670,10 @@ namespace Meta
 		private string filePath;
 		public MetaCustomParser(string text,string filePath)
 		{
+			if(filePath.EndsWith("testLib.meta"))
+			{
+				int asdf=0;
+			}
 			this.index=0;
 			this.text=text;
 			this.filePath=filePath;
@@ -3665,7 +3681,7 @@ namespace Meta
 		private bool TryConsume(string characters)
 		{
 			bool consumed;
-			if(text.Substring(index,characters.Length)==characters)
+			if(index<text.Length && text.Substring(index,characters.Length)==characters)
 			{
 				consumed=true;
 				index+=characters.Length;
@@ -3732,11 +3748,14 @@ namespace Meta
 		}
 		public const char indentationChar='\t';
 		private int indentationCount=-1;
+		public const char unixNewLine='\n';
+		public const string windowsNewLine="\r\n";
 		private bool Indentation()
 		{
-			string indentationString="\n"+"".PadLeft(indentationCount+1,indentationChar);
+			string indentationString="".PadLeft(indentationCount+1,indentationChar);
+//			string indentationString="\n"+"".PadLeft(indentationCount+1,indentationChar);
 			bool isIndentation;
-			if(TryConsume(indentationString))
+			if(TryConsume(unixNewLine+indentationString) || TryConsume(windowsNewLine+indentationString))
 			{
 				indentationCount++;
 				isIndentation=true;
@@ -3801,8 +3820,10 @@ namespace Meta
 			if(TryConsume(commentChar))
 			{
 				isComment=true;
+				// TODO: make this a try consume for the newline, simply use newline, maybe should refactor everything
 				while(Look()!='\n' && Look()!=endOfFileChar)
-				{
+//					while(Look()!='\n' && Look()!=endOfFileChar)
+					{
 					Consume();
 				}
 			}
@@ -3929,11 +3950,13 @@ namespace Meta
 							counter++;
 
 							//Whitespace();
-
-							TryConsume('\n'); // this should not be eaten
+							// TODO: fix newlines
+							NewLine(); // this should not be eaten
+//							TryConsume('\n'); // this should not be eaten
 							while(Comment())
 							{
-								TryConsume('\n');
+								NewLine();
+//								TryConsume('\n');
 							}
 							string newIndentation=GetIndentation();
 							if(newIndentation.Length<indentationCount)
@@ -3953,7 +3976,8 @@ namespace Meta
 						}
 						else
 						{
-							TryConsume('\n');
+							NewLine();
+//							TryConsume('\n');
 						}
 
 					}
@@ -3967,6 +3991,10 @@ namespace Meta
 			}
 			EndExpression(extent,program);
 			return program;
+		}
+		private bool NewLine()
+		{
+			return TryConsume('\n') || TryConsume("\r\n");
 		}
 		private string GetIndentation()
 		{
@@ -4138,6 +4166,8 @@ namespace Meta
 				}
 //				@string=new NormalMap(stringText);
 				ArrayList lines=new ArrayList();
+				// TODO: make these constants
+				stringText=stringText.Replace("\r\n","\n");
 				string[] originalLines=stringText.Split('\n');
 				string realText;
 //				string realText=(string)originalLines[0]+'\n';
@@ -4171,6 +4201,7 @@ namespace Meta
 		}
 		public const char lookupStartChar='[';
 		public const char lookupEndChar=']';
+		// TODO: use the other constants to create this array
 		public char[] lookupStringForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*'};
 		public char[] lookupStringFirstForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*','0','1','2','3','4','5','6','7','8','9'};
 		private Map LookupString()
