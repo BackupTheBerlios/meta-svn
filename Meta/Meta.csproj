@@ -103,6 +103,11 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "Copy (3) of Meta.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Copy of Meta.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

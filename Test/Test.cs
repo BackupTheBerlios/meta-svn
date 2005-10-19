@@ -127,7 +127,7 @@ namespace Test
 					} 
 					while(e!=null);
 					Console.WriteLine(text);
-					Console.ReadLine();
+//					Console.ReadLine();
 				}
 			}
 		}
@@ -151,7 +151,7 @@ namespace Test
 			public static Map map;
 			public override object Run() 
 			{
-				MetaCustomParser parser=new MetaCustomParser(Helper.ReadFile(filename));
+				MetaCustomParser parser=new MetaCustomParser(Helper.ReadFile(filename),filename);
 				map=parser.Program();
 //				map=Interpreter.Compile(Path.Combine(
 //					Test.path,filename));

@@ -698,8 +698,8 @@ namespace Meta
 			}
 			return hash;
 		}
-		Extent extent=new Extent(0,0,0,0,"");
-//		[Serialize]
+		Extent extent;//=new Extent(0,0,0,0,"");
+		[Serialize]
 		public Extent Extent
 		{
 			get
@@ -3655,10 +3655,12 @@ namespace Meta
 	{
 		private string text;
 		private int index;
-		public MetaCustomParser(string text)
+		private string filePath;
+		public MetaCustomParser(string text,string filePath)
 		{
 			this.index=0;
 			this.text=text;
+			this.filePath=filePath;
 		}
 		private bool TryConsume(string characters)
 		{
@@ -3865,8 +3867,8 @@ namespace Meta
 		}
 		private Map Call(Map select)
 		{
-
 			Map call;
+			Extent extent=StartExpression();
 			TryConsume(callChar);
 			Map argument=Expression();
 			if(argument!=null)
@@ -3881,6 +3883,7 @@ namespace Meta
 			{
 				call=null;
 			}
+			EndExpression(extent,call);
 			return call;
 		}
 		bool isStartOfFile=true;
@@ -3894,6 +3897,7 @@ namespace Meta
 		public Map Program()
 		{
 			Map program;
+			Extent extent=StartExpression();
 			if(TryConsume(emptyMapChar))
 			{
 				program=new NormalMap();
@@ -3961,6 +3965,7 @@ namespace Meta
 					program=null;
 				}
 			}
+			EndExpression(extent,program);
 			return program;
 		}
 		private string GetIndentation()
@@ -4032,9 +4037,24 @@ namespace Meta
 			Consume(character);
 			return character;
 		}
+		private Extent StartExpression()
+		{
+			return new Extent(Line,Column,0,0,"");
+		}
+		private void EndExpression(Extent extent,Map expression)
+		{
+			if(expression!=null)
+			{
+				extent.End.Line=Line;
+				extent.End.Column=Column;
+				extent.FileName=this.filePath;
+				expression.Extent=extent;
+			}
+		}
 		private Map Integer()
 		{
 			Map integer;
+			Extent extent=StartExpression();
 			if(LookAny(firstIntegerChars))
 			{
 				string integerString="";
@@ -4058,12 +4078,14 @@ namespace Meta
 			{
 				integer=null;
 			}
+			EndExpression(extent,integer);
 			return integer;
 		}
 		// maybe combine literals
 		private Map String()
 		{
 			Map @string;
+			Extent extent=StartExpression();
 			if(TryConsume(stringChar))
 			{
 				string stringText="";
@@ -4103,6 +4125,7 @@ namespace Meta
 			{
 				@string=null;
 			}
+			EndExpression(extent,@string);
 			return @string;
 		}
 		public const char lookupStartChar='[';
@@ -4112,6 +4135,7 @@ namespace Meta
 		private Map LookupString()
 		{
 			string lookupString="";
+			Extent extent=StartExpression();
 			if(LookExcept(lookupStringFirstForbiddenChars))
 			{
 				while(LookExcept(lookupStringForbiddenChars))
@@ -4134,6 +4158,7 @@ namespace Meta
 			{
 				lookup=null;
 			}
+			EndExpression(extent,lookup);
 			return lookup;
 		}
 		private bool LookExcept(char[] exceptions)
@@ -4176,6 +4201,7 @@ namespace Meta
 		private Map Select(Map keys)
 		{
 			Map select;
+			Extent extent=StartExpression();
 			if(keys!=null)
 			{
 				select=new NormalMap();
@@ -4185,6 +4211,7 @@ namespace Meta
 			{
 				select=null;
 			}
+			EndExpression(extent,select);
 			return select;
 		}
 		private Map Select()
@@ -4208,6 +4235,7 @@ namespace Meta
 //		}
 		private Map Keys()
 		{
+			Extent extent=StartExpression();
 			Map lookups=new NormalMap();
 			int counter=1;
 			Map lookup;
@@ -4237,6 +4265,7 @@ namespace Meta
 			{
 				keys=null;
 			}
+			EndExpression(extent,lookups);
 			return keys;
 		}
 //		private Map Select()
@@ -4274,10 +4303,7 @@ namespace Meta
 //		}
 		public Map Function()
 		{
-			if(Rest.IndexOf("returnFunction")<100)
-			{
-				int asdf=0;
-			}
+			Extent extent=StartExpression();
 			Map function=null;
 			if(TryConsume(functionChar))
 			{
@@ -4291,11 +4317,13 @@ namespace Meta
 					function[CodeKeys.Value]=literal;
 				}
 			}
+			EndExpression(extent,function);
 			return function;
 		}
 		const char statementChar='=';
 		public Map Statement(ref int count)
 		{
+			Extent extent=StartExpression();
 			Map key=Keys();
 //			Map key;
 			Map val;
@@ -4330,6 +4358,7 @@ namespace Meta
 			Map statement=new NormalMap();
 			statement[CodeKeys.Key]=key;
 			statement[CodeKeys.Value]=val;
+			EndExpression(extent,statement);
 			return statement;
 		}
 //		public Map Statement(ref int count)
