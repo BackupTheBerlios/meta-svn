@@ -127,7 +127,7 @@ namespace Test
 					} 
 					while(e!=null);
 					Console.WriteLine(text);
-//					Console.ReadLine();
+					Console.ReadLine();
 				}
 			}
 		}

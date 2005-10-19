@@ -3801,7 +3801,7 @@ namespace Meta
 			if(TryConsume(commentChar))
 			{
 				isComment=true;
-				while(Look()!='\n')
+				while(Look()!='\n' && Look()!=endOfFileChar)
 				{
 					Consume();
 				}
@@ -4082,19 +4082,60 @@ namespace Meta
 			return integer;
 		}
 		// maybe combine literals
+		public const char stringEscapeChar='\\';
 		private Map String()
 		{
 			Map @string;
 			Extent extent=StartExpression();
-			if(TryConsume(stringChar))
+
+			// Look should take the expected character as parameter and return bool, just like TryConsume
+			// and Consume should be called Parse or so
+			if(Look()==stringChar || Look()==stringEscapeChar)
 			{
-				string stringText="";
-				while(LookExcept(new char[] {stringChar})) // factor this out
+				int escapeCharCount=0;
+				while(TryConsume(stringEscapeChar))
 				{
-					stringText+=Look();
-					Consume(Look());
+					escapeCharCount++;
 				}
 				Consume(stringChar);
+				string stringText="";
+				bool loop=true;
+				while(true) // factor this out
+				{
+					if(Look()==stringChar)
+//					if(!LookExcept(new char[] {stringChar}))
+					{
+						if(escapeCharCount==0)
+						{
+							Consume(stringChar);
+							break;
+						}
+						else
+						{
+							int foundEscapeCharCount=0;
+							while(Look(foundEscapeCharCount+1)==stringEscapeChar)
+							{
+								foundEscapeCharCount++;
+								if(foundEscapeCharCount==escapeCharCount)
+								{
+									Consume(stringChar);
+									Consume("".PadLeft(escapeCharCount,stringEscapeChar));
+									loop=false;
+									break;
+								}
+							}
+						}
+					}
+					if(loop)
+					{
+						stringText+=Look();
+						Consume(Look());
+					}
+					else
+					{
+						break;
+					}
+				}
 //				@string=new NormalMap(stringText);
 				ArrayList lines=new ArrayList();
 				string[] originalLines=stringText.Split('\n');
