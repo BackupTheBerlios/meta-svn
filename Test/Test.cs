@@ -48,7 +48,7 @@ namespace Test
 					throw new ApplicationException("File "+file+" not found.");
 				}
 
-				Map result=Interpreter.Run(file,new NormalMap());
+				Map result=Interpreter.CreateInterpreter().Run(file,new NormalMap());
 				if(result.IsString)
 				{
 					Console.Write("Content-Type: text/html\n\n");
@@ -153,8 +153,6 @@ namespace Test
 			{
 				MetaCustomParser parser=new MetaCustomParser(Helper.ReadFile(filename),filename);
 				map=parser.Program();
-//				map=Interpreter.Compile(Path.Combine(
-//					Test.path,filename));
 				return map;
 			}
 		}
@@ -168,15 +166,6 @@ namespace Test
 //				return map;
 //			}
 //		}
-//		public class CompileToExpression:TestCase 
-//		{
-//			public override object Run() 
-//			{
-//				return Interpreter.Compile(Path.Combine(
-//					Test.path,filename)).GetExpression();
-//			}
-//		}
-
 
 		public class Execute:TestCase
 		{
@@ -194,7 +183,7 @@ namespace Test
 				Map argument=new NormalMap();
 				argument[1]="first arg";
 				argument[2]="second=arg";
-				return Interpreter.Run(Path.Combine(Test.path,filename),argument);
+				return Interpreter.CreateInterpreter().Run(Path.Combine(Test.path,filename),argument);
 			}
 		}
 	}

@@ -4074,15 +4074,6 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"indexerNoConversionIndexed"
-	Value (NormalMap):
-		Extent:
-			null
-		"abchihiunchangedYunchangedZabc"
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
 		"interceptedSymbolTwo"
 	Value (NormalMap):
 		Extent:
@@ -6124,15 +6115,6 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"0"
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"arrayListResult"
-	Value (NormalMap):
-		Extent:
-			null
-		"hello"
 Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:

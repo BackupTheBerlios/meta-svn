@@ -211,8 +211,8 @@
 			c="t"
 			"r"
 	indexerNoConversion=IndexerNoConversion*
-	indexerNoConversion.abc="hihi"
-	indexerNoConversionIndexed=indexerNoConversion.abc
+#	indexerNoConversion.abc="hihi"
+#	indexerNoConversionIndexed=indexerNoConversion.abc
 	interceptedSymbolTwo=1
 	k="hello"
 	xyz="w"
@@ -319,7 +319,7 @@
 	arrayList=System.Collections.ArrayList*
 	arrayList.Add 
 		"hello"
-	arrayListResult=arrayList.[*]
+#	arrayListResult=arrayList.[*]
 	textBox=System.Windows.Forms.TextBox*
 	textBox.Text.Set
 		"

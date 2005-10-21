@@ -105,9 +105,7 @@ namespace Meta
 			this.fileName=fileName;
 			this.position=position;
 		}
-
-
-
+		
 		public string FileName
 		{
 			get
@@ -127,7 +125,25 @@ namespace Meta
 	}
 	public class Interpreter
 	{
-		private static bool reverse=false;
+		private Interpreter()
+		{
+		}
+		// rename this to process, maybe, or so
+		public static Interpreter CreateInterpreter()
+		{
+			Interpreter interpreter=new Interpreter();
+			processes[Thread.CurrentThread]=interpreter;
+			return interpreter;
+		}
+		public static Interpreter Current
+		{
+			get
+			{
+				return (Interpreter)processes[Thread.CurrentThread];
+			}
+		}
+		private static Hashtable processes=new Hashtable();
+		private bool reverse=false;
 		public static Integer ParseInteger(string text)
 		{
 
@@ -161,7 +177,7 @@ namespace Meta
 			}
 			return result;
 		}
-		public static BreakPoint BreakPoint
+		public BreakPoint BreakPoint
 		{
 			get
 			{
@@ -172,8 +188,8 @@ namespace Meta
 				breakPoint=value;
 			}
 		}
-		private static BreakPoint breakPoint=new BreakPoint("",new SourcePosition(0,0));
-		public static Map Evaluate(Map code,Map context)
+		private BreakPoint breakPoint=new BreakPoint("",new SourcePosition(0,0));
+		public Map Evaluate(Map code,Map context)
 		{
 			Map val;
 			if(code.ContainsKey(CodeKeys.Call))
@@ -198,34 +214,34 @@ namespace Meta
 			}
 			return val;
 		}
-		public static Map Call(Map code,Map context)
+		public Map Call(Map code,Map context)
 		{
-			object function=Interpreter.Evaluate(code[CodeKeys.Callable],context);
-			if(! (function is ICallable))
-			{
-				throw new MetaException("Object to be called is not callable.",code.Extent);
-			}
+			Map function=Evaluate(code[CodeKeys.Callable],context);
+//			if(! (function is Map))
+//			{
+//				throw new MetaException("Object to be called is not callable.",code.Extent);
+//			}
 			Map argument=Evaluate(code[CodeKeys.Argument],context);
-			return ((ICallable)function).Call(argument);
+			return function.Call(argument);
 		}
-		public static Map Program(Map code,Map context)
+		public Map Program(Map code,Map context)
 		{
 			Map local=new NormalMap();
 			Program(code,context,ref local);
 			return local;
 		}
-		private static bool Reverse
+		private bool Reverse
 		{
 			get
 			{
-				return reverse && Thread.CurrentThread==debugThread;
+				return reverse;// && Thread.CurrentThread==debugThread;
 			}
 		}
-		private static bool ResumeAfterReverse(Map code)
+		private bool ResumeAfterReverse(Map code)
 		{
 			return code.Extent.End.Smaller(BreakPoint.Position);
 		}
-		private static void Program(Map code,Map context,ref Map local)
+		private void Program(Map code,Map context,ref Map local)
 		{
 			local.Parent=context;
 			for(int i=0;i<code.Array.Count && i>=0;i++)
@@ -245,7 +261,7 @@ namespace Meta
 				Statement((Map)code.Array[i],ref local);
 			}
 		}
-		public static void Statement(Map code,ref Map context)
+		public void Statement(Map code,ref Map context)
 		{
 			Map selected=context;
 			Map key;
@@ -261,7 +277,7 @@ namespace Meta
 				selected=selection;
 				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
 				{
-					Interpreter.CallBreak(selected);
+					CallBreak(selected);
 				}
 			}
 			Map lastKey=Evaluate((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context);
@@ -276,7 +292,7 @@ namespace Meta
 				{
 					oldValue=new NormalMap("<null>");
 				}
-				Interpreter.CallBreak(oldValue);
+				CallBreak(oldValue);
 			}
 			
 			Map val=Evaluate(code[CodeKeys.Value],context);
@@ -290,13 +306,13 @@ namespace Meta
 				selected[lastKey]=val;
 			}
 		}
-		public static ArrayList recognitions=new ArrayList();
-		public static Map Literal(Map code,Map context)
+		public ArrayList recognitions=new ArrayList();
+		public Map Literal(Map code,Map context)
 		{
 			return code;
 		}
 
-		public static Map Select(Map code,Map context)
+		public Map Select(Map code,Map context)
 		{
 			Map selected=FindFirstKey(code,context);
 			for(int i=1;i<code.Array.Count;i++)
@@ -305,7 +321,7 @@ namespace Meta
 				Map selection=selected[key];
 				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[i]).Extent))
 				{
-					Interpreter.CallBreak(selection);
+					CallBreak(selection);
 				}
 				if(selection==null)
 				{
@@ -316,7 +332,7 @@ namespace Meta
 			}
 			return selected;
 		}
-		private static Map FindFirstKey(Map code,Map context)
+		private Map FindFirstKey(Map code,Map context)
 		{
 			Map key=Evaluate((Map)code.Array[0],context);
 			Map selected=context;
@@ -331,15 +347,15 @@ namespace Meta
 			Map val=selected[key];
 			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[0]).Extent))
 			{
-				Interpreter.CallBreak(val);
+				CallBreak(val);
 			}
 			return val;
 		}
 
-		public static event DebugBreak Break;
+		public event DebugBreak Break;
 
 		public delegate void DebugBreak(Map data);
-		public static void CallBreak(Map data)
+		public void CallBreak(Map data)
 		{
 			if(Break!=null)
 			{
@@ -363,19 +379,18 @@ namespace Meta
 			}
 			return result;
 		}
-		public static Map Run(string fileName)
+		public Map Run(string fileName)
 		{
 			return Run(fileName,new NormalMap());
 		}
-		public static Map Run(string fileName,Map argument)
+		public Map Run(string fileName,Map argument)
 		{
-			Map program=Interpreter.Compile(fileName);//,new StringReader(Helper.ReadFile(fileName)));
-//			Map program=Interpreter.Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
+			Map program=Compile(fileName);
 			program=CallProgram(program,new NormalMap(),null);
 			program.Parent=GetPersistantMaps(fileName);
 			return program.Call(argument);
 		}
-		public static Map GetPersistantMaps(string fileName)
+		public Map GetPersistantMaps(string fileName)
 		{
 			DirectoryInfo directory=new DirectoryInfo(Path.GetDirectoryName(fileName));
 			Map root=new PersistantMap(directory);
@@ -392,96 +407,99 @@ namespace Meta
 			}
 			return root;
 		}
-		public static Map RunWithoutLibrary(string fileName,TextReader textReader)
+		public Map RunWithoutLibrary(string fileName,TextReader textReader)
 		{
 			Map program=Compile(fileName, textReader);
 			return CallProgram(program,new NormalMap(),null);
 		}
-		public static Map RunWithoutLibrary(string fileName)
+		public Map RunWithoutLibrary(string fileName)
 		{
 			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
 		}
-		public static Map CallProgram(Map program,Map argument,Map current)
+		public Map CallProgram(Map program,Map argument,Map current)
 		{
 			Map callable=new NormalMap();
 			callable[CodeKeys.Function]=program;
 			callable.Parent=current;
 			return callable.Call(argument);
 		}
-		public static Map Compile(string fileName)
+		// kinda pointless
+		public Map Compile(string fileName)
 		{
 			return Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
 		}
-		public static Map Compile(string fileName,TextReader textReader)
+		public Map Compile(string fileName,TextReader textReader)
 		{
-			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();//(new MetaTreeParser()).program(ParseToAst(fileName,textReader));
-//			return (new MetaTreeParser()).program(ParseToAst(fileName,textReader));
+			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();
 		}
-		public static AST ParseToAst(string fileName)
-		{
-			return ParseToAst(fileName,new StringReader(Helper.ReadFile(fileName)));
-		}
-		public static AST ParseToAst(string fileName,TextReader reader) 
-		{
-			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(reader,fileName); 
-			MetaLexer metaLexer = new MetaLexer(sharedInputState);
-	
-			metaLexer.setTokenObjectClass("MetaToken");
-	
-			MetaParser metaParser = new MetaParser(new IndentationStream(metaLexer));
+//		public AST ParseToAst(string fileName)
+//		{
+//			return ParseToAst(fileName,new StringReader(Helper.ReadFile(fileName)));
+//		}
+//		public static AST ParseToAst(string fileName,TextReader reader) 
+//		{
+//			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(reader,fileName); 
+//			MetaLexer metaLexer = new MetaLexer(sharedInputState);
+//	
+//			metaLexer.setTokenObjectClass("MetaToken");
+//	
+//			MetaParser metaParser = new MetaParser(new IndentationStream(metaLexer));
+//
+//			metaParser.setASTNodeClass("MetaAST");
+//			metaParser.map();
+//			AST ast=metaParser.getAST();
+//			return ast;
+//		}
 
-			metaParser.setASTNodeClass("MetaAST");
-			metaParser.map();
-			AST ast=metaParser.getAST();
-			return ast;
-		}
-		private static void ExecuteInThread()
-		{
-			try
-			{
-				Interpreter.Run(executeFileName,new NormalMap());
-			}
-			catch(Exception e)
-			{
-				MessageBox.Show(e.ToString());
-			}
-		}
-		private static string executeFileName="";
-		public static void StartDebug(string fileName)
-		{
-			executeFileName=fileName;
-			debugThread=new Thread(new ThreadStart(ExecuteInThread));
-			debugThread.Start();
-		}
-		private static Thread debugThread;
-		public static void StopDebug()
-		{
-			if(debugThread!=null)
-			{
-				debugThread.Resume();
-				debugThread.Abort();
-				debugThread=null;
-			}
-		}
-		public static void ContinueDebug()
-		{
-			if(debugThread!=null)
-			{
-				debugThread.Resume();
-			}
-		}
-		public static void ReverseDebug()
-		{
-			if(debugThread!=null)
-			{
-				reverse=true;
-				debugThread.Resume();
-			}
-		}
-		static Interpreter()
-		{
-			Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
-		}
+//		private static void ExecuteInThread()
+//		{
+//			try
+//			{
+//				Interpreter.Run(executeFileName,new NormalMap());
+//			}
+//			catch(Exception e)
+//			{
+//				MessageBox.Show(e.ToString());
+//			}
+//		}
+
+//		private static string executeFileName="";
+//		public static void StartDebug(string fileName)
+//		{
+//			executeFileName=fileName;
+//			debugThread=new Thread(new ThreadStart(ExecuteInThread));
+//			debugThread.Start();
+//		}
+//		private static Thread debugThread;
+//		public static void StopDebug()
+//		{
+//			if(debugThread!=null)
+//			{
+//				debugThread.Resume();
+//				debugThread.Abort();
+//				debugThread=null;
+//			}
+//		}
+//		public static void ContinueDebug()
+//		{
+//			if(debugThread!=null)
+//			{
+//				debugThread.Resume();
+//			}
+//		}
+//		public static void ReverseDebug()
+//		{
+//			if(debugThread!=null)
+//			{
+//				reverse=true;
+//				debugThread.Resume();
+//			}
+//		}
+		// should this be shared or not
+//		static Interpreter()
+//		{
+//			Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
+//		}
 		public static DirectoryInfo LibraryPath
 		{
 			get
@@ -489,9 +507,374 @@ namespace Meta
 				return new DirectoryInfo(@"c:\_projectsupportmaterial\meta\library");
 			}
 		}
+		// should this be static?
 		public static ArrayList loadedAssemblies=new ArrayList();
 	}
-	public interface ICallable
+//	public class Interpreter
+//	{
+//		private static bool reverse=false;
+//		public static Integer ParseInteger(string text)
+//		{
+//
+//			Integer result=new Integer(0);
+//			if(text.Equals(""))
+//			{
+//				result=null;
+//			}
+//			else
+//			{
+//				int index=0;
+//				if(text[0]=='-')
+//				{
+//					index++;
+//				}
+//				for(;index<text.Length;index++)
+//				{
+//					if(char.IsDigit(text[index]))
+//					{
+//						result=result*10+(text[index]-'0');
+//					}
+//					else
+//					{
+//						return null;
+//					}
+//				}
+//				if(text[0]=='-')
+//				{
+//					result=-result;
+//				}
+//			}
+//			return result;
+//		}
+//		public static BreakPoint BreakPoint
+//		{
+//			get
+//			{
+//				return breakPoint;
+//			}
+//			set
+//			{
+//				breakPoint=value;
+//			}
+//		}
+//		private static BreakPoint breakPoint=new BreakPoint("",new SourcePosition(0,0));
+//		public static Map Evaluate(Map code,Map context)
+//		{
+//			Map val;
+//			if(code.ContainsKey(CodeKeys.Call))
+//			{
+//				val=Call(code[CodeKeys.Call],context);
+//			}
+//			else if(code.ContainsKey(CodeKeys.Program))
+//			{
+//				val=Program(code[CodeKeys.Program],context);
+//			}
+//			else if(code.ContainsKey(CodeKeys.Literal))
+//			{
+//				val=Literal(code[CodeKeys.Literal],context);
+//			}
+//			else if(code.ContainsKey(CodeKeys.Select))
+//			{
+//				val=Select(code[CodeKeys.Select],context);
+//			}
+//			else
+//			{
+//				throw new ApplicationException("Cannot compile map.");
+//			}
+//			return val;
+//		}
+//		public static Map Call(Map code,Map context)
+//		{
+//			object function=Interpreter.Evaluate(code[CodeKeys.Callable],context);
+//			if(! (function is ICallable))
+//			{
+//				throw new MetaException("Object to be called is not callable.",code.Extent);
+//			}
+//			Map argument=Evaluate(code[CodeKeys.Argument],context);
+//			return ((ICallable)function).Call(argument);
+//		}
+//		public static Map Program(Map code,Map context)
+//		{
+//			Map local=new NormalMap();
+//			Program(code,context,ref local);
+//			return local;
+//		}
+//		private static bool Reverse
+//		{
+//			get
+//			{
+//				return reverse && Thread.CurrentThread==debugThread;
+//			}
+//		}
+//		private static bool ResumeAfterReverse(Map code)
+//		{
+//			return code.Extent.End.Smaller(BreakPoint.Position);
+//		}
+//		private static void Program(Map code,Map context,ref Map local)
+//		{
+//			local.Parent=context;
+//			for(int i=0;i<code.Array.Count && i>=0;i++)
+//			{
+//				if(Reverse)
+//				{
+//					if(!ResumeAfterReverse((Map)code.Array[i]))
+//					{
+//						i-=2;
+//						continue;
+//					}
+//					else
+//					{
+//						reverse=false;
+//					}
+//				}
+//				Statement((Map)code.Array[i],ref local);
+//			}
+//		}
+//		public static void Statement(Map code,ref Map context)
+//		{
+//			Map selected=context;
+//			Map key;
+//			for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
+//			{
+//				key=Evaluate((Map)code[CodeKeys.Key].Array[i],context);
+//				Map selection=selected[key];
+//				if(selection==null)
+//				{
+//					object x=selected[key];
+//					Throw.KeyDoesNotExist(key,((Map)code[CodeKeys.Key].Array[i]).Extent);
+//				}
+//				selected=selection;
+//				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
+//				{
+//					Interpreter.CallBreak(selected);
+//				}
+//			}
+//			Map lastKey=Evaluate((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context);
+//			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
+//			{
+//				Map oldValue;
+//				if(selected.ContainsKey(lastKey))
+//				{
+//					oldValue=selected[lastKey];
+//				}
+//				else
+//				{
+//					oldValue=new NormalMap("<null>");
+//				}
+//				Interpreter.CallBreak(oldValue);
+//			}
+//			
+//			Map val=Evaluate(code[CodeKeys.Value],context);
+//			if(lastKey.Equals(SpecialKeys.Current))
+//			{
+//				val.Parent=context.Parent;
+//				context=val;
+//			}
+//			else
+//			{
+//				selected[lastKey]=val;
+//			}
+//		}
+//		public static ArrayList recognitions=new ArrayList();
+//		public static Map Literal(Map code,Map context)
+//		{
+//			return code;
+//		}
+//
+//		public static Map Select(Map code,Map context)
+//		{
+//			Map selected=FindFirstKey(code,context);
+//			for(int i=1;i<code.Array.Count;i++)
+//			{
+//				Map key=Evaluate((Map)code.Array[i],context);
+//				Map selection=selected[key];
+//				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[i]).Extent))
+//				{
+//					Interpreter.CallBreak(selection);
+//				}
+//				if(selection==null)
+//				{
+//					object test=selected[key];
+//					Throw.KeyDoesNotExist(key,key.Extent);
+//				}
+//				selected=selection;
+//			}
+//			return selected;
+//		}
+//		private static Map FindFirstKey(Map code,Map context)
+//		{
+//			Map key=Evaluate((Map)code.Array[0],context);
+//			Map selected=context;
+//			while(!selected.ContainsKey(key))
+//			{
+//				selected=selected.Parent;
+//				if(selected==null)
+//				{
+//					Throw.KeyNotFound(key,key.Extent);
+//				}
+//			}
+//			Map val=selected[key];
+//			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[0]).Extent))
+//			{
+//				Interpreter.CallBreak(val);
+//			}
+//			return val;
+//		}
+//
+//		public static event DebugBreak Break;
+//
+//		public delegate void DebugBreak(Map data);
+//		public static void CallBreak(Map data)
+//		{
+//			if(Break!=null)
+//			{
+//				Break(data);
+//				Thread.CurrentThread.Suspend();
+//			}
+//		}
+//		public static Map Merge(params Map[] arkvlToMerge)
+//		{
+//			return MergeCollection(arkvlToMerge);
+//		}
+//		public static Map MergeCollection(ICollection collection)
+//		{
+//			Map result=new NormalMap();
+//			foreach(Map current in collection)
+//			{
+//				foreach(DictionaryEntry entry in current)
+//				{
+//					result[(Map)entry.Key]=(Map)entry.Value;
+//				}
+//			}
+//			return result;
+//		}
+//		public static Map Run(string fileName)
+//		{
+//			return Run(fileName,new NormalMap());
+//		}
+//		public static Map Run(string fileName,Map argument)
+//		{
+//			Map program=Interpreter.Compile(fileName);
+//			program=CallProgram(program,new NormalMap(),null);
+//			program.Parent=GetPersistantMaps(fileName);
+//			return program.Call(argument);
+//		}
+//		public static Map GetPersistantMaps(string fileName)
+//		{
+//			DirectoryInfo directory=new DirectoryInfo(Path.GetDirectoryName(fileName));
+//			Map root=new PersistantMap(directory);
+//			Map current=root;
+//			while(true)
+//			{
+//				if(String.Compare(directory.FullName,Interpreter.LibraryPath.FullName,true)==0)
+//				{
+//					current.Parent=GAC.singleton;
+//					break;
+//				}
+//				current.Parent=new PersistantMap(directory.Parent);
+//				current=current.Parent;
+//			}
+//			return root;
+//		}
+//		public static Map RunWithoutLibrary(string fileName,TextReader textReader)
+//		{
+//			Map program=Compile(fileName, textReader);
+//			return CallProgram(program,new NormalMap(),null);
+//		}
+//		public static Map RunWithoutLibrary(string fileName)
+//		{
+//			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
+//		}
+//		public static Map CallProgram(Map program,Map argument,Map current)
+//		{
+//			Map callable=new NormalMap();
+//			callable[CodeKeys.Function]=program;
+//			callable.Parent=current;
+//			return callable.Call(argument);
+//		}
+//		public static Map Compile(string fileName)
+//		{
+//			return Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
+//		}
+//		public static Map Compile(string fileName,TextReader textReader)
+//		{
+//			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();
+//		}
+//		public static AST ParseToAst(string fileName)
+//		{
+//			return ParseToAst(fileName,new StringReader(Helper.ReadFile(fileName)));
+//		}
+//		public static AST ParseToAst(string fileName,TextReader reader) 
+//		{
+//			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(reader,fileName); 
+//			MetaLexer metaLexer = new MetaLexer(sharedInputState);
+//	
+//			metaLexer.setTokenObjectClass("MetaToken");
+//	
+//			MetaParser metaParser = new MetaParser(new IndentationStream(metaLexer));
+//
+//			metaParser.setASTNodeClass("MetaAST");
+//			metaParser.map();
+//			AST ast=metaParser.getAST();
+//			return ast;
+//		}
+//		private static void ExecuteInThread()
+//		{
+//			try
+//			{
+//				Interpreter.Run(executeFileName,new NormalMap());
+//			}
+//			catch(Exception e)
+//			{
+//				MessageBox.Show(e.ToString());
+//			}
+//		}
+//		private static string executeFileName="";
+//		public static void StartDebug(string fileName)
+//		{
+//			executeFileName=fileName;
+//			debugThread=new Thread(new ThreadStart(ExecuteInThread));
+//			debugThread.Start();
+//		}
+//		private static Thread debugThread;
+//		public static void StopDebug()
+//		{
+//			if(debugThread!=null)
+//			{
+//				debugThread.Resume();
+//				debugThread.Abort();
+//				debugThread=null;
+//			}
+//		}
+//		public static void ContinueDebug()
+//		{
+//			if(debugThread!=null)
+//			{
+//				debugThread.Resume();
+//			}
+//		}
+//		public static void ReverseDebug()
+//		{
+//			if(debugThread!=null)
+//			{
+//				reverse=true;
+//				debugThread.Resume();
+//			}
+//		}
+//		static Interpreter()
+//		{
+//			Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
+//		}
+//		public static DirectoryInfo LibraryPath
+//		{
+//			get
+//			{
+//				return new DirectoryInfo(@"c:\_projectsupportmaterial\meta\library");
+//			}
+//		}
+//		public static ArrayList loadedAssemblies=new ArrayList();
+//	}
+	public interface ICallable // not really useful
 	{
 		Map Call(Map argument);
 	}
@@ -512,8 +895,6 @@ namespace Meta
 				return IsInteger && (GetInteger()==0 || GetInteger()==1);
 			}
 		}
-		// TODO: throw exceptions here? or maybe not?
-		// TODO: change this to a method!!
 		public virtual bool GetBoolean()
 		{
 			bool boolean;
@@ -527,7 +908,6 @@ namespace Meta
 			}
 			else
 			{
-				// TODO: Throw another exception here
 				throw new ApplicationException("Map is not a boolean.");
 			}
 			return boolean;
@@ -651,7 +1031,7 @@ namespace Meta
 			this.Parameter=argument;
 			Map function=this[CodeKeys.Function];
 			Map result;
-			result=Interpreter.Evaluate(function,this);
+			result=Interpreter.Current.Evaluate(function,this);
 			return result;
 		}
 		public abstract ArrayList Keys
@@ -700,7 +1080,7 @@ namespace Meta
 			}
 			return hash;
 		}
-		Extent extent;//=new Extent(0,0,0,0,"");
+		Extent extent;
 		[Serialize]
 		public Extent Extent
 		{
@@ -832,10 +1212,6 @@ namespace Meta
 				{
 					val=strategy[key];
 				}
-//				if(val==null)
-//				{
-//					throw new MetaException("Key "+Meta.Serialize.Value(key)+" does not exist.");
-//				}
 				return val;
 			}
 			set
@@ -1093,7 +1469,7 @@ namespace Meta
 				Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
 				Stream stream=webClient.OpenRead(fullPath.ToString());
 				StreamReader streamReader=new StreamReader(stream);
-				return Interpreter.RunWithoutLibrary(fullPath.ToString(),streamReader);
+				return Interpreter.Current.RunWithoutLibrary(fullPath.ToString(),streamReader);
 			}
 			set
 			{
@@ -1388,7 +1764,6 @@ namespace Meta
 		private const string newLine="\n";
 		private const string literalStartDelimiter="\"";
 		private const string assignment="=";
-//		private const string assignment="=";
 		private const string literalEndDelimiter="\"";
 
 		private static bool IsLiteralKey(string text)
@@ -1430,7 +1805,7 @@ namespace Meta
 		}
 		private Map GetMap()
 		{
-			Map data=Interpreter.RunWithoutLibrary(this.file.FullName);
+			Map data=Interpreter.Current.RunWithoutLibrary(this.file.FullName);
 			data.Parent=this.map;
 			return data;
 		}
@@ -1503,8 +1878,6 @@ namespace Meta
 				map.strategy.map=map;
 				map.InitFromStrategy(this);
 				map.strategy[key]=value;
-
-//				throw new ApplicationException("Cannot set key "+key.ToString()+" in .NET namespace.");
 			}
 		}
 		public override ArrayList Keys
@@ -1905,7 +2278,6 @@ namespace Meta
 		{
 			get
 			{
-//				throw new KeyDoesNotExistException(key);
 				return null;
 			}
 			set
@@ -1934,97 +2306,6 @@ namespace Meta
 				}
 				return result;
 			}
-//			private static int GetPrimitiveTypePriority(Type type)
-//			{
-//				int priority;
-//				switch(Type.GetTypeCode(type))
-//				{
-//					case TypeCode.String:
-//						break;
-//					case TypeCode.DateTime:
-//						break;
-//					case TypeCode.Boolean:
-//						break;
-//					case TypeCode.Char:
-//						break;
-//					case TypeCode.Byte:
-//						break;
-//					case TypeCode.DBNull:
-//						break;
-//					case TypeCode.Decimal:
-//						break;
-//					case TypeCode.Double:
-//						break;
-//					case TypeCode.Int16:
-//						break;
-//					case TypeCode.Int32:
-//						break;
-//					case TypeCode.Int64:
-//						break;
-//					case TypeCode.SByte:
-//						break;
-//					case TypeCode.Single:
-//						break;
-//					case TypeCode.UInt16:
-//						break;
-//					case TypeCode.UInt32:
-//						break;
-//					case TypeCode.UInt64:
-//						break;
-//
-//				}
-//			}
-//			private static int ComparePrimitiveParameters(Type a,Type b)
-//			{
-//			}
-//			private static int CompareParameter(Type a,Type b)
-//			{
-//				int compared;
-//				if(a.Equals(b))
-//				{
-//					compared=0;
-//				}
-//				else if(a.IsSubclassOf(b))
-//				{
-//					compared=-1;
-//				}
-//				else if(b.IsSubclassOf(a))
-//				{
-//					compared=1;
-//				}
-//				else if(a.IsPrimitive && !b.IsPrimitive)
-//				{
-//					compared=-1;
-//				}
-//				else if(b.IsPrimitive && !a.IsPrimitive)
-//				{
-//					compared=1;
-//				}
-//				else if(a.IsPrimitive && b.IsPrimitive)
-//				{
-//					compared=ComparePrimitiveParameters(a,b);
-//				}
-//				else
-//				{
-//					compared=a.FullName.CompareTo(b.FullName); // last resort, sort by name
-//				}
-//			}
-//			public int Compare(object a, object b)
-//			{
-//				int compared=0;
-//				ParameterInfo[] first=((MethodBase)a).GetParameters();
-//				ParameterInfo[] second=((MethodBase)b).GetParameters();
-//				for(int i=0;i<first.Length && compared==0;i++)
-//				{
-//					compared=CompareParameter(first[i].ParameterType,second[i].ParameterType);
-//				}
-//				if(compared==0)
-//				{
-//					throw new ApplicationException("Could not sort parameters!");
-//				}
-//				return compared;
-//			}
-
 		}
 		public override Map Call(Map argument)
 		{
@@ -2343,7 +2624,7 @@ namespace Meta
 			map.Parameter=argument;
 			Map function=this[CodeKeys.Function];
 			Map result;
-			result=Interpreter.Evaluate(function,map);
+			result=Interpreter.Current.Evaluate(function,map);
 			return result;
 		}
 		public StrategyMap map;
@@ -2720,7 +3001,7 @@ namespace Meta
 				{
 					DotNetMethod invoke=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
 					// TODO: use GetRaiseMethod???
-					result=invoke.Call(argument); 
+					result=invoke.Call(argument);
 				}
 				else
 				{
@@ -2768,7 +3049,6 @@ namespace Meta
 				else
 				{
 					val=null;
-//					throw new KeyDoesNotExistException(key);
 				}
 				return val;
 			}
@@ -2876,18 +3156,18 @@ namespace Meta
 					return true;
 				}
 			}
-			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
-			Map argument=new NormalMap();
-			argument[1]=key;
-			try
-			{
-				indexer.Call(argument);
-				return true;
-			}
-			catch(Exception)
-			{
+//			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
+//			Map argument=new NormalMap();
+//			argument[1]=key;
+//			try
+//			{
+//				indexer.Call(argument);
+//				return true;
+//			}
+//			catch(Exception)
+//			{
 				return false;
-			}
+//			}
 		}
 		public override ArrayList Keys
 		{
@@ -2946,19 +3226,19 @@ namespace Meta
 				}
 				else
 				{
-					DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
-					Map argument=new NormalMap();
-					argument[1]=key;
-					try
-					{
-						val=Transform.ToMeta(indexer.Call(argument));
-					}
-					catch(Exception e)
-					{
+//					DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
+//					Map argument=new NormalMap();
+//					argument[1]=key;
+//					try
+//					{
+//						val=Transform.ToMeta(indexer.Call(argument));
+//					}
+//					catch(Exception e)
+//					{
 						val=null;
-					}
+//					}
 				}
-				// TODO: was ist wenn Wert null ist??
+				// TODO: what if value is null?
 				return val;
 			}
 			set
@@ -3010,19 +3290,18 @@ namespace Meta
 				}
 				else
 				{
-					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type);
-					Map argument=new NormalMap();
-					argument[1]=key;
-					argument[2]=value;
-					try
-					{
-						indexer.Call(argument);
-					}
-					catch(Exception e)
-					{
+//					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type);
+//					Map argument=new NormalMap();
+//					argument[1]=key;
+//					argument[2]=value;
+//					try
+//					{
+//						indexer.Call(argument,interpreter);
+//					}
+//					catch(Exception e)
+//					{
 						throw new ApplicationException("Cannot set "+Meta.Serialize.Key(key)+".");
-//						throw new ApplicationException("Cannot set "+Transform.ToDotNet(key).ToString()+".");
-					}
+//					}
 				}
 			}
 		}
@@ -3333,7 +3612,6 @@ namespace Meta
 			return result;
 		}
 	}
-	// TODO: serialize members before IEnumerable
 	namespace TestingFramework
 	{
 		public interface ISerializeSpecial
@@ -3426,7 +3704,6 @@ namespace Meta
 					members.Sort(new MemberInfoComparer());
 					foreach(MemberInfo member in members) 
 					{
-						// ugly hack
 						if(member.Name!="Item" && member.Name!="SyncRoot") 
 						{
 							if(Assembly.GetAssembly(member.DeclaringType)!=Assembly.GetExecutingAssembly() || member is MethodInfo || member.GetCustomAttributes(typeof(SerializeAttribute),false).Length==1) 
@@ -3499,14 +3776,6 @@ namespace Meta
 		{
 			return this.Line>other.Line || (this.Line==other.Line && this.Column>other.Column);
 		}
-//		public static bool operator <(SourcePosition a,SourcePosition b)
-//		{
-//			return a.Line<b.Line || (a.Line==b.Line && a.Column<b.Column);
-//		}
-//		public static bool operator >(SourcePosition a,SourcePosition b)
-//		{
-//			return a.Line>b.Line || (a.Line==b.Line && a.Column>b.Column);
-//		}
 		public bool IsBetween(Extent extent)
 		{
 			return false;
@@ -3753,7 +4022,6 @@ namespace Meta
 		private bool Indentation()
 		{
 			string indentationString="".PadLeft(indentationCount+1,indentationChar);
-//			string indentationString="\n"+"".PadLeft(indentationCount+1,indentationChar);
 			bool isIndentation;
 			if(TryConsume(unixNewLine+indentationString) || TryConsume(windowsNewLine+indentationString))
 			{
@@ -3793,25 +4061,6 @@ namespace Meta
 			}
 			return isDedentation;
 		}
-//		private bool Dedentation()
-//		{
-//			int indent=0;
-//			while(Look(indent)==indentationChar)
-//			{
-//				indent++;
-//			}
-//			bool isDedentation;
-//			if(indent>0)
-//			{
-//				isDedentation=true;
-//				indentationCount=indent;
-//			}
-//			else
-//			{
-//				isDedentation=false;
-//			}
-//			return isDedentation;
-//		}
 		public const char commentChar='#';
 
 		private bool Comment()
@@ -3922,7 +4171,6 @@ namespace Meta
 			if(TryConsume(emptyMapChar))
 			{
 				program=new NormalMap();
-//				program.Extent
 				program[CodeKeys.Program]=new NormalMap();
 			}
 			else
@@ -4007,47 +4255,6 @@ namespace Meta
 			}
 			return indentation;
 		}
-//		public Map Program()
-//		{
-//			Map program;
-//			if(TryConsume(emptyMapChar))
-//			{
-//				program=new NormalMap();
-//			}
-//			else
-//			{
-//				if(Indentation())
-//				{
-//					program=new NormalMap();
-//					int counter=1;
-//					int defaultKey=1;
-//					while(true)
-//					{
-//						if(!Comment())
-//						{
-//							Map statement=Function();
-//							if(statement==null)
-//							{
-//								statement=Statement(ref defaultKey);
-//							}
-//							program[counter]=statement;
-//							counter++;
-//						}
-//						Consume('\n');
-//						SameIndentation();
-//						if(Dedentation())
-//						{
-//							break;
-//						}
-//					}
-//				}
-//				else
-//				{
-//					program=null;
-//				}
-//			}
-//			return program;
-//		}
 		private void SameIndentation()
 		{
 			string sameIndentationString="".PadLeft(indentationCount,indentationChar);
@@ -4244,10 +4451,6 @@ namespace Meta
 			Map lookupAnything;
 			if(TryConsume(lookupStartChar)) // separate into TryConsume and Consume, only try, and throw
 			{
-//				if(Rest.IndexOf("integerInc")<40)
-//				{
-//					int asdf=0;
-//				}
 				lookupAnything=Expression();
 				Consume(lookupEndChar);
 			}
@@ -4290,21 +4493,6 @@ namespace Meta
 		{
 			return Select(Keys());
 		}
-//		private Map Select()
-//		{
-//			Map keys=Keys();
-//			Map select;
-//			if(keys!=null)
-//			{
-//				select=new NormalMap();
-//				select[CodeKeys.Select]=keys;
-//			}
-//			else
-//			{
-//				select=null;
-//			}
-//			return select;
-//		}
 		private Map Keys()
 		{
 			Extent extent=StartExpression();
@@ -4340,39 +4528,6 @@ namespace Meta
 			EndExpression(extent,lookups);
 			return keys;
 		}
-//		private Map Select()
-//		{
-//			Map lookups=new NormalMap();
-//			int counter=1;
-//			Map lookup;
-//			while(true)
-//			{
-//				lookup=Lookup();
-//				if(lookup!=null)
-//				{
-//					lookups[counter]=lookup;
-//					counter++;
-//				}
-//				else
-//				{
-//					break;
-//				}
-//				if(!TryConsume(selectChar))
-//				{
-//					break;
-//				}
-//			}
-//			Map select;
-//			if(counter>1)
-//			{
-//				select=lookups;
-//			}
-//			else
-//			{
-//				select=null;
-//			}
-//			return select;
-//		}
 		public Map Function()
 		{
 			Extent extent=StartExpression();
@@ -4397,11 +4552,9 @@ namespace Meta
 		{
 			Extent extent=StartExpression();
 			Map key=Keys();
-//			Map key;
 			Map val;
 			if(key!=null && TryConsume(statementChar))
 			{
-//				key=select;
 				val=Expression();
 			}
 			else
@@ -4433,64 +4586,11 @@ namespace Meta
 			EndExpression(extent,statement);
 			return statement;
 		}
-//		public Map Statement(ref int count)
-//		{
-//			Map select=Select();
-//			Map key;
-//			Map val;
-//			if(select!=null) && TryConsume(statementChar))
-//			{
-//				key=select;
-//				val=Expression();
-//			}
-//			else
-//			{
-//				TryConsume(statementChar);
-//				if(select!=null)
-//				{
-//					val=select;
-//				}
-//				else
-//				{
-//					val=Expression();
-//				}
-//				key=CreateDefaultKey(new NormalMap(new Integer(count)));
-//			}
-//			Map statement=new NormalMap();
-//			statement[CodeKeys.Key]=key;
-//			statement[CodeKeys.Value]=val;
-//			return statement;
-//		}
-//		public Map Statement(ref int count)
-//		{
-//			Map statement;
-//			// check for same indent here
-//			Map expression=Expression();
-//			statement=new NormalMap();
-//			Map key;
-//			Map val;
-//			if(TryConsume(statementChar))
-//			{
-//				key=expression;
-//				val=Expression();
-//			}
-//			else
-//			{
-//				key=CreateDefaultKey(new NormalMap(new Integer(count)));
-//				val=expression;
-//				count++;
-//			}
-//			statement[CodeKeys.Key]=key;
-//			statement[CodeKeys.Value]=val;
-//			return statement;
-//		}
 		private Map CreateDefaultKey(Map literal)
 		{
 			Map key=new NormalMap();
-//			Map select=new NormalMap();
 			Map firstKey=new NormalMap();
 			firstKey[CodeKeys.Literal]=literal;
-//			select[1]=firstKey;
 			key[1]=firstKey;
 			return key;
 		}
