@@ -37,6 +37,7 @@ using System.Net;
 namespace Meta
 {
 
+
 	public class CodeKeys
 	{
 		public static readonly Map Literal="literal";
@@ -69,7 +70,7 @@ namespace Meta
 	{
 		public static readonly Map Denominator="denominator";
 		public static readonly Map Numerator="numerator";
-		public static readonly Map Negative="negative";
+//		public static readonly Map Negative="negative";
 		public static readonly Map EmptyMap=new NormalMap();
 	}
 
@@ -96,6 +97,107 @@ namespace Meta
 			throw new MetaException("The key "+Serialize.Value(key)+" could not be found.",extent);
 		}
 	}
+	// rename to NaturalNumber
+//	public class Integer
+//	{
+//		public override int GetHashCode()
+//		{
+//			return 0;
+//		}
+//		public override bool Equals(object obj)
+//		{
+//			return false;
+//		}
+//
+//		private uint[] data;
+//		public static explicit operator Integer(int integer)
+//		{
+//			return new Integer((uint)integer);
+//		}
+//		public static explicit operator Integer(long integer)
+//		{
+//			return new Integer((uint)integer);
+//		}
+//		public static implicit operator Integer(uint integer)
+//		{
+//			return new Integer(integer);
+//		}
+//		public static implicit operator Integer(ulong integer)
+//		{
+//			return new Integer(integer);
+//		}
+//		public Integer()
+//		{
+//			data=new uint[] {0,0};
+//		}
+//		public Integer(ulong integer):this()
+//		{
+//			Add(new uint[] {(uint)(integer/uint.MaxValue),(uint)Math.Min(uint.MaxValue,integer)});
+//		}
+//		public Integer(Integer integer)
+//		{
+//			this.data=(uint[])integer.data.Clone();
+//		}
+//		private void Add(uint[] summand)
+//		{
+//			
+//		}
+//
+//
+//
+//
+//
+//
+//
+//		public int GetInt32()
+//		{
+//			return 0;
+//		}
+//		public long GetInt64()
+//		{
+//			return 0;
+//		}
+//		public static Integer operator +(Integer a,Integer b)
+//		{
+//			return null;
+//		}
+//		public static Integer operator -(Integer a,Integer b)
+//		{
+//			return null;
+//		}
+//		public static bool operator !=(Integer a,Integer b)
+//		{
+//			return !(a==b);
+//		}
+//		public static bool operator ==(Integer a,Integer b)
+//		{
+//			return a.Equals(b);
+//		}
+//		public static Integer operator *(Integer a,Integer b)
+//		{
+//			return null;
+//		}
+//		public static Integer operator |(Integer a,Integer b)
+//		{
+//			return null;
+//		}
+//		public static bool operator >(Integer a,Integer b)
+//		{
+//			return false;
+//		}
+//		public static bool operator <(Integer a,Integer b)
+//		{
+//			return false;
+//		}
+//		public static bool operator <=(Integer a,Integer b)
+//		{
+//			return a<b || a==b;
+//		}
+//		public static bool operator >=(Integer a,Integer b)
+//		{
+//			return a>b || a==b;
+//		}
+//	}
 
 	public class BreakPoint
 	{
@@ -154,25 +256,25 @@ namespace Meta
 			else
 			{
 				int index=0;
-				if(text[0]=='-')
-				{
-					index++;
-				}
+//				if(text[0]=='-')
+//				{
+//					index++;
+//				}
 				for(;index<text.Length;index++)
 				{
 					if(char.IsDigit(text[index]))
 					{
-						result=result*10+(text[index]-'0');
+						result=result*10+(Integer)(text[index]-'0');
 					}
 					else
 					{
 						return null;
 					}
 				}
-				if(text[0]=='-')
-				{
-					result=-result;
-				}
+//				if(text[0]=='-')
+//				{
+//					result=-result;
+//				}
 			}
 			return result;
 		}
@@ -510,7 +612,7 @@ namespace Meta
 			double fraction;
 			if(IsFraction)
 			{
-				fraction=((double)(this["numerator"]).GetInteger().LongValue())/((double)(this["denominator"]).GetInteger().LongValue());
+				fraction=((double)(this["numerator"]).GetInteger().GetInt64())/((double)(this["denominator"]).GetInteger().GetInt64());
 			}
 			else
 			{
@@ -555,7 +657,7 @@ namespace Meta
 				{
 					try
 					{
-						text+=Convert.ToChar(map[key].GetInteger().Int32);
+						text+=Convert.ToChar(map[key].GetInteger().GetInt32());
 					}
 					catch
 					{
@@ -1581,7 +1683,7 @@ namespace Meta
 			}
 			else if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
 			{ 
-				dotNet=Enum.ToObject(target,meta.GetInteger().Int32); // TODO: support other underlying types
+				dotNet=Enum.ToObject(target,meta.GetInteger().GetInt32()); // TODO: support other underlying types
 			}
 			else 
 			{
@@ -1603,13 +1705,13 @@ namespace Meta
 					case TypeCode.Byte:
 						if(IsIntegerInRange(meta,new Integer(Byte.MinValue),new Integer(Byte.MaxValue)))
 						{
-							dotNet=Convert.ToByte(meta.GetInteger().Int32);
+							dotNet=Convert.ToByte(meta.GetInteger().GetInt32());
 						}
 						break;
 					case TypeCode.Char:
 						if(IsIntegerInRange(meta,(int)Char.MinValue,(int)Char.MaxValue))
 						{
-							dotNet=Convert.ToChar(meta.GetInteger().LongValue());
+							dotNet=Convert.ToChar(meta.GetInteger().GetInt64());
 						}
 						break;
 					case TypeCode.DateTime:
@@ -1624,7 +1726,7 @@ namespace Meta
 					case TypeCode.Decimal:
 						if(IsIntegerInRange(meta,Helper.IntegerFromDouble((double)decimal.MinValue),Helper.IntegerFromDouble((double)decimal.MaxValue)))
 						{
-							dotNet=(decimal)(meta.GetInteger().LongValue());
+							dotNet=(decimal)(meta.GetInteger().GetInt64());
 						}
 						else if(IsFractionInRange(meta,(double)decimal.MinValue,(double)decimal.MaxValue))
 						{
@@ -1634,7 +1736,7 @@ namespace Meta
 					case TypeCode.Double:
 						if(IsIntegerInRange(meta,Helper.IntegerFromDouble(double.MinValue),Helper.IntegerFromDouble(double.MaxValue)))
 						{
-							dotNet=(double)(meta.GetInteger().LongValue());
+							dotNet=(double)(meta.GetInteger().GetInt64());
 						}
 						else if(IsFractionInRange(meta,double.MinValue,double.MaxValue))
 						{
@@ -1643,20 +1745,20 @@ namespace Meta
 						break;
 					case TypeCode.Int16:
 						if(IsIntegerInRange(meta,Int16.MinValue,Int16.MaxValue))
-						{
-							dotNet=Convert.ToInt16(meta.GetInteger().LongValue());
+							{
+							dotNet=Convert.ToInt16(meta.GetInteger().GetInt64());
 						}
 						break;
 					case TypeCode.Int32:
-						if(IsIntegerInRange(meta,Int32.MinValue,Int32.MaxValue))
-						{
-							dotNet=meta.GetInteger().Int32;
+						if(IsIntegerInRange(meta,(Integer)Int32.MinValue,Int32.MaxValue))
+							{
+							dotNet=meta.GetInteger().GetInt32();
 						}
 						break;
 					case TypeCode.Int64:
-						if(IsIntegerInRange(meta,Int64.MinValue,Int64.MaxValue))
-						{
-							dotNet=Convert.ToInt64(meta.GetInteger().LongValue());
+						if(IsIntegerInRange(meta,Int64.MinValue,(Integer)Int64.MaxValue))
+							{
+							dotNet=Convert.ToInt64(meta.GetInteger().GetInt64());
 						}
 						break;
 					case TypeCode.Object:
@@ -1670,15 +1772,15 @@ namespace Meta
 						}
 						break;
 					case TypeCode.SByte:
-						if(IsIntegerInRange(meta,SByte.MinValue,SByte.MaxValue))
+						if(IsIntegerInRange(meta,(Integer)SByte.MinValue,(Integer)SByte.MaxValue))
 						{
-							dotNet=Convert.ToSByte(meta.GetInteger().LongValue());
+							dotNet=Convert.ToSByte(meta.GetInteger().GetInt64());
 						}
 						break;
 					case TypeCode.Single:
 						if(IsIntegerInRange(meta,Helper.IntegerFromDouble(Single.MinValue),Helper.IntegerFromDouble(Single.MaxValue)))
 						{
-							dotNet=(float)meta.GetInteger().LongValue();
+							dotNet=(float)meta.GetInteger().GetInt64();
 						}
 						else if(IsFractionInRange(meta,Single.MinValue,Single.MaxValue))
 						{
@@ -1694,19 +1796,19 @@ namespace Meta
 					case TypeCode.UInt16:
 						if(IsIntegerInRange(meta,new Integer(UInt16.MinValue),new Integer(UInt16.MaxValue)))
 						{
-							dotNet=Convert.ToUInt16(meta.GetInteger().LongValue());
+							dotNet=Convert.ToUInt16(meta.GetInteger().GetInt64());
 						}
 						break;
 					case TypeCode.UInt32:
 						if(IsIntegerInRange(meta,UInt32.MinValue,UInt32.MaxValue))
 						{
-							dotNet=Convert.ToUInt32(meta.GetInteger().LongValue());
+							dotNet=Convert.ToUInt32(meta.GetInteger().GetInt64());
 						}
 						break;
 					case TypeCode.UInt64:
 						if(IsIntegerInRange(meta,UInt64.MinValue,UInt64.MaxValue))
 						{
-							dotNet=Convert.ToUInt64(meta.GetInteger().LongValue());
+							dotNet=Convert.ToUInt64(meta.GetInteger().GetInt64());
 						}
 						break;
 					default:
@@ -2371,7 +2473,7 @@ namespace Meta
 				ArrayList keys=new ArrayList();
 				for(int i=1;i<=text.Length;i++)
 				{ 
-					keys.Add(new NormalMap(new Integer(i)));			
+					keys.Add(new NormalMap((Integer)i));			
 				}
 				return keys;
 			}
@@ -2398,7 +2500,7 @@ namespace Meta
 			{
 				if(key.IsInteger)
 				{
-					int iInteger=key.GetInteger().Int32;
+					int iInteger=key.GetInteger().GetInt32();
 					if(iInteger>0 && iInteger<=this.Count)
 					{
 						return text[iInteger-1];
@@ -2418,7 +2520,7 @@ namespace Meta
 		{
 			if(key.IsInteger)
 			{
-				return key.GetInteger()>0 && key.GetInteger()<=this.Count;
+				return key.GetInteger()>0 && key.GetInteger()<=(Integer)this.Count;
 			}
 			else
 			{
@@ -2437,15 +2539,16 @@ namespace Meta
 				{
 					number=0;
 				}
-				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) && this[NumberKeys.Negative]==new NormalMap(new Integer(1)))) && this.ContainsKey(NumberKeys.EmptyMap))
+				else if(this.Count==1 && this.ContainsKey(NumberKeys.EmptyMap))
+//				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) && this[NumberKeys.Negative]==new NormalMap(new Integer(1)))) && this.ContainsKey(NumberKeys.EmptyMap))
 				{
 					if(this[NumberKeys.EmptyMap].GetInteger()!=null)
 					{
 						number=this[NumberKeys.EmptyMap].GetInteger()+1;
-						if(this[NumberKeys.Negative]==new NormalMap(new Integer(1)))
-						{
-							number=-number;
-						}
+//						if(this[NumberKeys.Negative]==new NormalMap(new Integer(1)))
+//						{
+//							number=-number;
+//						}
 					}
 					else
 					{
@@ -2488,7 +2591,7 @@ namespace Meta
 			get
 			{
 				ArrayList list=new ArrayList();
-				for(Integer iInteger=new Integer(1);ContainsKey(new NormalMap(iInteger));iInteger++)
+				for(Integer iInteger=new Integer(1);ContainsKey(new NormalMap(iInteger));iInteger+=1)
 				{
 					list.Add(this[new NormalMap(iInteger)]);
 				}
@@ -2512,7 +2615,7 @@ namespace Meta
 						{
 							try
 							{
-								text+=Convert.ToChar(val.GetInteger().Int32);
+								text+=Convert.ToChar(val.GetInteger().GetInt32());
 							}
 							catch
 							{
@@ -2806,7 +2909,7 @@ namespace Meta
 				}
 				else if(this.obj!=null && key.IsInteger && this.type.IsArray)
 				{
-					val=Transform.ToMeta(((Array)obj).GetValue(key.GetInteger().Int32));
+					val=Transform.ToMeta(((Array)obj).GetValue(key.GetInteger().GetInt32()));
 				}
 				else
 				{
@@ -2858,7 +2961,7 @@ namespace Meta
 					object converted=Transform.ToDotNet(value,type.GetElementType(),out isConverted);
 					if(isConverted)
 					{
-						((Array)obj).SetValue(converted,key.GetInteger().Int32);
+						((Array)obj).SetValue(converted,key.GetInteger().GetInt32());
 						return;
 					}
 				}
@@ -2957,10 +3060,10 @@ namespace Meta
 				{
 					keys.Add(NumberKeys.EmptyMap);
 				}
-				if(number<0)
-				{
-					keys.Add(NumberKeys.Negative);
-				}
+//				if(number<0)
+//				{
+//					keys.Add(NumberKeys.Negative);
+//				}
 				return keys;
 			}
 		}
@@ -2977,20 +3080,21 @@ namespace Meta
 					}
 					else
 					{
-						result=number.abs()-1;
+						result=number-1;
+//						result=number.abs()-1;
 					}
 				}
-				else if(key.Equals(NumberKeys.Negative))
-				{
-					if(number<0)
-					{
-						result=new NormalMap(new Integer(1));
-					}
-					else
-					{
-						result=null;
-					}
-				}
+//				else if(key.Equals(NumberKeys.Negative))
+//				{
+//					if(number<0)
+//					{
+//						result=new NormalMap(new Integer(1));
+//					}
+//					else
+//					{
+//						result=null;
+//					}
+//				}
 				else
 				{
 					result=null;
@@ -3003,21 +3107,21 @@ namespace Meta
 				{
 					Panic(key,value);
 				}
-				else if(key.Equals(NumberKeys.Negative))
-				{
-					if(value==null)
-					{
-						number=number.abs();
-					}
-					else if(value.Equals(new NormalMap(new Integer(1))))
-					{
-						number=-number.abs();
-					}
-					else
-					{
-						Panic(key,value);
-					}
-				}
+//				else if(key.Equals(NumberKeys.Negative))
+//				{
+//					if(value==null)
+//					{
+//						number=number.abs();
+//					}
+//					else if(value.Equals(new NormalMap(new Integer(1))))
+//					{
+//						number=-number.abs();
+//					}
+//					else
+//					{
+//						Panic(key,value);
+//					}
+//				}
 				else
 				{
 					Panic(key,value); // TODO: dont do assignment in panic, do it here
@@ -3133,7 +3237,7 @@ namespace Meta
 				val/=int.MaxValue;
 				integer*=int.MaxValue;
 			}
-			integer*=Convert.ToInt32(val);
+			integer*=(Integer)Convert.ToInt32(val);
 			return integer;
 		}
 		public static FileInfo[] FindFiles(DirectoryInfo directory,string fileName)
@@ -4140,7 +4244,7 @@ namespace Meta
 				{
 					val=Expression();
 				}
-				key=CreateDefaultKey(new NormalMap(new Integer(count)));
+				key=CreateDefaultKey(new NormalMap((Integer)count));
 				count++;
 			}
 			Map statement=new NormalMap();
