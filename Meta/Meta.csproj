@@ -89,17 +89,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "GAC.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Meta.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "oldGAC.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
