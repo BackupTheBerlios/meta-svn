@@ -1757,7 +1757,7 @@ namespace Meta
 						break;
 					case TypeCode.Int64:
 						if(IsIntegerInRange(meta,Int64.MinValue,(Integer)Int64.MaxValue))
-							{
+						{
 							dotNet=Convert.ToInt64(meta.GetInteger().GetInt64());
 						}
 						break;
