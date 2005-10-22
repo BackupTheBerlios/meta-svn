@@ -94,34 +94,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Copy (2) of Meta.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Copy (2) of Parser.g"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "Copy (3) of Meta.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Copy of Meta.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Copy of Parser.g"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "ExtentLexerSharedInputState.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "GAC.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -135,40 +107,6 @@
                     RelPath = "Meta.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MetaAST.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MetaLexer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MetaLexerTokenTypes.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MetaParser.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MetaToken.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MetaTreeParser.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Parser.g"
-                    BuildAction = "None"
                 />
             </Include>
         </Files>

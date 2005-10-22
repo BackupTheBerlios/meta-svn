@@ -13,6 +13,7 @@ using Meta;
 using System.Reflection;
 using System.Xml;
 
+// TODO: rename
 public class ScrollingTextBox: RichTextBox
 {
 	public event EventHandler Changed;

@@ -30,7 +30,6 @@ using System.Windows.Forms;
 using System.Globalization;
 using antlr;
 using antlr.collections;
-using Meta.Parser;
 using Meta.TestingFramework;
 using System.Text.RegularExpressions;
 using System.Net;
@@ -217,10 +216,6 @@ namespace Meta
 		public Map Call(Map code,Map context)
 		{
 			Map function=Evaluate(code[CodeKeys.Callable],context);
-//			if(! (function is Map))
-//			{
-//				throw new MetaException("Object to be called is not callable.",code.Extent);
-//			}
 			Map argument=Evaluate(code[CodeKeys.Argument],context);
 			return function.Call(argument);
 		}
@@ -261,6 +256,30 @@ namespace Meta
 				Statement((Map)code.Array[i],ref local);
 			}
 		}
+		// assignment to "this" cannot really be undone very well
+		public class Change
+		{
+			private Map map;
+			private Map key;
+			private Map oldValue;
+			public Change(Map map,Map key,Map oldValue)
+			{
+				this.map=map;
+				this.key=key;
+				this.oldValue=oldValue;
+			}
+			public void Undo(ref Map current)
+			{
+				if(key.Equals(SpecialKeys.Current))
+				{
+					current=oldValue;
+				}
+				else
+				{
+					this.map[key]=oldValue;
+				}
+			}
+		}
 		public void Statement(Map code,ref Map context)
 		{
 			Map selected=context;
@@ -290,12 +309,14 @@ namespace Meta
 				}
 				else
 				{
-					oldValue=new NormalMap("<null>");
+					oldValue=null;//new NormalMap("<null>");
 				}
 				CallBreak(oldValue);
 			}
 			
 			Map val=Evaluate(code[CodeKeys.Value],context);
+//			changes.AddRange(new Change(selected,key,oldValue));
+
 			if(lastKey.Equals(SpecialKeys.Current))
 			{
 				val.Parent=context.Parent;
@@ -432,74 +453,6 @@ namespace Meta
 		{
 			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();
 		}
-//		public AST ParseToAst(string fileName)
-//		{
-//			return ParseToAst(fileName,new StringReader(Helper.ReadFile(fileName)));
-//		}
-//		public static AST ParseToAst(string fileName,TextReader reader) 
-//		{
-//			ExtentLexerSharedInputState sharedInputState = new ExtentLexerSharedInputState(reader,fileName); 
-//			MetaLexer metaLexer = new MetaLexer(sharedInputState);
-//	
-//			metaLexer.setTokenObjectClass("MetaToken");
-//	
-//			MetaParser metaParser = new MetaParser(new IndentationStream(metaLexer));
-//
-//			metaParser.setASTNodeClass("MetaAST");
-//			metaParser.map();
-//			AST ast=metaParser.getAST();
-//			return ast;
-//		}
-
-//		private static void ExecuteInThread()
-//		{
-//			try
-//			{
-//				Interpreter.Run(executeFileName,new NormalMap());
-//			}
-//			catch(Exception e)
-//			{
-//				MessageBox.Show(e.ToString());
-//			}
-//		}
-
-//		private static string executeFileName="";
-//		public static void StartDebug(string fileName)
-//		{
-//			executeFileName=fileName;
-//			debugThread=new Thread(new ThreadStart(ExecuteInThread));
-//			debugThread.Start();
-//		}
-//		private static Thread debugThread;
-//		public static void StopDebug()
-//		{
-//			if(debugThread!=null)
-//			{
-//				debugThread.Resume();
-//				debugThread.Abort();
-//				debugThread=null;
-//			}
-//		}
-//		public static void ContinueDebug()
-//		{
-//			if(debugThread!=null)
-//			{
-//				debugThread.Resume();
-//			}
-//		}
-//		public static void ReverseDebug()
-//		{
-//			if(debugThread!=null)
-//			{
-//				reverse=true;
-//				debugThread.Resume();
-//			}
-//		}
-		// should this be shared or not
-//		static Interpreter()
-//		{
-//			Assembly metaAssembly=Assembly.GetAssembly(typeof(Map));
-//		}
 		public static DirectoryInfo LibraryPath
 		{
 			get
@@ -2798,18 +2751,7 @@ namespace Meta
 					return true;
 				}
 			}
-//			DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
-//			Map argument=new NormalMap();
-//			argument[1]=key;
-//			try
-//			{
-//				indexer.Call(argument);
-//				return true;
-//			}
-//			catch(Exception)
-//			{
-				return false;
-//			}
+			return false;
 		}
 		public override ArrayList Keys
 		{
@@ -2868,17 +2810,7 @@ namespace Meta
 				}
 				else
 				{
-//					DotNetMethod indexer=new DotNetMethod("get_Item",obj,type);
-//					Map argument=new NormalMap();
-//					argument[1]=key;
-//					try
-//					{
-//						val=Transform.ToMeta(indexer.Call(argument));
-//					}
-//					catch(Exception e)
-//					{
-						val=null;
-//					}
+					val=null;
 				}
 				// TODO: what if value is null?
 				return val;
@@ -2932,18 +2864,7 @@ namespace Meta
 				}
 				else
 				{
-//					DotNetMethod indexer=new DotNetMethod("set_Item",obj,type);
-//					Map argument=new NormalMap();
-//					argument[1]=key;
-//					argument[2]=value;
-//					try
-//					{
-//						indexer.Call(argument,interpreter);
-//					}
-//					catch(Exception e)
-//					{
-						throw new ApplicationException("Cannot set "+Meta.Serialize.Key(key)+".");
-//					}
+					throw new ApplicationException("Cannot set "+Meta.Serialize.Key(key)+".");
 				}
 			}
 		}
@@ -3112,95 +3033,95 @@ namespace Meta
 			map.strategy[key]=val;
 		}
 	}
-	namespace Parser 
-	{
-		public class IndentationStream: TokenStream
-		{
-			public IndentationStream(TokenStream tokenStream) 
-			{
-				this.tokenStream=tokenStream;
-				Indent(0,new Token());
-			}
-			public Token nextToken() 
-			{
-				if(tokenBuffer.Count==0) 
-				{
-					Token token=tokenStream.nextToken();
-					switch(token.Type)
-					{
-						case MetaLexerTokenTypes.EOF:
-							Indent(-1,token);
-							break;
-						case MetaLexerTokenTypes.INDENTATION:
-							Indent(token.getText().Length,token);
-							break;
-						case MetaLexerTokenTypes.LITERAL:
-							string indentation="";
-							for(int i=0;i<indentationDepth+1;i++)
-							{
-								indentation+='\t';
-							}
-							string text=token.getText();
-							text=text.Replace(Environment.NewLine,"\n");
-							string[] lines=text.Split('\n');
-
-							string result="";
-							for(int i=0;i<lines.Length;i++)
-							{
-								if(i!=0 && lines[i].StartsWith(indentation))
-								{
-									result+=lines[i].Remove(0,indentationDepth+1);
-								}
-								else
-								{
-									result+=lines[i];
-								}
-								if(i!=lines.Length-1)
-								{
-									result+=Environment.NewLine;
-								}
-							}
-
-							token.setText(result);
-							tokenBuffer.Enqueue(token);
-							break;
-						default:
-							tokenBuffer.Enqueue(token);
-							break;
-					}
-				}
-				return (Token)tokenBuffer.Dequeue();
-			}
-			protected void Indent(int newIndentationDepth,Token currentToken) 
-			{
-				int difference=newIndentationDepth-indentationDepth; 
-				if(difference==0)
-				{
-					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
-				}
-				else if(difference==1)
-				{
-					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));
-				}
-				else if(difference<0)
-				{
-					for(int i=difference;i<0;i++)
-					{
-						tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
-					}
-					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
-				}
-				else if(difference>1)
-				{
-					throw new RecognitionException("Incorrect indentation.",currentToken.getFilename(),currentToken.getLine(),currentToken.getColumn());
-				}
-				indentationDepth=newIndentationDepth;
-			}
-			protected Queue tokenBuffer=new Queue();
-			protected TokenStream tokenStream;
-			protected int indentationDepth=-1;
-		}
-	}
+//	namespace Parser 
+//	{
+//		public class IndentationStream: TokenStream
+//		{
+//			public IndentationStream(TokenStream tokenStream) 
+//			{
+//				this.tokenStream=tokenStream;
+//				Indent(0,new Token());
+//			}
+//			public Token nextToken() 
+//			{
+//				if(tokenBuffer.Count==0) 
+//				{
+//					Token token=tokenStream.nextToken();
+//					switch(token.Type)
+//					{
+//						case MetaLexerTokenTypes.EOF:
+//							Indent(-1,token);
+//							break;
+//						case MetaLexerTokenTypes.INDENTATION:
+//							Indent(token.getText().Length,token);
+//							break;
+//						case MetaLexerTokenTypes.LITERAL:
+//							string indentation="";
+//							for(int i=0;i<indentationDepth+1;i++)
+//							{
+//								indentation+='\t';
+//							}
+//							string text=token.getText();
+//							text=text.Replace(Environment.NewLine,"\n");
+//							string[] lines=text.Split('\n');
+//
+//							string result="";
+//							for(int i=0;i<lines.Length;i++)
+//							{
+//								if(i!=0 && lines[i].StartsWith(indentation))
+//								{
+//									result+=lines[i].Remove(0,indentationDepth+1);
+//								}
+//								else
+//								{
+//									result+=lines[i];
+//								}
+//								if(i!=lines.Length-1)
+//								{
+//									result+=Environment.NewLine;
+//								}
+//							}
+//
+//							token.setText(result);
+//							tokenBuffer.Enqueue(token);
+//							break;
+//						default:
+//							tokenBuffer.Enqueue(token);
+//							break;
+//					}
+//				}
+//				return (Token)tokenBuffer.Dequeue();
+//			}
+//			protected void Indent(int newIndentationDepth,Token currentToken) 
+//			{
+//				int difference=newIndentationDepth-indentationDepth; 
+//				if(difference==0)
+//				{
+//					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
+//				}
+//				else if(difference==1)
+//				{
+//					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));
+//				}
+//				else if(difference<0)
+//				{
+//					for(int i=difference;i<0;i++)
+//					{
+//						tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
+//					}
+//					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
+//				}
+//				else if(difference>1)
+//				{
+//					throw new RecognitionException("Incorrect indentation.",currentToken.getFilename(),currentToken.getLine(),currentToken.getColumn());
+//				}
+//				indentationDepth=newIndentationDepth;
+//			}
+//			protected Queue tokenBuffer=new Queue();
+//			protected TokenStream tokenStream;
+//			protected int indentationDepth=-1;
+//		}
+//	}
 	// TODO: rename
 	public class Helper
 	{
