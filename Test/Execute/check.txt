@@ -86,14 +86,6 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"Opposite"
-	Value (DotNetMethod):
-		Extent:
-			null
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
 		"Product"
 	Value (DotNetMethod):
 		Extent:
@@ -208,7 +200,7 @@ Entry (DictionaryEntry)
 	Value (NormalMap):
 		Extent:
 			null
-		"-900"
+		"1100"
 Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:

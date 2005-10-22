@@ -3461,7 +3461,7 @@ Entry (DictionaryEntry)
 																						Extent (Extent):
 																							End (SourcePosition):
 																								Column (Int32):
-																									"16"
+																									"7"
 																								Line (Int32):
 																									"46"
 																							FileName (String):
@@ -3505,118 +3505,25 @@ Entry (DictionaryEntry)
 																								Extent (Extent):
 																									End (SourcePosition):
 																										Column (Int32):
-																											"16"
+																											"7"
 																										Line (Int32):
 																											"46"
 																									FileName (String):
 																										"C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
 																									Start (SourcePosition):
 																										Column (Int32):
-																											"11"
+																											"3"
 																										Line (Int32):
 																											"46"
 																								Entry (DictionaryEntry)
 																									Key (NormalMap):
 																										Extent:
 																											null
-																										"call"
+																										"literal"
 																									Value (NormalMap):
 																										Extent:
 																											null
-																										Entry (DictionaryEntry)
-																											Key (NormalMap):
-																												Extent:
-																													null
-																												"callable"
-																											Value (NormalMap):
-																												Extent (Extent):
-																													End (SourcePosition):
-																														Column (Int32):
-																															"11"
-																														Line (Int32):
-																															"46"
-																													FileName (String):
-																														"C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-																													Start (SourcePosition):
-																														Column (Int32):
-																															"11"
-																														Line (Int32):
-																															"46"
-																												Entry (DictionaryEntry)
-																													Key (NormalMap):
-																														Extent:
-																															null
-																														"select"
-																													Value (NormalMap):
-																														Extent (Extent):
-																															End (SourcePosition):
-																																Column (Int32):
-																																	"11"
-																																Line (Int32):
-																																	"46"
-																															FileName (String):
-																																"C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-																															Start (SourcePosition):
-																																Column (Int32):
-																																	"3"
-																																Line (Int32):
-																																	"46"
-																														Entry (DictionaryEntry)
-																															Key (NormalMap):
-																																Extent:
-																																	null
-																																"1"
-																															Value (NormalMap):
-																																Extent (Extent):
-																																	End (SourcePosition):
-																																		Column (Int32):
-																																			"11"
-																																		Line (Int32):
-																																			"46"
-																																	FileName (String):
-																																		"C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-																																	Start (SourcePosition):
-																																		Column (Int32):
-																																			"3"
-																																		Line (Int32):
-																																			"46"
-																																Entry (DictionaryEntry)
-																																	Key (NormalMap):
-																																		Extent:
-																																			null
-																																		"literal"
-																																	Value (NormalMap):
-																																		Extent:
-																																			null
-																																		"Opposite"
-																										Entry (DictionaryEntry)
-																											Key (NormalMap):
-																												Extent:
-																													null
-																												"argument"
-																											Value (NormalMap):
-																												Extent (Extent):
-																													End (SourcePosition):
-																														Column (Int32):
-																															"16"
-																														Line (Int32):
-																															"46"
-																													FileName (String):
-																														"C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta"
-																													Start (SourcePosition):
-																														Column (Int32):
-																															"12"
-																														Line (Int32):
-																															"46"
-																												Entry (DictionaryEntry)
-																													Key (NormalMap):
-																														Extent:
-																															null
-																														"literal"
-																													Value (NormalMap):
-																														Extent:
-																															null
-																														"1000"
+																										"1000"
 										Entry (DictionaryEntry)
 											Key (NormalMap):
 												Extent:
