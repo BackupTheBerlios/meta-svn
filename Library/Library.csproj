@@ -112,6 +112,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "editorTest.txt"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Library.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -84,11 +84,6 @@
                     Project = "{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
-                <Reference
-                    Name = "antlr.runtime"
-                    AssemblyName = "antlr.runtime"
-                    HintPath = "..\..\antlr\lib\csharp\src\bin\antlr.runtime.dll"
-                />
             </References>
         </Build>
         <Files>

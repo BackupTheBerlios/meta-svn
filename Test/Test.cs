@@ -22,7 +22,6 @@ using Meta;
 
 using System;
 using Meta.TestingFramework;
-using antlr;
 using System.Threading;
 
 namespace Test 
@@ -34,15 +33,11 @@ namespace Test
 		{
 			if(file=="") 
 			{
-//				Directory.SetCurrentDirectory(
-//					".."+Path.DirectorySeparatorChar+"Test"+Path.DirectorySeparatorChar);
 				ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Interpreter.LibraryPath.Parent.FullName,"Test"));
-//				ExecuteTests test=new ExecuteTests(typeof(Tests),path);
 			}
 			else 
 			{
-				if(!File.Exists(file)) // add parameter for debugging purposes
-					// make this thingy a Map/parsing machine
+				if(!File.Exists(file))
 				{
 					throw new ApplicationException("File "+file+" not found.");
 				}
@@ -96,26 +91,6 @@ namespace Test
 				{
 					Run(fileName);
 				}
-				catch(CharStreamException e) 
-				{// put this into "Run" ???, no don't, every caller can do this differently
-					Console.WriteLine(e.Message); //put all this error printing into one method
-					Console.ReadLine();
-				}
-				catch(RecognitionException e) 
-				{
-					Console.WriteLine(e.Message+" line:"+e.line+"+ column:"+e.column);
-					Console.ReadLine();
-				}
-				catch(TokenStreamRecognitionException e) 
-				{
-					Console.WriteLine(e.recog.Message+" line:"+e.recog.line+" column:"+e.recog.column);
-					Console.ReadLine();
-				}
-				catch(TokenStreamException e) 
-				{
-					Console.WriteLine(e.Message);
-					Console.ReadLine();
-				}
 				catch(Exception e) 
 				{
 					string text="";
@@ -134,27 +109,16 @@ namespace Test
 	public class Tests 
 	{
 		private static string filename=@"C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta";
-		//private static string filename=@"basicTest.meta";
-		// TODO:make it possible to choose between different tests on command line, and whether to test at all
-//		[SerializeMethods(new string[]{"getNextSibling","getFirstChild","getText"})]
-//			public class ParseToAst:TestCase 
+//		public class CompileToMap:TestCase 
 //		{
+//			public static Map map;
 //			public override object Run() 
 //			{
-//				return Interpreter.ParseToAst(Path.Combine(
-//					Test.path,filename));
+//				MetaCustomParser parser=new MetaCustomParser(Helper.ReadFile(filename),filename);
+//				map=parser.Program();
+//				return map;
 //			}
 //		}
-		public class CompileToMap:TestCase 
-		{
-			public static Map map;
-			public override object Run() 
-			{
-				MetaCustomParser parser=new MetaCustomParser(Helper.ReadFile(filename),filename);
-				map=parser.Program();
-				return map;
-			}
-		}
 //		public class CompileToMap:TestCase 
 //		{
 //			public static Map map;
@@ -268,7 +232,7 @@ namespace testClasses
 		}
 	}
 	public class NamedNoConversion:TestClass 
-	{ //refactor
+	{ 
 		public NamedNoConversion(Map arg) 
 		{
 			Map def=new NormalMap();

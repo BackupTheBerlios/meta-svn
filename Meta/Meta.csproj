@@ -79,11 +79,6 @@
                     AssemblyName = "System.Windows.Forms"
                     HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
                 />
-                <Reference
-                    Name = "antlr.runtime"
-                    AssemblyName = "antlr.runtime"
-                    HintPath = "..\..\antlr-2.7.3\lib\csharp\src\bin\antlr.runtime.dll"
-                />
             </References>
         </Build>
         <Files>
@@ -99,12 +94,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Integer.cs"
+                    RelPath = "Meta.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Meta.cs"
+                    RelPath = "oldGAC.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
