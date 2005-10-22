@@ -43,7 +43,7 @@
 	negativeInteger.x="hello"
 	subtractionTest=number.Sum
 		100
-		Opposite 1000
+		1000
 	integerIncrementTest=5
 	integerIncrementTest.[*]=integerIncrementTest
 	integerDecrementTest=5

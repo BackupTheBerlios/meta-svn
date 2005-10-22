@@ -20,7 +20,7 @@ public class array:MetaLibrary
 			foreach(Map val in map.Array) 
 			{
 				array[i]=val;
-				i++;
+				i+=1;
 			}
 		}
 		return array;
@@ -66,7 +66,7 @@ public class map:MetaLibrary
 		foreach(Map key in arg.Keys) 
 		{
 			keys[i]=key;
-			i++;
+			i+=1;
 		}
 		return keys;
 	}
@@ -159,11 +159,11 @@ public class number:MetaLibrary
 	/// <summary>
 	/// Returns the opposite number of its argument.
 	/// </summary>
-	public static Map Opposite(Map arg)
-	{
-		Argument.Integer(arg);
-		return -arg.GetInteger();
-	}
+//	public static Map Opposite(Map arg)
+//	{
+//		Argument.Integer(arg);
+//		return -arg.GetInteger();
+//	}
 	/// <summary>
 	/// Returns the product of all arguments.
 	/// </summary>
