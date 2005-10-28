@@ -1,0 +1,132 @@
+Extent:
+	null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Negation"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Conjunction"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Disjunction"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Containment"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Keys"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Merging"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Equality"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Sum"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Product"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Greater"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Smaller"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Concatenation"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"Application"
+	Value (DotNetMethod):
+		Extent:
+			null
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"notTest"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"true"
+			Value (NormalMap):
+				Extent:
+					null
+				"1"
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"false"
+			Value (NormalMap):
+				Extent:
+					null
+				"0"

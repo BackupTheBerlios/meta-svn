@@ -6,4 +6,5 @@
 		number
 		array
 	notTest=
-		true=Not *
+		true=Negation *
+		false=Negation 1
