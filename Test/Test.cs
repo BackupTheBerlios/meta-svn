@@ -53,7 +53,7 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-//			args=new string[] {@"-debug",@"C:\_ProjectSupportMaterial\Meta\Library\editor.meta"};
+//			args=new string[] {@"-debug",@"C:\Projects\Meta\Library\editor.meta"};
 
 
 			Hashtable options=new Hashtable();
@@ -108,7 +108,7 @@ namespace Test
 	}
 	public class Tests 
 	{
-		private static string filename=@"C:\_ProjectSupportMaterial\Meta\Library\basicTest.meta";
+		private static string filename=@"C:\Projects\Meta\Library\basicTest.meta";
 //		public class CompileToMap:TestCase 
 //		{
 //			public static Map map;
@@ -134,19 +134,17 @@ namespace Test
 		{
 			public override object Run()
 			{
-				string cachePath=@"C:\_ProjectSupportMaterial\Meta\cachedAssemblyInfo.meta";
-				if(File.Exists(cachePath))
-				{
-					File.Delete(cachePath);
-				}
-				foreach(FileInfo file in Helper.FindFiles(Interpreter.LibraryPath,"cachedAssemblyInfo.meta"))
-				{
-					file.Delete();
-				}
 				Map argument=new NormalMap();
 				argument[1]="first arg";
 				argument[2]="second=arg";
-				return Interpreter.CreateInterpreter().Run(Path.Combine(Test.path,filename),argument);
+				return Interpreter.CreateInterpreter().Run(@"C:\Projects\Meta\Library\basicTest.meta",argument);
+			}
+		}
+		public class Library:TestCase
+		{
+			public override object Run()
+			{
+				return Interpreter.CreateInterpreter().Run(@"C:\Projects\Meta\Library\libraryTest.meta",new NormalMap());
 			}
 		}
 	}

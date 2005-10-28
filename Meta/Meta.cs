@@ -556,7 +556,8 @@ namespace Meta
 		{
 			get
 			{
-				return new DirectoryInfo(@"c:\_projectsupportmaterial\meta\library");
+				// TODO: localize this, infer this from the exe path, maybe
+				return new DirectoryInfo(@"c:\Projects\meta\library");
 			}
 		}
 		// should this be static?
@@ -4947,65 +4948,6 @@ namespace Meta
 //	
 	public class GAC
 	{
-		[Flags]
-			public enum ASM_DISPLAY_FLAGS
-		{
-			VERSION = 0x1,
-			CULTURE = 0x2,
-			PUBLIC_KEY_TOKEN = 0x4,
-			PUBLIC_KEY = 0x8,
-			CUSTOM = 0x10,
-			PROCESSORARCHITECTURE = 0x20,
-			LANGUAGEID = 0x40
-		}
-
-		[Flags]
-			public enum ASM_CMP_FLAGS
-		{
-			NAME = 0x1,
-			MAJOR_VERSION = 0x2,
-			MINOR_VERSION = 0x4,
-			BUILD_NUMBER = 0x8,
-			REVISION_NUMBER = 0x10,
-			PUBLIC_KEY_TOKEN = 0x20,
-			CULTURE = 0x40,
-			CUSTOM = 0x80,
-			ALL = NAME | MAJOR_VERSION | MINOR_VERSION |
-				REVISION_NUMBER | BUILD_NUMBER |
-				PUBLIC_KEY_TOKEN | CULTURE | CUSTOM,
-			DEFAULT = 0x100
-		}
-		public enum ASM_NAME
-		{
-			ASM_NAME_PUBLIC_KEY = 0,
-			ASM_NAME_PUBLIC_KEY_TOKEN,
-			ASM_NAME_HASH_VALUE,
-			ASM_NAME_NAME,
-			ASM_NAME_MAJOR_VERSION,
-			ASM_NAME_MINOR_VERSION,
-			ASM_NAME_BUILD_NUMBER,
-			ASM_NAME_REVISION_NUMBER,
-			ASM_NAME_CULTURE,
-			ASM_NAME_PROCESSOR_ID_ARRAY,
-			ASM_NAME_OSINFO_ARRAY,
-			ASM_NAME_HASH_ALGID,
-			ASM_NAME_ALIAS,
-			ASM_NAME_CODEBASE_URL,
-			ASM_NAME_CODEBASE_LASTMOD,
-			ASM_NAME_NULL_PUBLIC_KEY,
-			ASM_NAME_NULL_PUBLIC_KEY_TOKEN,
-			ASM_NAME_CUSTOM,
-			ASM_NAME_NULL_CUSTOM,                
-			ASM_NAME_MVID,
-			ASM_NAME_MAX_PARAMS
-		}
-		[Flags]
-			public enum ASM_CACHE_FLAGS
-		{
-			ASM_CACHE_ZAP = 0x1,
-			ASM_CACHE_GAC = 0x2,
-			ASM_CACHE_DOWNLOAD = 0x4
-		}
 		public static ArrayList Assemblies
 		{
 			get
@@ -5145,6 +5087,66 @@ namespace Meta
 			int Reset();
 			[PreserveSig()]
 			int Clone(out IAssemblyEnum ppEnum);
+		}
+
+		[Flags]
+			public enum ASM_DISPLAY_FLAGS
+		{
+			VERSION = 0x1,
+			CULTURE = 0x2,
+			PUBLIC_KEY_TOKEN = 0x4,
+			PUBLIC_KEY = 0x8,
+			CUSTOM = 0x10,
+			PROCESSORARCHITECTURE = 0x20,
+			LANGUAGEID = 0x40
+		}
+
+		[Flags]
+			public enum ASM_CMP_FLAGS
+		{
+			NAME = 0x1,
+			MAJOR_VERSION = 0x2,
+			MINOR_VERSION = 0x4,
+			BUILD_NUMBER = 0x8,
+			REVISION_NUMBER = 0x10,
+			PUBLIC_KEY_TOKEN = 0x20,
+			CULTURE = 0x40,
+			CUSTOM = 0x80,
+			ALL = NAME | MAJOR_VERSION | MINOR_VERSION |
+				REVISION_NUMBER | BUILD_NUMBER |
+				PUBLIC_KEY_TOKEN | CULTURE | CUSTOM,
+			DEFAULT = 0x100
+		}
+		public enum ASM_NAME
+		{
+			ASM_NAME_PUBLIC_KEY = 0,
+			ASM_NAME_PUBLIC_KEY_TOKEN,
+			ASM_NAME_HASH_VALUE,
+			ASM_NAME_NAME,
+			ASM_NAME_MAJOR_VERSION,
+			ASM_NAME_MINOR_VERSION,
+			ASM_NAME_BUILD_NUMBER,
+			ASM_NAME_REVISION_NUMBER,
+			ASM_NAME_CULTURE,
+			ASM_NAME_PROCESSOR_ID_ARRAY,
+			ASM_NAME_OSINFO_ARRAY,
+			ASM_NAME_HASH_ALGID,
+			ASM_NAME_ALIAS,
+			ASM_NAME_CODEBASE_URL,
+			ASM_NAME_CODEBASE_LASTMOD,
+			ASM_NAME_NULL_PUBLIC_KEY,
+			ASM_NAME_NULL_PUBLIC_KEY_TOKEN,
+			ASM_NAME_CUSTOM,
+			ASM_NAME_NULL_CUSTOM,                
+			ASM_NAME_MVID,
+			ASM_NAME_MAX_PARAMS
+		}
+		[Flags]
+			public enum ASM_CACHE_FLAGS
+		{
+			ASM_CACHE_ZAP = 0x1,
+			ASM_CACHE_GAC = 0x2,
+			ASM_CACHE_DOWNLOAD = 0x4
 		}
 	}
 }

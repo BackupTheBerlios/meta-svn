@@ -116,9 +116,21 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "editorTest2.txt"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "lib.meta"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "Library.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "libraryTest.meta"
+                    BuildAction = "None"
                 />
             </Include>
         </Files>

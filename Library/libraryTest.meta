@@ -1,0 +1,9 @@
+|
+	current=map.Merging
+		parent
+		boolean
+		map
+		number
+		array
+	notTest=
+		true=Not *
