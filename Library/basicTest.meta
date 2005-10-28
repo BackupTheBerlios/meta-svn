@@ -41,9 +41,6 @@
 		hashTest=[hashTestData]
 	negativeInteger=100
 	negativeInteger.x="hello"
-	subtractionTest=number.Sum
-		100
-		1000
 	integerIncrementTest=5
 	integerIncrementTest.[*]=integerIncrementTest
 	integerDecrementTest=5
@@ -55,33 +52,6 @@
 		[3]=\\"as"\df"\\
 		[4]=\\\"as"\\df"\\\
 		[5]=\\\\\\\\\\\\\\\\\"as"\\\\\\\\\\\\\\\\df"\\\\\\\\\\\\\\\\\
-	applyMethod=
-		|Sum
-			parameter
-			1
-	applyTest=Application
-		function=applyMethod
-		array=
-			1
-			2
-			3
-	ifTestCondition=Equality
-		1
-		1
-	ifTestCases=
-		[1]=
-			|"it is true"
-		[*]=
-			|"it is false"
-	ifTest=ifTestCases.[ifTestCondition]*
-#		ifTest=If
-#		condition=Equal
-#			1
-#			1
-#		then=
-#			|"it is true"
-#		else=
-#			|"it is false"
 	"ImpliedAutokey"
 	="Autokey"
 	gacTest=System.Collections
@@ -316,9 +286,6 @@
 			hello world!
 			hello!
 			"
-	ored=bitwise.Disjunction
-		20
-		System.Windows.Forms.Keys.Tab
 	arrayList=System.Collections.ArrayList*
 	arrayList.Add 
 		"hello"
@@ -340,12 +307,12 @@
 	whileCounter=*
 	loop=
 		|
-			whileDecision=Negation Equality
+			whileDecision=not Equality
 				parameter
 				10
 			whileBranches=
 				[1]=
-					|loop Sum
+					|loop add
 						parameter
 						1
 #					 

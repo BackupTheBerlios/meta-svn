@@ -333,7 +333,7 @@ namespace Meta
 		}
 		private bool ResumeAfterReverse(Map code)
 		{
-			return code.Extent.End.Smaller(BreakPoint.Position);
+			return code.Extent.End.smaller(BreakPoint.Position);
 		}
 		private void Program(Map code,Map context,ref Map local)
 		{
@@ -3433,11 +3433,11 @@ namespace Meta
 	}
 	public class SourcePosition
 	{
-		public bool Smaller(SourcePosition other)
+		public bool smaller(SourcePosition other)
 		{
 			return this.Line<other.Line || (this.Line==other.Line && this.Column<other.Column);
 		}
-		public bool Greater(SourcePosition other)
+		public bool greater(SourcePosition other)
 		{
 			return this.Line>other.Line || (this.Line==other.Line && this.Column>other.Column);
 		}
@@ -3615,7 +3615,7 @@ namespace Meta
 		private bool TryConsume(string characters)
 		{
 			bool consumed;
-			if(index<text.Length && text.Substring(index,characters.Length)==characters)
+			if(index+characters.Length<text.Length && text.Substring(index,characters.Length)==characters)
 			{
 				consumed=true;
 				index+=characters.Length;
@@ -4075,7 +4075,7 @@ namespace Meta
 		public const char lookupEndChar=']';
 		// TODO: use the other constants to create this array
 		public char[] lookupStringForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*'};
-		public char[] lookupStringFirstForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*','0','1','2','3','4','5','6','7','8','9'};
+		public char[] lookupStringFirstForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*','1','2','3','4','5','6','7','8','9'};
 		private Map LookupString()
 		{
 			string lookupString="";
@@ -4642,7 +4642,7 @@ namespace Meta
 			}
 
 			if((bi1.data[maxLength-1] & 0x80000000) == (result.data[maxLength-1] & 0x80000000))
-				throw (new ArithmeticException("Overflow in negation.\n"));
+				throw (new ArithmeticException("Overflow in not.\n"));
 
 			result.dataLength = maxLength;
 

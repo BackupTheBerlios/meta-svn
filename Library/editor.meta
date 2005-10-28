@@ -51,7 +51,7 @@
 			Meta.BreakPoint
 				fileName
 				Meta.SourcePosition
-					Sum
+					add
 						editBox.LineIndex.Get*
 						1
 					editBox.Column.Get*
@@ -59,7 +59,7 @@
 		SaveAs=
 			|
 				saveAs=choose.SaveFile*
-				hasName=Negation Equality
+				hasName=not Equality
 					saveAs
 					*
 				cases=
@@ -74,7 +74,7 @@
 				cases.[hasName]*
 		Save=
 			|
-				hasName=Negation Equality
+				hasName=not Equality
 					fileName
 					*
 				cases=
@@ -88,7 +88,7 @@
 		Open=
 			|
 				openFileName=choose.OpenFile*
-				hasName=Negation Equality
+				hasName=not Equality
 					openFileName
 					*
 				cases=
@@ -275,7 +275,7 @@
 					breakpoint=Meta.Interpreter.BreakPoint.Get*
 					position=breakpoint.Position.Get*
 					line=position.Line.Get*
-					forward=Smaller
+					forward=smaller
 						line
 						editBox.LineIndex.Get*
 					cases.[forward]*
@@ -332,14 +332,14 @@
 				Stop=commands.Stop
 		form.Menu.Set
 			MainMenu
-				Application
+				apply
 					array=Keys menu
 					function=
 						|
 							topKey=parameter
 							current=MenuItem
 								topKey
-								Application
+								apply
 									array=Keys menu.[topKey]
 									function=
 										|MenuItem

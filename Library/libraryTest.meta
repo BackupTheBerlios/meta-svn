@@ -5,6 +5,50 @@
 		map
 		number
 		array
-	notTest=
-		true=Negation *
-		false=Negation 1
+	booleanTest=
+		not=
+			true=library.not *
+			false=library.not 1
+		and=
+			true=and
+				1
+				1
+				1
+				1
+			false=and
+				1
+				*
+				1
+				1
+		or=
+			true=or
+				1
+				1
+				1
+			false=or
+				*
+				*
+				*
+	integerTest=
+		add=number.add
+			100
+			1000
+	mapTest=
+		apply=
+			applyMethod=
+				|add
+					parameter
+					1
+			current=apply
+				function=applyMethod
+				array=
+					1
+					2
+					3
+		equal=
+			numbers=Equality
+				1
+				1
+	bitwiseTest=bitwise.or
+		20
+		System.Windows.Forms.Keys.Tab

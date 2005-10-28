@@ -4,7 +4,7 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"Negation"
+		"not"
 	Value (DotNetMethod):
 		Extent:
 			null
@@ -12,7 +12,7 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"Conjunction"
+		"and"
 	Value (DotNetMethod):
 		Extent:
 			null
@@ -20,7 +20,7 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"Disjunction"
+		"or"
 	Value (DotNetMethod):
 		Extent:
 			null
@@ -28,7 +28,7 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"Containment"
+		"contains"
 	Value (DotNetMethod):
 		Extent:
 			null
@@ -60,7 +60,7 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"Sum"
+		"add"
 	Value (DotNetMethod):
 		Extent:
 			null
@@ -68,7 +68,7 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"Product"
+		"multiply"
 	Value (DotNetMethod):
 		Extent:
 			null
@@ -76,7 +76,7 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"Greater"
+		"greater"
 	Value (DotNetMethod):
 		Extent:
 			null
@@ -84,7 +84,7 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"Smaller"
+		"smaller"
 	Value (DotNetMethod):
 		Extent:
 			null
@@ -100,7 +100,7 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"Application"
+		"apply"
 	Value (DotNetMethod):
 		Extent:
 			null
@@ -108,7 +108,7 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"notTest"
+		"booleanTest"
 	Value (NormalMap):
 		Extent:
 			null
@@ -116,17 +116,137 @@ Entry (DictionaryEntry)
 			Key (NormalMap):
 				Extent:
 					null
-				"true"
+				"not"
 			Value (NormalMap):
 				Extent:
 					null
-				"1"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"true"
+					Value (NormalMap):
+						Extent:
+							null
+						"1"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"false"
+					Value (NormalMap):
+						Extent:
+							null
+						""
 		Entry (DictionaryEntry)
 			Key (NormalMap):
 				Extent:
 					null
-				"false"
+				"and"
 			Value (NormalMap):
 				Extent:
 					null
-				"0"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"true"
+					Value (NormalMap):
+						Extent:
+							null
+						"1"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"false"
+					Value (NormalMap):
+						Extent:
+							null
+						"0"
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"or"
+			Value (NormalMap):
+				Extent:
+					null
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"true"
+					Value (NormalMap):
+						Extent:
+							null
+						"1"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"false"
+					Value (NormalMap):
+						Extent:
+							null
+						"0"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"integerTest"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"add"
+			Value (NormalMap):
+				Extent:
+					null
+				"1100"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"mapTest"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"apply"
+			Value (NormalMap):
+				Extent:
+					null
+				""
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"equal"
+			Value (NormalMap):
+				Extent:
+					null
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"numbers"
+					Value (NormalMap):
+						Extent:
+							null
+						"1"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"bitwiseTest"
+	Value (NormalMap):
+		Extent:
+			null
+		"29"

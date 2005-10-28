@@ -29,7 +29,7 @@ public class array:MetaLibrary
 	/// <summary>
 	/// Returns an array that is created by applying a "function" to every element of an "array".
 	/// </summary>
-	public static Map Application(Map arg)
+	public static Map apply(Map arg)
 	{
 		// TODO: ensure "function" is callable, maybe?
 		Argument.ContainsKey(arg,"function");
@@ -50,7 +50,7 @@ public class map:MetaLibrary
 	/// <summary>
 	/// Determines whether a "map" contains a "key".
 	/// </summary>
-	public static bool Containment(Map arg) 
+	public static bool contains(Map arg) 
 	{
 		Argument.ContainsKey(arg,"map");
 		Argument.ContainsKey(arg,"key");
@@ -99,9 +99,9 @@ public class map:MetaLibrary
 public class boolean:MetaLibrary
 {
 	/// <summary>
-	/// Returns the logical negation of its argument.
+	/// Returns the logical not of its argument.
 	/// </summary>
-	public static Map Negation(Map arg)
+	public static Map not(Map arg)
 	{
 		Argument.Boolean(arg);
 		return !arg.GetBoolean();
@@ -109,7 +109,7 @@ public class boolean:MetaLibrary
 	/// <summary>
 	/// Returns the logical conjunction of all arguments.
 	/// </summary>
-	public static Map Conjunction(Map arg) 
+	public static Map and(Map arg) 
 	{
 		Argument.BooleanArray(arg);
 		bool and=true;
@@ -124,9 +124,9 @@ public class boolean:MetaLibrary
 		return and;
 	}
 	/// <summary>
-	/// Returns the logical disjunction of all arguments.
+	/// Returns the logical or of all arguments.
 	/// </summary>
-	public static Map Disjunction(Map arg) 
+	public static Map or(Map arg) 
 	{
 		Argument.BooleanArray(arg);
 		bool or=false;
@@ -146,7 +146,7 @@ public class number:MetaLibrary
 	/// <summary>
 	/// Returns the sum of all arguments.
 	/// </summary>
-	public static Map Sum(Map arg)
+	public static Map add(Map arg)
 	{
 		Argument.IntegerArray(arg);
 		Integer sum=0;
@@ -167,7 +167,7 @@ public class number:MetaLibrary
 	/// <summary>
 	/// Returns the product of all arguments.
 	/// </summary>
-	public static Map Product(Map arg) 
+	public static Map multiply(Map arg) 
 	{
 		Argument.IntegerArray(arg);
 		Integer product=1;
@@ -180,7 +180,7 @@ public class number:MetaLibrary
 	/// <summary>
 	/// Determines whether the first number is greater than the second number
 	/// </summary>
-	public static Map Greater(Map parameter)
+	public static Map greater(Map parameter)
 	{
 		Argument.IntegerArray(parameter);
 		Argument.ExactArrayCount(parameter,2);
@@ -189,7 +189,7 @@ public class number:MetaLibrary
 	/// <summary>
 	/// Determines whether the first number is smaller than the second number
 	/// </summary>
-	public static Map Smaller(Map parameter)
+	public static Map smaller(Map parameter)
 	{
 		Argument.IntegerArray(parameter);
 		Argument.ExactArrayCount(parameter,2);
@@ -200,9 +200,9 @@ public class number:MetaLibrary
 public class bitwise:MetaLibrary
 {
 	/// <summary>
-	/// Returns the bitwise disjunction of all arguments.
+	/// Returns the bitwise or of all arguments.
 	/// </summary>
-	public static Map Disjunction(Map arg)
+	public static Map or(Map arg)
 	{
 		Argument.IntegerArray(arg);
 		Integer or=0;
