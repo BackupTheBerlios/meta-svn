@@ -3507,7 +3507,7 @@ Entry (DictionaryEntry)
 																			Value (NormalMap):
 																				Extent:
 																					null
-																				"boolean"
+																				"logic"
 																Entry (DictionaryEntry)
 																	Key (NormalMap):
 																		Extent:
@@ -3961,7 +3961,7 @@ Entry (DictionaryEntry)
 																																					Value (NormalMap):
 																																						Extent:
 																																							null
-																																						"number"
+																																						"math"
 																																		Entry (DictionaryEntry)
 																																			Key (NormalMap):
 																																				Extent:

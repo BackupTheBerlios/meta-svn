@@ -5,9 +5,9 @@
 		System.Windows.Forms
 		System.Drawing
 		parent
-		library.boolean
+		library.logic
 		library.map
-		library.number
+		library.math
 		array
 		Meta
 	choose=

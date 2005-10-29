@@ -309,12 +309,12 @@
 	whileCounter=*
 	loop=
 		|
-			whileDecision=library.boolean.not library.map.equal
+			whileDecision=library.logic.not library.map.equal
 				parameter
 				10
 			whileBranches=
 				[1]=
-					|loop library.number.add
+					|loop library.math.add
 						parameter
 						1
 #					 

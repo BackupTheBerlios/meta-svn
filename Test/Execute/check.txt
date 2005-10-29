@@ -5371,7 +5371,7 @@ Entry (DictionaryEntry)
 												"C:\Projects\Meta\Library\basicTest.meta"
 											Start (SourcePosition):
 												Column (Int32):
-													"37"
+													"35"
 												Line (Int32):
 													"312"
 										Entry (DictionaryEntry)
@@ -5391,14 +5391,14 @@ Entry (DictionaryEntry)
 														Extent (Extent):
 															End (SourcePosition):
 																Column (Int32):
-																	"37"
+																	"35"
 																Line (Int32):
 																	"312"
 															FileName (String):
 																"C:\Projects\Meta\Library\basicTest.meta"
 															Start (SourcePosition):
 																Column (Int32):
-																	"37"
+																	"35"
 																Line (Int32):
 																	"312"
 														Entry (DictionaryEntry)
@@ -5410,7 +5410,7 @@ Entry (DictionaryEntry)
 																Extent (Extent):
 																	End (SourcePosition):
 																		Column (Int32):
-																			"37"
+																			"35"
 																		Line (Int32):
 																			"312"
 																	FileName (String):
@@ -5457,7 +5457,7 @@ Entry (DictionaryEntry)
 																		Extent (Extent):
 																			End (SourcePosition):
 																				Column (Int32):
-																					"33"
+																					"31"
 																				Line (Int32):
 																					"312"
 																			FileName (String):
@@ -5475,7 +5475,7 @@ Entry (DictionaryEntry)
 																			Value (NormalMap):
 																				Extent:
 																					null
-																				"boolean"
+																				"logic"
 																Entry (DictionaryEntry)
 																	Key (NormalMap):
 																		Extent:
@@ -5485,14 +5485,14 @@ Entry (DictionaryEntry)
 																		Extent (Extent):
 																			End (SourcePosition):
 																				Column (Int32):
-																					"37"
+																					"35"
 																				Line (Int32):
 																					"312"
 																			FileName (String):
 																				"C:\Projects\Meta\Library\basicTest.meta"
 																			Start (SourcePosition):
 																				Column (Int32):
-																					"34"
+																					"32"
 																				Line (Int32):
 																					"312"
 																		Entry (DictionaryEntry)
@@ -5520,7 +5520,7 @@ Entry (DictionaryEntry)
 																"C:\Projects\Meta\Library\basicTest.meta"
 															Start (SourcePosition):
 																Column (Int32):
-																	"55"
+																	"53"
 																Line (Int32):
 																	"312"
 														Entry (DictionaryEntry)
@@ -5540,14 +5540,14 @@ Entry (DictionaryEntry)
 																		Extent (Extent):
 																			End (SourcePosition):
 																				Column (Int32):
-																					"55"
+																					"53"
 																				Line (Int32):
 																					"312"
 																			FileName (String):
 																				"C:\Projects\Meta\Library\basicTest.meta"
 																			Start (SourcePosition):
 																				Column (Int32):
-																					"55"
+																					"53"
 																				Line (Int32):
 																					"312"
 																		Entry (DictionaryEntry)
@@ -5559,14 +5559,14 @@ Entry (DictionaryEntry)
 																				Extent (Extent):
 																					End (SourcePosition):
 																						Column (Int32):
-																							"55"
+																							"53"
 																						Line (Int32):
 																							"312"
 																					FileName (String):
 																						"C:\Projects\Meta\Library\basicTest.meta"
 																					Start (SourcePosition):
 																						Column (Int32):
-																							"38"
+																							"36"
 																						Line (Int32):
 																							"312"
 																				Entry (DictionaryEntry)
@@ -5578,14 +5578,14 @@ Entry (DictionaryEntry)
 																						Extent (Extent):
 																							End (SourcePosition):
 																								Column (Int32):
-																									"45"
+																									"43"
 																								Line (Int32):
 																									"312"
 																							FileName (String):
 																								"C:\Projects\Meta\Library\basicTest.meta"
 																							Start (SourcePosition):
 																								Column (Int32):
-																									"38"
+																									"36"
 																								Line (Int32):
 																									"312"
 																						Entry (DictionaryEntry)
@@ -5606,14 +5606,14 @@ Entry (DictionaryEntry)
 																						Extent (Extent):
 																							End (SourcePosition):
 																								Column (Int32):
-																									"49"
+																									"47"
 																								Line (Int32):
 																									"312"
 																							FileName (String):
 																								"C:\Projects\Meta\Library\basicTest.meta"
 																							Start (SourcePosition):
 																								Column (Int32):
-																									"46"
+																									"44"
 																								Line (Int32):
 																									"312"
 																						Entry (DictionaryEntry)
@@ -5634,14 +5634,14 @@ Entry (DictionaryEntry)
 																						Extent (Extent):
 																							End (SourcePosition):
 																								Column (Int32):
-																									"55"
+																									"53"
 																								Line (Int32):
 																									"312"
 																							FileName (String):
 																								"C:\Projects\Meta\Library\basicTest.meta"
 																							Start (SourcePosition):
 																								Column (Int32):
-																									"50"
+																									"48"
 																								Line (Int32):
 																									"312"
 																						Entry (DictionaryEntry)
@@ -5669,7 +5669,7 @@ Entry (DictionaryEntry)
 																				"C:\Projects\Meta\Library\basicTest.meta"
 																			Start (SourcePosition):
 																				Column (Int32):
-																					"55"
+																					"53"
 																				Line (Int32):
 																					"312"
 																		Entry (DictionaryEntry)
@@ -6209,7 +6209,7 @@ Entry (DictionaryEntry)
 																														"C:\Projects\Meta\Library\basicTest.meta"
 																													Start (SourcePosition):
 																														Column (Int32):
-																															"30"
+																															"28"
 																														Line (Int32):
 																															"317"
 																												Entry (DictionaryEntry)
@@ -6229,14 +6229,14 @@ Entry (DictionaryEntry)
 																																Extent (Extent):
 																																	End (SourcePosition):
 																																		Column (Int32):
-																																			"30"
+																																			"28"
 																																		Line (Int32):
 																																			"317"
 																																	FileName (String):
 																																		"C:\Projects\Meta\Library\basicTest.meta"
 																																	Start (SourcePosition):
 																																		Column (Int32):
-																																			"30"
+																																			"28"
 																																		Line (Int32):
 																																			"317"
 																																Entry (DictionaryEntry)
@@ -6248,7 +6248,7 @@ Entry (DictionaryEntry)
 																																		Extent (Extent):
 																																			End (SourcePosition):
 																																				Column (Int32):
-																																					"30"
+																																					"28"
 																																				Line (Int32):
 																																					"317"
 																																			FileName (String):
@@ -6295,7 +6295,7 @@ Entry (DictionaryEntry)
 																																				Extent (Extent):
 																																					End (SourcePosition):
 																																						Column (Int32):
-																																							"26"
+																																							"24"
 																																						Line (Int32):
 																																							"317"
 																																					FileName (String):
@@ -6313,7 +6313,7 @@ Entry (DictionaryEntry)
 																																					Value (NormalMap):
 																																						Extent:
 																																							null
-																																						"number"
+																																						"math"
 																																		Entry (DictionaryEntry)
 																																			Key (NormalMap):
 																																				Extent:
@@ -6323,14 +6323,14 @@ Entry (DictionaryEntry)
 																																				Extent (Extent):
 																																					End (SourcePosition):
 																																						Column (Int32):
-																																							"30"
+																																							"28"
 																																						Line (Int32):
 																																							"317"
 																																					FileName (String):
 																																						"C:\Projects\Meta\Library\basicTest.meta"
 																																					Start (SourcePosition):
 																																						Column (Int32):
-																																							"27"
+																																							"25"
 																																						Line (Int32):
 																																							"317"
 																																				Entry (DictionaryEntry)
@@ -6358,7 +6358,7 @@ Entry (DictionaryEntry)
 																																		"C:\Projects\Meta\Library\basicTest.meta"
 																																	Start (SourcePosition):
 																																		Column (Int32):
-																																			"30"
+																																			"28"
 																																		Line (Int32):
 																																			"317"
 																																Entry (DictionaryEntry)

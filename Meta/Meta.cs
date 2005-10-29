@@ -1641,6 +1641,7 @@ namespace Meta
 				Map val;
 				try
 				{
+					// TODO: some caching might be in order here
 					val=ClassesFromAssemblies(new Assembly[] {Assembly.LoadWithPartialName(key.GetString())});
 				}
 				catch

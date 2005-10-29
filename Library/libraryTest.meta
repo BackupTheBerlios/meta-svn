@@ -2,8 +2,8 @@
 	current=library.map.merge
 		parent
 		library.map
-		library.boolean
-		library.number
+		library.logic
+		library.math
 	booleanTest=
 		not=
 			true=not *
