@@ -14,17 +14,16 @@
 #	along with this program; if not, write to the Free Software
 #	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 |
-	current=map.Merging
+	current=library.map.merge
 		parent
 		=
 			"AssignedToCurrent"
 	unicodeText="äaba"
-	current=map.Merging
+	current=library.map.merge
 		parent
-		boolean
-		map
-		number
-		array
+		library.boolean
+		library.map
+		library.number
 #	internetTest=web.localhost.test
 	parent.parent.testSubDir.x=*
 	persistantDeleteTest=testSubDir.x
@@ -137,7 +136,7 @@
 	concatenate=array.Concatenation
 		"x"
 		"yz"
-	current=map.Merging
+	current=merge
 		parent
 		testClasses
 	TestClass.NestedClass.field=5

@@ -4,106 +4,2722 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"not"
-	Value (DotNetMethod):
+		"join"
+	Value (NormalMap):
 		Extent:
 			null
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"and"
-	Value (DotNetMethod):
-		Extent:
-			null
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"or"
-	Value (DotNetMethod):
-		Extent:
-			null
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"contains"
-	Value (DotNetMethod):
-		Extent:
-			null
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"Keys"
-	Value (DotNetMethod):
-		Extent:
-			null
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"Merging"
-	Value (DotNetMethod):
-		Extent:
-			null
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"Equality"
-	Value (DotNetMethod):
-		Extent:
-			null
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"add"
-	Value (DotNetMethod):
-		Extent:
-			null
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"multiply"
-	Value (DotNetMethod):
-		Extent:
-			null
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"greater"
-	Value (DotNetMethod):
-		Extent:
-			null
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"smaller"
-	Value (DotNetMethod):
-		Extent:
-			null
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"Concatenation"
-	Value (DotNetMethod):
-		Extent:
-			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 3 column 25"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"call"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"callable"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 3 column 25"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"select"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 3 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 3 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Meta"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"2"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 3 column 9"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Interpreter"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"3"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 3 column 21"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Join"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"argument"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 3 column 25"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"program"
+									Value (NormalMap):
+										Extent:
+											null
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 4 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"key"
+													Value (NormalMap):
+														Extent:
+															null
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"1"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (NormalMap):
+																		Extent:
+																			null
+																		"1"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"value"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 4 column 13"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 4 column 4"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 4 column 4"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"parameter"
 Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
 		"apply"
-	Value (DotNetMethod):
+	Value (NormalMap):
 		Extent:
 			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 6 column 26"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"call"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"callable"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 6 column 26"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"select"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 6 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 6 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Meta"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"2"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 6 column 9"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Interpreter"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"3"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 6 column 21"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Apply"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"argument"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 6 column 26"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"program"
+									Value (NormalMap):
+										Extent:
+											null
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 7 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"key"
+													Value (NormalMap):
+														Extent:
+															null
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"1"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (NormalMap):
+																		Extent:
+																			null
+																		"1"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"value"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 7 column 13"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 7 column 4"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 7 column 4"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"parameter"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"contains"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 9 column 4"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"program"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"1"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 10 column 4"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"key"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 10 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 10 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"object"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"value"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 10 column 28"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"call"
+											Value (NormalMap):
+												Extent:
+													null
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"callable"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 10 column 28"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 10 column 11"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 10 column 11"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"Meta"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"2"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 10 column 16"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"DotNetObject"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"argument"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 10 column 28"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"program"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 11 column 5"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"key"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				Entry (DictionaryEntry)
+																					Key (NormalMap):
+																						Extent:
+																							null
+																						"1"
+																					Value (NormalMap):
+																						Extent:
+																							null
+																						Entry (DictionaryEntry)
+																							Key (NormalMap):
+																								Extent:
+																									null
+																								"literal"
+																							Value (NormalMap):
+																								Extent:
+																									null
+																								"1"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"value"
+																			Value (NormalMap):
+																				Extent (Extent):
+																					"line 11 column 18"
+																				Entry (DictionaryEntry)
+																					Key (NormalMap):
+																						Extent:
+																							null
+																						"select"
+																					Value (NormalMap):
+																						Extent (Extent):
+																							"line 11 column 5"
+																						Entry (DictionaryEntry)
+																							Key (NormalMap):
+																								Extent:
+																									null
+																								"1"
+																							Value (NormalMap):
+																								Extent (Extent):
+																									"line 11 column 5"
+																								Entry (DictionaryEntry)
+																									Key (NormalMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (NormalMap):
+																										Extent:
+																											null
+																										"parameter"
+																						Entry (DictionaryEntry)
+																							Key (NormalMap):
+																								Extent:
+																									null
+																								"2"
+																							Value (NormalMap):
+																								Extent (Extent):
+																									"line 11 column 15"
+																								Entry (DictionaryEntry)
+																									Key (NormalMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (NormalMap):
+																										Extent:
+																											null
+																										"map"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"2"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 12 column 4"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"key"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 12 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 12 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"current"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"value"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 12 column 30"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"call"
+											Value (NormalMap):
+												Extent:
+													null
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"callable"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 12 column 30"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 12 column 12"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 12 column 12"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"object"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"2"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 12 column 19"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"ContainsKey"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"argument"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 12 column 30"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"program"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 13 column 5"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"key"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				Entry (DictionaryEntry)
+																					Key (NormalMap):
+																						Extent:
+																							null
+																						"1"
+																					Value (NormalMap):
+																						Extent:
+																							null
+																						Entry (DictionaryEntry)
+																							Key (NormalMap):
+																								Extent:
+																									null
+																								"literal"
+																							Value (NormalMap):
+																								Extent:
+																									null
+																								"1"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"value"
+																			Value (NormalMap):
+																				Extent (Extent):
+																					"line 13 column 18"
+																				Entry (DictionaryEntry)
+																					Key (NormalMap):
+																						Extent:
+																							null
+																						"select"
+																					Value (NormalMap):
+																						Extent (Extent):
+																							"line 13 column 5"
+																						Entry (DictionaryEntry)
+																							Key (NormalMap):
+																								Extent:
+																									null
+																								"1"
+																							Value (NormalMap):
+																								Extent (Extent):
+																									"line 13 column 5"
+																								Entry (DictionaryEntry)
+																									Key (NormalMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (NormalMap):
+																										Extent:
+																											null
+																										"parameter"
+																						Entry (DictionaryEntry)
+																							Key (NormalMap):
+																								Extent:
+																									null
+																								"2"
+																							Value (NormalMap):
+																								Extent (Extent):
+																									"line 13 column 15"
+																								Entry (DictionaryEntry)
+																									Key (NormalMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (NormalMap):
+																										Extent:
+																											null
+																										"key"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"keys"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 15 column 4"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"program"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"1"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 16 column 4"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"key"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 16 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 16 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"object"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"value"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 16 column 28"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"call"
+											Value (NormalMap):
+												Extent:
+													null
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"callable"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 16 column 28"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 16 column 11"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 16 column 11"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"Meta"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"2"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 16 column 16"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"DotNetObject"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"argument"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 16 column 28"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"program"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 17 column 5"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"key"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				Entry (DictionaryEntry)
+																					Key (NormalMap):
+																						Extent:
+																							null
+																						"1"
+																					Value (NormalMap):
+																						Extent:
+																							null
+																						Entry (DictionaryEntry)
+																							Key (NormalMap):
+																								Extent:
+																									null
+																								"literal"
+																							Value (NormalMap):
+																								Extent:
+																									null
+																								"1"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"value"
+																			Value (NormalMap):
+																				Extent (Extent):
+																					"line 17 column 14"
+																				Entry (DictionaryEntry)
+																					Key (NormalMap):
+																						Extent:
+																							null
+																						"select"
+																					Value (NormalMap):
+																						Extent (Extent):
+																							"line 17 column 5"
+																						Entry (DictionaryEntry)
+																							Key (NormalMap):
+																								Extent:
+																									null
+																								"1"
+																							Value (NormalMap):
+																								Extent (Extent):
+																									"line 17 column 5"
+																								Entry (DictionaryEntry)
+																									Key (NormalMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (NormalMap):
+																										Extent:
+																											null
+																										"parameter"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"2"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 18 column 4"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"key"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 18 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 18 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"current"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"value"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 18 column 32"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"call"
+											Value (NormalMap):
+												Extent:
+													null
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"callable"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 18 column 32"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 18 column 12"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 18 column 12"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"Meta"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"2"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 18 column 17"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"Transform"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"3"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 18 column 27"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"ToMap"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"argument"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 18 column 32"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"program"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 19 column 5"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"key"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				Entry (DictionaryEntry)
+																					Key (NormalMap):
+																						Extent:
+																							null
+																						"1"
+																					Value (NormalMap):
+																						Extent:
+																							null
+																						Entry (DictionaryEntry)
+																							Key (NormalMap):
+																								Extent:
+																									null
+																								"literal"
+																							Value (NormalMap):
+																								Extent:
+																									null
+																								"1"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"value"
+																			Value (NormalMap):
+																				Extent (Extent):
+																					"line 19 column 20"
+																				Entry (DictionaryEntry)
+																					Key (NormalMap):
+																						Extent:
+																							null
+																						"call"
+																					Value (NormalMap):
+																						Extent:
+																							null
+																						Entry (DictionaryEntry)
+																							Key (NormalMap):
+																								Extent:
+																									null
+																								"callable"
+																							Value (NormalMap):
+																								Extent (Extent):
+																									"line 19 column 20"
+																								Entry (DictionaryEntry)
+																									Key (NormalMap):
+																										Extent:
+																											null
+																										"select"
+																									Value (NormalMap):
+																										Extent (Extent):
+																											"line 19 column 5"
+																										Entry (DictionaryEntry)
+																											Key (NormalMap):
+																												Extent:
+																													null
+																												"1"
+																											Value (NormalMap):
+																												Extent (Extent):
+																													"line 19 column 5"
+																												Entry (DictionaryEntry)
+																													Key (NormalMap):
+																														Extent:
+																															null
+																														"literal"
+																													Value (NormalMap):
+																														Extent:
+																															null
+																														"object"
+																										Entry (DictionaryEntry)
+																											Key (NormalMap):
+																												Extent:
+																													null
+																												"2"
+																											Value (NormalMap):
+																												Extent (Extent):
+																													"line 19 column 12"
+																												Entry (DictionaryEntry)
+																													Key (NormalMap):
+																														Extent:
+																															null
+																														"literal"
+																													Value (NormalMap):
+																														Extent:
+																															null
+																														"Keys"
+																										Entry (DictionaryEntry)
+																											Key (NormalMap):
+																												Extent:
+																													null
+																												"3"
+																											Value (NormalMap):
+																												Extent (Extent):
+																													"line 19 column 17"
+																												Entry (DictionaryEntry)
+																													Key (NormalMap):
+																														Extent:
+																															null
+																														"literal"
+																													Value (NormalMap):
+																														Extent:
+																															null
+																														"get"
+																						Entry (DictionaryEntry)
+																							Key (NormalMap):
+																								Extent:
+																									null
+																								"argument"
+																							Value (NormalMap):
+																								Extent (Extent):
+																									"line 19 column 20"
+																								Entry (DictionaryEntry)
+																									Key (NormalMap):
+																										Extent:
+																											null
+																										"program"
+																									Value (NormalMap):
+																										Extent:
+																											null
+																										""
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"merge"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 21 column 26"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"call"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"callable"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 21 column 26"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"select"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 21 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 21 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Meta"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"2"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 21 column 9"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Interpreter"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"3"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 21 column 21"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Merge"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"argument"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 21 column 26"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"program"
+									Value (NormalMap):
+										Extent:
+											null
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 22 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"key"
+													Value (NormalMap):
+														Extent:
+															null
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"1"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (NormalMap):
+																		Extent:
+																			null
+																		"1"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"value"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 22 column 13"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 22 column 4"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 22 column 4"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"parameter"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"equal"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 24 column 26"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"call"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"callable"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 24 column 26"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"select"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 24 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 24 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Meta"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"2"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 24 column 9"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Interpreter"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"3"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 24 column 21"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Equal"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"argument"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 24 column 26"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"program"
+									Value (NormalMap):
+										Extent:
+											null
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 25 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"key"
+													Value (NormalMap):
+														Extent:
+															null
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"1"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (NormalMap):
+																		Extent:
+																			null
+																		"1"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"value"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 25 column 13"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 25 column 4"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 25 column 4"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"parameter"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"not"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 28 column 21"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"select"
+					Value (NormalMap):
+						Extent (Extent):
+							"line 28 column 4"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"1"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 28 column 4"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"literal"
+									Value (NormalMap):
+										Extent:
+											null
+										"table"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"2"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 28 column 20"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"select"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 28 column 11"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 28 column 11"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"parameter"
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"table"
+			Value (NormalMap):
+				Extent:
+					null
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						""
+					Value (NormalMap):
+						Extent:
+							null
+						"1"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"1"
+					Value (NormalMap):
+						Extent:
+							null
+						""
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"and"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 33 column 24"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"call"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"callable"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 33 column 24"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"select"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 33 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 33 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Meta"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"2"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 33 column 9"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Interpreter"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"3"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 33 column 21"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"And"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"argument"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 33 column 24"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"program"
+									Value (NormalMap):
+										Extent:
+											null
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 34 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"key"
+													Value (NormalMap):
+														Extent:
+															null
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"1"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (NormalMap):
+																		Extent:
+																			null
+																		"1"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"value"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 34 column 13"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 34 column 4"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 34 column 4"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"parameter"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"or"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 36 column 23"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"call"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"callable"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 36 column 23"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"select"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 36 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 36 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Meta"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"2"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 36 column 9"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Interpreter"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"3"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 36 column 21"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Or"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"argument"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 36 column 23"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"program"
+									Value (NormalMap):
+										Extent:
+											null
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 37 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"key"
+													Value (NormalMap):
+														Extent:
+															null
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"1"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (NormalMap):
+																		Extent:
+																			null
+																		"1"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"value"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 37 column 13"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 37 column 4"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 37 column 4"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"parameter"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"add"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 40 column 24"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"call"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"callable"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 40 column 24"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"select"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 40 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 40 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Meta"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"2"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 40 column 9"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Interpreter"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"3"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 40 column 21"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Add"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"argument"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 40 column 24"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"program"
+									Value (NormalMap):
+										Extent:
+											null
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 41 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"key"
+													Value (NormalMap):
+														Extent:
+															null
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"1"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (NormalMap):
+																		Extent:
+																			null
+																		"1"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"value"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 41 column 13"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 41 column 4"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 41 column 4"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"parameter"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"multiply"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 43 column 29"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"call"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"callable"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 43 column 29"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"select"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 43 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 43 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Meta"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"2"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 43 column 9"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Interpreter"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"3"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 43 column 21"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Multiply"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"argument"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 43 column 29"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"program"
+									Value (NormalMap):
+										Extent:
+											null
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 44 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"key"
+													Value (NormalMap):
+														Extent:
+															null
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"1"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (NormalMap):
+																		Extent:
+																			null
+																		"1"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"value"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 44 column 13"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 44 column 4"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 44 column 4"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"parameter"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"greater"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 46 column 28"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"call"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"callable"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 46 column 28"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"select"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 46 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 46 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Meta"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"2"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 46 column 9"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Interpreter"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"3"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 46 column 21"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Greater"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"argument"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 46 column 28"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"program"
+									Value (NormalMap):
+										Extent:
+											null
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 47 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"key"
+													Value (NormalMap):
+														Extent:
+															null
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"1"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (NormalMap):
+																		Extent:
+																			null
+																		"1"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"value"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 47 column 13"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 47 column 4"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 47 column 4"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"parameter"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"smaller"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+					"line 49 column 28"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"call"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"callable"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 49 column 28"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"select"
+									Value (NormalMap):
+										Extent (Extent):
+											"line 49 column 4"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 49 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Meta"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"2"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 49 column 9"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Interpreter"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"3"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 49 column 21"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Smaller"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"argument"
+							Value (NormalMap):
+								Extent (Extent):
+									"line 49 column 28"
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"program"
+									Value (NormalMap):
+										Extent:
+											null
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+													"line 50 column 4"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"key"
+													Value (NormalMap):
+														Extent:
+															null
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"1"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (NormalMap):
+																		Extent:
+																			null
+																		"1"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"value"
+													Value (NormalMap):
+														Extent (Extent):
+															"line 50 column 13"
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																	"line 50 column 4"
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																			"line 50 column 4"
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"parameter"
 Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
@@ -194,7 +2810,7 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
-		"integerTest"
+		"numberTest"
 	Value (NormalMap):
 		Extent:
 			null
@@ -207,6 +2823,42 @@ Entry (DictionaryEntry)
 				Extent:
 					null
 				"1100"
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"multiply"
+			Value (NormalMap):
+				Extent:
+					null
+				"19437"
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"greater"
+			Value (NormalMap):
+				Extent:
+					null
+				"1"
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"smaller"
+			Value (NormalMap):
+				Extent:
+					null
+				"0"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
+		"bitwiseTest"
+	Value (NormalMap):
+		Extent:
+			null
+		"29"
 Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
@@ -219,11 +2871,64 @@ Entry (DictionaryEntry)
 			Key (NormalMap):
 				Extent:
 					null
+				"join"
+			Value (NormalMap):
+				Extent:
+					null
+				"abc, die Katze lief im Schnee."
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
 				"apply"
 			Value (NormalMap):
 				Extent:
 					null
 				""
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"contains"
+			Value (NormalMap):
+				Extent:
+					null
+				"1"
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"keys"
+			Value (NormalMap):
+				Extent:
+					null
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"1"
+					Value (NormalMap):
+						Extent:
+							null
+						"jjqwv"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"2"
+					Value (NormalMap):
+						Extent:
+							null
+						"oere"
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"3"
+					Value (NormalMap):
+						Extent:
+							null
+						"1"
 		Entry (DictionaryEntry)
 			Key (NormalMap):
 				Extent:
@@ -241,12 +2946,3 @@ Entry (DictionaryEntry)
 						Extent:
 							null
 						"1"
-Entry (DictionaryEntry)
-	Key (NormalMap):
-		Extent:
-			null
-		"bitwiseTest"
-	Value (NormalMap):
-		Extent:
-			null
-		"29"

@@ -1,14 +1,13 @@
 |
-	current=map.Merging
+	current=library.map.merge
 		parent
-		boolean
-		map
-		number
-		array
+		library.map
+		library.boolean
+		library.number
 	booleanTest=
 		not=
-			true=library.not *
-			false=library.not 1
+			true=not *
+			false=not 1
 		and=
 			true=and
 				1
@@ -29,11 +28,27 @@
 				*
 				*
 				*
-	integerTest=
-		add=number.add
+	numberTest=
+		add=add
 			100
 			1000
+		multiply=multiply
+			19
+			1023
+		greater=greater
+			4
+			1
+		smaller=smaller
+			23
+			2
+	bitwiseTest=
+		or=library.bitwise.or
+			8
+			20
 	mapTest=
+		join=join
+			"abc, "
+			"die Katze lief im Schnee."
 		apply=
 			applyMethod=
 				|add
@@ -45,10 +60,18 @@
 					1
 					2
 					3
+		contains=contains
+			map=
+				x="hello"
+			key="x"
+		keys=keys
+			jjqwv="aeäquq"
+			oere="i ke"
+			"oiq"
 		equal=
-			numbers=Equality
+			numbers=equal
 				1
 				1
-	bitwiseTest=bitwise.or
+	bitwiseTest=library.bitwise.or
 		20
 		System.Windows.Forms.Keys.Tab

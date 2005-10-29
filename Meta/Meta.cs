@@ -74,13 +74,13 @@ namespace Meta
 
 	public class MetaException:ApplicationException
 	{
-		public MetaException(string message,Extent extent)
+		public MetaException(string message,Extent extent):base(message)
 		{
 			this.extent=extent;
-			this.message=message;
+//			this.message=message;
 		}
 		private Extent extent;
-		private string message="";
+//		private string message="";
 
 	}
 	public class Throw
@@ -456,6 +456,10 @@ namespace Meta
 		{
 			Map key=Evaluate((Map)code.Array[0],context);
 			Map selected=context;
+			if(key.Equals(new NormalMap("Meta")))
+			{
+				int asdf=0;
+			}
 			while(!selected.ContainsKey(key))
 			{
 				selected=selected.Parent;
@@ -482,6 +486,183 @@ namespace Meta
 				Break(data);
 				Thread.CurrentThread.Suspend();
 			}
+		}
+		public class Argument
+		{
+			public static void ContainsKey(Map map,Map key)
+			{
+				if(!map.ContainsKey(key))
+				{
+					throw new ApplicationException("Functions expects keyword argument "+Serialize.Value(key));
+				}
+			}
+			public static void Integer(Map arg)
+			{
+				if(!arg.IsInteger)
+				{
+					throw new ApplicationException("arg is not an integer");
+				}
+			}
+			public static void IntegerArray(Map arg)
+			{
+				foreach(Map map in arg.Array)
+				{
+					if(!map.IsInteger)
+					{
+						throw new ApplicationException("not all array elements in argument are integers");
+					}
+				}
+			}
+			public static void ExactArrayCount(Map parameter,int count)
+			{
+				if(parameter.Array.Count!=count)
+				{
+					throw new ApplicationException("did not pass array of length "+count.ToString()+" to function");
+				}
+			}
+			public static void MinimalArrayCount(Map arg,int count)
+			{
+				if(arg.Array.Count<count)
+				{
+					throw new ApplicationException("count is too small");
+				}
+			}
+			public static void Boolean(Map arg)
+			{
+				if(!arg.IsBoolean)
+				{
+					throw new ApplicationException("argument is not boolean");
+				}
+			}
+			public static void BooleanArray(Map arg)
+			{
+				foreach(Map map in arg.Array)
+				{
+					if(!map.IsBoolean)
+					{
+						throw new ApplicationException("one of the argument array elements is not boolean");
+					}
+				}
+			}
+
+		}
+
+		public static Map Or(Map arg) 
+		{
+			Argument.BooleanArray(arg);
+			bool or=false;
+			foreach(Map map in arg.Array)
+			{
+				if(map.GetBoolean())
+				{
+					or=true;
+					break;
+				}
+			}
+			return or;
+		}
+		public static Map Add(Map arg)
+		{
+			Argument.IntegerArray(arg);
+			Integer sum=0;
+			foreach(Map map in arg.Array)
+			{
+				sum+=map.GetInteger();
+			}
+			return sum;
+		}
+		public static Map Multiply(Map arg) 
+		{
+			Argument.IntegerArray(arg);
+			Integer product=1;
+			foreach(Map map in arg.Array)
+			{
+				product*=map.GetInteger();
+			}
+			return product;
+		}
+		public static Map Greater(Map parameter)
+		{
+			Argument.IntegerArray(parameter);
+			Argument.ExactArrayCount(parameter,2);
+			return parameter[1].GetInteger()>parameter[2].GetInteger();
+		}
+		public static Map Smaller(Map parameter)
+		{
+			Argument.IntegerArray(parameter);
+			Argument.ExactArrayCount(parameter,2);
+			return parameter[1].GetInteger()<parameter[2].GetInteger();
+		}
+
+		public static Map BitwiseOr(Map arg)
+		{
+			Argument.IntegerArray(arg);
+			Integer or=0;
+			foreach(Map map in arg.Array)
+			{
+				or|=map.GetInteger();
+			}
+			return or;
+		}
+		public static Map Join(Map arg) 
+		{
+			Integer i=1;
+			Map array=new NormalMap();
+			foreach(Map map in arg.Array) 
+			{ 
+				foreach(Map val in map.Array) 
+				{
+					array[i]=val;
+					i+=1;
+				}
+			}
+			return array;
+		}
+		public static Map Apply(Map arg)
+		{
+			// TODO: ensure "function" is callable, maybe?
+			Argument.ContainsKey(arg,"function");
+			Argument.ContainsKey(arg,"array");
+			Map application=new NormalMap();
+			int counter=1;
+			foreach(Map element in arg["array"].Array)
+			{
+				application[counter]=arg["function"].Call(element);
+				counter++;
+			}
+			return application;
+		}
+		public static Map And(Map arg) 
+		{
+			Argument.BooleanArray(arg);
+			bool and=true;
+			foreach(Map map in arg.Array)
+			{
+				if(!map.GetBoolean())
+				{
+					and=false;
+					break;
+				}
+			}
+			return and;
+		}
+		public static Map Equal(Map arg) 
+		{
+			bool equal=true;
+			for(int i=0;i+1<arg.Array.Count;i++)
+			{
+				if(!arg.Array[i].Equals(arg.Array[i+1]))
+				{
+					equal=false;
+					break;
+				}
+			}
+			return equal;
+		}
+		// refactor
+		public static Map Merge(Map map)
+		{
+			return MergeCollection(map.Array);
 		}
 		public static Map Merge(params Map[] arkvlToMerge)
 		{
@@ -1291,13 +1472,16 @@ namespace Meta
 					if(file.Exists)
 					{
 						val=new PersistantMap(file);
+						val.Parent=map;
 					}
 					else if(subDirectory.Exists)
 					{
 						val=new PersistantMap(subDirectory);
+						val.Parent=map;
 					}
 					else if(cache.ContainsKey(key))
 					{
+						// TODO: assign parent here, too
 						val=cache[key];
 					}
 					else
@@ -3514,6 +3698,11 @@ namespace Meta
 	}
 	public class Extent
 	{
+		public override string ToString()
+		{
+			return "line "+Start.Line+" column "+Start.Column;
+		}
+
 		public static ArrayList GetExtents(string fileName,int firstLine,int lastLine)
 		{
 			ArrayList result=new ArrayList();
