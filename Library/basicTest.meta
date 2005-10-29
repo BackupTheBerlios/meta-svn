@@ -140,7 +140,7 @@
 #	current=library.map.merge
 #		parent
 #		["MetaTest.exe"].testClasses
-	TestClass=TestClass
+	TestClass=MetaTest.TestClass
 	TestClass.NestedClass.field=5
 	nestedClassTest=TestClass.NestedClass.field
 	testClass=TestClass*
@@ -155,7 +155,7 @@
 		denominator=3
 	TestClass.boolTest=1
 	boolTest=TestClass.boolTest
-	MemberTest=MemberTest
+	MemberTest=MetaTest.MemberTest
 	memberTest=MemberTest*
 	MemberTest.classField="a"
 	memberTest.instanceField="b"
@@ -166,7 +166,7 @@
 		MemberTest.ClassProperty.get*
 	instancePropertyValue=memberTest.InstanceProperty.get*
 	interceptedSymbol="/hello/"
-	positionalNoConversion=PositionalNoConversion
+	positionalNoConversion=MetaTest.PositionalNoConversion
 		"m"
 		"n"
 		"o"
@@ -174,7 +174,7 @@
 		"r"
 		"s"
 		"t"
-	namedNoConversion=NamedNoConversion
+	namedNoConversion=MetaTest.NamedNoConversion
 		=
 			"m"
 			y="n"
@@ -182,7 +182,7 @@
 		=
 			c="t"
 			"r"
-	indexerNoConversion=IndexerNoConversion*
+	indexerNoConversion=MetaTest.IndexerNoConversion*
 	indexerNoConversion.Item.set
 		"abc"
 		"hihi"

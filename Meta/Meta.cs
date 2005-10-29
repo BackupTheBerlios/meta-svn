@@ -1554,74 +1554,10 @@ namespace Meta
 					{
 						root[type.Name]=new DotNetClass(type);
 					}
-					else
-					{
-						int asdf=0;
-					}
-
-//					if(!assemblyNamespaces.Contains(type.Namespace))
-//					{
-//						assemblyNamespaces.Add(type.Namespace);
-//						NamespaceStrategy current=root;
-//						if(type.Namespace!=null)
-//						{
-//							foreach(string subNamespace in type.Namespace.Split('.'))
-//							{
-//								if(!current.Namespaces.ContainsKey(subNamespace))
-//								{
-//									string fullName=current.FullName;
-//									if(fullName!=null)
-//									{
-//										fullName+=".";
-//									}
-//									fullName+=subNamespace;
-//									current.Namespaces[subNamespace]=new NormalMap(new NamespaceStrategy(fullName));
-//								}
-//								current=(NamespaceStrategy)((NormalMap)current.Namespaces[subNamespace]).strategy;
-//							}
-//						}
-//						current.Assemblies.Add(assembly);
-//					}
 				}
 			}
 			return root;
-//			return new NormalMap(root);
 		}
-//		public NormalMap NamespacesFromAssemblies(ArrayList assemblies)
-//		{
-//			NamespaceStrategy root=new NamespaceStrategy(null);
-//			foreach(Assembly assembly in assemblies)
-//			{
-//				ArrayList assemblyNamespaces=new ArrayList();
-//				foreach(Type type in assembly.GetExportedTypes())
-//				{
-//					if(!assemblyNamespaces.Contains(type.Namespace))
-//					{
-//						assemblyNamespaces.Add(type.Namespace);
-//						NamespaceStrategy current=root;
-//						if(type.Namespace!=null)
-//						{
-//							foreach(string subNamespace in type.Namespace.Split('.'))
-//							{
-//								if(!current.Namespaces.ContainsKey(subNamespace))
-//								{
-//									string fullName=current.FullName;
-//									if(fullName!=null)
-//									{
-//										fullName+=".";
-//									}
-//									fullName+=subNamespace;
-//									current.Namespaces[subNamespace]=new NormalMap(new NamespaceStrategy(fullName));
-//								}
-//								current=(NamespaceStrategy)((NormalMap)current.Namespaces[subNamespace]).strategy;
-//							}
-//						}
-//						current.Assemblies.Add(assembly);
-//					}
-//				}
-//			}
-//			return new NormalMap(root);
-//		}
 		protected Map cachedAssemblyInfo=new NormalMap();
 		protected Map cache=new NormalMap();
 	}
@@ -1641,7 +1577,7 @@ namespace Meta
 				Map val;
 				try
 				{
-					// TODO: some caching might be in order here
+					// some caching might be in order here
 					val=ClassesFromAssemblies(new Assembly[] {Assembly.LoadWithPartialName(key.GetString())});
 				}
 				catch
@@ -1659,17 +1595,18 @@ namespace Meta
 		{
 			get
 			{
-				return GAC.AssembliesNames;
+				ArrayList assemblies=GAC.AssembliesNames;
+				foreach(string dllPath in Directory.GetFiles(Process.LibraryPath.FullName,"*.dll"))
+				{
+					assemblies.Add(new NormalMap(Path.GetFileNameWithoutExtension(dllPath)));
+				}
+				foreach(string exePath in Directory.GetFiles(Process.LibraryPath.FullName,"*.exe"))
+				{
+					assemblies.Add(new NormalMap(Path.GetFileNameWithoutExtension(exePath)));
+				}
+				return assemblies;
 			}
 		}
-
-//		public override ArrayList Keys
-//		{
-//			get
-//			{
-//				return cache.Keys;
-//			}
-//		}
 		public override int Count
 		{
 			get
@@ -1683,10 +1620,6 @@ namespace Meta
 			{
 				return new ArrayList();
 			}
-		}
-		private GACMap()
-		{
-//			cache=ClassesFromAssemblies(GAC.Assemblies);
 		}
 		static GACMap()
 		{
@@ -1732,10 +1665,6 @@ namespace Meta
 				Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
 				Stream stream=webClient.OpenRead(fullPath.ToString());
 				StreamReader streamReader=new StreamReader(stream);
-				// of course, this is pointless
-				// there should only be one file
-				// only one file to worry about
-				// and no stupid file system restrictions
 				return Process.Current.RunWithoutLibrary(fullPath.ToString(),streamReader);
 			}
 			set
@@ -1796,19 +1725,19 @@ namespace Meta
 		{
 			this.directory=directory;
 			assemblyPath=Path.Combine(directory.FullName,"assembly");
-			ArrayList assemblies=new ArrayList();
-			if(Directory.Exists(assemblyPath))
-			{
-				foreach(string dllPath in Directory.GetFiles(assemblyPath,"*.dll"))
-				{
-					assemblies.Add(Assembly.LoadFrom(dllPath));
-				}
-				foreach(string exePath in Directory.GetFiles(assemblyPath,"*.exe"))
-				{
-					assemblies.Add(Assembly.LoadFrom(exePath));
-				}
-			}
-			cache=ClassesFromAssemblies(assemblies);
+//			ArrayList assemblies=new ArrayList();
+//			if(Directory.Exists(assemblyPath))
+//			{
+//				foreach(string dllPath in Directory.GetFiles(assemblyPath,"*.dll"))
+//				{
+//					assemblies.Add(Assembly.LoadFrom(dllPath));
+//				}
+//				foreach(string exePath in Directory.GetFiles(assemblyPath,"*.exe"))
+//				{
+//					assemblies.Add(Assembly.LoadFrom(exePath));
+//				}
+//			}
+//			cache=ClassesFromAssemblies(assemblies);
 		}
 		private string assemblyPath;
 		public override ArrayList Array
