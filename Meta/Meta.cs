@@ -198,24 +198,9 @@ namespace Meta
 		// should be removed
 		public Map RunWithoutLibrary(string fileName,TextReader textReader)
 		{
-//			TextReader textReader=new StreamReader(fileName);
 			Map program=Compile(textReader);
-//			textReader.Close();
 			return CallProgram(program,new NormalMap(),null);
 		}
-//		public Map RunWithoutLibrary(string fileName)
-//		{
-//			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
-//		}
-//		public Map RunWithoutLibrary(string fileName,TextReader textReader)
-//		{
-//			Map program=Compile(fileName, textReader);
-//			return CallProgram(program,new NormalMap(),null);
-//		}
-//		public Map RunWithoutLibrary(string fileName)
-//		{
-//			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
-//		}
 		// stupid name
 		public Map CallProgram(Map program,Map argument,Map current)
 		{
@@ -224,11 +209,6 @@ namespace Meta
 			callable.Parent=current;
 			return callable.Call(argument);
 		}
-		// kinda pointless
-//		public Map Compile(string fileName)
-//		{
-//			return Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
-//		}
 		public Map Compile(TextReader textReader)
 		{
 			return new MetaCustomParser(textReader.ReadToEnd(),this.path).Program();
@@ -245,13 +225,6 @@ namespace Meta
 		public void Resume()
 		{
 		}
-		// rename this to process, maybe, or so
-		//		public static Interpreter CreateInterpreter()
-		//		{
-		//			Interpreter interpreter=new Interpreter();
-		//			processes[Thread.CurrentThread]=interpreter;
-		//			return interpreter;
-		//		}
 		public static Process Current
 		{
 			get
@@ -260,7 +233,7 @@ namespace Meta
 			}
 		}
 		private static Hashtable processes=new Hashtable();
-		private bool reverse=false;
+		private bool reversed=false;
 
 		public BreakPoint BreakPoint
 		{
@@ -311,11 +284,11 @@ namespace Meta
 			Program(code,context,ref local);
 			return local;
 		}
-		private bool Reverse
+		private bool Reversed
 		{
 			get
 			{
-				return reverse;
+				return reversed;
 			}
 		}
 		private bool ResumeAfterReverse(Map code)
@@ -327,16 +300,17 @@ namespace Meta
 			local.Parent=context;
 			for(int i=0;i<code.Array.Count && i>=0;i++)
 			{
-				if(Reverse)
+				if(Reversed)
 				{
 					if(!ResumeAfterReverse((Map)code.Array[i]))
 					{
+						// ugly hack
 						i-=2;
 						continue;
 					}
 					else
 					{
-						reverse=false;
+						reversed=false;
 					}
 				}
 				Statement((Map)code.Array[i],ref local);
@@ -1257,15 +1231,15 @@ namespace Meta
 			get;
 			set;
 		}
-		// TODO: remove duplication in MapStrategy?
-		public virtual Map Call(Map argument)
+		public virtual Map Call(Map parameter)
 		{
-			this.Parameter=argument;
+			this.Parameter=parameter;
 			Map function=this[CodeKeys.Function];
 			Map result;
 			result=Process.Current.Evaluate(function,this);
 			return result;
 		}
+
 		public abstract ArrayList Keys
 		{
 			get;
@@ -1465,10 +1439,10 @@ namespace Meta
 				}
 			}
 		}
-		public override Map Call(Map argument)
-		{
-			return strategy.Call(argument);
-		}
+//		public override Map Call(Map argument)
+//		{
+//			return strategy.Call(argument);
+//		}
 		public override ArrayList Keys
 		{
 			get
@@ -2873,15 +2847,14 @@ namespace Meta
 				}
 			}
 		}
-		// i dont understand this
-		public virtual Map Call(Map argument)
-		{
-			map.Parameter=argument;
-			Map function=this[CodeKeys.Function];
-			Map result;
-			result=Process.Current.Evaluate(function,map);
-			return result;
-		}
+//		public virtual Map Call(Map argument)
+//		{
+//			map.Parameter=argument;
+//			Map function=this[CodeKeys.Function];
+//			Map result;
+//			result=Process.Current.Evaluate(function,map);
+//			return result;
+//		}
 		public StrategyMap map;
 		public virtual MapStrategy Clone()
 		{
