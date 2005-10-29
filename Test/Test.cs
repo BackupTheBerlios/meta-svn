@@ -129,8 +129,14 @@ namespace Test
 //				return map;
 //			}
 //		}
-
-		// TODO: rename to be identical to meta-file-name
+		public class Library:TestCase
+		{
+			public override object Run(ref int level)
+			{
+				level=2;
+				return new Process(@"C:\Projects\Meta\Library\libraryTest.meta",new NormalMap()).Run();
+			}
+		}
 		public class Execute:TestCase
 		{
 			public override object Run(ref int level)
@@ -152,13 +158,7 @@ namespace Test
 				return new Process(@"C:\Projects\Meta\Library\basicTest.meta",argument).Run();
 			}
 		}
-//		public class Library:TestCase
-//		{
-//			public override object Run()
-//			{
-//				return Interpreter.CreateInterpreter().Run(@"C:\Projects\Meta\Library\libraryTest.meta",new NormalMap());
-//			}
-//		}
+
 	}
 }
 namespace testClasses

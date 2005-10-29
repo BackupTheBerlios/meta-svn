@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Threading;
 using Meta;
 
-public class array:MetaLibrary
+public class map:MetaLibrary
 {
 	public static Map apply(Map arg)
 	{

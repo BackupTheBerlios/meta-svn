@@ -9,7 +9,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "library"
+                AssemblyName = "Library"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "copy library.dll ..\assembly\"
+                PostBuildEvent = "copy Library.dll ..\Library.dll"
                 RootNamespace = "library"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""

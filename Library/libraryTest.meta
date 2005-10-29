@@ -54,7 +54,7 @@
 				|add
 					parameter
 					1
-			current=apply
+			current=Library.map.apply
 				function=applyMethod
 				array=
 					1
@@ -74,4 +74,4 @@
 				1
 	bitwiseTest=library.bitwise.or
 		20
-		System.Windows.Forms.Keys.Tab
+		["System.Windows.Forms"].Keys.Tab
