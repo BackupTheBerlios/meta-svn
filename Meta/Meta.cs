@@ -173,8 +173,58 @@ namespace Meta
 		}
 
 	}
-	public class Interpreter
+	public class Process
 	{
+		// this should start everything at once
+		// we should have another class called a process that does everything i think
+		private string path;
+		private Map parameter;
+		public Process(string path):this(path,new NormalMap())
+		{
+		}
+		public Process(string path,Map parameter)
+		{
+			this.path=path;
+			this.parameter=parameter;
+			processes[Thread.CurrentThread]=this;
+		}
+		public Map Run()
+		{
+			return Run(parameter);
+		}
+		private Map Run(Map argument)
+		{
+			Map program=Compile(path);
+			program=CallProgram(program,new NormalMap(),null);
+			program.Parent=GetPersistantMaps(path);
+			return program.Call(argument);
+		}
+		public Map RunWithoutLibrary(string fileName,TextReader textReader)
+		{
+			Map program=Compile(fileName, textReader);
+			return CallProgram(program,new NormalMap(),null);
+		}
+		public Map RunWithoutLibrary(string fileName)
+		{
+			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
+		}
+		// stupid name
+		public Map CallProgram(Map program,Map argument,Map current)
+		{
+			Map callable=new NormalMap();
+			callable[CodeKeys.Function]=program;
+			callable.Parent=current;
+			return callable.Call(argument);
+		}
+		// kinda pointless
+		public Map Compile(string fileName)
+		{
+			return Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
+		}
+		public Map Compile(string fileName,TextReader textReader)
+		{
+			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();
+		}
 		public void Start()
 		{
 		}
@@ -187,71 +237,23 @@ namespace Meta
 		public void Resume()
 		{
 		}
-//		public void StartDebug()
-//		{
-//		}
-//		public void StopDebug()
-//		{
-//		}
-//		public void PauseDebug()
-//		{
-//		}
-//		public void ResumeDebug()
-//		{
-//		}
-
-		private Interpreter()
-		{
-		}
 		// rename this to process, maybe, or so
-		public static Interpreter CreateInterpreter()
-		{
-			Interpreter interpreter=new Interpreter();
-			processes[Thread.CurrentThread]=interpreter;
-			return interpreter;
-		}
-		public static Interpreter Current
+		//		public static Interpreter CreateInterpreter()
+		//		{
+		//			Interpreter interpreter=new Interpreter();
+		//			processes[Thread.CurrentThread]=interpreter;
+		//			return interpreter;
+		//		}
+		public static Process Current
 		{
 			get
 			{
-				return (Interpreter)processes[Thread.CurrentThread];
+				return (Process)processes[Thread.CurrentThread];
 			}
 		}
 		private static Hashtable processes=new Hashtable();
 		private bool reverse=false;
-		public static Integer ParseInteger(string text)
-		{
 
-			Integer result=new Integer(0);
-			if(text.Equals(""))
-			{
-				result=null;
-			}
-			else
-			{
-				int index=0;
-//				if(text[0]=='-')
-//				{
-//					index++;
-//				}
-				for(;index<text.Length;index++)
-				{
-					if(char.IsDigit(text[index]))
-					{
-						result=result*10+(Integer)(text[index]-'0');
-					}
-					else
-					{
-						return null;
-					}
-				}
-//				if(text[0]=='-')
-//				{
-//					result=-result;
-//				}
-			}
-			return result;
-		}
 		public BreakPoint BreakPoint
 		{
 			get
@@ -406,7 +408,6 @@ namespace Meta
 		{
 			return code;
 		}
-
 		public Map Select(Map code,Map context)
 		{
 			Map selected=FindFirstKey(code,context);
@@ -458,8 +459,73 @@ namespace Meta
 				Thread.CurrentThread.Suspend();
 			}
 		}
-
-
+		public Map GetPersistantMaps(string fileName)
+		{
+			DirectoryInfo directory=new DirectoryInfo(Path.GetDirectoryName(fileName));
+			Map root=new PersistantMap(directory);
+			Map current=root;
+			while(true)
+			{
+				if(String.Compare(directory.FullName,Process.LibraryPath.FullName,true)==0)
+				{
+					current.Parent=GACMap.singleton;
+					break;
+				}
+				current.Parent=new PersistantMap(directory.Parent);
+				current=current.Parent;
+			}
+			return root;
+		}
+//		public Map Run(string fileName)
+//		{
+//			return Run(fileName,new NormalMap());
+//		}
+//		public Map Run(string fileName,Map argument)
+//		{
+//			Map program=Compile(fileName);
+//			program=CallProgram(program,new NormalMap(),null);
+//			program.Parent=GetPersistantMaps(fileName);
+//			return program.Call(argument);
+//		}
+//		public Map RunWithoutLibrary(string fileName,TextReader textReader)
+//		{
+//			Map program=Compile(fileName, textReader);
+//			return CallProgram(program,new NormalMap(),null);
+//		}
+//		public Map RunWithoutLibrary(string fileName)
+//		{
+//			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
+//		}
+//		public Map CallProgram(Map program,Map argument,Map current)
+//		{
+//			Map callable=new NormalMap();
+//			callable[CodeKeys.Function]=program;
+//			callable.Parent=current;
+//			return callable.Call(argument);
+//		}
+//		// kinda pointless
+//		public Map Compile(string fileName)
+//		{
+//			return Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
+//		}
+//		public Map Compile(string fileName,TextReader textReader)
+//		{
+//			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();
+//		}
+		public static DirectoryInfo LibraryPath
+		{
+			get
+			{
+				// TODO: localize this, infer this from the exe path, maybe
+				return new DirectoryInfo(@"c:\Projects\meta\library");
+			}
+		}
+		// should this be static?
+		public static ArrayList loadedAssemblies=new ArrayList();
+	}
+	// TODO: rename remove
+	public class Interpreter
+	{
 		public static Map Or(Map arg) 
 		{
 			Argument.BooleanArray(arg);
@@ -506,7 +572,6 @@ namespace Meta
 			Argument.ExactArrayCount(parameter,2);
 			return parameter[1].GetInteger()<parameter[2].GetInteger();
 		}
-
 		public static Map BitwiseOr(Map arg)
 		{
 			Argument.IntegerArray(arg);
@@ -593,70 +658,449 @@ namespace Meta
 			}
 			return result;
 		}
-		public Map Run(string fileName)
-		{
-			return Run(fileName,new NormalMap());
-		}
-		public Map Run(string fileName,Map argument)
-		{
-			Map program=Compile(fileName);
-			program=CallProgram(program,new NormalMap(),null);
-			program.Parent=GetPersistantMaps(fileName);
-			return program.Call(argument);
-		}
-		public Map GetPersistantMaps(string fileName)
-		{
-			DirectoryInfo directory=new DirectoryInfo(Path.GetDirectoryName(fileName));
-			Map root=new PersistantMap(directory);
-			Map current=root;
-			while(true)
-			{
-				if(String.Compare(directory.FullName,Interpreter.LibraryPath.FullName,true)==0)
-				{
-					current.Parent=GACMap.singleton;
-					break;
-				}
-				current.Parent=new PersistantMap(directory.Parent);
-				current=current.Parent;
-			}
-			return root;
-		}
-		public Map RunWithoutLibrary(string fileName,TextReader textReader)
-		{
-			Map program=Compile(fileName, textReader);
-			return CallProgram(program,new NormalMap(),null);
-		}
-		public Map RunWithoutLibrary(string fileName)
-		{
-			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
-		}
-		public Map CallProgram(Map program,Map argument,Map current)
-		{
-			Map callable=new NormalMap();
-			callable[CodeKeys.Function]=program;
-			callable.Parent=current;
-			return callable.Call(argument);
-		}
-		// kinda pointless
-		public Map Compile(string fileName)
-		{
-			return Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
-		}
-		public Map Compile(string fileName,TextReader textReader)
-		{
-			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();
-		}
-		public static DirectoryInfo LibraryPath
-		{
-			get
-			{
-				// TODO: localize this, infer this from the exe path, maybe
-				return new DirectoryInfo(@"c:\Projects\meta\library");
-			}
-		}
-		// should this be static?
-		public static ArrayList loadedAssemblies=new ArrayList();
+
 	}
+//	public class Interpreter
+//	{
+//		// this should start everything at once
+//		// we should have another class called a process that does everything i think
+//		private Interpreter()
+//		{
+//		}
+//		public void Start()
+//		{
+//		}
+//		public void Stop()
+//		{
+//		}
+//		public void Pause()
+//		{
+//		}
+//		public void Resume()
+//		{
+//		}
+//		// rename this to process, maybe, or so
+//		public static Interpreter CreateInterpreter()
+//		{
+//			Interpreter interpreter=new Interpreter();
+//			processes[Thread.CurrentThread]=interpreter;
+//			return interpreter;
+//		}
+//		public static Interpreter Current
+//		{
+//			get
+//			{
+//				return (Interpreter)processes[Thread.CurrentThread];
+//			}
+//		}
+//		private static Hashtable processes=new Hashtable();
+//		private bool reverse=false;
+//
+//		public BreakPoint BreakPoint
+//		{
+//			get
+//			{
+//				return breakPoint;
+//			}
+//			set
+//			{
+//				breakPoint=value;
+//			}
+//		}
+//		private BreakPoint breakPoint=new BreakPoint("",new SourcePosition(0,0));
+//		public Map Evaluate(Map code,Map context)
+//		{
+//			Map val;
+//			if(code.ContainsKey(CodeKeys.Call))
+//			{
+//				val=Call(code[CodeKeys.Call],context);
+//			}
+//			else if(code.ContainsKey(CodeKeys.Program))
+//			{
+//				val=Program(code[CodeKeys.Program],context);
+//			}
+//			else if(code.ContainsKey(CodeKeys.Literal))
+//			{
+//				val=Literal(code[CodeKeys.Literal],context);
+//			}
+//			else if(code.ContainsKey(CodeKeys.Select))
+//			{
+//				val=Select(code[CodeKeys.Select],context);
+//			}
+//			else
+//			{
+//				throw new ApplicationException("Cannot compile map.");
+//			}
+//			return val;
+//		}
+//		public Map Call(Map code,Map context)
+//		{
+//			Map function=Evaluate(code[CodeKeys.Callable],context);
+//			Map argument=Evaluate(code[CodeKeys.Argument],context);
+//			return function.Call(argument);
+//		}
+//		public Map Program(Map code,Map context)
+//		{
+//			Map local=new NormalMap();
+//			Program(code,context,ref local);
+//			return local;
+//		}
+//		private bool Reverse
+//		{
+//			get
+//			{
+//				return reverse;
+//			}
+//		}
+//		private bool ResumeAfterReverse(Map code)
+//		{
+//			return code.Extent.End.smaller(BreakPoint.Position);
+//		}
+//		private void Program(Map code,Map context,ref Map local)
+//		{
+//			local.Parent=context;
+//			for(int i=0;i<code.Array.Count && i>=0;i++)
+//			{
+//				if(Reverse)
+//				{
+//					if(!ResumeAfterReverse((Map)code.Array[i]))
+//					{
+//						i-=2;
+//						continue;
+//					}
+//					else
+//					{
+//						reverse=false;
+//					}
+//				}
+//				Statement((Map)code.Array[i],ref local);
+//			}
+//		}
+//		public class Change
+//		{
+//			private Map map;
+//			private Map key;
+//			private Map oldValue;
+//			public Change(Map map,Map key,Map oldValue)
+//			{
+//				this.map=map;
+//				this.key=key;
+//				this.oldValue=oldValue;
+//			}
+//			public void Undo(ref Map current)
+//			{
+//				if(key.Equals(SpecialKeys.Current))
+//				{
+//					current=oldValue;
+//				}
+//				else
+//				{
+//					this.map[key]=oldValue;
+//				}
+//			}
+//		}
+//		public void Statement(Map code,ref Map context)
+//		{
+//			Map selected=context;
+//			Map key;
+//			for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
+//			{
+//				key=Evaluate((Map)code[CodeKeys.Key].Array[i],context);
+//				Map selection=selected[key];
+//				if(selection==null)
+//				{
+//					object x=selected[key];
+//					Throw.KeyDoesNotExist(key,((Map)code[CodeKeys.Key].Array[i]).Extent);
+//				}
+//				selected=selection;
+//				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
+//				{
+//					CallBreak(selected);
+//				}
+//			}
+//			Map lastKey=Evaluate((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context);
+//			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
+//			{
+//				Map oldValue;
+//				if(selected.ContainsKey(lastKey))
+//				{
+//					oldValue=selected[lastKey];
+//				}
+//				else
+//				{
+//					oldValue=null;//new NormalMap("<null>");
+//				}
+//				CallBreak(oldValue);
+//			}
+//			
+//			Map val=Evaluate(code[CodeKeys.Value],context);
+//
+//			if(lastKey.Equals(SpecialKeys.Current))
+//			{
+//				val.Parent=context.Parent;
+//				context=val;
+//			}
+//			else
+//			{
+//				selected[lastKey]=val;
+//			}
+//		}
+//		public ArrayList recognitions=new ArrayList();
+//		public Map Literal(Map code,Map context)
+//		{
+//			return code;
+//		}
+//
+//		public Map Select(Map code,Map context)
+//		{
+//			Map selected=FindFirstKey(code,context);
+//			for(int i=1;i<code.Array.Count;i++)
+//			{
+//				Map key=Evaluate((Map)code.Array[i],context);
+//				Map selection=selected[key];
+//				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[i]).Extent))
+//				{
+//					CallBreak(selection);
+//				}
+//				if(selection==null)
+//				{
+//					object test=selected[key];
+//					Throw.KeyDoesNotExist(key,key.Extent);
+//				}
+//				selected=selection;
+//			}
+//			return selected;
+//		}
+//		private Map FindFirstKey(Map code,Map context)
+//		{
+//			Map key=Evaluate((Map)code.Array[0],context);
+//			Map selected=context;
+//			while(!selected.ContainsKey(key))
+//			{
+//				selected=selected.Parent;
+//				if(selected==null)
+//				{
+//					Throw.KeyNotFound(key,key.Extent);
+//				}
+//			}
+//			Map val=selected[key];
+//			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[0]).Extent))
+//			{
+//				CallBreak(val);
+//			}
+//			return val;
+//		}
+//
+//		public event DebugBreak Break;
+//
+//		public delegate void DebugBreak(Map data);
+//		public void CallBreak(Map data)
+//		{
+//			if(Break!=null)
+//			{
+//				Break(data);
+//				Thread.CurrentThread.Suspend();
+//			}
+//		}
+//
+//
+//		public static Map Or(Map arg) 
+//		{
+//			Argument.BooleanArray(arg);
+//			bool or=false;
+//			foreach(Map map in arg.Array)
+//			{
+//				if(map.GetBoolean())
+//				{
+//					or=true;
+//					break;
+//				}
+//			}
+//			return or;
+//		}
+//		public static Map Add(Map arg)
+//		{
+//			Argument.IntegerArray(arg);
+//			Integer sum=0;
+//			foreach(Map map in arg.Array)
+//			{
+//				sum+=map.GetInteger();
+//			}
+//			return sum;
+//		}
+//		public static Map Multiply(Map arg) 
+//		{
+//			Argument.IntegerArray(arg);
+//			Integer product=1;
+//			foreach(Map map in arg.Array)
+//			{
+//				product*=map.GetInteger();
+//			}
+//			return product;
+//		}
+//		public static Map Greater(Map parameter)
+//		{
+//			Argument.IntegerArray(parameter);
+//			Argument.ExactArrayCount(parameter,2);
+//			return parameter[1].GetInteger()>parameter[2].GetInteger();
+//		}
+//		public static Map Smaller(Map parameter)
+//		{
+//			Argument.IntegerArray(parameter);
+//			Argument.ExactArrayCount(parameter,2);
+//			return parameter[1].GetInteger()<parameter[2].GetInteger();
+//		}
+//
+//		public static Map BitwiseOr(Map arg)
+//		{
+//			Argument.IntegerArray(arg);
+//			Integer or=0;
+//			foreach(Map map in arg.Array)
+//			{
+//				or|=map.GetInteger();
+//			}
+//			return or;
+//		}
+//		public static Map Join(Map arg) 
+//		{
+//			Integer i=1;
+//			Map array=new NormalMap();
+//			foreach(Map map in arg.Array) 
+//			{ 
+//				foreach(Map val in map.Array) 
+//				{
+//					array[i]=val;
+//					i+=1;
+//				}
+//			}
+//			return array;
+//		}
+//		public static Map Apply(Map arg)
+//		{
+//			// TODO: ensure "function" is callable, maybe?
+//			Argument.ContainsKey(arg,"function");
+//			Argument.ContainsKey(arg,"array");
+//			Map application=new NormalMap();
+//			int counter=1;
+//			foreach(Map element in arg["array"].Array)
+//			{
+//				application[counter]=arg["function"].Call(element);
+//				counter++;
+//			}
+//			return application;
+//		}
+//		public static Map And(Map arg) 
+//		{
+//			Argument.BooleanArray(arg);
+//			bool and=true;
+//			foreach(Map map in arg.Array)
+//			{
+//				if(!map.GetBoolean())
+//				{
+//					and=false;
+//					break;
+//				}
+//			}
+//			return and;
+//		}
+//		public static Map Equal(Map arg) 
+//		{
+//			bool equal=true;
+//			for(int i=0;i+1<arg.Array.Count;i++)
+//			{
+//				if(!arg.Array[i].Equals(arg.Array[i+1]))
+//				{
+//					equal=false;
+//					break;
+//				}
+//			}
+//			return equal;
+//		}
+//		// refactor
+//		public static Map Merge(Map map)
+//		{
+//			return MergeCollection(map.Array);
+//		}
+//		public static Map Merge(params Map[] arkvlToMerge)
+//		{
+//			return MergeCollection(arkvlToMerge);
+//		}
+//		public static Map MergeCollection(ICollection collection)
+//		{
+//			Map result=new NormalMap();
+//			foreach(Map current in collection)
+//			{
+//				foreach(DictionaryEntry entry in current)
+//				{
+//					result[(Map)entry.Key]=(Map)entry.Value;
+//				}
+//			}
+//			return result;
+//		}
+//		public Map Run(string fileName)
+//		{
+//			return Run(fileName,new NormalMap());
+//		}
+//		public Map Run(string fileName,Map argument)
+//		{
+//			Map program=Compile(fileName);
+//			program=CallProgram(program,new NormalMap(),null);
+//			program.Parent=GetPersistantMaps(fileName);
+//			return program.Call(argument);
+//		}
+//		public Map GetPersistantMaps(string fileName)
+//		{
+//			DirectoryInfo directory=new DirectoryInfo(Path.GetDirectoryName(fileName));
+//			Map root=new PersistantMap(directory);
+//			Map current=root;
+//			while(true)
+//			{
+//				if(String.Compare(directory.FullName,Interpreter.LibraryPath.FullName,true)==0)
+//				{
+//					current.Parent=GACMap.singleton;
+//					break;
+//				}
+//				current.Parent=new PersistantMap(directory.Parent);
+//				current=current.Parent;
+//			}
+//			return root;
+//		}
+//		public Map RunWithoutLibrary(string fileName,TextReader textReader)
+//		{
+//			Map program=Compile(fileName, textReader);
+//			return CallProgram(program,new NormalMap(),null);
+//		}
+//		public Map RunWithoutLibrary(string fileName)
+//		{
+//			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
+//		}
+//		public Map CallProgram(Map program,Map argument,Map current)
+//		{
+//			Map callable=new NormalMap();
+//			callable[CodeKeys.Function]=program;
+//			callable.Parent=current;
+//			return callable.Call(argument);
+//		}
+//		// kinda pointless
+//		public Map Compile(string fileName)
+//		{
+//			return Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
+//		}
+//		public Map Compile(string fileName,TextReader textReader)
+//		{
+//			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();
+//		}
+//		public static DirectoryInfo LibraryPath
+//		{
+//			get
+//			{
+//				// TODO: localize this, infer this from the exe path, maybe
+//				return new DirectoryInfo(@"c:\Projects\meta\library");
+//			}
+//		}
+//		// should this be static?
+//		public static ArrayList loadedAssemblies=new ArrayList();
+//	}
 
 	public abstract class Map: IEnumerable
 	{	
@@ -811,7 +1255,7 @@ namespace Meta
 			this.Parameter=argument;
 			Map function=this[CodeKeys.Function];
 			Map result;
-			result=Interpreter.Current.Evaluate(function,this);
+			result=Process.Current.Evaluate(function,this);
 			return result;
 		}
 		public abstract ArrayList Keys
@@ -1249,7 +1693,11 @@ namespace Meta
 				Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
 				Stream stream=webClient.OpenRead(fullPath.ToString());
 				StreamReader streamReader=new StreamReader(stream);
-				return Interpreter.Current.RunWithoutLibrary(fullPath.ToString(),streamReader);
+				// of course, this is pointless
+				// there should only be one file
+				// only one file to worry about
+				// and no stupid file system restrictions
+				return Process.Current.RunWithoutLibrary(fullPath.ToString(),streamReader);
 			}
 			set
 			{
@@ -1588,7 +2036,7 @@ namespace Meta
 		}
 		private Map GetMap()
 		{
-			Map data=Interpreter.Current.RunWithoutLibrary(this.file.FullName);
+			Map data=Process.Current.RunWithoutLibrary(this.file.FullName);
 			data.Parent=this.map;
 			return data;
 		}
@@ -1728,7 +2176,7 @@ namespace Meta
 						cache[new NormalMap(type.Name)]=new DotNetClass(type);
 					}
 				}
-				Interpreter.loadedAssemblies.Add(assembly.Location);
+				Process.loadedAssemblies.Add(assembly.Location);
 			}
 			foreach(DictionaryEntry entry in namespaces)
 			{
@@ -2259,7 +2707,7 @@ namespace Meta
 			source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
 			string metaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
 			ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
-			assemblyNames.AddRange(Interpreter.loadedAssemblies);
+			assemblyNames.AddRange(Process.loadedAssemblies);
 			CompilerParameters compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
 			CompilerResults compilerResults=compiler.CompileAssemblyFromSource(compilerParameters,source);
 			Type containerType=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
@@ -2419,7 +2867,7 @@ namespace Meta
 			map.Parameter=argument;
 			Map function=this[CodeKeys.Function];
 			Map result;
-			result=Interpreter.Current.Evaluate(function,map);
+			result=Process.Current.Evaluate(function,map);
 			return result;
 		}
 		public StrategyMap map;
@@ -3995,7 +4443,7 @@ namespace Meta
 						break;
 					}
 				}
-				Map literal=new NormalMap(Interpreter.ParseInteger(integerString));
+				Map literal=new NormalMap(Meta.Integer.ParseInteger(integerString));
 				integer=new NormalMap();
 				integer[CodeKeys.Literal]=literal;
 			}
@@ -4323,6 +4771,39 @@ namespace Meta
 
 	public class Integer
 	{
+		public static Integer ParseInteger(string text)
+		{
+
+			Integer result=new Integer(0);
+			if(text.Equals(""))
+			{
+				result=null;
+			}
+			else
+			{
+				int index=0;
+				//				if(text[0]=='-')
+				//				{
+				//					index++;
+				//				}
+				for(;index<text.Length;index++)
+				{
+					if(char.IsDigit(text[index]))
+					{
+						result=result*10+(Integer)(text[index]-'0');
+					}
+					else
+					{
+						return null;
+					}
+				}
+				//				if(text[0]=='-')
+				//				{
+				//					result=-result;
+				//				}
+			}
+			return result;
+		}
 		private const int maxLength = 70;
 		private uint[] data = null;
 		public int dataLength;

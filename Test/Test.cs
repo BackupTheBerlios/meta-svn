@@ -33,7 +33,7 @@ namespace Test
 		{
 			if(file=="") 
 			{
-				ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Interpreter.LibraryPath.Parent.FullName,"Test"));
+				ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Process.LibraryPath.Parent.FullName,"Test"));
 			}
 			else 
 			{
@@ -42,7 +42,7 @@ namespace Test
 					throw new ApplicationException("File "+file+" not found.");
 				}
 
-				Map result=Interpreter.CreateInterpreter().Run(file,new NormalMap());
+				Map result=new Process(file).Run();//,new NormalMap());
 				if(result.IsString)
 				{
 					Console.Write("Content-Type: text/html\n\n");
@@ -137,7 +137,7 @@ namespace Test
 				Map argument=new NormalMap();
 				argument[1]="first arg";
 				argument[2]="second=arg";
-				return Interpreter.CreateInterpreter().Run(@"C:\Projects\Meta\Library\basicTest.meta",argument);
+				return new Process(@"C:\Projects\Meta\Library\basicTest.meta",argument).Run();
 			}
 		}
 //		public class Library:TestCase
