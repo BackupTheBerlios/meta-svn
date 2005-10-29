@@ -175,8 +175,6 @@ namespace Meta
 	}
 	public class Process
 	{
-		// this should start everything at once
-		// we should have another class called a process that does everything i think
 		private string path;
 		private Map parameter;
 		public Process(string path):this(path,new NormalMap())
@@ -190,24 +188,34 @@ namespace Meta
 		}
 		public Map Run()
 		{
-			return Run(parameter);
-		}
-		private Map Run(Map argument)
-		{
-			Map program=Compile(path);
+			TextReader reader=new StreamReader(path,Encoding.Default);
+			Map program=Compile(reader);
+			reader.Close();
 			program=CallProgram(program,new NormalMap(),null);
 			program.Parent=GetPersistantMaps(path);
-			return program.Call(argument);
+			return program.Call(parameter);
 		}
+		// should be removed
 		public Map RunWithoutLibrary(string fileName,TextReader textReader)
 		{
-			Map program=Compile(fileName, textReader);
+//			TextReader textReader=new StreamReader(fileName);
+			Map program=Compile(textReader);
+//			textReader.Close();
 			return CallProgram(program,new NormalMap(),null);
 		}
-		public Map RunWithoutLibrary(string fileName)
-		{
-			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
-		}
+//		public Map RunWithoutLibrary(string fileName)
+//		{
+//			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
+//		}
+//		public Map RunWithoutLibrary(string fileName,TextReader textReader)
+//		{
+//			Map program=Compile(fileName, textReader);
+//			return CallProgram(program,new NormalMap(),null);
+//		}
+//		public Map RunWithoutLibrary(string fileName)
+//		{
+//			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
+//		}
 		// stupid name
 		public Map CallProgram(Map program,Map argument,Map current)
 		{
@@ -217,13 +225,13 @@ namespace Meta
 			return callable.Call(argument);
 		}
 		// kinda pointless
-		public Map Compile(string fileName)
+//		public Map Compile(string fileName)
+//		{
+//			return Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
+//		}
+		public Map Compile(TextReader textReader)
 		{
-			return Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
-		}
-		public Map Compile(string fileName,TextReader textReader)
-		{
-			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();
+			return new MetaCustomParser(textReader.ReadToEnd(),this.path).Program();
 		}
 		public void Start()
 		{
@@ -2036,9 +2044,13 @@ namespace Meta
 		}
 		private Map GetMap()
 		{
-			Map data=Process.Current.RunWithoutLibrary(this.file.FullName);
-			data.Parent=this.map;
-			return data;
+			Map data;
+			using(TextReader reader=new StreamReader(this.file.FullName))
+			{
+				data=Process.Current.RunWithoutLibrary(this.file.FullName,reader);
+				data.Parent=this.map;
+				return data;
+			}
 		}
 		private void SaveMap(Map map)
 		{
