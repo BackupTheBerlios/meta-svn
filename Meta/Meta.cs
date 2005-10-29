@@ -204,7 +204,7 @@ namespace Meta
 //			Map program=Compile(reader);
 //			reader.Close();
 //			program=CallProgram(program,new NormalMap(),null);
-			program.Parent=GetPersistantMaps(path);
+			program.Parent=FileSystem.singleton;
 			return program.Call(parameter);
 		}
 		public Map RunWithoutLibrary()
@@ -217,8 +217,8 @@ namespace Meta
 		// should be removed
 		public Map RunWithoutLibrary(string fileName,TextReader textReader)
 		{
-			Map program=Compile(textReader);
-			return CallProgram(program,new NormalMap(),null);
+			return Evaluate(Compile(textReader),new NormalMap());
+//			return CallProgram(program,new NormalMap(),null);
 		}
 		// refactor
 		public Map CallProgram(Map program,Map argument,Map current)
@@ -273,6 +273,7 @@ namespace Meta
 			}
 		}
 		private BreakPoint breakPoint=new BreakPoint("",new SourcePosition(0,0));
+		// rename to Expression
 		public Map Evaluate(Map code,Map context)
 		{
 			Map val;
@@ -443,7 +444,7 @@ namespace Meta
 		private Map FindFirstKey(Map code,Map context)
 		{
 			Map key=Evaluate((Map)code.Array[0],context);
-			if(key.Equals(new NormalMap("TestClass")))
+			if(key.Equals(new NormalMap("Meta")))
 			{
 				int asdf=0;
 			}
@@ -475,23 +476,24 @@ namespace Meta
 				Thread.CurrentThread.Suspend();
 			}
 		}
-		public Map GetPersistantMaps(string fileName)
-		{
-			DirectoryInfo directory=new DirectoryInfo(Path.GetDirectoryName(fileName));
-			Map root=new PersistantMap(directory);
-			Map current=root;
-			while(true)
-			{
-				if(String.Compare(directory.FullName,Process.LibraryPath.FullName,true)==0)
-				{
-					current.Parent=GACMap.singleton;
-					break;
-				}
-				current.Parent=new PersistantMap(directory.Parent);
-				current=current.Parent;
-			}
-			return root;
-		}
+//		public Map GetPersistantMaps(string fileName)
+//		{
+//			DirectoryInfo directory=new DirectoryInfo(Path.GetDirectoryName(fileName));
+//			Map root=new PersistantMap(directory);
+//			Map current=root;
+//			while(true)
+//			{
+//				if(String.Compare(directory.FullName,Process.LibraryPath.FullName,true)==0)
+//				{
+//					current.Parent=GAC.singleton;
+//					break;
+//				}
+//				current.Parent=new PersistantMap(directory.Parent);
+//				current=current.Parent;
+//			}
+//			return root;
+//		}
+
 //		public Map Run(string fileName)
 //		{
 //			return Run(fileName,new NormalMap());
@@ -528,6 +530,7 @@ namespace Meta
 //		{
 //			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();
 //		}
+		// make this a simple string
 		public static DirectoryInfo LibraryPath
 		{
 			get
@@ -1180,7 +1183,19 @@ namespace Meta
 				return GetInteger()!=null;
 			}
 		}
-		public abstract Integer GetInteger();
+		public virtual Integer GetInteger()
+		{
+			Integer integer;
+			if(this.ContainsKey(NumberKeys.EmptyMap))
+			{
+                integer=this[NumberKeys.EmptyMap].GetInteger()+1;
+			}
+			else
+			{
+				throw new ApplicationException("Map is not an integer.");
+			}
+			return integer;
+		}
 		public Map Parameter
 		{
 			get
@@ -1278,7 +1293,15 @@ namespace Meta
 		{
 			get;
 		}
-		public abstract Map Clone();
+		public virtual Map Clone()
+		{
+			Map clone=new NormalMap();
+			foreach(Map key in this.Keys)
+			{
+				clone[key]=this[key];
+			}
+			return clone;
+		}
 		public bool ContainsKey(Map key)
 		{
 			bool containsKey;
@@ -1546,115 +1569,48 @@ namespace Meta
 		{
 		}
 	}
-	public class PersistantMap:StrategyMap
-	{
-		public override Map Clone()
-		{
-			return base.Clone();
-		}
+//	public class PersistantMap:StrategyMap
+//	{
+//		public override Map Clone()
+//		{
+//			return base.Clone();
+//		}
+//
+//		public PersistantMap(PersistantStrategy strategy):base(strategy)
+//		{
+//		}
+//		public PersistantMap(FileInfo file):this(new FileStrategy(file))
+//		{
+//		}
+//		public PersistantMap(DirectoryInfo directory):this(new DirectoryStrategy(directory))
+//		{
+//		}
+//	}
+//	public abstract class PersistantStrategy:MapStrategy
+//	{
+//	}
+//	public abstract class AssemblyStrategy:PersistantStrategy
+//	{
+//		public Map ClassesFromAssemblies(IEnumerable assemblies)
+//		{
+//			Map root=new NormalMap();
+//			foreach(Assembly assembly in assemblies)
+//			{
+//				ArrayList assemblyNamespaces=new ArrayList();
+//				foreach(Type type in assembly.GetExportedTypes())
+//				{
+//					if(type.DeclaringType==null)
+//					{
+//						root[type.Name]=new DotNetClass(type);
+//					}
+//				}
+//			}
+//			return root;
+//		}
+//		protected Map cachedAssemblyInfo=new NormalMap();
+//		protected Map cache=new NormalMap();
+//	}
 
-		public PersistantMap(PersistantStrategy strategy):base(strategy)
-		{
-		}
-		public PersistantMap(FileInfo file):this(new FileStrategy(file))
-		{
-		}
-		public PersistantMap(DirectoryInfo directory):this(new DirectoryStrategy(directory))
-		{
-		}
-	}
-	public abstract class PersistantStrategy:MapStrategy
-	{
-	}
-	public abstract class AssemblyStrategy:PersistantStrategy
-	{
-		public Map ClassesFromAssemblies(IEnumerable assemblies)
-		{
-			Map root=new NormalMap();
-			foreach(Assembly assembly in assemblies)
-			{
-				ArrayList assemblyNamespaces=new ArrayList();
-				foreach(Type type in assembly.GetExportedTypes())
-				{
-					if(type.DeclaringType==null)
-					{
-						root[type.Name]=new DotNetClass(type);
-					}
-				}
-			}
-			return root;
-		}
-		protected Map cachedAssemblyInfo=new NormalMap();
-		protected Map cache=new NormalMap();
-	}
-	public class GACMap: AssemblyStrategy
-	{
-		public override Integer Integer
-		{
-			get
-			{
-				return null;
-			}
-		}
-		public override Map this[Map key]
-		{
-			get
-			{
-				Map val;
-				try
-				{
-					// some caching might be in order here
-					val=ClassesFromAssemblies(new Assembly[] {Assembly.LoadWithPartialName(key.GetString())});
-				}
-				catch
-				{
-					val=null;
-				}
-				return val;
-			}
-			set
-			{
-				throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
-			}
-		}
-		public override ArrayList Keys
-		{
-			get
-			{
-				ArrayList assemblies=GAC.AssembliesNames;
-				foreach(string dllPath in Directory.GetFiles(Process.LibraryPath.FullName,"*.dll"))
-				{
-					assemblies.Add(new NormalMap(Path.GetFileNameWithoutExtension(dllPath)));
-				}
-				foreach(string exePath in Directory.GetFiles(Process.LibraryPath.FullName,"*.exe"))
-				{
-					assemblies.Add(new NormalMap(Path.GetFileNameWithoutExtension(exePath)));
-				}
-				return assemblies;
-			}
-		}
-		public override int Count
-		{
-			get
-			{
-				return cache.Count;
-			}
-		}
-		public override ArrayList Array
-		{
-			get
-			{
-				return new ArrayList();
-			}
-		}
-		static GACMap()
-		{
-			GACMap gac=new GACMap();
-			gac.cache["web"]=Web.singleton;
-			singleton=new PersistantMap(gac);
-		}
-		public static Map singleton;
-	}
 
 	public class RemoteStrategy:NormalStrategy
 	{
@@ -1745,140 +1701,140 @@ namespace Meta
 		}
 		public static Web singleton=new Web();
 	}
-	public class DirectoryStrategy:AssemblyStrategy
-	{
-		public DirectoryStrategy(DirectoryInfo directory)
-		{
-			this.directory=directory;
-			assemblyPath=Path.Combine(directory.FullName,"assembly");
-//			ArrayList assemblies=new ArrayList();
-//			if(Directory.Exists(assemblyPath))
+//	public class DirectoryStrategy:AssemblyStrategy
+//	{
+//		public DirectoryStrategy(DirectoryInfo directory)
+//		{
+//			this.directory=directory;
+//			assemblyPath=Path.Combine(directory.FullName,"assembly");
+////			ArrayList assemblies=new ArrayList();
+////			if(Directory.Exists(assemblyPath))
+////			{
+////				foreach(string dllPath in Directory.GetFiles(assemblyPath,"*.dll"))
+////				{
+////					assemblies.Add(Assembly.LoadFrom(dllPath));
+////				}
+////				foreach(string exePath in Directory.GetFiles(assemblyPath,"*.exe"))
+////				{
+////					assemblies.Add(Assembly.LoadFrom(exePath));
+////				}
+////			}
+////			cache=ClassesFromAssemblies(assemblies);
+//		}
+//		private string assemblyPath;
+//		public override ArrayList Array
+//		{
+//			get
 //			{
-//				foreach(string dllPath in Directory.GetFiles(assemblyPath,"*.dll"))
+//				return new ArrayList();
+//			}
+//		}
+//		private DirectoryInfo directory;
+//		public override ArrayList Keys
+//		{
+//			get
+//			{
+//				ArrayList keys=new ArrayList();
+//				foreach(DirectoryInfo subDirectory in directory.GetDirectories())
 //				{
-//					assemblies.Add(Assembly.LoadFrom(dllPath));
+//					if(ValidName(subDirectory.Name))
+//					{
+//						keys.Add(new NormalMap(subDirectory.Name));
+//					}
 //				}
-//				foreach(string exePath in Directory.GetFiles(assemblyPath,"*.exe"))
+//				foreach(FileInfo file in directory.GetFiles("*.meta"))
 //				{
-//					assemblies.Add(Assembly.LoadFrom(exePath));
+//					if(ValidName(file.Name))
+//					{
+//						keys.Add(new NormalMap(Path.GetFileNameWithoutExtension(file.FullName)));
+//					}
+//				}
+//				foreach(DictionaryEntry entry in cache)
+//				{
+//					if(!keys.Contains(entry.Key))
+//					{
+//						keys.Add(entry.Key);
+//					}
+//				}
+//				return keys;
+//			}
+//		}
+//		private bool ValidName(string key)
+//		{
+//			return !key.StartsWith(".") && !key.Equals("assembly");
+//		}
+//		public override Integer Integer
+//		{
+//			get
+//			{
+//				return null;
+//			}
+//		}
+//		public override Map this[Map key]
+//		{
+//			get
+//			{
+//				if(key.Equals(new NormalMap("TestClass")))
+//				{
+//					int asdf=0;
+//				}
+//				Map val;
+//				if(key.IsString && ValidName(key.GetString()))
+//				{
+//					string path=Path.Combine(directory.FullName,key.GetString());
+//					FileInfo file=new FileInfo(path+".meta");
+//					DirectoryInfo subDirectory=new DirectoryInfo(path);
+//					if(file.Exists)
+//					{
+//						val=new PersistantMap(file);
+//						val.Parent=map;
+//					}
+//					else if(subDirectory.Exists)
+//					{
+//						val=new PersistantMap(subDirectory);
+//						val.Parent=map;
+//					}
+//					else if(cache.ContainsKey(key))
+//					{
+//						// TODO: assign parent here, too
+//						val=cache[key];
+//					}
+//					else
+//					{
+//						val=null;
+//					}
+//				}
+//				else
+//				{
+//					val=null;
+//				}
+//				return val;
+//			}
+//			set
+//			{
+//				if(key.IsString && ValidName(key.GetString()))
+//				{
+//					SaveToFile(value,Path.Combine(directory.FullName,key.GetString()+".meta"));
+//				}
+//				else
+//				{
+//					throw new ApplicationException("Cannot set key "+key.ToString()+" in DirectoryStrategy.");
 //				}
 //			}
-//			cache=ClassesFromAssemblies(assemblies);
-		}
-		private string assemblyPath;
-		public override ArrayList Array
-		{
-			get
-			{
-				return new ArrayList();
-			}
-		}
-		private DirectoryInfo directory;
-		public override ArrayList Keys
-		{
-			get
-			{
-				ArrayList keys=new ArrayList();
-				foreach(DirectoryInfo subDirectory in directory.GetDirectories())
-				{
-					if(ValidName(subDirectory.Name))
-					{
-						keys.Add(new NormalMap(subDirectory.Name));
-					}
-				}
-				foreach(FileInfo file in directory.GetFiles("*.meta"))
-				{
-					if(ValidName(file.Name))
-					{
-						keys.Add(new NormalMap(Path.GetFileNameWithoutExtension(file.FullName)));
-					}
-				}
-				foreach(DictionaryEntry entry in cache)
-				{
-					if(!keys.Contains(entry.Key))
-					{
-						keys.Add(entry.Key);
-					}
-				}
-				return keys;
-			}
-		}
-		private bool ValidName(string key)
-		{
-			return !key.StartsWith(".") && !key.Equals("assembly");
-		}
-		public override Integer Integer
-		{
-			get
-			{
-				return null;
-			}
-		}
-		public override Map this[Map key]
-		{
-			get
-			{
-				if(key.Equals(new NormalMap("TestClass")))
-				{
-					int asdf=0;
-				}
-				Map val;
-				if(key.IsString && ValidName(key.GetString()))
-				{
-					string path=Path.Combine(directory.FullName,key.GetString());
-					FileInfo file=new FileInfo(path+".meta");
-					DirectoryInfo subDirectory=new DirectoryInfo(path);
-					if(file.Exists)
-					{
-						val=new PersistantMap(file);
-						val.Parent=map;
-					}
-					else if(subDirectory.Exists)
-					{
-						val=new PersistantMap(subDirectory);
-						val.Parent=map;
-					}
-					else if(cache.ContainsKey(key))
-					{
-						// TODO: assign parent here, too
-						val=cache[key];
-					}
-					else
-					{
-						val=null;
-					}
-				}
-				else
-				{
-					val=null;
-				}
-				return val;
-			}
-			set
-			{
-				if(key.IsString && ValidName(key.GetString()))
-				{
-					SaveToFile(value,Path.Combine(directory.FullName,key.GetString()+".meta"));
-				}
-				else
-				{
-					throw new ApplicationException("Cannot set key "+key.ToString()+" in DirectoryStrategy.");
-				}
-			}
-		}
-		public static void SaveToFile(Map meta,string path)
-		{
-			Directory.CreateDirectory(Path.GetDirectoryName(path));
-			File.Create(path).Close();
-			string text=Meta.Serialize.MapValue(meta,"").Trim(new char[]{'\n'});
-			// TODO: use constants here
-			if(text=="\"\"")
-			{
-				text="";
-			}
-			Helper.WriteFile(path,text);
-		}
-	}
+//		}
+//		public static void SaveToFile(Map meta,string path)
+//		{
+//			Directory.CreateDirectory(Path.GetDirectoryName(path));
+//			File.Create(path).Close();
+//			string text=Meta.Serialize.MapValue(meta,"").Trim(new char[]{'\n'});
+//			// TODO: use constants here
+//			if(text=="\"\"")
+//			{
+//				text="";
+//			}
+//			Helper.WriteFile(path,text);
+//		}
+//	}
 	public class Serialize
 	{
 		public static string Key(Map key)
@@ -2000,67 +1956,68 @@ namespace Meta
 			return -1==text.IndexOfAny(new char[] {'@',' ','\t','\r','\n','=','.','/','\'','"','(',')','[',']','*',':','#','!'});
 		}
 	}
-	public class FileStrategy:PersistantStrategy
-	{
-		public FileStrategy(FileInfo file)
-		{
-			this.file=file;
-			if(!file.Exists)
-			{
-				file.Create().Close();
-			}
-		}
-		private FileInfo file;
-		public override ArrayList Array
-		{
-			get
-			{
-				return new ArrayList();
-			}
-		}
-		public override ArrayList Keys
-		{
-			get
-			{
-				return GetMap().Keys;
-			}
-		}
-		public override Integer Integer
-		{
-			get
-			{
-				return GetMap().GetInteger();
-			}
-		}
-		private Map GetMap()
-		{
-			Map data;
-			using(TextReader reader=new StreamReader(this.file.FullName,Encoding.Default))
-			{
-				data=Process.Current.RunWithoutLibrary(this.file.FullName,reader);
-				data.Parent=this.map;
-				return data;
-			}
-		}
-		private void SaveMap(Map map)
-		{
-			DirectoryStrategy.SaveToFile(map,file.FullName);
-		}
-		public override Map this[Map key]
-		{
-			get
-			{
-				Map data=GetMap();
-				return data[key];
-			}
-			set
-			{
-				Map data=GetMap();
-				data[key]=value;
-				SaveMap(data);
-			}
-		}
-	}
+
+//	public class FileStrategy:PersistantStrategy
+//	{
+//		public FileStrategy(FileInfo file)
+//		{
+//			this.file=file;
+//			if(!file.Exists)
+//			{
+//				file.Create().Close();
+//			}
+//		}
+//		private FileInfo file;
+//		public override ArrayList Array
+//		{
+//			get
+//			{
+//				return new ArrayList();
+//			}
+//		}
+//		public override ArrayList Keys
+//		{
+//			get
+//			{
+//				return GetMap().Keys;
+//			}
+//		}
+//		public override Integer Integer
+//		{
+//			get
+//			{
+//				return GetMap().GetInteger();
+//			}
+//		}
+//		private Map GetMap()
+//		{
+//			Map data;
+//			using(TextReader reader=new StreamReader(this.file.FullName,Encoding.Default))
+//			{
+//				data=Process.Current.RunWithoutLibrary(this.file.FullName,reader);
+//				data.Parent=this.map;
+//				return data;
+//			}
+//		}
+//		private void SaveMap(Map map)
+//		{
+//			DirectoryStrategy.SaveToFile(map,file.FullName);
+//		}
+//		public override Map this[Map key]
+//		{
+//			get
+//			{
+//				Map data=GetMap();
+//				return data[key];
+//			}
+//			set
+//			{
+//				Map data=GetMap();
+//				data[key]=value;
+//				SaveMap(data);
+//			}
+//		}
+//	}
 
 //	public class NamespaceStrategy: NormalStrategy
 //	{
@@ -4753,6 +4710,415 @@ namespace Meta
 			return key;
 		}
 	}
+	public class FileSystem:Map
+	{
+		public override Map Clone()
+		{
+			return base.Clone ();
+		}
+
+		public static FileSystem singleton;
+		static FileSystem()
+		{
+			singleton=new FileSystem();
+		}
+		private Map map;
+		public FileSystem()
+		{
+			this.map=new Process(Path.Combine(Process.LibraryPath.FullName,"meta.meta")).RunWithoutLibrary();
+			this.map.Parent=GAC.singleton;
+			// this is a little unlogical
+			this.Parent=GAC.singleton;
+		}
+		public override ArrayList Keys
+		{
+			get
+			{
+				return map.Keys;
+			}
+		}
+		public override Map this[Map key]
+		{
+			get
+			{
+				return map[key];
+			}
+			set
+			{
+				map[key]=value;
+				Save();
+			}
+		}
+		public void Save()
+		{
+//			Directory.CreateDirectory(Path.GetDirectoryName(path));
+//			File.Create(path).Close();
+			string text=Meta.Serialize.MapValue(map,"").Trim(new char[]{'\n'});
+			// TODO: use constants here
+			if(text=="\"\"")
+			{
+				text="";
+			}
+			Helper.WriteFile(Process.LibraryPath.FullName,text);
+		}
+
+	}
+	// make lowercase
+	public class GAC:Map
+	{
+		public override Map Clone()
+		{
+			return base.Clone ();
+		}
+
+//		public override Integer Integer
+//		{
+//			get
+//			{
+//				return null;
+//			}
+//		}
+		public Map ClassesFromAssemblies(IEnumerable assemblies)
+		{
+			Map root=new NormalMap();
+			foreach(Assembly assembly in assemblies)
+			{
+				ArrayList assemblyNamespaces=new ArrayList();
+				foreach(Type type in assembly.GetExportedTypes())
+				{
+					if(type.DeclaringType==null)
+					{
+						root[type.Name]=new DotNetClass(type);
+					}
+				}
+			}
+			return root;
+		}
+
+		public override Map this[Map key]
+		{
+			get
+			{
+				Map val;
+				try
+				{
+					// some caching might be in order here
+					val=ClassesFromAssemblies(new Assembly[] {Assembly.LoadWithPartialName(key.GetString())});
+				}
+				catch
+				{
+					val=null;
+				}
+				return val;
+			}
+			set
+			{
+				throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
+			}
+		}
+		public override ArrayList Keys
+		{
+			get
+			{
+				ArrayList assemblies=Fusion.AssembliesNames;
+				foreach(string dllPath in Directory.GetFiles(Process.LibraryPath.FullName,"*.dll"))
+				{
+					assemblies.Add(new NormalMap(Path.GetFileNameWithoutExtension(dllPath)));
+				}
+				foreach(string exePath in Directory.GetFiles(Process.LibraryPath.FullName,"*.exe"))
+				{
+					assemblies.Add(new NormalMap(Path.GetFileNameWithoutExtension(exePath)));
+				}
+				return assemblies;
+			}
+		}
+		public override int Count
+		{
+			get
+			{
+				return cache.Count;
+			}
+		}
+		public override ArrayList Array
+		{
+			get
+			{
+				return new ArrayList();
+			}
+		}
+//		public abstract class AssemblyStrategy:PersistantStrategy
+//		{
+//			public Map ClassesFromAssemblies(IEnumerable assemblies)
+//			{
+//				Map root=new NormalMap();
+//				foreach(Assembly assembly in assemblies)
+//				{
+//					ArrayList assemblyNamespaces=new ArrayList();
+//					foreach(Type type in assembly.GetExportedTypes())
+//					{
+//						if(type.DeclaringType==null)
+//						{
+//							root[type.Name]=new DotNetClass(type);
+//						}
+//					}
+//				}
+//				return root;
+//			}
+		protected Map cachedAssemblyInfo=new NormalMap();
+		protected Map cache=new NormalMap();
+//		}
+		static GAC()
+		{
+			GAC gac=new GAC();
+			// this is somewhat unlogical, why should the web be in the gac?
+			// if anything, it should be above the gac or even further up
+			gac.cache["web"]=Web.singleton;
+			singleton=gac;
+		}
+		public static Map singleton;
+
+
+	
+		// TODO: get a copyright statement
+
+		//	Source: Microsoft KB Article KB317540
+		//
+		//	
+		//	SUMMARY
+		//	The native code application programming interfaces (APIs) that allow you to interact with the Global Assembly Cache (GAC) are not documented 
+		//	in the .NET Framework Software Development Kit (SDK) documentation. 
+		//
+		//	MORE INFORMATION
+		//	CAUTION: Do not use these APIs in your application to perform assembly binds or to test for the presence of assemblies or other run time, 
+		//	development, or design-time operations. Only administrative tools and setup programs must use these APIs. If you use the GAC, this directly 
+		//	exposes your application to assembly binding fragility or may cause your application to work improperly on future versions of the .NET 
+		//	Framework.
+		//
+		//	The GAC stores assemblies that are shared across all applications on a computer. The actual storage location and structure of the GAC is 
+		//	not documented and is subject to change in future versions of the .NET Framework and the Microsoft Windows operating system.
+		//
+		//	The only supported method to access assemblies in the GAC is through the APIs that are documented in this article.
+		//
+		//	Most applications do not have to use these APIs because the assembly binding is performed automatically by the common language runtime. 
+		//	Only custom setup programs or management tools must use these APIs. Microsoft Windows Installer has native support for installing assemblies
+		//	 to the GAC.
+		//
+		//	For more information about assemblies and the GAC, see the .NET Framework SDK.
+		//
+		//	Use the GAC API in the following scenarios: 
+		//	When you install an assembly to the GAC.
+		//	When you remove an assembly from the GAC.
+		//	When you export an assembly from the GAC.
+		//	When you enumerate assemblies that are available in the GAC.
+		//	NOTE: CoInitialize(Ex) must be called before you use any of the functions and interfaces that are described in this specification. 
+		//	
+		public class Fusion
+		{
+			// rename
+			public static ArrayList AssembliesNames
+			{
+				get
+				{
+					ArrayList assemblies=new ArrayList();
+					assemblies.Add(new NormalMap("mscorlib"));
+
+					IAssemblyEnum assemblyEnum=CreateGACEnum();
+					IAssemblyName iname; 
+					while (GetNextAssembly(assemblyEnum, out iname) == 0)
+					{
+						try
+						{
+							string assemblyName=GetAssemblyName(iname);
+							if(assemblyName!="Microsoft.mshtml")
+							{
+								assemblies.Add(new NormalMap(assemblyName));
+								//							assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
+							}
+						}
+						catch(Exception e)
+						{
+						}
+					}
+					return assemblies;
+				}
+			}
+			private static string GetAssemblyName(IAssemblyName assemblyName)
+			{ 
+				AssemblyName name = new AssemblyName();
+				name.Name = GetName(assemblyName);
+				name.Version = GetVersion(assemblyName);
+				name.CultureInfo = GetCulture(assemblyName);
+				name.SetPublicKeyToken(GetPublicKeyToken(assemblyName));
+				return name.Name;
+			}
+			[DllImport("fusion.dll", SetLastError=true, PreserveSig=false)]
+			static extern void CreateAssemblyEnum(out IAssemblyEnum pEnum, IntPtr pUnkReserved, IAssemblyName pName,
+				ASM_CACHE_FLAGS dwFlags, IntPtr pvReserved);
+			private static  String GetDisplayName(IAssemblyName name, ASM_DISPLAY_FLAGS which)
+			{
+				uint bufferSize = 255;
+				StringBuilder buffer = new StringBuilder((int) bufferSize);
+				name.GetDisplayName(buffer, ref bufferSize, which);
+				return buffer.ToString();
+			}
+			private static  String GetName(IAssemblyName name)
+			{
+				uint bufferSize = 255;
+				StringBuilder buffer = new StringBuilder((int) bufferSize);
+				name.GetName(ref bufferSize, buffer);
+				return buffer.ToString();
+			}
+			private static Version GetVersion(IAssemblyName name)
+			{
+				uint major;
+				uint minor;
+				name.GetVersion(out major, out minor);
+				return new Version((int)major>>16, (int)major&0xFFFF, (int)minor>>16, (int)minor&0xFFFF);
+			}
+			private static byte[] GetPublicKeyToken(IAssemblyName name)
+			{
+				byte[] result = new byte[8];
+				uint bufferSize = 8;
+				IntPtr buffer = Marshal.AllocHGlobal((int) bufferSize);
+				name.GetProperty(ASM_NAME.ASM_NAME_PUBLIC_KEY_TOKEN, buffer, ref bufferSize);
+				for (int i = 0; i < 8; i++)
+					result[i] = Marshal.ReadByte(buffer, i);
+				Marshal.FreeHGlobal(buffer);
+				return result;
+			}
+			private static byte[] GetPublicKey(IAssemblyName name)
+			{
+				uint bufferSize = 512;
+				IntPtr buffer = Marshal.AllocHGlobal((int) bufferSize);
+				name.GetProperty(ASM_NAME.ASM_NAME_PUBLIC_KEY, buffer, ref bufferSize);
+				byte[] result = new byte[bufferSize];
+				for (int i = 0; i < bufferSize; i++)
+					result[i] = Marshal.ReadByte(buffer, i);
+				Marshal.FreeHGlobal(buffer);
+				return result;
+			}
+			private static CultureInfo GetCulture(IAssemblyName name)
+			{
+				uint bufferSize = 255;
+				IntPtr buffer = Marshal.AllocHGlobal((int) bufferSize);
+				name.GetProperty(ASM_NAME.ASM_NAME_CULTURE, buffer, ref bufferSize);
+				string result = Marshal.PtrToStringAuto(buffer);
+				Marshal.FreeHGlobal(buffer);
+				return new CultureInfo(result);
+			}
+			private static IAssemblyEnum CreateGACEnum()
+			{
+				IAssemblyEnum ae;
+
+				Fusion.CreateAssemblyEnum(out ae, (IntPtr)0, null, ASM_CACHE_FLAGS.ASM_CACHE_GAC, (IntPtr)0);
+
+				return ae;
+			}
+			private static int GetNextAssembly(IAssemblyEnum enumerator, out IAssemblyName name)
+			{
+				return enumerator.GetNextAssembly((IntPtr)0, out name, 0);
+			}
+			[ComImport, Guid("CD193BC0-B4BC-11d2-9833-00C04FC31D2E"),
+				InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+				private interface IAssemblyName
+			{
+				[PreserveSig]
+				int SetProperty(ASM_NAME PropertyId,IntPtr pvProperty,uint cbProperty);
+				[PreserveSig]
+				int GetProperty(ASM_NAME PropertyId,IntPtr pvProperty,ref uint pcbProperty);
+				[PreserveSig]
+				int Finalize();
+				[PreserveSig]
+				int GetDisplayName([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder szDisplayName,
+					ref uint pccDisplayName,ASM_DISPLAY_FLAGS dwDisplayFlags);
+				[PreserveSig]
+				int BindToObject(ref Guid refIID,[MarshalAs(UnmanagedType.IUnknown)] object pUnkSink,
+					[MarshalAs(UnmanagedType.IUnknown)] object pUnkContext,
+					[MarshalAs(UnmanagedType.LPWStr)] string szCodeBase,
+					long llFlags,IntPtr pvReserved,uint cbReserved,out IntPtr ppv);
+				[PreserveSig]
+				int GetName(ref uint lpcwBuffer,[Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pwzName);
+				[PreserveSig]
+				int GetVersion(out uint pdwVersionHi,out uint pdwVersionLow);
+				[PreserveSig]
+				int IsEqual(IAssemblyName pName,ASM_CMP_FLAGS dwCmpFlags);
+				[PreserveSig]
+				int Clone(out IAssemblyName pName);
+			}
+			[ComImport, Guid("21b8916c-f28e-11d2-a473-00c04f8ef448"),
+				InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+				private interface IAssemblyEnum
+			{
+				[PreserveSig()]
+				int GetNextAssembly(IntPtr pvReserved,out IAssemblyName ppName,uint dwFlags);
+				[PreserveSig()]
+				int Reset();
+				[PreserveSig()]
+				int Clone(out IAssemblyEnum ppEnum);
+			}
+
+			[Flags]
+				public enum ASM_DISPLAY_FLAGS
+			{
+				VERSION = 0x1,
+				CULTURE = 0x2,
+				PUBLIC_KEY_TOKEN = 0x4,
+				PUBLIC_KEY = 0x8,
+				CUSTOM = 0x10,
+				PROCESSORARCHITECTURE = 0x20,
+				LANGUAGEID = 0x40
+			}
+
+			[Flags]
+				public enum ASM_CMP_FLAGS
+			{
+				NAME = 0x1,
+				MAJOR_VERSION = 0x2,
+				MINOR_VERSION = 0x4,
+				BUILD_NUMBER = 0x8,
+				REVISION_NUMBER = 0x10,
+				PUBLIC_KEY_TOKEN = 0x20,
+				CULTURE = 0x40,
+				CUSTOM = 0x80,
+				ALL = NAME | MAJOR_VERSION | MINOR_VERSION |
+					REVISION_NUMBER | BUILD_NUMBER |
+					PUBLIC_KEY_TOKEN | CULTURE | CUSTOM,
+				DEFAULT = 0x100
+			}
+			public enum ASM_NAME
+			{
+				ASM_NAME_PUBLIC_KEY = 0,
+				ASM_NAME_PUBLIC_KEY_TOKEN,
+				ASM_NAME_HASH_VALUE,
+				ASM_NAME_NAME,
+				ASM_NAME_MAJOR_VERSION,
+				ASM_NAME_MINOR_VERSION,
+				ASM_NAME_BUILD_NUMBER,
+				ASM_NAME_REVISION_NUMBER,
+				ASM_NAME_CULTURE,
+				ASM_NAME_PROCESSOR_ID_ARRAY,
+				ASM_NAME_OSINFO_ARRAY,
+				ASM_NAME_HASH_ALGID,
+				ASM_NAME_ALIAS,
+				ASM_NAME_CODEBASE_URL,
+				ASM_NAME_CODEBASE_LASTMOD,
+				ASM_NAME_NULL_PUBLIC_KEY,
+				ASM_NAME_NULL_PUBLIC_KEY_TOKEN,
+				ASM_NAME_CUSTOM,
+				ASM_NAME_NULL_CUSTOM,                
+				ASM_NAME_MVID,
+				ASM_NAME_MAX_PARAMS
+			}
+			[Flags]
+				public enum ASM_CACHE_FLAGS
+			{
+				ASM_CACHE_ZAP = 0x1,
+				ASM_CACHE_GAC = 0x2,
+				ASM_CACHE_DOWNLOAD = 0x4
+			}
+		}
+	}
+
 
 	//************************************************************************************
 	// Integer Class Version 1.03
@@ -5439,270 +5805,6 @@ namespace Meta
 			}
 
 			return val;
-		}
-	}
-
-// TODO: get a copyright statement
-
-//	Source: Microsoft KB Article KB317540
-//
-//	
-//	SUMMARY
-//	The native code application programming interfaces (APIs) that allow you to interact with the Global Assembly Cache (GAC) are not documented 
-//	in the .NET Framework Software Development Kit (SDK) documentation. 
-//
-//	MORE INFORMATION
-//	CAUTION: Do not use these APIs in your application to perform assembly binds or to test for the presence of assemblies or other run time, 
-//	development, or design-time operations. Only administrative tools and setup programs must use these APIs. If you use the GAC, this directly 
-//	exposes your application to assembly binding fragility or may cause your application to work improperly on future versions of the .NET 
-//	Framework.
-//
-//	The GAC stores assemblies that are shared across all applications on a computer. The actual storage location and structure of the GAC is 
-//	not documented and is subject to change in future versions of the .NET Framework and the Microsoft Windows operating system.
-//
-//	The only supported method to access assemblies in the GAC is through the APIs that are documented in this article.
-//
-//	Most applications do not have to use these APIs because the assembly binding is performed automatically by the common language runtime. 
-//	Only custom setup programs or management tools must use these APIs. Microsoft Windows Installer has native support for installing assemblies
-//	 to the GAC.
-//
-//	For more information about assemblies and the GAC, see the .NET Framework SDK.
-//
-//	Use the GAC API in the following scenarios: 
-//	When you install an assembly to the GAC.
-//	When you remove an assembly from the GAC.
-//	When you export an assembly from the GAC.
-//	When you enumerate assemblies that are available in the GAC.
-//	NOTE: CoInitialize(Ex) must be called before you use any of the functions and interfaces that are described in this specification. 
-//	
-	public class GAC
-	{// TODO: put this into the real GAC-class, make this a private class
-		public static ArrayList AssembliesNames
-		{
-			get
-			{
-				ArrayList assemblies=new ArrayList();
-				assemblies.Add(new NormalMap("mscorlib"));
-
-				IAssemblyEnum assemblyEnum=CreateGACEnum();
-				IAssemblyName iname; 
-				while (GetNextAssembly(assemblyEnum, out iname) == 0)
-				{
-					try
-					{
-						string assemblyName=GetAssemblyName(iname);
-						if(assemblyName!="Microsoft.mshtml")
-						{
-							assemblies.Add(new NormalMap(assemblyName));
-//							assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
-						}
-					}
-					catch(Exception e)
-					{
-					}
-				}
-				return assemblies;
-			}
-		}
-//		public static ArrayList Assemblies
-//		{
-//			get
-//			{
-//				ArrayList assemblies=new ArrayList();
-//				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
-//
-//				IAssemblyEnum assemblyEnum=CreateGACEnum();
-//				IAssemblyName iname; 
-//				while (GetNextAssembly(assemblyEnum, out iname) == 0)
-//				{
-//					try
-//					{
-//						string assemblyName=GetAssemblyName(iname);
-//						if(assemblyName!="Microsoft.mshtml")
-//						{
-//							assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
-//						}
-//					}
-//					catch(Exception e)
-//					{
-//					}
-//				}
-//				return assemblies;
-//			}
-//		}
-		private static string GetAssemblyName(IAssemblyName assemblyName)
-		{ 
-			AssemblyName name = new AssemblyName();
-			name.Name = GetName(assemblyName);
-			name.Version = GetVersion(assemblyName);
-			name.CultureInfo = GetCulture(assemblyName);
-			name.SetPublicKeyToken(GetPublicKeyToken(assemblyName));
-			return name.Name;
-		}
-		[DllImport("fusion.dll", SetLastError=true, PreserveSig=false)]
-		static extern void CreateAssemblyEnum(out IAssemblyEnum pEnum, IntPtr pUnkReserved, IAssemblyName pName,
-			ASM_CACHE_FLAGS dwFlags, IntPtr pvReserved);
-		private static  String GetDisplayName(IAssemblyName name, ASM_DISPLAY_FLAGS which)
-		{
-			uint bufferSize = 255;
-			StringBuilder buffer = new StringBuilder((int) bufferSize);
-			name.GetDisplayName(buffer, ref bufferSize, which);
-			return buffer.ToString();
-		}
-		private static  String GetName(IAssemblyName name)
-		{
-			uint bufferSize = 255;
-			StringBuilder buffer = new StringBuilder((int) bufferSize);
-			name.GetName(ref bufferSize, buffer);
-			return buffer.ToString();
-		}
-		private static Version GetVersion(IAssemblyName name)
-		{
-			uint major;
-			uint minor;
-			name.GetVersion(out major, out minor);
-			return new Version((int)major>>16, (int)major&0xFFFF, (int)minor>>16, (int)minor&0xFFFF);
-		}
-		private static byte[] GetPublicKeyToken(IAssemblyName name)
-		{
-			byte[] result = new byte[8];
-			uint bufferSize = 8;
-			IntPtr buffer = Marshal.AllocHGlobal((int) bufferSize);
-			name.GetProperty(ASM_NAME.ASM_NAME_PUBLIC_KEY_TOKEN, buffer, ref bufferSize);
-			for (int i = 0; i < 8; i++)
-				result[i] = Marshal.ReadByte(buffer, i);
-			Marshal.FreeHGlobal(buffer);
-			return result;
-		}
-		private static byte[] GetPublicKey(IAssemblyName name)
-		{
-			uint bufferSize = 512;
-			IntPtr buffer = Marshal.AllocHGlobal((int) bufferSize);
-			name.GetProperty(ASM_NAME.ASM_NAME_PUBLIC_KEY, buffer, ref bufferSize);
-			byte[] result = new byte[bufferSize];
-			for (int i = 0; i < bufferSize; i++)
-				result[i] = Marshal.ReadByte(buffer, i);
-			Marshal.FreeHGlobal(buffer);
-			return result;
-		}
-		private static CultureInfo GetCulture(IAssemblyName name)
-		{
-			uint bufferSize = 255;
-			IntPtr buffer = Marshal.AllocHGlobal((int) bufferSize);
-			name.GetProperty(ASM_NAME.ASM_NAME_CULTURE, buffer, ref bufferSize);
-			string result = Marshal.PtrToStringAuto(buffer);
-			Marshal.FreeHGlobal(buffer);
-			return new CultureInfo(result);
-		}
-		private static IAssemblyEnum CreateGACEnum()
-		{
-			IAssemblyEnum ae;
-
-			GAC.CreateAssemblyEnum(out ae, (IntPtr)0, null, ASM_CACHE_FLAGS.ASM_CACHE_GAC, (IntPtr)0);
-
-			return ae;
-		}
-		private static int GetNextAssembly(IAssemblyEnum enumerator, out IAssemblyName name)
-		{
-			return enumerator.GetNextAssembly((IntPtr)0, out name, 0);
-		}
-		[ComImport, Guid("CD193BC0-B4BC-11d2-9833-00C04FC31D2E"),
-			InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-			private interface IAssemblyName
-		{
-			[PreserveSig]
-			int SetProperty(ASM_NAME PropertyId,IntPtr pvProperty,uint cbProperty);
-			[PreserveSig]
-			int GetProperty(ASM_NAME PropertyId,IntPtr pvProperty,ref uint pcbProperty);
-			[PreserveSig]
-			int Finalize();
-			[PreserveSig]
-			int GetDisplayName([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder szDisplayName,
-				ref uint pccDisplayName,ASM_DISPLAY_FLAGS dwDisplayFlags);
-			[PreserveSig]
-			int BindToObject(ref Guid refIID,[MarshalAs(UnmanagedType.IUnknown)] object pUnkSink,
-				[MarshalAs(UnmanagedType.IUnknown)] object pUnkContext,
-				[MarshalAs(UnmanagedType.LPWStr)] string szCodeBase,
-				long llFlags,IntPtr pvReserved,uint cbReserved,out IntPtr ppv);
-			[PreserveSig]
-			int GetName(ref uint lpcwBuffer,[Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pwzName);
-			[PreserveSig]
-			int GetVersion(out uint pdwVersionHi,out uint pdwVersionLow);
-			[PreserveSig]
-			int IsEqual(IAssemblyName pName,ASM_CMP_FLAGS dwCmpFlags);
-			[PreserveSig]
-			int Clone(out IAssemblyName pName);
-		}
-		[ComImport, Guid("21b8916c-f28e-11d2-a473-00c04f8ef448"),
-			InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-			private interface IAssemblyEnum
-		{
-			[PreserveSig()]
-			int GetNextAssembly(IntPtr pvReserved,out IAssemblyName ppName,uint dwFlags);
-			[PreserveSig()]
-			int Reset();
-			[PreserveSig()]
-			int Clone(out IAssemblyEnum ppEnum);
-		}
-
-		[Flags]
-			public enum ASM_DISPLAY_FLAGS
-		{
-			VERSION = 0x1,
-			CULTURE = 0x2,
-			PUBLIC_KEY_TOKEN = 0x4,
-			PUBLIC_KEY = 0x8,
-			CUSTOM = 0x10,
-			PROCESSORARCHITECTURE = 0x20,
-			LANGUAGEID = 0x40
-		}
-
-		[Flags]
-			public enum ASM_CMP_FLAGS
-		{
-			NAME = 0x1,
-			MAJOR_VERSION = 0x2,
-			MINOR_VERSION = 0x4,
-			BUILD_NUMBER = 0x8,
-			REVISION_NUMBER = 0x10,
-			PUBLIC_KEY_TOKEN = 0x20,
-			CULTURE = 0x40,
-			CUSTOM = 0x80,
-			ALL = NAME | MAJOR_VERSION | MINOR_VERSION |
-				REVISION_NUMBER | BUILD_NUMBER |
-				PUBLIC_KEY_TOKEN | CULTURE | CUSTOM,
-			DEFAULT = 0x100
-		}
-		public enum ASM_NAME
-		{
-			ASM_NAME_PUBLIC_KEY = 0,
-			ASM_NAME_PUBLIC_KEY_TOKEN,
-			ASM_NAME_HASH_VALUE,
-			ASM_NAME_NAME,
-			ASM_NAME_MAJOR_VERSION,
-			ASM_NAME_MINOR_VERSION,
-			ASM_NAME_BUILD_NUMBER,
-			ASM_NAME_REVISION_NUMBER,
-			ASM_NAME_CULTURE,
-			ASM_NAME_PROCESSOR_ID_ARRAY,
-			ASM_NAME_OSINFO_ARRAY,
-			ASM_NAME_HASH_ALGID,
-			ASM_NAME_ALIAS,
-			ASM_NAME_CODEBASE_URL,
-			ASM_NAME_CODEBASE_LASTMOD,
-			ASM_NAME_NULL_PUBLIC_KEY,
-			ASM_NAME_NULL_PUBLIC_KEY_TOKEN,
-			ASM_NAME_CUSTOM,
-			ASM_NAME_NULL_CUSTOM,                
-			ASM_NAME_MVID,
-			ASM_NAME_MAX_PARAMS
-		}
-		[Flags]
-			public enum ASM_CACHE_FLAGS
-		{
-			ASM_CACHE_ZAP = 0x1,
-			ASM_CACHE_GAC = 0x2,
-			ASM_CACHE_DOWNLOAD = 0x4
 		}
 	}
 }

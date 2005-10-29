@@ -156,24 +156,11 @@ namespace Test
 				argument[1]="first arg";
 				argument[2]="second=arg";
 				level=2;
-				// get rid of that "function" stuff
 				Map basicTest=new Process(@"C:\Projects\Meta\Library\meta.meta").RunWithoutLibrary()["basicTest"];//[CodeKeys.Function];
-//				Map basicTest=new Process(@"C:\Projects\Meta\Library\meta.meta").RunWithoutLibrary()["basicTest"][CodeKeys.Function];
 				return new Process(@"C:\Projects\Meta\Library\meta.meta",
 					basicTest,argument).Run();
 			}
 		}
-//		public class Basic:TestCase
-//		{
-//			public override object Run(ref int level)
-//			{
-//				Map argument=new NormalMap();
-//				argument[1]="first arg";
-//				argument[2]="second=arg";
-//				level=2;
-//				return new Process(@"C:\Projects\Meta\Library\basicTest.meta",argument).Run();
-//			}
-//		}
 
 	}
 }
