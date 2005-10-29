@@ -53,10 +53,10 @@
 		[5]=\\\\\\\\\\\\\\\\\"as"\\\\\\\\\\\\\\\\df"\\\\\\\\\\\\\\\\\
 	"ImpliedAutokey"
 	="Autokey"
-	gacTest=System.Collections
+#	gacTest=["mscorlib"]
 #
 #		some comment
-	lazyGACTest=Microsoft.CSharp
+#	lazyGACTest=Microsoft.CSharp
 #	metaLibTest=metaLib
 	commandLineArguments=parameter
 #	libraryAssemblyTest=testClasses
@@ -137,9 +137,10 @@
 #	concatenate=array.Concatenation
 #		"x"
 #		"yz"
-	current=library.map.merge
-		parent
-		testClasses
+#	current=library.map.merge
+#		parent
+#		["MetaTest.exe"].testClasses
+	TestClass=TestClass
 	TestClass.NestedClass.field=5
 	nestedClassTest=TestClass.NestedClass.field
 	testClass=TestClass*
@@ -154,6 +155,7 @@
 		denominator=3
 	TestClass.boolTest=1
 	boolTest=TestClass.boolTest
+	MemberTest=MemberTest
 	memberTest=MemberTest*
 	MemberTest.classField="a"
 	memberTest.instanceField="b"
@@ -266,7 +268,7 @@
 		|
 			x="hello"
 	emptyFunctionResult=emptyFunction*
-	font=System.Drawing.Font
+	font=["System.Drawing"].Font
 		"Courier New"
 		[2]=
 			numerator=10
@@ -286,12 +288,12 @@
 			hello world!
 			hello!
 			"
-	arrayList=System.Collections.ArrayList*
+	arrayList=["mscorlib"].ArrayList*
 	arrayList.Add 
 		"hello"
 	arrayListResult=arrayList.Item.get
 		*
-	textBox=System.Windows.Forms.TextBox*
+	textBox=["System.Windows.Forms"].TextBox*
 	textBox.Text.set
 		"
 			Alle meine Entchen,

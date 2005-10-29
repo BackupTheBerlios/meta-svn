@@ -130,13 +130,25 @@ namespace Test
 //			}
 //		}
 
+		// TODO: rename to be identical to meta-file-name
 		public class Execute:TestCase
 		{
-			public override object Run()
+			public override object Run(ref int level)
 			{
 				Map argument=new NormalMap();
 				argument[1]="first arg";
 				argument[2]="second=arg";
+				return new Process(@"C:\Projects\Meta\Library\basicTest.meta",argument).Run();
+			}
+		}
+		public class Basic:TestCase
+		{
+			public override object Run(ref int level)
+			{
+				Map argument=new NormalMap();
+				argument[1]="first arg";
+				argument[2]="second=arg";
+				level=2;
 				return new Process(@"C:\Projects\Meta\Library\basicTest.meta",argument).Run();
 			}
 		}

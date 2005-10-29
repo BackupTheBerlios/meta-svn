@@ -346,6 +346,10 @@ namespace Meta
 			for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
 			{
 				key=Evaluate((Map)code[CodeKeys.Key].Array[i],context);
+				if(key.Equals(new NormalMap("TestClass")))
+				{
+					int asdf=0;
+				}
 				Map selection=selected[key];
 				if(selection==null)
 				{
@@ -413,6 +417,10 @@ namespace Meta
 		private Map FindFirstKey(Map code,Map context)
 		{
 			Map key=Evaluate((Map)code.Array[0],context);
+			if(key.Equals(new NormalMap("TestClass")))
+			{
+				int asdf=0;
+			}
 			Map selected=context;
 			while(!selected.ContainsKey(key))
 			{
@@ -1287,7 +1295,7 @@ namespace Meta
 			return hash;
 		}
 		Extent extent;
-		[Serialize]
+		[Serialize(2)]
 		public Extent Extent
 		{
 			get
@@ -1300,6 +1308,8 @@ namespace Meta
 			}
 		}
 		private Map parent;
+
+
 
 		public static implicit operator Map(Integer integer)
 		{
@@ -1329,8 +1339,6 @@ namespace Meta
 		{
 			return new NormalMap(new Integer(integer));
 		}
-
-
 		public static implicit operator Map(int integer)
 		{
 			return new NormalMap(new Integer(integer));
@@ -1343,8 +1351,6 @@ namespace Meta
 		{
 			return new NormalMap(new Integer(integer));
 		}
-
-
 		public static implicit operator Map(double number)
 		{
 			return new NormalMap(number);
@@ -1357,7 +1363,6 @@ namespace Meta
 		{
 			return new NormalMap(Convert.ToDouble(number));
 		}
-
 		public static implicit operator Map(string text)
 		{
 			return new NormalMap(text);
@@ -1439,10 +1444,6 @@ namespace Meta
 				}
 			}
 		}
-//		public override Map Call(Map argument)
-//		{
-//			return strategy.Call(argument);
-//		}
 		public override ArrayList Keys
 		{
 			get
@@ -1496,9 +1497,9 @@ namespace Meta
 		}
 		public MapStrategy strategy;
 
-		public void Serialize(string indentation,string[] functions,StringBuilder stringBuilder)
+		public void Serialize(string indentation,string[] functions,StringBuilder stringBuilder,int level)
 		{
-			strategy.Serialize(indentation,functions,stringBuilder);
+			strategy.Serialize(indentation,functions,stringBuilder,level);
 		}
 	}
 	public class NormalMap:StrategyMap
@@ -1541,43 +1542,88 @@ namespace Meta
 	}
 	public abstract class AssemblyStrategy:PersistantStrategy
 	{
-		public NormalMap NamespacesFromAssemblies(ArrayList assemblies)
+		public Map ClassesFromAssemblies(IEnumerable assemblies)
 		{
-			NamespaceStrategy root=new NamespaceStrategy(null);
+			Map root=new NormalMap();
 			foreach(Assembly assembly in assemblies)
 			{
 				ArrayList assemblyNamespaces=new ArrayList();
 				foreach(Type type in assembly.GetExportedTypes())
 				{
-					if(!assemblyNamespaces.Contains(type.Namespace))
+					if(type.DeclaringType==null)
 					{
-						assemblyNamespaces.Add(type.Namespace);
-						NamespaceStrategy current=root;
-						if(type.Namespace!=null)
-						{
-							foreach(string subNamespace in type.Namespace.Split('.'))
-							{
-								if(!current.Namespaces.ContainsKey(subNamespace))
-								{
-									string fullName=current.FullName;
-									if(fullName!=null)
-									{
-										fullName+=".";
-									}
-									fullName+=subNamespace;
-									current.Namespaces[subNamespace]=new NormalMap(new NamespaceStrategy(fullName));
-								}
-								current=(NamespaceStrategy)((NormalMap)current.Namespaces[subNamespace]).strategy;
-							}
-						}
-						current.Assemblies.Add(assembly);
+						root[type.Name]=new DotNetClass(type);
 					}
+					else
+					{
+						int asdf=0;
+					}
+
+//					if(!assemblyNamespaces.Contains(type.Namespace))
+//					{
+//						assemblyNamespaces.Add(type.Namespace);
+//						NamespaceStrategy current=root;
+//						if(type.Namespace!=null)
+//						{
+//							foreach(string subNamespace in type.Namespace.Split('.'))
+//							{
+//								if(!current.Namespaces.ContainsKey(subNamespace))
+//								{
+//									string fullName=current.FullName;
+//									if(fullName!=null)
+//									{
+//										fullName+=".";
+//									}
+//									fullName+=subNamespace;
+//									current.Namespaces[subNamespace]=new NormalMap(new NamespaceStrategy(fullName));
+//								}
+//								current=(NamespaceStrategy)((NormalMap)current.Namespaces[subNamespace]).strategy;
+//							}
+//						}
+//						current.Assemblies.Add(assembly);
+//					}
 				}
 			}
-			return new NormalMap(root);
+			return root;
+//			return new NormalMap(root);
 		}
+//		public NormalMap NamespacesFromAssemblies(ArrayList assemblies)
+//		{
+//			NamespaceStrategy root=new NamespaceStrategy(null);
+//			foreach(Assembly assembly in assemblies)
+//			{
+//				ArrayList assemblyNamespaces=new ArrayList();
+//				foreach(Type type in assembly.GetExportedTypes())
+//				{
+//					if(!assemblyNamespaces.Contains(type.Namespace))
+//					{
+//						assemblyNamespaces.Add(type.Namespace);
+//						NamespaceStrategy current=root;
+//						if(type.Namespace!=null)
+//						{
+//							foreach(string subNamespace in type.Namespace.Split('.'))
+//							{
+//								if(!current.Namespaces.ContainsKey(subNamespace))
+//								{
+//									string fullName=current.FullName;
+//									if(fullName!=null)
+//									{
+//										fullName+=".";
+//									}
+//									fullName+=subNamespace;
+//									current.Namespaces[subNamespace]=new NormalMap(new NamespaceStrategy(fullName));
+//								}
+//								current=(NamespaceStrategy)((NormalMap)current.Namespaces[subNamespace]).strategy;
+//							}
+//						}
+//						current.Assemblies.Add(assembly);
+//					}
+//				}
+//			}
+//			return new NormalMap(root);
+//		}
 		protected Map cachedAssemblyInfo=new NormalMap();
-		protected NormalMap cache=new NormalMap();
+		protected Map cache=new NormalMap();
 	}
 	public class GACMap: AssemblyStrategy
 	{
@@ -1592,14 +1638,16 @@ namespace Meta
 		{
 			get
 			{
-				if(cache.ContainsKey(key))
+				Map val;
+				try
 				{
-					return cache[key];
+					val=ClassesFromAssemblies(new Assembly[] {Assembly.LoadWithPartialName(key.GetString())});
 				}
-				else
+				catch
 				{
-					return null;
+					val=null;
 				}
+				return val;
 			}
 			set
 			{
@@ -1610,9 +1658,17 @@ namespace Meta
 		{
 			get
 			{
-				return cache.Keys;
+				return GAC.AssembliesNames;
 			}
 		}
+
+//		public override ArrayList Keys
+//		{
+//			get
+//			{
+//				return cache.Keys;
+//			}
+//		}
 		public override int Count
 		{
 			get
@@ -1629,7 +1685,7 @@ namespace Meta
 		}
 		private GACMap()
 		{
-			cache=NamespacesFromAssemblies(GAC.Assemblies);
+//			cache=ClassesFromAssemblies(GAC.Assemblies);
 		}
 		static GACMap()
 		{
@@ -1751,7 +1807,7 @@ namespace Meta
 					assemblies.Add(Assembly.LoadFrom(exePath));
 				}
 			}
-			cache=NamespacesFromAssemblies(assemblies);
+			cache=ClassesFromAssemblies(assemblies);
 		}
 		private string assemblyPath;
 		public override ArrayList Array
@@ -1806,6 +1862,10 @@ namespace Meta
 		{
 			get
 			{
+				if(key.Equals(new NormalMap("TestClass")))
+				{
+					int asdf=0;
+				}
 				Map val;
 				if(key.IsString && ValidName(key.GetString()))
 				{
@@ -2046,130 +2106,130 @@ namespace Meta
 		}
 	}
 
-	public class NamespaceStrategy: NormalStrategy
-	{
-		public override MapStrategy Clone()
-		{
-			return new NamespaceStrategy(FullName,cache,namespaces,assemblies);
-		}
-
-		public override Integer Integer
-		{
-			get
-			{
-				return null;
-			}
-		}
-		public override ArrayList Array
-		{
-			get
-			{
-				return new ArrayList();
-			}
-		}
-		private ListDictionary Cache
-		{
-			get
-			{
-				if(cache==null)
-				{
-					Load();
-				}
-				return cache;
-			}
-		}
-		public override bool ContainsKey(Map key)
-		{
-			return Cache.Contains(key);
-		}
-		public override Map this[Map key]
-		{
-			get
-			{
-				return (Map)Cache[key];
-			}
-			set
-			{
-				// TODO: make an overload for initalization with map, maybe
-				map.strategy=new HybridDictionaryStrategy();
-				map.strategy.map=map;
-				map.InitFromStrategy(this);
-				map.strategy[key]=value;
-			}
-		}
-		public override ArrayList Keys
-		{
-			get
-			{
-				return new ArrayList(Cache.Keys);
-			}
-		}
-		public override int Count
-		{
-			get
-			{
-				return Cache.Count;
-			}
-		}
-		public string FullName
-		{
-			get
-			{
-				return fullName;
-			}
-		}
-		private string fullName;
-		private ArrayList assemblies;
-		private Hashtable namespaces;
-		private ListDictionary cache;
-
-		public ArrayList Assemblies
-		{
-			get
-			{
-				return assemblies;
-			}
-		}
-		public Hashtable Namespaces
-		{
-			get
-			{
-				return namespaces;
-			}
-		}
-		public NamespaceStrategy(string fullName)
-		{
-			this.fullName=fullName;
-			this.assemblies=new ArrayList();
-			this.namespaces=new Hashtable();
-		}
-		public NamespaceStrategy(string fullName,ListDictionary cache,Hashtable namespaces,ArrayList assemblies)
-		{
-			this.fullName=fullName;
-			this.cache=cache;
-			this.assemblies=assemblies;
-			this.namespaces=namespaces;
-		}
-		public void Load()
-		{
-			cache=new ListDictionary();
-			foreach(Assembly assembly in assemblies)
-			{
-				foreach(Type type in assembly.GetExportedTypes())
-				{
-					if(type.DeclaringType==null && this.FullName==type.Namespace) 
-					{
-						cache[new NormalMap(type.Name)]=new DotNetClass(type);
-					}
-				}
-				Process.loadedAssemblies.Add(assembly.Location);
-			}
-			foreach(DictionaryEntry entry in namespaces)
-			{
-				cache[new NormalMap((string)entry.Key)]=(Map)entry.Value;
-			}
-		}
-	}
+//	public class NamespaceStrategy: NormalStrategy
+//	{
+//		public override MapStrategy Clone()
+//		{
+//			return new NamespaceStrategy(FullName,cache,namespaces,assemblies);
+//		}
+//
+//		public override Integer Integer
+//		{
+//			get
+//			{
+//				return null;
+//			}
+//		}
+//		public override ArrayList Array
+//		{
+//			get
+//			{
+//				return new ArrayList();
+//			}
+//		}
+//		private ListDictionary Cache
+//		{
+//			get
+//			{
+//				if(cache==null)
+//				{
+//					Load();
+//				}
+//				return cache;
+//			}
+//		}
+//		public override bool ContainsKey(Map key)
+//		{
+//			return Cache.Contains(key);
+//		}
+//		public override Map this[Map key]
+//		{
+//			get
+//			{
+//				return (Map)Cache[key];
+//			}
+//			set
+//			{
+//				// TODO: make an overload for initalization with map, maybe
+//				map.strategy=new HybridDictionaryStrategy();
+//				map.strategy.map=map;
+//				map.InitFromStrategy(this);
+//				map.strategy[key]=value;
+//			}
+//		}
+//		public override ArrayList Keys
+//		{
+//			get
+//			{
+//				return new ArrayList(Cache.Keys);
+//			}
+//		}
+//		public override int Count
+//		{
+//			get
+//			{
+//				return Cache.Count;
+//			}
+//		}
+//		public string FullName
+//		{
+//			get
+//			{
+//				return fullName;
+//			}
+//		}
+//		private string fullName;
+//		private ArrayList assemblies;
+//		private Hashtable namespaces;
+//		private ListDictionary cache;
+//
+//		public ArrayList Assemblies
+//		{
+//			get
+//			{
+//				return assemblies;
+//			}
+//		}
+//		public Hashtable Namespaces
+//		{
+//			get
+//			{
+//				return namespaces;
+//			}
+//		}
+//		public NamespaceStrategy(string fullName)
+//		{
+//			this.fullName=fullName;
+//			this.assemblies=new ArrayList();
+//			this.namespaces=new Hashtable();
+//		}
+//		public NamespaceStrategy(string fullName,ListDictionary cache,Hashtable namespaces,ArrayList assemblies)
+//		{
+//			this.fullName=fullName;
+//			this.cache=cache;
+//			this.assemblies=assemblies;
+//			this.namespaces=namespaces;
+//		}
+//		public void Load()
+//		{
+//			cache=new ListDictionary();
+//			foreach(Assembly assembly in assemblies)
+//			{
+//				foreach(Type type in assembly.GetExportedTypes())
+//				{
+//					if(type.DeclaringType==null && this.FullName==type.Namespace) 
+//					{
+//						cache[new NormalMap(type.Name)]=new DotNetClass(type);
+//					}
+//				}
+//				Process.loadedAssemblies.Add(assembly.Location);
+//			}
+//			foreach(DictionaryEntry entry in namespaces)
+//			{
+//				cache[new NormalMap((string)entry.Key)]=(Map)entry.Value;
+//			}
+//		}
+//	}
 	public class Transform
 	{
 
@@ -2767,6 +2827,7 @@ namespace Meta
 
 		public MethodBase[] overloadedMethods;
 	}
+	// TODO: maybe rename to DotNetType, or TypeMap?, DotNet is a bit stupid
 	public class DotNetClass: DotNetContainer
 	{
 		public Type Type
@@ -2828,7 +2889,7 @@ namespace Meta
 		{
 			get;
 		}
-		public virtual void Serialize(string indentation,string[] functions,StringBuilder stringBuilder)
+		public virtual void Serialize(string indentation,string[] functions,StringBuilder stringBuilder,int level)
 		{
 			if(this.String!=null)
 			{
@@ -2843,7 +2904,7 @@ namespace Meta
 				foreach(object entry in map)
 				{
 					stringBuilder.Append(indentation+"Entry ("+entry.GetType().Name+")\n");
-					ExecuteTests.Serialize(entry,indentation+ExecuteTests.indentationText,functions,stringBuilder);
+					ExecuteTests.Serialize(entry,indentation+ExecuteTests.indentationText,functions,stringBuilder,level);
 				}
 			}
 		}
@@ -3364,9 +3425,9 @@ namespace Meta
 	}
 	public abstract class DotNetContainer: Map, ISerializeSpecial
 	{
-		public void Serialize(string indentation, string[] functions, StringBuilder stringBuilder)
+		public void Serialize(string indentation, string[] functions, StringBuilder stringBuilder,int level)
 		{
-			ExecuteTests.Serialize(obj!=null?this.obj:this.type,indentation,functions,stringBuilder);
+			ExecuteTests.Serialize(obj!=null?this.obj:this.type,indentation,functions,stringBuilder,level);
 		}
 		public override ArrayList Array
 		{
@@ -3732,13 +3793,14 @@ namespace Meta
 	}
 	namespace TestingFramework
 	{
+		// TODO: refactor special serialization
 		public interface ISerializeSpecial
 		{
-			void Serialize(string indent,string[] functions,StringBuilder builder);
+			void Serialize(string indent,string[] functions,StringBuilder builder,int level);
 		}
 		public abstract class TestCase
 		{
-			public abstract object Run();
+			public abstract object Run(ref int level);
 		}
 		public class ExecuteTests
 		{	
@@ -3758,9 +3820,10 @@ namespace Meta
 					Console.Write(testType.Name + "...");
 					DateTime start=DateTime.Now;
 					string output="";
-					object result=((TestCase)testType.GetConstructors()[0].Invoke(new object[]{})).Run();
+					int level=1;
+					object result=((TestCase)testType.GetConstructors()[0].Invoke(new object[]{})).Run(ref level);
 					TimeSpan timespan=DateTime.Now-start;
-					bool wasSuccessful=CompareResult(Path.Combine(fnResults,testType.Name),result,methodNames);
+					bool wasSuccessful=CompareResult(Path.Combine(fnResults,testType.Name),result,methodNames,level);
 					if(!wasSuccessful)
 					{
 						output=output + " failed";
@@ -3778,7 +3841,8 @@ namespace Meta
 					Console.ReadLine();
 				}
 			}
-			private bool CompareResult(string path,object toSerialize,string[] functions)
+			// TODO: remove functions!!
+			private bool CompareResult(string path,object toSerialize,string[] functions,int level)
 			{				
 				System.IO.Directory.CreateDirectory(path);
 				if(!File.Exists(Path.Combine(path,"check.txt")))
@@ -3786,7 +3850,7 @@ namespace Meta
 					File.Create(Path.Combine(path,"check.txt")).Close();
 				}
 				StringBuilder stringBuilder=new StringBuilder();
-				Serialize(toSerialize,"",functions,stringBuilder);
+				Serialize(toSerialize,"",functions,stringBuilder,level);
 
 				string result=stringBuilder.ToString();
 
@@ -3795,7 +3859,7 @@ namespace Meta
 				string check=Helper.ReadFile(Path.Combine(path,"check.txt"));
 				return result.Equals(check);
 			}
-			public static void Serialize(object toSerialize,string indent,string[] methods,StringBuilder stringBuilder) 
+			public static void Serialize(object toSerialize,string indent,string[] methods,StringBuilder stringBuilder,int level) 
 			{
 				if(toSerialize==null) 
 				{
@@ -3824,7 +3888,7 @@ namespace Meta
 					{
 						if(member.Name!="Item" && member.Name!="SyncRoot") 
 						{
-							if(Assembly.GetAssembly(member.DeclaringType)!=Assembly.GetExecutingAssembly() || member is MethodInfo || member.GetCustomAttributes(typeof(SerializeAttribute),false).Length==1) 
+							if(Assembly.GetAssembly(member.DeclaringType)!=Assembly.GetExecutingAssembly() || member is MethodInfo || (member.GetCustomAttributes(typeof(SerializeAttribute),false).Length==1 && ((SerializeAttribute)member.GetCustomAttributes(typeof(SerializeAttribute),false)[0]).Level>=level)) 
 							{				
 								if(toSerialize.GetType().Namespace!="System.Windows.Forms")
 								{ 
@@ -3837,21 +3901,21 @@ namespace Meta
 										stringBuilder.Append(" ("+val.GetType().Name+")");
 									}
 									stringBuilder.Append(":\n");
-									Serialize(val,indent+indentationText,methods,stringBuilder);
+									Serialize(val,indent+indentationText,methods,stringBuilder,level);
 								}
 							}
 						}
 					}
 					if(toSerialize is ISerializeSpecial)
 					{
-						((ISerializeSpecial)toSerialize).Serialize(indent,methods,stringBuilder);
+						((ISerializeSpecial)toSerialize).Serialize(indent,methods,stringBuilder,level);
 					}
 					else if(toSerialize is IEnumerable)
 					{
 						foreach(object entry in (IEnumerable)toSerialize)
 						{
 							stringBuilder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
-							Serialize(entry,indent+indentationText,methods,stringBuilder);
+							Serialize(entry,indent+indentationText,methods,stringBuilder,level);
 						}
 					}
 				}
@@ -3873,6 +3937,21 @@ namespace Meta
 		[AttributeUsage(AttributeTargets.Field|AttributeTargets.Property)]
 		public class SerializeAttribute:Attribute
 		{
+			public SerializeAttribute():this(1)
+			{
+			}
+			private int level;
+			public SerializeAttribute(int level)
+			{
+				this.level=level;
+			}
+			public int Level
+			{
+				get
+				{
+					return level;
+				}
+			}
 		}
 		[AttributeUsage(AttributeTargets.Class)]
 		public class SerializeMethodsAttribute:Attribute
@@ -5441,13 +5520,13 @@ namespace Meta
 //	NOTE: CoInitialize(Ex) must be called before you use any of the functions and interfaces that are described in this specification. 
 //	
 	public class GAC
-	{
-		public static ArrayList Assemblies
+	{// TODO: put this into the real GAC-class, make this a private class
+		public static ArrayList AssembliesNames
 		{
 			get
 			{
 				ArrayList assemblies=new ArrayList();
-				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
+				assemblies.Add(new NormalMap("mscorlib"));
 
 				IAssemblyEnum assemblyEnum=CreateGACEnum();
 				IAssemblyName iname; 
@@ -5458,7 +5537,8 @@ namespace Meta
 						string assemblyName=GetAssemblyName(iname);
 						if(assemblyName!="Microsoft.mshtml")
 						{
-							assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
+							assemblies.Add(new NormalMap(assemblyName));
+//							assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
 						}
 					}
 					catch(Exception e)
@@ -5468,6 +5548,32 @@ namespace Meta
 				return assemblies;
 			}
 		}
+//		public static ArrayList Assemblies
+//		{
+//			get
+//			{
+//				ArrayList assemblies=new ArrayList();
+//				assemblies.Add(Assembly.LoadWithPartialName("mscorlib"));
+//
+//				IAssemblyEnum assemblyEnum=CreateGACEnum();
+//				IAssemblyName iname; 
+//				while (GetNextAssembly(assemblyEnum, out iname) == 0)
+//				{
+//					try
+//					{
+//						string assemblyName=GetAssemblyName(iname);
+//						if(assemblyName!="Microsoft.mshtml")
+//						{
+//							assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
+//						}
+//					}
+//					catch(Exception e)
+//					{
+//					}
+//				}
+//				return assemblies;
+//			}
+//		}
 		private static string GetAssemblyName(IAssemblyName assemblyName)
 		{ 
 			AssemblyName name = new AssemblyName();
