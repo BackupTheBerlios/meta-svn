@@ -132,6 +132,10 @@
                     RelPath = "libraryTest.meta"
                     BuildAction = "None"
                 />
+                <File
+                    RelPath = "meta.meta"
+                    BuildAction = "None"
+                />
             </Include>
         </Files>
     </CSHARP>

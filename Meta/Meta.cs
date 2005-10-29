@@ -175,6 +175,7 @@ namespace Meta
 	}
 	public class Process
 	{
+		// rename
 		private string path;
 		private Map parameter;
 		public Process(string path):this(path,new NormalMap())
@@ -182,18 +183,36 @@ namespace Meta
 		}
 		public Process(string path,Map parameter)
 		{
+			// start a new thread here
 			this.path=path;
 			this.parameter=parameter;
 			processes[Thread.CurrentThread]=this;
-		}
-		public Map Run()
-		{
 			TextReader reader=new StreamReader(path,Encoding.Default);
 			Map program=Compile(reader);
 			reader.Close();
-			program=CallProgram(program,new NormalMap(),null);
+		}
+		private Map program;
+		public Process(string path,Map program,Map parameter)
+		{
+			this.program=program;
+			this.parameter=parameter;
+			this.path=path;
+		}
+		public Map Run()
+		{
+//			TextReader reader=new StreamReader(path,Encoding.Default);
+//			Map program=Compile(reader);
+//			reader.Close();
+//			program=CallProgram(program,new NormalMap(),null);
 			program.Parent=GetPersistantMaps(path);
 			return program.Call(parameter);
+		}
+		public Map RunWithoutLibrary()
+		{
+			using(TextReader reader=new StreamReader(path,Encoding.Default))
+			{
+				return RunWithoutLibrary(path,reader);
+			}
 		}
 		// should be removed
 		public Map RunWithoutLibrary(string fileName,TextReader textReader)
@@ -201,13 +220,20 @@ namespace Meta
 			Map program=Compile(textReader);
 			return CallProgram(program,new NormalMap(),null);
 		}
-		// stupid name
+		// refactor
 		public Map CallProgram(Map program,Map argument,Map current)
 		{
 			Map callable=new NormalMap();
 			callable[CodeKeys.Function]=program;
 			callable.Parent=current;
 			return callable.Call(argument);
+		}
+		public Map Compile()
+		{
+			using(TextReader reader=new StreamReader(this.path,Encoding.Default))
+			{
+				return Compile(reader);
+			}
 		}
 		public Map Compile(TextReader textReader)
 		{
@@ -2009,7 +2035,7 @@ namespace Meta
 		private Map GetMap()
 		{
 			Map data;
-			using(TextReader reader=new StreamReader(this.file.FullName))
+			using(TextReader reader=new StreamReader(this.file.FullName,Encoding.Default))
 			{
 				data=Process.Current.RunWithoutLibrary(this.file.FullName,reader);
 				data.Parent=this.map;
