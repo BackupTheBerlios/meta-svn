@@ -19,11 +19,11 @@
 		=
 			"AssignedToCurrent"
 	unicodeText="äaba"
-	current=library.map.merge
-		parent
-		library.boolean
-		library.map
-		library.number
+#	current=library.map.merge
+#		parent
+#		library.boolean
+#		library.map
+#		library.number
 #	internetTest=web.localhost.test
 	parent.parent.testSubDir.x=*
 	persistantDeleteTest=testSubDir.x
@@ -78,6 +78,7 @@
 		a="default"
 		autoSearch="default"
 		b=*
+# asdf
 		SetA=
 			|
 				parent.parent.a="c"
@@ -133,10 +134,10 @@
 		|parameter
 	argTest=FirstLevel
 		a="z"
-	concatenate=array.Concatenation
-		"x"
-		"yz"
-	current=merge
+#	concatenate=array.Concatenation
+#		"x"
+#		"yz"
+	current=library.map.merge
 		parent
 		testClasses
 	TestClass.NestedClass.field=5
@@ -244,7 +245,7 @@
 	two=2
 	firstIf="unchanged"
 	secondIf="unchanged"
-	firstIfCondition=Equality
+	firstIfCondition=library.map.equal
 		1
 		one
 	firstIfBranches=
@@ -306,12 +307,12 @@
 	whileCounter=*
 	loop=
 		|
-			whileDecision=not Equality
+			whileDecision=library.boolean.not library.map.equal
 				parameter
 				10
 			whileBranches=
 				[1]=
-					|loop add
+					|loop library.number.add
 						parameter
 						1
 #					 

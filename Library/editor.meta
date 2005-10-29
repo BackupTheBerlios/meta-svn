@@ -1,17 +1,16 @@
 |
-	current=map.Merging
+	current=library.map.merge
 		System
 		System.IO
 		System.Windows.Forms
 		System.Drawing
 		parent
-		boolean
-		map
-		number
+		library.boolean
+		library.map
+		library.number
 		array
 		Meta
 	choose=
-		# TODO: rename dialog to openFileDialog
 		OpenFile=
 			|
 				dialog=OpenFileDialog*
@@ -23,7 +22,6 @@
 				dialog.ShowDialog*
 				current=dialog.FileName.get*
 	file=
-		# TODO: use keyword arguments
 		Write=
 			|
 				writer=StreamWriter
@@ -59,7 +57,7 @@
 		SaveAs=
 			|
 				saveAs=choose.SaveFile*
-				hasName=not Equality
+				hasName=not equal
 					saveAs
 					*
 				cases=
@@ -125,17 +123,17 @@
 			|Meta.Interpreter.StopDebug*
 	CombinedModifierKeys=
 		current=System.Windows.Forms
-		AltControl=bitwise.Disjunction
+		AltControl=library.bitwise.or
 			Keys.Alt
 			Keys.Control
-		AltShift=bitwise.Disjunction
+		AltShift=library.bitwise.or
 			Keys.Alt
 			Keys.Shift
-		AltControlShift=bitwise.Disjunction
+		AltControlShift=library.bitwise.or
 			Keys.Alt
 			Keys.Control
 			Keys.Shift
-		ControlShift=bitwise.Disjunction
+		ControlShift=library.bitwise.or
 			Keys.Control
 			Keys.Shift
 	shortcutCombinations=
@@ -163,15 +161,13 @@
 				|editBox.IncreaseSelectionIndent*
 			[Keys.Back]=
 				|editBox.DeleteCharLeft*
-			[Keys.Delete]=	
+			[Keys.Delete]=
 				|editBox.DeleteCharRight*
 			[Keys.PageUp]=
 				|editBox.MovePageUp*
 			[Keys.PageDown]=
 				|editBox.MovePageDown*
 		[Keys.Shift]=
-			#[Keys.Tab]=
-			#	|editBox.DecreaseSelectionIndent*
 			[Keys.Left]=
 				|editBox.SelectCharLeft*
 			[Keys.Right]=
@@ -279,9 +275,9 @@
 						line
 						editBox.LineIndex.get*
 					cases.[forward]*
-		#editBox.Changed.add
-		#	=
-		#		|editBox.*
+#editBox.Changed.add
+#	=
+#		|editBox.*
 		editBox.KeyDown.add
 			=
 				|
@@ -316,8 +312,8 @@
 		controls.AddRange
 			=
 				editBox
-		#form.WindowState.set
-		#	FormWindowState.Maximized
+#form.WindowState.set
+#	FormWindowState.Maximized
 		menu=
 			File=
 				["Open..."]=commands.Open
@@ -333,14 +329,14 @@
 		form.Menu.set
 			MainMenu
 				apply
-					array=Keys menu
+					array=keys menu
 					function=
 						|
 							topKey=parameter
 							current=MenuItem
 								topKey
 								apply
-									array=Keys menu.[topKey]
+									array=keys menu.[topKey]
 									function=
 										|MenuItem
 											parameter

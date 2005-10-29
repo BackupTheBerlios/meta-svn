@@ -1,12 +1,12 @@
-//using System;
-//using System.Collections;
-//using System.Diagnostics;
-//using System.Windows.Forms;
-//using System.Threading;
-//using Meta;
-//
-//public class array:MetaLibrary
-//{
+using System;
+using System.Collections;
+using System.Diagnostics;
+using System.Windows.Forms;
+using System.Threading;
+using Meta;
+
+public class array:MetaLibrary
+{
 //	/// <summary>
 //	/// Returns the concatenation of all arguments.
 //	/// </summary>
@@ -28,22 +28,23 @@
 //
 //	/// <summary>
 //	/// Returns an array that is created by applying a "function" to every element of an "array".
-//	/// </summary>
-//	public static Map apply(Map arg)
-//	{
-//		// TODO: ensure "function" is callable, maybe?
-//		Argument.ContainsKey(arg,"function");
-//		Argument.ContainsKey(arg,"array");
-//		Map application=new NormalMap();
-//		int counter=1;
-//		foreach(Map element in arg["array"].Array)
-//		{
-//			application[counter]=arg["function"].Call(element);
-//			counter++;
-//		}
-//		return application;
-//	}
-//}
+//	/// </summary
+
+	public static Map apply(Map arg)
+	{
+		// TODO: ensure "function" is callable, maybe?
+		Argument.ContainsKey(arg,"function");
+		Argument.ContainsKey(arg,"array");
+		Map application=new NormalMap();
+		int counter=1;
+		foreach(Map element in arg["array"].Array)
+		{
+			application[counter]=arg["function"].Call(element);
+			counter++;
+		}
+		return application;
+	}
+}
 //public class map:MetaLibrary
 //{
 //

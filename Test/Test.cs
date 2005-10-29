@@ -130,23 +130,23 @@ namespace Test
 //			}
 //		}
 
-//		public class Execute:TestCase
-//		{
-//			public override object Run()
-//			{
-//				Map argument=new NormalMap();
-//				argument[1]="first arg";
-//				argument[2]="second=arg";
-//				return Interpreter.CreateInterpreter().Run(@"C:\Projects\Meta\Library\basicTest.meta",argument);
-//			}
-//		}
-		public class Library:TestCase
+		public class Execute:TestCase
 		{
 			public override object Run()
 			{
-				return Interpreter.CreateInterpreter().Run(@"C:\Projects\Meta\Library\libraryTest.meta",new NormalMap());
+				Map argument=new NormalMap();
+				argument[1]="first arg";
+				argument[2]="second=arg";
+				return Interpreter.CreateInterpreter().Run(@"C:\Projects\Meta\Library\basicTest.meta",argument);
 			}
 		}
+//		public class Library:TestCase
+//		{
+//			public override object Run()
+//			{
+//				return Interpreter.CreateInterpreter().Run(@"C:\Projects\Meta\Library\libraryTest.meta",new NormalMap());
+//			}
+//		}
 	}
 }
 namespace testClasses

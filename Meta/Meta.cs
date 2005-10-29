@@ -33,8 +33,6 @@ using System.Net;
 
 namespace Meta
 {
-
-
 	public class CodeKeys
 	{
 		public static readonly Map Literal="literal";
@@ -67,7 +65,6 @@ namespace Meta
 	{
 		public static readonly Map Denominator="denominator";
 		public static readonly Map Numerator="numerator";
-//		public static readonly Map Negative="negative";
 		public static readonly Map EmptyMap=new NormalMap();
 	}
 
@@ -77,10 +74,8 @@ namespace Meta
 		public MetaException(string message,Extent extent):base(message)
 		{
 			this.extent=extent;
-//			this.message=message;
 		}
 		private Extent extent;
-//		private string message="";
 
 	}
 	public class Throw
@@ -94,108 +89,6 @@ namespace Meta
 			throw new MetaException("The key "+Serialize.Value(key)+" could not be found.",extent);
 		}
 	}
-	// rename to NaturalNumber
-//	public class Integer
-//	{
-//		public override int GetHashCode()
-//		{
-//			return 0;
-//		}
-//		public override bool Equals(object obj)
-//		{
-//			return false;
-//		}
-//
-//		private uint[] data;
-//		public static explicit operator Integer(int integer)
-//		{
-//			return new Integer((uint)integer);
-//		}
-//		public static explicit operator Integer(long integer)
-//		{
-//			return new Integer((uint)integer);
-//		}
-//		public static implicit operator Integer(uint integer)
-//		{
-//			return new Integer(integer);
-//		}
-//		public static implicit operator Integer(ulong integer)
-//		{
-//			return new Integer(integer);
-//		}
-//		public Integer()
-//		{
-//			data=new uint[] {0,0};
-//		}
-//		public Integer(ulong integer):this()
-//		{
-//			Add(new uint[] {(uint)(integer/uint.MaxValue),(uint)Math.Min(uint.MaxValue,integer)});
-//		}
-//		public Integer(Integer integer)
-//		{
-//			this.data=(uint[])integer.data.Clone();
-//		}
-//		private void Add(uint[] summand)
-//		{
-//			
-//		}
-//
-//
-//
-//
-//
-//
-//
-//		public int GetInt32()
-//		{
-//			return 0;
-//		}
-//		public long GetInt64()
-//		{
-//			return 0;
-//		}
-//		public static Integer operator +(Integer a,Integer b)
-//		{
-//			return null;
-//		}
-//		public static Integer operator -(Integer a,Integer b)
-//		{
-//			return null;
-//		}
-//		public static bool operator !=(Integer a,Integer b)
-//		{
-//			return !(a==b);
-//		}
-//		public static bool operator ==(Integer a,Integer b)
-//		{
-//			return a.Equals(b);
-//		}
-//		public static Integer operator *(Integer a,Integer b)
-//		{
-//			return null;
-//		}
-//		public static Integer operator |(Integer a,Integer b)
-//		{
-//			return null;
-//		}
-//		public static bool operator >(Integer a,Integer b)
-//		{
-//			return false;
-//		}
-//		public static bool operator <(Integer a,Integer b)
-//		{
-//			return false;
-//		}
-//		public static bool operator <=(Integer a,Integer b)
-//		{
-//			return a<b || a==b;
-//		}
-//		public static bool operator >=(Integer a,Integer b)
-//		{
-//			return a>b || a==b;
-//		}
-//	}
-
 	public class BreakPoint
 	{
 		public BreakPoint(string fileName,SourcePosition position)
@@ -221,8 +114,92 @@ namespace Meta
 		private SourcePosition position;
 		string fileName;
 	}
+	public class Argument
+	{
+		public static void ContainsKey(Map map,Map key)
+		{
+			if(!map.ContainsKey(key))
+			{
+				throw new ApplicationException("Functions expects keyword argument "+Serialize.Value(key));
+			}
+		}
+		public static void Integer(Map arg)
+		{
+			if(!arg.IsInteger)
+			{
+				throw new ApplicationException("arg is not an integer");
+			}
+		}
+		public static void IntegerArray(Map arg)
+		{
+			foreach(Map map in arg.Array)
+			{
+				if(!map.IsInteger)
+				{
+					throw new ApplicationException("not all array elements in argument are integers");
+				}
+			}
+		}
+		public static void ExactArrayCount(Map parameter,int count)
+		{
+			if(parameter.Array.Count!=count)
+			{
+				throw new ApplicationException("did not pass array of length "+count.ToString()+" to function");
+			}
+		}
+		public static void MinimalArrayCount(Map arg,int count)
+		{
+			if(arg.Array.Count<count)
+			{
+				throw new ApplicationException("count is too small");
+			}
+		}
+		public static void Boolean(Map arg)
+		{
+			if(!arg.IsBoolean)
+			{
+				throw new ApplicationException("argument is not boolean");
+			}
+		}
+		public static void BooleanArray(Map arg)
+		{
+			foreach(Map map in arg.Array)
+			{
+				if(!map.IsBoolean)
+				{
+					throw new ApplicationException("one of the argument array elements is not boolean");
+				}
+			}
+		}
+
+	}
 	public class Interpreter
 	{
+		public void Start()
+		{
+		}
+		public void Stop()
+		{
+		}
+		public void Pause()
+		{
+		}
+		public void Resume()
+		{
+		}
+//		public void StartDebug()
+//		{
+//		}
+//		public void StopDebug()
+//		{
+//		}
+//		public void PauseDebug()
+//		{
+//		}
+//		public void ResumeDebug()
+//		{
+//		}
+
 		private Interpreter()
 		{
 		}
@@ -328,7 +305,7 @@ namespace Meta
 		{
 			get
 			{
-				return reverse;// && Thread.CurrentThread==debugThread;
+				return reverse;
 			}
 		}
 		private bool ResumeAfterReverse(Map code)
@@ -355,7 +332,6 @@ namespace Meta
 				Statement((Map)code.Array[i],ref local);
 			}
 		}
-		// assignment to "this" cannot really be undone very well
 		public class Change
 		{
 			private Map map;
@@ -414,7 +390,6 @@ namespace Meta
 			}
 			
 			Map val=Evaluate(code[CodeKeys.Value],context);
-//			changes.AddRange(new Change(selected,key,oldValue));
 
 			if(lastKey.Equals(SpecialKeys.Current))
 			{
@@ -456,10 +431,6 @@ namespace Meta
 		{
 			Map key=Evaluate((Map)code.Array[0],context);
 			Map selected=context;
-			if(key.Equals(new NormalMap("Meta")))
-			{
-				int asdf=0;
-			}
 			while(!selected.ContainsKey(key))
 			{
 				selected=selected.Parent;
@@ -487,65 +458,7 @@ namespace Meta
 				Thread.CurrentThread.Suspend();
 			}
 		}
-		public class Argument
-		{
-			public static void ContainsKey(Map map,Map key)
-			{
-				if(!map.ContainsKey(key))
-				{
-					throw new ApplicationException("Functions expects keyword argument "+Serialize.Value(key));
-				}
-			}
-			public static void Integer(Map arg)
-			{
-				if(!arg.IsInteger)
-				{
-					throw new ApplicationException("arg is not an integer");
-				}
-			}
-			public static void IntegerArray(Map arg)
-			{
-				foreach(Map map in arg.Array)
-				{
-					if(!map.IsInteger)
-					{
-						throw new ApplicationException("not all array elements in argument are integers");
-					}
-				}
-			}
-			public static void ExactArrayCount(Map parameter,int count)
-			{
-				if(parameter.Array.Count!=count)
-				{
-					throw new ApplicationException("did not pass array of length "+count.ToString()+" to function");
-				}
-			}
-			public static void MinimalArrayCount(Map arg,int count)
-			{
-				if(arg.Array.Count<count)
-				{
-					throw new ApplicationException("count is too small");
-				}
-			}
-			public static void Boolean(Map arg)
-			{
-				if(!arg.IsBoolean)
-				{
-					throw new ApplicationException("argument is not boolean");
-				}
-			}
-			public static void BooleanArray(Map arg)
-			{
-				foreach(Map map in arg.Array)
-				{
-					if(!map.IsBoolean)
-					{
-						throw new ApplicationException("one of the argument array elements is not boolean");
-					}
-				}
-			}
 
-		}
 
 		public static Map Or(Map arg) 
 		{
@@ -3331,95 +3244,6 @@ namespace Meta
 			map.strategy[key]=val;
 		}
 	}
-//	namespace Parser 
-//	{
-//		public class IndentationStream: TokenStream
-//		{
-//			public IndentationStream(TokenStream tokenStream) 
-//			{
-//				this.tokenStream=tokenStream;
-//				Indent(0,new Token());
-//			}
-//			public Token nextToken() 
-//			{
-//				if(tokenBuffer.Count==0) 
-//				{
-//					Token token=tokenStream.nextToken();
-//					switch(token.Type)
-//					{
-//						case MetaLexerTokenTypes.EOF:
-//							Indent(-1,token);
-//							break;
-//						case MetaLexerTokenTypes.INDENTATION:
-//							Indent(token.getText().Length,token);
-//							break;
-//						case MetaLexerTokenTypes.LITERAL:
-//							string indentation="";
-//							for(int i=0;i<indentationDepth+1;i++)
-//							{
-//								indentation+='\t';
-//							}
-//							string text=token.getText();
-//							text=text.Replace(Environment.NewLine,"\n");
-//							string[] lines=text.Split('\n');
-//
-//							string result="";
-//							for(int i=0;i<lines.Length;i++)
-//							{
-//								if(i!=0 && lines[i].StartsWith(indentation))
-//								{
-//									result+=lines[i].Remove(0,indentationDepth+1);
-//								}
-//								else
-//								{
-//									result+=lines[i];
-//								}
-//								if(i!=lines.Length-1)
-//								{
-//									result+=Environment.NewLine;
-//								}
-//							}
-//
-//							token.setText(result);
-//							tokenBuffer.Enqueue(token);
-//							break;
-//						default:
-//							tokenBuffer.Enqueue(token);
-//							break;
-//					}
-//				}
-//				return (Token)tokenBuffer.Dequeue();
-//			}
-//			protected void Indent(int newIndentationDepth,Token currentToken) 
-//			{
-//				int difference=newIndentationDepth-indentationDepth; 
-//				if(difference==0)
-//				{
-//					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
-//				}
-//				else if(difference==1)
-//				{
-//					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.INDENT));
-//				}
-//				else if(difference<0)
-//				{
-//					for(int i=difference;i<0;i++)
-//					{
-//						tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.DEDENT));
-//					}
-//					tokenBuffer.Enqueue(new Token(MetaLexerTokenTypes.ENDLINE));
-//				}
-//				else if(difference>1)
-//				{
-//					throw new RecognitionException("Incorrect indentation.",currentToken.getFilename(),currentToken.getLine(),currentToken.getColumn());
-//				}
-//				indentationDepth=newIndentationDepth;
-//			}
-//			protected Queue tokenBuffer=new Queue();
-//			protected TokenStream tokenStream;
-//			protected int indentationDepth=-1;
-//		}
-//	}
 	// TODO: rename
 	public class Helper
 	{
@@ -3698,10 +3522,10 @@ namespace Meta
 	}
 	public class Extent
 	{
-		public override string ToString()
-		{
-			return "line "+Start.Line+" column "+Start.Column;
-		}
+//		public override string ToString()
+//		{
+//			return "line "+Start.Line+" column "+Start.Column;
+//		}
 
 		public static ArrayList GetExtents(string fileName,int firstLine,int lastLine)
 		{
@@ -5116,6 +4940,9 @@ namespace Meta
 			return val;
 		}
 	}
+
+// TODO: get a copyright statement
+
 //	Source: Microsoft KB Article KB317540
 //
 //	
