@@ -5172,7 +5172,7 @@ Entry (DictionaryEntry)
 			Key (NormalMap):
 				Extent:
 					null
-				"Add"
+				"add"
 			Value (DotNetMethod):
 				Extent:
 					null
@@ -5213,7 +5213,7 @@ Entry (DictionaryEntry)
 			Key (NormalMap):
 				Extent:
 					null
-				"Add"
+				"add"
 			Value (DotNetMethod):
 				Extent:
 					null

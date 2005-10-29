@@ -58,10 +58,10 @@ namespace Meta
 	}
 	public class DotNetKeys
 	{
-		public static readonly Map Add="Add";
-		public static readonly Map Remove="Remove";
-		public static readonly Map Get="Get";
-		public static readonly Map Set="Set";
+		public static readonly Map Add="add";
+		public static readonly Map Remove="remove";
+		public static readonly Map Get="get";
+		public static readonly Map Set="set";
 	}
 	public class NumberKeys
 	{
@@ -1641,6 +1641,7 @@ namespace Meta
 	}
 	public class Transform
 	{
+
 		public static object ToDotNet(Map meta,Type target)
 		{
 			bool isConverted;
@@ -1830,6 +1831,17 @@ namespace Meta
 		private static bool IsFractionInRange(Map meta,double minValue,double maxValue)
 		{
 			return meta.IsFraction && meta.GetFraction()>=minValue && meta.GetFraction()<=maxValue;
+		}
+		public static Map ToMap(ArrayList list)
+		{
+			Map map=new NormalMap();
+			int index=1;
+			foreach(object entry in list)
+			{
+				map[index]=Transform.ToMeta(entry);
+				index++;
+			}
+			return map;
 		}
 		public static Map ToMeta(object dotNet)
 		{

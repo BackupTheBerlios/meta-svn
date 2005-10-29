@@ -157,12 +157,12 @@
 	memberTest=MemberTest*
 	MemberTest.classField="a"
 	memberTest.instanceField="b"
-	MemberTest.ClassProperty.Set
-		memberTest.InstanceProperty.Get*
-	classPropertyValue=MemberTest.ClassProperty.Get*
-	memberTest.InstanceProperty.Set
-		MemberTest.ClassProperty.Get*
-	instancePropertyValue=memberTest.InstanceProperty.Get*
+	MemberTest.ClassProperty.set
+		memberTest.InstanceProperty.get*
+	classPropertyValue=MemberTest.ClassProperty.get*
+	memberTest.InstanceProperty.set
+		MemberTest.ClassProperty.get*
+	instancePropertyValue=memberTest.InstanceProperty.get*
 	interceptedSymbol="/hello/"
 	positionalNoConversion=PositionalNoConversion
 		"m"
@@ -181,10 +181,10 @@
 			c="t"
 			"r"
 	indexerNoConversion=IndexerNoConversion*
-	indexerNoConversion.Item.Set
+	indexerNoConversion.Item.set
 		"abc"
 		"hihi"
-	indexerNoConversionIndexed=indexerNoConversion.Item.Get
+	indexerNoConversionIndexed=indexerNoConversion.Item.get
 		"abc"
 	interceptedSymbolTwo=1
 	k="hello"
@@ -220,7 +220,7 @@
 	ChangeStaticEvent=
 		|
 			parent.parent.staticEventChanged=parameter
-	TestClass.staticEvent.Add
+	TestClass.staticEvent.add
 		=
 			|
 				ChangeStaticEvent 1
@@ -233,7 +233,7 @@
 	staticEventResult=TestClass.staticEvent 
 		testClass
 	instanceEventChanged=*
-	testClass.instanceEvent.Add
+	testClass.instanceEvent.add
 		=
 			|
 				parent.parent.parent.instanceEventChanged=1
@@ -289,17 +289,17 @@
 	arrayList=System.Collections.ArrayList*
 	arrayList.Add 
 		"hello"
-	arrayListResult=arrayList.Item.Get
+	arrayListResult=arrayList.Item.get
 		*
 	textBox=System.Windows.Forms.TextBox*
-	textBox.Text.Set
+	textBox.Text.set
 		"
 			Alle meine Entchen,
 			schwimmen auf dem See,
 			schwimmen auf dem See,
 			Köpfchen in das Wasser,
 			Schwaenzchen in die Hoeh."
-	lines=textBox.Lines.Get*
+	lines=textBox.Lines.get*
 	alleMeineText=lines.[1]
 	lines.[5]="bwuhahaha"
 	tabText="			hello"

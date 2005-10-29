@@ -140,13 +140,13 @@ namespace Test
 				return Interpreter.CreateInterpreter().Run(@"C:\Projects\Meta\Library\basicTest.meta",argument);
 			}
 		}
-		public class Library:TestCase
-		{
-			public override object Run()
-			{
-				return Interpreter.CreateInterpreter().Run(@"C:\Projects\Meta\Library\libraryTest.meta",new NormalMap());
-			}
-		}
+//		public class Library:TestCase
+//		{
+//			public override object Run()
+//			{
+//				return Interpreter.CreateInterpreter().Run(@"C:\Projects\Meta\Library\libraryTest.meta",new NormalMap());
+//			}
+//		}
 	}
 }
 namespace testClasses
