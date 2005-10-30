@@ -1188,9 +1188,9 @@ namespace Meta
 		}
 		public MapStrategy strategy;
 
-		public void Serialize(string indentation,string[] functions,StringBuilder stringBuilder,int level)
+		public void Serialize(string indentation,StringBuilder stringBuilder,int level)
 		{
-			strategy.Serialize(indentation,functions,stringBuilder,level);
+			strategy.Serialize(indentation,stringBuilder,level);
 		}
 	}
 	public class NormalMap:StrategyMap
@@ -1498,20 +1498,12 @@ namespace Meta
 						{
 							dotNet=(decimal)(meta.GetInteger().GetInt64());
 						}
-//						else if(IsFractionInRange(meta,(double)decimal.MinValue,(double)decimal.MaxValue))
-//						{
-//							dotNet=(decimal)meta.GetFraction();
-//						}
 						break;
 					case TypeCode.Double:
 						if(IsIntegerInRange(meta,Helper.IntegerFromDouble(double.MinValue),Helper.IntegerFromDouble(double.MaxValue)))
 						{
 							dotNet=(double)(meta.GetInteger().GetInt64());
 						}
-//						else if(IsFractionInRange(meta,double.MinValue,double.MaxValue))
-//						{
-//							dotNet=meta.GetFraction();
-//						}
 						break;
 					case TypeCode.Int16:
 						if(IsIntegerInRange(meta,Int16.MinValue,Int16.MaxValue))
@@ -1552,10 +1544,6 @@ namespace Meta
 						{
 							dotNet=(float)meta.GetInteger().GetInt64();
 						}
-//						else if(IsFractionInRange(meta,Single.MinValue,Single.MaxValue))
-//						{
-//							dotNet=(float)meta.GetFraction();
-//						}
 						break;
 					case TypeCode.String:
 						if(meta.IsString)
@@ -2092,7 +2080,7 @@ namespace Meta
 //		{
 //			get;
 //		}
-		public virtual void Serialize(string indentation,string[] functions,StringBuilder stringBuilder,int level)
+		public virtual void Serialize(string indentation,StringBuilder stringBuilder,int level)
 		{
 			if(this.IsString)
 			{
@@ -2107,7 +2095,7 @@ namespace Meta
 				foreach(object entry in map)
 				{
 					stringBuilder.Append(indentation+"Entry ("+entry.GetType().Name+")\n");
-					ExecuteTests.Serialize(entry,indentation+ExecuteTests.indentationText,functions,stringBuilder,level);
+					ExecuteTests.Serialize(entry,indentation+ExecuteTests.indentationText,stringBuilder,level);
 				}
 			}
 		}
@@ -2640,9 +2628,9 @@ namespace Meta
 	}
 	public abstract class DotNetContainer: Map, ISerializeSpecial
 	{
-		public void Serialize(string indentation, string[] functions, StringBuilder stringBuilder,int level)
+		public void Serialize(string indentation, StringBuilder stringBuilder,int level)
 		{
-			ExecuteTests.Serialize(obj!=null?this.obj:this.type,indentation,functions,stringBuilder,level);
+			ExecuteTests.Serialize(obj!=null?this.obj:this.type,indentation,stringBuilder,level);
 		}
 		public override ArrayList Array
 		{
@@ -3028,7 +3016,7 @@ namespace Meta
 		// TODO: refactor special serialization
 		public interface ISerializeSpecial
 		{
-			void Serialize(string indent,string[] functions,StringBuilder builder,int level);
+			void Serialize(string indent,StringBuilder builder,int level);
 		}
 		public abstract class TestCase
 		{
@@ -3055,7 +3043,7 @@ namespace Meta
 					int level=1;
 					object result=((TestCase)testType.GetConstructors()[0].Invoke(new object[]{})).Run(ref level);
 					TimeSpan timespan=DateTime.Now-start;
-					bool wasSuccessful=CompareResult(Path.Combine(fnResults,testType.Name),result,methodNames,level);
+					bool wasSuccessful=CompareResult(Path.Combine(fnResults,testType.Name),result,level);
 					if(!wasSuccessful)
 					{
 						output=output + " failed";
@@ -3074,7 +3062,7 @@ namespace Meta
 				}
 			}
 			// TODO: remove functions!!
-			private bool CompareResult(string path,object toSerialize,string[] functions,int level)
+			private bool CompareResult(string path,object toSerialize,int level)
 			{				
 				System.IO.Directory.CreateDirectory(path);
 				if(!File.Exists(Path.Combine(path,"check.txt")))
@@ -3082,7 +3070,7 @@ namespace Meta
 					File.Create(Path.Combine(path,"check.txt")).Close();
 				}
 				StringBuilder stringBuilder=new StringBuilder();
-				Serialize(toSerialize,"",functions,stringBuilder,level);
+				Serialize(toSerialize,"",stringBuilder,level);
 
 				string result=stringBuilder.ToString();
 
@@ -3091,7 +3079,7 @@ namespace Meta
 				string check=Helper.ReadFile(Path.Combine(path,"check.txt"));
 				return result.Equals(check);
 			}
-			public static void Serialize(object toSerialize,string indent,string[] methods,StringBuilder stringBuilder,int level) 
+			public static void Serialize(object toSerialize,string indent,StringBuilder stringBuilder,int level) 
 			{
 
 				if(toSerialize==null) 
@@ -3108,14 +3096,14 @@ namespace Meta
 					ArrayList members=new ArrayList();
 					members.AddRange(toSerialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
 					members.AddRange(toSerialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
-					foreach(string method in methods)
-					{
-						MethodInfo methodInfo=toSerialize.GetType().GetMethod(method,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance);
-						if(methodInfo!=null)
-						{ 
-							members.Add(methodInfo);
-						}
-					}
+//					foreach(string method in methods)
+//					{
+//						MethodInfo methodInfo=toSerialize.GetType().GetMethod(method,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance);
+//						if(methodInfo!=null)
+//						{ 
+//							members.Add(methodInfo);
+//						}
+//					}
 					members.Sort(new MemberInfoComparer());
 					foreach(MemberInfo member in members) 
 					{
@@ -3127,28 +3115,29 @@ namespace Meta
 								{ 
 									object val=toSerialize.GetType().InvokeMember(member.Name,BindingFlags.Public
 										|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
-										|BindingFlags.InvokeMethod,null,toSerialize,null);
+										,null,toSerialize,null);
+//										|BindingFlags.InvokeMethod,null,toSerialize,null);
 									stringBuilder.Append(indent+member.Name);
 									if(val!=null)
 									{
 										stringBuilder.Append(" ("+val.GetType().Name+")");
 									}
 									stringBuilder.Append(":\n");
-									Serialize(val,indent+indentationText,methods,stringBuilder,level);
+									Serialize(val,indent+indentationText,stringBuilder,level);
 								}
 							}
 						}
 					}
 					if(toSerialize is ISerializeSpecial)
 					{
-						((ISerializeSpecial)toSerialize).Serialize(indent,methods,stringBuilder,level);
+						((ISerializeSpecial)toSerialize).Serialize(indent,stringBuilder,level);
 					}
 					else if(toSerialize is IEnumerable)
 					{
 						foreach(object entry in (IEnumerable)toSerialize)
 						{
 							stringBuilder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
-							Serialize(entry,indent+indentationText,methods,stringBuilder,level);
+							Serialize(entry,indent+indentationText,stringBuilder,level);
 						}
 					}
 				}
@@ -3209,21 +3198,11 @@ namespace Meta
 		public bool IsBetween(Extent extent)
 		{
 			return false;
-//			return IsBetween(extent.Start,extent.End);
 		}
-//		public bool IsBetween(Extent extent)
-//		{
-//			return IsBetween(extent.Start,extent.End);
-//		}
 		public bool IsBetween(SourcePosition start,SourcePosition end)
 		{
 			return false;
-//			return Line>=start.Line && Line<=end.Line && Column>=start.Column && Column<=end.Column;
 		}
-//		public bool IsBetween(SourcePosition start,SourcePosition end)
-//		{
-//			return Line>=start.Line && Line<=end.Line && Column>=start.Column && Column<=end.Column;
-//		}
 		private int line;
 		private int column;
 		public SourcePosition(int line,int column)
@@ -3274,8 +3253,7 @@ namespace Meta
 			{
 				Extent extent=(Extent)entry.Value;
 				if(extent.Start.Line>=firstLine && extent.End.Line<=lastLine)
-//					if(extent.FileName==fileName && extent.Start.Line>=firstLine && extent.End.Line<=lastLine)
-					{
+				{
 					result.Add(extent);
 				}
 			}
@@ -3300,7 +3278,6 @@ namespace Meta
 					extent.Start.Column==Start.Column && 
 					extent.End.Line==End.Line && 
 					extent.End.Column==End.Column
-//					extent.FileName==FileName
 				)
 				{
 					isEqual=true;
@@ -3334,24 +3311,10 @@ namespace Meta
 		}
 		private SourcePosition start;
 		private SourcePosition end;
-//		[Serialize]
-//		public string FileName
-//		{
-//			get
-//			{
-//				return fileName;
-//			}
-//			set
-//			{
-//				fileName=value;
-//			}
-//		}
-//		string fileName;
 		public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
 		{
 			this.start=new SourcePosition(startLine,startColumn);
 			this.end=new SourcePosition(endLine,endColumn);
-//			this.fileName=fileName;
 
 		}
 		public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
@@ -3503,8 +3466,7 @@ namespace Meta
 				isComment=true;
 				// TODO: make this a try consume for the newline, simply use newline, maybe should refactor everything
 				while(Look()!='\n' && Look()!=endOfFileChar)
-//					while(Look()!='\n' && Look()!=endOfFileChar)
-					{
+				{
 					Consume();
 				}
 			}
@@ -3589,7 +3551,6 @@ namespace Meta
 			return call;
 		}
 		bool isStartOfFile=true;
-		// TODO: what is CodeKeys.Function good for?
 		private void Whitespace()
 		{
 			while(TryConsume('\t') || TryConsume(' '))
@@ -3632,11 +3593,9 @@ namespace Meta
 							//Whitespace();
 							// TODO: fix newlines
 							NewLine(); // this should not be eaten
-//							TryConsume('\n'); // this should not be eaten
 							while(Comment())
 							{
 								NewLine();
-//								TryConsume('\n');
 							}
 							string newIndentation=GetIndentation();
 							if(newIndentation.Length<indentationCount)
@@ -3657,7 +3616,6 @@ namespace Meta
 						else
 						{
 							NewLine();
-//							TryConsume('\n');
 						}
 
 					}
@@ -3714,7 +3672,6 @@ namespace Meta
 			{
 				extent.End.Line=Line;
 				extent.End.Column=Column;
-//				extent.FileName=this.filePath;
 				expression.Extent=extent;
 			}
 		}
@@ -3748,7 +3705,7 @@ namespace Meta
 			EndExpression(extent,integer);
 			return integer;
 		}
-		// maybe combine literals
+		// maybe combine all literal expressions in some way
 		public const char stringEscapeChar='\\';
 		private Map String()
 		{
@@ -3770,7 +3727,6 @@ namespace Meta
 				while(true) // factor this out
 				{
 					if(Look()==stringChar)
-//					if(!LookExcept(new char[] {stringChar}))
 					{
 						if(escapeCharCount==0)
 						{
@@ -3803,13 +3759,11 @@ namespace Meta
 						break;
 					}
 				}
-//				@string=new NormalMap(stringText);
 				ArrayList lines=new ArrayList();
 				// TODO: make these constants
 				stringText=stringText.Replace("\r\n","\n");
 				string[] originalLines=stringText.Split('\n');
 				string realText;
-//				string realText=(string)originalLines[0]+'\n';
 				for(int i=0;i<originalLines.Length;i++)
 				{
 					if(i==0)
@@ -3821,11 +3775,6 @@ namespace Meta
 						lines.Add(originalLines[i].Remove(0,Math.Min(indentationCount+1,originalLines[i].Length-originalLines[i].TrimStart(indentationChar).Length)));
 					}
 				}
-//				string realText=(string)originalLines[0]+'\n';
-//				foreach(string line in originalLines.GetRange(1,originalLines.Count-1))
-//				{
-//					lines.Add(line.Remove(0,Math.Min(indentationCount+1,line.Length-line.TrimStart(indentationChar).Length)));
-//				}
 				realText=string.Join("\n",(string[])lines.ToArray(typeof(string)));
 				Map literal=new NormalMap(realText);
 				@string=new NormalMap();
@@ -4070,10 +4019,7 @@ namespace Meta
 		}
 		public void Save()
 		{
-//			Directory.CreateDirectory(Path.GetDirectoryName(path));
-//			File.Create(path).Close();
 			string text=Meta.Serialize.MapValue(map,"").Trim(new char[]{'\n'});
-			// TODO: use constants here
 			if(text=="\"\"")
 			{
 				text="";
