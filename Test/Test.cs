@@ -35,26 +35,26 @@ namespace Test
 			{
 				ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Process.LibraryPath.Parent.FullName,"Test"));
 			}
-			else 
-			{
-				if(!File.Exists(file))
-				{
-					throw new ApplicationException("File "+file+" not found.");
-				}
-
-				Map result=new Process(file).Run();//,new NormalMap());
-				if(result.IsString)
-				{
-					Console.Write("Content-Type: text/html\n\n");
-					Console.Write(result.GetString());
-				}
-			}
+//			else 
+//			{
+//				if(!File.Exists(file))
+//				{
+//					throw new ApplicationException("File "+file+" not found.");
+//				}
+//				// not functional
+//				Map result=new Process(file).Run();
+//				if(result.IsString)
+//				{
+//					Console.Write("Content-Type: text/html\n\n");
+//					Console.Write(result.GetString());
+//				}
+//			}
 		}
+		// remove possibility to execute a file
 		[STAThread]
 		public static void Main(string[] args) 
 		{
 //			args=new string[] {@"-debug",@"C:\Projects\Meta\Library\editor.meta"};
-
 
 			Hashtable options=new Hashtable();
 			string fileName="";
@@ -108,46 +108,15 @@ namespace Test
 	}
 	public class Tests 
 	{
-		private static string filename=@"C:\Projects\Meta\Library\basicTest.meta";
-//		public class CompileToMap:TestCase 
-//		{
-//			public static Map map;
-//			public override object Run() 
-//			{
-//				MetaCustomParser parser=new MetaCustomParser(Helper.ReadFile(filename),filename);
-//				map=parser.Program();
-//				return map;
-//			}
-//		}
-//		public class CompileToMap:TestCase 
-//		{
-//			public static Map map;
-//			public override object Run() 
-//			{
-//				map=Interpreter.Compile(Path.Combine(
-//					Test.path,filename));
-//				return map;
-//			}
-//		}
 		public class Library:TestCase
 		{
 			public override object Run(ref int level)
 			{
 				level=2;
-				Map code=new Process(@"C:\Projects\Meta\Library\meta.meta").RunWithoutLibrary()["libraryTest"];
+				Map code=FileSystem.singleton["libraryTest"];
 				return new Process(@"C:\Projects\Meta\Library\meta.meta",code,new NormalMap()).Run();
 			}
 		}
-//		public class Execute:TestCase
-//		{
-//			public override object Run(ref int level)
-//			{
-//				Map argument=new NormalMap();
-//				argument[1]="first arg";
-//				argument[2]="second=arg";
-//				return new Process(@"C:\Projects\Meta\Library\basicTest.meta",argument).Run();
-//			}
-//		}
 		public class Basic:TestCase
 		{
 			public override object Run(ref int level)
@@ -156,7 +125,7 @@ namespace Test
 				argument[1]="first arg";
 				argument[2]="second=arg";
 				level=2;
-				Map basicTest=new Process(@"C:\Projects\Meta\Library\meta.meta").RunWithoutLibrary()["basicTest"];//[CodeKeys.Function];
+				Map basicTest=FileSystem.singleton["basicTest"];
 				return new Process(@"C:\Projects\Meta\Library\meta.meta",
 					basicTest,argument).Run();
 			}

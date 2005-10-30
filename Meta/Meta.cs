@@ -175,19 +175,16 @@ namespace Meta
 	}
 	public class Process
 	{
-		// rename
-		private string path;
 		private Map parameter;
-		public Process(string path):this(path,new NormalMap())
+		public Process():this(new NormalMap())
 		{
 		}
-		public Process(string path,Map parameter)
+		public Process(Map parameter)
 		{
 			// start a new thread here
-			this.path=path;
 			this.parameter=parameter;
 			processes[Thread.CurrentThread]=this;
-			TextReader reader=new StreamReader(path,Encoding.Default);
+			TextReader reader=new StreamReader(FileSystem.Path,Encoding.Default);
 			Map program=Compile(reader);
 			reader.Close();
 		}
@@ -196,7 +193,6 @@ namespace Meta
 		{
 			this.program=program;
 			this.parameter=parameter;
-			this.path=path;
 		}
 		public Map Run()
 		{
@@ -207,11 +203,12 @@ namespace Meta
 			program.Parent=FileSystem.singleton;
 			return program.Call(parameter);
 		}
+		// only the FileSystem should ever parse anything, and run without library
 		public Map RunWithoutLibrary()
 		{
-			using(TextReader reader=new StreamReader(path,Encoding.Default))
+			using(TextReader reader=new StreamReader(FileSystem.Path,Encoding.Default))
 			{
-				return RunWithoutLibrary(path,reader);
+				return RunWithoutLibrary(FileSystem.Path,reader);
 			}
 		}
 		// should be removed
@@ -230,14 +227,14 @@ namespace Meta
 		}
 		public Map Compile()
 		{
-			using(TextReader reader=new StreamReader(this.path,Encoding.Default))
+			using(TextReader reader=new StreamReader(FileSystem.Path,Encoding.Default))
 			{
 				return Compile(reader);
 			}
 		}
 		public Map Compile(TextReader textReader)
 		{
-			return new MetaCustomParser(textReader.ReadToEnd(),this.path).Program();
+			return new MetaCustomParser(textReader.ReadToEnd(),FileSystem.Path).Program();
 		}
 		public void Start()
 		{
@@ -3947,19 +3944,15 @@ namespace Meta
 	}
 	public class Extent
 	{
-//		public override string ToString()
-//		{
-//			return "line "+Start.Line+" column "+Start.Column;
-//		}
-
 		public static ArrayList GetExtents(string fileName,int firstLine,int lastLine)
 		{
 			ArrayList result=new ArrayList();
 			foreach(DictionaryEntry entry in Extents)
 			{
 				Extent extent=(Extent)entry.Value;
-				if(extent.FileName==fileName && extent.Start.Line>=firstLine && extent.End.Line<=lastLine)
-				{
+				if(extent.Start.Line>=firstLine && extent.End.Line<=lastLine)
+//					if(extent.FileName==fileName && extent.Start.Line>=firstLine && extent.End.Line<=lastLine)
+					{
 					result.Add(extent);
 				}
 			}
@@ -3983,8 +3976,9 @@ namespace Meta
 					extent.Start.Line==Start.Line && 
 					extent.Start.Column==Start.Column && 
 					extent.End.Line==End.Line && 
-					extent.End.Column==End.Column && 
-					extent.FileName==FileName)
+					extent.End.Column==End.Column
+//					extent.FileName==FileName
+				)
 				{
 					isEqual=true;
 				}
@@ -3995,7 +3989,7 @@ namespace Meta
 		{
 			unchecked
 			{
-				return fileName.GetHashCode()*Start.Line.GetHashCode()*Start.Column.GetHashCode()*End.Line.GetHashCode()*End.Column.GetHashCode();
+				return Start.Line.GetHashCode()*Start.Column.GetHashCode()*End.Line.GetHashCode()*End.Column.GetHashCode();
 			}
 		}
 
@@ -4017,24 +4011,24 @@ namespace Meta
 		}
 		private SourcePosition start;
 		private SourcePosition end;
-		[Serialize]
-		public string FileName
-		{
-			get
-			{
-				return fileName;
-			}
-			set
-			{
-				fileName=value;
-			}
-		}
-		string fileName;
+//		[Serialize]
+//		public string FileName
+//		{
+//			get
+//			{
+//				return fileName;
+//			}
+//			set
+//			{
+//				fileName=value;
+//			}
+//		}
+//		string fileName;
 		public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
 		{
 			this.start=new SourcePosition(startLine,startColumn);
 			this.end=new SourcePosition(endLine,endColumn);
-			this.fileName=fileName;
+//			this.fileName=fileName;
 
 		}
 		public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
@@ -4397,7 +4391,7 @@ namespace Meta
 			{
 				extent.End.Line=Line;
 				extent.End.Column=Column;
-				extent.FileName=this.filePath;
+//				extent.FileName=this.filePath;
 				expression.Extent=extent;
 			}
 		}
@@ -4723,9 +4717,16 @@ namespace Meta
 			singleton=new FileSystem();
 		}
 		private Map map;
+		public static string Path
+		{
+			get
+			{
+				return System.IO.Path.Combine(Process.LibraryPath.FullName,"meta.meta");
+			}
+		}
 		public FileSystem()
 		{
-			this.map=new Process(Path.Combine(Process.LibraryPath.FullName,"meta.meta")).RunWithoutLibrary();
+			this.map=new Process(Path).RunWithoutLibrary();
 			this.map.Parent=GAC.singleton;
 			// this is a little unlogical
 			this.Parent=GAC.singleton;
