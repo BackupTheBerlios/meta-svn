@@ -3403,7 +3403,7 @@ namespace Meta
 			return integer;
 		}
 		// maybe combine all literal expressions in some way
-		public const char stringEscapeChar='\\';
+		public const char stringEscapeChar='\'';
 		private Map String()
 		{
 			Map @string;
@@ -3487,7 +3487,8 @@ namespace Meta
 		public const char lookupStartChar='[';
 		public const char lookupEndChar=']';
 		// TODO: use the other constants to create this array
-		public char[] lookupStringForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*'};
+		public char[] lookupStringForbiddenChars=new char[] {' ','\t','\r','\n','=','.',stringEscapeChar,'|','#','"','[',']','*'};
+//		public char[] lookupStringForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*'};
 		public char[] lookupStringFirstForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*','1','2','3','4','5','6','7','8','9'};
 		private Map LookupString()
 		{

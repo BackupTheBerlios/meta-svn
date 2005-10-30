@@ -1,4 +1,4 @@
-license=\"
+license='"
 	Meta is a programming language.
 	Copyright (C) 2004 Christian Staudenmeyer "christianstaudenmeyer@web.de"
 
@@ -13,7 +13,7 @@ license=\"
 
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."\
+	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."'
 basicTest=
 	|
 		current=library.map.merge
@@ -42,11 +42,11 @@ basicTest=
 		integerDecrementTest=integerDecrementTest.[*]
 		persistenceTest=testSubDir
 		literalEscapeTest=
-			[1]=\"asdf"\
-			[2]=\\"asdf"\\
-			[3]=\\"as"\df"\\
-			[4]=\\\"as"\\df"\\\
-			[5]=\\\\\\\\\\\\\\\\\"as"\\\\\\\\\\\\\\\\df"\\\\\\\\\\\\\\\\\
+			[1]='"asdf"'
+			[2]=''"asdf"''
+			[3]=''"as"'df"''
+			[4]='''"as"''df"'''
+			[5]='''''''''''''''''"as"''''''''''''''''df"'''''''''''''''''
 		"ImpliedAutokey"
 		="Autokey"
 		commandLineArguments=parameter
@@ -272,7 +272,7 @@ basicTest=
 		alleMeineText=lines.[1]
 		lines.[5]="bwuhahaha"
 		tabText="			hello"
-		escapedText="\#\n\\\t"
+		escapedText="'#'n'''t"
 		whileCounter=*
 		loop=
 			|
