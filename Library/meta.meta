@@ -511,62 +511,23 @@ editor=
 			library.math
 			Library.map
 			Editor
-		file=
-			Write=
-				|
-					writer=StreamWriter
-						parameter.[1]
-					writer.Write
-						parameter.[2]
-					writer.Close*
-			Read=
-				|
-					reader=StreamReader
-						parameter
-					result=reader.ReadToEnd*
-					reader.Close*
-					current=result
+		Process=Meta.Process
 		SetBreakPoint=
-			|Meta.Interpreter.BreakPoint.set
-				Meta.BreakPoint
-					Meta.SourcePosition
-						add
-							editBox.LineIndex.get*
-							1
-						editBox.Column.get*
+			|
+				process=Process.Current.get*
+				process.BreakPoint.set
+					BreakPoint
+						SourcePosition
+							add
+								editBox.LineIndex.get*
+								1
+							editBox.Column.get*
 		commands=
 			Save=
 				|
-					hasName=not Equality
-						fileName
-						*
-					cases=
-						[*]=
-							|commands.SaveAs*
-						[1]=
-							|file.Write
-								fileName
-								editBox.RealText.get*
-					cases.[hasName]*
-			Open=
-				|
-					openFileName=choose.OpenFile*
-					hasName=not Equality
-						openFileName
-						*
-					cases=
-						[*]=
-							|*
-						[1]=
-							|
-								SetFileName openFileName
-								editBox.RealText.set
-									file.Read fileName
-								editBox.MoveAbsolute
-									*
-									*
-					cases.[hasName]*
-			Run=
+					Meta.FileSystem.singleton.Set
+						editBox.RealText.get*
+			Start=
 				|
 					commands.Save*
 					SetBreakPoint*
@@ -579,11 +540,13 @@ editor=
 			Continue=
 				|
 					SetBreakPoint*
-					Meta.Interpreter.ContinueDebug*
+					process=Process.Current.get*
+					process.Continue*
 			Reverse=
 				|
 					SetBreakPoint*
-					Meta.Interpreter.ReverseDebug*
+					process=Process.Current.get*
+					process.Continue*
 			Stop=
 				|Meta.Interpreter.StopDebug*
 		CombinedModifierKeys=
@@ -638,8 +601,6 @@ editor=
 				[Keys.Right]=
 					|editBox.SelectCharRight*
 			[Keys.Control]=
-				[Keys.O]=
-					|commands.Open*
 				[Keys.S]=
 					|commands.Save*
 				[Keys.I]=
@@ -733,7 +694,8 @@ editor=
 								|commands.Reverse*
 							[1]=
 								|commands.Continue*
-						breakpoint=Meta.Interpreter.BreakPoint.get*
+						process=Process.Current.get*
+						breakpoint=process.BreakPoint.get*
 						position=breakpoint.Position.get*
 						line=position.Line.get*
 						forward=smaller
@@ -747,7 +709,7 @@ editor=
 						modifier=eventArgs.Modifiers.get*
 						key=eventArgs.KeyCode.get*
 						shortcuts=shortcutCombinations.[modifier]
-						exists=Containment
+						exists=contains
 							map=shortcuts
 							key=key
 						cases=
@@ -761,6 +723,9 @@ editor=
 							[*]=
 								|*
 						cases.[exists]*
+			editBox.Text.set
+				FileAccess.Read
+					FileSystem.Path.get*
 			current=editBox
 		form=
 			form=Form*
@@ -776,13 +741,12 @@ editor=
 					editBox
 			menu=
 				File=
-					["Open..."]=commands.Open
-					["Save"]=commands.Save
-					["Save as..."]=commands.SaveAs
+					["Save"]=
+						|commands.Save*
 					["Close"]=
 						|form.Close*
 				Debug=
-					Start=commands.Run
+					Start=commands.Start
 					Continue=commands.Continue
 					Reverse=commands.Reverse
 					Stop=commands.Stop

@@ -254,7 +254,7 @@ namespace Meta
 		public void Pause()
 		{
 		}
-		public void Resume()
+		public void Continue()
 		{
 		}
 		public static Process Current
@@ -322,6 +322,10 @@ namespace Meta
 			get
 			{
 				return reversed;
+			}
+			set
+			{
+				reversed=value;
 			}
 		}
 		private bool ResumeAfterReverse(Map code)
@@ -781,6 +785,36 @@ namespace Meta
 			}
 			return text;
 		}
+//		public string GetStringDefault()
+//		{
+//			string text="";
+//			foreach(Map key in Keys)
+//			{
+//				if(key.IsInteger)
+//				{
+//					if(this[key].IsInteger)
+//					{
+//						try
+//						{
+//							text+=Convert.ToChar(this[key].GetInteger().GetInt32());
+//						}
+//						catch
+//						{
+//							return null;
+//						}
+//					}
+//					else
+//					{
+//						return null;
+//					}
+//				}
+//				else
+//				{
+//					return null;
+//				}
+//			}
+//			return text;
+//		}
 		public virtual string GetString()
 		{
 			return GetStringDefault();
@@ -2077,6 +2111,11 @@ namespace Meta
 				return true;
 			}
 		}
+		public override string GetString()
+		{
+			return this.text;
+		}
+
 
 		public override MapStrategy Clone()
 		{
@@ -3636,6 +3675,11 @@ namespace Meta
 	}
 	public class FileSystem:Map
 	{
+		public void Set(string text)
+		{
+			FileAccess.Write(Path,text);
+			Load();
+		}
 		public static FileSystem singleton;
 		static FileSystem()
 		{
@@ -3650,6 +3694,15 @@ namespace Meta
 			}
 		}
 		public FileSystem()
+		{
+			Load();
+//			// unlogical
+//			this.map=Process.Current.Parse(Path);
+//			this.map.Parent=Gac.singleton;
+//			// this is a little unlogical
+//			this.Parent=Gac.singleton;
+		}
+		private void Load()
 		{
 			// unlogical
 			this.map=Process.Current.Parse(Path);
