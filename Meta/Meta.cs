@@ -173,6 +173,7 @@ namespace Meta
 	}
 	public class Process
 	{
+		Thread thread;
 		private Map parameter;
 //		public Process():this(new NormalMap())
 //		{
@@ -188,9 +189,17 @@ namespace Meta
 		private Map program;
 		public Process(Map program,Map parameter)
 		{
+			this.thread=new Thread(new ThreadStart(Start));
+			processes[thread]=this;
 			this.program=program;
 			this.parameter=parameter;
-			processes[Thread.CurrentThread]=this;
+		}
+		static Process()
+		{
+			processes[Thread.CurrentThread]=new Process();
+		}
+		private Process()
+		{
 		}
 		public Map Run()
 		{
@@ -3643,7 +3652,7 @@ namespace Meta
 		public FileSystem()
 		{
 			// unlogical
-			this.map=new Process(null,null).Parse(Path);
+			this.map=Process.Current.Parse(Path);
 			this.map.Parent=Gac.singleton;
 			// this is a little unlogical
 			this.Parent=Gac.singleton;
@@ -3696,6 +3705,14 @@ namespace Meta
 						{
 							val[type.Name]=new TypeMap(type);
 						}
+					}
+					if(!Process.loadedAssemblies.Contains(assembly.Location))
+					{
+						Process.loadedAssemblies.Add(assembly.Location);
+					}
+					else
+					{
+						int asdf=0;
 					}
 				}
 				catch
