@@ -3153,26 +3153,26 @@ namespace Meta
 			}
 			return isDedentation;
 		}
-		public const char commentChar='#';
+//		public const char commentChar='#';
 
-		private bool Comment()
-		{
-			bool isComment;
-			if(TryConsume(commentChar))
-			{
-				isComment=true;
-				// TODO: make this a try consume for the newline, simply use newline, maybe should refactor everything
-				while(Look()!='\n' && Look()!=endOfFileChar)
-				{
-					Consume();
-				}
-			}
-			else
-			{
-				isComment=false;
-			}
-			return isComment;
-		}
+//		private bool Comment()
+//		{
+//			bool isComment;
+//			if(TryConsume(commentChar))
+//			{
+//				isComment=true;
+//				// TODO: make this a try consume for the newline, simply use newline, maybe should refactor everything
+//				while(Look()!='\n' && Look()!=endOfFileChar)
+//				{
+//					Consume();
+//				}
+//			}
+//			else
+//			{
+//				isComment=false;
+//			}
+//			return isComment;
+//		}
 		private void Consume()
 		{
 			Consume(Look());
@@ -3273,8 +3273,8 @@ namespace Meta
 					Map statements=new NormalMap();
 					while(Look()!=endOfFileChar)
 					{
-						if(!Comment())
-						{
+//						if(!Comment())
+//						{
 							Map statement=Function();
 							if(Rest.IndexOf("returnInMap")<40)
 							{
@@ -3290,10 +3290,10 @@ namespace Meta
 							//Whitespace();
 							// TODO: fix newlines
 							NewLine(); // this should not be eaten
-							while(Comment())
-							{
-								NewLine();
-							}
+//							while(Comment())
+//							{
+//								NewLine();
+//							}
 							string newIndentation=GetIndentation();
 							if(newIndentation.Length<indentationCount)
 							{
@@ -3309,11 +3309,11 @@ namespace Meta
 								throw new ApplicationException("incorrect indentation");
 							}		
 
-						}
-						else
-						{
-							NewLine();
-						}
+//						}
+//						else
+//						{
+//							NewLine();
+//						}
 
 					}
 					// TODO: combine???

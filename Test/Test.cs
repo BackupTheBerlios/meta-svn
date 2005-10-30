@@ -32,8 +32,8 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-//			ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Directory.GetParent(Process.LibraryPath).FullName,"Test"));
-			FileSystem.singleton["editor"].Call(Map.Empty);
+			ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Directory.GetParent(Process.LibraryPath).FullName,"Test"));
+//			FileSystem.singleton["editor"].Call(Map.Empty);
 		}
 	}
 	public class Tests 
