@@ -2440,7 +2440,7 @@ Entry (DictionaryEntry)
 					Value (NormalMap):
 						Extent:
 							null
-						"0"
+						""
 		Entry (DictionaryEntry)
 			Key (NormalMap):
 				Extent:
@@ -2466,7 +2466,7 @@ Entry (DictionaryEntry)
 					Value (NormalMap):
 						Extent:
 							null
-						"0"
+						""
 Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
@@ -2510,7 +2510,7 @@ Entry (DictionaryEntry)
 			Value (NormalMap):
 				Extent:
 					null
-				"0"
+				""
 Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:

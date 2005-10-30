@@ -1167,55 +1167,158 @@ namespace Meta
 			}
 			return fraction;
 		}
-		public virtual bool IsInteger
+		public bool IsIntegerDefault
 		{
 			get
 			{
 				return Count==0 || (Count==1 && ContainsKey(NumberKeys.EmptyMap) && this[NumberKeys.EmptyMap].IsInteger);
 			}
 		}
-		public virtual Integer GetInteger()
-		{
-			Integer integer;
-			if(this.ContainsKey(NumberKeys.EmptyMap))
-			{
-                integer=this[NumberKeys.EmptyMap].GetInteger()+1;
-			}
-			else
-			{
-				throw new ApplicationException("Map is not an integer.");
-			}
-			return integer;
-		}
-		public Map Parameter
+
+		public virtual bool IsInteger
 		{
 			get
 			{
-				return parameter;
-			}
-			set
-			{ 
-				parameter=value;
+				return IsIntegerDefault;
+//				return Count==0 || (Count==1 && ContainsKey(NumberKeys.EmptyMap) && this[NumberKeys.EmptyMap].IsInteger);
 			}
 		}
-		Map parameter=null;
+		public virtual Integer GetInteger()
+		{
+			return GetIntegerDefault();
+		}
+		public Integer GetIntegerDefault()
+		{
+				Integer number;
+				if(this.Equals(NumberKeys.EmptyMap))
+				{
+					number=0;
+				}
+				else if(this.Count==1 && this.ContainsKey(NumberKeys.EmptyMap))
+					//				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) && this[NumberKeys.Negative]==new NormalMap(new Integer(1)))) && this.ContainsKey(NumberKeys.EmptyMap))
+				{
+					if(this[NumberKeys.EmptyMap].GetInteger()!=null)
+					{
+						number=this[NumberKeys.EmptyMap].GetInteger()+1;
+						//						if(this[NumberKeys.Negative]==new NormalMap(new Integer(1)))
+						//						{
+						//							number=-number;
+						//						}
+					}
+					else
+					{
+						number=null;
+					}
+				}
+				else
+				{
+					number=null;
+				}
+				return number;
+		}
+
+//		public virtual Integer GetIntegerDefault()
+//		{
+//			Integer integer;
+//			if(this.ContainsKey(NumberKeys.EmptyMap))
+//			{
+//                integer=this[NumberKeys.EmptyMap].GetInteger()+1;
+//			}
+//			else
+//			{
+//				throw new ApplicationException("Map is not an integer.");
+//			}
+//			return integer;
+//		}
+//		public virtual Integer GetInteger()
+//		{
+//			Integer integer;
+//			if(this.ContainsKey(NumberKeys.EmptyMap))
+//			{
+//                integer=this[NumberKeys.EmptyMap].GetInteger()+1;
+//			}
+//			else
+//			{
+//				throw new ApplicationException("Map is not an integer.");
+//			}
+//			return integer;
+//		}
+//		public virtual bool IsStringDefault
+//		{
+//			get
+//			{
+//				bool isString=Array.Count!=0;
+//				foreach(Map key in this.Array)
+//				{
+//					if(!key.IsInteger || !this[key].IsInteger)
+//					{
+//						isString=false;
+//						break;
+//					}
+//				}
+//				return isString;
+//			}
+//		}
+		public bool IsStringDefault
+		{
+			get
+			{
+				string text="";
+				if(Array.Count!=Keys.Count)
+				{
+					text=null;
+				}
+				else
+				{
+					foreach(Map val in this.Array)
+					{
+						if(val.IsInteger)
+						{
+							try
+							{
+								text+=Convert.ToChar(val.GetInteger().GetInt32());
+							}
+							catch
+							{
+								text=null;
+								break;
+							}
+						}
+						else
+						{
+							text=null;
+							break;
+						}
+					}
+				}
+				return text!=null;
+			}
+		}		
 		public virtual bool IsString
 		{
 			get
 			{
-				return GetString()!=null;
+				return IsStringDefault;
 			}
 		}
-		public static string GetString(Map map)
+//		public virtual bool IsString
+//		{
+//			get
+//			{
+//				return GetString()!=null;
+//			}
+//		}
+		// refactor
+		public string GetStringDefault()
 		{
 			string text="";
-			foreach(Map key in map.Keys)
+			foreach(Map key in Keys)
 			{
-				if(key.GetInteger()!=null && map[key].GetInteger()!=null)
+				if(key.GetInteger()!=null && this[key].GetInteger()!=null)
 				{
 					try
 					{
-						text+=Convert.ToChar(map[key].GetInteger().GetInt32());
+						text+=Convert.ToChar(this[key].GetInteger().GetInt32());
 					}
 					catch
 					{
@@ -1231,8 +1334,45 @@ namespace Meta
 		}
 		public virtual string GetString()
 		{
-			return GetString(this);
+			return GetStringDefault();
 		}
+//		public static string GetString(Map map)
+//		{
+//			string text="";
+//			foreach(Map key in map.Keys)
+//			{
+//				if(key.GetInteger()!=null && map[key].GetInteger()!=null)
+//				{
+//					try
+//					{
+//						text+=Convert.ToChar(map[key].GetInteger().GetInt32());
+//					}
+//					catch
+//					{
+//						return null;
+//					}
+//				}
+//				else
+//				{
+//					return null;
+//				}
+//			}
+//			return text;
+//		}
+		public Map Parameter
+		{
+			get
+			{
+				return parameter;
+			}
+			set
+			{ 
+				parameter=value;
+			}
+		}
+		Map parameter=null;
+
+
 		public virtual Map Parent
 		{
 			get
@@ -1421,12 +1561,28 @@ namespace Meta
 		}
 		public override Integer GetInteger()
 		{
-			return strategy.Integer;
+			return strategy.GetInteger();
 		}
 		public override string GetString()
 		{
-			return strategy.String;
+			return strategy.GetString();
 		}
+		public override bool IsString
+		{
+			get
+			{
+				return strategy.IsString;
+			}
+		}
+		public override bool IsInteger
+		{
+			get
+			{
+				return strategy.IsInteger;
+			}
+		}
+
+
 
 		public override int Count
 		{
@@ -1612,13 +1768,13 @@ namespace Meta
 				throw new ApplicationException("not implemented.");
 			}
 		}
-		public override Integer Integer
-		{
-			get
-			{
-				return null;
-			}
-		}
+//		public override Integer Integer
+//		{
+//			get
+//			{
+//				return null;
+//			}
+//		}
 		public override ArrayList Keys
 		{
 			get
@@ -2467,19 +2623,42 @@ namespace Meta
 	}
 	public abstract class MapStrategy:ISerializeSpecial
 	{
-		public abstract Integer Integer
+		public virtual bool IsInteger
 		{
-			get;
+			get
+			{
+				return map.IsIntegerDefault;
+			}
 		}
+		public virtual bool IsString
+		{
+			get
+			{
+				return map.IsStringDefault;
+			}
+		}
+		public virtual string GetString()
+		{
+			return map.GetStringDefault();
+		}
+		public virtual Integer GetInteger()
+		{
+			return map.GetIntegerDefault();
+		}
+
+//		public abstract Integer Integer
+//		{
+//			get;
+//		}
 		public virtual void Serialize(string indentation,string[] functions,StringBuilder stringBuilder,int level)
 		{
-			if(this.String!=null)
+			if(this.IsString)
 			{
-				stringBuilder.Append(indentation+"\""+this.String+"\""+"\n");
+				stringBuilder.Append(indentation+"\""+this.GetString()+"\""+"\n");
 			}
-			else if(this.Integer!=null)
+			else if(this.GetInteger()!=null)
 			{
-				stringBuilder.Append(indentation+"\""+this.Integer.ToString()+"\""+"\n");
+				stringBuilder.Append(indentation+"\""+this.GetInteger().ToString()+"\""+"\n");
 			}
 			else
 			{
@@ -2526,13 +2705,17 @@ namespace Meta
 		{
 			get;
 		}
-		public virtual string String
-		{
-			get
-			{
-				return null;
-			}
-		}
+//		public virtual string String
+//		{
+//			get
+//			{
+//				return null;
+//			}
+//		}
+//		public abstract Integer Integer
+//		{
+//			get;
+//		}
 		public abstract ArrayList Keys
 		{
 			get;
@@ -2600,18 +2783,26 @@ namespace Meta
 	}
 	public class StringStrategy:NormalStrategy
 	{
+		public override bool IsString
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public override MapStrategy Clone()
 		{
 			return new StringStrategy(this.text);
 		}
 
-		public override Integer Integer
-		{
-			get
-			{
-				return null;
-			}
-		}
+//		public override Integer Integer
+//		{
+//			get
+//			{
+//				return null;
+//			}
+//		}
 		public override int GetHashCode()
 		{
 			return base.GetHashCode ();
@@ -2642,13 +2833,13 @@ namespace Meta
 				return list;
 			}
 		}
-		public override string String
-		{
-			get
-			{
-				return text;
-			}
-		}
+//		public override string String
+//		{
+//			get
+//			{
+//				return text;
+//			}
+//		}
 		public override ArrayList Keys
 		{
 			get
@@ -2713,38 +2904,38 @@ namespace Meta
 	}
 	public class HybridDictionaryStrategy:NormalStrategy
 	{
-		public override Integer Integer
-		{
-			get
-			{
-				Integer number;
-				if(this.map.Equals(NumberKeys.EmptyMap))
-				{
-					number=0;
-				}
-				else if(this.Count==1 && this.ContainsKey(NumberKeys.EmptyMap))
-//				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) && this[NumberKeys.Negative]==new NormalMap(new Integer(1)))) && this.ContainsKey(NumberKeys.EmptyMap))
-				{
-					if(this[NumberKeys.EmptyMap].GetInteger()!=null)
-					{
-						number=this[NumberKeys.EmptyMap].GetInteger()+1;
-//						if(this[NumberKeys.Negative]==new NormalMap(new Integer(1)))
-//						{
-//							number=-number;
-//						}
-					}
-					else
-					{
-						number=null;
-					}
-				}
-				else
-				{
-					number=null;
-				}
-				return number;
-			}
-		}
+//		public override Integer Integer
+//		{
+//			get
+//			{
+//				Integer number;
+//				if(this.map.Equals(NumberKeys.EmptyMap))
+//				{
+//					number=0;
+//				}
+//				else if(this.Count==1 && this.ContainsKey(NumberKeys.EmptyMap))
+////				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) && this[NumberKeys.Negative]==new NormalMap(new Integer(1)))) && this.ContainsKey(NumberKeys.EmptyMap))
+//				{
+//					if(this[NumberKeys.EmptyMap].GetInteger()!=null)
+//					{
+//						number=this[NumberKeys.EmptyMap].GetInteger()+1;
+////						if(this[NumberKeys.Negative]==new NormalMap(new Integer(1)))
+////						{
+////							number=-number;
+////						}
+//					}
+//					else
+//					{
+//						number=null;
+//					}
+//				}
+//				else
+//				{
+//					number=null;
+//				}
+//				return number;
+//			}
+//		}
 		ArrayList keys;
 		private HybridDictionary dictionary;
 
@@ -2781,41 +2972,41 @@ namespace Meta
 				return list;
 			}
 		}
-		public override string String
-		{
-			get
-			{
-				string text="";
-				if(Array.Count!=Keys.Count)
-				{
-					text=null;
-				}
-				else
-				{
-					foreach(Map val in this.Array)
-					{
-						if(val.IsInteger)
-						{
-							try
-							{
-								text+=Convert.ToChar(val.GetInteger().GetInt32());
-							}
-							catch
-							{
-								text=null;
-								break;
-							}
-						}
-						else
-						{
-							text=null;
-							break;
-						}
-					}
-				}
-				return text;
-			}
-		}
+//		public override string String
+//		{
+//			get
+//			{
+//				string text="";
+//				if(Array.Count!=Keys.Count)
+//				{
+//					text=null;
+//				}
+//				else
+//				{
+//					foreach(Map val in this.Array)
+//					{
+//						if(val.IsInteger)
+//						{
+//							try
+//							{
+//								text+=Convert.ToChar(val.GetInteger().GetInt32());
+//							}
+//							catch
+//							{
+//								text=null;
+//								break;
+//							}
+//						}
+//						else
+//						{
+//							text=null;
+//							break;
+//						}
+//					}
+//				}
+//				return text;
+//			}
+//		}
 		public override ArrayList Keys
 		{
 			get
@@ -3191,19 +3382,32 @@ namespace Meta
 			return 0;
 		}
 		private Integer number;
-		public override Integer Integer
+		public override bool IsInteger
 		{
 			get
 			{
-				return number;
+				return true;
 			}
 		}
+
+		public override Integer GetInteger()
+		{
+			return number;
+		}
+
+//		public override Integer Integer
+//		{
+//			get
+//			{
+//				return number;
+//			}
+//		}
 		public override bool Equals(object obj)
 		{
 			bool isEqual;
 			if(obj is IntegerStrategy)
 			{
-				if(((IntegerStrategy)obj).Integer==Integer)
+				if(((IntegerStrategy)obj).GetInteger()==GetInteger())
 				{
 					isEqual=true;
 				}
@@ -3443,6 +3647,10 @@ namespace Meta
 			}
 			public static void Serialize(object toSerialize,string indent,string[] methods,StringBuilder stringBuilder,int level) 
 			{
+				if(toSerialize!=null && toSerialize.Equals(new NormalMap(new Integer(1))))
+				{
+					int asdf=0;
+				}
 				if(toSerialize==null) 
 				{
 					stringBuilder.Append(indent+"null\n");
