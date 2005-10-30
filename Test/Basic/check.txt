@@ -1909,7 +1909,7 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"TestClass"
-	Value (DotNetClass):
+	Value (TypeMap):
 		Extent:
 			null
 		"testClasses.TestClass"
@@ -1927,7 +1927,7 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"testClass"
-	Value (DotNetObject):
+	Value (ObjectMap):
 		"testClasses.TestClass"
 Entry (DictionaryEntry)
 	Key (NormalMap):
@@ -1943,7 +1943,7 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"MemberTest"
-	Value (DotNetClass):
+	Value (TypeMap):
 		Extent:
 			null
 		"testClasses.MemberTest"
@@ -1952,7 +1952,7 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"memberTest"
-	Value (DotNetObject):
+	Value (ObjectMap):
 		"testClasses.MemberTest"
 Entry (DictionaryEntry)
 	Key (NormalMap):
@@ -1986,7 +1986,7 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"positionalNoConversion"
-	Value (DotNetObject):
+	Value (ObjectMap):
 		"testClasses.PositionalNoConversion"
 Entry (DictionaryEntry)
 	Key (NormalMap):
@@ -2002,7 +2002,7 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"namedNoConversion"
-	Value (DotNetObject):
+	Value (ObjectMap):
 		"testClasses.NamedNoConversion"
 Entry (DictionaryEntry)
 	Key (NormalMap):
@@ -2018,7 +2018,7 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"indexerNoConversion"
-	Value (DotNetObject):
+	Value (ObjectMap):
 		"testClasses.IndexerNoConversion"
 Entry (DictionaryEntry)
 	Key (NormalMap):
@@ -2927,7 +2927,7 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"staticEventResult"
-	Value (DotNetObject):
+	Value (ObjectMap):
 		"testClasses.TestClass"
 Entry (DictionaryEntry)
 	Key (NormalMap):
@@ -3218,7 +3218,7 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"font"
-	Value (DotNetObject):
+	Value (ObjectMap):
 		"[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]"
 Entry (DictionaryEntry)
 	Key (NormalMap):
@@ -3290,7 +3290,7 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"arrayList"
-	Value (DotNetObject):
+	Value (ObjectMap):
 		"System.Collections.ArrayList"
 Entry (DictionaryEntry)
 	Key (NormalMap):
@@ -3315,7 +3315,7 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"textBox"
-	Value (DotNetObject):
+	Value (ObjectMap):
 		"System.Windows.Forms.TextBox, Text: 
 Alle meine Entchen,
 schwimmen auf dem S..."
@@ -3324,7 +3324,7 @@ Entry (DictionaryEntry)
 		Extent:
 			null
 		"lines"
-	Value (DotNetObject):
+	Value (ObjectMap):
 		"System.String[]"
 Entry (DictionaryEntry)
 	Key (NormalMap):

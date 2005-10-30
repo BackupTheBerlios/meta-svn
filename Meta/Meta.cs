@@ -1546,9 +1546,9 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Object:
-						if(meta is DotNetObject && target.IsAssignableFrom(((DotNetObject)meta).type))
+						if(meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).type))
 						{
-							dotNet=((DotNetObject)meta).obj;
+							dotNet=((ObjectMap)meta).obj;
 						}
 						else if(target.IsAssignableFrom(meta.GetType()))
 						{
@@ -1645,10 +1645,10 @@ namespace Meta
 						meta=(char)dotNet;
 						break;
 					case TypeCode.DateTime:
-						meta=new DotNetObject(dotNet);
+						meta=new ObjectMap(dotNet);
 						break;
 					case TypeCode.DBNull:
-						meta=new DotNetObject(dotNet);
+						meta=new ObjectMap(dotNet);
 						break;
 					case TypeCode.Decimal:
 						meta=(int)dotNet;
@@ -1676,7 +1676,7 @@ namespace Meta
 						}
 						else
 						{
-							meta=new DotNetObject(dotNet);
+							meta=new ObjectMap(dotNet);
 						}
 						break;
 					case TypeCode.SByte:
@@ -2017,8 +2017,7 @@ namespace Meta
 
 		public MethodBase[] overloadedMethods;
 	}
-	// TODO: maybe rename to DotNetType, or TypeMap?, DotNet is a bit stupid
-	public class DotNetClass: DotNetContainer
+	public class TypeMap: DotNetContainer
 	{
 		public Type Type
 		{
@@ -2027,17 +2026,12 @@ namespace Meta
 				return type;
 			}
 		}
-//		public override Integer GetInteger()
-//		{
-//			// TODO: Throw exception
-//			return null;
-//		}
 		public override Map Clone()
 		{
-			return new DotNetClass(type);
+			return new TypeMap(type);
 		}
 		protected DotNetMethod constructor;
-		public DotNetClass(Type targetType):base(null,targetType)
+		public TypeMap(Type targetType):base(null,targetType)
 		{
 			this.constructor=new DotNetMethod(this.type);
 		}
@@ -2047,7 +2041,7 @@ namespace Meta
 		}
 
 	}
-	public class DotNetObject: DotNetContainer
+	public class ObjectMap: DotNetContainer
 	{
 		public object Object
 		{
@@ -2056,12 +2050,7 @@ namespace Meta
 				return obj;
 			}
 		}
-//		public override Integer GetInteger()
-//		{
-//			// TODO: throw exception
-//			return null;
-//		}
-		public DotNetObject(object target):base(target,target.GetType())
+		public ObjectMap(object target):base(target,target.GetType())
 		{
 		}
 		public override string ToString()
@@ -2070,7 +2059,7 @@ namespace Meta
 		}
 		public override Map Clone()
 		{
-			return new DotNetObject(obj);
+			return new ObjectMap(obj);
 		}
 	}
 	public abstract class MapStrategy
@@ -2098,37 +2087,6 @@ namespace Meta
 			return map.GetIntegerDefault();
 		}
 
-//		public abstract Integer Integer
-//		{
-//			get;
-//		}
-//		public virtual void Serialize(string indentation,StringBuilder stringBuilder,int level)
-//		{
-//			if(this.IsString)
-//			{
-//				stringBuilder.Append(indentation+"\""+this.GetString()+"\""+"\n");
-//			}
-//			else if(this.GetInteger()!=null)
-//			{
-//				stringBuilder.Append(indentation+"\""+this.GetInteger().ToString()+"\""+"\n");
-//			}
-//			else
-//			{
-//				foreach(object entry in map)
-//				{
-//					stringBuilder.Append(indentation+"Entry ("+entry.GetType().Name+")\n");
-//					ExecuteTests.Serialize(entry,indentation+ExecuteTests.indentationText,stringBuilder,level);
-//				}
-//			}
-//		}
-//		public virtual Map Call(Map argument)
-//		{
-//			map.Parameter=argument;
-//			Map function=this[CodeKeys.Function];
-//			Map result;
-//			result=Process.Current.Evaluate(function,map);
-//			return result;
-//		}
 		public StrategyMap map;
 		public virtual MapStrategy Clone()
 		{
@@ -2157,17 +2115,6 @@ namespace Meta
 		{
 			get;
 		}
-//		public virtual string String
-//		{
-//			get
-//			{
-//				return null;
-//			}
-//		}
-//		public abstract Integer Integer
-//		{
-//			get;
-//		}
 		public abstract ArrayList Keys
 		{
 			get;
@@ -2248,13 +2195,6 @@ namespace Meta
 			return new StringStrategy(this.text);
 		}
 
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				return null;
-//			}
-//		}
 		public override int GetHashCode()
 		{
 			return base.GetHashCode ();
@@ -2285,13 +2225,6 @@ namespace Meta
 				return list;
 			}
 		}
-//		public override string String
-//		{
-//			get
-//			{
-//				return text;
-//			}
-//		}
 		public override ArrayList Keys
 		{
 			get
@@ -2356,53 +2289,8 @@ namespace Meta
 	}
 	public class HybridDictionaryStrategy:NormalStrategy
 	{
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				Integer number;
-//				if(this.map.Equals(NumberKeys.EmptyMap))
-//				{
-//					number=0;
-//				}
-//				else if(this.Count==1 && this.ContainsKey(NumberKeys.EmptyMap))
-////				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) && this[NumberKeys.Negative]==new NormalMap(new Integer(1)))) && this.ContainsKey(NumberKeys.EmptyMap))
-//				{
-//					if(this[NumberKeys.EmptyMap].GetInteger()!=null)
-//					{
-//						number=this[NumberKeys.EmptyMap].GetInteger()+1;
-////						if(this[NumberKeys.Negative]==new NormalMap(new Integer(1)))
-////						{
-////							number=-number;
-////						}
-//					}
-//					else
-//					{
-//						number=null;
-//					}
-//				}
-//				else
-//				{
-//					number=null;
-//				}
-//				return number;
-//			}
-//		}
 		ArrayList keys;
 		private HybridDictionary dictionary;
-
-//		public HybridDictionaryStrategy(double fraction):this(2)
-//		{
-//			Integer denominator=new Integer(1);
-//			while(Math.Floor(fraction)!=fraction)
-//			{
-//				fraction*=2;
-//				denominator*=2;
-//			}
-//			Integer numerator=IntegerFromDouble(fraction);
-//			this[NumberKeys.Numerator]=new NormalMap(numerator);
-//			this[NumberKeys.Denominator]=new NormalMap(denominator);
-//		}
 
 		public HybridDictionaryStrategy():this(2)
 		{
@@ -2424,41 +2312,6 @@ namespace Meta
 				return list;
 			}
 		}
-//		public override string String
-//		{
-//			get
-//			{
-//				string text="";
-//				if(Array.Count!=Keys.Count)
-//				{
-//					text=null;
-//				}
-//				else
-//				{
-//					foreach(Map val in this.Array)
-//					{
-//						if(val.IsInteger)
-//						{
-//							try
-//							{
-//								text+=Convert.ToChar(val.GetInteger().GetInt32());
-//							}
-//							catch
-//							{
-//								text=null;
-//								break;
-//							}
-//						}
-//						else
-//						{
-//							text=null;
-//							break;
-//						}
-//					}
-//				}
-//				return text;
-//			}
-//		}
 		public override ArrayList Keys
 		{
 			get
@@ -2534,11 +2387,6 @@ namespace Meta
 		{
 			return new Event(eventInfo,obj,type);
 		}
-//		public override Integer GetInteger()
-//		{
-//			// TODO: throw exception
-//			return null;
-//		}
 		public override ArrayList Keys
 		{
 			get
@@ -2588,11 +2436,6 @@ namespace Meta
 		{
 			return new Property(property,obj,type);
 		}
-//		public override Integer GetInteger()
-//		{
-//			// TODO: throw exception
-//			return null;
-//		}
 		public override ArrayList Keys
 		{
 			get
@@ -2613,11 +2456,7 @@ namespace Meta
 		public override Map this[Map key]
 		{
 			get
-			{
-				if(this.property.Name=="Item")
-				{
-					int asdf=0;
-				}	
+			{	
 				Map val;
 				if(key.Equals(DotNetKeys.Get))
 				{
@@ -2629,11 +2468,6 @@ namespace Meta
 				}
 				else
 				{
-					// TODO: add extent in the code that called this stuff
-					// dont know how to do this yet
-					// TODO: maybe add info about where this was looked up, must be a map
-					// maybe in caller too though
-//					throw new KeyDoesNotExistException(key);
 					val=null;
 				}
 				return val;
@@ -2650,7 +2484,7 @@ namespace Meta
 	}
 	public abstract class DotNetContainer: Map, ISerializeSpecial
 	{
-		public void Serialize(string indentation, StringBuilder stringBuilder,int level)
+		public override void Serialize(string indentation, StringBuilder stringBuilder,int level)
 		{
 			ExecuteTests.Serialize(obj!=null?this.obj:this.type,indentation,stringBuilder,level);
 		}
@@ -2726,7 +2560,7 @@ namespace Meta
 					}
 					else if(members[0] is Type)
 					{
-						val=new DotNetClass((Type)members[0]);
+						val=new TypeMap((Type)members[0]);
 					}
 					else
 					{
@@ -2741,7 +2575,6 @@ namespace Meta
 				{
 					val=null;
 				}
-				// TODO: what if value is null?
 				return val;
 			}
 			set
@@ -2850,14 +2683,6 @@ namespace Meta
 		{
 			return number;
 		}
-
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				return number;
-//			}
-//		}
 		public override bool Equals(object obj)
 		{
 			bool isEqual;
@@ -2903,10 +2728,6 @@ namespace Meta
 				{
 					keys.Add(NumberKeys.EmptyMap);
 				}
-//				if(number<0)
-//				{
-//					keys.Add(NumberKeys.Negative);
-//				}
 				return keys;
 			}
 		}
@@ -2924,20 +2745,9 @@ namespace Meta
 					else
 					{
 						result=number-1;
-//						result=number.abs()-1;
 					}
 				}
-//				else if(key.Equals(NumberKeys.Negative))
-//				{
-//					if(number<0)
-//					{
-//						result=new NormalMap(new Integer(1));
-//					}
-//					else
-//					{
-//						result=null;
-//					}
-//				}
+
 				else
 				{
 					result=null;
@@ -2950,21 +2760,6 @@ namespace Meta
 				{
 					Panic(key,value);
 				}
-//				else if(key.Equals(NumberKeys.Negative))
-//				{
-//					if(value==null)
-//					{
-//						number=number.abs();
-//					}
-//					else if(value.Equals(new NormalMap(new Integer(1))))
-//					{
-//						number=-number.abs();
-//					}
-//					else
-//					{
-//						Panic(key,value);
-//					}
-//				}
 				else
 				{
 					Panic(key,value); // TODO: dont do assignment in panic, do it here
@@ -4019,7 +3814,7 @@ namespace Meta
 					{
 						if(type.DeclaringType==null)
 						{
-							val[type.Name]=new DotNetClass(type);
+							val[type.Name]=new TypeMap(type);
 						}
 					}
 				}

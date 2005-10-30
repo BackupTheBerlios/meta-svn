@@ -275,7 +275,7 @@ Entry (DictionaryEntry)
 																			Value (NormalMap):
 																				Extent:
 																					null
-																				"DotNetObject"
+																				"ObjectMap"
 												Entry (DictionaryEntry)
 													Key (NormalMap):
 														Extent:
@@ -666,7 +666,7 @@ Entry (DictionaryEntry)
 																			Value (NormalMap):
 																				Extent:
 																					null
-																				"DotNetObject"
+																				"ObjectMap"
 												Entry (DictionaryEntry)
 													Key (NormalMap):
 														Extent:
