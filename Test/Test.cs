@@ -29,64 +29,10 @@ namespace Test
 	class Test 
 	{
 		public static string path="";
-		private static void Run(string file)
-		{
-			ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Directory.GetParent(Process.LibraryPath).FullName,"Test"));
-		}
-		// remove possibility to execute a file
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-//			args=new string[] {@"-debug",@"C:\Projects\Meta\Library\editor.meta"};
-
-			Hashtable options=new Hashtable();
-			string fileName="";
-			for(int i=0;i<args.Length;i++)
-			{
-				if(args[i].StartsWith("-"))
-				{
-					string data="";
-					string key=args[i].TrimStart('-');
-					if(i+1<args.Length-1)
-					{
-						string next=args[i+1];
-						if(!next.StartsWith("-"))
-						{
-							data=next;
-						}
-						i++;
-					}
-					options[key]=data;
-				}
-				else
-				{
-					fileName=args[i];
-				}
-			}
-
-			if(options.ContainsKey("debug"))
-			{
-				Run(fileName);
-			}
-			else
-			{
-				try 
-				{
-					Run(fileName);
-				}
-				catch(Exception e) 
-				{
-					string text="";
-					do 
-					{
-						text+=e.Message+"\n"+e.TargetSite+"\n";
-						e=e.InnerException;
-					} 
-					while(e!=null);
-					Console.WriteLine(text);
-					Console.ReadLine();
-				}
-			}
+			ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Directory.GetParent(Process.LibraryPath).FullName,"Test"));
 		}
 	}
 	public class Tests 
@@ -96,8 +42,7 @@ namespace Test
 			public override object Run(ref int level)
 			{
 				level=2;
-				Map code=FileSystem.singleton["libraryTest"];
-				return new Process(@"C:\Projects\Meta\Library\meta.meta",code,new NormalMap()).Run();
+				return new Process(FileSystem.singleton["libraryTest"],new NormalMap()).Run();
 			}
 		}
 		public class Basic:TestCase
@@ -108,9 +53,7 @@ namespace Test
 				argument[1]="first arg";
 				argument[2]="second=arg";
 				level=2;
-				Map basicTest=FileSystem.singleton["basicTest"];
-				return new Process(@"C:\Projects\Meta\Library\meta.meta",
-					basicTest,argument).Run();
+				return new Process(FileSystem.singleton["basicTest"],argument).Run();
 			}
 		}
 

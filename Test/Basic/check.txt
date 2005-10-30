@@ -2909,7 +2909,7 @@ Entry (DictionaryEntry)
 				Extent:
 					null
 				"add"
-			Value (DotNetMethod):
+			Value (Method):
 				Extent:
 					null
 				""
@@ -2951,7 +2951,7 @@ Entry (DictionaryEntry)
 				Extent:
 					null
 				"add"
-			Value (DotNetMethod):
+			Value (Method):
 				Extent:
 					null
 				""

@@ -61,12 +61,10 @@ namespace Meta
 		public static readonly Map Get="get";
 		public static readonly Map Set="set";
 	}
-	public class NumberKeys
-	{
-//		public static readonly Map Denominator="denominator";
-//		public static readonly Map Numerator="numerator";
-		public static readonly Map EmptyMap=new NormalMap();
-	}
+//	public class NumberKeys
+//	{
+//		public static readonly Map EmptyMap=new NormalMap();
+//	}
 
 
 	public class MetaException:ApplicationException
@@ -176,23 +174,23 @@ namespace Meta
 	public class Process
 	{
 		private Map parameter;
-		public Process():this(new NormalMap())
-		{
-		}
-		public Process(Map parameter)
-		{
-			// start a new thread here
-			this.parameter=parameter;
-			processes[Thread.CurrentThread]=this;
-			TextReader reader=new StreamReader(FileSystem.Path,Encoding.Default);
-			Map program=Compile(reader);
-			reader.Close();
-		}
+//		public Process():this(new NormalMap())
+//		{
+//		}
+//		public Process(Map parameter)
+//		{
+//			// start a new thread here
+//			this.parameter=parameter;
+//			TextReader reader=new StreamReader(FileSystem.Path,Encoding.Default);
+//			Map program=Compile(reader);
+//			reader.Close();
+//		}
 		private Map program;
-		public Process(string path,Map program,Map parameter)
+		public Process(Map program,Map parameter)
 		{
 			this.program=program;
 			this.parameter=parameter;
+			processes[Thread.CurrentThread]=this;
 		}
 		public Map Run()
 		{
@@ -200,34 +198,41 @@ namespace Meta
 			return program.Call(parameter);
 		}
 		// only the FileSystem should ever parse anything, and run without library
-		public Map RunWithoutLibrary()
+//		public Map RunWithoutLibrary()
+//		{
+//			using(TextReader reader=new StreamReader(FileSystem.Path,Encoding.Default))
+//			{
+//				return RunWithoutLibrary(reader);
+//			}
+//		}
+		public Map Parse(string filePath)
 		{
-			using(TextReader reader=new StreamReader(FileSystem.Path,Encoding.Default))
+			using(TextReader reader=new StreamReader(filePath,Encoding.Default))
 			{
-				return RunWithoutLibrary(reader);
+				return Parse(reader);
 			}
 		}
-		// should be removed
-		public Map RunWithoutLibrary(TextReader textReader)
+		public Map Parse(TextReader textReader)
 		{
 			return Evaluate(Compile(textReader),new NormalMap());
 		}
 		// refactor
-		public Map CallProgram(Map program,Map argument,Map current)
-		{
-			Map callable=new NormalMap();
-			callable[CodeKeys.Function]=program;
-			callable.Parent=current;
-			return callable.Call(argument);
-		}
-		public Map Compile()
+//		public Map CallProgram(Map program,Map argument,Map current)
+//		{
+//			Map callable=new NormalMap();
+//			callable[CodeKeys.Function]=program;
+//			callable.Parent=current;
+//			return callable.Call(argument);
+//		}
+		// maybe make this part of Interpreter, which should be renamed to Meta
+		public static Map Compile()
 		{
 			using(TextReader reader=new StreamReader(FileSystem.Path,Encoding.Default))
 			{
 				return Compile(reader);
 			}
 		}
-		public Map Compile(TextReader textReader)
+		public static Map Compile(TextReader textReader)
 		{
 			return new MetaCustomParser(textReader.ReadToEnd(),FileSystem.Path).Program();
 		}
@@ -460,7 +465,6 @@ namespace Meta
 				Thread.CurrentThread.Suspend();
 			}
 		}
-		// make this a simple string
 		public static string LibraryPath
 		{
 			get
@@ -546,7 +550,6 @@ namespace Meta
 		}
 		public static Map Apply(Map arg)
 		{
-			// TODO: ensure "function" is callable, maybe?
 			Argument.ContainsKey(arg,"function");
 			Argument.ContainsKey(arg,"array");
 			Map application=new NormalMap();
@@ -610,6 +613,7 @@ namespace Meta
 	}
 	public abstract class Map: IEnumerable, ISerializeSpecial
 	{	
+		public static readonly Map Empty=new NormalMap();
 		public virtual void Serialize(string indentation,StringBuilder stringBuilder,int level)
 		{
 			if(this.IsString)
@@ -653,31 +657,11 @@ namespace Meta
 			}
 			return boolean;
 		}
-//		public virtual bool IsFraction
-//		{
-//			get
-//			{
-//				return this.ContainsKey(NumberKeys.Numerator) && this[NumberKeys.Numerator].IsInteger && this.ContainsKey(NumberKeys.Denominator) && this[NumberKeys.Denominator].IsInteger;
-//			}
-//		}
-//		public virtual double GetFraction()
-//		{
-//			double fraction;
-//			if(IsFraction)
-//			{
-//				fraction=((double)(this["numerator"]).GetInteger().GetInt64())/((double)(this["denominator"]).GetInteger().GetInt64());
-//			}
-//			else
-//			{
-//				throw new ApplicationException("Map is not a fraction");
-//			}
-//			return fraction;
-//		}
 		public bool IsIntegerDefault
 		{
 			get
 			{
-				return Count==0 || (Count==1 && ContainsKey(NumberKeys.EmptyMap) && this[NumberKeys.EmptyMap].IsInteger);
+				return Count==0 || (Count==1 && ContainsKey(Map.Empty) && this[Map.Empty].IsInteger);
 			}
 		}
 
@@ -686,7 +670,6 @@ namespace Meta
 			get
 			{
 				return IsIntegerDefault;
-//				return Count==0 || (Count==1 && ContainsKey(NumberKeys.EmptyMap) && this[NumberKeys.EmptyMap].IsInteger);
 			}
 		}
 		public virtual Integer GetInteger()
@@ -696,20 +679,15 @@ namespace Meta
 		public Integer GetIntegerDefault()
 		{
 				Integer number;
-				if(this.Equals(NumberKeys.EmptyMap))
+				if(this.Equals(Map.Empty))
 				{
 					number=0;
 				}
-				else if(this.Count==1 && this.ContainsKey(NumberKeys.EmptyMap))
-					//				else if((this.Count==1 || (this.Count==2 && this.ContainsKey(NumberKeys.Negative) && this[NumberKeys.Negative]==new NormalMap(new Integer(1)))) && this.ContainsKey(NumberKeys.EmptyMap))
+				else if(this.Count==1 && this.ContainsKey(Map.Empty))
 				{
-					if(this[NumberKeys.EmptyMap].GetInteger()!=null)
+					if(this[Map.Empty].GetInteger()!=null)
 					{
-						number=this[NumberKeys.EmptyMap].GetInteger()+1;
-						//						if(this[NumberKeys.Negative]==new NormalMap(new Integer(1)))
-						//						{
-						//							number=-number;
-						//						}
+						number=this[Map.Empty].GetInteger()+1;
 					}
 					else
 					{
@@ -722,49 +700,6 @@ namespace Meta
 				}
 				return number;
 		}
-
-//		public virtual Integer GetIntegerDefault()
-//		{
-//			Integer integer;
-//			if(this.ContainsKey(NumberKeys.EmptyMap))
-//			{
-//                integer=this[NumberKeys.EmptyMap].GetInteger()+1;
-//			}
-//			else
-//			{
-//				throw new ApplicationException("Map is not an integer.");
-//			}
-//			return integer;
-//		}
-//		public virtual Integer GetInteger()
-//		{
-//			Integer integer;
-//			if(this.ContainsKey(NumberKeys.EmptyMap))
-//			{
-//                integer=this[NumberKeys.EmptyMap].GetInteger()+1;
-//			}
-//			else
-//			{
-//				throw new ApplicationException("Map is not an integer.");
-//			}
-//			return integer;
-//		}
-//		public virtual bool IsStringDefault
-//		{
-//			get
-//			{
-//				bool isString=Array.Count!=0;
-//				foreach(Map key in this.Array)
-//				{
-//					if(!key.IsInteger || !this[key].IsInteger)
-//					{
-//						isString=false;
-//						break;
-//					}
-//				}
-//				return isString;
-//			}
-//		}
 		public bool IsStringDefault
 		{
 			get
@@ -807,26 +742,25 @@ namespace Meta
 				return IsStringDefault;
 			}
 		}
-//		public virtual bool IsString
-//		{
-//			get
-//			{
-//				return GetString()!=null;
-//			}
-//		}
-		// refactor
 		public string GetStringDefault()
 		{
 			string text="";
 			foreach(Map key in Keys)
 			{
-				if(key.GetInteger()!=null && this[key].GetInteger()!=null)
+				if(key.IsInteger)
 				{
-					try
+					if(this[key].IsInteger)
 					{
-						text+=Convert.ToChar(this[key].GetInteger().GetInt32());
+						try
+						{
+							text+=Convert.ToChar(this[key].GetInteger().GetInt32());
+						}
+						catch
+						{
+							return null;
+						}
 					}
-					catch
+					else
 					{
 						return null;
 					}
@@ -842,29 +776,6 @@ namespace Meta
 		{
 			return GetStringDefault();
 		}
-//		public static string GetString(Map map)
-//		{
-//			string text="";
-//			foreach(Map key in map.Keys)
-//			{
-//				if(key.GetInteger()!=null && map[key].GetInteger()!=null)
-//				{
-//					try
-//					{
-//						text+=Convert.ToChar(map[key].GetInteger().GetInt32());
-//					}
-//					catch
-//					{
-//						return null;
-//					}
-//				}
-//				else
-//				{
-//					return null;
-//				}
-//			}
-//			return text;
-//		}
 		public Map Parameter
 		{
 			get
@@ -1037,18 +948,6 @@ namespace Meta
 		{
 			return new NormalMap(new Integer(integer));
 		}
-//		public static implicit operator Map(double number)
-//		{
-//			return new NormalMap(number);
-//		}
-//		public static implicit operator Map(float number)
-//		{
-//			return new NormalMap(number);
-//		}
-//		public static implicit operator Map(decimal number)
-//		{
-//			return new NormalMap(Convert.ToDouble(number));
-//		}
 		public static implicit operator Map(string text)
 		{
 			return new NormalMap(text);
@@ -1087,9 +986,6 @@ namespace Meta
 				return strategy.IsInteger;
 			}
 		}
-
-
-
 		public override int Count
 		{
 			get
@@ -1198,11 +1094,6 @@ namespace Meta
 			this.strategy.map=this;
 		}
 		public MapStrategy strategy;
-
-//		public void Serialize(string indentation,StringBuilder stringBuilder,int level)
-//		{
-//			strategy.Serialize(indentation,stringBuilder,level);
-//		}
 	}
 	public class NormalMap:StrategyMap
 	{
@@ -1215,9 +1106,6 @@ namespace Meta
 		public NormalMap(Integer number):this(new IntegerStrategy(number))
 		{
 		}
-//		public NormalMap(double fraction):this(new HybridDictionaryStrategy(fraction))
-//		{
-//		}
 		public NormalMap(string text):this(new StringStrategy(text))
 		{
 		}
@@ -1251,7 +1139,7 @@ namespace Meta
 				Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
 				Stream stream=webClient.OpenRead(fullPath.ToString());
 				StreamReader streamReader=new StreamReader(stream);
-				return Process.Current.RunWithoutLibrary(streamReader);
+				return Process.Current.Parse(streamReader);
 			}
 			set
 			{
@@ -1448,7 +1336,7 @@ namespace Meta
 			{
 				MethodInfo invoke=target.GetMethod("Invoke",BindingFlags.Instance
 					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-				Delegate function=DotNetMethod.CreateDelegateFromCode(target,invoke,meta);
+				Delegate function=Method.CreateDelegateFromCode(target,invoke,meta);
 				dotNet=function;
 			}
 			else if(target.IsArray && meta.Array.Count!=0)
@@ -1529,7 +1417,7 @@ namespace Meta
 						break;
 					case TypeCode.Int16:
 						if(IsIntegerInRange(meta,Int16.MinValue,Int16.MaxValue))
-							{
+						{
 							dotNet=Convert.ToInt16(meta.GetInteger().GetInt64());
 						}
 						break;
@@ -1609,10 +1497,6 @@ namespace Meta
 		{
 			return meta.IsInteger && meta.GetInteger()>=minValue && meta.GetInteger()<=maxValue;
 		}
-//		private static bool IsFractionInRange(Map meta,double minValue,double maxValue)
-//		{
-//			return meta.IsFraction && meta.GetFraction()>=minValue && meta.GetFraction()<=maxValue;
-//		}
 		public static Map ToMap(ArrayList list)
 		{
 			Map map=new NormalMap();
@@ -1735,16 +1619,11 @@ namespace Meta
 	public class MetaLibrary
 	{
 	}
-	public class DotNetMethod: Map
+	public class Method: Map
 	{
-//		public override Integer GetInteger()
-//		{
-//			// TODO: throw exception, make this the default implementation?, no better not
-//			return null;
-//		}
 		public override Map Clone()
 		{
-			return new DotNetMethod(this.name,this.obj,this.type);
+			return new Method(this.name,this.obj,this.type);
 		}
 		public override ArrayList Keys
 		{
@@ -1761,7 +1640,7 @@ namespace Meta
 			}
 			set
 			{
-				throw new ApplicationException("Cannot set key in DotNetMethod");
+				throw new ApplicationException("Cannot set key in Method");
 			}
 		}
 		// TODO: properly support sorting of multiple argument methods
@@ -1972,20 +1851,20 @@ namespace Meta
 			}
 			overloadedMethods=(MethodBase[])methods.ToArray(typeof(MethodBase));
 		}
-		public DotNetMethod(string name,object obj,Type type)
+		public Method(string name,object obj,Type type)
 		{
 			this.Initialize(name,obj,type);
 		}
-		public DotNetMethod(Type type)
+		public Method(Type type)
 		{
 			this.Initialize(".ctor",null,type);
 		}
 		public override bool Equals(object toCompare)
 		{
-			if(toCompare is DotNetMethod)
+			if(toCompare is Method)
 			{
-				DotNetMethod DotNetMethod=(DotNetMethod)toCompare;
-				if(DotNetMethod.obj==obj && DotNetMethod.name.Equals(name) && DotNetMethod.type.Equals(type))
+				Method Method=(Method)toCompare;
+				if(Method.obj==obj && Method.name.Equals(name) && Method.type.Equals(type))
 				{
 					return true;
 				}
@@ -2030,10 +1909,10 @@ namespace Meta
 		{
 			return new TypeMap(type);
 		}
-		protected DotNetMethod constructor;
+		protected Method constructor;
 		public TypeMap(Type targetType):base(null,targetType)
 		{
-			this.constructor=new DotNetMethod(this.type);
+			this.constructor=new Method(this.type);
 		}
 		public override Map Call(Map argument)
 		{
@@ -2367,7 +2246,7 @@ namespace Meta
 					BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
 				if(eventDelegate!=null)
 				{
-					DotNetMethod invoke=new DotNetMethod("Invoke",eventDelegate,eventDelegate.GetType());
+					Method invoke=new Method("Invoke",eventDelegate,eventDelegate.GetType());
 					// TODO: use GetRaiseMethod???
 					result=invoke.Call(argument);
 				}
@@ -2407,7 +2286,7 @@ namespace Meta
 				Map val;
 				if(key.Equals(DotNetKeys.Add))
 				{
-					val=new DotNetMethod(eventInfo.GetAddMethod().Name,obj,type);
+					val=new Method(eventInfo.GetAddMethod().Name,obj,type);
 				}
 				else
 				{
@@ -2460,11 +2339,11 @@ namespace Meta
 				Map val;
 				if(key.Equals(DotNetKeys.Get))
 				{
-					val=new DotNetMethod(property.GetGetMethod().Name,obj,type);
+					val=new Method(property.GetGetMethod().Name,obj,type);
 				}
 				else if(key.Equals(DotNetKeys.Set))
 				{
-					val=new DotNetMethod(property.GetSetMethod().Name,obj,type);
+					val=new Method(property.GetSetMethod().Name,obj,type);
 				}
 				else
 				{
@@ -2543,7 +2422,7 @@ namespace Meta
 					MemberInfo[] members=type.GetMember(text,bindingFlags);
 					if(members[0] is MethodBase)
 					{
-						val=new DotNetMethod(text,obj,type);
+						val=new Method(text,obj,type);
 					}
 					else if(members[0] is FieldInfo)
 					{
@@ -2644,7 +2523,7 @@ namespace Meta
 				BindingFlags.Static|BindingFlags.Instance);
 			MethodInfo invoke=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
 				|BindingFlags.Public|BindingFlags.NonPublic);
-			Delegate eventDelegate=DotNetMethod.CreateDelegateFromCode(eventInfo.EventHandlerType,invoke,code);
+			Delegate eventDelegate=Method.CreateDelegateFromCode(eventInfo.EventHandlerType,invoke,code);
 			return eventDelegate;
 		}
 		public DotNetContainer(object obj,Type type)
@@ -2726,7 +2605,7 @@ namespace Meta
 				ArrayList keys=new ArrayList();
 				if(number!=0)
 				{
-					keys.Add(NumberKeys.EmptyMap);
+					keys.Add(Map.Empty);
 				}
 				return keys;
 			}
@@ -2736,7 +2615,7 @@ namespace Meta
 			get
 			{
 				Map result;
-				if(key.Equals(NumberKeys.EmptyMap))
+				if(key.Equals(Map.Empty))
 				{
 					if(number==0)
 					{
@@ -2756,7 +2635,7 @@ namespace Meta
 			}
 			set
 			{
-				if(key.Equals(NumberKeys.EmptyMap))
+				if(key.Equals(Map.Empty))
 				{
 					Panic(key,value);
 				}
@@ -3763,7 +3642,8 @@ namespace Meta
 		}
 		public FileSystem()
 		{
-			this.map=new Process(Path).RunWithoutLibrary();
+			// unlogical
+			this.map=new Process(null,null).Parse(Path);
 			this.map.Parent=Gac.singleton;
 			// this is a little unlogical
 			this.Parent=Gac.singleton;

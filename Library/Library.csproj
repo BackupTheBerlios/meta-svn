@@ -104,18 +104,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "editor.meta"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "editorTest.txt"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "editorTest2.txt"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "Library.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

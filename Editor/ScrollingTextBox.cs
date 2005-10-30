@@ -212,9 +212,9 @@ public class ScrollingTextBox: RichTextBox
 	{
 		Graphics graphics=this.CreateGraphics();
 		string text;
-		if(debugValue is DotNetMethod)
+		if(debugValue is Method)
 		{
-			text=XmlComments.GetDoc(((DotNetMethod)debugValue).overloadedMethods[0],true,true,true);
+			text=XmlComments.GetDoc(((Method)debugValue).overloadedMethods[0],true,true,true);
 		}
 		else
 		{
