@@ -89,9 +89,9 @@ namespace Meta
 	}
 	public class BreakPoint
 	{
-		public BreakPoint(string fileName,SourcePosition position)
+		public BreakPoint(SourcePosition position)
 		{
-			this.fileName=fileName;
+//			this.fileName=fileName;
 			this.position=position;
 		}
 		
@@ -278,7 +278,7 @@ namespace Meta
 				breakPoint=value;
 			}
 		}
-		private BreakPoint breakPoint=new BreakPoint("",new SourcePosition(0,0));
+		private BreakPoint breakPoint=new BreakPoint(new SourcePosition(0,0));
 		// rename to Expression
 		public Map Evaluate(Map code,Map context)
 		{
