@@ -1,3 +1,4 @@
+|editor*
 license='"
 	Meta is a programming language.
 	Copyright (C) 2004 Christian Staudenmeyer "christianstaudenmeyer@web.de"
@@ -205,7 +206,7 @@ basicTest=
 			=
 				|"resultFromDelegate"
 		resultFromDelegate=TestClass.GetResultFromDelegate*
-		staticEventResult=TestClass.staticEvent 
+		staticEventResult=TestClass.staticEvent
 			testClass
 		instanceEventChanged=*
 		testClass.instanceEvent.add
@@ -256,7 +257,7 @@ basicTest=
 				hello!
 				"
 		arrayList=["mscorlib"].ArrayList*
-		arrayList.Add 
+		arrayList.Add
 			"hello"
 		arrayListResult=arrayList.Item.get
 			*
@@ -514,30 +515,27 @@ editor=
 			Editor
 		Process=Meta.Process
 		SetBreakPoint=
-			|
-				process=Process.Current.get*
-				process.BreakPoint.set
-					BreakPoint
-						SourcePosition
-							add
-								editBox.LineIndex.get*
-								1
-							editBox.Column.get*
+			|process.BreakPoint.set
+				BreakPoint
+					SourcePosition
+						add
+							editBox.LineIndex.get*
+							1
+						editBox.Column.get*
+		process=Process*
 		commands=
 			Save=
-				|
-					Meta.FileSystem.singleton.Set
-						editBox.RealText.get*
+				|FileSystem.Set
+					editBox.RealText.get*
 			Start=
 				|
 					commands.Save*
 					SetBreakPoint*
-					Meta.Interpreter.Break.add
+					process.Break.add
 						=
 							|editBox.ShowDebugValue
 								parameter.[1]
-					Meta.Interpreter.StartDebug
-						fileName
+					process.Start*
 			Continue=
 				|
 					SetBreakPoint*
@@ -724,7 +722,7 @@ editor=
 							[*]=
 								|*
 						cases.[exists]*
-			editBox.Text.set
+			editBox.RealText.set
 				FileAccess.Read
 					FileSystem.Path.get*
 			current=editBox
@@ -742,9 +740,9 @@ editor=
 					editBox
 			menu=
 				File=
-					["Save"]=
+					Save=
 						|commands.Save*
-					["Close"]=
+					Close=
 						|form.Close*
 				Debug=
 					Start=commands.Start

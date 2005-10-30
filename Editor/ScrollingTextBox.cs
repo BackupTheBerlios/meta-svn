@@ -220,6 +220,10 @@ public class ScrollingTextBox: RichTextBox
 		{
 			text=Serialize.Value((Map)debugValue);
 		}
+		if(text.Length>500)
+		{
+			text=text.Substring(0,500);
+		}
 		MessageBox.Show(text);
 //		info=new Info(Serialize.Value((Map)debugValue),CursorPosition);
 		DrawInfo();

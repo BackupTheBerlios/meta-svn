@@ -175,21 +175,11 @@ namespace Meta
 	{
 		Thread thread;
 		private Map parameter;
-//		public Process():this(new NormalMap())
-//		{
-//		}
-//		public Process(Map parameter)
-//		{
-//			// start a new thread here
-//			this.parameter=parameter;
-//			TextReader reader=new StreamReader(FileSystem.Path,Encoding.Default);
-//			Map program=Compile(reader);
-//			reader.Close();
-//		}
 		private Map program;
+		// refactor
 		public Process(Map program,Map parameter)
 		{
-			this.thread=new Thread(new ThreadStart(Start));
+			this.thread=new Thread(new ThreadStart(Run));
 			processes[thread]=this;
 			this.program=program;
 			this.parameter=parameter;
@@ -198,13 +188,13 @@ namespace Meta
 		{
 			processes[Thread.CurrentThread]=new Process();
 		}
-		private Process()
+		public Process():this(FileSystem.singleton,new NormalMap())
 		{
 		}
-		public Map Run()
+		public void Run()
 		{
-			program.Parent=FileSystem.singleton;
-			return program.Call(parameter);
+//			program.Parent=FileSystem.singleton;
+			program.Call(parameter);
 		}
 		// only the FileSystem should ever parse anything, and run without library
 //		public Map RunWithoutLibrary()
@@ -243,19 +233,27 @@ namespace Meta
 		}
 		public static Map Compile(TextReader textReader)
 		{
-			return new MetaCustomParser(textReader.ReadToEnd(),FileSystem.Path).Program();
+			return new Parser(textReader.ReadToEnd(),FileSystem.Path).Program();
 		}
 		public void Start()
 		{
+			thread.Start();
 		}
 		public void Stop()
 		{
+			thread.Abort();
 		}
 		public void Pause()
 		{
+			thread.Suspend();
 		}
 		public void Continue()
 		{
+			// somewhat dangerous
+			if(thread.ThreadState==ThreadState.Suspended)
+			{
+				thread.Resume();
+			}
 		}
 		public static Process Current
 		{
@@ -2408,7 +2406,7 @@ namespace Meta
 				throw new ApplicationException("Cannot assign in property "+property.Name+".");
 			}
 		}
-	}
+	}// rename to DotNetMap or so
 	public abstract class DotNetContainer: Map, ISerializeSpecial
 	{
 		public override void Serialize(string indentation, StringBuilder stringBuilder,int level)
@@ -2894,12 +2892,12 @@ namespace Meta
 		}
 		public bool IsBetween(Extent extent)
 		{
-			return false;
+			return extent!=null && this.greater(extent.Start) && this.smaller(extent.End);
 		}
-		public bool IsBetween(SourcePosition start,SourcePosition end)
-		{
-			return false;
-		}
+//		public bool IsBetween(SourcePosition start,SourcePosition end)
+//		{
+//			return false;
+//		}
 		private int line;
 		private int column;
 		public SourcePosition(int line,int column)
@@ -3024,12 +3022,13 @@ namespace Meta
 			return (Extent)extents[extent];
 		}
 	}
-	public class MetaCustomParser
+	// rename
+	public class Parser
 	{
 		private string text;
 		private int index;
 		private string filePath;
-		public MetaCustomParser(string text,string filePath)
+		public Parser(string text,string filePath)
 		{
 			if(filePath.EndsWith("testLib.meta"))
 			{
@@ -3486,25 +3485,20 @@ namespace Meta
 		}
 		public const char lookupStartChar='[';
 		public const char lookupEndChar=']';
-		// TODO: use the other constants to create this array
-		public char[] lookupStringForbiddenChars=new char[] {' ','\t','\r','\n','=','.',stringEscapeChar,'|','#','"','[',']','*'};
-//		public char[] lookupStringForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*'};
-		public char[] lookupStringFirstForbiddenChars=new char[] {' ','\t','\r','\n','=','.','\\','|','#','"','[',']','*','1','2','3','4','5','6','7','8','9'};
+		public char[] lookupStringForbiddenChars=new char[] {callChar,indentationChar,'\r','\n',statementChar,selectChar,stringEscapeChar,functionChar,stringChar,lookupStartChar,lookupEndChar,emptyMapChar};
+		// combine with number chars
+		public char[] lookupStringFirstCharAdditionalForbiddenChars=new char[] {'1','2','3','4','5','6','7','8','9'};
 		private Map LookupString()
 		{
 			string lookupString="";
 			Extent extent=StartExpression();
-			if(LookExcept(lookupStringFirstForbiddenChars))
+			if(LookExcept(lookupStringForbiddenChars) && LookExcept(lookupStringFirstCharAdditionalForbiddenChars))
 			{
 				while(LookExcept(lookupStringForbiddenChars))
 				{
 					lookupString+=Look();
 					Consume(Look());
 				}
-			}
-			else
-			{
-				int asdf=0;
 			}
 			Map lookup;
 			if(lookupString.Length>0)
@@ -3676,10 +3670,10 @@ namespace Meta
 	}
 	public class FileSystem:Map
 	{
-		public void Set(string text)
+		public static void Set(string text)
 		{
 			FileAccess.Write(Path,text);
-			Load();
+			singleton.Load();
 		}
 		public static FileSystem singleton;
 		static FileSystem()
