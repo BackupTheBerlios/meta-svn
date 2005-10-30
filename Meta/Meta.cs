@@ -629,18 +629,6 @@ namespace Meta
 				}
 			}
 		}
-//		public void Serialize(string indentation,StringBuilder stringBuilder,int level)
-//		{
-//			strategy.Serialize(indentation,stringBuilder,level);
-//		}
-//		// TODO: not really accurate
-//		public bool IsFunction
-//		{
-//			get
-//			{
-//				return ContainsKey(CodeKeys.Function);
-//			}
-//		}
 		public virtual bool IsBoolean
 		{
 			get
@@ -1436,6 +1424,17 @@ namespace Meta
 	}
 	public class Transform
 	{
+		public static Integer IntegerFromDouble(double val)
+		{
+			Integer integer=new Integer(1);
+			while(Math.Abs(val)/(double)int.MaxValue>1.0d)
+			{
+				val/=int.MaxValue;
+				integer*=int.MaxValue;
+			}
+			integer*=(Integer)Convert.ToInt32(val);
+			return integer;
+		}
 		public static object ToDotNet(Map meta,Type target)
 		{
 			bool isConverted;
@@ -1517,13 +1516,13 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Decimal:
-						if(IsIntegerInRange(meta,Helper.IntegerFromDouble((double)decimal.MinValue),Helper.IntegerFromDouble((double)decimal.MaxValue)))
+						if(IsIntegerInRange(meta,IntegerFromDouble((double)decimal.MinValue),IntegerFromDouble((double)decimal.MaxValue)))
 						{
 							dotNet=(decimal)(meta.GetInteger().GetInt64());
 						}
 						break;
 					case TypeCode.Double:
-						if(IsIntegerInRange(meta,Helper.IntegerFromDouble(double.MinValue),Helper.IntegerFromDouble(double.MaxValue)))
+						if(IsIntegerInRange(meta,IntegerFromDouble(double.MinValue),IntegerFromDouble(double.MaxValue)))
 						{
 							dotNet=(double)(meta.GetInteger().GetInt64());
 						}
@@ -1563,7 +1562,7 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Single:
-						if(IsIntegerInRange(meta,Helper.IntegerFromDouble(Single.MinValue),Helper.IntegerFromDouble(Single.MaxValue)))
+						if(IsIntegerInRange(meta,IntegerFromDouble(Single.MinValue),IntegerFromDouble(Single.MaxValue)))
 						{
 							dotNet=(float)meta.GetInteger().GetInt64();
 						}
@@ -2400,7 +2399,7 @@ namespace Meta
 //				fraction*=2;
 //				denominator*=2;
 //			}
-//			Integer numerator=Helper.IntegerFromDouble(fraction);
+//			Integer numerator=IntegerFromDouble(fraction);
 //			this[NumberKeys.Numerator]=new NormalMap(numerator);
 //			this[NumberKeys.Denominator]=new NormalMap(denominator);
 //		}
@@ -2981,62 +2980,24 @@ namespace Meta
 			map.strategy[key]=val;
 		}
 	}
-	// TODO: rename
-	public class Helper
+	public class FileAccess
 	{
-		public static Integer IntegerFromDouble(double val)
-		{
-			Integer integer=new Integer(1);
-			while(Math.Abs(val)/(double)int.MaxValue>1.0d)
-			{
-				val/=int.MaxValue;
-				integer*=int.MaxValue;
-			}
-			integer*=(Integer)Convert.ToInt32(val);
-			return integer;
-		}
-		public static FileInfo[] FindFiles(DirectoryInfo directory,string fileName)
-		{
-			ArrayList files=new ArrayList();
-			foreach(FileInfo file in directory.GetFiles())
-			{
-				if(file.Name==fileName)
-				{
-					files.Add(file);
-				}
-			}
-			foreach(DirectoryInfo subDirectory in directory.GetDirectories())
-			{
-				files.AddRange(FindFiles(subDirectory,fileName));
-			}
-			return (FileInfo[])files.ToArray(typeof(FileInfo));
-		}
-		public static void WriteFile(string fileName,string text)
+		public static void Write(string fileName,string text)
 		{
 			StreamWriter writer=new StreamWriter(fileName,false,Encoding.Default);
 			writer.Write(text);
 			writer.Close();
 		}
-		public static string ReadFile(string fileName)
+		public static string Read(string fileName)
 		{
 			StreamReader reader=new StreamReader(fileName,Encoding.Default);
 			string result=reader.ReadToEnd();
 			reader.Close();
 			return result;
 		}
-		public static string ReverseString(string text)
-		{
-			string result="";
-			foreach(char c in text)
-			{
-				result=c+result;
-			}
-			return result;
-		}
 	}
 	namespace TestingFramework
 	{
-		// TODO: refactor special serialization
 		public interface ISerializeSpecial
 		{
 			void Serialize(string indent,StringBuilder builder,int level);
@@ -3087,18 +3048,18 @@ namespace Meta
 			private bool CompareResult(string path,object toSerialize,int level)
 			{				
 				System.IO.Directory.CreateDirectory(path);
-				if(!File.Exists(Path.Combine(path,"check.txt")))
+				if(!System.IO.File.Exists(Path.Combine(path,"check.txt")))
 				{
-					File.Create(Path.Combine(path,"check.txt")).Close();
+					System.IO.File.Create(Path.Combine(path,"check.txt")).Close();
 				}
 				StringBuilder stringBuilder=new StringBuilder();
 				Serialize(toSerialize,"",stringBuilder,level);
 
 				string result=stringBuilder.ToString();
 
-				Helper.WriteFile(Path.Combine(path,"result.txt"),result);
-				Helper.WriteFile(Path.Combine(path,"resultCopy.txt"),result);
-				string check=Helper.ReadFile(Path.Combine(path,"check.txt"));
+				FileAccess.Write(Path.Combine(path,"result.txt"),result);
+				FileAccess.Write(Path.Combine(path,"resultCopy.txt"),result);
+				string check=FileAccess.Read(Path.Combine(path,"check.txt"));
 				return result.Equals(check);
 			}
 			public static void Serialize(object toSerialize,string indent,StringBuilder stringBuilder,int level) 
@@ -3118,14 +3079,7 @@ namespace Meta
 					ArrayList members=new ArrayList();
 					members.AddRange(toSerialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
 					members.AddRange(toSerialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
-//					foreach(string method in methods)
-//					{
-//						MethodInfo methodInfo=toSerialize.GetType().GetMethod(method,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance);
-//						if(methodInfo!=null)
-//						{ 
-//							members.Add(methodInfo);
-//						}
-//					}
+
 					members.Sort(new MemberInfoComparer());
 					foreach(MemberInfo member in members) 
 					{
@@ -3136,9 +3090,8 @@ namespace Meta
 								if(toSerialize.GetType().Namespace!="System.Windows.Forms")
 								{ 
 									object val=toSerialize.GetType().InvokeMember(member.Name,BindingFlags.Public
-										|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField
-										,null,toSerialize,null);
-//										|BindingFlags.InvokeMethod,null,toSerialize,null);
+										|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField,
+										null,toSerialize,null);
 									stringBuilder.Append(indent+member.Name);
 									if(val!=null)
 									{
@@ -4046,7 +3999,7 @@ namespace Meta
 			{
 				text="";
 			}
-			Helper.WriteFile(Process.LibraryPath,text);
+			FileAccess.Write(Process.LibraryPath,text);
 		}
 
 	}
