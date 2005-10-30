@@ -63,8 +63,8 @@ namespace Meta
 	}
 	public class NumberKeys
 	{
-		public static readonly Map Denominator="denominator";
-		public static readonly Map Numerator="numerator";
+//		public static readonly Map Denominator="denominator";
+//		public static readonly Map Numerator="numerator";
 		public static readonly Map EmptyMap=new NormalMap();
 	}
 
@@ -365,10 +365,6 @@ namespace Meta
 			for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
 			{
 				key=Evaluate((Map)code[CodeKeys.Key].Array[i],context);
-				if(key.Equals(new NormalMap("TestClass")))
-				{
-					int asdf=0;
-				}
 				Map selection=selected[key];
 				if(selection==null)
 				{
@@ -436,10 +432,6 @@ namespace Meta
 		private Map FindFirstKey(Map code,Map context)
 		{
 			Map key=Evaluate((Map)code.Array[0],context);
-			if(key.Equals(new NormalMap("Meta")))
-			{
-				int asdf=0;
-			}
 			Map selected=context;
 			while(!selected.ContainsKey(key))
 			{
@@ -468,67 +460,12 @@ namespace Meta
 				Thread.CurrentThread.Suspend();
 			}
 		}
-//		public Map GetPersistantMaps(string fileName)
-//		{
-//			DirectoryInfo directory=new DirectoryInfo(Path.GetDirectoryName(fileName));
-//			Map root=new PersistantMap(directory);
-//			Map current=root;
-//			while(true)
-//			{
-//				if(String.Compare(directory.FullName,Process.LibraryPath.FullName,true)==0)
-//				{
-//					current.Parent=GAC.singleton;
-//					break;
-//				}
-//				current.Parent=new PersistantMap(directory.Parent);
-//				current=current.Parent;
-//			}
-//			return root;
-//		}
-
-//		public Map Run(string fileName)
-//		{
-//			return Run(fileName,new NormalMap());
-//		}
-//		public Map Run(string fileName,Map argument)
-//		{
-//			Map program=Compile(fileName);
-//			program=CallProgram(program,new NormalMap(),null);
-//			program.Parent=GetPersistantMaps(fileName);
-//			return program.Call(argument);
-//		}
-//		public Map RunWithoutLibrary(string fileName,TextReader textReader)
-//		{
-//			Map program=Compile(fileName, textReader);
-//			return CallProgram(program,new NormalMap(),null);
-//		}
-//		public Map RunWithoutLibrary(string fileName)
-//		{
-//			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
-//		}
-//		public Map CallProgram(Map program,Map argument,Map current)
-//		{
-//			Map callable=new NormalMap();
-//			callable[CodeKeys.Function]=program;
-//			callable.Parent=current;
-//			return callable.Call(argument);
-//		}
-//		// kinda pointless
-//		public Map Compile(string fileName)
-//		{
-//			return Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
-//		}
-//		public Map Compile(string fileName,TextReader textReader)
-//		{
-//			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();
-//		}
 		// make this a simple string
-		public static DirectoryInfo LibraryPath
+		public static string LibraryPath
 		{
 			get
 			{
-				// TODO: localize this, infer this from the exe path, maybe
-				return new DirectoryInfo(@"c:\Projects\meta\library");
+				return @"c:\Projects\meta\library";
 			}
 		}
 		// should this be static?
@@ -671,458 +608,16 @@ namespace Meta
 		}
 
 	}
-//	public class Interpreter
-//	{
-//		// this should start everything at once
-//		// we should have another class called a process that does everything i think
-//		private Interpreter()
-//		{
-//		}
-//		public void Start()
-//		{
-//		}
-//		public void Stop()
-//		{
-//		}
-//		public void Pause()
-//		{
-//		}
-//		public void Resume()
-//		{
-//		}
-//		// rename this to process, maybe, or so
-//		public static Interpreter CreateInterpreter()
-//		{
-//			Interpreter interpreter=new Interpreter();
-//			processes[Thread.CurrentThread]=interpreter;
-//			return interpreter;
-//		}
-//		public static Interpreter Current
-//		{
-//			get
-//			{
-//				return (Interpreter)processes[Thread.CurrentThread];
-//			}
-//		}
-//		private static Hashtable processes=new Hashtable();
-//		private bool reverse=false;
-//
-//		public BreakPoint BreakPoint
-//		{
-//			get
-//			{
-//				return breakPoint;
-//			}
-//			set
-//			{
-//				breakPoint=value;
-//			}
-//		}
-//		private BreakPoint breakPoint=new BreakPoint("",new SourcePosition(0,0));
-//		public Map Evaluate(Map code,Map context)
-//		{
-//			Map val;
-//			if(code.ContainsKey(CodeKeys.Call))
-//			{
-//				val=Call(code[CodeKeys.Call],context);
-//			}
-//			else if(code.ContainsKey(CodeKeys.Program))
-//			{
-//				val=Program(code[CodeKeys.Program],context);
-//			}
-//			else if(code.ContainsKey(CodeKeys.Literal))
-//			{
-//				val=Literal(code[CodeKeys.Literal],context);
-//			}
-//			else if(code.ContainsKey(CodeKeys.Select))
-//			{
-//				val=Select(code[CodeKeys.Select],context);
-//			}
-//			else
-//			{
-//				throw new ApplicationException("Cannot compile map.");
-//			}
-//			return val;
-//		}
-//		public Map Call(Map code,Map context)
-//		{
-//			Map function=Evaluate(code[CodeKeys.Callable],context);
-//			Map argument=Evaluate(code[CodeKeys.Argument],context);
-//			return function.Call(argument);
-//		}
-//		public Map Program(Map code,Map context)
-//		{
-//			Map local=new NormalMap();
-//			Program(code,context,ref local);
-//			return local;
-//		}
-//		private bool Reverse
-//		{
-//			get
-//			{
-//				return reverse;
-//			}
-//		}
-//		private bool ResumeAfterReverse(Map code)
-//		{
-//			return code.Extent.End.smaller(BreakPoint.Position);
-//		}
-//		private void Program(Map code,Map context,ref Map local)
-//		{
-//			local.Parent=context;
-//			for(int i=0;i<code.Array.Count && i>=0;i++)
-//			{
-//				if(Reverse)
-//				{
-//					if(!ResumeAfterReverse((Map)code.Array[i]))
-//					{
-//						i-=2;
-//						continue;
-//					}
-//					else
-//					{
-//						reverse=false;
-//					}
-//				}
-//				Statement((Map)code.Array[i],ref local);
-//			}
-//		}
-//		public class Change
-//		{
-//			private Map map;
-//			private Map key;
-//			private Map oldValue;
-//			public Change(Map map,Map key,Map oldValue)
-//			{
-//				this.map=map;
-//				this.key=key;
-//				this.oldValue=oldValue;
-//			}
-//			public void Undo(ref Map current)
-//			{
-//				if(key.Equals(SpecialKeys.Current))
-//				{
-//					current=oldValue;
-//				}
-//				else
-//				{
-//					this.map[key]=oldValue;
-//				}
-//			}
-//		}
-//		public void Statement(Map code,ref Map context)
-//		{
-//			Map selected=context;
-//			Map key;
-//			for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
-//			{
-//				key=Evaluate((Map)code[CodeKeys.Key].Array[i],context);
-//				Map selection=selected[key];
-//				if(selection==null)
-//				{
-//					object x=selected[key];
-//					Throw.KeyDoesNotExist(key,((Map)code[CodeKeys.Key].Array[i]).Extent);
-//				}
-//				selected=selection;
-//				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
-//				{
-//					CallBreak(selected);
-//				}
-//			}
-//			Map lastKey=Evaluate((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context);
-//			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
-//			{
-//				Map oldValue;
-//				if(selected.ContainsKey(lastKey))
-//				{
-//					oldValue=selected[lastKey];
-//				}
-//				else
-//				{
-//					oldValue=null;//new NormalMap("<null>");
-//				}
-//				CallBreak(oldValue);
-//			}
-//			
-//			Map val=Evaluate(code[CodeKeys.Value],context);
-//
-//			if(lastKey.Equals(SpecialKeys.Current))
-//			{
-//				val.Parent=context.Parent;
-//				context=val;
-//			}
-//			else
-//			{
-//				selected[lastKey]=val;
-//			}
-//		}
-//		public ArrayList recognitions=new ArrayList();
-//		public Map Literal(Map code,Map context)
-//		{
-//			return code;
-//		}
-//
-//		public Map Select(Map code,Map context)
-//		{
-//			Map selected=FindFirstKey(code,context);
-//			for(int i=1;i<code.Array.Count;i++)
-//			{
-//				Map key=Evaluate((Map)code.Array[i],context);
-//				Map selection=selected[key];
-//				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[i]).Extent))
-//				{
-//					CallBreak(selection);
-//				}
-//				if(selection==null)
-//				{
-//					object test=selected[key];
-//					Throw.KeyDoesNotExist(key,key.Extent);
-//				}
-//				selected=selection;
-//			}
-//			return selected;
-//		}
-//		private Map FindFirstKey(Map code,Map context)
-//		{
-//			Map key=Evaluate((Map)code.Array[0],context);
-//			Map selected=context;
-//			while(!selected.ContainsKey(key))
-//			{
-//				selected=selected.Parent;
-//				if(selected==null)
-//				{
-//					Throw.KeyNotFound(key,key.Extent);
-//				}
-//			}
-//			Map val=selected[key];
-//			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[0]).Extent))
-//			{
-//				CallBreak(val);
-//			}
-//			return val;
-//		}
-//
-//		public event DebugBreak Break;
-//
-//		public delegate void DebugBreak(Map data);
-//		public void CallBreak(Map data)
-//		{
-//			if(Break!=null)
-//			{
-//				Break(data);
-//				Thread.CurrentThread.Suspend();
-//			}
-//		}
-//
-//
-//		public static Map Or(Map arg) 
-//		{
-//			Argument.BooleanArray(arg);
-//			bool or=false;
-//			foreach(Map map in arg.Array)
-//			{
-//				if(map.GetBoolean())
-//				{
-//					or=true;
-//					break;
-//				}
-//			}
-//			return or;
-//		}
-//		public static Map Add(Map arg)
-//		{
-//			Argument.IntegerArray(arg);
-//			Integer sum=0;
-//			foreach(Map map in arg.Array)
-//			{
-//				sum+=map.GetInteger();
-//			}
-//			return sum;
-//		}
-//		public static Map Multiply(Map arg) 
-//		{
-//			Argument.IntegerArray(arg);
-//			Integer product=1;
-//			foreach(Map map in arg.Array)
-//			{
-//				product*=map.GetInteger();
-//			}
-//			return product;
-//		}
-//		public static Map Greater(Map parameter)
-//		{
-//			Argument.IntegerArray(parameter);
-//			Argument.ExactArrayCount(parameter,2);
-//			return parameter[1].GetInteger()>parameter[2].GetInteger();
-//		}
-//		public static Map Smaller(Map parameter)
-//		{
-//			Argument.IntegerArray(parameter);
-//			Argument.ExactArrayCount(parameter,2);
-//			return parameter[1].GetInteger()<parameter[2].GetInteger();
-//		}
-//
-//		public static Map BitwiseOr(Map arg)
-//		{
-//			Argument.IntegerArray(arg);
-//			Integer or=0;
-//			foreach(Map map in arg.Array)
-//			{
-//				or|=map.GetInteger();
-//			}
-//			return or;
-//		}
-//		public static Map Join(Map arg) 
-//		{
-//			Integer i=1;
-//			Map array=new NormalMap();
-//			foreach(Map map in arg.Array) 
-//			{ 
-//				foreach(Map val in map.Array) 
-//				{
-//					array[i]=val;
-//					i+=1;
-//				}
-//			}
-//			return array;
-//		}
-//		public static Map Apply(Map arg)
-//		{
-//			// TODO: ensure "function" is callable, maybe?
-//			Argument.ContainsKey(arg,"function");
-//			Argument.ContainsKey(arg,"array");
-//			Map application=new NormalMap();
-//			int counter=1;
-//			foreach(Map element in arg["array"].Array)
-//			{
-//				application[counter]=arg["function"].Call(element);
-//				counter++;
-//			}
-//			return application;
-//		}
-//		public static Map And(Map arg) 
-//		{
-//			Argument.BooleanArray(arg);
-//			bool and=true;
-//			foreach(Map map in arg.Array)
-//			{
-//				if(!map.GetBoolean())
-//				{
-//					and=false;
-//					break;
-//				}
-//			}
-//			return and;
-//		}
-//		public static Map Equal(Map arg) 
-//		{
-//			bool equal=true;
-//			for(int i=0;i+1<arg.Array.Count;i++)
-//			{
-//				if(!arg.Array[i].Equals(arg.Array[i+1]))
-//				{
-//					equal=false;
-//					break;
-//				}
-//			}
-//			return equal;
-//		}
-//		// refactor
-//		public static Map Merge(Map map)
-//		{
-//			return MergeCollection(map.Array);
-//		}
-//		public static Map Merge(params Map[] arkvlToMerge)
-//		{
-//			return MergeCollection(arkvlToMerge);
-//		}
-//		public static Map MergeCollection(ICollection collection)
-//		{
-//			Map result=new NormalMap();
-//			foreach(Map current in collection)
-//			{
-//				foreach(DictionaryEntry entry in current)
-//				{
-//					result[(Map)entry.Key]=(Map)entry.Value;
-//				}
-//			}
-//			return result;
-//		}
-//		public Map Run(string fileName)
-//		{
-//			return Run(fileName,new NormalMap());
-//		}
-//		public Map Run(string fileName,Map argument)
-//		{
-//			Map program=Compile(fileName);
-//			program=CallProgram(program,new NormalMap(),null);
-//			program.Parent=GetPersistantMaps(fileName);
-//			return program.Call(argument);
-//		}
-//		public Map GetPersistantMaps(string fileName)
-//		{
-//			DirectoryInfo directory=new DirectoryInfo(Path.GetDirectoryName(fileName));
-//			Map root=new PersistantMap(directory);
-//			Map current=root;
-//			while(true)
-//			{
-//				if(String.Compare(directory.FullName,Interpreter.LibraryPath.FullName,true)==0)
-//				{
-//					current.Parent=GACMap.singleton;
-//					break;
-//				}
-//				current.Parent=new PersistantMap(directory.Parent);
-//				current=current.Parent;
-//			}
-//			return root;
-//		}
-//		public Map RunWithoutLibrary(string fileName,TextReader textReader)
-//		{
-//			Map program=Compile(fileName, textReader);
-//			return CallProgram(program,new NormalMap(),null);
-//		}
-//		public Map RunWithoutLibrary(string fileName)
-//		{
-//			return RunWithoutLibrary(fileName,new StringReader(Helper.ReadFile(fileName)));
-//		}
-//		public Map CallProgram(Map program,Map argument,Map current)
-//		{
-//			Map callable=new NormalMap();
-//			callable[CodeKeys.Function]=program;
-//			callable.Parent=current;
-//			return callable.Call(argument);
-//		}
-//		// kinda pointless
-//		public Map Compile(string fileName)
-//		{
-//			return Compile(fileName,new StringReader(Helper.ReadFile(fileName)));
-//		}
-//		public Map Compile(string fileName,TextReader textReader)
-//		{
-//			return new MetaCustomParser(textReader.ReadToEnd(),fileName).Program();
-//		}
-//		public static DirectoryInfo LibraryPath
-//		{
-//			get
-//			{
-//				// TODO: localize this, infer this from the exe path, maybe
-//				return new DirectoryInfo(@"c:\Projects\meta\library");
-//			}
-//		}
-//		// should this be static?
-//		public static ArrayList loadedAssemblies=new ArrayList();
-//	}
-
 	public abstract class Map: IEnumerable
 	{	
-		// TODO: not really accurate
-		public bool IsFunction
-		{
-			get
-			{
-				return ContainsKey(CodeKeys.Function);
-			}
-		}
+//		// TODO: not really accurate
+//		public bool IsFunction
+//		{
+//			get
+//			{
+//				return ContainsKey(CodeKeys.Function);
+//			}
+//		}
 		public virtual bool IsBoolean
 		{
 			get
@@ -1147,26 +642,26 @@ namespace Meta
 			}
 			return boolean;
 		}
-		public virtual bool IsFraction
-		{
-			get
-			{
-				return this.ContainsKey(NumberKeys.Numerator) && this[NumberKeys.Numerator].IsInteger && this.ContainsKey(NumberKeys.Denominator) && this[NumberKeys.Denominator].IsInteger;
-			}
-		}
-		public virtual double GetFraction()
-		{
-			double fraction;
-			if(IsFraction)
-			{
-				fraction=((double)(this["numerator"]).GetInteger().GetInt64())/((double)(this["denominator"]).GetInteger().GetInt64());
-			}
-			else
-			{
-				throw new ApplicationException("Map is not a fraction");
-			}
-			return fraction;
-		}
+//		public virtual bool IsFraction
+//		{
+//			get
+//			{
+//				return this.ContainsKey(NumberKeys.Numerator) && this[NumberKeys.Numerator].IsInteger && this.ContainsKey(NumberKeys.Denominator) && this[NumberKeys.Denominator].IsInteger;
+//			}
+//		}
+//		public virtual double GetFraction()
+//		{
+//			double fraction;
+//			if(IsFraction)
+//			{
+//				fraction=((double)(this["numerator"]).GetInteger().GetInt64())/((double)(this["denominator"]).GetInteger().GetInt64());
+//			}
+//			else
+//			{
+//				throw new ApplicationException("Map is not a fraction");
+//			}
+//			return fraction;
+//		}
 		public bool IsIntegerDefault
 		{
 			get
@@ -1531,18 +1026,18 @@ namespace Meta
 		{
 			return new NormalMap(new Integer(integer));
 		}
-		public static implicit operator Map(double number)
-		{
-			return new NormalMap(number);
-		}
-		public static implicit operator Map(float number)
-		{
-			return new NormalMap(number);
-		}
-		public static implicit operator Map(decimal number)
-		{
-			return new NormalMap(Convert.ToDouble(number));
-		}
+//		public static implicit operator Map(double number)
+//		{
+//			return new NormalMap(number);
+//		}
+//		public static implicit operator Map(float number)
+//		{
+//			return new NormalMap(number);
+//		}
+//		public static implicit operator Map(decimal number)
+//		{
+//			return new NormalMap(Convert.ToDouble(number));
+//		}
 		public static implicit operator Map(string text)
 		{
 			return new NormalMap(text);
@@ -1709,56 +1204,14 @@ namespace Meta
 		public NormalMap(Integer number):this(new IntegerStrategy(number))
 		{
 		}
-		public NormalMap(double fraction):this(new HybridDictionaryStrategy(fraction))
-		{
-		}
+//		public NormalMap(double fraction):this(new HybridDictionaryStrategy(fraction))
+//		{
+//		}
 		public NormalMap(string text):this(new StringStrategy(text))
 		{
 		}
 	}
-//	public class PersistantMap:StrategyMap
-//	{
-//		public override Map Clone()
-//		{
-//			return base.Clone();
-//		}
-//
-//		public PersistantMap(PersistantStrategy strategy):base(strategy)
-//		{
-//		}
-//		public PersistantMap(FileInfo file):this(new FileStrategy(file))
-//		{
-//		}
-//		public PersistantMap(DirectoryInfo directory):this(new DirectoryStrategy(directory))
-//		{
-//		}
-//	}
-//	public abstract class PersistantStrategy:MapStrategy
-//	{
-//	}
-//	public abstract class AssemblyStrategy:PersistantStrategy
-//	{
-//		public Map ClassesFromAssemblies(IEnumerable assemblies)
-//		{
-//			Map root=new NormalMap();
-//			foreach(Assembly assembly in assemblies)
-//			{
-//				ArrayList assemblyNamespaces=new ArrayList();
-//				foreach(Type type in assembly.GetExportedTypes())
-//				{
-//					if(type.DeclaringType==null)
-//					{
-//						root[type.Name]=new DotNetClass(type);
-//					}
-//				}
-//			}
-//			return root;
-//		}
-//		protected Map cachedAssemblyInfo=new NormalMap();
-//		protected Map cache=new NormalMap();
-//	}
-
-
+	// think about this a bit, should be a map maybe
 	public class RemoteStrategy:NormalStrategy
 	{
 		public override ArrayList Array
@@ -1768,13 +1221,6 @@ namespace Meta
 				throw new ApplicationException("not implemented.");
 			}
 		}
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				return null;
-//			}
-//		}
 		public override ArrayList Keys
 		{
 			get
@@ -1833,10 +1279,6 @@ namespace Meta
 				throw new ApplicationException("Cannot set key in Web.");
 			}
 		}
-//		public override Integer GetInteger()
-//		{
-//			return null;
-//		}
 
 		public override Map Clone()
 		{
@@ -1980,7 +1422,7 @@ namespace Meta
 		{
 			object dotNet=null;
 			if((target.IsSubclassOf(typeof(Delegate))
-				||target.Equals(typeof(Delegate)))&& meta.IsFunction)
+				||target.Equals(typeof(Delegate)))&& meta.ContainsKey(CodeKeys.Function))
 			{
 				MethodInfo invoke=target.GetMethod("Invoke",BindingFlags.Instance
 					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
@@ -2056,20 +1498,20 @@ namespace Meta
 						{
 							dotNet=(decimal)(meta.GetInteger().GetInt64());
 						}
-						else if(IsFractionInRange(meta,(double)decimal.MinValue,(double)decimal.MaxValue))
-						{
-							dotNet=(decimal)meta.GetFraction();
-						}
+//						else if(IsFractionInRange(meta,(double)decimal.MinValue,(double)decimal.MaxValue))
+//						{
+//							dotNet=(decimal)meta.GetFraction();
+//						}
 						break;
 					case TypeCode.Double:
 						if(IsIntegerInRange(meta,Helper.IntegerFromDouble(double.MinValue),Helper.IntegerFromDouble(double.MaxValue)))
 						{
 							dotNet=(double)(meta.GetInteger().GetInt64());
 						}
-						else if(IsFractionInRange(meta,double.MinValue,double.MaxValue))
-						{
-							dotNet=meta.GetFraction();
-						}
+//						else if(IsFractionInRange(meta,double.MinValue,double.MaxValue))
+//						{
+//							dotNet=meta.GetFraction();
+//						}
 						break;
 					case TypeCode.Int16:
 						if(IsIntegerInRange(meta,Int16.MinValue,Int16.MaxValue))
@@ -2110,10 +1552,10 @@ namespace Meta
 						{
 							dotNet=(float)meta.GetInteger().GetInt64();
 						}
-						else if(IsFractionInRange(meta,Single.MinValue,Single.MaxValue))
-						{
-							dotNet=(float)meta.GetFraction();
-						}
+//						else if(IsFractionInRange(meta,Single.MinValue,Single.MaxValue))
+//						{
+//							dotNet=(float)meta.GetFraction();
+//						}
 						break;
 					case TypeCode.String:
 						if(meta.IsString)
@@ -2157,10 +1599,10 @@ namespace Meta
 		{
 			return meta.IsInteger && meta.GetInteger()>=minValue && meta.GetInteger()<=maxValue;
 		}
-		private static bool IsFractionInRange(Map meta,double minValue,double maxValue)
-		{
-			return meta.IsFraction && meta.GetFraction()>=minValue && meta.GetFraction()<=maxValue;
-		}
+//		private static bool IsFractionInRange(Map meta,double minValue,double maxValue)
+//		{
+//			return meta.IsFraction && meta.GetFraction()>=minValue && meta.GetFraction()<=maxValue;
+//		}
 		public static Map ToMap(ArrayList list)
 		{
 			Map map=new NormalMap();
@@ -2199,10 +1641,10 @@ namespace Meta
 						meta=new DotNetObject(dotNet);
 						break;
 					case TypeCode.Decimal:
-						meta=(decimal)dotNet;
+						meta=(int)dotNet;
 						break;
 					case TypeCode.Double:
-						meta=(double)dotNet;
+						meta=(int)dotNet;
 						break;
 					case TypeCode.Int16:
 						meta=(short)dotNet;
@@ -2231,7 +1673,7 @@ namespace Meta
 						meta=(sbyte)dotNet;
 						break;
 					case TypeCode.Single:
-						meta=(float)dotNet;
+						meta=(int)dotNet;
 						break;
 					case TypeCode.String:
 						meta=(string)dotNet;
@@ -2939,18 +2381,18 @@ namespace Meta
 		ArrayList keys;
 		private HybridDictionary dictionary;
 
-		public HybridDictionaryStrategy(double fraction):this(2)
-		{
-			Integer denominator=new Integer(1);
-			while(Math.Floor(fraction)!=fraction)
-			{
-				fraction*=2;
-				denominator*=2;
-			}
-			Integer numerator=Helper.IntegerFromDouble(fraction);
-			this[NumberKeys.Numerator]=new NormalMap(numerator);
-			this[NumberKeys.Denominator]=new NormalMap(denominator);
-		}
+//		public HybridDictionaryStrategy(double fraction):this(2)
+//		{
+//			Integer denominator=new Integer(1);
+//			while(Math.Floor(fraction)!=fraction)
+//			{
+//				fraction*=2;
+//				denominator*=2;
+//			}
+//			Integer numerator=Helper.IntegerFromDouble(fraction);
+//			this[NumberKeys.Numerator]=new NormalMap(numerator);
+//			this[NumberKeys.Denominator]=new NormalMap(denominator);
+//		}
 
 		public HybridDictionaryStrategy():this(2)
 		{
@@ -3300,6 +2742,10 @@ namespace Meta
 					MemberInfo member=type.GetMember(text,bindingFlags)[0];
 					if(member is FieldInfo)
 					{
+						if(member.Name=="floatValue")
+						{
+							int asdf=0;
+						}
 						FieldInfo field=(FieldInfo)member;
 						bool isConverted;
 						object val=Transform.ToDotNet(value,field.FieldType,out isConverted);
@@ -3647,10 +3093,7 @@ namespace Meta
 			}
 			public static void Serialize(object toSerialize,string indent,string[] methods,StringBuilder stringBuilder,int level) 
 			{
-				if(toSerialize!=null && toSerialize.Equals(new NormalMap(new Integer(1))))
-				{
-					int asdf=0;
-				}
+
 				if(toSerialize==null) 
 				{
 					stringBuilder.Append(indent+"null\n");
@@ -4586,11 +4029,6 @@ namespace Meta
 	}
 	public class FileSystem:Map
 	{
-		public override Map Clone()
-		{
-			return base.Clone ();
-		}
-
 		public static FileSystem singleton;
 		static FileSystem()
 		{
@@ -4601,15 +4039,15 @@ namespace Meta
 		{
 			get
 			{
-				return System.IO.Path.Combine(Process.LibraryPath.FullName,"meta.meta");
+				return System.IO.Path.Combine(Process.LibraryPath,"meta.meta");
 			}
 		}
 		public FileSystem()
 		{
 			this.map=new Process(Path).RunWithoutLibrary();
-			this.map.Parent=GAC.singleton;
+			this.map.Parent=Gac.singleton;
 			// this is a little unlogical
-			this.Parent=GAC.singleton;
+			this.Parent=Gac.singleton;
 		}
 		public override ArrayList Keys
 		{
@@ -4640,42 +4078,12 @@ namespace Meta
 			{
 				text="";
 			}
-			Helper.WriteFile(Process.LibraryPath.FullName,text);
+			Helper.WriteFile(Process.LibraryPath,text);
 		}
 
 	}
-	// make lowercase
-	public class GAC:Map
+	public class Gac:Map
 	{
-		public override Map Clone()
-		{
-			return base.Clone ();
-		}
-
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				return null;
-//			}
-//		}
-		public Map ClassesFromAssemblies(IEnumerable assemblies)
-		{
-			Map root=new NormalMap();
-			foreach(Assembly assembly in assemblies)
-			{
-				ArrayList assemblyNamespaces=new ArrayList();
-				foreach(Type type in assembly.GetExportedTypes())
-				{
-					if(type.DeclaringType==null)
-					{
-						root[type.Name]=new DotNetClass(type);
-					}
-				}
-			}
-			return root;
-		}
-
 		public override Map this[Map key]
 		{
 			get
@@ -4683,8 +4091,16 @@ namespace Meta
 				Map val;
 				try
 				{
-					// some caching might be in order here
-					val=ClassesFromAssemblies(new Assembly[] {Assembly.LoadWithPartialName(key.GetString())});
+					Assembly assembly=Assembly.LoadWithPartialName(key.GetString());
+					val=new NormalMap();
+					ArrayList assemblyNamespaces=new ArrayList();
+					foreach(Type type in assembly.GetExportedTypes())
+					{
+						if(type.DeclaringType==null)
+						{
+							val[type.Name]=new DotNetClass(type);
+						}
+					}
 				}
 				catch
 				{
@@ -4701,12 +4117,12 @@ namespace Meta
 		{
 			get
 			{
-				ArrayList assemblies=Fusion.AssembliesNames;
-				foreach(string dllPath in Directory.GetFiles(Process.LibraryPath.FullName,"*.dll"))
+				ArrayList assemblies=Fusion.Assemblies;
+				foreach(string dllPath in Directory.GetFiles(Process.LibraryPath,"*.dll"))
 				{
 					assemblies.Add(new NormalMap(Path.GetFileNameWithoutExtension(dllPath)));
 				}
-				foreach(string exePath in Directory.GetFiles(Process.LibraryPath.FullName,"*.exe"))
+				foreach(string exePath in Directory.GetFiles(Process.LibraryPath,"*.exe"))
 				{
 					assemblies.Add(new NormalMap(Path.GetFileNameWithoutExtension(exePath)));
 				}
@@ -4727,32 +4143,11 @@ namespace Meta
 				return new ArrayList();
 			}
 		}
-//		public abstract class AssemblyStrategy:PersistantStrategy
-//		{
-//			public Map ClassesFromAssemblies(IEnumerable assemblies)
-//			{
-//				Map root=new NormalMap();
-//				foreach(Assembly assembly in assemblies)
-//				{
-//					ArrayList assemblyNamespaces=new ArrayList();
-//					foreach(Type type in assembly.GetExportedTypes())
-//					{
-//						if(type.DeclaringType==null)
-//						{
-//							root[type.Name]=new DotNetClass(type);
-//						}
-//					}
-//				}
-//				return root;
-//			}
 		protected Map cachedAssemblyInfo=new NormalMap();
 		protected Map cache=new NormalMap();
-//		}
-		static GAC()
+		static Gac()
 		{
-			GAC gac=new GAC();
-			// this is somewhat unlogical, why should the web be in the gac?
-			// if anything, it should be above the gac or even further up
+			Gac gac=new Gac();
 			gac.cache["web"]=Web.singleton;
 			singleton=gac;
 		}
@@ -4795,16 +4190,15 @@ namespace Meta
 		//	
 		public class Fusion
 		{
-			// rename
-			public static ArrayList AssembliesNames
+			public static ArrayList Assemblies
 			{
 				get
 				{
 					ArrayList assemblies=new ArrayList();
-					assemblies.Add(new NormalMap("mscorlib"));
-
 					IAssemblyEnum assemblyEnum=CreateGACEnum();
 					IAssemblyName iname; 
+
+					assemblies.Add(new NormalMap("mscorlib"));
 					while (GetNextAssembly(assemblyEnum, out iname) == 0)
 					{
 						try
@@ -4813,7 +4207,6 @@ namespace Meta
 							if(assemblyName!="Microsoft.mshtml")
 							{
 								assemblies.Add(new NormalMap(assemblyName));
-								//							assemblies.Add(Assembly.LoadWithPartialName(assemblyName));
 							}
 						}
 						catch(Exception e)
@@ -5049,10 +4442,6 @@ namespace Meta
 			else
 			{
 				int index=0;
-				//				if(text[0]=='-')
-				//				{
-				//					index++;
-				//				}
 				for(;index<text.Length;index++)
 				{
 					if(char.IsDigit(text[index]))
@@ -5064,10 +4453,7 @@ namespace Meta
 						return null;
 					}
 				}
-				//				if(text[0]=='-')
-				//				{
-				//					result=-result;
-				//				}
+
 			}
 			return result;
 		}
@@ -5141,60 +4527,6 @@ namespace Meta
 
 			for(int i = 0; i < dataLength; i++)
 				data[i] = bi.data[i];
-		}
-		// maybe remove, or rename to TryParseInteger
-		public Integer(string value, int radix)
-		{
-			Integer multiplier = new Integer(1);
-			Integer result = new Integer();
-			value = (value.ToUpper()).Trim();
-			int limit = 0;
-
-			if(value[0] == '-')
-				limit = 1;
-
-			for(int i = value.Length - 1; i >= limit ; i--)
-			{
-				int posVal = (int)value[i];
-
-				if(posVal >= '0' && posVal <= '9')
-					posVal -= '0';
-				else if(posVal >= 'A' && posVal <= 'Z')
-					posVal = (posVal - 'A') + 10;
-				else
-					posVal = 9999999;       // arbitrary large
-
-
-				if(posVal >= radix)
-					throw(new ArithmeticException("Invalid string in constructor."));
-				else
-				{
-					if(value[0] == '-')
-						posVal = -posVal;
-
-					result = result + (multiplier * posVal);
-
-					if((i - 1) >= limit)
-						multiplier = multiplier * radix;
-				}
-			}
-
-			if(value[0] == '-')     // negative values
-			{
-				if((result.data[maxLength-1] & 0x80000000) == 0)
-					throw(new ArithmeticException("Negative underflow in constructor."));
-			}
-			else    // positive values
-			{
-				if((result.data[maxLength-1] & 0x80000000) != 0)
-					throw(new ArithmeticException("Positive overflow in constructor."));
-			}
-
-			data = new uint[maxLength];
-			for(int i = 0; i < result.dataLength; i++)
-				data[i] = result.data[i];
-
-			dataLength = result.dataLength;
 		}
 		public static implicit operator Integer(long value)
 		{

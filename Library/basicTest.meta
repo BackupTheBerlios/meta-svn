@@ -144,15 +144,9 @@
 	TestClass.NestedClass.field=5
 	nestedClassTest=TestClass.NestedClass.field
 	testClass=TestClass*
-	testClass.floatValue=
-		numerator=1
-		denominator=3
-	testClass.doubleValue=
-		numerator=1
-		denominator=3
-	testClass.decimalValue=
-		numerator=1
-		denominator=3
+	testClass.floatValue=2
+	testClass.doubleValue=3
+	testClass.decimalValue=4
 	TestClass.boolTest=1
 	boolTest=TestClass.boolTest
 	MemberTest=MetaTest.MemberTest
@@ -270,15 +264,9 @@
 	emptyFunctionResult=emptyFunction*
 	font=["System.Drawing"].Font
 		"Courier New"
-		[2]=
-			numerator=10
-			denominator=1
-	decimalTest=
-		numerator=5023
-		denominator=100
-	fractionTest=
-		numerator=4
-		denominator=52
+		[2]=10
+	decimalTest=5
+	fractionTest=7
 	stringTest="hello"
 	stringTest.[6]=stringTest.[1]
 	helloh="hi"

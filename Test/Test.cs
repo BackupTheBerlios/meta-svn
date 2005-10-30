@@ -31,24 +31,7 @@ namespace Test
 		public static string path="";
 		private static void Run(string file)
 		{
-			if(file=="") 
-			{
-				ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Process.LibraryPath.Parent.FullName,"Test"));
-			}
-//			else 
-//			{
-//				if(!File.Exists(file))
-//				{
-//					throw new ApplicationException("File "+file+" not found.");
-//				}
-//				// not functional
-//				Map result=new Process(file).Run();
-//				if(result.IsString)
-//				{
-//					Console.Write("Content-Type: text/html\n\n");
-//					Console.Write(result.GetString());
-//				}
-//			}
+			ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Directory.GetParent(Process.LibraryPath).FullName,"Test"));
 		}
 		// remove possibility to execute a file
 		[STAThread]

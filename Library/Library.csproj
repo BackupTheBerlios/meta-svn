@@ -104,10 +104,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "basicTest.meta"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "editor.meta"
                     BuildAction = "None"
                 />
@@ -123,14 +119,6 @@
                     RelPath = "Library.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "library.meta"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "libraryTest.meta"
-                    BuildAction = "None"
                 />
                 <File
                     RelPath = "meta.meta"

@@ -3226,24 +3226,7 @@ Entry (DictionaryEntry)
 	Value (NormalMap):
 		Extent:
 			null
-		Entry (DictionaryEntry)
-			Key (NormalMap):
-				Extent:
-					null
-				"numerator"
-			Value (NormalMap):
-				Extent:
-					null
-				"5023"
-		Entry (DictionaryEntry)
-			Key (NormalMap):
-				Extent:
-					null
-				"denominator"
-			Value (NormalMap):
-				Extent:
-					null
-				"100"
+		"5"
 Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
@@ -3252,24 +3235,7 @@ Entry (DictionaryEntry)
 	Value (NormalMap):
 		Extent:
 			null
-		Entry (DictionaryEntry)
-			Key (NormalMap):
-				Extent:
-					null
-				"numerator"
-			Value (NormalMap):
-				Extent:
-					null
-				"4"
-		Entry (DictionaryEntry)
-			Key (NormalMap):
-				Extent:
-					null
-				"denominator"
-			Value (NormalMap):
-				Extent:
-					null
-				"52"
+		"40"
 Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
