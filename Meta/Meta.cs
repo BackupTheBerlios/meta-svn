@@ -196,10 +196,6 @@ namespace Meta
 		}
 		public Map Run()
 		{
-//			TextReader reader=new StreamReader(path,Encoding.Default);
-//			Map program=Compile(reader);
-//			reader.Close();
-//			program=CallProgram(program,new NormalMap(),null);
 			program.Parent=FileSystem.singleton;
 			return program.Call(parameter);
 		}
@@ -208,14 +204,13 @@ namespace Meta
 		{
 			using(TextReader reader=new StreamReader(FileSystem.Path,Encoding.Default))
 			{
-				return RunWithoutLibrary(FileSystem.Path,reader);
+				return RunWithoutLibrary(reader);
 			}
 		}
 		// should be removed
-		public Map RunWithoutLibrary(string fileName,TextReader textReader)
+		public Map RunWithoutLibrary(TextReader textReader)
 		{
 			return Evaluate(Compile(textReader),new NormalMap());
-//			return CallProgram(program,new NormalMap(),null);
 		}
 		// refactor
 		public Map CallProgram(Map program,Map argument,Map current)
@@ -1176,8 +1171,7 @@ namespace Meta
 		{
 			get
 			{
-				// TODO: this is incorrect, GetInteger should throw if it isnt an integer
-				return GetInteger()!=null;
+				return Count==0 || (Count==1 && ContainsKey(NumberKeys.EmptyMap) && this[NumberKeys.EmptyMap].IsInteger);
 			}
 		}
 		public virtual Integer GetInteger()
@@ -1644,7 +1638,7 @@ namespace Meta
 				Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
 				Stream stream=webClient.OpenRead(fullPath.ToString());
 				StreamReader streamReader=new StreamReader(stream);
-				return Process.Current.RunWithoutLibrary(fullPath.ToString(),streamReader);
+				return Process.Current.RunWithoutLibrary(streamReader);
 			}
 			set
 			{
@@ -1670,12 +1664,12 @@ namespace Meta
 		{
 			get
 			{
-				// TODO: use the Argument checking stuff here too, or something similar
+				// use the Argument checking stuff here too, or something similar
 				if(!key.IsString)
 				{
 					throw new ApplicationException("need a string here");
 				}
-				// TODO: maybe check the host name here
+				// maybe check the host name here
 				return new NormalMap(new RemoteStrategy(key.GetString()));
 			}
 			set
@@ -1683,10 +1677,10 @@ namespace Meta
 				throw new ApplicationException("Cannot set key in Web.");
 			}
 		}
-		public override Integer GetInteger()
-		{
-			return null;
-		}
+//		public override Integer GetInteger()
+//		{
+//			return null;
+//		}
 
 		public override Map Clone()
 		{
@@ -1698,140 +1692,6 @@ namespace Meta
 		}
 		public static Web singleton=new Web();
 	}
-//	public class DirectoryStrategy:AssemblyStrategy
-//	{
-//		public DirectoryStrategy(DirectoryInfo directory)
-//		{
-//			this.directory=directory;
-//			assemblyPath=Path.Combine(directory.FullName,"assembly");
-////			ArrayList assemblies=new ArrayList();
-////			if(Directory.Exists(assemblyPath))
-////			{
-////				foreach(string dllPath in Directory.GetFiles(assemblyPath,"*.dll"))
-////				{
-////					assemblies.Add(Assembly.LoadFrom(dllPath));
-////				}
-////				foreach(string exePath in Directory.GetFiles(assemblyPath,"*.exe"))
-////				{
-////					assemblies.Add(Assembly.LoadFrom(exePath));
-////				}
-////			}
-////			cache=ClassesFromAssemblies(assemblies);
-//		}
-//		private string assemblyPath;
-//		public override ArrayList Array
-//		{
-//			get
-//			{
-//				return new ArrayList();
-//			}
-//		}
-//		private DirectoryInfo directory;
-//		public override ArrayList Keys
-//		{
-//			get
-//			{
-//				ArrayList keys=new ArrayList();
-//				foreach(DirectoryInfo subDirectory in directory.GetDirectories())
-//				{
-//					if(ValidName(subDirectory.Name))
-//					{
-//						keys.Add(new NormalMap(subDirectory.Name));
-//					}
-//				}
-//				foreach(FileInfo file in directory.GetFiles("*.meta"))
-//				{
-//					if(ValidName(file.Name))
-//					{
-//						keys.Add(new NormalMap(Path.GetFileNameWithoutExtension(file.FullName)));
-//					}
-//				}
-//				foreach(DictionaryEntry entry in cache)
-//				{
-//					if(!keys.Contains(entry.Key))
-//					{
-//						keys.Add(entry.Key);
-//					}
-//				}
-//				return keys;
-//			}
-//		}
-//		private bool ValidName(string key)
-//		{
-//			return !key.StartsWith(".") && !key.Equals("assembly");
-//		}
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				return null;
-//			}
-//		}
-//		public override Map this[Map key]
-//		{
-//			get
-//			{
-//				if(key.Equals(new NormalMap("TestClass")))
-//				{
-//					int asdf=0;
-//				}
-//				Map val;
-//				if(key.IsString && ValidName(key.GetString()))
-//				{
-//					string path=Path.Combine(directory.FullName,key.GetString());
-//					FileInfo file=new FileInfo(path+".meta");
-//					DirectoryInfo subDirectory=new DirectoryInfo(path);
-//					if(file.Exists)
-//					{
-//						val=new PersistantMap(file);
-//						val.Parent=map;
-//					}
-//					else if(subDirectory.Exists)
-//					{
-//						val=new PersistantMap(subDirectory);
-//						val.Parent=map;
-//					}
-//					else if(cache.ContainsKey(key))
-//					{
-//						// TODO: assign parent here, too
-//						val=cache[key];
-//					}
-//					else
-//					{
-//						val=null;
-//					}
-//				}
-//				else
-//				{
-//					val=null;
-//				}
-//				return val;
-//			}
-//			set
-//			{
-//				if(key.IsString && ValidName(key.GetString()))
-//				{
-//					SaveToFile(value,Path.Combine(directory.FullName,key.GetString()+".meta"));
-//				}
-//				else
-//				{
-//					throw new ApplicationException("Cannot set key "+key.ToString()+" in DirectoryStrategy.");
-//				}
-//			}
-//		}
-//		public static void SaveToFile(Map meta,string path)
-//		{
-//			Directory.CreateDirectory(Path.GetDirectoryName(path));
-//			File.Create(path).Close();
-//			string text=Meta.Serialize.MapValue(meta,"").Trim(new char[]{'\n'});
-//			// TODO: use constants here
-//			if(text=="\"\"")
-//			{
-//				text="";
-//			}
-//			Helper.WriteFile(path,text);
-//		}
-//	}
 	public class Serialize
 	{
 		public static string Key(Map key)
@@ -1953,196 +1813,8 @@ namespace Meta
 			return -1==text.IndexOfAny(new char[] {'@',' ','\t','\r','\n','=','.','/','\'','"','(',')','[',']','*',':','#','!'});
 		}
 	}
-
-//	public class FileStrategy:PersistantStrategy
-//	{
-//		public FileStrategy(FileInfo file)
-//		{
-//			this.file=file;
-//			if(!file.Exists)
-//			{
-//				file.Create().Close();
-//			}
-//		}
-//		private FileInfo file;
-//		public override ArrayList Array
-//		{
-//			get
-//			{
-//				return new ArrayList();
-//			}
-//		}
-//		public override ArrayList Keys
-//		{
-//			get
-//			{
-//				return GetMap().Keys;
-//			}
-//		}
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				return GetMap().GetInteger();
-//			}
-//		}
-//		private Map GetMap()
-//		{
-//			Map data;
-//			using(TextReader reader=new StreamReader(this.file.FullName,Encoding.Default))
-//			{
-//				data=Process.Current.RunWithoutLibrary(this.file.FullName,reader);
-//				data.Parent=this.map;
-//				return data;
-//			}
-//		}
-//		private void SaveMap(Map map)
-//		{
-//			DirectoryStrategy.SaveToFile(map,file.FullName);
-//		}
-//		public override Map this[Map key]
-//		{
-//			get
-//			{
-//				Map data=GetMap();
-//				return data[key];
-//			}
-//			set
-//			{
-//				Map data=GetMap();
-//				data[key]=value;
-//				SaveMap(data);
-//			}
-//		}
-//	}
-
-//	public class NamespaceStrategy: NormalStrategy
-//	{
-//		public override MapStrategy Clone()
-//		{
-//			return new NamespaceStrategy(FullName,cache,namespaces,assemblies);
-//		}
-//
-//		public override Integer Integer
-//		{
-//			get
-//			{
-//				return null;
-//			}
-//		}
-//		public override ArrayList Array
-//		{
-//			get
-//			{
-//				return new ArrayList();
-//			}
-//		}
-//		private ListDictionary Cache
-//		{
-//			get
-//			{
-//				if(cache==null)
-//				{
-//					Load();
-//				}
-//				return cache;
-//			}
-//		}
-//		public override bool ContainsKey(Map key)
-//		{
-//			return Cache.Contains(key);
-//		}
-//		public override Map this[Map key]
-//		{
-//			get
-//			{
-//				return (Map)Cache[key];
-//			}
-//			set
-//			{
-//				// TODO: make an overload for initalization with map, maybe
-//				map.strategy=new HybridDictionaryStrategy();
-//				map.strategy.map=map;
-//				map.InitFromStrategy(this);
-//				map.strategy[key]=value;
-//			}
-//		}
-//		public override ArrayList Keys
-//		{
-//			get
-//			{
-//				return new ArrayList(Cache.Keys);
-//			}
-//		}
-//		public override int Count
-//		{
-//			get
-//			{
-//				return Cache.Count;
-//			}
-//		}
-//		public string FullName
-//		{
-//			get
-//			{
-//				return fullName;
-//			}
-//		}
-//		private string fullName;
-//		private ArrayList assemblies;
-//		private Hashtable namespaces;
-//		private ListDictionary cache;
-//
-//		public ArrayList Assemblies
-//		{
-//			get
-//			{
-//				return assemblies;
-//			}
-//		}
-//		public Hashtable Namespaces
-//		{
-//			get
-//			{
-//				return namespaces;
-//			}
-//		}
-//		public NamespaceStrategy(string fullName)
-//		{
-//			this.fullName=fullName;
-//			this.assemblies=new ArrayList();
-//			this.namespaces=new Hashtable();
-//		}
-//		public NamespaceStrategy(string fullName,ListDictionary cache,Hashtable namespaces,ArrayList assemblies)
-//		{
-//			this.fullName=fullName;
-//			this.cache=cache;
-//			this.assemblies=assemblies;
-//			this.namespaces=namespaces;
-//		}
-//		public void Load()
-//		{
-//			cache=new ListDictionary();
-//			foreach(Assembly assembly in assemblies)
-//			{
-//				foreach(Type type in assembly.GetExportedTypes())
-//				{
-//					if(type.DeclaringType==null && this.FullName==type.Namespace) 
-//					{
-//						cache[new NormalMap(type.Name)]=new DotNetClass(type);
-//					}
-//				}
-//				Process.loadedAssemblies.Add(assembly.Location);
-//			}
-//			foreach(DictionaryEntry entry in namespaces)
-//			{
-//				cache[new NormalMap((string)entry.Key)]=(Map)entry.Value;
-//			}
-//		}
-//	}
 	public class Transform
 	{
-
 		public static object ToDotNet(Map meta,Type target)
 		{
 			bool isConverted;
@@ -2457,11 +2129,11 @@ namespace Meta
 	}
 	public class DotNetMethod: Map
 	{
-		public override Integer GetInteger()
-		{
-			// TODO: throw exception, make this the default implementation?, no better not
-			return null;
-		}
+//		public override Integer GetInteger()
+//		{
+//			// TODO: throw exception, make this the default implementation?, no better not
+//			return null;
+//		}
 		public override Map Clone()
 		{
 			return new DotNetMethod(this.name,this.obj,this.type);
@@ -2747,11 +2419,11 @@ namespace Meta
 				return type;
 			}
 		}
-		public override Integer GetInteger()
-		{
-			// TODO: Throw exception
-			return null;
-		}
+//		public override Integer GetInteger()
+//		{
+//			// TODO: Throw exception
+//			return null;
+//		}
 		public override Map Clone()
 		{
 			return new DotNetClass(type);
@@ -2776,11 +2448,11 @@ namespace Meta
 				return obj;
 			}
 		}
-		public override Integer GetInteger()
-		{
-			// TODO: throw exception
-			return null;
-		}
+//		public override Integer GetInteger()
+//		{
+//			// TODO: throw exception
+//			return null;
+//		}
 		public DotNetObject(object target):base(target,target.GetType())
 		{
 		}
@@ -3219,11 +2891,11 @@ namespace Meta
 		{
 			return new Event(eventInfo,obj,type);
 		}
-		public override Integer GetInteger()
-		{
-			// TODO: throw exception
-			return null;
-		}
+//		public override Integer GetInteger()
+//		{
+//			// TODO: throw exception
+//			return null;
+//		}
 		public override ArrayList Keys
 		{
 			get
@@ -3273,11 +2945,11 @@ namespace Meta
 		{
 			return new Property(property,obj,type);
 		}
-		public override Integer GetInteger()
-		{
-			// TODO: throw exception
-			return null;
-		}
+//		public override Integer GetInteger()
+//		{
+//			// TODO: throw exception
+//			return null;
+//		}
 		public override ArrayList Keys
 		{
 			get
