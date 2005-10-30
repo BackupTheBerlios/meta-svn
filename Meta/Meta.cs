@@ -608,8 +608,31 @@ namespace Meta
 		}
 
 	}
-	public abstract class Map: IEnumerable
+	public abstract class Map: IEnumerable, ISerializeSpecial
 	{	
+		public virtual void Serialize(string indentation,StringBuilder stringBuilder,int level)
+		{
+			if(this.IsString)
+			{
+				stringBuilder.Append(indentation+"\""+this.GetString()+"\""+"\n");
+			}
+			else if(this.IsInteger)
+			{
+				stringBuilder.Append(indentation+"\""+this.GetInteger().ToString()+"\""+"\n");
+			}
+			else
+			{
+				foreach(object entry in this)
+				{
+					stringBuilder.Append(indentation+"Entry ("+entry.GetType().Name+")\n");
+					ExecuteTests.Serialize(entry,indentation+ExecuteTests.indentationText,stringBuilder,level);
+				}
+			}
+		}
+//		public void Serialize(string indentation,StringBuilder stringBuilder,int level)
+//		{
+//			strategy.Serialize(indentation,stringBuilder,level);
+//		}
 //		// TODO: not really accurate
 //		public bool IsFunction
 //		{
@@ -1044,7 +1067,7 @@ namespace Meta
 		}
 	}
 
-	public abstract class StrategyMap: Map, ISerializeSpecial
+	public abstract class StrategyMap: Map
 	{
 		// TODO: no deep cloning necessary??
 		public void InitFromStrategy(MapStrategy clone) 
@@ -1188,10 +1211,10 @@ namespace Meta
 		}
 		public MapStrategy strategy;
 
-		public void Serialize(string indentation,StringBuilder stringBuilder,int level)
-		{
-			strategy.Serialize(indentation,stringBuilder,level);
-		}
+//		public void Serialize(string indentation,StringBuilder stringBuilder,int level)
+//		{
+//			strategy.Serialize(indentation,stringBuilder,level);
+//		}
 	}
 	public class NormalMap:StrategyMap
 	{
@@ -2051,7 +2074,7 @@ namespace Meta
 			return new DotNetObject(obj);
 		}
 	}
-	public abstract class MapStrategy:ISerializeSpecial
+	public abstract class MapStrategy
 	{
 		public virtual bool IsInteger
 		{
@@ -2080,25 +2103,25 @@ namespace Meta
 //		{
 //			get;
 //		}
-		public virtual void Serialize(string indentation,StringBuilder stringBuilder,int level)
-		{
-			if(this.IsString)
-			{
-				stringBuilder.Append(indentation+"\""+this.GetString()+"\""+"\n");
-			}
-			else if(this.GetInteger()!=null)
-			{
-				stringBuilder.Append(indentation+"\""+this.GetInteger().ToString()+"\""+"\n");
-			}
-			else
-			{
-				foreach(object entry in map)
-				{
-					stringBuilder.Append(indentation+"Entry ("+entry.GetType().Name+")\n");
-					ExecuteTests.Serialize(entry,indentation+ExecuteTests.indentationText,stringBuilder,level);
-				}
-			}
-		}
+//		public virtual void Serialize(string indentation,StringBuilder stringBuilder,int level)
+//		{
+//			if(this.IsString)
+//			{
+//				stringBuilder.Append(indentation+"\""+this.GetString()+"\""+"\n");
+//			}
+//			else if(this.GetInteger()!=null)
+//			{
+//				stringBuilder.Append(indentation+"\""+this.GetInteger().ToString()+"\""+"\n");
+//			}
+//			else
+//			{
+//				foreach(object entry in map)
+//				{
+//					stringBuilder.Append(indentation+"Entry ("+entry.GetType().Name+")\n");
+//					ExecuteTests.Serialize(entry,indentation+ExecuteTests.indentationText,stringBuilder,level);
+//				}
+//			}
+//		}
 //		public virtual Map Call(Map argument)
 //		{
 //			map.Parameter=argument;
@@ -3061,7 +3084,6 @@ namespace Meta
 					Console.ReadLine();
 				}
 			}
-			// TODO: remove functions!!
 			private bool CompareResult(string path,object toSerialize,int level)
 			{				
 				System.IO.Directory.CreateDirectory(path);
