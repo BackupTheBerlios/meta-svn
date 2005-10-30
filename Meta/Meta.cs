@@ -186,24 +186,15 @@ namespace Meta
 		}
 		static Process()
 		{
-			processes[Thread.CurrentThread]=new Process();
+			processes[Thread.CurrentThread]=new Process(null,null);
 		}
 		public Process():this(FileSystem.singleton,new NormalMap())
 		{
 		}
 		public void Run()
 		{
-//			program.Parent=FileSystem.singleton;
 			program.Call(parameter);
 		}
-		// only the FileSystem should ever parse anything, and run without library
-//		public Map RunWithoutLibrary()
-//		{
-//			using(TextReader reader=new StreamReader(FileSystem.Path,Encoding.Default))
-//			{
-//				return RunWithoutLibrary(reader);
-//			}
-//		}
 		public Map Parse(string filePath)
 		{
 			using(TextReader reader=new StreamReader(filePath,Encoding.Default))
@@ -215,14 +206,6 @@ namespace Meta
 		{
 			return Evaluate(Compile(textReader),new NormalMap());
 		}
-		// refactor
-//		public Map CallProgram(Map program,Map argument,Map current)
-//		{
-//			Map callable=new NormalMap();
-//			callable[CodeKeys.Function]=program;
-//			callable.Parent=current;
-//			return callable.Call(argument);
-//		}
 		// maybe make this part of Interpreter, which should be renamed to Meta
 		public static Map Compile()
 		{
@@ -241,7 +224,10 @@ namespace Meta
 		}
 		public void Stop()
 		{
-			thread.Abort();
+			if(thread.ThreadState!=ThreadState.Suspended && thread.ThreadState!=ThreadState.SuspendRequested)
+			{
+				thread.Suspend();
+			}
 		}
 		public void Pause()
 		{
@@ -889,6 +875,7 @@ namespace Meta
 			{
 				clone[key]=this[key];
 			}
+			clone.Extent=Extent;
 			return clone;
 		}
 		public bool ContainsKey(Map key)
@@ -3022,7 +3009,6 @@ namespace Meta
 			return (Extent)extents[extent];
 		}
 	}
-	// rename
 	public class Parser
 	{
 		private string text;
@@ -3030,10 +3016,6 @@ namespace Meta
 		private string filePath;
 		public Parser(string text,string filePath)
 		{
-			if(filePath.EndsWith("testLib.meta"))
-			{
-				int asdf=0;
-			}
 			this.index=0;
 			this.text=text;
 			this.filePath=filePath;
@@ -3152,26 +3134,6 @@ namespace Meta
 			}
 			return isDedentation;
 		}
-//		public const char commentChar='#';
-
-//		private bool Comment()
-//		{
-//			bool isComment;
-//			if(TryConsume(commentChar))
-//			{
-//				isComment=true;
-//				// TODO: make this a try consume for the newline, simply use newline, maybe should refactor everything
-//				while(Look()!='\n' && Look()!=endOfFileChar)
-//				{
-//					Consume();
-//				}
-//			}
-//			else
-//			{
-//				isComment=false;
-//			}
-//			return isComment;
-//		}
 		private void Consume()
 		{
 			Consume(Look());
@@ -3522,6 +3484,7 @@ namespace Meta
 		private Map LookupAnything()
 		{
 			Map lookupAnything;
+//			Extent extent=StartExpression();
 			if(TryConsume(lookupStartChar)) // separate into TryConsume and Consume, only try, and throw
 			{
 				lookupAnything=Expression();
@@ -3531,17 +3494,20 @@ namespace Meta
 			{
 				lookupAnything=null;
 			}
+//			EndExpression(extent,lookupAnything);
 			return lookupAnything;
 		}
 
 		public const char emptyMapChar='*';
 		private Map Lookup()
 		{
+			Extent extent=StartExpression();
 			Map lookup=LookupString();
 			if(lookup==null)
 			{
 				lookup=LookupAnything();
 			}
+			EndExpression(extent,lookup);
 			return lookup;
 		}
 		const char callChar=' ';

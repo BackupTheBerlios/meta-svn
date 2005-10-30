@@ -1,4 +1,4 @@
-|editor*
+|debugTest*
 license='"
 	Meta is a programming language.
 	Copyright (C) 2004 Christian Staudenmeyer "christianstaudenmeyer@web.de"
@@ -15,6 +15,22 @@ license='"
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."'
+debugTest=
+	|
+		abc="hello"
+		map=
+			a="hello"
+			b="world"
+			aha=
+				thisStuff=
+					"rocks"
+			absolutely="!!!!"
+		map="x"
+		x=abc
+		asdfasdf=map
+		mscorlib.Console.WriteLine
+			"hello world"
+		mscorlib.Console.ReadLine*
 basicTest=
 	|
 		current=library.map.merge
@@ -539,15 +555,15 @@ editor=
 			Continue=
 				|
 					SetBreakPoint*
-					process=Process.Current.get*
 					process.Continue*
 			Reverse=
 				|
 					SetBreakPoint*
-					process=Process.Current.get*
 					process.Continue*
 			Stop=
-				|Meta.Interpreter.StopDebug*
+				|
+					process.Stop*
+					parent.parent.parent.process=Process*
 		CombinedModifierKeys=
 			current=["System.Windows.Forms"]
 			AltControl=library.bitwise.or
@@ -745,10 +761,14 @@ editor=
 					Close=
 						|form.Close*
 				Debug=
-					Start=commands.Start
-					Continue=commands.Continue
-					Reverse=commands.Reverse
-					Stop=commands.Stop
+					Start=
+						|commands.Start*
+					Continue=
+						|commands.Continue*
+					Reverse=
+						|commands.Reverse*
+					Stop=
+						|commands.Stop*
 			form.Menu.set
 				MainMenu
 					apply

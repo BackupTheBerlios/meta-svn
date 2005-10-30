@@ -32,8 +32,8 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-//			ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Directory.GetParent(Process.LibraryPath).FullName,"Test"));
-			FileSystem.singleton["editor"].Call(Map.Empty);
+			ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Directory.GetParent(Process.LibraryPath).FullName,"Test"));
+//			FileSystem.singleton["editor"].Call(Map.Empty);
 		}
 	}
 	public class Tests 
@@ -57,7 +57,17 @@ namespace Test
 				return FileSystem.singleton["basicTest"].Call(argument);
 			}
 		}
-
+		public class Extents:TestCase
+		{
+			public override object Run(ref int level)
+			{
+				Map argument=new NormalMap();
+				argument[1]="first arg";
+				argument[2]="second=arg";
+//				level=2;
+				return FileSystem.singleton["basicTest"];
+			}
+		}
 	}
 }
 namespace testClasses
