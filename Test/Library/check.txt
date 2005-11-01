@@ -4,6 +4,168 @@ Entry (DictionaryEntry)
 	Key (NormalMap):
 		Extent:
 			null
+		"apply"
+	Value (NormalMap):
+		Extent:
+			null
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				Extent:
+					null
+				"function"
+			Value (NormalMap):
+				Extent (Extent):
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						Extent:
+							null
+						"call"
+					Value (NormalMap):
+						Extent:
+							null
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"callable"
+							Value (NormalMap):
+								Extent (Extent):
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"select"
+									Value (NormalMap):
+										Extent (Extent):
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Meta"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"2"
+											Value (NormalMap):
+												Extent (Extent):
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Interpreter"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"3"
+											Value (NormalMap):
+												Extent (Extent):
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"literal"
+													Value (NormalMap):
+														Extent:
+															null
+														"Apply"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								Extent:
+									null
+								"argument"
+							Value (NormalMap):
+								Extent (Extent):
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										Extent:
+											null
+										"program"
+									Value (NormalMap):
+										Extent:
+											null
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												Extent:
+													null
+												"1"
+											Value (NormalMap):
+												Extent (Extent):
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"key"
+													Value (NormalMap):
+														Extent:
+															null
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"1"
+															Value (NormalMap):
+																Extent:
+																	null
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (NormalMap):
+																		Extent:
+																			null
+																		"1"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														Extent:
+															null
+														"value"
+													Value (NormalMap):
+														Extent (Extent):
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																Extent:
+																	null
+																"select"
+															Value (NormalMap):
+																Extent (Extent):
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		Extent:
+																			null
+																		"1"
+																	Value (NormalMap):
+																		Extent (Extent):
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (NormalMap):
+																				Extent:
+																					null
+																				"parameter"
+Entry (DictionaryEntry)
+	Key (NormalMap):
+		Extent:
+			null
 		"join"
 	Value (NormalMap):
 		Extent:

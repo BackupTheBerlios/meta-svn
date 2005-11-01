@@ -1,4 +1,4 @@
-|debugTest*
+|html.test*
 license='"
 	Meta is a programming language.
 	Copyright (C) 2004 Christian Staudenmeyer "christianstaudenmeyer@web.de"
@@ -31,6 +31,76 @@ debugTest=
 		mscorlib.Console.WriteLine
 			"hello world"
 		mscorlib.Console.ReadLine*
+file=
+	write=
+		|
+			writer=mscorlib.StreamWriter
+				parameter.file
+			writer.Write
+				parameter.text
+			writer.Close*
+html=
+	tags=
+		create=
+			|
+				name=parameter
+				|map.join
+					"<"
+					name
+					">"
+					parameter
+					"</"
+					name
+					">"
+		createAll=
+			|
+				tags=
+					tags=*
+					set=
+						|
+							parent.parent.tags=parameter
+				stuff=library.map.apply
+					function=
+						|
+							[parameter]=create parameter
+					array=
+						"h1"
+						"h2"
+						"h3"
+						"h4"
+						"h5"
+						"h6"
+						"p"
+				current=map.merge stuff
+		|
+			h1=create "h1"
+			h2=create "h2"
+			h3=create "h3"
+			h4=create "h4"
+			h5=create "h5"
+			h6=create "h6"
+			p=create "p"
+			current=createAll*
+	test=
+		|
+			tags=tags*
+			text=map.join
+				tags.h1 "fuck the system"
+				tags.p "I'm not sure, but i dont really like this government stuff"
+				tags.p "how about you?"
+			display text
+	display=
+		|
+			file.write
+				file="C:\test.html"
+				text=parameter
+			process=System.Process*
+			startInfo=process.StartInfo.get*
+			startInfo.FileName.set
+				"iexplore.exe"
+			startInfo.Arguments.set
+				"C:\test.html"
+			process.Start*
 basicTest=
 	|
 		current=library.map.merge
@@ -336,6 +406,9 @@ testSubDir=
 			y="world"
 library=
 	map=
+		apply=
+			|Meta.Interpreter.Apply
+				parameter
 		join=
 			|Meta.Interpreter.Join
 				parameter
@@ -494,7 +567,7 @@ libraryTest=
 					|add
 						parameter
 						1
-				current=Library.map.apply
+				current=library.map.apply
 					function=applyMethod
 					array=
 						1
@@ -537,7 +610,9 @@ editor=
 						add
 							editBox.LineIndex.get*
 							1
-						editBox.Column.get*
+						add
+							editBox.Column.get*
+							1
 		process=Process*
 		commands=
 			Save=
@@ -545,6 +620,7 @@ editor=
 					editBox.RealText.get*
 			Start=
 				|
+					parent.parent.parent.process=Process*
 					commands.Save*
 					SetBreakPoint*
 					process.Break.add
@@ -555,15 +631,18 @@ editor=
 			Continue=
 				|
 					SetBreakPoint*
+					process.Reversed.set
+						*
 					process.Continue*
 			Reverse=
 				|
 					SetBreakPoint*
+					process.Reversed.set
+						1
 					process.Continue*
 			Stop=
 				|
 					process.Stop*
-					parent.parent.parent.process=Process*
 		CombinedModifierKeys=
 			current=["System.Windows.Forms"]
 			AltControl=library.bitwise.or
@@ -585,9 +664,7 @@ editor=
 				[Keys.Escape]=
 					|editBox.StopInteractiveSearch*
 				[Keys.F5]=
-					|commands.Run*
-				[Keys.F5]=
-					|commands.Run*
+					|commands.Start*
 				[Keys.Up]=
 					|editBox.MoveLineUp*
 				[Keys.Down]=
@@ -709,7 +786,6 @@ editor=
 								|commands.Reverse*
 							[1]=
 								|commands.Continue*
-						process=Process.Current.get*
 						breakpoint=process.BreakPoint.get*
 						position=breakpoint.Position.get*
 						line=position.Line.get*
@@ -785,4 +861,3 @@ editor=
 												parameter
 												menu.[topKey].[parameter]
 			current=form
-		form.ShowDialog*

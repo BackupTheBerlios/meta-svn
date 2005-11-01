@@ -289,11 +289,33 @@ namespace Meta
 			}
 			return val;
 		}
+		private Map Caller
+		{
+			get
+			{
+				Map caller;
+				if(callers.Count!=0)
+				{
+					caller=(Map)callers[callers.Count-1];
+				}
+				else
+				{
+					caller=null;
+				}
+				return caller;
+			}
+		}
+		public ArrayList callers=new ArrayList();
+		// maybe rename context to current
 		public Map Call(Map code,Map context)
 		{
 			Map function=Evaluate(code[CodeKeys.Callable],context);
 			Map argument=Evaluate(code[CodeKeys.Argument],context);
-			return function.Call(argument);
+			callers.Add(context);
+//			argument.Parent=Caller;
+			Map result=function.Call(argument);
+			callers.RemoveAt(callers.Count-1);
+			return result;
 		}
 		public Map Program(Map code,Map context)
 		{
@@ -301,7 +323,7 @@ namespace Meta
 			Program(code,context,ref local);
 			return local;
 		}
-		private bool Reversed
+		public bool Reversed
 		{
 			get
 			{
@@ -376,10 +398,15 @@ namespace Meta
 				selected=selection;
 				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
 				{
+
 					CallBreak(selected);
 				}
 			}
 			Map lastKey=Evaluate((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context);
+			if(lastKey.Equals(new NormalMap("abc")))
+			{
+				int asdf=0;
+			}
 			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
 			{
 				Map oldValue;
@@ -417,6 +444,10 @@ namespace Meta
 			for(int i=1;i<code.Array.Count;i++)
 			{
 				Map key=Evaluate((Map)code.Array[i],context);
+				if(key.Equals(new NormalMap("Reversed")))
+				{
+					int asdf=0;
+				}
 				Map selection=selected[key];
 				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[i]).Extent))
 				{
@@ -458,6 +489,10 @@ namespace Meta
 		{
 			if(Break!=null)
 			{
+				if(data==null)
+				{
+					data=new NormalMap("nothing");;
+				}
 				Break(data);
 				Thread.CurrentThread.Suspend();
 			}
@@ -475,6 +510,22 @@ namespace Meta
 	// TODO: rename remove
 	public class Interpreter
 	{
+		public static Map Apply(Map arg)
+		{
+			// TODO: ensure "function" is callable, maybe?
+			Argument.ContainsKey(arg,"function");
+			Argument.ContainsKey(arg,"array");
+			Map application=new NormalMap();
+			int counter=1;
+			arg.Parent=(Map)Process.Current.callers[Process.Current.callers.Count-2];
+			foreach(Map element in arg["array"].Array)
+			{
+				application[counter]=arg["function"].Call(element);
+				counter++;
+			}
+			return application;
+		}
+
 		public static Map Or(Map arg) 
 		{
 			Argument.BooleanArray(arg);
@@ -545,19 +596,19 @@ namespace Meta
 			}
 			return array;
 		}
-		public static Map Apply(Map arg)
-		{
-			Argument.ContainsKey(arg,"function");
-			Argument.ContainsKey(arg,"array");
-			Map application=new NormalMap();
-			int counter=1;
-			foreach(Map element in arg["array"].Array)
-			{
-				application[counter]=arg["function"].Call(element);
-				counter++;
-			}
-			return application;
-		}
+//		public static Map Apply(Map arg)
+//		{
+//			Argument.ContainsKey(arg,"function");
+//			Argument.ContainsKey(arg,"array");
+//			Map application=new NormalMap();
+//			int counter=1;
+//			foreach(Map element in arg["array"].Array)
+//			{
+//				application[counter]=arg["function"].Call(element);
+//				counter++;
+//			}
+//			return application;
+//		}
 		public static Map And(Map arg) 
 		{
 			Argument.BooleanArray(arg);
@@ -2879,7 +2930,22 @@ namespace Meta
 		}
 		public bool IsBetween(Extent extent)
 		{
-			return extent!=null && this.greater(extent.Start) && this.smaller(extent.End);
+			if(extent!=null && extent.Start.Line==24 && extent.Start.Column==13)
+			{
+				int asdf=0;
+			}
+			if(extent!=null)
+			{
+				if(this.greater(extent.Start) || this.Equals(extent.Start))
+				{
+					if(this.smaller(extent.End) || this.Equals(extent.End))
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+
 		}
 //		public bool IsBetween(SourcePosition start,SourcePosition end)
 //		{

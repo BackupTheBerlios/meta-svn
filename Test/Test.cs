@@ -24,6 +24,7 @@ using System;
 using Meta.TestingFramework;
 using System.Threading;
 
+
 namespace Test 
 {
 	class Test 
@@ -38,14 +39,6 @@ namespace Test
 	}
 	public class Tests 
 	{
-		public class Library:TestCase
-		{
-			public override object Run(ref int level)
-			{
-				level=2;
-				return FileSystem.singleton["libraryTest"].Call(new NormalMap());
-			}
-		}
 		public class Basic:TestCase
 		{
 			public override object Run(ref int level)
@@ -54,9 +47,19 @@ namespace Test
 				argument[1]="first arg";
 				argument[2]="second=arg";
 				level=2;
+//				return Process.Current.Call(FileSystem.singleton["basicTest"]["function"],FileSystem.singleton);
 				return FileSystem.singleton["basicTest"].Call(argument);
 			}
 		}
+		public class Library:TestCase
+		{
+			public override object Run(ref int level)
+			{
+				level=2;
+				return FileSystem.singleton["libraryTest"].Call(new NormalMap());
+			}
+		}
+
 		public class Extents:TestCase
 		{
 			public override object Run(ref int level)
@@ -68,6 +71,17 @@ namespace Test
 				return FileSystem.singleton["basicTest"];
 			}
 		}
+//		public class DebugTest:TestCase
+//		{
+//			public override object Run(ref int level)
+//			{
+//				Map argument=new NormalMap();
+//				argument[1]="first arg";
+//				argument[2]="second=arg";
+//				//				level=2;
+//				return FileSystem.singleton["debugTest"];
+//			}
+//		}
 	}
 }
 namespace testClasses
