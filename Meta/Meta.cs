@@ -193,7 +193,7 @@ namespace Meta
 		}
 		public void Run()
 		{
-			program.Call(parameter);
+			program.Call(parameter,new NormalMap());
 		}
 		public Map Parse(string filePath)
 		{
@@ -313,7 +313,7 @@ namespace Meta
 //		public class Value
 //		{
 //		}
-		private Map Caller
+		public Map Caller
 		{
 			get
 			{
@@ -336,11 +336,21 @@ namespace Meta
 			Map function=Evaluate(code[CodeKeys.Callable],context);
 			Map argument=Evaluate(code[CodeKeys.Argument],context);
 			callers.Add(context);
-//			Arg.Parent=Caller;
-			Map result=function.Call(argument);
+			//			Arg.Parent=Caller;
+			Map result=function.Call(argument,context);
 			callers.RemoveAt(callers.Count-1);
 			return result;
 		}
+//		public Map Call(Map code,Map context)
+//		{
+//			Map function=Evaluate(code[CodeKeys.Callable],context);
+//			Map argument=Evaluate(code[CodeKeys.Argument],context);
+//			callers.Add(context);
+////			Arg.Parent=Caller;
+//			Map result=function.Call(argument);
+//			callers.RemoveAt(callers.Count-1);
+//			return result;
+//		}
 		public Map Program(Map code,Map context)
 		{
 			Map local=new NormalMap();
@@ -711,7 +721,7 @@ namespace Meta
 			arg.Parent=(Map)Process.Current.callers[Process.Current.callers.Count-2];
 			foreach(Map element in arg["array"].Array)
 			{
-				application[counter]=arg["function"].Call(element);
+				application[counter]=arg["function"].Call(element,Process.Current.Caller);
 				counter++;
 			}
 			return application;
@@ -852,6 +862,18 @@ namespace Meta
 	}
 	public abstract class Map: IEnumerable, ISerializeSpecial
 	{	
+		public Map Caller
+		{
+			get
+			{
+				return caller;
+			}
+			set
+			{
+				caller=value;
+			}
+		}
+		private Map caller;
 		public static readonly Map Empty=new NormalMap();
 		public virtual void Serialize(string indentation,StringBuilder stringBuilder,int level)
 		{
@@ -1097,7 +1119,7 @@ namespace Meta
 			get;
 			set;
 		}
-		public virtual Map Call(Map parameter)
+		public virtual Map Call(Map parameter,Map caller)
 		{
 			this.Parameter=parameter;
 			Map function=this[CodeKeys.Function];
@@ -1936,7 +1958,7 @@ namespace Meta
 				return result;
 			}
 		}
-		public override Map Call(Map argument)
+		public override Map Call(Map argument,Map caller)
 		{
 			object result=null;
 			bool isExecuted=false;
@@ -2074,7 +2096,7 @@ namespace Meta
 			argumentList+=")";
 			source+=argumentList+"{";
 			source+=argumentBuiling;
-			source+="Map result=callable.Call(arg);";
+			source+="Map result=callable.Call(arg,Process.Current.Caller);";
 			if(method!=null)
 			{
 				if(!method.ReturnType.Equals(typeof(void)))
@@ -2185,9 +2207,9 @@ namespace Meta
 		{
 			this.constructor=new Method(this.type);
 		}
-		public override Map Call(Map argument)
+		public override Map Call(Map argument,Map caller)
 		{
-			return constructor.Call(argument);
+			return constructor.Call(argument,caller);
 		}
 
 	}
@@ -2529,7 +2551,7 @@ namespace Meta
 			this.type=type;
 		}
 		// TODO: refactor
-		public override Map Call(Map argument)
+		public override Map Call(Map argument,Map caller) // assign the caller here somewhere, too
 		{
 			Map result;
 			try
@@ -2540,7 +2562,7 @@ namespace Meta
 				{
 					Method invoke=new Method("Invoke",eventDelegate,eventDelegate.GetType());
 					// TODO: use GetRaiseMethod???
-					result=invoke.Call(argument);
+					result=invoke.Call(argument,caller);
 				}
 				else
 				{

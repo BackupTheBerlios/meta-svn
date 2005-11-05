@@ -50,7 +50,7 @@ namespace Test
 				argument[2]="second=arg";
 				level=2;
 //				return Process.Current.Call(FileSystem.singleton["basicTest"]["function"],FileSystem.singleton);
-				return FileSystem.singleton["basicTest"].Call(argument);
+				return FileSystem.singleton["basicTest"].Call(argument,new NormalMap());
 			}
 		}
 		public class Library:TestCase
@@ -58,7 +58,7 @@ namespace Test
 			public override object Run(ref int level)
 			{
 				level=2;
-				return FileSystem.singleton["libraryTest"].Call(new NormalMap());
+				return FileSystem.singleton["libraryTest"].Call(new NormalMap(),new NormalMap());
 			}
 		}
 
