@@ -1162,7 +1162,7 @@ namespace Meta
 			return hash;
 		}
 		Extent extent;
-		[Serialize(2)]
+		[Serialize(1)]
 		public Extent Extent
 		{
 			get
@@ -3041,6 +3041,10 @@ namespace Meta
 					members.Sort(new MemberInfoComparer());
 					foreach(MemberInfo member in members) 
 					{
+						if(member.Name=="Extent")
+						{
+							int asdf=0;
+						}
 						if(member.Name!="Item" && member.Name!="SyncRoot") 
 						{
 							if(Assembly.GetAssembly(member.DeclaringType)!=Assembly.GetExecutingAssembly() || member is MethodInfo || (member.GetCustomAttributes(typeof(SerializeAttribute),false).Length==1 && ((SerializeAttribute)member.GetCustomAttributes(typeof(SerializeAttribute),false)[0]).Level>=level)) 
