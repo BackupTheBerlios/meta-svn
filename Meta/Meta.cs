@@ -38,20 +38,20 @@ namespace Meta
 		public static readonly Map Literal="literal";
 
 		public static readonly Map Function="function";
+
 		public static readonly Map Call="call";
 		public static readonly Map Callable="callable";
 		public static readonly Map Argument="argument";
+
 		public static readonly Map Select="select";
-		public static readonly Map Search="search";
-		public static readonly Map Key="key";
 		public static readonly Map Program="program";
-		public static readonly Map Lookup="lookup";
+		public static readonly Map Key="key";
 		public static readonly Map Value="value";
 	}
 	public class SpecialKeys
 	{
 		public static readonly Map Parent="parent";
-		public static readonly Map Parameter="parameter";
+		public static readonly Map Parameter="arg";
 		public static readonly Map Current="current";
 	}
 	public class DotNetKeys
@@ -289,6 +289,30 @@ namespace Meta
 			}
 			return val;
 		}
+//		public class Call
+//		{
+//		}
+//		public class Program
+//		{
+//		}
+//		public class Literal
+//		{
+//		}
+//		public class Select
+//		{
+//		}
+//		public class Statement
+//		{
+//		}
+//		public class Lookup
+//		{
+//		}
+//		public class Key
+//		{
+//		}
+//		public class Value
+//		{
+//		}
 		private Map Caller
 		{
 			get
@@ -312,7 +336,7 @@ namespace Meta
 			Map function=Evaluate(code[CodeKeys.Callable],context);
 			Map argument=Evaluate(code[CodeKeys.Argument],context);
 			callers.Add(context);
-//			argument.Parent=Caller;
+//			Arg.Parent=Caller;
 			Map result=function.Call(argument);
 			callers.RemoveAt(callers.Count-1);
 			return result;
@@ -341,11 +365,11 @@ namespace Meta
 		private void Program(Map code,Map context,ref Map local)
 		{
 			local.Parent=context;
-			for(int i=0;i<code.Array.Count && i>=0;i++)
+			for(int i=1;code.ContainsKey(i) && i>0;i++)
 			{
 				if(Reversed)
 				{
-					if(!ResumeAfterReverse((Map)code.Array[i]))
+					if(!ResumeAfterReverse((Map)code[i]))
 					{
 						// ugly hack
 						i-=2;
@@ -356,9 +380,30 @@ namespace Meta
 						reversed=false;
 					}
 				}
-				Statement((Map)code.Array[i],ref local);
+				Statement((Map)code[i],ref local);
 			}
 		}
+//		private void Program(Map code,Map context,ref Map local)
+//		{
+//			local.Parent=context;
+//			for(int i=0;i<code.Array.Count && i>=0;i++)
+//			{
+//				if(Reversed)
+//				{
+//					if(!ResumeAfterReverse((Map)code.Array[i]))
+//					{
+//						// ugly hack
+//						i-=2;
+//						continue;
+//					}
+//					else
+//					{
+//						reversed=false;
+//					}
+//				}
+//				Statement((Map)code.Array[i],ref local);
+//			}
+//		}
 		public class Change
 		{
 			private Map map;
@@ -507,6 +552,152 @@ namespace Meta
 		// should this be static?
 		public static ArrayList loadedAssemblies=new ArrayList();
 	}
+//	public abstract class SingleKey:NormalStrategy
+//	{
+//		public override ArrayList Keys
+//		{
+//			get
+//			{
+//				ArrayList list=new ArrayList(1);
+//				list.Add(SingleKey);
+//				return list;
+//			}
+//		}
+//		public SingleKey(Map firstValue)
+//		{
+//			this.firstValue=firstValue;
+//		}
+//		protected abstract Map FirstKey
+//		{
+//			get;
+//		}
+//		private Map firstValue;
+//		public override Map this[Map key]
+//		{
+//			get
+//			{
+//				Map val;
+//				if(key==FirstKey)
+//				{
+//					val=firstValue;
+//				}
+//				else
+//				{
+//					val=null;
+//				}
+//				return val;
+//			}
+//			set
+//			{
+//			}
+//		}
+//	}
+//	public abstract class DoubleKey:NormalStrategy
+//	{
+//		public override ArrayList Keys
+//		{
+//			get
+//			{
+//				ArrayList list=new ArrayList(1);
+//				list.Add(FirstKey);
+//				list.Add(SecondKey);
+//				return list;
+//			}
+//		}
+//		public DoubleKey(Map firstValue,Map secondValue)
+//		{
+//			this.firstValue=firstValue;
+//			this.secondValue=secondValue;
+//		}
+//		protected abstract Map FirstKey
+//		{
+//			get;
+//		}
+//		protected abstract Map SecondKey
+//		{
+//			get;
+//		}
+//		private Map firstValue;
+//		private Map secondValue;
+//		public override Map this[Map key]
+//		{
+//			get
+//			{
+//				Map val;
+//				if(key==FirstKey)
+//				{
+//					val=singleValue;
+//				}
+//				else if(key==SecondKey)
+//				{
+//					val=secondKey;
+//				}
+//				else
+//				{
+//					val=null;
+//				}
+//				return val;
+//			}
+//			set
+//			{
+//			}
+//		}
+//	}
+//	public class Literal:SingleKey
+//	{
+//		protected override Map FirstKey
+//		{
+//			get
+//			{
+//				return CodeKeys.Literal;
+//			}
+//		}
+//
+//	}
+//	public class Call
+//	{
+//	}
+//	public class CallData:DoubleKey
+//	{
+//		protected override Map FirstKey
+//		{
+//			get
+//			{
+//				return CodeKeys.Callable;
+//			}
+//		}
+//		protected override Map SecondKey
+//		{
+//			get
+//			{
+//				return CodeKeys.Argument;
+//			}
+//		}
+//	}
+//	public class Function
+//	{
+//	}
+//	public class Callable
+//	{
+//	}
+//	public class Argument
+//	{
+//	}
+//	public class Select
+//	{
+//	}
+//	public class Program
+//	{
+//	}
+//	public class Statement
+//	{
+//	}
+//	public class Key
+//	{
+//	}
+//	public class Value
+//	{
+//	}
 	// TODO: rename remove
 	public class Interpreter
 	{
@@ -598,8 +789,8 @@ namespace Meta
 		}
 //		public static Map Apply(Map arg)
 //		{
-//			Argument.ContainsKey(arg,"function");
-//			Argument.ContainsKey(arg,"array");
+//			Arg.ContainsKey(arg,"function");
+//			Arg.ContainsKey(arg,"array");
 //			Map application=new NormalMap();
 //			int counter=1;
 //			foreach(Map element in arg["array"].Array)
@@ -1032,6 +1223,7 @@ namespace Meta
 			return new NormalMap(text);
 		}
 	}
+
 
 	public abstract class StrategyMap: Map
 	{
@@ -2069,9 +2261,17 @@ namespace Meta
 			return clone;
 		}
 
-		public abstract ArrayList Array
+		public virtual ArrayList Array
 		{
-			get;
+			get
+			{
+				ArrayList array=new ArrayList();
+				for(int i=1;this.ContainsKey(i);i++)
+				{
+					array.Add(this[i]);
+				}
+				return array;
+			}
 		}
 		public abstract ArrayList Keys
 		{
@@ -2137,6 +2337,14 @@ namespace Meta
 	}
 	public abstract class NormalStrategy:MapStrategy
 	{
+		// TODO: rename, refactor, make general function, extract assignment
+		protected void Panic(Map key,Map val)
+		{
+			map.strategy=new HybridDictionaryStrategy();
+			map.strategy.map=map;
+			map.InitFromStrategy(this);
+			map.strategy[key]=val;
+		}
 	}
 	public class StringStrategy:NormalStrategy
 	{
@@ -2728,14 +2936,6 @@ namespace Meta
 					Panic(key,value); // TODO: dont do assignment in panic, do it here
 				}
 			}
-		}
-		// TODO: rename, refactor, make general function, extract assignment
-		private void Panic(Map key,Map val)
-		{
-			map.strategy=new HybridDictionaryStrategy();
-			map.strategy.map=map;
-			map.InitFromStrategy(this);
-			map.strategy[key]=val;
 		}
 	}
 	public class FileAccess

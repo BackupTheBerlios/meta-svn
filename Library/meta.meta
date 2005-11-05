@@ -35,52 +35,48 @@ file=
 	write=
 		|
 			writer=mscorlib.StreamWriter
-				parameter.file
+				arg.file
 			writer.Write
-				parameter.text
+				arg.text
 			writer.Close*
 html=
 	tags=
 		create=
 			|
-				name=parameter
+				name=arg
 				|map.join
 					"<"
 					name
 					">"
-					parameter
+					arg
 					"</"
 					name
 					">"
-		createAll=
-			|
-				tags=
-					tags=*
-					set=
-						|
-							parent.parent.tags=parameter
-				stuff=library.map.apply
-					function=
-						|
-							[parameter]=create parameter
-					array=
-						"h1"
-						"h2"
-						"h3"
-						"h4"
-						"h5"
-						"h6"
-						"p"
-				current=map.merge stuff
+		|map.merge library.map.apply
+			function=
+				|
+					[arg]=create arg
+			array=
+				"h1"
+				"h2"
+				"h3"
+				"h4"
+				"h5"
+				"h6"
+				"p"
+				"table"
+				"tr"
+				"td"
+	table=
 		|
-			h1=create "h1"
-			h2=create "h2"
-			h3=create "h3"
-			h4=create "h4"
-			h5=create "h5"
-			h6=create "h6"
-			p=create "p"
-			current=createAll*
+			tags=tags*
+			current=tags.table library.map.join library.map.apply
+				array=arg
+				function=
+					|tags.tr map.join library.map.apply
+						array=arg
+						function=
+							|tags.td arg
 	test=
 		|
 			tags=tags*
@@ -88,12 +84,22 @@ html=
 				tags.h1 "fuck the system"
 				tags.p "I'm not sure, but i dont really like this government stuff"
 				tags.p "how about you?"
+				table
+					=
+						"answer"
+						"points"
+					=
+						"hate them"
+						"1"
+					=
+						"like em"
+						"109234"
 			display text
 	display=
 		|
 			file.write
 				file="C:\test.html"
-				text=parameter
+				text=arg
 			process=System.Process*
 			startInfo=process.StartInfo.get*
 			startInfo.FileName.set
@@ -136,7 +142,7 @@ basicTest=
 			[5]='''''''''''''''''"as"''''''''''''''''df"'''''''''''''''''
 		"ImpliedAutokey"
 		="Autokey"
-		commandLineArguments=parameter
+		commandLineArguments=arg
 		aMap=
 			["a"]="a"
 		[aMap]="Object"
@@ -157,7 +163,7 @@ basicTest=
 					parent.parent.autoSearch="changed"
 			SetB=
 				|
-					parent.parent.b.[1]=parameter.value
+					parent.parent.b.[1]=arg.value
 					current="changed"
 			x=
 				a="b"
@@ -174,7 +180,7 @@ basicTest=
 				z=1
 		ReturnEverything=
 			|
-				current=parameter
+				current=arg
 		everythingReturned=ReturnEverything
 			"a"
 			"b"
@@ -194,16 +200,16 @@ basicTest=
 		SetCurrent=
 			|
 				current=
-					parameter=parameter
-					x=parameter.symbol
+					arg=arg
+					x=arg.symbol
 				current=x
 		thisSet=SetCurrent
 			symbol="haha"
 		FirstLevel=
 			|
-				SecondLevel parameter
+				SecondLevel arg
 		SecondLevel=
-			|parameter
+			|arg
 		argTest=FirstLevel
 			a="z"
 		TestClass=MetaTest.TestClass
@@ -273,7 +279,7 @@ basicTest=
 		upperLevel="unchanged"
 		SetUpperLevel=
 			|
-				parent.parent.upperLevel=parameter
+				parent.parent.upperLevel=arg
 		ChangeUpperLevel=
 			|
 				SetUpperLevel "changed"
@@ -281,12 +287,12 @@ basicTest=
 		staticEventChanged=*
 		ChangeStaticEvent=
 			|
-				parent.parent.staticEventChanged=parameter
+				parent.parent.staticEventChanged=arg
 		TestClass.staticEvent.add
 			=
 				|
 					ChangeStaticEvent 1
-					current=parameter.[1]
+					current=arg.[1]
 		staticEvent=TestClass.staticEvent
 		TestClass.TakeDelegate
 			=
@@ -299,7 +305,7 @@ basicTest=
 			=
 				|
 					parent.parent.parent.instanceEventChanged=1
-					current=parameter.[1]
+					current=arg.[1]
 		instanceEvent=testClass.instanceEvent
 		instanceEventResult=testClass.instanceEvent
 			5
@@ -364,26 +370,26 @@ basicTest=
 		loop=
 			|
 				whileDecision=library.logic.not library.map.equal
-					parameter
+					arg
 					10
 				whileBranches=
 					[1]=
 						|loop library.math.add
-							parameter
+							arg
 							1
 					[*]=
-						|parameter
-				current=whileBranches.[whileDecision] parameter
+						|arg
+				current=whileBranches.[whileDecision] arg
 		whileCounter=loop 3
 		returnInMap=
 			|
-				result=parameter
+				result=arg
 		literalAsArgument=returnInMap 1
 		returnFunction=
 			|
 				|"functionResult"
 		returnArg=
-			|parameter
+			|arg
 		myArg=
 			|
 				hello="world"
@@ -408,108 +414,140 @@ library=
 	map=
 		apply=
 			|Meta.Interpreter.Apply
-				parameter
+				arg
 		join=
 			|Meta.Interpreter.Join
-				parameter
+				arg
 		contains=
 			|
 				object=Meta.ObjectMap
-					parameter.map
+					arg.map
 				current=object.ContainsKey
-					parameter.key
+					arg.key
 		keys=
 			|
 				object=Meta.ObjectMap
-					parameter
+					arg
 				current=Meta.Transform.ToMap
 					object.Keys.get*
 		merge=
 			|Meta.Interpreter.Merge
-				parameter
+				arg
 		equal=
 			|Meta.Interpreter.Equal
-				parameter
+				arg
+		length=
+			|
+				map=Meta.ObjectMap
+					arg
+				array=map.Array.get*
+				current=array.Count.get*
+		sum=
+			|sum
+				index=1
+				array=arg.array
+				function=arg.function
+				result=arg.start
+			sum=
+				|
+					stop=math.greater
+						arg.index
+						length arg.array
+					i=arg.index
+					next=
+						[1]=
+							|arg.result
+						[*]=
+							|sum
+								index=math.add
+									arg.index
+									1
+								result=arg.function
+									a=arg.result
+									b=arg.array.[arg.index]
+								array=arg.array
+								function=arg.function
+					current=next.[stop] arg
 	logic=
 		not=
-			|table.[parameter]
+			|table.[arg]
 			table=
 				[*]=1
 				[1]=*
 		and=
 			|Meta.Interpreter.And
-				parameter
+				arg
 		or=
 			|Meta.Interpreter.Or
-				parameter
+				arg
 	math=
 		add=
 			|Meta.Interpreter.Add
-				parameter
+				arg
 		multiply=
 			|Meta.Interpreter.Multiply
-				parameter
+				arg
 		greater=
 			|Meta.Interpreter.Greater
-				parameter
+				arg
 		smaller=
 			|Meta.Interpreter.Smaller
-				parameter
+				arg
 	bitwise=
 		or=
 			|Meta.Interpreter.BitwiseOr
-				parameter
+				arg
 map=
 	join=
 		|Meta.Interpreter.Join
-			parameter
+			arg
 	contains=
 		|
 			object=Meta.ObjectMap
-				parameter.map
+				arg.map
 			current=object.ContainsKey
-				parameter.key
+				arg.key
 	keys=
 		|
 			object=Meta.ObjectMap
-				parameter
+				arg
 			current=Meta.Transform.ToMap
 				object.Keys.get*
 	merge=
 		|Meta.Interpreter.Merge
-			parameter
+			arg
 	equal=
 		|Meta.Interpreter.Equal
-			parameter
+			arg
 logic=
 	not=
-		|table.[parameter]
+		|table.[arg]
 		table=
 			[*]=1
 			[1]=*
 	and=
 		|Meta.Interpreter.And
-			parameter
+			arg
 	or=
 		|Meta.Interpreter.Or
-			parameter
+			arg
 math=
 	add=
 		|Meta.Interpreter.Add
-			parameter
+			arg
 	multiply=
 		|Meta.Interpreter.Multiply
-			parameter
+			arg
 	greater=
 		|Meta.Interpreter.Greater
-			parameter
+			arg
 	smaller=
 		|Meta.Interpreter.Smaller
-			parameter
+			arg
 bitwise=
 	or=
 		|Meta.Interpreter.BitwiseOr
-			parameter
+			arg
 libraryTest=
 	|
 		current=library.map.merge
@@ -565,7 +603,7 @@ libraryTest=
 			apply=
 				applyMethod=
 					|add
-						parameter
+						arg
 						1
 				current=library.map.apply
 					function=applyMethod
@@ -600,7 +638,6 @@ editor=
 			library.logic
 			library.map
 			library.math
-			Library.map
 			Editor
 		Process=Meta.Process
 		SetBreakPoint=
@@ -626,7 +663,7 @@ editor=
 					process.Break.add
 						=
 							|editBox.ShowDebugValue
-								parameter.[1]
+								arg.[1]
 					process.Start*
 			Continue=
 				|
@@ -796,7 +833,7 @@ editor=
 			editBox.KeyDown.add
 				=
 					|
-						eventArgs=parameter.[2]
+						eventArgs=arg.[2]
 						modifier=eventArgs.Modifiers.get*
 						key=eventArgs.KeyCode.get*
 						shortcuts=shortcutCombinations.[modifier]
@@ -851,13 +888,14 @@ editor=
 						array=keys menu
 						function=
 							|
-								topKey=parameter
+								topKey=arg
 								current=MenuItem
 									topKey
 									apply
 										array=keys menu.[topKey]
 										function=
 											|MenuItem
-												parameter
-												menu.[topKey].[parameter]
+												arg
+												menu.[topKey].[arg]
 			current=form
+		form.ShowDialog*
