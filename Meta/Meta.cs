@@ -3041,10 +3041,6 @@ namespace Meta
 					members.Sort(new MemberInfoComparer());
 					foreach(MemberInfo member in members) 
 					{
-						if(member.Name=="Extent")
-						{
-							int asdf=0;
-						}
 						if(member.Name!="Item" && member.Name!="SyncRoot") 
 						{
 							if(Assembly.GetAssembly(member.DeclaringType)!=Assembly.GetExecutingAssembly() || member is MethodInfo || (member.GetCustomAttributes(typeof(SerializeAttribute),false).Length==1 && ((SerializeAttribute)member.GetCustomAttributes(typeof(SerializeAttribute),false)[0]).Level>=level)) 
@@ -3886,6 +3882,10 @@ namespace Meta
 				{
 					val=Expression();
 				}
+				if(val==null)
+				{
+					throw new ParserException("Expected value of statement",new SourcePosition(Line,Column));
+				}
 				key=CreateDefaultKey(new NormalMap((Integer)count));
 				count++;
 			}
@@ -3902,6 +3902,23 @@ namespace Meta
 			firstKey[CodeKeys.Literal]=literal;
 			key[1]=firstKey;
 			return key;
+		}
+	}
+	public class ParserException:ApplicationException
+	{
+		public override string Message
+		{
+			get
+			{
+				return this.text+" in line "+position.Line+", column "+position.Column+".";
+			}
+		}
+		private string text;
+		private SourcePosition position;
+		public ParserException(string text,SourcePosition position)
+		{
+			this.text=text;
+			this.position=position;
 		}
 	}
 	public class FileSystem:Map
