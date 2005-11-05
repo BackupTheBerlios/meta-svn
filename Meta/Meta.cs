@@ -523,10 +523,32 @@ namespace Meta
 			Map selected=context;
 			while(!selected.ContainsKey(key))
 			{
-				selected=selected.Parent;
-				if(selected==null)
+				if(selected.IsParameter)
 				{
-					Throw.KeyNotFound(key,key.Extent);
+					while(!selected.ContainsKey(key))
+					{
+						if(selected.Caller!=null)
+						{
+							selected=selected.Caller;
+						}
+						else
+						{
+							selected=selected.Parent;
+						}
+						if(selected==null)
+						{
+							Throw.KeyNotFound(key,key.Extent);
+						}
+					}
+				}
+				else
+				{
+					
+					selected=selected.Parent;
+					if(selected==null)
+					{
+						Throw.KeyNotFound(key,key.Extent);
+					}
 				}
 			}
 			Map val=selected[key];
@@ -536,6 +558,25 @@ namespace Meta
 			}
 			return val;
 		}
+//		private Map FindFirstKey(Map code,Map context)
+//		{
+//			Map key=Evaluate((Map)code.Array[0],context);
+//			Map selected=context;
+//			while(!selected.ContainsKey(key))
+//			{
+//				selected=selected.Parent;
+//				if(selected==null)
+//				{
+//					Throw.KeyNotFound(key,key.Extent);
+//				}
+//			}
+//			Map val=selected[key];
+//			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[0]).Extent))
+//			{
+//				CallBreak(val);
+//			}
+//			return val;
+//		}
 
 		public event DebugBreak Break;
 
@@ -858,10 +899,21 @@ namespace Meta
 			}
 			return result;
 		}
-
 	}
 	public abstract class Map: IEnumerable, ISerializeSpecial
-	{	
+	{
+		public bool IsParameter
+		{
+			get
+			{
+				return isParameter;
+			}
+			set
+			{
+				isParameter=value;
+			}
+		}
+		private bool isParameter=false;
 		public Map Caller
 		{
 			get
@@ -1075,9 +1127,21 @@ namespace Meta
 			}
 			set
 			{ 
-				parameter=value;
+				parameter=value.Clone();
+				parameter.IsParameter=true;
 			}
 		}
+//		public Map Parameter
+//		{
+//			get
+//			{
+//				return parameter;
+//			}
+//			set
+//			{ 
+//				parameter=value;
+//			}
+//		}
 		Map parameter=null;
 
 
@@ -1140,6 +1204,7 @@ namespace Meta
 				clone[key]=this[key];
 			}
 			clone.Extent=Extent;
+			clone.Parent=Parent;
 			return clone;
 		}
 		public bool ContainsKey(Map key)
@@ -1914,6 +1979,7 @@ namespace Meta
 	}
 	public class Method: Map
 	{
+		// clone isnt correct, should only override a part of the cloning, the actual cloning, not parent assignment 
 		public override Map Clone()
 		{
 			return new Method(this.name,this.obj,this.type);
