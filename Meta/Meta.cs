@@ -603,7 +603,7 @@ namespace Meta
 		// should this be static?
 		public static ArrayList loadedAssemblies=new ArrayList();
 	}
-//	public abstract class SingleKey:NormalStrategy
+//	public abstract class SingleKey:MapStrategy
 //	{
 //		public override ArrayList Keys
 //		{
@@ -643,7 +643,7 @@ namespace Meta
 //			}
 //		}
 //	}
-//	public abstract class DoubleKey:NormalStrategy
+//	public abstract class DoubleKey:MapStrategy
 //	{
 //		public override ArrayList Keys
 //		{
@@ -1196,6 +1196,7 @@ namespace Meta
 		{
 			get;
 		}
+		// rename to Copy
 		public virtual Map Clone()
 		{
 			Map clone=new NormalMap();
@@ -1455,7 +1456,7 @@ namespace Meta
 	}
 	public class NormalMap:StrategyMap
 	{
-		public NormalMap(NormalStrategy strategy):base(strategy)
+		public NormalMap(MapStrategy strategy):base(strategy)
 		{
 		}
 		public NormalMap():this(new HybridDictionaryStrategy())
@@ -1469,7 +1470,7 @@ namespace Meta
 		}
 	}
 	// think about this a bit, should be a map maybe
-	public class RemoteStrategy:NormalStrategy
+	public class RemoteStrategy:MapStrategy
 	{
 		public override ArrayList Array
 		{
@@ -2303,6 +2304,14 @@ namespace Meta
 	}
 	public abstract class MapStrategy
 	{
+		protected void Panic(Map key,Map val)
+		{
+			map.strategy=new HybridDictionaryStrategy();
+			map.strategy.map=map;
+			map.InitFromStrategy(this);
+			map.strategy[key]=val;
+		}
+
 		public virtual bool IsInteger
 		{
 			get
@@ -2335,7 +2344,7 @@ namespace Meta
 		public virtual Map CloneMap() // TODO: move into Map??
 		{
 			Map clone;
-			NormalStrategy strategy=(NormalStrategy)this.Clone();
+			MapStrategy strategy=(MapStrategy)this.Clone();
 			if(strategy!=null)
 			{
 				clone=new NormalMap(strategy);
@@ -2425,16 +2434,9 @@ namespace Meta
 			return isEqual;
 		}
 	}
-	public abstract class NormalStrategy:MapStrategy
-	{
-		// TODO: rename, refactor, make general function, extract assignment
-		protected void Panic(Map key,Map val)
-		{
-			map.strategy=new HybridDictionaryStrategy();
-			map.strategy.map=map;
-			map.InitFromStrategy(this);
-			map.strategy[key]=val;
-		}
+//	public abstract class MapStrategy:MapStrategy
+//	{
+//		// TODO: rename, refactor, make general function, extract assignment
 //		protected void Panic(Map key,Map val)
 //		{
 //			map.strategy=new HybridDictionaryStrategy();
@@ -2442,13 +2444,20 @@ namespace Meta
 //			map.InitFromStrategy(this);
 //			map.strategy[key]=val;
 //		}
-	}
+////		protected void Panic(Map key,Map val)
+////		{
+////			map.strategy=new HybridDictionaryStrategy();
+////			map.strategy.map=map;
+////			map.InitFromStrategy(this);
+////			map.strategy[key]=val;
+////		}
+//	}
 	// maybe use a namespace for all the strategies, but doesnt make all that much sense either, maybe put them all
 	// into Map, or NormalMap, or StrategyMap
-	public class Clone:NormalStrategy
+	public class CloneStrategy:MapStrategy
 	{
-		private NormalStrategy original;
-		public Clone(NormalStrategy original)
+		private MapStrategy original;
+		public CloneStrategy(MapStrategy original)
 		{
 			this.original=original;
 		}
@@ -2469,6 +2478,10 @@ namespace Meta
 			{
 				return original.Count;
 			}
+		}
+		public override MapStrategy Clone()
+		{
+			return new CloneStrategy(this.original);
 		}
 		public override bool Equals(object obj)
 		{
@@ -2528,7 +2541,7 @@ namespace Meta
 			}
 		}
 	}
-	public class StringStrategy:NormalStrategy
+	public class StringStrategy:MapStrategy
 	{
 		public override bool IsString
 		{
@@ -2640,7 +2653,7 @@ namespace Meta
 			}
 		}
 	}
-	public class HybridDictionaryStrategy:NormalStrategy
+	public class HybridDictionaryStrategy:MapStrategy
 	{
 		ArrayList keys;
 		private HybridDictionary dictionary;
@@ -2650,7 +2663,7 @@ namespace Meta
 		}
 		public override MapStrategy Clone()
 		{
-			return new Clone(this);
+			return new CloneStrategy(this);
 		}
 
 		public HybridDictionaryStrategy(int Count)
@@ -3022,7 +3035,7 @@ namespace Meta
 		public object obj;
 		public Type type;
 	}
-	public class IntegerStrategy:NormalStrategy
+	public class IntegerStrategy:MapStrategy
 	{
 		public override int GetHashCode()
 		{
@@ -3478,8 +3491,13 @@ namespace Meta
 			bool consumed;
 			if(index+characters.Length<text.Length && text.Substring(index,characters.Length)==characters)
 			{
+
 				consumed=true;
-				index+=characters.Length;
+				foreach(char c in characters)
+				{
+					Consume(c);
+				}
+//				index+=characters.Length;
 			}
 			else
 			{
@@ -3487,6 +3505,20 @@ namespace Meta
 			}
 			return consumed;
 		}
+//		private bool TryConsume(string characters)
+//		{
+//			bool consumed;
+//			if(index+characters.Length<text.Length && text.Substring(index,characters.Length)==characters)
+//			{
+//				consumed=true;
+//				index+=characters.Length;
+//			}
+//			else
+//			{
+//				consumed=false;
+//			}
+//			return consumed;
+//		}
 		private string Rest
 		{
 			get
@@ -3494,11 +3526,34 @@ namespace Meta
 				return text.Substring(index);
 			}
 		}
+		private void Consume(string characters)
+		{
+			foreach(char character in characters)
+			{
+
+				Consume(character);
+			}
+		}
+		private void Consume(char character)
+		{
+//			if(character==unixNewLine)
+//			{
+//				line++;
+//			}
+			if(!TryConsume(character))
+			{
+				throw new ApplicationException("Unexpected token "+text[index]+" ,expected "+character);
+			}
+		}
 		private bool TryConsume(char character)
 		{
 			bool consumed;
 			if(index<text.Length && text[index]==character)
 			{
+				if(character==unixNewLine)
+				{
+					line++;
+				}
 				index++;
 				consumed=true;
 			}
@@ -3527,20 +3582,7 @@ namespace Meta
 		{
 			return Look(0);
 		}
-		private void Consume(string characters)
-		{
-			foreach(char character in characters)
-			{
-				Consume(character);
-			}
-		}
-		private void Consume(char character)
-		{
-			if(!TryConsume(character))
-			{
-				throw new ApplicationException("Unexpected token "+text[index]+" ,expected "+character);
-			}
-		}
+
 		public const char indentationChar='\t';
 		private int indentationCount=-1;
 		public const char unixNewLine='\n';
@@ -3626,11 +3668,13 @@ namespace Meta
 			}
 			return expression;
 		}
+		private int line=1;
 		private int Line
 		{
 			get
 			{
-				return text.Substring(0,index).Split('\n').Length;
+				return line;
+//				return text.Substring(0,index).Split('\n').Length;
 			}
 		}
 		private int Column

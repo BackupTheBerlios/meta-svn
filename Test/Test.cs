@@ -33,8 +33,11 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-//			FileSystem.singleton["basicTest"].Call(new NormalMap());
-//			MethodInfo[] methods=typeof(Integer).GetMethods();
+//			FileSystem.singleton["basicTest"].Call(Map.Empty,Map.Empty);
+//			FileSystem.singleton["libraryTest"].Call(Map.Empty,Map.Empty);
+
+
+			//			MethodInfo[] methods=typeof(Integer).GetMethods();
 			ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Directory.GetParent(Process.LibraryPath).FullName,"Test"));
 //			FileSystem.singleton["editor"].Call(Map.Empty,Map.Empty);
 		}
