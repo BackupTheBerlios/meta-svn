@@ -1656,6 +1656,7 @@ namespace Meta
 			}
 			return text;
 		}
+		// TODO: remove, use the parser stuff, maybe put everything into Parser anyway, Unparse/Serialize
 		private const string leftBracket="[";
 		private const string rightBracket="]";
 		private const string newLine="\n";
@@ -2328,6 +2329,7 @@ namespace Meta
 		public StrategyMap map;
 		public virtual MapStrategy Clone()
 		{
+//			throw new ApplicationException("not implemented");
 			return null;
 		}
 		public virtual Map CloneMap() // TODO: move into Map??
@@ -2432,6 +2434,98 @@ namespace Meta
 			map.strategy.map=map;
 			map.InitFromStrategy(this);
 			map.strategy[key]=val;
+		}
+//		protected void Panic(Map key,Map val)
+//		{
+//			map.strategy=new HybridDictionaryStrategy();
+//			map.strategy.map=map;
+//			map.InitFromStrategy(this);
+//			map.strategy[key]=val;
+//		}
+	}
+	// maybe use a namespace for all the strategies, but doesnt make all that much sense either, maybe put them all
+	// into Map, or NormalMap, or StrategyMap
+	public class Clone:NormalStrategy
+	{
+		private NormalStrategy original;
+		public Clone(NormalStrategy original)
+		{
+			this.original=original;
+		}
+		public override ArrayList Array
+		{
+			get
+			{
+				return original.Array;
+			}
+		}
+		public override bool ContainsKey(Map key)
+		{
+			return original.ContainsKey (key);
+		}
+		public override int Count
+		{
+			get
+			{
+				return original.Count;
+			}
+		}
+		public override bool Equals(object obj)
+		{
+			return original.Equals(obj);
+		}
+		public override int GetHashCode()
+		{
+			return original.GetHashCode();
+		}
+		public override Integer GetInteger()
+		{
+			return original.GetInteger();
+		}
+		public override string GetString()
+		{
+			return original.GetString();
+		}
+		public override bool IsInteger
+		{
+			get
+			{
+				return original.IsInteger;
+			}
+		}
+		public override bool IsString
+		{
+			get
+			{
+				return original.IsString;
+			}
+		}
+
+
+
+
+
+
+
+
+
+		public override ArrayList Keys
+		{
+			get
+			{
+				return original.Keys;
+			}
+		}
+		public override Map this[Map key]
+		{
+			get
+			{
+				return original[key];
+			}
+			set
+			{
+				Panic(key,value);
+			}
 		}
 	}
 	public class StringStrategy:NormalStrategy
@@ -2554,6 +2648,11 @@ namespace Meta
 		public HybridDictionaryStrategy():this(2)
 		{
 		}
+		public override MapStrategy Clone()
+		{
+			return new Clone(this);
+		}
+
 		public HybridDictionaryStrategy(int Count)
 		{
 			this.keys=new ArrayList(Count);

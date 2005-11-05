@@ -39,6 +39,7 @@ file=
 			writer.Write
 				arg.text
 			writer.Close*
+
 html=
 	tags=
 		create=
@@ -57,6 +58,10 @@ html=
 				|
 					[arg]=create arg
 			array=
+				"html"
+				"head"
+				"title"
+				"body"
 				"h1"
 				"h2"
 				"h3"
@@ -64,6 +69,10 @@ html=
 				"h5"
 				"h6"
 				"p"
+				"br"
+				"pre"
+				"b"
+				"i"
 				"table"
 				"tr"
 				"td"
@@ -80,20 +89,22 @@ html=
 	test=
 		|
 			tags=tags*
-			text=map.join
-				tags.h1 "fuck the system"
-				tags.p "I'm not sure, but i dont really like this government stuff"
-				tags.p "how about you?"
-				table
-					=
-						"answer"
-						"points"
-					=
-						"hate them"
-						"1"
-					=
-						"like em"
-						"109234"
+			text=tags.html map.join
+				tags.head tags.title "Meta rocks!"
+				tags.body map.join
+					tags.h1 "fuck the system"
+					tags.p "I'm not sure, but i dont really like this government stuff"
+					tags.p "how about you?"
+					table
+						=
+							"answer"
+							"points"
+						=
+							"hate them"
+							"1"
+						=
+							"like em"
+							"109234"
 			display text
 	display=
 		|

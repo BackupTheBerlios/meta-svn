@@ -36,7 +36,7 @@ namespace Test
 //			FileSystem.singleton["basicTest"].Call(new NormalMap());
 //			MethodInfo[] methods=typeof(Integer).GetMethods();
 			ExecuteTests test=new ExecuteTests(typeof(Tests),Path.Combine(Directory.GetParent(Process.LibraryPath).FullName,"Test"));
-//			FileSystem.singleton["editor"].Call(Map.Empty);
+//			FileSystem.singleton["editor"].Call(Map.Empty,Map.Empty);
 		}
 	}
 	public class Tests 
