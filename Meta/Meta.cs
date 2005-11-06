@@ -4221,16 +4221,34 @@ namespace Meta
 	}
 	public class Gac:Map
 	{
-		public override Map this[Map key]
+//		private Hashtable assemblies=new Hashtable();
+//		private bool LoadAssembly(string assemblyName)
+//		{
+//			Map key=new NormalMap(assemblyName);
+//			bool loaded;
+//			if(!assemblies.ContainsKey(key))
+//			{
+//				Assembly assembly=Assembly.LoadWithPartialName(assemblyName);
+//				assemblies[key]=assembly;
+//				loaded=assembly!=null;
+//			}
+//			else
+//			{
+//				loaded=true;
+//			}
+//			return loaded;
+//		}
+		private Map cache=new NormalMap();
+		private bool LoadAssembly(string assemblyName)
 		{
-			get
+			Map key=new NormalMap(assemblyName);
+			bool loaded;
+			if(!cache.ContainsKey(key))
 			{
-				Map val;
-				try
+				Assembly assembly=Assembly.LoadWithPartialName(assemblyName);
+				if(assembly!=null)
 				{
-					Assembly assembly=Assembly.LoadWithPartialName(key.GetString());
-					val=new NormalMap();
-					ArrayList assemblyNamespaces=new ArrayList();
+					Map val=new NormalMap();
 					foreach(Type type in assembly.GetExportedTypes())
 					{
 						if(type.DeclaringType==null)
@@ -4242,10 +4260,68 @@ namespace Meta
 					{
 						Process.loadedAssemblies.Add(assembly.Location);
 					}
+					cache[key]=val;
+					loaded=true;
+				}
+				else
+				{
+					loaded=false;
+				}
+			}
+			else
+			{
+				loaded=true;
+			}
+			return loaded;
+		}
+		public override Map this[Map key]
+		{
+			get
+			{
+				Map val;
+				try
+				{
+					if(key.IsString)
+					{
+						if(!cache.ContainsKey(key))
+						{
+							if(LoadAssembly(key.GetString()))
+							{
+								val=cache[key];
+							}
+							else
+							{
+								val=null;
+							}
+						}
+						else
+						{
+							// combine with above
+							val=cache[key];
+						}
+					}
 					else
 					{
-						int asdf=0;
+						val=null;
 					}
+//					Assembly assembly=Assembly.LoadWithPartialName(key.GetString());
+//					val=new NormalMap();
+//					ArrayList assemblyNamespaces=new ArrayList();
+//					foreach(Type type in assembly.GetExportedTypes())
+//					{
+//						if(type.DeclaringType==null)
+//						{
+//							val[type.Name]=new TypeMap(type);
+//						}
+//					}
+//					if(!Process.loadedAssemblies.Contains(assembly.Location))
+//					{
+//						Process.loadedAssemblies.Add(assembly.Location);
+//					}
+//					else
+//					{
+//						int asdf=0;
+//					}
 				}
 				catch
 				{
@@ -4253,11 +4329,42 @@ namespace Meta
 				}
 				return val;
 			}
+//			get
+//			{
+//				Map val;
+//				try
+//				{
+//					Assembly assembly=Assembly.LoadWithPartialName(key.GetString());
+//					val=new NormalMap();
+//					ArrayList assemblyNamespaces=new ArrayList();
+//					foreach(Type type in assembly.GetExportedTypes())
+//					{
+//						if(type.DeclaringType==null)
+//						{
+//							val[type.Name]=new TypeMap(type);
+//						}
+//					}
+//					if(!Process.loadedAssemblies.Contains(assembly.Location))
+//					{
+//						Process.loadedAssemblies.Add(assembly.Location);
+//					}
+//					else
+//					{
+//						int asdf=0;
+//					}
+//				}
+//				catch
+//				{
+//					val=null;
+//				}
+//				return val;
+//			}
 			set
 			{
 				throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
 			}
 		}
+
 		public override ArrayList Keys
 		{
 			get
@@ -4281,6 +4388,21 @@ namespace Meta
 				return cache.Count;
 			}
 		}
+
+		protected override bool ContainsKeyImplementation(Map key)
+		{
+			bool containsKey;
+			if(key.IsString)
+			{
+				containsKey=LoadAssembly(key.GetString());
+			}
+			else
+			{
+				containsKey=false;
+			}
+			return containsKey;
+		}
+
 		public override ArrayList Array
 		{
 			get
@@ -4289,7 +4411,7 @@ namespace Meta
 			}
 		}
 		protected Map cachedAssemblyInfo=new NormalMap();
-		protected Map cache=new NormalMap();
+//		protected Map cache=new NormalMap();
 		static Gac()
 		{
 			Gac gac=new Gac();
