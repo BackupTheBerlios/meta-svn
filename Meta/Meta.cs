@@ -752,6 +752,13 @@ namespace Meta
 	// TODO: rename remove
 	public class Interpreter
 	{
+		public static void While(Map arg)
+		{
+			while(arg["condition"].Call(Map.Empty,Process.Current.Caller).GetBoolean())
+			{
+				arg["function"].Call(Map.Empty,Process.Current.Caller);
+			}
+		}
 		public static Map Apply(Map arg)
 		{
 			// TODO: ensure "function" is callable, maybe?

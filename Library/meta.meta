@@ -1,4 +1,4 @@
-|html.test*
+|sdl.test*
 license='"
 	Meta is a programming language.
 	Copyright (C) 2004 Christian Staudenmeyer "christianstaudenmeyer@web.de"
@@ -39,7 +39,23 @@ file=
 			writer.Write
 				arg.text
 			writer.Close*
-
+sdl=
+	test=
+		|
+			current=SdlDotNet
+			Video.SetVideoModeWindow
+				400
+				300
+			quit=*
+			Events.Quit.add
+				=
+					|
+						parent.parent.parent.quit=1
+			library.map.while
+				condition=
+					|library.logic.not quit
+				function=
+					|Events.Poll*
 html=
 	tags=
 		create=
@@ -92,19 +108,19 @@ html=
 			text=tags.html map.join
 				tags.head tags.title "Meta rocks!"
 				tags.body map.join
-					tags.h1 "fuck the system"
-					tags.p "I'm not sure, but i dont really like this government stuff"
-					tags.p "how about you?"
+					tags.h1 "caption"
+					tags.p "paragraph"
+					tags.p "paragraph"
 					table
 						=
-							"answer"
-							"points"
+							"caption"
+							"caption"
 						=
-							"hate them"
-							"1"
+							"data"
+							"data"
 						=
-							"like em"
-							"109234"
+							"data"
+							"data"
 			display text
 	display=
 		|
@@ -423,6 +439,9 @@ testSubDir=
 			y="world"
 library=
 	map=
+		while=
+			|Meta.Interpreter.While
+				arg
 		apply=
 			|Meta.Interpreter.Apply
 				arg
@@ -909,4 +928,3 @@ editor=
 												arg
 												menu.[topKey].[arg]
 			current=form
-		form.ShowDialog*
