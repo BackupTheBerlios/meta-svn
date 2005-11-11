@@ -16,9 +16,7 @@
 
 using System;
 using System.IO;
-using System.Collections;
 //using System.Collections;
-//using System.Collections.Specialized;
 using System.CodeDom.Compiler;
 using System.Xml;
 using System.Runtime.InteropServices;
@@ -843,7 +841,7 @@ namespace Meta
 			Map result=new NormalMap();
 			foreach(Map current in collection)
 			{
-				foreach(DictionaryEntry entry in current)
+				foreach(KeyValuePair<Map,Map> entry in current)
 				{
 					result[(Map)entry.Key]=(Map)entry.Value;
 				}
@@ -851,7 +849,7 @@ namespace Meta
 			return result;
 		}
 	}
-	public abstract class Map: IEnumerable, ISerializeSpecial
+	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeSpecial
 	{
 		public bool IsParameter
 		{
@@ -1184,7 +1182,12 @@ namespace Meta
 		{
 			return Keys.Contains(key);
 		}
-		public virtual IEnumerator GetEnumerator()
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+
+        } 
+		public virtual IEnumerator<KeyValuePair<Map,Map>> GetEnumerator()
 		{
 			return new MapEnumerator(this);
 		}
@@ -1598,7 +1601,7 @@ namespace Meta
 		{
 			string text;
 			text=newLine;
-			foreach(DictionaryEntry entry in map)
+			foreach(KeyValuePair<Map,Map> entry in map)
 			{
 				text+=indentation + Key((Map)entry.Key,indentation)	+ assignment + Value((Map)entry.Value,indentation+'\t');
 				if(!text.EndsWith(newLine))
@@ -1902,20 +1905,30 @@ namespace Meta
         //private static Dictionary toDotNet=new Dictionary<();
         //private static Hashtable toMeta=new Hashtable();
 	}
-	public class MapEnumerator: IEnumerator
+	public class MapEnumerator: IEnumerator<KeyValuePair<Map,Map>>
 	{
 		private Map map; 
 		public MapEnumerator(Map map)
 		{
 			this.map=map;
 		}
-		public object Current
+        object System.Collections.IEnumerator.Current
+        {
+            get
+            {
+                return Current;
+            }
+        }
+		public KeyValuePair<Map,Map> Current
 		{
 			get
 			{
-				return new DictionaryEntry(map.Keys[index],map[(Map)map.Keys[index]]);
+				return new KeyValuePair<Map,Map>(map.Keys[index],map[(Map)map.Keys[index]]);
 			}
 		}
+        public void Dispose()
+        {
+        }
 		public bool MoveNext()
 		{
 			index++;
@@ -2040,7 +2053,7 @@ namespace Meta
 				rightNumberArgumentMethods.Sort(new ArgumentComparer());
 				foreach(MethodBase method in rightNumberArgumentMethods)
 				{
-					ArrayList arguments=new ArrayList();
+					List<object> arguments=new List<object>();
 					bool argumentsMatched=true;
 					ParameterInfo[] parameters=method.GetParameters();
 					for(int i=0;argumentsMatched && i<parameters.Length;i++)
@@ -2134,9 +2147,9 @@ namespace Meta
 			source+="private Map callable;";
 			source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
 			string metaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
-			ArrayList assemblyNames=new ArrayList(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
+			List<string> assemblyNames=new List<string>(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
 			assemblyNames.AddRange(Process.loadedAssemblies);
-			CompilerParameters compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray(typeof(string)));
+			CompilerParameters compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
 			CompilerResults compilerResults=compiler.CompileAssemblyFromSource(compilerParameters,source);
 			Type containerType=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
 			object container=containerType.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {code});
@@ -2153,16 +2166,16 @@ namespace Meta
 			this.name=name;
 			this.obj=obj;
 			this.type=type;
-			ArrayList methods;
+			List<MemberInfo> methods;
 			if(name==".ctor")
 			{
-				methods=new ArrayList(type.GetConstructors());
+				methods=new List<MemberInfo>(type.GetConstructors());
 			}
 			else
 			{
-				methods=new ArrayList(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+				methods=new List<MemberInfo>(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
 			}
-			overloadedMethods=(MethodBase[])methods.ToArray(typeof(MethodBase));
+			overloadedMethods=methods.ToArray();
 		}
 		public Method(string name,object obj,Type type)
 		{
@@ -2207,7 +2220,7 @@ namespace Meta
 		protected object obj;
 		protected Type type;
 
-		public MethodBase[] overloadedMethods;
+		public MemberInfo[] overloadedMethods;
 	}
 	public class TypeMap: DotNetContainer
 	{
@@ -3181,7 +3194,7 @@ namespace Meta
 				{
 					stringBuilder.Append(indent+"null\n");
 				}
-				else if(toSerialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
+				else if(!(toSerialize is KeyValuePair<Map,Map>) && toSerialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
 					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) 
 				{
 					stringBuilder.Append(indent+"\""+toSerialize.ToString()+"\""+"\n");
@@ -3219,9 +3232,9 @@ namespace Meta
 					{
 						((ISerializeSpecial)toSerialize).Serialize(indent,stringBuilder,level);
 					}
-					else if(toSerialize is IEnumerable)
+					else if(toSerialize is System.Collections.IEnumerable)
 					{
-						foreach(object entry in (IEnumerable)toSerialize)
+						foreach(object entry in (System.Collections.IEnumerable)toSerialize)
 						{
 							stringBuilder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
 							Serialize(entry,indent+indentationText,stringBuilder,level);
@@ -3868,7 +3881,7 @@ namespace Meta
 						break;
 					}
 				}
-				ArrayList lines=new ArrayList();
+				List<string> lines=new List<string>();
 				// TODO: make these constants
 				stringText=stringText.Replace("\r\n","\n");
 				string[] originalLines=stringText.Split('\n');
@@ -3884,7 +3897,7 @@ namespace Meta
 						lines.Add(originalLines[i].Remove(0,Math.Min(indentationCount+1,originalLines[i].Length-originalLines[i].TrimStart(indentationChar).Length)));
 					}
 				}
-				realText=string.Join("\n",(string[])lines.ToArray(typeof(string)));
+				realText=string.Join("\n",lines.ToArray());
 				Map literal=new NormalMap(realText);
 				@string=new NormalMap();
 				@string[CodeKeys.Literal]=literal;
@@ -3928,9 +3941,9 @@ namespace Meta
 		}
 		private bool LookExcept(char[] exceptions)
 		{
-			ArrayList list=new ArrayList(exceptions);
+			List<char> list=new List<char>(exceptions);
 			list.Add(endOfFileChar);
-			return Look().ToString().IndexOfAny((char[])list.ToArray(typeof(char)))==-1;
+			return Look().ToString().IndexOfAny(list.ToArray())==-1;
 		}
 		private Map LookupAnything()
 		{

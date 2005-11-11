@@ -1,1810 +1,1810 @@
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"1"
 	Value (NormalMap):
 		"ImpliedAutokey"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"unicodeText"
 	Value (NormalMap):
 		"äaba"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"persistantDeleteTest"
 	Value (NormalMap):
 		""
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"integerHashTest"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"2"
 			Value (NormalMap):
 				"correct hash content"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"hashTestData"
 			Value (NormalMap):
 				"2"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"hashTest"
 			Value (NormalMap):
 				"correct hash content"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"negativeInteger"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				""
 			Value (NormalMap):
 				"99"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"x"
 			Value (NormalMap):
 				"hello"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"integerIncrementTest"
 	Value (NormalMap):
 		"6"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"integerDecrementTest"
 	Value (NormalMap):
 		"4"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"persistenceTest"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"testLib"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"x"
 					Value (NormalMap):
 						"hello"
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"y"
 					Value (NormalMap):
 						"world"
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"subMap"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"a"
 							Value (NormalMap):
 								"b"
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"c"
 							Value (NormalMap):
 								"d"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"x"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"a"
 					Value (NormalMap):
 						"b"
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"x"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"x"
 							Value (NormalMap):
 								"hello"
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"y"
 							Value (NormalMap):
 								"world"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"literalEscapeTest"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"1"
 			Value (NormalMap):
 				"asdf"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"2"
 			Value (NormalMap):
 				"asdf"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"3"
 			Value (NormalMap):
 				"as"'df"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"4"
 			Value (NormalMap):
 				"as"''df"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"5"
 			Value (NormalMap):
 				"as"''''''''''''''''df"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"2"
 	Value (NormalMap):
 		"Autokey"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"commandLineArguments"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"1"
 			Value (NormalMap):
 				"first arg"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"2"
 			Value (NormalMap):
 				"second=arg"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"aMap"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"a"
 			Value (NormalMap):
 				"a"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"a"
 			Value (NormalMap):
 				"a"
 	Value (NormalMap):
 		"Object"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"normal symbol"
 	Value (NormalMap):
 		"NormalSymbol"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"lookupSymbol"
 	Value (NormalMap):
 		"LookupSymbol"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"long key symbol"
 	Value (NormalMap):
 		"LookupExtendedSymbol"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"lookedUpMap"
 	Value (NormalMap):
 		"Object"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"lookedUpNormalSymbol"
 	Value (NormalMap):
 		"NormalSymbol"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"lookedUpSymbol"
 	Value (NormalMap):
 		"LookupSymbol"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"lookedUpLongSymbol"
 	Value (NormalMap):
 		"LookupExtendedSymbol"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"object"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"a"
 			Value (NormalMap):
 				"c"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"autoSearch"
 			Value (NormalMap):
 				"changed"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"b"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"1"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"x"
 							Value (NormalMap):
 								"7"
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"z"
 							Value (NormalMap):
 								"1"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"SetA"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"function"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"program"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"1"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"key"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"parent"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"2"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"parent"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"3"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"a"
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"value"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"c"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"2"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"key"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"parent"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"2"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"parent"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"3"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"autoSearch"
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"value"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"changed"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"SetB"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"function"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"program"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"1"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"key"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"parent"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"2"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"parent"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"3"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"b"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"4"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"1"
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"value"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"select"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"1"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"literal"
 																	Value (NormalMap):
 																		"arg"
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"2"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"literal"
 																	Value (NormalMap):
 																		"value"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"2"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"key"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"current"
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"value"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"changed"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"x"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"a"
 					Value (NormalMap):
 						"b"
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"c"
 					Value (NormalMap):
 						"d"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"1"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"function"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"program"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"1"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"key"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"current"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"2"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"a"
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"value"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"b"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"a"
 	Value (NormalMap):
 		"default"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"b"
 	Value (NormalMap):
 		""
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"aSet"
 	Value (NormalMap):
 		""
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"bSet"
 	Value (NormalMap):
 		"changed"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"ReturnEverything"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"current"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"select"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"arg"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"everythingReturned"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"1"
 			Value (NormalMap):
 				"a"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"2"
 			Value (NormalMap):
 				"b"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"3"
 			Value (NormalMap):
 				"c"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"variableAsArgument"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"1"
 			Value (NormalMap):
 				"x"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"2"
 			Value (NormalMap):
 				"y"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"3"
 			Value (NormalMap):
 				"z"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"ReturnFunction"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"current"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"program"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"key"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"1"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"function"
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"value"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"literal"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"program"
 																			Value (NormalMap):
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"1"
 																					Value (NormalMap):
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"key"
 																							Value (NormalMap):
-																								Entry (DictionaryEntry)
+																								Entry (KeyValuePair`2)
 																									Key (NormalMap):
 																										"1"
 																									Value (NormalMap):
-																										Entry (DictionaryEntry)
+																										Entry (KeyValuePair`2)
 																											Key (NormalMap):
 																												"literal"
 																											Value (NormalMap):
 																												"current"
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"value"
 																							Value (NormalMap):
-																								Entry (DictionaryEntry)
+																								Entry (KeyValuePair`2)
 																									Key (NormalMap):
 																										"program"
 																									Value (NormalMap):
-																										Entry (DictionaryEntry)
+																										Entry (KeyValuePair`2)
 																											Key (NormalMap):
 																												"1"
 																											Value (NormalMap):
-																												Entry (DictionaryEntry)
+																												Entry (KeyValuePair`2)
 																													Key (NormalMap):
 																														"key"
 																													Value (NormalMap):
-																														Entry (DictionaryEntry)
+																														Entry (KeyValuePair`2)
 																															Key (NormalMap):
 																																"1"
 																															Value (NormalMap):
-																																Entry (DictionaryEntry)
+																																Entry (KeyValuePair`2)
 																																	Key (NormalMap):
 																																		"literal"
 																																	Value (NormalMap):
 																																		"1"
-																												Entry (DictionaryEntry)
+																												Entry (KeyValuePair`2)
 																													Key (NormalMap):
 																														"value"
 																													Value (NormalMap):
-																														Entry (DictionaryEntry)
+																														Entry (KeyValuePair`2)
 																															Key (NormalMap):
 																																"literal"
 																															Value (NormalMap):
 																																"1"
-																										Entry (DictionaryEntry)
+																										Entry (KeyValuePair`2)
 																											Key (NormalMap):
 																												"2"
 																											Value (NormalMap):
-																												Entry (DictionaryEntry)
+																												Entry (KeyValuePair`2)
 																													Key (NormalMap):
 																														"key"
 																													Value (NormalMap):
-																														Entry (DictionaryEntry)
+																														Entry (KeyValuePair`2)
 																															Key (NormalMap):
 																																"1"
 																															Value (NormalMap):
-																																Entry (DictionaryEntry)
+																																Entry (KeyValuePair`2)
 																																	Key (NormalMap):
 																																		"literal"
 																																	Value (NormalMap):
 																																		"2"
-																												Entry (DictionaryEntry)
+																												Entry (KeyValuePair`2)
 																													Key (NormalMap):
 																														"value"
 																													Value (NormalMap):
-																														Entry (DictionaryEntry)
+																														Entry (KeyValuePair`2)
 																															Key (NormalMap):
 																																"literal"
 																															Value (NormalMap):
 																																"2"
-																										Entry (DictionaryEntry)
+																										Entry (KeyValuePair`2)
 																											Key (NormalMap):
 																												"3"
 																											Value (NormalMap):
-																												Entry (DictionaryEntry)
+																												Entry (KeyValuePair`2)
 																													Key (NormalMap):
 																														"key"
 																													Value (NormalMap):
-																														Entry (DictionaryEntry)
+																														Entry (KeyValuePair`2)
 																															Key (NormalMap):
 																																"1"
 																															Value (NormalMap):
-																																Entry (DictionaryEntry)
+																																Entry (KeyValuePair`2)
 																																	Key (NormalMap):
 																																		"literal"
 																																	Value (NormalMap):
 																																		"3"
-																												Entry (DictionaryEntry)
+																												Entry (KeyValuePair`2)
 																													Key (NormalMap):
 																														"value"
 																													Value (NormalMap):
-																														Entry (DictionaryEntry)
+																														Entry (KeyValuePair`2)
 																															Key (NormalMap):
 																																"literal"
 																															Value (NormalMap):
 																																"3"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"SetCurrent"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"current"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"program"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"key"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"1"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"arg"
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"value"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"select"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"1"
 																			Value (NormalMap):
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"literal"
 																					Value (NormalMap):
 																						"arg"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"2"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"key"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"1"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"x"
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"value"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"select"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"1"
 																			Value (NormalMap):
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"literal"
 																					Value (NormalMap):
 																						"arg"
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"2"
 																			Value (NormalMap):
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"literal"
 																					Value (NormalMap):
 																						"symbol"
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"2"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"current"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"select"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"x"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"thisSet"
 	Value (NormalMap):
 		"haha"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"FirstLevel"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"1"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"call"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"callable"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"select"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"1"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"SecondLevel"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"argument"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"select"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"1"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"arg"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"SecondLevel"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"select"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"literal"
 									Value (NormalMap):
 										"arg"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"argTest"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"1"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"a"
 					Value (NormalMap):
 						"z"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"TestClass"
 	Value (TypeMap):
 		"testClasses.TestClass"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"nestedClassTest"
 	Value (NormalMap):
 		"5"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"testClass"
 	Value (ObjectMap):
 		"testClasses.TestClass"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"boolTest"
 	Value (NormalMap):
 		"1"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"MemberTest"
 	Value (TypeMap):
 		"testClasses.MemberTest"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"memberTest"
 	Value (ObjectMap):
 		"testClasses.MemberTest"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"classPropertyValue"
 	Value (NormalMap):
 		"b"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"instancePropertyValue"
 	Value (NormalMap):
 		"b"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"interceptedSymbol"
 	Value (NormalMap):
 		"/hello/"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"positionalNoConversion"
 	Value (ObjectMap):
 		"testClasses.PositionalNoConversion"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"positionalNoConversionConcatenated"
 	Value (NormalMap):
 		"rstmno"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"namedNoConversion"
 	Value (ObjectMap):
 		"testClasses.NamedNoConversion"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"namedNoConversionConcatenated"
 	Value (NormalMap):
 		"rnulltmnnull"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"indexerNoConversion"
 	Value (ObjectMap):
 		"testClasses.IndexerNoConversion"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"indexerNoConversionIndexed"
 	Value (NormalMap):
 		"abchihiunchangedYunchangedZabc"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"interceptedSymbolTwo"
 	Value (NormalMap):
 		"1"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"k"
 	Value (NormalMap):
 		"hello"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"xyz"
 	Value (NormalMap):
 		"w"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"literalFunction"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"literal"
 					Value (NormalMap):
 						"5"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"literalFunctionResult"
 	Value (NormalMap):
 		"5"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"someFunction"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"current"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"literal"
 											Value (NormalMap):
 												"simple function this"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"callFunction"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"select"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"literal"
 									Value (NormalMap):
 										"someFunction"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"callFunctionResult"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"current"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"literal"
 											Value (NormalMap):
 												"simple function this"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"delayedFunction"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"function"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"literal"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"program"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"1"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"key"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"1"
 																			Value (NormalMap):
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"literal"
 																					Value (NormalMap):
 																						"x"
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"value"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"y"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"delayedFunctionResult"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"x"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"literal"
 											Value (NormalMap):
 												"y"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"value"
 	Value (NormalMap):
 		"xyz"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"selectionFunction"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"select"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"literal"
 									Value (NormalMap):
 										"value"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"selectionFunctionResult"
 	Value (NormalMap):
 		"xyz"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"bigInteger"
 	Value (NormalMap):
 		"89383838383832839123497123047217340712340720347072304702340720347"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"upperLevel"
 	Value (NormalMap):
 		"changed"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"SetUpperLevel"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"parent"
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"2"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"parent"
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"3"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"upperLevel"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"select"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"arg"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"ChangeUpperLevel"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"1"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"call"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"callable"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"select"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"1"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"SetUpperLevel"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"argument"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"changed"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"6"
 	Value (NormalMap):
 		" "
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"staticEventChanged"
 	Value (NormalMap):
 		"1"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"ChangeStaticEvent"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"parent"
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"2"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"parent"
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"3"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"staticEventChanged"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"select"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"arg"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"staticEvent"
 	Value (Event):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"add"
 			Value (Method):
 				""
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"resultFromDelegate"
 	Value (NormalMap):
 		"resultFromDelegate"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"staticEventResult"
 	Value (ObjectMap):
 		"testClasses.TestClass"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"instanceEventChanged"
 	Value (NormalMap):
 		"1"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"instanceEvent"
 	Value (Event):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"add"
 			Value (Method):
 				""
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"instanceEventResult"
 	Value (NormalMap):
 		"5"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"one"
 	Value (NormalMap):
 		"1"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"two"
 	Value (NormalMap):
 		"2"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"firstIf"
 	Value (NormalMap):
 		"then"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"secondIf"
 	Value (NormalMap):
 		"unchanged"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"firstIfCondition"
 	Value (NormalMap):
 		"1"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"firstIfBranches"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"1"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"function"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"literal"
 							Value (NormalMap):
 								"then"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				""
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"function"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"literal"
 							Value (NormalMap):
 								"else"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"bigNumber"
 	Value (NormalMap):
 		"50020202029029233344"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"secondSwitch"
 	Value (NormalMap):
 		"three"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"secondSwitchCases"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"1"
 			Value (NormalMap):
 				"one"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"2"
 			Value (NormalMap):
 				"two"
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"3"
 			Value (NormalMap):
 				"three"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"emptyMap"
 	Value (NormalMap):
 		""
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"emptyFunction"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"x"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"literal"
 											Value (NormalMap):
 												"hello"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"emptyFunctionResult"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"x"
 			Value (NormalMap):
 				"hello"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"font"
 	Value (ObjectMap):
 		"[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"decimalTest"
 	Value (NormalMap):
 		"5"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"fractionTest"
 	Value (NormalMap):
 		"40"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"stringTest"
 	Value (NormalMap):
 		"helloh"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"helloh"
 	Value (NormalMap):
 		"hi"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"stringStrategyHashTest"
 	Value (NormalMap):
 		"hi"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"x"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"aLongText"
 			Value (NormalMap):
@@ -1812,766 +1812,766 @@ Entry (DictionaryEntry)
 hello world!
 hello!
 "
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"arrayList"
 	Value (ObjectMap):
 		"System.Collections.ArrayList"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"10"
 	Value (NormalMap):
 		""
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"arrayListResult"
 	Value (NormalMap):
 		"hello"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"textBox"
 	Value (ObjectMap):
 		"System.Windows.Forms.TextBox, Text: 
 Alle meine Entchen,
 schwimmen auf dem S..."
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"lines"
 	Value (ObjectMap):
 		"System.String[]"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"alleMeineText"
 	Value (NormalMap):
 		"Alle meine Entchen,"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"tabText"
 	Value (NormalMap):
 		"			hello"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"escapedText"
 	Value (NormalMap):
 		"'#'n'''t"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"whileCounter"
 	Value (NormalMap):
 		"10"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"loop"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"whileDecision"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"call"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"callable"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"select"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"1"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"library"
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"2"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"logic"
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"3"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"not"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"argument"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"call"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"callable"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"select"
 																			Value (NormalMap):
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"1"
 																					Value (NormalMap):
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"literal"
 																							Value (NormalMap):
 																								"library"
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"2"
 																					Value (NormalMap):
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"literal"
 																							Value (NormalMap):
 																								"map"
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"3"
 																					Value (NormalMap):
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"literal"
 																							Value (NormalMap):
 																								"equal"
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"argument"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"program"
 																			Value (NormalMap):
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"1"
 																					Value (NormalMap):
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"key"
 																							Value (NormalMap):
-																								Entry (DictionaryEntry)
+																								Entry (KeyValuePair`2)
 																									Key (NormalMap):
 																										"1"
 																									Value (NormalMap):
-																										Entry (DictionaryEntry)
+																										Entry (KeyValuePair`2)
 																											Key (NormalMap):
 																												"literal"
 																											Value (NormalMap):
 																												"1"
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"value"
 																							Value (NormalMap):
-																								Entry (DictionaryEntry)
+																								Entry (KeyValuePair`2)
 																									Key (NormalMap):
 																										"select"
 																									Value (NormalMap):
-																										Entry (DictionaryEntry)
+																										Entry (KeyValuePair`2)
 																											Key (NormalMap):
 																												"1"
 																											Value (NormalMap):
-																												Entry (DictionaryEntry)
+																												Entry (KeyValuePair`2)
 																													Key (NormalMap):
 																														"literal"
 																													Value (NormalMap):
 																														"arg"
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"2"
 																					Value (NormalMap):
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"key"
 																							Value (NormalMap):
-																								Entry (DictionaryEntry)
+																								Entry (KeyValuePair`2)
 																									Key (NormalMap):
 																										"1"
 																									Value (NormalMap):
-																										Entry (DictionaryEntry)
+																										Entry (KeyValuePair`2)
 																											Key (NormalMap):
 																												"literal"
 																											Value (NormalMap):
 																												"2"
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"value"
 																							Value (NormalMap):
-																								Entry (DictionaryEntry)
+																								Entry (KeyValuePair`2)
 																									Key (NormalMap):
 																										"literal"
 																									Value (NormalMap):
 																										"10"
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"2"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"whileBranches"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"program"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"key"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"1"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"1"
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"value"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"program"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"1"
 																			Value (NormalMap):
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"key"
 																					Value (NormalMap):
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"1"
 																							Value (NormalMap):
-																								Entry (DictionaryEntry)
+																								Entry (KeyValuePair`2)
 																									Key (NormalMap):
 																										"literal"
 																									Value (NormalMap):
 																										"function"
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"value"
 																					Value (NormalMap):
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"literal"
 																							Value (NormalMap):
-																								Entry (DictionaryEntry)
+																								Entry (KeyValuePair`2)
 																									Key (NormalMap):
 																										"call"
 																									Value (NormalMap):
-																										Entry (DictionaryEntry)
+																										Entry (KeyValuePair`2)
 																											Key (NormalMap):
 																												"callable"
 																											Value (NormalMap):
-																												Entry (DictionaryEntry)
+																												Entry (KeyValuePair`2)
 																													Key (NormalMap):
 																														"select"
 																													Value (NormalMap):
-																														Entry (DictionaryEntry)
+																														Entry (KeyValuePair`2)
 																															Key (NormalMap):
 																																"1"
 																															Value (NormalMap):
-																																Entry (DictionaryEntry)
+																																Entry (KeyValuePair`2)
 																																	Key (NormalMap):
 																																		"literal"
 																																	Value (NormalMap):
 																																		"loop"
-																										Entry (DictionaryEntry)
+																										Entry (KeyValuePair`2)
 																											Key (NormalMap):
 																												"argument"
 																											Value (NormalMap):
-																												Entry (DictionaryEntry)
+																												Entry (KeyValuePair`2)
 																													Key (NormalMap):
 																														"call"
 																													Value (NormalMap):
-																														Entry (DictionaryEntry)
+																														Entry (KeyValuePair`2)
 																															Key (NormalMap):
 																																"callable"
 																															Value (NormalMap):
-																																Entry (DictionaryEntry)
+																																Entry (KeyValuePair`2)
 																																	Key (NormalMap):
 																																		"select"
 																																	Value (NormalMap):
-																																		Entry (DictionaryEntry)
+																																		Entry (KeyValuePair`2)
 																																			Key (NormalMap):
 																																				"1"
 																																			Value (NormalMap):
-																																				Entry (DictionaryEntry)
+																																				Entry (KeyValuePair`2)
 																																					Key (NormalMap):
 																																						"literal"
 																																					Value (NormalMap):
 																																						"library"
-																																		Entry (DictionaryEntry)
+																																		Entry (KeyValuePair`2)
 																																			Key (NormalMap):
 																																				"2"
 																																			Value (NormalMap):
-																																				Entry (DictionaryEntry)
+																																				Entry (KeyValuePair`2)
 																																					Key (NormalMap):
 																																						"literal"
 																																					Value (NormalMap):
 																																						"math"
-																																		Entry (DictionaryEntry)
+																																		Entry (KeyValuePair`2)
 																																			Key (NormalMap):
 																																				"3"
 																																			Value (NormalMap):
-																																				Entry (DictionaryEntry)
+																																				Entry (KeyValuePair`2)
 																																					Key (NormalMap):
 																																						"literal"
 																																					Value (NormalMap):
 																																						"add"
-																														Entry (DictionaryEntry)
+																														Entry (KeyValuePair`2)
 																															Key (NormalMap):
 																																"argument"
 																															Value (NormalMap):
-																																Entry (DictionaryEntry)
+																																Entry (KeyValuePair`2)
 																																	Key (NormalMap):
 																																		"program"
 																																	Value (NormalMap):
-																																		Entry (DictionaryEntry)
+																																		Entry (KeyValuePair`2)
 																																			Key (NormalMap):
 																																				"1"
 																																			Value (NormalMap):
-																																				Entry (DictionaryEntry)
+																																				Entry (KeyValuePair`2)
 																																					Key (NormalMap):
 																																						"key"
 																																					Value (NormalMap):
-																																						Entry (DictionaryEntry)
+																																						Entry (KeyValuePair`2)
 																																							Key (NormalMap):
 																																								"1"
 																																							Value (NormalMap):
-																																								Entry (DictionaryEntry)
+																																								Entry (KeyValuePair`2)
 																																									Key (NormalMap):
 																																										"literal"
 																																									Value (NormalMap):
 																																										"1"
-																																				Entry (DictionaryEntry)
+																																				Entry (KeyValuePair`2)
 																																					Key (NormalMap):
 																																						"value"
 																																					Value (NormalMap):
-																																						Entry (DictionaryEntry)
+																																						Entry (KeyValuePair`2)
 																																							Key (NormalMap):
 																																								"select"
 																																							Value (NormalMap):
-																																								Entry (DictionaryEntry)
+																																								Entry (KeyValuePair`2)
 																																									Key (NormalMap):
 																																										"1"
 																																									Value (NormalMap):
-																																										Entry (DictionaryEntry)
+																																										Entry (KeyValuePair`2)
 																																											Key (NormalMap):
 																																												"literal"
 																																											Value (NormalMap):
 																																												"arg"
-																																		Entry (DictionaryEntry)
+																																		Entry (KeyValuePair`2)
 																																			Key (NormalMap):
 																																				"2"
 																																			Value (NormalMap):
-																																				Entry (DictionaryEntry)
+																																				Entry (KeyValuePair`2)
 																																					Key (NormalMap):
 																																						"key"
 																																					Value (NormalMap):
-																																						Entry (DictionaryEntry)
+																																						Entry (KeyValuePair`2)
 																																							Key (NormalMap):
 																																								"1"
 																																							Value (NormalMap):
-																																								Entry (DictionaryEntry)
+																																								Entry (KeyValuePair`2)
 																																									Key (NormalMap):
 																																										"literal"
 																																									Value (NormalMap):
 																																										"2"
-																																				Entry (DictionaryEntry)
+																																				Entry (KeyValuePair`2)
 																																					Key (NormalMap):
 																																						"value"
 																																					Value (NormalMap):
-																																						Entry (DictionaryEntry)
+																																						Entry (KeyValuePair`2)
 																																							Key (NormalMap):
 																																								"literal"
 																																							Value (NormalMap):
 																																								"1"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"2"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"key"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"1"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"program"
 																			Value (NormalMap):
 																				""
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"value"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"program"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"1"
 																			Value (NormalMap):
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"key"
 																					Value (NormalMap):
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"1"
 																							Value (NormalMap):
-																								Entry (DictionaryEntry)
+																								Entry (KeyValuePair`2)
 																									Key (NormalMap):
 																										"literal"
 																									Value (NormalMap):
 																										"function"
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"value"
 																					Value (NormalMap):
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"literal"
 																							Value (NormalMap):
-																								Entry (DictionaryEntry)
+																								Entry (KeyValuePair`2)
 																									Key (NormalMap):
 																										"select"
 																									Value (NormalMap):
-																										Entry (DictionaryEntry)
+																										Entry (KeyValuePair`2)
 																											Key (NormalMap):
 																												"1"
 																											Value (NormalMap):
-																												Entry (DictionaryEntry)
+																												Entry (KeyValuePair`2)
 																													Key (NormalMap):
 																														"literal"
 																													Value (NormalMap):
 																														"arg"
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"3"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"current"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"call"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"callable"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"select"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"1"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"whileBranches"
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"2"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"select"
 																			Value (NormalMap):
-																				Entry (DictionaryEntry)
+																				Entry (KeyValuePair`2)
 																					Key (NormalMap):
 																						"1"
 																					Value (NormalMap):
-																						Entry (DictionaryEntry)
+																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								"literal"
 																							Value (NormalMap):
 																								"whileDecision"
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"argument"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"select"
 															Value (NormalMap):
-																Entry (DictionaryEntry)
+																Entry (KeyValuePair`2)
 																	Key (NormalMap):
 																		"1"
 																	Value (NormalMap):
-																		Entry (DictionaryEntry)
+																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
 																				"literal"
 																			Value (NormalMap):
 																				"arg"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"returnInMap"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"result"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"select"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"1"
 													Value (NormalMap):
-														Entry (DictionaryEntry)
+														Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
 																"arg"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"literalAsArgument"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"result"
 			Value (NormalMap):
 				"1"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"returnFunction"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"function"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"literal"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"functionResult"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"returnArg"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"select"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"literal"
 									Value (NormalMap):
 										"arg"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"myArg"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"program"
 					Value (NormalMap):
-						Entry (DictionaryEntry)
+						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"1"
 							Value (NormalMap):
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"key"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"1"
 											Value (NormalMap):
-												Entry (DictionaryEntry)
+												Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
 														"hello"
-								Entry (DictionaryEntry)
+								Entry (KeyValuePair`2)
 									Key (NormalMap):
 										"value"
 									Value (NormalMap):
-										Entry (DictionaryEntry)
+										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"literal"
 											Value (NormalMap):
 												"world"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"funcReturnTest"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"hello"
 			Value (NormalMap):
 				"world"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"documentedFunction"
 	Value (NormalMap):
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"doc"
 			Value (NormalMap):
 				"This function returns #hello ."
-		Entry (DictionaryEntry)
+		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"function"
 			Value (NormalMap):
-				Entry (DictionaryEntry)
+				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"literal"
 					Value (NormalMap):
 						"hello"
-Entry (DictionaryEntry)
+Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"docFunctionResult"
 	Value (NormalMap):
