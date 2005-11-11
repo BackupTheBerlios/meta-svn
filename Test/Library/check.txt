@@ -1,5 +1,94 @@
 Entry (DictionaryEntry)
 	Key (NormalMap):
+		"while"
+	Value (NormalMap):
+		Entry (DictionaryEntry)
+			Key (NormalMap):
+				"function"
+			Value (NormalMap):
+				Entry (DictionaryEntry)
+					Key (NormalMap):
+						"call"
+					Value (NormalMap):
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								"callable"
+							Value (NormalMap):
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										"select"
+									Value (NormalMap):
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												"1"
+											Value (NormalMap):
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														"literal"
+													Value (NormalMap):
+														"Meta"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												"2"
+											Value (NormalMap):
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														"literal"
+													Value (NormalMap):
+														"Interpreter"
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												"3"
+											Value (NormalMap):
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														"literal"
+													Value (NormalMap):
+														"While"
+						Entry (DictionaryEntry)
+							Key (NormalMap):
+								"argument"
+							Value (NormalMap):
+								Entry (DictionaryEntry)
+									Key (NormalMap):
+										"program"
+									Value (NormalMap):
+										Entry (DictionaryEntry)
+											Key (NormalMap):
+												"1"
+											Value (NormalMap):
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														"key"
+													Value (NormalMap):
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																"1"
+															Value (NormalMap):
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		"literal"
+																	Value (NormalMap):
+																		"1"
+												Entry (DictionaryEntry)
+													Key (NormalMap):
+														"value"
+													Value (NormalMap):
+														Entry (DictionaryEntry)
+															Key (NormalMap):
+																"select"
+															Value (NormalMap):
+																Entry (DictionaryEntry)
+																	Key (NormalMap):
+																		"1"
+																	Value (NormalMap):
+																		Entry (DictionaryEntry)
+																			Key (NormalMap):
+																				"literal"
+																			Value (NormalMap):
+																				"arg"
+Entry (DictionaryEntry)
+	Key (NormalMap):
 		"apply"
 	Value (NormalMap):
 		Entry (DictionaryEntry)

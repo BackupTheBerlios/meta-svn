@@ -30,6 +30,7 @@ using System.Globalization;
 using Meta.TestingFramework;
 using System.Text.RegularExpressions;
 using System.Net;
+using System.Collections.Generic;
 
 namespace Meta
 {
@@ -61,10 +62,6 @@ namespace Meta
 		public static readonly Map Get="get";
 		public static readonly Map Set="set";
 	}
-//	public class NumberKeys
-//	{
-//		public static readonly Map EmptyMap=new NormalMap();
-//	}
 
 
 	public class MetaException:ApplicationException
@@ -289,30 +286,6 @@ namespace Meta
 			}
 			return val;
 		}
-//		public class Call
-//		{
-//		}
-//		public class Program
-//		{
-//		}
-//		public class Literal
-//		{
-//		}
-//		public class Select
-//		{
-//		}
-//		public class Statement
-//		{
-//		}
-//		public class Lookup
-//		{
-//		}
-//		public class Key
-//		{
-//		}
-//		public class Value
-//		{
-//		}
 		public Map Caller
 		{
 			get
@@ -341,16 +314,6 @@ namespace Meta
 			callers.RemoveAt(callers.Count-1);
 			return result;
 		}
-//		public Map Call(Map code,Map context)
-//		{
-//			Map function=Evaluate(code[CodeKeys.Callable],context);
-//			Map argument=Evaluate(code[CodeKeys.Argument],context);
-//			callers.Add(context);
-////			Arg.Parent=Caller;
-//			Map result=function.Call(argument);
-//			callers.RemoveAt(callers.Count-1);
-//			return result;
-//		}
 		public Map Program(Map code,Map context)
 		{
 			Map local=new NormalMap();
@@ -393,27 +356,6 @@ namespace Meta
 				Statement((Map)code[i],ref local);
 			}
 		}
-//		private void Program(Map code,Map context,ref Map local)
-//		{
-//			local.Parent=context;
-//			for(int i=0;i<code.Array.Count && i>=0;i++)
-//			{
-//				if(Reversed)
-//				{
-//					if(!ResumeAfterReverse((Map)code.Array[i]))
-//					{
-//						// ugly hack
-//						i-=2;
-//						continue;
-//					}
-//					else
-//					{
-//						reversed=false;
-//					}
-//				}
-//				Statement((Map)code.Array[i],ref local);
-//			}
-//		}
 		public class Change
 		{
 			private Map map;
@@ -2663,7 +2605,7 @@ namespace Meta
 	public class HybridDictionaryStrategy:MapStrategy
 	{
 		ArrayList keys;
-		private HybridDictionary dictionary;
+		private Dictionary<Map,Map> dictionary;
 
 		public HybridDictionaryStrategy():this(2)
 		{
@@ -2676,7 +2618,7 @@ namespace Meta
 		public HybridDictionaryStrategy(int Count)
 		{
 			this.keys=new ArrayList(Count);
-			this.dictionary=new HybridDictionary(Count);
+			this.dictionary=new Dictionary<Map,Map>(Count);
 		}
 		public override ArrayList Array
 		{
@@ -2721,7 +2663,7 @@ namespace Meta
 		}
 		public override bool ContainsKey(Map key) 
 		{
-			return dictionary.Contains(key);
+			return dictionary.ContainsKey(key);
 		}
 	}
 	public class Event:Map
