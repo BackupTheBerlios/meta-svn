@@ -17,7 +17,8 @@
 using System;
 using System.IO;
 using System.Collections;
-using System.Collections.Specialized;
+//using System.Collections;
+//using System.Collections.Specialized;
 using System.CodeDom.Compiler;
 using System.Xml;
 using System.Runtime.InteropServices;
@@ -245,7 +246,7 @@ namespace Meta
 				return (Process)processes[Thread.CurrentThread];
 			}
 		}
-		private static Hashtable processes=new Hashtable();
+		private static Dictionary<Thread,Process> processes=new Dictionary<Thread,Process>();
 		private bool reversed=false;
 
 		public BreakPoint BreakPoint
@@ -302,7 +303,7 @@ namespace Meta
 				return caller;
 			}
 		}
-		public ArrayList callers=new ArrayList();
+		public List<Map> callers=new List<Map>();
 		// maybe rename context to current
 		public Map Call(Map code,Map context)
 		{
@@ -430,7 +431,7 @@ namespace Meta
 				selected[lastKey]=val;
 			}
 		}
-		public ArrayList recognitions=new ArrayList();
+        //public ArrayList recognitions=new ArrayList();
 		public Map Literal(Map code,Map context)
 		{
 			return code;
@@ -543,7 +544,7 @@ namespace Meta
 			}
 		}
 		// should this be static?
-		public static ArrayList loadedAssemblies=new ArrayList();
+		public static List<string> loadedAssemblies=new List<string>();
 	}
 //	public abstract class SingleKey:MapStrategy
 //	{
@@ -836,7 +837,8 @@ namespace Meta
 		{
 			return MergeCollection(arkvlToMerge);
 		}
-		public static Map MergeCollection(ICollection collection)
+        // get rid of this
+		public static Map MergeCollection(ICollection<Map> collection)
 		{
 			Map result=new NormalMap();
 			foreach(Map current in collection)
@@ -1112,11 +1114,11 @@ namespace Meta
 				return Keys.Count;
 			}
 		}
-		public virtual ArrayList Array
+		public virtual List<Map> Array
 		{ 
 			get
 			{
-				ArrayList array=new ArrayList();
+				List<Map> array=new List<Map>();
 				foreach(Map key in this.Keys) // TODO: need to sort the keys, by integer?? or require that keys are already sorted
 				{
 					if(key.IsInteger)
@@ -1141,7 +1143,7 @@ namespace Meta
 			return result;
 		}
 
-		public abstract ArrayList Keys
+		public abstract List<Map> Keys
 		{
 			get;
 		}
@@ -1301,7 +1303,7 @@ namespace Meta
 				return strategy.Count;
 			}
 		}
-		public override ArrayList Array
+		public override List<Map> Array
 		{
 			get
 			{
@@ -1350,7 +1352,7 @@ namespace Meta
 				}
 			}
 		}
-		public override ArrayList Keys
+		public override List<Map> Keys
 		{
 			get
 			{
@@ -1421,14 +1423,14 @@ namespace Meta
 	// think about this a bit, should be a map maybe
 	public class RemoteStrategy:MapStrategy
 	{
-		public override ArrayList Array
+		public override List<Map> Array
 		{
 			get
 			{
 				throw new ApplicationException("not implemented.");
 			}
 		}
-		public override ArrayList Keys
+		public override List<Map> Keys
 		{
 			get
 			{
@@ -1462,11 +1464,11 @@ namespace Meta
 	}
 	public class Web:Map
 	{
-		public override ArrayList Keys
+		public override List<Map> Keys
 		{
 			get
 			{
-				return new ArrayList();
+				return new List<Map>();
 			}
 		}
 		public override Map this[Map key]
@@ -1806,7 +1808,8 @@ namespace Meta
 		{
 			return meta.IsInteger && meta.GetInteger()>=minValue && meta.GetInteger()<=maxValue;
 		}
-		public static Map ToMap(ArrayList list)
+        // is this even needed?
+		public static Map ToMap(List<Map> list)
 		{
 			Map map=new NormalMap();
 			int index=1;
@@ -1896,8 +1899,8 @@ namespace Meta
 			}
 			return meta;
 		}
-		private static Hashtable toDotNet=new Hashtable();
-		private static Hashtable toMeta=new Hashtable();
+        //private static Dictionary toDotNet=new Dictionary<();
+        //private static Hashtable toMeta=new Hashtable();
 	}
 	public class MapEnumerator: IEnumerator
 	{
@@ -1935,11 +1938,11 @@ namespace Meta
 		{
 			return new Method(this.name,this.obj,this.type);
 		}
-		public override ArrayList Keys
+		public override List<Map> Keys
 		{
 			get
 			{
-				return new ArrayList();
+				return new List<Map>();
 			}
 		}
 		public override Map this[Map key]
@@ -1954,9 +1957,9 @@ namespace Meta
 			}
 		}
 		// TODO: properly support sorting of multiple argument methods
-		public class ArgumentComparer: IComparer
+		public class ArgumentComparer: IComparer<MethodBase>
 		{
-			public int Compare(object x, object y)
+			public int Compare(MethodBase x, MethodBase y)
 			{
 				int result;
 				MethodBase first=(MethodBase)x;
@@ -1982,7 +1985,7 @@ namespace Meta
 
 			if(type.IsSubclassOf(typeof(MetaLibrary)))
 			{
-				ArrayList oneArgumentMethods=new ArrayList();
+				List<MethodBase> oneArgumentMethods=new List<MethodBase>();
 				foreach(MethodBase method in overloadedMethods)
 				{
 					if(method.GetParameters().Length==1)
@@ -2019,7 +2022,7 @@ namespace Meta
 			}
 			if(!isExecuted)
 			{
-				ArrayList rightNumberArgumentMethods=new ArrayList();
+				List<MethodBase> rightNumberArgumentMethods=new List<MethodBase>();
 				foreach(MethodBase method in overloadedMethods)
 				{
 					if(argument.Array.Count==method.GetParameters().Length)
@@ -2309,11 +2312,11 @@ namespace Meta
 			return clone;
 		}
 
-		public virtual ArrayList Array
+		public virtual List<Map> Array
 		{
 			get
 			{
-				ArrayList array=new ArrayList();
+				List<Map> array=new List<Map>();
 				for(int i=1;this.ContainsKey(i);i++)
 				{
 					array.Add(this[i]);
@@ -2321,7 +2324,7 @@ namespace Meta
 				return array;
 			}
 		}
-		public abstract ArrayList Keys
+		public abstract List<Map> Keys
 		{
 			get;
 		}
@@ -2410,7 +2413,7 @@ namespace Meta
 		{
 			this.original=original;
 		}
-		public override ArrayList Array
+		public override List<Map> Array
 		{
 			get
 			{
@@ -2471,7 +2474,7 @@ namespace Meta
 
 
 
-		public override ArrayList Keys
+		public override List<Map> Keys
 		{
 			get
 			{
@@ -2528,11 +2531,11 @@ namespace Meta
 			}
 			return isEqual;
 		}
-		public override ArrayList Array
+		public override List<Map> Array
 		{
 			get
 			{
-				ArrayList list=new ArrayList();
+				List<Map> list=new List<Map>();
 				foreach(char iChar in text)
 				{
 					list.Add(new NormalMap(new Integer(iChar)));
@@ -2540,11 +2543,12 @@ namespace Meta
 				return list;
 			}
 		}
-		public override ArrayList Keys
+        // we could use some sort of apply function here??
+		public override List<Map> Keys
 		{
 			get
 			{
-				ArrayList keys=new ArrayList();
+				List<Map> keys=new List<Map>();
 				for(int i=1;i<=text.Length;i++)
 				{ 
 					keys.Add(new NormalMap((Integer)i));			
@@ -2604,7 +2608,8 @@ namespace Meta
 	}
 	public class HybridDictionaryStrategy:MapStrategy
 	{
-		ArrayList keys;
+        // get rid of this completely, use keys from dictionary
+		List<Map> keys;
 		private Dictionary<Map,Map> dictionary;
 
 		public HybridDictionaryStrategy():this(2)
@@ -2617,14 +2622,14 @@ namespace Meta
 
 		public HybridDictionaryStrategy(int Count)
 		{
-			this.keys=new ArrayList(Count);
+			this.keys=new List<Map>(Count);
 			this.dictionary=new Dictionary<Map,Map>(Count);
 		}
-		public override ArrayList Array
+		public override List<Map> Array
 		{
 			get
 			{
-				ArrayList list=new ArrayList();
+				List<Map> list=new List<Map>();
 				for(Integer iInteger=new Integer(1);ContainsKey(new NormalMap(iInteger));iInteger+=1)
 				{
 					list.Add(this[new NormalMap(iInteger)]);
@@ -2632,7 +2637,7 @@ namespace Meta
 				return list;
 			}
 		}
-		public override ArrayList Keys
+		public override List<Map> Keys
 		{
 			get
 			{
@@ -2707,11 +2712,11 @@ namespace Meta
 		{
 			return new Event(eventInfo,obj,type);
 		}
-		public override ArrayList Keys
+		public override List<Map> Keys
 		{
 			get
 			{
-				ArrayList keys=new ArrayList();
+				List<Map> keys=new List<Map>();
 				if(eventInfo.GetAddMethod()!=null)
 				{
 					keys.Add(DotNetKeys.Add);
@@ -2756,12 +2761,12 @@ namespace Meta
 		{
 			return new Property(property,obj,type);
 		}
-		public override ArrayList Keys
+		public override List<Map> Keys
 		{
 			get
 			{
 
-				ArrayList keys=new ArrayList();
+				List<Map> keys=new List<Map>();
 				if(property.GetGetMethod()!=null)
 				{
 					keys.Add(DotNetKeys.Get);
@@ -2808,11 +2813,11 @@ namespace Meta
 		{
 			ExecuteTests.Serialize(obj!=null?this.obj:this.type,indentation,stringBuilder,level);
 		}
-		public override ArrayList Array
+		public override List<Map> Array
 		{
 			get
 			{
-				ArrayList array=new ArrayList();
+				List<Map> array=new List<Map>();
 				foreach(Map key in Keys)
 				{
 					if(key.IsInteger)
@@ -2836,11 +2841,11 @@ namespace Meta
 			}
 			return false;
 		}
-		public override ArrayList Keys
+		public override List<Map> Keys
 		{
 			get
 			{
-				ArrayList keys=new ArrayList();
+				List<Map> keys=new List<Map>();
 				foreach(MemberInfo member in this.type.GetMembers(bindingFlags))
 				{
 					keys.Add(new NormalMap(member.Name));
@@ -3024,11 +3029,11 @@ namespace Meta
 			return isEqual;
 		}
 
-		public override ArrayList Array
+		public override List<Map> Array
 		{
 			get
 			{
-				return new ArrayList();
+				return new List<Map>();
 			}
 		}
 		public IntegerStrategy(Integer number)
@@ -3039,11 +3044,11 @@ namespace Meta
 		{
 			return new IntegerStrategy(number);
 		}
-		public override ArrayList Keys
+		public override List<Map> Keys
 		{
 			get
 			{
-				ArrayList keys=new ArrayList();
+				List<Map> keys=new List<Map>();
 				if(number!=0)
 				{
 					keys.Add(Map.Empty);
@@ -3183,7 +3188,7 @@ namespace Meta
 				}
 				else
 				{
-					ArrayList members=new ArrayList();
+					List<MemberInfo> members=new List<MemberInfo>();
 					members.AddRange(toSerialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
 					members.AddRange(toSerialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
 
@@ -3225,9 +3230,9 @@ namespace Meta
 				}
 			}
 		}
-		class MemberInfoComparer:IComparer
+		class MemberInfoComparer:IComparer<MemberInfo>
 		{
-			public int Compare(object first,object second)
+			public int Compare(MemberInfo first,MemberInfo second)
 			{
 				if(first==null || second==null || ((MemberInfo)first).Name==null || ((MemberInfo)second).Name==null)
 				{
@@ -3343,10 +3348,10 @@ namespace Meta
 	}
 	public class Extent
 	{
-		public static ArrayList GetExtents(string fileName,int firstLine,int lastLine)
+		public static List<Extent> GetExtents(string fileName,int firstLine,int lastLine)
 		{
-			ArrayList result=new ArrayList();
-			foreach(DictionaryEntry entry in Extents)
+			List<Extent> result=new List<Extent>();
+			foreach(KeyValuePair<Extent,Extent> entry in Extents)
 			{
 				Extent extent=(Extent)entry.Value;
 				if(extent.Start.Line>=firstLine && extent.End.Line<=lastLine)
@@ -3356,14 +3361,14 @@ namespace Meta
 			}
 			return result;
 		}
-		public static Hashtable Extents
+		public static Dictionary<Extent,Extent> Extents
 		{
 			get
 			{
 				return extents;
 			}
 		}
-		private static Hashtable extents=new Hashtable();
+		private static Dictionary<Extent,Extent> extents=new Dictionary<Extent,Extent>();
 		public override bool Equals(object obj)
 		{	
 			bool isEqual=false;
@@ -4138,7 +4143,7 @@ namespace Meta
 			// this is a little unlogical
 			this.Parent=Gac.singleton;
 		}
-		public override ArrayList Keys
+		public override List<Map> Keys
 		{
 			get
 			{
@@ -4314,11 +4319,11 @@ namespace Meta
 			}
 		}
 
-		public override ArrayList Keys
+		public override List<Map> Keys
 		{
 			get
 			{
-				ArrayList assemblies=Fusion.Assemblies;
+				List<Map> assemblies=Fusion.Assemblies;
 				foreach(string dllPath in Directory.GetFiles(Process.LibraryPath,"*.dll"))
 				{
 					assemblies.Add(new NormalMap(Path.GetFileNameWithoutExtension(dllPath)));
@@ -4351,12 +4356,12 @@ namespace Meta
 			}
 			return containsKey;
 		}
-
-		public override ArrayList Array
+        // make this the default implementation or do not override here
+		public override List<Map> Array
 		{
 			get
 			{
-				return new ArrayList();
+				return new List<Map>();
 			}
 		}
 		protected Map cachedAssemblyInfo=new NormalMap();
@@ -4406,11 +4411,11 @@ namespace Meta
 		//	
 		public class Fusion
 		{
-			public static ArrayList Assemblies
+			public static List<Map> Assemblies
 			{
 				get
 				{
-					ArrayList assemblies=new ArrayList();
+					List<Map> assemblies=new List<Map>();
 					IAssemblyEnum assemblyEnum=CreateGACEnum();
 					IAssemblyName iname; 
 
