@@ -117,6 +117,15 @@ Entry (KeyValuePair`2)
 			Value (NormalMap):
 				Entry (KeyValuePair`2)
 					Key (NormalMap):
-						"numbers"
+						"map"
 					Value (NormalMap):
-						"1"
+						Entry (KeyValuePair`2)
+							Key (NormalMap):
+								"true"
+							Value (NormalMap):
+								"1"
+						Entry (KeyValuePair`2)
+							Key (NormalMap):
+								"false"
+							Value (NormalMap):
+								""

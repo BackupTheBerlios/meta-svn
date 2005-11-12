@@ -1776,7 +1776,7 @@ namespace Meta
 		{
 			object result=null;
 			bool isExecuted=false;
-            if (this.name == "op_Addition")
+            if (this.name == "Equals")
             {
             }
             // remove this

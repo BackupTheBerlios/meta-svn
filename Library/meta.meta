@@ -464,8 +464,23 @@ library=
 			|Meta.Interpreter.Merge
 				arg
 		equal=
-			|Meta.Interpreter.Equal
-				arg
+			|
+				result=library.map.sum
+					array=arg
+					function=
+						|
+							first=Meta.ObjectMap
+								arg.a.previous
+							current=
+								equality=library.logic.and
+									first.Equals
+										arg.b
+									arg.a.equality
+								previous=arg.b
+					start=
+						equality=1
+						previous=arg.[1]
+				current=result.equality
 		length=
 			|
 				map=Meta.ObjectMap
@@ -502,7 +517,7 @@ library=
 				[*]=1
 				[1]=*
 		and=
-			|sum
+			|library.map.sum
 				array=arg
 				function=
 					|library.logic.and.table.[arg]
@@ -672,9 +687,21 @@ libraryTest=
 					oere="i ke"
 					"oiq"
 				equal=
-					numbers=equal
-						1
-						1
+					map=
+						true=equal
+							=
+								x="hello"
+								y="world"
+							=
+								x="hello"
+								y="world"
+						false=equal
+							=
+								x="y"
+								y="z"
+							=
+								x="y"
+								y="a"
 			bitwiseTest=library.bitwise.or
 				20
 				["System.Windows.Forms"].Keys.Tab
