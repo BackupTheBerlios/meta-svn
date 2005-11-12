@@ -505,8 +505,28 @@ library=
 			|Meta.Interpreter.And
 				arg
 		or=
-			|Meta.Interpreter.Or
-				arg
+			|sum
+				array=arg
+				function=
+					|library.logic.or.table.[arg]
+				start=*
+			table=
+				[
+					a=1
+					b=*
+				]=1
+				[
+					a=*
+					b=1
+				]=1
+				[
+					a=*
+					b=*
+				]=*
+				[
+					a=1
+					b=1
+				]=1
 	math=
 		increment=
 			|

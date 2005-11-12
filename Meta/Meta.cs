@@ -3192,7 +3192,6 @@ namespace Meta
 			return (Extent)extents[extent];
 		}
 	}
-    // refactor
 	public class Parser
 	{
 		private string text;
@@ -3661,6 +3660,8 @@ namespace Meta
 			if(TryConsume(lookupStartChar))
 			{
 				lookupAnything=Expression();
+                // ugly hack for lookup of maps
+                while (TryConsume(indentationChar)) ;
 				Consume(lookupEndChar);
 			}
 			else
