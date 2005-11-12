@@ -566,77 +566,79 @@ libraryTest=
 			library.map
 			library.logic
 			library.math
-		booleanTest=
-			not=
-				true=not *
-				false=not 1
-			and=
-				true=and
+		test=
+			booleanTest=
+				not=
+					true=not *
+					false=not 1
+				and=
+					true=and
+						1
+						1
+						1
+						1
+					false=and
+						1
+						*
+						1
+						1
+				or=
+					true=or
+						1
+						1
+						1
+					false=or
+						*
+						*
+						*
+			numberTest=
+				add=add
+					100
+					1000
+				multiply=multiply
+					19
+					1023
+				greater=greater
+					4
 					1
-					1
-					1
-					1
-				false=and
-					1
-					*
-					1
-					1
-			or=
-				true=or
-					1
-					1
-					1
-				false=or
-					*
-					*
-					*
-		numberTest=
-			add=add
-				100
-				1000
-			multiply=multiply
-				19
-				1023
-			greater=greater
-				4
-				1
-			smaller=smaller
-				23
-				2
-		bitwiseTest=
-			or=library.bitwise.or
-				8
+				smaller=smaller
+					23
+					2
+			bitwiseTest=
+				or=library.bitwise.or
+					8
+					20
+			mapTest=
+				join=join
+					"abc, "
+					"die Katze lief im Schnee."
+				apply=
+					applyMethod=
+						|add
+							arg
+							1
+					current=library.map.apply
+						function=applyMethod
+						array=
+							1
+							2
+							3
+				contains=contains
+					map=
+						x="hello"
+					key="x"
+				keys=keys
+					jjqwv="aeäquq"
+					oere="i ke"
+					"oiq"
+				equal=
+					numbers=equal
+						1
+						1
+			bitwiseTest=library.bitwise.or
 				20
-		mapTest=
-			join=join
-				"abc, "
-				"die Katze lief im Schnee."
-			apply=
-				applyMethod=
-					|add
-						arg
-						1
-				current=library.map.apply
-					function=applyMethod
-					array=
-						1
-						2
-						3
-			contains=contains
-				map=
-					x="hello"
-				key="x"
-			keys=keys
-				jjqwv="aeäquq"
-				oere="i ke"
-				"oiq"
-			equal=
-				numbers=equal
-					1
-					1
-		bitwiseTest=library.bitwise.or
-			20
-			["System.Windows.Forms"].Keys.Tab
+				["System.Windows.Forms"].Keys.Tab
+		current=test
 editor=
 	|
 		current=library.map.merge
