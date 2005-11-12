@@ -1731,6 +1731,7 @@ namespace Meta
 		{
 			return new Method(this.name,this.obj,this.type);
 		}
+        // remove?
 		public override List<Map> Keys
 		{
 			get
@@ -1775,7 +1776,7 @@ namespace Meta
 		{
 			object result=null;
 			bool isExecuted=false;
-            if (this.name == "op_GreaterThan")
+            if (this.name == "op_Addition")
             {
             }
             // remove this

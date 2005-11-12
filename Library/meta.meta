@@ -488,9 +488,7 @@ library=
 							|arg.result
 						[*]=
 							|sumImplementation
-								index=math.add
-									arg.index
-									1
+								index=math.increment arg.index
 								result=arg.function
 									a=arg.result
 									b=arg.array.[arg.index]
@@ -510,12 +508,33 @@ library=
 			|Meta.Interpreter.Or
 				arg
 	math=
+		increment=
+			|
+				incremented=*
+				incremented.[*]=arg
+				current=incremented
 		add=
-			|Meta.Interpreter.Add
-				arg
+			|Meta.NormalMap
+				library.map.sum
+					array=arg
+					function=
+						|Meta.Integer.op_Addition
+							Meta.Integer
+								arg.a
+							Meta.Integer
+								arg.b
+					start=*
 		multiply=
-			|Meta.Interpreter.Multiply
-				arg
+			|Meta.NormalMap
+				sum
+					array=arg
+					function=
+						|Meta.Integer.op_Multiply
+							Meta.Integer
+								arg.a
+							Meta.Integer
+								arg.b
+					start=1
 		greater=
 			|Meta.Integer.op_GreaterThan
 				Meta.Integer
@@ -540,57 +559,6 @@ library=
 							Meta.Integer
 								arg.b
 					start=*
-map=
-	join=
-		|Meta.Interpreter.Join
-			arg
-	contains=
-		|
-			object=Meta.ObjectMap
-				arg.map
-			current=object.ContainsKey
-				arg.key
-	keys=
-		|
-			object=Meta.ObjectMap
-				arg
-			current=Meta.Transform.ToMap
-				object.Keys.get*
-	merge=
-		|Meta.Interpreter.Merge
-			arg
-	equal=
-		|Meta.Interpreter.Equal
-			arg
-logic=
-	not=
-		|table.[arg]
-		table=
-			[*]=1
-			[1]=*
-	and=
-		|Meta.Interpreter.And
-			arg
-	or=
-		|Meta.Interpreter.Or
-			arg
-math=
-	add=
-		|Meta.Interpreter.Add
-			arg
-	multiply=
-		|Meta.Interpreter.Multiply
-			arg
-	greater=
-		|Meta.Interpreter.Greater
-			arg
-	smaller=
-		|Meta.Interpreter.Smaller
-			arg
-bitwise=
-	or=
-		|Meta.Interpreter.BitwiseOr
-			arg
 libraryTest=
 	|
 		current=library.map.merge

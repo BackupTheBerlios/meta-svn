@@ -2511,16 +2511,7 @@ Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
-														"Interpreter"
-										Entry (KeyValuePair`2)
-											Key (NormalMap):
-												"3"
-											Value (NormalMap):
-												Entry (KeyValuePair`2)
-													Key (NormalMap):
-														"literal"
-													Value (NormalMap):
-														"Multiply"
+														"NormalMap"
 						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"argument"
@@ -2552,17 +2543,394 @@ Entry (KeyValuePair`2)
 													Value (NormalMap):
 														Entry (KeyValuePair`2)
 															Key (NormalMap):
-																"select"
+																"call"
 															Value (NormalMap):
 																Entry (KeyValuePair`2)
 																	Key (NormalMap):
-																		"1"
+																		"callable"
 																	Value (NormalMap):
 																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
-																				"literal"
+																				"select"
 																			Value (NormalMap):
-																				"arg"
+																				Entry (KeyValuePair`2)
+																					Key (NormalMap):
+																						"1"
+																					Value (NormalMap):
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"literal"
+																							Value (NormalMap):
+																								"sum"
+																Entry (KeyValuePair`2)
+																	Key (NormalMap):
+																		"argument"
+																	Value (NormalMap):
+																		Entry (KeyValuePair`2)
+																			Key (NormalMap):
+																				"program"
+																			Value (NormalMap):
+																				Entry (KeyValuePair`2)
+																					Key (NormalMap):
+																						"1"
+																					Value (NormalMap):
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"key"
+																							Value (NormalMap):
+																								Entry (KeyValuePair`2)
+																									Key (NormalMap):
+																										"1"
+																									Value (NormalMap):
+																										Entry (KeyValuePair`2)
+																											Key (NormalMap):
+																												"literal"
+																											Value (NormalMap):
+																												"array"
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"value"
+																							Value (NormalMap):
+																								Entry (KeyValuePair`2)
+																									Key (NormalMap):
+																										"select"
+																									Value (NormalMap):
+																										Entry (KeyValuePair`2)
+																											Key (NormalMap):
+																												"1"
+																											Value (NormalMap):
+																												Entry (KeyValuePair`2)
+																													Key (NormalMap):
+																														"literal"
+																													Value (NormalMap):
+																														"arg"
+																				Entry (KeyValuePair`2)
+																					Key (NormalMap):
+																						"2"
+																					Value (NormalMap):
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"key"
+																							Value (NormalMap):
+																								Entry (KeyValuePair`2)
+																									Key (NormalMap):
+																										"1"
+																									Value (NormalMap):
+																										Entry (KeyValuePair`2)
+																											Key (NormalMap):
+																												"literal"
+																											Value (NormalMap):
+																												"function"
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"value"
+																							Value (NormalMap):
+																								Entry (KeyValuePair`2)
+																									Key (NormalMap):
+																										"program"
+																									Value (NormalMap):
+																										Entry (KeyValuePair`2)
+																											Key (NormalMap):
+																												"1"
+																											Value (NormalMap):
+																												Entry (KeyValuePair`2)
+																													Key (NormalMap):
+																														"key"
+																													Value (NormalMap):
+																														Entry (KeyValuePair`2)
+																															Key (NormalMap):
+																																"1"
+																															Value (NormalMap):
+																																Entry (KeyValuePair`2)
+																																	Key (NormalMap):
+																																		"literal"
+																																	Value (NormalMap):
+																																		"function"
+																												Entry (KeyValuePair`2)
+																													Key (NormalMap):
+																														"value"
+																													Value (NormalMap):
+																														Entry (KeyValuePair`2)
+																															Key (NormalMap):
+																																"literal"
+																															Value (NormalMap):
+																																Entry (KeyValuePair`2)
+																																	Key (NormalMap):
+																																		"call"
+																																	Value (NormalMap):
+																																		Entry (KeyValuePair`2)
+																																			Key (NormalMap):
+																																				"callable"
+																																			Value (NormalMap):
+																																				Entry (KeyValuePair`2)
+																																					Key (NormalMap):
+																																						"select"
+																																					Value (NormalMap):
+																																						Entry (KeyValuePair`2)
+																																							Key (NormalMap):
+																																								"1"
+																																							Value (NormalMap):
+																																								Entry (KeyValuePair`2)
+																																									Key (NormalMap):
+																																										"literal"
+																																									Value (NormalMap):
+																																										"Meta"
+																																						Entry (KeyValuePair`2)
+																																							Key (NormalMap):
+																																								"2"
+																																							Value (NormalMap):
+																																								Entry (KeyValuePair`2)
+																																									Key (NormalMap):
+																																										"literal"
+																																									Value (NormalMap):
+																																										"Integer"
+																																						Entry (KeyValuePair`2)
+																																							Key (NormalMap):
+																																								"3"
+																																							Value (NormalMap):
+																																								Entry (KeyValuePair`2)
+																																									Key (NormalMap):
+																																										"literal"
+																																									Value (NormalMap):
+																																										"op_Multiply"
+																																		Entry (KeyValuePair`2)
+																																			Key (NormalMap):
+																																				"argument"
+																																			Value (NormalMap):
+																																				Entry (KeyValuePair`2)
+																																					Key (NormalMap):
+																																						"program"
+																																					Value (NormalMap):
+																																						Entry (KeyValuePair`2)
+																																							Key (NormalMap):
+																																								"1"
+																																							Value (NormalMap):
+																																								Entry (KeyValuePair`2)
+																																									Key (NormalMap):
+																																										"key"
+																																									Value (NormalMap):
+																																										Entry (KeyValuePair`2)
+																																											Key (NormalMap):
+																																												"1"
+																																											Value (NormalMap):
+																																												Entry (KeyValuePair`2)
+																																													Key (NormalMap):
+																																														"literal"
+																																													Value (NormalMap):
+																																														"1"
+																																								Entry (KeyValuePair`2)
+																																									Key (NormalMap):
+																																										"value"
+																																									Value (NormalMap):
+																																										Entry (KeyValuePair`2)
+																																											Key (NormalMap):
+																																												"call"
+																																											Value (NormalMap):
+																																												Entry (KeyValuePair`2)
+																																													Key (NormalMap):
+																																														"callable"
+																																													Value (NormalMap):
+																																														Entry (KeyValuePair`2)
+																																															Key (NormalMap):
+																																																"select"
+																																															Value (NormalMap):
+																																																Entry (KeyValuePair`2)
+																																																	Key (NormalMap):
+																																																		"1"
+																																																	Value (NormalMap):
+																																																		Entry (KeyValuePair`2)
+																																																			Key (NormalMap):
+																																																				"literal"
+																																																			Value (NormalMap):
+																																																				"Meta"
+																																																Entry (KeyValuePair`2)
+																																																	Key (NormalMap):
+																																																		"2"
+																																																	Value (NormalMap):
+																																																		Entry (KeyValuePair`2)
+																																																			Key (NormalMap):
+																																																				"literal"
+																																																			Value (NormalMap):
+																																																				"Integer"
+																																												Entry (KeyValuePair`2)
+																																													Key (NormalMap):
+																																														"argument"
+																																													Value (NormalMap):
+																																														Entry (KeyValuePair`2)
+																																															Key (NormalMap):
+																																																"program"
+																																															Value (NormalMap):
+																																																Entry (KeyValuePair`2)
+																																																	Key (NormalMap):
+																																																		"1"
+																																																	Value (NormalMap):
+																																																		Entry (KeyValuePair`2)
+																																																			Key (NormalMap):
+																																																				"key"
+																																																			Value (NormalMap):
+																																																				Entry (KeyValuePair`2)
+																																																					Key (NormalMap):
+																																																						"1"
+																																																					Value (NormalMap):
+																																																						Entry (KeyValuePair`2)
+																																																							Key (NormalMap):
+																																																								"literal"
+																																																							Value (NormalMap):
+																																																								"1"
+																																																		Entry (KeyValuePair`2)
+																																																			Key (NormalMap):
+																																																				"value"
+																																																			Value (NormalMap):
+																																																				Entry (KeyValuePair`2)
+																																																					Key (NormalMap):
+																																																						"select"
+																																																					Value (NormalMap):
+																																																						Entry (KeyValuePair`2)
+																																																							Key (NormalMap):
+																																																								"1"
+																																																							Value (NormalMap):
+																																																								Entry (KeyValuePair`2)
+																																																									Key (NormalMap):
+																																																										"literal"
+																																																									Value (NormalMap):
+																																																										"arg"
+																																																						Entry (KeyValuePair`2)
+																																																							Key (NormalMap):
+																																																								"2"
+																																																							Value (NormalMap):
+																																																								Entry (KeyValuePair`2)
+																																																									Key (NormalMap):
+																																																										"literal"
+																																																									Value (NormalMap):
+																																																										"a"
+																																						Entry (KeyValuePair`2)
+																																							Key (NormalMap):
+																																								"2"
+																																							Value (NormalMap):
+																																								Entry (KeyValuePair`2)
+																																									Key (NormalMap):
+																																										"key"
+																																									Value (NormalMap):
+																																										Entry (KeyValuePair`2)
+																																											Key (NormalMap):
+																																												"1"
+																																											Value (NormalMap):
+																																												Entry (KeyValuePair`2)
+																																													Key (NormalMap):
+																																														"literal"
+																																													Value (NormalMap):
+																																														"2"
+																																								Entry (KeyValuePair`2)
+																																									Key (NormalMap):
+																																										"value"
+																																									Value (NormalMap):
+																																										Entry (KeyValuePair`2)
+																																											Key (NormalMap):
+																																												"call"
+																																											Value (NormalMap):
+																																												Entry (KeyValuePair`2)
+																																													Key (NormalMap):
+																																														"callable"
+																																													Value (NormalMap):
+																																														Entry (KeyValuePair`2)
+																																															Key (NormalMap):
+																																																"select"
+																																															Value (NormalMap):
+																																																Entry (KeyValuePair`2)
+																																																	Key (NormalMap):
+																																																		"1"
+																																																	Value (NormalMap):
+																																																		Entry (KeyValuePair`2)
+																																																			Key (NormalMap):
+																																																				"literal"
+																																																			Value (NormalMap):
+																																																				"Meta"
+																																																Entry (KeyValuePair`2)
+																																																	Key (NormalMap):
+																																																		"2"
+																																																	Value (NormalMap):
+																																																		Entry (KeyValuePair`2)
+																																																			Key (NormalMap):
+																																																				"literal"
+																																																			Value (NormalMap):
+																																																				"Integer"
+																																												Entry (KeyValuePair`2)
+																																													Key (NormalMap):
+																																														"argument"
+																																													Value (NormalMap):
+																																														Entry (KeyValuePair`2)
+																																															Key (NormalMap):
+																																																"program"
+																																															Value (NormalMap):
+																																																Entry (KeyValuePair`2)
+																																																	Key (NormalMap):
+																																																		"1"
+																																																	Value (NormalMap):
+																																																		Entry (KeyValuePair`2)
+																																																			Key (NormalMap):
+																																																				"key"
+																																																			Value (NormalMap):
+																																																				Entry (KeyValuePair`2)
+																																																					Key (NormalMap):
+																																																						"1"
+																																																					Value (NormalMap):
+																																																						Entry (KeyValuePair`2)
+																																																							Key (NormalMap):
+																																																								"literal"
+																																																							Value (NormalMap):
+																																																								"1"
+																																																		Entry (KeyValuePair`2)
+																																																			Key (NormalMap):
+																																																				"value"
+																																																			Value (NormalMap):
+																																																				Entry (KeyValuePair`2)
+																																																					Key (NormalMap):
+																																																						"select"
+																																																					Value (NormalMap):
+																																																						Entry (KeyValuePair`2)
+																																																							Key (NormalMap):
+																																																								"1"
+																																																							Value (NormalMap):
+																																																								Entry (KeyValuePair`2)
+																																																									Key (NormalMap):
+																																																										"literal"
+																																																									Value (NormalMap):
+																																																										"arg"
+																																																						Entry (KeyValuePair`2)
+																																																							Key (NormalMap):
+																																																								"2"
+																																																							Value (NormalMap):
+																																																								Entry (KeyValuePair`2)
+																																																									Key (NormalMap):
+																																																										"literal"
+																																																									Value (NormalMap):
+																																																										"b"
+																				Entry (KeyValuePair`2)
+																					Key (NormalMap):
+																						"3"
+																					Value (NormalMap):
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"key"
+																							Value (NormalMap):
+																								Entry (KeyValuePair`2)
+																									Key (NormalMap):
+																										"1"
+																									Value (NormalMap):
+																										Entry (KeyValuePair`2)
+																											Key (NormalMap):
+																												"literal"
+																											Value (NormalMap):
+																												"start"
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"value"
+																							Value (NormalMap):
+																								Entry (KeyValuePair`2)
+																									Key (NormalMap):
+																										"literal"
+																									Value (NormalMap):
+																										"1"
 Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"greater"
