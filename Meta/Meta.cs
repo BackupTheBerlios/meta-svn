@@ -407,7 +407,6 @@ namespace Meta
 				{
 					object x=selected[key];
                     Throw.KeyDoesNotExist(key,code.Extent);
-                    //Throw.KeyDoesNotExist(key, ((Map)code[CodeKeys.Key].Array[i]).Extent);
                 }
 				selected=selection;
 				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
@@ -426,7 +425,7 @@ namespace Meta
 				}
 				else
 				{
-					oldValue=null;//new NormalMap("<null>");
+					oldValue=null;
 				}
 				CallBreak(oldValue);
 			}
@@ -443,7 +442,6 @@ namespace Meta
 				selected[lastKey]=val;
 			}
 		}
-        //public ArrayList recognitions=new ArrayList();
 		public Map Literal(Map code,Map context)
 		{
 			return code.Copy();
@@ -481,34 +479,12 @@ namespace Meta
             }
 			while(!selected.ContainsKey(key))
 			{
-                //if(selected.IsParameter)
-                //{
-                //    while(!selected.ContainsKey(key))
-                //    {
-                //        if(selected.Caller!=null)
-                //        {
-                //            selected=selected.Caller;
-                //        }
-                //        else
-                //        {
-                //            selected=selected.Parent;
-                //        }
-                //        if(selected==null)
-                //        {
-                //            Throw.KeyNotFound(key,key.Extent);
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                    selected = selected.FirstParent;
+                selected = selected.FirstParent;
 
-                    //selected = selected.Parent;
-                    if (selected == null)
-					{
-						Throw.KeyNotFound(key,code.Extent);
-					}
-                //}
+                if (selected == null)
+				{
+					Throw.KeyNotFound(key,code.Extent);
+				}
 			}
 			Map val=selected[key];
 			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[0]).Extent))
@@ -638,19 +614,6 @@ namespace Meta
 			}
 			return array;
 		}
-//		public static Map Apply(Map arg)
-//		{
-//			Arg.ContainsKey(arg,"function");
-//			Arg.ContainsKey(arg,"array");
-//			Map application=new NormalMap();
-//			int counter=1;
-//			foreach(Map element in arg["array"].Array)
-//			{
-//				application[counter]=arg["function"].Call(element);
-//				counter++;
-//			}
-//			return application;
-//		}
 		public static Map And(Map arg) 
 		{
 			Argument.BooleanArray(arg);
@@ -691,12 +654,6 @@ namespace Meta
 			}
 			return result;
 		}
-        //public static Map Merge(params Map[] toMerge)
-        //{
-        //    return MergeCollection(toMerge);
-        //}
-        // get rid of this
-
 	}
     [DebuggerVisualizer(typeof(Visualizer))]
     [Serializable]
@@ -706,17 +663,6 @@ namespace Meta
         {
             this[Array.Count+1] = map;
         }
-		//public bool IsParameter
-		//{
-		//    get
-		//    {
-		//        return isParameter;
-		//    }
-		//    set
-		//    {
-		//        isParameter=value;
-		//    }
-		//}
 		private bool isParameter=false;
 		public Map Caller
 		{
@@ -902,7 +848,6 @@ namespace Meta
 			set
 			{ 
 				parameter=value.Copy();
-				//parameter.IsParameter=true;
 			}
 		}
 		Map parameter=null;
@@ -920,7 +865,6 @@ namespace Meta
             }
         }
         private Map firstParent;
-        // get rid of this
 		public virtual Map Parent
 		{
 			get
@@ -989,7 +933,7 @@ namespace Meta
                     val.Parent = this;
                     Set(key, val);
                 }
-                // should throw exception
+                // what should happen when a .NET method returns null or void? for example
                 else
                 {
                 }
@@ -998,11 +942,7 @@ namespace Meta
         protected abstract Map Get(Map key);
         protected abstract void Set(Map key, Map val);
 
-        //public abstract Map this[Map key] 
-        //{
-        //    get;
-        //    set;
-        //}
+
 		public virtual Map Call(Map parameter,Map caller)
 		{
 			this.Parameter=parameter;
@@ -1139,7 +1079,6 @@ namespace Meta
 
 	public abstract class StrategyMap: Map
 	{
-		// TODO: no deep cloning necessary??
 		public void InitFromStrategy(MapStrategy clone) 
 		{
 			foreach(Map key in clone.Keys)
@@ -1187,54 +1126,8 @@ namespace Meta
         {
             return strategy[key];
         }
-        //public override Map this[Map key]
-        //{
-        //    //get
-        //    //{
-        //    //    Map val;
-        //    //    if (key.Equals(SpecialKeys.Parent))
-        //    //    {
-        //    //        val = Parent;
-        //    //    }
-        //    //    else if (key.Equals(SpecialKeys.Parameter))
-        //    //    {
-        //    //        val = Parameter;
-        //    //    }
-        //    //    else if (key.Equals(SpecialKeys.Current))
-        //    //    {
-        //    //        val = this;
-        //    //    }
-        //    //    else
-        //    //    {
-        //    //        val = strategy[key];
-        //    //    }
-        //    //    return val;
-        //    //}
-        //    set
-        //    {
-        //        if (value != null)
-        //        {
-        //            isHashCached = false;
-        //            if (key.Equals(SpecialKeys.Current))
-        //            {
-        //                this.strategy = ((NormalMap)value).strategy.Clone();
-        //                this.strategy.map = this;
-        //            }
-        //            else
-        //            {
-        //                Map val;
-        //                val = value.Copy();
-        //                val.Parent = this;
-        //                strategy[key] = val;
-        //            }
-        //            //Assigned(this,EventArgs.Empty);
-        //        }
-        //    }
-        //}
         protected override void Set(Map key, Map value)
         {
-            //if (val != null)
-            //{
             isHashCached = false;
             if (key.Equals(SpecialKeys.Current))
             {
@@ -1245,54 +1138,7 @@ namespace Meta
             {
                 strategy[key] = value;
             }
-                //Assigned(this,EventArgs.Empty);
-            //}
         }
-        //public override Map this[Map key] 
-        //{
-        //    get
-        //    {
-        //        Map val;
-        //        if(key.Equals(SpecialKeys.Parent))
-        //        {
-        //            val=Parent;
-        //        }
-        //        else if(key.Equals(SpecialKeys.Parameter))
-        //        {
-        //            val=Parameter;
-        //        }
-        //        else if(key.Equals(SpecialKeys.Current))
-        //        {
-        //            val=this;
-        //        }
-        //        else
-        //        {
-        //            val=strategy[key];
-        //        }
-        //        return val;
-        //    }
-        //    set
-        //    {
-        //        if(value!=null)
-        //        {
-        //            isHashCached=false;
-        //            if(key.Equals(SpecialKeys.Current))
-        //            {
-        //                this.strategy=((NormalMap)value).strategy.Clone();
-        //                this.strategy.map = this;
-        //            }
-        //            else
-        //            {
-        //                Map val;
-        //                val=value.Copy();
-        //                val.Parent=this;
-        //                strategy[key]=val;
-        //            }
-        //            //Assigned(this,EventArgs.Empty);
-        //        }
-        //    }
-        //}
-        //public event EventHandler<EventArgs> Assigned;
 		public override List<Map> Keys
 		{
 			get
@@ -1364,13 +1210,6 @@ namespace Meta
 	// think about this a bit, should be a map maybe
 	public class RemoteStrategy:MapStrategy
 	{
-        //public override List<Map> Array
-        //{
-        //    get
-        //    {
-        //        throw new ApplicationException("not implemented.");
-        //    }
-        //}
 		public override List<Map> Keys
 		{
 			get
@@ -1426,24 +1265,6 @@ namespace Meta
         {
 			throw new ApplicationException("Cannot set key in Web.");
         }
-        //public override Map this[Map key]
-        //{
-        //    get
-        //    {
-        //        // use the Argument checking stuff here too, or something similar
-        //        if(!key.IsString)
-        //        {
-        //            throw new ApplicationException("need a string here");
-        //        }
-        //        // maybe check the host name here
-        //        return new NormalMap(new RemoteStrategy(key.GetString()));
-        //    }
-        //    set
-        //    {
-        //        throw new ApplicationException("Cannot set key in Web.");
-        //    }
-        //}
-
 		public override Map Copy()
 		{
 			return this;
@@ -1913,17 +1734,6 @@ namespace Meta
 		{
 			throw new ApplicationException("Cannot set key in Method");
 		}
-		//public override Map this[Map key]
-		//{
-		//    get
-		//    {
-		//        return null;
-		//    }
-		//    set
-		//    {
-		//        throw new ApplicationException("Cannot set key in Method");
-		//    }
-		//}
 		// TODO: properly support sorting of multiple argument methods
 		public class ArgumentComparer: IComparer<MethodBase>
 		{
@@ -2104,9 +1914,7 @@ namespace Meta
 			source+="}";
 			source+="private Map callable;";
 			source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-            //string metaDllLocation = Assembly.GetAssembly(typeof(Map)).Location;
             List<string> assemblyNames = new List<string>();//new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
-            //List<string> assemblyNames = new List<string>(new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
             assemblyNames.AddRange(Process.loadedAssemblies);
 			CompilerParameters compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
 			CompilerResults compilerResults=compiler.CompileAssemblyFromSource(compilerParameters,source);
@@ -2260,9 +2068,9 @@ namespace Meta
 		}
 
 		public StrategyMap map;
+		// remove this if possible
 		public virtual MapStrategy Clone()
 		{
-//			throw new ApplicationException("not implemented");
 			return null;
 		}
 		public virtual Map Copy() // TODO: move into Map??
@@ -2562,11 +2370,6 @@ namespace Meta
 		}
 		public override MapStrategy Clone()
 		{
-            //CloneStrategy clone=new CloneStrategy(this);
-            //clone.map = this.map;
-            //this.map.strategy = clone;
-            ////this.map.strategy = new CloneStrategy(this);
-            ////this.map = null;
 			return new CloneStrategy(this);
 		}
 
@@ -2694,26 +2497,6 @@ namespace Meta
 		{
 			throw new ApplicationException("Cannot assign in event " + eventInfo.Name + ".");
 		}
-		//public override Map this[Map key]
-		//{
-		//    get
-		//    {
-		//        Map val;
-		//        if(key.Equals(DotNetKeys.Add))
-		//        {
-		//            val=new Method(eventInfo.GetAddMethod().Name,obj,type);
-		//        }
-		//        else
-		//        {
-		//            val=null;
-		//        }
-		//        return val;
-		//    }
-		//    set
-		//    {
-		//        throw new ApplicationException("Cannot assign in event "+eventInfo.Name+".");
-		//    }
-		//}
 	}
 	public class Property:Map
 	{
@@ -2922,112 +2705,6 @@ namespace Meta
 				throw new ApplicationException("Cannot set " + Meta.Serialize.Key(key) + ".");
 			}
 		}
-		//public override Map this[Map key] 
-		//{
-		//    get
-		//    {
-		//        Map val;
-		//        if(key.Equals(SpecialKeys.Parent))
-		//        {
-		//            val=Parent;
-		//        }
-		//        else if(key.IsString && type.GetMember(key.GetString(),bindingFlags).Length>0)
-		//        {
-		//            string text=key.GetString();
-		//            MemberInfo[] members=type.GetMember(text,bindingFlags);
-		//            if(members[0] is MethodBase)
-		//            {
-		//                val=new Method(text,obj,type);
-		//            }
-		//            else if(members[0] is FieldInfo)
-		//            {
-		//                val=Transform.ToMeta(type.GetField(text).GetValue(obj));
-		//            }
-		//            else if(members[0] is PropertyInfo)
-		//            {
-		//                val=new Property(type.GetProperty(text),this.obj,type);// TODO: set parent here, too
-		//            }
-		//            else if(members[0] is EventInfo)
-		//            {
-		//                val=new Event(((EventInfo)members[0]),obj,type);
-		//                val.Parent=this;
-		//            }
-		//            else if(members[0] is Type)
-		//            {
-		//                val=new TypeMap((Type)members[0]);
-		//            }
-		//            else
-		//            {
-		//                val=null;
-		//            }
-		//        }
-		//        else if(this.obj!=null && key.IsInteger && this.type.IsArray)
-		//        {
-		//            val=Transform.ToMeta(((Array)obj).GetValue(key.GetInteger().GetInt32()));
-		//        }
-		//        else
-		//        {
-		//            val=null;
-		//        }
-		//        return val;
-		//    }
-		//    set
-		//    {
-		//        if(key.IsString && type.GetMember(key.GetString(),bindingFlags).Length!=0)
-		//        {
-		//            string text=key.GetString();
-		//            MemberInfo member=type.GetMember(text,bindingFlags)[0];
-		//            if(member is FieldInfo)
-		//            {
-		//                if(member.Name=="floatValue")
-		//                {
-		//                    int asdf=0;
-		//                }
-		//                FieldInfo field=(FieldInfo)member;
-		//                bool isConverted;
-		//                object val=Transform.ToDotNet(value,field.FieldType,out isConverted);
-		//                if(isConverted)
-		//                {
-		//                    field.SetValue(obj,val);
-		//                }
-		//                else
-		//                {
-		//                    throw new ApplicationException("Field "+field.Name+" could not be assigned because the value cannot be converted.");
-		//                }
-		//            }
-		//            else if(member is PropertyInfo)
-		//            {
-		//                throw new ApplicationException("Cannot set property "+member.Name+" directly. Use its set method instead.");
-		//            }
-		//            else if(member is EventInfo)
-		//            {
-		//                throw new ApplicationException("Cannot set event "+member.Name+" directly. Use its add method instead.");
-		//            }
-		//            else if(member is MethodBase)
-		//            {
-		//                throw new ApplicationException("Cannot assign to method "+member.Name+".");
-		//            }					 
-		//            else
-		//            {
-		//                throw new ApplicationException("Could not assign "+text+" .");
-		//            }
-		//        }
-		//        else if(obj!=null && key.IsInteger && type.IsArray)
-		//        {
-		//            bool isConverted; 
-		//            object converted=Transform.ToDotNet(value,type.GetElementType(),out isConverted);
-		//            if(isConverted)
-		//            {
-		//                ((Array)obj).SetValue(converted,key.GetInteger().GetInt32());
-		//                return;
-		//            }
-		//        }
-		//        else
-		//        {
-		//            throw new ApplicationException("Cannot set "+Meta.Serialize.Key(key)+".");
-		//        }
-		//    }
-		//}
 		public string Serialize(string indent,string[] functions)
 		{
 			return indent;
@@ -4267,50 +3944,6 @@ namespace Meta
 		{
 			throw new ApplicationException("Cannot set key " + key.ToString() + " in library.");
 		}
-		//public override Map this[Map key]
-		//{
-		//    get
-		//    {
-		//        Map val;
-		//        try
-		//        {
-		//            if(key.IsString)
-		//            {
-		//                // refactor
-		//                if(!cache.ContainsKey(key))
-		//                {
-		//                    if(LoadAssembly(key.GetString()))
-		//                    {
-		//                        val=cache[key];
-		//                    }
-		//                    else
-		//                    {
-		//                        val=null;
-		//                    }
-		//                }
-		//                else
-		//                {
-		//                    // combine with above
-		//                    val=cache[key];
-		//                }
-		//            }
-		//            else
-		//            {
-		//                val=null;
-		//            }
-		//        }
-		//        catch
-		//        {
-		//            val=null;
-		//        }
-		//        return val;
-		//    }
-		//    set
-		//    {
-		//        throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
-		//    }
-		//}
-
 		public override List<Map> Keys
 		{
 			get
