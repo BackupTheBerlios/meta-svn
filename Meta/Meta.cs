@@ -53,7 +53,7 @@ namespace Meta
 	{
 		public static readonly Map Parent="parent";
 		// refactor
-		public static readonly Map Parameter="arg";
+		public static readonly Map Arg="arg";
 		public static readonly Map Current="current";
 	}
 	public class DotNetKeys
@@ -326,13 +326,17 @@ namespace Meta
 			for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
 			{
 				key=Expression((Map)code[CodeKeys.Key].Array[i],context,arg);
-				Map selection=selected[key];
-                if (key.Equals(new NormalMap("testSubDir")))
+				Map selection;
+
+                if (key.Equals(SpecialKeys.Parent))
                 {
+                    selection = selected.Parent;
                 }
-                if (key.Equals(new NormalMap("parent")))
-                {
-                } 
+				else
+				{
+					selection=selected[key];
+				}
+
                 if (selection == null)
 				{
 					object x=selected[key];
@@ -383,14 +387,14 @@ namespace Meta
 			{
 				Map key=Expression((Map)code.Array[i],context,arg);
 				Map selection;
-				//if (key.Equals(SpecialKeys.Parameter))
-				//{
-				//    selection = parameter;
-				//}
-				//else
-				//{
+				if (key.Equals(SpecialKeys.Parent))
+				{
+				    selection = selected.Parent;
+				}
+				else
+				{
 					selection = selected[key];
-				//}
+				}
 				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[i]).Extent))
 				{
 					CallBreak(selection);
@@ -408,10 +412,18 @@ namespace Meta
 		{
 			Map key=Expression((Map)code.Array[0],context,arg);
 			Map val;
-			if (key.Equals(SpecialKeys.Parameter))
+			if (key.Equals(SpecialKeys.Arg))
 			{
 				val = arg;
 			}
+            else if (key.Equals(SpecialKeys.Parent))
+            {
+                val = context.Parent;
+            }
+            else if (key.Equals(SpecialKeys.Current))
+            {
+                val = context;
+            }
 			else
 			{
 				Map selected = context;
@@ -559,6 +571,7 @@ namespace Meta
 		{
 			return GetIntegerDefault();
 		}
+		// refactor
 		public Integer GetIntegerDefault()
 		{
 			Integer number;
@@ -622,21 +635,6 @@ namespace Meta
 			}
 			return text;
 		}
-
-		//public Map Parameter
-		//{
-		//    get
-		//    {
-		//        return parameter;
-		//    }
-		//    set
-		//    { 
-		//        parameter=value.Copy();
-		//    }
-		//}
-		//Map parameter=null;
-
-
         public Map FirstParent
         {
             get
@@ -691,22 +689,18 @@ namespace Meta
             get
             {
                 Map val;
-                if (key.Equals(SpecialKeys.Parent))
-                {
-                    val = Parent;
-                }
-				//else if (key.Equals(SpecialKeys.Parameter))
+				//if (key.Equals(SpecialKeys.Parent))
 				//{
-				//    val = Parameter;
+				//    val = Parent;
 				//}
-                else if (key.Equals(SpecialKeys.Current))
-                {
-                    val = this;
-                }
-                else
-                {
+				//else if (key.Equals(SpecialKeys.Current))
+				//{
+				//    val = this;
+				//}
+				//else
+				//{
                     val = Get(key);
-                }
+				//}
                 return val;
             }
             set
@@ -864,11 +858,11 @@ namespace Meta
 
 	public abstract class StrategyMap: Map
 	{
-		public void InitFromStrategy(MapStrategy clone) 
+		public void InitFromStrategy(Strategy clone) 
 		{
 			foreach(Map key in clone.Keys)
 			{
-				this[key]=clone[key];
+				this[key]=clone.Get(key);
 			}
 		}
 		public override Integer GetInteger()
@@ -909,19 +903,20 @@ namespace Meta
 		}
         protected override Map Get(Map key)
         {
-            return strategy[key];
+            return strategy.Get(key);
         }
         protected override void Set(Map key, Map value)
         {
             isHashCached = false;
             if (key.Equals(SpecialKeys.Current))
             {
-                this.strategy = ((NormalMap)value).strategy.Clone();
+				// refactor
+                this.strategy = ((NormalMap)value).strategy.CopyImplementation();
                 this.strategy.map = this;
             }
             else
             {
-                strategy[key] = value;
+                strategy.Set(key,value);
             }
         }
 		public override List<Map> Keys
@@ -970,16 +965,16 @@ namespace Meta
 		}
 		private bool isHashCached=false;
 		private int hash;
-		public StrategyMap(MapStrategy strategy)
+		public StrategyMap(Strategy strategy)
 		{
 			this.strategy=strategy;
 			this.strategy.map=this;
 		}
-		public MapStrategy strategy;
+		public Strategy strategy;
 	}
 	public class NormalMap:StrategyMap
 	{
-		public NormalMap(MapStrategy strategy):base(strategy)
+		public NormalMap(Strategy strategy):base(strategy)
 		{
 		}
 		public NormalMap():this(new HybridDictionaryStrategy())
@@ -993,8 +988,12 @@ namespace Meta
 		}
 	}
 	// think about this a bit, should be a map maybe
-	public class RemoteStrategy:MapStrategy
+	public class RemoteStrategy:Strategy
 	{
+		public override Strategy CopyImplementation()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
 		public override List<Map> Keys
 		{
 			get
@@ -1002,24 +1001,21 @@ namespace Meta
 				return null;
 			}
 		}
-		public override Map this[Map key]
+		public override Map Get(Map key)
 		{
-			get
+			if(!key.IsString)
 			{
-				if(!key.IsString)
-				{
-					throw new ApplicationException("key is not a string");
-				}
-				WebClient webClient=new WebClient();
-				Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
-				Stream stream=webClient.OpenRead(fullPath.ToString());
-				StreamReader streamReader=new StreamReader(stream);
-				return Process.Current.Parse(streamReader);
+				throw new ApplicationException("key is not a string");
 			}
-			set
-			{
-				throw new ApplicationException("Cannot set key in remote map.");
-			}
+			WebClient webClient=new WebClient();
+			Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
+			Stream stream=webClient.OpenRead(fullPath.ToString());
+			StreamReader streamReader=new StreamReader(stream);
+			return Process.Current.Parse(streamReader);
+		}
+		public override void Set(Map key,Map val)
+		{
+			throw new ApplicationException("Cannot set key in remote map.");
 		}
 		private string address;
 		public RemoteStrategy(string address)
@@ -1819,14 +1815,14 @@ namespace Meta
 			return new ObjectMap(obj);
 		}
 	}
-	public abstract class MapStrategy
+	public abstract class Strategy
 	{
 		protected void Panic(Map key,Map val)
 		{
 			map.strategy=new HybridDictionaryStrategy();
 			map.strategy.map=map;
 			map.InitFromStrategy(this);
-			map.strategy[key]=val;
+			map.strategy.Set(key,val);
 		}
 
 		public virtual bool IsInteger
@@ -1854,28 +1850,13 @@ namespace Meta
 
 		public StrategyMap map;
 		// remove this if possible
-		public virtual MapStrategy Clone()
-		{
-			return null;
-		}
+		public abstract Strategy CopyImplementation();
 		public virtual Map Copy() // TODO: move into Map??
 		{
 			StrategyMap clone;
-			MapStrategy strategy=(MapStrategy)this.Clone();
-			if(strategy!=null)
-			{
-				clone=new NormalMap(strategy);
-                strategy.map = clone;
-			}
-			else
-			{
-				clone=new NormalMap();
-                strategy.map = clone;
-				foreach(Map key in Keys)
-				{
-					clone[key]=this[key];
-				}
-			}
+			Strategy strategy = (Strategy)this.CopyImplementation();
+			clone=new NormalMap(strategy);
+            strategy.map = clone;
 			return clone;
 		}
 
@@ -1886,7 +1867,7 @@ namespace Meta
 				List<Map> array=new List<Map>();
 				for(int i=1;this.ContainsKey(i);i++)
 				{
-					array.Add(this[i]);
+					array.Add(this.Get(i));
 				}
 				return array;
 			}
@@ -1902,11 +1883,13 @@ namespace Meta
 				return Keys.Count;
 			}
 		}
-		public abstract Map this[Map key] 
-		{
-			get;
-			set;
-		}
+		//public abstract Map this[Map key] 
+		//{
+		//    get;
+		//    set;
+		//}
+		public abstract void Set(Map key, Map val);
+		public abstract Map Get(Map key);
 
 		public virtual bool ContainsKey(Map key)
 		{
@@ -1919,7 +1902,7 @@ namespace Meta
 			{
 				unchecked
 				{
-					hash+=key.GetHashCode()*this[key].GetHashCode();
+					hash+=key.GetHashCode()*this.Get(key).GetHashCode();
 				}
 			}
 			return hash;
@@ -1931,11 +1914,11 @@ namespace Meta
 			{ 
 				isEqual=true;
 			}
-			else if(!(strategy is MapStrategy))
+			else if(!(strategy is Strategy))
 			{
 				isEqual=false;
 			}
-			else if(((MapStrategy)strategy).Count!=this.Count)
+			else if(((Strategy)strategy).Count!=this.Count)
 			{
 				isEqual=false;
 			}
@@ -1944,7 +1927,7 @@ namespace Meta
 				isEqual=true;
 				foreach(Map key in this.Keys) 
 				{
-					if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy)[key].Equals(this[key]))
+					if(!((Strategy)strategy).ContainsKey(key)||!((Strategy)strategy).Get(key).Equals(this.Get(key)))
 					{
 						isEqual=false;
 					}
@@ -1953,10 +1936,10 @@ namespace Meta
 			return isEqual;
 		}
 	}
-	public class CloneStrategy:MapStrategy
+	public class CloneStrategy:Strategy
 	{
-		private MapStrategy original;
-		public CloneStrategy(MapStrategy original)
+		private Strategy original;
+		public CloneStrategy(Strategy original)
 		{
 			this.original=original;
 		}
@@ -1978,7 +1961,7 @@ namespace Meta
 				return original.Count;
 			}
 		}
-		public override MapStrategy Clone()
+		public override Strategy CopyImplementation()
 		{
 			return new CloneStrategy(this.original);
 		}
@@ -2019,19 +2002,17 @@ namespace Meta
 				return original.Keys;
 			}
 		}
-		public override Map this[Map key]
+		public override Map  Get(Map key)
 		{
-			get
-			{
-				return original[key];
-			}
-			set
-			{
-				Panic(key,value);
-			}
+			return original.Get(key);
+		}
+		// refactor, should also panic when called
+		public override void Set(Map key, Map value)
+		{
+			Panic(key,value);
 		}
 	}
-	public class StringStrategy:MapStrategy
+	public class StringStrategy:Strategy
 	{
 		public override bool IsString
 		{
@@ -2046,7 +2027,7 @@ namespace Meta
 		}
 
 
-		public override MapStrategy Clone()
+		public override Strategy CopyImplementation()
 		{
 			return new StringStrategy(this.text);
 		}
@@ -2110,27 +2091,24 @@ namespace Meta
 				return text.Length;
 			}
 		}
-		public override Map this[Map key]
+		public override Map  Get(Map key)
 		{
-			get
+			if(key.IsInteger)
 			{
-				if(key.IsInteger)
+				int iInteger=key.GetInteger().GetInt32();
+				if(iInteger>0 && iInteger<=this.Count)
 				{
-					int iInteger=key.GetInteger().GetInt32();
-					if(iInteger>0 && iInteger<=this.Count)
-					{
-						return text[iInteger-1];
-					}
+					return text[iInteger-1];
 				}
-				return null;
 			}
-			set
-			{
-				map.strategy=new HybridDictionaryStrategy();
-				map.strategy.map=map;
-				map.InitFromStrategy(this);
-				map.strategy[key]=value;
-			}
+			return null;
+		}
+		public override void  Set(Map key, Map value)
+		{
+			map.strategy=new HybridDictionaryStrategy();
+			map.strategy.map=map;
+			map.InitFromStrategy(this);
+			map.strategy.Set(key,value);
 		}
 		public override bool ContainsKey(Map key) 
 		{
@@ -2144,7 +2122,7 @@ namespace Meta
 			}
 		}
 	}
-	public class HybridDictionaryStrategy:MapStrategy
+	public class HybridDictionaryStrategy:Strategy
 	{
         // get rid of this completely, use keys from dictionary
 		List<Map> keys;
@@ -2153,7 +2131,7 @@ namespace Meta
 		public HybridDictionaryStrategy():this(2)
 		{
 		}
-		public override MapStrategy Clone()
+		public override Strategy CopyImplementation()
 		{
 			return new CloneStrategy(this);
 		}
@@ -2170,7 +2148,7 @@ namespace Meta
 				List<Map> list=new List<Map>();
 				for(Integer iInteger=new Integer(1);ContainsKey(new NormalMap(iInteger));iInteger+=1)
 				{
-					list.Add(this[new NormalMap(iInteger)]);
+					list.Add(this.Get(new NormalMap(iInteger)));
 				}
 				return list;
 			}
@@ -2189,22 +2167,19 @@ namespace Meta
 				return dictionary.Count;
 			}
 		}
-		public override Map this[Map key] 
+		public override Map  Get(Map key)
 		{
-			get
+			Map val;
+            dictionary.TryGetValue(key,out val);
+            return val;
+		}
+		public override void Set(Map key,Map value)
+		{
+			if(!this.ContainsKey(key))
 			{
-				Map val;
-                dictionary.TryGetValue(key,out val);
-                return val;
+				keys.Add(key);
 			}
-			set
-			{
-				if(!this.ContainsKey(key))
-				{
-					keys.Add(key);
-				}
-				dictionary[key]=value;
-			}
+			dictionary[key]=value;
 		}
 		public override bool ContainsKey(Map key) 
 		{
@@ -2519,7 +2494,7 @@ namespace Meta
 		public object obj;
 		public Type type;
 	}
-	public class IntegerStrategy:MapStrategy
+	public class IntegerStrategy:Strategy
 	{
 		public override int GetHashCode()
 		{
@@ -2562,7 +2537,7 @@ namespace Meta
 		{
 			this.number=new Integer(number);
 		}
-		public override MapStrategy Clone()
+		public override Strategy CopyImplementation()
 		{
 			return new IntegerStrategy(number);
 		}
@@ -2578,39 +2553,37 @@ namespace Meta
 				return keys;
 			}
 		}
-		public override Map this[Map key]
+		// refactor
+		public override Map Get(Map key)
 		{
-			get
+			Map result;
+			if(key.Equals(Map.Empty))
 			{
-				Map result;
-				if(key.Equals(Map.Empty))
-				{
-					if(number==0)
-					{
-						result=null;
-					}
-					else
-					{
-						result=number-1;
-					}
-				}
-
-				else
+				if(number==0)
 				{
 					result=null;
 				}
-				return result;
-			}
-			set
-			{
-				if(key.Equals(Map.Empty))
-				{
-					Panic(key,value);
-				}
 				else
 				{
-					Panic(key,value);
+					result=number-1;
 				}
+			}
+
+			else
+			{
+				result=null;
+			}
+				return result;
+		}
+		public override void Set(Map key,Map value)
+		{
+			if(key.Equals(Map.Empty))
+			{
+				Panic(key,value);
+			}
+			else
+			{
+				Panic(key,value);
 			}
 		}
 	}
