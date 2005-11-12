@@ -23,6 +23,7 @@ using Meta;
 using System;
 using Meta.TestingFramework;
 using System.Threading;
+using Microsoft.VisualStudio.DebuggerVisualizers;
 
 
 namespace Test 
@@ -33,6 +34,13 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
+			Map x = new NormalMap();
+			x["hello"] = "world";
+			x["world"] = "hello";
+			//Visualizer.TestShowVisualizer(x);
+			//VisualizerDevelopmentHost host = new VisualizerDevelopmentHost(
+			//"hello", typeof(Visualizer));
+			//host.ShowVisualizer();
 //			FileSystem.singleton["basicTest"].Call(Map.Empty,Map.Empty);
 //			FileSystem.singleton["libraryTest"].Call(Map.Empty,Map.Empty);
 

@@ -855,9 +855,15 @@ namespace Meta
 		}
 	}
 
-
+	[DebuggerVisualizer(typeof(Visualizer))]
+	[Serializable]
 	public abstract class StrategyMap: Map
 	{
+		public override Map Call(Map arg, Map caller)
+		{
+			strategy.Panic();
+			return base.Call(arg, caller);
+		}
 		public void InitFromStrategy(Strategy clone) 
 		{
 			foreach(Map key in clone.Keys)
@@ -972,6 +978,8 @@ namespace Meta
 		}
 		public Strategy strategy;
 	}
+	[DebuggerVisualizer(typeof(Visualizer))]
+	[Serializable]
 	public class NormalMap:StrategyMap
 	{
 		public NormalMap(Strategy strategy):base(strategy)
@@ -1815,15 +1823,28 @@ namespace Meta
 			return new ObjectMap(obj);
 		}
 	}
+	[DebuggerVisualizer(typeof(Visualizer))]
+	[Serializable]
 	public abstract class Strategy
 	{
-		protected void Panic(Map key,Map val)
+		public void Panic()
 		{
-			map.strategy=new HybridDictionaryStrategy();
-			map.strategy.map=map;
+			map.strategy = new HybridDictionaryStrategy();
+			map.strategy.map = map;
 			map.InitFromStrategy(this);
-			map.strategy.Set(key,val);
 		}
+		protected void Panic(Map key, Map val)
+		{
+			Panic();
+			map.strategy.Set(key, val);
+		}
+		//protected void Panic(Map key,Map val)
+		//{
+		//    map.strategy=new HybridDictionaryStrategy();
+		//    map.strategy.map=map;
+		//    map.InitFromStrategy(this);
+		//    map.strategy.Set(key,val);
+		//}
 
 		public virtual bool IsInteger
 		{
@@ -1936,6 +1957,7 @@ namespace Meta
 			return isEqual;
 		}
 	}
+	[Serializable]
 	public class CloneStrategy:Strategy
 	{
 		private Strategy original;
@@ -2012,6 +2034,7 @@ namespace Meta
 			Panic(key,value);
 		}
 	}
+	[Serializable]
 	public class StringStrategy:Strategy
 	{
 		public override bool IsString
@@ -2122,6 +2145,9 @@ namespace Meta
 			}
 		}
 	}
+	[DebuggerVisualizer(typeof(Visualizer))]
+	[Serializable]
+	// refactor
 	public class HybridDictionaryStrategy:Strategy
 	{
         // get rid of this completely, use keys from dictionary
@@ -2494,6 +2520,7 @@ namespace Meta
 		public object obj;
 		public Type type;
 	}
+	[Serializable]
 	public class IntegerStrategy:Strategy
 	{
 		public override int GetHashCode()
@@ -2831,6 +2858,7 @@ namespace Meta
 			}
 		}
 	}
+	[Serializable]
 	public class Extent
 	{
 		public static List<Extent> GetExtents(string fileName,int firstLine,int lastLine)
@@ -4589,6 +4617,56 @@ namespace Meta
 			}
 
 			return val;
+		}
+	}
+	// TODO: Add the following to SomeType's definition to see this visualizer when debugging instances of SomeType:
+	// 
+	//  [DebuggerVisualizer(typeof(Visualizer))]
+	//  [Serializable]
+	//  public class SomeType
+	//  {
+	//   ...
+	//  }
+	// 
+	/// <summary>
+	/// A Visualizer for SomeType.  
+	/// </summary>
+	public class Visualizer : DialogDebuggerVisualizer
+	{
+		protected override void Show(IDialogVisualizerService windowService, IVisualizerObjectProvider objectProvider)
+		{
+			// TODO: Get the object to display a visualizer for.
+			//       Cast the result of objectProvider.GetObject() 
+			//       to the type of the object being visualized.
+			object data = (object)objectProvider.GetObject();
+
+			// TODO: Display your view of the object.
+			//       Replace displayForm with your own custom Form or Control.
+			using (Form displayForm = new Form())
+			{
+				TextBox textBox = new TextBox();
+				textBox.Dock = DockStyle.Fill;
+				textBox.Multiline = true;
+				textBox.AcceptsTab = true;
+				textBox.Text = Serialize.Value((Map)data).Replace("\n", Environment.NewLine);
+				displayForm.Controls.Add(textBox);
+				displayForm.Text = data.ToString();
+				windowService.ShowDialog(displayForm);
+			}
+		}
+
+		// TODO: Add the following to your testing code to test the visualizer:
+		// 
+		//    Visualizer.TestShowVisualizer(new SomeType());
+		// 
+		/// <summary>
+		/// Tests the visualizer by hosting it outside of the debugger.
+		/// </summary>
+		/// <param name="objectToVisualize">The object to display in the visualizer.</param>
+		public static void TestShowVisualizer(object objectToVisualize)
+		{
+			VisualizerDevelopmentHost visualizerHost = new VisualizerDevelopmentHost(objectToVisualize, typeof(Visualizer));
+			visualizerHost.ShowVisualizer();
 		}
 	}
 }
