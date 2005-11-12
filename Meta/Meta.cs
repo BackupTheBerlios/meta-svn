@@ -93,6 +93,7 @@ namespace Meta
 			throw new MetaException("The key "+Serialize.Value(key)+" could not be found.",extent);
 		}
 	}
+	[Serializable]
 	public class BreakPoint
 	{
 		public BreakPoint(SourcePosition position)
@@ -108,6 +109,7 @@ namespace Meta
 		}
 		private SourcePosition position;
 	}
+	[Serializable]
 	public class Process
 	{
 		Thread thread;
@@ -296,6 +298,7 @@ namespace Meta
 				Statement((Map)code[i],ref local,arg);
 			}
 		}
+		[Serializable]
 		public class Change
 		{
 			private Map map;
@@ -470,6 +473,7 @@ namespace Meta
 		public static List<string> loadedAssemblies=new List<string>();
 	}
 	// rename remove
+	[Serializable]
 	public class Interpreter
 	{
 		// remove
@@ -996,7 +1000,8 @@ namespace Meta
 		}
 	}
 	// think about this a bit, should be a map maybe
-	public class RemoteStrategy:Strategy
+	[Serializable]
+	public class RemoteStrategy : Strategy
 	{
 		public override Strategy CopyImplementation()
 		{
@@ -1031,6 +1036,7 @@ namespace Meta
 			this.address=address;
 		}
 	}
+	[Serializable]
 	public class Web:Map
 	{
 		public override List<Map> Keys
@@ -1064,113 +1070,110 @@ namespace Meta
 		}
 		public static Web singleton=new Web();
 	}
-    // write a test for this
 	public class Serialize
 	{
-		public static string Key(Map key)
-		{
-			return Key(key,"");
-		}
-		private static string Key(Map key,string indentation)
-		{
-			string text;
-			if(key.IsString)
-			{
-				text=StringKey(key,indentation);
-			}
-			else if(key.IsInteger)
-			{
-				text=IntegerKey(key);
-			} 
-			else
-			{
-				text=MapKey(key,indentation);
-			}
-			return text;			
-		}
 		public static string Value(Map val)
 		{
-			return Value(val,"");
+			return Value(val, "");
 		}
-		private static string Value(Map val,string indentation)
+		private static string Value(Map val, string indentation)
 		{
 			string text;
-			if(val.IsString)
+			if (val.IsString)
 			{
-				text=StringValue(val,indentation);
+				text = StringValue(val, indentation);
 			}
-			else if(val.IsInteger)
+			else if (val.IsInteger)
 			{
-				text=IntegerValue(val);
+				text = IntegerValue(val);
 			}
 			else
 			{
-				text=MapValue(val,indentation);
+				text = MapValue(val, indentation);
 			}
 			return text;
 		}
-		private static string IntegerKey(Map number)
+		private static string Key(Map key, string indentation)
+		{
+			string text;
+			if (key.IsString)
+			{
+				text = StringKey(key, indentation);
+			}
+			else
+			{
+
+				text = Parser.lookupStartChar.ToString();
+				if (key.Equals(Map.Empty))
+				{
+					text += Parser.emptyMapChar;
+				}
+				else if (key.IsInteger)
+				{
+					text += IntegerValue(key.GetInteger());
+				}
+				else
+				{
+					text += Parser.unixNewLine + MapValue(key, indentation);
+				}
+				text += Parser.lookupEndChar;
+			}
+			return text;
+		}
+
+		private static string IntegerValue(Map number)
 		{
 			return number.GetInteger().ToString();
 		}
-		private static string IntegerValue(Map number)
-		{
-			return number.ToString();
-		}
-		private static string StringKey(Map key,string indentation)
+		private static string StringKey(Map key, string indentation)
 		{
 			string text;
-			if(IsLiteralKey(key.GetString()))
+			if (IsLiteralKey(key.GetString()))
 			{
-				text=key.GetString();
+				text = key.GetString();
 			}
 			else
 			{
-				text=Parser.lookupStartChar + StringValue(key,indentation) + Parser.lookupEndChar;
+				text = Parser.lookupStartChar + StringValue(key, indentation) + Parser.lookupEndChar;
 			}
 			return text;
 		}
-		private static string StringValue(Map val,string indentation)
+		private static string StringValue(Map val, string indentation)
 		{
 			string text;
-			if(val.IsString)
+			if (val.IsString)
 			{
-				int longest=0;
-                // this is incorrect
-				foreach(Match match in Regex.Matches(val.GetString(),"("+Parser.stringChar+")?("+Parser.stringEscapeChar+")*"))
+				int longestMatch = 0;
+				foreach (Match match in Regex.Matches(val.GetString(), "(" + Parser.stringChar + ")?(" + Parser.stringEscapeChar + ")*"))
 				{
-					if(match.ToString().Length>longest)
+					if (match.ToString().Length > longestMatch)
 					{
-						longest=match.Length;
+						longestMatch = match.Length;
 					}
 				}
-				string escape="";
-				for(int i=0;i<longest;i++)
+				string escape = "";
+				for (int i = 0; i < longestMatch; i++)
 				{
-					escape+=Parser.stringEscapeChar;
+					escape += Parser.stringEscapeChar;
 				}
-				text=escape+Parser.stringChar+val.GetString()+Parser.stringChar+escape;
+				text = escape + Parser.stringChar + val.GetString() + Parser.stringChar + escape;
 			}
 			else
 			{
-				text=MapValue(val,indentation);
+				text = MapValue(val, indentation);
 			}
 			return text;
 		}
-		private static string MapKey(Map map,string indentation)
-		{
-			return indentation + Parser.lookupStartChar + Parser.unixNewLine + MapValue(map,indentation) + Parser.lookupEndChar;
-		}
-		public static string MapValue(Map map,string indentation)
+		public static string MapValue(Map map, string indentation)
 		{
 			string text;
-			text=Parser.unixNewLine.ToString();
-			foreach(KeyValuePair<Map,Map> entry in map)
+			text = Parser.unixNewLine.ToString();
+			foreach (KeyValuePair<Map, Map> entry in map)
 			{
-				text+=indentation + Key((Map)entry.Key,indentation)	+ Parser.statementChar + Value((Map)entry.Value,indentation+'\t');
-				if(!text.EndsWith(Parser.unixNewLine.ToString()))
+				text += indentation + Key((Map)entry.Key, indentation) + Parser.statementChar + Value((Map)entry.Value, indentation + '\t');
+				if (!text.EndsWith(Parser.unixNewLine.ToString()))
 				{
-					text+=Parser.unixNewLine;
+					text += Parser.unixNewLine;
 				}
 			}
 			return text;
@@ -1178,10 +1181,141 @@ namespace Meta
 
 		private static bool IsLiteralKey(string text)
 		{
-            return -1 == text.IndexOfAny(Parser.lookupStringForbiddenChars);//.fornew char[] { '@', ' ', '\t', '\r', '\n', '=', '.', '/', '\'', '"', '(', ')', '[', ']', '*', ':', '#', '!' });
-            //return -1 == text.IndexOfAny(new char[] { '@', ' ', '\t', '\r', '\n', '=', '.', '/', '\'', '"', '(', ')', '[', ']', '*', ':', '#', '!' });
-        }
+			return -1 == text.IndexOfAny(Parser.lookupStringForbiddenChars);//.fornew char[] { '@', ' ', '\t', '\r', '\n', '=', '.', '/', '\'', '"', '(', ')', '[', ']', '*', ':', '#', '!' });
+		}
 	}
+	//public class Serialize
+	//{
+	//    public static string Key(Map key)
+	//    {
+	//        return Key(key,"");
+	//    }
+	//    private static string Key(Map key,string indentation)
+	//    {
+	//        string text;
+	//        if(key.IsString)
+	//        {
+	//            text=StringKey(key,indentation);
+	//        }
+	//        //else if (key.IsInteger)
+	//        //{
+	//        //    text = IntegerKey(key);
+	//        //} 
+	//        else
+	//        {
+	//            text=MapKey(key,indentation);
+	//        }
+	//        return text;			
+	//    }
+	//    public static string Value(Map val)
+	//    {
+	//        return Value(val,"");
+	//    }
+	//    private static string Value(Map val,string indentation)
+	//    {
+	//        string text;
+	//        if(val.IsString)
+	//        {
+	//            text=StringValue(val,indentation);
+	//        }
+	//        else if(val.IsInteger)
+	//        {
+	//            text=IntegerValue(val);
+	//        }
+	//        else
+	//        {
+	//            text=MapValue(val,indentation);
+	//        }
+	//        return text;
+	//    }
+	//    //private static string IntegerKey(Map number)
+	//    //{
+	//    //    return number.GetInteger().ToString();
+	//    //}
+	//    private static string IntegerValue(Map number)
+	//    {
+	//        return number.ToString();
+	//    }
+	//    private static string StringKey(Map key,string indentation)
+	//    {
+	//        string text;
+	//        if(IsLiteralKey(key.GetString()))
+	//        {
+	//            text=key.GetString();
+	//        }
+	//        else
+	//        {
+	//            text=Parser.lookupStartChar + StringValue(key,indentation) + Parser.lookupEndChar;
+	//        }
+	//        return text;
+	//    }
+	//    private static string StringValue(Map val,string indentation)
+	//    {
+	//        string text;
+	//        if(val.IsString)
+	//        {
+	//            int longest=0;
+	//            // this is incorrect
+	//            foreach(Match match in Regex.Matches(val.GetString(),"("+Parser.stringChar+")?("+Parser.stringEscapeChar+")*"))
+	//            {
+	//                if(match.ToString().Length>longest)
+	//                {
+	//                    longest=match.Length;
+	//                }
+	//            }
+	//            string escape="";
+	//            for(int i=0;i<longest;i++)
+	//            {
+	//                escape+=Parser.stringEscapeChar;
+	//            }
+	//            text=escape+Parser.stringChar+val.GetString()+Parser.stringChar+escape;
+	//        }
+	//        else
+	//        {
+	//            text=MapValue(val,indentation);
+	//        }
+	//        return text;
+	//    }
+	//    private static string MapKey(Map map,string indentation)
+	//    {
+
+	//        string text = Parser.lookupStartChar.ToString();
+	//        if (map.IsInteger)
+	//        {
+	//            text += map.GetInteger().ToString();
+	//        }
+	//        else
+	//        {
+	//            text += Parser.unixNewLine + MapValue(map, indentation);
+	//        }
+	//        text+=Parser.lookupEndChar;
+	//        return text;
+	//    }
+	//    //private static string MapKey(Map map,string indentation)
+	//    //{
+	//    //    return indentation + Parser.lookupStartChar + Parser.unixNewLine + MapValue(map,indentation) + Parser.lookupEndChar;
+	//    //}
+	//    public static string MapValue(Map map,string indentation)
+	//    {
+	//        string text;
+	//        text=Parser.unixNewLine.ToString();
+	//        foreach(KeyValuePair<Map,Map> entry in map)
+	//        {
+	//            text+=indentation + Key((Map)entry.Key,indentation)	+ Parser.statementChar + Value((Map)entry.Value,indentation+'\t');
+	//            if(!text.EndsWith(Parser.unixNewLine.ToString()))
+	//            {
+	//                text+=Parser.unixNewLine;
+	//            }
+	//        }
+	//        return text;
+	//    }
+
+	//    private static bool IsLiteralKey(string text)
+	//    {
+	//        return -1 == text.IndexOfAny(Parser.lookupStringForbiddenChars);//.fornew char[] { '@', ' ', '\t', '\r', '\n', '=', '.', '/', '\'', '"', '(', ')', '[', ']', '*', ':', '#', '!' });
+	//        //return -1 == text.IndexOfAny(new char[] { '@', ' ', '\t', '\r', '\n', '=', '.', '/', '\'', '"', '(', ')', '[', ']', '*', ':', '#', '!' });
+	//    }
+	//}
 	public class Transform
 	{
 		public static Integer IntegerFromDouble(double val)
@@ -1497,9 +1631,11 @@ namespace Meta
 		private int index=-1;
 	}
 	public delegate object DelegateCreatedForGenericDelegates();
+	[Serializable]
 	public class MetaLibrary
 	{
 	}
+	[Serializable]
 	public class Method: Map
 	{
 		// clone isnt correct, should only override a part of the cloning, the actual cloning, not parent assignment 
@@ -1666,7 +1802,8 @@ namespace Meta
 				returnType=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
 			}
 			string source="using System;using Meta;";
-			source+="public class EventHandlerContainer{public "+returnType+" EventHandlerMethod";
+			source+=@"	[Serializable]
+					public class EventHandlerContainer{public "+returnType+" EventHandlerMethod";
 			int counter=1;
 			string argumentList="(";
 			string argumentBuiling="Map arg=new NormalMap();";
@@ -1773,11 +1910,15 @@ namespace Meta
 			}
 		}
 		private string name;
+		[NonSerialized]
 		protected object obj;
+		[NonSerialized]
 		protected Type type;
-
+		[NonSerialized]
 		public MemberInfo[] overloadedMethods;
 	}
+
+	[Serializable]
 	public class TypeMap: DotNetContainer
 	{
 		public Type Type
@@ -1791,6 +1932,7 @@ namespace Meta
 		{
 			return new TypeMap(type);
 		}
+		[NonSerialized]
 		protected Method constructor;
 		public TypeMap(Type targetType):base(null,targetType)
 		{
@@ -1802,6 +1944,7 @@ namespace Meta
 		}
 
 	}
+	[Serializable]
 	public class ObjectMap: DotNetContainer
 	{
 		public object Object
@@ -2212,6 +2355,7 @@ namespace Meta
 			return dictionary.ContainsKey(key);
 		}
 	}
+	[Serializable]
 	public class Event:Map
 	{
 		EventInfo eventInfo;
@@ -2283,6 +2427,7 @@ namespace Meta
 			throw new ApplicationException("Cannot assign in event " + eventInfo.Name + ".");
 		}
 	}
+	[Serializable]
 	public class Property:Map
 	{
 		PropertyInfo property;
@@ -2341,6 +2486,7 @@ namespace Meta
 			throw new ApplicationException("Cannot assign in property "+property.Name+".");
 		}
 	}// rename to DotNetMap or so
+	[Serializable]
 	public abstract class DotNetContainer: Map, ISerializeSpecial
 	{
 		public override void Serialize(string indentation, StringBuilder stringBuilder,int level)
@@ -2487,7 +2633,7 @@ namespace Meta
 			}
 			else
 			{
-				throw new ApplicationException("Cannot set " + Meta.Serialize.Key(key) + ".");
+				throw new ApplicationException("Cannot set key " + Meta.Serialize.Value(key) + ".");
 			}
 		}
 		public string Serialize(string indent,string[] functions)
@@ -2517,7 +2663,9 @@ namespace Meta
 			this.type=type;
 		}
 		private BindingFlags bindingFlags;
+		[NonSerialized]
 		public object obj;
+		[NonSerialized]
 		public Type type;
 	}
 	[Serializable]
@@ -2614,6 +2762,7 @@ namespace Meta
 			}
 		}
 	}
+	[Serializable]
 	public class FileAccess
 	{
 		public static void Write(string fileName,string text)
@@ -2792,6 +2941,7 @@ namespace Meta
 			}
 		}
 	}
+	[Serializable]
 	public class SourcePosition
 	{
 		public bool smaller(SourcePosition other)
@@ -3577,6 +3727,7 @@ namespace Meta
 			this.position=position;
 		}
 	}
+	[Serializable]
 	public class FileSystem:Map
 	{
 		public static void Set(string text)
@@ -3646,6 +3797,7 @@ namespace Meta
 		}
 
 	}
+	[Serializable]
 	public class Gac:Map
 	{
 		private Map cache=new NormalMap();
@@ -4022,7 +4174,7 @@ namespace Meta
 	// proper verification and testing.  I disclaim all liability and responsibility
 	// to any person or entity with respect to any loss or damage caused, or alleged
 	// to be caused, directly or indirectly, by the use of this Integer class.
-
+	[Serializable]
 	public class Integer
 	{
         // this is not even used, maybe, however it might be in case of overflow
@@ -4644,10 +4796,20 @@ namespace Meta
 			//       Replace displayForm with your own custom Form or Control.
 			using (Form displayForm = new Form())
 			{
-				TextBox textBox = new TextBox();
+				RichTextBox textBox = new RichTextBox();
 				textBox.Dock = DockStyle.Fill;
-				textBox.Multiline = true;
-				textBox.AcceptsTab = true;
+				textBox.ScrollBars = RichTextBoxScrollBars.Both;
+				int[] tabStops=new int[32];
+				int tabWidth = 32;
+				int firstTabStop = 0;
+				for (int i = 0; i < tabStops.Length; i++)
+				{
+					tabStops[i] = i * tabWidth + firstTabStop;
+				}
+				textBox.SelectionTabs = tabStops;
+				textBox.WordWrap = false;
+				//textBox.Multiline = true;
+				//textBox.AcceptsTab = true;
 				textBox.Text = Serialize.Value((Map)data).Replace("\n", Environment.NewLine);
 				displayForm.Controls.Add(textBox);
 				displayForm.Text = data.ToString();

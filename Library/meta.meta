@@ -477,8 +477,20 @@ library=
 										arg.function arg.array.[arg.index]
 					current=next.[stop] arg
 		join=
-			|Meta.Interpreter.Join
-				arg
+			|sum
+				start=*
+				array=arg
+				function=
+					|
+						impossibleKey=Meta.ObjectMap
+							arg.a
+						library.map.apply
+							array=arg.b
+							function=
+								|impossibleKey.Append
+									arg
+						current=impossibleKey
+				start=*
 		contains=
 			|
 				object=Meta.ObjectMap

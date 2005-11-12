@@ -37,16 +37,13 @@ namespace Test
 			Map x = new NormalMap();
 			x["hello"] = "world";
 			x["world"] = "hello";
-			//Visualizer.TestShowVisualizer(x);
-			//VisualizerDevelopmentHost host = new VisualizerDevelopmentHost(
-			//"hello", typeof(Visualizer));
-			//host.ShowVisualizer();
-//			FileSystem.singleton["basicTest"].Call(Map.Empty,Map.Empty);
+			Map basicTest=FileSystem.singleton["basicTest"];//.Call(Map.Empty, Map.Empty);
+			Visualizer.TestShowVisualizer(basicTest);
 //			FileSystem.singleton["libraryTest"].Call(Map.Empty,Map.Empty);
 
 
 			//			MethodInfo[] methods=typeof(Integer).GetMethods();
-			ExecuteTests test = new ExecuteTests(typeof(Tests), Path.Combine(Directory.GetParent(Process.LibraryPath).FullName, "Test"));
+			//ExecuteTests test = new ExecuteTests(typeof(Tests), Path.Combine(Directory.GetParent(Process.LibraryPath).FullName, "Test"));
 			//FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
 		}
 	}
@@ -99,6 +96,7 @@ namespace Test
 }
 namespace testClasses
 {
+	[Serializable]
 	public class MemberTest 
 	{
 		public static string classField="default";
@@ -129,6 +127,7 @@ namespace testClasses
 	}
 	public delegate int IntEvent (int intArg);
 	public delegate object NormalEvent (object sender);
+	[Serializable]
 	public class TestClass 
 	{
 		public class NestedClass// TODO: rename, only used for testing purposes
@@ -164,7 +163,8 @@ namespace testClasses
 		public float floatValue=0.0F;
 		public decimal decimalValue=0.0M;
 	}
-	public class PositionalNoConversion:TestClass 
+	[Serializable]
+	public class PositionalNoConversion : TestClass 
 	{
 		public PositionalNoConversion(string p1,string b,string p2) 
 		{
@@ -177,7 +177,8 @@ namespace testClasses
 			return p1+b+c+this.x+this.y+this.z;
 		}
 	}
-	public class NamedNoConversion:TestClass 
+	[Serializable]
+	public class NamedNoConversion : TestClass 
 	{ 
 		public NamedNoConversion(Map arg) 
 		{
@@ -209,7 +210,8 @@ namespace testClasses
 				this.x+this.y+this.z;
 		}   
 	}
-	public class IndexerNoConversion:TestClass 
+	[Serializable]
+	public class IndexerNoConversion : TestClass 
 	{
 		public string this[string a] 
 		{
