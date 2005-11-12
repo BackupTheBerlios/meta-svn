@@ -706,17 +706,17 @@ namespace Meta
         {
             this[Array.Count+1] = map;
         }
-		public bool IsParameter
-		{
-			get
-			{
-				return isParameter;
-			}
-			set
-			{
-				isParameter=value;
-			}
-		}
+		//public bool IsParameter
+		//{
+		//    get
+		//    {
+		//        return isParameter;
+		//    }
+		//    set
+		//    {
+		//        isParameter=value;
+		//    }
+		//}
 		private bool isParameter=false;
 		public Map Caller
 		{
@@ -902,7 +902,7 @@ namespace Meta
 			set
 			{ 
 				parameter=value.Copy();
-				parameter.IsParameter=true;
+				//parameter.IsParameter=true;
 			}
 		}
 		Map parameter=null;
@@ -1243,10 +1243,7 @@ namespace Meta
             }
             else
             {
-                Map val;
-                val = value.Copy();
-                val.Parent = this;// should be unnecessary????
-                strategy[key] = val;
+                strategy[key] = value;
             }
                 //Assigned(this,EventArgs.Empty);
             //}
