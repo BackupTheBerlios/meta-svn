@@ -16,7 +16,6 @@
 
 using System;
 using System.IO;
-//using System.Collections;
 using System.CodeDom.Compiler;
 using System.Xml;
 using System.Runtime.InteropServices;
@@ -87,7 +86,6 @@ namespace Meta
 	{
 		public BreakPoint(SourcePosition position)
 		{
-//			this.fileName=fileName;
 			this.position=position;
 		}
 		
@@ -108,6 +106,7 @@ namespace Meta
 		private SourcePosition position;
 		string fileName;
 	}
+    // get rid of this
 	public class Argument
 	{
 		public static void ContainsKey(Map map,Map key)
@@ -182,6 +181,8 @@ namespace Meta
 		}
 		static Process()
 		{
+            string metaDllLocation = Assembly.GetAssembly(typeof(Map)).Location;
+            loadedAssemblies.AddRange(new string[] { metaDllLocation });
 			processes[Thread.CurrentThread]=new Process(null,null);
 		}
 		public Process():this(FileSystem.singleton,new NormalMap())
@@ -200,7 +201,7 @@ namespace Meta
 		}
 		public Map Parse(TextReader textReader)
 		{
-			return Evaluate(Compile(textReader),new NormalMap());
+			return Expression(Compile(textReader),new NormalMap());
 		}
 		// maybe make this part of Interpreter, which should be renamed to Meta
 		public static Map Compile()
@@ -259,8 +260,7 @@ namespace Meta
 			}
 		}
 		private BreakPoint breakPoint=new BreakPoint(new SourcePosition(0,0));
-		// rename to Expression
-		public Map Evaluate(Map code,Map context)
+		public Map Expression(Map code,Map context)
 		{
 			Map val;
 			if(code.ContainsKey(CodeKeys.Call))
@@ -305,8 +305,8 @@ namespace Meta
 		// maybe rename context to current
 		public Map Call(Map code,Map context)
 		{
-			Map function=Evaluate(code[CodeKeys.Callable],context);
-			Map argument=Evaluate(code[CodeKeys.Argument],context);
+			Map function=Expression(code[CodeKeys.Callable],context);
+			Map argument=Expression(code[CodeKeys.Argument],context);
 			callers.Add(context);
 			//			Arg.Parent=Caller;
 			Map result=function.Call(argument,context);
@@ -384,7 +384,7 @@ namespace Meta
 			Map key;
 			for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
 			{
-				key=Evaluate((Map)code[CodeKeys.Key].Array[i],context);
+				key=Expression((Map)code[CodeKeys.Key].Array[i],context);
 				Map selection=selected[key];
 				if(selection==null)
 				{
@@ -398,11 +398,7 @@ namespace Meta
 					CallBreak(selected);
 				}
 			}
-			Map lastKey=Evaluate((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context);
-			if(lastKey.Equals(new NormalMap("abc")))
-			{
-				int asdf=0;
-			}
+			Map lastKey=Expression((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context);
 			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
 			{
 				Map oldValue;
@@ -417,7 +413,7 @@ namespace Meta
 				CallBreak(oldValue);
 			}
 			
-			Map val=Evaluate(code[CodeKeys.Value],context);
+			Map val=Expression(code[CodeKeys.Value],context);
 
 			if(lastKey.Equals(SpecialKeys.Current))
 			{
@@ -439,7 +435,7 @@ namespace Meta
 			Map selected=FindFirstKey(code,context);
 			for(int i=1;i<code.Array.Count;i++)
 			{
-				Map key=Evaluate((Map)code.Array[i],context);
+				Map key=Expression((Map)code.Array[i],context);
 				if(key.Equals(new NormalMap("Reversed")))
 				{
 					int asdf=0;
@@ -460,7 +456,7 @@ namespace Meta
 		}
 		private Map FindFirstKey(Map code,Map context)
 		{
-			Map key=Evaluate((Map)code.Array[0],context);
+			Map key=Expression((Map)code.Array[0],context);
 			Map selected=context;
 			while(!selected.ContainsKey(key))
 			{
@@ -499,25 +495,6 @@ namespace Meta
 			}
 			return val;
 		}
-//		private Map FindFirstKey(Map code,Map context)
-//		{
-//			Map key=Evaluate((Map)code.Array[0],context);
-//			Map selected=context;
-//			while(!selected.ContainsKey(key))
-//			{
-//				selected=selected.Parent;
-//				if(selected==null)
-//				{
-//					Throw.KeyNotFound(key,key.Extent);
-//				}
-//			}
-//			Map val=selected[key];
-//			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[0]).Extent))
-//			{
-//				CallBreak(val);
-//			}
-//			return val;
-//		}
 
 		public event DebugBreak Break;
 
@@ -541,155 +518,8 @@ namespace Meta
 				return @"c:\Projects\meta\library";
 			}
 		}
-		// should this be static?
 		public static List<string> loadedAssemblies=new List<string>();
 	}
-//	public abstract class SingleKey:MapStrategy
-//	{
-//		public override ArrayList Keys
-//		{
-//			get
-//			{
-//				ArrayList list=new ArrayList(1);
-//				list.Add(SingleKey);
-//				return list;
-//			}
-//		}
-//		public SingleKey(Map firstValue)
-//		{
-//			this.firstValue=firstValue;
-//		}
-//		protected abstract Map FirstKey
-//		{
-//			get;
-//		}
-//		private Map firstValue;
-//		public override Map this[Map key]
-//		{
-//			get
-//			{
-//				Map val;
-//				if(key==FirstKey)
-//				{
-//					val=firstValue;
-//				}
-//				else
-//				{
-//					val=null;
-//				}
-//				return val;
-//			}
-//			set
-//			{
-//			}
-//		}
-//	}
-//	public abstract class DoubleKey:MapStrategy
-//	{
-//		public override ArrayList Keys
-//		{
-//			get
-//			{
-//				ArrayList list=new ArrayList(1);
-//				list.Add(FirstKey);
-//				list.Add(SecondKey);
-//				return list;
-//			}
-//		}
-//		public DoubleKey(Map firstValue,Map secondValue)
-//		{
-//			this.firstValue=firstValue;
-//			this.secondValue=secondValue;
-//		}
-//		protected abstract Map FirstKey
-//		{
-//			get;
-//		}
-//		protected abstract Map SecondKey
-//		{
-//			get;
-//		}
-//		private Map firstValue;
-//		private Map secondValue;
-//		public override Map this[Map key]
-//		{
-//			get
-//			{
-//				Map val;
-//				if(key==FirstKey)
-//				{
-//					val=singleValue;
-//				}
-//				else if(key==SecondKey)
-//				{
-//					val=secondKey;
-//				}
-//				else
-//				{
-//					val=null;
-//				}
-//				return val;
-//			}
-//			set
-//			{
-//			}
-//		}
-//	}
-//	public class Literal:SingleKey
-//	{
-//		protected override Map FirstKey
-//		{
-//			get
-//			{
-//				return CodeKeys.Literal;
-//			}
-//		}
-//
-//	}
-//	public class Call
-//	{
-//	}
-//	public class CallData:DoubleKey
-//	{
-//		protected override Map FirstKey
-//		{
-//			get
-//			{
-//				return CodeKeys.Callable;
-//			}
-//		}
-//		protected override Map SecondKey
-//		{
-//			get
-//			{
-//				return CodeKeys.Argument;
-//			}
-//		}
-//	}
-//	public class Function
-//	{
-//	}
-//	public class Callable
-//	{
-//	}
-//	public class Argument
-//	{
-//	}
-//	public class Select
-//	{
-//	}
-//	public class Program
-//	{
-//	}
-//	public class Statement
-//	{
-//	}
-//	public class Key
-//	{
-//	}
-//	public class Value
-//	{
-//	}
 	// TODO: rename remove
 	public class Interpreter
 	{
@@ -826,20 +656,11 @@ namespace Meta
 			}
 			return equal;
 		}
-		// refactor
+        // get rid of this, should be implemented in Meta
 		public static Map Merge(Map map)
 		{
-			return MergeCollection(map.Array);
-		}
-		public static Map Merge(params Map[] arkvlToMerge)
-		{
-			return MergeCollection(arkvlToMerge);
-		}
-        // get rid of this
-		public static Map MergeCollection(ICollection<Map> collection)
-		{
 			Map result=new NormalMap();
-			foreach(Map current in collection)
+			foreach(Map current in map.Array)
 			{
 				foreach(KeyValuePair<Map,Map> entry in current)
 				{
@@ -848,6 +669,12 @@ namespace Meta
 			}
 			return result;
 		}
+        //public static Map Merge(params Map[] toMerge)
+        //{
+        //    return MergeCollection(toMerge);
+        //}
+        // get rid of this
+
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeSpecial
 	{
@@ -1034,36 +861,6 @@ namespace Meta
 			}
 			return text;
 		}
-//		public string GetStringDefault()
-//		{
-//			string text="";
-//			foreach(Map key in Keys)
-//			{
-//				if(key.IsInteger)
-//				{
-//					if(this[key].IsInteger)
-//					{
-//						try
-//						{
-//							text+=Convert.ToChar(this[key].GetInteger().GetInt32());
-//						}
-//						catch
-//						{
-//							return null;
-//						}
-//					}
-//					else
-//					{
-//						return null;
-//					}
-//				}
-//				else
-//				{
-//					return null;
-//				}
-//			}
-//			return text;
-//		}
 		public virtual string GetString()
 		{
 			return GetStringDefault();
@@ -1076,21 +873,10 @@ namespace Meta
 			}
 			set
 			{ 
-				parameter=value.Clone();
+				parameter=value.Copy();
 				parameter.IsParameter=true;
 			}
 		}
-//		public Map Parameter
-//		{
-//			get
-//			{
-//				return parameter;
-//			}
-//			set
-//			{ 
-//				parameter=value;
-//			}
-//		}
 		Map parameter=null;
 
 
@@ -1137,7 +923,7 @@ namespace Meta
 			this.Parameter=parameter;
 			Map function=this[CodeKeys.Function];
 			Map result;
-			result=Process.Current.Evaluate(function,this);
+			result=Process.Current.Expression(function,this);
 			return result;
 		}
 
@@ -1145,8 +931,7 @@ namespace Meta
 		{
 			get;
 		}
-		// rename to Copy
-		public virtual Map Clone()
+		public virtual Map Copy()
 		{
 			Map clone=new NormalMap();
 			foreach(Map key in this.Keys)
@@ -1344,11 +1129,12 @@ namespace Meta
 					if(key.Equals(SpecialKeys.Current))
 					{
 						this.strategy=((NormalMap)value).strategy.Clone();
+                        this.strategy.map = this;
 					}
 					else
 					{
 						Map val;
-						val=value.Clone();
+						val=value.Copy();
 						val.Parent=this;
 						strategy[key]=val;
 					}
@@ -1362,9 +1148,9 @@ namespace Meta
 				return strategy.Keys;
 			}
 		}
-		public override Map Clone()
+		public override Map Copy()
 		{
-			Map clone=strategy.CloneMap();
+			Map clone=strategy.Copy();
 			clone.Parent=Parent;
 			clone.Extent=Extent;
 			return clone;
@@ -1426,13 +1212,13 @@ namespace Meta
 	// think about this a bit, should be a map maybe
 	public class RemoteStrategy:MapStrategy
 	{
-		public override List<Map> Array
-		{
-			get
-			{
-				throw new ApplicationException("not implemented.");
-			}
-		}
+        //public override List<Map> Array
+        //{
+        //    get
+        //    {
+        //        throw new ApplicationException("not implemented.");
+        //    }
+        //}
 		public override List<Map> Keys
 		{
 			get
@@ -1492,7 +1278,7 @@ namespace Meta
 			}
 		}
 
-		public override Map Clone()
+		public override Map Copy()
 		{
 			return this;
 		}
@@ -1502,6 +1288,7 @@ namespace Meta
 		}
 		public static Web singleton=new Web();
 	}
+    // write a test for this
 	public class Serialize
 	{
 		public static string Key(Map key)
@@ -1552,7 +1339,7 @@ namespace Meta
 		}
 		private static string IntegerValue(Map number)
 		{
-			return literalStartDelimiter+number.ToString()+literalEndDelimiter;
+			return number.ToString();
 		}
 		private static string StringKey(Map key,string indentation)
 		{
@@ -1563,7 +1350,7 @@ namespace Meta
 			}
 			else
 			{
-				text=leftBracket + StringValue(key,indentation) + rightBracket;
+				text=Parser.lookupStartChar + StringValue(key,indentation) + Parser.lookupEndChar;
 			}
 			return text;
 		}
@@ -1573,7 +1360,8 @@ namespace Meta
 			if(val.IsString)
 			{
 				int longest=0;
-				foreach(Match match in Regex.Matches(val.GetString(),"(>)?(\\\\)*"))
+                // this is incorrect
+				foreach(Match match in Regex.Matches(val.GetString(),"("+Parser.stringChar+")?("+Parser.stringEscapeChar+")*"))
 				{
 					if(match.ToString().Length>longest)
 					{
@@ -1583,9 +1371,9 @@ namespace Meta
 				string escape="";
 				for(int i=0;i<longest;i++)
 				{
-					escape+='\\';
+					escape+=Parser.stringEscapeChar;
 				}
-				text=escape+literalStartDelimiter+val.GetString()+literalEndDelimiter+escape;
+				text=escape+Parser.stringChar+val.GetString()+Parser.stringChar+escape;
 			}
 			else
 			{
@@ -1595,34 +1383,28 @@ namespace Meta
 		}
 		private static string MapKey(Map map,string indentation)
 		{
-			return indentation + leftBracket + newLine + MapValue(map,indentation) + rightBracket;
+			return indentation + Parser.lookupStartChar + Parser.unixNewLine + MapValue(map,indentation) + Parser.lookupEndChar;
 		}
 		public static string MapValue(Map map,string indentation)
 		{
 			string text;
-			text=newLine;
+			text=Parser.unixNewLine.ToString();
 			foreach(KeyValuePair<Map,Map> entry in map)
 			{
-				text+=indentation + Key((Map)entry.Key,indentation)	+ assignment + Value((Map)entry.Value,indentation+'\t');
-				if(!text.EndsWith(newLine))
+				text+=indentation + Key((Map)entry.Key,indentation)	+ Parser.statementChar + Value((Map)entry.Value,indentation+'\t');
+				if(!text.EndsWith(Parser.unixNewLine.ToString()))
 				{
-					text+=newLine;
+					text+=Parser.unixNewLine;
 				}
 			}
 			return text;
 		}
-		// TODO: remove, use the parser stuff, maybe put everything into Parser anyway, Unparse/Serialize
-		private const string leftBracket="[";
-		private const string rightBracket="]";
-		private const string newLine="\n";
-		private const string literalStartDelimiter="\"";
-		private const string assignment="=";
-		private const string literalEndDelimiter="\"";
 
 		private static bool IsLiteralKey(string text)
 		{
-			return -1==text.IndexOfAny(new char[] {'@',' ','\t','\r','\n','=','.','/','\'','"','(',')','[',']','*',':','#','!'});
-		}
+            return -1 == text.IndexOfAny(Parser.lookupStringForbiddenChars);//.fornew char[] { '@', ' ', '\t', '\r', '\n', '=', '.', '/', '\'', '"', '(', ')', '[', ']', '*', ':', '#', '!' });
+            //return -1 == text.IndexOfAny(new char[] { '@', ' ', '\t', '\r', '\n', '=', '.', '/', '\'', '"', '(', ')', '[', ']', '*', ':', '#', '!' });
+        }
 	}
 	public class Transform
 	{
@@ -1902,8 +1684,6 @@ namespace Meta
 			}
 			return meta;
 		}
-        //private static Dictionary toDotNet=new Dictionary<();
-        //private static Hashtable toMeta=new Hashtable();
 	}
 	public class MapEnumerator: IEnumerator<KeyValuePair<Map,Map>>
 	{
@@ -1947,7 +1727,7 @@ namespace Meta
 	public class Method: Map
 	{
 		// clone isnt correct, should only override a part of the cloning, the actual cloning, not parent assignment 
-		public override Map Clone()
+		public override Map Copy()
 		{
 			return new Method(this.name,this.obj,this.type);
 		}
@@ -1995,7 +1775,10 @@ namespace Meta
 		{
 			object result=null;
 			bool isExecuted=false;
-
+            if (this.name == "op_GreaterThan")
+            {
+            }
+            // remove this
 			if(type.IsSubclassOf(typeof(MetaLibrary)))
 			{
 				List<MethodBase> oneArgumentMethods=new List<MethodBase>();
@@ -2146,9 +1929,10 @@ namespace Meta
 			source+="}";
 			source+="private Map callable;";
 			source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-			string metaDllLocation=Assembly.GetAssembly(typeof(Map)).Location;
-			List<string> assemblyNames=new List<string>(new string[] {"mscorlib.dll","System.dll",metaDllLocation});
-			assemblyNames.AddRange(Process.loadedAssemblies);
+            //string metaDllLocation = Assembly.GetAssembly(typeof(Map)).Location;
+            List<string> assemblyNames = new List<string>();//new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
+            //List<string> assemblyNames = new List<string>(new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
+            assemblyNames.AddRange(Process.loadedAssemblies);
 			CompilerParameters compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
 			CompilerResults compilerResults=compiler.CompileAssemblyFromSource(compilerParameters,source);
 			Type containerType=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
@@ -2231,7 +2015,7 @@ namespace Meta
 				return type;
 			}
 		}
-		public override Map Clone()
+		public override Map Copy()
 		{
 			return new TypeMap(type);
 		}
@@ -2262,7 +2046,7 @@ namespace Meta
 		{
 			return obj.ToString();
 		}
-		public override Map Clone()
+		public override Map Copy()
 		{
 			return new ObjectMap(obj);
 		}
@@ -2306,17 +2090,19 @@ namespace Meta
 //			throw new ApplicationException("not implemented");
 			return null;
 		}
-		public virtual Map CloneMap() // TODO: move into Map??
+		public virtual Map Copy() // TODO: move into Map??
 		{
-			Map clone;
+			StrategyMap clone;
 			MapStrategy strategy=(MapStrategy)this.Clone();
 			if(strategy!=null)
 			{
 				clone=new NormalMap(strategy);
+                strategy.map = clone;
 			}
 			else
 			{
 				clone=new NormalMap();
+                strategy.map = clone;
 				foreach(Map key in Keys)
 				{
 					clone[key]=this[key];
@@ -2399,26 +2185,6 @@ namespace Meta
 			return isEqual;
 		}
 	}
-//	public abstract class MapStrategy:MapStrategy
-//	{
-//		// TODO: rename, refactor, make general function, extract assignment
-//		protected void Panic(Map key,Map val)
-//		{
-//			map.strategy=new HybridDictionaryStrategy();
-//			map.strategy.map=map;
-//			map.InitFromStrategy(this);
-//			map.strategy[key]=val;
-//		}
-////		protected void Panic(Map key,Map val)
-////		{
-////			map.strategy=new HybridDictionaryStrategy();
-////			map.strategy.map=map;
-////			map.InitFromStrategy(this);
-////			map.strategy[key]=val;
-////		}
-//	}
-	// maybe use a namespace for all the strategies, but doesnt make all that much sense either, maybe put them all
-	// into Map, or NormalMap, or StrategyMap
 	public class CloneStrategy:MapStrategy
 	{
 		private MapStrategy original;
@@ -2478,15 +2244,6 @@ namespace Meta
 				return original.IsString;
 			}
 		}
-
-
-
-
-
-
-
-
-
 		public override List<Map> Keys
 		{
 			get
@@ -2630,6 +2387,11 @@ namespace Meta
 		}
 		public override MapStrategy Clone()
 		{
+            //CloneStrategy clone=new CloneStrategy(this);
+            //clone.map = this.map;
+            //this.map.strategy = clone;
+            ////this.map.strategy = new CloneStrategy(this);
+            ////this.map = null;
 			return new CloneStrategy(this);
 		}
 
@@ -2721,7 +2483,7 @@ namespace Meta
 			return result;
 		}
 
-		public override Map Clone()
+		public override Map Copy()
 		{
 			return new Event(eventInfo,obj,type);
 		}
@@ -2770,7 +2532,7 @@ namespace Meta
 			this.obj=obj;
 			this.type=type;
 		}
-		public override Map Clone()
+		public override Map Copy()
 		{
 			return new Property(property,obj,type);
 		}
@@ -3041,14 +2803,6 @@ namespace Meta
 			}
 			return isEqual;
 		}
-
-		public override List<Map> Array
-		{
-			get
-			{
-				return new List<Map>();
-			}
-		}
 		public IntegerStrategy(Integer number)
 		{
 			this.number=new Integer(number);
@@ -3100,7 +2854,7 @@ namespace Meta
 				}
 				else
 				{
-					Panic(key,value); // TODO: dont do assignment in panic, do it here
+					Panic(key,value);
 				}
 			}
 		}
@@ -3121,6 +2875,8 @@ namespace Meta
 			return result;
 		}
 	}
+    // refactor
+    // add option of serializing everything??
 	namespace TestingFramework
 	{
 		public interface ISerializeSpecial
@@ -3131,6 +2887,7 @@ namespace Meta
 		{
 			public abstract object Run(ref int level);
 		}
+        // refactor
 		public class ExecuteTests
 		{	
 			public const string indentationText="\t";
@@ -3140,20 +2897,14 @@ namespace Meta
 				Type[] testTypes=testContainerType.GetNestedTypes();
 				foreach(Type testType in testTypes)
 				{
-					object[] serializeMethodsAttributes=testType.GetCustomAttributes(typeof(SerializeMethodsAttribute),false);
-					string[] methodNames=new string[0];
-					if(serializeMethodsAttributes.Length!=0)
-					{
-						methodNames=((SerializeMethodsAttribute)serializeMethodsAttributes[0]).methods;
-					}
 					Console.Write(testType.Name + "...");
 					DateTime start=DateTime.Now;
 					string output="";
 					int level=1;
 					object result=((TestCase)testType.GetConstructors()[0].Invoke(new object[]{})).Run(ref level);
 					TimeSpan timespan=DateTime.Now-start;
-					bool wasSuccessful=CompareResult(Path.Combine(fnResults,testType.Name),result,level);
-					if(!wasSuccessful)
+					bool successful=CompareResult(Path.Combine(fnResults,testType.Name),result,level);
+					if(!successful)
 					{
 						output=output + " failed";
 						isWaitAtEnd=true;
@@ -3187,57 +2938,62 @@ namespace Meta
 				string check=FileAccess.Read(Path.Combine(path,"check.txt"));
 				return result.Equals(check);
 			}
-			public static void Serialize(object toSerialize,string indent,StringBuilder stringBuilder,int level) 
+			public static void Serialize(object obj,string indent,StringBuilder builder,int level) 
 			{
-
-				if(toSerialize==null) 
+				if(obj==null) 
 				{
-					stringBuilder.Append(indent+"null\n");
+					builder.Append(indent+"null\n");
 				}
-				else if(!(toSerialize is KeyValuePair<Map,Map>) && toSerialize.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
+                // refactor
+				else if(!(obj is KeyValuePair<Map,Map>) && obj.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
 					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) 
 				{
-					stringBuilder.Append(indent+"\""+toSerialize.ToString()+"\""+"\n");
+					builder.Append(indent+"\""+obj.ToString()+"\""+"\n");
 				}
 				else
 				{
 					List<MemberInfo> members=new List<MemberInfo>();
-					members.AddRange(toSerialize.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
-					members.AddRange(toSerialize.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
+					members.AddRange(obj.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
+					members.AddRange(obj.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
 
 					members.Sort(new MemberInfoComparer());
 					foreach(MemberInfo member in members) 
 					{
+                        // maybe generalize this to a number of exceptions
 						if(member.Name!="Item" && member.Name!="SyncRoot") 
 						{
+                            // make this a little faster
+                            // means that everything is serialized, except in the current assembly
 							if(Assembly.GetAssembly(member.DeclaringType)!=Assembly.GetExecutingAssembly() || member is MethodInfo || (member.GetCustomAttributes(typeof(SerializeAttribute),false).Length==1 && ((SerializeAttribute)member.GetCustomAttributes(typeof(SerializeAttribute),false)[0]).Level>=level)) 
 							{				
-								if(toSerialize.GetType().Namespace!="System.Windows.Forms")
+								if(obj.GetType().Namespace!="System.Windows.Forms")
 								{ 
-									object val=toSerialize.GetType().InvokeMember(member.Name,BindingFlags.Public
+									object val=obj.GetType().InvokeMember(member.Name,BindingFlags.Public
 										|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField,
-										null,toSerialize,null);
-									stringBuilder.Append(indent+member.Name);
+										null,obj,null);
+									builder.Append(indent+member.Name);
 									if(val!=null)
 									{
-										stringBuilder.Append(" ("+val.GetType().Name+")");
+										builder.Append(" ("+val.GetType().Name+")");
 									}
-									stringBuilder.Append(":\n");
-									Serialize(val,indent+indentationText,stringBuilder,level);
+									builder.Append(":\n");
+									Serialize(val,indent+indentationText,builder,level);
 								}
 							}
 						}
 					}
-					if(toSerialize is ISerializeSpecial)
+                    // that really isnt all that great
+                    // maybe a map should always serialize itself for real, however, maybe not in the test
+					if(obj is ISerializeSpecial)
 					{
-						((ISerializeSpecial)toSerialize).Serialize(indent,stringBuilder,level);
+						((ISerializeSpecial)obj).Serialize(indent,builder,level);
 					}
-					else if(toSerialize is System.Collections.IEnumerable)
+					else if(obj is System.Collections.IEnumerable)
 					{
-						foreach(object entry in (System.Collections.IEnumerable)toSerialize)
+						foreach(object entry in (System.Collections.IEnumerable)obj)
 						{
-							stringBuilder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
-							Serialize(entry,indent+indentationText,stringBuilder,level);
+							builder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
+							Serialize(entry,indent+indentationText,builder,level);
 						}
 					}
 				}
@@ -3297,10 +3053,6 @@ namespace Meta
 		}
 		public bool IsBetween(Extent extent)
 		{
-			if(extent!=null && extent.Start.Line==24 && extent.Start.Column==13)
-			{
-				int asdf=0;
-			}
 			if(extent!=null)
 			{
 				if(this.greater(extent.Start) || this.Equals(extent.Start))
@@ -3314,10 +3066,6 @@ namespace Meta
 			return false;
 
 		}
-//		public bool IsBetween(SourcePosition start,SourcePosition end)
-//		{
-//			return false;
-//		}
 		private int line;
 		private int column;
 		public SourcePosition(int line,int column)
@@ -3407,7 +3155,6 @@ namespace Meta
 				return Start.Line.GetHashCode()*Start.Column.GetHashCode()*End.Line.GetHashCode()*End.Column.GetHashCode();
 			}
 		}
-
 		[Serialize]
 		public SourcePosition Start
 		{
@@ -3442,6 +3189,7 @@ namespace Meta
 			return (Extent)extents[extent];
 		}
 	}
+    // refactor
 	public class Parser
 	{
 		private string text;
@@ -3464,7 +3212,6 @@ namespace Meta
 				{
 					Consume(c);
 				}
-//				index+=characters.Length;
 			}
 			else
 			{
@@ -3472,20 +3219,6 @@ namespace Meta
 			}
 			return consumed;
 		}
-//		private bool TryConsume(string characters)
-//		{
-//			bool consumed;
-//			if(index+characters.Length<text.Length && text.Substring(index,characters.Length)==characters)
-//			{
-//				consumed=true;
-//				index+=characters.Length;
-//			}
-//			else
-//			{
-//				consumed=false;
-//			}
-//			return consumed;
-//		}
 		private string Rest
 		{
 			get
@@ -3503,10 +3236,6 @@ namespace Meta
 		}
 		private void Consume(char character)
 		{
-//			if(character==unixNewLine)
-//			{
-//				line++;
-//			}
 			if(!TryConsume(character))
 			{
 				throw new ApplicationException("Unexpected token "+text[index]+" ,expected "+character);
@@ -3641,7 +3370,6 @@ namespace Meta
 			get
 			{
 				return line;
-//				return text.Substring(0,index).Split('\n').Length;
 			}
 		}
 		private int Column
@@ -3698,48 +3426,35 @@ namespace Meta
 					Map statements=new NormalMap();
 					while(Look()!=endOfFileChar)
 					{
-//						if(!Comment())
-//						{
-							Map statement=Function();
-							if(Rest.IndexOf("returnInMap")<40)
-							{
-								int asdf=0;
-							}
-							if(statement==null)
-							{
-								statement=Statement(ref defaultKey);
-							}
-							statements[counter]=statement;
-							counter++;
+						Map statement=Function();
+						if(Rest.IndexOf("returnInMap")<40)
+						{
+							int asdf=0;
+						}
+						if(statement==null)
+						{
+							statement=Statement(ref defaultKey);
+						}
+						statements[counter]=statement;
+						counter++;
 
-							//Whitespace();
-							// TODO: fix newlines
-							NewLine(); // this should not be eaten
-//							while(Comment())
-//							{
-//								NewLine();
-//							}
-							string newIndentation=GetIndentation();
-							if(newIndentation.Length<indentationCount)
-							{
-								indentationCount--; // TODO: make this local variable???
-								break;
-							}
-							else if(newIndentation.Length==indentationCount)
-							{
-								Consume(newIndentation);
-							}
-							else
-							{
-								throw new ApplicationException("incorrect indentation");
-							}		
-
-//						}
-//						else
-//						{
-//							NewLine();
-//						}
-
+						//Whitespace();
+						// TODO: fix newlines
+						NewLine(); // this should not be eaten
+						string newIndentation=GetIndentation();
+						if(newIndentation.Length<indentationCount)
+						{
+							indentationCount--; // TODO: make this local variable???
+							break;
+						}
+						else if(newIndentation.Length==indentationCount)
+						{
+							Consume(newIndentation);
+						}
+						else
+						{
+							throw new ApplicationException("incorrect indentation");
+						}		
 					}
 					// TODO: combine???
 					program[CodeKeys.Program]=statements;
@@ -3805,16 +3520,9 @@ namespace Meta
 			{
 				string integerString="";
 				integerString+=ConsumeGet();
-				while(true)
+				while(LookAny(integerChars)) // should be one function
 				{
-					if(LookAny(integerChars)) // should be one function
-					{
-						integerString+=ConsumeGet();
-					}
-					else
-					{
-						break;
-					}
+					integerString+=ConsumeGet();
 				}
 				Map literal=new NormalMap(Meta.Integer.ParseInteger(integerString));
 				integer=new NormalMap();
@@ -3911,8 +3619,7 @@ namespace Meta
 		}
 		public const char lookupStartChar='[';
 		public const char lookupEndChar=']';
-		public char[] lookupStringForbiddenChars=new char[] {callChar,indentationChar,'\r','\n',statementChar,selectChar,stringEscapeChar,functionChar,stringChar,lookupStartChar,lookupEndChar,emptyMapChar};
-		// combine with number chars
+		public static char[] lookupStringForbiddenChars=new char[] {callChar,indentationChar,'\r','\n',statementChar,selectChar,stringEscapeChar,functionChar,stringChar,lookupStartChar,lookupEndChar,emptyMapChar};
 		public char[] lookupStringFirstCharAdditionalForbiddenChars=new char[] {'1','2','3','4','5','6','7','8','9'};
 		private Map LookupString()
 		{
@@ -3948,8 +3655,7 @@ namespace Meta
 		private Map LookupAnything()
 		{
 			Map lookupAnything;
-//			Extent extent=StartExpression();
-			if(TryConsume(lookupStartChar)) // separate into TryConsume and Consume, only try, and throw
+			if(TryConsume(lookupStartChar))
 			{
 				lookupAnything=Expression();
 				Consume(lookupEndChar);
@@ -3958,7 +3664,6 @@ namespace Meta
 			{
 				lookupAnything=null;
 			}
-//			EndExpression(extent,lookupAnything);
 			return lookupAnything;
 		}
 
@@ -4050,7 +3755,7 @@ namespace Meta
 			EndExpression(extent,function);
 			return function;
 		}
-		const char statementChar='=';
+		public const char statementChar='=';
 		public Map Statement(ref int count)
 		{
 			Extent extent=StartExpression();
@@ -4142,11 +3847,6 @@ namespace Meta
 		public FileSystem()
 		{
 			Load();
-//			// unlogical
-//			this.map=Process.Current.Parse(Path);
-//			this.map.Parent=Gac.singleton;
-//			// this is a little unlogical
-//			this.Parent=Gac.singleton;
 		}
 		private void Load()
 		{
@@ -4188,28 +3888,12 @@ namespace Meta
 	}
 	public class Gac:Map
 	{
-//		private Hashtable assemblies=new Hashtable();
-//		private bool LoadAssembly(string assemblyName)
-//		{
-//			Map key=new NormalMap(assemblyName);
-//			bool loaded;
-//			if(!assemblies.ContainsKey(key))
-//			{
-//				Assembly assembly=Assembly.LoadWithPartialName(assemblyName);
-//				assemblies[key]=assembly;
-//				loaded=assembly!=null;
-//			}
-//			else
-//			{
-//				loaded=true;
-//			}
-//			return loaded;
-//		}
 		private Map cache=new NormalMap();
 		private bool LoadAssembly(string assemblyName)
 		{
 			Map key=new NormalMap(assemblyName);
 			bool loaded;
+            // refactor
 			if(!cache.ContainsKey(key))
 			{
 				Assembly assembly=Assembly.LoadWithPartialName(assemblyName);
@@ -4250,6 +3934,7 @@ namespace Meta
 				{
 					if(key.IsString)
 					{
+                        // refactor
 						if(!cache.ContainsKey(key))
 						{
 							if(LoadAssembly(key.GetString()))
@@ -4271,24 +3956,6 @@ namespace Meta
 					{
 						val=null;
 					}
-//					Assembly assembly=Assembly.LoadWithPartialName(key.GetString());
-//					val=new NormalMap();
-//					ArrayList assemblyNamespaces=new ArrayList();
-//					foreach(Type type in assembly.GetExportedTypes())
-//					{
-//						if(type.DeclaringType==null)
-//						{
-//							val[type.Name]=new TypeMap(type);
-//						}
-//					}
-//					if(!Process.loadedAssemblies.Contains(assembly.Location))
-//					{
-//						Process.loadedAssemblies.Add(assembly.Location);
-//					}
-//					else
-//					{
-//						int asdf=0;
-//					}
 				}
 				catch
 				{
@@ -4296,36 +3963,6 @@ namespace Meta
 				}
 				return val;
 			}
-//			get
-//			{
-//				Map val;
-//				try
-//				{
-//					Assembly assembly=Assembly.LoadWithPartialName(key.GetString());
-//					val=new NormalMap();
-//					ArrayList assemblyNamespaces=new ArrayList();
-//					foreach(Type type in assembly.GetExportedTypes())
-//					{
-//						if(type.DeclaringType==null)
-//						{
-//							val[type.Name]=new TypeMap(type);
-//						}
-//					}
-//					if(!Process.loadedAssemblies.Contains(assembly.Location))
-//					{
-//						Process.loadedAssemblies.Add(assembly.Location);
-//					}
-//					else
-//					{
-//						int asdf=0;
-//					}
-//				}
-//				catch
-//				{
-//					val=null;
-//				}
-//				return val;
-//			}
 			set
 			{
 				throw new ApplicationException("Cannot set key "+key.ToString()+" in library.");
@@ -4369,16 +4006,7 @@ namespace Meta
 			}
 			return containsKey;
 		}
-        // make this the default implementation or do not override here
-		public override List<Map> Array
-		{
-			get
-			{
-				return new List<Map>();
-			}
-		}
 		protected Map cachedAssemblyInfo=new NormalMap();
-//		protected Map cache=new NormalMap();
 		static Gac()
 		{
 			Gac gac=new Gac();
@@ -4665,6 +4293,10 @@ namespace Meta
 
 	public class Integer
 	{
+        public Integer(Map map)
+        {
+            this.data = map.GetInteger().data;
+        }
 		public static Integer ParseInteger(string text)
 		{
 

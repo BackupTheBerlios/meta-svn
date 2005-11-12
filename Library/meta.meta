@@ -518,8 +518,11 @@ library=
 			|Meta.Interpreter.Multiply
 				arg
 		greater=
-			|Meta.Interpreter.Greater
-				arg
+			|Meta.Integer.op_GreaterThan
+				Meta.Integer
+					arg.[1]
+				Meta.Integer
+					arg.[2]
 		smaller=
 			|Meta.Interpreter.Smaller
 				arg
@@ -928,3 +931,4 @@ editor=
 												arg
 												menu.[topKey].[arg]
 			current=form
+		form.ShowDialog*

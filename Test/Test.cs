@@ -39,7 +39,7 @@ namespace Test
 
 			//			MethodInfo[] methods=typeof(Integer).GetMethods();
             ExecuteTests test = new ExecuteTests(typeof(Tests), Path.Combine(Directory.GetParent(Process.LibraryPath).FullName, "Test"));
-            //FileSystem.singleton["editor"].Call(Map.Empty,Map.Empty);
+            //FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
 		}
 	}
 	public class Tests 
@@ -177,7 +177,10 @@ namespace testClasses
 			def[1]="null";
 			def["y"]="null";
 			def["p2"]="null";
-			arg=(Map)Interpreter.Merge(def,arg);
+            Map toMerge = new NormalMap();
+            toMerge[1] = def;
+            toMerge[2] = arg;
+			arg=(Map)Interpreter.Merge(toMerge);
 
 			this.x=arg[1].GetString();
 			this.y=arg["y"].GetString();
@@ -189,10 +192,14 @@ namespace testClasses
 			def[1]="null";
 			def["b"]="null";
 			def["c"]="null";
-			arg=(Map)Interpreter.Merge(def,arg);
+            Map toMerge = new NormalMap();
+            toMerge[1] = def;
+            toMerge[2] = arg;
+            // merging shouldnt be used here, not relevant to the test
+			arg=(Map)Interpreter.Merge(toMerge);
 			return arg[1].GetString()+arg["b"].GetString()+arg["c"].GetString()+
 				this.x+this.y+this.z;
-		}
+		}   
 	}
 	public class IndexerNoConversion:TestClass 
 	{
