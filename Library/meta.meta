@@ -440,8 +440,16 @@ testSubDir=
 library=
 	map=
 		while=
-			|Meta.Interpreter.While
-				arg
+			|
+				stop=arg.condition*
+				next=
+					[*]=
+						|*
+					[1]=
+						|
+							arg.function*
+							while arg
+				next.[stop] arg
 		apply=
 			|applyImplementation
 				array=arg.array
