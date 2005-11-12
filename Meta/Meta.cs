@@ -80,7 +80,6 @@ namespace Meta
             }
         }
 		private Extent extent;
-
 	}
 	public class Throw
 	{
@@ -98,8 +97,7 @@ namespace Meta
 		public BreakPoint(SourcePosition position)
 		{
 			this.position=position;
-		}
-		
+		}		
 		public string FileName
 		{
 			get
@@ -117,66 +115,66 @@ namespace Meta
 		private SourcePosition position;
 		string fileName;
 	}
-    // get rid of this
-	public class Argument
-	{
-		public static void ContainsKey(Map map,Map key)
-		{
-			if(!map.ContainsKey(key))
-			{
-				throw new ApplicationException("Functions expects keyword argument "+Serialize.Value(key));
-			}
-		}
-		public static void Integer(Map arg)
-		{
-			if(!arg.IsInteger)
-			{
-				throw new ApplicationException("arg is not an integer");
-			}
-		}
-		public static void IntegerArray(Map arg)
-		{
-			foreach(Map map in arg.Array)
-			{
-				if(!map.IsInteger)
-				{
-					throw new ApplicationException("not all array elements in argument are integers");
-				}
-			}
-		}
-		public static void ExactArrayCount(Map parameter,int count)
-		{
-			if(parameter.Array.Count!=count)
-			{
-				throw new ApplicationException("did not pass array of length "+count.ToString()+" to function");
-			}
-		}
-		public static void MinimalArrayCount(Map arg,int count)
-		{
-			if(arg.Array.Count<count)
-			{
-				throw new ApplicationException("count is too small");
-			}
-		}
-		public static void Boolean(Map arg)
-		{
-			if(!arg.IsBoolean)
-			{
-				throw new ApplicationException("argument is not boolean");
-			}
-		}
-		public static void BooleanArray(Map arg)
-		{
-			foreach(Map map in arg.Array)
-			{
-				if(!map.IsBoolean)
-				{
-					throw new ApplicationException("one of the argument array elements is not boolean");
-				}
-			}
-		}
+	//// get rid of this
+	//public class Argument
+	//{
+	//    public static void ContainsKey(Map map,Map key)
+	//    {
+	//        if(!map.ContainsKey(key))
+	//        {
+	//            throw new ApplicationException("Functions expects keyword argument "+Serialize.Value(key));
+	//        }
+	//    }
+	//    public static void Integer(Map arg)
+	//    {
+	//        if(!arg.IsInteger)
+	//        {
+	//            throw new ApplicationException("arg is not an integer");
+	//        }
+	//    }
+	//    public static void IntegerArray(Map arg)
+	//    {
+	//        foreach(Map map in arg.Array)
+	//        {
+	//            if(!map.IsInteger)
+	//            {
+	//                throw new ApplicationException("not all array elements in argument are integers");
+	//            }
+	//        }
+	//    }
+	//    public static void ExactArrayCount(Map parameter,int count)
+	//    {
+	//        if(parameter.Array.Count!=count)
+	//        {
+	//            throw new ApplicationException("did not pass array of length "+count.ToString()+" to function");
+	//        }
+	//    }
+	//    public static void MinimalArrayCount(Map arg,int count)
+	//    {
+	//        if(arg.Array.Count<count)
+	//        {
+	//            throw new ApplicationException("count is too small");
+	//        }
+	//    }
+	//    public static void Boolean(Map arg)
+	//    {
+	//        if(!arg.IsBoolean)
+	//        {
+	//            throw new ApplicationException("argument is not boolean");
+	//        }
+	//    }
+	//    public static void BooleanArray(Map arg)
+	//    {
+	//        foreach(Map map in arg.Array)
+	//        {
+	//            if(!map.IsBoolean)
+	//            {
+	//                throw new ApplicationException("one of the argument array elements is not boolean");
+	//            }
+	//        }
+	//    }
 
-	}
+	//}
 	public class Process
 	{
 		Thread thread;
@@ -518,88 +516,10 @@ namespace Meta
 		}
 		public static List<string> loadedAssemblies=new List<string>();
 	}
-	// TODO: rename remove
+	// rename remove
 	public class Interpreter
 	{
-		public static void While(Map arg)
-		{
-			while(arg["condition"].Call(Map.Empty,Process.Current.Caller).GetBoolean())
-			{
-				arg["function"].Call(Map.Empty,Process.Current.Caller);
-			}
-		}
-		public static Map Apply(Map arg)
-		{
-			// TODO: ensure "function" is callable, maybe?
-			Argument.ContainsKey(arg,"function");
-			Argument.ContainsKey(arg,"array");
-			Map application=new NormalMap();
-			int counter=1;
-			arg.Parent=(Map)Process.Current.callers[Process.Current.callers.Count-2];
-			foreach(Map element in arg["array"].Array)
-			{
-				application[counter]=arg["function"].Call(element,Process.Current.Caller);
-				counter++;
-			}
-			return application;
-		}
-
-		public static Map Or(Map arg) 
-		{
-			Argument.BooleanArray(arg);
-			bool or=false;
-			foreach(Map map in arg.Array)
-			{
-				if(map.GetBoolean())
-				{
-					or=true;
-					break;
-				}
-			}
-			return or;
-		}
-		public static Map Add(Map arg)
-		{
-			Argument.IntegerArray(arg);
-			Integer sum=0;
-			foreach(Map map in arg.Array)
-			{
-				sum+=map.GetInteger();
-			}
-			return sum;
-		}
-		public static Map Multiply(Map arg) 
-		{
-			Argument.IntegerArray(arg);
-			Integer product=1;
-			foreach(Map map in arg.Array)
-			{
-				product*=map.GetInteger();
-			}
-			return product;
-		}
-		public static Map Greater(Map parameter)
-		{
-			Argument.IntegerArray(parameter);
-			Argument.ExactArrayCount(parameter,2);
-			return parameter[1].GetInteger()>parameter[2].GetInteger();
-		}
-		public static Map Smaller(Map parameter)
-		{
-			Argument.IntegerArray(parameter);
-			Argument.ExactArrayCount(parameter,2);
-			return parameter[1].GetInteger()<parameter[2].GetInteger();
-		}
-		public static Map BitwiseOr(Map arg)
-		{
-			Argument.IntegerArray(arg);
-			Integer or=0;
-			foreach(Map map in arg.Array)
-			{
-				or|=map.GetInteger();
-			}
-			return or;
-		}
+		// remove
 		public static Map Join(Map arg) 
 		{
 			Integer i=1;
@@ -614,34 +534,6 @@ namespace Meta
 			}
 			return array;
 		}
-		public static Map And(Map arg) 
-		{
-			Argument.BooleanArray(arg);
-			bool and=true;
-			foreach(Map map in arg.Array)
-			{
-				if(!map.GetBoolean())
-				{
-					and=false;
-					break;
-				}
-			}
-			return and;
-		}
-		public static Map Equal(Map arg) 
-		{
-			bool equal=true;
-			for(int i=0;i+1<arg.Array.Count;i++)
-			{
-				if(!arg.Array[i].Equals(arg.Array[i+1]))
-				{
-					equal=false;
-					break;
-				}
-			}
-			return equal;
-		}
-        // get rid of this, should be implemented in Meta
 		public static Map Merge(Map map)
 		{
 			Map result=new NormalMap();
@@ -741,61 +633,45 @@ namespace Meta
 		}
 		public Integer GetIntegerDefault()
 		{
-				Integer number;
-				if(this.Equals(Map.Empty))
+			Integer number;
+			if(this.Equals(Map.Empty))
+			{
+				number=0;
+			}
+			else if(this.Count==1 && this.ContainsKey(Map.Empty))
+			{
+				if(this[Map.Empty].GetInteger()!=null)
 				{
-					number=0;
-				}
-				else if(this.Count==1 && this.ContainsKey(Map.Empty))
-				{
-					if(this[Map.Empty].GetInteger()!=null)
-					{
-						number=this[Map.Empty].GetInteger()+1;
-					}
-					else
-					{
-						number=null;
-					}
+					number=this[Map.Empty].GetInteger()+1;
 				}
 				else
 				{
 					number=null;
 				}
-				return number;
+			}
+			else
+			{
+				number=null;
+			}
+			return number;
 		}
 		public bool IsStringDefault
 		{
 			get
 			{
-				string text="";
-				if(Array.Count!=Keys.Count)
+				bool isString;
+				if (Array.Count == Keys.Count)
 				{
-					text=null;
+					isString=this.Array.TrueForAll(delegate(Map map)
+					{
+						return Transform.IsIntegerInRange(map, (int)Char.MinValue, (int)Char.MaxValue);
+					});
 				}
 				else
 				{
-					foreach(Map val in this.Array)
-					{
-						if(val.IsInteger)
-						{
-							try
-							{
-								text+=Convert.ToChar(val.GetInteger().GetInt32());
-							}
-							catch
-							{
-								text=null;
-								break;
-							}
-						}
-						else
-						{
-							text=null;
-							break;
-						}
-					}
+					isString = false;
 				}
-				return text!=null;
+				return isString;
 			}
 		}		
 		public virtual bool IsString
@@ -1576,7 +1452,7 @@ namespace Meta
 			}
 			return dotNet;
 		}
-		private static bool IsIntegerInRange(Map meta,Integer minValue,Integer maxValue)
+		public static bool IsIntegerInRange(Map meta,Integer minValue,Integer maxValue)
 		{
 			return meta.IsInteger && meta.GetInteger()>=minValue && meta.GetInteger()<=maxValue;
 		}

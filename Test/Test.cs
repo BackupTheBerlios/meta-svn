@@ -38,8 +38,8 @@ namespace Test
 
 
 			//			MethodInfo[] methods=typeof(Integer).GetMethods();
-            ExecuteTests test = new ExecuteTests(typeof(Tests), Path.Combine(Directory.GetParent(Process.LibraryPath).FullName, "Test"));
-            //FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
+			ExecuteTests test = new ExecuteTests(typeof(Tests), Path.Combine(Directory.GetParent(Process.LibraryPath).FullName, "Test"));
+			//FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
 		}
 	}
 	public class Tests 
