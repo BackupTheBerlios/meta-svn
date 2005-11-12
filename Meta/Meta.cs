@@ -52,6 +52,7 @@ namespace Meta
 	public class SpecialKeys
 	{
 		public static readonly Map Parent="parent";
+		// refactor
 		public static readonly Map Parameter="arg";
 		public static readonly Map Current="current";
 	}
@@ -141,7 +142,7 @@ namespace Meta
 		}
 		public Map Parse(TextReader textReader)
 		{
-			return Expression(Compile(textReader),new NormalMap());
+			return Expression(Compile(textReader),Map.Empty,Map.Empty);
 		}
 		// maybe make this part of Interpreter, which should be renamed to Meta
 		public static Map Compile()
@@ -200,16 +201,16 @@ namespace Meta
 			}
 		}
 		private BreakPoint breakPoint=new BreakPoint(new SourcePosition(0,0));
-		public Map Expression(Map code,Map context)
+		public Map Expression(Map code,Map context,Map arg)
 		{
 			Map val;
 			if(code.ContainsKey(CodeKeys.Call))
 			{
-				val=Call(code[CodeKeys.Call],context);
+				val=Call(code[CodeKeys.Call],context,arg);
 			}
 			else if(code.ContainsKey(CodeKeys.Program))
 			{
-				val=Program(code[CodeKeys.Program],context);
+				val=Program(code[CodeKeys.Program],context,arg);
 			}
 			else if(code.ContainsKey(CodeKeys.Literal))
 			{
@@ -217,7 +218,7 @@ namespace Meta
 			}
 			else if(code.ContainsKey(CodeKeys.Select))
 			{
-				val=Select(code[CodeKeys.Select],context);
+				val=Select(code[CodeKeys.Select],context,arg);
 			}
 			else
 			{
@@ -243,20 +244,20 @@ namespace Meta
 		}
 		public List<Map> callers=new List<Map>();
 		// maybe rename context to current
-		public Map Call(Map code,Map context)
+		public Map Call(Map code,Map context,Map arg)
 		{
-			Map function=Expression(code[CodeKeys.Callable],context);
-			Map argument=Expression(code[CodeKeys.Argument],context);
+			Map function=Expression(code[CodeKeys.Callable],context,arg);
+			Map argument=Expression(code[CodeKeys.Argument],context,arg);
 			callers.Add(context);
 			//			Arg.Parent=Caller;
 			Map result=function.Call(argument,context);
 			callers.RemoveAt(callers.Count-1);
 			return result;
 		}
-		public Map Program(Map code,Map context)
+		public Map Program(Map code,Map context,Map arg)
 		{
 			Map local=new NormalMap();
-			Program(code,context,ref local);
+			Program(code,context,ref local,arg);
 			return local;
 		}
 		public bool Reversed
@@ -274,7 +275,7 @@ namespace Meta
 		{
 			return code.Extent.End.smaller(BreakPoint.Position);
 		}
-		private void Program(Map code,Map context,ref Map local)
+		private void Program(Map code,Map context,ref Map local,Map arg)
 		{
 			local.Parent=context;
 			for(int i=1;code.ContainsKey(i) && i>0;i++)
@@ -292,7 +293,7 @@ namespace Meta
 						reversed=false;
 					}
 				}
-				Statement((Map)code[i],ref local);
+				Statement((Map)code[i],ref local,arg);
 			}
 		}
 		public class Change
@@ -318,13 +319,13 @@ namespace Meta
 				}
 			}
 		}
-		public void Statement(Map code,ref Map context)
+		public void Statement(Map code,ref Map context,Map arg)
 		{
 			Map selected=context;
 			Map key;
 			for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
 			{
-				key=Expression((Map)code[CodeKeys.Key].Array[i],context);
+				key=Expression((Map)code[CodeKeys.Key].Array[i],context,arg);
 				Map selection=selected[key];
                 if (key.Equals(new NormalMap("testSubDir")))
                 {
@@ -344,7 +345,7 @@ namespace Meta
 					CallBreak(selected);
 				}
 			}
-			Map lastKey=Expression((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context);
+			Map lastKey=Expression((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context,arg);
 			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
 			{
 				Map oldValue;
@@ -359,7 +360,7 @@ namespace Meta
 				CallBreak(oldValue);
 			}
 			
-			Map val=Expression(code[CodeKeys.Value],context);
+			Map val=Expression(code[CodeKeys.Value],context,arg);
 
 			if(lastKey.Equals(SpecialKeys.Current))
 			{
@@ -375,17 +376,21 @@ namespace Meta
 		{
 			return code.Copy();
 		}
-		public Map Select(Map code,Map context)
+		public Map Select(Map code,Map context,Map arg)
 		{
-			Map selected=FindFirstKey(code,context);
+			Map selected=FindFirstKey(code,context,arg);
 			for(int i=1;i<code.Array.Count;i++)
 			{
-				Map key=Expression((Map)code.Array[i],context);
-				if(key.Equals(new NormalMap("Reversed")))
-				{
-					int asdf=0;
-				}
-				Map selection=selected[key];
+				Map key=Expression((Map)code.Array[i],context,arg);
+				Map selection;
+				//if (key.Equals(SpecialKeys.Parameter))
+				//{
+				//    selection = parameter;
+				//}
+				//else
+				//{
+					selection = selected[key];
+				//}
 				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[i]).Extent))
 				{
 					CallBreak(selection);
@@ -399,23 +404,28 @@ namespace Meta
 			}
 			return selected;
 		}
-		private Map FindFirstKey(Map code,Map context)
+		private Map FindFirstKey(Map code,Map context,Map arg)
 		{
-			Map key=Expression((Map)code.Array[0],context);
-			Map selected=context;
-            if (key.Equals(new NormalMap("impossibleKey")))
-            {
-            }
-			while(!selected.ContainsKey(key))
+			Map key=Expression((Map)code.Array[0],context,arg);
+			Map val;
+			if (key.Equals(SpecialKeys.Parameter))
 			{
-                selected = selected.FirstParent;
-
-                if (selected == null)
-				{
-					Throw.KeyNotFound(key,code.Extent);
-				}
+				val = arg;
 			}
-			Map val=selected[key];
+			else
+			{
+				Map selected = context;
+				while (!selected.ContainsKey(key))
+				{
+					selected = selected.FirstParent;
+
+					if (selected == null)
+					{
+						Throw.KeyNotFound(key, code.Extent);
+					}
+				}
+				val = selected[key];
+			}
 			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[0]).Extent))
 			{
 				CallBreak(val);
@@ -486,20 +496,8 @@ namespace Meta
         {
             this[Array.Count+1] = map;
         }
-		private bool isParameter=false;
-		public Map Caller
-		{
-			get
-			{
-				return caller;
-			}
-			set
-			{
-				caller=value;
-			}
-		}
-		private Map caller;
 		public static readonly Map Empty=new NormalMap();
+		// refactor
 		public virtual void Serialize(string indentation,StringBuilder stringBuilder,int level)
 		{
 			if(this.IsString)
@@ -543,7 +541,6 @@ namespace Meta
 			}
 			return boolean;
 		}
-
 		public virtual bool IsInteger
 		{
 			get
@@ -626,18 +623,18 @@ namespace Meta
 			return text;
 		}
 
-		public Map Parameter
-		{
-			get
-			{
-				return parameter;
-			}
-			set
-			{ 
-				parameter=value.Copy();
-			}
-		}
-		Map parameter=null;
+		//public Map Parameter
+		//{
+		//    get
+		//    {
+		//        return parameter;
+		//    }
+		//    set
+		//    { 
+		//        parameter=value.Copy();
+		//    }
+		//}
+		//Map parameter=null;
 
 
         public Map FirstParent
@@ -698,10 +695,10 @@ namespace Meta
                 {
                     val = Parent;
                 }
-                else if (key.Equals(SpecialKeys.Parameter))
-                {
-                    val = Parameter;
-                }
+				//else if (key.Equals(SpecialKeys.Parameter))
+				//{
+				//    val = Parameter;
+				//}
                 else if (key.Equals(SpecialKeys.Current))
                 {
                     val = this;
@@ -730,12 +727,12 @@ namespace Meta
         protected abstract void Set(Map key, Map val);
 
 
-		public virtual Map Call(Map parameter,Map caller)
+		public virtual Map Call(Map arg,Map caller)
 		{
-			this.Parameter=parameter;
+			//this.Parameter=parameter;
 			Map function=this[CodeKeys.Function];
 			Map result;
-			result=Process.Current.Expression(function,this);
+			result=Process.Current.Expression(function,this,arg);
 			return result;
 		}
 
@@ -757,11 +754,12 @@ namespace Meta
 		public bool ContainsKey(Map key)
 		{
 			bool containsKey;
-			if(key.Equals(SpecialKeys.Parameter))
-			{
-				containsKey=this.Parameter!=null;
-			}
-			else if(key.Equals(SpecialKeys.Parent))
+			//if(key.Equals(SpecialKeys.Parameter))
+			//{
+			//    containsKey=this.Parameter!=null;
+			//}
+			//else 
+			if(key.Equals(SpecialKeys.Parent))
 			{
 				containsKey=this.Parent!=null;
 			}
