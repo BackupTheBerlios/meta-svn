@@ -502,8 +502,28 @@ library=
 				[*]=1
 				[1]=*
 		and=
-			|Meta.Interpreter.And
-				arg
+			|sum
+				array=arg
+				function=
+					|library.logic.and.table.[arg]
+				start=1
+			table=
+				[
+					a=1
+					b=*
+				]=*
+				[
+					a=*
+					b=1
+				]=*
+				[
+					a=*
+					b=*
+				]=*
+				[
+					a=1
+					b=1
+				]=1
 		or=
 			|sum
 				array=arg
