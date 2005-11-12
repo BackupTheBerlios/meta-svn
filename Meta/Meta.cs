@@ -612,19 +612,19 @@ namespace Meta
 			}
 			return boolean;
 		}
-		public bool IsIntegerDefault
-		{
-			get
-			{
-				return Count==0 || (Count==1 && ContainsKey(Map.Empty) && this[Map.Empty].IsInteger);
-			}
-		}
 
 		public virtual bool IsInteger
 		{
 			get
 			{
 				return IsIntegerDefault;
+			}
+		}
+		public bool IsIntegerDefault
+		{
+			get
+			{
+				return Count==0 || (Count==1 && ContainsKey(Map.Empty) && this[Map.Empty].IsInteger);
 			}
 		}
 		public virtual Integer GetInteger()
@@ -655,6 +655,13 @@ namespace Meta
 			}
 			return number;
 		}
+		public virtual bool IsString
+		{
+			get
+			{
+				return IsStringDefault;
+			}
+		}
 		public bool IsStringDefault
 		{
 			get
@@ -673,48 +680,21 @@ namespace Meta
 				}
 				return isString;
 			}
-		}		
-		public virtual bool IsString
+		}
+		public virtual string GetString()
 		{
-			get
-			{
-				return IsStringDefault;
-			}
+			return GetStringDefault();
 		}
 		public string GetStringDefault()
 		{
 			string text="";
 			foreach(Map key in Keys)
 			{
-				if(key.IsInteger)
-				{
-					if(this[key].IsInteger)
-					{
-						try
-						{
-							text+=Convert.ToChar(this[key].GetInteger().GetInt32());
-						}
-						catch
-						{
-							return null;
-						}
-					}
-					else
-					{
-						return null;
-					}
-				}
-				else
-				{
-					return null;
-				}
+				text+=Convert.ToChar(this[key].GetInteger().GetInt32());
 			}
 			return text;
 		}
-		public virtual string GetString()
-		{
-			return GetStringDefault();
-		}
+
 		public Map Parameter
 		{
 			get
