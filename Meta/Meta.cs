@@ -98,13 +98,6 @@ namespace Meta
 		{
 			this.position=position;
 		}		
-		public string FileName
-		{
-			get
-			{
-				return fileName;
-			}
-		}
 		public SourcePosition Position
 		{
 			get
@@ -113,74 +106,12 @@ namespace Meta
 			}
 		}
 		private SourcePosition position;
-		string fileName;
 	}
-	//// get rid of this
-	//public class Argument
-	//{
-	//    public static void ContainsKey(Map map,Map key)
-	//    {
-	//        if(!map.ContainsKey(key))
-	//        {
-	//            throw new ApplicationException("Functions expects keyword argument "+Serialize.Value(key));
-	//        }
-	//    }
-	//    public static void Integer(Map arg)
-	//    {
-	//        if(!arg.IsInteger)
-	//        {
-	//            throw new ApplicationException("arg is not an integer");
-	//        }
-	//    }
-	//    public static void IntegerArray(Map arg)
-	//    {
-	//        foreach(Map map in arg.Array)
-	//        {
-	//            if(!map.IsInteger)
-	//            {
-	//                throw new ApplicationException("not all array elements in argument are integers");
-	//            }
-	//        }
-	//    }
-	//    public static void ExactArrayCount(Map parameter,int count)
-	//    {
-	//        if(parameter.Array.Count!=count)
-	//        {
-	//            throw new ApplicationException("did not pass array of length "+count.ToString()+" to function");
-	//        }
-	//    }
-	//    public static void MinimalArrayCount(Map arg,int count)
-	//    {
-	//        if(arg.Array.Count<count)
-	//        {
-	//            throw new ApplicationException("count is too small");
-	//        }
-	//    }
-	//    public static void Boolean(Map arg)
-	//    {
-	//        if(!arg.IsBoolean)
-	//        {
-	//            throw new ApplicationException("argument is not boolean");
-	//        }
-	//    }
-	//    public static void BooleanArray(Map arg)
-	//    {
-	//        foreach(Map map in arg.Array)
-	//        {
-	//            if(!map.IsBoolean)
-	//            {
-	//                throw new ApplicationException("one of the argument array elements is not boolean");
-	//            }
-	//        }
-	//    }
-
-	//}
 	public class Process
 	{
 		Thread thread;
 		private Map parameter;
 		private Map program;
-		// refactor
 		public Process(Map program,Map parameter)
 		{
 			this.thread=new Thread(new ThreadStart(Run));
@@ -2293,8 +2224,7 @@ namespace Meta
 			this.obj=obj;
 			this.type=type;
 		}
-		// TODO: refactor
-		public override Map Call(Map argument,Map caller) // assign the caller here somewhere, too
+		public override Map Call(Map argument,Map caller)
 		{
 			Map result;
 			try
@@ -2702,8 +2632,6 @@ namespace Meta
 			return result;
 		}
 	}
-    // refactor
-    // add option of serializing everything??
 	namespace TestingFramework
 	{
 		public interface ISerializeSpecial
@@ -2714,7 +2642,6 @@ namespace Meta
 		{
 			public abstract object Run(ref int level);
 		}
-        // refactor
 		public class ExecuteTests
 		{	
 			public const string indentationText="\t";
@@ -2771,7 +2698,6 @@ namespace Meta
 				{
 					builder.Append(indent+"null\n");
 				}
-                // refactor
 				else if(!(obj is KeyValuePair<Map,Map>) && obj.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
 					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) 
 				{
@@ -3728,8 +3654,11 @@ namespace Meta
 		{
 			Map key=new NormalMap(assemblyName);
 			bool loaded;
-            // refactor
-			if(!cache.ContainsKey(key))
+			if(cache.ContainsKey(key))
+			{
+				loaded=true;
+			}
+			else
 			{
 				Assembly assembly=Assembly.LoadWithPartialName(assemblyName);
 				if(assembly!=null)
@@ -3753,10 +3682,6 @@ namespace Meta
 				{
 					loaded=false;
 				}
-			}
-			else
-			{
-				loaded=true;
 			}
 			return loaded;
 		}
@@ -3825,7 +3750,7 @@ namespace Meta
 
 
 	
-		// TODO: get a copyright statement
+		// TODO: get license
 
 		//	Source: Microsoft KB Article KB317540
 		//
