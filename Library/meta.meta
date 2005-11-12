@@ -443,8 +443,31 @@ library=
 			|Meta.Interpreter.While
 				arg
 		apply=
-			|Meta.Interpreter.Apply
-				arg
+			|applyImplementation
+				array=arg.array
+				function=arg.function
+				index=1
+				result=*
+			applyImplementation=
+				|
+					stop=library.math.greater
+						arg.index
+						library.map.length arg.array
+					next=
+						[1]=
+							|arg.result
+						[*]=
+							|applyImplementation
+								array=arg.array
+								function=arg.function
+								index=library.math.add
+									arg.index
+									1
+								result=library.map.join
+									arg.result
+									=
+										arg.function arg.array.[arg.index]
+					current=next.[stop] arg
 		join=
 			|Meta.Interpreter.Join
 				arg
@@ -669,7 +692,7 @@ libraryTest=
 					"die Katze lief im Schnee."
 				apply=
 					applyMethod=
-						|add
+						|library.math.add
 							arg
 							1
 					current=library.map.apply
