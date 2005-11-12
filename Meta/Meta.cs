@@ -789,7 +789,7 @@ namespace Meta
                     val.Parent = this;
                     Set(key, val);
                 }
-                // what should happen when a .NET method returns null or void? for example
+                // what should happen when a .NET method returns null or void, null should maybe be a valid value to assign, or not
                 else
                 {
                 }
@@ -3763,34 +3763,11 @@ namespace Meta
 		protected override Map Get(Map key)
 		{
 			Map val;
-			try
+			if (key.IsString && cache.ContainsKey(key) || LoadAssembly(key.GetString()))
 			{
-				if (key.IsString)
-				{
-					// refactor
-					if (!cache.ContainsKey(key))
-					{
-						if (LoadAssembly(key.GetString()))
-						{
-							val = cache[key];
-						}
-						else
-						{
-							val = null;
-						}
-					}
-					else
-					{
-						// combine with above
-						val = cache[key];
-					}
-				}
-				else
-				{
-					val = null;
-				}
+				val = cache[key];
 			}
-			catch
+			else
 			{
 				val = null;
 			}
