@@ -571,7 +571,7 @@ library=
 					b=1
 				]=1
 		or=
-			|sum
+			|library.map.sum
 				array=arg
 				function=
 					|library.logic.or.table.[arg]
@@ -612,7 +612,7 @@ library=
 					start=*
 		multiply=
 			|Meta.NormalMap
-				sum
+				library.map.sum
 					array=arg
 					function=
 						|Meta.Integer.op_Multiply
@@ -1022,4 +1022,3 @@ editor=
 												arg
 												menu.[topKey].[arg]
 			current=form
-		form.ShowDialog*

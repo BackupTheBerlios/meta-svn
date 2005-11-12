@@ -64,10 +64,19 @@ namespace Meta
 
 	public class MetaException:ApplicationException
 	{
-		public MetaException(string message,Extent extent):base(message)
+		public MetaException(string message,Extent extent)
 		{
 			this.extent=extent;
+            this.message = message;
 		}
+        private string message;
+        public override string Message
+        {
+            get
+            {
+                return base.Message+" In line "+extent.Start.Line+", column "+extent.Start.Column;
+            }
+        }
 		private Extent extent;
 
 	}
@@ -389,8 +398,9 @@ namespace Meta
 				if(selection==null)
 				{
 					object x=selected[key];
-					Throw.KeyDoesNotExist(key,((Map)code[CodeKeys.Key].Array[i]).Extent);
-				}
+                    Throw.KeyDoesNotExist(key,code.Extent);
+                    //Throw.KeyDoesNotExist(key, ((Map)code[CodeKeys.Key].Array[i]).Extent);
+                }
 				selected=selection;
 				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
 				{
@@ -458,35 +468,39 @@ namespace Meta
 		{
 			Map key=Expression((Map)code.Array[0],context);
 			Map selected=context;
+            if (key.Equals(new NormalMap("Meta")))
+            {
+            }
 			while(!selected.ContainsKey(key))
 			{
-				if(selected.IsParameter)
-				{
-					while(!selected.ContainsKey(key))
+                //if(selected.IsParameter)
+                //{
+                //    while(!selected.ContainsKey(key))
+                //    {
+                //        if(selected.Caller!=null)
+                //        {
+                //            selected=selected.Caller;
+                //        }
+                //        else
+                //        {
+                //            selected=selected.Parent;
+                //        }
+                //        if(selected==null)
+                //        {
+                //            Throw.KeyNotFound(key,key.Extent);
+                //        }
+                //    }
+                //}
+                //else
+                //{
+                    selected = selected.FirstParent;
+
+                    //selected = selected.Parent;
+                    if (selected == null)
 					{
-						if(selected.Caller!=null)
-						{
-							selected=selected.Caller;
-						}
-						else
-						{
-							selected=selected.Parent;
-						}
-						if(selected==null)
-						{
-							Throw.KeyNotFound(key,key.Extent);
-						}
+						Throw.KeyNotFound(key,code.Extent);
 					}
-				}
-				else
-				{
-					
-					selected=selected.Parent;
-					if(selected==null)
-					{
-						Throw.KeyNotFound(key,key.Extent);
-					}
-				}
+                //}
 			}
 			Map val=selected[key];
 			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[0]).Extent))
@@ -678,6 +692,10 @@ namespace Meta
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeSpecial
 	{
+        public void Append(Map map)
+        {
+            this[Array.Count+1] = map;
+        }
 		public bool IsParameter
 		{
 			get
@@ -880,6 +898,19 @@ namespace Meta
 		Map parameter=null;
 
 
+        public Map FirstParent
+        {
+            get
+            {
+                return firstParent;
+            }
+            set
+            {
+                firstParent = value;
+            }
+        }
+        private Map firstParent;
+        // get rid of this
 		public virtual Map Parent
 		{
 			get
@@ -888,6 +919,10 @@ namespace Meta
 			}
 			set
 			{
+                if (parent == null)
+                {
+                    FirstParent = value;
+                }
 				parent=value;
 			}
 		}
@@ -3857,8 +3892,12 @@ namespace Meta
 			// unlogical
 			this.map=Process.Current.Parse(Path);
 			this.map.Parent=Gac.singleton;
+            // extremely unlogical, why does this already have a parent? it shouldnt
+            this.map.FirstParent = Gac.singleton;
 			// this is a little unlogical
 			this.Parent=Gac.singleton;
+            // unlogical, not sure whehter this is necessary
+            this.FirstParent = Gac.singleton;
 		}
 		public override List<Map> Keys
 		{
