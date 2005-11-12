@@ -129,3 +129,8 @@ Entry (KeyValuePair`2)
 								"false"
 							Value (NormalMap):
 								""
+		Entry (KeyValuePair`2)
+			Key (NormalMap):
+				"while"
+			Value (NormalMap):
+				"10"

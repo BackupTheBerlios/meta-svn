@@ -725,6 +725,19 @@ libraryTest=
 							=
 								x="y"
 								y="a"
+				while=
+					counter=*
+					SetCounter=
+						|
+							parent.parent.counter=arg
+					test=while
+						condition=
+							|library.math.smaller
+								counter
+								10
+						function=
+							|SetCounter library.math.increment counter
+					current=counter
 			bitwiseTest=library.bitwise.or
 				20
 				["System.Windows.Forms"].Keys.Tab
