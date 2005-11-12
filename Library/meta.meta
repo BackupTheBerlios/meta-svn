@@ -473,22 +473,21 @@ library=
 				array=map.Array.get*
 				current=array.Count.get*
 		sum=
-			|sum
+			|sumImplementation
 				index=1
 				array=arg.array
 				function=arg.function
 				result=arg.start
-			sum=
+			sumImplementation=
 				|
 					stop=math.greater
 						arg.index
 						length arg.array
-					i=arg.index
 					next=
 						[1]=
 							|arg.result
 						[*]=
-							|sum
+							|sumImplementation
 								index=math.add
 									arg.index
 									1
@@ -524,12 +523,23 @@ library=
 				Meta.Integer
 					arg.[2]
 		smaller=
-			|Meta.Interpreter.Smaller
-				arg
+			|Meta.Integer.op_LessThan
+				Meta.Integer
+					arg.[1]
+				Meta.Integer
+					arg.[2]
 	bitwise=
 		or=
-			|Meta.Interpreter.BitwiseOr
-				arg
+			|Meta.NormalMap
+				map.sum
+					array=arg
+					function=
+						|Meta.Integer.op_BitwiseOr
+							Meta.Integer
+								arg.a
+							Meta.Integer
+								arg.b
+					start=*
 map=
 	join=
 		|Meta.Interpreter.Join

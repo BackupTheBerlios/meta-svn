@@ -1172,7 +1172,7 @@ Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
-														"sum"
+														"sumImplementation"
 						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"argument"
@@ -1338,7 +1338,7 @@ Entry (KeyValuePair`2)
 																				"start"
 		Entry (KeyValuePair`2)
 			Key (NormalMap):
-				"sum"
+				"sumImplementation"
 			Value (NormalMap):
 				Entry (KeyValuePair`2)
 					Key (NormalMap):
@@ -1534,49 +1534,6 @@ Entry (KeyValuePair`2)
 															Key (NormalMap):
 																"literal"
 															Value (NormalMap):
-																"i"
-										Entry (KeyValuePair`2)
-											Key (NormalMap):
-												"value"
-											Value (NormalMap):
-												Entry (KeyValuePair`2)
-													Key (NormalMap):
-														"select"
-													Value (NormalMap):
-														Entry (KeyValuePair`2)
-															Key (NormalMap):
-																"1"
-															Value (NormalMap):
-																Entry (KeyValuePair`2)
-																	Key (NormalMap):
-																		"literal"
-																	Value (NormalMap):
-																		"arg"
-														Entry (KeyValuePair`2)
-															Key (NormalMap):
-																"2"
-															Value (NormalMap):
-																Entry (KeyValuePair`2)
-																	Key (NormalMap):
-																		"literal"
-																	Value (NormalMap):
-																		"index"
-								Entry (KeyValuePair`2)
-									Key (NormalMap):
-										"3"
-									Value (NormalMap):
-										Entry (KeyValuePair`2)
-											Key (NormalMap):
-												"key"
-											Value (NormalMap):
-												Entry (KeyValuePair`2)
-													Key (NormalMap):
-														"1"
-													Value (NormalMap):
-														Entry (KeyValuePair`2)
-															Key (NormalMap):
-																"literal"
-															Value (NormalMap):
 																"next"
 										Entry (KeyValuePair`2)
 											Key (NormalMap):
@@ -1728,7 +1685,7 @@ Entry (KeyValuePair`2)
 																																			Key (NormalMap):
 																																				"literal"
 																																			Value (NormalMap):
-																																				"sum"
+																																				"sumImplementation"
 																												Entry (KeyValuePair`2)
 																													Key (NormalMap):
 																														"argument"
@@ -2124,7 +2081,7 @@ Entry (KeyValuePair`2)
 																																										"function"
 								Entry (KeyValuePair`2)
 									Key (NormalMap):
-										"4"
+										"3"
 									Value (NormalMap):
 										Entry (KeyValuePair`2)
 											Key (NormalMap):
@@ -2902,7 +2859,7 @@ Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
-														"Interpreter"
+														"Integer"
 										Entry (KeyValuePair`2)
 											Key (NormalMap):
 												"3"
@@ -2911,7 +2868,7 @@ Entry (KeyValuePair`2)
 													Key (NormalMap):
 														"literal"
 													Value (NormalMap):
-														"Smaller"
+														"op_LessThan"
 						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"argument"
@@ -2943,17 +2900,187 @@ Entry (KeyValuePair`2)
 													Value (NormalMap):
 														Entry (KeyValuePair`2)
 															Key (NormalMap):
-																"select"
+																"call"
 															Value (NormalMap):
 																Entry (KeyValuePair`2)
 																	Key (NormalMap):
-																		"1"
+																		"callable"
 																	Value (NormalMap):
 																		Entry (KeyValuePair`2)
 																			Key (NormalMap):
-																				"literal"
+																				"select"
 																			Value (NormalMap):
-																				"arg"
+																				Entry (KeyValuePair`2)
+																					Key (NormalMap):
+																						"1"
+																					Value (NormalMap):
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"literal"
+																							Value (NormalMap):
+																								"Meta"
+																				Entry (KeyValuePair`2)
+																					Key (NormalMap):
+																						"2"
+																					Value (NormalMap):
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"literal"
+																							Value (NormalMap):
+																								"Integer"
+																Entry (KeyValuePair`2)
+																	Key (NormalMap):
+																		"argument"
+																	Value (NormalMap):
+																		Entry (KeyValuePair`2)
+																			Key (NormalMap):
+																				"program"
+																			Value (NormalMap):
+																				Entry (KeyValuePair`2)
+																					Key (NormalMap):
+																						"1"
+																					Value (NormalMap):
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"key"
+																							Value (NormalMap):
+																								Entry (KeyValuePair`2)
+																									Key (NormalMap):
+																										"1"
+																									Value (NormalMap):
+																										Entry (KeyValuePair`2)
+																											Key (NormalMap):
+																												"literal"
+																											Value (NormalMap):
+																												"1"
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"value"
+																							Value (NormalMap):
+																								Entry (KeyValuePair`2)
+																									Key (NormalMap):
+																										"select"
+																									Value (NormalMap):
+																										Entry (KeyValuePair`2)
+																											Key (NormalMap):
+																												"1"
+																											Value (NormalMap):
+																												Entry (KeyValuePair`2)
+																													Key (NormalMap):
+																														"literal"
+																													Value (NormalMap):
+																														"arg"
+																										Entry (KeyValuePair`2)
+																											Key (NormalMap):
+																												"2"
+																											Value (NormalMap):
+																												Entry (KeyValuePair`2)
+																													Key (NormalMap):
+																														"literal"
+																													Value (NormalMap):
+																														"1"
+										Entry (KeyValuePair`2)
+											Key (NormalMap):
+												"2"
+											Value (NormalMap):
+												Entry (KeyValuePair`2)
+													Key (NormalMap):
+														"key"
+													Value (NormalMap):
+														Entry (KeyValuePair`2)
+															Key (NormalMap):
+																"1"
+															Value (NormalMap):
+																Entry (KeyValuePair`2)
+																	Key (NormalMap):
+																		"literal"
+																	Value (NormalMap):
+																		"2"
+												Entry (KeyValuePair`2)
+													Key (NormalMap):
+														"value"
+													Value (NormalMap):
+														Entry (KeyValuePair`2)
+															Key (NormalMap):
+																"call"
+															Value (NormalMap):
+																Entry (KeyValuePair`2)
+																	Key (NormalMap):
+																		"callable"
+																	Value (NormalMap):
+																		Entry (KeyValuePair`2)
+																			Key (NormalMap):
+																				"select"
+																			Value (NormalMap):
+																				Entry (KeyValuePair`2)
+																					Key (NormalMap):
+																						"1"
+																					Value (NormalMap):
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"literal"
+																							Value (NormalMap):
+																								"Meta"
+																				Entry (KeyValuePair`2)
+																					Key (NormalMap):
+																						"2"
+																					Value (NormalMap):
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"literal"
+																							Value (NormalMap):
+																								"Integer"
+																Entry (KeyValuePair`2)
+																	Key (NormalMap):
+																		"argument"
+																	Value (NormalMap):
+																		Entry (KeyValuePair`2)
+																			Key (NormalMap):
+																				"program"
+																			Value (NormalMap):
+																				Entry (KeyValuePair`2)
+																					Key (NormalMap):
+																						"1"
+																					Value (NormalMap):
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"key"
+																							Value (NormalMap):
+																								Entry (KeyValuePair`2)
+																									Key (NormalMap):
+																										"1"
+																									Value (NormalMap):
+																										Entry (KeyValuePair`2)
+																											Key (NormalMap):
+																												"literal"
+																											Value (NormalMap):
+																												"1"
+																						Entry (KeyValuePair`2)
+																							Key (NormalMap):
+																								"value"
+																							Value (NormalMap):
+																								Entry (KeyValuePair`2)
+																									Key (NormalMap):
+																										"select"
+																									Value (NormalMap):
+																										Entry (KeyValuePair`2)
+																											Key (NormalMap):
+																												"1"
+																											Value (NormalMap):
+																												Entry (KeyValuePair`2)
+																													Key (NormalMap):
+																														"literal"
+																													Value (NormalMap):
+																														"arg"
+																										Entry (KeyValuePair`2)
+																											Key (NormalMap):
+																												"2"
+																											Value (NormalMap):
+																												Entry (KeyValuePair`2)
+																													Key (NormalMap):
+																														"literal"
+																													Value (NormalMap):
+																														"2"
 Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"booleanTest"

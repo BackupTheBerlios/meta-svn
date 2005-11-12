@@ -2430,7 +2430,9 @@ namespace Meta
 		{
 			get
 			{
-				return (Map)dictionary[key];
+				Map val;
+                dictionary.TryGetValue(key,out val);
+                return val;
 			}
 			set
 			{
@@ -4293,6 +4295,7 @@ namespace Meta
 
 	public class Integer
 	{
+        // this is not even used, maybe, however it might be in case of overflow
         public Integer(Map map)
         {
             this.data = map.GetInteger().data;
