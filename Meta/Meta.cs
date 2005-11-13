@@ -38,6 +38,7 @@ namespace Meta
 	{
 		public static readonly Map Literal="literal";
 
+		// remove
 		public static readonly Map Function="function";
 
 		public static readonly Map Call="call";
@@ -1120,11 +1121,6 @@ namespace Meta
 			}
 			return text;
 		}
-
-		private static string IntegerValue(Map number)
-		{
-			return number.GetInteger().ToString();
-		}
 		private static string StringKey(Map key, string indentation)
 		{
 			string text;
@@ -1138,6 +1134,141 @@ namespace Meta
 			}
 			return text;
 		}
+		private static bool IsLiteralKey(string text)
+		{
+			return -1 == text.IndexOfAny(Parser.lookupStringForbiddenChars);//.fornew char[] { '@', ' ', '\t', '\r', '\n', '=', '.', '/', '\'', '"', '(', ')', '[', ']', '*', ':', '#', '!' });
+		}
+		public static string MapValue(Map map, string indentation)
+		{
+			string text;
+			text = Parser.unixNewLine.ToString();
+			foreach (KeyValuePair<Map, Map> entry in map)
+			{
+				if (entry.Key.Equals(CodeKeys.Function))
+				{
+				    text+= indentation + Parser.functionChar + Expression(entry.Value, indentation);
+				    //text+= Program(indentation + Parser.functionChar + Expression(entry.Value, indentation + Parser.indentationChar);
+				}
+				else
+				{
+					text += indentation + Key((Map)entry.Key, indentation) + Parser.statementChar + Value((Map)entry.Value, indentation + '\t');
+					if (!text.EndsWith(Parser.unixNewLine.ToString()))
+					{
+						text += Parser.unixNewLine;
+					}
+				}
+			}
+			return text;
+		}
+		public static string Expression(Map code, string indentation)
+		{
+			string text;
+			if(code.ContainsKey(CodeKeys.Call))
+			{
+				text=Call(code[CodeKeys.Call],indentation);
+			}
+			else if(code.ContainsKey(CodeKeys.Program))
+			{
+				text=Program(code[CodeKeys.Program],indentation);
+			}
+			else if(code.ContainsKey(CodeKeys.Literal))
+			{
+				text=Literal(code[CodeKeys.Literal],indentation);
+			}
+			else if(code.ContainsKey(CodeKeys.Select))
+			{
+				text=Select(code[CodeKeys.Select],indentation);
+			}
+			else
+			{
+				throw new ApplicationException("Cannot serialize map.");
+			}
+			return text;
+		}
+		public static string Call(Map code,string indentation)
+		{
+			return Expression(code[CodeKeys.Callable],indentation) + Parser.callChar + Expression(code[CodeKeys.Argument],indentation);
+		}
+		public static string Program(Map code,string indentation)
+		{
+			string text;
+			if (code.Array.Count == 0)
+			{
+				text = "*";
+			}
+			else
+			{
+				text = Parser.unixNewLine.ToString();
+				int autoKeys = 0;
+				foreach (Map statement in code.Array)
+				{
+					text += Statement(statement, indentation + Parser.indentationChar,ref autoKeys);
+					if (!text.EndsWith(Parser.unixNewLine.ToString()))
+					{
+						text += Parser.unixNewLine;
+					}
+				}
+			}
+			return text;
+		}
+		public static string Statement(Map code,string indentation,ref int autoKeys)
+		{
+			Map key = code[CodeKeys.Key];
+			string text;
+			if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
+			{
+				text = indentation + Parser.functionChar + Expression(code[CodeKeys.Value][CodeKeys.Literal], indentation);
+				//text+= Program(indentation + Parser.functionChar + Expression(entry.Value, indentation + Parser.indentationChar);
+			}
+			else
+			{
+				Map autoKey;
+				text = indentation;
+				Map value=code[CodeKeys.Value];
+				if(key.Count == 1 && (autoKey=key[1][CodeKeys.Literal])!=null && autoKey.IsInteger && autoKey.GetInteger()==autoKeys+1)
+				{
+					autoKeys++;
+					if (value.ContainsKey(CodeKeys.Program))
+					{
+						text += "=";
+					}
+				}
+				else
+				{
+					text+=Select(code[CodeKeys.Key], indentation) + Parser.statementChar;
+				}
+				text += Expression(value, indentation);
+			}
+			return text;
+		}
+		public static string Literal(Map code,string indentation)
+		{
+			return Value(code,indentation);
+		}
+		public static string Select(Map code,string indentation)
+		{
+			string text = Lookup(code[1],indentation);
+			for (int i = 2; code.ContainsKey(i); i++)
+			{
+				text += Parser.selectChar + Lookup(code[i], indentation);
+			}
+			return text;
+		}
+		public static string Lookup(Map code, string indentation)
+		{
+			string text;
+			if (code.ContainsKey(CodeKeys.Literal))
+			{
+				text = Key(code[CodeKeys.Literal], indentation);
+			}
+			else
+			{
+				text = Parser.lookupStartChar + Expression(code,indentation) + Parser.lookupEndChar;
+			}
+			return text;
+		}
+
+
 		private static string StringValue(Map val, string indentation)
 		{
 			string text;
@@ -1164,25 +1295,11 @@ namespace Meta
 			}
 			return text;
 		}
-		public static string MapValue(Map map, string indentation)
+		private static string IntegerValue(Map number)
 		{
-			string text;
-			text = Parser.unixNewLine.ToString();
-			foreach (KeyValuePair<Map, Map> entry in map)
-			{
-				text += indentation + Key((Map)entry.Key, indentation) + Parser.statementChar + Value((Map)entry.Value, indentation + '\t');
-				if (!text.EndsWith(Parser.unixNewLine.ToString()))
-				{
-					text += Parser.unixNewLine;
-				}
-			}
-			return text;
+			return number.GetInteger().ToString();
 		}
 
-		private static bool IsLiteralKey(string text)
-		{
-			return -1 == text.IndexOfAny(Parser.lookupStringForbiddenChars);//.fornew char[] { '@', ' ', '\t', '\r', '\n', '=', '.', '/', '\'', '"', '(', ')', '[', ']', '*', ':', '#', '!' });
-		}
 	}
 	//public class Serialize
 	//{
@@ -3582,8 +3699,8 @@ namespace Meta
 			EndExpression(extent,lookup);
 			return lookup;
 		}
-		const char callChar=' ';
-		const char selectChar='.';
+		public const char callChar=' ';
+		public const char selectChar='.';
 		private Map Select(Map keys)
 		{
 			Map select;
