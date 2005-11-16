@@ -34,31 +34,31 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			Map x = new NormalMap();
-			x["hello"] = "world";
-			x["world"] = "hello";
-			Map basicTest=FileSystem.singleton["basicTest"];//.Call(Map.Empty, Map.Empty);
-			Visualizer.TestShowVisualizer(basicTest);
+			//Map x = new NormalMap();
+			//x["hello"] = "world";
+			//x["world"] = "hello";
+			//Map basicTest=FileSystem.singleton["basicTest"];//.Call(Map.Empty, Map.Empty);
+			//Visualizer.TestShowVisualizer(basicTest);
 //			FileSystem.singleton["libraryTest"].Call(Map.Empty,Map.Empty);
 
 
 			//			MethodInfo[] methods=typeof(Integer).GetMethods();
-			//ExecuteTests test = new ExecuteTests(typeof(Tests), Path.Combine(Directory.GetParent(Process.LibraryPath).FullName, "Test"));
+			ExecuteTests test = new ExecuteTests(typeof(Tests), Path.Combine(Directory.GetParent(Process.LibraryPath).FullName, "Test"));
 			//FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
 		}
 	}
 	public class Tests 
 	{
-		public class Basic:TestCase
+		public class Basic : TestCase
 		{
 			public override object Run(ref int level)
 			{
-				Map argument=new NormalMap();
-				argument[1]="first arg";
-				argument[2]="second=arg";
-				level=2;
-//				return Process.Current.Call(FileSystem.singleton["basicTest"]["function"],FileSystem.singleton);
-				return FileSystem.singleton["basicTest"].Call(argument,new NormalMap());
+				Map argument = new NormalMap();
+				argument[1] = "first arg";
+				argument[2] = "second=arg";
+				level = 2;
+				//				return Process.Current.Call(FileSystem.singleton["basicTest"]["function"],FileSystem.singleton);
+				return FileSystem.singleton["basicTest"].Call(argument, new NormalMap());
 			}
 		}
 		public class Library:TestCase

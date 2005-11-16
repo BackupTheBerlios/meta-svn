@@ -1076,9 +1076,19 @@ Entry (KeyValuePair`2)
 		"testClasses.MemberTest"
 Entry (KeyValuePair`2)
 	Key (NormalMap):
+		"3"
+	Value (NormalMap):
+		""
+Entry (KeyValuePair`2)
+	Key (NormalMap):
 		"classPropertyValue"
 	Value (NormalMap):
 		"b"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"4"
+	Value (NormalMap):
+		""
 Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"instancePropertyValue"
@@ -1114,6 +1124,11 @@ Entry (KeyValuePair`2)
 		"indexerNoConversion"
 	Value (ObjectMap):
 		"testClasses.IndexerNoConversion"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"5"
+	Value (NormalMap):
+		""
 Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"indexerNoConversionIndexed"
@@ -1598,6 +1613,11 @@ Entry (KeyValuePair`2)
 																"arg"
 Entry (KeyValuePair`2)
 	Key (NormalMap):
+		"7"
+	Value (NormalMap):
+		""
+Entry (KeyValuePair`2)
+	Key (NormalMap):
 		"staticEvent"
 	Value (Event):
 		Entry (KeyValuePair`2)
@@ -1605,6 +1625,11 @@ Entry (KeyValuePair`2)
 				"add"
 			Value (Method):
 				""
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"8"
+	Value (NormalMap):
+		""
 Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"resultFromDelegate"
@@ -1620,6 +1645,11 @@ Entry (KeyValuePair`2)
 		"instanceEventChanged"
 	Value (NormalMap):
 		"1"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"9"
+	Value (NormalMap):
+		""
 Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"instanceEvent"
@@ -1834,6 +1864,11 @@ Entry (KeyValuePair`2)
 		"System.Windows.Forms.TextBox, Text: 
 Alle meine Entchen,
 schwimmen auf dem S..."
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"11"
+	Value (NormalMap):
+		""
 Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"lines"

@@ -254,6 +254,10 @@ namespace Meta
 			callers.Add(context);
 			//			Arg.Parent=Caller;
 			Map result=function.Call(argument,context);
+			if (result == null)
+			{
+				result = Map.Empty;
+			}
 			callers.RemoveAt(callers.Count-1);
 			return result;
 		}
@@ -416,6 +420,12 @@ namespace Meta
 		{
 			Map key=Expression((Map)code.Array[0],context,arg);
 			Map val;
+			if (key.Equals(new NormalMap("join")))
+			{
+			} 
+			if (key.Equals(new NormalMap("impossibleKey")))
+			{
+			}
 			if (key.Equals(SpecialKeys.Arg))
 			{
 				val = arg;
@@ -509,6 +519,13 @@ namespace Meta
     [Serializable]
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeSpecial
 	{
+		public Map Current
+		{
+			get
+			{
+				return this;
+			}
+		}
         public void Append(Map map)
         {
             this[Array.Count+1] = map;
@@ -747,7 +764,8 @@ namespace Meta
 				clone[key]=this[key];
 			}
 			clone.Extent=Extent;
-			clone.Parent=Parent;
+			clone.FirstParent = FirstParent;
+			clone.Parent = Parent;
 			return clone;
 		}
 		public bool ContainsKey(Map key)
@@ -940,6 +958,8 @@ namespace Meta
 		public override Map Copy()
 		{
 			Map clone=strategy.Copy();
+			// move all of this into Map
+			clone.FirstParent = FirstParent;
 			clone.Parent=Parent;
 			clone.Extent=Extent;
 			return clone;
@@ -2653,6 +2673,10 @@ namespace Meta
 		protected override Map Get(Map key)
 		{
 			Map val;
+			if (key.Equals(new NormalMap("Current")))
+			{
+				int asdf = 0;
+			}
 			if (key.Equals(SpecialKeys.Parent))
 			{
 				val = Parent;

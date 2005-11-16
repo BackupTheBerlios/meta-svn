@@ -471,10 +471,12 @@ library=
 								index=library.math.add
 									arg.index
 									1
-								result=library.map.join
+								object=Meta.ObjectMap
 									arg.result
-									=
-										arg.function arg.array.[arg.index]
+								argument=arg.function arg.array.[arg.index]
+								object.Append
+									argument
+								result=object.Current.get*
 					current=next.[stop] arg
 		join=
 			|sum
@@ -489,8 +491,11 @@ library=
 							function=
 								|impossibleKey.Append
 									arg
-						current=impossibleKey
+						whatever=impossibleKey.Current.get*
 				start=*
+		join=
+			|Meta.Interpreter.Join
+				arg
 		contains=
 			|
 				object=Meta.ObjectMap
