@@ -506,7 +506,7 @@ library=
 			|
 				object=Meta.ObjectMap
 					arg
-				current=Meta.Transform.ToMap
+				current=Meta.NormalMap
 					object.Keys.get*
 		merge=
 			|Meta.Interpreter.Merge

@@ -86,21 +86,6 @@ namespace Meta
 			throw new MetaException("The key "+Serialize.Value(key)+" could not be found.",extent);
 		}
 	}
-	//public class BreakPoint
-	//{
-	//    public BreakPoint(SourcePosition position)
-	//    {
-	//        this.position=position;
-	//    }		
-	//    public SourcePosition Position
-	//    {
-	//        get
-	//        {
-	//            return position;
-	//        }
-	//    }
-	//    private SourcePosition position;
-	//}
 	public class Process
 	{
 		Thread thread;
@@ -137,18 +122,11 @@ namespace Meta
 		{
 			return Expression(Compile(textReader),Map.Empty,Map.Empty);
 		}
-		// maybe make this part of Interpreter, which should be renamed to Meta
-		public static Map Compile()
-		{
-			using(TextReader reader=new StreamReader(FileSystem.Path,Encoding.Default))
-			{
-				return Compile(reader);
-			}
-		}
 		public static Map Compile(TextReader textReader)
 		{
 			return new Parser(textReader.ReadToEnd(),FileSystem.Path).Program();
 		}
+		// refactor this stuff to use something more sensible
 		public void Start()
 		{
 			thread.Start();
@@ -166,7 +144,6 @@ namespace Meta
 		}
 		public void Continue()
 		{
-			// somewhat dangerous
 			if(thread.ThreadState==System.Threading.ThreadState.Suspended)
 			{
 				thread.Resume();
@@ -180,8 +157,7 @@ namespace Meta
 			}
 		}
 		private static Dictionary<Thread,Process> processes=new Dictionary<Thread,Process>();
-		private bool reversed=false;
-
+		private bool reverseDebugging=false;
 		public SourcePosition BreakPoint
 		{
 			get
@@ -219,6 +195,7 @@ namespace Meta
 			}
 			return val;
 		}
+		// remove, make unnecessary
 		public Map Caller
 		{
 			get
@@ -235,6 +212,7 @@ namespace Meta
 				return caller;
 			}
 		}
+		// remove
 		public List<Map> callers=new List<Map>();
 		public Map Call(Map code,Map current,Map arg)
 		{
@@ -249,15 +227,15 @@ namespace Meta
 			callers.RemoveAt(callers.Count-1);
 			return result;
 		}
-		public bool Reversed
+		public bool ReverseDebugging
 		{
 			get
 			{
-				return reversed;
+				return reverseDebugging;
 			}
 			set
 			{
-				reversed=value;
+				reverseDebugging=value;
 			}
 		}
 		private bool ResumeAfterReverse(Map code)
@@ -276,7 +254,7 @@ namespace Meta
 			current.Parent=parent;
 			for(int i=1;code.ContainsKey(i) && i>0;i++)
 			{
-				if(Reversed)
+				if(ReverseDebugging)
 				{
 					if(!ResumeAfterReverse((Map)code[i]))
 					{
@@ -286,12 +264,13 @@ namespace Meta
 					}
 					else
 					{
-						reversed=false;
+						reverseDebugging=false;
 					}
 				}
 				Statement((Map)code[i],ref current,arg);
 			}
 		}
+		// implement
 		public class Change
 		{
 			private Map map;
@@ -567,7 +546,6 @@ namespace Meta
 		{
 			return GetIntegerDefault();
 		}
-		// refactor
 		public Integer GetIntegerDefault()
 		{
 			Integer number;
@@ -575,20 +553,13 @@ namespace Meta
 			{
 				number=0;
 			}
-			else if(this.Count==1 && this.ContainsKey(Map.Empty))
+			else if(this.Count==1 && this.ContainsKey(Map.Empty) && this[Map.Empty].GetInteger()!=null)
 			{
-				if(this[Map.Empty].GetInteger()!=null)
-				{
-					number=this[Map.Empty].GetInteger()+1;
-				}
-				else
-				{
-					number=null;
-				}
+				number = 1 + this[Map.Empty].GetInteger();
 			}
 			else
 			{
-				number=null;
+				throw new ApplicationException("Map is not an integer");
 			}
 			return number;
 		}
@@ -606,10 +577,9 @@ namespace Meta
 				bool isString;
 				if (Array.Count == Keys.Count)
 				{
-					isString=this.Array.TrueForAll(delegate(Map map)
-					{
-						return Transform.IsIntegerInRange(map, (int)Char.MinValue, (int)Char.MaxValue);
-					});
+					isString=this.Array.TrueForAll(
+						delegate(Map map) {
+							return Transform.IsIntegerInRange(map, (int)Char.MinValue, (int)Char.MaxValue);});
 				}
 				else
 				{
@@ -631,6 +601,7 @@ namespace Meta
 			}
 			return text;
 		}
+		// rethink, fix this, rename to Scope
         public Map FirstParent
         {
             get
@@ -666,16 +637,14 @@ namespace Meta
 			}
 		}
 		public virtual List<Map> Array
-		{ 
+		{
 			get
 			{
-				List<Map> array=new List<Map>();
-				foreach(Map key in this.Keys) // TODO: need to sort the keys, by integer?? or require that keys are already sorted
+				List<Map> array = new List<Map>();
+				int index = 1;
+				while (this.ContainsKey(index))
 				{
-					if(key.IsInteger)
-					{
-						array.Add(this[key]);
-					}
+					array.Add(this[index]);
 				}
 				return array;
 			}
@@ -684,20 +653,7 @@ namespace Meta
         {
             get
             {
-                Map val;
-				//if (key.Equals(SpecialKeys.Parent))
-				//{
-				//    val = Parent;
-				//}
-				//else if (key.Equals(SpecialKeys.Current))
-				//{
-				//    val = this;
-				//}
-				//else
-				//{
-                    val = Get(key);
-				//}
-                return val;
+                return Get(key);
             }
             set
             {
@@ -707,9 +663,9 @@ namespace Meta
                     val.Parent = this;
                     Set(key, val);
                 }
-                // what should happen when a .NET method returns null or void, null should maybe be a valid value to assign, or not
                 else
                 {
+					throw new ApplicationException("Could not set key.");
                 }
             }
         }
@@ -719,10 +675,8 @@ namespace Meta
 
 		public virtual Map Call(Map arg,Map caller)
 		{
-			//this.Parameter=parameter;
 			Map function=this[CodeKeys.Function];
-			Map result;
-			result=Process.Current.Expression(function,this,arg);
+			Map result=Process.Current.Expression(function,this,arg);
 			return result;
 		}
 
@@ -730,41 +684,24 @@ namespace Meta
 		{
 			get;
 		}
-		public virtual Map Copy()
+		public Map Copy()
 		{
-			Map clone=new NormalMap();
-			foreach(Map key in this.Keys)
-			{
-				clone[key]=this[key];
-			}
-			clone.Extent=Extent;
+			Map clone = CopyImplementation();
 			clone.FirstParent = FirstParent;
 			clone.Parent = Parent;
+			clone.Extent = Extent;
 			return clone;
 		}
-		public bool ContainsKey(Map key)
+		protected virtual Map CopyImplementation()
 		{
-			bool containsKey;
-			//if(key.Equals(SpecialKeys.Parameter))
-			//{
-			//    containsKey=this.Parameter!=null;
-			//}
-			//else 
-			if(key.Equals(SpecialKeys.Parent))
+			Map clone = new NormalMap();
+			foreach (Map key in this.Keys)
 			{
-				containsKey=this.Parent!=null;
+				clone[key] = this[key];
 			}
-			else if(key.Equals(SpecialKeys.Current))
-			{
-				containsKey=true;
-			}
-			else
-			{
-				containsKey=ContainsKeyImplementation(key);
-			}
-			return containsKey;
+			return clone;
 		}
-		protected virtual bool ContainsKeyImplementation(Map key)
+		public virtual bool ContainsKey(Map key)
 		{
 			return Keys.Contains(key);
 		}
@@ -927,16 +864,12 @@ namespace Meta
 				return strategy.Keys;
 			}
 		}
-		public override Map Copy()
+		protected override Map CopyImplementation()
 		{
-			Map clone=strategy.Copy();
-			// move all of this into Map
-			clone.FirstParent = FirstParent;
-			clone.Parent=Parent;
-			clone.Extent=Extent;
-			return clone;
+			// why does the strategy do the cloning?
+			return strategy.Copy();
 		}
-		protected override bool ContainsKeyImplementation(Map key)
+		public override bool ContainsKey(Map key)
 		{
 			return strategy.ContainsKey(key);
 		}
@@ -977,6 +910,15 @@ namespace Meta
 	}
 	public class NormalMap:StrategyMap
 	{
+		public NormalMap(List<Map> list):this()
+		{
+			int index = 1;
+			foreach (object entry in list)
+			{
+				this[index] = Transform.ToMeta(entry);
+				index++;
+			}
+		}
 		public NormalMap(Strategy strategy):base(strategy)
 		{
 		}
@@ -1047,7 +989,7 @@ namespace Meta
         {
 			throw new ApplicationException("Cannot set key in Web.");
         }
-		public override Map Copy()
+		protected override Map CopyImplementation()
 		{
 			return this;
 		}
@@ -1289,14 +1231,14 @@ namespace Meta
 	}
 	public class Transform
 	{
-		public static object ToDotNet(Map meta,Type target)//,out bool isConverted)
+		public static object ToDotNet(Map meta,Type target)
 		{
 			object dotNet=null;
-			if(target.IsSubclassOf(typeof(Delegate)
-				||target.Equals(typeof(Delegate)))&& meta.ContainsKey(CodeKeys.Function))
+			if((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
+				&& meta.ContainsKey(CodeKeys.Function))
 			{
-				MethodInfo invoke=target.GetMethod("Invoke",BindingFlags.Instance
-					|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+				MethodInfo invoke=target.GetMethod("Invoke",
+					BindingFlags.Instance|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
 				Delegate function=Method.CreateDelegateFromCode(target,invoke,meta);
 				dotNet=function;
 			}
@@ -1359,7 +1301,6 @@ namespace Meta
 						break;
 					case TypeCode.DateTime:
 						dotNet = null;
-						//isConverted=false;
 						break;
 					case TypeCode.DBNull:
 						if(meta.IsInteger && meta.GetInteger()==0)
@@ -1447,14 +1388,6 @@ namespace Meta
 						throw new ApplicationException("not implemented");
 				}
 			}
-			//if(dotNet!=null)
-			//{
-			//    isConverted=true;
-			//}
-			//else
-			//{
-			//    isConverted=false;
-			//}
 			return dotNet;
 		}
 		public static bool IsIntegerInRange(Map meta,Integer minValue,Integer maxValue)
@@ -1462,17 +1395,17 @@ namespace Meta
 			return meta.IsInteger && meta.GetInteger()>=minValue && meta.GetInteger()<=maxValue;
 		}
         // is this even needed?
-		public static Map ToMap(List<Map> list)
-		{
-			Map map=new NormalMap();
-			int index=1;
-			foreach(object entry in list)
-			{
-				map[index]=Transform.ToMeta(entry);
-				index++;
-			}
-			return map;
-		}
+		//public static Map ToMap(List<Map> list)
+		//{
+		//    Map map = new NormalMap();
+		//    int index = 1;
+		//    foreach (object entry in list)
+		//    {
+		//        map[index] = Transform.ToMeta(entry);
+		//        index++;
+		//    }
+		//    return map;
+		//}
 		public static Map ToMeta(object dotNet)
 		{
 			Map meta;
@@ -1593,7 +1526,7 @@ namespace Meta
 	public class Method: Map
 	{
 		// clone isnt correct, should only override a part of the cloning, the actual cloning, not parent assignment 
-		public override Map Copy()
+		protected override Map CopyImplementation()
 		{
 			return new Method(this.name,this.obj,this.type);
 		}
@@ -1854,7 +1787,7 @@ namespace Meta
 				return type;
 			}
 		}
-		public override Map Copy()
+		protected override Map CopyImplementation()
 		{
 			return new TypeMap(type);
 		}
@@ -1887,7 +1820,7 @@ namespace Meta
 		{
 			return obj.ToString();
 		}
-		public override Map Copy()
+		protected override Map CopyImplementation()
 		{
 			return new ObjectMap(obj);
 		}
@@ -2305,7 +2238,7 @@ namespace Meta
 			return result;
 		}
 
-		public override Map Copy()
+		protected override Map CopyImplementation()
 		{
 			return new Event(eventInfo,obj,type);
 		}
@@ -2351,7 +2284,7 @@ namespace Meta
 			this.obj=obj;
 			this.type=type;
 		}
-		public override Map Copy()
+		protected override Map CopyImplementation()
 		{
 			return new Property(property,obj,type);
 		}
@@ -2420,7 +2353,7 @@ namespace Meta
 				return array;
 			}
 		}
-		protected override bool ContainsKeyImplementation(Map key)
+		public override bool ContainsKey(Map key)
 		{
 			if(key.IsString)
 			{
@@ -3796,7 +3729,7 @@ namespace Meta
 			}
 		}
 
-		protected override bool ContainsKeyImplementation(Map key)
+		public override bool ContainsKey(Map key)
 		{
 			bool containsKey;
 			if(key.IsString)
