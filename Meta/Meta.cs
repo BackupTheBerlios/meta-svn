@@ -25,7 +25,6 @@ using System.Threading;
 using Microsoft.CSharp;
 using System.Windows.Forms;
 using System.Globalization;
-using Meta.Testing;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.Collections.Generic;
@@ -37,14 +36,10 @@ namespace Meta
 	public class CodeKeys
 	{
 		public static readonly Map Literal="literal";
-
-		// remove
 		public static readonly Map Function="function";
-
 		public static readonly Map Call="call";
 		public static readonly Map Callable="callable";
 		public static readonly Map Argument="argument";
-
 		public static readonly Map Select="select";
 		public static readonly Map Program="program";
 		public static readonly Map Key="key";
@@ -53,7 +48,6 @@ namespace Meta
 	public class SpecialKeys
 	{
 		public static readonly Map Parent="parent";
-		// refactor
 		public static readonly Map Arg="arg";
 		public static readonly Map Current="current";
 	}
@@ -64,8 +58,6 @@ namespace Meta
 		public static readonly Map Get="get";
 		public static readonly Map Set="set";
 	}
-
-
 	public class MetaException:ApplicationException
 	{
 		public MetaException(string message,Extent extent)
@@ -73,7 +65,6 @@ namespace Meta
 			this.extent=extent;
             this.message = message;
 		}
-        private string message;
         public override string Message
         {
             get
@@ -81,6 +72,7 @@ namespace Meta
                 return message+" In line "+extent.Start.Line+", column "+extent.Start.Column;
             }
         }
+        private string message;
 		private Extent extent;
 	}
 	public class Throw
@@ -94,21 +86,21 @@ namespace Meta
 			throw new MetaException("The key "+Serialize.Value(key)+" could not be found.",extent);
 		}
 	}
-	public class BreakPoint
-	{
-		public BreakPoint(SourcePosition position)
-		{
-			this.position=position;
-		}		
-		public SourcePosition Position
-		{
-			get
-			{
-				return position;
-			}
-		}
-		private SourcePosition position;
-	}
+	//public class BreakPoint
+	//{
+	//    public BreakPoint(SourcePosition position)
+	//    {
+	//        this.position=position;
+	//    }		
+	//    public SourcePosition Position
+	//    {
+	//        get
+	//        {
+	//            return position;
+	//        }
+	//    }
+	//    private SourcePosition position;
+	//}
 	public class Process
 	{
 		Thread thread;
@@ -190,7 +182,7 @@ namespace Meta
 		private static Dictionary<Thread,Process> processes=new Dictionary<Thread,Process>();
 		private bool reversed=false;
 
-		public BreakPoint BreakPoint
+		public SourcePosition BreakPoint
 		{
 			get
 			{
@@ -201,7 +193,7 @@ namespace Meta
 				breakPoint=value;
 			}
 		}
-		private BreakPoint breakPoint=new BreakPoint(new SourcePosition(0,0));
+		private SourcePosition breakPoint=new SourcePosition(0,0);
 		public Map Expression(Map code,Map context,Map arg)
 		{
 			Map val;
@@ -257,7 +249,6 @@ namespace Meta
 			callers.RemoveAt(callers.Count-1);
 			return result;
 		}
-
 		public bool Reversed
 		{
 			get
@@ -271,7 +262,7 @@ namespace Meta
 		}
 		private bool ResumeAfterReverse(Map code)
 		{
-			return code.Extent.End.smaller(BreakPoint.Position);
+			return code.Extent.End.IsSmaller(BreakPoint);
 		}
 		public Map Program(Map code,Map current,Map arg)
 		{
@@ -347,14 +338,14 @@ namespace Meta
                     Throw.KeyDoesNotExist(key,code.Extent);
                 }
 				selected=selection;
-				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
+				if(BreakPoint!=null && BreakPoint.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
 				{
 
 					CallBreak(selected);
 				}
 			}
 			Map lastKey=Expression((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context,arg);
-			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
+			if(BreakPoint!=null && BreakPoint.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
 			{
 				Map oldValue;
 				if(selected.ContainsKey(lastKey))
@@ -399,7 +390,7 @@ namespace Meta
 				{
 					selection = selected[key];
 				}
-				if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[i]).Extent))
+				if(BreakPoint!=null && BreakPoint.IsBetween(((Map)code.Array[i]).Extent))
 				{
 					CallBreak(selection);
 				}
@@ -441,7 +432,7 @@ namespace Meta
 				}
 				val = selected[key];
 			}
-			if(BreakPoint!=null && BreakPoint.Position.IsBetween(((Map)code.Array[0]).Extent))
+			if(BreakPoint!=null && BreakPoint.IsBetween(((Map)code.Array[0]).Extent))
 			{
 				CallBreak(val);
 			}
@@ -457,7 +448,7 @@ namespace Meta
 			{
 				if(data==null)
 				{
-					data=new NormalMap("nothing");;
+					data=new NormalMap("nothing");
 				}
 				Break(data);
 				Thread.CurrentThread.Suspend();
@@ -503,7 +494,7 @@ namespace Meta
 			return result;
 		}
 	}
-	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeSpecial
+	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
 		public Map Current
 		{
@@ -1296,36 +1287,12 @@ namespace Meta
 		}
 
 	}
-	// transfromations can only ever happen when calling a method
-	// fields should be unavailable from meta, i think, although maybe not
-	// conversion should be part of method, or so
-	// or DotNetContainer
-	// but there it wouldnt be accessable from Method
-	// and then there ist Event, and so on
-	// this is pretty problematic
-	// i dont know how to handle this yet
-	// might have to think about it a bit
-	// how are enums implemented, i think with public fields
-	// public fields are needed
-	// no events dont really matter
-	// what i really need now is a good and clever way to remove this whole goddamn class
-	// this sutff is just plain to open and flexible here
-	// it really is in the way maybe remove it completely
-	// all the conversions shouldnt be too many
-	// it is too specialized to be its own class
 	public class Transform
 	{
-		// should be part of integer
-
-		public static object ToDotNet(Map meta,Type target)
-		{
-			bool isConverted;
-			return ToDotNet(meta,target,out isConverted);
-		}
-		public static object ToDotNet(Map meta,Type target,out bool isConverted)
+		public static object ToDotNet(Map meta,Type target)//,out bool isConverted)
 		{
 			object dotNet=null;
-			if((target.IsSubclassOf(typeof(Delegate))
+			if(target.IsSubclassOf(typeof(Delegate)
 				||target.Equals(typeof(Delegate)))&& meta.ContainsKey(CodeKeys.Function))
 			{
 				MethodInfo invoke=target.GetMethod("Invoke",BindingFlags.Instance
@@ -1340,13 +1307,15 @@ namespace Meta
 				bool isElementConverted=true;
 				for(int i=0;i<meta.Count;i++)
 				{
-					object element=Transform.ToDotNet(meta[i+1],type,out isElementConverted);
-					if(isElementConverted)
+					object element = Transform.ToDotNet(meta[i + 1], type);
+					//object element = Transform.ToDotNet(meta[i + 1], type, out isElementConverted);
+					if (element!=null)
 					{
 						arguments.SetValue(element,i);
 					}
 					else
 					{
+						isElementConverted = false;
 						break;
 					}
 				}
@@ -1389,7 +1358,8 @@ namespace Meta
 						}
 						break;
 					case TypeCode.DateTime:
-						isConverted=false;
+						dotNet = null;
+						//isConverted=false;
 						break;
 					case TypeCode.DBNull:
 						if(meta.IsInteger && meta.GetInteger()==0)
@@ -1477,14 +1447,14 @@ namespace Meta
 						throw new ApplicationException("not implemented");
 				}
 			}
-			if(dotNet!=null)
-			{
-				isConverted=true;
-			}
-			else
-			{
-				isConverted=false;
-			}
+			//if(dotNet!=null)
+			//{
+			//    isConverted=true;
+			//}
+			//else
+			//{
+			//    isConverted=false;
+			//}
 			return dotNet;
 		}
 		public static bool IsIntegerInRange(Map meta,Integer minValue,Integer maxValue)
@@ -1697,7 +1667,17 @@ namespace Meta
 					ParameterInfo[] parameters=method.GetParameters();
 					for(int i=0;argumentsMatched && i<parameters.Length;i++)
 					{
-						arguments.Add(Transform.ToDotNet((Map)argument.Array[i],parameters[i].ParameterType,out argumentsMatched));
+						object arg=Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType);
+						if (arg != null)
+						{
+							arguments.Add(arg);
+						}
+						else
+						{
+							argumentsMatched = false;
+							break;
+						}
+						//arguments.Add(Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType, out argumentsMatched));
 					}
 					if(argumentsMatched)
 					{
@@ -2418,7 +2398,7 @@ namespace Meta
 			throw new ApplicationException("Cannot assign in property "+property.Name+".");
 		}
 	}// rename to DotNetMap or so
-	public abstract class DotNetContainer: Map, ISerializeSpecial
+	public abstract class DotNetContainer: Map, ISerializeEnumerableSpecial
 	{
 		public override string Serialize() //string indentation, StringBuilder stringBuilder,int level)
 		{
@@ -2529,9 +2509,9 @@ namespace Meta
 						int asdf = 0;
 					}
 					FieldInfo field = (FieldInfo)member;
-					bool isConverted;
-					object val = Transform.ToDotNet(value, field.FieldType, out isConverted);
-					if (isConverted)
+					//bool isConverted;
+					object val = Transform.ToDotNet(value, field.FieldType);//, out isConverted);
+					if (val!=null)
 					{
 						field.SetValue(obj, val);
 					}
@@ -2559,9 +2539,8 @@ namespace Meta
 			}
 			else if (obj != null && key.IsInteger && type.IsArray)
 			{
-				bool isConverted;
-				object converted = Transform.ToDotNet(value, type.GetElementType(), out isConverted);
-				if (isConverted)
+				object converted = Transform.ToDotNet(value, type.GetElementType());
+				if (converted!=null)
 				{
 					((Array)obj).SetValue(converted, key.GetInteger().GetInt32());
 					return;
@@ -2713,238 +2692,182 @@ namespace Meta
 			return result;
 		}
 	}
-	namespace Testing
+
+	public interface ISerializeEnumerableSpecial
 	{
-		public interface ISerializeSpecial
+		string Serialize();
+	}
+	public class TestAttribute:Attribute
+	{
+		public TestAttribute():this(1)
 		{
-			string Serialize();
 		}
-		//public abstract class TestCase
-		//{
-		//    public abstract object Run(ref int level);
-		//}
-		public class TestAttribute:Attribute
+		public TestAttribute(int level)
 		{
-			public TestAttribute():this(1)
-			{
-			}
-			public TestAttribute(int level)
-			{
-				this.level = level;
-			}
-			private int level;
-			public int Level
-			{
-				get
-				{
-					return level;
-				}
-			}
+			this.level = level;
 		}
-		public abstract class TestRunner
+		private int level;
+		public int Level
 		{
-			protected abstract string TestDirectory
+			get
 			{
-				get;
-			}
-			public void Run()
-			{
-				bool allTestsSucessful = true;
-				foreach (MethodInfo test in this.GetType().GetMethods())
-				{
-					object[] attributes=test.GetCustomAttributes(typeof(TestAttribute),false);
-					if (attributes.Length == 1)
-					{
-						int level = ((TestAttribute)attributes[0]).Level;
-						Console.Write(test.Name + "...");
-						DateTime startTime = DateTime.Now;
-
-						object result = test.Invoke(this, new object[] {});
-
-						TimeSpan duration = DateTime.Now - startTime;
-
-
-						string testDirectory = Path.Combine(TestDirectory, test.Name);
-						string resultPath = Path.Combine(testDirectory, "result.txt");
-						string resultCopyPath = Path.Combine(testDirectory, "resultCopy.txt");
-						string checkPath = Path.Combine(testDirectory, "check.txt");
-
-
-						System.IO.Directory.CreateDirectory(TestDirectory);
-						if (!System.IO.File.Exists(checkPath))
-						{
-							System.IO.File.Create(checkPath).Close();
-						}
-
-
-						StringBuilder stringBuilder = new StringBuilder();
-						Serialize(result, "", stringBuilder, level);
-						string resultText = stringBuilder.ToString();
-						FileAccess.Write(resultPath, resultText);
-						FileAccess.Write(resultCopyPath, resultText);
-
-
-						bool successful=FileAccess.Read(resultPath).Equals(FileAccess.Read(checkPath));
-
-
-						if (!successful)
-						{
-							allTestsSucessful = false;
-						}
-
-
-						string durationText = duration.TotalSeconds.ToString();
-						string successText;
-						if (!successful)
-						{
-							successText = "failed";
-						}
-						else
-						{
-							successText = "succeeded";
-						}
-
-						Console.WriteLine(" " + successText + "  " + durationText + " s");
-					}
-				}
-				if (!allTestsSucessful)
-				{
-					Console.ReadLine();
-				}
-			}
-			public const string indentationText = "\t";
-			//private static void Serialize(string path, object testResult, int level)
-			//{
-			//    StringBuilder stringBuilder = new StringBuilder();
-			//    Serialize(testResult, "", stringBuilder, level);
-
-			//    string result = stringBuilder.ToString();
-
-			//    FileAccess.Write(Path.Combine(path, "result.txt"), result);
-			//    FileAccess.Write(Path.Combine(path, "resultCopy.txt"), result);
-			//}
-
-			public static void Serialize(object obj,string indent,StringBuilder builder,int level) 
-			{
-				if(obj==null) 
-				{
-					builder.Append(indent+"null\n");
-				}
-				else if (!(obj is KeyValuePair<Map, Map>) && Assembly.GetAssembly(obj.GetType()) != Assembly.GetExecutingAssembly()// && (obj is string || obj.GetType().IsPrimitive) 
-					&& obj.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
-					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) 
-				{
-					builder.Append(indent+"\""+obj.ToString()+"\""+"\n");
-				}
-				else
-				{
-					List<MemberInfo> members=new List<MemberInfo>();
-					members.AddRange(obj.GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance));
-					members.AddRange(obj.GetType().GetFields(BindingFlags.Public|BindingFlags.Instance));
-
-					members.Sort(new MemberInfoComparer());
-					foreach(MemberInfo member in members) 
-					{
-                        // maybe generalize this to a number of exceptions
-						if(member.Name!="Item" && member.Name!="SyncRoot") 
-						{
-                            // make this a little faster
-                            // means that everything is serialized, except in the current assembly
-							if(Assembly.GetAssembly(member.DeclaringType)!=Assembly.GetExecutingAssembly() || member is MethodInfo || (member.GetCustomAttributes(typeof(SerializeAttribute),false).Length==1 && ((SerializeAttribute)member.GetCustomAttributes(typeof(SerializeAttribute),false)[0]).Level>=level)) 
-							{				
-								if(obj.GetType().Namespace!="System.Windows.Forms")
-								{ 
-									object val=obj.GetType().InvokeMember(member.Name,BindingFlags.Public
-										|BindingFlags.Instance|BindingFlags.GetProperty|BindingFlags.GetField,
-										null,obj,null);
-									builder.Append(indent+member.Name);
-									if(val!=null)
-									{
-										builder.Append(" ("+val.GetType().Name+")");
-									}
-									builder.Append(":\n");
-									Serialize(val,indent+indentationText,builder,level);
-								}
-							}
-						}
-					}
-                    // that really isnt all that great
-                    // maybe a map should always serialize itself for real, however, maybe not in the test
-					string text;
-					if(obj is ISerializeSpecial)
-					{
-						text=((ISerializeSpecial)obj).Serialize();//(indent, builder, level);
-						//((ISerializeSpecial)obj).Serialize(indent, builder, level);
-					}
-					else
-					{
-						text=null;
-					}
-					if (text == null && obj is System.Collections.IEnumerable)
-					{
-						foreach (object entry in (System.Collections.IEnumerable)obj)
-						{
-							builder.Append(indent + "Entry (" + entry.GetType().Name + ")\n");
-							Serialize(entry, indent + indentationText, builder, level);
-						}
-					}
-					else if(text!=null)
-					{
-						builder.Append(indent + text +"\n");
-					}
-				}
-			}
-		}
-		class MemberInfoComparer:IComparer<MemberInfo>
-		{
-			public int Compare(MemberInfo first,MemberInfo second)
-			{
-				if(first==null || second==null || ((MemberInfo)first).Name==null || ((MemberInfo)second).Name==null)
-				{
-					return 0;}
-				else
-				{
-					return ((MemberInfo)first).Name.CompareTo(((MemberInfo)second).Name);
-				}
-			}
-		}
-		[AttributeUsage(AttributeTargets.Field|AttributeTargets.Property)]
-		public class SerializeAttribute:Attribute
-		{
-			public SerializeAttribute():this(1)
-			{
-			}
-			private int level;
-			public SerializeAttribute(int level)
-			{
-				this.level=level;
-			}
-			public int Level
-			{
-				get
-				{
-					return level;
-				}
-			}
-		}
-		[AttributeUsage(AttributeTargets.Class)]
-		public class SerializeMethodsAttribute:Attribute
-		{
-			public string[] methods;
-			public SerializeMethodsAttribute(string[] methods)
-			{
-				this.methods=methods;
+				return level;
 			}
 		}
 	}
-	[Serializable]
+	[AttributeUsage(AttributeTargets.Property)]
+	public class SerializeAttribute : Attribute
+	{
+		public SerializeAttribute()
+			: this(1)
+		{
+		}
+		public SerializeAttribute(int level)
+		{
+			this.level = level;
+		}
+		private int level;
+		public int Level
+		{
+			get
+			{
+				return level;
+			}
+		}
+	}
+	public abstract class TestRunner
+	{
+		protected abstract string TestDirectory
+		{
+			get;
+		}
+		public void Run()
+		{
+			bool allTestsSucessful = true;
+			foreach (MethodInfo test in this.GetType().GetMethods())
+			{
+				object[] attributes=test.GetCustomAttributes(typeof(TestAttribute),false);
+				if (attributes.Length == 1)
+				{
+					int level = ((TestAttribute)attributes[0]).Level;
+					Console.Write(test.Name + "...");
+					DateTime startTime = DateTime.Now;
+					object result = test.Invoke(this, new object[] {});
+					TimeSpan duration = DateTime.Now - startTime;
+
+					string testDirectory = Path.Combine(TestDirectory, test.Name);
+					string resultPath = Path.Combine(testDirectory, "result.txt");
+					string resultCopyPath = Path.Combine(testDirectory, "resultCopy.txt");
+					string checkPath = Path.Combine(testDirectory, "check.txt");
+
+					Directory.CreateDirectory(TestDirectory);
+					if (!File.Exists(checkPath))
+					{
+						File.Create(checkPath).Close();
+					}
+
+					StringBuilder stringBuilder = new StringBuilder();
+					Serialize(result, "", stringBuilder, level);
+
+					string resultText = stringBuilder.ToString();
+					FileAccess.Write(resultPath, resultText);
+					FileAccess.Write(resultCopyPath, resultText);
+
+					bool successful=FileAccess.Read(resultPath).Equals(FileAccess.Read(checkPath));
+					
+					if (!successful)
+					{
+						allTestsSucessful = false;
+					}
+
+					string durationText = duration.TotalSeconds.ToString();
+					string successText;
+					if (!successful)
+					{
+						successText = "failed";
+					}
+					else
+					{
+						successText = "succeeded";
+					}
+					Console.WriteLine(" " + successText + "  " + durationText + " s");
+				}
+			}
+			if (!allTestsSucessful)
+			{
+				Console.ReadLine();
+			}
+		}
+		public const char indentationChar = '\t';
+
+		private bool UseToStringMethod(Type type)
+		{
+			return (!type.IsValueType || type.IsPrimitive )
+				&& Assembly.GetAssembly(type) != Assembly.GetExecutingAssembly()
+				&& type.GetMethod(
+					"ToString",
+					BindingFlags.Public|BindingFlags.DeclaredOnly|BindingFlags.Instance,
+					null,
+					new Type[]{},
+					new ParameterModifier[] { })!=null
+			;
+		}
+		private bool UseProperty(PropertyInfo property,int level)
+		{
+			object[] attributes=property.GetCustomAttributes(typeof(SerializeAttribute), false);
+
+			return Assembly.GetAssembly(property.DeclaringType) != Assembly.GetExecutingAssembly()
+			|| (attributes.Length == 1 && ((SerializeAttribute)attributes[0]).Level >= level);
+		}
+		public void Serialize(object obj,string indent,StringBuilder builder,int level) 
+		{
+			if(obj == null) 
+			{
+				builder.Append(indent+"null\n");
+			}
+			else if (UseToStringMethod(obj.GetType()))
+			{
+				builder.Append(indent+"\""+obj.ToString()+"\""+"\n");
+			}
+			else
+			{
+				foreach (PropertyInfo property in obj.GetType().GetProperties())
+				{
+					if(UseProperty((PropertyInfo)property,level))
+					{
+						object val=property.GetValue(obj, null);
+						builder.Append(indent + property.Name);
+						if(val!=null)
+						{
+							builder.Append(" ("+val.GetType().Name+")");
+						}
+						builder.Append(":\n");
+						Serialize(val,indent+indentationChar,builder,level);
+					}
+				}
+				string specialEnumerableSerializationText;
+				if (obj is ISerializeEnumerableSpecial && (specialEnumerableSerializationText = ((ISerializeEnumerableSpecial)obj).Serialize()) != null)
+				{
+					builder.Append(indent + specialEnumerableSerializationText + "\n");
+				}
+				else if (obj is System.Collections.IEnumerable)
+				{
+					foreach (object entry in (System.Collections.IEnumerable)obj)
+					{
+						builder.Append(indent + "Entry (" + entry.GetType().Name + ")\n");
+						Serialize(entry, indent + indentationChar, builder, level);
+					}
+				}
+			}
+		}
+	}
 	public class SourcePosition
 	{
-		public bool smaller(SourcePosition other)
+		public bool IsSmaller(SourcePosition other)
 		{
 			return this.Line<other.Line || (this.Line==other.Line && this.Column<other.Column);
 		}
-		public bool greater(SourcePosition other)
+		public bool IsGreater(SourcePosition other)
 		{
 			return this.Line>other.Line || (this.Line==other.Line && this.Column>other.Column);
 		}
@@ -2952,9 +2875,9 @@ namespace Meta
 		{
 			if(extent!=null)
 			{
-				if(this.greater(extent.Start) || this.Equals(extent.Start))
+				if(this.IsGreater(extent.Start) || this.Equals(extent.Start))
 				{
-					if(this.smaller(extent.End) || this.Equals(extent.End))
+					if(this.IsSmaller(extent.End) || this.Equals(extent.End))
 					{
 						return true;
 					}
@@ -3004,7 +2927,6 @@ namespace Meta
 			}
 		}
 	}
-	[Serializable]
 	public class Extent
 	{
 		public static List<Extent> GetExtents(string fileName,int firstLine,int lastLine)

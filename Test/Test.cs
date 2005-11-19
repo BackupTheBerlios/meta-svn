@@ -21,26 +21,20 @@ using System.Text;
 using Meta;
 
 using System;
-using Meta.Testing;
 using System.Threading;
 using Microsoft.VisualStudio.DebuggerVisualizers;
 
 
 namespace Test 
 {
-	class Whatever
+	public class Test:TestRunner
 	{
-		public static string path="";
 		[STAThread]
 		public static void Main(string[] args) 
 		{
 			new Test().Run();
 			//FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
 		}
-	}
-
-	public class Test:TestRunner
-	{
 		protected override string TestDirectory
 		{
 			get 
