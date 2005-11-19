@@ -486,24 +486,6 @@ library=
 								result=object.Current.get*
 					current=next.[stop] arg
 		join=
-			|sum
-				start=*
-				array=arg
-				function=
-					|
-						impossibleKey=Meta.ObjectMap
-							arg.a
-						library.map.apply
-							array=arg.b
-							function=
-								|impossibleKey.Append
-									arg
-						whatever=impossibleKey.Current.get*
-				start=*
-		join=
-			|Meta.Interpreter.Join
-				arg
-		join=
 			|library.map.sum
 				array=arg
 				function=
@@ -530,8 +512,20 @@ library=
 				current=Meta.NormalMap
 					object.Keys.get*
 		merge=
-			|Meta.Interpreter.Merge
-				arg
+			|sum
+				array=arg
+				function=
+					|
+						overwrite=arg.b
+						current=sum
+							array=keys arg.b
+							function=
+								|
+									result=arg.a
+									result.[arg.b]=overwrite.[arg.b]
+									current=result
+							start=arg.a
+				start=*
 		equal=
 			|
 				result=library.map.sum

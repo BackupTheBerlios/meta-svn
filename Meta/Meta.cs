@@ -360,6 +360,9 @@ namespace Meta
 			for(int i=1;i<code.Array.Count;i++)
 			{
 				Map key=Expression((Map)code.Array[i],context,arg);
+				//if (key.Equals(new NormalMap("overwrite")))
+				//{
+				//}
 				Map selection;
 				if (key.Equals(SpecialKeys.Parent))
 				{
@@ -384,6 +387,9 @@ namespace Meta
 		private Map FindFirstKey(Map code,Map context,Map arg)
 		{
 			Map key=Expression((Map)code.Array[0],context,arg);
+			if (key.Equals(new NormalMap("overwrite")))
+			{
+			}
 			Map val;
 			if (key.Equals(SpecialKeys.Arg))
 			{
@@ -445,21 +451,6 @@ namespace Meta
 	// rename remove
 	public class Interpreter
 	{
-		// remove
-		public static Map Join(Map arg) 
-		{
-			Integer i=1;
-			Map array=new NormalMap();
-			foreach(Map map in arg.Array) 
-			{ 
-				foreach(Map val in map.Array) 
-				{
-					array[i]=val;
-					i+=1;
-				}
-			}
-			return array;
-		}
 		public static Map Merge(Map map)
 		{
 			Map result=new NormalMap();
@@ -656,6 +647,7 @@ namespace Meta
             }
             set
             {
+				// refactor
                 if (value != null)
                 {
                     Map val = value.Copy();
