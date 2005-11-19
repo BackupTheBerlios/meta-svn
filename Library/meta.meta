@@ -140,6 +140,13 @@ basicTest=
 			parent
 			=
 				"AssignedToCurrent"
+		scoping=
+			test=
+				scopingValue="right"
+				|scopingValue
+		scopingValue="wrong"
+		scopingTest=scoping.test
+		lexicalScoping=scopingTest*
 		unicodeText="äaba"
 		parent.parent.testSubDir.x=*
 		persistantDeleteTest=testSubDir.x
@@ -496,6 +503,20 @@ library=
 		join=
 			|Meta.Interpreter.Join
 				arg
+		join=
+			|library.map.sum
+				array=arg
+				function=
+					|
+						joined=Meta.ObjectMap
+							arg.a
+						apply
+							array=arg.b
+							function=
+								|joined.Append
+									arg
+						current=joined.Current.get*
+				start=*
 		contains=
 			|
 				object=Meta.ObjectMap

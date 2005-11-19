@@ -5,6 +5,72 @@ Entry (KeyValuePair`2)
 		"ImpliedAutokey"
 Entry (KeyValuePair`2)
 	Key (NormalMap):
+		"scoping"
+	Value (NormalMap):
+		Entry (KeyValuePair`2)
+			Key (NormalMap):
+				"test"
+			Value (NormalMap):
+				Entry (KeyValuePair`2)
+					Key (NormalMap):
+						"scopingValue"
+					Value (NormalMap):
+						"right"
+				Entry (KeyValuePair`2)
+					Key (NormalMap):
+						"function"
+					Value (NormalMap):
+						Entry (KeyValuePair`2)
+							Key (NormalMap):
+								"select"
+							Value (NormalMap):
+								Entry (KeyValuePair`2)
+									Key (NormalMap):
+										1
+									Value (NormalMap):
+										Entry (KeyValuePair`2)
+											Key (NormalMap):
+												"literal"
+											Value (NormalMap):
+												"scopingValue"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"scopingValue"
+	Value (NormalMap):
+		"wrong"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"scopingTest"
+	Value (NormalMap):
+		Entry (KeyValuePair`2)
+			Key (NormalMap):
+				"scopingValue"
+			Value (NormalMap):
+				"right"
+		Entry (KeyValuePair`2)
+			Key (NormalMap):
+				"function"
+			Value (NormalMap):
+				Entry (KeyValuePair`2)
+					Key (NormalMap):
+						"select"
+					Value (NormalMap):
+						Entry (KeyValuePair`2)
+							Key (NormalMap):
+								1
+							Value (NormalMap):
+								Entry (KeyValuePair`2)
+									Key (NormalMap):
+										"literal"
+									Value (NormalMap):
+										"scopingValue"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"lexicalScoping"
+	Value (NormalMap):
+		"right"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
 		"unicodeText"
 	Value (NormalMap):
 		"äaba"

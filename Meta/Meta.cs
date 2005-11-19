@@ -402,7 +402,7 @@ namespace Meta
 				Map selected = context;
 				while (!selected.ContainsKey(key))
 				{
-					selected = selected.FirstParent;
+					selected = selected.Scope;
 
 					if (selected == null)
 					{
@@ -601,8 +601,7 @@ namespace Meta
 			}
 			return text;
 		}
-		// rethink, fix this, rename to Scope
-        public Map FirstParent
+        public Map Scope
         {
             get
             {
@@ -622,9 +621,9 @@ namespace Meta
 			}
 			set
 			{
-                if (parent == null)
+                if (parent == null && Scope== null)
                 {
-                    FirstParent = value;
+                    Scope = value;
                 }
 				parent=value;
 			}
@@ -687,7 +686,7 @@ namespace Meta
 		public Map Copy()
 		{
 			Map clone = CopyImplementation();
-			clone.FirstParent = FirstParent;
+			clone.Scope = Scope;
 			clone.Parent = Parent;
 			clone.Extent = Extent;
 			return clone;
@@ -2761,7 +2760,7 @@ namespace Meta
 			this.map=Process.Current.Parse(Path);
 			this.map.Parent=Gac.singleton;
             // extremely unlogical, why does this already have a parent? it shouldnt
-            this.map.FirstParent = Gac.singleton;
+            this.map.Scope = Gac.singleton;
             //foreach (KeyValuePair<Map, Map> pair in map)
             //{
             //    pair.Value.FirstParent = this;
@@ -2770,7 +2769,7 @@ namespace Meta
 			// this is a little unlogical
 			this.Parent=Gac.singleton;
             // unlogical, not sure whehter this is necessary
-            this.FirstParent = Gac.singleton;
+            this.Scope = Gac.singleton;
 		}
 		public override List<Map> Keys
 		{
