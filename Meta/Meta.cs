@@ -2741,63 +2741,89 @@ namespace Meta
 				}
 			}
 		}
-		public class TestRunner
-		{	
-			public const string indentationText="\t";
-			public static void Run(Type test, string path)
+		public abstract class TestRunner
+		{
+			protected abstract string TestDirectory
 			{
-				bool isWaitAtEnd = false;
-				foreach (MethodInfo method in test.GetMethods())
+				get;
+			}
+			public void Run()
+			{
+				bool allTestsSucessful = true;
+				foreach (MethodInfo test in this.GetType().GetMethods())
 				{
-					object[] testAttributes=method.GetCustomAttributes(typeof(TestAttribute),false);
-					if (testAttributes.Length == 1)
+					object[] attributes=test.GetCustomAttributes(typeof(TestAttribute),false);
+					if (attributes.Length == 1)
 					{
-						TestAttribute testAttribute = (TestAttribute) testAttributes[0];
-						Console.Write(method.Name + "...");
-						int level = testAttribute.Level;
-						// level of serialization should be given with attribute
-						DateTime testStartTime = DateTime.Now;
-						object result = method.Invoke(null, new object[] { });
-						TimeSpan testDuration = DateTime.Now - testStartTime;
-						string testDurationText = testDuration.TotalSeconds.ToString();
+						int level = ((TestAttribute)attributes[0]).Level;
+						Console.Write(test.Name + "...");
+						DateTime startTime = DateTime.Now;
 
-						// split CompareResult into two methods
-						bool testSucceeded = CompareResult(Path.Combine(path, method.Name), result, level);
-						string testSucceededText;
-						if (!testSucceeded)
+						object result = test.Invoke(this, new object[] {});
+
+						TimeSpan duration = DateTime.Now - startTime;
+
+
+						string testDirectory = Path.Combine(TestDirectory, test.Name);
+						string resultPath = Path.Combine(testDirectory, "result.txt");
+						string resultCopyPath = Path.Combine(testDirectory, "resultCopy.txt");
+						string checkPath = Path.Combine(testDirectory, "check.txt");
+
+
+						System.IO.Directory.CreateDirectory(TestDirectory);
+						if (!System.IO.File.Exists(checkPath))
 						{
-							testSucceededText = "failed";
-							isWaitAtEnd = true;
+							System.IO.File.Create(checkPath).Close();
+						}
+
+
+						StringBuilder stringBuilder = new StringBuilder();
+						Serialize(result, "", stringBuilder, level);
+						string resultText = stringBuilder.ToString();
+						FileAccess.Write(resultPath, resultText);
+						FileAccess.Write(resultCopyPath, resultText);
+
+
+						bool successful=FileAccess.Read(resultPath).Equals(FileAccess.Read(checkPath));
+
+
+						if (!successful)
+						{
+							allTestsSucessful = false;
+						}
+
+
+						string durationText = duration.TotalSeconds.ToString();
+						string successText;
+						if (!successful)
+						{
+							successText = "failed";
 						}
 						else
 						{
-							testSucceededText = "succeeded";
+							successText = "succeeded";
 						}
-						Console.WriteLine(" " + testSucceededText + "  " + testDurationText + " s");
+
+						Console.WriteLine(" " + successText + "  " + durationText + " s");
 					}
 				}
-				if (isWaitAtEnd)
+				if (!allTestsSucessful)
 				{
 					Console.ReadLine();
 				}
 			}
-			private static bool CompareResult(string path,object toSerialize,int level)
-			{		
-				System.IO.Directory.CreateDirectory(path);
-				if(!System.IO.File.Exists(Path.Combine(path,"check.txt")))
-				{
-					System.IO.File.Create(Path.Combine(path,"check.txt")).Close();
-				}
-				StringBuilder stringBuilder=new StringBuilder();
-				Serialize(toSerialize,"",stringBuilder,level);
+			public const string indentationText = "\t";
+			//private static void Serialize(string path, object testResult, int level)
+			//{
+			//    StringBuilder stringBuilder = new StringBuilder();
+			//    Serialize(testResult, "", stringBuilder, level);
 
-				string result=stringBuilder.ToString();
+			//    string result = stringBuilder.ToString();
 
-				FileAccess.Write(Path.Combine(path,"result.txt"),result);
-				FileAccess.Write(Path.Combine(path,"resultCopy.txt"),result);
-				string check=FileAccess.Read(Path.Combine(path,"check.txt"));
-				return result.Equals(check);
-			}
+			//    FileAccess.Write(Path.Combine(path, "result.txt"), result);
+			//    FileAccess.Write(Path.Combine(path, "resultCopy.txt"), result);
+			//}
+
 			public static void Serialize(object obj,string indent,StringBuilder builder,int level) 
 			{
 				if(obj==null) 
@@ -3705,6 +3731,7 @@ namespace Meta
 			FileAccess.Write(Path,text);
 			singleton.Load();
 		}
+		// make this a property
 		public static FileSystem singleton;
 		static FileSystem()
 		{

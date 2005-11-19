@@ -28,73 +28,47 @@ using Microsoft.VisualStudio.DebuggerVisualizers;
 
 namespace Test 
 {
-	class Test 
+	class Whatever
 	{
 		public static string path="";
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			TestRunner.Run(typeof(Tests), Path.Combine(Directory.GetParent(Process.LibraryPath).FullName, "Test"));
+			new Test().Run();
 			//FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
 		}
 	}
-	public class Tests 
+
+	public class Test:TestRunner
 	{
+		protected override string TestDirectory
+		{
+			get 
+			{
+				return Path.Combine(Directory.GetParent(Process.LibraryPath).FullName, "Test");
+			}
+		}
 		[Test(2)]
-		public static object Basic()//ref int level)
+		public object Basic()
 		{
 			Map argument = new NormalMap();
 			argument[1] = "first arg";
 			argument[2] = "second=arg";
-			//level = 2;
-			return FileSystem.singleton["basicTest"].Call(argument, new NormalMap());
+			return FileSystem.singleton["basicTest"].Call(argument, Map.Empty);
 		}
 		[Test(2)]
-		public static object Library()//ref int level)
+		public object Library()
 		{
-			//level = 2;
-			return FileSystem.singleton["libraryTest"].Call(new NormalMap(), new NormalMap());
+			return FileSystem.singleton["libraryTest"].Call(Map.Empty, Map.Empty);
 		}
 		[Test]
-		public static object Extents()//ref int level)
+		public object Extents()
 		{
-			//level = 1;
-			Map argument = new NormalMap();
+			Map argument = Map.Empty;
 			argument[1] = "first arg";
 			argument[2] = "second=arg";
 			return FileSystem.singleton["basicTest"];
 		}
-		//public class Basic : TestCase
-		//{
-		//    public override object Run(ref int level)
-		//    {
-		//        Map argument = new NormalMap();
-		//        argument[1] = "first arg";
-		//        argument[2] = "second=arg";
-		//        level = 2;
-		//        return FileSystem.singleton["basicTest"].Call(argument, new NormalMap());
-		//    }
-		//}
-		//public class Library:TestCase
-		//{
-		//    public override object Run(ref int level)
-		//    {
-		//        level=2;
-		//        return FileSystem.singleton["libraryTest"].Call(new NormalMap(),new NormalMap());
-		//    }
-		//}
-
-		//public class Extents:TestCase
-		//{
-		//    public override object Run(ref int level)
-		//    {
-		//        level = 1;
-		//        Map argument=new NormalMap();
-		//        argument[1]="first arg";
-		//        argument[2]="second=arg";
-		//        return FileSystem.singleton["basicTest"];
-		//    }
-		//}
 	}
 }
 namespace testClasses
