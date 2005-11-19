@@ -10,7 +10,7 @@ Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"true"
 					Value (NormalMap):
-						"1"
+						1
 				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"false"
@@ -24,7 +24,7 @@ Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"true"
 					Value (NormalMap):
-						"1"
+						1
 				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"false"
@@ -38,7 +38,7 @@ Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"true"
 					Value (NormalMap):
-						"1"
+						1
 				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						"false"
@@ -52,17 +52,17 @@ Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"add"
 			Value (NormalMap):
-				"1100"
+				1100
 		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"multiply"
 			Value (NormalMap):
-				"19437"
+				19437
 		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"greater"
 			Value (NormalMap):
-				"1"
+				1
 		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"smaller"
@@ -72,7 +72,7 @@ Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"bitwiseTest"
 	Value (NormalMap):
-		"29"
+		29
 Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"mapTest"
@@ -91,26 +91,26 @@ Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"contains"
 			Value (NormalMap):
-				"1"
+				1
 		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"keys"
 			Value (NormalMap):
 				Entry (KeyValuePair`2)
 					Key (NormalMap):
-						"1"
+						1
 					Value (NormalMap):
 						"jjqwv"
 				Entry (KeyValuePair`2)
 					Key (NormalMap):
-						"2"
+						2
 					Value (NormalMap):
 						"oere"
 				Entry (KeyValuePair`2)
 					Key (NormalMap):
-						"3"
+						3
 					Value (NormalMap):
-						"1"
+						1
 		Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"equal"
@@ -123,7 +123,7 @@ Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"true"
 							Value (NormalMap):
-								"1"
+								1
 						Entry (KeyValuePair`2)
 							Key (NormalMap):
 								"false"
@@ -133,4 +133,4 @@ Entry (KeyValuePair`2)
 			Key (NormalMap):
 				"while"
 			Value (NormalMap):
-				"10"
+				10

@@ -25,7 +25,7 @@ using System.Threading;
 using Microsoft.CSharp;
 using System.Windows.Forms;
 using System.Globalization;
-using Meta.TestingFramework;
+using Meta.Testing;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.Collections.Generic;
@@ -94,7 +94,6 @@ namespace Meta
 			throw new MetaException("The key "+Serialize.Value(key)+" could not be found.",extent);
 		}
 	}
-	[Serializable]
 	public class BreakPoint
 	{
 		public BreakPoint(SourcePosition position)
@@ -110,7 +109,6 @@ namespace Meta
 		}
 		private SourcePosition position;
 	}
-	[Serializable]
 	public class Process
 	{
 		Thread thread;
@@ -246,14 +244,12 @@ namespace Meta
 			}
 		}
 		public List<Map> callers=new List<Map>();
-		// maybe rename context to current
-		public Map Call(Map code,Map context,Map arg)
+		public Map Call(Map code,Map current,Map arg)
 		{
-			Map function=Expression(code[CodeKeys.Callable],context,arg);
-			Map argument=Expression(code[CodeKeys.Argument],context,arg);
-			callers.Add(context);
-			//			Arg.Parent=Caller;
-			Map result=function.Call(argument,context);
+			Map function=Expression(code[CodeKeys.Callable],current,arg);
+			Map argument=Expression(code[CodeKeys.Argument],current,arg);
+			callers.Add(current);
+			Map result=function.Call(argument,current);
 			if (result == null)
 			{
 				result = Map.Empty;
@@ -261,12 +257,7 @@ namespace Meta
 			callers.RemoveAt(callers.Count-1);
 			return result;
 		}
-		public Map Program(Map code,Map context,Map arg)
-		{
-			Map local=new NormalMap();
-			Program(code,context,ref local,arg);
-			return local;
-		}
+
 		public bool Reversed
 		{
 			get
@@ -282,16 +273,23 @@ namespace Meta
 		{
 			return code.Extent.End.smaller(BreakPoint.Position);
 		}
-		private void Program(Map code,Map context,ref Map local,Map arg)
+		public Map Program(Map code,Map current,Map arg)
 		{
-			local.Parent=context;
+			Map local=new NormalMap();
+			Program(code,current,ref local,arg);
+			return local;
+		}
+		// think about the parameters, combine with above
+		private void Program(Map code,Map parent,ref Map current,Map arg)
+		{
+			current.Parent=parent;
 			for(int i=1;code.ContainsKey(i) && i>0;i++)
 			{
 				if(Reversed)
 				{
 					if(!ResumeAfterReverse((Map)code[i]))
 					{
-						// ugly hack
+						// improve
 						i-=2;
 						continue;
 					}
@@ -300,10 +298,9 @@ namespace Meta
 						reversed=false;
 					}
 				}
-				Statement((Map)code[i],ref local,arg);
+				Statement((Map)code[i],ref current,arg);
 			}
 		}
-		[Serializable]
 		public class Change
 		{
 			private Map map;
@@ -347,7 +344,6 @@ namespace Meta
 
                 if (selection == null)
 				{
-					object x=selected[key];
                     Throw.KeyDoesNotExist(key,code.Extent);
                 }
 				selected=selection;
@@ -409,7 +405,6 @@ namespace Meta
 				}
 				if(selection==null)
 				{
-					object test=selected[key];
 					Throw.KeyDoesNotExist(key,key.Extent);
 				}
 				selected=selection;
@@ -420,12 +415,6 @@ namespace Meta
 		{
 			Map key=Expression((Map)code.Array[0],context,arg);
 			Map val;
-			if (key.Equals(new NormalMap("join")))
-			{
-			} 
-			if (key.Equals(new NormalMap("impossibleKey")))
-			{
-			}
 			if (key.Equals(SpecialKeys.Arg))
 			{
 				val = arg;
@@ -484,7 +473,6 @@ namespace Meta
 		public static List<string> loadedAssemblies=new List<string>();
 	}
 	// rename remove
-	[Serializable]
 	public class Interpreter
 	{
 		// remove
@@ -509,14 +497,12 @@ namespace Meta
 			{
 				foreach(KeyValuePair<Map,Map> entry in current)
 				{
-					result[(Map)entry.Key]=(Map)entry.Value;
+					result[entry.Key]=entry.Value;
 				}
 			}
 			return result;
 		}
 	}
-    [DebuggerVisualizer(typeof(Visualizer))]
-    [Serializable]
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeSpecial
 	{
 		public Map Current
@@ -531,25 +517,22 @@ namespace Meta
             this[Array.Count+1] = map;
         }
 		public static readonly Map Empty=new NormalMap();
-		// refactor
-		public virtual void Serialize(string indentation,StringBuilder stringBuilder,int level)
+		public virtual string Serialize()
 		{
-			if(this.IsString)
+			string text;
+			if (this.IsString)
 			{
-				stringBuilder.Append(indentation+"\""+this.GetString()+"\""+"\n");
+				text = "\"" + this.GetString() + "\"";
 			}
-			else if(this.IsInteger)
+			else if (this.IsInteger)
 			{
-				stringBuilder.Append(indentation+"\""+this.GetInteger().ToString()+"\""+"\n");
+				text = this.GetInteger().ToString();
 			}
 			else
 			{
-				foreach(object entry in this)
-				{
-					stringBuilder.Append(indentation+"Entry ("+entry.GetType().Name+")\n");
-					ExecuteTests.Serialize(entry,indentation+ExecuteTests.indentationText,stringBuilder,level);
-				}
+				text = null;
 			}
+			return text;
 		}
 		public virtual bool IsBoolean
 		{
@@ -878,8 +861,6 @@ namespace Meta
 		}
 	}
 
-	[DebuggerVisualizer(typeof(Visualizer))]
-	[Serializable]
 	public abstract class StrategyMap: Map
 	{
 		public override Map Call(Map arg, Map caller)
@@ -1003,8 +984,6 @@ namespace Meta
 		}
 		public Strategy strategy;
 	}
-	[DebuggerVisualizer(typeof(Visualizer))]
-	[Serializable]
 	public class NormalMap:StrategyMap
 	{
 		public NormalMap(Strategy strategy):base(strategy)
@@ -1021,7 +1000,6 @@ namespace Meta
 		}
 	}
 	// think about this a bit, should be a map maybe
-	[Serializable]
 	public class RemoteStrategy : Strategy
 	{
 		public override Strategy CopyImplementation()
@@ -1057,7 +1035,6 @@ namespace Meta
 			this.address=address;
 		}
 	}
-	[Serializable]
 	public class Web:Map
 	{
 		public override List<Map> Keys
@@ -1068,14 +1045,12 @@ namespace Meta
 			}
 		}
         protected override Map  Get(Map key)
-         {
-                // use the Argument checking stuff here too, or something similar
-                if (!key.IsString)
-                {
-                    throw new ApplicationException("need a string here");
-                }
-                // maybe check the host name here
-                return new NormalMap(new RemoteStrategy(key.GetString()));
+        {
+            if (!key.IsString)
+            {
+                throw new ApplicationException("need a string here");
+            }
+            return new NormalMap(new RemoteStrategy(key.GetString()));
         }
         protected override void  Set(Map key, Map val)
         {
@@ -1085,12 +1060,12 @@ namespace Meta
 		{
 			return this;
 		}
-
 		private Web()
 		{
 		}
 		public static Web singleton=new Web();
 	}
+	// this should be part of filesystem, just like the parser should be
 	public class Serialize
 	{
 		public static string Value(Map val)
@@ -1321,151 +1296,27 @@ namespace Meta
 		}
 
 	}
-	//public class Serialize
-	//{
-	//    public static string Key(Map key)
-	//    {
-	//        return Key(key,"");
-	//    }
-	//    private static string Key(Map key,string indentation)
-	//    {
-	//        string text;
-	//        if(key.IsString)
-	//        {
-	//            text=StringKey(key,indentation);
-	//        }
-	//        //else if (key.IsInteger)
-	//        //{
-	//        //    text = IntegerKey(key);
-	//        //} 
-	//        else
-	//        {
-	//            text=MapKey(key,indentation);
-	//        }
-	//        return text;			
-	//    }
-	//    public static string Value(Map val)
-	//    {
-	//        return Value(val,"");
-	//    }
-	//    private static string Value(Map val,string indentation)
-	//    {
-	//        string text;
-	//        if(val.IsString)
-	//        {
-	//            text=StringValue(val,indentation);
-	//        }
-	//        else if(val.IsInteger)
-	//        {
-	//            text=IntegerValue(val);
-	//        }
-	//        else
-	//        {
-	//            text=MapValue(val,indentation);
-	//        }
-	//        return text;
-	//    }
-	//    //private static string IntegerKey(Map number)
-	//    //{
-	//    //    return number.GetInteger().ToString();
-	//    //}
-	//    private static string IntegerValue(Map number)
-	//    {
-	//        return number.ToString();
-	//    }
-	//    private static string StringKey(Map key,string indentation)
-	//    {
-	//        string text;
-	//        if(IsLiteralKey(key.GetString()))
-	//        {
-	//            text=key.GetString();
-	//        }
-	//        else
-	//        {
-	//            text=Parser.lookupStartChar + StringValue(key,indentation) + Parser.lookupEndChar;
-	//        }
-	//        return text;
-	//    }
-	//    private static string StringValue(Map val,string indentation)
-	//    {
-	//        string text;
-	//        if(val.IsString)
-	//        {
-	//            int longest=0;
-	//            // this is incorrect
-	//            foreach(Match match in Regex.Matches(val.GetString(),"("+Parser.stringChar+")?("+Parser.stringEscapeChar+")*"))
-	//            {
-	//                if(match.ToString().Length>longest)
-	//                {
-	//                    longest=match.Length;
-	//                }
-	//            }
-	//            string escape="";
-	//            for(int i=0;i<longest;i++)
-	//            {
-	//                escape+=Parser.stringEscapeChar;
-	//            }
-	//            text=escape+Parser.stringChar+val.GetString()+Parser.stringChar+escape;
-	//        }
-	//        else
-	//        {
-	//            text=MapValue(val,indentation);
-	//        }
-	//        return text;
-	//    }
-	//    private static string MapKey(Map map,string indentation)
-	//    {
-
-	//        string text = Parser.lookupStartChar.ToString();
-	//        if (map.IsInteger)
-	//        {
-	//            text += map.GetInteger().ToString();
-	//        }
-	//        else
-	//        {
-	//            text += Parser.unixNewLine + MapValue(map, indentation);
-	//        }
-	//        text+=Parser.lookupEndChar;
-	//        return text;
-	//    }
-	//    //private static string MapKey(Map map,string indentation)
-	//    //{
-	//    //    return indentation + Parser.lookupStartChar + Parser.unixNewLine + MapValue(map,indentation) + Parser.lookupEndChar;
-	//    //}
-	//    public static string MapValue(Map map,string indentation)
-	//    {
-	//        string text;
-	//        text=Parser.unixNewLine.ToString();
-	//        foreach(KeyValuePair<Map,Map> entry in map)
-	//        {
-	//            text+=indentation + Key((Map)entry.Key,indentation)	+ Parser.statementChar + Value((Map)entry.Value,indentation+'\t');
-	//            if(!text.EndsWith(Parser.unixNewLine.ToString()))
-	//            {
-	//                text+=Parser.unixNewLine;
-	//            }
-	//        }
-	//        return text;
-	//    }
-
-	//    private static bool IsLiteralKey(string text)
-	//    {
-	//        return -1 == text.IndexOfAny(Parser.lookupStringForbiddenChars);//.fornew char[] { '@', ' ', '\t', '\r', '\n', '=', '.', '/', '\'', '"', '(', ')', '[', ']', '*', ':', '#', '!' });
-	//        //return -1 == text.IndexOfAny(new char[] { '@', ' ', '\t', '\r', '\n', '=', '.', '/', '\'', '"', '(', ')', '[', ']', '*', ':', '#', '!' });
-	//    }
-	//}
+	// transfromations can only ever happen when calling a method
+	// fields should be unavailable from meta, i think, although maybe not
+	// conversion should be part of method, or so
+	// or DotNetContainer
+	// but there it wouldnt be accessable from Method
+	// and then there ist Event, and so on
+	// this is pretty problematic
+	// i dont know how to handle this yet
+	// might have to think about it a bit
+	// how are enums implemented, i think with public fields
+	// public fields are needed
+	// no events dont really matter
+	// what i really need now is a good and clever way to remove this whole goddamn class
+	// this sutff is just plain to open and flexible here
+	// it really is in the way maybe remove it completely
+	// all the conversions shouldnt be too many
+	// it is too specialized to be its own class
 	public class Transform
 	{
-		public static Integer IntegerFromDouble(double val)
-		{
-			Integer integer=new Integer(1);
-			while(Math.Abs(val)/(double)int.MaxValue>1.0d)
-			{
-				val/=int.MaxValue;
-				integer*=int.MaxValue;
-			}
-			integer*=(Integer)Convert.ToInt32(val);
-			return integer;
-		}
+		// should be part of integer
+
 		public static object ToDotNet(Map meta,Type target)
 		{
 			bool isConverted;
@@ -1547,13 +1398,13 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Decimal:
-						if(IsIntegerInRange(meta,IntegerFromDouble((double)decimal.MinValue),IntegerFromDouble((double)decimal.MaxValue)))
+						if(IsIntegerInRange(meta,new Integer((double)decimal.MinValue),new Integer((double)decimal.MaxValue)))
 						{
 							dotNet=(decimal)(meta.GetInteger().GetInt64());
 						}
 						break;
 					case TypeCode.Double:
-						if(IsIntegerInRange(meta,IntegerFromDouble(double.MinValue),IntegerFromDouble(double.MaxValue)))
+						if(IsIntegerInRange(meta,new Integer(double.MinValue),new Integer(double.MaxValue)))
 						{
 							dotNet=(double)(meta.GetInteger().GetInt64());
 						}
@@ -1593,7 +1444,7 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Single:
-						if(IsIntegerInRange(meta,IntegerFromDouble(Single.MinValue),IntegerFromDouble(Single.MaxValue)))
+						if(IsIntegerInRange(meta,new Integer(Single.MinValue),new Integer(Single.MaxValue)))
 						{
 							dotNet=(float)meta.GetInteger().GetInt64();
 						}
@@ -1768,11 +1619,7 @@ namespace Meta
 		private int index=-1;
 	}
 	public delegate object DelegateCreatedForGenericDelegates();
-	[Serializable]
-	public class MetaLibrary
-	{
-	}
-	[Serializable]
+
 	public class Method: Map
 	{
 		// clone isnt correct, should only override a part of the cloning, the actual cloning, not parent assignment 
@@ -1825,44 +1672,6 @@ namespace Meta
             if (this.name == "Equals")
             {
             }
-            // remove this
-			if(type.IsSubclassOf(typeof(MetaLibrary)))
-			{
-				List<MethodBase> oneArgumentMethods=new List<MethodBase>();
-				foreach(MethodBase method in overloadedMethods)
-				{
-					if(method.GetParameters().Length==1)
-					{ 
-						oneArgumentMethods.Add(method);
-					}
-				}
-				oneArgumentMethods.Sort(new ArgumentComparer());
-				foreach(MethodBase method in oneArgumentMethods)
-				{
-					bool isConverted;
-					object parameter=Transform.ToDotNet(argument,method.GetParameters()[0].ParameterType,out isConverted);
-					if(isConverted)
-					{
-						if(method is ConstructorInfo)
-						{
-							result=((ConstructorInfo)method).Invoke(new object[] {parameter});
-						}
-						else
-						{
-							try
-							{
-								result=method.Invoke(obj,new object[] {parameter});
-							}
-							catch(TargetInvocationException e)
-							{
-								throw e.InnerException;
-							}
-						}
-						isExecuted=true;
-						break;
-					}
-				}
-			}
 			if(!isExecuted)
 			{
 				List<MethodBase> rightNumberArgumentMethods=new List<MethodBase>();
@@ -2103,8 +1912,6 @@ namespace Meta
 			return new ObjectMap(obj);
 		}
 	}
-	[DebuggerVisualizer(typeof(Visualizer))]
-	[Serializable]
 	public abstract class Strategy
 	{
 		public void Panic()
@@ -2118,13 +1925,6 @@ namespace Meta
 			Panic();
 			map.strategy.Set(key, val);
 		}
-		//protected void Panic(Map key,Map val)
-		//{
-		//    map.strategy=new HybridDictionaryStrategy();
-		//    map.strategy.map=map;
-		//    map.InitFromStrategy(this);
-		//    map.strategy.Set(key,val);
-		//}
 
 		public virtual bool IsInteger
 		{
@@ -2237,7 +2037,6 @@ namespace Meta
 			return isEqual;
 		}
 	}
-	[Serializable]
 	public class CloneStrategy:Strategy
 	{
 		private Strategy original;
@@ -2425,8 +2224,6 @@ namespace Meta
 			}
 		}
 	}
-	[DebuggerVisualizer(typeof(Visualizer))]
-	[Serializable]
 	// refactor
 	public class HybridDictionaryStrategy:Strategy
 	{
@@ -2492,7 +2289,6 @@ namespace Meta
 			return dictionary.ContainsKey(key);
 		}
 	}
-	[Serializable]
 	public class Event:Map
 	{
 		EventInfo eventInfo;
@@ -2564,7 +2360,6 @@ namespace Meta
 			throw new ApplicationException("Cannot assign in event " + eventInfo.Name + ".");
 		}
 	}
-	[Serializable]
 	public class Property:Map
 	{
 		PropertyInfo property;
@@ -2623,12 +2418,12 @@ namespace Meta
 			throw new ApplicationException("Cannot assign in property "+property.Name+".");
 		}
 	}// rename to DotNetMap or so
-	[Serializable]
 	public abstract class DotNetContainer: Map, ISerializeSpecial
 	{
-		public override void Serialize(string indentation, StringBuilder stringBuilder,int level)
+		public override string Serialize() //string indentation, StringBuilder stringBuilder,int level)
 		{
-			ExecuteTests.Serialize(obj!=null?this.obj:this.type,indentation,stringBuilder,level);
+			return obj != null ? this.obj.ToString() : this.type.ToString();
+			//ExecuteTests.Serialize(obj!=null?this.obj:this.type,indentation,stringBuilder,level);
 		}
 		public override List<Map> Array
 		{
@@ -2809,7 +2604,6 @@ namespace Meta
 		[NonSerialized]
 		public Type type;
 	}
-	[Serializable]
 	public class IntegerStrategy:Strategy
 	{
 		public override int GetHashCode()
@@ -2903,7 +2697,6 @@ namespace Meta
 			}
 		}
 	}
-	[Serializable]
 	public class FileAccess
 	{
 		public static void Write(string fileName,string text)
@@ -2920,51 +2713,76 @@ namespace Meta
 			return result;
 		}
 	}
-	namespace TestingFramework
+	namespace Testing
 	{
 		public interface ISerializeSpecial
 		{
-			void Serialize(string indent,StringBuilder builder,int level);
+			string Serialize();
 		}
-		public abstract class TestCase
+		//public abstract class TestCase
+		//{
+		//    public abstract object Run(ref int level);
+		//}
+		public class TestAttribute:Attribute
 		{
-			public abstract object Run(ref int level);
+			public TestAttribute():this(1)
+			{
+			}
+			public TestAttribute(int level)
+			{
+				this.level = level;
+			}
+			private int level;
+			public int Level
+			{
+				get
+				{
+					return level;
+				}
+			}
 		}
-		public class ExecuteTests
+		public class TestRunner
 		{	
 			public const string indentationText="\t";
-			public ExecuteTests(Type testContainerType,string fnResults)
-			{ 
-				bool isWaitAtEnd=false;
-				Type[] testTypes=testContainerType.GetNestedTypes();
-				foreach(Type testType in testTypes)
+			public static void Run(Type test, string path)
+			{
+				bool isWaitAtEnd = false;
+				foreach (MethodInfo method in test.GetMethods())
 				{
-					Console.Write(testType.Name + "...");
-					DateTime start=DateTime.Now;
-					string output="";
-					int level=1;
-					object result=((TestCase)testType.GetConstructors()[0].Invoke(new object[]{})).Run(ref level);
-					TimeSpan timespan=DateTime.Now-start;
-					bool successful=CompareResult(Path.Combine(fnResults,testType.Name),result,level);
-					if(!successful)
+					object[] testAttributes=method.GetCustomAttributes(typeof(TestAttribute),false);
+					if (testAttributes.Length == 1)
 					{
-						output=output + " failed";
-						isWaitAtEnd=true;
+						TestAttribute testAttribute = (TestAttribute) testAttributes[0];
+						Console.Write(method.Name + "...");
+						int level = testAttribute.Level;
+						// level of serialization should be given with attribute
+						DateTime testStartTime = DateTime.Now;
+						object result = method.Invoke(null, new object[] { });
+						TimeSpan testDuration = DateTime.Now - testStartTime;
+						string testDurationText = testDuration.TotalSeconds.ToString();
+
+						// split CompareResult into two methods
+						bool testSucceeded = CompareResult(Path.Combine(path, method.Name), result, level);
+						string testSucceededText;
+						if (!testSucceeded)
+						{
+							testSucceededText = "failed";
+							isWaitAtEnd = true;
+						}
+						else
+						{
+							testSucceededText = "succeeded";
+						}
+						Console.WriteLine(" " + testSucceededText + "  " + testDurationText + " s");
 					}
-					else
-					{
-						output+=" succeeded";
-					}
-					output=output + "  " + timespan.TotalSeconds.ToString() + " s";
-					Console.WriteLine(output);
 				}
-				if(isWaitAtEnd)
+				if (isWaitAtEnd)
 				{
 					Console.ReadLine();
 				}
 			}
-			private bool CompareResult(string path,object toSerialize,int level)
-			{				
+			private static bool CompareResult(string path,object toSerialize,int level)
+			{		
 				System.IO.Directory.CreateDirectory(path);
 				if(!System.IO.File.Exists(Path.Combine(path,"check.txt")))
 				{
@@ -2986,7 +2804,8 @@ namespace Meta
 				{
 					builder.Append(indent+"null\n");
 				}
-				else if(!(obj is KeyValuePair<Map,Map>) && obj.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
+				else if (!(obj is KeyValuePair<Map, Map>) && Assembly.GetAssembly(obj.GetType()) != Assembly.GetExecutingAssembly()// && (obj is string || obj.GetType().IsPrimitive) 
+					&& obj.GetType().GetMethod("ToString",BindingFlags.Public|BindingFlags.DeclaredOnly|
 					BindingFlags.Instance,null,new Type[]{},new ParameterModifier[]{})!=null) 
 				{
 					builder.Append(indent+"\""+obj.ToString()+"\""+"\n");
@@ -3025,17 +2844,27 @@ namespace Meta
 					}
                     // that really isnt all that great
                     // maybe a map should always serialize itself for real, however, maybe not in the test
+					string text;
 					if(obj is ISerializeSpecial)
 					{
-						((ISerializeSpecial)obj).Serialize(indent,builder,level);
+						text=((ISerializeSpecial)obj).Serialize();//(indent, builder, level);
+						//((ISerializeSpecial)obj).Serialize(indent, builder, level);
 					}
-					else if(obj is System.Collections.IEnumerable)
+					else
 					{
-						foreach(object entry in (System.Collections.IEnumerable)obj)
+						text=null;
+					}
+					if (text == null && obj is System.Collections.IEnumerable)
+					{
+						foreach (object entry in (System.Collections.IEnumerable)obj)
 						{
-							builder.Append(indent+"Entry ("+entry.GetType().Name+")\n");
-							Serialize(entry,indent+indentationText,builder,level);
+							builder.Append(indent + "Entry (" + entry.GetType().Name + ")\n");
+							Serialize(entry, indent + indentationText, builder, level);
 						}
+					}
+					else if(text!=null)
+					{
+						builder.Append(indent + text +"\n");
 					}
 				}
 			}
@@ -4318,6 +4147,17 @@ namespace Meta
 	[Serializable]
 	public class Integer
 	{
+		public Integer(double val)
+		{
+			Integer integer = new Integer(1);
+			while (Math.Abs(val) / (double)int.MaxValue > 1.0d)
+			{
+				val /= int.MaxValue;
+				integer *= int.MaxValue;
+			}
+			integer *= (Integer)Convert.ToInt32(val);
+			this.data = integer.data;
+		}
         // this is not even used, maybe, however it might be in case of overflow
         public Integer(Map map)
         {
@@ -4325,7 +4165,6 @@ namespace Meta
         }
 		public static Integer ParseInteger(string text)
 		{
-
 			Integer result=new Integer(0);
 			if(text.Equals(""))
 			{
@@ -4910,66 +4749,6 @@ namespace Meta
 			}
 
 			return val;
-		}
-	}
-	// TODO: Add the following to SomeType's definition to see this visualizer when debugging instances of SomeType:
-	// 
-	//  [DebuggerVisualizer(typeof(Visualizer))]
-	//  [Serializable]
-	//  public class SomeType
-	//  {
-	//   ...
-	//  }
-	// 
-	/// <summary>
-	/// A Visualizer for SomeType.  
-	/// </summary>
-	public class Visualizer : DialogDebuggerVisualizer
-	{
-		protected override void Show(IDialogVisualizerService windowService, IVisualizerObjectProvider objectProvider)
-		{
-			// TODO: Get the object to display a visualizer for.
-			//       Cast the result of objectProvider.GetObject() 
-			//       to the type of the object being visualized.
-			object data = (object)objectProvider.GetObject();
-
-			// TODO: Display your view of the object.
-			//       Replace displayForm with your own custom Form or Control.
-			using (Form displayForm = new Form())
-			{
-				RichTextBox textBox = new RichTextBox();
-				textBox.Dock = DockStyle.Fill;
-				textBox.ScrollBars = RichTextBoxScrollBars.Both;
-				int[] tabStops=new int[32];
-				int tabWidth = 32;
-				int firstTabStop = 0;
-				for (int i = 0; i < tabStops.Length; i++)
-				{
-					tabStops[i] = i * tabWidth + firstTabStop;
-				}
-				textBox.SelectionTabs = tabStops;
-				textBox.WordWrap = false;
-				//textBox.Multiline = true;
-				//textBox.AcceptsTab = true;
-				textBox.Text = Serialize.Value((Map)data).Replace("\n", Environment.NewLine);
-				displayForm.Controls.Add(textBox);
-				displayForm.Text = data.ToString();
-				windowService.ShowDialog(displayForm);
-			}
-		}
-
-		// TODO: Add the following to your testing code to test the visualizer:
-		// 
-		//    Visualizer.TestShowVisualizer(new SomeType());
-		// 
-		/// <summary>
-		/// Tests the visualizer by hosting it outside of the debugger.
-		/// </summary>
-		/// <param name="objectToVisualize">The object to display in the visualizer.</param>
-		public static void TestShowVisualizer(object objectToVisualize)
-		{
-			VisualizerDevelopmentHost visualizerHost = new VisualizerDevelopmentHost(objectToVisualize, typeof(Visualizer));
-			visualizerHost.ShowVisualizer();
 		}
 	}
 }
