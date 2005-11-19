@@ -448,22 +448,6 @@ namespace Meta
 		}
 		public static List<string> loadedAssemblies=new List<string>();
 	}
-	// rename remove
-	public class Interpreter
-	{
-		public static Map Merge(Map map)
-		{
-			Map result=new NormalMap();
-			foreach(Map current in map.Array)
-			{
-				foreach(KeyValuePair<Map,Map> entry in current)
-				{
-					result[entry.Key]=entry.Value;
-				}
-			}
-			return result;
-		}
-	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
 		public Map Current

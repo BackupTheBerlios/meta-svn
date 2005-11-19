@@ -148,7 +148,6 @@ namespace testClasses
 			return p1+b+c+this.x+this.y+this.z;
 		}
 	}
-	[Serializable]
 	public class NamedNoConversion : TestClass 
 	{ 
 		public NamedNoConversion(Map arg) 
@@ -157,27 +156,55 @@ namespace testClasses
 			def[1]="null";
 			def["y"]="null";
 			def["p2"]="null";
-            Map toMerge = new NormalMap();
-            toMerge[1] = def;
-            toMerge[2] = arg;
-			arg=(Map)Interpreter.Merge(toMerge);
+			if (arg.ContainsKey(1))
+			{
+				def[1] = arg[1];
+			}
+			if (arg.ContainsKey("y"))
+			{
+				def["y"] = arg["y"];
+			}
+			if (arg.ContainsKey("p2"))
+			{
+				def["y2"] = arg["y2"];
+			}
+			//Map toMerge = new NormalMap();
+			//toMerge[1] = def;
+			//toMerge[2] = arg;
+			//arg = def;
+			//arg=arg
+			//arg=(Map)Interpreter.Merge(toMerge);
 
-			this.x=arg[1].GetString();
-			this.y=arg["y"].GetString();
-			this.z=arg["p2"].GetString();
+			this.x=def[1].GetString();
+			this.y=def["y"].GetString();
+			this.z=def["p2"].GetString();
 		}
+		// refactor, remove
 		public string Concatenate(Map arg) 
 		{
 			Map def=new NormalMap();
 			def[1]="null";
 			def["b"]="null";
 			def["c"]="null";
-            Map toMerge = new NormalMap();
-            toMerge[1] = def;
-            toMerge[2] = arg;
+
+			if (arg.ContainsKey(1))
+			{
+				def[1] = arg[1];
+			}
+			if (arg.ContainsKey("b"))
+			{
+				def["b"] = arg["b"];
+			}
+			if (arg.ContainsKey("c"))
+			{
+				def["c"] = arg["c"];
+			}
+			//Map toMerge = new NormalMap();
+			//toMerge[1] = def;
+			//toMerge[2] = arg;
             // merging shouldnt be used here, not relevant to the test
-			arg=(Map)Interpreter.Merge(toMerge);
-			return arg[1].GetString()+arg["b"].GetString()+arg["c"].GetString()+
+			//arg=(Map)Interpreter.Merge(toMerge);
+			return def[1].GetString()+def["b"].GetString()+def["c"].GetString()+
 				this.x+this.y+this.z;
 		}   
 	}
