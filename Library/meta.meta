@@ -1,4 +1,4 @@
-|editor*
+|debugTest*
 license='"
 	Meta is a programming language.
 	Copyright (C) 2004 Christian Staudenmeyer "christianstaudenmeyer@web.de"
@@ -330,7 +330,7 @@ basicTest=
 		staticEvent=TestClass.staticEvent
 		TestClass.TakeDelegate
 			=
-				|"resultFromDelegate"
+				|arg.[1]
 		resultFromDelegate=TestClass.GetResultFromDelegate*
 		staticEventResult=TestClass.staticEvent
 			testClass

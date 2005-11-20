@@ -21415,7 +21415,7 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"333"
 																								Column (Int32):
-																									"26"
+																									"13"
 																						Entry (KeyValuePair`2)
 																							Key (NormalMap):
 																								Extent:
@@ -21460,21 +21460,81 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"333"
 																												Column (Int32):
-																													"6"
+																													"13"
 																											End (SourcePosition):
 																												Line (Int32):
 																													"333"
 																												Column (Int32):
-																													"26"
+																													"13"
 																										Entry (KeyValuePair`2)
 																											Key (NormalMap):
 																												Extent:
 																													null
-																												"literal"
+																												"select"
 																											Value (NormalMap):
-																												Extent:
-																													null
-																												"resultFromDelegate"
+																												Extent (Extent):
+																													Start (SourcePosition):
+																														Line (Int32):
+																															"333"
+																														Column (Int32):
+																															"6"
+																													End (SourcePosition):
+																														Line (Int32):
+																															"333"
+																														Column (Int32):
+																															"13"
+																												Entry (KeyValuePair`2)
+																													Key (NormalMap):
+																														Extent:
+																															null
+																														1
+																													Value (NormalMap):
+																														Extent (Extent):
+																															Start (SourcePosition):
+																																Line (Int32):
+																																	"333"
+																																Column (Int32):
+																																	"6"
+																															End (SourcePosition):
+																																Line (Int32):
+																																	"333"
+																																Column (Int32):
+																																	"9"
+																														Entry (KeyValuePair`2)
+																															Key (NormalMap):
+																																Extent:
+																																	null
+																																"literal"
+																															Value (NormalMap):
+																																Extent:
+																																	null
+																																"arg"
+																												Entry (KeyValuePair`2)
+																													Key (NormalMap):
+																														Extent:
+																															null
+																														2
+																													Value (NormalMap):
+																														Extent (Extent):
+																															Start (SourcePosition):
+																																Line (Int32):
+																																	"333"
+																																Column (Int32):
+																																	"10"
+																															End (SourcePosition):
+																																Line (Int32):
+																																	"333"
+																																Column (Int32):
+																																	"13"
+																														Entry (KeyValuePair`2)
+																															Key (NormalMap):
+																																Extent:
+																																	null
+																																"literal"
+																															Value (NormalMap):
+																																Extent:
+																																	null
+																																1
 				Entry (KeyValuePair`2)
 					Key (NormalMap):
 						Extent:

@@ -32,8 +32,8 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			//new Test().Run();
-			FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
+			new Test().Run();
+			//FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
 		}
 		protected override string TestDirectory
 		{
@@ -121,14 +121,15 @@ namespace testClasses
 			MethodBase[] m=typeof(TestClass).GetMethods();
 			return null;
 		}
+		public delegate string TestDelegate(string x);
 		public static Delegate del;
-		public static void TakeDelegate(Delegate d) 
+		public static void TakeDelegate(TestDelegate d) 
 		{
 			del=d;
 		}
 		public static object GetResultFromDelegate() 
 		{
-			return del.GetType().GetMethod("Invoke").Invoke(del,new object[]{});
+			return del.GetType().GetMethod("Invoke").Invoke(del,new object[]{"argumentString"});
 		}
 		public double doubleValue=0.0;
 		public float floatValue=0.0F;

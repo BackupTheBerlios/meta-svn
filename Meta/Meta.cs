@@ -30,6 +30,7 @@ using System.Net;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.DebuggerVisualizers;
 using System.Diagnostics;
+using System.Reflection.Emit;
 
 namespace Meta
 {
@@ -989,6 +990,12 @@ namespace Meta
 			{
 				MethodInfo invoke=target.GetMethod("Invoke",
 					BindingFlags.Instance|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
+				if (invoke == null) // if it is a plain vanilla "Delegate"
+				{
+				}
+				else
+				{
+				}
 				Delegate function=Method.CreateDelegateFromCode(target,invoke,meta);
 				dotNet=function;
 			}
@@ -1397,72 +1404,371 @@ namespace Meta
 			}
 			return Transform.ToMeta(result);
 		}
-		public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,Map code)
+		public class EventHandlerContainer
 		{
-			CSharpCodeProvider codeProvider=new CSharpCodeProvider();
-			ICodeCompiler compiler=codeProvider.CreateCompiler();
-			string returnType;
-			if(method==null)
+			private Map callable;
+			public EventHandlerContainer(Map callable)
 			{
-				returnType="object";
+				this.callable=callable;
+			}
+			// return object, if necessary
+			public Map Raise(Map argument)
+			{
+				return callable.Call(argument, Process.Current.Caller);
+			}
+
+		}
+		//public static Delegate CreateDelegateFromCode(Type delegateType, MethodInfo method, Map code)
+		//{
+		//    Type returnType;
+		//    // refactor
+		//    if (method == null)
+		//    {
+		//        returnType = typeof(object);
+		//    }
+		//    else
+		//    {
+		//        returnType = method.ReturnType.Equals(typeof(void)) ? typeof(void) : method.ReturnType;
+		//    }
+		//    List<Type> arguments=new List<Type>();
+		//    int counter = 1;
+		//    // why can method be null?
+		//    if (method != null)
+		//    {
+		//        foreach (ParameterInfo parameter in method.GetParameters())
+		//        {
+		//            arguments.Add(parameter.ParameterType);
+		//        }
+		//    }
+
+		//    DynamicMethod dynamicMethod = new DynamicMethod("EventHandlerMethod",
+		//        typeof(int),
+		//        arguments.ToArray(),
+		//        typeof(string).Module);
+
+
+		//    Type[] writeStringArgs = { typeof(string) };
+
+		//    MethodInfo writeString = typeof(Console).GetMethod("WriteLine",
+		//        writeStringArgs);
+
+		//    ILGenerator il = dynamicMethod.GetILGenerator();
+
+		//    foreach(ParameterInfo 
+		//    // Load the first argument, which is a string, onto the stack.
+		//    il.Emit(OpCodes.Ldarg_0);
+		//    // Call the overload of Console.WriteLine that prints a string.
+		//    il.EmitCall(OpCodes.Call, writeString, null);
+		//    // The Hello method returns the value of the second argument;
+		//    // to do this, load the onto the stack and return.
+		//    il.Emit(OpCodes.Ldarg_1);
+		//    il.Emit(OpCodes.Ret);
+
+		//    // Display MethodAttributes for the dynamic method, set when 
+		//    // the dynamic method was created.
+		//    Console.WriteLine("\r\nMethod Attributes: {0}", hello.Attributes);
+
+		//    // Display the calling convention of the dynamic method, set when the 
+		//    // dynamic method was created.
+		//    Console.WriteLine("\r\nCalling convention: {0}", hello.CallingConvention);
+
+		//    // Display the declaring type, which is always null for dynamic
+		//    // methods.
+		//    if (hello.DeclaringType == null)
+		//    {
+		//        Console.WriteLine("\r\nDeclaringType is always null for dynamic methods.");
+		//    }
+		//    else
+		//    {
+		//        Console.WriteLine("DeclaringType: {0}", hello.DeclaringType);
+		//    }
+
+		//    // Display the default value for InitLocals.
+		//    if (hello.InitLocals)
+		//    {
+		//        Console.Write("\r\nThis method contains verifiable code.");
+		//    }
+		//    else
+		//    {
+		//        Console.Write("\r\nThis method contains unverifiable code.");
+		//    }
+		//    Console.WriteLine(" (InitLocals = {0})", hello.InitLocals);
+
+		//    // Display the module specified when the dynamic method was created.
+		//    Console.WriteLine("\r\nModule: {0}", hello.Module);
+
+		//    // Display the name specified when the dynamic method was created.
+		//    // Note that the name can be blank.
+		//    Console.WriteLine("\r\nName: {0}", hello.Name);
+
+		//    // For dynamic methods, the reflected type is always null.
+		//    if (hello.ReflectedType == null)
+		//    {
+		//        Console.WriteLine("\r\nReflectedType is null.");
+		//    }
+		//    else
+		//    {
+		//        Console.WriteLine("\r\nReflectedType: {0}", hello.ReflectedType);
+		//    }
+
+		//    if (hello.ReturnParameter == null)
+		//    {
+		//        Console.WriteLine("\r\nMethod has no return parameter.");
+		//    }
+		//    else
+		//    {
+		//        Console.WriteLine("\r\nReturn parameter: {0}", hello.ReturnParameter);
+		//    }
+
+		//    // If the method has no return type, ReturnType is System.Void.
+		//    Console.WriteLine("\r\nReturn type: {0}", hello.ReturnType);
+
+		//    // ReturnTypeCustomAttributes returns an ICustomeAttributeProvider
+		//    // that can be used to enumerate the custom attributes of the
+		//    // return value. At present, there is no way to set such custom
+		//    // attributes, so the list is empty.
+		//    if (hello.ReturnType == typeof(void))
+		//    {
+		//        Console.WriteLine("The method has no return type.");
+		//    }
+		//    else
+		//    {
+		//        ICustomAttributeProvider caProvider = hello.ReturnTypeCustomAttributes;
+		//        object[] returnAttributes = caProvider.GetCustomAttributes(true);
+		//        if (returnAttributes.Length == 0)
+		//        {
+		//            Console.WriteLine("\r\nThe return type has no custom attributes.");
+		//        }
+		//        else
+		//        {
+		//            Console.WriteLine("\r\nThe return type has the following custom attributes:");
+		//            foreach (object attr in returnAttributes)
+		//            {
+		//                Console.WriteLine("\t{0}", attr.ToString());
+		//            }
+		//        }
+		//    }
+
+		//    Console.WriteLine("\r\nToString: {0}", hello.ToString());
+
+		//    // Add parameter information to the dynamic method. (This is not
+		//    // necessary, but can be useful for debugging.) For each parameter,
+		//    // identified by position, supply the parameter attributes and a 
+		//    // parameter name.
+		//    ParameterBuilder parameter1 = hello.DefineParameter(
+		//        1,
+		//        ParameterAttributes.In,
+		//        "message"
+		//    );
+		//    ParameterBuilder parameter2 = hello.DefineParameter(
+		//        2,
+		//        ParameterAttributes.In,
+		//        "valueToReturn"
+		//    );
+
+		//    // Display parameter information.
+		//    ParameterInfo[] parameters = hello.GetParameters();
+		//    Console.WriteLine("\r\nParameters: name, type, ParameterAttributes");
+		//    foreach (ParameterInfo p in parameters)
+		//    {
+		//        Console.WriteLine("\t{0}, {1}, {2}",
+		//            p.Name, p.ParameterType, p.Attributes);
+		//    }
+
+		//    // Create a delegate that represents the dynamic method. This
+		//    // action completes the method, and any further attempts to
+		//    // change the method will cause an exception.
+		//    HelloDelegate hi =
+		//        (HelloDelegate)hello.CreateDelegate(typeof(HelloDelegate));
+
+		//    // Use the delegate to execute the dynamic method.
+		//    Console.WriteLine("\r\nUse the delegate to execute the dynamic method:");
+		//    int retval = hi("\r\nHello, World!", 42);
+		//    Console.WriteLine("Invoking delegate hi(\"Hello, World!\", 42) returned: " + retval);
+
+		//    // Create an array of arguments to use with the Invoke method.
+		//    object[] invokeArgs = { "\r\nHello, World!", 42 };
+		//    // Invoke the dynamic method using the arguments. This is much
+		//    // slower than using the delegate, because you must create an
+		//    // array to contain the arguments, and value-type arguments
+		//    // must be boxed.
+		//    object objRet = hello.Invoke(null, BindingFlags.ExactBinding, null, invokeArgs, new CultureInfo("en-us"));
+		//    Console.WriteLine("hello.Invoke returned: " + objRet);
+
+
+		//    //source += argumentList + "{";
+		//    //source += argumentBuiling;
+		//    //source += "Map result=callable.Call(arg,Process.Current.Caller);";
+		//    //if (method != null)
+		//    //{
+		//    //    if (!method.ReturnType.Equals(typeof(void)))
+		//    //    {
+		//    //        source += "return (" + returnType + ")";
+		//    //        source += "Meta.Transform.ToDotNet(result,typeof(" + returnType + "));";
+		//    //    }
+		//    //}
+		//    //else
+		//    //{
+		//    //    source += "return";
+		//    //    source += " result;";
+		//    //}
+		//    //source += "}";
+		//    //source += "private Map callable;";
+		//    //source += "public EventHandlerContainer(Map callable) {this.callable=callable;}}";
+		//    //List<string> assemblyNames = new List<string>();//new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
+		//    //assemblyNames.AddRange(Process.loadedAssemblies);
+		//    //CompilerParameters compilerParameters = new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
+		//    //CompilerResults compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, source);
+		//    ////CompilerResults compilerResults = compiler.CompileAssemblyFromSource(compilerParameters, source);
+		//    //Type containerType = compilerResults.CompiledAssembly.GetType("EventHandlerContainer", true);
+		//    //object container = containerType.GetConstructor(new Type[] { typeof(Map) }).Invoke(new object[] { code });
+		//    //if (method == null)
+		//    //{
+		//    //    delegateType = typeof(DelegateCreatedForGenericDelegates);
+		//    //}
+		//    //Delegate result = Delegate.CreateDelegate(delegateType,
+		//    //    container, "EventHandlerMethod");
+		//    return result;
+		//}
+
+		public static Delegate CreateDelegateFromCode(Type delegateType, MethodInfo method, Map code)
+		{
+			CSharpCodeProvider codeProvider = new CSharpCodeProvider();
+			//ICodeCompiler compiler = codeProvider.CreateCompiler();
+			string returnType;
+			if (method == null)
+			{
+				returnType = "object";
 			}
 			else
 			{
-				returnType=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
+				returnType = method.ReturnType.Equals(typeof(void)) ? "void" : method.ReturnType.FullName;
 			}
-			string source="using System;using Meta;";
-			source+=@"	[Serializable]
-					public class EventHandlerContainer{public "+returnType+" EventHandlerMethod";
-			int counter=1;
-			string argumentList="(";
-			string argumentBuiling="Map arg=new NormalMap();";
-			if(method!=null)
+			string source = "using System;using Meta;";
+			source += @"	[Serializable]
+					public class EventHandlerContainer{public " + returnType + " EventHandlerMethod";
+			int counter = 1;
+			string argumentList = "(";
+			string argumentBuiling = "Map arg=new NormalMap();";
+			if (method != null)
 			{
-				foreach(ParameterInfo parameter in method.GetParameters())
+				foreach (ParameterInfo parameter in method.GetParameters())
 				{
-					argumentList+=parameter.ParameterType.FullName+" arg"+counter;
-					argumentBuiling+="arg["+counter+"]=Meta.Transform.ToMeta(arg"+counter+");";
-					if(counter<method.GetParameters().Length)
+					argumentList += parameter.ParameterType.FullName + " arg" + counter;
+					argumentBuiling += "arg[" + counter + "]=Meta.Transform.ToMeta(arg" + counter + ");";
+					if (counter < method.GetParameters().Length)
 					{
-						argumentList+=",";
+						argumentList += ",";
 					}
 					counter++;
 				}
 			}
-			argumentList+=")";
-			source+=argumentList+"{";
-			source+=argumentBuiling;
-			source+="Map result=callable.Call(arg,Process.Current.Caller);";
-			if(method!=null)
+			argumentList += ")";
+			source += argumentList + "{";
+			source += argumentBuiling;
+			source += "Map result=callable.Call(arg,Process.Current.Caller);";
+			if (method != null)
 			{
-				if(!method.ReturnType.Equals(typeof(void)))
+				if (!method.ReturnType.Equals(typeof(void)))
 				{
-					source+="return ("+returnType+")";
-					source+="Meta.Transform.ToDotNet(result,typeof("+returnType+"));"; 
+					source += "return (" + returnType + ")";
+					source += "Meta.Transform.ToDotNet(result,typeof(" + returnType + "));";
 				}
 			}
-			else 
+			else
 			{
-				source+="return";
-				source+=" result;";
+				source += "return";
+				source += " result;";
 			}
-			source+="}";
-			source+="private Map callable;";
-			source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-            List<string> assemblyNames = new List<string>();//new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
-            assemblyNames.AddRange(Process.loadedAssemblies);
-			CompilerParameters compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
-			CompilerResults compilerResults=compiler.CompileAssemblyFromSource(compilerParameters,source);
-			Type containerType=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
-			object container=containerType.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {code});
-			if(method==null)
+			source += "}";
+			source += "private Map callable;";
+			source += "public EventHandlerContainer(Map callable) {this.callable=callable;}}";
+			List<string> assemblyNames = new List<string>();//new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
+			assemblyNames.AddRange(Process.loadedAssemblies);
+			CompilerParameters compilerParameters = new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
+			CompilerResults compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, source);
+			//CompilerResults compilerResults = compiler.CompileAssemblyFromSource(compilerParameters, source);
+			Type containerType = compilerResults.CompiledAssembly.GetType("EventHandlerContainer", true);
+			object container = containerType.GetConstructor(new Type[] { typeof(Map) }).Invoke(new object[] { code });
+			if (method == null)
 			{
-				delegateType=typeof(DelegateCreatedForGenericDelegates);
+				delegateType = typeof(DelegateCreatedForGenericDelegates);
 			}
-			Delegate result=Delegate.CreateDelegate(delegateType,
-				container,"EventHandlerMethod");
+			Delegate result = Delegate.CreateDelegate(delegateType,
+				container, "EventHandlerMethod");
 			return result;
 		}
+
+
+
+
+
+//        public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,Map code)
+//        {
+//            CSharpCodeProvider codeProvider=new CSharpCodeProvider();
+//            ICodeCompiler compiler=codeProvider.CreateCompiler();
+//            string returnType;
+//            if(method==null)
+//            {
+//                returnType="object";
+//            }
+//            else
+//            {
+//                returnType=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
+//            }
+//            string source="using System;using Meta;";
+//            source+=@"	[Serializable]
+//					public class EventHandlerContainer{public "+returnType+" EventHandlerMethod";
+//            int counter=1;
+//            string argumentList="(";
+//            string argumentBuiling="Map arg=new NormalMap();";
+//            if(method!=null)
+//            {
+//                foreach(ParameterInfo parameter in method.GetParameters())
+//                {
+//                    argumentList+=parameter.ParameterType.FullName+" arg"+counter;
+//                    argumentBuiling+="arg["+counter+"]=Meta.Transform.ToMeta(arg"+counter+");";
+//                    if(counter<method.GetParameters().Length)
+//                    {
+//                        argumentList+=",";
+//                    }
+//                    counter++;
+//                }
+//            }
+//            argumentList+=")";
+//            source+=argumentList+"{";
+//            source+=argumentBuiling;
+//            source+="Map result=callable.Call(arg,Process.Current.Caller);";
+//            if(method!=null)
+//            {
+//                if(!method.ReturnType.Equals(typeof(void)))
+//                {
+//                    source+="return ("+returnType+")";
+//                    source+="Meta.Transform.ToDotNet(result,typeof("+returnType+"));"; 
+//                }
+//            }
+//            else 
+//            {
+//                source+="return";
+//                source+=" result;";
+//            }
+//            source+="}";
+//            source+="private Map callable;";
+//            source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
+//            List<string> assemblyNames = new List<string>();//new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
+//            assemblyNames.AddRange(Process.loadedAssemblies);
+//            CompilerParameters compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
+//            CompilerResults compilerResults=compiler.CompileAssemblyFromSource(compilerParameters,source);
+//            Type containerType=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
+//            object container=containerType.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {code});
+//            if(method==null)
+//            {
+//                delegateType=typeof(DelegateCreatedForGenericDelegates);
+//            }
+//            Delegate result=Delegate.CreateDelegate(delegateType,
+//                container,"EventHandlerMethod");
+//            return result;
+//        }
 		private void Initialize(string name,object obj,Type type)
 		{
 			this.name=name;
@@ -2244,6 +2550,12 @@ namespace Meta
 				BindingFlags.Static|BindingFlags.Instance);
 			MethodInfo invoke=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
 				|BindingFlags.Public|BindingFlags.NonPublic);
+			if (invoke == null)
+			{
+			}
+			else
+			{
+			}
 			Delegate eventDelegate=Method.CreateDelegateFromCode(eventInfo.EventHandlerType,invoke,code);
 			return eventDelegate;
 		}
@@ -3369,7 +3681,8 @@ namespace Meta
 		{
 			get
 			{
-				return index - text.Substring(0, index).LastIndexOf('\n');
+				int startPos=Math.Min(index,text.Length-1);
+				return index - text.LastIndexOf('\n', startPos);
 			}
 		}
 	}

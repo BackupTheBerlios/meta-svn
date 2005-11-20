@@ -1700,7 +1700,7 @@ Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"resultFromDelegate"
 	Value (NormalMap):
-		"resultFromDelegate"
+		"argumentString"
 Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"staticEventResult"
