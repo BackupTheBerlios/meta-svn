@@ -168,13 +168,6 @@ namespace testClasses
 			{
 				def["y2"] = arg["y2"];
 			}
-			//Map toMerge = new NormalMap();
-			//toMerge[1] = def;
-			//toMerge[2] = arg;
-			//arg = def;
-			//arg=arg
-			//arg=(Map)Interpreter.Merge(toMerge);
-
 			this.x=def[1].GetString();
 			this.y=def["y"].GetString();
 			this.z=def["p2"].GetString();
@@ -199,11 +192,6 @@ namespace testClasses
 			{
 				def["c"] = arg["c"];
 			}
-			//Map toMerge = new NormalMap();
-			//toMerge[1] = def;
-			//toMerge[2] = arg;
-            // merging shouldnt be used here, not relevant to the test
-			//arg=(Map)Interpreter.Merge(toMerge);
 			return def[1].GetString()+def["b"].GetString()+def["c"].GetString()+
 				this.x+this.y+this.z;
 		}   

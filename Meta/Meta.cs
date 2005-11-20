@@ -69,7 +69,12 @@ namespace Meta
         {
             get
             {
-                return message+" In line "+extent.Start.Line+", column "+extent.Start.Column;
+				string text = message;
+				if (extent != null)
+				{
+					text += " In line " + extent.Start.Line + ", column " + extent.Start.Column;
+				}
+				return text;
             }
         }
         private string message;
@@ -3970,7 +3975,6 @@ namespace Meta
 	// proper verification and testing.  I disclaim all liability and responsibility
 	// to any person or entity with respect to any loss or damage caused, or alleged
 	// to be caused, directly or indirectly, by the use of this Integer class.
-	[Serializable]
 	public class Integer
 	{
 		public Integer(double val)

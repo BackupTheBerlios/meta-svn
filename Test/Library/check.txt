@@ -50,6 +50,11 @@ Entry (KeyValuePair`2)
 	Value (NormalMap):
 		Entry (KeyValuePair`2)
 			Key (NormalMap):
+				"increment"
+			Value (NormalMap):
+				6
+		Entry (KeyValuePair`2)
+			Key (NormalMap):
 				"add"
 			Value (NormalMap):
 				1100

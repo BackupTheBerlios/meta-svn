@@ -628,9 +628,13 @@ library=
 	math=
 		increment=
 			|
-				incremented=*
-				incremented.[*]=arg
-				current=incremented
+				result=Meta.Integer.op_Addition
+					Meta.Integer
+						arg
+					Meta.Integer
+						1
+				current=Meta.NormalMap
+					result
 		add=
 			|Meta.NormalMap
 				library.map.sum
@@ -710,6 +714,7 @@ libraryTest=
 						*
 						*
 			numberTest=
+				increment=increment 5
 				add=add
 					100
 					1000
