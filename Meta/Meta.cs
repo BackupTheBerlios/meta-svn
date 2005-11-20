@@ -990,12 +990,6 @@ namespace Meta
 			{
 				MethodInfo invoke=target.GetMethod("Invoke",
 					BindingFlags.Instance|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-				if (invoke == null) // if it is a plain vanilla "Delegate"
-				{
-				}
-				else
-				{
-				}
 				Delegate function=Method.CreateDelegateFromCode(target,invoke,meta);
 				dotNet=function;
 			}
@@ -1634,52 +1628,36 @@ namespace Meta
 		public static Delegate CreateDelegateFromCode(Type delegateType, MethodInfo method, Map code)
 		{
 			CSharpCodeProvider codeProvider = new CSharpCodeProvider();
-			//ICodeCompiler compiler = codeProvider.CreateCompiler();
-			string returnType;
-			if (method == null)
-			{
-				returnType = "object";
-			}
-			else
-			{
-				returnType = method.ReturnType.Equals(typeof(void)) ? "void" : method.ReturnType.FullName;
-			}
+			string returnType = method.ReturnType.Equals(typeof(void)) ? "void" : method.ReturnType.FullName;
+
 			string source = "using System;using Meta;";
 			source += @"	[Serializable]
 					public class EventHandlerContainer{public " + returnType + " EventHandlerMethod";
 			int counter = 1;
 			string argumentList = "(";
 			string argumentBuiling = "Map arg=new NormalMap();";
-			if (method != null)
+			foreach (ParameterInfo parameter in method.GetParameters())
 			{
-				foreach (ParameterInfo parameter in method.GetParameters())
+				argumentList += parameter.ParameterType.FullName + " arg" + counter;
+				argumentBuiling += "arg[" + counter + "]=Meta.Transform.ToMeta(arg" + counter + ");";
+				if (counter < method.GetParameters().Length)
 				{
-					argumentList += parameter.ParameterType.FullName + " arg" + counter;
-					argumentBuiling += "arg[" + counter + "]=Meta.Transform.ToMeta(arg" + counter + ");";
-					if (counter < method.GetParameters().Length)
-					{
-						argumentList += ",";
-					}
-					counter++;
+					argumentList += ",";
 				}
+				counter++;
 			}
+
 			argumentList += ")";
 			source += argumentList + "{";
 			source += argumentBuiling;
 			source += "Map result=callable.Call(arg,Process.Current.Caller);";
-			if (method != null)
+
+			if (!method.ReturnType.Equals(typeof(void)))
 			{
-				if (!method.ReturnType.Equals(typeof(void)))
-				{
-					source += "return (" + returnType + ")";
-					source += "Meta.Transform.ToDotNet(result,typeof(" + returnType + "));";
-				}
+				source += "return (" + returnType + ")";
+				source += "Meta.Transform.ToDotNet(result,typeof(" + returnType + "));";
 			}
-			else
-			{
-				source += "return";
-				source += " result;";
-			}
+
 			source += "}";
 			source += "private Map callable;";
 			source += "public EventHandlerContainer(Map callable) {this.callable=callable;}}";
