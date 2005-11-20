@@ -643,10 +643,10 @@ namespace Meta
                     val.Parent = this;
                     Set(key, val);
                 }
-                else
-                {
-					throw new ApplicationException("Could not set key.");
-                }
+				//else
+				//{
+				//    throw new ApplicationException("Could not set key.");
+				//}
             }
         }
         protected abstract Map Get(Map key);

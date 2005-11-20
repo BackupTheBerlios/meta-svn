@@ -1,4 +1,4 @@
-|sdl.test*
+|editor*
 license='"
 	Meta is a programming language.
 	Copyright (C) 2004 Christian Staudenmeyer "christianstaudenmeyer@web.de"
@@ -789,32 +789,20 @@ libraryTest=
 		current=test
 editor=
 	|
-		current=library.map.merge
-			parent
-			System
-			mscorlib
-			["System.Windows.Forms"]
-			["System.Drawing"]
-			Meta
-			library.logic
-			library.map
-			library.math
-			Editor
 		Process=Meta.Process
 		SetBreakPoint=
 			|process.BreakPoint.set
-				BreakPoint
-					SourcePosition
-						add
-							editBox.LineIndex.get*
-							1
-						add
-							editBox.Column.get*
-							1
+				Meta.SourcePosition
+					library.math.add
+						editBox.LineIndex.get*
+						1
+					library.math.add
+						editBox.Column.get*
+						1
 		process=Process*
 		commands=
 			Save=
-				|FileSystem.Set
+				|Meta.FileSystem.Set
 					editBox.RealText.get*
 			Start=
 				|
@@ -829,153 +817,153 @@ editor=
 			Continue=
 				|
 					SetBreakPoint*
-					process.Reversed.set
+					process.ReverseDebugging.set
 						*
 					process.Continue*
 			Reverse=
 				|
 					SetBreakPoint*
-					process.Reversed.set
+					process.ReverseDebugging.set
 						1
 					process.Continue*
 			Stop=
 				|
 					process.Stop*
 		CombinedModifierKeys=
-			current=["System.Windows.Forms"]
+			forms=["System.Windows.Forms"]
 			AltControl=library.bitwise.or
-				Keys.Alt
-				Keys.Control
+				forms.Keys.Alt
+				forms.Keys.Control
 			AltShift=library.bitwise.or
-				Keys.Alt
-				Keys.Shift
+				forms.Keys.Alt
+				forms.Keys.Shift
 			AltControlShift=library.bitwise.or
-				Keys.Alt
-				Keys.Control
-				Keys.Shift
+				forms.Keys.Alt
+				forms.Keys.Control
+				forms.Keys.Shift
 			ControlShift=library.bitwise.or
-				Keys.Control
-				Keys.Shift
+				forms.Keys.Control
+				forms.Keys.Shift
 		shortcutCombinations=
-			current=["System.Windows.Forms"]
-			[Keys.None]=
-				[Keys.Escape]=
+			forms=["System.Windows.Forms"]
+			[forms.Keys.None]=
+				[forms.Keys.Escape]=
 					|editBox.StopInteractiveSearch*
-				[Keys.F5]=
+				[forms.Keys.F5]=
 					|commands.Start*
-				[Keys.Up]=
+				[forms.Keys.Up]=
 					|editBox.MoveLineUp*
-				[Keys.Down]=
+				[forms.Keys.Down]=
 					|editBox.MoveLineDown*
-				[Keys.Left]=
+				[forms.Keys.Left]=
 					|editBox.MoveCharLeft*
-				[Keys.Right]=
+				[forms.Keys.Right]=
 					|editBox.MoveCharRight*
-				[Keys.Home]=
+				[forms.Keys.Home]=
 					|editBox.MoveLineStart*
-				[Keys.End]=
+				[forms.Keys.End]=
 					|editBox.MoveLineEnd*
-				[Keys.Tab]=
+				[forms.Keys.Tab]=
 					|editBox.IncreaseSelectionIndent*
-				[Keys.Back]=
+				[forms.Keys.Back]=
 					|editBox.DeleteCharLeft*
-				[Keys.Delete]=
+				[forms.Keys.Delete]=
 					|editBox.DeleteCharRight*
-				[Keys.PageUp]=
+				[forms.Keys.PageUp]=
 					|editBox.MovePageUp*
-				[Keys.PageDown]=
+				[forms.Keys.PageDown]=
 					|editBox.MovePageDown*
-			[Keys.Shift]=
-				[Keys.Left]=
+			[forms.Keys.Shift]=
+				[forms.Keys.Left]=
 					|editBox.SelectCharLeft*
-				[Keys.Right]=
+				[forms.Keys.Right]=
 					|editBox.SelectCharRight*
-			[Keys.Control]=
-				[Keys.S]=
+			[forms.Keys.Control]=
+				[forms.Keys.S]=
 					|commands.Save*
-				[Keys.I]=
+				[forms.Keys.I]=
 					|editBox.StartInteractiveSearch*
-				[Keys.H]=
+				[forms.Keys.H]=
 					|editBox.FindAndReplace*
-				[Keys.Left]=
+				[forms.Keys.Left]=
 					|editBox.MoveWordLeft*
-				[Keys.Right]=
+				[forms.Keys.Right]=
 					|editBox.MoveWordRight*
-				[Keys.Back]=
+				[forms.Keys.Back]=
 					|editBox.DeleteWordLeft*
-				[Keys.Delete]=
+				[forms.Keys.Delete]=
 					|editBox.DeleteWordRight*
-				[Keys.Home]=
+				[forms.Keys.Home]=
 					|editBox.MoveDocumentStart*
-				[Keys.End]=
+				[forms.Keys.End]=
 					|editBox.MoveDocumentEnd*
-			[Keys.Alt]=
-				[Keys.K]=
+			[forms.Keys.Alt]=
+				[forms.Keys.K]=
 					|editBox.MoveLineDown*
-				[Keys.L]=
+				[forms.Keys.L]=
 					|editBox.MoveLineUp*
-				[Keys.Oemtilde]=
+				[forms.Keys.Oemtilde]=
 					|editBox.MoveCharRight*
-				[Keys.J]=
+				[forms.Keys.J]=
 					|editBox.MoveCharLeft*
-				[Keys.U]=
+				[forms.Keys.U]=
 					|editBox.MoveLineStart*
-				[Keys.OemSemicolon]=
+				[forms.Keys.OemSemicolon]=
 					|editBox.MoveLineEnd*
-				[Keys.N]=
+				[forms.Keys.N]=
 					|editBox.DeleteCharLeft*
-				[Keys.M]=
+				[forms.Keys.M]=
 					|editBox.DeleteCharRight*
 			[CombinedModifierKeys.ControlShift]=
-				[Keys.Left]=
+				[forms.Keys.Left]=
 					|editBox.SelectWordLeft*
-				[Keys.Right]=
+				[forms.Keys.Right]=
 					|editBox.SelectWordRight*
 			[CombinedModifierKeys.AltShift]=
-				[Keys.J]=
+				[forms.Keys.J]=
 					|editBox.SelectCharLeft*
-				[Keys.Oemtilde]=
+				[forms.Keys.Oemtilde]=
 					|editBox.SelectCharRight*
-				[Keys.L]=
+				[forms.Keys.L]=
 					|editBox.SelectLineUp*
-				[Keys.K]=
+				[forms.Keys.K]=
 					|editBox.SelectLineDown*
-				[Keys.OemSemicolon]=
+				[forms.Keys.OemSemicolon]=
 					|editBox.SelectLineEnd*
-				[Keys.U]=
+				[forms.Keys.U]=
 					|editBox.SelectLineStart*
 			[CombinedModifierKeys.AltControl]=
-				[Keys.J]=
+				[forms.Keys.J]=
 					|editBox.MoveWordLeft*
-				[Keys.Oemtilde]=
+				[forms.Keys.Oemtilde]=
 					|editBox.MoveWordRight*
-				[Keys.OemSemicolon]=
+				[forms.Keys.OemSemicolon]=
 					|editBox.MoveDocumentEnd*
-				[Keys.U]=
+				[forms.Keys.U]=
 					|editBox.MoveDocumentStart*
-				[Keys.N]=
+				[forms.Keys.N]=
 					|editBox.DeleteWordLeft*
-				[Keys.M]=
+				[forms.Keys.M]=
 					|editBox.DeleteWordRight*
-				[Keys.L]=
+				[forms.Keys.L]=
 					|editBox.MovePageUp*
-				[Keys.K]=
+				[forms.Keys.K]=
 					|editBox.MovePageDown*
 			[CombinedModifierKeys.AltControlShift]=
-				[Keys.J]=
+				[forms.Keys.J]=
 					|editBox.SelectWordLeft*
-				[Keys.Oemtilde]=
+				[forms.Keys.Oemtilde]=
 					|editBox.SelectWordRight*
 		editBox=
-			editBox=ScrollingTextBox*
+			editBox=Editor.ScrollingTextBox*
 			editBox.ShowSelectionMargin.set
 				1
 			editBox.AcceptsTab.set
 				1
 			editBox.Dock.set
-				DockStyle.Fill
+				["System.Windows.Forms"].DockStyle.Fill
 			editBox.ScrollBars.set
-				RichTextBoxScrollBars.ForcedBoth
+				["System.Windows.Forms"].RichTextBoxScrollBars.ForcedBoth
 			editBox.Moved.add
 				=
 					|
@@ -985,9 +973,9 @@ editor=
 							[1]=
 								|commands.Continue*
 						breakpoint=process.BreakPoint.get*
-						position=breakpoint.Position.get*
+						position=breakpoint
 						line=position.Line.get*
-						forward=smaller
+						forward=library.math.smaller
 							line
 							editBox.LineIndex.get*
 						cases.[forward]*
@@ -998,7 +986,7 @@ editor=
 						modifier=eventArgs.Modifiers.get*
 						key=eventArgs.KeyCode.get*
 						shortcuts=shortcutCombinations.[modifier]
-						exists=contains
+						exists=library.map.contains
 							map=shortcuts
 							key=key
 						cases=
@@ -1013,15 +1001,15 @@ editor=
 								|*
 						cases.[exists]*
 			editBox.RealText.set
-				FileAccess.Read
-					FileSystem.Path.get*
+				Meta.FileAccess.Read
+					Meta.FileSystem.Path.get*
 			current=editBox
 		form=
-			form=Form*
+			form=["System.Windows.Forms"].Form*
 			form.Text.set
 				"Meta Edit"
 			form.Font.set
-				Font
+				["System.Drawing"].Font
 					"Courier New"
 					10
 			controls=form.Controls.get*
@@ -1044,18 +1032,19 @@ editor=
 					Stop=
 						|commands.Stop*
 			form.Menu.set
-				MainMenu
-					apply
-						array=keys menu
+				["System.Windows.Forms"].MainMenu
+					library.map.apply
+						array=library.map.keys menu
 						function=
 							|
 								topKey=arg
-								current=MenuItem
+								current=["System.Windows.Forms"].MenuItem
 									topKey
-									apply
-										array=keys menu.[topKey]
+									library.map.apply
+										array=library.map.keys menu.[topKey]
 										function=
-											|MenuItem
+											|["System.Windows.Forms"].MenuItem
 												arg
 												menu.[topKey].[arg]
 			current=form
+		form.ShowDialog*

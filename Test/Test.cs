@@ -32,8 +32,8 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			new Test().Run();
-			//FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
+			//new Test().Run();
+			FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
 		}
 		protected override string TestDirectory
 		{
