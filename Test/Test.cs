@@ -33,6 +33,8 @@ namespace Test
 		public static void Main(string[] args) 
 		{
 			new Test().Run();
+			//Map map = SpecialMaps.Local;
+			//File.WriteAllText(@"C:\Projects\Meta\Library\test.txt", Meta.Serialize.Value(map).TrimStart());
 			//FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
 		}
 		protected override string TestDirectory
@@ -48,12 +50,12 @@ namespace Test
 			Map argument = new NormalMap();
 			argument[1] = "first arg";
 			argument[2] = "second=arg";
-			return FileSystem.fileSystem["basicTest"].Call(argument, Map.Empty);
+			return SpecialMaps.Local["basicTest"].Call(argument, Map.Empty);
 		}
 		[Test(2)]
 		public object Library()
 		{
-			return FileSystem.fileSystem["libraryTest"].Call(Map.Empty, Map.Empty);
+			return SpecialMaps.Local["libraryTest"].Call(Map.Empty, Map.Empty);
 		}
 		[Test]
 		public object Extents()
@@ -61,7 +63,7 @@ namespace Test
 			Map argument = Map.Empty;
 			argument[1] = "first arg";
 			argument[2] = "second=arg";
-			return FileSystem.fileSystem["basicTest"];
+			return SpecialMaps.Local["basicTest"];
 		}
 	}
 }

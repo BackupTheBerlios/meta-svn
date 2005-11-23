@@ -1,4 +1,4 @@
-|debugTest*
+|debugTest *
 license='"
 	Meta is a programming language.
 	Copyright (C) 2004 Christian Staudenmeyer "christianstaudenmeyer@web.de"
@@ -30,7 +30,7 @@ debugTest=
 		asdfasdf=map
 		mscorlib.Console.WriteLine
 			"hello world"
-		mscorlib.Console.ReadLine*
+		mscorlib.Console.ReadLine *
 file=
 	write=
 		|
@@ -38,7 +38,7 @@ file=
 				arg.file
 			writer.Write
 				arg.text
-			writer.Close*
+			writer.Close *
 sdl=
 	test=
 		|
@@ -54,8 +54,8 @@ sdl=
 			library.map.while
 				condition=
 					|library.logic.not quit
-				function=
-					|Events.Poll*
+				with=
+					|Events.Poll *
 html=
 	tags=
 		create=
@@ -70,7 +70,7 @@ html=
 					name
 					">"
 		|map.merge library.map.apply
-			function=
+			with=
 				|
 					[arg]=create arg
 			array=
@@ -94,17 +94,17 @@ html=
 				"td"
 	table=
 		|
-			tags=tags*
+			tags=tags *
 			current=tags.table library.map.join library.map.apply
 				array=arg
-				function=
+				with=
 					|tags.tr map.join library.map.apply
 						array=arg
-						function=
+						with=
 							|tags.td arg
 	test=
 		|
-			tags=tags*
+			tags=tags *
 			text=tags.html map.join
 				tags.head tags.title "Meta rocks!"
 				tags.body map.join
@@ -127,13 +127,13 @@ html=
 			file.write
 				file="C:\test.html"
 				text=arg
-			process=System.Process*
-			startInfo=process.StartInfo.get*
+			process=System.Process *
+			startInfo=process.StartInfo.get *
 			startInfo.FileName.set
 				"iexplore.exe"
 			startInfo.Arguments.set
 				"C:\test.html"
-			process.Start*
+			process.Start *
 basicTest=
 	|
 		current=library.map.merge
@@ -146,7 +146,7 @@ basicTest=
 				|scopingValue
 		scopingValue="wrong"
 		scopingTest=scoping.test
-		lexicalScoping=scopingTest*
+		lexicalScoping=scopingTest *
 		unicodeText="äaba"
 		parent.parent.testSubDir.x=*
 		persistantDeleteTest=testSubDir.x
@@ -207,7 +207,7 @@ basicTest=
 					current.a="b"
 		a="default"
 		b=*
-		aSet=object.SetA*
+		aSet=object.SetA *
 		bSet=object.SetB
 			value=
 				x=7
@@ -249,22 +249,22 @@ basicTest=
 		TestClass=MetaTest.TestClass
 		TestClass.NestedClass.field=5
 		nestedClassTest=TestClass.NestedClass.field
-		testClass=TestClass*
+		testClass=TestClass *
 		testClass.floatValue=3
 		testClass.doubleValue=4
 		testClass.decimalValue=5
 		TestClass.boolTest=1
 		boolTest=TestClass.boolTest
 		MemberTest=MetaTest.MemberTest
-		memberTest=MemberTest*
+		memberTest=MemberTest *
 		MemberTest.classField="a"
 		memberTest.instanceField="b"
 		MemberTest.ClassProperty.set
-			memberTest.InstanceProperty.get*
-		classPropertyValue=MemberTest.ClassProperty.get*
+			memberTest.InstanceProperty.get *
+		classPropertyValue=MemberTest.ClassProperty.get *
 		memberTest.InstanceProperty.set
-			MemberTest.ClassProperty.get*
-		instancePropertyValue=memberTest.InstanceProperty.get*
+			MemberTest.ClassProperty.get *
+		instancePropertyValue=memberTest.InstanceProperty.get *
 		interceptedSymbol="/hello/"
 		positionalNoConversion=MetaTest.PositionalNoConversion
 			"m"
@@ -282,7 +282,7 @@ basicTest=
 			=
 				c="t"
 				"r"
-		indexerNoConversion=MetaTest.IndexerNoConversion*
+		indexerNoConversion=MetaTest.IndexerNoConversion *
 		indexerNoConversion.Item.set
 			"abc"
 			"hihi"
@@ -293,13 +293,13 @@ basicTest=
 		xyz="w"
 		literalFunction=
 			|5
-		literalFunctionResult=literalFunction*
+		literalFunctionResult=literalFunction *
 		someFunction=
 			|
 				current="simple function this"
 		callFunction=
 			|someFunction
-		callFunctionResult=callFunction*
+		callFunctionResult=callFunction *
 		delayedFunction=
 			|
 				|
@@ -317,7 +317,7 @@ basicTest=
 		ChangeUpperLevel=
 			|
 				SetUpperLevel "changed"
-		ChangeUpperLevel*
+		ChangeUpperLevel *
 		staticEventChanged=*
 		ChangeStaticEvent=
 			|
@@ -331,7 +331,7 @@ basicTest=
 		TestClass.TakeDelegate
 			=
 				|arg.[1]
-		resultFromDelegate=TestClass.GetResultFromDelegate*
+		resultFromDelegate=TestClass.GetResultFromDelegate *
 		staticEventResult=TestClass.staticEvent
 			testClass
 		instanceEventChanged=*
@@ -355,7 +355,7 @@ basicTest=
 				|"then"
 			[*]=
 				|"else"
-		firstIf=firstIfBranches.[firstIfCondition]*
+		firstIf=firstIfBranches.[firstIfCondition] *
 		bigNumber=50020202029029233344
 		secondSwitch="unchanged"
 		secondSwitchCases=
@@ -367,7 +367,7 @@ basicTest=
 		emptyFunction=
 			|
 				x="hello"
-		emptyFunctionResult=emptyFunction*
+		emptyFunctionResult=emptyFunction *
 		font=["System.Drawing"].Font
 			"Courier New"
 			[2]=10
@@ -382,12 +382,12 @@ basicTest=
 				hello world!
 				hello!
 				"
-		arrayList=["mscorlib"].ArrayList*
+		arrayList=["mscorlib"].ArrayList *
 		arrayList.Add
 			"hello"
 		arrayListResult=arrayList.Item.get
 			*
-		textBox=["System.Windows.Forms"].TextBox*
+		textBox=["System.Windows.Forms"].TextBox *
 		textBox.Text.set
 			"
 				Alle meine Entchen,
@@ -395,7 +395,7 @@ basicTest=
 				schwimmen auf dem See,
 				Köpfchen in das Wasser,
 				Schwaenzchen in die Hoeh."
-		lines=textBox.Lines.get*
+		lines=textBox.Lines.get *
 		alleMeineText=lines.[1]
 		lines.[5]="bwuhahaha"
 		tabText="			hello"
@@ -427,11 +427,11 @@ basicTest=
 		myArg=
 			|
 				hello="world"
-		funcReturnTest=returnArg myArg*
+		funcReturnTest=returnArg myArg *
 		documentedFunction=
 			doc="This function returns #hello ."
 			|"hello"
-		docFunctionResult=documentedFunction*
+		docFunctionResult=documentedFunction *
 testSubDir=
 	testLib=
 		x="hello"
@@ -448,19 +448,19 @@ library=
 	map=
 		while=
 			|
-				stop=arg.condition*
+				stop=arg.condition *
 				next=
 					[*]=
 						|*
 					[1]=
 						|
-							arg.function*
+							arg.with *
 							while arg
 				next.[stop] arg
 		apply=
 			|applyImplementation
 				array=arg.array
-				function=arg.function
+				with=arg.with
 				index=1
 				result=*
 			applyImplementation=
@@ -474,30 +474,30 @@ library=
 						[*]=
 							|applyImplementation
 								array=arg.array
-								function=arg.function
+								with=arg.with
 								index=library.math.add
 									arg.index
 									1
 								object=Meta.ObjectMap
 									arg.result
-								argument=arg.function arg.array.[arg.index]
+								argument=arg.with arg.array.[arg.index]
 								object.Append
 									argument
-								result=object.Current.get*
+								result=object.Current.get *
 					current=next.[stop] arg
 		join=
 			|library.map.sum
 				array=arg
-				function=
+				with=
 					|
 						joined=Meta.ObjectMap
 							arg.a
 						apply
 							array=arg.b
-							function=
+							with=
 								|joined.Append
 									arg
-						current=joined.Current.get*
+						current=joined.Current.get *
 				start=*
 		contains=
 			|
@@ -510,16 +510,16 @@ library=
 				object=Meta.ObjectMap
 					arg
 				current=Meta.NormalMap
-					object.Keys.get*
+					object.Keys.get *
 		merge=
 			|sum
 				array=arg
-				function=
+				with=
 					|
 						overwrite=arg.b
 						current=sum
 							array=keys arg.b
-							function=
+							with=
 								|
 									result=arg.a
 									result.[arg.b]=overwrite.[arg.b]
@@ -530,7 +530,7 @@ library=
 			|
 				result=library.map.sum
 					array=arg
-					function=
+					with=
 						|
 							first=Meta.ObjectMap
 								arg.a.previous
@@ -548,13 +548,13 @@ library=
 			|
 				map=Meta.ObjectMap
 					arg
-				array=map.Array.get*
-				current=array.Count.get*
+				array=map.Array.get *
+				current=array.Count.get *
 		sum=
 			|sumImplementation
 				index=1
 				array=arg.array
-				function=arg.function
+				with=arg.with
 				result=arg.start
 			sumImplementation=
 				|
@@ -567,11 +567,11 @@ library=
 						[*]=
 							|sumImplementation
 								index=math.increment arg.index
-								result=arg.function
+								result=arg.with
 									a=arg.result
 									b=arg.array.[arg.index]
 								array=arg.array
-								function=arg.function
+								with=arg.with
 					current=next.[stop] arg
 	logic=
 		not=
@@ -582,7 +582,7 @@ library=
 		and=
 			|library.map.sum
 				array=arg
-				function=
+				with=
 					|library.logic.and.table.[arg]
 				start=1
 			table=
@@ -605,7 +605,7 @@ library=
 		or=
 			|library.map.sum
 				array=arg
-				function=
+				with=
 					|library.logic.or.table.[arg]
 				start=*
 			table=
@@ -639,7 +639,7 @@ library=
 			|Meta.NormalMap
 				library.map.sum
 					array=arg
-					function=
+					with=
 						|Meta.Integer.op_Addition
 							Meta.Integer
 								arg.a
@@ -650,7 +650,7 @@ library=
 			|Meta.NormalMap
 				library.map.sum
 					array=arg
-					function=
+					with=
 						|Meta.Integer.op_Multiply
 							Meta.Integer
 								arg.a
@@ -674,7 +674,7 @@ library=
 			|Meta.NormalMap
 				map.sum
 					array=arg
-					function=
+					with=
 						|Meta.Integer.op_BitwiseOr
 							Meta.Integer
 								arg.a
@@ -741,7 +741,7 @@ libraryTest=
 							arg
 							1
 					current=library.map.apply
-						function=applyMethod
+						with=applyMethod
 						array=
 							1
 							2
@@ -780,7 +780,7 @@ libraryTest=
 							|library.math.smaller
 								counter
 								10
-						function=
+						with=
 							|SetCounter library.math.increment counter
 					current=counter
 			bitwiseTest=library.bitwise.or
@@ -794,41 +794,41 @@ editor=
 			|process.BreakPoint.set
 				Meta.SourcePosition
 					library.math.add
-						editBox.LineIndex.get*
+						editBox.LineIndex.get *
 						1
 					library.math.add
-						editBox.Column.get*
+						editBox.Column.get *
 						1
-		process=Process*
+		process=Process *
 		commands=
 			Save=
 				|Meta.FileSystem.Set
-					editBox.RealText.get*
+					editBox.RealText.get *
 			Start=
 				|
-					parent.parent.parent.process=Process*
-					commands.Save*
-					SetBreakPoint*
+					parent.parent.parent.process=Process *
+					commands.Save *
+					SetBreakPoint *
 					process.Break.add
 						=
 							|editBox.ShowDebugValue
 								arg.[1]
-					process.Start*
+					process.Start *
 			Continue=
 				|
-					SetBreakPoint*
+					SetBreakPoint *
 					process.ReverseDebugging.set
 						*
-					process.Continue*
+					process.Continue *
 			Reverse=
 				|
-					SetBreakPoint*
+					SetBreakPoint *
 					process.ReverseDebugging.set
 						1
-					process.Continue*
+					process.Continue *
 			Stop=
 				|
-					process.Stop*
+					process.Stop *
 		CombinedModifierKeys=
 			forms=["System.Windows.Forms"]
 			AltControl=library.bitwise.or
@@ -848,114 +848,114 @@ editor=
 			forms=["System.Windows.Forms"]
 			[forms.Keys.None]=
 				[forms.Keys.Escape]=
-					|editBox.StopInteractiveSearch*
+					|editBox.StopInteractiveSearch *
 				[forms.Keys.F5]=
-					|commands.Start*
+					|commands.Start *
 				[forms.Keys.Up]=
-					|editBox.MoveLineUp*
+					|editBox.MoveLineUp *
 				[forms.Keys.Down]=
-					|editBox.MoveLineDown*
+					|editBox.MoveLineDown *
 				[forms.Keys.Left]=
-					|editBox.MoveCharLeft*
+					|editBox.MoveCharLeft *
 				[forms.Keys.Right]=
-					|editBox.MoveCharRight*
+					|editBox.MoveCharRight *
 				[forms.Keys.Home]=
-					|editBox.MoveLineStart*
+					|editBox.MoveLineStart *
 				[forms.Keys.End]=
-					|editBox.MoveLineEnd*
+					|editBox.MoveLineEnd *
 				[forms.Keys.Tab]=
-					|editBox.IncreaseSelectionIndent*
+					|editBox.IncreaseSelectionIndent *
 				[forms.Keys.Back]=
-					|editBox.DeleteCharLeft*
+					|editBox.DeleteCharLeft *
 				[forms.Keys.Delete]=
-					|editBox.DeleteCharRight*
+					|editBox.DeleteCharRight *
 				[forms.Keys.PageUp]=
-					|editBox.MovePageUp*
+					|editBox.MovePageUp *
 				[forms.Keys.PageDown]=
-					|editBox.MovePageDown*
+					|editBox.MovePageDown *
 			[forms.Keys.Shift]=
 				[forms.Keys.Left]=
-					|editBox.SelectCharLeft*
+					|editBox.SelectCharLeft *
 				[forms.Keys.Right]=
-					|editBox.SelectCharRight*
+					|editBox.SelectCharRight *
 			[forms.Keys.Control]=
 				[forms.Keys.S]=
-					|commands.Save*
+					|commands.Save *
 				[forms.Keys.I]=
-					|editBox.StartInteractiveSearch*
+					|editBox.StartInteractiveSearch *
 				[forms.Keys.H]=
-					|editBox.FindAndReplace*
+					|editBox.FindAndReplace *
 				[forms.Keys.Left]=
-					|editBox.MoveWordLeft*
+					|editBox.MoveWordLeft *
 				[forms.Keys.Right]=
-					|editBox.MoveWordRight*
+					|editBox.MoveWordRight *
 				[forms.Keys.Back]=
-					|editBox.DeleteWordLeft*
+					|editBox.DeleteWordLeft *
 				[forms.Keys.Delete]=
-					|editBox.DeleteWordRight*
+					|editBox.DeleteWordRight *
 				[forms.Keys.Home]=
-					|editBox.MoveDocumentStart*
+					|editBox.MoveDocumentStart *
 				[forms.Keys.End]=
-					|editBox.MoveDocumentEnd*
+					|editBox.MoveDocumentEnd *
 			[forms.Keys.Alt]=
 				[forms.Keys.K]=
-					|editBox.MoveLineDown*
+					|editBox.MoveLineDown *
 				[forms.Keys.L]=
-					|editBox.MoveLineUp*
+					|editBox.MoveLineUp *
 				[forms.Keys.Oemtilde]=
-					|editBox.MoveCharRight*
+					|editBox.MoveCharRight *
 				[forms.Keys.J]=
-					|editBox.MoveCharLeft*
+					|editBox.MoveCharLeft *
 				[forms.Keys.U]=
-					|editBox.MoveLineStart*
+					|editBox.MoveLineStart *
 				[forms.Keys.OemSemicolon]=
-					|editBox.MoveLineEnd*
+					|editBox.MoveLineEnd *
 				[forms.Keys.N]=
-					|editBox.DeleteCharLeft*
+					|editBox.DeleteCharLeft *
 				[forms.Keys.M]=
-					|editBox.DeleteCharRight*
+					|editBox.DeleteCharRight *
 			[CombinedModifierKeys.ControlShift]=
 				[forms.Keys.Left]=
-					|editBox.SelectWordLeft*
+					|editBox.SelectWordLeft *
 				[forms.Keys.Right]=
-					|editBox.SelectWordRight*
+					|editBox.SelectWordRight *
 			[CombinedModifierKeys.AltShift]=
 				[forms.Keys.J]=
-					|editBox.SelectCharLeft*
+					|editBox.SelectCharLeft *
 				[forms.Keys.Oemtilde]=
-					|editBox.SelectCharRight*
+					|editBox.SelectCharRight *
 				[forms.Keys.L]=
-					|editBox.SelectLineUp*
+					|editBox.SelectLineUp *
 				[forms.Keys.K]=
-					|editBox.SelectLineDown*
+					|editBox.SelectLineDown *
 				[forms.Keys.OemSemicolon]=
-					|editBox.SelectLineEnd*
+					|editBox.SelectLineEnd *
 				[forms.Keys.U]=
-					|editBox.SelectLineStart*
+					|editBox.SelectLineStart *
 			[CombinedModifierKeys.AltControl]=
 				[forms.Keys.J]=
-					|editBox.MoveWordLeft*
+					|editBox.MoveWordLeft *
 				[forms.Keys.Oemtilde]=
-					|editBox.MoveWordRight*
+					|editBox.MoveWordRight *
 				[forms.Keys.OemSemicolon]=
-					|editBox.MoveDocumentEnd*
+					|editBox.MoveDocumentEnd *
 				[forms.Keys.U]=
-					|editBox.MoveDocumentStart*
+					|editBox.MoveDocumentStart *
 				[forms.Keys.N]=
-					|editBox.DeleteWordLeft*
+					|editBox.DeleteWordLeft *
 				[forms.Keys.M]=
-					|editBox.DeleteWordRight*
+					|editBox.DeleteWordRight *
 				[forms.Keys.L]=
-					|editBox.MovePageUp*
+					|editBox.MovePageUp *
 				[forms.Keys.K]=
-					|editBox.MovePageDown*
+					|editBox.MovePageDown *
 			[CombinedModifierKeys.AltControlShift]=
 				[forms.Keys.J]=
-					|editBox.SelectWordLeft*
+					|editBox.SelectWordLeft *
 				[forms.Keys.Oemtilde]=
-					|editBox.SelectWordRight*
+					|editBox.SelectWordRight *
 		editBox=
-			editBox=Editor.ScrollingTextBox*
+			editBox=Editor.ScrollingTextBox *
 			editBox.ShowSelectionMargin.set
 				1
 			editBox.AcceptsTab.set
@@ -969,22 +969,22 @@ editor=
 					|
 						cases=
 							[*]=
-								|commands.Reverse*
+								|commands.Reverse *
 							[1]=
-								|commands.Continue*
-						breakpoint=process.BreakPoint.get*
+								|commands.Continue *
+						breakpoint=process.BreakPoint.get *
 						position=breakpoint
-						line=position.Line.get*
+						line=position.Line.get *
 						forward=library.math.smaller
 							line
-							editBox.LineIndex.get*
-						cases.[forward]*
+							editBox.LineIndex.get *
+						cases.[forward] *
 			editBox.KeyDown.add
 				=
 					|
 						eventArgs=arg.[2]
-						modifier=eventArgs.Modifiers.get*
-						key=eventArgs.KeyCode.get*
+						modifier=eventArgs.Modifiers.get *
+						key=eventArgs.KeyCode.get *
 						shortcuts=shortcutCombinations.[modifier]
 						exists=library.map.contains
 							map=shortcuts
@@ -992,59 +992,59 @@ editor=
 						cases=
 							[1]=
 								|
-									editBox.SuspendWindowUpdate*
-									shortcuts.[key]*
-									editBox.ResumeWindowUpdate*
+									editBox.SuspendWindowUpdate *
+									shortcuts.[key] *
+									editBox.ResumeWindowUpdate *
 									eventArgs.Handled.set
 										1
 							[*]=
 								|*
-						cases.[exists]*
+						cases.[exists] *
 			editBox.RealText.set
 				Meta.FileAccess.Read
-					Meta.FileSystem.Path.get*
+					Meta.FileSystem.Path.get *
 			current=editBox
 		form=
-			form=["System.Windows.Forms"].Form*
+			form=["System.Windows.Forms"].Form *
 			form.Text.set
 				"Meta Edit"
 			form.Font.set
 				["System.Drawing"].Font
 					"Courier New"
 					10
-			controls=form.Controls.get*
+			controls=form.Controls.get *
 			controls.AddRange
 				=
 					editBox
 			menu=
 				File=
 					Save=
-						|commands.Save*
+						|commands.Save *
 					Close=
-						|form.Close*
+						|form.Close *
 				Debug=
 					Start=
-						|commands.Start*
+						|commands.Start *
 					Continue=
-						|commands.Continue*
+						|commands.Continue *
 					Reverse=
-						|commands.Reverse*
+						|commands.Reverse *
 					Stop=
-						|commands.Stop*
+						|commands.Stop *
 			form.Menu.set
 				["System.Windows.Forms"].MainMenu
 					library.map.apply
 						array=library.map.keys menu
-						function=
+						with=
 							|
 								topKey=arg
 								current=["System.Windows.Forms"].MenuItem
 									topKey
 									library.map.apply
 										array=library.map.keys menu.[topKey]
-										function=
+										with=
 											|["System.Windows.Forms"].MenuItem
 												arg
 												menu.[topKey].[arg]
 			current=form
-		form.ShowDialog*
+		form.ShowDialog *
