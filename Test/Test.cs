@@ -56,13 +56,26 @@ namespace Test
 			Map argument = new NormalMap();
 			argument[1] = "first arg";
 			argument[2] = "second=arg";
-			return SpecialMaps.Local["basicTest"].Call(argument, Map.Empty);
+			return SpecialMaps.Local["basicTest"].Call(argument);//, Map.Empty);
 		}
+		//[Test(2)]
+		//public object Basic()
+		//{
+		//    Map argument = new NormalMap();
+		//    argument[1] = "first arg";
+		//    argument[2] = "second=arg";
+		//    return SpecialMaps.Local["basicTest"].Call(argument, Map.Empty);
+		//}
 		[Test(2)]
 		public object Library()
 		{
-			return SpecialMaps.Local["libraryTest"].Call(Map.Empty, Map.Empty);
+			return SpecialMaps.Local["libraryTest"].Call(Map.Empty);//, Map.Empty);
 		}
+		//[Test(2)]
+		//public object Library()
+		//{
+		//    return SpecialMaps.Local["libraryTest"].Call(Map.Empty, Map.Empty);
+		//}
 		[Test]
 		public object Extents()
 		{

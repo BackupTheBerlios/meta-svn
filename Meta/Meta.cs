@@ -117,7 +117,7 @@ namespace Meta
 		}
 		public void Run()
 		{
-			program.Call(parameter,new NormalMap());
+			program.Call(parameter);//,new NormalMap());
 		}
 		public Map Parse(string filePath)
 		{
@@ -204,37 +204,50 @@ namespace Meta
 			return val;
 		}
 		// remove, make unnecessary
-		public Map Caller
-		{
-			get
-			{
-				Map caller;
-				if(callers.Count!=0)
-				{
-					caller=(Map)callers[callers.Count-1];
-				}
-				else
-				{
-					caller=null;
-				}
-				return caller;
-			}
-		}
+		//public Map Caller
+		//{
+		//    get
+		//    {
+		//        Map caller;
+		//        if(callers.Count!=0)
+		//        {
+		//            caller=(Map)callers[callers.Count-1];
+		//        }
+		//        else
+		//        {
+		//            caller=null;
+		//        }
+		//        return caller;
+		//    }
+		//}
 		// remove
 		public List<Map> callers=new List<Map>();
-		public Map Call(Map code,Map current,Map arg)
+		public Map Call(Map code, Map current, Map arg)
 		{
-			Map function=Expression(code[CodeKeys.Callable],current,arg);
-			Map argument=Expression(code[CodeKeys.Argument],current,arg);
+			Map function = Expression(code[CodeKeys.Callable], current, arg);
+			Map argument = Expression(code[CodeKeys.Argument], current, arg);
 			callers.Add(current);
-			Map result=function.Call(argument,current);
+			Map result = function.Call(argument);//, current);
 			if (result == null)
 			{
 				result = Map.Empty;
 			}
-			callers.RemoveAt(callers.Count-1);
+			callers.RemoveAt(callers.Count - 1);
 			return result;
 		}
+		//public Map Call(Map code,Map current,Map arg)
+		//{
+		//    Map function=Expression(code[CodeKeys.Callable],current,arg);
+		//    Map argument=Expression(code[CodeKeys.Argument],current,arg);
+		//    callers.Add(current);
+		//    Map result=function.Call(argument,current);
+		//    if (result == null)
+		//    {
+		//        result = Map.Empty;
+		//    }
+		//    callers.RemoveAt(callers.Count-1);
+		//    return result;
+		//}
 		public bool ReverseDebugging
 		{
 			get
@@ -666,13 +679,18 @@ namespace Meta
         protected abstract Map Get(Map key);
         protected abstract void Set(Map key, Map val);
 
-
-		public virtual Map Call(Map arg,Map caller)
+		public virtual Map Call(Map arg)//, Map caller)
 		{
-			Map function=this[CodeKeys.Function];
-			Map result=Process.Current.Expression(function,this,arg);
+			Map function = this[CodeKeys.Function];
+			Map result = Process.Current.Expression(function, this, arg);
 			return result;
 		}
+		//public virtual Map Call(Map arg,Map caller)
+		//{
+		//    Map function=this[CodeKeys.Function];
+		//    Map result=Process.Current.Expression(function,this,arg);
+		//    return result;
+		//}
 
 		public abstract List<Map> Keys
 		{
@@ -785,11 +803,16 @@ namespace Meta
 
 	public abstract class StrategyMap: Map
 	{
-		public override Map Call(Map arg, Map caller)
+		public override Map Call(Map arg)//, Map caller)
 		{
 			strategy.Panic();
-			return base.Call(arg, caller);
+			return base.Call(arg);//, caller);
 		}
+		//public override Map Call(Map arg, Map caller)
+		//{
+		//    strategy.Panic();
+		//    return base.Call(arg, caller);
+		//}
 		public void InitFromStrategy(Strategy clone) 
 		{
 			foreach(Map key in clone.Keys)
@@ -1410,39 +1433,39 @@ namespace Meta
 				return result;
 			}
 		}
-		public override Map Call(Map argument,Map caller)
+		public override Map Call(Map argument) //, Map caller)
 		{
-			object result=null;
-			bool isExecuted=false;
-            if (this.name == "Equals")
-            {
-            }
-			if(!isExecuted)
+			object result = null;
+			bool isExecuted = false;
+			if (this.name == "Equals")
 			{
-				List<MethodBase> rightNumberArgumentMethods=new List<MethodBase>();
-				foreach(MethodBase method in overloadedMethods)
+			}
+			if (!isExecuted)
+			{
+				List<MethodBase> rightNumberArgumentMethods = new List<MethodBase>();
+				foreach (MethodBase method in overloadedMethods)
 				{
-					if(argument.Array.Count==method.GetParameters().Length)
-					{ 
-						if(argument.Array.Count==((Map)argument).Keys.Count)
-						{ 
+					if (argument.Array.Count == method.GetParameters().Length)
+					{
+						if (argument.Array.Count == ((Map)argument).Keys.Count)
+						{
 							rightNumberArgumentMethods.Add(method);
 						}
 					}
 				}
-				if(rightNumberArgumentMethods.Count==0)
+				if (rightNumberArgumentMethods.Count == 0)
 				{
-					throw new ApplicationException("Method "+this.type.Name+"."+this.name+": No methods with the right number of arguments.");
+					throw new ApplicationException("Method " + this.type.Name + "." + this.name + ": No methods with the right number of arguments.");
 				}
 				rightNumberArgumentMethods.Sort(new ArgumentComparer());
-				foreach(MethodBase method in rightNumberArgumentMethods)
+				foreach (MethodBase method in rightNumberArgumentMethods)
 				{
-					List<object> arguments=new List<object>();
-					bool argumentsMatched=true;
-					ParameterInfo[] parameters=method.GetParameters();
-					for(int i=0;argumentsMatched && i<parameters.Length;i++)
+					List<object> arguments = new List<object>();
+					bool argumentsMatched = true;
+					ParameterInfo[] parameters = method.GetParameters();
+					for (int i = 0; argumentsMatched && i < parameters.Length; i++)
 					{
-						object arg=Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType);
+						object arg = Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType);
 						if (arg != null)
 						{
 							arguments.Add(arg);
@@ -1454,15 +1477,15 @@ namespace Meta
 						}
 						//arguments.Add(Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType, out argumentsMatched));
 					}
-					if(argumentsMatched)
+					if (argumentsMatched)
 					{
-						if(method is ConstructorInfo)
+						if (method is ConstructorInfo)
 						{
 							try
 							{
-								result=((ConstructorInfo)method).Invoke(arguments.ToArray());
+								result = ((ConstructorInfo)method).Invoke(arguments.ToArray());
 							}
-							catch(Exception e)
+							catch (Exception e)
 							{
 								throw e.InnerException;
 							}
@@ -1471,24 +1494,103 @@ namespace Meta
 						{
 							try
 							{
-								result=method.Invoke(obj,arguments.ToArray());
+								result = method.Invoke(obj, arguments.ToArray());
 							}
-							catch(Exception e)
+							catch (Exception e)
 							{
 								throw e.InnerException;
 							}
 						}
-						isExecuted=true;
+						isExecuted = true;
 						break;
 					}
 				}
 			}
-			if(!isExecuted)
+			if (!isExecuted)
 			{
-				throw new ApplicationException("Method "+this.name+" could not be called.");
+				throw new ApplicationException("Method " + this.name + " could not be called.");
 			}
 			return Transform.ToMeta(result);
 		}
+		//public override Map Call(Map argument,Map caller)
+		//{
+		//    object result=null;
+		//    bool isExecuted=false;
+		//    if (this.name == "Equals")
+		//    {
+		//    }
+		//    if(!isExecuted)
+		//    {
+		//        List<MethodBase> rightNumberArgumentMethods=new List<MethodBase>();
+		//        foreach(MethodBase method in overloadedMethods)
+		//        {
+		//            if(argument.Array.Count==method.GetParameters().Length)
+		//            { 
+		//                if(argument.Array.Count==((Map)argument).Keys.Count)
+		//                { 
+		//                    rightNumberArgumentMethods.Add(method);
+		//                }
+		//            }
+		//        }
+		//        if(rightNumberArgumentMethods.Count==0)
+		//        {
+		//            throw new ApplicationException("Method "+this.type.Name+"."+this.name+": No methods with the right number of arguments.");
+		//        }
+		//        rightNumberArgumentMethods.Sort(new ArgumentComparer());
+		//        foreach(MethodBase method in rightNumberArgumentMethods)
+		//        {
+		//            List<object> arguments=new List<object>();
+		//            bool argumentsMatched=true;
+		//            ParameterInfo[] parameters=method.GetParameters();
+		//            for(int i=0;argumentsMatched && i<parameters.Length;i++)
+		//            {
+		//                object arg=Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType);
+		//                if (arg != null)
+		//                {
+		//                    arguments.Add(arg);
+		//                }
+		//                else
+		//                {
+		//                    argumentsMatched = false;
+		//                    break;
+		//                }
+		//                //arguments.Add(Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType, out argumentsMatched));
+		//            }
+		//            if(argumentsMatched)
+		//            {
+		//                if(method is ConstructorInfo)
+		//                {
+		//                    try
+		//                    {
+		//                        result=((ConstructorInfo)method).Invoke(arguments.ToArray());
+		//                    }
+		//                    catch(Exception e)
+		//                    {
+		//                        throw e.InnerException;
+		//                    }
+		//                }
+		//                else
+		//                {
+		//                    try
+		//                    {
+		//                        result=method.Invoke(obj,arguments.ToArray());
+		//                    }
+		//                    catch(Exception e)
+		//                    {
+		//                        throw e.InnerException;
+		//                    }
+		//                }
+		//                isExecuted=true;
+		//                break;
+		//            }
+		//        }
+		//    }
+		//    if(!isExecuted)
+		//    {
+		//        throw new ApplicationException("Method "+this.name+" could not be called.");
+		//    }
+		//    return Transform.ToMeta(result);
+		//}
 
 		//public static Delegate CreateDelegateFromCode(Type delegateType, MethodInfo method, Map code)
 		//{
@@ -1617,8 +1719,12 @@ namespace Meta
 			// return object, if necessary
 			public Map Raise(Map argument)
 			{
-				return callable.Call(argument, Process.Current.Caller);
+				return callable.Call(argument);//, Process.Current.Caller);
 			}
+			//public Map Raise(Map argument)
+			//{
+			//    return callable.Call(argument, Process.Current.Caller);
+			//}
 
 		}
 //        public static Delegate CreateDelegateFromCode(Type delegateType, MethodInfo method, Map code)
@@ -1747,18 +1853,33 @@ namespace Meta
 			public object Call(object[] arguments)
 			//public static object Call(MetaDelegate metaEvent, object[] arguments)
 			{
-				Map arg=new NormalMap();
+				Map arg = new NormalMap();
 				foreach (object argument in arguments)
 				{
 					arg.Append(Transform.ToMeta(argument));
 				}
-				Map result=this.callable.Call(arg,Process.Current.Caller);
-				return Meta.Transform.ToDotNet(result,this.returnType);
+				Map result = this.callable.Call(arg);//, Process.Current.Caller);
+				return Meta.Transform.ToDotNet(result, this.returnType);
 
 				//Console.WriteLine("called");
 				//int asdf = 0;
 				//return ;
 			}
+			//public object Call(object[] arguments)
+			////public static object Call(MetaDelegate metaEvent, object[] arguments)
+			//{
+			//    Map arg=new NormalMap();
+			//    foreach (object argument in arguments)
+			//    {
+			//        arg.Append(Transform.ToMeta(argument));
+			//    }
+			//    Map result=this.callable.Call(arg,Process.Current.Caller);
+			//    return Meta.Transform.ToDotNet(result,this.returnType);
+
+			//    //Console.WriteLine("called");
+			//    //int asdf = 0;
+			//    //return ;
+			//}
 		}
 
 		public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
@@ -1956,10 +2077,14 @@ namespace Meta
 		{
 			this.constructor=new Method(this.type);
 		}
-		public override Map Call(Map argument,Map caller)
+		public override Map Call(Map argument)//, Map caller)
 		{
-			return constructor.Call(argument,caller);
+			return constructor.Call(argument);//, caller);
 		}
+		//public override Map Call(Map argument,Map caller)
+		//{
+		//    return constructor.Call(argument,caller);
+		//}
 
 	}
 	[Serializable]
@@ -2378,7 +2503,7 @@ namespace Meta
 			this.obj=obj;
 			this.type=type;
 		}
-		public override Map Call(Map argument,Map caller)
+		public override Map Call(Map argument)//,Map caller)
 		{
 			Map result;
 			try
@@ -2406,6 +2531,34 @@ namespace Meta
 			}
 			return result;
 		}
+		//public override Map Call(Map argument,Map caller)
+		//{
+		//    Map result;
+		//    try
+		//    {
+		//        Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public |
+		//            BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
+		//        if (eventDelegate != null)
+		//        {
+		//            List<object> arguments = new List<object>();
+		//            ParameterInfo[] parameters = eventDelegate.Method.GetParameters();
+		//            for (int i = 1; i < parameters.Length; i++)
+		//            {
+		//                arguments.Add(Transform.ToDotNet((Map)argument[i], parameters[i].ParameterType));
+		//            }
+		//            result = Transform.ToMeta(eventDelegate.DynamicInvoke(arguments.ToArray()));
+		//        }
+		//        else
+		//        {
+		//            result = null;
+		//        }
+		//    }
+		//    catch (Exception e)
+		//    {
+		//        result = null;
+		//    }
+		//    return result;
+		//}
 
 		protected override Map CopyImplementation()
 		{
