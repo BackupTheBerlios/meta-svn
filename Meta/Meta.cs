@@ -117,7 +117,7 @@ namespace Meta
 		}
 		public void Run()
 		{
-			program.Call(parameter);//,new NormalMap());
+			program.Call(parameter);
 		}
 		public Map Parse(string filePath)
 		{
@@ -134,7 +134,6 @@ namespace Meta
 		{
 			return new Parser(textReader.ReadToEnd(),LocalStrategy.Path).Program();
 		}
-		// refactor this stuff to use something more sensible
 		public void Start()
 		{
 			thread.Start();
@@ -203,51 +202,17 @@ namespace Meta
 			}
 			return val;
 		}
-		// remove, make unnecessary
-		//public Map Caller
-		//{
-		//    get
-		//    {
-		//        Map caller;
-		//        if(callers.Count!=0)
-		//        {
-		//            caller=(Map)callers[callers.Count-1];
-		//        }
-		//        else
-		//        {
-		//            caller=null;
-		//        }
-		//        return caller;
-		//    }
-		//}
-		// remove
-		public List<Map> callers=new List<Map>();
 		public Map Call(Map code, Map current, Map arg)
 		{
 			Map function = Expression(code[CodeKeys.Callable], current, arg);
 			Map argument = Expression(code[CodeKeys.Argument], current, arg);
-			callers.Add(current);
 			Map result = function.Call(argument);//, current);
 			if (result == null)
 			{
 				result = Map.Empty;
 			}
-			callers.RemoveAt(callers.Count - 1);
 			return result;
 		}
-		//public Map Call(Map code,Map current,Map arg)
-		//{
-		//    Map function=Expression(code[CodeKeys.Callable],current,arg);
-		//    Map argument=Expression(code[CodeKeys.Argument],current,arg);
-		//    callers.Add(current);
-		//    Map result=function.Call(argument,current);
-		//    if (result == null)
-		//    {
-		//        result = Map.Empty;
-		//    }
-		//    callers.RemoveAt(callers.Count-1);
-		//    return result;
-		//}
 		public bool ReverseDebugging
 		{
 			get
@@ -269,7 +234,6 @@ namespace Meta
 			Program(code,current,ref local,arg);
 			return local;
 		}
-		// think about the parameters, combine with above
 		private void Program(Map code,Map parent,ref Map current,Map arg)
 		{
 			current.Parent=parent;
@@ -279,7 +243,6 @@ namespace Meta
 				{
 					if(!ResumeAfterReverse((Map)code[i]))
 					{
-						// improve
 						i-=2;
 						continue;
 					}
@@ -291,7 +254,6 @@ namespace Meta
 				Statement((Map)code[i],ref current,arg);
 			}
 		}
-		// implement
 		public class Change
 		{
 			private Map map;
@@ -383,9 +345,6 @@ namespace Meta
 			for(int i=1;i<code.Array.Count;i++)
 			{
 				Map key=Expression((Map)code.Array[i],context,arg);
-				//if (key.Equals(new NormalMap("overwrite")))
-				//{
-				//}
 				Map selection;
 				if (key.Equals(SpecialKeys.Parent))
 				{
@@ -663,7 +622,6 @@ namespace Meta
             }
             set
             {
-				// refactor
                 if (value != null)
                 {
                     Map val = value.Copy();
@@ -679,19 +637,12 @@ namespace Meta
         protected abstract Map Get(Map key);
         protected abstract void Set(Map key, Map val);
 
-		public virtual Map Call(Map arg)//, Map caller)
+		public virtual Map Call(Map arg)
 		{
 			Map function = this[CodeKeys.Function];
 			Map result = Process.Current.Expression(function, this, arg);
 			return result;
 		}
-		//public virtual Map Call(Map arg,Map caller)
-		//{
-		//    Map function=this[CodeKeys.Function];
-		//    Map result=Process.Current.Expression(function,this,arg);
-		//    return result;
-		//}
-
 		public abstract List<Map> Keys
 		{
 			get;
@@ -801,23 +752,138 @@ namespace Meta
 		}
 	}
 
-	public abstract class StrategyMap: Map
+	//public abstract class StrategyMap: Map
+	//{
+	//    public override Map Call(Map arg)
+	//    {
+	//        strategy.Panic();
+	//        return base.Call(arg);
+	//    }
+	//    public void InitFromStrategy(Strategy clone) 
+	//    {
+	//        foreach(Map key in clone.Keys)
+	//        {
+	//            this[key]=clone.Get(key);
+	//        }
+	//    }
+	//    public override Integer GetInteger()
+	//    {
+	//        return strategy.GetInteger();
+	//    }
+	//    public override string GetString()
+	//    {
+	//        return strategy.GetString();
+	//    }
+	//    public override bool IsString
+	//    {
+	//        get
+	//        {
+	//            return strategy.IsString;
+	//        }
+	//    }
+	//    public override bool IsInteger
+	//    {
+	//        get
+	//        {
+	//            return strategy.IsInteger;
+	//        }
+	//    }
+	//    public override int Count
+	//    {
+	//        get
+	//        {
+	//            return strategy.Count;
+	//        }
+	//    }
+	//    public override List<Map> Array
+	//    {
+	//        get
+	//        {
+	//            return strategy.Array;
+	//        }
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        return strategy.Get(key);
+	//    }
+	//    protected override void Set(Map key, Map value)
+	//    {
+	//        isHashCached = false;
+	//        if (key.Equals(SpecialKeys.Current))
+	//        {
+	//            // refactor
+	//            this.strategy = ((NormalMap)value).strategy.CopyImplementation();
+	//            this.strategy.map = this;
+	//        }
+	//        else
+	//        {
+	//            strategy.Set(key,value);
+	//        }
+	//    }
+	//    public override List<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            return strategy.Keys;
+	//        }
+	//    }
+	//    protected override Map CopyImplementation()
+	//    {
+	//        // why does the strategy do the cloning?
+	//        return strategy.Copy();
+	//    }
+	//    public override bool ContainsKey(Map key)
+	//    {
+	//        return strategy.ContainsKey(key);
+	//    }
+	//    public override bool Equals(object toCompare)
+	//    {
+	//        bool isEqual;
+	//        if(Object.ReferenceEquals(toCompare,this))
+	//        {
+	//            isEqual=true;
+	//        }
+	//        else if(toCompare is NormalMap)
+	//        {
+	//            isEqual=((NormalMap)toCompare).strategy.Equals(strategy);
+	//        }
+	//        else
+	//        {
+	//            isEqual=false;
+	//        }
+	//        return isEqual;
+	//    }
+	//    public override int GetHashCode() 
+	//    {
+	//        if(!isHashCached)
+	//        {
+	//            hash=this.strategy.GetHashCode();
+	//            isHashCached=true;
+	//        }
+	//        return hash;
+	//    }
+	//    private bool isHashCached=false;
+	//    private int hash;
+	//    public StrategyMap(Strategy strategy)
+	//    {
+	//        this.strategy=strategy;
+	//        this.strategy.map=this;
+	//    }
+	//    public Strategy strategy;
+	//}
+	// combine NormalMap and Map and StrategyMap
+	public class NormalMap:Map
 	{
-		public override Map Call(Map arg)//, Map caller)
+		public override Map Call(Map arg)
 		{
 			strategy.Panic();
-			return base.Call(arg);//, caller);
+			return base.Call(arg);
 		}
-		//public override Map Call(Map arg, Map caller)
-		//{
-		//    strategy.Panic();
-		//    return base.Call(arg, caller);
-		//}
-		public void InitFromStrategy(Strategy clone) 
+		public void InitFromStrategy(Strategy clone)
 		{
-			foreach(Map key in clone.Keys)
+			foreach (Map key in clone.Keys)
 			{
-				this[key]=clone.Get(key);
+				this[key] = clone.Get(key);
 			}
 		}
 		public override Integer GetInteger()
@@ -856,24 +922,24 @@ namespace Meta
 				return strategy.Array;
 			}
 		}
-        protected override Map Get(Map key)
-        {
-            return strategy.Get(key);
-        }
-        protected override void Set(Map key, Map value)
-        {
-            isHashCached = false;
-            if (key.Equals(SpecialKeys.Current))
-            {
+		protected override Map Get(Map key)
+		{
+			return strategy.Get(key);
+		}
+		protected override void Set(Map key, Map value)
+		{
+			isHashCached = false;
+			if (key.Equals(SpecialKeys.Current))
+			{
 				// refactor
-                this.strategy = ((NormalMap)value).strategy.CopyImplementation();
-                this.strategy.map = this;
-            }
-            else
-            {
-                strategy.Set(key,value);
-            }
-        }
+				this.strategy = ((NormalMap)value).strategy.CopyImplementation();
+				this.strategy.map = this;
+			}
+			else
+			{
+				strategy.Set(key, value);
+			}
+		}
 		public override List<Map> Keys
 		{
 			get
@@ -893,41 +959,37 @@ namespace Meta
 		public override bool Equals(object toCompare)
 		{
 			bool isEqual;
-			if(Object.ReferenceEquals(toCompare,this))
+			if (Object.ReferenceEquals(toCompare, this))
 			{
-				isEqual=true;
+				isEqual = true;
 			}
-			else if(toCompare is NormalMap)
+			else if (toCompare is NormalMap)
 			{
-				isEqual=((NormalMap)toCompare).strategy.Equals(strategy);
+				isEqual = ((NormalMap)toCompare).strategy.Equals(strategy);
 			}
 			else
 			{
-				isEqual=false;
+				isEqual = false;
 			}
 			return isEqual;
 		}
-		public override int GetHashCode() 
+		public override int GetHashCode()
 		{
-			if(!isHashCached)
+			if (!isHashCached)
 			{
-				hash=this.strategy.GetHashCode();
-				isHashCached=true;
+				hash = this.strategy.GetHashCode();
+				isHashCached = true;
 			}
 			return hash;
 		}
-		private bool isHashCached=false;
+		private bool isHashCached = false;
 		private int hash;
-		public StrategyMap(Strategy strategy)
-		{
-			this.strategy=strategy;
-			this.strategy.map=this;
-		}
+		//public StrategyMap(Strategy strategy)
+		//{
+		//    this.strategy = strategy;
+		//    this.strategy.map = this;
+		//}
 		public Strategy strategy;
-	}
-	// combine NormalMap and Map and StrategyMap
-	public class NormalMap:StrategyMap
-	{
 		public NormalMap(List<Map> list):this()
 		{
 			int index = 1;
@@ -937,9 +999,14 @@ namespace Meta
 				index++;
 			}
 		}
-		public NormalMap(Strategy strategy):base(strategy)
+		public NormalMap(Strategy strategy)
 		{
+			this.strategy = strategy;
+			this.strategy.map = this;
 		}
+		//public NormalMap(Strategy strategy):this(strategy)
+		//{
+		//}
 		public NormalMap():this(new HybridDictionaryStrategy())
 		{
 		}
@@ -2147,7 +2214,7 @@ namespace Meta
 			return map.GetIntegerDefault();
 		}
 
-		public StrategyMap map;
+		public NormalMap map;
 		// remove this if possible
 
 		// the copying cannot possible work correctly because the parents arent rewired
@@ -2157,7 +2224,7 @@ namespace Meta
 		public abstract Strategy CopyImplementation();
 		public virtual Map Copy() // TODO: move into Map??
 		{
-			StrategyMap clone;
+			NormalMap clone;
 			Strategy strategy = (Strategy)this.CopyImplementation();
 			clone=new NormalMap(strategy);
             strategy.map = clone;
