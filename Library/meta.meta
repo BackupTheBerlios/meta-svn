@@ -2,16 +2,16 @@
 license='"
 	Meta is a programming language.
 	Copyright (C) 2004 Christian Staudenmeyer "christianstaudenmeyer@web.de"
-
+	
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License version 2
 	as published by the Free Software Foundation.
-
+	
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-
+	
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."'
@@ -169,16 +169,16 @@ basicTest=
 		integerDecrementTest=integerDecrementTest.[*]
 		persistenceTest=testSubDir
 		literalEscapeTest=
-			[1]='"asdf"'
-			[2]=''"asdf"''
-			[3]=''"as"'df"''
-			[4]='''"as"''df"'''
-			[5]='''''''''''''''''"as"''''''''''''''''df"'''''''''''''''''
+			"asdf"
+			"asdf"
+			''"as"'df"''
+			'''"as"''df"'''
+			'''''''''''''''''"as"''''''''''''''''df"'''''''''''''''''
 		"ImpliedAutokey"
-		="Autokey"
+		"Autokey"
 		commandLineArguments=arg
 		aMap=
-			["a"]="a"
+			a="a"
 		[aMap]="Object"
 		["normal symbol"]="NormalSymbol"
 		lookupSymbol="LookupSymbol"
@@ -351,7 +351,7 @@ basicTest=
 			1
 			one
 		firstIfBranches=
-			[1]=
+			=
 				|"then"
 			[*]=
 				|"else"
@@ -359,9 +359,9 @@ basicTest=
 		bigNumber=50020202029029233344
 		secondSwitch="unchanged"
 		secondSwitchCases=
-			[1]="one"
-			[2]="two"
-			[3]="three"
+			"one"
+			"two"
+			"three"
 		secondSwitch=secondSwitchCases.[3]
 		emptyMap=*
 		emptyFunction=
@@ -370,7 +370,7 @@ basicTest=
 		emptyFunctionResult=emptyFunction *
 		font=["System.Drawing"].Font
 			"Courier New"
-			[2]=10
+			10
 		decimalTest=5
 		fractionTest=40
 		stringTest="hello"
@@ -382,7 +382,7 @@ basicTest=
 				hello world!
 				hello!
 				"
-		arrayList=["mscorlib"].ArrayList *
+		arrayList=mscorlib.ArrayList *
 		arrayList.Add
 			"hello"
 		arrayListResult=arrayList.Item.get
@@ -407,7 +407,7 @@ basicTest=
 					arg
 					10
 				whileBranches=
-					[1]=
+					=
 						|loop library.math.add
 							arg
 							1
@@ -452,7 +452,7 @@ library=
 				next=
 					[*]=
 						|*
-					[1]=
+					=
 						|
 							arg.with *
 							while arg
@@ -469,7 +469,7 @@ library=
 						arg.index
 						library.map.length arg.array
 					next=
-						[1]=
+						=
 							|arg.result
 						[*]=
 							|applyImplementation
@@ -562,7 +562,7 @@ library=
 						arg.index
 						length arg.array
 					next=
-						[1]=
+						=
 							|arg.result
 						[*]=
 							|sumImplementation
@@ -970,7 +970,7 @@ editor=
 						cases=
 							[*]=
 								|commands.Reverse *
-							[1]=
+							=
 								|commands.Continue *
 						breakpoint=process.BreakPoint.get *
 						position=breakpoint
@@ -990,7 +990,7 @@ editor=
 							map=shortcuts
 							key=key
 						cases=
-							[1]=
+							=
 								|
 									editBox.SuspendWindowUpdate *
 									shortcuts.[key] *

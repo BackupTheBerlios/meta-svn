@@ -2869,7 +2869,7 @@ namespace Meta
 					string resultCopyPath = Path.Combine(testDirectory, "resultCopy.txt");
 					string checkPath = Path.Combine(testDirectory, "check.txt");
 
-					Directory.CreateDirectory(TestDirectory);
+					Directory.CreateDirectory(testDirectory);
 					if (!File.Exists(checkPath))
 					{
 						File.Create(checkPath).Close();
@@ -3186,25 +3186,19 @@ namespace Meta
 				return System.IO.Path.Combine(Process.LibraryPath, "meta.meta");
 			}
 		}
-		// remove
-		public LocalStrategy()
+		private LocalStrategy()
+		{
+			Load();
+		}
+		private void Load()
 		{
 			try
 			{
-				Load();
+				this.map = Process.Current.Parse(Path);
 			}
 			catch (Exception e)
 			{
 			}
-		}
-		private void Load()
-		{
-			// unlogical
-			this.map = Process.Current.Parse(Path);
-			//this.map.Parent = SpecialMaps.Gac;
-			//this.map.Scope = SpecialMaps.Gac;
-			//this.map.Parent = Gac.singleton;
-			//this.map.Scope = Gac.singleton;
 		}
 		public override List<Map> Keys
 		{
@@ -3926,17 +3920,21 @@ namespace Meta
 			}
 		}
 	}
-	// rename or put somewhere else
 	public class Serialize
 	{
 		public static string Value(Map val)
 		{
-			return Value(val, "");
+			return Value(val, null);
 		}
 		private static string Value(Map val, string indentation)
 		{
 			string text;
-			if (val.IsString)
+			// refactor
+			if(val.Equals(Map.Empty))
+			{
+				text = Parser.emptyMapChar.ToString();
+			}
+			else if (val.IsString)
 			{
 				text = StringValue(val, indentation);
 			}
@@ -3953,7 +3951,7 @@ namespace Meta
 		public static string Key(Map key, string indentation)
 		{
 			string text;
-			if (key.IsString)
+			if (key.IsString && !key.Equals(Map.Empty))
 			{
 				text = StringKey(key, indentation);
 			}
@@ -3971,7 +3969,7 @@ namespace Meta
 				}
 				else
 				{
-					text += Parser.unixNewLine + MapValue(key, indentation);
+					text += MapValue(key, indentation) + indentation;
 				}
 				text += Parser.lookupEndChar;
 			}
@@ -3998,15 +3996,27 @@ namespace Meta
 		{
 			string text;
 			text = Parser.unixNewLine.ToString();
+			if (indentation == null)
+			{
+				indentation = "";
+			}
+			else
+			{
+				indentation += Parser.indentationChar;
+			}
 			foreach (KeyValuePair<Map, Map> entry in map)
 			{
 				if (entry.Key.Equals(CodeKeys.Function))
 				{
 					text += indentation + Parser.functionChar + Expression(entry.Value, indentation);
+					if (!text.EndsWith(Parser.unixNewLine.ToString()))
+					{
+						text += Parser.unixNewLine;
+					}
 				}
 				else
 				{
-					text += indentation + Key((Map)entry.Key, indentation) + Parser.statementChar + Value((Map)entry.Value, indentation + '\t');
+					text += indentation + Key((Map)entry.Key, indentation) + Parser.statementChar + Value((Map)entry.Value, (indentation));
 					if (!text.EndsWith(Parser.unixNewLine.ToString()))
 					{
 						text += Parser.unixNewLine;
@@ -4042,7 +4052,18 @@ namespace Meta
 		}
 		public static string Call(Map code, string indentation)
 		{
-			return Expression(code[CodeKeys.Callable], indentation) + Parser.callChar + Expression(code[CodeKeys.Argument], indentation);
+			Map callable=code[CodeKeys.Callable];
+			Map argument=code[CodeKeys.Argument];
+			string text = Expression(callable, indentation);
+			if (!(argument.ContainsKey(CodeKeys.Program) && argument[CodeKeys.Program].Count!=0))
+			{
+				text += Parser.callChar;
+			}
+			else
+			{
+			}
+			text += Expression(argument, indentation);
+			return text;
 		}
 		public static string Program(Map code, string indentation)
 		{
@@ -4088,10 +4109,13 @@ namespace Meta
 				Map value = code[CodeKeys.Value];
 				if (key.Count == 1 && (autoKey = key[1][CodeKeys.Literal]) != null && autoKey.IsInteger && autoKey.GetInteger() == autoKeys + 1)
 				{
-					autoKeys++;
-					if (value.ContainsKey(CodeKeys.Program))
+					if (code.Extent.Start.Line>500)
 					{
-						text += "=";
+					}
+					autoKeys++;
+					if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count!=0)
+					{
+						text += Parser.statementChar;
 					}
 				}
 				else
@@ -4124,7 +4148,12 @@ namespace Meta
 			}
 			else
 			{
-				text = Parser.lookupStartChar + Expression(code, indentation) + Parser.lookupEndChar;
+				text = Parser.lookupStartChar + Expression(code, indentation);
+				if (code.ContainsKey(CodeKeys.Program) && code[CodeKeys.Program].Count != 0)
+				{
+					text += indentation;
+				}
+				text += Parser.lookupEndChar;
 			}
 			return text;
 		}
@@ -4136,13 +4165,27 @@ namespace Meta
 			if (val.IsString)
 			{
 				int longestMatch = 0;
-				foreach (Match match in Regex.Matches(val.GetString(), "(" + Parser.stringChar + ")?(" + Parser.stringEscapeChar + ")*"))
+				if (val.GetString().IndexOf("'n'") != -1)
 				{
-					if (match.ToString().Length > longestMatch)
+				}
+				string mapString = val.GetString();
+				string[] split=mapString.Split(Parser.stringChar);
+				for(int i=1;i<split.Length;i++)
+				{
+					int matchLength=split[i].Length - split[i].TrimStart(Parser.stringEscapeChar).Length + 1;
+					if (matchLength > longestMatch)
 					{
-						longestMatch = match.Length;
+						longestMatch = matchLength;
 					}
 				}
+				//string search=Parser.stringChar + " (" + Parser.stringEscapeChar + ")*";
+				//foreach (Match match in Regex.Matches(val.GetString(),search))
+				//{
+				//    if (match.ToString().Length > longestMatch)
+				//    {
+				//        longestMatch = match.Length;
+				//    }
+				//}
 				string escape = "";
 				for (int i = 0; i < longestMatch; i++)
 				{
@@ -4153,7 +4196,7 @@ namespace Meta
 				text+=lines[0];
 				for (int i = 1; i < lines.Length; i++)
 				{
-					text += Parser.unixNewLine + indentation + lines[i];
+					text += Parser.unixNewLine + indentation + Parser.indentationChar + lines[i];
 				}
 				text += Parser.stringChar + escape;
 			}

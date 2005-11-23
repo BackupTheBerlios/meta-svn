@@ -34,7 +34,7 @@ namespace Test
 		{
 			new Test().Run();
 			//Map map = SpecialMaps.Local;
-			//File.WriteAllText(@"C:\Projects\Meta\Library\test.txt", Meta.Serialize.Value(map).TrimStart());
+			//File.WriteAllText(@"C:\Projects\Meta\Library\test.txt", ,Encoding.Default);
 			//FileSystem.singleton["editor"].Call(Map.Empty, Map.Empty);
 		}
 		protected override string TestDirectory
@@ -43,6 +43,12 @@ namespace Test
 			{
 				return Path.Combine(Directory.GetParent(Process.LibraryPath).FullName, "Test");
 			}
+		}
+		[Test]
+		public object Serialization()
+		{
+			Map map = SpecialMaps.Local;
+			return Meta.Serialize.Value(map).TrimStart();
 		}
 		[Test(2)]
 		public object Basic()
@@ -65,6 +71,7 @@ namespace Test
 			argument[2] = "second=arg";
 			return SpecialMaps.Local["basicTest"];
 		}
+
 	}
 }
 namespace testClasses
