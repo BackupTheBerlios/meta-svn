@@ -51,6 +51,8 @@ namespace Meta
 		public static readonly Map Parent="parent";
 		public static readonly Map Arg="arg";
 		public static readonly Map Current="current";
+		public static readonly Map Net = "net";
+		public static readonly Map Local = "local";
 	}
 	public class DotNetKeys
 	{
@@ -110,7 +112,7 @@ namespace Meta
             loadedAssemblies.AddRange(new string[] { metaDllLocation });
 			processes[Thread.CurrentThread]=new Process(null,null);
 		}
-		public Process():this(FileSystem.singleton,new NormalMap())
+		public Process():this(FileSystem.fileSystem,new NormalMap())
 		{
 		}
 		public void Run()
@@ -308,7 +310,9 @@ namespace Meta
 			{
 				key=Expression((Map)code[CodeKeys.Key].Array[i],context,arg);
 				Map selection;
-
+				if (key.Equals(new NormalMap("testSubDir")))
+				{
+				}
                 if (key.Equals(SpecialKeys.Parent))
                 {
                     selection = selected.Parent;
@@ -949,7 +953,7 @@ namespace Meta
 			this.address=address;
 		}
 	}
-	public class Web:Map
+	public class Net:Map
 	{
 		public override List<Map> Keys
 		{
@@ -964,20 +968,36 @@ namespace Meta
             {
                 throw new ApplicationException("need a string here");
             }
-            return new NormalMap(new RemoteStrategy(key.GetString()));
+			Map val;
+			if (key.Equals(SpecialKeys.Local))
+			{
+				val = FileSystem.fileSystem;
+			}
+			else
+			{
+				val=new NormalMap(new RemoteStrategy(key.GetString()));
+			}
+			return val;
         }
         protected override void  Set(Map key, Map val)
         {
-			throw new ApplicationException("Cannot set key in Web.");
+			if (key.Equals(SpecialKeys.Local))
+			{
+				((FileSystem)FileSystem.fileSystem.strategy).Replace(val);
+			}
+			else
+			{
+				throw new ApplicationException("Cannot set key in Web.");
+			}
         }
 		protected override Map CopyImplementation()
 		{
 			return this;
 		}
-		private Web()
+		private Net()
 		{
 		}
-		public static Web singleton=new Web();
+		public static Net singleton=new Net();
 	}
 
 	public class Transform
@@ -990,7 +1010,7 @@ namespace Meta
 			{
 				MethodInfo invoke=target.GetMethod("Invoke",
 					BindingFlags.Instance|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-				Delegate function=Method.CreateDelegateFromCode(target,invoke,meta);
+				Delegate function=Method.CreateDelegateFromCode(target,meta);
 				dotNet=function;
 			}
 			else if(target.IsArray && meta.Array.Count!=0)
@@ -1276,6 +1296,20 @@ namespace Meta
 
 	public class Method: Map
 	{
+		//// split into two functions, one for converting the arguments, one for calling the function
+		//// refactor
+		//public static Map Call(Map argument, Delegate del)
+		//{
+		//    List<object> arguments=new List<object>();
+		//    ParameterInfo[] parameters=del.Method.GetParameters();
+		//    for(int i=0;i<parameters.Length-1;i++)
+		//    {
+		//        arguments.Add(Transform.ToDotNet((Map)argument[i+1], parameters[i].ParameterType));
+		//    }
+		//    object result=del.DynamicInvoke(arguments.ToArray());
+		//    return (Map)result;
+		//    //return Transform.ToDotNet((Map)result,del.Method.ReturnType);
+		//}
 		// clone isnt correct, should only override a part of the cloning, the actual cloning, not parent assignment 
 		protected override Map CopyImplementation()
 		{
@@ -1398,20 +1432,7 @@ namespace Meta
 			}
 			return Transform.ToMeta(result);
 		}
-		public class EventHandlerContainer
-		{
-			private Map callable;
-			public EventHandlerContainer(Map callable)
-			{
-				this.callable=callable;
-			}
-			// return object, if necessary
-			public Map Raise(Map argument)
-			{
-				return callable.Call(argument, Process.Current.Caller);
-			}
 
-		}
 		//public static Delegate CreateDelegateFromCode(Type delegateType, MethodInfo method, Map code)
 		//{
 		//    Type returnType;
@@ -1458,293 +1479,340 @@ namespace Meta
 		//    il.Emit(OpCodes.Ldarg_1);
 		//    il.Emit(OpCodes.Ret);
 
-		//    // Display MethodAttributes for the dynamic method, set when 
-		//    // the dynamic method was created.
-		//    Console.WriteLine("\r\nMethod Attributes: {0}", hello.Attributes);
 
-		//    // Display the calling convention of the dynamic method, set when the 
-		//    // dynamic method was created.
-		//    Console.WriteLine("\r\nCalling convention: {0}", hello.CallingConvention);
 
-		//    // Display the declaring type, which is always null for dynamic
-		//    // methods.
-		//    if (hello.DeclaringType == null)
-		//    {
-		//        Console.WriteLine("\r\nDeclaringType is always null for dynamic methods.");
-		//    }
-		//    else
-		//    {
-		//        Console.WriteLine("DeclaringType: {0}", hello.DeclaringType);
-		//    }
-
-		//    // Display the default value for InitLocals.
-		//    if (hello.InitLocals)
-		//    {
-		//        Console.Write("\r\nThis method contains verifiable code.");
-		//    }
-		//    else
-		//    {
-		//        Console.Write("\r\nThis method contains unverifiable code.");
-		//    }
-		//    Console.WriteLine(" (InitLocals = {0})", hello.InitLocals);
-
-		//    // Display the module specified when the dynamic method was created.
-		//    Console.WriteLine("\r\nModule: {0}", hello.Module);
-
-		//    // Display the name specified when the dynamic method was created.
-		//    // Note that the name can be blank.
-		//    Console.WriteLine("\r\nName: {0}", hello.Name);
-
-		//    // For dynamic methods, the reflected type is always null.
-		//    if (hello.ReflectedType == null)
-		//    {
-		//        Console.WriteLine("\r\nReflectedType is null.");
-		//    }
-		//    else
-		//    {
-		//        Console.WriteLine("\r\nReflectedType: {0}", hello.ReflectedType);
-		//    }
-
-		//    if (hello.ReturnParameter == null)
-		//    {
-		//        Console.WriteLine("\r\nMethod has no return parameter.");
-		//    }
-		//    else
-		//    {
-		//        Console.WriteLine("\r\nReturn parameter: {0}", hello.ReturnParameter);
-		//    }
-
-		//    // If the method has no return type, ReturnType is System.Void.
-		//    Console.WriteLine("\r\nReturn type: {0}", hello.ReturnType);
-
-		//    // ReturnTypeCustomAttributes returns an ICustomeAttributeProvider
-		//    // that can be used to enumerate the custom attributes of the
-		//    // return value. At present, there is no way to set such custom
-		//    // attributes, so the list is empty.
-		//    if (hello.ReturnType == typeof(void))
-		//    {
-		//        Console.WriteLine("The method has no return type.");
-		//    }
-		//    else
-		//    {
-		//        ICustomAttributeProvider caProvider = hello.ReturnTypeCustomAttributes;
-		//        object[] returnAttributes = caProvider.GetCustomAttributes(true);
-		//        if (returnAttributes.Length == 0)
-		//        {
-		//            Console.WriteLine("\r\nThe return type has no custom attributes.");
-		//        }
-		//        else
-		//        {
-		//            Console.WriteLine("\r\nThe return type has the following custom attributes:");
-		//            foreach (object attr in returnAttributes)
-		//            {
-		//                Console.WriteLine("\t{0}", attr.ToString());
-		//            }
-		//        }
-		//    }
-
-		//    Console.WriteLine("\r\nToString: {0}", hello.ToString());
-
-		//    // Add parameter information to the dynamic method. (This is not
-		//    // necessary, but can be useful for debugging.) For each parameter,
-		//    // identified by position, supply the parameter attributes and a 
-		//    // parameter name.
-		//    ParameterBuilder parameter1 = hello.DefineParameter(
-		//        1,
-		//        ParameterAttributes.In,
-		//        "message"
-		//    );
-		//    ParameterBuilder parameter2 = hello.DefineParameter(
-		//        2,
-		//        ParameterAttributes.In,
-		//        "valueToReturn"
-		//    );
-
-		//    // Display parameter information.
-		//    ParameterInfo[] parameters = hello.GetParameters();
-		//    Console.WriteLine("\r\nParameters: name, type, ParameterAttributes");
-		//    foreach (ParameterInfo p in parameters)
-		//    {
-		//        Console.WriteLine("\t{0}, {1}, {2}",
-		//            p.Name, p.ParameterType, p.Attributes);
-		//    }
-
-		//    // Create a delegate that represents the dynamic method. This
-		//    // action completes the method, and any further attempts to
-		//    // change the method will cause an exception.
 		//    HelloDelegate hi =
 		//        (HelloDelegate)hello.CreateDelegate(typeof(HelloDelegate));
 
-		//    // Use the delegate to execute the dynamic method.
-		//    Console.WriteLine("\r\nUse the delegate to execute the dynamic method:");
 		//    int retval = hi("\r\nHello, World!", 42);
-		//    Console.WriteLine("Invoking delegate hi(\"Hello, World!\", 42) returned: " + retval);
-
-		//    // Create an array of arguments to use with the Invoke method.
-		//    object[] invokeArgs = { "\r\nHello, World!", 42 };
-		//    // Invoke the dynamic method using the arguments. This is much
-		//    // slower than using the delegate, because you must create an
-		//    // array to contain the arguments, and value-type arguments
-		//    // must be boxed.
-		//    object objRet = hello.Invoke(null, BindingFlags.ExactBinding, null, invokeArgs, new CultureInfo("en-us"));
-		//    Console.WriteLine("hello.Invoke returned: " + objRet);
 
 
-		//    //source += argumentList + "{";
-		//    //source += argumentBuiling;
-		//    //source += "Map result=callable.Call(arg,Process.Current.Caller);";
-		//    //if (method != null)
-		//    //{
-		//    //    if (!method.ReturnType.Equals(typeof(void)))
-		//    //    {
-		//    //        source += "return (" + returnType + ")";
-		//    //        source += "Meta.Transform.ToDotNet(result,typeof(" + returnType + "));";
-		//    //    }
-		//    //}
-		//    //else
-		//    //{
-		//    //    source += "return";
-		//    //    source += " result;";
-		//    //}
-		//    //source += "}";
-		//    //source += "private Map callable;";
-		//    //source += "public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-		//    //List<string> assemblyNames = new List<string>();//new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
-		//    //assemblyNames.AddRange(Process.loadedAssemblies);
-		//    //CompilerParameters compilerParameters = new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
-		//    //CompilerResults compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, source);
-		//    ////CompilerResults compilerResults = compiler.CompileAssemblyFromSource(compilerParameters, source);
-		//    //Type containerType = compilerResults.CompiledAssembly.GetType("EventHandlerContainer", true);
-		//    //object container = containerType.GetConstructor(new Type[] { typeof(Map) }).Invoke(new object[] { code });
-		//    //if (method == null)
-		//    //{
-		//    //    delegateType = typeof(DelegateCreatedForGenericDelegates);
-		//    //}
-		//    //Delegate result = Delegate.CreateDelegate(delegateType,
-		//    //    container, "EventHandlerMethod");
+
 		//    return result;
 		//}
 
-		public static Delegate CreateDelegateFromCode(Type delegateType, MethodInfo method, Map code)
+
+
+		//public static void SomeStuff()
+		//{
+
+		//    //Type returnType;
+		//    //// refactor
+		//    //if (method == null)
+		//    //{
+		//    //    returnType = typeof(object);
+		//    //}
+		//    //else
+		//    //{
+		//    //    returnType = method.ReturnType.Equals(typeof(void)) ? typeof(void) : method.ReturnType;
+		//    //}
+		//    //List<Type> arguments=new List<Type>();
+		//    //int counter = 1;
+		//    //// why can method be null?
+		//    ////if (method != null)
+		//    ////{
+		//    //    foreach (ParameterInfo parameter in method.GetParameters())
+		//    //    {
+		//    //        arguments.Add(parameter.ParameterType);
+		//    //    }
+		//    ////}
+
+		//    //DynamicMethod dynamicMethod = new DynamicMethod("EventHandlerMethod",
+		//    //    typeof(int),
+		//    //    arguments.ToArray(),
+		//    //    typeof(string).Module);
+
+
+		//    Type[] writeStringArgs = { typeof(string) };
+
+		//    MethodInfo writeString = typeof(Console).GetMethod("WriteLine",
+		//        writeStringArgs);
+
+		//    ILGenerator il = dynamicMethod.GetILGenerator();
+
+		//    // Load the first argument, which is a string, onto the stack.
+		//    il.Emit(OpCodes.Ldarg_0);
+		//    // Call the overload of Console.WriteLine that prints a string.
+		//    il.EmitCall(OpCodes.Call, writeString, null);
+		//    // The Hello method returns the value of the second argument;
+		//    // to do this, load the onto the stack and return.
+		//    il.Emit(OpCodes.Ldarg_1);
+		//    il.Emit(OpCodes.Ret);
+
+
+
+		//    HelloDelegate hi =
+		//        (HelloDelegate)hello.CreateDelegate(typeof(HelloDelegate));
+
+		//    int retval = hi("\r\nHello, World!", 42);
+
+
+
+		//    return result;
+		//}
+		public class EventHandlerContainer
 		{
-			CSharpCodeProvider codeProvider = new CSharpCodeProvider();
-			string returnType = method.ReturnType.Equals(typeof(void)) ? "void" : method.ReturnType.FullName;
-
-			string source = "using System;using Meta;";
-			source += @"	[Serializable]
-					public class EventHandlerContainer{public " + returnType + " EventHandlerMethod";
-			int counter = 1;
-			string argumentList = "(";
-			string argumentBuiling = "Map arg=new NormalMap();";
-			foreach (ParameterInfo parameter in method.GetParameters())
+			private Map callable;
+			public EventHandlerContainer(Map callable)
 			{
-				argumentList += parameter.ParameterType.FullName + " arg" + counter;
-				argumentBuiling += "arg[" + counter + "]=Meta.Transform.ToMeta(arg" + counter + ");";
-				if (counter < method.GetParameters().Length)
+				this.callable = callable;
+			}
+			// return object, if necessary
+			public Map Raise(Map argument)
+			{
+				return callable.Call(argument, Process.Current.Caller);
+			}
+
+		}
+//        public static Delegate CreateDelegateFromCode(Type delegateType, MethodInfo method, Map code)
+//        {
+
+//            //CSharpCodeProvider codeProvider = new CSharpCodeProvider();
+//            //string returnType = method.ReturnType.Equals(typeof(void)) ? "void" : method.ReturnType.FullName;
+
+//            List<Type> arguments = new List<Type>();
+//            arguments.Add(typeof(EventHandlerContainer));
+//            foreach (ParameterInfo parameter in method.GetParameters())
+//            {
+//                arguments.Add(parameter.ParameterType);
+//            }
+
+//            DynamicMethod dynamicMethod = new DynamicMethod("EventHandlerMethod",
+//                method.ReturnType,
+//                arguments.ToArray(),
+//                typeof(string).Module);
+
+
+
+//            MethodInfo raise=typeof(EventHandlerContainer).GetMethod("Raise");
+//            ILGenerator il = dynamicMethod.GetILGenerator();
+
+//            string argumentBuiling = "Map arg=new NormalMap();";
+//            int counter=0;
+//            foreach (ParameterInfo parameter in method.GetParameters())
+//            {
+//                il.Emit(OpCodes.Ldind_Ref,
+//                il.Emit(OpCodes.Ldarg, counter);
+//                il.EmitCall(OpCodes.Call, typeof(Map).GetMethod("set_Item"), null);
+//                argumentBuiling += "arg[" + counter + "]=Meta.Transform.ToMeta(arg" + counter + ");";
+//                counter++;
+//            }
+//            // Load the first argument, which is a string, onto the stack.
+//            il.Emit(OpCodes.Ldarg_0);
+//            // Call the overload of Console.WriteLine that prints a string.
+
+//            source += "Map result=callable.Call(arg,Process.Current.Caller);";
+
+//            il.EmitCall(OpCodes.Call, writeString, null);
+
+//            if (!method.ReturnType.Equals(typeof(void)))
+//            {
+//                source += "return (" + returnType + ")";
+//                source += "Meta.Transform.ToDotNet(result,typeof(" + returnType + "));";
+//            }
+//            // The Hello method returns the value of the second argument;
+//            // to do this, load the onto the stack and return.
+//            il.Emit(OpCodes.Ldarg_1);
+//            il.Emit(OpCodes.Ret);
+
+
+
+//            HelloDelegate result = (HelloDelegate)dynamicMethod.CreateDelegate(typeof(HelloDelegate),new EventHandlerContainer());
+
+
+
+
+
+//            //int retval = hi("\r\nHello, World!", 42);
+
+
+
+//            return result;
+
+
+//            //string source = "using System;using Meta;";
+////            source += @"	[Serializable]
+////					public class EventHandlerContainer{public " + returnType + " EventHandlerMethod";
+//            //int counter = 1;
+//            //string argumentList = "(";
+//            //string argumentBuiling = "Map arg=new NormalMap();";
+//            //foreach (ParameterInfo parameter in method.GetParameters())
+//            //{
+//            //    //argumentList += parameter.ParameterType.FullName + " arg" + counter;
+//            //    argumentBuiling += "arg[" + counter + "]=Meta.Transform.ToMeta(arg" + counter + ");";
+//            //    //if (counter < method.GetParameters().Length)
+//            //    //{
+//            //    //    argumentList += ",";
+//            //    //}
+//            //    counter++;
+//            //}
+
+//            ////argumentList += ")";
+//            ////source += argumentList + "{";
+//            ////source += argumentBuiling;
+//            //source += "Map result=callable.Call(arg,Process.Current.Caller);";
+
+//            //if (!method.ReturnType.Equals(typeof(void)))
+//            //{
+//            //    source += "return (" + returnType + ")";
+//            //    source += "Meta.Transform.ToDotNet(result,typeof(" + returnType + "));";
+//            //}
+
+
+//            //source += "}";
+//            //source += "private Map callable;";
+//            //source += "public EventHandlerContainer(Map callable) {this.callable=callable;}}";
+//            //List<string> assemblyNames = new List<string>();//new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
+//            //assemblyNames.AddRange(Process.loadedAssemblies);
+//            //CompilerParameters compilerParameters = new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
+//            //CompilerResults compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, source);
+//            ////CompilerResults compilerResults = compiler.CompileAssemblyFromSource(compilerParameters, source);
+//            //Type containerType = compilerResults.CompiledAssembly.GetType("EventHandlerContainer", true);
+//            //object container = containerType.GetConstructor(new Type[] { typeof(Map) }).Invoke(new object[] { code });
+//            //if (method == null)
+//            //{
+//            //    delegateType = typeof(DelegateCreatedForGenericDelegates);
+//            //}
+//            //Delegate result = Delegate.CreateDelegate(delegateType,
+//            //    container, "EventHandlerMethod");
+//            //return result;
+//        }
+
+		public class MetaDelegate
+		{
+			private Map callable;
+			private Type returnType;
+			public MetaDelegate(Map callable,Type returnType)
+			{
+				this.callable = callable;
+				this.returnType = returnType;
+			}
+			public object Call(object[] arguments)
+			//public static object Call(MetaDelegate metaEvent, object[] arguments)
+			{
+				Map arg=new NormalMap();
+				foreach (object argument in arguments)
 				{
-					argumentList += ",";
+					arg.Append(Transform.ToMeta(argument));
 				}
-				counter++;
-			}
+				Map result=this.callable.Call(arg,Process.Current.Caller);
+				return Meta.Transform.ToDotNet(result,this.returnType);
 
-			argumentList += ")";
-			source += argumentList + "{";
-			source += argumentBuiling;
-			source += "Map result=callable.Call(arg,Process.Current.Caller);";
-
-			if (!method.ReturnType.Equals(typeof(void)))
-			{
-				source += "return (" + returnType + ")";
-				source += "Meta.Transform.ToDotNet(result,typeof(" + returnType + "));";
+				//Console.WriteLine("called");
+				//int asdf = 0;
+				//return ;
 			}
-
-			source += "}";
-			source += "private Map callable;";
-			source += "public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-			List<string> assemblyNames = new List<string>();//new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
-			assemblyNames.AddRange(Process.loadedAssemblies);
-			CompilerParameters compilerParameters = new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
-			CompilerResults compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, source);
-			//CompilerResults compilerResults = compiler.CompileAssemblyFromSource(compilerParameters, source);
-			Type containerType = compilerResults.CompiledAssembly.GetType("EventHandlerContainer", true);
-			object container = containerType.GetConstructor(new Type[] { typeof(Map) }).Invoke(new object[] { code });
-			if (method == null)
-			{
-				delegateType = typeof(DelegateCreatedForGenericDelegates);
-			}
-			Delegate result = Delegate.CreateDelegate(delegateType,
-				container, "EventHandlerMethod");
-			return result;
 		}
 
+		public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
+		{
+			MethodInfo invoke = delegateType.GetMethod("Invoke");
+			ParameterInfo[] parameters = invoke.GetParameters();
+			List<Type> arguments = new List<Type>();
+			arguments.Add(typeof(MetaDelegate));
+			foreach (ParameterInfo parameter in parameters)
+			{
+				arguments.Add(parameter.ParameterType);
+			}
+			DynamicMethod hello = new DynamicMethod("EventHandler",
+				invoke.ReturnType,
+				arguments.ToArray(),
+				typeof(Map).Module);
+			ILGenerator il = hello.GetILGenerator();
 
 
 
+			// TODO: push "this" here
+			LocalBuilder local = il.DeclareLocal(typeof(object[]));
+			il.Emit(OpCodes.Ldc_I4, parameters.Length);
+			il.Emit(OpCodes.Newarr, typeof(object));
+			il.Emit(OpCodes.Stloc, local);
 
-//        public static Delegate CreateDelegateFromCode(Type delegateType,MethodInfo method,Map code)
+			for (int i = 0; i < parameters.Length; i++)
+			{
+				il.Emit(OpCodes.Ldloc, local);
+				il.Emit(OpCodes.Ldc_I4, i);
+				il.Emit(OpCodes.Ldarg, i + 1); // ignore the first arg, which is the target of the delegate
+				il.Emit(OpCodes.Stelem_Ref);
+			}
+			il.Emit(OpCodes.Ldarg_0);
+			il.Emit(OpCodes.Ldloc, local);
+			il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
+
+			if (invoke.ReturnType == typeof(void))
+			{
+				il.Emit(OpCodes.Pop);
+				il.Emit(OpCodes.Ret);
+			}
+			else
+			{
+				il.Emit(OpCodes.Castclass, invoke.ReturnType);
+				il.Emit(OpCodes.Ret);
+			}
+			Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
+			//object x=del.DynamicInvoke(new object[] { "hi" });
+			int asdf = 0;
+			return del;
+
+		}
+
+//        public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
 //        {
-//            CSharpCodeProvider codeProvider=new CSharpCodeProvider();
-//            ICodeCompiler compiler=codeProvider.CreateCompiler();
+//            CSharpCodeProvider codeProvider = new CSharpCodeProvider();
+//            ICodeCompiler compiler = codeProvider.CreateCompiler();
 //            string returnType;
-//            if(method==null)
+//            MethodInfo method = delegateType.GetMethod("Invoke");
+//            returnType = method.ReturnType.Equals(typeof(void)) ? "void" : method.ReturnType.FullName;
+//            string source = "using System;using Meta;";
+//            source += @"
+//					public class EventHandlerContainer{public " + returnType + " EventHandlerMethod";
+//            int counter = 1;
+//            string argumentList = "(";
+//            string argumentBuiling = "Map arg=new NormalMap();";
+
+
+//            foreach (ParameterInfo parameter in method.GetParameters())
 //            {
-//                returnType="object";
+//                argumentList += parameter.ParameterType.FullName + " arg" + counter;
+//                argumentBuiling += "arg[" + counter + "]=Meta.Transform.ToMeta(arg" + counter + ");";
+//                if (counter < method.GetParameters().Length)
+//                {
+//                    argumentList += ",";
+//                }
+//                counter++;
+//            }
+//            argumentList += ")";
+//            source += argumentList + "{";
+//            source += argumentBuiling;
+//            source += "Map result=callable.Call(arg,Process.Current.Caller);";
+//            if (method != null)
+//            {
+//                if (!method.ReturnType.Equals(typeof(void)))
+//                {
+//                    source += "return (" + returnType + ")";
+//                    source += "Meta.Transform.ToDotNet(result,typeof(" + returnType + "));";
+//                }
 //            }
 //            else
 //            {
-//                returnType=method.ReturnType.Equals(typeof(void)) ? "void":method.ReturnType.FullName;
+//                source += "return";
+//                source += " result;";
 //            }
-//            string source="using System;using Meta;";
-//            source+=@"	[Serializable]
-//					public class EventHandlerContainer{public "+returnType+" EventHandlerMethod";
-//            int counter=1;
-//            string argumentList="(";
-//            string argumentBuiling="Map arg=new NormalMap();";
-//            if(method!=null)
-//            {
-//                foreach(ParameterInfo parameter in method.GetParameters())
-//                {
-//                    argumentList+=parameter.ParameterType.FullName+" arg"+counter;
-//                    argumentBuiling+="arg["+counter+"]=Meta.Transform.ToMeta(arg"+counter+");";
-//                    if(counter<method.GetParameters().Length)
-//                    {
-//                        argumentList+=",";
-//                    }
-//                    counter++;
-//                }
-//            }
-//            argumentList+=")";
-//            source+=argumentList+"{";
-//            source+=argumentBuiling;
-//            source+="Map result=callable.Call(arg,Process.Current.Caller);";
-//            if(method!=null)
-//            {
-//                if(!method.ReturnType.Equals(typeof(void)))
-//                {
-//                    source+="return ("+returnType+")";
-//                    source+="Meta.Transform.ToDotNet(result,typeof("+returnType+"));"; 
-//                }
-//            }
-//            else 
-//            {
-//                source+="return";
-//                source+=" result;";
-//            }
-//            source+="}";
-//            source+="private Map callable;";
-//            source+="public EventHandlerContainer(Map callable) {this.callable=callable;}}";
+//            source += "}";
+//            source += "private Map callable;";
+//            source += "public EventHandlerContainer(Map callable) {this.callable=callable;}}";
 //            List<string> assemblyNames = new List<string>();//new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
 //            assemblyNames.AddRange(Process.loadedAssemblies);
-//            CompilerParameters compilerParameters=new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
-//            CompilerResults compilerResults=compiler.CompileAssemblyFromSource(compilerParameters,source);
-//            Type containerType=compilerResults.CompiledAssembly.GetType("EventHandlerContainer",true);
-//            object container=containerType.GetConstructor(new Type[]{typeof(Map)}).Invoke(new object[] {code});
-//            if(method==null)
-//            {
-//                delegateType=typeof(DelegateCreatedForGenericDelegates);
-//            }
-//            Delegate result=Delegate.CreateDelegate(delegateType,
-//                container,"EventHandlerMethod");
+//            CompilerParameters compilerParameters = new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
+//            CompilerResults compilerResults = compiler.CompileAssemblyFromSource(compilerParameters, source);
+//            Type containerType = compilerResults.CompiledAssembly.GetType("EventHandlerContainer", true);
+//            object container = containerType.GetConstructor(new Type[] { typeof(Map) }).Invoke(new object[] { code });
+//            //if (method == null)
+//            //{
+//            //    delegateType = typeof(DelegateCreatedForGenericDelegates);
+//            //}
+//            Delegate result = Delegate.CreateDelegate(delegateType,
+//                container, "EventHandlerMethod");
 //            return result;
 //        }
 		private void Initialize(string name,object obj,Type type)
@@ -1898,6 +1966,11 @@ namespace Meta
 
 		public StrategyMap map;
 		// remove this if possible
+
+		// the copying cannot possible work correctly because the parents arent rewired
+		// possibly that doesnt matter however, but i think it should matter really
+		// ill have to think about this a lot, i think
+		// the copying needs tobe
 		public abstract Strategy CopyImplementation();
 		public virtual Map Copy() // TODO: move into Map??
 		{
@@ -2252,22 +2325,26 @@ namespace Meta
 			Map result;
 			try
 			{
-				Delegate eventDelegate=(Delegate)type.GetField(eventInfo.Name,BindingFlags.Public|
-					BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance).GetValue(obj);
-				if(eventDelegate!=null)
+				Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public |
+					BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
+				if (eventDelegate != null)
 				{
-					Method invoke=new Method("Invoke",eventDelegate,eventDelegate.GetType());
-					// TODO: use GetRaiseMethod???
-					result=invoke.Call(argument,caller);
+					List<object> arguments = new List<object>();
+					ParameterInfo[] parameters = eventDelegate.Method.GetParameters();
+					for (int i = 1; i < parameters.Length; i++)
+					{
+						arguments.Add(Transform.ToDotNet((Map)argument[i], parameters[i].ParameterType));
+					}
+					result = Transform.ToMeta(eventDelegate.DynamicInvoke(arguments.ToArray()));
 				}
 				else
 				{
-					result=null;
+					result = null;
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
-				result=null;
+				result = null;
 			}
 			return result;
 		}
@@ -2526,15 +2603,15 @@ namespace Meta
 		{
 			EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
 				BindingFlags.Static|BindingFlags.Instance);
-			MethodInfo invoke=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
-				|BindingFlags.Public|BindingFlags.NonPublic);
-			if (invoke == null)
-			{
-			}
-			else
-			{
-			}
-			Delegate eventDelegate=Method.CreateDelegateFromCode(eventInfo.EventHandlerType,invoke,code);
+			//MethodInfo invoke=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
+			//    |BindingFlags.Public|BindingFlags.NonPublic);
+			//if (invoke == null)
+			//{
+			//}
+			//else
+			//{
+			//}
+			Delegate eventDelegate=Method.CreateDelegateFromCode(eventInfo.EventHandlerType,code);
 			return eventDelegate;
 		}
 		public DotNetContainer(object obj,Type type)
@@ -3000,25 +3077,40 @@ namespace Meta
 			this.position=position;
 		}
 	}
-	public class FileSystem:Map
+	// maybe should be a strategy???
+	public class FileSystem : Strategy
 	{
+		public static NormalMap fileSystem;
+		public override Strategy CopyImplementation()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public void Replace(Map val)
+		{
+			this.map = val;
+			this.Save();
+		}
+		// remove
 		public static void Set(string text)
 		{
-			FileAccess.Write(Path,text);
-			singleton.Load();
+			FileAccess.Write(Path, text);
+			((FileSystem)fileSystem.strategy).Load();
 		}
 		// make this a property
-		public static FileSystem singleton;
+		//public static FileSystem singleton;
 		static FileSystem()
 		{
-			singleton=new FileSystem();
+			fileSystem = new NormalMap(new FileSystem());
+			fileSystem.Parent = Gac.singleton;
+			fileSystem.Scope = Gac.singleton;
+			//singleton = new FileSystem();
 		}
-        private Map map;
+		private Map map;
 		public static string Path
 		{
 			get
 			{
-				return System.IO.Path.Combine(Process.LibraryPath,"meta.meta");
+				return System.IO.Path.Combine(Process.LibraryPath, "meta.meta");
 			}
 		}
 		public FileSystem()
@@ -3028,19 +3120,19 @@ namespace Meta
 		private void Load()
 		{
 			// unlogical
-			this.map=Process.Current.Parse(Path);
-			this.map.Parent=Gac.singleton;
-            // extremely unlogical, why does this already have a parent? it shouldnt
-            this.map.Scope = Gac.singleton;
-            //foreach (KeyValuePair<Map, Map> pair in map)
-            //{
-            //    pair.Value.FirstParent = this;
-            //    pair.Value.Parent = this;
-            //}
+			this.map = Process.Current.Parse(Path);
+			this.map.Parent = Gac.singleton;
+			// extremely unlogical, why does this already have a parent? it shouldnt
+			this.map.Scope = Gac.singleton;
+			//foreach (KeyValuePair<Map, Map> pair in map)
+			//{
+			//    pair.Value.FirstParent = this;
+			//    pair.Value.Parent = this;
+			//}
 			// this is a little unlogical
-			this.Parent=Gac.singleton;
-            // unlogical, not sure whehter this is necessary
-            this.Scope = Gac.singleton;
+			//this.Parent = Gac.singleton;
+			// unlogical, not sure whehter this is necessary
+			//this.Scope = Gac.singleton;
 		}
 		public override List<Map> Keys
 		{
@@ -3049,26 +3141,99 @@ namespace Meta
 				return map.Keys;
 			}
 		}
-        // maps shouldnt override this directly, but only implement the c
-		protected override Map Get(Map key)
+		public override Map Get(Map key)
 		{
 			return map[key];
 		}
-		protected override void Set(Map key,Map val)
+		public override void Set(Map key, Map val)
 		{
-			map[key]=val;
+			map[key] = val;
 			Save();
 		}
 		public void Save()
 		{
-			string text=Meta.Serialize.MapValue(map,"").Trim(new char[]{'\n'});
-			if(text=="\"\"")
+			string text = Meta.Serialize.MapValue(map, "").Trim(new char[] { '\n' });
+			if (text == "\"\"")
 			{
-				text="";
+				text = "";
 			}
-			FileAccess.Write(Process.LibraryPath,text);
+			FileAccess.Write(Process.LibraryPath, text);
 		}
 	}
+	//public class FileSystem:Map
+	//{
+	//    public void Replace(Map val)
+	//    {
+	//        this.map = val;
+	//        this.Save();
+	//    }
+	//    // remove
+	//    public static void Set(string text)
+	//    {
+	//        FileAccess.Write(Path,text);
+	//        singleton.Load();
+	//    }
+	//    // make this a property
+	//    public static FileSystem singleton;
+	//    static FileSystem()
+	//    {
+	//        singleton=new FileSystem();
+	//    }
+	//    private Map map;
+	//    public static string Path
+	//    {
+	//        get
+	//        {
+	//            return System.IO.Path.Combine(Process.LibraryPath,"meta.meta");
+	//        }
+	//    }
+	//    public FileSystem()
+	//    {
+	//        Load();
+	//    }
+	//    private void Load()
+	//    {
+	//        // unlogical
+	//        this.map=Process.Current.Parse(Path);
+	//        this.map.Parent=Gac.singleton;
+	//        // extremely unlogical, why does this already have a parent? it shouldnt
+	//        this.map.Scope = Gac.singleton;
+	//        //foreach (KeyValuePair<Map, Map> pair in map)
+	//        //{
+	//        //    pair.Value.FirstParent = this;
+	//        //    pair.Value.Parent = this;
+	//        //}
+	//        // this is a little unlogical
+	//        this.Parent=Gac.singleton;
+	//        // unlogical, not sure whehter this is necessary
+	//        this.Scope = Gac.singleton;
+	//    }
+	//    public override List<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            return map.Keys;
+	//        }
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        return new FileMap(map[key]);
+	//    }
+	//    protected override void Set(Map key,Map val)
+	//    {
+	//        map[key]=val;
+	//        Save();
+	//    }
+	//    public void Save()
+	//    {
+	//        string text=Meta.Serialize.MapValue(map,"").Trim(new char[]{'\n'});
+	//        if(text=="\"\"")
+	//        {
+	//            text="";
+	//        }
+	//        FileAccess.Write(Process.LibraryPath,text);
+	//    }
+	//}
 	public class Parser
 	{
 		private string text;
@@ -3988,7 +4153,7 @@ namespace Meta
 		static Gac()
 		{
 			Gac gac=new Gac();
-			gac.cache["web"]=Web.singleton;
+			gac.cache["net"]=Net.singleton;
 			singleton=gac;
 		}
 		public static Map singleton;

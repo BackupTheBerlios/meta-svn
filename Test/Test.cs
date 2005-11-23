@@ -48,12 +48,12 @@ namespace Test
 			Map argument = new NormalMap();
 			argument[1] = "first arg";
 			argument[2] = "second=arg";
-			return FileSystem.singleton["basicTest"].Call(argument, Map.Empty);
+			return FileSystem.fileSystem["basicTest"].Call(argument, Map.Empty);
 		}
 		[Test(2)]
 		public object Library()
 		{
-			return FileSystem.singleton["libraryTest"].Call(Map.Empty, Map.Empty);
+			return FileSystem.fileSystem["libraryTest"].Call(Map.Empty, Map.Empty);
 		}
 		[Test]
 		public object Extents()
@@ -61,7 +61,7 @@ namespace Test
 			Map argument = Map.Empty;
 			argument[1] = "first arg";
 			argument[2] = "second=arg";
-			return FileSystem.singleton["basicTest"];
+			return FileSystem.fileSystem["basicTest"];
 		}
 	}
 }
@@ -96,7 +96,7 @@ namespace testClasses
 			}
 		}
 	}
-	public delegate int IntEvent (int intArg);
+	public delegate object IntEvent (object intArg);
 	public delegate object NormalEvent (object sender);
 	[Serializable]
 	public class TestClass 
@@ -129,7 +129,8 @@ namespace testClasses
 		}
 		public static object GetResultFromDelegate() 
 		{
-			return del.GetType().GetMethod("Invoke").Invoke(del,new object[]{"argumentString"});
+			return del.DynamicInvoke(new object[] { "argumentString" });
+			//return del.GetType().GetMethod("Invoke").Invoke(del.Target, new object[] { "argumentString" });
 		}
 		public double doubleValue=0.0;
 		public float floatValue=0.0F;
