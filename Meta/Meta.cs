@@ -112,9 +112,12 @@ namespace Meta
             loadedAssemblies.AddRange(new string[] { metaDllLocation });
 			processes[Thread.CurrentThread]=new Process(null,null);
 		}
-		public Process():this(LocalStrategy.fileSystem,new NormalMap())
+		public Process() : this(LocalStrategy.singleton.Map, new NormalMap())
 		{
 		}
+		//public Process():this(LocalStrategy.fileSystem,new NormalMap())
+		//{
+		//}
 		public void Run()
 		{
 			program.Call(parameter);
@@ -369,7 +372,7 @@ namespace Meta
 		private Map FindFirstKey(Map code,Map context,Map arg)
 		{
 			Map key=Expression((Map)code.Array[0],context,arg);
-			if (key.Equals(new NormalMap("overwrite")))
+			if (key.Equals(new NormalMap("mscorlib")))
 			{
 			}
 			Map val;
@@ -751,132 +754,11 @@ namespace Meta
 			return new NormalMap(text);
 		}
 	}
-
-	//public abstract class StrategyMap: Map
-	//{
-	//    public override Map Call(Map arg)
-	//    {
-	//        strategy.Panic();
-	//        return base.Call(arg);
-	//    }
-	//    public void InitFromStrategy(Strategy clone) 
-	//    {
-	//        foreach(Map key in clone.Keys)
-	//        {
-	//            this[key]=clone.Get(key);
-	//        }
-	//    }
-	//    public override Integer GetInteger()
-	//    {
-	//        return strategy.GetInteger();
-	//    }
-	//    public override string GetString()
-	//    {
-	//        return strategy.GetString();
-	//    }
-	//    public override bool IsString
-	//    {
-	//        get
-	//        {
-	//            return strategy.IsString;
-	//        }
-	//    }
-	//    public override bool IsInteger
-	//    {
-	//        get
-	//        {
-	//            return strategy.IsInteger;
-	//        }
-	//    }
-	//    public override int Count
-	//    {
-	//        get
-	//        {
-	//            return strategy.Count;
-	//        }
-	//    }
-	//    public override List<Map> Array
-	//    {
-	//        get
-	//        {
-	//            return strategy.Array;
-	//        }
-	//    }
-	//    protected override Map Get(Map key)
-	//    {
-	//        return strategy.Get(key);
-	//    }
-	//    protected override void Set(Map key, Map value)
-	//    {
-	//        isHashCached = false;
-	//        if (key.Equals(SpecialKeys.Current))
-	//        {
-	//            // refactor
-	//            this.strategy = ((NormalMap)value).strategy.CopyImplementation();
-	//            this.strategy.map = this;
-	//        }
-	//        else
-	//        {
-	//            strategy.Set(key,value);
-	//        }
-	//    }
-	//    public override List<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            return strategy.Keys;
-	//        }
-	//    }
-	//    protected override Map CopyImplementation()
-	//    {
-	//        // why does the strategy do the cloning?
-	//        return strategy.Copy();
-	//    }
-	//    public override bool ContainsKey(Map key)
-	//    {
-	//        return strategy.ContainsKey(key);
-	//    }
-	//    public override bool Equals(object toCompare)
-	//    {
-	//        bool isEqual;
-	//        if(Object.ReferenceEquals(toCompare,this))
-	//        {
-	//            isEqual=true;
-	//        }
-	//        else if(toCompare is NormalMap)
-	//        {
-	//            isEqual=((NormalMap)toCompare).strategy.Equals(strategy);
-	//        }
-	//        else
-	//        {
-	//            isEqual=false;
-	//        }
-	//        return isEqual;
-	//    }
-	//    public override int GetHashCode() 
-	//    {
-	//        if(!isHashCached)
-	//        {
-	//            hash=this.strategy.GetHashCode();
-	//            isHashCached=true;
-	//        }
-	//        return hash;
-	//    }
-	//    private bool isHashCached=false;
-	//    private int hash;
-	//    public StrategyMap(Strategy strategy)
-	//    {
-	//        this.strategy=strategy;
-	//        this.strategy.map=this;
-	//    }
-	//    public Strategy strategy;
-	//}
-	// combine NormalMap and Map and StrategyMap
 	public class NormalMap:Map
 	{
 		public override Map Call(Map arg)
 		{
-			strategy.Panic();
+			//strategy.Panic();
 			return base.Call(arg);
 		}
 		public void InitFromStrategy(Strategy clone)
@@ -984,11 +866,6 @@ namespace Meta
 		}
 		private bool isHashCached = false;
 		private int hash;
-		//public StrategyMap(Strategy strategy)
-		//{
-		//    this.strategy = strategy;
-		//    this.strategy.map = this;
-		//}
 		public Strategy strategy;
 		public NormalMap(List<Map> list):this()
 		{
@@ -1004,9 +881,6 @@ namespace Meta
 			this.strategy = strategy;
 			this.strategy.map = this;
 		}
-		//public NormalMap(Strategy strategy):this(strategy)
-		//{
-		//}
 		public NormalMap():this(new HybridDictionaryStrategy())
 		{
 		}
@@ -1017,7 +891,6 @@ namespace Meta
 		{
 		}
 	}
-	// should this be a map?
 	public class RemoteStrategy : Strategy
 	{
 		public override Strategy CopyImplementation()
@@ -1074,8 +947,12 @@ namespace Meta
 			Map val;
 			if (key.Equals(SpecialKeys.Local))
 			{
-				val = LocalStrategy.fileSystem;
+				val = LocalStrategy.singleton.Map;
 			}
+			//if (key.Equals(SpecialKeys.Local))
+			//{
+			//    val = LocalStrategy.fileSystem;
+			//}
 			else
 			{
 				val=new NormalMap(new RemoteStrategy(key.GetString()));
@@ -1086,8 +963,13 @@ namespace Meta
         {
 			if (key.Equals(SpecialKeys.Local))
 			{
-				((LocalStrategy)LocalStrategy.fileSystem.strategy).Replace(val);
+				// use Set
+				((LocalStrategy)LocalStrategy.singleton).Replace(val);
 			}
+			//if (key.Equals(SpecialKeys.Local))
+			//{
+			//    ((LocalStrategy)LocalStrategy.fileSystem.strategy).Replace(val);
+			//}
 			else
 			{
 				throw new ApplicationException("Cannot set key in Web.");
@@ -3360,20 +3242,31 @@ namespace Meta
 	{
 		public static readonly NormalMap Net= new NormalMap(NetStrategy.singleton);
 		public static readonly NormalMap Gac= new NormalMap(GacStrategy.singleton);
-		public static readonly NormalMap Local = new NormalMap(LocalStrategy.singleton);
+		//public static readonly NormalMap Local = new NormalMap(LocalStrategy.singleton);
 
 
 		static SpecialMaps()
 		{
-			((LocalStrategy)Local.strategy).map.Parent = SpecialMaps.Gac;
-			((LocalStrategy)Local.strategy).map.Scope = SpecialMaps.Gac;
+			// loading should somehow be done differently
+			//((LocalStrategy)LocalStrategy.singleton).map.Parent = SpecialMaps.Gac;
+			//((LocalStrategy)LocalStrategy.singleton).map.Scope = SpecialMaps.Gac;
+			//LocalStrategy.singleton.map.Parent = Gac;
+			//LocalStrategy.singleton.map.Scope = Gac;
 		}
 
 	}
 	public class LocalStrategy : Strategy
 	{
-		public static LocalStrategy singleton=new LocalStrategy();
-		public static NormalMap fileSystem;
+		public Map Map
+		{
+			get
+			{
+				return map;
+			}
+		}
+		public Map local;
+		public static LocalStrategy singleton = new LocalStrategy();
+		//public static NormalMap fileSystem;
 		public override Strategy CopyImplementation()
 		{
 			throw new Exception("The method or operation is not implemented.");
@@ -3388,7 +3281,7 @@ namespace Meta
 		public static void Set(string text)
 		{
 			FileAccess.Write(Path, text);
-			((LocalStrategy)fileSystem.strategy).Load();
+			((LocalStrategy)LocalStrategy.singleton).Load();
 		}
 		// make this a property
 		//public static FileSystem singleton;
@@ -3409,7 +3302,17 @@ namespace Meta
 		}
 		private LocalStrategy()
 		{
+			map = new NormalMap(this);
 			Load();
+			map.Parent = SpecialMaps.Gac;
+			map.Scope = SpecialMaps.Gac;
+			map.Parent = SpecialMaps.Gac;
+			map.Scope = SpecialMaps.Gac;
+
+			//((LocalStrategy)LocalStrategy.singleton).map.Parent = SpecialMaps.Gac;
+			//((LocalStrategy)LocalStrategy.singleton).map.Scope = SpecialMaps.Gac;
+			//LocalStrategy.singleton.map.Parent = Gac;
+			//LocalStrategy.singleton.map.Scope = Gac;
 		}
 		private void Load()
 		{

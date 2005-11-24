@@ -1,4 +1,4 @@
-|debugTest *
+|market *
 license='"
 	Meta is a programming language.
 	Copyright (C) 2004 Christian Staudenmeyer "christianstaudenmeyer@web.de"
@@ -802,7 +802,7 @@ editor=
 		process=Process *
 		commands=
 			Save=
-				|Meta.FileSystem.Set
+				|Meta.LocalStrategy.Set
 					editBox.RealText.get *
 			Start=
 				|
@@ -1002,7 +1002,7 @@ editor=
 						cases.[exists] *
 			editBox.RealText.set
 				Meta.FileAccess.Read
-					Meta.FileSystem.Path.get *
+					Meta.LocalStrategy.Path.get *
 			current=editBox
 		form=
 			form=["System.Windows.Forms"].Form *
@@ -1048,3 +1048,5 @@ editor=
 												menu.[topKey].[arg]
 			current=form
 		form.ShowDialog *
+market=
+	|html.display "hello"
