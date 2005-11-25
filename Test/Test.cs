@@ -35,8 +35,8 @@ namespace Test
 			DateTime start = DateTime.Now;
 			LocalStrategy.singleton.map["market"].Call(Map.Empty);//, Map.Empty);
 			Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
-			Console.ReadLine();
-			//new Test().Run();
+			//Console.ReadLine();
+			new Test().Run();
 			//Map map = SpecialMaps.Local;
 			//File.WriteAllText(@"C:\Projects\Meta\Library\test.txt", ,Encoding.Default);
 			//LocalStrategy.singleton.map["market"].Call(Map.Empty);

@@ -343,114 +343,54 @@ namespace Meta
 				selected[lastKey] = val;
 			}
 		}
-		//public void Statement(Map code,ref Map context,Map arg)
-		//{
-		//    Map selected=context;
-		//    Map key;
-		//    for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
-		//    {
-		//        key=Expression((Map)code[CodeKeys.Key].Array[i],context,arg);
-		//        Map selection;
-		//        if (key.Equals(new NormalMap("testSubDir")))
-		//        {
-		//        }
-		//        if (key.Equals(SpecialKeys.Parent))
-		//        {
-		//            selection = selected.Parent;
-		//        }
-		//        else
-		//        {
-		//            selection=selected[key];
-		//        }
-
-		//        if (selection == null)
-		//        {
-		//            Throw.KeyDoesNotExist(key,code.Extent);
-		//        }
-		//        selected=selection;
-		//        if(BreakPoint!=null && BreakPoint.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
-		//        {
-
-		//            CallBreak(selected);
-		//        }
-		//    }
-		//    Map lastKey=Expression((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context,arg);
-		//    if(BreakPoint!=null && BreakPoint.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
-		//    {
-		//        Map oldValue;
-		//        if(selected.ContainsKey(lastKey))
-		//        {
-		//            oldValue=selected[lastKey];
-		//        }
-		//        else
-		//        {
-		//            oldValue=null;
-		//        }
-		//        CallBreak(oldValue);
-		//    }
-			
-		//    Map val=Expression(code[CodeKeys.Value],context,arg);
-
-		//    if(lastKey.Equals(SpecialKeys.Current))
-		//    {
-		//        val.Parent=context.Parent;
-		//        context=val;
-		//    }
-		//    else
-		//    {
-		//        selected[lastKey]=val;
-		//    }
-		//}
 		public Map Literal(Map code,Map context)
 		{
 			return code.Copy();
 		}
-		public Map Select(Map code,Map context,Map arg)
+		public Map Select(Map code, Map context, Map arg)
 		{
-			Map selected=FindFirstKey(code,context,arg);
-			for(int i=1;i<code.Array.Count;i++)
+			Map selected = FindFirstKey(code, context, arg);
+			for (int i = 2;code.ContainsKey(i); i++)
+			//for (int i = 1; i < code.Array.Count; i++)
 			{
-				Map key=Expression((Map)code.Array[i],context,arg);
+				Map key = Expression((Map)code[i], context, arg);
 				Map selection;
 				if (key.Equals(SpecialKeys.Parent))
 				{
-				    selection = selected.Parent;
+					selection = selected.Parent;
 				}
 				else
 				{
 					selection = selected[key];
 				}
-				if(BreakPoint!=null && BreakPoint.IsBetween(((Map)code.Array[i]).Extent))
+				if (BreakPoint != null && BreakPoint.IsBetween(((Map)code[i]).Extent))
 				{
 					CallBreak(selection);
 				}
-				if(selection==null)
+				if (selection == null)
 				{
-					Throw.KeyDoesNotExist(key,key.Extent);
+					Throw.KeyDoesNotExist(key, key.Extent);
 				}
-				selected=selection;
+				selected = selection;
 			}
 			return selected;
 		}
-		private Map FindFirstKey(Map code,Map context,Map arg)
+		private Map FindFirstKey(Map code, Map context, Map arg)
 		{
-			Map key=Expression((Map)code.Array[0],context,arg);
-			if (key.Equals(new NormalMap("mscorlib")))
-			{
-			}
+			Map key = Expression((Map)code[1], context, arg);
 			Map val;
 			if (key.Equals(SpecialKeys.Arg))
 			{
 				val = arg;
 			}
-            else if (key.Equals(SpecialKeys.Parent))
-            {
-                val = context.Parent;
-            }
-            else if (key.Equals(SpecialKeys.Current))
-            {
-                val = context;
-            }
+			else if (key.Equals(SpecialKeys.Parent))
+			{
+				val = context.Parent;
+			}
+			else if (key.Equals(SpecialKeys.Current))
+			{
+				val = context;
+			}
 			else
 			{
 				Map selected = context;
@@ -465,7 +405,7 @@ namespace Meta
 				}
 				val = selected[key];
 			}
-			if(BreakPoint!=null && BreakPoint.IsBetween(((Map)code.Array[0]).Extent))
+			if (BreakPoint != null && BreakPoint.IsBetween(((Map)code[1]).Extent))
 			{
 				CallBreak(val);
 			}
@@ -1012,10 +952,6 @@ namespace Meta
 			{
 				val = LocalStrategy.singleton.Map;
 			}
-			//if (key.Equals(SpecialKeys.Local))
-			//{
-			//    val = LocalStrategy.fileSystem;
-			//}
 			else
 			{
 				val=new NormalMap(new RemoteStrategy(key.GetString()));
@@ -1029,10 +965,6 @@ namespace Meta
 				// use Set
 				((LocalStrategy)LocalStrategy.singleton).Replace(val);
 			}
-			//if (key.Equals(SpecialKeys.Local))
-			//{
-			//    ((LocalStrategy)LocalStrategy.fileSystem.strategy).Replace(val);
-			//}
 			else
 			{
 				throw new ApplicationException("Cannot set key in Web.");
@@ -1044,53 +976,6 @@ namespace Meta
 		}
 		public static NetStrategy singleton=new NetStrategy();
 	}
-	// make this a strategy
-	//public class Net:Map
-	//{
-	//    public override List<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            return new List<Map>();
-	//        }
-	//    }
-	//    protected override Map  Get(Map key)
-	//    {
-	//        if (!key.IsString)
-	//        {
-	//            throw new ApplicationException("need a string here");
-	//        }
-	//        Map val;
-	//        if (key.Equals(SpecialKeys.Local))
-	//        {
-	//            val = FileSystem.fileSystem;
-	//        }
-	//        else
-	//        {
-	//            val=new NormalMap(new RemoteStrategy(key.GetString()));
-	//        }
-	//        return val;
-	//    }
-	//    protected override void  Set(Map key, Map val)
-	//    {
-	//        if (key.Equals(SpecialKeys.Local))
-	//        {
-	//            ((FileSystem)FileSystem.fileSystem.strategy).Replace(val);
-	//        }
-	//        else
-	//        {
-	//            throw new ApplicationException("Cannot set key in Web.");
-	//        }
-	//    }
-	//    protected override Map CopyImplementation()
-	//    {
-	//        return this;
-	//    }
-	//    private Net()
-	//    {
-	//    }
-	//    public static Net singleton=new Net();
-	//}
 
 	public class Transform
 	{
