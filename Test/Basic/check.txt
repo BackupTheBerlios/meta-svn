@@ -1784,7 +1784,7 @@ Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"bigNumber"
 	Value (NormalMap):
-		50020202029029233344
+		50020202
 Entry (KeyValuePair`2)
 	Key (NormalMap):
 		"secondSwitch"
