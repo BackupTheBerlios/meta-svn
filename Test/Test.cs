@@ -32,9 +32,9 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			//DateTime start = DateTime.Now;
-			//LocalStrategy.singleton.map["market"].Call(Map.Empty);//, Map.Empty);
-			//Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
+			DateTime start = DateTime.Now;
+			LocalStrategy.singleton.map["market"].Call(Map.Empty);//, Map.Empty);
+			Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
 			//Console.ReadLine();
 			new Test().Run();
 			//Map map = SpecialMaps.Local;
