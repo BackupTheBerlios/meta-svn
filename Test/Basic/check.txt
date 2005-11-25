@@ -1468,11 +1468,6 @@ Entry (KeyValuePair`2)
 		"xyz"
 Entry (KeyValuePair`2)
 	Key (NormalMap):
-		"bigInteger"
-	Value (NormalMap):
-		89383838383832839123497123047217340712340720347072304702340720347
-Entry (KeyValuePair`2)
-	Key (NormalMap):
 		"upperLevel"
 	Value (NormalMap):
 		"changed"

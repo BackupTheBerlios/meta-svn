@@ -172,7 +172,6 @@
 	selectionFunction=
 		|value
 	selectionFunctionResult=selectionFunction *
-	bigInteger=89383838383832839123497123047217340712340720347072304702340720347
 	upperLevel="unchanged"
 	SetUpperLevel=
 		|
