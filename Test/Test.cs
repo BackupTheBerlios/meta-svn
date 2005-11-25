@@ -32,10 +32,15 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
+			DateTime start = DateTime.Now;
+			LocalStrategy.singleton.map["market"].Call(Map.Empty);//, Map.Empty);
+			Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
+			Console.ReadLine();
 			//new Test().Run();
 			//Map map = SpecialMaps.Local;
 			//File.WriteAllText(@"C:\Projects\Meta\Library\test.txt", ,Encoding.Default);
-			LocalStrategy.singleton.map["editor"].Call(Map.Empty);
+			//LocalStrategy.singleton.map["market"].Call(Map.Empty);
+			//LocalStrategy.singleton.map["editor"].Call(Map.Empty);
 		}
 		protected override string TestDirectory
 		{
@@ -44,6 +49,11 @@ namespace Test
 				return Path.Combine(Directory.GetParent(Process.LibraryPath).FullName, "Test");
 			}
 		}
+		//[Test]
+		//public object Market()
+		//{
+
+		//}
 		[Test]
 		public object Serialization()
 		{

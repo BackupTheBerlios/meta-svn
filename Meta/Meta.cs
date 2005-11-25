@@ -280,64 +280,127 @@ namespace Meta
 				}
 			}
 		}
-		public void Statement(Map code,ref Map context,Map arg)
+		public void Statement(Map code, ref Map context, Map arg)
 		{
-			Map selected=context;
+			Map selected = context;
 			Map key;
-			for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
+			Map keys = code[CodeKeys.Key];
+			int i = 1;
+			for (; keys.ContainsKey(i + 1);)
 			{
-				key=Expression((Map)code[CodeKeys.Key].Array[i],context,arg);
+				key = Expression((Map)keys[i], context, arg);
 				Map selection;
 				if (key.Equals(new NormalMap("testSubDir")))
 				{
 				}
-                if (key.Equals(SpecialKeys.Parent))
-                {
-                    selection = selected.Parent;
-                }
+				if (key.Equals(SpecialKeys.Parent))
+				{
+					selection = selected.Parent;
+				}
 				else
 				{
-					selection=selected[key];
+					selection = selected[key];
 				}
 
-                if (selection == null)
+				if (selection == null)
 				{
-                    Throw.KeyDoesNotExist(key,code.Extent);
-                }
-				selected=selection;
-				if(BreakPoint!=null && BreakPoint.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
+					Throw.KeyDoesNotExist(key, code.Extent);
+				}
+				selected = selection;
+				if (BreakPoint != null && BreakPoint.IsBetween(((Map)keys[i]).Extent))
 				{
 
 					CallBreak(selected);
 				}
+				i++;
 			}
-			Map lastKey=Expression((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context,arg);
-			if(BreakPoint!=null && BreakPoint.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
+			Map lastKey = Expression((Map)keys[i], context, arg);
+			//Map lastKey = Expression((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count - 1], context, arg);
+			//if (BreakPoint != null && BreakPoint.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count - 1]).Extent))
+			if (BreakPoint != null && BreakPoint.IsBetween(((Map)keys[i]).Extent))
 			{
 				Map oldValue;
-				if(selected.ContainsKey(lastKey))
+				if (selected.ContainsKey(lastKey))
 				{
-					oldValue=selected[lastKey];
+					oldValue = selected[lastKey];
 				}
 				else
 				{
-					oldValue=null;
+					oldValue = null;
 				}
 				CallBreak(oldValue);
 			}
-			
-			Map val=Expression(code[CodeKeys.Value],context,arg);
 
-			if(lastKey.Equals(SpecialKeys.Current))
+			Map val = Expression(code[CodeKeys.Value], context, arg);
+
+			if (lastKey.Equals(SpecialKeys.Current))
 			{
-				val.Parent=context.Parent;
-				context=val;
+				val.Parent = context.Parent;
+				context = val;
 			}
 			else
 			{
-				selected[lastKey]=val;
+				selected[lastKey] = val;
 			}
 		}
+		//public void Statement(Map code,ref Map context,Map arg)
+		//{
+		//    Map selected=context;
+		//    Map key;
+		//    for(int i=0;i<code[CodeKeys.Key].Array.Count-1;i++)
+		//    {
+		//        key=Expression((Map)code[CodeKeys.Key].Array[i],context,arg);
+		//        Map selection;
+		//        if (key.Equals(new NormalMap("testSubDir")))
+		//        {
+		//        }
+		//        if (key.Equals(SpecialKeys.Parent))
+		//        {
+		//            selection = selected.Parent;
+		//        }
+		//        else
+		//        {
+		//            selection=selected[key];
+		//        }
+
+		//        if (selection == null)
+		//        {
+		//            Throw.KeyDoesNotExist(key,code.Extent);
+		//        }
+		//        selected=selection;
+		//        if(BreakPoint!=null && BreakPoint.IsBetween(((Map)code[CodeKeys.Key].Array[i]).Extent))
+		//        {
+
+		//            CallBreak(selected);
+		//        }
+		//    }
+		//    Map lastKey=Expression((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1],context,arg);
+		//    if(BreakPoint!=null && BreakPoint.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count-1]).Extent))
+		//    {
+		//        Map oldValue;
+		//        if(selected.ContainsKey(lastKey))
+		//        {
+		//            oldValue=selected[lastKey];
+		//        }
+		//        else
+		//        {
+		//            oldValue=null;
+		//        }
+		//        CallBreak(oldValue);
+		//    }
+			
+		//    Map val=Expression(code[CodeKeys.Value],context,arg);
+
+		//    if(lastKey.Equals(SpecialKeys.Current))
+		//    {
+		//        val.Parent=context.Parent;
+		//        context=val;
+		//    }
+		//    else
+		//    {
+		//        selected[lastKey]=val;
+		//    }
+		//}
 		public Map Literal(Map code,Map context)
 		{
 			return code.Copy();
@@ -3626,7 +3689,7 @@ namespace Meta
 					}
 					else
 					{
-						throw new ApplicationException("incorrect indentation");
+						throw new MetaException("incorrect indentation",extent);
 					}
 				}
 				program[CodeKeys.Program] = statements;

@@ -56,84 +56,6 @@ sdl=
 					|library.logic.not quit
 				with=
 					|Events.Poll *
-html=
-	tags=
-		create=
-			|
-				name=arg
-				|map.join
-					"<"
-					name
-					">"
-					arg
-					"</"
-					name
-					">"
-		|map.merge library.map.apply
-			with=
-				|
-					[arg]=create arg
-			array=
-				"html"
-				"head"
-				"title"
-				"body"
-				"h1"
-				"h2"
-				"h3"
-				"h4"
-				"h5"
-				"h6"
-				"p"
-				"br"
-				"pre"
-				"b"
-				"i"
-				"table"
-				"tr"
-				"td"
-	table=
-		|
-			tags=tags *
-			current=tags.table library.map.join library.map.apply
-				array=arg
-				with=
-					|tags.tr map.join library.map.apply
-						array=arg
-						with=
-							|tags.td arg
-	test=
-		|
-			tags=tags *
-			text=tags.html map.join
-				tags.head tags.title "Meta rocks!"
-				tags.body map.join
-					tags.h1 "caption"
-					tags.p "paragraph"
-					tags.p "paragraph"
-					table
-						=
-							"caption"
-							"caption"
-						=
-							"data"
-							"data"
-						=
-							"data"
-							"data"
-			display text
-	display=
-		|
-			file.write
-				file="C:\test.html"
-				text=arg
-			process=System.Process *
-			startInfo=process.StartInfo.get *
-			startInfo.FileName.set
-				"iexplore.exe"
-			startInfo.Arguments.set
-				"C:\test.html"
-			process.Start *
 basicTest=
 	|
 		current=library.map.merge
@@ -1048,5 +970,73 @@ editor=
 												menu.[topKey].[arg]
 			current=form
 		form.ShowDialog *
+html=
+	|
+		tags=
+			create=
+				|
+					name=arg
+					|library.map.join
+						"<"
+						name
+						">"
+						arg.inner
+						"</"
+						name
+						">"
+			current=library.map.merge library.map.apply
+				with=
+					|
+						[arg]=create arg
+				array=
+					"html"
+					"head"
+					"title"
+					"body"
+					"h1"
+					"h2"
+					"h3"
+					"h4"
+					"h5"
+					"h6"
+					"p"
+					"br"
+					"pre"
+					"b"
+					"i"
+					"table"
+					"tr"
+					"td"
+					"form"
+					"input"
+		table=
+			|
+				tags=tags *
+				current=tags.table library.map.join library.map.apply
+					array=arg
+					with=
+						|tags.tr library.map.join library.map.apply
+							array=arg
+							with=
+								|tags.td arg
+		display=
+			|
+				file.write
+					file="C:\test.html"
+					text=arg
+				process=System.Process *
+				startInfo=process.StartInfo.get *
+				startInfo.FileName.set
+					"iexplore.exe"
+				startInfo.Arguments.set
+					"C:\test.html"
+				process.Start *
 market=
-	|html.display "hello"
+	|
+		html=html *
+		library.map.join
+			html.tags.h1
+				inner="hello world"
+			html.tags.form
+				inner=html.tags.input
+					inner="hello"
