@@ -607,6 +607,13 @@ namespace Meta
 				return Keys.Count;
 			}
 		}
+		public virtual int ArrayCount
+		{
+			get
+			{
+				return Array.Count;
+			}
+		}
 		public virtual List<Map> Array
 		{
 			get
@@ -1334,278 +1341,77 @@ namespace Meta
 		{
 			object result = null;
 			bool isExecuted = false;
-			if (this.name == "Equals")
+			List<MethodBase> rightNumberArgumentMethods = new List<MethodBase>();
+			int count = argument.ArrayCount;
+			if (count == ((Map)argument).Count)
 			{
-			}
-			if (!isExecuted)
-			{
-				List<MethodBase> rightNumberArgumentMethods = new List<MethodBase>();
 				foreach (MethodBase method in overloadedMethods)
 				{
-					if (argument.Array.Count == method.GetParameters().Length)
+					if (count == method.GetParameters().Length)
 					{
-						if (argument.Array.Count == ((Map)argument).Keys.Count)
-						{
-							rightNumberArgumentMethods.Add(method);
-						}
-					}
-				}
-				if (rightNumberArgumentMethods.Count == 0)
-				{
-					throw new ApplicationException("Method " + this.type.Name + "." + this.name + ": No methods with the right number of arguments.");
-				}
-				rightNumberArgumentMethods.Sort(new ArgumentComparer());
-				foreach (MethodBase method in rightNumberArgumentMethods)
-				{
-					List<object> arguments = new List<object>();
-					bool argumentsMatched = true;
-					ParameterInfo[] parameters = method.GetParameters();
-					for (int i = 0; argumentsMatched && i < parameters.Length; i++)
-					{
-						object arg = Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType);
-						if (arg != null)
-						{
-							arguments.Add(arg);
-						}
-						else
-						{
-							argumentsMatched = false;
-							break;
-						}
-						//arguments.Add(Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType, out argumentsMatched));
-					}
-					if (argumentsMatched)
-					{
-						if (method is ConstructorInfo)
-						{
-							try
-							{
-								result = ((ConstructorInfo)method).Invoke(arguments.ToArray());
-							}
-							catch (Exception e)
-							{
-								throw e.InnerException;
-							}
-						}
-						else
-						{
-							try
-							{
-								result = method.Invoke(obj, arguments.ToArray());
-							}
-							catch (Exception e)
-							{
-								throw e.InnerException;
-							}
-						}
-						isExecuted = true;
-						break;
+						rightNumberArgumentMethods.Add(method);
 					}
 				}
 			}
+			if (rightNumberArgumentMethods.Count == 0)
+			{
+				throw new ApplicationException("Method " + this.type.Name + "." + this.name + ": No methods with the right number of arguments.");
+			}
+			rightNumberArgumentMethods.Sort(new ArgumentComparer());
+			foreach (MethodBase method in rightNumberArgumentMethods)
+			{
+				List<object> arguments = new List<object>();
+				bool argumentsMatched = true;
+				ParameterInfo[] parameters = method.GetParameters();
+				for (int i = 0; argumentsMatched && i < parameters.Length; i++)
+				{
+					object arg = Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType);
+					if (arg != null)
+					{
+						arguments.Add(arg);
+					}
+					else
+					{
+						argumentsMatched = false;
+						break;
+					}
+					//arguments.Add(Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType, out argumentsMatched));
+				}
+				if (argumentsMatched)
+				{
+					if (method is ConstructorInfo)
+					{
+						try
+						{
+							result = ((ConstructorInfo)method).Invoke(arguments.ToArray());
+						}
+						catch (Exception e)
+						{
+							throw e.InnerException;
+						}
+					}
+					else
+					{
+						try
+						{
+							result = method.Invoke(obj, arguments.ToArray());
+						}
+						catch (Exception e)
+						{
+							throw e.InnerException;
+						}
+					}
+					isExecuted = true;
+					break;
+				}
+			}
+			//}
 			if (!isExecuted)
 			{
 				throw new ApplicationException("Method " + this.name + " could not be called.");
 			}
 			return Transform.ToMeta(result);
 		}
-		//public override Map Call(Map argument,Map caller)
-		//{
-		//    object result=null;
-		//    bool isExecuted=false;
-		//    if (this.name == "Equals")
-		//    {
-		//    }
-		//    if(!isExecuted)
-		//    {
-		//        List<MethodBase> rightNumberArgumentMethods=new List<MethodBase>();
-		//        foreach(MethodBase method in overloadedMethods)
-		//        {
-		//            if(argument.Array.Count==method.GetParameters().Length)
-		//            { 
-		//                if(argument.Array.Count==((Map)argument).Keys.Count)
-		//                { 
-		//                    rightNumberArgumentMethods.Add(method);
-		//                }
-		//            }
-		//        }
-		//        if(rightNumberArgumentMethods.Count==0)
-		//        {
-		//            throw new ApplicationException("Method "+this.type.Name+"."+this.name+": No methods with the right number of arguments.");
-		//        }
-		//        rightNumberArgumentMethods.Sort(new ArgumentComparer());
-		//        foreach(MethodBase method in rightNumberArgumentMethods)
-		//        {
-		//            List<object> arguments=new List<object>();
-		//            bool argumentsMatched=true;
-		//            ParameterInfo[] parameters=method.GetParameters();
-		//            for(int i=0;argumentsMatched && i<parameters.Length;i++)
-		//            {
-		//                object arg=Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType);
-		//                if (arg != null)
-		//                {
-		//                    arguments.Add(arg);
-		//                }
-		//                else
-		//                {
-		//                    argumentsMatched = false;
-		//                    break;
-		//                }
-		//                //arguments.Add(Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType, out argumentsMatched));
-		//            }
-		//            if(argumentsMatched)
-		//            {
-		//                if(method is ConstructorInfo)
-		//                {
-		//                    try
-		//                    {
-		//                        result=((ConstructorInfo)method).Invoke(arguments.ToArray());
-		//                    }
-		//                    catch(Exception e)
-		//                    {
-		//                        throw e.InnerException;
-		//                    }
-		//                }
-		//                else
-		//                {
-		//                    try
-		//                    {
-		//                        result=method.Invoke(obj,arguments.ToArray());
-		//                    }
-		//                    catch(Exception e)
-		//                    {
-		//                        throw e.InnerException;
-		//                    }
-		//                }
-		//                isExecuted=true;
-		//                break;
-		//            }
-		//        }
-		//    }
-		//    if(!isExecuted)
-		//    {
-		//        throw new ApplicationException("Method "+this.name+" could not be called.");
-		//    }
-		//    return Transform.ToMeta(result);
-		//}
-
-		//public static Delegate CreateDelegateFromCode(Type delegateType, MethodInfo method, Map code)
-		//{
-		//    Type returnType;
-		//    // refactor
-		//    if (method == null)
-		//    {
-		//        returnType = typeof(object);
-		//    }
-		//    else
-		//    {
-		//        returnType = method.ReturnType.Equals(typeof(void)) ? typeof(void) : method.ReturnType;
-		//    }
-		//    List<Type> arguments=new List<Type>();
-		//    int counter = 1;
-		//    // why can method be null?
-		//    if (method != null)
-		//    {
-		//        foreach (ParameterInfo parameter in method.GetParameters())
-		//        {
-		//            arguments.Add(parameter.ParameterType);
-		//        }
-		//    }
-
-		//    DynamicMethod dynamicMethod = new DynamicMethod("EventHandlerMethod",
-		//        typeof(int),
-		//        arguments.ToArray(),
-		//        typeof(string).Module);
-
-
-		//    Type[] writeStringArgs = { typeof(string) };
-
-		//    MethodInfo writeString = typeof(Console).GetMethod("WriteLine",
-		//        writeStringArgs);
-
-		//    ILGenerator il = dynamicMethod.GetILGenerator();
-
-		//    foreach(ParameterInfo 
-		//    // Load the first argument, which is a string, onto the stack.
-		//    il.Emit(OpCodes.Ldarg_0);
-		//    // Call the overload of Console.WriteLine that prints a string.
-		//    il.EmitCall(OpCodes.Call, writeString, null);
-		//    // The Hello method returns the value of the second argument;
-		//    // to do this, load the onto the stack and return.
-		//    il.Emit(OpCodes.Ldarg_1);
-		//    il.Emit(OpCodes.Ret);
-
-
-
-		//    HelloDelegate hi =
-		//        (HelloDelegate)hello.CreateDelegate(typeof(HelloDelegate));
-
-		//    int retval = hi("\r\nHello, World!", 42);
-
-
-
-		//    return result;
-		//}
-
-
-
-		//public static void SomeStuff()
-		//{
-
-		//    //Type returnType;
-		//    //// refactor
-		//    //if (method == null)
-		//    //{
-		//    //    returnType = typeof(object);
-		//    //}
-		//    //else
-		//    //{
-		//    //    returnType = method.ReturnType.Equals(typeof(void)) ? typeof(void) : method.ReturnType;
-		//    //}
-		//    //List<Type> arguments=new List<Type>();
-		//    //int counter = 1;
-		//    //// why can method be null?
-		//    ////if (method != null)
-		//    ////{
-		//    //    foreach (ParameterInfo parameter in method.GetParameters())
-		//    //    {
-		//    //        arguments.Add(parameter.ParameterType);
-		//    //    }
-		//    ////}
-
-		//    //DynamicMethod dynamicMethod = new DynamicMethod("EventHandlerMethod",
-		//    //    typeof(int),
-		//    //    arguments.ToArray(),
-		//    //    typeof(string).Module);
-
-
-		//    Type[] writeStringArgs = { typeof(string) };
-
-		//    MethodInfo writeString = typeof(Console).GetMethod("WriteLine",
-		//        writeStringArgs);
-
-		//    ILGenerator il = dynamicMethod.GetILGenerator();
-
-		//    // Load the first argument, which is a string, onto the stack.
-		//    il.Emit(OpCodes.Ldarg_0);
-		//    // Call the overload of Console.WriteLine that prints a string.
-		//    il.EmitCall(OpCodes.Call, writeString, null);
-		//    // The Hello method returns the value of the second argument;
-		//    // to do this, load the onto the stack and return.
-		//    il.Emit(OpCodes.Ldarg_1);
-		//    il.Emit(OpCodes.Ret);
-
-
-
-		//    HelloDelegate hi =
-		//        (HelloDelegate)hello.CreateDelegate(typeof(HelloDelegate));
-
-		//    int retval = hi("\r\nHello, World!", 42);
-
-
-
-		//    return result;
-		//}
 		public class EventHandlerContainer
 		{
 			private Map callable;
@@ -1624,120 +1430,6 @@ namespace Meta
 			//}
 
 		}
-//        public static Delegate CreateDelegateFromCode(Type delegateType, MethodInfo method, Map code)
-//        {
-
-//            //CSharpCodeProvider codeProvider = new CSharpCodeProvider();
-//            //string returnType = method.ReturnType.Equals(typeof(void)) ? "void" : method.ReturnType.FullName;
-
-//            List<Type> arguments = new List<Type>();
-//            arguments.Add(typeof(EventHandlerContainer));
-//            foreach (ParameterInfo parameter in method.GetParameters())
-//            {
-//                arguments.Add(parameter.ParameterType);
-//            }
-
-//            DynamicMethod dynamicMethod = new DynamicMethod("EventHandlerMethod",
-//                method.ReturnType,
-//                arguments.ToArray(),
-//                typeof(string).Module);
-
-
-
-//            MethodInfo raise=typeof(EventHandlerContainer).GetMethod("Raise");
-//            ILGenerator il = dynamicMethod.GetILGenerator();
-
-//            string argumentBuiling = "Map arg=new NormalMap();";
-//            int counter=0;
-//            foreach (ParameterInfo parameter in method.GetParameters())
-//            {
-//                il.Emit(OpCodes.Ldind_Ref,
-//                il.Emit(OpCodes.Ldarg, counter);
-//                il.EmitCall(OpCodes.Call, typeof(Map).GetMethod("set_Item"), null);
-//                argumentBuiling += "arg[" + counter + "]=Meta.Transform.ToMeta(arg" + counter + ");";
-//                counter++;
-//            }
-//            // Load the first argument, which is a string, onto the stack.
-//            il.Emit(OpCodes.Ldarg_0);
-//            // Call the overload of Console.WriteLine that prints a string.
-
-//            source += "Map result=callable.Call(arg,Process.Current.Caller);";
-
-//            il.EmitCall(OpCodes.Call, writeString, null);
-
-//            if (!method.ReturnType.Equals(typeof(void)))
-//            {
-//                source += "return (" + returnType + ")";
-//                source += "Meta.Transform.ToDotNet(result,typeof(" + returnType + "));";
-//            }
-//            // The Hello method returns the value of the second argument;
-//            // to do this, load the onto the stack and return.
-//            il.Emit(OpCodes.Ldarg_1);
-//            il.Emit(OpCodes.Ret);
-
-
-
-//            HelloDelegate result = (HelloDelegate)dynamicMethod.CreateDelegate(typeof(HelloDelegate),new EventHandlerContainer());
-
-
-
-
-
-//            //int retval = hi("\r\nHello, World!", 42);
-
-
-
-//            return result;
-
-
-//            //string source = "using System;using Meta;";
-////            source += @"	[Serializable]
-////					public class EventHandlerContainer{public " + returnType + " EventHandlerMethod";
-//            //int counter = 1;
-//            //string argumentList = "(";
-//            //string argumentBuiling = "Map arg=new NormalMap();";
-//            //foreach (ParameterInfo parameter in method.GetParameters())
-//            //{
-//            //    //argumentList += parameter.ParameterType.FullName + " arg" + counter;
-//            //    argumentBuiling += "arg[" + counter + "]=Meta.Transform.ToMeta(arg" + counter + ");";
-//            //    //if (counter < method.GetParameters().Length)
-//            //    //{
-//            //    //    argumentList += ",";
-//            //    //}
-//            //    counter++;
-//            //}
-
-//            ////argumentList += ")";
-//            ////source += argumentList + "{";
-//            ////source += argumentBuiling;
-//            //source += "Map result=callable.Call(arg,Process.Current.Caller);";
-
-//            //if (!method.ReturnType.Equals(typeof(void)))
-//            //{
-//            //    source += "return (" + returnType + ")";
-//            //    source += "Meta.Transform.ToDotNet(result,typeof(" + returnType + "));";
-//            //}
-
-
-//            //source += "}";
-//            //source += "private Map callable;";
-//            //source += "public EventHandlerContainer(Map callable) {this.callable=callable;}}";
-//            //List<string> assemblyNames = new List<string>();//new string[] { "mscorlib.dll", "System.dll", metaDllLocation });
-//            //assemblyNames.AddRange(Process.loadedAssemblies);
-//            //CompilerParameters compilerParameters = new CompilerParameters((string[])assemblyNames.ToArray());//typeof(string)));
-//            //CompilerResults compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, source);
-//            ////CompilerResults compilerResults = compiler.CompileAssemblyFromSource(compilerParameters, source);
-//            //Type containerType = compilerResults.CompiledAssembly.GetType("EventHandlerContainer", true);
-//            //object container = containerType.GetConstructor(new Type[] { typeof(Map) }).Invoke(new object[] { code });
-//            //if (method == null)
-//            //{
-//            //    delegateType = typeof(DelegateCreatedForGenericDelegates);
-//            //}
-//            //Delegate result = Delegate.CreateDelegate(delegateType,
-//            //    container, "EventHandlerMethod");
-//            //return result;
-//        }
-
 		public class MetaDelegate
 		{
 			private Map callable;
@@ -5002,6 +4694,8 @@ namespace Meta
 	// proper verification and testing.  I disclaim all liability and responsibility
 	// to any person or entity with respect to any loss or damage caused, or alleged
 	// to be caused, directly or indirectly, by the use of this Integer class.
+
+
 	public class Integer
 	{
 		public Integer(double val)
