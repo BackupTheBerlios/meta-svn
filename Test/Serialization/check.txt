@@ -258,7 +258,8 @@
 			Köpfchen in das Wasser,
 			Schwaenzchen in die Hoeh."
 	lines=textBox.Lines.get *
-	alleMeineText=lines.[1]
+	alleMeineText=lines.GetValue
+		1
 	lines.[5]="bwuhahaha"
 	tabText="			hello"
 	escapedText="'#'n'''t"

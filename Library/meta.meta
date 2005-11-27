@@ -317,7 +317,8 @@ basicTest=
 				Köpfchen in das Wasser,
 				Schwaenzchen in die Hoeh."
 		lines=textBox.Lines.get *
-		alleMeineText=lines.[1]
+		alleMeineText=lines.GetValue
+			1
 		lines.[5]="bwuhahaha"
 		tabText="			hello"
 		escapedText="'#'n'''t"
@@ -410,15 +411,16 @@ library=
 			|library.map.sum
 				array=arg
 				with=
-					|
-						joined=Meta.ObjectMap
-							arg.a
-						apply
-							array=arg.b
-							with=
-								|joined.Append
-									arg
-						current=joined.Current.get *
+					|library.map.sum
+						array=arg.b
+						with=
+							|
+								map=Meta.ObjectMap
+									arg.a
+								map.Append
+									arg.b
+								current=map.Current.get *
+						start=arg.a
 				start=*
 		contains=
 			|
@@ -970,72 +972,84 @@ editor=
 			current=form
 		form.ShowDialog *
 html=
-	|
-		tags=
-			create=
-				|
+	|library.map.merge library.map.apply
+		with=
+			|
+				[arg]=
 					name=arg
 					|library.map.join
 						"<"
 						name
+						argument=library.map.merge
+							=
+								inner=*
+								attribute=*
+							arg
+						library.map.join library.map.apply
+							array=library.map.keys argument.attribute
+							with=
+								|library.map.join
+									" "
+									arg
+									"="
+									'"""'
+									argument.attribute.[arg]
+									'"""'
 						">"
-						arg.inner
+						argument.inner
 						"</"
 						name
 						">"
-			current=library.map.merge library.map.apply
-				with=
-					|
-						[arg]=create arg
-				array=
-					"html"
-					"head"
-					"title"
-					"body"
-					"h1"
-					"h2"
-					"h3"
-					"h4"
-					"h5"
-					"h6"
-					"p"
-					"br"
-					"pre"
-					"b"
-					"i"
-					"table"
-					"tr"
-					"td"
-					"form"
-					"input"
-		table=
-			|
-				tags=tags *
-				current=tags.table library.map.join library.map.apply
-					array=arg
-					with=
-						|tags.tr library.map.join library.map.apply
-							array=arg
-							with=
-								|tags.td arg
-		display=
-			|
-				file.write
-					file="C:\test.html"
-					text=arg
-				process=System.Process *
-				startInfo=process.StartInfo.get *
-				startInfo.FileName.set
-					"iexplore.exe"
-				startInfo.Arguments.set
-					"C:\test.html"
-				process.Start *
+		array=
+			"html"
+			"head"
+			"title"
+			"body"
+			"h1"
+			"h2"
+			"h3"
+			"h4"
+			"h5"
+			"h6"
+			"p"
+			"br"
+			"pre"
+			"b"
+			"i"
+			"table"
+			"tr"
+			"td"
+			"form"
+			"input"
+ie=
+	|
+		file.write
+			file="C:\test.html"
+			text=arg
+		process=System.Process *
+		startInfo=process.StartInfo.get *
+		startInfo.FileName.set
+			"iexplore.exe"
+		startInfo.Arguments.set
+			"C:\test.html"
+		process.Start *
 market=
 	|
 		html=html *
-		library.map.join
-			html.tags.h1
-				inner="hello world"
-			html.tags.form
-				inner=html.tags.input
-					inner="hello"
+		ie html.p
+			attribute=
+				align="center"
+			inner=library.map.join
+				html.h1
+					inner="hello world"
+				html.form
+					inner=html.input
+						inner="hello"
+				html.input
+					attribute=
+						type="password"
+						value="hello"
+				html.input
+					attribute=
+						type="password"
+						value="hello"

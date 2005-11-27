@@ -168,17 +168,17 @@ namespace Meta
 		}
 		private static Dictionary<Thread,Process> processes=new Dictionary<Thread,Process>();
 		private bool reverseDebugging=false;
-		public SourcePosition BreakPoint
-		{
-			get
-			{
-				return breakPoint;
-			}
-			set
-			{
-				breakPoint=value;
-			}
-		}
+		//public SourcePosition BreakPoint
+		//{
+		//    get
+		//    {
+		//        return breakPoint;
+		//    }
+		//    set
+		//    {
+		//        breakPoint=value;
+		//    }
+		//}
 		private SourcePosition breakPoint=new SourcePosition(0,0);
 		public Map Expression(Map code,Map context,Map arg)
 		{
@@ -227,10 +227,10 @@ namespace Meta
 				reverseDebugging=value;
 			}
 		}
-		private bool ResumeAfterReverse(Map code)
-		{
-			return code.Extent.End.IsSmaller(BreakPoint);
-		}
+		//private bool ResumeAfterReverse(Map code)
+		//{
+		//    return code.Extent.End.IsSmaller(BreakPoint);
+		//}
 		public Map Program(Map code,Map current,Map arg)
 		{
 			Map local=new NormalMap();
@@ -242,18 +242,18 @@ namespace Meta
 			current.Parent=parent;
 			for(int i=1;code.ContainsKey(i) && i>0;i++)
 			{
-				if(ReverseDebugging)
-				{
-					if(!ResumeAfterReverse((Map)code[i]))
-					{
-						i-=2;
-						continue;
-					}
-					else
-					{
-						reverseDebugging=false;
-					}
-				}
+				//if(ReverseDebugging)
+				//{
+				//    //if(!ResumeAfterReverse((Map)code[i]))
+				//    //{
+				//    //    i-=2;
+				//    //    continue;
+				//    //}
+				//    //else
+				//    //{
+				//    //    reverseDebugging=false;
+				//    //}
+				//}
 				Statement((Map)code[i],ref current,arg);
 			}
 		}
@@ -307,29 +307,29 @@ namespace Meta
 					Throw.KeyDoesNotExist(key, code.Extent);
 				}
 				selected = selection;
-				if (BreakPoint != null && BreakPoint.IsBetween(((Map)keys[i]).Extent))
-				{
+				//if (BreakPoint != null && BreakPoint.IsBetween(((Map)keys[i]).Extent))
+				//{
 
-					CallBreak(selected);
-				}
+				//    CallBreak(selected);
+				//}
 				i++;
 			}
 			Map lastKey = Expression((Map)keys[i], context, arg);
 			//Map lastKey = Expression((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count - 1], context, arg);
 			//if (BreakPoint != null && BreakPoint.IsBetween(((Map)code[CodeKeys.Key].Array[code[CodeKeys.Key].Array.Count - 1]).Extent))
-			if (BreakPoint != null && BreakPoint.IsBetween(((Map)keys[i]).Extent))
-			{
-				Map oldValue;
-				if (selected.ContainsKey(lastKey))
-				{
-					oldValue = selected[lastKey];
-				}
-				else
-				{
-					oldValue = null;
-				}
-				CallBreak(oldValue);
-			}
+			//if (BreakPoint != null && BreakPoint.IsBetween(((Map)keys[i]).Extent))
+			//{
+			//    Map oldValue;
+			//    if (selected.ContainsKey(lastKey))
+			//    {
+			//        oldValue = selected[lastKey];
+			//    }
+			//    else
+			//    {
+			//        oldValue = null;
+			//    }
+			//    CallBreak(oldValue);
+			//}
 
 			Map val = Expression(code[CodeKeys.Value], context, arg);
 
@@ -363,12 +363,13 @@ namespace Meta
 				{
 					selection = selected[key];
 				}
-				if (BreakPoint != null && BreakPoint.IsBetween(((Map)code[i]).Extent))
-				{
-					CallBreak(selection);
-				}
+				//if (BreakPoint != null && BreakPoint.IsBetween(((Map)code[i]).Extent))
+				//{
+				//    CallBreak(selection);
+				//}
 				if (selection == null)
 				{
+					object x = selected["Item"];
 					Throw.KeyDoesNotExist(key, key.Extent);
 				}
 				selected = selection;
@@ -405,10 +406,10 @@ namespace Meta
 				}
 				val = selected[key];
 			}
-			if (BreakPoint != null && BreakPoint.IsBetween(((Map)code[1]).Extent))
-			{
-				CallBreak(val);
-			}
+			//if (BreakPoint != null && BreakPoint.IsBetween(((Map)code[1]).Extent))
+			//{
+			//    CallBreak(val);
+			//}
 			return val;
 		}
 
@@ -1319,6 +1320,7 @@ namespace Meta
 		// TODO: properly support sorting of multiple argument methods
 		public class ArgumentComparer: IComparer<MethodBase>
 		{
+			public static ArgumentComparer singleton = new ArgumentComparer();
 			public int Compare(MethodBase x, MethodBase y)
 			{
 				int result;
@@ -1358,7 +1360,11 @@ namespace Meta
 			{
 				throw new ApplicationException("Method " + this.type.Name + "." + this.name + ": No methods with the right number of arguments.");
 			}
-			rightNumberArgumentMethods.Sort(new ArgumentComparer());
+			if (rightNumberArgumentMethods.Count > 1)
+			{
+				rightNumberArgumentMethods.Sort(ArgumentComparer.singleton);
+				//rightNumberArgumentMethods.Sort(new ArgumentComparer());
+			}
 			foreach (MethodBase method in rightNumberArgumentMethods)
 			{
 				List<object> arguments = new List<object>();
@@ -1648,7 +1654,7 @@ namespace Meta
 	}
 
 	[Serializable]
-	public class TypeMap: DotNetContainer
+	public class TypeMap: ContainerMap
 	{
 		public Type Type
 		{
@@ -1678,7 +1684,7 @@ namespace Meta
 
 	}
 	[Serializable]
-	public class ObjectMap: DotNetContainer
+	public class ObjectMap: ContainerMap
 	{
 		public object Object
 		{
@@ -1808,9 +1814,9 @@ namespace Meta
 			{ 
 				isEqual=true;
 			}
-			else if(!(strategy is Strategy))
+			else if (!(strategy is Strategy))
 			{
-				isEqual=false;
+				isEqual = false;
 			}
 			else if(((Strategy)strategy).Count!=this.Count)
 			{
@@ -1931,20 +1937,32 @@ namespace Meta
 		{
 			return base.GetHashCode ();
 		}
-
 		public override bool Equals(object strategy)
 		{
 			bool isEqual;
-			if(strategy is StringStrategy)
-			{	
-				isEqual=((StringStrategy)strategy).text==this.text;
+			if (strategy is StringStrategy)
+			{
+				isEqual = ((StringStrategy)strategy).text.Equals(this.text);
 			}
 			else
 			{
-				isEqual=base.Equals(strategy);
+				isEqual = base.Equals(strategy);
 			}
 			return isEqual;
 		}
+		//public override bool Equals(object strategy)
+		//{
+		//    bool isEqual;
+		//    if(strategy is StringStrategy)
+		//    {	
+		//        isEqual=((StringStrategy)strategy).text==this.text;
+		//    }
+		//    else
+		//    {
+		//        isEqual=base.Equals(strategy);
+		//    }
+		//    return isEqual;
+		//}
 		public override List<Map> Array
 		{
 			get
@@ -2241,8 +2259,8 @@ namespace Meta
 			}	
 			throw new ApplicationException("Cannot assign in property "+property.Name+".");
 		}
-	}// rename to DotNetMap or so
-	public abstract class DotNetContainer: Map, ISerializeEnumerableSpecial
+	}
+	public abstract class ContainerMap: Map, ISerializeEnumerableSpecial
 	{
 		public override string Serialize() //string indentation, StringBuilder stringBuilder,int level)
 		{
@@ -2292,54 +2310,96 @@ namespace Meta
 		protected override Map Get(Map key)
 		{
 			Map val;
-			if (key.Equals(new NormalMap("Current")))
-			{
-				int asdf = 0;
-			}
-			if (key.Equals(SpecialKeys.Parent))
-			{
-				val = Parent;
-			}
-			else if (key.IsString && type.GetMember(key.GetString(), bindingFlags).Length > 0)
+			if (key.IsString)
 			{
 				string text = key.GetString();
 				MemberInfo[] members = type.GetMember(text, bindingFlags);
-				if (members[0] is MethodBase)
+				if (members.Length != 0)
 				{
-					val = new Method(text, obj, type);
-				}
-				else if (members[0] is FieldInfo)
-				{
-					val = Transform.ToMeta(type.GetField(text).GetValue(obj));
-				}
-				else if (members[0] is PropertyInfo)
-				{
-					val = new Property(type.GetProperty(text), this.obj, type);// TODO: set parent here, too
-				}
-				else if (members[0] is EventInfo)
-				{
-					val = new Event(((EventInfo)members[0]), obj, type);
-					val.Parent = this;
-				}
-				else if (members[0] is Type)
-				{
-					val = new TypeMap((Type)members[0]);
+					if (members[0] is MethodBase)
+					{
+						val = new Method(text, obj, type);
+					}
+					else if (members[0] is PropertyInfo)
+					{
+						val = new Property(type.GetProperty(text), this.obj, type);// TODO: set parent here, too
+					}
+					else if (members[0] is FieldInfo)
+					{
+						val = Transform.ToMeta(type.GetField(text).GetValue(obj));
+					}
+					else if (members[0] is EventInfo)
+					{
+						val = new Event(((EventInfo)members[0]), obj, type);
+						val.Parent = this;
+					}
+					else if (members[0] is Type)
+					{
+						val = new TypeMap((Type)members[0]);
+					}
+					else
+					{
+						val = null;
+					}
 				}
 				else
 				{
 					val = null;
 				}
 			}
-			else if (this.obj != null && key.IsInteger && this.type.IsArray)
-			{
-				val = Transform.ToMeta(((Array)obj).GetValue(key.GetInteger().GetInt32()));
-			}
+			//else if (this.obj != null && key.IsInteger && this.type.IsArray)
+			//{
+			//    val = Transform.ToMeta(((Array)obj).GetValue(key.GetInteger().GetInt32()));
+			//}
 			else
 			{
 				val = null;
 			}
 			return val;
 		}
+		//protected override Map Get(Map key)
+		//{
+		//    Map val;
+		//    if (key.IsString && type.GetMember(key.GetString(), bindingFlags).Length > 0)
+		//    {
+		//        string text = key.GetString();
+		//        MemberInfo[] members = type.GetMember(text, bindingFlags);
+		//        if (members[0] is MethodBase)
+		//        {
+		//            val = new Method(text, obj, type);
+		//        }
+		//        else if (members[0] is FieldInfo)
+		//        {
+		//            val = Transform.ToMeta(type.GetField(text).GetValue(obj));
+		//        }
+		//        else if (members[0] is PropertyInfo)
+		//        {
+		//            val = new Property(type.GetProperty(text), this.obj, type);// TODO: set parent here, too
+		//        }
+		//        else if (members[0] is EventInfo)
+		//        {
+		//            val = new Event(((EventInfo)members[0]), obj, type);
+		//            val.Parent = this;
+		//        }
+		//        else if (members[0] is Type)
+		//        {
+		//            val = new TypeMap((Type)members[0]);
+		//        }
+		//        else
+		//        {
+		//            val = null;
+		//        }
+		//    }
+		//    else if (this.obj != null && key.IsInteger && this.type.IsArray)
+		//    {
+		//        val = Transform.ToMeta(((Array)obj).GetValue(key.GetInteger().GetInt32()));
+		//    }
+		//    else
+		//    {
+		//        val = null;
+		//    }
+		//    return val;
+		//}
 		protected override void Set(Map key,Map value)
 		{
 			if (key.IsString && type.GetMember(key.GetString(), bindingFlags).Length != 0)
@@ -2414,7 +2474,7 @@ namespace Meta
 			Delegate eventDelegate=Method.CreateDelegateFromCode(eventInfo.EventHandlerType,code);
 			return eventDelegate;
 		}
-		public DotNetContainer(object obj,Type type)
+		public ContainerMap(object obj,Type type)
 		{
 			if(obj==null)
 			{
@@ -2455,23 +2515,37 @@ namespace Meta
 		public override bool Equals(object obj)
 		{
 			bool isEqual;
-			if(obj is IntegerStrategy)
+			if (obj is IntegerStrategy)
 			{
-				if(((IntegerStrategy)obj).GetInteger()==GetInteger())
-				{
-					isEqual=true;
-				}
-				else
-				{
-					isEqual=false;
-				}
+				isEqual = ((IntegerStrategy)obj).number == number;
+				//isEqual = ((IntegerStrategy)obj).GetInteger() == GetInteger();
 			}
 			else
 			{
-				isEqual=base.Equals(obj);
+				isEqual = base.Equals(obj);
 			}
 			return isEqual;
 		}
+		//public override bool Equals(object obj)
+		//{
+		//    bool isEqual;
+		//    if(obj is IntegerStrategy)
+		//    {
+		//        if(((IntegerStrategy)obj).GetInteger()==GetInteger())
+		//        {
+		//            isEqual=true;
+		//        }
+		//        else
+		//        {
+		//            isEqual=false;
+		//        }
+		//    }
+		//    else
+		//    {
+		//        isEqual=base.Equals(obj);
+		//    }
+		//    return isEqual;
+		//}
 		public IntegerStrategy(Integer number)
 		{
 			this.number = new Integer(number);
@@ -2957,12 +3031,14 @@ namespace Meta
 		}
 		private void Load()
 		{
+			// why catch?
 			try
 			{
 				this.map = Process.Current.Parse(Path);
 			}
 			catch (Exception e)
 			{
+				Console.WriteLine(e.ToString());
 			}
 		}
 		public override List<Map> Keys
@@ -4326,7 +4402,6 @@ namespace Meta
 		{
 			return Convert.ToInt32(a.integer) | Convert.ToInt32(b.integer);
 		}
-
 		public Integer(Integer i)
 		{
 			this.integer = i.integer;
