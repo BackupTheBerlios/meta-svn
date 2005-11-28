@@ -6,8 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta", "Meta\Meta.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "library\Library.csproj", "{2F710547-5B9E-4CB6-849B-1FFF439D3D62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor.csproj", "{5D717D65-566F-413E-BF37-8E73E61C5D1E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,14 +38,6 @@ Global
 		{2F710547-5B9E-4CB6-849B-1FFF439D3D62}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2F710547-5B9E-4CB6-849B-1FFF439D3D62}.Test|Any CPU.ActiveCfg = Release|Any CPU
 		{2F710547-5B9E-4CB6-849B-1FFF439D3D62}.Test|Any CPU.Build.0 = Release|Any CPU
-		{5D717D65-566F-413E-BF37-8E73E61C5D1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D717D65-566F-413E-BF37-8E73E61C5D1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D717D65-566F-413E-BF37-8E73E61C5D1E}.Interactive|Any CPU.ActiveCfg = Release|Any CPU
-		{5D717D65-566F-413E-BF37-8E73E61C5D1E}.Interactive|Any CPU.Build.0 = Release|Any CPU
-		{5D717D65-566F-413E-BF37-8E73E61C5D1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D717D65-566F-413E-BF37-8E73E61C5D1E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D717D65-566F-413E-BF37-8E73E61C5D1E}.Test|Any CPU.ActiveCfg = Release|Any CPU
-		{5D717D65-566F-413E-BF37-8E73E61C5D1E}.Test|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
