@@ -351,7 +351,6 @@ namespace Meta
 		{
 			Map selected = FindFirstKey(code, context, arg);
 			for (int i = 2;code.ContainsKey(i); i++)
-			//for (int i = 1; i < code.Array.Count; i++)
 			{
 				Map key = Expression((Map)code[i], context, arg);
 				Map selection;
@@ -363,10 +362,6 @@ namespace Meta
 				{
 					selection = selected[key];
 				}
-				//if (BreakPoint != null && BreakPoint.IsBetween(((Map)code[i]).Extent))
-				//{
-				//    CallBreak(selection);
-				//}
 				if (selection == null)
 				{
 					object x = selected["Item"];
@@ -406,10 +401,6 @@ namespace Meta
 				}
 				val = selected[key];
 			}
-			//if (BreakPoint != null && BreakPoint.IsBetween(((Map)code[1]).Extent))
-			//{
-			//    CallBreak(val);
-			//}
 			return val;
 		}
 

@@ -33,7 +33,7 @@ namespace Test
 		public static void Main(string[] args) 
 		{
 			DateTime start = DateTime.Now;
-			LocalStrategy.singleton.map["market"].Call(Map.Empty);//, Map.Empty);
+			LocalStrategy.singleton.map["test"].Call(Map.Empty);//, Map.Empty);
 			Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
 			//Console.ReadLine();
 			//new Test().Run();

@@ -1,4 +1,4 @@
-|market *
+|test *
 license='"
 	Meta is a programming language.
 	Copyright (C) 2004 Christian Staudenmeyer "christianstaudenmeyer@web.de"
@@ -408,20 +408,24 @@ library=
 								result=object.Current.get *
 					current=next.[stop] arg
 		join=
-			|library.map.sum
-				array=arg
-				with=
-					|library.map.sum
-						array=arg.b
-						with=
-							|
-								map=Meta.ObjectMap
-									arg.a
-								map.Append
-									arg.b
-								current=map.Current.get *
-						start=arg.a
-				start=*
+			|
+				result=library.map.sum
+					array=arg
+					with=
+						|library.map.sum
+							array=arg.b
+							with=
+								|
+									map=arg.a.map
+									map.[arg.a.counter]=arg.b
+									counter=library.math.increment arg.a.counter
+							start=
+								map=arg.a.map
+								counter=arg.a.counter
+					start=
+						map=*
+						counter=1
+				current=result.map
 		contains=
 			|
 				object=Meta.ObjectMap
@@ -1033,23 +1037,24 @@ ie=
 		startInfo.Arguments.set
 			"C:\test.html"
 		process.Start *
-market=
+test=
 	|
 		html=html *
-		ie html.p
-			attribute=
-				align="center"
-			inner=library.map.join
-				html.h1
-					inner="hello world"
-				html.form
-					inner=html.input
-						inner="hello"
-				html.input
-					attribute=
-						type="password"
-						value="hello"
-				html.input
-					attribute=
-						type="password"
-						value="hello"
+		library.map.join
+			html.p
+				attribute=
+					align="center"
+				inner=library.map.join
+					html.h1
+						inner="hello world"
+					html.form
+						inner=html.input
+							inner="hello"
+					html.input
+						attribute=
+							type="password"
+							value="hello"
+					html.input
+						attribute=
+							type="password"
+							value="hello"
