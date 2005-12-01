@@ -75,6 +75,20 @@
 		value=
 			x=7
 			z=1
+	scopeTest="default"
+	scopeFunction=
+		inScope="right"
+		|
+			parent.parent.scopeTest=inScope
+	inScope="wrong"
+	scopeFunction *
+	scopeFromFunctionData="right"
+	scopeFunctionFunction=
+		scopeFromFunctionData="wrong"
+		|
+			|scopeFromFunctionData
+	scopeFromFunction=scopeFunctionFunction *
+	scopeFromFunctionTest=scopeFromFunction *
 	ReturnEverything=
 		|
 			current=arg

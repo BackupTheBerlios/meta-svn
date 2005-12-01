@@ -601,6 +601,176 @@ Entry (KeyValuePair`2)
 		"changed"
 Entry (KeyValuePair`2)
 	Key (NormalMap):
+		"scopeTest"
+	Value (NormalMap):
+		"right"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"scopeFunction"
+	Value (NormalMap):
+		Entry (KeyValuePair`2)
+			Key (NormalMap):
+				"inScope"
+			Value (NormalMap):
+				"right"
+		Entry (KeyValuePair`2)
+			Key (NormalMap):
+				"function"
+			Value (NormalMap):
+				Entry (KeyValuePair`2)
+					Key (NormalMap):
+						"program"
+					Value (NormalMap):
+						Entry (KeyValuePair`2)
+							Key (NormalMap):
+								1
+							Value (NormalMap):
+								Entry (KeyValuePair`2)
+									Key (NormalMap):
+										"key"
+									Value (NormalMap):
+										Entry (KeyValuePair`2)
+											Key (NormalMap):
+												1
+											Value (NormalMap):
+												Entry (KeyValuePair`2)
+													Key (NormalMap):
+														"literal"
+													Value (NormalMap):
+														"parent"
+										Entry (KeyValuePair`2)
+											Key (NormalMap):
+												2
+											Value (NormalMap):
+												Entry (KeyValuePair`2)
+													Key (NormalMap):
+														"literal"
+													Value (NormalMap):
+														"parent"
+										Entry (KeyValuePair`2)
+											Key (NormalMap):
+												3
+											Value (NormalMap):
+												Entry (KeyValuePair`2)
+													Key (NormalMap):
+														"literal"
+													Value (NormalMap):
+														"scopeTest"
+								Entry (KeyValuePair`2)
+									Key (NormalMap):
+										"value"
+									Value (NormalMap):
+										Entry (KeyValuePair`2)
+											Key (NormalMap):
+												"select"
+											Value (NormalMap):
+												Entry (KeyValuePair`2)
+													Key (NormalMap):
+														1
+													Value (NormalMap):
+														Entry (KeyValuePair`2)
+															Key (NormalMap):
+																"literal"
+															Value (NormalMap):
+																"inScope"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"inScope"
+	Value (NormalMap):
+		"wrong"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		3
+	Value (NormalMap):
+		""
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"scopeFromFunctionData"
+	Value (NormalMap):
+		"right"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"scopeFunctionFunction"
+	Value (NormalMap):
+		Entry (KeyValuePair`2)
+			Key (NormalMap):
+				"scopeFromFunctionData"
+			Value (NormalMap):
+				"wrong"
+		Entry (KeyValuePair`2)
+			Key (NormalMap):
+				"function"
+			Value (NormalMap):
+				Entry (KeyValuePair`2)
+					Key (NormalMap):
+						"program"
+					Value (NormalMap):
+						Entry (KeyValuePair`2)
+							Key (NormalMap):
+								1
+							Value (NormalMap):
+								Entry (KeyValuePair`2)
+									Key (NormalMap):
+										"key"
+									Value (NormalMap):
+										Entry (KeyValuePair`2)
+											Key (NormalMap):
+												1
+											Value (NormalMap):
+												Entry (KeyValuePair`2)
+													Key (NormalMap):
+														"literal"
+													Value (NormalMap):
+														"function"
+								Entry (KeyValuePair`2)
+									Key (NormalMap):
+										"value"
+									Value (NormalMap):
+										Entry (KeyValuePair`2)
+											Key (NormalMap):
+												"literal"
+											Value (NormalMap):
+												Entry (KeyValuePair`2)
+													Key (NormalMap):
+														"select"
+													Value (NormalMap):
+														Entry (KeyValuePair`2)
+															Key (NormalMap):
+																1
+															Value (NormalMap):
+																Entry (KeyValuePair`2)
+																	Key (NormalMap):
+																		"literal"
+																	Value (NormalMap):
+																		"scopeFromFunctionData"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"scopeFromFunction"
+	Value (NormalMap):
+		Entry (KeyValuePair`2)
+			Key (NormalMap):
+				"function"
+			Value (NormalMap):
+				Entry (KeyValuePair`2)
+					Key (NormalMap):
+						"select"
+					Value (NormalMap):
+						Entry (KeyValuePair`2)
+							Key (NormalMap):
+								1
+							Value (NormalMap):
+								Entry (KeyValuePair`2)
+									Key (NormalMap):
+										"literal"
+									Value (NormalMap):
+										"scopeFromFunctionData"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
+		"scopeFromFunctionTest"
+	Value (NormalMap):
+		"right"
+Entry (KeyValuePair`2)
+	Key (NormalMap):
 		"ReturnEverything"
 	Value (NormalMap):
 		Entry (KeyValuePair`2)
@@ -1142,7 +1312,7 @@ Entry (KeyValuePair`2)
 		testClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (NormalMap):
-		3
+		4
 	Value (NormalMap):
 		""
 Entry (KeyValuePair`2)
@@ -1152,7 +1322,7 @@ Entry (KeyValuePair`2)
 		"b"
 Entry (KeyValuePair`2)
 	Key (NormalMap):
-		4
+		5
 	Value (NormalMap):
 		""
 Entry (KeyValuePair`2)
@@ -1192,7 +1362,7 @@ Entry (KeyValuePair`2)
 		testClasses.IndexerNoConversion
 Entry (KeyValuePair`2)
 	Key (NormalMap):
-		5
+		6
 	Value (NormalMap):
 		""
 Entry (KeyValuePair`2)
@@ -1600,7 +1770,7 @@ Entry (KeyValuePair`2)
 																"changed"
 Entry (KeyValuePair`2)
 	Key (NormalMap):
-		6
+		7
 	Value (NormalMap):
 		" "
 Entry (KeyValuePair`2)
@@ -1674,7 +1844,7 @@ Entry (KeyValuePair`2)
 																"arg"
 Entry (KeyValuePair`2)
 	Key (NormalMap):
-		7
+		8
 	Value (NormalMap):
 		""
 Entry (KeyValuePair`2)
@@ -1688,7 +1858,7 @@ Entry (KeyValuePair`2)
 				""
 Entry (KeyValuePair`2)
 	Key (NormalMap):
-		8
+		9
 	Value (NormalMap):
 		""
 Entry (KeyValuePair`2)
@@ -1708,7 +1878,7 @@ Entry (KeyValuePair`2)
 		1
 Entry (KeyValuePair`2)
 	Key (NormalMap):
-		9
+		10
 	Value (NormalMap):
 		""
 Entry (KeyValuePair`2)
@@ -1910,7 +2080,7 @@ Entry (KeyValuePair`2)
 		System.Collections.ArrayList
 Entry (KeyValuePair`2)
 	Key (NormalMap):
-		10
+		11
 	Value (NormalMap):
 		""
 Entry (KeyValuePair`2)
@@ -1927,7 +2097,7 @@ Alle meine Entchen,
 schwimmen auf dem S...
 Entry (KeyValuePair`2)
 	Key (NormalMap):
-		11
+		12
 	Value (NormalMap):
 		""
 Entry (KeyValuePair`2)

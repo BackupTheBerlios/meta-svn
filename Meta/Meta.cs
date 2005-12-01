@@ -218,8 +218,10 @@ namespace Meta
 			Map result = function.Call(argument);//, current);
 			if (result == null)
 			{
-				result = Map.Empty;
+				result = Map.Empty.Copy();
 			}
+			result.Parent = null;
+			result.Scope = null;
 			return result;
 		}
 		public bool ReverseDebugging
@@ -576,14 +578,14 @@ namespace Meta
         {
             get
             {
-                return firstParent;
+                return scope;
             }
             set
             {
-                firstParent = value;
+                scope = value;
             }
         }
-        private Map firstParent;
+        private Map scope;
 		public virtual Map Parent
 		{
 			get
@@ -648,13 +650,18 @@ namespace Meta
         }
         protected abstract Map Get(Map key);
         protected abstract void Set(Map key, Map val);
-
 		public virtual Map Call(Map arg)
 		{
 			Map function = this[CodeKeys.Function];
 			Map result = Process.Current.Expression(function, this, arg);
 			return result;
 		}
+		//public virtual Map Call(Map arg)
+		//{
+		//    Map function = this[CodeKeys.Function];
+		//    Map result = Process.Current.Expression(function, this, arg);
+		//    return result;
+		//}
 		public abstract List<Map> Keys
 		{
 			get;
