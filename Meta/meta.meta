@@ -407,9 +407,9 @@ library=
 				result=*
 			applyImplementation=
 				|
-					stop=library.math.greater
+					stop=math.greater
 						arg.index
-						library.map.length arg.array
+						length arg.array
 					next=
 						=
 							|arg.result
@@ -417,7 +417,7 @@ library=
 							|applyImplementation
 								array=arg.array
 								with=arg.with
-								index=library.math.add
+								index=math.add
 									arg.index
 									1
 								object=Meta.ObjectMap
@@ -429,16 +429,16 @@ library=
 					current=next.[stop] arg
 		join=
 			|
-				result=library.map.sum
+				result=sum
 					array=arg
 					with=
-						|library.map.sum
+						|sum
 							array=arg.b
 							with=
 								|
 									map=arg.a.map
 									map.[arg.a.counter]=arg.b
-									counter=library.math.increment arg.a.counter
+									counter=math.increment arg.a.counter
 							start=
 								map=arg.a.map
 								counter=arg.a.counter
@@ -475,14 +475,14 @@ library=
 				start=*
 		equal=
 			|
-				result=library.map.sum
+				result=sum
 					array=arg
 					with=
 						|
 							first=Meta.ObjectMap
 								arg.a.previous
 							current=
-								equality=library.logic.and
+								equality=logic.and
 									first.Equals
 										arg.b
 									arg.a.equality
@@ -527,10 +527,10 @@ library=
 				[*]=1
 				[1]=*
 		and=
-			|library.map.sum
+			|map.sum
 				array=arg
 				with=
-					|library.logic.and.table.[arg]
+					|table.[arg]
 				start=1
 			table=
 				[
@@ -550,10 +550,10 @@ library=
 					b=1
 				]=1
 		or=
-			|library.map.sum
+			|map.sum
 				array=arg
 				with=
-					|library.logic.or.table.[arg]
+					|table.[arg]
 				start=*
 			table=
 				[
@@ -584,7 +584,7 @@ library=
 					result
 		add=
 			|Meta.NormalMap
-				library.map.sum
+				map.sum
 					array=arg
 					with=
 						|Meta.Integer.op_Addition
@@ -595,7 +595,7 @@ library=
 					start=*
 		multiply=
 			|Meta.NormalMap
-				library.map.sum
+				map.sum
 					array=arg
 					with=
 						|Meta.Integer.op_Multiply
@@ -684,10 +684,10 @@ libraryTest=
 					"die Katze lief im Schnee."
 				apply=
 					applyMethod=
-						|library.math.add
+						|add
 							arg
 							1
-					current=library.map.apply
+					current=apply
 						with=applyMethod
 						array=
 							1
@@ -724,11 +724,11 @@ libraryTest=
 							parent.parent.counter=arg
 					test=while
 						condition=
-							|library.math.smaller
+							|smaller
 								counter
 								10
 						with=
-							|SetCounter library.math.increment counter
+							|SetCounter increment counter
 					current=counter
 			bitwiseTest=library.bitwise.or
 				20
