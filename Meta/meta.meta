@@ -799,7 +799,7 @@ ie=
 test=
 	|
 		html=html *
-		library.map.join
+		ie library.map.join
 			html.p
 				attribute=
 					align="center"
