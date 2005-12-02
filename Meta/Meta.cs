@@ -866,6 +866,7 @@ namespace Meta
 	}
 	public class NetStrategy:MapStrategy
 	{
+		public static readonly NormalMap Net = new NormalMap(new NetStrategy());
 		private NetStrategy()
 		{
 		}
@@ -1771,10 +1772,7 @@ namespace Meta
 	}
 	public class DictionaryStrategy:MapStrategy
 	{
-        // get rid of this completely, use keys from dictionary
-		//List<Map> keys;
 		private Dictionary<Map,Map> dictionary;
-
 		public DictionaryStrategy():this(2)
 		{
 		}
@@ -1782,10 +1780,8 @@ namespace Meta
 		{
 			return new CloneStrategy(this);
 		}
-
 		public DictionaryStrategy(int Count)
 		{
-			//this.keys=new List<Map>(Count);
 			this.dictionary=new Dictionary<Map,Map>(Count);
 		}
 		public override List<Map> Array
@@ -1805,16 +1801,8 @@ namespace Meta
 			get
 			{
 				return dictionary.Keys;
-				//return keys;
 			}
 		}
-		//public override List<Map> Keys
-		//{
-		//    get
-		//    {
-		//        return keys;
-		//    }
-		//}
 		public override int Count
 		{
 			get
@@ -1830,10 +1818,6 @@ namespace Meta
 		}
 		public override void Set(Map key,Map value)
 		{
-			//if(!this.ContainsKey(key))
-			//{
-			//    keys.Add(key);
-			//}
 			dictionary[key]=value;
 		}
 		public override bool ContainsKey(Map key) 
@@ -1852,7 +1836,7 @@ namespace Meta
 			this.obj=obj;
 			this.type=type;
 		}
-		public override Map Call(Map argument)//,Map caller)
+		public override Map Call(Map argument)
 		{
 			Map result;
 			try
@@ -1880,35 +1864,6 @@ namespace Meta
 			}
 			return result;
 		}
-		//public override Map Call(Map argument,Map caller)
-		//{
-		//    Map result;
-		//    try
-		//    {
-		//        Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public |
-		//            BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
-		//        if (eventDelegate != null)
-		//        {
-		//            List<object> arguments = new List<object>();
-		//            ParameterInfo[] parameters = eventDelegate.Method.GetParameters();
-		//            for (int i = 1; i < parameters.Length; i++)
-		//            {
-		//                arguments.Add(Transform.ToDotNet((Map)argument[i], parameters[i].ParameterType));
-		//            }
-		//            result = Transform.ToMeta(eventDelegate.DynamicInvoke(arguments.ToArray()));
-		//        }
-		//        else
-		//        {
-		//            result = null;
-		//        }
-		//    }
-		//    catch (Exception e)
-		//    {
-		//        result = null;
-		//    }
-		//    return result;
-		//}
-
 		protected override Map CopyImplementation()
 		{
 			return new Event(eventInfo,obj,type);
@@ -2004,10 +1959,9 @@ namespace Meta
 	}
 	public abstract class ContainerMap: Map, ISerializeEnumerableSpecial
 	{
-		public override string Serialize() //string indentation, StringBuilder stringBuilder,int level)
+		public override string Serialize()
 		{
 			return obj != null ? this.obj.ToString() : this.type.ToString();
-			//ExecuteTests.Serialize(obj!=null?this.obj:this.type,indentation,stringBuilder,level);
 		}
 		public override List<Map> Array
 		{
@@ -2089,59 +2043,12 @@ namespace Meta
 					val = null;
 				}
 			}
-			//else if (this.obj != null && key.IsInteger && this.type.IsArray)
-			//{
-			//    val = Transform.ToMeta(((Array)obj).GetValue(key.GetInteger().GetInt32()));
-			//}
 			else
 			{
 				val = null;
 			}
 			return val;
 		}
-		//protected override Map Get(Map key)
-		//{
-		//    Map val;
-		//    if (key.IsString && type.GetMember(key.GetString(), bindingFlags).Length > 0)
-		//    {
-		//        string text = key.GetString();
-		//        MemberInfo[] members = type.GetMember(text, bindingFlags);
-		//        if (members[0] is MethodBase)
-		//        {
-		//            val = new Method(text, obj, type);
-		//        }
-		//        else if (members[0] is FieldInfo)
-		//        {
-		//            val = Transform.ToMeta(type.GetField(text).GetValue(obj));
-		//        }
-		//        else if (members[0] is PropertyInfo)
-		//        {
-		//            val = new Property(type.GetProperty(text), this.obj, type);// TODO: set parent here, too
-		//        }
-		//        else if (members[0] is EventInfo)
-		//        {
-		//            val = new Event(((EventInfo)members[0]), obj, type);
-		//            val.Parent = this;
-		//        }
-		//        else if (members[0] is Type)
-		//        {
-		//            val = new TypeMap((Type)members[0]);
-		//        }
-		//        else
-		//        {
-		//            val = null;
-		//        }
-		//    }
-		//    else if (this.obj != null && key.IsInteger && this.type.IsArray)
-		//    {
-		//        val = Transform.ToMeta(((Array)obj).GetValue(key.GetInteger().GetInt32()));
-		//    }
-		//    else
-		//    {
-		//        val = null;
-		//    }
-		//    return val;
-		//}
 		protected override void Set(Map key,Map value)
 		{
 			if (key.IsString && type.GetMember(key.GetString(), bindingFlags).Length != 0)
@@ -2150,12 +2057,7 @@ namespace Meta
 				MemberInfo member = type.GetMember(text, bindingFlags)[0];
 				if (member is FieldInfo)
 				{
-					if (member.Name == "floatValue")
-					{
-						int asdf = 0;
-					}
 					FieldInfo field = (FieldInfo)member;
-					//bool isConverted;
 					object val = Transform.ToDotNet(value, field.FieldType);//, out isConverted);
 					if (val!=null)
 					{
@@ -2205,14 +2107,6 @@ namespace Meta
 		{
 			EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
 				BindingFlags.Static|BindingFlags.Instance);
-			//MethodInfo invoke=eventInfo.EventHandlerType.GetMethod("Invoke",BindingFlags.Instance|BindingFlags.Static
-			//    |BindingFlags.Public|BindingFlags.NonPublic);
-			//if (invoke == null)
-			//{
-			//}
-			//else
-			//{
-			//}
 			Delegate eventDelegate=Method.CreateDelegateFromCode(eventInfo.EventHandlerType,code);
 			return eventDelegate;
 		}
@@ -2260,7 +2154,6 @@ namespace Meta
 			if (obj is IntegerStrategy)
 			{
 				isEqual = ((IntegerStrategy)obj).number == number;
-				//isEqual = ((IntegerStrategy)obj).GetInteger() == GetInteger();
 			}
 			else
 			{
@@ -2268,30 +2161,9 @@ namespace Meta
 			}
 			return isEqual;
 		}
-		//public override bool Equals(object obj)
-		//{
-		//    bool isEqual;
-		//    if(obj is IntegerStrategy)
-		//    {
-		//        if(((IntegerStrategy)obj).GetInteger()==GetInteger())
-		//        {
-		//            isEqual=true;
-		//        }
-		//        else
-		//        {
-		//            isEqual=false;
-		//        }
-		//    }
-		//    else
-		//    {
-		//        isEqual=base.Equals(obj);
-		//    }
-		//    return isEqual;
-		//}
 		public IntegerStrategy(Integer number)
 		{
 			this.number = new Integer(number);
-			//this.number = number.Clone();
 		}
 		public override MapStrategy CopyImplementation()
 		{
@@ -2309,7 +2181,6 @@ namespace Meta
 				return keys;
 			}
 		}
-		// refactor
 		public override Map Get(Map key)
 		{
 			Map result;
@@ -2343,7 +2214,6 @@ namespace Meta
 			}
 		}
 	}
-	// remove
 	public class FileAccess
 	{
 		public static void Write(string fileName, string text)
@@ -2695,23 +2565,6 @@ namespace Meta
 			this.position=position;
 		}
 	}
-	public class SpecialMaps
-	{
-		public static readonly NormalMap Net= new NormalMap(NetStrategy.singleton);
-		public static readonly NormalMap Gac= new NormalMap(GacStrategy.singleton);
-		//public static readonly NormalMap Local = new NormalMap(LocalStrategy.singleton);
-
-
-		static SpecialMaps()
-		{
-			// loading should somehow be done differently
-			//((LocalStrategy)LocalStrategy.singleton).map.Parent = SpecialMaps.Gac;
-			//((LocalStrategy)LocalStrategy.singleton).map.Scope = SpecialMaps.Gac;
-			//LocalStrategy.singleton.map.Parent = Gac;
-			//LocalStrategy.singleton.map.Scope = Gac;
-		}
-
-	}
 	public class LocalStrategy : MapStrategy
 	{
 		public Map Map
@@ -2761,27 +2614,21 @@ namespace Meta
 		{
 			map = new NormalMap(this);
 			Load();
-			map.Parent = SpecialMaps.Gac;
-			map.Scope = SpecialMaps.Gac;
-			map.Parent = SpecialMaps.Gac;
-			map.Scope = SpecialMaps.Gac;
-
-			//((LocalStrategy)LocalStrategy.singleton).map.Parent = SpecialMaps.Gac;
-			//((LocalStrategy)LocalStrategy.singleton).map.Scope = SpecialMaps.Gac;
-			//LocalStrategy.singleton.map.Parent = Gac;
-			//LocalStrategy.singleton.map.Scope = Gac;
+			map.Parent = GacStrategy.Gac;
+			map.Scope = GacStrategy.Gac;
+			map.Parent = GacStrategy.Gac;
+			map.Scope = GacStrategy.Gac;
 		}
 		private void Load()
 		{
-			// why catch?
-			try
-			{
+			//try
+			//{
 				this.map = Process.Current.Parse(Path);
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e.ToString());
-			}
+			//}
+			//catch (Exception e)
+			//{
+			//    Console.WriteLine(e.ToString());
+			//}
 		}
 		public override ICollection<Map> Keys
 		{
@@ -3797,6 +3644,8 @@ namespace Meta
 	}
 	public class GacStrategy : MapStrategy
 	{
+		public static readonly NormalMap Gac = new NormalMap(new GacStrategy());
+
 		private Map cache = new NormalMap();
 		public override MapStrategy CopyImplementation()
 		{
@@ -3899,7 +3748,7 @@ namespace Meta
 		//    //gac.cache["net"] = NetStrategy.singleton;
 		//    singleton = gac;
 		//}
-		public static GacStrategy singleton=new GacStrategy();
+		//public static GacStrategy singleton=new GacStrategy();
 
 
 

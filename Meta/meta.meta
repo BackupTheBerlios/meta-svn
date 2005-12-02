@@ -433,15 +433,15 @@ library=
 					array=arg
 					with=
 						|sum
-							array=arg.b
+							array=arg.present
 							with=
 								|
-									map=arg.a.map
-									map.[arg.a.counter]=arg.b
-									counter=math.increment arg.a.counter
+									map=arg.previous.map
+									map.[arg.previous.counter]=arg.present
+									counter=math.increment arg.previous.counter
 							start=
-								map=arg.a.map
-								counter=arg.a.counter
+								map=arg.previous.map
+								counter=arg.previous.counter
 					start=
 						map=*
 						counter=1
@@ -463,15 +463,15 @@ library=
 				array=arg
 				with=
 					|
-						overwrite=arg.b
+						overwrite=arg.present
 						current=sum
-							array=keys arg.b
+							array=keys arg.present
 							with=
 								|
-									result=arg.a
-									result.[arg.b]=overwrite.[arg.b]
+									result=arg.previous
+									result.[arg.present]=overwrite.[arg.present]
 									current=result
-							start=arg.a
+							start=arg.previous
 				start=*
 		equal=
 			|
@@ -480,13 +480,13 @@ library=
 					with=
 						|
 							first=Meta.ObjectMap
-								arg.a.previous
+								arg.previous.previous
 							current=
 								equality=logic.and
 									first.Equals
-										arg.b
-									arg.a.equality
-								previous=arg.b
+										arg.present
+									arg.previous.equality
+								previous=arg.present
 					start=
 						equality=1
 						previous=arg.[1]
@@ -515,8 +515,8 @@ library=
 							|sumImplementation
 								index=math.increment arg.index
 								result=arg.with
-									a=arg.result
-									b=arg.array.[arg.index]
+									previous=arg.result
+									present=arg.array.[arg.index]
 								array=arg.array
 								with=arg.with
 					current=next.[stop] arg
@@ -534,20 +534,20 @@ library=
 				start=1
 			table=
 				[
-					a=1
-					b=*
+					previous=1
+					present=*
 				]=*
 				[
-					a=*
-					b=1
+					previous=*
+					present=1
 				]=*
 				[
-					a=*
-					b=*
+					previous=*
+					present=*
 				]=*
 				[
-					a=1
-					b=1
+					previous=1
+					present=1
 				]=1
 		or=
 			|map.sum
@@ -557,20 +557,20 @@ library=
 				start=*
 			table=
 				[
-					a=1
-					b=*
+					previous=1
+					present=*
 				]=1
 				[
-					a=*
-					b=1
+					previous=*
+					present=1
 				]=1
 				[
-					a=*
-					b=*
+					previous=*
+					present=*
 				]=*
 				[
-					a=1
-					b=1
+					previous=1
+					present=1
 				]=1
 	math=
 		increment=
@@ -589,9 +589,9 @@ library=
 					with=
 						|Meta.Integer.op_Addition
 							Meta.Integer
-								arg.a
+								arg.previous
 							Meta.Integer
-								arg.b
+								arg.present
 					start=*
 		multiply=
 			|Meta.NormalMap
@@ -600,9 +600,9 @@ library=
 					with=
 						|Meta.Integer.op_Multiply
 							Meta.Integer
-								arg.a
+								arg.previous
 							Meta.Integer
-								arg.b
+								arg.present
 					start=1
 		greater=
 			|Meta.Integer.op_GreaterThan
@@ -624,9 +624,9 @@ library=
 					with=
 						|Meta.Integer.op_BitwiseOr
 							Meta.Integer
-								arg.a
+								arg.previous
 							Meta.Integer
-								arg.b
+								arg.present
 					start=*
 libraryTest=
 	|

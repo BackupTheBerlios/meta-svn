@@ -42,7 +42,7 @@ namespace Test
 			DateTime start = DateTime.Now;
 			LocalStrategy.singleton.map["test"].Call(Map.Empty);//, Map.Empty);
 			Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
-			Console.ReadLine();
+			//Console.ReadLine();
 			new Test().Run();
 
 			//Map map = SpecialMaps.Local;
