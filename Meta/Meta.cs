@@ -575,10 +575,6 @@ namespace Meta
                     val.Parent = this;
                     Set(key, val);
                 }
-				//else
-				//{
-				//    throw new ApplicationException("Could not set key.");
-				//}
             }
         }
         protected abstract Map Get(Map key);
@@ -589,7 +585,7 @@ namespace Meta
 			Map result = Process.Current.Expression(function, this, arg);
 			return result;
 		}
-		public abstract List<Map> Keys
+		public abstract ICollection<Map> Keys
 		{
 			get;
 		}
@@ -618,11 +614,7 @@ namespace Meta
         {
             return this.GetEnumerator();
 
-        } 
-		//public virtual IEnumerator<KeyValuePair<Map,Map>> GetEnumerator()
-		//{
-		//    return new MapEnumerator(this);
-		//}
+        }
 		public virtual IEnumerator<KeyValuePair<Map, Map>> GetEnumerator()
 		{
 			foreach (Map key in Keys)
@@ -768,7 +760,7 @@ namespace Meta
 				strategy.Set(key, value);
 			}
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
@@ -813,7 +805,7 @@ namespace Meta
 		private bool isHashCached = false;
 		private int hash;
 		public MapStrategy strategy;
-		public NormalMap(List<Map> list):this()
+		public NormalMap(ICollection<Map> list):this()
 		{
 			int index = 1;
 			foreach (object entry in list)
@@ -843,7 +835,7 @@ namespace Meta
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
@@ -877,7 +869,7 @@ namespace Meta
 		private NetStrategy()
 		{
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
@@ -1163,41 +1155,6 @@ namespace Meta
 			return meta;
 		}
 	}
-	//public class MapEnumerator: IEnumerator<KeyValuePair<Map,Map>>
-	//{
-	//    private Map map; 
-	//    public MapEnumerator(Map map)
-	//    {
-	//        this.map=map;
-	//    }
-	//    object System.Collections.IEnumerator.Current
-	//    {
-	//        get
-	//        {
-	//            return Current;
-	//        }
-	//    }
-	//    public KeyValuePair<Map,Map> Current
-	//    {
-	//        get
-	//        {
-	//            return new KeyValuePair<Map,Map>(map.Keys[index],map[(Map)map.Keys[index]]);
-	//        }
-	//    }
-	//    public void Dispose()
-	//    {
-	//    }
-	//    public bool MoveNext()
-	//    {
-	//        index++;
-	//        return index<map.Count;
-	//    }
-	//    public void Reset()
-	//    {
-	//        index=-1;
-	//    }
-	//    private int index=-1;
-	//}
 	public delegate object DelegateCreatedForGenericDelegates();
 
 	public class Method: Map
@@ -1206,7 +1163,7 @@ namespace Meta
 		{
 			return new Method(this.name,this.obj,this.type);
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
@@ -1221,7 +1178,6 @@ namespace Meta
 		{
 			throw new ApplicationException("Cannot set key in Method");
 		}
-		// properly support sorting of multiple argument methods
 		public class ArgumentComparer: IComparer<MethodBase>
 		{
 			public static ArgumentComparer singleton = new ArgumentComparer();
@@ -1378,7 +1334,7 @@ namespace Meta
 			{
 				il.Emit(OpCodes.Ldloc, local);
 				il.Emit(OpCodes.Ldc_I4, i);
-				il.Emit(OpCodes.Ldarg, i + 1); // ignore the first arg, which is the target of the delegate
+				il.Emit(OpCodes.Ldarg, i + 1);
 				il.Emit(OpCodes.Stelem_Ref);
 			}
 			il.Emit(OpCodes.Ldarg_0);
@@ -1570,7 +1526,7 @@ namespace Meta
 				return array;
 			}
 		}
-		public abstract List<Map> Keys
+		public abstract ICollection<Map> Keys
 		{
 			get;
 		}
@@ -1688,7 +1644,7 @@ namespace Meta
 				return original.IsString;
 			}
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
@@ -1754,7 +1710,7 @@ namespace Meta
 				return list;
 			}
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
@@ -1816,7 +1772,7 @@ namespace Meta
 	public class DictionaryStrategy:MapStrategy
 	{
         // get rid of this completely, use keys from dictionary
-		List<Map> keys;
+		//List<Map> keys;
 		private Dictionary<Map,Map> dictionary;
 
 		public DictionaryStrategy():this(2)
@@ -1829,7 +1785,7 @@ namespace Meta
 
 		public DictionaryStrategy(int Count)
 		{
-			this.keys=new List<Map>(Count);
+			//this.keys=new List<Map>(Count);
 			this.dictionary=new Dictionary<Map,Map>(Count);
 		}
 		public override List<Map> Array
@@ -1844,13 +1800,21 @@ namespace Meta
 				return list;
 			}
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
-				return keys;
+				return dictionary.Keys;
+				//return keys;
 			}
 		}
+		//public override List<Map> Keys
+		//{
+		//    get
+		//    {
+		//        return keys;
+		//    }
+		//}
 		public override int Count
 		{
 			get
@@ -1866,10 +1830,10 @@ namespace Meta
 		}
 		public override void Set(Map key,Map value)
 		{
-			if(!this.ContainsKey(key))
-			{
-				keys.Add(key);
-			}
+			//if(!this.ContainsKey(key))
+			//{
+			//    keys.Add(key);
+			//}
 			dictionary[key]=value;
 		}
 		public override bool ContainsKey(Map key) 
@@ -1949,7 +1913,7 @@ namespace Meta
 		{
 			return new Event(eventInfo,obj,type);
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
@@ -1995,7 +1959,7 @@ namespace Meta
 		{
 			return new Property(property,obj,type);
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
@@ -2073,7 +2037,7 @@ namespace Meta
 			}
 			return false;
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
@@ -2333,7 +2297,7 @@ namespace Meta
 		{
 			return new IntegerStrategy(number);
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
@@ -2819,7 +2783,7 @@ namespace Meta
 				Console.WriteLine(e.ToString());
 			}
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
@@ -3890,7 +3854,7 @@ namespace Meta
 		{
 			throw new ApplicationException("Cannot set key " + key.ToString() + " in library.");
 		}
-		public override List<Map> Keys
+		public override ICollection<Map> Keys
 		{
 			get
 			{
