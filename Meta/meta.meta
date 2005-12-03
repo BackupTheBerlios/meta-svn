@@ -47,7 +47,7 @@ file=
 			writer.Close *
 directory=
 	create=
-		|mscorlib.Directory.Create
+		|mscorlib.Directory.CreateDirectory
 			arg
 	delete=
 		|mscorlib.Directory.Delete
@@ -636,6 +636,13 @@ library=
 							Meta.Integer
 								arg.present
 					start=*
+	string=
+		lower=
+			|library.map.apply
+				array=arg
+				with=
+					|mscorlib.Char.ToLower
+						arg
 libraryTest=
 	|
 		current=library.map.merge
@@ -744,6 +751,17 @@ libraryTest=
 		current=test
 html=
 	|
+		htmlTable=
+			|tags.table
+				inner=library.map.join library.map.apply
+					array=arg
+					with=
+						|tags.tr
+							inner=library.map.join library.map.apply
+								array=arg
+								with=
+									|tags.td
+										inner=arg
 		tags=library.map.merge library.map.apply
 			with=
 				|
@@ -831,15 +849,43 @@ console=
 		|mscorlib.Console.ReadLine *
 website=
 	|
+		current=library.map.merge
+			library.map
 		html=html *
 		navigation=
-			|table
-				=
-					*
-				=
-					"hello world"
-				=
-					"hello world"
-		directory="C:\Projects\Meta\Website"
-		index="hello"
-		displayHtml index
+			|join
+				html.htmlTable
+					=
+						"hi"
+					=
+						"hello"
+					=
+						"world"
+				html.tags.br
+		console.write Meta.FileSystem.Serialize.Value
+			keys html
+		x=html.htmlTable
+		websiteDirectory="C:\Projects\Meta\Website"
+		indexPath=path.combine
+			websiteDirectory
+			"Home.html"
+		website=
+			Home="Meta rocks!"
+			Tutorial="this is a multipart tutorial"
+			Forum="This is the forum"
+			Documentation="Lots of boring details"
+			Development="Fun stuff for hackers"
+		directory.create websiteDirectory
+		apply
+			array=keys website
+			with=
+				|file.write
+					file=path.combine
+						websiteDirectory
+						join
+							arg
+							".html"
+					text=join
+						navigation *
+						website.[arg]
+		browser indexPath

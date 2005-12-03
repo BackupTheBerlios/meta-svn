@@ -308,6 +308,9 @@ namespace Meta
 			for (int i = 2;code.ContainsKey(i); i++)
 			{
 				Map key = Expression((Map)code[i], context, arg);
+				if (key.Equals(new StrategyMap("htmlTable")))
+				{
+				}
 				Map selection;
 				if (key.Equals(SpecialKeys.Parent))
 				{
@@ -644,18 +647,64 @@ namespace Meta
 				yield return new KeyValuePair<Map, Map>(key, this[key]);
 			}
 		}
-		public override int GetHashCode() 
+		//protected abstract uint GetPseudoHashCode();
+		//public static int Hashify(uint x)
+		//{
+		//    unchecked
+		//    {
+		//        return (int)(((x + 17) * 9812413)%(int.MaxValue-int.MinValue)+int.MinValue);
+		//    }
+		//}
+		//public uint GetPseudoHashCodeDefault()
+		//{
+		//    uint hash = 0;
+		//    foreach (KeyValuePair<Map, Map> entry in this)
+		//    {
+		//        unchecked
+		//        {
+		//            hash += entry.Key.GetPseudoHashCode() + entry.Value.GetPseudoHashCode();
+		//        }
+		//    }
+		//    return hash;
+		//}
+		public override int GetHashCode()
 		{
-			int hash=0;
-			foreach(Map key in this.Keys)
-			{
-				unchecked
-				{
-					hash+=key.GetHashCode()*this[key].GetHashCode();
-				}
-			}
-			return hash;
+			return 0;
 		}
+		//public override int GetHashCode()
+		//{
+		//    return Hashify(GetPseudoHashCode());
+		//    //int hash = 0;
+		//    //foreach (KeyValuePair<Map, Map> entry in this)
+		//    //{
+		//    //    unchecked
+		//    //    {
+		//    //        hash += entry.Key.GetPseudoHashCode() + entry.Value.GetPseudoHashCode();
+		//    //    }
+		//    //}
+		//    //return Hashify(hash);
+		//    //int hash = 0;
+		//    //foreach (Map key in this.Keys)
+		//    //{
+		//    //    unchecked
+		//    //    {
+		//    //        hash += key.GetHashCode() * this[key].GetHashCode();
+		//    //    }
+		//    //}
+		//    //return hash;
+		//}
+		//public override int GetHashCode() 
+		//{
+		//    int hash=0;
+		//    foreach(Map key in this.Keys)
+		//    {
+		//        unchecked
+		//        {
+		//            hash+=key.GetHashCode()*this[key].GetHashCode();
+		//        }
+		//    }
+		//    return hash;
+		//}
 		Extent extent;
 		[Serialize(1)]
 		public Extent Extent
@@ -717,6 +766,10 @@ namespace Meta
 	}
 	public class StrategyMap:Map
 	{
+		//protected override uint GetPseudoHashCode()
+		//{
+		//    return strategy.GetPseudoHashCode();
+		//}
 		public bool Persistant
 		{
 			get
@@ -835,9 +888,10 @@ namespace Meta
 		}
 		public override int GetHashCode()
 		{
+			// fix this
 			if (!isHashCached)
 			{
-				hash = this.strategy.GetHashCode();
+				hash = base.GetHashCode();
 				isHashCached = true;
 			}
 			return hash;
@@ -1193,6 +1247,10 @@ namespace Meta
 
 	public class Method: Map
 	{
+		//protected override uint GetPseudoHashCode()
+		//{
+		//    return 0;
+		//}
 		protected override Map CopyImplementation()
 		{
 			return new Method(this.name,this.obj,this.type);
@@ -1236,6 +1294,9 @@ namespace Meta
 		}
 		public override Map Call(Map argument)
 		{
+			if (this.name == "Write")
+			{
+			}
 			object result = null;
 			bool isExecuted = false;
 			List<MethodBase> rightNumberArgumentMethods = new List<MethodBase>();
@@ -1453,8 +1514,12 @@ namespace Meta
 	}
 
 	[Serializable]
-	public class TypeMap: ContainerMap
+	public class TypeMap: DotNetMap
 	{
+		//protected override uint GetPseudoHashCode()
+		//{
+		//    return 0;
+		//}
 		public Type Type
 		{
 			get
@@ -1478,8 +1543,12 @@ namespace Meta
 		}
 	}
 	[Serializable]
-	public class ObjectMap: ContainerMap
+	public class ObjectMap: DotNetMap
 	{
+		//protected override uint GetPseudoHashCode()
+		//{
+		//    return 0;
+		//}
 		public object Object
 		{
 			get
@@ -1501,6 +1570,10 @@ namespace Meta
 	}
 	public abstract class MapStrategy
 	{
+		//public virtual uint GetPseudoHashCode()
+		//{
+		//    return map.GetPseudoHashCodeDefault();
+		//}
 		public void Panic()
 		{
 			map.strategy = new DictionaryStrategy();
@@ -1578,18 +1651,31 @@ namespace Meta
 		{
 			return Keys.Contains(key);
 		}
+		// remove
 		public override int GetHashCode()
 		{
-			int hash=0;
-			foreach(Map key in this.Keys)
+			int hash = 0;
+			foreach (Map key in this.Keys)
 			{
 				unchecked
 				{
-					hash+=key.GetHashCode()*this.Get(key).GetHashCode();
+					hash += key.GetHashCode() * this.Get(key).GetHashCode();
 				}
 			}
 			return hash;
 		}
+		//public override int GetHashCode()
+		//{
+		//    int hash=0;
+		//    foreach(Map key in this.Keys)
+		//    {
+		//        unchecked
+		//        {
+		//            hash+=key.GetHashCode()*this.Get(key).GetHashCode();
+		//        }
+		//    }
+		//    return hash;
+		//}
 		public override bool Equals(object strategy)
 		{
 			bool isEqual;
@@ -1697,6 +1783,10 @@ namespace Meta
 	[Serializable]
 	public class StringStrategy:MapStrategy
 	{
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
 		public override bool IsString
 		{
 			get
@@ -1715,10 +1805,10 @@ namespace Meta
 			return new StringStrategy(this.text);
 		}
 
-		public override int GetHashCode()
-		{
-			return base.GetHashCode ();
-		}
+		//public override int GetHashCode()
+		//{
+		//    return base.GetHashCode ();
+		//}
 		public override bool Equals(object strategy)
 		{
 			bool isEqual;
@@ -1860,6 +1950,10 @@ namespace Meta
 	}
 	public class Event:Map
 	{
+		//protected override uint GetPseudoHashCode()
+		//{
+		//    return 0;
+		//}
 		EventInfo eventInfo;
 		object obj;
 		Type type;
@@ -1934,6 +2028,10 @@ namespace Meta
 	}
 	public class Property:Map
 	{
+		//protected override uint GetPseudoHashCode()
+		//{
+		//    return 0;
+		//}
 		PropertyInfo property;
 		object obj;
 		Type type;
@@ -1990,7 +2088,7 @@ namespace Meta
 			throw new ApplicationException("Cannot assign in property "+property.Name+".");
 		}
 	}
-	public abstract class ContainerMap: Map, ISerializeEnumerableSpecial
+	public abstract class DotNetMap: Map, ISerializeEnumerableSpecial
 	{
 		public override string Serialize()
 		{
@@ -2042,6 +2140,9 @@ namespace Meta
 			if (key.IsString)
 			{
 				string text = key.GetString();
+				if (text == "Serialize")
+				{
+				}
 				MemberInfo[] members = type.GetMember(text, bindingFlags);
 				if (members.Length != 0)
 				{
@@ -2143,7 +2244,7 @@ namespace Meta
 			Delegate eventDelegate=Method.CreateDelegateFromCode(eventInfo.EventHandlerType,code);
 			return eventDelegate;
 		}
-		public ContainerMap(object obj,Type type)
+		public DotNetMap(object obj,Type type)
 		{
 			if(obj==null)
 			{
@@ -2164,10 +2265,14 @@ namespace Meta
 	}
 	public class IntegerStrategy:MapStrategy
 	{
-		public override int GetHashCode()
-		{
-			return 0;
-		}
+		//public override uint GetPseudoHashCode()
+		//{
+		//    return (uint)(this.number.integer % ((double)uint.MaxValue));
+		//}
+		//public override int GetHashCode()
+		//{
+		//    return 0;
+		//}
 		private Integer number;
 		public override bool IsInteger
 		{
@@ -2519,10 +2624,10 @@ namespace Meta
 			this.column=column;
 
 		}
-		public override int GetHashCode()
-		{
-			return base.GetHashCode ();
-		}
+		//public override int GetHashCode()
+		//{
+		//    return base.GetHashCode ();
+		//}
 		public override bool Equals(object obj)
 		{
 			return obj is SourcePosition && ((SourcePosition)obj).Line==Line && ((SourcePosition)obj).Column==Column;
@@ -3977,7 +4082,7 @@ namespace Meta
 		{
 			this.integer = integer;
 		}
-		private double integer;
+		public readonly double integer;
 
 		public static implicit operator Integer(int integer)
 		{
@@ -4028,7 +4133,7 @@ namespace Meta
 			Integer bi = (Integer)o;
 			return bi.integer == integer;
 		}
-
+		// remove??? or improve
 		public override int GetHashCode()
 		{
 			Integer x = new Integer(this);
