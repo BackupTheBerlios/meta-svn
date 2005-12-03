@@ -1,7 +1,7 @@
 |test *
 license='"
 	Copyright (c) 2005 Christian Staudenmeyer
-
+	
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the
 	"Software"), to deal in the Software without restriction, including
@@ -12,7 +12,7 @@ license='"
 	
 	The above copyright notice and this permission notice shall be
 	included in all copies or substantial portions of the Software.
-
+	
 	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -30,7 +30,7 @@ debugTest=
 			aha=
 				thisStuff=
 					"rocks"
-			absolutely="!!!!"				
+			absolutely="!!!!"
 		map="x"
 		x=abc
 		asdfasdf=map
@@ -40,31 +40,31 @@ debugTest=
 file=
 	write=
 		|
-			writer=mscorlib.StreamWriter		 
+			writer=mscorlib.StreamWriter
 				arg.file
 			writer.Write
 				arg.text
-			writer.Close *			 
+			writer.Close *
 directory=
 	create=
-		|mscorlib.Directory.Create			  
+		|mscorlib.Directory.Create
 			arg
 	delete=
-		|mscorlib.Directory.Delete   
-			arg  
-			1		
+		|mscorlib.Directory.Delete
+			arg
+			1
 sdl=
 	test=
 		|
 			current=SdlDotNet
-			Video.SetVideoModeWindow			
+			Video.SetVideoModeWindow
 				400
 				300
 			quit=*
 			Events.Quit.add
 				=
 					|
-						parent.parent.parent.quit=1			
+						parent.parent.parent.quit=1
 			library.map.while
 				condition=
 					|library.logic.not quit
@@ -846,7 +846,7 @@ website=
 		navigation=
 			|table
 				=
-					""
+					*
 				=
 					"hello world"
 				=

@@ -2675,12 +2675,12 @@ namespace Meta
 		}
 		public static void Save()
 		{
-			string text = Serialize.MapValue(fileSystem, "").Trim(new char[] { '\n' });
+			string text = Serialize.MapValue(fileSystem, null).Trim(new char[] { '\n' });
 			if (text == "\"\"")
 			{
 				text = "";
 			}
-			File.WriteAllText(Process.InstallationPath, text);
+			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath,"meta.meta"), text,Encoding.Default);
 		}
 		public class Parser
 		{
