@@ -58,10 +58,20 @@ namespace Test
 		//{
 
 		//}
+		//[Test]
+		//public object Parsing()
+		//{
+		//    Map test;
+		//    using (TextReader reader = new StreamReader(LocalStrategy.Path))
+		//    {
+		//        test = Process.Compile(reader);
+		//    }
+		//    return test;
+		//}
 		[Test]
 		public object Serialization()
 		{
-			Map map = LocalStrategy.singleton.map["basicTest"];
+			Map map = LocalStrategy.singleton.cache["basicTest"];
 			return Meta.Serialize.Value(map).TrimStart();
 		}
 		[Test(2)]
@@ -70,12 +80,12 @@ namespace Test
 			Map argument = new NormalMap();
 			argument[1] = "first arg";
 			argument[2] = "second=arg";
-			return LocalStrategy.singleton.map["basicTest"].Call(argument);//, Map.Empty);
+			return LocalStrategy.singleton.cache["basicTest"].Call(argument);//, Map.Empty);
 		}
 		[Test(2)]
 		public object Library()
 		{
-			return LocalStrategy.singleton.map["libraryTest"].Call(Map.Empty);//, Map.Empty);
+			return LocalStrategy.singleton.cache["libraryTest"].Call(Map.Empty);//, Map.Empty);
 		}
 		[Test]
 		public object Extents()
@@ -83,7 +93,7 @@ namespace Test
 			Map argument = Map.Empty;
 			argument[1] = "first arg";
 			argument[2] = "second=arg";
-			return LocalStrategy.singleton.map["basicTest"];
+			return LocalStrategy.singleton.cache["basicTest"];
 		}
 
 	}

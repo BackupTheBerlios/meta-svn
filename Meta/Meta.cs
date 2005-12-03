@@ -195,8 +195,34 @@ namespace Meta
 			{
 				throw new ApplicationException("Cannot compile map.");
 			}
+			//val.Extent = code.Extent;
 			return val;
 		}
+		//public Map Expression(Map code,Map context,Map arg)
+		//{
+		//    Map val;
+		//    if(code.ContainsKey(CodeKeys.Call))
+		//    {
+		//        val=Call(code[CodeKeys.Call],context,arg);
+		//    }
+		//    else if(code.ContainsKey(CodeKeys.Program))
+		//    {
+		//        val=Program(code[CodeKeys.Program],context,arg);
+		//    }
+		//    else if(code.ContainsKey(CodeKeys.Literal))
+		//    {
+		//        val=Literal(code[CodeKeys.Literal],context);
+		//    }
+		//    else if(code.ContainsKey(CodeKeys.Select))
+		//    {
+		//        val=Select(code[CodeKeys.Select],context,arg);
+		//    }
+		//    else
+		//    {
+		//        throw new ApplicationException("Cannot compile map.");
+		//    }
+		//    return val;
+		//}
 		public Map Call(Map code, Map current, Map arg)
 		{
 			Map function = Expression(code[CodeKeys.Callable], current, arg);
@@ -2290,7 +2316,15 @@ namespace Meta
 					int level = ((TestAttribute)attributes[0]).Level;
 					Console.Write(test.Name + "...");
 					DateTime startTime = DateTime.Now;
-					object result = test.Invoke(this, new object[] {});
+					object result;
+					try
+					{
+						result = test.Invoke(this, new object[] { });
+					}
+					catch(Exception e)
+					{
+						throw e.InnerException;
+					}
 					TimeSpan duration = DateTime.Now - startTime;
 
 					string testDirectory = Path.Combine(TestDirectory, test.Name);
@@ -2491,7 +2525,7 @@ namespace Meta
 		public override bool Equals(object obj)
 		{	
 			bool isEqual=false;
-			if(obj is Extent)
+			if(obj != null && obj is Extent)
 			{
 				Extent extent=(Extent)obj;
 				if(
@@ -2555,7 +2589,7 @@ namespace Meta
 		{
 			get
 			{
-				return map;
+				return cache;
 			}
 		}
 		public Map local;
@@ -2566,9 +2600,8 @@ namespace Meta
 		}
 		public void Replace(Map val)
 		{
-			this.map = val;
+			this.cache = val;
 			this.Save();
-
 		}
 		// remove
 		public static void Set(string text)
@@ -2576,16 +2609,7 @@ namespace Meta
 			FileAccess.Write(Path, text);
 			((LocalStrategy)LocalStrategy.singleton).Load();
 		}
-		// make this a property
-		//public static FileSystem singleton;
-		//static FileSystem()
-		//{
-		//    fileSystem = new NormalMap(singleton);
-		//    fileSystem.Parent = Gac.singleton;
-		//    fileSystem.Scope = Gac.singleton;
-		//    //singleton = new FileSystem();
-		//}
-		public Map map;
+		public Map cache;
 		public static string Path
 		{
 			get
@@ -2595,43 +2619,36 @@ namespace Meta
 		}
 		private LocalStrategy()
 		{
-			map = new NormalMap(this);
+			cache = new NormalMap(this);
 			Load();
-			map.Parent = GacStrategy.Gac;
-			map.Scope = GacStrategy.Gac;
-			map.Parent = GacStrategy.Gac;
-			map.Scope = GacStrategy.Gac;
+			cache.Parent = GacStrategy.Gac;
+			cache.Scope = GacStrategy.Gac;
+			cache.Parent = GacStrategy.Gac;
+			cache.Scope = GacStrategy.Gac;
 		}
 		private void Load()
 		{
-			//try
-			//{
-				this.map = Process.Current.Parse(Path);
-			//}
-			//catch (Exception e)
-			//{
-			//    Console.WriteLine(e.ToString());
-			//}
+			this.cache = Process.Current.Parse(Path);
 		}
 		public override ICollection<Map> Keys
 		{
 			get
 			{
-				return map.Keys;
+				return cache.Keys;
 			}
 		}
 		public override Map Get(Map key)
 		{
-			return map[key];
+			return cache[key];
 		}
 		public override void Set(Map key, Map val)
 		{
-			map[key] = val;
+			cache[key] = val;
 			Save();
 		}
 		public void Save()
 		{
-			string text = Meta.Serialize.MapValue(map, "").Trim(new char[] { '\n' });
+			string text = Meta.Serialize.MapValue(cache, "").Trim(new char[] { '\n' });
 			if (text == "\"\"")
 			{
 				text = "";
@@ -2812,6 +2829,9 @@ namespace Meta
 					}
 				}
 			}
+			if (expression != null && expression.Extent == null)
+			{
+			}
 			return expression;
 		}
 		private Map Call(Map select)
@@ -2884,6 +2904,7 @@ namespace Meta
 						throw new MetaException("incorrect indentation",extent);
 					}
 				}
+				EndExpression(extent, statements);
 				program[CodeKeys.Program] = statements;
 			}
 			else
