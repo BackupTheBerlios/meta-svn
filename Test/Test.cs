@@ -34,7 +34,7 @@ using Microsoft.VisualStudio.DebuggerVisualizers;
 
 namespace Test 
 {
-	public class Test:TestRunner
+	public class MetaTest:TestRunner
 	{
 		[STAThread]
 		public static void Main(string[] args) 
@@ -44,7 +44,7 @@ namespace Test
 			////LocalStrategy.singleton.map["test"].Call(Map.Empty);//, Map.Empty);
 			//Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
 			//Console.ReadLine();
-			new Test().Run();
+			new MetaTest().Run();
 		}
 		protected override string TestDirectory
 		{
@@ -68,33 +68,72 @@ namespace Test
 		//    }
 		//    return test;
 		//}
-		[Test]
-		public object Serialization()
+		public class Serialization : Test
 		{
-			Map map = FileSystem.fileSystem["basicTest"];
-			return FileSystem.Serialize.Value(map).TrimStart();
+			public override object  GetResult(out int level)
+			{
+				level=1;
+				Map map = FileSystem.fileSystem["basicTest"];
+				return FileSystem.Serialize.Value(map).TrimStart();
+			}
 		}
-		[Test(2)]
-		public object Basic()
+		public class Basic : Test
 		{
-			Map argument = new StrategyMap();
-			argument[1] = "first arg";
-			argument[2] = "second=arg";
-			return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
+			public override object GetResult(out int level)
+			{
+				level = 2;
+				Map argument = new StrategyMap();
+				argument[1] = "first arg";
+				argument[2] = "second=arg";
+				return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
+			}
 		}
-		[Test(2)]
-		public object Library()
+		public class Library : Test
 		{
-			return FileSystem.fileSystem["libraryTest"].Call(Map.Empty);//, Map.Empty);
+			public override object GetResult(out int level)
+			{
+				level = 2;
+				return FileSystem.fileSystem["libraryTest"].Call(Map.Empty);//, Map.Empty);
+			}
 		}
-		[Test]
-		public object Extents()
+		public class Extents : Test
 		{
-			Map argument = Map.Empty;
-			argument[1] = "first arg";
-			argument[2] = "second=arg";
-			return FileSystem.fileSystem["basicTest"];
+			public override object  GetResult(out int level)
+			{
+				level=1;
+				Map argument = Map.Empty;
+				argument[1] = "first arg";
+				argument[2] = "second=arg";
+				return FileSystem.fileSystem["basicTest"];
+			}
 		}
+		//[Test]
+		//public object Serialization()
+		//{
+		//    Map map = FileSystem.fileSystem["basicTest"];
+		//    return FileSystem.Serialize.Value(map).TrimStart();
+		//}
+		//[Test(2)]
+		//public object Basic()
+		//{
+		//    Map argument = new StrategyMap();
+		//    argument[1] = "first arg";
+		//    argument[2] = "second=arg";
+		//    return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
+		//}
+		//[Test(2)]
+		//public object Library()
+		//{
+		//    return FileSystem.fileSystem["libraryTest"].Call(Map.Empty);//, Map.Empty);
+		//}
+		//[Test]
+		//public object Extents()
+		//{
+		//    Map argument = Map.Empty;
+		//    argument[1] = "first arg";
+		//    argument[2] = "second=arg";
+		//    return FileSystem.fileSystem["basicTest"];
+		//}
 
 	}
 }
