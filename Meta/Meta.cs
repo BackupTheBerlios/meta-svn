@@ -685,7 +685,6 @@ namespace Meta
 			return new StrategyMap(text);
 		}
 	}
-	// rename to StrategyMap
 	public class StrategyMap:Map
 	{
 		public bool Persistant
@@ -765,7 +764,11 @@ namespace Meta
 			{
 				strategy.Set(key, value);
 			}
+			if (Persistant && !FileSystem.Parsing)
+			{
+			}
 		}
+
 		public override ICollection<Map> Keys
 		{
 			get
@@ -859,7 +862,6 @@ namespace Meta
 			Stream stream=webClient.OpenRead(fullPath.ToString());
 			StreamReader streamReader=new StreamReader(stream);
 			return FileSystem.Parse(streamReader);
-			//return Process.Current.Parse(streamReader);
 		}
 		public override void Set(Map key,Map val)
 		{
@@ -903,14 +905,7 @@ namespace Meta
         }
         public override void Set(Map key, Map val)
         {
-			//if (key.Equals(SpecialKeys.Local))
-			//{
-			//    (()LocalStrategy.singleton).Replace(val);
-			//}
-			//else
-			//{
-				throw new ApplicationException("Cannot set key in Web.");
-			//}
+			throw new ApplicationException("Cannot set key in Web.");
         }
 		public override MapStrategy CopyImplementation()
 		{
@@ -2221,23 +2216,6 @@ namespace Meta
 			}
 		}
 	}
-	// remove
-	//public class FileAccess
-	//{
-	//    public static void Write(string fileName, string text)
-	//    {
-	//        StreamWriter writer = new StreamWriter(fileName, false, Encoding.Default);
-	//        writer.Write(text);
-	//        writer.Close();
-	//    }
-	//    public static string Read(string fileName)
-	//    {
-	//        StreamReader reader = new StreamReader(fileName, Encoding.Default);
-	//        string result = reader.ReadToEnd();
-	//        reader.Close();
-	//        return result;
-	//    }
-	//}
 
 	public interface ISerializeEnumerableSpecial
 	{
@@ -2325,12 +2303,9 @@ namespace Meta
 
 					string resultText = stringBuilder.ToString();
 					File.WriteAllText(resultPath, resultText,Encoding.Default);
-					//FileAccess.Write(resultPath, resultText);
 					File.WriteAllText(resultCopyPath, resultText,Encoding.Default);
-					//FileAccess.Write(resultCopyPath, resultText);
 
 					bool successful = File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath));
-					//bool successful = FileAccess.Read(resultPath).Equals(FileAccess.Read(checkPath));
 					
 					if (!successful)
 					{
@@ -2568,39 +2543,21 @@ namespace Meta
 			return (Extent)extents[extent];
 		}
 	}
-	//public class PersistantMap : NormalMap
-	//{
-	//    public PersistantMap(MapStrategy strategy)
-	//        : base(strategy)
-	//    {
-	//    }
-	//    public void SetWithoutCloning(Map key,PersistantMap val)
-	//    {
-	//        val.Parent = this;
-	//        this.strategy.Set(key, val);
-	//    }
-	//    public static PersistantMap MakePersistant(NormalMap map)
-	//    {
-	//        PersistantMap result = new PersistantMap(map.strategy);
-	//        result.Scope = map.Scope;
-	//        result.Parent = map.Parent;
-	//        result.Extent = map.Extent;
-	//        //if (map.strategy is DictionaryStrategy)
-	//        //{
-	//        //    foreach (KeyValuePair<Map, Map> pair in map)
-	//        //    {
-	//        //        result.SetWithoutCloning(pair.Key, MakePersistant((NormalMap)pair.Value));
-	//        //    }
-	//        //}
-	//        return result;
-	//    }
-	//    protected override void Set(Map key, Map value)
-	//    {
-	//        base.Set(key, value);
-	//    }
-	//}
+
 	public class FileSystem
 	{
+		private static bool parsing=false;
+		public static bool Parsing
+		{
+			get
+			{
+				return parsing;
+			}
+			set
+			{
+				parsing = value;
+			}
+		}
 		private static void MakePersistant(StrategyMap map)
 		{
 			map.Persistant = true;
@@ -2620,47 +2577,32 @@ namespace Meta
 		// rename, refactor
 		public static Map Parse(string filePath)
 		{
+
 			using (TextReader reader = new StreamReader(filePath, Encoding.Default))
 			{
 				Map parsed = Parse(reader);
-				//Map persistant = PersistantMap.MakePersistant((NormalMap)parsed);
 				MakePersistant((StrategyMap)parsed);
 				return parsed;
-				//return persistant;
 			}
 		}
 		public static Map Parse(TextReader textReader)
 		{
-			// refactor
-			return Process.Current.Expression(Compile(textReader), Map.Empty, Map.Empty);
+			Parsing = true;
+			Map result=Process.Current.Expression(Compile(textReader), Map.Empty, Map.Empty);
+			Parsing = false;
+			return result;
 		}
 		public static Map Compile(TextReader textReader)
 		{
 			return new Parser(textReader.ReadToEnd(), FileSystem.Path).Program();
 		}
-		//public Map Map
-		//{
-		//    get
-		//    {
-		//        return cache;
-		//    }
-		//}
-		//public Map local;
 		public static Map fileSystem;
 		static FileSystem()
 		{
-			//fileSystem=Compile();
 			fileSystem=Parse(Path);
-			//Load();
 			fileSystem.Parent = GacStrategy.Gac;
 			fileSystem.Scope = GacStrategy.Gac;
 		}
-		//public void Replace(Map val)
-		//{
-		//    this.cache = val;
-		//    this.Save();
-		//}
-		//public Map cache;
 		public static string Path
 		{
 			get
@@ -2668,36 +2610,6 @@ namespace Meta
 				return System.IO.Path.Combine(Process.InstallationPath, "meta.meta");
 			}
 		}
-
-		//private LocalStrategy()
-		//{
-		//    cache = new NormalMap(this);
-		//    Load();
-		//    cache.Parent = GacStrategy.Gac;
-		//    cache.Scope = GacStrategy.Gac;
-		//    cache.Parent = GacStrategy.Gac;
-		//    cache.Scope = GacStrategy.Gac;
-		//}
-		//private void Load()
-		//{
-		//    this.cache = Process.Current.Parse(Path);
-		//}
-		//public override ICollection<Map> Keys
-		//{
-		//    get
-		//    {
-		//        return cache.Keys;
-		//    }
-		//}
-		//public override Map Get(Map key)
-		//{
-		//    return cache[key];
-		//}
-		//public override void Set(Map key, Map val)
-		//{
-		//    cache[key] = val;
-		//    Save();
-		//}
 		//public void Save()
 		//{
 		//    string text = Meta.LocalStrategy.Serialize.MapValue(cache, "").Trim(new char[] { '\n' });
