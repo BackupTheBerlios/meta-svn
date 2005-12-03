@@ -34,7 +34,6 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.DebuggerVisualizers;
 using System.Diagnostics;
 using System.Reflection.Emit;
 
@@ -813,7 +812,7 @@ namespace Meta
 			}
 			else if (toCompare is StrategyMap)
 			{
-				isEqual = ((StrategyMap)toCompare).strategy.Equals(strategy);
+				isEqual = ((StrategyMap)toCompare).strategy.Equal(strategy);
 			}
 			else
 			{
@@ -1561,7 +1560,7 @@ namespace Meta
 			return Keys.Contains(key);
 		}
 		// rename, only used internally
-		public override bool Equals(object strategy)
+		public virtual bool Equal(MapStrategy strategy)
 		{
 			bool isEqual;
 			if(Object.ReferenceEquals(strategy,this))
@@ -1581,7 +1580,8 @@ namespace Meta
 				isEqual=true;
 				foreach(Map key in this.Keys) 
 				{
-					if(!((MapStrategy)strategy).ContainsKey(key)||!((MapStrategy)strategy).Get(key).Equals(this.Get(key)))
+					if (!((MapStrategy)strategy).ContainsKey(key) || !((MapStrategy)strategy).Get(key).Equals(this.Get(key)))
+					//if (!((MapStrategy)strategy).ContainsKey(key) || !((MapStrategy)strategy).Get(key).Equals(this.Get(key)))
 					{
 						isEqual=false;
 					}
@@ -1619,9 +1619,9 @@ namespace Meta
 		{
 			return new CloneStrategy(this.original);
 		}
-		public override bool Equals(object obj)
+		public override bool Equal(MapStrategy obj)
 		{
-			return original.Equals(obj);
+			return original.Equal(obj);
 		}
 		public override int GetHashCode()
 		{
@@ -1689,7 +1689,7 @@ namespace Meta
 		{
 			return new StringStrategy(this.text);
 		}
-		public override bool Equals(object strategy)
+		public override bool Equal(MapStrategy strategy)
 		{
 			bool isEqual;
 			if (strategy is StringStrategy)
@@ -1698,7 +1698,7 @@ namespace Meta
 			}
 			else
 			{
-				isEqual = base.Equals(strategy);
+				isEqual = base.Equal(strategy);
 			}
 			return isEqual;
 		}
@@ -2145,12 +2145,16 @@ namespace Meta
 				return true;
 			}
 		}
+		//public override int GetHashCode()
+		//{
+		//    return number.integer.GetHashCode();
+		//}
 
 		public override Integer GetInteger()
 		{
 			return number;
 		}
-		public override bool Equals(object obj)
+		public override bool Equal(MapStrategy obj)
 		{
 			bool isEqual;
 			if (obj is IntegerStrategy)
@@ -2159,7 +2163,7 @@ namespace Meta
 			}
 			else
 			{
-				isEqual = base.Equals(obj);
+				isEqual = base.Equal(obj);
 			}
 			return isEqual;
 		}
@@ -2754,6 +2758,9 @@ namespace Meta
 			}
 			private Map Expression()
 			{
+				if (line > 878)
+				{
+				}
 				Map expression = Integer();
 				if (expression == null)
 				{
@@ -2790,6 +2797,9 @@ namespace Meta
 			}
 			private Map Call(Map select)
 			{
+				if (line > 880)
+				{
+				}
 				Map call;
 				Extent extent = StartExpression();
 				Map argument;
@@ -2843,7 +2853,28 @@ namespace Meta
 						}
 						statements[counter] = statement;
 						counter++;
-						NewLine();
+						if (!NewLine() && !Look(endOfFileChar))
+						{
+							//refactor
+							index -= 1;
+							if (!NewLine())
+							{
+								index -= 1;
+								if (!NewLine())
+								{
+									index += 2;
+									throw new MetaException("Expected newline.", new Extent(Position, Position));
+								}
+								else
+								{
+									line--;
+								}
+							}
+							else
+							{
+								line--;
+							}
+						}
 						string newIndentation = GetIndentation();
 						if (newIndentation.Length < indentationCount)
 						{
@@ -2868,6 +2899,13 @@ namespace Meta
 				}
 				EndExpression(extent, program);
 				return program;
+			}
+			private SourcePosition Position
+			{
+				get
+				{
+					return new SourcePosition(line, Column);
+				}
 			}
 			private Map EmptyProgram()
 			{

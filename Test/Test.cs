@@ -29,7 +29,6 @@ using Meta;
 
 using System;
 using System.Threading;
-using Microsoft.VisualStudio.DebuggerVisualizers;
 
 
 namespace Test 
@@ -39,13 +38,13 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			//DateTime start = DateTime.Now;
+			new MetaTest().Run();
+			DateTime start = DateTime.Now;
 			//LocalStrategy.singleton.map["website"].Call(Map.Empty);//, Map.Empty);
 			////LocalStrategy.singleton.map["test"].Call(Map.Empty);//, Map.Empty);
-			//Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
-			//Console.ReadLine();
-			new MetaTest().Run();
 			FileSystem.fileSystem["website"].Call(Map.Empty);
+			Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
+			Console.ReadLine();
 		}
 		protected override string TestDirectory
 		{

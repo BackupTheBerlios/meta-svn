@@ -40,19 +40,14 @@ debugTest=
 file=
 	write=
 		|
+			mscorlib.Directory.CreateDirectory
+				mscorlib.Path.GetDirectoryName
+					arg.file
 			writer=mscorlib.StreamWriter
 				arg.file
 			writer.Write
 				arg.text
 			writer.Close *
-directory=
-	create=
-		|mscorlib.Directory.CreateDirectory
-			arg
-	delete=
-		|mscorlib.Directory.Delete
-			arg
-			1
 sdl=
 	test=
 		|
@@ -751,7 +746,7 @@ libraryTest=
 		current=test
 html=
 	|
-		htmlTable=
+		table=
 			|tags.table
 				inner=library.map.join library.map.apply
 					array=arg
@@ -852,30 +847,27 @@ website=
 		current=library.map.merge
 			library.map
 		html=html *
+		menu=
+			|html.tags.h1
+				inner="Meta"
 		navigation=
-			|join
-				html.htmlTable
-					=
-						"hi"
-					=
-						"hello"
-					=
-						"world"
-				html.tags.br
+			|html.table apply
+				array=keys website
+				with=
+					|
+						arg
 		console.write Meta.FileSystem.Serialize.Value
 			keys html
-		x=html.htmlTable
 		websiteDirectory="C:\Projects\Meta\Website"
 		indexPath=path.combine
 			websiteDirectory
 			"Home.html"
 		website=
 			Home="Meta rocks!"
-			Tutorial="this is a multipart tutorial"
-			Forum="This is the forum"
-			Documentation="Lots of boring details"
-			Development="Fun stuff for hackers"
-		directory.create websiteDirectory
+		'"Tutorial="this is a multipart tutorial"
+			Help="This is the forum"
+			Docs="Lots of boring details"
+			Develop="Fun stuff for hackers""'
 		apply
 			array=keys website
 			with=
@@ -885,7 +877,10 @@ website=
 						join
 							arg
 							".html"
-					text=join
-						navigation *
-						website.[arg]
-		browser indexPath
+					text=html.table
+						=
+							menu *
+						=
+							navigation *
+							website.[arg]
+		"browser indexPath"
