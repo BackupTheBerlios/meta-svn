@@ -2538,9 +2538,6 @@ namespace Meta
 		}
 		public Extent(int startLine,int startColumn,int endLine,int endColumn):this(new SourcePosition(startLine,startColumn),new SourcePosition(endLine,endColumn))
 		{
-			//this.start=new SourcePosition(startLine,startColumn);
-			//this.end=new SourcePosition(endLine,endColumn);
-
 		}
 		public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn)//,string fileName) 
 		{
@@ -2552,24 +2549,6 @@ namespace Meta
 			return (Extent)extents[extent];
 		}
 	}
-
-	//public class ParserException:ApplicationException
-	//{
-	//    public override string Message
-	//    {
-	//        get
-	//        {
-	//            return this.text+" in line "+position.Line+", column "+position.Column+".";
-	//        }
-	//    }
-	//    private string text;
-	//    private SourcePosition position;
-	//    public ParserException(string text,SourcePosition position)
-	//    {
-	//        this.text=text;
-	//        this.position=position;
-	//    }
-	//}
 	public class LocalStrategy : MapStrategy
 	{
 		public Map Map
@@ -2581,7 +2560,6 @@ namespace Meta
 		}
 		public Map local;
 		public static LocalStrategy singleton = new LocalStrategy();
-		//public static NormalMap fileSystem;
 		public override MapStrategy CopyImplementation()
 		{
 			throw new Exception("The method or operation is not implemented.");
@@ -2773,11 +2751,20 @@ namespace Meta
 		public const char selectChar = '.';
 
 
+		private bool TryConsumeNewLine(string text)
+		{
+			string whitespace="";
+			for (int i = 0; Look(i) == space || Look(i) == tab; i++)
+			{
+				whitespace += Look(i);
+			}
+			return TryConsume(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text);
+		}
 		private bool Indentation()
 		{
 			string indentationString = "".PadLeft(indentationCount + 1, indentationChar);
 			bool isIndentation;
-			if (TryConsume(unixNewLine + indentationString) || TryConsume(windowsNewLine + indentationString))
+			if (TryConsumeNewLine(indentationString))
 			{
 				indentationCount++;
 				isIndentation = true;
@@ -2793,26 +2780,6 @@ namespace Meta
 				isIndentation = false;
 			}
 			return isIndentation;
-		}
-		private bool Dedentation()
-		{
-			int indent = 0;
-			while (Look(indent) == indentationChar)
-			{
-				indent++;
-			}
-			bool isDedentation;
-			if (indent < indentationCount)
-			{
-				Consume(indentationChar);
-				isDedentation = true;
-				indentationCount--;
-			}
-			else
-			{
-				isDedentation = false;
-			}
-			return isDedentation;
 		}
 		private Map Expression()
 		{
@@ -2953,7 +2920,7 @@ namespace Meta
 		}
 		private bool NewLine()
 		{
-			return TryConsume('\n') || TryConsume("\r\n");
+			return TryConsumeNewLine("");
 		}
 		private string GetIndentation()
 		{
@@ -2965,11 +2932,6 @@ namespace Meta
 				i++;
 			}
 			return indentation;
-		}
-		private void SameIndentation()
-		{
-			string sameIndentationString = "".PadLeft(indentationCount, indentationChar);
-			TryConsume(sameIndentationString);
 		}
 		private bool LookAny(char[] any)
 		{

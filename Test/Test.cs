@@ -45,11 +45,6 @@ namespace Test
 			//Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
 			//Console.ReadLine();
 			new Test().Run();
-
-			//Map map = SpecialMaps.Local;
-			//File.WriteAllText(@"C:\Projects\Meta\Library\test.txt", ,Encoding.Default);
-			//LocalStrategy.singleton.map["market"].Call(Map.Empty);
-			//LocalStrategy.singleton.map["editor"].Call(Map.Empty);
 		}
 		protected override string TestDirectory
 		{

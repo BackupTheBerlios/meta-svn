@@ -30,7 +30,7 @@ debugTest=
 			aha=
 				thisStuff=
 					"rocks"
-			absolutely="!!!!"
+			absolutely="!!!!"				
 		map="x"
 		x=abc
 		asdfasdf=map
@@ -40,31 +40,31 @@ debugTest=
 file=
 	write=
 		|
-			writer=mscorlib.StreamWriter
+			writer=mscorlib.StreamWriter		 
 				arg.file
 			writer.Write
 				arg.text
-			writer.Close *
+			writer.Close *			 
 directory=
 	create=
-		|mscorlib.Directory.Create
+		|mscorlib.Directory.Create			  
 			arg
 	delete=
-		|mscorlib.Directory.Delete
-			arg
-			1
+		|mscorlib.Directory.Delete   
+			arg  
+			1		
 sdl=
 	test=
 		|
 			current=SdlDotNet
-			Video.SetVideoModeWindow
+			Video.SetVideoModeWindow			
 				400
 				300
 			quit=*
 			Events.Quit.add
 				=
 					|
-						parent.parent.parent.quit=1
+						parent.parent.parent.quit=1			
 			library.map.while
 				condition=
 					|library.logic.not quit
