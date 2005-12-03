@@ -2531,15 +2531,20 @@ namespace Meta
 		}
 		private SourcePosition start;
 		private SourcePosition end;
-		public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+		public Extent(SourcePosition start, SourcePosition end)//, string fileName)
 		{
-			this.start=new SourcePosition(startLine,startColumn);
-			this.end=new SourcePosition(endLine,endColumn);
+			this.start = start;
+			this.end = end;
+		}
+		public Extent(int startLine,int startColumn,int endLine,int endColumn):this(new SourcePosition(startLine,startColumn),new SourcePosition(endLine,endColumn))
+		{
+			//this.start=new SourcePosition(startLine,startColumn);
+			//this.end=new SourcePosition(endLine,endColumn);
 
 		}
-		public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn,string fileName) 
+		public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn)//,string fileName) 
 		{
-			Extent extent=new Extent(startLine,startColumn,endLine,endColumn,fileName);
+			Extent extent=new Extent(startLine,startColumn,endLine,endColumn);//,fileName);
 			if(!extents.ContainsKey(extent))
 			{
 				extents.Add(extent,extent);
@@ -2548,23 +2553,23 @@ namespace Meta
 		}
 	}
 
-	public class ParserException:ApplicationException
-	{
-		public override string Message
-		{
-			get
-			{
-				return this.text+" in line "+position.Line+", column "+position.Column+".";
-			}
-		}
-		private string text;
-		private SourcePosition position;
-		public ParserException(string text,SourcePosition position)
-		{
-			this.text=text;
-			this.position=position;
-		}
-	}
+	//public class ParserException:ApplicationException
+	//{
+	//    public override string Message
+	//    {
+	//        get
+	//        {
+	//            return this.text+" in line "+position.Line+", column "+position.Column+".";
+	//        }
+	//    }
+	//    private string text;
+	//    private SourcePosition position;
+	//    public ParserException(string text,SourcePosition position)
+	//    {
+	//        this.text=text;
+	//        this.position=position;
+	//    }
+	//}
 	public class LocalStrategy : MapStrategy
 	{
 		public Map Map
@@ -2870,27 +2875,6 @@ namespace Meta
 			EndExpression(extent, call);
 			return call;
 		}
-		//private Map Call(Map select)
-		//{
-		//    Map call;
-		//    Extent extent = StartExpression();
-		//    TryConsume(callChar);
-		//    Map argument = Expression();
-		//    if (argument != null)
-		//    {
-		//        call = new NormalMap();
-		//        Map callCode = new NormalMap();
-		//        callCode[CodeKeys.Callable] = select;
-		//        callCode[CodeKeys.Argument] = argument;
-		//        call[CodeKeys.Call] = callCode;
-		//    }
-		//    else
-		//    {
-		//        call = null;
-		//    }
-		//    EndExpression(extent, call);
-		//    return call;
-		//}
 		bool isStartOfFile = true;
 		private void Whitespace()
 		{
@@ -2917,8 +2901,6 @@ namespace Meta
 					}
 					statements[counter] = statement;
 					counter++;
-
-					// allow empty lines
 					NewLine();
 					string newIndentation = GetIndentation();
 					if (newIndentation.Length < indentationCount)
@@ -2969,60 +2951,6 @@ namespace Meta
 			}
 			return program;
 		}
-		//public Map Program()
-		//{
-		//    Map program;
-		//    Extent extent = StartExpression();
-		//    if (TryConsume(emptyMapChar))
-		//    {
-		//        program = new NormalMap();
-		//        program[CodeKeys.Program] = new NormalMap();
-		//    }
-		//    else
-		//    {
-		//        if (Indentation())
-		//        {
-		//            program = new NormalMap();
-		//            int counter = 1;
-		//            int defaultKey = 1;
-		//            Map statements = new NormalMap();
-		//            while (!Look(endOfFileChar))
-		//            {
-		//                Map statement = Function();
-		//                if (statement == null)
-		//                {
-		//                    statement = Statement(ref defaultKey);
-		//                }
-		//                statements[counter] = statement;
-		//                counter++;
-
-		//                // allow empty lines
-		//                NewLine();
-		//                string newIndentation = GetIndentation();
-		//                if (newIndentation.Length < indentationCount)
-		//                {
-		//                    indentationCount--;
-		//                    break;
-		//                }
-		//                else if (newIndentation.Length == indentationCount)
-		//                {
-		//                    Consume(newIndentation);
-		//                }
-		//                else
-		//                {
-		//                    throw new ApplicationException("incorrect indentation");
-		//                }
-		//            }
-		//            program[CodeKeys.Program] = statements;
-		//        }
-		//        else
-		//        {
-		//            program = null;
-		//        }
-		//    }
-		//    EndExpression(extent, program);
-		//    return program;
-		//}
 		private bool NewLine()
 		{
 			return TryConsume('\n') || TryConsume("\r\n");
@@ -3055,7 +2983,7 @@ namespace Meta
 		}
 		private Extent StartExpression()
 		{
-			return new Extent(Line, Column, 0, 0, "");
+			return new Extent(Line, Column, 0, 0);//, "");
 		}
 		private void EndExpression(Extent extent, Map expression)
 		{
@@ -3314,7 +3242,8 @@ namespace Meta
 				}
 				if (val == null)
 				{
-					throw new ParserException("Expected value of statement", new SourcePosition(Line, Column));
+					SourcePosition position=new SourcePosition(Line, Column);
+					throw new MetaException("Expected value of statement", new Extent(position,position));
 				}
 				key = CreateDefaultKey(new NormalMap((Integer)count));
 				count++;
@@ -3325,6 +3254,8 @@ namespace Meta
 			EndExpression(extent, statement);
 			return statement;
 		}
+		private const char space=' ';
+		private const char tab = '\t';
 		private Map CreateDefaultKey(Map literal)
 		{
 			Map key = new NormalMap();
@@ -3359,7 +3290,6 @@ namespace Meta
 		private static string Value(Map val, string indentation)
 		{
 			string text;
-			// refactor
 			if(val.Equals(Map.Empty))
 			{
 				text = Parser.emptyMapChar.ToString();
@@ -3530,7 +3460,6 @@ namespace Meta
 				{
 				}
 				text = indentation + Parser.functionChar + Expression(code[CodeKeys.Value][CodeKeys.Literal], indentation);
-				//text = indentation + Parser.functionChar + Expression(code[CodeKeys.Value][CodeKeys.Literal], indentation);
 			}
 			else
 			{
@@ -3608,14 +3537,6 @@ namespace Meta
 						longestMatch = matchLength;
 					}
 				}
-				//string search=Parser.stringChar + " (" + Parser.stringEscapeChar + ")*";
-				//foreach (Match match in Regex.Matches(val.GetString(),search))
-				//{
-				//    if (match.ToString().Length > longestMatch)
-				//    {
-				//        longestMatch = match.Length;
-				//    }
-				//}
 				string escape = "";
 				for (int i = 0; i < longestMatch; i++)
 				{
