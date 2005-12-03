@@ -72,7 +72,7 @@ namespace Test
 		public object Serialization()
 		{
 			Map map = LocalStrategy.singleton.cache["basicTest"];
-			return Meta.Serialize.Value(map).TrimStart();
+			return Meta.LocalStrategy.Serialize.Value(map).TrimStart();
 		}
 		[Test(2)]
 		public object Basic()

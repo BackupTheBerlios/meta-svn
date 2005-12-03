@@ -93,11 +93,11 @@ namespace Meta
 	{
 		public static void KeyDoesNotExist(Map key,Extent extent)
 		{
-			throw new MetaException("The key "+Serialize.Value(key)+" does not exist.",extent);
+			throw new MetaException("The key "+LocalStrategy.Serialize.Value(key)+" does not exist.",extent);
 		}
 		public static void KeyNotFound(Map key,Extent extent)
 		{
-			throw new MetaException("The key "+Serialize.Value(key)+" could not be found.",extent);
+			throw new MetaException("The key "+LocalStrategy.Serialize.Value(key)+" could not be found.",extent);
 		}
 	}
 	public class Process
@@ -134,12 +134,10 @@ namespace Meta
 		}
 		public Map Parse(TextReader textReader)
 		{
-			return Expression(Compile(textReader),Map.Empty,Map.Empty);
+			// refactor
+			return Expression(LocalStrategy.Compile(textReader),Map.Empty,Map.Empty);
 		}
-		public static Map Compile(TextReader textReader)
-		{
-			return new Parser(textReader.ReadToEnd(),LocalStrategy.Path).Program();
-		}
+
 		public void Start()
 		{
 			thread.Start();
@@ -195,34 +193,8 @@ namespace Meta
 			{
 				throw new ApplicationException("Cannot compile map.");
 			}
-			//val.Extent = code.Extent;
 			return val;
 		}
-		//public Map Expression(Map code,Map context,Map arg)
-		//{
-		//    Map val;
-		//    if(code.ContainsKey(CodeKeys.Call))
-		//    {
-		//        val=Call(code[CodeKeys.Call],context,arg);
-		//    }
-		//    else if(code.ContainsKey(CodeKeys.Program))
-		//    {
-		//        val=Program(code[CodeKeys.Program],context,arg);
-		//    }
-		//    else if(code.ContainsKey(CodeKeys.Literal))
-		//    {
-		//        val=Literal(code[CodeKeys.Literal],context);
-		//    }
-		//    else if(code.ContainsKey(CodeKeys.Select))
-		//    {
-		//        val=Select(code[CodeKeys.Select],context,arg);
-		//    }
-		//    else
-		//    {
-		//        throw new ApplicationException("Cannot compile map.");
-		//    }
-		//    return val;
-		//}
 		public Map Call(Map code, Map current, Map arg)
 		{
 			Map function = Expression(code[CodeKeys.Callable], current, arg);
@@ -386,7 +358,6 @@ namespace Meta
 				Thread.CurrentThread.Suspend();
 			}
 		}
-		// rename
 		public static string InstallationPath
 		{
 			get
@@ -403,7 +374,7 @@ namespace Meta
 			string text="";
 			foreach (Map key in this.Keys)
 			{
-				text += Meta.Serialize.Key(key,"") + " ";
+				text += Meta.LocalStrategy.Serialize.Key(key,"") + " ";
 			}
 			return text;
 		}
@@ -719,6 +690,7 @@ namespace Meta
 			return new NormalMap(text);
 		}
 	}
+	// rename to StrategyMap
 	public class NormalMap:Map
 	{
 		public override Map Call(Map arg)
@@ -2044,7 +2016,7 @@ namespace Meta
 					}
 					else if (members[0] is PropertyInfo)
 					{
-						val = new Property(type.GetProperty(text), this.obj, type);// TODO: set parent here, too
+						val = new Property(type.GetProperty(text), this.obj, type);
 					}
 					else if (members[0] is FieldInfo)
 					{
@@ -2084,7 +2056,7 @@ namespace Meta
 				if (member is FieldInfo)
 				{
 					FieldInfo field = (FieldInfo)member;
-					object val = Transform.ToDotNet(value, field.FieldType);//, out isConverted);
+					object val = Transform.ToDotNet(value, field.FieldType);
 					if (val!=null)
 					{
 						field.SetValue(obj, val);
@@ -2122,7 +2094,7 @@ namespace Meta
 			}
 			else
 			{
-				throw new ApplicationException("Cannot set key " + Meta.Serialize.Value(key) + ".");
+				throw new ApplicationException("Cannot set key " + Meta.LocalStrategy.Serialize.Value(key) + ".");
 			}
 		}
 		public string Serialize(string indent,string[] functions)
@@ -2565,7 +2537,7 @@ namespace Meta
 		}
 		private SourcePosition start;
 		private SourcePosition end;
-		public Extent(SourcePosition start, SourcePosition end)//, string fileName)
+		public Extent(SourcePosition start, SourcePosition end)
 		{
 			this.start = start;
 			this.end = end;
@@ -2573,9 +2545,9 @@ namespace Meta
 		public Extent(int startLine,int startColumn,int endLine,int endColumn):this(new SourcePosition(startLine,startColumn),new SourcePosition(endLine,endColumn))
 		{
 		}
-		public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn)//,string fileName) 
+		public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn)
 		{
-			Extent extent=new Extent(startLine,startColumn,endLine,endColumn);//,fileName);
+			Extent extent=new Extent(startLine,startColumn,endLine,endColumn);
 			if(!extents.ContainsKey(extent))
 			{
 				extents.Add(extent,extent);
@@ -2583,8 +2555,36 @@ namespace Meta
 			return (Extent)extents[extent];
 		}
 	}
+	public class PersistantMap : NormalMap
+	{
+		public PersistantMap(MapStrategy strategy)
+			: base(strategy)
+		{
+		}
+		public void SetWithoutCloning(Map key,PersistantMap val)
+		{
+			this.strategy.Set(key, val);
+		}
+		private PersistantMap MakePersistant(NormalMap map)
+		{
+			PersistantMap result = new PersistantMap(map.strategy);
+			foreach (KeyValuePair<Map, Map> pair in map)
+			{
+				result[pair.Key] = MakePersistant((NormalMap)pair.Value);
+			}
+			return result;
+		}
+		protected override void Set(Map key, Map value)
+		{
+			base.Set(key, value);
+		}
+	}
 	public class LocalStrategy : MapStrategy
 	{
+		public static Map Compile(TextReader textReader)
+		{
+			return new Parser(textReader.ReadToEnd(), LocalStrategy.Path).Program();
+		}
 		public Map Map
 		{
 			get
@@ -2602,12 +2602,6 @@ namespace Meta
 		{
 			this.cache = val;
 			this.Save();
-		}
-		// remove
-		public static void Set(string text)
-		{
-			FileAccess.Write(Path, text);
-			((LocalStrategy)LocalStrategy.singleton).Load();
 		}
 		public Map cache;
 		public static string Path
@@ -2648,903 +2642,902 @@ namespace Meta
 		}
 		public void Save()
 		{
-			string text = Meta.Serialize.MapValue(cache, "").Trim(new char[] { '\n' });
+			string text = Meta.LocalStrategy.Serialize.MapValue(cache, "").Trim(new char[] { '\n' });
 			if (text == "\"\"")
 			{
 				text = "";
 			}
 			FileAccess.Write(Process.InstallationPath, text);
 		}
-	}
-	public class Parser
-	{
-		private string text;
-		private int index;
-		private string filePath;
-		public Parser(string text, string filePath)
+		public class Parser
 		{
-			this.index = 0;
-			this.text = text;
-			this.filePath = filePath;
-		}
-		private void Consume(string characters)
-		{
-			foreach (char character in characters)
+			private string text;
+			private int index;
+			private string filePath;
+			public Parser(string text, string filePath)
 			{
-
-				Consume(character);
+				this.index = 0;
+				this.text = text;
+				this.filePath = filePath;
 			}
-		}
-		private void Consume()
-		{
-			Consume(Look());
-		}
-		private void Consume(char character)
-		{
-			if (!TryConsume(character))
+			private void Consume(string characters)
 			{
-				throw new ApplicationException("Unexpected token " + text[index] + " ,expected " + character);
-			}
-		}
-		private bool TryConsume(string characters)
-		{
-			bool consumed;
-			if (index + characters.Length < text.Length && text.Substring(index, characters.Length) == characters)
-			{
-
-				consumed = true;
-				foreach (char c in characters)
+				foreach (char character in characters)
 				{
-					Consume(c);
+
+					Consume(character);
 				}
 			}
-			else
+			private void Consume()
 			{
-				consumed = false;
+				Consume(Look());
 			}
-			return consumed;
-		}
-		private bool TryConsume(char character)
-		{
-			bool consumed;
-			if (index < text.Length && text[index] == character)
+			private void Consume(char character)
 			{
-				if (character == unixNewLine)
+				if (!TryConsume(character))
 				{
-					line++;
+					throw new ApplicationException("Unexpected token " + text[index] + " ,expected " + character);
 				}
-				index++;
-				consumed = true;
 			}
-			else
+			private bool TryConsume(string characters)
 			{
-				consumed = false;
+				bool consumed;
+				if (index + characters.Length < text.Length && text.Substring(index, characters.Length) == characters)
+				{
+
+					consumed = true;
+					foreach (char c in characters)
+					{
+						Consume(c);
+					}
+				}
+				else
+				{
+					consumed = false;
+				}
+				return consumed;
 			}
-			return consumed;
-		}
-		private bool Look(int lookAhead,char character)
-		{
-			return Look(lookAhead)==character;
-		}
-		private bool Look(char character)
-		{
-			return Look(0,character);
-		}
-		private char Look()
-		{
-			return Look(0);
-		}
-		private char Look(int lookahead)
-		{
-			char character;
-			int i = index + lookahead;
-			if (i < text.Length)
+			private bool TryConsume(char character)
 			{
-				character = text[index + lookahead];
+				bool consumed;
+				if (index < text.Length && text[index] == character)
+				{
+					if (character == unixNewLine)
+					{
+						line++;
+					}
+					index++;
+					consumed = true;
+				}
+				else
+				{
+					consumed = false;
+				}
+				return consumed;
 			}
-			else
+			private bool Look(int lookAhead, char character)
 			{
-				character = endOfFileChar;
+				return Look(lookAhead) == character;
 			}
-			return character;
-		}
+			private bool Look(char character)
+			{
+				return Look(0, character);
+			}
+			private char Look()
+			{
+				return Look(0);
+			}
+			private char Look(int lookahead)
+			{
+				char character;
+				int i = index + lookahead;
+				if (i < text.Length)
+				{
+					character = text[index + lookahead];
+				}
+				else
+				{
+					character = endOfFileChar;
+				}
+				return character;
+			}
 
 
-		public char endOfFileChar = (char)65535;
-		public const char indentationChar = '\t';
-		private int indentationCount = -1;
-		public const char unixNewLine = '\n';
-		public const string windowsNewLine = "\r\n";
-		public const char functionChar = '|';
-		public const char stringChar = '\"';
-		public char[] integerChars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public char[] firstIntegerChars = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public const char lookupStartChar = '[';
-		public const char lookupEndChar = ']';
-		public static char[] lookupStringForbiddenChars = new char[] { callChar, indentationChar, '\r', '\n', statementChar, selectChar, stringEscapeChar, functionChar, stringChar, lookupStartChar, lookupEndChar, emptyMapChar };
-		public char[] lookupStringFirstCharAdditionalForbiddenChars = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public const char emptyMapChar = '*';
-		public const char callChar = ' ';
-		public const char selectChar = '.';
+			public char endOfFileChar = (char)65535;
+			public const char indentationChar = '\t';
+			private int indentationCount = -1;
+			public const char unixNewLine = '\n';
+			public const string windowsNewLine = "\r\n";
+			public const char functionChar = '|';
+			public const char stringChar = '\"';
+			public char[] integerChars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			public char[] firstIntegerChars = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			public const char lookupStartChar = '[';
+			public const char lookupEndChar = ']';
+			public static char[] lookupStringForbiddenChars = new char[] { callChar, indentationChar, '\r', '\n', statementChar, selectChar, stringEscapeChar, functionChar, stringChar, lookupStartChar, lookupEndChar, emptyMapChar };
+			public char[] lookupStringFirstCharAdditionalForbiddenChars = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			public const char emptyMapChar = '*';
+			public const char callChar = ' ';
+			public const char selectChar = '.';
 
 
-		private bool TryConsumeNewLine(string text)
-		{
-			string whitespace="";
-			for (int i = 0; Look(i) == space || Look(i) == tab; i++)
+			private bool TryConsumeNewLine(string text)
 			{
-				whitespace += Look(i);
+				string whitespace = "";
+				for (int i = 0; Look(i) == space || Look(i) == tab; i++)
+				{
+					whitespace += Look(i);
+				}
+				return TryConsume(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text);
 			}
-			return TryConsume(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text);
-		}
-		private bool Indentation()
-		{
-			string indentationString = "".PadLeft(indentationCount + 1, indentationChar);
-			bool isIndentation;
-			if (TryConsumeNewLine(indentationString))
+			private bool Indentation()
 			{
-				indentationCount++;
-				isIndentation = true;
+				string indentationString = "".PadLeft(indentationCount + 1, indentationChar);
+				bool isIndentation;
+				if (TryConsumeNewLine(indentationString))
+				{
+					indentationCount++;
+					isIndentation = true;
+				}
+				else if (isStartOfFile)
+				{
+					isStartOfFile = false;
+					indentationCount++;
+					isIndentation = true;
+				}
+				else
+				{
+					isIndentation = false;
+				}
+				return isIndentation;
 			}
-			else if (isStartOfFile)
+			private Map Expression()
 			{
-				isStartOfFile = false;
-				indentationCount++;
-				isIndentation = true;
-			}
-			else
-			{
-				isIndentation = false;
-			}
-			return isIndentation;
-		}
-		private Map Expression()
-		{
-			Map expression = Integer();
-			if (expression == null)
-			{
-				expression = String();
+				Map expression = Integer();
 				if (expression == null)
 				{
-					expression = Program();
+					expression = String();
 					if (expression == null)
 					{
-						Map select = Select();
-						if (select != null)
+						expression = Program();
+						if (expression == null)
 						{
-							Map call = Call(select);
-							if (call != null)
+							Map select = Select();
+							if (select != null)
 							{
-								expression = call;
+								Map call = Call(select);
+								if (call != null)
+								{
+									expression = call;
+								}
+								else
+								{
+									expression = select;
+								}
 							}
 							else
 							{
-								expression = select;
+								expression = null;
 							}
+						}
+					}
+				}
+				if (expression != null && expression.Extent == null)
+				{
+				}
+				return expression;
+			}
+			private Map Call(Map select)
+			{
+				Map call;
+				Extent extent = StartExpression();
+				Map argument;
+				if (TryConsume(callChar))
+				{
+					argument = Expression();
+				}
+				else
+				{
+					argument = NormalProgram();
+				}
+				if (argument != null)
+				{
+					call = new NormalMap();
+					Map callCode = new NormalMap();
+					callCode[CodeKeys.Callable] = select;
+					callCode[CodeKeys.Argument] = argument;
+					call[CodeKeys.Call] = callCode;
+				}
+				else
+				{
+					call = null;
+				}
+				EndExpression(extent, call);
+				return call;
+			}
+			bool isStartOfFile = true;
+			private void Whitespace()
+			{
+				while (TryConsume('\t') || TryConsume(' '))
+				{
+				}
+			}
+			private Map NormalProgram()
+			{
+				Extent extent = StartExpression();
+				Map program;
+				if (Indentation())
+				{
+					program = new NormalMap();
+					int counter = 1;
+					int defaultKey = 1;
+					Map statements = new NormalMap();
+					while (!Look(endOfFileChar))
+					{
+						Map statement = Function();
+						if (statement == null)
+						{
+							statement = Statement(ref defaultKey);
+						}
+						statements[counter] = statement;
+						counter++;
+						NewLine();
+						string newIndentation = GetIndentation();
+						if (newIndentation.Length < indentationCount)
+						{
+							indentationCount--;
+							break;
+						}
+						else if (newIndentation.Length == indentationCount)
+						{
+							Consume(newIndentation);
 						}
 						else
 						{
-							expression = null;
+							throw new MetaException("incorrect indentation", extent);
 						}
 					}
-				}
-			}
-			if (expression != null && expression.Extent == null)
-			{
-			}
-			return expression;
-		}
-		private Map Call(Map select)
-		{
-			Map call;
-			Extent extent = StartExpression();
-			Map argument;
-			if (TryConsume(callChar))
-			{
-				argument = Expression();
-			}
-			else
-			{
-				argument = NormalProgram();
-			}
-			if (argument != null)
-			{
-				call = new NormalMap();
-				Map callCode = new NormalMap();
-				callCode[CodeKeys.Callable] = select;
-				callCode[CodeKeys.Argument] = argument;
-				call[CodeKeys.Call] = callCode;
-			}
-			else
-			{
-				call = null;
-			}
-			EndExpression(extent, call);
-			return call;
-		}
-		bool isStartOfFile = true;
-		private void Whitespace()
-		{
-			while (TryConsume('\t') || TryConsume(' '))
-			{
-			}
-		}
-		private Map NormalProgram()
-		{
-			Extent extent = StartExpression();
-			Map program;
-			if (Indentation())
-			{
-				program = new NormalMap();
-				int counter = 1;
-				int defaultKey = 1;
-				Map statements = new NormalMap();
-				while (!Look(endOfFileChar))
-				{
-					Map statement = Function();
-					if (statement == null)
-					{
-						statement = Statement(ref defaultKey);
-					}
-					statements[counter] = statement;
-					counter++;
-					NewLine();
-					string newIndentation = GetIndentation();
-					if (newIndentation.Length < indentationCount)
-					{
-						indentationCount--;
-						break;
-					}
-					else if (newIndentation.Length == indentationCount)
-					{
-						Consume(newIndentation);
-					}
-					else
-					{
-						throw new MetaException("incorrect indentation",extent);
-					}
-				}
-				EndExpression(extent, statements);
-				program[CodeKeys.Program] = statements;
-			}
-			else
-			{
-				program=null;
-			}
-			EndExpression(extent,program);
-			return program;
-		}
-		private Map EmptyProgram()
-		{
-			Extent extent = StartExpression();
-			Map program;
-			if (TryConsume(emptyMapChar))
-			{
-				program = new NormalMap();
-				program[CodeKeys.Program] = new NormalMap();
-			}
-			else
-			{
-				program = null;
-			}
-			EndExpression(extent, program);
-			return program;
-		}
-		public Map Program()
-		{
-			Map program = EmptyProgram();
-			if (program == null)
-			{
-				program = NormalProgram();
-			}
-			return program;
-		}
-		private bool NewLine()
-		{
-			return TryConsumeNewLine("");
-		}
-		private string GetIndentation()
-		{
-			int i = 0;
-			string indentation = "";
-			while (Look(i) == indentationChar)
-			{
-				indentation += Look(i);
-				i++;
-			}
-			return indentation;
-		}
-		private bool LookAny(char[] any)
-		{
-			return Look().ToString().IndexOfAny(any) != -1;
-		}
-		private char ConsumeGet()
-		{
-			char character = Look();
-			Consume(character);
-			return character;
-		}
-		private Extent StartExpression()
-		{
-			return new Extent(Line, Column, 0, 0);//, "");
-		}
-		private void EndExpression(Extent extent, Map expression)
-		{
-			if (expression != null)
-			{
-				extent.End.Line = Line;
-				extent.End.Column = Column;
-				expression.Extent = extent;
-			}
-		}
-		private Map Integer()
-		{
-			Map integer;
-			Extent extent = StartExpression();
-			if (LookAny(firstIntegerChars))
-			{
-				string integerString = "";
-				integerString += ConsumeGet();
-				while (LookAny(integerChars))
-				{
-					integerString += ConsumeGet();
-				}
-				Map literal = new NormalMap(Meta.Integer.ParseInteger(integerString));
-				integer = new NormalMap();
-				integer[CodeKeys.Literal] = literal;
-			}
-			else
-			{
-				integer = null;
-			}
-			EndExpression(extent, integer);
-			return integer;
-		}
-		public const char stringEscapeChar = '\'';
-		private Map String()
-		{
-			Map @string;
-			Extent extent = StartExpression();
-
-			if (Look(stringChar) || Look(stringEscapeChar))
-			{
-				int escapeCharCount = 0;
-				while (TryConsume(stringEscapeChar))
-				{
-					escapeCharCount++;
-				}
-				Consume(stringChar);
-				string stringText = "";
-				while (true) // factor this out
-				{
-					if (Look(stringChar))
-					{
-						int foundEscapeCharCount = 0;
-						while (foundEscapeCharCount<escapeCharCount && Look(foundEscapeCharCount + 1,stringEscapeChar))
-						{
-							foundEscapeCharCount++;
-						}
-						if (foundEscapeCharCount == escapeCharCount)
-						{
-							Consume(stringChar);
-							Consume("".PadLeft(escapeCharCount, stringEscapeChar));
-							break;
-						}
-					}
-					stringText += Look();
-					Consume(Look());
-				}
-				List<string> realLines = new List<string>();
-				string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
-				for (int i = 0; i < lines.Length; i++)
-				{
-					if (i == 0)
-					{
-						realLines.Add(lines[i]);
-					}
-					else
-					{
-						realLines.Add(lines[i].Remove(0, Math.Min(indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentationChar).Length)));
-					}
-				}
-				string realText = string.Join("\n", realLines.ToArray());
-				Map literal = new NormalMap(realText);
-				@string = new NormalMap();
-				@string[CodeKeys.Literal] = literal;
-			}
-			else
-			{
-				@string = null;
-			}
-			EndExpression(extent, @string);
-			return @string;
-		}
-		private Map LookupString()
-		{
-			string lookupString = "";
-			Extent extent = StartExpression();
-			if (LookExcept(lookupStringForbiddenChars) && LookExcept(lookupStringFirstCharAdditionalForbiddenChars))
-			{
-				while (LookExcept(lookupStringForbiddenChars))
-				{
-					lookupString += Look();
-					Consume(Look());
-				}
-			}
-			Map lookup;
-			if (lookupString.Length > 0)
-			{
-				lookup = new NormalMap();
-				lookup[CodeKeys.Literal] = new NormalMap(lookupString);
-			}
-			else
-			{
-				lookup = null;
-			}
-			EndExpression(extent, lookup);
-			return lookup;
-		}
-		private bool LookExcept(char[] exceptions)
-		{
-			List<char> list = new List<char>(exceptions);
-			list.Add(endOfFileChar);
-			return Look().ToString().IndexOfAny(list.ToArray()) == -1;
-		}
-		private Map LookupAnything()
-		{
-			Map lookupAnything;
-			if (TryConsume(lookupStartChar))
-			{
-				lookupAnything = Expression();
-				// support maps as keys cleanly
-				while (TryConsume(indentationChar)) ;
-				Consume(lookupEndChar);
-			}
-			else
-			{
-				lookupAnything = null;
-			}
-			return lookupAnything;
-		}
-
-		private Map Lookup()
-		{
-			Extent extent = StartExpression();
-			Map lookup = LookupString();
-			if (lookup == null)
-			{
-				lookup = LookupAnything();
-			}
-			EndExpression(extent, lookup);
-			return lookup;
-		}
-
-		private Map Select(Map keys)
-		{
-			Map select;
-			Extent extent = StartExpression();
-			if (keys != null)
-			{
-				select = new NormalMap();
-				select[CodeKeys.Select] = keys;
-			}
-			else
-			{
-				select = null;
-			}
-			EndExpression(extent, select);
-			return select;
-		}
-		private Map Select()
-		{
-			return Select(Keys());
-		}
-		private Map Keys()
-		{
-			Extent extent = StartExpression();
-			Map lookups = new NormalMap();
-			int counter = 1;
-			Map lookup;
-			while (true)
-			{
-				lookup = Lookup();
-				if (lookup != null)
-				{
-					lookups[counter] = lookup;
-					counter++;
+					EndExpression(extent, statements);
+					program[CodeKeys.Program] = statements;
 				}
 				else
 				{
-					break;
+					program = null;
 				}
-				if (!TryConsume(selectChar))
+				EndExpression(extent, program);
+				return program;
+			}
+			private Map EmptyProgram()
+			{
+				Extent extent = StartExpression();
+				Map program;
+				if (TryConsume(emptyMapChar))
 				{
-					break;
+					program = new NormalMap();
+					program[CodeKeys.Program] = new NormalMap();
 				}
+				else
+				{
+					program = null;
+				}
+				EndExpression(extent, program);
+				return program;
 			}
-			Map keys;
-			if (counter > 1)
+			public Map Program()
 			{
-				keys = lookups;
+				Map program = EmptyProgram();
+				if (program == null)
+				{
+					program = NormalProgram();
+				}
+				return program;
 			}
-			else
+			private bool NewLine()
 			{
-				keys = null;
+				return TryConsumeNewLine("");
 			}
-			EndExpression(extent, lookups);
-			return keys;
-		}
-		public Map Function()
-		{
-			Extent extent = StartExpression();
-			Map function = null;
-			if (TryConsume(functionChar))
+			private string GetIndentation()
 			{
-				Map expression = Expression();
+				int i = 0;
+				string indentation = "";
+				while (Look(i) == indentationChar)
+				{
+					indentation += Look(i);
+					i++;
+				}
+				return indentation;
+			}
+			private bool LookAny(char[] any)
+			{
+				return Look().ToString().IndexOfAny(any) != -1;
+			}
+			private char ConsumeGet()
+			{
+				char character = Look();
+				Consume(character);
+				return character;
+			}
+			private Extent StartExpression()
+			{
+				return new Extent(Line, Column, 0, 0);
+			}
+			private void EndExpression(Extent extent, Map expression)
+			{
 				if (expression != null)
 				{
-					function = new NormalMap();
-					function[CodeKeys.Key] = CreateDefaultKey(CodeKeys.Function);
-					Map literal = new NormalMap();
-					literal[CodeKeys.Literal] = expression;
-					function[CodeKeys.Value] = literal;
+					extent.End.Line = Line;
+					extent.End.Column = Column;
+					expression.Extent = extent;
 				}
 			}
-			EndExpression(extent, function);
-			return function;
-		}
-		public const char statementChar = '=';
-		public Map Statement(ref int count)
-		{
-			Extent extent = StartExpression();
-			Map key = Keys();
-			Map val;
-			if (key != null && TryConsume(statementChar))
+			private Map Integer()
 			{
-				val = Expression();
-			}
-			else
-			{
-				TryConsume(statementChar);
-				if (key != null)
+				Map integer;
+				Extent extent = StartExpression();
+				if (LookAny(firstIntegerChars))
 				{
-					Map select = Select(key);
-					Map call = Call(select);
-					if (call != null)
+					string integerString = "";
+					integerString += ConsumeGet();
+					while (LookAny(integerChars))
 					{
-						val = call;
+						integerString += ConsumeGet();
+					}
+					Map literal = new NormalMap(Meta.Integer.ParseInteger(integerString));
+					integer = new NormalMap();
+					integer[CodeKeys.Literal] = literal;
+				}
+				else
+				{
+					integer = null;
+				}
+				EndExpression(extent, integer);
+				return integer;
+			}
+			public const char stringEscapeChar = '\'';
+			private Map String()
+			{
+				Map @string;
+				Extent extent = StartExpression();
+
+				if (Look(stringChar) || Look(stringEscapeChar))
+				{
+					int escapeCharCount = 0;
+					while (TryConsume(stringEscapeChar))
+					{
+						escapeCharCount++;
+					}
+					Consume(stringChar);
+					string stringText = "";
+					while (true) // factor this out
+					{
+						if (Look(stringChar))
+						{
+							int foundEscapeCharCount = 0;
+							while (foundEscapeCharCount < escapeCharCount && Look(foundEscapeCharCount + 1, stringEscapeChar))
+							{
+								foundEscapeCharCount++;
+							}
+							if (foundEscapeCharCount == escapeCharCount)
+							{
+								Consume(stringChar);
+								Consume("".PadLeft(escapeCharCount, stringEscapeChar));
+								break;
+							}
+						}
+						stringText += Look();
+						Consume(Look());
+					}
+					List<string> realLines = new List<string>();
+					string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
+					for (int i = 0; i < lines.Length; i++)
+					{
+						if (i == 0)
+						{
+							realLines.Add(lines[i]);
+						}
+						else
+						{
+							realLines.Add(lines[i].Remove(0, Math.Min(indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentationChar).Length)));
+						}
+					}
+					string realText = string.Join("\n", realLines.ToArray());
+					Map literal = new NormalMap(realText);
+					@string = new NormalMap();
+					@string[CodeKeys.Literal] = literal;
+				}
+				else
+				{
+					@string = null;
+				}
+				EndExpression(extent, @string);
+				return @string;
+			}
+			private Map LookupString()
+			{
+				string lookupString = "";
+				Extent extent = StartExpression();
+				if (LookExcept(lookupStringForbiddenChars) && LookExcept(lookupStringFirstCharAdditionalForbiddenChars))
+				{
+					while (LookExcept(lookupStringForbiddenChars))
+					{
+						lookupString += Look();
+						Consume(Look());
+					}
+				}
+				Map lookup;
+				if (lookupString.Length > 0)
+				{
+					lookup = new NormalMap();
+					lookup[CodeKeys.Literal] = new NormalMap(lookupString);
+				}
+				else
+				{
+					lookup = null;
+				}
+				EndExpression(extent, lookup);
+				return lookup;
+			}
+			private bool LookExcept(char[] exceptions)
+			{
+				List<char> list = new List<char>(exceptions);
+				list.Add(endOfFileChar);
+				return Look().ToString().IndexOfAny(list.ToArray()) == -1;
+			}
+			private Map LookupAnything()
+			{
+				Map lookupAnything;
+				if (TryConsume(lookupStartChar))
+				{
+					lookupAnything = Expression();
+					while (TryConsume(indentationChar)) ;
+					Consume(lookupEndChar);
+				}
+				else
+				{
+					lookupAnything = null;
+				}
+				return lookupAnything;
+			}
+
+			private Map Lookup()
+			{
+				Extent extent = StartExpression();
+				Map lookup = LookupString();
+				if (lookup == null)
+				{
+					lookup = LookupAnything();
+				}
+				EndExpression(extent, lookup);
+				return lookup;
+			}
+
+			private Map Select(Map keys)
+			{
+				Map select;
+				Extent extent = StartExpression();
+				if (keys != null)
+				{
+					select = new NormalMap();
+					select[CodeKeys.Select] = keys;
+				}
+				else
+				{
+					select = null;
+				}
+				EndExpression(extent, select);
+				return select;
+			}
+			private Map Select()
+			{
+				return Select(Keys());
+			}
+			private Map Keys()
+			{
+				Extent extent = StartExpression();
+				Map lookups = new NormalMap();
+				int counter = 1;
+				Map lookup;
+				while (true)
+				{
+					lookup = Lookup();
+					if (lookup != null)
+					{
+						lookups[counter] = lookup;
+						counter++;
 					}
 					else
 					{
-						val = select;
+						break;
+					}
+					if (!TryConsume(selectChar))
+					{
+						break;
 					}
 				}
+				Map keys;
+				if (counter > 1)
+				{
+					keys = lookups;
+				}
 				else
+				{
+					keys = null;
+				}
+				EndExpression(extent, lookups);
+				return keys;
+			}
+			public Map Function()
+			{
+				Extent extent = StartExpression();
+				Map function = null;
+				if (TryConsume(functionChar))
+				{
+					Map expression = Expression();
+					if (expression != null)
+					{
+						function = new NormalMap();
+						function[CodeKeys.Key] = CreateDefaultKey(CodeKeys.Function);
+						Map literal = new NormalMap();
+						literal[CodeKeys.Literal] = expression;
+						function[CodeKeys.Value] = literal;
+					}
+				}
+				EndExpression(extent, function);
+				return function;
+			}
+			public const char statementChar = '=';
+			public Map Statement(ref int count)
+			{
+				Extent extent = StartExpression();
+				Map key = Keys();
+				Map val;
+				if (key != null && TryConsume(statementChar))
 				{
 					val = Expression();
 				}
-				if (val == null)
+				else
 				{
-					SourcePosition position=new SourcePosition(Line, Column);
-					throw new MetaException("Expected value of statement", new Extent(position,position));
+					TryConsume(statementChar);
+					if (key != null)
+					{
+						Map select = Select(key);
+						Map call = Call(select);
+						if (call != null)
+						{
+							val = call;
+						}
+						else
+						{
+							val = select;
+						}
+					}
+					else
+					{
+						val = Expression();
+					}
+					if (val == null)
+					{
+						SourcePosition position = new SourcePosition(Line, Column);
+						throw new MetaException("Expected value of statement", new Extent(position, position));
+					}
+					key = CreateDefaultKey(new NormalMap((Integer)count));
+					count++;
 				}
-				key = CreateDefaultKey(new NormalMap((Integer)count));
-				count++;
+				Map statement = new NormalMap();
+				statement[CodeKeys.Key] = key;
+				statement[CodeKeys.Value] = val;
+				EndExpression(extent, statement);
+				return statement;
 			}
-			Map statement = new NormalMap();
-			statement[CodeKeys.Key] = key;
-			statement[CodeKeys.Value] = val;
-			EndExpression(extent, statement);
-			return statement;
-		}
-		private const char space=' ';
-		private const char tab = '\t';
-		private Map CreateDefaultKey(Map literal)
-		{
-			Map key = new NormalMap();
-			Map firstKey = new NormalMap();
-			firstKey[CodeKeys.Literal] = literal;
-			key[1] = firstKey;
-			return key;
-		}
-		private int line = 1;
-		private int Line
-		{
-			get
+			private const char space = ' ';
+			private const char tab = '\t';
+			private Map CreateDefaultKey(Map literal)
 			{
-				return line;
+				Map key = new NormalMap();
+				Map firstKey = new NormalMap();
+				firstKey[CodeKeys.Literal] = literal;
+				key[1] = firstKey;
+				return key;
 			}
-		}
-		private int Column
-		{
-			get
+			private int line = 1;
+			private int Line
 			{
-				int startPos=Math.Min(index,text.Length-1);
-				return index - text.LastIndexOf('\n', startPos);
+				get
+				{
+					return line;
+				}
+			}
+			private int Column
+			{
+				get
+				{
+					int startPos = Math.Min(index, text.Length - 1);
+					return index - text.LastIndexOf('\n', startPos);
+				}
 			}
 		}
-	}
-	public class Serialize
-	{
-		public static string Value(Map val)
+		public class Serialize
 		{
-			return Value(val, null);
-		}
-		private static string Value(Map val, string indentation)
-		{
-			string text;
-			if(val.Equals(Map.Empty))
+			public static string Value(Map val)
 			{
-				text = Parser.emptyMapChar.ToString();
+				return Value(val, null);
 			}
-			else if (val.IsString)
+			private static string Value(Map val, string indentation)
 			{
-				text = StringValue(val, indentation);
+				string text;
+				if (val.Equals(Map.Empty))
+				{
+					text = Parser.emptyMapChar.ToString();
+				}
+				else if (val.IsString)
+				{
+					text = StringValue(val, indentation);
+				}
+				else if (val.IsInteger)
+				{
+					text = IntegerValue(val);
+				}
+				else
+				{
+					text = MapValue(val, indentation);
+				}
+				return text;
 			}
-			else if (val.IsInteger)
+			public static string Key(Map key, string indentation)
 			{
-				text = IntegerValue(val);
-			}
-			else
-			{
-				text = MapValue(val, indentation);
-			}
-			return text;
-		}
-		public static string Key(Map key, string indentation)
-		{
-			string text;
-			if (key.IsString && !key.Equals(Map.Empty))
-			{
-				text = StringKey(key, indentation);
-			}
-			else
-			{
+				string text;
+				if (key.IsString && !key.Equals(Map.Empty))
+				{
+					text = StringKey(key, indentation);
+				}
+				else
+				{
 
-				text = Parser.lookupStartChar.ToString();
-				if (key.Equals(Map.Empty))
-				{
-					text += Parser.emptyMapChar;
+					text = Parser.lookupStartChar.ToString();
+					if (key.Equals(Map.Empty))
+					{
+						text += Parser.emptyMapChar;
+					}
+					else if (key.IsInteger)
+					{
+						text += IntegerValue(key.GetInteger());
+					}
+					else
+					{
+						text += MapValue(key, indentation) + indentation;
+					}
+					text += Parser.lookupEndChar;
 				}
-				else if (key.IsInteger)
+				return text;
+			}
+			private static string StringKey(Map key, string indentation)
+			{
+				string text;
+				if (IsLiteralKey(key.GetString()))
 				{
-					text += IntegerValue(key.GetInteger());
+					text = key.GetString();
 				}
 				else
 				{
-					text += MapValue(key, indentation) + indentation;
+					text = Parser.lookupStartChar + StringValue(key, indentation) + Parser.lookupEndChar;
 				}
-				text += Parser.lookupEndChar;
+				return text;
 			}
-			return text;
-		}
-		private static string StringKey(Map key, string indentation)
-		{
-			string text;
-			if (IsLiteralKey(key.GetString()))
+			private static bool IsLiteralKey(string text)
 			{
-				text = key.GetString();
+				return -1 == text.IndexOfAny(Parser.lookupStringForbiddenChars);
 			}
-			else
+			public static string MapValue(Map map, string indentation)
 			{
-				text = Parser.lookupStartChar + StringValue(key, indentation) + Parser.lookupEndChar;
-			}
-			return text;
-		}
-		private static bool IsLiteralKey(string text)
-		{
-			return -1 == text.IndexOfAny(Parser.lookupStringForbiddenChars);
-		}
-		public static string MapValue(Map map, string indentation)
-		{
-			string text;
-			text = Parser.unixNewLine.ToString();
-			if (indentation == null)
-			{
-				indentation = "";
-			}
-			else
-			{
-				indentation += Parser.indentationChar;
-			}
-			foreach (KeyValuePair<Map, Map> entry in map)
-			{
-				if (entry.Key.Equals(CodeKeys.Function))
-				{
-					text += indentation + Parser.functionChar + Expression(entry.Value, indentation);
-					if (!text.EndsWith(Parser.unixNewLine.ToString()))
-					{
-						text += Parser.unixNewLine;
-					}
-				}
-				else
-				{
-					text += indentation + Key((Map)entry.Key, indentation) + Parser.statementChar + Value((Map)entry.Value, (indentation));
-					if (!text.EndsWith(Parser.unixNewLine.ToString()))
-					{
-						text += Parser.unixNewLine;
-					}
-				}
-			}
-			return text;
-		}
-		public static string Expression(Map code, string indentation)
-		{
-			string text;
-			if (code.ContainsKey(CodeKeys.Call))
-			{
-				text = Call(code[CodeKeys.Call], indentation);
-			}
-			else if (code.ContainsKey(CodeKeys.Program))
-			{
-				text = Program(code[CodeKeys.Program], indentation);
-			}
-			else if (code.ContainsKey(CodeKeys.Literal))
-			{
-				text = Literal(code[CodeKeys.Literal], indentation);
-			}
-			else if (code.ContainsKey(CodeKeys.Select))
-			{
-				text = Select(code[CodeKeys.Select], indentation);
-			}
-			else
-			{
-				throw new ApplicationException("Cannot serialize map.");
-			}
-			return text;
-		}
-		public static string Call(Map code, string indentation)
-		{
-			Map callable=code[CodeKeys.Callable];
-			Map argument=code[CodeKeys.Argument];
-			string text = Expression(callable, indentation);
-			if (!(argument.ContainsKey(CodeKeys.Program) && argument[CodeKeys.Program].Count!=0))
-			{
-				text += Parser.callChar;
-			}
-			else
-			{
-			}
-			text += Expression(argument, indentation);
-			return text;
-		}
-		public static string Program(Map code, string indentation)
-		{
-			string text;
-			if (code.Array.Count == 0)
-			{
-				text = "*";
-			}
-			else
-			{
+				string text;
 				text = Parser.unixNewLine.ToString();
-				int autoKeys = 0;
-				foreach (Map statement in code.Array)
+				if (indentation == null)
 				{
-					text += Statement(statement, indentation + Parser.indentationChar, ref autoKeys);
-					if (!text.EndsWith(Parser.unixNewLine.ToString()))
-					{
-						text += Parser.unixNewLine;
-					}
-				}
-			}
-			return text;
-		}
-		public static string Statement(Map code, string indentation, ref int autoKeys)
-		{
-			Map key = code[CodeKeys.Key];
-			string text;
-			if (code.Extent != null && code.Extent.Start.Line == 57)
-			{
-			}
-			if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
-			{
-				if (code[CodeKeys.Value][CodeKeys.Literal]==null)
-				{
-				}
-				text = indentation + Parser.functionChar + Expression(code[CodeKeys.Value][CodeKeys.Literal], indentation);
-			}
-			else
-			{
-				Map autoKey;
-				text = indentation;
-				Map value = code[CodeKeys.Value];
-				if (key.Count == 1 && (autoKey = key[1][CodeKeys.Literal]) != null && autoKey.IsInteger && autoKey.GetInteger() == autoKeys + 1)
-				{
-					if (code.Extent.Start.Line>500)
-					{
-					}
-					autoKeys++;
-					if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count!=0)
-					{
-						text += Parser.statementChar;
-					}
+					indentation = "";
 				}
 				else
 				{
-					text += Select(code[CodeKeys.Key], indentation) + Parser.statementChar;
+					indentation += Parser.indentationChar;
 				}
-				text += Expression(value, indentation);
-			}
-			return text;
-		}
-		public static string Literal(Map code, string indentation)
-		{
-			return Value(code, indentation);
-		}
-		public static string Select(Map code, string indentation)
-		{
-			string text = Lookup(code[1], indentation);
-			for (int i = 2; code.ContainsKey(i); i++)
-			{
-				text += Parser.selectChar + Lookup(code[i], indentation);
-			}
-			return text;
-		}
-		public static string Lookup(Map code, string indentation)
-		{
-			string text;
-			if (code.ContainsKey(CodeKeys.Literal))
-			{
-				text = Key(code[CodeKeys.Literal], indentation);
-			}
-			else
-			{
-				text = Parser.lookupStartChar + Expression(code, indentation);
-				if (code.ContainsKey(CodeKeys.Program) && code[CodeKeys.Program].Count != 0)
+				foreach (KeyValuePair<Map, Map> entry in map)
 				{
-					text += indentation;
-				}
-				text += Parser.lookupEndChar;
-			}
-			return text;
-		}
-
-
-		private static string StringValue(Map val, string indentation)
-		{
-			string text;
-			if (val.IsString)
-			{
-				int longestMatch = 0;
-				if (val.GetString().IndexOf("'n'") != -1)
-				{
-				}
-				string mapString = val.GetString();
-				string[] split=mapString.Split(Parser.stringChar);
-				for(int i=1;i<split.Length;i++)
-				{
-					int matchLength=split[i].Length - split[i].TrimStart(Parser.stringEscapeChar).Length + 1;
-					if (matchLength > longestMatch)
+					if (entry.Key.Equals(CodeKeys.Function))
 					{
-						longestMatch = matchLength;
+						text += indentation + Parser.functionChar + Expression(entry.Value, indentation);
+						if (!text.EndsWith(Parser.unixNewLine.ToString()))
+						{
+							text += Parser.unixNewLine;
+						}
+					}
+					else
+					{
+						text += indentation + Key((Map)entry.Key, indentation) + Parser.statementChar + Value((Map)entry.Value, (indentation));
+						if (!text.EndsWith(Parser.unixNewLine.ToString()))
+						{
+							text += Parser.unixNewLine;
+						}
 					}
 				}
-				string escape = "";
-				for (int i = 0; i < longestMatch; i++)
-				{
-					escape += Parser.stringEscapeChar;
-				}
-				text = escape + Parser.stringChar;
-				string[] lines=val.GetString().Split(new string[] {Parser.unixNewLine.ToString(),Parser.windowsNewLine},StringSplitOptions.None);
-				text+=lines[0];
-				for (int i = 1; i < lines.Length; i++)
-				{
-					text += Parser.unixNewLine + indentation + Parser.indentationChar + lines[i];
-				}
-				text += Parser.stringChar + escape;
+				return text;
 			}
-			else
+			public static string Expression(Map code, string indentation)
 			{
-				text = MapValue(val, indentation);
+				string text;
+				if (code.ContainsKey(CodeKeys.Call))
+				{
+					text = Call(code[CodeKeys.Call], indentation);
+				}
+				else if (code.ContainsKey(CodeKeys.Program))
+				{
+					text = Program(code[CodeKeys.Program], indentation);
+				}
+				else if (code.ContainsKey(CodeKeys.Literal))
+				{
+					text = Literal(code[CodeKeys.Literal], indentation);
+				}
+				else if (code.ContainsKey(CodeKeys.Select))
+				{
+					text = Select(code[CodeKeys.Select], indentation);
+				}
+				else
+				{
+					throw new ApplicationException("Cannot serialize map.");
+				}
+				return text;
 			}
-			return text;
-		}
-		private static string IntegerValue(Map number)
-		{
-			return number.GetInteger().ToString();
-		}
+			public static string Call(Map code, string indentation)
+			{
+				Map callable = code[CodeKeys.Callable];
+				Map argument = code[CodeKeys.Argument];
+				string text = Expression(callable, indentation);
+				if (!(argument.ContainsKey(CodeKeys.Program) && argument[CodeKeys.Program].Count != 0))
+				{
+					text += Parser.callChar;
+				}
+				else
+				{
+				}
+				text += Expression(argument, indentation);
+				return text;
+			}
+			public static string Program(Map code, string indentation)
+			{
+				string text;
+				if (code.Array.Count == 0)
+				{
+					text = "*";
+				}
+				else
+				{
+					text = Parser.unixNewLine.ToString();
+					int autoKeys = 0;
+					foreach (Map statement in code.Array)
+					{
+						text += Statement(statement, indentation + Parser.indentationChar, ref autoKeys);
+						if (!text.EndsWith(Parser.unixNewLine.ToString()))
+						{
+							text += Parser.unixNewLine;
+						}
+					}
+				}
+				return text;
+			}
+			public static string Statement(Map code, string indentation, ref int autoKeys)
+			{
+				Map key = code[CodeKeys.Key];
+				string text;
+				if (code.Extent != null && code.Extent.Start.Line == 57)
+				{
+				}
+				if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
+				{
+					if (code[CodeKeys.Value][CodeKeys.Literal] == null)
+					{
+					}
+					text = indentation + Parser.functionChar + Expression(code[CodeKeys.Value][CodeKeys.Literal], indentation);
+				}
+				else
+				{
+					Map autoKey;
+					text = indentation;
+					Map value = code[CodeKeys.Value];
+					if (key.Count == 1 && (autoKey = key[1][CodeKeys.Literal]) != null && autoKey.IsInteger && autoKey.GetInteger() == autoKeys + 1)
+					{
+						if (code.Extent.Start.Line > 500)
+						{
+						}
+						autoKeys++;
+						if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
+						{
+							text += Parser.statementChar;
+						}
+					}
+					else
+					{
+						text += Select(code[CodeKeys.Key], indentation) + Parser.statementChar;
+					}
+					text += Expression(value, indentation);
+				}
+				return text;
+			}
+			public static string Literal(Map code, string indentation)
+			{
+				return Value(code, indentation);
+			}
+			public static string Select(Map code, string indentation)
+			{
+				string text = Lookup(code[1], indentation);
+				for (int i = 2; code.ContainsKey(i); i++)
+				{
+					text += Parser.selectChar + Lookup(code[i], indentation);
+				}
+				return text;
+			}
+			public static string Lookup(Map code, string indentation)
+			{
+				string text;
+				if (code.ContainsKey(CodeKeys.Literal))
+				{
+					text = Key(code[CodeKeys.Literal], indentation);
+				}
+				else
+				{
+					text = Parser.lookupStartChar + Expression(code, indentation);
+					if (code.ContainsKey(CodeKeys.Program) && code[CodeKeys.Program].Count != 0)
+					{
+						text += indentation;
+					}
+					text += Parser.lookupEndChar;
+				}
+				return text;
+			}
 
+
+			private static string StringValue(Map val, string indentation)
+			{
+				string text;
+				if (val.IsString)
+				{
+					int longestMatch = 0;
+					if (val.GetString().IndexOf("'n'") != -1)
+					{
+					}
+					string mapString = val.GetString();
+					string[] split = mapString.Split(Parser.stringChar);
+					for (int i = 1; i < split.Length; i++)
+					{
+						int matchLength = split[i].Length - split[i].TrimStart(Parser.stringEscapeChar).Length + 1;
+						if (matchLength > longestMatch)
+						{
+							longestMatch = matchLength;
+						}
+					}
+					string escape = "";
+					for (int i = 0; i < longestMatch; i++)
+					{
+						escape += Parser.stringEscapeChar;
+					}
+					text = escape + Parser.stringChar;
+					string[] lines = val.GetString().Split(new string[] { Parser.unixNewLine.ToString(), Parser.windowsNewLine }, StringSplitOptions.None);
+					text += lines[0];
+					for (int i = 1; i < lines.Length; i++)
+					{
+						text += Parser.unixNewLine + indentation + Parser.indentationChar + lines[i];
+					}
+					text += Parser.stringChar + escape;
+				}
+				else
+				{
+					text = MapValue(val, indentation);
+				}
+				return text;
+			}
+			private static string IntegerValue(Map number)
+			{
+				return number.GetInteger().ToString();
+			}
+
+		}
 	}
 	public class GacStrategy : MapStrategy
 	{
@@ -3645,15 +3638,6 @@ namespace Meta
 			return containsKey;
 		}
 		protected Map cachedAssemblyInfo = new NormalMap();
-		//static Gac()
-		//{
-		//    Gac gac = new Gac();
-		//    gac.cache["net"] = SpecialMaps.Net;
-		//    //gac.cache["net"] = NetStrategy.singleton;
-		//    singleton = gac;
-		//}
-		//public static GacStrategy singleton=new GacStrategy();
-
 
 
 		//	Source: Microsoft KB Article KB317540
