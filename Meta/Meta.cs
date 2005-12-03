@@ -766,7 +766,7 @@ namespace Meta
 			}
 			if (Persistant && !FileSystem.Parsing)
 			{
-				FileSystem.Save();
+				//FileSystem.Save();
 			}
 		}
 
@@ -3248,7 +3248,6 @@ namespace Meta
 					{
 						val = Expression();
 					}
-
 					key = CreateDefaultKey(new StrategyMap((Integer)count));
 					count++;
 				}
