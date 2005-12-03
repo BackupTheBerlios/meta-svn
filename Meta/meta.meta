@@ -794,17 +794,6 @@ html=
 				"form"
 				"input"
 				"a"
-		table=
-			|html.table
-				inner=library.map.join library.map.apply
-					array=arg
-					with=
-						|html.tr
-							inner=library.map.join library.map.apply
-								array=arg
-								with=
-									|html.td
-										inner=arg
 displayHtml=
 	|
 		fileName="C:\test.html"
@@ -852,8 +841,5 @@ website=
 				=
 					"hello world"
 		directory="C:\Projects\Meta\Website"
-		console.write path.combine
-			directory
-			"Website"
-			"index.html"
+		index="hello"
 		displayHtml index

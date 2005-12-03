@@ -69,10 +69,23 @@ namespace Meta
 	}
 	public class MetaException:ApplicationException
 	{
-		public MetaException(string message,Extent extent)
+		public MetaException(Exception innerException, string message, Extent extent):base(GetMessage(message,extent),innerException)
 		{
-			this.extent=extent;
-            this.message = message;
+			//this.InnerException = innerException;
+			this.extent = extent;
+			this.message = message;
+		}
+		private static string GetMessage(string message, Extent extent)
+		{
+			string text = message;
+			if (extent != null)
+			{
+				text += " In line " + extent.Start.Line + ", column " + extent.Start.Column;
+			}
+			return text;
+		}
+		public MetaException(string message,Extent extent):this(null,message,extent)
+		{
 		}
         public override string Message
         {
@@ -194,7 +207,15 @@ namespace Meta
 		{
 			Map function = Expression(code[CodeKeys.Callable], current, arg);
 			Map argument = Expression(code[CodeKeys.Argument], current, arg);
-			Map result = function.Call(argument);
+			Map result;
+			try
+			{
+				result = function.Call(argument);
+			}
+			catch(Exception e)
+			{
+				throw new MetaException(e, "Function threw an exception." , code.Extent);
+			}
 			if (result == null)
 			{
 				result = Map.Empty.Copy();
@@ -384,7 +405,16 @@ namespace Meta
         {
             this[Array.Count+1] = map;
         }
-		public static readonly Map Empty=new StrategyMap();
+		//public static readonly Map Empty = new StrategyMap();
+		//public static readonly Map Empty = new StrategyMap();
+		private static readonly Map empty = new StrategyMap();
+		public static Map Empty
+		{
+			get
+			{
+				return empty.Copy();
+			}
+		}
 		public virtual string Serialize()
 		{
 			string text;
@@ -2879,6 +2909,7 @@ namespace Meta
 					Map callCode = new StrategyMap();
 					callCode[CodeKeys.Callable] = select;
 					callCode[CodeKeys.Argument] = argument;
+					EndExpression(extent,callCode);
 					call[CodeKeys.Call] = callCode;
 				}
 				else
