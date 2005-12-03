@@ -118,7 +118,7 @@ namespace Meta
             loadedAssemblies.AddRange(new string[] { metaDllLocation });
 			processes[Thread.CurrentThread]=new Process(null,null);
 		}
-		public Process() : this(FileSystem.fileSystem, new NormalMap())
+		public Process() : this(FileSystem.fileSystem, new StrategyMap())
 		{
 		}
 		public void Run()
@@ -218,7 +218,7 @@ namespace Meta
 		}
 		public Map Program(Map code,Map current,Map arg)
 		{
-			Map local=new NormalMap();
+			Map local=new StrategyMap();
 			Program(code,current,ref local,arg);
 			return local;
 		}
@@ -240,7 +240,7 @@ namespace Meta
 			{
 				key = Expression((Map)keys[i], context, arg);
 				Map selection;
-				if (key.Equals(new NormalMap("testSubDir")))
+				if (key.Equals(new StrategyMap("testSubDir")))
 				{
 				}
 				if (key.Equals(SpecialKeys.Parent))
@@ -260,7 +260,7 @@ namespace Meta
 				i++;
 			}
 			Map lastKey = Expression((Map)keys[i], context, arg);
-			if (lastKey.Equals(new NormalMap("html")))
+			if (lastKey.Equals(new StrategyMap("html")))
 			{
 				int asdf = 0;
 			}
@@ -347,7 +347,7 @@ namespace Meta
 			{
 				if(data==null)
 				{
-					data=new NormalMap("nothing");
+					data=new StrategyMap("nothing");
 				}
 				Break(data);
 				Thread.CurrentThread.Suspend();
@@ -384,7 +384,7 @@ namespace Meta
         {
             this[Array.Count+1] = map;
         }
-		public static readonly Map Empty=new NormalMap();
+		public static readonly Map Empty=new StrategyMap();
 		public virtual string Serialize()
 		{
 			string text;
@@ -591,7 +591,7 @@ namespace Meta
 		}
 		protected virtual Map CopyImplementation()
 		{
-			Map clone = new NormalMap();
+			Map clone = new StrategyMap();
 			foreach (Map key in this.Keys)
 			{
 				clone[key] = this[key];
@@ -642,51 +642,51 @@ namespace Meta
 		private Map parent;
 		public static implicit operator Map(Integer integer)
 		{
-			return new NormalMap(integer);
+			return new StrategyMap(integer);
 		}
 		public static implicit operator Map(bool boolean)
 		{
-			return new NormalMap(new Integer((int)(boolean?1:0)));
+			return new StrategyMap(new Integer((int)(boolean?1:0)));
 		}
 		public static implicit operator Map(char character)
 		{
-			return new NormalMap(new Integer(character));
+			return new StrategyMap(new Integer(character));
 		}
 		public static implicit operator Map(byte integer)
 		{
-			return new NormalMap(new Integer(integer));
+			return new StrategyMap(new Integer(integer));
 		}
 		public static implicit operator Map(sbyte integer)
 		{
-			return new NormalMap(new Integer(integer));
+			return new StrategyMap(new Integer(integer));
 		}
 		public static implicit operator Map(uint integer)
 		{
-			return new NormalMap(new Integer(integer));
+			return new StrategyMap(new Integer(integer));
 		}
 		public static implicit operator Map(ushort integer)
 		{
-			return new NormalMap(new Integer(integer));
+			return new StrategyMap(new Integer(integer));
 		}
 		public static implicit operator Map(int integer)
 		{
-			return new NormalMap(new Integer(integer));
+			return new StrategyMap(new Integer(integer));
 		}
 		public static implicit operator Map(long integer)
 		{
-			return new NormalMap(new Integer(integer));
+			return new StrategyMap(new Integer(integer));
 		}
 		public static implicit operator Map(ulong integer)
 		{
-			return new NormalMap(new Integer(integer));
+			return new StrategyMap(new Integer(integer));
 		}
 		public static implicit operator Map(string text)
 		{
-			return new NormalMap(text);
+			return new StrategyMap(text);
 		}
 	}
 	// rename to StrategyMap
-	public class NormalMap:Map
+	public class StrategyMap:Map
 	{
 		public bool Persistant
 		{
@@ -758,7 +758,7 @@ namespace Meta
 			if (key.Equals(SpecialKeys.Current))
 			{
 				// refactor
-				this.strategy = ((NormalMap)value).strategy.CopyImplementation();
+				this.strategy = ((StrategyMap)value).strategy.CopyImplementation();
 				this.strategy.map = this;
 			}
 			else
@@ -789,9 +789,9 @@ namespace Meta
 			{
 				isEqual = true;
 			}
-			else if (toCompare is NormalMap)
+			else if (toCompare is StrategyMap)
 			{
-				isEqual = ((NormalMap)toCompare).strategy.Equals(strategy);
+				isEqual = ((StrategyMap)toCompare).strategy.Equals(strategy);
 			}
 			else
 			{
@@ -811,7 +811,7 @@ namespace Meta
 		private bool isHashCached = false;
 		private int hash;
 		public MapStrategy strategy;
-		public NormalMap(ICollection<Map> list):this()
+		public StrategyMap(ICollection<Map> list):this()
 		{
 			int index = 1;
 			foreach (object entry in list)
@@ -820,18 +820,18 @@ namespace Meta
 				index++;
 			}
 		}
-		public NormalMap(MapStrategy strategy)
+		public StrategyMap(MapStrategy strategy)
 		{
 			this.strategy = strategy;
 			this.strategy.map = this;
 		}
-		public NormalMap():this(new DictionaryStrategy())
+		public StrategyMap():this(new DictionaryStrategy())
 		{
 		}
-		public NormalMap(Integer number):this(new IntegerStrategy(number))
+		public StrategyMap(Integer number):this(new IntegerStrategy(number))
 		{
 		}
-		public NormalMap(string text):this(new StringStrategy(text))
+		public StrategyMap(string text):this(new StringStrategy(text))
 		{
 		}
 	}
@@ -873,7 +873,7 @@ namespace Meta
 	}
 	public class NetStrategy:MapStrategy
 	{
-		public static readonly NormalMap Net = new NormalMap(new NetStrategy());
+		public static readonly StrategyMap Net = new StrategyMap(new NetStrategy());
 		private NetStrategy()
 		{
 		}
@@ -897,7 +897,7 @@ namespace Meta
 			}
 			else
 			{
-				val=new NormalMap(new RemoteStrategy(key.GetString()));
+				val=new StrategyMap(new RemoteStrategy(key.GetString()));
 			}
 			return val;
         }
@@ -1307,7 +1307,7 @@ namespace Meta
 			}
 			public object Call(object[] arguments)
 			{
-				Map arg = new NormalMap();
+				Map arg = new StrategyMap();
 				foreach (object argument in arguments)
 				{
 					arg.Append(Transform.ToMeta(argument));
@@ -1510,14 +1510,14 @@ namespace Meta
 			return map.GetIntegerDefault();
 		}
 
-		public NormalMap map;
+		public StrategyMap map;
 
 		public abstract MapStrategy CopyImplementation();
 		public virtual Map Copy()
 		{
-			NormalMap clone;
+			StrategyMap clone;
 			MapStrategy strategy = (MapStrategy)this.CopyImplementation();
-			clone=new NormalMap(strategy);
+			clone=new StrategyMap(strategy);
             strategy.map = clone;
 			return clone;
 		}
@@ -1713,7 +1713,7 @@ namespace Meta
 				List<Map> list=new List<Map>();
 				foreach(char iChar in text)
 				{
-					list.Add(new NormalMap(new Integer(iChar)));
+					list.Add(new StrategyMap(new Integer(iChar)));
 				}
 				return list;
 			}
@@ -1725,7 +1725,7 @@ namespace Meta
 				List<Map> keys=new List<Map>();
 				for(int i=1;i<=text.Length;i++)
 				{ 
-					keys.Add(new NormalMap(i));			
+					keys.Add(new StrategyMap(i));			
 				}
 				return keys;
 			}
@@ -1796,9 +1796,9 @@ namespace Meta
 			get
 			{
 				List<Map> list=new List<Map>();
-				for(Integer iInteger=new Integer(1);ContainsKey(new NormalMap(iInteger));iInteger+=1)
+				for(Integer iInteger=new Integer(1);ContainsKey(new StrategyMap(iInteger));iInteger+=1)
 				{
-					list.Add(this.Get(new NormalMap(iInteger)));
+					list.Add(this.Get(new StrategyMap(iInteger)));
 				}
 				return list;
 			}
@@ -2005,7 +2005,7 @@ namespace Meta
 				List<Map> keys=new List<Map>();
 				foreach(MemberInfo member in this.type.GetMembers(bindingFlags))
 				{
-					keys.Add(new NormalMap(member.Name));
+					keys.Add(new StrategyMap(member.Name));
 				}
 				return keys;
 			}
@@ -2222,22 +2222,22 @@ namespace Meta
 		}
 	}
 	// remove
-	public class FileAccess
-	{
-		public static void Write(string fileName, string text)
-		{
-			StreamWriter writer = new StreamWriter(fileName, false, Encoding.Default);
-			writer.Write(text);
-			writer.Close();
-		}
-		public static string Read(string fileName)
-		{
-			StreamReader reader = new StreamReader(fileName, Encoding.Default);
-			string result = reader.ReadToEnd();
-			reader.Close();
-			return result;
-		}
-	}
+	//public class FileAccess
+	//{
+	//    public static void Write(string fileName, string text)
+	//    {
+	//        StreamWriter writer = new StreamWriter(fileName, false, Encoding.Default);
+	//        writer.Write(text);
+	//        writer.Close();
+	//    }
+	//    public static string Read(string fileName)
+	//    {
+	//        StreamReader reader = new StreamReader(fileName, Encoding.Default);
+	//        string result = reader.ReadToEnd();
+	//        reader.Close();
+	//        return result;
+	//    }
+	//}
 
 	public interface ISerializeEnumerableSpecial
 	{
@@ -2324,10 +2324,13 @@ namespace Meta
 					Serialize(result, "", stringBuilder, level);
 
 					string resultText = stringBuilder.ToString();
-					FileAccess.Write(resultPath, resultText);
-					FileAccess.Write(resultCopyPath, resultText);
+					File.WriteAllText(resultPath, resultText,Encoding.Default);
+					//FileAccess.Write(resultPath, resultText);
+					File.WriteAllText(resultCopyPath, resultText,Encoding.Default);
+					//FileAccess.Write(resultCopyPath, resultText);
 
-					bool successful=FileAccess.Read(resultPath).Equals(FileAccess.Read(checkPath));
+					bool successful = File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath));
+					//bool successful = FileAccess.Read(resultPath).Equals(FileAccess.Read(checkPath));
 					
 					if (!successful)
 					{
@@ -2598,18 +2601,18 @@ namespace Meta
 	//}
 	public class FileSystem
 	{
-		private static void MakePersistant(NormalMap map)
+		private static void MakePersistant(StrategyMap map)
 		{
 			map.Persistant = true;
 			foreach (KeyValuePair<Map, Map> pair in map)
 			{
-				if (pair.Value is NormalMap)
+				if (pair.Value is StrategyMap)
 				{
-					NormalMap normalMap = (NormalMap)pair.Value;
+					StrategyMap normalMap = (StrategyMap)pair.Value;
 					//normalMap.Persistant = true;
 					if (normalMap.strategy is DictionaryStrategy || (normalMap.strategy is CloneStrategy && ((CloneStrategy)normalMap.strategy).original is DictionaryStrategy))
 					{
-						MakePersistant((NormalMap)pair.Value);
+						MakePersistant((StrategyMap)pair.Value);
 					}
 				}
 			}
@@ -2621,7 +2624,7 @@ namespace Meta
 			{
 				Map parsed = Parse(reader);
 				//Map persistant = PersistantMap.MakePersistant((NormalMap)parsed);
-				MakePersistant((NormalMap)parsed);
+				MakePersistant((StrategyMap)parsed);
 				return parsed;
 				//return persistant;
 			}
@@ -2897,8 +2900,8 @@ namespace Meta
 				}
 				if (argument != null)
 				{
-					call = new NormalMap();
-					Map callCode = new NormalMap();
+					call = new StrategyMap();
+					Map callCode = new StrategyMap();
 					callCode[CodeKeys.Callable] = select;
 					callCode[CodeKeys.Argument] = argument;
 					call[CodeKeys.Call] = callCode;
@@ -2923,10 +2926,10 @@ namespace Meta
 				Map program;
 				if (Indentation())
 				{
-					program = new NormalMap();
+					program = new StrategyMap();
 					int counter = 1;
 					int defaultKey = 1;
-					Map statements = new NormalMap();
+					Map statements = new StrategyMap();
 					while (!Look(endOfFileChar))
 					{
 						Map statement = Function();
@@ -2968,8 +2971,8 @@ namespace Meta
 				Map program;
 				if (TryConsume(emptyMapChar))
 				{
-					program = new NormalMap();
-					program[CodeKeys.Program] = new NormalMap();
+					program = new StrategyMap();
+					program[CodeKeys.Program] = new StrategyMap();
 				}
 				else
 				{
@@ -3037,8 +3040,8 @@ namespace Meta
 					{
 						integerString += ConsumeGet();
 					}
-					Map literal = new NormalMap(Meta.Integer.ParseInteger(integerString));
-					integer = new NormalMap();
+					Map literal = new StrategyMap(Meta.Integer.ParseInteger(integerString));
+					integer = new StrategyMap();
 					integer[CodeKeys.Literal] = literal;
 				}
 				else
@@ -3096,8 +3099,8 @@ namespace Meta
 						}
 					}
 					string realText = string.Join("\n", realLines.ToArray());
-					Map literal = new NormalMap(realText);
-					@string = new NormalMap();
+					Map literal = new StrategyMap(realText);
+					@string = new StrategyMap();
 					@string[CodeKeys.Literal] = literal;
 				}
 				else
@@ -3122,8 +3125,8 @@ namespace Meta
 				Map lookup;
 				if (lookupString.Length > 0)
 				{
-					lookup = new NormalMap();
-					lookup[CodeKeys.Literal] = new NormalMap(lookupString);
+					lookup = new StrategyMap();
+					lookup[CodeKeys.Literal] = new StrategyMap(lookupString);
 				}
 				else
 				{
@@ -3172,7 +3175,7 @@ namespace Meta
 				Extent extent = StartExpression();
 				if (keys != null)
 				{
-					select = new NormalMap();
+					select = new StrategyMap();
 					select[CodeKeys.Select] = keys;
 				}
 				else
@@ -3189,7 +3192,7 @@ namespace Meta
 			private Map Keys()
 			{
 				Extent extent = StartExpression();
-				Map lookups = new NormalMap();
+				Map lookups = new StrategyMap();
 				int counter = 1;
 				Map lookup;
 				while (true)
@@ -3230,9 +3233,9 @@ namespace Meta
 					Map expression = Expression();
 					if (expression != null)
 					{
-						function = new NormalMap();
+						function = new StrategyMap();
 						function[CodeKeys.Key] = CreateDefaultKey(CodeKeys.Function);
-						Map literal = new NormalMap();
+						Map literal = new StrategyMap();
 						literal[CodeKeys.Literal] = expression;
 						function[CodeKeys.Value] = literal;
 					}
@@ -3275,10 +3278,10 @@ namespace Meta
 						SourcePosition position = new SourcePosition(Line, Column);
 						throw new MetaException("Expected value of statement", new Extent(position, position));
 					}
-					key = CreateDefaultKey(new NormalMap((Integer)count));
+					key = CreateDefaultKey(new StrategyMap((Integer)count));
 					count++;
 				}
-				Map statement = new NormalMap();
+				Map statement = new StrategyMap();
 				statement[CodeKeys.Key] = key;
 				statement[CodeKeys.Value] = val;
 				EndExpression(extent, statement);
@@ -3288,8 +3291,8 @@ namespace Meta
 			private const char tab = '\t';
 			private Map CreateDefaultKey(Map literal)
 			{
-				Map key = new NormalMap();
-				Map firstKey = new NormalMap();
+				Map key = new StrategyMap();
+				Map firstKey = new StrategyMap();
 				firstKey[CodeKeys.Literal] = literal;
 				key[1] = firstKey;
 				return key;
@@ -3596,16 +3599,16 @@ namespace Meta
 	}
 	public class GacStrategy : MapStrategy
 	{
-		public static readonly NormalMap Gac = new NormalMap(new GacStrategy());
+		public static readonly StrategyMap Gac = new StrategyMap(new GacStrategy());
 
-		private Map cache = new NormalMap();
+		private Map cache = new StrategyMap();
 		public override MapStrategy CopyImplementation()
 		{
 			return this;
 		}
 		private bool LoadAssembly(string assemblyName)
 		{
-			Map key = new NormalMap(assemblyName);
+			Map key = new StrategyMap(assemblyName);
 			bool loaded;
 			if (cache.ContainsKey(key))
 			{
@@ -3616,7 +3619,7 @@ namespace Meta
 				Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
 				if (assembly != null)
 				{
-					Map val = new NormalMap();
+					Map val = new StrategyMap();
 					foreach (Type type in assembly.GetExportedTypes())
 					{
 						if (type.DeclaringType == null)
@@ -3662,11 +3665,11 @@ namespace Meta
 				List<Map> assemblies = Fusion.Assemblies;
 				foreach (string dllPath in Directory.GetFiles(Process.InstallationPath, "*.dll"))
 				{
-					assemblies.Add(new NormalMap(Path.GetFileNameWithoutExtension(dllPath)));
+					assemblies.Add(new StrategyMap(Path.GetFileNameWithoutExtension(dllPath)));
 				}
 				foreach (string exePath in Directory.GetFiles(Process.InstallationPath, "*.exe"))
 				{
-					assemblies.Add(new NormalMap(Path.GetFileNameWithoutExtension(exePath)));
+					assemblies.Add(new StrategyMap(Path.GetFileNameWithoutExtension(exePath)));
 				}
 				return assemblies;
 			}
@@ -3692,7 +3695,7 @@ namespace Meta
 			}
 			return containsKey;
 		}
-		protected Map cachedAssemblyInfo = new NormalMap();
+		protected Map cachedAssemblyInfo = new StrategyMap();
 
 
 		//	Source: Microsoft KB Article KB317540
@@ -3736,7 +3739,7 @@ namespace Meta
 					IAssemblyEnum assemblyEnum = CreateGACEnum();
 					IAssemblyName iname;
 
-					assemblies.Add(new NormalMap("mscorlib"));
+					assemblies.Add(new StrategyMap("mscorlib"));
 					while (GetNextAssembly(assemblyEnum, out iname) == 0)
 					{
 						try
@@ -3744,7 +3747,7 @@ namespace Meta
 							string assemblyName = GetAssemblyName(iname);
 							if (assemblyName != "Microsoft.mshtml")
 							{
-								assemblies.Add(new NormalMap(assemblyName));
+								assemblies.Add(new StrategyMap(assemblyName));
 							}
 						}
 						catch (Exception e)

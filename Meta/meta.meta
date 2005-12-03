@@ -464,7 +464,7 @@ library=
 			|
 				object=Meta.ObjectMap
 					arg
-				current=Meta.NormalMap
+				current=Meta.StrategyMap
 					object.Keys.get *
 		merge=
 			|sum
@@ -588,10 +588,10 @@ library=
 						arg
 					Meta.Integer
 						1
-				current=Meta.NormalMap
+				current=Meta.StrategyMap
 					result
 		add=
-			|Meta.NormalMap
+			|Meta.StrategyMap
 				map.sum
 					array=arg
 					with=
@@ -602,7 +602,7 @@ library=
 								arg.present
 					start=*
 		multiply=
-			|Meta.NormalMap
+			|Meta.StrategyMap
 				map.sum
 					array=arg
 					with=
@@ -626,7 +626,7 @@ library=
 					arg.[2]
 	bitwise=
 		or=
-			|Meta.NormalMap
+			|Meta.StrategyMap
 				map.sum
 					array=arg
 					with=

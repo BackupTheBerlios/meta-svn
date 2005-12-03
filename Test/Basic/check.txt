@@ -1,2844 +1,2844 @@
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		1
-	Value (NormalMap):
+	Value (StrategyMap):
 		"ImpliedAutokey"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"scoping"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"test"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"scopingValue"
-					Value (NormalMap):
+					Value (StrategyMap):
 						"right"
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"function"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"select"
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										1
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"literal"
-											Value (NormalMap):
+											Value (StrategyMap):
 												"scopingValue"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"scopingValue"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"wrong"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"scopingTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"scopingValue"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"right"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"select"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"literal"
-									Value (NormalMap):
+									Value (StrategyMap):
 										"scopingValue"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"lexicalScoping"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"right"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"unicodeText"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"äaba"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"persistantDeleteTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"integerHashTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				2
-			Value (NormalMap):
+			Value (StrategyMap):
 				"correct hash content"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"hashTestData"
-			Value (NormalMap):
+			Value (StrategyMap):
 				2
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"hashTest"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"correct hash content"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"negativeInteger"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				""
-			Value (NormalMap):
+			Value (StrategyMap):
 				99
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"x"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"hello"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"integerIncrementTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		6
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"integerDecrementTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		4
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"persistenceTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"testLib"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"x"
-					Value (NormalMap):
+					Value (StrategyMap):
 						"hello"
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"y"
-					Value (NormalMap):
+					Value (StrategyMap):
 						"world"
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"subMap"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"a"
-							Value (NormalMap):
+							Value (StrategyMap):
 								"b"
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"c"
-							Value (NormalMap):
+							Value (StrategyMap):
 								"d"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"x"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"a"
-					Value (NormalMap):
+					Value (StrategyMap):
 						"b"
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"x"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"x"
-							Value (NormalMap):
+							Value (StrategyMap):
 								"hello"
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"y"
-							Value (NormalMap):
+							Value (StrategyMap):
 								"world"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"literalEscapeTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				1
-			Value (NormalMap):
+			Value (StrategyMap):
 				"asdf"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				2
-			Value (NormalMap):
+			Value (StrategyMap):
 				"asdf"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				3
-			Value (NormalMap):
+			Value (StrategyMap):
 				"as"'df"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				4
-			Value (NormalMap):
+			Value (StrategyMap):
 				"as"''df"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				5
-			Value (NormalMap):
+			Value (StrategyMap):
 				"as"''''''''''''''''df"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		2
-	Value (NormalMap):
+	Value (StrategyMap):
 		"Autokey"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"commandLineArguments"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				1
-			Value (NormalMap):
+			Value (StrategyMap):
 				"first arg"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				2
-			Value (NormalMap):
+			Value (StrategyMap):
 				"second=arg"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"aMap"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"a"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"a"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"a"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"a"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"Object"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"normal symbol"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"NormalSymbol"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"lookupSymbol"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"LookupSymbol"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"long key symbol"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"LookupExtendedSymbol"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"lookedUpMap"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"Object"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"lookedUpNormalSymbol"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"NormalSymbol"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"lookedUpSymbol"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"LookupSymbol"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"lookedUpLongSymbol"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"LookupExtendedSymbol"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"object"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"a"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"c"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"autoSearch"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"changed"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"b"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						1
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"x"
-							Value (NormalMap):
+							Value (StrategyMap):
 								7
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"z"
-							Value (NormalMap):
+							Value (StrategyMap):
 								1
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"SetA"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"function"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"program"
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										1
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"key"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"parent"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														2
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"parent"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														3
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"a"
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"value"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"c"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										2
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"key"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"parent"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														2
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"parent"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														3
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"autoSearch"
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"value"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"changed"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"SetB"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"function"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"program"
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										1
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"key"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"parent"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														2
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"parent"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														3
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"b"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														4
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																1
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"value"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"select"
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																1
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		"literal"
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		"arg"
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																2
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		"literal"
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		"value"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										2
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"key"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"current"
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"value"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"changed"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"x"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"a"
-					Value (NormalMap):
+					Value (StrategyMap):
 						"b"
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"c"
-					Value (NormalMap):
+					Value (StrategyMap):
 						"d"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				1
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"function"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"program"
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										1
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"key"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"current"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														2
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"a"
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"value"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"b"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"a"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"default"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"b"
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"aSet"
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"bSet"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"changed"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"scopeTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"right"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"scopeFunction"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"inScope"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"right"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"parent"
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												2
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"parent"
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												3
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"scopeTest"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"select"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"inScope"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"inScope"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"wrong"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		3
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"scopeFromFunctionData"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"right"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"scopeFunctionFunction"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"scopeFromFunctionData"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"wrong"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"function"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"literal"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"select"
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																1
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		"literal"
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		"scopeFromFunctionData"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"scopeFromFunction"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"select"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"literal"
-									Value (NormalMap):
+									Value (StrategyMap):
 										"scopeFromFunctionData"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"scopeFromFunctionTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"right"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"ReturnEverything"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"current"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"select"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"arg"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"everythingReturned"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				1
-			Value (NormalMap):
+			Value (StrategyMap):
 				"a"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				2
-			Value (NormalMap):
+			Value (StrategyMap):
 				"b"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				3
-			Value (NormalMap):
+			Value (StrategyMap):
 				"c"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"variableAsArgument"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				1
-			Value (NormalMap):
+			Value (StrategyMap):
 				"x"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				2
-			Value (NormalMap):
+			Value (StrategyMap):
 				"y"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				3
-			Value (NormalMap):
+			Value (StrategyMap):
 				"z"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"ReturnFunction"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"current"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"program"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"key"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		1
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				"function"
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"value"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		"literal"
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"program"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						1
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								"key"
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								Entry (KeyValuePair`2)
-																									Key (NormalMap):
+																									Key (StrategyMap):
 																										1
-																									Value (NormalMap):
+																									Value (StrategyMap):
 																										Entry (KeyValuePair`2)
-																											Key (NormalMap):
+																											Key (StrategyMap):
 																												"literal"
-																											Value (NormalMap):
+																											Value (StrategyMap):
 																												"current"
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								"value"
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								Entry (KeyValuePair`2)
-																									Key (NormalMap):
+																									Key (StrategyMap):
 																										"program"
-																									Value (NormalMap):
+																									Value (StrategyMap):
 																										Entry (KeyValuePair`2)
-																											Key (NormalMap):
+																											Key (StrategyMap):
 																												1
-																											Value (NormalMap):
+																											Value (StrategyMap):
 																												Entry (KeyValuePair`2)
-																													Key (NormalMap):
+																													Key (StrategyMap):
 																														"key"
-																													Value (NormalMap):
+																													Value (StrategyMap):
 																														Entry (KeyValuePair`2)
-																															Key (NormalMap):
+																															Key (StrategyMap):
 																																1
-																															Value (NormalMap):
+																															Value (StrategyMap):
 																																Entry (KeyValuePair`2)
-																																	Key (NormalMap):
+																																	Key (StrategyMap):
 																																		"literal"
-																																	Value (NormalMap):
+																																	Value (StrategyMap):
 																																		1
 																												Entry (KeyValuePair`2)
-																													Key (NormalMap):
+																													Key (StrategyMap):
 																														"value"
-																													Value (NormalMap):
+																													Value (StrategyMap):
 																														Entry (KeyValuePair`2)
-																															Key (NormalMap):
+																															Key (StrategyMap):
 																																"literal"
-																															Value (NormalMap):
+																															Value (StrategyMap):
 																																1
 																										Entry (KeyValuePair`2)
-																											Key (NormalMap):
+																											Key (StrategyMap):
 																												2
-																											Value (NormalMap):
+																											Value (StrategyMap):
 																												Entry (KeyValuePair`2)
-																													Key (NormalMap):
+																													Key (StrategyMap):
 																														"key"
-																													Value (NormalMap):
+																													Value (StrategyMap):
 																														Entry (KeyValuePair`2)
-																															Key (NormalMap):
+																															Key (StrategyMap):
 																																1
-																															Value (NormalMap):
+																															Value (StrategyMap):
 																																Entry (KeyValuePair`2)
-																																	Key (NormalMap):
+																																	Key (StrategyMap):
 																																		"literal"
-																																	Value (NormalMap):
+																																	Value (StrategyMap):
 																																		2
 																												Entry (KeyValuePair`2)
-																													Key (NormalMap):
+																													Key (StrategyMap):
 																														"value"
-																													Value (NormalMap):
+																													Value (StrategyMap):
 																														Entry (KeyValuePair`2)
-																															Key (NormalMap):
+																															Key (StrategyMap):
 																																"literal"
-																															Value (NormalMap):
+																															Value (StrategyMap):
 																																2
 																										Entry (KeyValuePair`2)
-																											Key (NormalMap):
+																											Key (StrategyMap):
 																												3
-																											Value (NormalMap):
+																											Value (StrategyMap):
 																												Entry (KeyValuePair`2)
-																													Key (NormalMap):
+																													Key (StrategyMap):
 																														"key"
-																													Value (NormalMap):
+																													Value (StrategyMap):
 																														Entry (KeyValuePair`2)
-																															Key (NormalMap):
+																															Key (StrategyMap):
 																																1
-																															Value (NormalMap):
+																															Value (StrategyMap):
 																																Entry (KeyValuePair`2)
-																																	Key (NormalMap):
+																																	Key (StrategyMap):
 																																		"literal"
-																																	Value (NormalMap):
+																																	Value (StrategyMap):
 																																		3
 																												Entry (KeyValuePair`2)
-																													Key (NormalMap):
+																													Key (StrategyMap):
 																														"value"
-																													Value (NormalMap):
+																													Value (StrategyMap):
 																														Entry (KeyValuePair`2)
-																															Key (NormalMap):
+																															Key (StrategyMap):
 																																"literal"
-																															Value (NormalMap):
+																															Value (StrategyMap):
 																																3
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"SetCurrent"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"current"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"program"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"key"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		1
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				"arg"
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"value"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		"select"
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				1
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						"literal"
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						"arg"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														2
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"key"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		1
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				"x"
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"value"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		"select"
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				1
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						"literal"
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						"arg"
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				2
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						"literal"
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						"symbol"
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								2
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"current"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"select"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"x"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"thisSet"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"haha"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"FirstLevel"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														1
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"call"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"callable"
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"select"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		1
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				"SecondLevel"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"argument"
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"select"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		1
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				"arg"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"SecondLevel"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"select"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"literal"
-									Value (NormalMap):
+									Value (StrategyMap):
 										"arg"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"argTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				1
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"a"
-					Value (NormalMap):
+					Value (StrategyMap):
 						"z"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"TestClass"
 	Value (TypeMap):
 		testClasses.TestClass
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"nestedClassTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		5
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"testClass"
 	Value (ObjectMap):
 		testClasses.TestClass
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"boolTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		1
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"MemberTest"
 	Value (TypeMap):
 		testClasses.MemberTest
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"memberTest"
 	Value (ObjectMap):
 		testClasses.MemberTest
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		4
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"classPropertyValue"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"b"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		5
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"instancePropertyValue"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"b"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"interceptedSymbol"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"/hello/"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"positionalNoConversion"
 	Value (ObjectMap):
 		testClasses.PositionalNoConversion
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"positionalNoConversionConcatenated"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"rstmno"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"namedNoConversion"
 	Value (ObjectMap):
 		testClasses.NamedNoConversion
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"namedNoConversionConcatenated"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"rnulltmnnull"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"indexerNoConversion"
 	Value (ObjectMap):
 		testClasses.IndexerNoConversion
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		6
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"indexerNoConversionIndexed"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"abchihiunchangedYunchangedZabc"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"interceptedSymbolTwo"
-	Value (NormalMap):
+	Value (StrategyMap):
 		1
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"k"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"hello"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"xyz"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"w"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"literalFunction"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"literal"
-					Value (NormalMap):
+					Value (StrategyMap):
 						5
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"literalFunctionResult"
-	Value (NormalMap):
+	Value (StrategyMap):
 		5
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"someFunction"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"current"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"literal"
-											Value (NormalMap):
+											Value (StrategyMap):
 												"simple function this"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"callFunction"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"select"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"literal"
-									Value (NormalMap):
+									Value (StrategyMap):
 										"someFunction"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"callFunctionResult"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"current"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"literal"
-											Value (NormalMap):
+											Value (StrategyMap):
 												"simple function this"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"delayedFunction"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"function"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"literal"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"program"
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																1
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		"key"
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				1
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						"literal"
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						"x"
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		"value"
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				"y"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"delayedFunctionResult"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"x"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"literal"
-											Value (NormalMap):
+											Value (StrategyMap):
 												"y"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"value"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"xyz"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"selectionFunction"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"select"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"literal"
-									Value (NormalMap):
+									Value (StrategyMap):
 										"value"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"selectionFunctionResult"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"xyz"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"upperLevel"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"changed"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"SetUpperLevel"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"parent"
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												2
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"parent"
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												3
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"upperLevel"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"select"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"arg"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"ChangeUpperLevel"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														1
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"call"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"callable"
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"select"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		1
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				"SetUpperLevel"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"argument"
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"changed"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		7
-	Value (NormalMap):
+	Value (StrategyMap):
 		" "
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"staticEventChanged"
-	Value (NormalMap):
+	Value (StrategyMap):
 		1
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"ChangeStaticEvent"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"parent"
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												2
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"parent"
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												3
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"staticEventChanged"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"select"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"arg"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		8
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"staticEvent"
 	Value (Event):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"add"
 			Value (Method):
 				""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		9
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"resultFromDelegate"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"argumentString"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"staticEventResult"
 	Value (ObjectMap):
 		testClasses.TestClass
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"instanceEventChanged"
-	Value (NormalMap):
+	Value (StrategyMap):
 		1
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		10
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"instanceEvent"
 	Value (Event):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"add"
 			Value (Method):
 				""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"instanceEventResult"
-	Value (NormalMap):
+	Value (StrategyMap):
 		5
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"one"
-	Value (NormalMap):
+	Value (StrategyMap):
 		1
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"two"
-	Value (NormalMap):
+	Value (StrategyMap):
 		2
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"firstIf"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"then"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"secondIf"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"unchanged"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"firstIfCondition"
-	Value (NormalMap):
+	Value (StrategyMap):
 		1
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"firstIfBranches"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				1
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"function"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"literal"
-							Value (NormalMap):
+							Value (StrategyMap):
 								"then"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				""
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"function"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"literal"
-							Value (NormalMap):
+							Value (StrategyMap):
 								"else"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"bigNumber"
-	Value (NormalMap):
+	Value (StrategyMap):
 		50020202
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"secondSwitch"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"three"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"secondSwitchCases"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				1
-			Value (NormalMap):
+			Value (StrategyMap):
 				"one"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				2
-			Value (NormalMap):
+			Value (StrategyMap):
 				"two"
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				3
-			Value (NormalMap):
+			Value (StrategyMap):
 				"three"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"emptyMap"
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"emptyFunction"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"x"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"literal"
-											Value (NormalMap):
+											Value (StrategyMap):
 												"hello"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"emptyFunctionResult"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"x"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"hello"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"font"
 	Value (ObjectMap):
 		[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"decimalTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		5
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"fractionTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		40
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"stringTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"helloh"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"helloh"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"hi"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"stringStrategyHashTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"hi"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"x"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"aLongText"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"
 hello world!
 hello!
 "
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"arrayList"
 	Value (ObjectMap):
 		System.Collections.ArrayList
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		11
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"arrayListResult"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"hello"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"textBox"
 	Value (ObjectMap):
 		System.Windows.Forms.TextBox, Text: 
 Alle meine Entchen,
 schwimmen auf dem S...
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		12
-	Value (NormalMap):
+	Value (StrategyMap):
 		""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"lines"
 	Value (ObjectMap):
 		System.String[]
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"alleMeineText"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"Alle meine Entchen,"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"tabText"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"			hello"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"escapedText"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"'#'n'''t"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"whileCounter"
-	Value (NormalMap):
+	Value (StrategyMap):
 		10
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"loop"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"whileDecision"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"call"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"callable"
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"select"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		1
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				"library"
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		2
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				"logic"
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		3
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				"not"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"argument"
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"call"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		"callable"
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"select"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						1
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								"literal"
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								"library"
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						2
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								"literal"
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								"map"
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						3
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								"literal"
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								"equal"
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		"argument"
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"program"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						1
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								"key"
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								Entry (KeyValuePair`2)
-																									Key (NormalMap):
+																									Key (StrategyMap):
 																										1
-																									Value (NormalMap):
+																									Value (StrategyMap):
 																										Entry (KeyValuePair`2)
-																											Key (NormalMap):
+																											Key (StrategyMap):
 																												"literal"
-																											Value (NormalMap):
+																											Value (StrategyMap):
 																												1
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								"value"
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								Entry (KeyValuePair`2)
-																									Key (NormalMap):
+																									Key (StrategyMap):
 																										"select"
-																									Value (NormalMap):
+																									Value (StrategyMap):
 																										Entry (KeyValuePair`2)
-																											Key (NormalMap):
+																											Key (StrategyMap):
 																												1
-																											Value (NormalMap):
+																											Value (StrategyMap):
 																												Entry (KeyValuePair`2)
-																													Key (NormalMap):
+																													Key (StrategyMap):
 																														"literal"
-																													Value (NormalMap):
+																													Value (StrategyMap):
 																														"arg"
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						2
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								"key"
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								Entry (KeyValuePair`2)
-																									Key (NormalMap):
+																									Key (StrategyMap):
 																										1
-																									Value (NormalMap):
+																									Value (StrategyMap):
 																										Entry (KeyValuePair`2)
-																											Key (NormalMap):
+																											Key (StrategyMap):
 																												"literal"
-																											Value (NormalMap):
+																											Value (StrategyMap):
 																												2
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								"value"
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								Entry (KeyValuePair`2)
-																									Key (NormalMap):
+																									Key (StrategyMap):
 																										"literal"
-																									Value (NormalMap):
+																									Value (StrategyMap):
 																										10
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								2
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"whileBranches"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"program"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"key"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		1
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				1
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"value"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		"program"
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				1
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						"key"
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								1
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								Entry (KeyValuePair`2)
-																									Key (NormalMap):
+																									Key (StrategyMap):
 																										"literal"
-																									Value (NormalMap):
+																									Value (StrategyMap):
 																										"function"
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						"value"
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								"literal"
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								Entry (KeyValuePair`2)
-																									Key (NormalMap):
+																									Key (StrategyMap):
 																										"call"
-																									Value (NormalMap):
+																									Value (StrategyMap):
 																										Entry (KeyValuePair`2)
-																											Key (NormalMap):
+																											Key (StrategyMap):
 																												"callable"
-																											Value (NormalMap):
+																											Value (StrategyMap):
 																												Entry (KeyValuePair`2)
-																													Key (NormalMap):
+																													Key (StrategyMap):
 																														"select"
-																													Value (NormalMap):
+																													Value (StrategyMap):
 																														Entry (KeyValuePair`2)
-																															Key (NormalMap):
+																															Key (StrategyMap):
 																																1
-																															Value (NormalMap):
+																															Value (StrategyMap):
 																																Entry (KeyValuePair`2)
-																																	Key (NormalMap):
+																																	Key (StrategyMap):
 																																		"literal"
-																																	Value (NormalMap):
+																																	Value (StrategyMap):
 																																		"loop"
 																										Entry (KeyValuePair`2)
-																											Key (NormalMap):
+																											Key (StrategyMap):
 																												"argument"
-																											Value (NormalMap):
+																											Value (StrategyMap):
 																												Entry (KeyValuePair`2)
-																													Key (NormalMap):
+																													Key (StrategyMap):
 																														"call"
-																													Value (NormalMap):
+																													Value (StrategyMap):
 																														Entry (KeyValuePair`2)
-																															Key (NormalMap):
+																															Key (StrategyMap):
 																																"callable"
-																															Value (NormalMap):
+																															Value (StrategyMap):
 																																Entry (KeyValuePair`2)
-																																	Key (NormalMap):
+																																	Key (StrategyMap):
 																																		"select"
-																																	Value (NormalMap):
+																																	Value (StrategyMap):
 																																		Entry (KeyValuePair`2)
-																																			Key (NormalMap):
+																																			Key (StrategyMap):
 																																				1
-																																			Value (NormalMap):
+																																			Value (StrategyMap):
 																																				Entry (KeyValuePair`2)
-																																					Key (NormalMap):
+																																					Key (StrategyMap):
 																																						"literal"
-																																					Value (NormalMap):
+																																					Value (StrategyMap):
 																																						"library"
 																																		Entry (KeyValuePair`2)
-																																			Key (NormalMap):
+																																			Key (StrategyMap):
 																																				2
-																																			Value (NormalMap):
+																																			Value (StrategyMap):
 																																				Entry (KeyValuePair`2)
-																																					Key (NormalMap):
+																																					Key (StrategyMap):
 																																						"literal"
-																																					Value (NormalMap):
+																																					Value (StrategyMap):
 																																						"math"
 																																		Entry (KeyValuePair`2)
-																																			Key (NormalMap):
+																																			Key (StrategyMap):
 																																				3
-																																			Value (NormalMap):
+																																			Value (StrategyMap):
 																																				Entry (KeyValuePair`2)
-																																					Key (NormalMap):
+																																					Key (StrategyMap):
 																																						"literal"
-																																					Value (NormalMap):
+																																					Value (StrategyMap):
 																																						"add"
 																														Entry (KeyValuePair`2)
-																															Key (NormalMap):
+																															Key (StrategyMap):
 																																"argument"
-																															Value (NormalMap):
+																															Value (StrategyMap):
 																																Entry (KeyValuePair`2)
-																																	Key (NormalMap):
+																																	Key (StrategyMap):
 																																		"program"
-																																	Value (NormalMap):
+																																	Value (StrategyMap):
 																																		Entry (KeyValuePair`2)
-																																			Key (NormalMap):
+																																			Key (StrategyMap):
 																																				1
-																																			Value (NormalMap):
+																																			Value (StrategyMap):
 																																				Entry (KeyValuePair`2)
-																																					Key (NormalMap):
+																																					Key (StrategyMap):
 																																						"key"
-																																					Value (NormalMap):
+																																					Value (StrategyMap):
 																																						Entry (KeyValuePair`2)
-																																							Key (NormalMap):
+																																							Key (StrategyMap):
 																																								1
-																																							Value (NormalMap):
+																																							Value (StrategyMap):
 																																								Entry (KeyValuePair`2)
-																																									Key (NormalMap):
+																																									Key (StrategyMap):
 																																										"literal"
-																																									Value (NormalMap):
+																																									Value (StrategyMap):
 																																										1
 																																				Entry (KeyValuePair`2)
-																																					Key (NormalMap):
+																																					Key (StrategyMap):
 																																						"value"
-																																					Value (NormalMap):
+																																					Value (StrategyMap):
 																																						Entry (KeyValuePair`2)
-																																							Key (NormalMap):
+																																							Key (StrategyMap):
 																																								"select"
-																																							Value (NormalMap):
+																																							Value (StrategyMap):
 																																								Entry (KeyValuePair`2)
-																																									Key (NormalMap):
+																																									Key (StrategyMap):
 																																										1
-																																									Value (NormalMap):
+																																									Value (StrategyMap):
 																																										Entry (KeyValuePair`2)
-																																											Key (NormalMap):
+																																											Key (StrategyMap):
 																																												"literal"
-																																											Value (NormalMap):
+																																											Value (StrategyMap):
 																																												"arg"
 																																		Entry (KeyValuePair`2)
-																																			Key (NormalMap):
+																																			Key (StrategyMap):
 																																				2
-																																			Value (NormalMap):
+																																			Value (StrategyMap):
 																																				Entry (KeyValuePair`2)
-																																					Key (NormalMap):
+																																					Key (StrategyMap):
 																																						"key"
-																																					Value (NormalMap):
+																																					Value (StrategyMap):
 																																						Entry (KeyValuePair`2)
-																																							Key (NormalMap):
+																																							Key (StrategyMap):
 																																								1
-																																							Value (NormalMap):
+																																							Value (StrategyMap):
 																																								Entry (KeyValuePair`2)
-																																									Key (NormalMap):
+																																									Key (StrategyMap):
 																																										"literal"
-																																									Value (NormalMap):
+																																									Value (StrategyMap):
 																																										2
 																																				Entry (KeyValuePair`2)
-																																					Key (NormalMap):
+																																					Key (StrategyMap):
 																																						"value"
-																																					Value (NormalMap):
+																																					Value (StrategyMap):
 																																						Entry (KeyValuePair`2)
-																																							Key (NormalMap):
+																																							Key (StrategyMap):
 																																								"literal"
-																																							Value (NormalMap):
+																																							Value (StrategyMap):
 																																								1
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														2
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"key"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		1
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"program"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				""
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"value"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		"program"
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				1
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						"key"
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								1
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								Entry (KeyValuePair`2)
-																									Key (NormalMap):
+																									Key (StrategyMap):
 																										"literal"
-																									Value (NormalMap):
+																									Value (StrategyMap):
 																										"function"
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						"value"
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								"literal"
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								Entry (KeyValuePair`2)
-																									Key (NormalMap):
+																									Key (StrategyMap):
 																										"select"
-																									Value (NormalMap):
+																									Value (StrategyMap):
 																										Entry (KeyValuePair`2)
-																											Key (NormalMap):
+																											Key (StrategyMap):
 																												1
-																											Value (NormalMap):
+																											Value (StrategyMap):
 																												Entry (KeyValuePair`2)
-																													Key (NormalMap):
+																													Key (StrategyMap):
 																														"literal"
-																													Value (NormalMap):
+																													Value (StrategyMap):
 																														"arg"
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								3
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"current"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"call"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"callable"
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"select"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		1
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				"whileBranches"
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		2
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"select"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
-																					Key (NormalMap):
+																					Key (StrategyMap):
 																						1
-																					Value (NormalMap):
+																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
-																							Key (NormalMap):
+																							Key (StrategyMap):
 																								"literal"
-																							Value (NormalMap):
+																							Value (StrategyMap):
 																								"whileDecision"
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"argument"
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"select"
-															Value (NormalMap):
+															Value (StrategyMap):
 																Entry (KeyValuePair`2)
-																	Key (NormalMap):
+																	Key (StrategyMap):
 																		1
-																	Value (NormalMap):
+																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
-																			Key (NormalMap):
+																			Key (StrategyMap):
 																				"literal"
-																			Value (NormalMap):
+																			Value (StrategyMap):
 																				"arg"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"returnInMap"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"result"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"select"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														1
-													Value (NormalMap):
+													Value (StrategyMap):
 														Entry (KeyValuePair`2)
-															Key (NormalMap):
+															Key (StrategyMap):
 																"literal"
-															Value (NormalMap):
+															Value (StrategyMap):
 																"arg"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"literalAsArgument"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"result"
-			Value (NormalMap):
+			Value (StrategyMap):
 				1
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"returnFunction"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"function"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"literal"
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"functionResult"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"returnArg"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"select"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"literal"
-									Value (NormalMap):
+									Value (StrategyMap):
 										"arg"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"myArg"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"program"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								1
-							Value (NormalMap):
+							Value (StrategyMap):
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"key"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												1
-											Value (NormalMap):
+											Value (StrategyMap):
 												Entry (KeyValuePair`2)
-													Key (NormalMap):
+													Key (StrategyMap):
 														"literal"
-													Value (NormalMap):
+													Value (StrategyMap):
 														"hello"
 								Entry (KeyValuePair`2)
-									Key (NormalMap):
+									Key (StrategyMap):
 										"value"
-									Value (NormalMap):
+									Value (StrategyMap):
 										Entry (KeyValuePair`2)
-											Key (NormalMap):
+											Key (StrategyMap):
 												"literal"
-											Value (NormalMap):
+											Value (StrategyMap):
 												"world"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"funcReturnTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"hello"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"world"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"documentedFunction"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"doc"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"This function returns #hello ."
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"function"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"literal"
-					Value (NormalMap):
+					Value (StrategyMap):
 						"hello"
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"docFunctionResult"
-	Value (NormalMap):
+	Value (StrategyMap):
 		"hello"

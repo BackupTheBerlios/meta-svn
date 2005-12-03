@@ -77,7 +77,7 @@ namespace Test
 		[Test(2)]
 		public object Basic()
 		{
-			Map argument = new NormalMap();
+			Map argument = new StrategyMap();
 			argument[1] = "first arg";
 			argument[2] = "second=arg";
 			return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
@@ -187,7 +187,7 @@ namespace testClasses
 	{ 
 		public NamedNoConversion(Map arg) 
 		{
-			Map def=new NormalMap();
+			Map def=new StrategyMap();
 			def[1]="null";
 			def["y"]="null";
 			def["p2"]="null";
@@ -210,7 +210,7 @@ namespace testClasses
 		// refactor, remove
 		public string Concatenate(Map arg) 
 		{
-			Map def=new NormalMap();
+			Map def=new StrategyMap();
 			def[1]="null";
 			def["b"]="null";
 			def["c"]="null";

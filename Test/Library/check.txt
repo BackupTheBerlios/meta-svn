@@ -1,141 +1,141 @@
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"booleanTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"not"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"true"
-					Value (NormalMap):
+					Value (StrategyMap):
 						1
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"false"
-					Value (NormalMap):
+					Value (StrategyMap):
 						""
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"and"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"true"
-					Value (NormalMap):
+					Value (StrategyMap):
 						1
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"false"
-					Value (NormalMap):
+					Value (StrategyMap):
 						""
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"or"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"true"
-					Value (NormalMap):
+					Value (StrategyMap):
 						1
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"false"
-					Value (NormalMap):
+					Value (StrategyMap):
 						""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"numberTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"increment"
-			Value (NormalMap):
+			Value (StrategyMap):
 				6
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"add"
-			Value (NormalMap):
+			Value (StrategyMap):
 				1100
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"multiply"
-			Value (NormalMap):
+			Value (StrategyMap):
 				19437
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"greater"
-			Value (NormalMap):
+			Value (StrategyMap):
 				1
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"smaller"
-			Value (NormalMap):
+			Value (StrategyMap):
 				""
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"bitwiseTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		29
 Entry (KeyValuePair`2)
-	Key (NormalMap):
+	Key (StrategyMap):
 		"mapTest"
-	Value (NormalMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"join"
-			Value (NormalMap):
+			Value (StrategyMap):
 				"abc, die Katze lief im Schnee."
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"apply"
-			Value (NormalMap):
+			Value (StrategyMap):
 				""
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"contains"
-			Value (NormalMap):
+			Value (StrategyMap):
 				1
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"keys"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						1
-					Value (NormalMap):
+					Value (StrategyMap):
 						"jjqwv"
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						2
-					Value (NormalMap):
+					Value (StrategyMap):
 						"oere"
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						3
-					Value (NormalMap):
+					Value (StrategyMap):
 						1
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"equal"
-			Value (NormalMap):
+			Value (StrategyMap):
 				Entry (KeyValuePair`2)
-					Key (NormalMap):
+					Key (StrategyMap):
 						"map"
-					Value (NormalMap):
+					Value (StrategyMap):
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"true"
-							Value (NormalMap):
+							Value (StrategyMap):
 								1
 						Entry (KeyValuePair`2)
-							Key (NormalMap):
+							Key (StrategyMap):
 								"false"
-							Value (NormalMap):
+							Value (StrategyMap):
 								""
 		Entry (KeyValuePair`2)
-			Key (NormalMap):
+			Key (StrategyMap):
 				"while"
-			Value (NormalMap):
+			Value (StrategyMap):
 				10
