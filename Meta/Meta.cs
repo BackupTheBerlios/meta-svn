@@ -640,7 +640,14 @@ namespace Meta
 		}
 		public override int GetHashCode()
 		{
-			return Count;
+			if (IsInteger)
+			{
+				return (int)(GetInteger().integer % int.MaxValue);
+			}
+			else
+			{
+				return Count;
+			}
 			//return 0;
 		}
 		Extent extent;
@@ -2147,7 +2154,14 @@ namespace Meta
 		}
 		//public override int GetHashCode()
 		//{
-		//    return number.integer.GetHashCode();
+		//    if (number.integer == 0.0d)
+		//    {
+		//        return 0;
+		//    }
+		//    else
+		//    {
+		//        return 1;
+		//    }
 		//}
 
 		public override Integer GetInteger()
