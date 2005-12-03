@@ -71,7 +71,6 @@ namespace Meta
 	{
 		public MetaException(Exception innerException, string message, Extent extent):base(GetMessage(message,extent),innerException)
 		{
-			//this.InnerException = innerException;
 			this.extent = extent;
 			this.message = message;
 		}
@@ -140,11 +139,6 @@ namespace Meta
 		}
 
 
-		//public Map Parse(TextReader textReader)
-		//{
-		//    // refactor
-		//    return Expression(FileSystem.Compile(textReader),Map.Empty,Map.Empty);
-		//}
 
 		public void Start()
 		{
@@ -408,8 +402,6 @@ namespace Meta
         {
             this[Array.Count+1] = map;
         }
-		//public static readonly Map Empty = new StrategyMap();
-		//public static readonly Map Empty = new StrategyMap();
 		private static readonly Map empty = new StrategyMap();
 		public static Map Empty
 		{
@@ -647,64 +639,10 @@ namespace Meta
 				yield return new KeyValuePair<Map, Map>(key, this[key]);
 			}
 		}
-		//protected abstract uint GetPseudoHashCode();
-		//public static int Hashify(uint x)
-		//{
-		//    unchecked
-		//    {
-		//        return (int)(((x + 17) * 9812413)%(int.MaxValue-int.MinValue)+int.MinValue);
-		//    }
-		//}
-		//public uint GetPseudoHashCodeDefault()
-		//{
-		//    uint hash = 0;
-		//    foreach (KeyValuePair<Map, Map> entry in this)
-		//    {
-		//        unchecked
-		//        {
-		//            hash += entry.Key.GetPseudoHashCode() + entry.Value.GetPseudoHashCode();
-		//        }
-		//    }
-		//    return hash;
-		//}
 		public override int GetHashCode()
 		{
 			return 0;
 		}
-		//public override int GetHashCode()
-		//{
-		//    return Hashify(GetPseudoHashCode());
-		//    //int hash = 0;
-		//    //foreach (KeyValuePair<Map, Map> entry in this)
-		//    //{
-		//    //    unchecked
-		//    //    {
-		//    //        hash += entry.Key.GetPseudoHashCode() + entry.Value.GetPseudoHashCode();
-		//    //    }
-		//    //}
-		//    //return Hashify(hash);
-		//    //int hash = 0;
-		//    //foreach (Map key in this.Keys)
-		//    //{
-		//    //    unchecked
-		//    //    {
-		//    //        hash += key.GetHashCode() * this[key].GetHashCode();
-		//    //    }
-		//    //}
-		//    //return hash;
-		//}
-		//public override int GetHashCode() 
-		//{
-		//    int hash=0;
-		//    foreach(Map key in this.Keys)
-		//    {
-		//        unchecked
-		//        {
-		//            hash+=key.GetHashCode()*this[key].GetHashCode();
-		//        }
-		//    }
-		//    return hash;
-		//}
 		Extent extent;
 		[Serialize(1)]
 		public Extent Extent
@@ -766,10 +704,6 @@ namespace Meta
 	}
 	public class StrategyMap:Map
 	{
-		//protected override uint GetPseudoHashCode()
-		//{
-		//    return strategy.GetPseudoHashCode();
-		//}
 		public bool Persistant
 		{
 			get
@@ -885,16 +819,6 @@ namespace Meta
 				isEqual = false;
 			}
 			return isEqual;
-		}
-		public override int GetHashCode()
-		{
-			// fix this
-			if (!isHashCached)
-			{
-				hash = base.GetHashCode();
-				isHashCached = true;
-			}
-			return hash;
 		}
 		private bool isHashCached = false;
 		private int hash;
@@ -1247,10 +1171,6 @@ namespace Meta
 
 	public class Method: Map
 	{
-		//protected override uint GetPseudoHashCode()
-		//{
-		//    return 0;
-		//}
 		protected override Map CopyImplementation()
 		{
 			return new Method(this.name,this.obj,this.type);
@@ -1516,10 +1436,6 @@ namespace Meta
 	[Serializable]
 	public class TypeMap: DotNetMap
 	{
-		//protected override uint GetPseudoHashCode()
-		//{
-		//    return 0;
-		//}
 		public Type Type
 		{
 			get
@@ -1545,10 +1461,6 @@ namespace Meta
 	[Serializable]
 	public class ObjectMap: DotNetMap
 	{
-		//protected override uint GetPseudoHashCode()
-		//{
-		//    return 0;
-		//}
 		public object Object
 		{
 			get
@@ -1570,10 +1482,6 @@ namespace Meta
 	}
 	public abstract class MapStrategy
 	{
-		//public virtual uint GetPseudoHashCode()
-		//{
-		//    return map.GetPseudoHashCodeDefault();
-		//}
 		public void Panic()
 		{
 			map.strategy = new DictionaryStrategy();
@@ -1651,31 +1559,6 @@ namespace Meta
 		{
 			return Keys.Contains(key);
 		}
-		// remove
-		public override int GetHashCode()
-		{
-			int hash = 0;
-			foreach (Map key in this.Keys)
-			{
-				unchecked
-				{
-					hash += key.GetHashCode() * this.Get(key).GetHashCode();
-				}
-			}
-			return hash;
-		}
-		//public override int GetHashCode()
-		//{
-		//    int hash=0;
-		//    foreach(Map key in this.Keys)
-		//    {
-		//        unchecked
-		//        {
-		//            hash+=key.GetHashCode()*this.Get(key).GetHashCode();
-		//        }
-		//    }
-		//    return hash;
-		//}
 		public override bool Equals(object strategy)
 		{
 			bool isEqual;
@@ -1804,11 +1687,6 @@ namespace Meta
 		{
 			return new StringStrategy(this.text);
 		}
-
-		//public override int GetHashCode()
-		//{
-		//    return base.GetHashCode ();
-		//}
 		public override bool Equals(object strategy)
 		{
 			bool isEqual;
@@ -1950,10 +1828,6 @@ namespace Meta
 	}
 	public class Event:Map
 	{
-		//protected override uint GetPseudoHashCode()
-		//{
-		//    return 0;
-		//}
 		EventInfo eventInfo;
 		object obj;
 		Type type;
@@ -2028,10 +1902,6 @@ namespace Meta
 	}
 	public class Property:Map
 	{
-		//protected override uint GetPseudoHashCode()
-		//{
-		//    return 0;
-		//}
 		PropertyInfo property;
 		object obj;
 		Type type;
@@ -2265,14 +2135,6 @@ namespace Meta
 	}
 	public class IntegerStrategy:MapStrategy
 	{
-		//public override uint GetPseudoHashCode()
-		//{
-		//    return (uint)(this.number.integer % ((double)uint.MaxValue));
-		//}
-		//public override int GetHashCode()
-		//{
-		//    return 0;
-		//}
 		private Integer number;
 		public override bool IsInteger
 		{
@@ -2410,7 +2272,6 @@ namespace Meta
 			bool allTestsSucessful = true;
 			foreach(Type testType in this.GetType().GetNestedTypes())
 			{
-				//object[] attributes = test.GetCustomAttributes(typeof(TestAttribute), false);
 				if (testType.IsSubclassOf(typeof(Test)))
 				{
 					Test test=(Test)testType.GetConstructor(new Type[]{}).Invoke(null);
@@ -2463,71 +2324,6 @@ namespace Meta
 				Console.ReadLine();
 			}
 		}
-		//public void Run()
-		//{
-		//    bool allTestsSucessful = true;
-		//    foreach (MethodInfo test in this.GetType().GetMethods())
-		//    {
-		//        object[] attributes=test.GetCustomAttributes(typeof(TestAttribute),false);
-		//        if (attributes.Length == 1)
-		//        {
-		//            int level = ((TestAttribute)attributes[0]).Level;
-		//            Console.Write(test.Name + "...");
-		//            DateTime startTime = DateTime.Now;
-		//            object result;
-		//            try
-		//            {
-		//                result = test.Invoke(this, new object[] { });
-		//            }
-		//            catch(Exception e)
-		//            {
-		//                throw e.InnerException;
-		//            }
-		//            TimeSpan duration = DateTime.Now - startTime;
-
-		//            string testDirectory = Path.Combine(TestDirectory, test.Name);
-		//            string resultPath = Path.Combine(testDirectory, "result.txt");
-		//            string resultCopyPath = Path.Combine(testDirectory, "resultCopy.txt");
-		//            string checkPath = Path.Combine(testDirectory, "check.txt");
-
-		//            Directory.CreateDirectory(testDirectory);
-		//            if (!File.Exists(checkPath))
-		//            {
-		//                File.Create(checkPath).Close();
-		//            }
-
-		//            StringBuilder stringBuilder = new StringBuilder();
-		//            Serialize(result, "", stringBuilder, level);
-
-		//            string resultText = stringBuilder.ToString();
-		//            File.WriteAllText(resultPath, resultText,Encoding.Default);
-		//            File.WriteAllText(resultCopyPath, resultText,Encoding.Default);
-
-		//            bool successful = File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath));
-					
-		//            if (!successful)
-		//            {
-		//                allTestsSucessful = false;
-		//            }
-
-		//            string durationText = duration.TotalSeconds.ToString();
-		//            string successText;
-		//            if (!successful)
-		//            {
-		//                successText = "failed";
-		//            }
-		//            else
-		//            {
-		//                successText = "succeeded";
-		//            }
-		//            Console.WriteLine(" " + successText + "  " + durationText + " s");
-		//        }
-		//    }
-		//    if (!allTestsSucessful)
-		//    {
-		//        Console.ReadLine();
-		//    }
-		//}
 		public const char indentationChar = '\t';
 
 		private bool UseToStringMethod(Type type)
@@ -2624,10 +2420,6 @@ namespace Meta
 			this.column=column;
 
 		}
-		//public override int GetHashCode()
-		//{
-		//    return base.GetHashCode ();
-		//}
 		public override bool Equals(object obj)
 		{
 			return obj is SourcePosition && ((SourcePosition)obj).Line==Line && ((SourcePosition)obj).Column==Column;
@@ -2764,7 +2556,6 @@ namespace Meta
 				if (pair.Value is StrategyMap)
 				{
 					StrategyMap normalMap = (StrategyMap)pair.Value;
-					//normalMap.Persistant = true;
 					if (normalMap.strategy is DictionaryStrategy || (normalMap.strategy is CloneStrategy && ((CloneStrategy)normalMap.strategy).original is DictionaryStrategy))
 					{
 						MakePersistant((StrategyMap)pair.Value);
