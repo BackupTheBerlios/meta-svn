@@ -641,7 +641,8 @@ namespace Meta
 		}
 		public override int GetHashCode()
 		{
-			return 0;
+			return Count;
+			//return 0;
 		}
 		Extent extent;
 		[Serialize(1)]
@@ -1559,6 +1560,7 @@ namespace Meta
 		{
 			return Keys.Contains(key);
 		}
+		// rename, only used internally
 		public override bool Equals(object strategy)
 		{
 			bool isEqual;
