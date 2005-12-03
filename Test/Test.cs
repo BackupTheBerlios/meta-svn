@@ -45,7 +45,7 @@ namespace Test
 			//Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
 			//Console.ReadLine();
 			new MetaTest().Run();
-			//FileSystem.fileSystem["website"].Call(Map.Empty);
+			FileSystem.fileSystem["website"].Call(Map.Empty);
 		}
 		protected override string TestDirectory
 		{

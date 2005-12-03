@@ -117,8 +117,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"75"
+												Column (Int32):
+													"28"
+											End (SourcePosition):
+												Line (Int32):
+													"79"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -1210,8 +1219,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"85"
+												Column (Int32):
+													"29"
+											End (SourcePosition):
+												Line (Int32):
+													"85"
+												Column (Int32):
+													"31"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -7457,8 +7475,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"146"
+												Column (Int32):
+													"19"
+											End (SourcePosition):
+												Line (Int32):
+													"146"
+												Column (Int32):
+													"21"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -7654,8 +7681,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"147"
+												Column (Int32):
+													"19"
+											End (SourcePosition):
+												Line (Int32):
+													"151"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -8715,8 +8751,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"157"
+												Column (Int32):
+													"16"
+											End (SourcePosition):
+												Line (Int32):
+													"157"
+												Column (Int32):
+													"18"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -9346,8 +9391,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"163"
+												Column (Int32):
+													"42"
+											End (SourcePosition):
+												Line (Int32):
+													"163"
+												Column (Int32):
+													"44"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -9517,8 +9571,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"164"
+												Column (Int32):
+													"42"
+											End (SourcePosition):
+												Line (Int32):
+													"164"
+												Column (Int32):
+													"44"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -9986,8 +10049,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"168"
+												Column (Int32):
+													"38"
+											End (SourcePosition):
+												Line (Int32):
+													"172"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -10369,8 +10441,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"172"
+												Column (Int32):
+													"38"
+											End (SourcePosition):
+												Line (Int32):
+													"176"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -12064,8 +12145,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"190"
+												Column (Int32):
+													"21"
+											End (SourcePosition):
+												Line (Int32):
+													"192"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -12489,8 +12579,17 @@ Entry (KeyValuePair`2)
 																									null
 																								"call"
 																							Value (StrategyMap):
-																								Extent:
-																									null
+																								Extent (Extent):
+																									Start (SourcePosition):
+																										Line (Int32):
+																											"194"
+																										Column (Int32):
+																											"16"
+																									End (SourcePosition):
+																										Line (Int32):
+																											"194"
+																										Column (Int32):
+																											"20"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -12898,8 +12997,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"197"
+												Column (Int32):
+													"21"
+											End (SourcePosition):
+												Line (Int32):
+													"199"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -13619,8 +13727,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"202"
+												Column (Int32):
+													"22"
+											End (SourcePosition):
+												Line (Int32):
+													"202"
+												Column (Int32):
+													"24"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -14530,8 +14647,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"209"
+												Column (Int32):
+													"24"
+											End (SourcePosition):
+												Line (Int32):
+													"209"
+												Column (Int32):
+													"26"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -14907,8 +15033,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"212"
+												Column (Int32):
+													"31"
+											End (SourcePosition):
+												Line (Int32):
+													"214"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -15120,8 +15255,17 @@ Entry (KeyValuePair`2)
 																					null
 																				"call"
 																			Value (StrategyMap):
-																				Extent:
-																					null
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"213"
+																						Column (Int32):
+																							"35"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"213"
+																						Column (Int32):
+																							"37"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -15343,8 +15487,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"214"
+												Column (Int32):
+													"50"
+											End (SourcePosition):
+												Line (Int32):
+													"214"
+												Column (Int32):
+													"52"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -15548,8 +15701,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"215"
+												Column (Int32):
+													"34"
+											End (SourcePosition):
+												Line (Int32):
+													"217"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -15761,8 +15923,17 @@ Entry (KeyValuePair`2)
 																					null
 																				"call"
 																			Value (StrategyMap):
-																				Extent:
-																					null
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"216"
+																						Column (Int32):
+																							"32"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"216"
+																						Column (Int32):
+																							"34"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -15984,8 +16155,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"217"
+												Column (Int32):
+													"56"
+											End (SourcePosition):
+												Line (Int32):
+													"217"
+												Column (Int32):
+													"58"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -16293,8 +16473,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"219"
+												Column (Int32):
+													"57"
+											End (SourcePosition):
+												Line (Int32):
+													"223"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -16702,8 +16891,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"223"
+												Column (Int32):
+													"72"
+											End (SourcePosition):
+												Line (Int32):
+													"227"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -17111,8 +17309,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"227"
+												Column (Int32):
+													"47"
+											End (SourcePosition):
+												Line (Int32):
+													"231"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -17546,8 +17753,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"231"
+												Column (Int32):
+													"62"
+											End (SourcePosition):
+												Line (Int32):
+													"235"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -17981,8 +18197,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"235"
+												Column (Int32):
+													"51"
+											End (SourcePosition):
+												Line (Int32):
+													"235"
+												Column (Int32):
+													"53"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -18160,8 +18385,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"236"
+												Column (Int32):
+													"31"
+											End (SourcePosition):
+												Line (Int32):
+													"239"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -18527,8 +18761,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"239"
+												Column (Int32):
+													"58"
+											End (SourcePosition):
+												Line (Int32):
+													"241"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -19254,8 +19497,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"246"
+												Column (Int32):
+													"40"
+											End (SourcePosition):
+												Line (Int32):
+													"246"
+												Column (Int32):
+													"42"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -19893,8 +20145,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"252"
+												Column (Int32):
+													"34"
+											End (SourcePosition):
+												Line (Int32):
+													"252"
+												Column (Int32):
+													"36"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -20412,8 +20673,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"257"
+												Column (Int32):
+													"40"
+											End (SourcePosition):
+												Line (Int32):
+													"257"
+												Column (Int32):
+													"42"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -20873,8 +21143,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"261"
+												Column (Int32):
+													"44"
+											End (SourcePosition):
+												Line (Int32):
+													"261"
+												Column (Int32):
+													"46"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -21640,8 +21919,17 @@ Entry (KeyValuePair`2)
 																									null
 																								"call"
 																							Value (StrategyMap):
-																								Extent:
-																									null
+																								Extent (Extent):
+																									Start (SourcePosition):
+																										Line (Int32):
+																											"268"
+																										Column (Int32):
+																											"18"
+																									End (SourcePosition):
+																										Line (Int32):
+																											"268"
+																										Column (Int32):
+																											"28"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -21793,8 +22081,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"269"
+												Column (Int32):
+													"19"
+											End (SourcePosition):
+												Line (Int32):
+													"269"
+												Column (Int32):
+													"21"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -22382,8 +22679,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"274"
+												Column (Int32):
+													"28"
+											End (SourcePosition):
+												Line (Int32):
+													"279"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -22755,8 +23061,17 @@ Entry (KeyValuePair`2)
 																																			null
 																																		"call"
 																																	Value (StrategyMap):
-																																		Extent:
-																																			null
+																																		Extent (Extent):
+																																			Start (SourcePosition):
+																																				Line (Int32):
+																																					"277"
+																																				Column (Int32):
+																																					"23"
+																																			End (SourcePosition):
+																																				Line (Int32):
+																																					"277"
+																																				Column (Int32):
+																																					"25"
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				Extent:
@@ -23200,8 +23515,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"280"
+												Column (Int32):
+													"25"
+											End (SourcePosition):
+												Line (Int32):
+													"283"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -23617,8 +23941,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"283"
+												Column (Int32):
+													"53"
+											End (SourcePosition):
+												Line (Int32):
+													"283"
+												Column (Int32):
+													"55"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -23814,8 +24147,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"284"
+												Column (Int32):
+													"42"
+											End (SourcePosition):
+												Line (Int32):
+													"286"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -24189,8 +24531,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"287"
+												Column (Int32):
+													"30"
+											End (SourcePosition):
+												Line (Int32):
+													"292"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -25036,8 +25387,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"293"
+												Column (Int32):
+													"46"
+											End (SourcePosition):
+												Line (Int32):
+													"295"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -25653,8 +26013,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"299"
+												Column (Int32):
+													"37"
+											End (SourcePosition):
+												Line (Int32):
+													"302"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -26470,8 +26839,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"307"
+												Column (Int32):
+													"45"
+											End (SourcePosition):
+												Line (Int32):
+													"307"
+												Column (Int32):
+													"47"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -27667,8 +28045,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"319"
+												Column (Int32):
+													"36"
+											End (SourcePosition):
+												Line (Int32):
+													"319"
+												Column (Int32):
+													"38"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -27838,8 +28225,17 @@ Entry (KeyValuePair`2)
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"320"
+												Column (Int32):
+													"31"
+											End (SourcePosition):
+												Line (Int32):
+													"323"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -29032,8 +29428,17 @@ hello!
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"334"
+												Column (Int32):
+													"31"
+											End (SourcePosition):
+												Line (Int32):
+													"334"
+												Column (Int32):
+													"33"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -29211,8 +29616,17 @@ hello!
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"335"
+												Column (Int32):
+													"16"
+											End (SourcePosition):
+												Line (Int32):
+													"337"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -29484,8 +29898,17 @@ hello!
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"337"
+												Column (Int32):
+													"37"
+											End (SourcePosition):
+												Line (Int32):
+													"339"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -29783,8 +30206,17 @@ hello!
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"339"
+												Column (Int32):
+													"43"
+											End (SourcePosition):
+												Line (Int32):
+													"339"
+												Column (Int32):
+													"45"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -29962,8 +30394,17 @@ hello!
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"340"
+												Column (Int32):
+													"19"
+											End (SourcePosition):
+												Line (Int32):
+													"347"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -30266,8 +30707,17 @@ Schwaenzchen in die Hoeh."
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"347"
+												Column (Int32):
+													"26"
+											End (SourcePosition):
+												Line (Int32):
+													"347"
+												Column (Int32):
+													"28"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -30489,8 +30939,17 @@ Schwaenzchen in die Hoeh."
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"348"
+												Column (Int32):
+													"31"
+											End (SourcePosition):
+												Line (Int32):
+													"350"
+												Column (Int32):
+													"1"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -31310,8 +31769,17 @@ Schwaenzchen in die Hoeh."
 																									null
 																								"call"
 																							Value (StrategyMap):
-																								Extent:
-																									null
+																								Extent (Extent):
+																									Start (SourcePosition):
+																										Line (Int32):
+																											"356"
+																										Column (Int32):
+																											"36"
+																									End (SourcePosition):
+																										Line (Int32):
+																											"359"
+																										Column (Int32):
+																											"1"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -31447,8 +31915,17 @@ Schwaenzchen in die Hoeh."
 																													null
 																												"call"
 																											Value (StrategyMap):
-																												Extent:
-																													null
+																												Extent (Extent):
+																													Start (SourcePosition):
+																														Line (Int32):
+																															"356"
+																														Column (Int32):
+																															"54"
+																													End (SourcePosition):
+																														Line (Int32):
+																															"359"
+																														Column (Int32):
+																															"1"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -32008,8 +32485,17 @@ Schwaenzchen in die Hoeh."
 																																							null
 																																						"call"
 																																					Value (StrategyMap):
-																																						Extent:
-																																							null
+																																						Extent (Extent):
+																																							Start (SourcePosition):
+																																								Line (Int32):
+																																									"361"
+																																								Column (Int32):
+																																									"12"
+																																							End (SourcePosition):
+																																								Line (Int32):
+																																									"364"
+																																								Column (Int32):
+																																									"1"
 																																						Entry (KeyValuePair`2)
 																																							Key (StrategyMap):
 																																								Extent:
@@ -32093,8 +32579,17 @@ Schwaenzchen in die Hoeh."
 																																											null
 																																										"call"
 																																									Value (StrategyMap):
-																																										Extent:
-																																											null
+																																										Extent (Extent):
+																																											Start (SourcePosition):
+																																												Line (Int32):
+																																													"361"
+																																												Column (Int32):
+																																													"29"
+																																											End (SourcePosition):
+																																												Line (Int32):
+																																													"364"
+																																												Column (Int32):
+																																													"1"
 																																										Entry (KeyValuePair`2)
 																																											Key (StrategyMap):
 																																												Extent:
@@ -32698,8 +33193,17 @@ Schwaenzchen in die Hoeh."
 																									null
 																								"call"
 																							Value (StrategyMap):
-																								Extent:
-																									null
+																								Extent (Extent):
+																									Start (SourcePosition):
+																										Line (Int32):
+																											"366"
+																										Column (Int32):
+																											"42"
+																									End (SourcePosition):
+																										Line (Int32):
+																											"366"
+																										Column (Int32):
+																											"46"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -32963,8 +33467,17 @@ Schwaenzchen in die Hoeh."
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"367"
+												Column (Int32):
+													"20"
+											End (SourcePosition):
+												Line (Int32):
+													"367"
+												Column (Int32):
+													"22"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -33432,8 +33945,17 @@ Schwaenzchen in die Hoeh."
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"371"
+												Column (Int32):
+													"32"
+											End (SourcePosition):
+												Line (Int32):
+													"371"
+												Column (Int32):
+													"34"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -34325,8 +34847,17 @@ Schwaenzchen in die Hoeh."
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"380"
+												Column (Int32):
+													"27"
+											End (SourcePosition):
+												Line (Int32):
+													"380"
+												Column (Int32):
+													"35"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -34410,8 +34941,17 @@ Schwaenzchen in die Hoeh."
 															null
 														"call"
 													Value (StrategyMap):
-														Extent:
-															null
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"380"
+																Column (Int32):
+																	"33"
+															End (SourcePosition):
+																Line (Int32):
+																	"380"
+																Column (Int32):
+																	"35"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -34837,8 +35377,17 @@ Schwaenzchen in die Hoeh."
 											null
 										"call"
 									Value (StrategyMap):
-										Extent:
-											null
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"384"
+												Column (Int32):
+													"39"
+											End (SourcePosition):
+												Line (Int32):
+													"384"
+												Column (Int32):
+													"41"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
