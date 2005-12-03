@@ -766,7 +766,7 @@ namespace Meta
 			}
 			if (Persistant && !FileSystem.Parsing)
 			{
-				//FileSystem.Save();
+				FileSystem.Save();
 			}
 		}
 
@@ -3248,13 +3248,14 @@ namespace Meta
 					{
 						val = Expression();
 					}
-					if (val == null)
-					{
-						SourcePosition position = new SourcePosition(Line, Column);
-						throw new MetaException("Expected value of statement", new Extent(position, position));
-					}
+
 					key = CreateDefaultKey(new StrategyMap((Integer)count));
 					count++;
+				}
+				if (val == null)
+				{
+					SourcePosition position = new SourcePosition(Line, Column);
+					throw new MetaException("Expected value of statement", new Extent(position, position));
 				}
 				Map statement = new StrategyMap();
 				statement[CodeKeys.Key] = key;

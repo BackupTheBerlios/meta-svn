@@ -856,5 +856,4 @@ website=
 			directory
 			"Website"
 			"index.html"
-		index=
 		displayHtml index
