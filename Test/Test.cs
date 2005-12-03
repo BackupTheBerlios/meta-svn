@@ -71,8 +71,8 @@ namespace Test
 		[Test]
 		public object Serialization()
 		{
-			Map map = LocalStrategy.singleton.cache["basicTest"];
-			return Meta.LocalStrategy.Serialize.Value(map).TrimStart();
+			Map map = FileSystem.fileSystem["basicTest"];
+			return FileSystem.Serialize.Value(map).TrimStart();
 		}
 		[Test(2)]
 		public object Basic()
@@ -80,12 +80,12 @@ namespace Test
 			Map argument = new NormalMap();
 			argument[1] = "first arg";
 			argument[2] = "second=arg";
-			return LocalStrategy.singleton.cache["basicTest"].Call(argument);//, Map.Empty);
+			return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
 		}
 		[Test(2)]
 		public object Library()
 		{
-			return LocalStrategy.singleton.cache["libraryTest"].Call(Map.Empty);//, Map.Empty);
+			return FileSystem.fileSystem["libraryTest"].Call(Map.Empty);//, Map.Empty);
 		}
 		[Test]
 		public object Extents()
@@ -93,7 +93,7 @@ namespace Test
 			Map argument = Map.Empty;
 			argument[1] = "first arg";
 			argument[2] = "second=arg";
-			return LocalStrategy.singleton.cache["basicTest"];
+			return FileSystem.fileSystem["basicTest"];
 		}
 
 	}
