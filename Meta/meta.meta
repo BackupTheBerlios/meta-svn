@@ -449,6 +449,9 @@ library=
 						map=*
 						counter=1
 				current=result.map
+		join=
+			|Meta.Process.Join
+				arg
 		contains=
 			|
 				object=Meta.ObjectMap
@@ -498,8 +501,7 @@ library=
 			|
 				map=Meta.ObjectMap
 					arg
-				array=map.Array.get *
-				current=array.Count.get *
+				current=map.ArrayCount.get *
 		sum=
 			|sumImplementation
 				index=1
@@ -585,6 +587,11 @@ library=
 						1
 				current=Meta.StrategyMap
 					result
+		increment=
+			|
+				result=arg
+				result.[*]=arg
+				current=result
 		add=
 			|Meta.StrategyMap
 				map.sum
@@ -807,6 +814,7 @@ html=
 				"form"
 				"input"
 				"a"
+				"img"
 displayHtml=
 	|
 		fileName="C:\test.html"
@@ -846,28 +854,31 @@ website=
 	|
 		current=library.map.merge
 			library.map
-		html=html *
+			html *
 		menu=
-			|html.tags.h1
-				inner="Meta"
+			|tags.a
+				inner=tags.h1
+					inner="Meta"
+				attribute=
+					href="home.html"
 		navigation=
-			|html.table apply
+			|table apply
 				array=keys website
 				with=
 					|
-						arg
-		console.write Meta.FileSystem.Serialize.Value
-			keys html
+						tags.a
+							inner=arg
+							attribute=
+								href=join
+									arg
+									".html"
 		websiteDirectory="C:\Projects\Meta\Website"
 		indexPath=path.combine
 			websiteDirectory
 			"Home.html"
 		website=
-			Home="Meta rocks!"
-		'"Tutorial="this is a multipart tutorial"
-			Help="This is the forum"
-			Docs="Lots of boring details"
-			Develop="Fun stuff for hackers""'
+			home="Meta rocks!"
+			tutorial="this is a multipart tutorial"
 		apply
 			array=keys website
 			with=
@@ -877,10 +888,29 @@ website=
 						join
 							arg
 							".html"
-					text=html.table
-						=
-							menu *
-						=
-							navigation *
-							website.[arg]
-		"browser indexPath"
+					text=join
+						tags.title
+							inner=join
+								"Meta - "
+								arg						
+						table
+							=
+								navigation *
+								table
+									=
+										menu *
+									=
+										website.[arg]
+						table
+							=
+								tags.a
+									attribute=
+										href="http://developer.berlios.de"
+									inner=tags.img
+										attribute=
+											src="http://developer.berlios.de/bslogo.php?group_id=2780"
+											width="124"
+											height="32"
+											border="0"
+											alt="BerliOS Logo"
+		browser indexPath

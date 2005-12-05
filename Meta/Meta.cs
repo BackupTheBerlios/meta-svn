@@ -45,6 +45,7 @@ namespace Meta
 		public static readonly Map Function="function";
 		public static readonly Map Call="call";
 		public static readonly Map Callable="callable";
+		// rename to parameter
 		public static readonly Map Argument="argument";
 		public static readonly Map Select="select";
 		public static readonly Map Program="program";
@@ -68,32 +69,41 @@ namespace Meta
 	}
 	public class MetaException:ApplicationException
 	{
-		public MetaException(Exception innerException, string message, Extent extent):base(GetMessage(message,extent),innerException)
+		public List<string> Stack
 		{
-			this.extent = extent;
-			this.message = message;
-		}
-		private static string GetMessage(string message, Extent extent)
-		{
-			string text = message;
-			if (extent != null)
+			get
 			{
-				text += " In line " + extent.Start.Line + ", column " + extent.Start.Column;
+				return stack;
 			}
-			return text;
 		}
-		public MetaException(string message,Extent extent):this(null,message,extent)
+		private List<string> stack = new List<string>();
+		public override string ToString()
 		{
+			return Message + "\n" +string.Join("\n",stack.ToArray());
+		}
+		public static string GetExtentText(Extent extent)
+		{
+			return "Line " + extent.Start.Line + ", column " + extent.Start.Column + ": ";
+		}
+		public MetaException(string message, Extent extent)
+		{
+			this.message = message;
+			this.extent = extent;
 		}
         public override string Message
         {
             get
             {
-				string text = message;
+				string text;
 				if (extent != null)
 				{
-					text += " In line " + extent.Start.Line + ", column " + extent.Start.Column;
+					text = GetExtentText(extent);
 				}
+				else
+				{
+					text = "Unknown location: ";
+				}
+				text += message;
 				return text;
             }
         }
@@ -111,8 +121,212 @@ namespace Meta
 			throw new MetaException("The key "+FileSystem.Serialize.Value(key)+" could not be found.",extent);
 		}
 	}
+	public abstract class Expression
+	{
+		public abstract Map Evaluate(Map context,Map arg);
+	}
+	public class Call : Expression
+	{
+		private Map callable;
+		private Map parameter;
+		public Call(Map code)
+		{
+			this.callable = code[CodeKeys.Callable];
+			this.parameter = code[CodeKeys.Argument];
+		}
+		public override Map Evaluate(Map current, Map arg)
+		{
+			Map function = callable.GetExpression().Evaluate(current, arg);
+			Map argument = parameter.GetExpression().Evaluate(current, arg);
+			Map result;
+			try
+			{
+				result = function.Call(argument);
+			}
+			catch (MetaException e)
+			{
+				e.Stack.Add(MetaException.GetExtentText(callable.Extent));
+				throw e;
+			}
+			if (result == null)
+			{
+				result = Map.Empty.Copy();
+			}
+			// messy
+			Map clone = result.Copy();
+			clone.Parent = null;
+			clone.Scope = null;
+			return clone;
+		}
+	}
+	public class Program : Expression
+	{
+		//private List<Map> statements=new List<Statement>();
+		private List<Map> statements;
+		public Program(Map code)
+		{
+			statements = code.Array;
+			//foreach (Map statement in code.Array)
+			//{
+			//    statements.Add(new Statement(statement));
+			//}
+		}
+		public override Map Evaluate(Map context, Map arg)
+		{
+			Map local = new StrategyMap();
+			Evaluate(context, ref local, arg);
+			return local;
+		}
+		private void Evaluate(Map parent, ref Map current, Map arg)
+		{
+			current.Parent = parent;
+			foreach (Map statement in statements)
+			{
+				statement.GetStatement().Assign(ref current, arg);
+			}
+		}
+	}
+	public class Literal : Expression
+	{
+		private Map literal;
+		public Literal(Map code)
+		{
+			this.literal = code;
+		}
+		public override Map Evaluate(Map context, Map arg)
+		{
+			return literal.Copy();
+		}
+	}
+	public class Select : Expression
+	{
+		private Map FindFirstKey(Map keyExpression, Map context, Map arg)
+		{
+			Map key = keyExpression.GetExpression().Evaluate(context, arg);
+			Map val;
+			if (key.Equals(SpecialKeys.Arg))
+			{
+				val = arg;
+			}
+			else if (key.Equals(SpecialKeys.Parent))
+			{
+				val = context.Parent;
+			}
+			else if (key.Equals(SpecialKeys.Current))
+			{
+				val = context;
+			}
+			else
+			{
+				Map selected = context;
+				while (!selected.ContainsKey(key))
+				{
+					selected = selected.Scope;
+
+					if (selected == null)
+					{
+						Throw.KeyNotFound(key, key.Extent);
+					}
+				}
+				val = selected[key];
+			}
+			return val;
+		}
+		private List<Map> keys;
+		public Select(Map code)
+		{
+			this.keys = code.Array;
+		}
+		public override Map Evaluate(Map context, Map arg)
+		{
+			Map selected = FindFirstKey(keys[0], context, arg);
+			for (int i = 1; i<keys.Count; i++)
+			{
+				Map key = keys[i].GetExpression().Evaluate(context, arg);
+				Map selection;
+				if (key.Equals(SpecialKeys.Parent))
+				{
+					selection = selected.Parent;
+				}
+				else
+				{
+					selection = selected[key];
+				}
+				if (selection == null)
+				{
+					object x = selected["Item"];
+					Throw.KeyDoesNotExist(key, key.Extent);
+				}
+				selected = selection;
+			}
+			return selected;
+		}
+	}
+	public class Statement
+	{
+		// not quite correct, we should rather just cache the array in maps
+		List<Map> keys;
+		Map value;
+		public Statement(Map code)
+		{
+			this.keys = code[CodeKeys.Key].Array;
+			this.value = code[CodeKeys.Value];
+		}
+		public void Assign(ref Map context, Map arg)
+		{
+			Map selected = context;
+			Map key;
+			int i = 0;
+			for (; i+1<keys.Count;)
+			{
+				key = keys[i].GetExpression().Evaluate(context, arg);
+				Map selection;
+				if (key.Equals(SpecialKeys.Parent))
+				{
+					selection = selected.Parent;
+				}
+				else
+				{
+					selection = selected[key];
+				}
+
+				if (selection == null)
+				{
+					Throw.KeyDoesNotExist(key, keys[0].Extent);
+				}
+				selected = selection;
+				i++;
+			}
+			Map lastKey = keys[i].GetExpression().Evaluate(context, arg);
+			Map val = value.GetExpression().Evaluate(context, arg);
+
+			if (lastKey.Equals(SpecialKeys.Current))
+			{
+				val.Parent = context.Parent;
+				context = val;
+			}
+			else
+			{
+				selected[lastKey] = val;
+			}
+		}
+	}
 	public class Process
 	{
+		public static Map Join(Map arg)
+		{
+			Map result = new StrategyMap();
+			Integer counter=1;
+			foreach (Map map in arg.Array)
+			{
+				foreach (Map entry in map.Array)
+				{
+					result[counter] = entry;
+					counter += 1;
+				}
+			}
+			return result;
+		}
 		Thread thread;
 		private Map parameter;
 		private Map program;
@@ -171,54 +385,130 @@ namespace Meta
 		private static Dictionary<Thread,Process> processes=new Dictionary<Thread,Process>();
 		private bool reverseDebugging=false;
 		private SourcePosition breakPoint=new SourcePosition(0,0);
-		public Map Expression(Map code,Map context,Map arg)
-		{
-			Map val;
-			if(code.ContainsKey(CodeKeys.Call))
-			{
-				val=Call(code[CodeKeys.Call],context,arg);
-			}
-			else if(code.ContainsKey(CodeKeys.Program))
-			{
-				val=Program(code[CodeKeys.Program],context,arg);
-			}
-			else if(code.ContainsKey(CodeKeys.Literal))
-			{
-				val=Literal(code[CodeKeys.Literal],context);
-			}
-			else if(code.ContainsKey(CodeKeys.Select))
-			{
-				val=Select(code[CodeKeys.Select],context,arg);
-			}
-			else
-			{
-				throw new ApplicationException("Cannot compile map.");
-			}
-			return val;
-		}
-		public Map Call(Map code, Map current, Map arg)
-		{
-			Map function = Expression(code[CodeKeys.Callable], current, arg);
-			Map argument = Expression(code[CodeKeys.Argument], current, arg);
-			Map result;
-			try
-			{
-				result = function.Call(argument);
-			}
-			catch(Exception e)
-			{
-				throw new MetaException(e, "Function threw an exception." , code.Extent);
-			}
-			if (result == null)
-			{
-				result = Map.Empty.Copy();
-			}
-			// messy
-			Map clone = result.Copy();
-			clone.Parent = null;
-			clone.Scope = null;
-			return clone;
-		}
+		//public Map Expression(Map code, Map context, Map arg)
+		//{
+		//    Map val;
+		//    Expression expression;
+		//    if (code.Expression == null)
+		//    {
+		//        if (code.ContainsKey(CodeKeys.Call))
+		//        {
+		//            expression = new Call(code[CodeKeys.Call]);
+		//        }
+		//        else if (code.ContainsKey(CodeKeys.Program))
+		//        {
+		//            expression = new Program(code[CodeKeys.Program]);
+		//        }
+		//        else if (code.ContainsKey(CodeKeys.Literal))
+		//        {
+		//            expression = new Literal(code[CodeKeys.Literal]);
+		//        }
+		//        else if (code.ContainsKey(CodeKeys.Select))
+		//        {
+		//            expression = new Select(code[CodeKeys.Select]);
+		//        }
+		//        else
+		//        {
+		//            throw new ApplicationException("Cannot compile map.");
+		//        }
+		//    }
+		//    else
+		//    {
+		//        expression = code.Expression;
+		//    }
+		//    val = expression.Evaluate(context, arg);
+		//    return val;
+		//}
+		//public Map Expression(Map code, Map context, Map arg)
+		//{
+		//    Map val;
+		//    Expression expression;
+		//    if (code.Expression == null)
+		//    {
+		//        if (code.ContainsKey(CodeKeys.Call))
+		//        {
+		//            expression = new Call(code[CodeKeys.Call]);
+		//        }
+		//        else if (code.ContainsKey(CodeKeys.Program))
+		//        {
+		//            expression = new Program(code[CodeKeys.Program]);
+		//        }
+		//        else if (code.ContainsKey(CodeKeys.Literal))
+		//        {
+		//            expression = new Literal(code[CodeKeys.Literal]);
+		//        }
+		//        else if (code.ContainsKey(CodeKeys.Select))
+		//        {
+		//            expression = new Select(code[CodeKeys.Select]);
+		//        }
+		//        else
+		//        {
+		//            throw new ApplicationException("Cannot compile map.");
+		//        }
+		//    }
+		//    else
+		//    {
+		//        expression=code.Expression;
+		//    }
+		//    val=code.Expression.Evaluate(code, context, arg);
+		//    return val;
+		//}
+		//public Map Expression(Map code,Map context,Map arg)
+		//{
+		//    Map val;
+		//    if (code.Expression == null)
+		//    {
+		//        if (code.ContainsKey(CodeKeys.Call))
+		//        {
+		//            val = Call(code[CodeKeys.Call], context, arg);
+		//        }
+		//        else if (code.ContainsKey(CodeKeys.Program))
+		//        {
+		//            val = Program(code[CodeKeys.Program], context, arg);
+		//        }
+		//        else if (code.ContainsKey(CodeKeys.Literal))
+		//        {
+		//            val = Literal(code[CodeKeys.Literal], context);
+		//        }
+		//        else if (code.ContainsKey(CodeKeys.Select))
+		//        {
+		//            val = Select(code[CodeKeys.Select], context, arg);
+		//        }
+		//        else
+		//        {
+		//            throw new ApplicationException("Cannot compile map.");
+		//        }
+		//    }
+		//    else
+		//    {
+		//        val = null;
+		//    }
+		//    return val;
+		//}
+		//public Map Call(Map code, Map current, Map arg)
+		//{
+		//    Map function = Expression(code[CodeKeys.Callable], current, arg);
+		//    Map argument = Expression(code[CodeKeys.Argument], current, arg);
+		//    Map result;
+		//    try
+		//    {
+		//        result = function.Call(argument);
+		//    }
+		//    catch (MetaException e)
+		//    {
+		//        e.Stack.Add(MetaException.GetExtentText(code.Extent));
+		//        throw e;
+		//    }
+		//    if (result == null)
+		//    {
+		//        result = Map.Empty.Copy();
+		//    }
+		//    // messy
+		//    Map clone = result.Copy();
+		//    clone.Parent = null;
+		//    clone.Scope = null;
+		//    return clone;
+		//}
 		public bool ReverseDebugging
 		{
 			get
@@ -230,130 +520,130 @@ namespace Meta
 				reverseDebugging=value;
 			}
 		}
-		public Map Program(Map code,Map current,Map arg)
-		{
-			Map local=new StrategyMap();
-			Program(code,current,ref local,arg);
-			return local;
-		}
-		private void Program(Map code,Map parent,ref Map current,Map arg)
-		{
-			current.Parent=parent;
-			for(int i=1;code.ContainsKey(i) && i>0;i++)
-			{
-				Statement((Map)code[i],ref current,arg);
-			}
-		}
-		public void Statement(Map code, ref Map context, Map arg)
-		{
-			Map selected = context;
-			Map key;
-			Map keys = code[CodeKeys.Key];
-			int i = 1;
-			for (; keys.ContainsKey(i + 1);)
-			{
-				key = Expression((Map)keys[i], context, arg);
-				Map selection;
-				if (key.Equals(new StrategyMap("testSubDir")))
-				{
-				}
-				if (key.Equals(SpecialKeys.Parent))
-				{
-					selection = selected.Parent;
-				}
-				else
-				{
-					selection = selected[key];
-				}
+		//public Map Program(Map code,Map current,Map arg)
+		//{
+		//    Map local=new StrategyMap();
+		//    Program(code,current,ref local,arg);
+		//    return local;
+		//}
+		//private void Program(Map code,Map parent,ref Map current,Map arg)
+		//{
+		//    current.Parent=parent;
+		//    for(int i=1;code.ContainsKey(i) && i>0;i++)
+		//    {
+		//        Statement((Map)code[i],ref current,arg);
+		//    }
+		//}
+		//public void Statement(Map code, ref Map context, Map arg)
+		//{
+		//    Map selected = context;
+		//    Map key;
+		//    Map keys = code[CodeKeys.Key];
+		//    int i = 1;
+		//    for (; keys.ContainsKey(i + 1);)
+		//    {
+		//        key = Expression((Map)keys[i], context, arg);
+		//        Map selection;
+		//        if (key.Equals(new StrategyMap("testSubDir")))
+		//        {
+		//        }
+		//        if (key.Equals(SpecialKeys.Parent))
+		//        {
+		//            selection = selected.Parent;
+		//        }
+		//        else
+		//        {
+		//            selection = selected[key];
+		//        }
 
-				if (selection == null)
-				{
-					Throw.KeyDoesNotExist(key, code.Extent);
-				}
-				selected = selection;
-				i++;
-			}
-			Map lastKey = Expression((Map)keys[i], context, arg);
-			if (lastKey.Equals(new StrategyMap("html")))
-			{
-				int asdf = 0;
-			}
+		//        if (selection == null)
+		//        {
+		//            Throw.KeyDoesNotExist(key, code.Extent);
+		//        }
+		//        selected = selection;
+		//        i++;
+		//    }
+		//    Map lastKey = Expression((Map)keys[i], context, arg);
+		//    if (lastKey.Equals(new StrategyMap("html")))
+		//    {
+		//        int asdf = 0;
+		//    }
 
-			Map val = Expression(code[CodeKeys.Value], context, arg);
+		//    Map val = Expression(code[CodeKeys.Value], context, arg);
 
-			if (lastKey.Equals(SpecialKeys.Current))
-			{
-				val.Parent = context.Parent;
-				context = val;
-			}
-			else
-			{
-				selected[lastKey] = val;
-			}
-		}
-		public Map Literal(Map code,Map context)
-		{
-			return code.Copy();
-		}
-		public Map Select(Map code, Map context, Map arg)
-		{
-			Map selected = FindFirstKey(code, context, arg);
-			for (int i = 2;code.ContainsKey(i); i++)
-			{
-				Map key = Expression((Map)code[i], context, arg);
-				if (key.Equals(new StrategyMap("htmlTable")))
-				{
-				}
-				Map selection;
-				if (key.Equals(SpecialKeys.Parent))
-				{
-					selection = selected.Parent;
-				}
-				else
-				{
-					selection = selected[key];
-				}
-				if (selection == null)
-				{
-					object x = selected["Item"];
-					Throw.KeyDoesNotExist(key, key.Extent);
-				}
-				selected = selection;
-			}
-			return selected;
-		}
-		private Map FindFirstKey(Map code, Map context, Map arg)
-		{
-			Map key = Expression((Map)code[1], context, arg);
-			Map val;
-			if (key.Equals(SpecialKeys.Arg))
-			{
-				val = arg;
-			}
-			else if (key.Equals(SpecialKeys.Parent))
-			{
-				val = context.Parent;
-			}
-			else if (key.Equals(SpecialKeys.Current))
-			{
-				val = context;
-			}
-			else
-			{
-				Map selected = context;
-				while (!selected.ContainsKey(key))
-				{
-					selected = selected.Scope;
+		//    if (lastKey.Equals(SpecialKeys.Current))
+		//    {
+		//        val.Parent = context.Parent;
+		//        context = val;
+		//    }
+		//    else
+		//    {
+		//        selected[lastKey] = val;
+		//    }
+		//}
+		//public Map Literal(Map code,Map context)
+		//{
+		//    return code.Copy();
+		//}
+		//public Map Select(Map code, Map context, Map arg)
+		//{
+		//    Map selected = FindFirstKey(code, context, arg);
+		//    for (int i = 2;code.ContainsKey(i); i++)
+		//    {
+		//        Map key = Expression((Map)code[i], context, arg);
+		//        if (key.Equals(new StrategyMap("htmlTable")))
+		//        {
+		//        }
+		//        Map selection;
+		//        if (key.Equals(SpecialKeys.Parent))
+		//        {
+		//            selection = selected.Parent;
+		//        }
+		//        else
+		//        {
+		//            selection = selected[key];
+		//        }
+		//        if (selection == null)
+		//        {
+		//            object x = selected["Item"];
+		//            Throw.KeyDoesNotExist(key, key.Extent);
+		//        }
+		//        selected = selection;
+		//    }
+		//    return selected;
+		//}
+		//private Map FindFirstKey(Map code, Map context, Map arg)
+		//{
+		//    Map key = Expression((Map)code[1], context, arg);
+		//    Map val;
+		//    if (key.Equals(SpecialKeys.Arg))
+		//    {
+		//        val = arg;
+		//    }
+		//    else if (key.Equals(SpecialKeys.Parent))
+		//    {
+		//        val = context.Parent;
+		//    }
+		//    else if (key.Equals(SpecialKeys.Current))
+		//    {
+		//        val = context;
+		//    }
+		//    else
+		//    {
+		//        Map selected = context;
+		//        while (!selected.ContainsKey(key))
+		//        {
+		//            selected = selected.Scope;
 
-					if (selected == null)
-					{
-						Throw.KeyNotFound(key, code.Extent);
-					}
-				}
-				val = selected[key];
-			}
-			return val;
-		}
+		//            if (selected == null)
+		//            {
+		//                Throw.KeyNotFound(key, code.Extent);
+		//            }
+		//        }
+		//        val = selected[key];
+		//    }
+		//    return val;
+		//}
 
 		public event DebugBreak Break;
 
@@ -381,6 +671,44 @@ namespace Meta
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
+		private Statement statement;
+		public Statement GetStatement()
+		{
+			if (statement == null)
+			{
+				statement = new Statement(this);
+			}
+			return statement;
+		}
+		public Expression GetExpression()
+		{
+			if (expression == null)
+			{
+				if (ContainsKey(CodeKeys.Call))
+				{
+					expression = new Call(this[CodeKeys.Call]);
+				}
+				else if (ContainsKey(CodeKeys.Program))
+				{
+					expression = new Program(this[CodeKeys.Program]);
+				}
+				else if (ContainsKey(CodeKeys.Literal))
+				{
+					expression = new Literal(this[CodeKeys.Literal]);
+				}
+				else if (ContainsKey(CodeKeys.Select))
+				{
+					expression = new Select(this[CodeKeys.Select]);
+				}
+				else
+				{
+					throw new ApplicationException("Cannot compile map.");
+				}
+			}
+			return expression;
+		}
+		private Expression expression;
+
 		public string GetKeyStrings()
 		{
 			string text="";
@@ -497,11 +825,13 @@ namespace Meta
 			get
 			{
 				bool isString;
-				if (Array.Count == Keys.Count)
+				if (ArrayCount == Count)
 				{
-					isString=this.Array.TrueForAll(
-						delegate(Map map) {
-							return Transform.IsIntegerInRange(map, (int)Char.MinValue, (int)Char.MaxValue);});
+					isString = this.Array.TrueForAll(
+						delegate(Map map)
+						{
+							return Transform.IsIntegerInRange(map, (int)Char.MinValue, (int)Char.MaxValue);
+						});
 				}
 				else
 				{
@@ -561,14 +891,19 @@ namespace Meta
 		{
 			get
 			{
-				return Array.Count;
+				int i = 1;
+				for (; this.ContainsKey(i); i++)
+				{
+				}
+				return i-1;
 			}
 		}
+		// array instead of list
 		public virtual List<Map> Array
 		{
 			get
 			{
-				List<Map> array = new List<Map>();
+				List<Map> array = new List<Map>(Count);
 				int index = 1;
 				while (this.ContainsKey(index))
 				{
@@ -587,6 +922,8 @@ namespace Meta
             {
                 if (value != null)
                 {
+					expression = null;
+					statement = null;
                     Map val = value.Copy();
                     val.Parent = this;
                     Set(key, val);
@@ -598,7 +935,7 @@ namespace Meta
 		public virtual Map Call(Map arg)
 		{
 			Map function = this[CodeKeys.Function];
-			Map result = Process.Current.Expression(function, this, arg);
+			Map result = function.GetExpression().Evaluate(this, arg);
 			return result;
 		}
 		public abstract ICollection<Map> Keys
@@ -644,11 +981,14 @@ namespace Meta
 			{
 				return (int)(GetInteger().integer % int.MaxValue);
 			}
+			else if (IsString)
+			{
+				return GetString().GetHashCode();
+			}
 			else
 			{
 				return Count;
 			}
-			//return 0;
 		}
 		Extent extent;
 		[Serialize(1)]
@@ -1197,6 +1537,7 @@ namespace Meta
 		{
 			throw new ApplicationException("Cannot set key in Method");
 		}
+		// refactor
 		public class ArgumentComparer: IComparer<MethodBase>
 		{
 			public static ArgumentComparer singleton = new ArgumentComparer();
@@ -1221,14 +1562,11 @@ namespace Meta
 		}
 		public override Map Call(Map argument)
 		{
-			if (this.name == "Write")
-			{
-			}
 			object result = null;
 			bool isExecuted = false;
 			List<MethodBase> rightNumberArgumentMethods = new List<MethodBase>();
 			int count = argument.ArrayCount;
-			if (count == ((Map)argument).Count)
+			if (count == argument.Count)
 			{
 				foreach (MethodBase method in overloadedMethods)
 				{
@@ -1253,7 +1591,7 @@ namespace Meta
 				ParameterInfo[] parameters = method.GetParameters();
 				for (int i = 0; argumentsMatched && i < parameters.Length; i++)
 				{
-					object arg = Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType);
+					object arg = Transform.ToDotNet(argument[i+1], parameters[i].ParameterType);
 					if (arg != null)
 					{
 						arguments.Add(arg);
@@ -1298,6 +1636,82 @@ namespace Meta
 			}
 			return Transform.ToMeta(result);
 		}
+		//public override Map Call(Map argument)
+		//{
+		//    object result = null;
+		//    bool isExecuted = false;
+		//    List<MethodBase> rightNumberArgumentMethods = new List<MethodBase>();
+		//    int count = argument.ArrayCount;
+		//    if (count == argument.Count)
+		//    {
+		//        foreach (MethodBase method in overloadedMethods)
+		//        {
+		//            if (count == method.GetParameters().Length)
+		//            {
+		//                rightNumberArgumentMethods.Add(method);
+		//            }
+		//        }
+		//    }
+		//    if (rightNumberArgumentMethods.Count == 0)
+		//    {
+		//        throw new ApplicationException("Method " + this.type.Name + "." + this.name + ": No methods with the right number of arguments.");
+		//    }
+		//    if (rightNumberArgumentMethods.Count > 1)
+		//    {
+		//        rightNumberArgumentMethods.Sort(ArgumentComparer.singleton);
+		//    }
+		//    foreach (MethodBase method in rightNumberArgumentMethods)
+		//    {
+		//        List<object> arguments = new List<object>();
+		//        bool argumentsMatched = true;
+		//        ParameterInfo[] parameters = method.GetParameters();
+		//        for (int i = 0; argumentsMatched && i < parameters.Length; i++)
+		//        {
+		//            object arg = Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType);
+		//            if (arg != null)
+		//            {
+		//                arguments.Add(arg);
+		//            }
+		//            else
+		//            {
+		//                argumentsMatched = false;
+		//                break;
+		//            }
+		//        }
+		//        if (argumentsMatched)
+		//        {
+		//            if (method is ConstructorInfo)
+		//            {
+		//                try
+		//                {
+		//                    result = ((ConstructorInfo)method).Invoke(arguments.ToArray());
+		//                }
+		//                catch (Exception e)
+		//                {
+		//                    throw e.InnerException;
+		//                }
+		//            }
+		//            else
+		//            {
+		//                try
+		//                {
+		//                    result = method.Invoke(obj, arguments.ToArray());
+		//                }
+		//                catch (Exception e)
+		//                {
+		//                    throw e.InnerException;
+		//                }
+		//            }
+		//            isExecuted = true;
+		//            break;
+		//        }
+		//    }
+		//    if (!isExecuted)
+		//    {
+		//        throw new ApplicationException("Method " + this.name + " could not be called.");
+		//    }
+		//    return Transform.ToMeta(result);
+		//}
 		public class EventHandlerContainer
 		{
 			private Map callable;
@@ -1574,10 +1988,10 @@ namespace Meta
 			{ 
 				isEqual=true;
 			}
-			else if (!(strategy is MapStrategy))
-			{
-				isEqual = false;
-			}
+			//else if (!(strategy is MapStrategy))
+			//{
+			//    isEqual = false;
+			//}
 			else if(((MapStrategy)strategy).Count!=this.Count)
 			{
 				isEqual=false;
@@ -1600,6 +2014,7 @@ namespace Meta
 	public class CloneStrategy:MapStrategy
 	{
 		public MapStrategy original;
+		// this isnt quite correct, map of original needs a clone strategy, too
 		public CloneStrategy(MapStrategy original)
 		{
 			this.original=original;
@@ -1698,6 +2113,7 @@ namespace Meta
 		}
 		public override bool Equal(MapStrategy strategy)
 		{
+			// rename to equal
 			bool isEqual;
 			if (strategy is StringStrategy)
 			{
@@ -2222,17 +2638,29 @@ namespace Meta
 			}
 				return result;
 		}
-		public override void Set(Map key,Map value)
+		public override void Set(Map key, Map value)
 		{
-			if(key.Equals(Map.Empty))
+			if (key.Equals(Map.Empty) && value.IsInteger)
 			{
-				Panic(key,value);
+				this.number += 1;
+				//Panic(key, value);
 			}
 			else
 			{
-				Panic(key,value);
+				Panic(key, value);
 			}
 		}
+		//public override void Set(Map key, Map value)
+		//{
+		//    if (key.Equals(Map.Empty))
+		//    {
+		//        Panic(key, value);
+		//    }
+		//    else
+		//    {
+		//        Panic(key, value);
+		//    }
+		//}
 	}
 
 	public interface ISerializeEnumerableSpecial
@@ -2597,7 +3025,7 @@ namespace Meta
 		public static Map Parse(TextReader textReader)
 		{
 			Parsing = true;
-			Map result=Process.Current.Expression(Compile(textReader), Map.Empty, Map.Empty);
+			Map result=Compile(textReader).GetExpression().Evaluate(Map.Empty, Map.Empty);
 			Parsing = false;
 			return result;
 		}

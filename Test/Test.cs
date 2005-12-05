@@ -38,13 +38,22 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			new MetaTest().Run();
-			DateTime start = DateTime.Now;
-			//LocalStrategy.singleton.map["website"].Call(Map.Empty);//, Map.Empty);
-			////LocalStrategy.singleton.map["test"].Call(Map.Empty);//, Map.Empty);
-			FileSystem.fileSystem["website"].Call(Map.Empty);
-			Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
-			Console.ReadLine();
+			try
+			{
+				new MetaTest().Run();
+				//LocalStrategy.singleton.map["website"].Call(Map.Empty);//, Map.Empty);
+				DateTime start = DateTime.Now;
+				FileSystem.fileSystem["website"].Call(Map.Empty);
+				Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
+				//Console.ReadLine();
+			}
+			catch(MetaException e)
+			{
+				Console.WriteLine();
+				Console.WriteLine(e.ToString());
+				Console.WriteLine();
+				Console.ReadLine();
+			}
 		}
 		protected override string TestDirectory
 		{
@@ -53,21 +62,6 @@ namespace Test
 				return Path.Combine(Directory.GetParent(Process.InstallationPath).FullName, "Test");
 			}
 		}
-		//[Test]
-		//public object Market()
-		//{
-
-		//}
-		//[Test]
-		//public object Parsing()
-		//{
-		//    Map test;
-		//    using (TextReader reader = new StreamReader(LocalStrategy.Path))
-		//    {
-		//        test = Process.Compile(reader);
-		//    }
-		//    return test;
-		//}
 		public class Serialization : Test
 		{
 			public override object  GetResult(out int level)
