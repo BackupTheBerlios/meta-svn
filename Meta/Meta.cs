@@ -161,15 +161,10 @@ namespace Meta
 	}
 	public class Program : Expression
 	{
-		//private List<Map> statements=new List<Statement>();
 		private List<Map> statements;
 		public Program(Map code)
 		{
 			statements = code.Array;
-			//foreach (Map statement in code.Array)
-			//{
-			//    statements.Add(new Statement(statement));
-			//}
 		}
 		public override Map Evaluate(Map context, Map arg)
 		{
@@ -385,130 +380,7 @@ namespace Meta
 		private static Dictionary<Thread,Process> processes=new Dictionary<Thread,Process>();
 		private bool reverseDebugging=false;
 		private SourcePosition breakPoint=new SourcePosition(0,0);
-		//public Map Expression(Map code, Map context, Map arg)
-		//{
-		//    Map val;
-		//    Expression expression;
-		//    if (code.Expression == null)
-		//    {
-		//        if (code.ContainsKey(CodeKeys.Call))
-		//        {
-		//            expression = new Call(code[CodeKeys.Call]);
-		//        }
-		//        else if (code.ContainsKey(CodeKeys.Program))
-		//        {
-		//            expression = new Program(code[CodeKeys.Program]);
-		//        }
-		//        else if (code.ContainsKey(CodeKeys.Literal))
-		//        {
-		//            expression = new Literal(code[CodeKeys.Literal]);
-		//        }
-		//        else if (code.ContainsKey(CodeKeys.Select))
-		//        {
-		//            expression = new Select(code[CodeKeys.Select]);
-		//        }
-		//        else
-		//        {
-		//            throw new ApplicationException("Cannot compile map.");
-		//        }
-		//    }
-		//    else
-		//    {
-		//        expression = code.Expression;
-		//    }
-		//    val = expression.Evaluate(context, arg);
-		//    return val;
-		//}
-		//public Map Expression(Map code, Map context, Map arg)
-		//{
-		//    Map val;
-		//    Expression expression;
-		//    if (code.Expression == null)
-		//    {
-		//        if (code.ContainsKey(CodeKeys.Call))
-		//        {
-		//            expression = new Call(code[CodeKeys.Call]);
-		//        }
-		//        else if (code.ContainsKey(CodeKeys.Program))
-		//        {
-		//            expression = new Program(code[CodeKeys.Program]);
-		//        }
-		//        else if (code.ContainsKey(CodeKeys.Literal))
-		//        {
-		//            expression = new Literal(code[CodeKeys.Literal]);
-		//        }
-		//        else if (code.ContainsKey(CodeKeys.Select))
-		//        {
-		//            expression = new Select(code[CodeKeys.Select]);
-		//        }
-		//        else
-		//        {
-		//            throw new ApplicationException("Cannot compile map.");
-		//        }
-		//    }
-		//    else
-		//    {
-		//        expression=code.Expression;
-		//    }
-		//    val=code.Expression.Evaluate(code, context, arg);
-		//    return val;
-		//}
-		//public Map Expression(Map code,Map context,Map arg)
-		//{
-		//    Map val;
-		//    if (code.Expression == null)
-		//    {
-		//        if (code.ContainsKey(CodeKeys.Call))
-		//        {
-		//            val = Call(code[CodeKeys.Call], context, arg);
-		//        }
-		//        else if (code.ContainsKey(CodeKeys.Program))
-		//        {
-		//            val = Program(code[CodeKeys.Program], context, arg);
-		//        }
-		//        else if (code.ContainsKey(CodeKeys.Literal))
-		//        {
-		//            val = Literal(code[CodeKeys.Literal], context);
-		//        }
-		//        else if (code.ContainsKey(CodeKeys.Select))
-		//        {
-		//            val = Select(code[CodeKeys.Select], context, arg);
-		//        }
-		//        else
-		//        {
-		//            throw new ApplicationException("Cannot compile map.");
-		//        }
-		//    }
-		//    else
-		//    {
-		//        val = null;
-		//    }
-		//    return val;
-		//}
-		//public Map Call(Map code, Map current, Map arg)
-		//{
-		//    Map function = Expression(code[CodeKeys.Callable], current, arg);
-		//    Map argument = Expression(code[CodeKeys.Argument], current, arg);
-		//    Map result;
-		//    try
-		//    {
-		//        result = function.Call(argument);
-		//    }
-		//    catch (MetaException e)
-		//    {
-		//        e.Stack.Add(MetaException.GetExtentText(code.Extent));
-		//        throw e;
-		//    }
-		//    if (result == null)
-		//    {
-		//        result = Map.Empty.Copy();
-		//    }
-		//    // messy
-		//    Map clone = result.Copy();
-		//    clone.Parent = null;
-		//    clone.Scope = null;
-		//    return clone;
-		//}
+
 		public bool ReverseDebugging
 		{
 			get
@@ -520,130 +392,6 @@ namespace Meta
 				reverseDebugging=value;
 			}
 		}
-		//public Map Program(Map code,Map current,Map arg)
-		//{
-		//    Map local=new StrategyMap();
-		//    Program(code,current,ref local,arg);
-		//    return local;
-		//}
-		//private void Program(Map code,Map parent,ref Map current,Map arg)
-		//{
-		//    current.Parent=parent;
-		//    for(int i=1;code.ContainsKey(i) && i>0;i++)
-		//    {
-		//        Statement((Map)code[i],ref current,arg);
-		//    }
-		//}
-		//public void Statement(Map code, ref Map context, Map arg)
-		//{
-		//    Map selected = context;
-		//    Map key;
-		//    Map keys = code[CodeKeys.Key];
-		//    int i = 1;
-		//    for (; keys.ContainsKey(i + 1);)
-		//    {
-		//        key = Expression((Map)keys[i], context, arg);
-		//        Map selection;
-		//        if (key.Equals(new StrategyMap("testSubDir")))
-		//        {
-		//        }
-		//        if (key.Equals(SpecialKeys.Parent))
-		//        {
-		//            selection = selected.Parent;
-		//        }
-		//        else
-		//        {
-		//            selection = selected[key];
-		//        }
-
-		//        if (selection == null)
-		//        {
-		//            Throw.KeyDoesNotExist(key, code.Extent);
-		//        }
-		//        selected = selection;
-		//        i++;
-		//    }
-		//    Map lastKey = Expression((Map)keys[i], context, arg);
-		//    if (lastKey.Equals(new StrategyMap("html")))
-		//    {
-		//        int asdf = 0;
-		//    }
-
-		//    Map val = Expression(code[CodeKeys.Value], context, arg);
-
-		//    if (lastKey.Equals(SpecialKeys.Current))
-		//    {
-		//        val.Parent = context.Parent;
-		//        context = val;
-		//    }
-		//    else
-		//    {
-		//        selected[lastKey] = val;
-		//    }
-		//}
-		//public Map Literal(Map code,Map context)
-		//{
-		//    return code.Copy();
-		//}
-		//public Map Select(Map code, Map context, Map arg)
-		//{
-		//    Map selected = FindFirstKey(code, context, arg);
-		//    for (int i = 2;code.ContainsKey(i); i++)
-		//    {
-		//        Map key = Expression((Map)code[i], context, arg);
-		//        if (key.Equals(new StrategyMap("htmlTable")))
-		//        {
-		//        }
-		//        Map selection;
-		//        if (key.Equals(SpecialKeys.Parent))
-		//        {
-		//            selection = selected.Parent;
-		//        }
-		//        else
-		//        {
-		//            selection = selected[key];
-		//        }
-		//        if (selection == null)
-		//        {
-		//            object x = selected["Item"];
-		//            Throw.KeyDoesNotExist(key, key.Extent);
-		//        }
-		//        selected = selection;
-		//    }
-		//    return selected;
-		//}
-		//private Map FindFirstKey(Map code, Map context, Map arg)
-		//{
-		//    Map key = Expression((Map)code[1], context, arg);
-		//    Map val;
-		//    if (key.Equals(SpecialKeys.Arg))
-		//    {
-		//        val = arg;
-		//    }
-		//    else if (key.Equals(SpecialKeys.Parent))
-		//    {
-		//        val = context.Parent;
-		//    }
-		//    else if (key.Equals(SpecialKeys.Current))
-		//    {
-		//        val = context;
-		//    }
-		//    else
-		//    {
-		//        Map selected = context;
-		//        while (!selected.ContainsKey(key))
-		//        {
-		//            selected = selected.Scope;
-
-		//            if (selected == null)
-		//            {
-		//                Throw.KeyNotFound(key, code.Extent);
-		//            }
-		//        }
-		//        val = selected[key];
-		//    }
-		//    return val;
-		//}
 
 		public event DebugBreak Break;
 
@@ -898,7 +646,7 @@ namespace Meta
 				return i-1;
 			}
 		}
-		// array instead of list
+		// use array instead of list
 		public virtual List<Map> Array
 		{
 			get
@@ -1636,82 +1384,6 @@ namespace Meta
 			}
 			return Transform.ToMeta(result);
 		}
-		//public override Map Call(Map argument)
-		//{
-		//    object result = null;
-		//    bool isExecuted = false;
-		//    List<MethodBase> rightNumberArgumentMethods = new List<MethodBase>();
-		//    int count = argument.ArrayCount;
-		//    if (count == argument.Count)
-		//    {
-		//        foreach (MethodBase method in overloadedMethods)
-		//        {
-		//            if (count == method.GetParameters().Length)
-		//            {
-		//                rightNumberArgumentMethods.Add(method);
-		//            }
-		//        }
-		//    }
-		//    if (rightNumberArgumentMethods.Count == 0)
-		//    {
-		//        throw new ApplicationException("Method " + this.type.Name + "." + this.name + ": No methods with the right number of arguments.");
-		//    }
-		//    if (rightNumberArgumentMethods.Count > 1)
-		//    {
-		//        rightNumberArgumentMethods.Sort(ArgumentComparer.singleton);
-		//    }
-		//    foreach (MethodBase method in rightNumberArgumentMethods)
-		//    {
-		//        List<object> arguments = new List<object>();
-		//        bool argumentsMatched = true;
-		//        ParameterInfo[] parameters = method.GetParameters();
-		//        for (int i = 0; argumentsMatched && i < parameters.Length; i++)
-		//        {
-		//            object arg = Transform.ToDotNet((Map)argument.Array[i], parameters[i].ParameterType);
-		//            if (arg != null)
-		//            {
-		//                arguments.Add(arg);
-		//            }
-		//            else
-		//            {
-		//                argumentsMatched = false;
-		//                break;
-		//            }
-		//        }
-		//        if (argumentsMatched)
-		//        {
-		//            if (method is ConstructorInfo)
-		//            {
-		//                try
-		//                {
-		//                    result = ((ConstructorInfo)method).Invoke(arguments.ToArray());
-		//                }
-		//                catch (Exception e)
-		//                {
-		//                    throw e.InnerException;
-		//                }
-		//            }
-		//            else
-		//            {
-		//                try
-		//                {
-		//                    result = method.Invoke(obj, arguments.ToArray());
-		//                }
-		//                catch (Exception e)
-		//                {
-		//                    throw e.InnerException;
-		//                }
-		//            }
-		//            isExecuted = true;
-		//            break;
-		//        }
-		//    }
-		//    if (!isExecuted)
-		//    {
-		//        throw new ApplicationException("Method " + this.name + " could not be called.");
-		//    }
-		//    return Transform.ToMeta(result);
-		//}
 		public class EventHandlerContainer
 		{
 			private Map callable;
@@ -1988,10 +1660,6 @@ namespace Meta
 			{ 
 				isEqual=true;
 			}
-			//else if (!(strategy is MapStrategy))
-			//{
-			//    isEqual = false;
-			//}
 			else if(((MapStrategy)strategy).Count!=this.Count)
 			{
 				isEqual=false;
@@ -2002,7 +1670,6 @@ namespace Meta
 				foreach(Map key in this.Keys) 
 				{
 					if (!((MapStrategy)strategy).ContainsKey(key) || !((MapStrategy)strategy).Get(key).Equals(this.Get(key)))
-					//if (!((MapStrategy)strategy).ContainsKey(key) || !((MapStrategy)strategy).Get(key).Equals(this.Get(key)))
 					{
 						isEqual=false;
 					}
@@ -2568,18 +2235,6 @@ namespace Meta
 				return true;
 			}
 		}
-		//public override int GetHashCode()
-		//{
-		//    if (number.integer == 0.0d)
-		//    {
-		//        return 0;
-		//    }
-		//    else
-		//    {
-		//        return 1;
-		//    }
-		//}
-
 		public override Integer GetInteger()
 		{
 			return number;
@@ -2643,24 +2298,12 @@ namespace Meta
 			if (key.Equals(Map.Empty) && value.IsInteger)
 			{
 				this.number += 1;
-				//Panic(key, value);
 			}
 			else
 			{
 				Panic(key, value);
 			}
 		}
-		//public override void Set(Map key, Map value)
-		//{
-		//    if (key.Equals(Map.Empty))
-		//    {
-		//        Panic(key, value);
-		//    }
-		//    else
-		//    {
-		//        Panic(key, value);
-		//    }
-		//}
 	}
 
 	public interface ISerializeEnumerableSpecial
@@ -3450,7 +3093,7 @@ namespace Meta
 					}
 					Consume(stringChar);
 					string stringText = "";
-					while (true) // factor this out
+					while (true)
 					{
 						if (Look(stringChar))
 						{
@@ -4046,16 +3689,7 @@ namespace Meta
 		{
 			get
 			{
-				List<Map> assemblies = Fusion.Assemblies;
-				foreach (string dllPath in Directory.GetFiles(Process.InstallationPath, "*.dll"))
-				{
-					assemblies.Add(new StrategyMap(Path.GetFileNameWithoutExtension(dllPath)));
-				}
-				foreach (string exePath in Directory.GetFiles(Process.InstallationPath, "*.exe"))
-				{
-					assemblies.Add(new StrategyMap(Path.GetFileNameWithoutExtension(exePath)));
-				}
-				return assemblies;
+				throw new ApplicationException("not implemented.");
 			}
 		}
 		public override int Count
@@ -4080,242 +3714,6 @@ namespace Meta
 			return containsKey;
 		}
 		protected Map cachedAssemblyInfo = new StrategyMap();
-
-
-		//	Source: Microsoft KB Article KB317540
-		//
-		//	
-		//	SUMMARY
-		//	The native code application programming interfaces (APIs) that allow you to interact with the Global Assembly Cache (GAC) are not documented 
-		//	in the .NET Framework Software Development Kit (SDK) documentation. 
-		//
-		//	MORE INFORMATION
-		//	CAUTION: Do not use these APIs in your application to perform assembly binds or to test for the presence of assemblies or other run time, 
-		//	development, or design-time operations. Only administrative tools and setup programs must use these APIs. If you use the GAC, this directly 
-		//	exposes your application to assembly binding fragility or may cause your application to work improperly on future versions of the .NET 
-		//	Framework.
-		//
-		//	The GAC stores assemblies that are shared across all applications on a computer. The actual storage location and structure of the GAC is 
-		//	not documented and is subject to change in future versions of the .NET Framework and the Microsoft Windows operating system.
-		//
-		//	The only supported method to access assemblies in the GAC is through the APIs that are documented in this article.
-		//
-		//	Most applications do not have to use these APIs because the assembly binding is performed automatically by the common language runtime. 
-		//	Only custom setup programs or management tools must use these APIs. Microsoft Windows Installer has native support for installing assemblies
-		//	 to the GAC.
-		//
-		//	For more information about assemblies and the GAC, see the .NET Framework SDK.
-		//
-		//	Use the GAC API in the following scenarios: 
-		//	When you install an assembly to the GAC.
-		//	When you remove an assembly from the GAC.
-		//	When you export an assembly from the GAC.
-		//	When you enumerate assemblies that are available in the GAC.
-		//	NOTE: CoInitialize(Ex) must be called before you use any of the functions and interfaces that are described in this specification. 
-		//	
-		public class Fusion
-		{
-			public static List<Map> Assemblies
-			{
-				get
-				{
-					List<Map> assemblies = new List<Map>();
-					IAssemblyEnum assemblyEnum = CreateGACEnum();
-					IAssemblyName iname;
-
-					assemblies.Add(new StrategyMap("mscorlib"));
-					while (GetNextAssembly(assemblyEnum, out iname) == 0)
-					{
-						try
-						{
-							string assemblyName = GetAssemblyName(iname);
-							if (assemblyName != "Microsoft.mshtml")
-							{
-								assemblies.Add(new StrategyMap(assemblyName));
-							}
-						}
-						catch (Exception e)
-						{
-						}
-					}
-					return assemblies;
-				}
-			}
-			private static string GetAssemblyName(IAssemblyName assemblyName)
-			{
-				AssemblyName name = new AssemblyName();
-				name.Name = GetName(assemblyName);
-				name.Version = GetVersion(assemblyName);
-				name.CultureInfo = GetCulture(assemblyName);
-				name.SetPublicKeyToken(GetPublicKeyToken(assemblyName));
-				return name.Name;
-			}
-			[DllImport("fusion.dll", SetLastError = true, PreserveSig = false)]
-			static extern void CreateAssemblyEnum(out IAssemblyEnum pEnum, IntPtr pUnkReserved, IAssemblyName pName,
-				ASM_CACHE_FLAGS dwFlags, IntPtr pvReserved);
-			private static String GetDisplayName(IAssemblyName name, ASM_DISPLAY_FLAGS which)
-			{
-				uint bufferSize = 255;
-				StringBuilder buffer = new StringBuilder((int)bufferSize);
-				name.GetDisplayName(buffer, ref bufferSize, which);
-				return buffer.ToString();
-			}
-			private static String GetName(IAssemblyName name)
-			{
-				uint bufferSize = 255;
-				StringBuilder buffer = new StringBuilder((int)bufferSize);
-				name.GetName(ref bufferSize, buffer);
-				return buffer.ToString();
-			}
-			private static Version GetVersion(IAssemblyName name)
-			{
-				uint major;
-				uint minor;
-				name.GetVersion(out major, out minor);
-				return new Version((int)major >> 16, (int)major & 0xFFFF, (int)minor >> 16, (int)minor & 0xFFFF);
-			}
-			private static byte[] GetPublicKeyToken(IAssemblyName name)
-			{
-				byte[] result = new byte[8];
-				uint bufferSize = 8;
-				IntPtr buffer = Marshal.AllocHGlobal((int)bufferSize);
-				name.GetProperty(ASM_NAME.ASM_NAME_PUBLIC_KEY_TOKEN, buffer, ref bufferSize);
-				for (int i = 0; i < 8; i++)
-					result[i] = Marshal.ReadByte(buffer, i);
-				Marshal.FreeHGlobal(buffer);
-				return result;
-			}
-			private static byte[] GetPublicKey(IAssemblyName name)
-			{
-				uint bufferSize = 512;
-				IntPtr buffer = Marshal.AllocHGlobal((int)bufferSize);
-				name.GetProperty(ASM_NAME.ASM_NAME_PUBLIC_KEY, buffer, ref bufferSize);
-				byte[] result = new byte[bufferSize];
-				for (int i = 0; i < bufferSize; i++)
-					result[i] = Marshal.ReadByte(buffer, i);
-				Marshal.FreeHGlobal(buffer);
-				return result;
-			}
-			private static CultureInfo GetCulture(IAssemblyName name)
-			{
-				uint bufferSize = 255;
-				IntPtr buffer = Marshal.AllocHGlobal((int)bufferSize);
-				name.GetProperty(ASM_NAME.ASM_NAME_CULTURE, buffer, ref bufferSize);
-				string result = Marshal.PtrToStringAuto(buffer);
-				Marshal.FreeHGlobal(buffer);
-				return new CultureInfo(result);
-			}
-			private static IAssemblyEnum CreateGACEnum()
-			{
-				IAssemblyEnum ae;
-
-				Fusion.CreateAssemblyEnum(out ae, (IntPtr)0, null, ASM_CACHE_FLAGS.ASM_CACHE_GAC, (IntPtr)0);
-
-				return ae;
-			}
-			private static int GetNextAssembly(IAssemblyEnum enumerator, out IAssemblyName name)
-			{
-				return enumerator.GetNextAssembly((IntPtr)0, out name, 0);
-			}
-			[ComImport, Guid("CD193BC0-B4BC-11d2-9833-00C04FC31D2E"),
-				InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-			private interface IAssemblyName
-			{
-				[PreserveSig]
-				int SetProperty(ASM_NAME PropertyId, IntPtr pvProperty, uint cbProperty);
-				[PreserveSig]
-				int GetProperty(ASM_NAME PropertyId, IntPtr pvProperty, ref uint pcbProperty);
-				[PreserveSig]
-				int Finalize();
-				[PreserveSig]
-				int GetDisplayName([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder szDisplayName,
-					ref uint pccDisplayName, ASM_DISPLAY_FLAGS dwDisplayFlags);
-				[PreserveSig]
-				int BindToObject(ref Guid refIID, [MarshalAs(UnmanagedType.IUnknown)] object pUnkSink,
-					 [MarshalAs(UnmanagedType.IUnknown)] object pUnkContext,
-					 [MarshalAs(UnmanagedType.LPWStr)] string szCodeBase,
-					 long llFlags, IntPtr pvReserved, uint cbReserved, out IntPtr ppv);
-				[PreserveSig]
-				int GetName(ref uint lpcwBuffer, [Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pwzName);
-				[PreserveSig]
-				int GetVersion(out uint pdwVersionHi, out uint pdwVersionLow);
-				[PreserveSig]
-				int IsEqual(IAssemblyName pName, ASM_CMP_FLAGS dwCmpFlags);
-				[PreserveSig]
-				int Clone(out IAssemblyName pName);
-			}
-			[ComImport, Guid("21b8916c-f28e-11d2-a473-00c04f8ef448"),
-				InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-			private interface IAssemblyEnum
-			{
-				[PreserveSig()]
-				int GetNextAssembly(IntPtr pvReserved, out IAssemblyName ppName, uint dwFlags);
-				[PreserveSig()]
-				int Reset();
-				[PreserveSig()]
-				int Clone(out IAssemblyEnum ppEnum);
-			}
-
-			[Flags]
-			public enum ASM_DISPLAY_FLAGS
-			{
-				VERSION = 0x1,
-				CULTURE = 0x2,
-				PUBLIC_KEY_TOKEN = 0x4,
-				PUBLIC_KEY = 0x8,
-				CUSTOM = 0x10,
-				PROCESSORARCHITECTURE = 0x20,
-				LANGUAGEID = 0x40
-			}
-
-			[Flags]
-			public enum ASM_CMP_FLAGS
-			{
-				NAME = 0x1,
-				MAJOR_VERSION = 0x2,
-				MINOR_VERSION = 0x4,
-				BUILD_NUMBER = 0x8,
-				REVISION_NUMBER = 0x10,
-				PUBLIC_KEY_TOKEN = 0x20,
-				CULTURE = 0x40,
-				CUSTOM = 0x80,
-				ALL = NAME | MAJOR_VERSION | MINOR_VERSION |
-					REVISION_NUMBER | BUILD_NUMBER |
-					PUBLIC_KEY_TOKEN | CULTURE | CUSTOM,
-				DEFAULT = 0x100
-			}
-			public enum ASM_NAME
-			{
-				ASM_NAME_PUBLIC_KEY = 0,
-				ASM_NAME_PUBLIC_KEY_TOKEN,
-				ASM_NAME_HASH_VALUE,
-				ASM_NAME_NAME,
-				ASM_NAME_MAJOR_VERSION,
-				ASM_NAME_MINOR_VERSION,
-				ASM_NAME_BUILD_NUMBER,
-				ASM_NAME_REVISION_NUMBER,
-				ASM_NAME_CULTURE,
-				ASM_NAME_PROCESSOR_ID_ARRAY,
-				ASM_NAME_OSINFO_ARRAY,
-				ASM_NAME_HASH_ALGID,
-				ASM_NAME_ALIAS,
-				ASM_NAME_CODEBASE_URL,
-				ASM_NAME_CODEBASE_LASTMOD,
-				ASM_NAME_NULL_PUBLIC_KEY,
-				ASM_NAME_NULL_PUBLIC_KEY_TOKEN,
-				ASM_NAME_CUSTOM,
-				ASM_NAME_NULL_CUSTOM,
-				ASM_NAME_MVID,
-				ASM_NAME_MAX_PARAMS
-			}
-			[Flags]
-			public enum ASM_CACHE_FLAGS
-			{
-				ASM_CACHE_ZAP = 0x1,
-				ASM_CACHE_GAC = 0x2,
-				ASM_CACHE_DOWNLOAD = 0x4
-			}
-		}
 	}
 	public class Integer
 	{
@@ -4406,7 +3804,6 @@ namespace Meta
 			Integer bi = (Integer)o;
 			return bi.integer == integer;
 		}
-		// remove??? or improve
 		public override int GetHashCode()
 		{
 			Integer x = new Integer(this);
