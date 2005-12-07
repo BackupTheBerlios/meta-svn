@@ -1,4 +1,17 @@
-|test *
+sdltest=
+	|
+		current=SdlDotNet
+		ball=Sprite
+			"C:\Projects\Meta\Library\Paddle2.png"
+		game
+			|
+				screen=Video.Screen.get *
+				ball.Render
+					screen
+				screen.Update *
+				mscorlib.Console.WriteLine
+					"hello world"
+|website *
 license='"
 	Copyright (c) 2005 Christian Staudenmeyer
 	
@@ -48,23 +61,25 @@ file=
 			writer.Write
 				arg.text
 			writer.Close *
-sdl=
-	test=
-		|
-			current=SdlDotNet
-			Video.SetVideoModeWindow
-				400
-				300
-			quit=*
-			Events.Quit.add
-				=
-					|
-						parent.parent.parent.quit=1
-			library.map.while
-				condition=
-					|library.logic.not quit
-				with=
-					|Events.Poll *
+game=
+	|
+		current=SdlDotNet
+		Video.SetVideoModeWindow
+			400
+			300
+		quit=*
+		mainFunction=arg
+		Events.Quit.add
+			=
+				|
+					parent.parent.parent.quit=1
+		library.map.while
+			condition=
+				|library.logic.not quit
+			with=
+				|
+					Events.Poll *
+					mainFunction *
 basicTest=
 	|
 		current=library.map.merge
@@ -402,6 +417,9 @@ library=
 							arg.with *
 							while arg
 				next.[stop] arg
+		while=
+			|Meta.Library.While
+				arg
 		apply=
 			|applyImplementation
 				array=arg.array
@@ -431,26 +449,7 @@ library=
 								result=object.Current.get *
 					current=next.[stop] arg
 		join=
-			|
-				result=sum
-					array=arg
-					with=
-						|sum
-							array=arg.present
-							with=
-								|
-									map=arg.previous.map
-									map.[arg.previous.counter]=arg.present
-									counter=math.increment arg.previous.counter
-							start=
-								map=arg.previous.map
-								counter=arg.previous.counter
-					start=
-						map=*
-						counter=1
-				current=result.map
-		join=
-			|Meta.Process.Join
+			|Meta.Library.Join
 				arg
 		contains=
 			|
@@ -866,19 +865,24 @@ website=
 				array=keys website
 				with=
 					|
-						tags.a
-							inner=arg
+						tags.input
 							attribute=
-								href=join
-									arg
-									".html"
+								type="checkbox"
+							inner=join
+								"&nbsp"
+								tags.a
+									inner=arg
+									attribute=
+										href=join
+											arg
+											".html"
 		websiteDirectory="C:\Projects\Meta\Website"
 		indexPath=path.combine
 			websiteDirectory
 			"Home.html"
 		website=
 			home="Meta rocks!"
-			tutorial="this is a multipart tutorial"
+			docs="this is a multipart tutorial"
 		apply
 			array=keys website
 			with=
@@ -901,16 +905,17 @@ website=
 										menu *
 									=
 										website.[arg]
-						table
-							=
-								tags.a
-									attribute=
-										href="http://developer.berlios.de"
-									inner=tags.img
-										attribute=
-											src="http://developer.berlios.de/bslogo.php?group_id=2780"
-											width="124"
-											height="32"
-											border="0"
-											alt="BerliOS Logo"
+		berliosLogo=
+			|table
+				=
+					tags.a
+						attribute=
+							href="http://developer.berlios.de"
+						inner=tags.img
+							attribute=
+								src="http://developer.berlios.de/bslogo.php?group_id=2780"
+								width="124"
+								height="32"
+								border="0"
+								alt="BerliOS Logo"
 		browser indexPath

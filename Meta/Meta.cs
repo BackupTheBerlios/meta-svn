@@ -45,7 +45,6 @@ namespace Meta
 		public static readonly Map Function="function";
 		public static readonly Map Call="call";
 		public static readonly Map Callable="callable";
-		// rename to parameter
 		public static readonly Map Argument="argument";
 		public static readonly Map Select="select";
 		public static readonly Map Program="program";
@@ -199,6 +198,9 @@ namespace Meta
 		{
 			Map key = keyExpression.GetExpression().Evaluate(context, arg);
 			Map val;
+			if (key.Equals(new StrategyMap("library")))
+			{
+			}
 			if (key.Equals(SpecialKeys.Arg))
 			{
 				val = arg;
@@ -220,7 +222,7 @@ namespace Meta
 
 					if (selected == null)
 					{
-						Throw.KeyNotFound(key, key.Extent);
+						Throw.KeyNotFound(key, keyExpression.Extent);
 					}
 				}
 				val = selected[key];
@@ -297,21 +299,27 @@ namespace Meta
 
 			if (lastKey.Equals(SpecialKeys.Current))
 			{
+				val.Scope = context.Scope;
 				val.Parent = context.Parent;
 				context = val;
 			}
+			//if (lastKey.Equals(SpecialKeys.Current))
+			//{
+			//    val.Parent = context.Parent;
+			//    context = val;
+			//}
 			else
 			{
 				selected[lastKey] = val;
 			}
 		}
 	}
-	public class Process
+	public class Library
 	{
 		public static Map Join(Map arg)
 		{
 			Map result = new StrategyMap();
-			Integer counter=1;
+			Integer counter = 1;
 			foreach (Map map in arg.Array)
 			{
 				foreach (Map entry in map.Array)
@@ -322,6 +330,31 @@ namespace Meta
 			}
 			return result;
 		}
+		public static Map While(Map arg)
+		{
+			while (arg["condition"].Call(Map.Empty).GetBoolean())
+			{
+				arg["with"].Call(Map.Empty);
+			}
+			return Map.Empty;
+		}
+	}
+	public class Process
+	{
+		//public static Map Join(Map arg)
+		//{
+		//    Map result = new StrategyMap();
+		//    Integer counter=1;
+		//    foreach (Map map in arg.Array)
+		//    {
+		//        foreach (Map entry in map.Array)
+		//        {
+		//            result[counter] = entry;
+		//            counter += 1;
+		//        }
+		//    }
+		//    return result;
+		//}
 		Thread thread;
 		private Map parameter;
 		private Map program;

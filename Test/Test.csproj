@@ -75,6 +75,7 @@
     <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SdlDotNet, Version=4.0.0.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
