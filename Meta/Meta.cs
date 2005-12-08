@@ -144,7 +144,7 @@ namespace Meta
 			}
 			catch (MetaException e)
 			{
-				e.Stack.Add(MetaException.GetExtentText(callable.Extent));
+				e.Stack.Add(MetaException.GetExtentText(callable.Extent)+"Called function has thrown an exception.");
 				throw e;
 			}
 			if (result == null)
@@ -252,7 +252,7 @@ namespace Meta
 				if (selection == null)
 				{
 					object x = selected["Item"];
-					Throw.KeyDoesNotExist(key, key.Extent);
+					Throw.KeyDoesNotExist(key, keys[i].Extent);
 				}
 				selected = selection;
 			}
@@ -950,8 +950,22 @@ namespace Meta
 		}
 		private bool isHashCached = false;
 		private int hash;
-		public MapStrategy strategy;
-		public StrategyMap(ICollection<Map> list):this()
+		public MapStrategy Strategy
+		{
+			get
+			{
+				return strategy;
+			}
+			set
+			{
+				strategy = value;
+				strategy.map = this;
+			}
+		}
+		private MapStrategy strategy;
+		//public MapStrategy strategy;
+		public StrategyMap(ICollection<Map> list)
+			: this()
 		{
 			int index = 1;
 			foreach (object entry in list)
@@ -1010,6 +1024,7 @@ namespace Meta
 			this.address=address;
 		}
 	}
+	// this ist not used yet
 	public class NetStrategy:MapStrategy
 	{
 		public static readonly StrategyMap Net = new StrategyMap(new NetStrategy());
@@ -1610,14 +1625,16 @@ namespace Meta
 	{
 		public void Panic()
 		{
-			map.strategy = new DictionaryStrategy();
-			map.strategy.map = map;
+			map.Strategy = new DictionaryStrategy();
+			//map.Strategy.map = map;
+			//map.strategy = new DictionaryStrategy();
+			//map.strategy.map = map;
 			map.InitFromStrategy(this);
 		}
 		protected void Panic(Map key, Map val)
 		{
 			Panic();
-			map.strategy.Set(key, val);
+			map.Strategy.Set(key, val);
 		}
 
 		public virtual bool IsInteger
@@ -1715,9 +1732,13 @@ namespace Meta
 	{
 		public MapStrategy original;
 		// this isnt quite correct, map of original needs a clone strategy, too
+		//public CloneStrategy(StrategyMap original)
+		//{
+		//    this.original = original.strategy;
+		//}
 		public CloneStrategy(MapStrategy original)
 		{
-			this.original=original;
+			this.original = original;
 		}
 		public override List<Map> Array
 		{
@@ -1739,7 +1760,10 @@ namespace Meta
 		}
 		public override MapStrategy CopyImplementation()
 		{
-			return new CloneStrategy(this.original);
+			MapStrategy clone=new CloneStrategy(this.original);
+			map.Strategy = new CloneStrategy(this);
+			return clone;
+
 		}
 		public override bool Equal(MapStrategy obj)
 		{
@@ -1879,10 +1903,10 @@ namespace Meta
 		}
 		public override void  Set(Map key, Map value)
 		{
-			map.strategy=new DictionaryStrategy();
-			map.strategy.map=map;
+			map.Strategy=new DictionaryStrategy();
+			//map.strategy.map=map;
 			map.InitFromStrategy(this);
-			map.strategy.Set(key,value);
+			map.Strategy.Set(key,value);
 		}
 		public override bool ContainsKey(Map key) 
 		{
@@ -2680,7 +2704,7 @@ namespace Meta
 				if (pair.Value is StrategyMap)
 				{
 					StrategyMap normalMap = (StrategyMap)pair.Value;
-					if (normalMap.strategy is DictionaryStrategy || (normalMap.strategy is CloneStrategy && ((CloneStrategy)normalMap.strategy).original is DictionaryStrategy))
+					if (normalMap.Strategy is DictionaryStrategy || (normalMap.Strategy is CloneStrategy && ((CloneStrategy)normalMap.Strategy).original is DictionaryStrategy))
 					{
 						MakePersistant((StrategyMap)pair.Value);
 					}
@@ -2694,7 +2718,8 @@ namespace Meta
 			using (TextReader reader = new StreamReader(filePath, Encoding.Default))
 			{
 				Map parsed = Parse(reader);
-				MakePersistant((StrategyMap)parsed);
+				// reintroduce this
+				//MakePersistant((StrategyMap)parsed);
 				return parsed;
 			}
 		}

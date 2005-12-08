@@ -44,13 +44,13 @@ namespace Test
 			{
 				//Sprite ball=new SdlDotNet.Sprites.Sprite()
 
-				FileSystem.fileSystem.Call(Map.Empty);
-				//new MetaTest().Run();
+				new MetaTest().Run();
 				////LocalStrategy.singleton.map["website"].Call(Map.Empty);//, Map.Empty);
-				//DateTime start = DateTime.Now;
-				//FileSystem.fileSystem["website"].Call(Map.Empty);
-				//Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
-				////Console.ReadLine();
+				DateTime start = DateTime.Now;
+				//FileSystem.fileSystem.Call(Map.Empty);
+				FileSystem.fileSystem["website"].Call(Map.Empty);
+				Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
+				//Console.ReadLine();
 			}
 			catch(MetaException e)
 			{
