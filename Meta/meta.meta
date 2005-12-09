@@ -405,6 +405,11 @@ testSubDir=
 			x="hello"
 			y="world"
 library=
+	integerToString=
+		|
+			int=Meta.Integer
+				arg
+			current=int.ToString *
 	map=
 		remove=
 			|Meta.Library.Remove
@@ -912,33 +917,75 @@ website=
 						}
 					}
 				"
-		chapter=
-			|join
-				arg.title
-				tags.a
-					id="showThis"
-					href="javascript:show('test');hide('showThis');show('hideThis')"
-					style="display:none"
-					text="show this chapter"
-				tags.a
-					id="hideThis"
-					href="javascript:hide('test');hide('hideThis');show('showThis')"
-					text="hide this chapter"
-				tags.a
-					name="showAll"
-					href="javascript:showAll('chapter');"
-					text="show all chapters"
-				tags.a
-					name="hideAll"
-					href="javascript:hideAll('chapter');"
-					text="hide all chapters"
-				tags.br *
-				tags.div
-					id="test"
-					name="chapter"
-					text=join
-						arg.text
-						tags.br *
+		getId=
+			id=*
+			|
+				parent.id=library.math.increment id
+				current=library.integerToString id
+		items=merge apply
+			array=
+				"chapter"
+				"example"
+			with=
+				|
+					[arg]=
+						name=arg
+						|join
+							arg.title
+							itemId=getId *
+							tags.a
+								id=join
+									"show"
+									itemId
+								href=join
+									"javascript:show('"
+									itemId
+									"');hide('"
+									join
+										"show"
+										itemId
+									"');show('"
+									join
+										"hide"
+										itemId
+									"');"									
+								text="show this chapter"
+							tags.a
+								id=join
+									"hide"
+									itemId
+								href=join
+									"javascript:hide('"
+									itemId
+									"');hide('"
+									join
+										"hide"
+										itemId
+									"');show('"
+									join
+										"show"
+										itemId
+									"');"
+								text="hide this chapter"
+							tags.a
+								href=join
+									"javascript:showAll('"
+									name
+									"');"
+								text="show all chapters"
+							tags.a
+								href=join
+									"javascript:hideAll('"
+									name
+									"');"
+								text="hide all chapters"
+							tags.br *
+							tags.div
+								id=itemId
+								name=name
+								text=join
+									arg.text
+									tags.br *
 		file.write
 			fileName=indexPath
 			text=tags.html 
@@ -950,10 +997,10 @@ website=
 								text="Meta"
 					tags.body
 						text=join
-							chapter
+							items.chapter
 								title="hello world"
 								text="jhaölksdflkasöasdjf"
-							chapter
+							items.chapter
 								title="come on everybody"
 								text="asdfkasödkhfklsjdf"
 		browser indexPath
