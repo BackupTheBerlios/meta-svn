@@ -406,6 +406,9 @@ testSubDir=
 			y="world"
 library=
 	map=
+		remove=
+			|Meta.Library.Remove
+				arg
 		while=
 			|
 				stop=arg.condition *
@@ -695,6 +698,11 @@ libraryTest=
 					8
 					20
 			mapTest=
+				remove=remove
+					map=
+						x="hello"
+						y="world"
+					key="x"
 				join=join
 					"abc, "
 					"die Katze lief im Schnee."
@@ -925,13 +933,12 @@ website=
 				tags.a
 					attribute=
 						name="showAll"
-						href="javascript:showAll('chapter')"
-						style="display:none"
+						href="javascript:showAll('chapter');"
 					text="show all chapters"
 				tags.a
 					attribute=
 						name="hideAll"
-						href="javascript:hideAll('chapter')"
+						href="javascript:hideAll('chapter');"
 					text="hide all chapters"
 				tags.br *
 				tags.div

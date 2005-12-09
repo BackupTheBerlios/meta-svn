@@ -84,6 +84,15 @@ Entry (KeyValuePair`2)
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
+				"remove"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"y"
+					Value (StrategyMap):
+						"world"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
 				"join"
 			Value (StrategyMap):
 				"abc, die Katze lief im Schnee."
