@@ -929,9 +929,14 @@ website=
 			with=
 				|
 					[arg]=
-						name=arg
+						typeName=arg
+						argument=merge
 						|join
-							arg.title
+							argument=merge
+								=
+									title=typeName
+								arg
+							argument.title
 							ids=
 								item=getId *
 								hide=join
@@ -951,7 +956,9 @@ website=
 									"');show('"
 									ids.hide
 									"');"									
-								text="show this chapter"
+								text=join
+									"show this "
+									typeName
 							tags.a
 								id=ids.hide
 								href=join
@@ -962,9 +969,11 @@ website=
 									"');show('"
 									ids.show
 									"');"
-								text="hide this chapter"
+								text=join
+									"hide this "
+									typeName
 							names=
-								item=name
+								item=typeName
 								hideAll=join
 									"hideAll"
 									item
@@ -986,7 +995,10 @@ website=
 									ids.hide
 									"')"
 								style="display:none"
-								text="show all chapters"
+								text=join
+									"show all "
+									typeName
+									"s"
 							tags.a
 								name=names.hideAll
 								href=join
@@ -1001,11 +1013,14 @@ website=
 									"');show('"
 									ids.show
 									"')"
-								text="hide all chapters"
+								text=join
+									"hide all "
+									typeName
+									"s"
 							tags.br *
 							tags.div
 								id=ids.item
-								name=name
+								name=typeName
 								text=join
 									arg.text
 									tags.br *
@@ -1026,4 +1041,6 @@ website=
 							items.chapter
 								title="come on everybody"
 								text="asdfkasödkhfklsjdf"
+							items.example
+								text="example"
 		browser indexPath
