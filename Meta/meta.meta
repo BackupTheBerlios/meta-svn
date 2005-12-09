@@ -817,6 +817,8 @@ html=
 				"a"
 				"img"
 				"font"
+				"script"
+				"div"
 displayHtml=
 	|
 		fileName="C:\test.html"
@@ -873,28 +875,77 @@ website=
 		indexPath=path
 			websiteDirectory
 			"index.html"
-		website=
-			home="Meta rocks!"
-			docs="this is a multipart tutorial"
+		script=
+			|tags.script
+				attribute=
+					language="Javascript 1.2"
+					type="text/javascript"
+				text="
+					function show(id)
+					{
+						el = document.getElementById(id);
+						el.style.display = '';
+					}
+					function hide(id)
+					{
+						el = document.getElementById(id);
+						el.style.display = 'none';
+					}
+					function showAll(name)
+					{
+						elements=document.getElementsByName(name);
+						elements[0].display='';
+					}
+					function hideAll(name)
+					{
+						elements=document.getElementsByName(name);
+						elements[0].display='none';
+					}
+				"
+		chapter=
+			|join
+				arg.title
+				tags.a
+					attribute=
+						id="showThis"
+						href="javascript:show('test');hide('showThis');show('hideThis')"
+						style="display:none"
+					text="show this chapter"
+				tags.a
+					attribute=
+						id="hideThis"
+						href="javascript:hide('test');hide('hideThis');show('showThis')"
+					text="hide this chapter"
+				tags.a
+					attribute=
+						name="showAll"
+						href="javascript:showAll('test')"
+						style="display:none"
+					text="show all chapters"
+				tags.a
+					attribute=
+						name="hideAll"
+						href="javascript:hideAll('test')"
+					text="hide all chapters"
+				tags.br *
+				tags.div
+					attribute=
+						id="test"
+						name="chapter"
+					text=join
+						arg.text
+						tags.br *
 		file.write
 			fileName=indexPath
-			text=join apply
-				array=keys website
-				with=
-					|join
-						tags.b
-							text=tags.font
-								attribute=
-									size="+3"
-								text=arg
-						tags.a
-							attribute=
-								href="www.google.de"
-							text=join
-								"hide "
-								arg
-						tags.br *
-						website.[arg]
-						tags.br *
-						tags.b "HELLO WORLD"
+			text=tags.html join
+				tags.head join
+					script *
+					tags.title "Meta"
+				tags.body join
+					chapter
+						title="hello world"
+						text="jhaölksdflkasöasdjf"
+					chapter
+						title="come on everybody"
+						text="asdfkasödkhfklsjdf"
 		browser indexPath

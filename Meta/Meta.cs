@@ -322,6 +322,7 @@ namespace Meta
 			Integer counter = 1;
 			foreach (Map map in arg.Array)
 			{
+				//result.AppendMap(map);
 				foreach (Map entry in map.Array)
 				{
 					result[counter] = entry;
@@ -452,6 +453,15 @@ namespace Meta
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
+		public virtual void AppendMap(Map array)
+		{
+			int counter = ArrayCount + 2;
+			foreach (Map map in array.Array)
+			{
+				this[counter]=map;
+				counter++;
+			}
+		}
 		private Statement statement;
 		public Statement GetStatement()
 		{
@@ -506,10 +516,10 @@ namespace Meta
 				return this;
 			}
 		}
-        public void Append(Map map)
-        {
-            this[Array.Count+1] = map;
-        }
+		public void Append(Map map)
+		{
+			this[Array.Count + 1] = map;
+		}
 		private static readonly Map empty = new StrategyMap();
 		public static Map Empty
 		{
