@@ -48,6 +48,7 @@ namespace Test
 				////LocalStrategy.singleton.map["website"].Call(Map.Empty);//, Map.Empty);
 				DateTime start = DateTime.Now;
 				//FileSystem.fileSystem.Call(Map.Empty);
+				//FileSystem.fileSystem["basicTest"].Call(Map.Empty);
 				FileSystem.fileSystem["website"].Call(Map.Empty);
 				Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
 				//Console.ReadLine();
