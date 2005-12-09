@@ -919,13 +919,13 @@ website=
 				tags.a
 					attribute=
 						name="showAll"
-						href="javascript:showAll('test')"
+						href="javascript:showAll('chapter')"
 						style="display:none"
 					text="show all chapters"
 				tags.a
 					attribute=
 						name="hideAll"
-						href="javascript:hideAll('test')"
+						href="javascript:hideAll('chapter')"
 					text="hide all chapters"
 				tags.br *
 				tags.div

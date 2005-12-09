@@ -316,18 +316,37 @@ namespace Meta
 	}
 	public class Library
 	{
+		//public static Map Join(Map arg)
+		//{
+		//    Integer counter = 1;
+		//    List<Map> array = arg.Array;
+		//    Map result;
+		//    if (array.Count != 0)
+		//    {
+		//        result = array[0].Copy();
+		//        for (int i = 1; i < array.Count; i++)
+		//        {
+		//            result.AppendMap(array[i]);
+		//        }
+		//    }
+		//    else
+		//    {
+		//        result = Map.Empty;
+		//    }
+		//    return result;
+		//}
 		public static Map Join(Map arg)
 		{
 			Map result = new StrategyMap();
 			Integer counter = 1;
 			foreach (Map map in arg.Array)
 			{
-				//result.AppendMap(map);
-				foreach (Map entry in map.Array)
-				{
-					result[counter] = entry;
-					counter += 1;
-				}
+				result.AppendMap(map);
+				//foreach (Map entry in map.Array)
+				//{
+				//    result[counter] = entry;
+				//    counter += 1;
+				//}
 			}
 			return result;
 		}
@@ -455,10 +474,14 @@ namespace Meta
 	{
 		public virtual void AppendMap(Map array)
 		{
-			int counter = ArrayCount + 2;
+			AppendMapDefault(array);
+		}
+		public virtual void AppendMapDefault(Map array)
+		{
+			int counter = ArrayCount + 1;
 			foreach (Map map in array.Array)
 			{
-				this[counter]=map;
+				this[counter] = map;
 				counter++;
 			}
 		}
@@ -842,6 +865,10 @@ namespace Meta
 	}
 	public class StrategyMap:Map
 	{
+		public override void AppendMap(Map array)
+		{
+			strategy.AppendMap(array);
+		}
 		public bool Persistant
 		{
 			get
@@ -1633,6 +1660,10 @@ namespace Meta
 	}
 	public abstract class MapStrategy
 	{
+		public virtual void AppendMap(Map array)
+		{
+			map.AppendMapDefault(array);
+		}
 		public void Panic()
 		{
 			map.Strategy = new DictionaryStrategy();
@@ -1824,6 +1855,19 @@ namespace Meta
 	[Serializable]
 	public class StringStrategy:MapStrategy
 	{
+		public override void AppendMap(Map array)
+		{
+			StrategyMap map;
+			StringStrategy strategy;
+			if ((map = array as StrategyMap) != null && (strategy = map.Strategy as StringStrategy) != null)
+			{
+				this.text+=strategy.text;
+			}
+			else
+			{
+				map.AppendMapDefault(array);
+			}
+		}
 		public override int GetHashCode()
 		{
 			return base.GetHashCode();
@@ -1843,6 +1887,9 @@ namespace Meta
 
 		public override MapStrategy CopyImplementation()
 		{
+			if (text == "abc, ")
+			{
+			}
 			return new StringStrategy(this.text);
 		}
 		public override bool Equal(MapStrategy strategy)
@@ -1890,6 +1937,9 @@ namespace Meta
 		}
 		public StringStrategy(string text)
 		{
+			if (text == "abc, ")
+			{
+			}
 			this.text=text;
 		}
 		public override int Count
@@ -1935,6 +1985,9 @@ namespace Meta
 		private Dictionary<Map,Map> dictionary;
 		public DictionaryStrategy():this(2)
 		{
+			if (this.map!= null &&this.IsString && this.GetString() == "abc, ")
+			{
+			}
 		}
 		public override MapStrategy CopyImplementation()
 		{
