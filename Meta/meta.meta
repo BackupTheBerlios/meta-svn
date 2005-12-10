@@ -831,6 +831,7 @@ html=
 				"font"
 				"script"
 				"div"
+				"center"
 displayHtml=
 	|
 		fileName="C:\test.html"
@@ -926,6 +927,8 @@ website=
 			array=
 				"chapter"
 				"example"
+				"subchapter"
+				"subsubchapter"
 			with=
 				|
 					[arg]=
@@ -935,8 +938,12 @@ website=
 							argument=merge
 								=
 									title=typeName
+									text=*
 								arg
-							argument.title
+							tags.b
+								text=tags.font
+									size="+2"
+									text=argument.title
 							ids=
 								item=getId *
 								hide=join
@@ -945,8 +952,23 @@ website=
 								show=join
 									"show"
 									item
+							names=
+								item=typeName
+								hideAll=join
+									"hideAll"
+									item
+								showAll=join
+									"showAll"
+									item
+								hide=join
+									"hide"
+									item
+								show=join
+									"show"
+									item
 							tags.a
 								id=ids.show
+								name=names.show
 								style="display:none"
 								href=join
 									"javascript:show('"
@@ -961,6 +983,7 @@ website=
 									typeName
 							tags.a
 								id=ids.hide
+								name=names.hide
 								href=join
 									"javascript:hide('"
 									ids.item
@@ -972,14 +995,6 @@ website=
 								text=join
 									"hide this "
 									typeName
-							names=
-								item=typeName
-								hideAll=join
-									"hideAll"
-									item
-								showAll=join
-									"showAll"
-									item
 							tags.a
 								name=names.showAll
 								href=join
@@ -989,10 +1004,10 @@ website=
 									names.showAll
 									"');showAll('"
 									names.hideAll
-									"');hide('"
-									ids.show
-									"');show('"
-									ids.hide
+									"');hideAll('"
+									names.show
+									"');showAll('"
+									names.hide
 									"')"
 								style="display:none"
 								text=join
@@ -1008,10 +1023,10 @@ website=
 									names.hideAll
 									"');showAll('"
 									names.showAll
-									"');hide('"
-									ids.hide
-									"');show('"
-									ids.show
+									"');hideAll('"
+									names.hide
+									"');showAll('"
+									names.show
 									"')"
 								text=join
 									"hide all "
@@ -1022,8 +1037,11 @@ website=
 								id=ids.item
 								name=typeName
 								text=join
-									arg.text
+									arg.content
 									tags.br *
+		current=merge
+			parent
+			items
 		file.write
 			fileName=indexPath
 			text=tags.html 
@@ -1035,12 +1053,51 @@ website=
 								text="Meta"
 					tags.body
 						text=join
-							items.chapter
-								title="hello world"
-								text="jhaölksdflkasöasdjf"
-							items.chapter
-								title="come on everybody"
-								text="asdfkasödkhfklsjdf"
-							items.example
-								text="example"
+							"Meta is a simple programming language."
+							chapter
+								title="Installation"
+								content=join
+									"Please download from "
+									tags.a
+										href="http://developer.berlios.de/project/showfiles.php?group_id=2780"
+										text="here"
+							chapter
+								title="Language definition"
+								text=join
+									subchapter
+										title="Select"
+										content="The select expression lets you select."
+									subchapter
+										title="Statement"
+										content="Statements asssign a value to a key."
+									subchapter
+										title="Call"
+										content="Functions can called quite simply."
+									subchapter
+										title="Program"
+										content="Programs create maps by executing statements."
+									subchapter
+										title="Function"
+										content="Functions are a special type of statement, but they also create an expression."
+									subchapter
+										title="Literal"
+										content="Literals create predefined maps."
+							chapter
+								title=".NET integration"
+								content=join
+									"Meta is implemented in C# and can directly access .NET objects and methods."
+									subchapter
+										title="Methods"
+									subchapter
+										title="Types"
+									subchapter
+										title="Fields"
+									subchapter
+										title="Properties"
+									subchapter
+										title="Events"
+									subchapter=
+										title="Conversions to Meta"
+									subchapter
+										title="Conversions to .NET"
 		browser indexPath
