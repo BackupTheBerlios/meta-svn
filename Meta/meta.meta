@@ -410,6 +410,29 @@ library=
 				arg
 			current=int.ToString *
 	map=
+		range=
+			|
+				array=*
+				counter=1
+				limit=math.add
+					arg
+					1
+				count=
+					|
+						parent.parent.array.[counter]=counter
+						parent.parent.counter=math.add
+							counter
+							1
+				while
+					condition=
+						|math.smaller
+							counter
+							limit
+					with=
+						|
+							console.writeLine counter
+							current=count arg
+				current=array
 		remove=
 			|Meta.Library.Remove
 				arg
@@ -860,6 +883,9 @@ path=
 				arg.present
 		start=*
 console=
+	writeLine=
+		|mscorlib.Console.WriteLine
+			arg
 	write=
 		|mscorlib.Console.Write
 			arg
@@ -1100,4 +1126,27 @@ website=
 									subchapter
 										title="Conversions to .NET"
 		browser indexPath
-|basicTest *
+|
+	current=library.map.merge
+		library.map
+		library.math
+		library.logic
+	newLine=mscorlib.Environment.NewLine.get *
+	repeat=
+		|
+			argument=arg
+			join apply
+				array=range arg
+				with=
+					|argument
+	console.write library.map.join
+		"hello "
+		"world"
+		library.integerToString 12332
+		newLine
+		newLine
+	apply
+		array=range 10
+		with=
+			|console.write "hello!"
+		
