@@ -11,7 +11,6 @@ sdltest=
 				screen.Update *
 				mscorlib.Console.WriteLine
 					"hello world"
-|sdltest *
 license='"
 	Copyright (c) 2005 Christian Staudenmeyer
 	
@@ -1101,3 +1100,4 @@ website=
 									subchapter
 										title="Conversions to .NET"
 		browser indexPath
+|basicTest *

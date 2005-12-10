@@ -29,8 +29,6 @@ using Meta;
 
 using System;
 using System.Threading;
-using SdlDotNet;
-using SdlDotNet.Sprites;
 
 
 namespace Test 
@@ -46,11 +44,11 @@ namespace Test
 
 				new MetaTest().Run();
 				////LocalStrategy.singleton.map["website"].Call(Map.Empty);//, Map.Empty);
-				DateTime start = DateTime.Now;
+				//DateTime start = DateTime.Now;
 				//FileSystem.fileSystem.Call(Map.Empty);
-				//FileSystem.fileSystem["basicTest"].Call(Map.Empty);
-				//FileSystem.fileSystem["website"].Call(Map.Empty);
-				Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
+				//////FileSystem.fileSystem["basicTest"].Call(Map.Empty);
+				//////FileSystem.fileSystem["website"].Call(Map.Empty);
+				//Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
 				//Console.ReadLine();
 			}
 			catch(MetaException e)

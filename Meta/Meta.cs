@@ -436,9 +436,16 @@ namespace Meta
 		{
 			get
 			{
-				return @"c:\Projects\meta\Meta";
+				return Application.StartupPath;
 			}
 		}
+		//public static string InstallationPath
+		//{
+		//    get
+		//    {
+		//        return @"c:\Projects\meta\Meta";
+		//    }
+		//}
 		public static List<string> loadedAssemblies=new List<string>();
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
