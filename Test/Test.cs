@@ -41,11 +41,24 @@ namespace Test
 			try
 			{
 				//Sprite ball=new SdlDotNet.Sprites.Sprite()
-
-				new MetaTest().Run();
-				////LocalStrategy.singleton.map["website"].Call(Map.Empty);//, Map.Empty);
-				//DateTime start = DateTime.Now;
-				//FileSystem.fileSystem.Call(Map.Empty);
+				if (args.Length == 1 && args[0] == "-test")
+				{
+					new MetaTest().Run();
+				}
+				else
+				{
+					try
+					{
+						////LocalStrategy.singleton.map["website"].Call(Map.Empty);//, Map.Empty);
+						//DateTime start = DateTime.Now;
+						FileSystem.fileSystem.Call(Map.Empty);
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine(e.ToString());
+						Console.ReadLine();
+					}
+				}
 				//////FileSystem.fileSystem["basicTest"].Call(Map.Empty);
 				//////FileSystem.fileSystem["website"].Call(Map.Empty);
 				//Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());

@@ -958,12 +958,11 @@ website=
 				|
 					[arg]=
 						typeName=arg
-						argument=merge
 						|join
 							argument=merge
 								=
 									title=typeName
-									text=*
+									content=*
 								arg
 							tags.b
 								text=tags.font
@@ -1062,7 +1061,7 @@ website=
 								id=ids.item
 								name=typeName
 								text=join
-									arg.content
+									argument.content
 									tags.br *
 		current=merge
 			parent
@@ -1088,7 +1087,7 @@ website=
 										text="here"
 							chapter
 								title="Language definition"
-								text=join
+								content=join
 									subchapter
 										title="Select"
 										content="The select expression lets you select."
@@ -1123,30 +1122,7 @@ website=
 										title="Events"
 									subchapter=
 										title="Conversions to Meta"
-									subchapter
+									subchapter=
 										title="Conversions to .NET"
 		browser indexPath
-|
-	current=library.map.merge
-		library.map
-		library.math
-		library.logic
-	newLine=mscorlib.Environment.NewLine.get *
-	repeat=
-		|
-			argument=arg
-			join apply
-				array=range arg
-				with=
-					|argument
-	console.write library.map.join
-		"hello "
-		"world"
-		library.integerToString 12332
-		newLine
-		newLine
-	apply
-		array=range 10
-		with=
-			|console.write "hello!"
-		
+|website *

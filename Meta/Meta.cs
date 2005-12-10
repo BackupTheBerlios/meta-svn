@@ -136,6 +136,10 @@ namespace Meta
 		public override Map Evaluate(Map current, Map arg)
 		{
 			Map function = callable.GetExpression().Evaluate(current, arg);
+			if (!function.IsFunction)
+			{
+				throw new MetaException("Called map is not a function.", callable.Extent);
+			}
 			Map argument = parameter.GetExpression().Evaluate(current, arg);
 			Map result;
 			try
@@ -450,6 +454,10 @@ namespace Meta
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
+		public abstract bool IsFunction
+		{
+			get;
+		}
 		//public bool IsInterned
 		//{
 		//    get
@@ -1049,6 +1057,13 @@ namespace Meta
 	}
 	public class StrategyMap:Map
 	{
+		public override bool IsFunction
+		{
+			get
+			{
+				return this.ContainsKey(CodeKeys.Function);
+			}
+		}
 		public override int ArrayCount
 		{
 			get
@@ -1543,6 +1558,13 @@ namespace Meta
 
 	public class Method: Map
 	{
+		public override bool IsFunction
+		{
+			get
+			{
+				return true;
+			}
+		}
 		protected override Map CopyImplementation()
 		{
 			return new Method(this.name,this.obj,this.type);
@@ -1806,6 +1828,13 @@ namespace Meta
 	[Serializable]
 	public class TypeMap: DotNetMap
 	{
+		public override bool IsFunction
+		{
+			get
+			{
+				return true;
+			}
+		}
 		public Type Type
 		{
 			get
@@ -1831,6 +1860,13 @@ namespace Meta
 	[Serializable]
 	public class ObjectMap: DotNetMap
 	{
+		public override bool IsFunction
+		{
+			get
+			{
+				return false;
+			}
+		}
 		public object Object
 		{
 			get
@@ -2132,6 +2168,13 @@ namespace Meta
 	}
 	public class Event:Map
 	{
+		public override bool IsFunction
+		{
+			get
+			{
+				return true;
+			}
+		}
 		EventInfo eventInfo;
 		object obj;
 		Type type;
@@ -2206,6 +2249,13 @@ namespace Meta
 	}
 	public class Property:Map
 	{
+		public override bool IsFunction
+		{
+			get
+			{
+				return false;
+			}
+		}
 		PropertyInfo property;
 		object obj;
 		Type type;
