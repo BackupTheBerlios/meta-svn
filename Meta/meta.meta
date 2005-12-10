@@ -410,6 +410,13 @@ library=
 				arg
 			current=int.ToString *
 	map=
+		repeat=
+			|
+				argument=arg.array
+				current=join apply
+					array=range arg.times
+					with=
+						|argument
 		range=
 			|
 				array=*
@@ -430,7 +437,6 @@ library=
 							limit
 					with=
 						|
-							console.writeLine counter
 							current=count arg
 				current=array
 		remove=
@@ -964,10 +970,11 @@ website=
 									title=typeName
 									content=*
 								arg
-							tags.b
-								text=tags.font
-									size="+2"
-									text=argument.title
+							tags.div
+								text=tags.b
+									text=tags.font
+										size="+1"
+										text=argument.title
 							ids=
 								item=getId *
 								hide=join
@@ -1003,8 +1010,9 @@ website=
 									ids.hide
 									"');"									
 								text=join
-									"show this "
+									"- show this "
 									typeName
+									" -"
 							tags.a
 								id=ids.hide
 								name=names.hide
@@ -1017,8 +1025,12 @@ website=
 									ids.show
 									"');"
 								text=join
-									"hide this "
+									"- hide this "
 									typeName
+									" -"
+							repeat
+								array="&nbsp"
+								times=20
 							tags.a
 								name=names.showAll
 								href=join
@@ -1035,9 +1047,9 @@ website=
 									"')"
 								style="display:none"
 								text=join
-									"show all "
+									"- show all "
 									typeName
-									"s"
+									"s -"
 							tags.a
 								name=names.hideAll
 								href=join
@@ -1053,9 +1065,9 @@ website=
 									names.show
 									"')"
 								text=join
-									"hide all "
+									"- hide all "
 									typeName
-									"s"
+									"s -"
 							tags.br *
 							tags.div
 								id=ids.item
@@ -1126,3 +1138,22 @@ website=
 										title="Conversions to .NET"
 		browser indexPath
 |website *
+documentation=
+	Miscellaneous=
+		text=*
+		subchapters=
+			Introduction=
+				text="Meta is a simple programming language."
+			Installation=*
+			Setup=*
+	["The Meta programming language"]=
+		text=*
+		subchapters=
+			Select=*
+			Call=
+				text=*
+			Program=*
+			Statment=*
+			Function=*
+			Literal=*
+	[".NET integration"]=*
