@@ -405,12 +405,14 @@ testSubDir=
 			y="world"
 library=
 	integerToString=
+		documentation="Converts an integer to a string."
 		|
 			int=Meta.Integer
 				arg
 			current=int.ToString *
 	map=
 		repeat=
+			documentation="Repeats an array a given number of times."
 			|
 				argument=arg.array
 				current=join apply
@@ -418,6 +420,7 @@ library=
 					with=
 						|argument
 		range=
+			documentation="Returns an array containing all numbers from 1 to the argument."
 			|
 				array=*
 				counter=1
@@ -440,9 +443,11 @@ library=
 							current=count arg
 				current=array
 		remove=
+			documentation="Removes a key from a map."
 			|Meta.Library.Remove
 				arg
 		while=
+			documentation="Calls a function as long as the condition function returns 1."
 			|
 				stop=arg.condition *
 				next=
@@ -454,9 +459,11 @@ library=
 							while arg
 				next.[stop] arg
 		while=
+			documentation="Calls a function as long as the condition function returns 1."
 			|Meta.Library.While
 				arg
 		apply=
+			documentation="Calls a function with every value in an array as an argument and returns the results as an array."
 			|applyImplementation
 				array=arg.array
 				with=arg.with
@@ -485,21 +492,25 @@ library=
 								result=object.Current.get *
 					current=next.[stop] arg
 		join=
+			documentation="Concatenates arrays."
 			|Meta.Library.Join
 				arg
 		contains=
+			documentation="Determines whether a map contains a key."
 			|
 				object=Meta.ObjectMap
 					arg.map
 				current=object.ContainsKey
 					arg.key
 		keys=
+			documentation="Returns the keys of a map in an array."
 			|
 				object=Meta.ObjectMap
 					arg
 				current=Meta.StrategyMap
 					object.Keys.get *
 		merge=
+			documentation="Combines several maps into one."
 			|sum
 				array=arg
 				with=
@@ -515,6 +526,7 @@ library=
 							start=arg.previous
 				start=*
 		equal=
+			documentation="Determines whether maps are identical."
 			|
 				result=sum
 					array=arg
@@ -533,6 +545,7 @@ library=
 						previous=arg.[1]
 				current=result.equality
 		length=
+			documentation="Returns the length of an array."
 			|
 				map=Meta.ObjectMap
 					arg
@@ -562,11 +575,13 @@ library=
 					current=next.[stop] arg
 	logic=
 		not=
+			documentation="Negates a boolean."
 			|table.[arg]
 			table=
 				[*]=1
 				[1]=*
 		and=
+			documentation="Returns whether all booleans are true."
 			|map.sum
 				array=arg
 				with=
@@ -590,6 +605,7 @@ library=
 					present=1
 				]=1
 		or=
+			documentation="Returns whether at least one boolean is true."
 			|map.sum
 				array=arg
 				with=
@@ -614,6 +630,7 @@ library=
 				]=1
 	math=
 		increment=
+			documentation="Increments an integer."
 			|
 				result=Meta.Integer.op_Addition
 					Meta.Integer
@@ -623,11 +640,13 @@ library=
 				current=Meta.StrategyMap
 					result
 		increment=
+			documentation="Increments an integer."
 			|
 				result=arg
 				result.[*]=arg
 				current=result
 		add=
+			documentation="Adds integers."
 			|Meta.StrategyMap
 				map.sum
 					array=arg
@@ -639,6 +658,7 @@ library=
 								arg.present
 					start=*
 		multiply=
+			documentation="Multiplies integers."
 			|Meta.StrategyMap
 				map.sum
 					array=arg
@@ -650,12 +670,14 @@ library=
 								arg.present
 					start=1
 		greater=
+			documentation="Determines whether the first integer is greater than the second integer."
 			|Meta.Integer.op_GreaterThan
 				Meta.Integer
 					arg.[1]
 				Meta.Integer
 					arg.[2]
 		smaller=
+			documentation="Determines whether the first integer is smaller than the second integer."
 			|Meta.Integer.op_LessThan
 				Meta.Integer
 					arg.[1]
@@ -663,6 +685,7 @@ library=
 					arg.[2]
 	bitwise=
 		or=
+			documentation="Performs a bitwise or operation on integers."
 			|Meta.StrategyMap
 				map.sum
 					array=arg
@@ -675,6 +698,7 @@ library=
 					start=*
 	string=
 		lower=
+			documentation="Converts a string to lowercase."
 			|library.map.apply
 				array=arg
 				with=
@@ -795,15 +819,15 @@ html=
 	|
 		table=
 			|tags.table
-				text=library.map.join library.map.apply
+				inner=library.map.join library.map.apply
 					array=arg
 					with=
 						|tags.tr
-							text=library.map.join library.map.apply
+							inner=library.map.join library.map.apply
 								array=arg
 								with=
 									|tags.td
-										text=arg
+										inner=arg
 		tags=library.map.merge library.map.apply
 			with=
 				|
@@ -814,12 +838,12 @@ html=
 							name
 							argument=library.map.merge
 								=
-									text=*
+									inner=*
 								arg
 							library.map.join library.map.apply
 								array=library.map.keys library.map.remove
 									map=argument
-									key="text"
+									key="inner"
 								with=
 									|library.map.join
 										" "
@@ -829,7 +853,7 @@ html=
 										argument.[arg]
 										'"""'
 							">"
-							argument.text
+							argument.inner
 							"</"
 							name
 							">"
@@ -897,6 +921,62 @@ console=
 			arg
 	readLine=
 		|mscorlib.Console.ReadLine *
+meta=
+	grammar=
+		emptyMap='"
+			"*"
+		"'
+		integer='"
+			("1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9") ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9")*
+		"'
+		character="
+			<any unicode character> // insert the exact range here, maybe include it directly
+		"
+		string=''"
+			("'")* '"' (character)+ '"' <same number of "'" as at start of string>
+		"''
+		program="
+			indentation statement (sameIndentation statement)* dedentation
+		"
+		newLine="
+			("\n"|"\n\r")
+		"
+		whitespace="
+			(" "|"\t")*
+		"
+		sameIndentation="
+			whitespace newLine <as many tabs as in previous line>
+		"
+		newLine='"
+			("\n" | "\n\r")
+		"'
+		indentation="
+			(<start of file> | (newLine <one tab more than in previous line>))
+		"
+		dedentation="
+			(<end of file> | <next line has one tab less at start of line than this line>)
+		"
+		lookup=''"
+			(~("*"|"="|"|"|"."|"'"|"\""))+ | ("[" (select|string|integer|emptyMap) "]")
+		"''
+		select="
+			lookup ("." lookup)*
+		"
+		function="
+			"|" expression
+		"
+		statement="
+			( ((lookup ("." lookup)* "=")|(("=")?) ) expression) | function)
+		"
+		"everything that is functionally different should have its own rule
+			this also makes sense from the perspective of explaining things
+			"
+		call="
+			select (program | (" " expression))
+		"
+		expression="
+			(emptyMap|integer|string|program|select|call)
+		"
 website=
 	|
 		current=library.map.merge
@@ -907,7 +987,7 @@ website=
 				=
 					tags.a
 						href="http://developer.berlios.de"
-						text=tags.img
+						inner=tags.img
 							src="http://developer.berlios.de/bslogo.php?group_id=2780"
 							width="124"
 							height="32"
@@ -921,7 +1001,7 @@ website=
 			|tags.script
 				language="Javascript 1.2"
 				type="text/javascript"
-				text="
+				inner="
 					function show(id)
 					{
 						el = document.getElementById(id);
@@ -971,10 +1051,10 @@ website=
 									content=*
 								arg
 							tags.div
-								text=tags.b
-									text=tags.font
+								inner=tags.b
+									inner=tags.font
 										size="+1"
-										text=argument.title
+										inner=argument.title
 							ids=
 								item=getId *
 								hide=join
@@ -999,6 +1079,7 @@ website=
 									item
 							tags.a
 								id=ids.show
+								style=
 								name=names.show
 								style="display:none"
 								href=join
@@ -1009,10 +1090,8 @@ website=
 									"');show('"
 									ids.hide
 									"');"									
-								text=join
-									"- show this "
-									typeName
-									" -"
+								inner=join
+									"show"
 							tags.a
 								id=ids.hide
 								name=names.hide
@@ -1024,13 +1103,10 @@ website=
 									"');show('"
 									ids.show
 									"');"
-								text=join
-									"- hide this "
-									typeName
-									" -"
+								inner="hide"
 							repeat
 								array="&nbsp"
-								times=20
+								times=8
 							tags.a
 								name=names.showAll
 								href=join
@@ -1046,10 +1122,8 @@ website=
 									names.hide
 									"')"
 								style="display:none"
-								text=join
-									"- show all "
-									typeName
-									"s -"
+								inner=join
+									"show all"
 							tags.a
 								name=names.hideAll
 								href=join
@@ -1064,15 +1138,13 @@ website=
 									"');showAll('"
 									names.show
 									"')"
-								text=join
-									"- hide all "
-									typeName
-									"s -"
+								inner=join
+									"hide all"
 							tags.br *
 							tags.div
 								id=ids.item
 								name=typeName
-								text=join
+								inner=join
 									argument.content
 									tags.br *
 		current=merge
@@ -1081,14 +1153,14 @@ website=
 		file.write
 			fileName=indexPath
 			text=tags.html 
-				text=join
+				inner=join
 					tags.head 
-						text=join
+						inner=join
 							script *
 							tags.title
-								text="Meta"
+								inner="Meta"
 					tags.body
-						text=join
+						inner=join
 							"Meta is a simple programming language."
 							chapter
 								title="Installation"
@@ -1096,7 +1168,7 @@ website=
 									"Please download from "
 									tags.a
 										href="http://developer.berlios.de/project/showfiles.php?group_id=2780"
-										text="here"
+										inner="here"
 							chapter
 								title="Language definition"
 								content=join
