@@ -1,54 +1,54 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-         "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en-us">
-
+<html>
 <head>
-
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<meta http-equiv="Content-Language" content="en-us">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-
 <script type="text/javascript">
 <!--
 function allowInteger(evt)
 {
-var AsciiValue = document.addEventListener ? evt.which : event.keyCode;
-if(AsciiValue < 48 || AsciiValue > 57)
-        {
+    var AsciiValue = document.addEventListener ? evt.which : event.keyCode;
+    if(AsciiValue < 48 || AsciiValue > 57)
+    {
         if(document.addEventListener)
-                {
-                evt.preventDefault();
-                }
-        else if(window.event)
-                {
-                event.returnValue = false;
-                };
+        {
+//                alert("hello");
+                var ta=document.meta.input;
+                
+                var bits=(new RegExp('([\x00-\xff]{'+ta.selectionStart+'})([\x00-\xff]{'+(ta.selectionEnd - ta.selectionStart)+'})([\x00-\xff]*)')).exec(ta.value);
+//                alert("world");
+//                input.value="hello";
+                ta.value=bits[1]+"\t"+bits[3]; 
+    //               document.meta.input.focus();
+            evt.preventDefault();
+
+    //            e.returnValue=false;
         }
-        alert(AsciiValue);
+        else if(window.event)
+        {
+            event.returnValue = false;
+        };
+        
+    }
+//    alert(AsciiValue);
 
 }
 
 function init()
 {
-if(document.addEventListener)
-        {
-        document.getElementById("idP").addEventListener("keypress",
-allowInteger, true);
-        }
-else if(window.event)
-        {
-        document.getElementById("idalfloat").onkeypress = allowInteger;
-        };
+    if(document.addEventListener)
+    {
+        document.getElementById("idP").addEventListener("keypress",allowInteger, true);
+    }
+    else if(window.event)
+    {
+        document.getElementById("input").onkeypress = allowInteger;
+    };
 }
 
 -->
 </script>
 </head>
 <body onload="init();">
-<form action="" name="frm" runat=server>
-<p id="idP">Only integer is allowed: <textarea type="text"
-name="alfloatName" id="idalfloat"></p>
+<form action="" id="meta" name="frm" runat=server>
+<p id="idP">Only integer is allowed: <textarea type="text" id="input"></p>
 </form>
 </body>
 </html> 
