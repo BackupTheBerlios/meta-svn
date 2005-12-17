@@ -16,7 +16,7 @@
 					obj.selection = document.selection.createRange();
 					obj.selection.text = "\t";
 					event.returnValue = false;
-					evt.stopPropagation();
+//					evt.stopPropagation();
 				}
 				else //if(document.addEventListener)
 				{
@@ -56,9 +56,12 @@
 	<body onload="init();">
 		<form action="" id="meta" onkeydown="whatever(event,this)" name="frm" runat=server>
 			<p id="idP">
-				<asp:TextBox id="input" runat=server>
-				</asp:TextBox>
+				<asp:TextBox id="input" runat=server Height="108px" TextMode="MultiLine" Width="326px"></asp:TextBox>
 			</p>
+			<p>
+				<asp:Button ID="execute" runat="server" OnClick="execute_Click" Text="Execute" />&nbsp;</p>
+			<p>
+				<asp:Label ID="output" runat="server" Height="146px" Width="333px"></asp:Label>&nbsp;</p>
 		</form>
 	</body>
 </html>
