@@ -1,4 +1,59 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true"  CodeFile="Default.aspx.cs" Inherits="_Default" %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+         "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en-us">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+
+<script type="text/javascript">
+<!--
+function allowInteger(evt)
+{
+var AsciiValue = document.addEventListener ? evt.which : event.keyCode;
+if(AsciiValue < 48 || AsciiValue > 57)
+        {
+        if(document.addEventListener)
+                {
+                evt.preventDefault();
+                }
+        else if(window.event)
+                {
+                event.returnValue = false;
+                };
+        }
+        alert(AsciiValue);
+
+}
+
+function init()
+{
+if(document.addEventListener)
+        {
+        document.getElementById("idP").addEventListener("keypress",
+allowInteger, true);
+        }
+else if(window.event)
+        {
+        document.getElementById("idalfloat").onkeypress = allowInteger;
+        };
+}
+
+-->
+</script>
+</head>
+<body onload="init();">
+<form action="" name="frm" runat=server>
+<p id="idP">Only integer is allowed: <textarea type="text"
+name="alfloatName" id="idalfloat"></p>
+</form>
+</body>
+</html> 
+
+<%--<%@ Page Language="C#" AutoEventWireup="true"  CodeFile="Default.aspx.cs" Inherits="_Default" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -6,58 +61,109 @@
 <head runat="server">
     <title>Untitled Page</title>
     <script language="javascript">
-    function HandleKeyDown(e,obj)
-    {
-        
-     var key, target;
-
-     /* Event-Objekt in Erfahrung bringen */
-     if (!e) e = window.event;
-
-     /* Tastencode in Erfahrung bringen */
-     if (e.keyCode) key = e.keyCode;
-     else if (e.which) key = e.which;
-     else return;
-     
-     
-    var input=document.meta.input;
-    if(key==' ')
-    {
-        if(document.selection)
+       
+ function allowInteger(evt)
+{
+        var AsciiValue = document.addEventListener ? evt.charCode : event.keyCode;
+        alert(AsciiValue.toString());
+        if(AsciiValue == '\t')// || AsciiValue > 57)
         {
-//            alert("hello");
-            obj.selection = document.selection.createRange();
-            obj.selection.text = "\t";
-            event.returnValue = false;
+            alert(AsciiValue);
+            if(document.addEventListener)
+            {
+            evt.preventDefault();
+            }
+            else if(window.event)
+                    {
+                    event.returnValue = false;
+                    };
+
+            if(document.selection)
+            {
+                obj.selection = document.selection.createRange();
+                obj.selection.text = "\t";
+            }
+            else
+            {
+//                alert("hello");
+                var ta=document.meta.input;
+                
+                var bits=(new RegExp('([\x00-\xff]{'+ta.selectionStart+'})([\x00-\xff]{'+(ta.selectionEnd - ta.selectionStart)+'})([\x00-\xff]*)')).exec(ta.value);
+//                alert("world");
+//                input.value="hello";
+                ta.value=bits[1]+"\t"+bits[3]; 
+    //               document.meta.input.focus();
+
+    //            e.returnValue=false;
+            }
+
         }
-        else
+
+}
+
+function init()
+{
+if(document.addEventListener)
         {
-//            alert(input.selectionStart);
-//            alert(input.selectionEnd);
-            var ta=input;
-            var bits=(new RegExp('([\x00-\xff]{'+ta.selectionStart+'})([\x00-\xff]{'+(ta.selectionEnd - ta.selectionStart)+'})([\x00-\xff]*)')).exec(ta.value);
-            input.value=bits[1]+"\t"+bits[3]; 
-               document.meta.input.focus();
-
-            e.returnValue=false;
+        document.getElementById("idP").addEventListener("keypress",
+allowInteger, true);
         }
-    }
+else if(window.event)
+        {
+        document.getElementById("input").onkeypress = allowInteger;
+        };
+}      
+       
+//        
+//     var key, target;
 
-     /* Element in Erfahrung bringen, bei dem der Event passierte */
-    // if (e.target) target = e.target;
-    // else if (e.srcElement) target = e.srcElement;
-    // else return;
+//     /* Event-Objekt in Erfahrung bringen */
+//     if (!e) e = window.event;
 
-     /* Prüfung, ob das Target-Element ein input- oder textarea-Element ist */
-    // if (target.type && (target.type == "textarea" || target.type == "text")) {
-     // Alternativ:
-     // if (target.nodeName && (target.nodeName.toLowerCase() == "input" || arget.nodeName.toLowerCase() == "textarea")) {
-      // Target-Element ist input oder textarea.
-      // Breche Event-Verarbeitung ab. (optional)
-      if (e.stopPropagation) e.stopPropagation();
-      else if (typeof(e.cancelBubble) == "boolean") e.cancelBubble = true;
-      return;
- }
+//     /* Tastencode in Erfahrung bringen */
+//     if (e.keyCode) key = e.keyCode;
+//     else if (e.which) key = e.which;
+//     else return;
+//     
+//     
+//    var input=document.meta.input;
+//    if(key==' ')
+//    {
+//        if(document.selection)
+//        {
+////            alert("hello");
+//            obj.selection = document.selection.createRange();
+//            obj.selection.text = "\t";
+//            event.returnValue = false;
+//        }
+//        else
+//        {
+////            alert(input.selectionStart);
+////            alert(input.selectionEnd);
+//            var ta=input;
+//            var bits=(new RegExp('([\x00-\xff]{'+ta.selectionStart+'})([\x00-\xff]{'+(ta.selectionEnd - ta.selectionStart)+'})([\x00-\xff]*)')).exec(ta.value);
+//            input.value=bits[1]+"\t"+bits[3]; 
+//               document.meta.input.focus();
+
+//            e.returnValue=false;
+//        }
+//    }
+
+//     /* Element in Erfahrung bringen, bei dem der Event passierte */
+//    // if (e.target) target = e.target;
+//    // else if (e.srcElement) target = e.srcElement;
+//    // else return;
+
+//     /* Pr�fung, ob das Target-Element ein input- oder textarea-Element ist */
+//    // if (target.type && (target.type == "textarea" || target.type == "text")) {
+//     // Alternativ:
+//     // if (target.nodeName && (target.nodeName.toLowerCase() == "input" || arget.nodeName.toLowerCase() == "textarea")) {
+//      // Target-Element ist input oder textarea.
+//      // Breche Event-Verarbeitung ab. (optional)
+//      if (e.stopPropagation) e.stopPropagation();
+//      else if (typeof(e.cancelBubble) == "boolean") e.cancelBubble = true;
+//      return;
+// }
 
  /* Verarbeitung des Tastendrucks */
  // ...
@@ -71,19 +177,16 @@
 //          event.returnValue = false;
 //       }
 //    }
-    </script>
+<%--    </script>
 </head>
-<body >
+<body onload="init()">
     <form id="meta" runat="server">
     <div>
-    <asp:TextBox onkeydown="HandleKeyDown(event,this);" onkeyup="document.meta.input.focus();" ID="input" runat=server TextMode=MultiLine Columns="40" Rows="10" Width="386px"></asp:TextBox>&nbsp;
-        <br />
-        <br />
-        <asp:Button ID="execute" runat="server" Height="41px" OnClick="execute_Click" Text="Execute"
-            Width="97px" TabIndex="-1" />
-        <br />
-        <br />
-        <asp:Label ID="output" runat="server" Height="170px" Width="393px"></asp:Label></div>
+    <p id="idP">
+        <
+    </p>
     </form>
+    </p>
 </body>
-</html>
+</html>--%>
+--%>
