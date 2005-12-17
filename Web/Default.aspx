@@ -28,6 +28,31 @@
 		        
 			}
 		}
+		var buttonClicked=false;
+		function InsertTab()
+		{
+			var obj=document.meta.input;
+			var ta=document.meta.input; 
+			ta.focus();
+			if(document.selection)
+			{
+
+					alert("hello");
+				obj.selection = document.selection.createRange();
+				obj.selection.text = "\t";
+//				event.returnValue = false;
+//					evt.stopPropagation();
+			}
+			else //if(document.addEventListener)
+			{
+				var ta=document.meta.input;                
+				var bits=(new RegExp('([\x00-\xff]{'+ta.selectionStart+'})([\x00-\xff]{'+(ta.selectionEnd - ta.selectionStart)+'})([\x00-\xff]*)')).exec(ta.value);
+				ta.value=bits[1]+"\t"+bits[3]; 
+//				evt.preventDefault();
+			}
+			var ta=document.meta.input; 
+			ta.focus();
+		}
 		function whatever(evt,obj)
 		{
 //			alert("whatever");
@@ -36,6 +61,11 @@
 //				alert("in");
 				allowInteger(evt,obj);
 			}
+		}
+		function clicked()
+		{
+//			alert("Clicked");
+//			buttonClicked=true;
 		}
 		function init()
 		{	if(window.event)
@@ -53,13 +83,16 @@
 		-->
 		</script>
 	</head>
-	<body onload="init();">
-		<form action="" id="meta" onkeydown="whatever(event,this)" name="frm" runat=server>
+	<body >
+		<form action="" id="meta"  name="frm" runat=server>
 			<p id="idP">
 				<asp:TextBox id="input" runat=server Height="108px" TextMode="MultiLine" Width="326px"></asp:TextBox>
 			</p>
 			<p>
-				<asp:Button ID="execute" runat="server" OnClick="execute_Click" Text="Execute" />&nbsp;</p>
+				&nbsp;
+				<asp:Button onfocus="InsertTab();"
+				  ID="execute" runat="server" 
+				  OnClick="execute_Click" Text="Execute" /></p>
 			<p>
 				<asp:Label ID="output" runat="server" Height="146px" Width="333px"></asp:Label>&nbsp;</p>
 		</form>

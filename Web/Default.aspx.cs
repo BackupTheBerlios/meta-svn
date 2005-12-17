@@ -16,6 +16,7 @@ public partial class _Default : System.Web.UI.Page
     {
 		if (!IsPostBack)
 		{
+			//execute.Attributes.Add("onclick", "clicked()");
 			input.Focus();
 			Session["map"] = new StrategyMap();
 		}
@@ -44,6 +45,7 @@ public partial class _Default : System.Web.UI.Page
 		try
 		{
 			string code = input.Text;
+			code = code.Trim();
 			Map context = (Map)Session["map"];
 			//Map context = new StrategyMap();
 			FileSystem.Parser parser = new FileSystem.Parser(code, "");
