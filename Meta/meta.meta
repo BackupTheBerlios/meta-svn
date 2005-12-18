@@ -72,16 +72,16 @@ game=
 			=
 				|
 					parent.parent.parent.quit=1
-		library.map.while
+		local.map.while
 			condition=
-				|library.logic.not quit
+				|local.logic.not quit
 			with=
 				|
 					Events.Poll *
 					mainFunction *
 basicTest=
 	|
-		current=library.map.merge
+		current=local.map.merge
 			parent
 			=
 				"AssignedToCurrent"
@@ -305,7 +305,7 @@ basicTest=
 		two=2
 		firstIf="unchanged"
 		secondIf="unchanged"
-		firstIfCondition=library.map.equal
+		firstIfCondition=local.map.equal
 			1
 			one
 		firstIfBranches=
@@ -362,12 +362,12 @@ basicTest=
 		whileCounter=*
 		loop=
 			|
-				whileDecision=library.logic.not library.map.equal
+				whileDecision=local.logic.not local.map.equal
 					arg
 					10
 				whileBranches=
 					=
-						|loop library.math.add
+						|loop local.math.add
 							arg
 							1
 					[*]=
@@ -403,314 +403,345 @@ testSubDir=
 		x=
 			x="hello"
 			y="world"
-library=
-	integerToString=
-		documentation="Converts an integer to a string."
+console=
+	writeLine=
+		|mscorlib.Console.WriteLine
+			arg
+	write=
+		|mscorlib.Console.Write
+			arg
+	readLine=
+		|mscorlib.Console.ReadLine *
+integerToString=
+	documentation="Converts an integer to a string."
+	|
+		int=Meta.Integer
+			arg
+		current=int.ToString *
+map=
+	isInteger=
 		|
-			int=Meta.Integer
+			object=Meta.ObjectMap
 				arg
-			current=int.ToString *
-	map=
-		repeat=
-			documentation="Repeats an array a given number of times."
-			|
-				argument=arg.array
-				current=join apply
-					array=range arg.times
-					with=
-						|argument
-		range=
-			documentation="Returns an array containing all numbers from 1 to the argument."
-			|
-				array=*
-				counter=1
-				limit=math.add
-					arg
-					1
-				count=
-					|
-						parent.parent.array.[counter]=counter
-						parent.parent.counter=math.add
-							counter
-							1
-				while
-					condition=
-						|math.smaller
-							counter
-							limit
-					with=
-						|
-							current=count arg
-				current=array
-		remove=
-			documentation="Removes a key from a map."
-			|Meta.Library.Remove
+			current=object.IsInteger.get *
+	isString=
+		|
+			object=Meta.ObjectMap
 				arg
-		while=
-			documentation="Calls a function as long as the condition function returns 1."
-			|
-				stop=arg.condition *
-				next=
-					[*]=
+			current=object.IsString.get *
+	if=
+		|
+			argument=merge
+				=
+					else=
 						|*
-					=
-						|
-							arg.with *
-							while arg
-				next.[stop] arg
-		while=
-			documentation="Calls a function as long as the condition function returns 1."
-			|Meta.Library.While
+					then=
+						|*
 				arg
-		apply=
-			documentation="Calls a function with every value in an array as an argument and returns the results as an array."
-			|applyImplementation
-				array=arg.array
-				with=arg.with
-				index=1
-				result=*
-			applyImplementation=
+			cases=
+				[1]=argument.then
+				[*]=argument.else
+			current=cases.[argument.condition] *
+	repeat=
+		documentation="Repeats an array a given number of times."
+		|
+			argument=arg.array
+			current=join apply
+				array=range arg.times
+				with=
+					|argument
+	range=
+		documentation="Returns an array containing all numbers from 1 to the argument."
+		|
+			array=*
+			counter=1
+			limit=math.add
+				arg
+				1
+			count=
 				|
-					stop=math.greater
-						arg.index
-						length arg.array
-					next=
-						=
-							|arg.result
-						[*]=
-							|applyImplementation
-								array=arg.array
-								with=arg.with
-								index=math.add
-									arg.index
-									1
-								object=Meta.ObjectMap
-									arg.result
-								argument=arg.with arg.array.[arg.index]
-								object.Append
-									argument
-								result=object.Current.get *
-					current=next.[stop] arg
-		join=
-			documentation="Concatenates arrays."
-			|Meta.Library.Join
+					parent.parent.array.[counter]=counter
+					parent.parent.counter=math.add
+						counter
+						1
+			while
+				condition=
+					|math.smaller
+						counter
+						limit
+				with=
+					|
+						current=count arg
+			current=array
+	remove=
+		documentation="Removes a key from a map."
+		|Meta.Library.Remove
+			arg
+	while=
+		documentation="Calls a function as long as the condition function returns 1."
+		|
+			stop=arg.condition *
+			next=
+				[*]=
+					|*
+				=
+					|
+						arg.with *
+						while arg
+			next.[stop] arg
+	while=
+		documentation="Calls a function as long as the condition function returns 1."
+		|Meta.Library.While
+			arg
+	apply=
+		documentation="Calls a function with every value in an array as an argument and returns the results as an array."
+		|applyImplementation
+			array=arg.array
+			with=arg.with
+			index=1
+			result=*
+		applyImplementation=
+			|
+				stop=math.greater
+					arg.index
+					length arg.array
+				next=
+					=
+						|arg.result
+					[*]=
+						|applyImplementation
+							array=arg.array
+							with=arg.with
+							index=math.add
+								arg.index
+								1
+							object=Meta.ObjectMap
+								arg.result
+							argument=arg.with arg.array.[arg.index]
+							object.Append
+								argument
+							result=object.Current.get *
+				current=next.[stop] arg
+	join=
+		documentation="Concatenates arrays."
+		|Meta.Library.Join
+			arg
+	contains=
+		documentation="Determines whether a map contains a key."
+		|
+			object=Meta.ObjectMap
+				arg.map
+			current=object.ContainsKey
+				arg.key
+	keys=
+		documentation="Returns the keys of a map in an array."
+		|
+			object=Meta.ObjectMap
 				arg
-		contains=
-			documentation="Determines whether a map contains a key."
-			|
-				object=Meta.ObjectMap
-					arg.map
-				current=object.ContainsKey
-					arg.key
-		keys=
-			documentation="Returns the keys of a map in an array."
-			|
-				object=Meta.ObjectMap
-					arg
-				current=Meta.StrategyMap
-					object.Keys.get *
-		merge=
-			documentation="Combines several maps into one."
-			|sum
+			current=Meta.StrategyMap
+				object.Keys.get *
+	merge=
+		documentation="Combines several maps into one."
+		|sum
+			array=arg
+			with=
+				|
+					overwrite=arg.present
+					current=sum
+						array=keys arg.present
+						with=
+							|
+								result=arg.previous
+								result.[arg.present]=overwrite.[arg.present]
+								current=result
+						start=arg.previous
+			start=*
+	equal=
+		documentation="Determines whether maps are identical."
+		|
+			result=sum
 				array=arg
 				with=
 					|
-						overwrite=arg.present
-						current=sum
-							array=keys arg.present
-							with=
-								|
-									result=arg.previous
-									result.[arg.present]=overwrite.[arg.present]
-									current=result
-							start=arg.previous
-				start=*
-		equal=
-			documentation="Determines whether maps are identical."
+						first=Meta.ObjectMap
+							arg.previous.previous
+						current=
+							equality=logic.and
+								first.Equals
+									arg.present
+								arg.previous.equality
+							previous=arg.present
+				start=
+					equality=1
+					previous=arg.[1]
+			current=result.equality
+	length=
+		documentation="Returns the length of an array."
+		|
+			map=Meta.ObjectMap
+				arg
+			current=map.ArrayCount.get *
+	sum=
+		|sumImplementation
+			index=1
+			array=arg.array
+			with=arg.with
+			result=arg.start
+		sumImplementation=
 			|
-				result=sum
-					array=arg
-					with=
-						|
-							first=Meta.ObjectMap
-								arg.previous.previous
-							current=
-								equality=logic.and
-									first.Equals
-										arg.present
-									arg.previous.equality
-								previous=arg.present
-					start=
-						equality=1
-						previous=arg.[1]
-				current=result.equality
-		length=
-			documentation="Returns the length of an array."
-			|
-				map=Meta.ObjectMap
+				stop=math.greater
+					arg.index
+					length arg.array
+				next=
+					=
+						|arg.result
+					[*]=
+						|sumImplementation
+							index=math.increment arg.index
+							result=arg.with
+								previous=arg.result
+								present=arg.array.[arg.index]
+							array=arg.array
+							with=arg.with
+				current=next.[stop] arg
+logic=
+	not=
+		documentation="Negates a boolean."
+		|table.[arg]
+		table=
+			[*]=1
+			[1]=*
+	and=
+		documentation="Returns whether all booleans are true."
+		|map.sum
+			array=arg
+			with=
+				|table.[arg]
+			start=1
+		table=
+			[
+				previous=1
+				present=*
+			]=*
+			[
+				previous=*
+				present=1
+			]=*
+			[
+				previous=*
+				present=*
+			]=*
+			[
+				previous=1
+				present=1
+			]=1
+	or=
+		documentation="Returns whether at least one boolean is true."
+		|map.sum
+			array=arg
+			with=
+				|table.[arg]
+			start=*
+		table=
+			[
+				previous=1
+				present=*
+			]=1
+			[
+				previous=*
+				present=1
+			]=1
+			[
+				previous=*
+				present=*
+			]=*
+			[
+				previous=1
+				present=1
+			]=1
+math=
+	increment=
+		documentation="Increments an integer."
+		|
+			result=Meta.Integer.op_Addition
+				Meta.Integer
 					arg
-				current=map.ArrayCount.get *
-		sum=
-			|sumImplementation
-				index=1
-				array=arg.array
-				with=arg.with
-				result=arg.start
-			sumImplementation=
-				|
-					stop=math.greater
-						arg.index
-						length arg.array
-					next=
-						=
-							|arg.result
-						[*]=
-							|sumImplementation
-								index=math.increment arg.index
-								result=arg.with
-									previous=arg.result
-									present=arg.array.[arg.index]
-								array=arg.array
-								with=arg.with
-					current=next.[stop] arg
-	logic=
-		not=
-			documentation="Negates a boolean."
-			|table.[arg]
-			table=
-				[*]=1
-				[1]=*
-		and=
-			documentation="Returns whether all booleans are true."
-			|map.sum
+				Meta.Integer
+					1
+			current=Meta.StrategyMap
+				result
+	increment=
+		documentation="Increments an integer."
+		|
+			result=arg
+			result.[*]=arg
+			current=result
+	add=
+		documentation="Adds integers."
+		|Meta.StrategyMap
+			map.sum
 				array=arg
 				with=
-					|table.[arg]
-				start=1
-			table=
-				[
-					previous=1
-					present=*
-				]=*
-				[
-					previous=*
-					present=1
-				]=*
-				[
-					previous=*
-					present=*
-				]=*
-				[
-					previous=1
-					present=1
-				]=1
-		or=
-			documentation="Returns whether at least one boolean is true."
-			|map.sum
-				array=arg
-				with=
-					|table.[arg]
+					|Meta.Integer.op_Addition
+						Meta.Integer
+							arg.previous
+						Meta.Integer
+							arg.present
 				start=*
-			table=
-				[
-					previous=1
-					present=*
-				]=1
-				[
-					previous=*
-					present=1
-				]=1
-				[
-					previous=*
-					present=*
-				]=*
-				[
-					previous=1
-					present=1
-				]=1
-	math=
-		increment=
-			documentation="Increments an integer."
-			|
-				result=Meta.Integer.op_Addition
-					Meta.Integer
-						arg
-					Meta.Integer
-						1
-				current=Meta.StrategyMap
-					result
-		increment=
-			documentation="Increments an integer."
-			|
-				result=arg
-				result.[*]=arg
-				current=result
-		add=
-			documentation="Adds integers."
-			|Meta.StrategyMap
-				map.sum
-					array=arg
-					with=
-						|Meta.Integer.op_Addition
-							Meta.Integer
-								arg.previous
-							Meta.Integer
-								arg.present
-					start=*
-		multiply=
-			documentation="Multiplies integers."
-			|Meta.StrategyMap
-				map.sum
-					array=arg
-					with=
-						|Meta.Integer.op_Multiply
-							Meta.Integer
-								arg.previous
-							Meta.Integer
-								arg.present
-					start=1
-		greater=
-			documentation="Determines whether the first integer is greater than the second integer."
-			|Meta.Integer.op_GreaterThan
-				Meta.Integer
-					arg.[1]
-				Meta.Integer
-					arg.[2]
-		smaller=
-			documentation="Determines whether the first integer is smaller than the second integer."
-			|Meta.Integer.op_LessThan
-				Meta.Integer
-					arg.[1]
-				Meta.Integer
-					arg.[2]
-	bitwise=
-		or=
-			documentation="Performs a bitwise or operation on integers."
-			|Meta.StrategyMap
-				map.sum
-					array=arg
-					with=
-						|Meta.Integer.op_BitwiseOr
-							Meta.Integer
-								arg.previous
-							Meta.Integer
-								arg.present
-					start=*
-	string=
-		lower=
-			documentation="Converts a string to lowercase."
-			|library.map.apply
+	multiply=
+		documentation="Multiplies integers."
+		|Meta.StrategyMap
+			map.sum
 				array=arg
 				with=
-					|mscorlib.Char.ToLower
-						arg
+					|Meta.Integer.op_Multiply
+						Meta.Integer
+							arg.previous
+						Meta.Integer
+							arg.present
+				start=1
+	greater=
+		documentation="Determines whether the first integer is greater than the second integer."
+		|Meta.Integer.op_GreaterThan
+			Meta.Integer
+				arg.[1]
+			Meta.Integer
+				arg.[2]
+	smaller=
+		documentation="Determines whether the first integer is smaller than the second integer."
+		|Meta.Integer.op_LessThan
+			Meta.Integer
+				arg.[1]
+			Meta.Integer
+				arg.[2]
+bitwise=
+	or=
+		documentation="Performs a bitwise or operation on integers."
+		|Meta.StrategyMap
+			map.sum
+				array=arg
+				with=
+					|Meta.Integer.op_BitwiseOr
+						Meta.Integer
+							arg.previous
+						Meta.Integer
+							arg.present
+				start=*
+string=
+	lower=
+		documentation="Converts a string to lowercase."
+		|local.map.apply
+			array=arg
+			with=
+				|mscorlib.Char.ToLower
+					arg
 libraryTest=
 	|
-		current=library.map.merge
+		current=local.map.merge
 			parent
-			library.map
-			library.logic
-			library.math
+			local.map
+			local.logic
+			local.math
 		test=
 			booleanTest=
 				not=
@@ -751,10 +782,14 @@ libraryTest=
 					23
 					2
 			bitwiseTest=
-				or=library.bitwise.or
+				or=local.bitwise.or
 					8
 					20
 			mapTest=
+				if=if
+					condition=1
+					then=
+						|"if test successful"
 				remove=remove
 					map=
 						x="hello"
@@ -811,7 +846,7 @@ libraryTest=
 						with=
 							|SetCounter increment counter
 					current=counter
-			bitwiseTest=library.bitwise.or
+			bitwiseTest=local.bitwise.or
 				20
 				["System.Windows.Forms"].Keys.Tab
 		current=test
@@ -819,33 +854,33 @@ html=
 	|
 		table=
 			|tags.table
-				inner=library.map.join library.map.apply
+				inner=local.map.join local.map.apply
 					array=arg
 					with=
 						|tags.tr
-							inner=library.map.join library.map.apply
+							inner=local.map.join local.map.apply
 								array=arg
 								with=
 									|tags.td
 										inner=arg
-		tags=library.map.merge library.map.apply
+		tags=local.map.merge local.map.apply
 			with=
 				|
 					[arg]=
 						name=arg
-						|library.map.join
+						|local.map.join
 							"<"
 							name
-							argument=library.map.merge
+							argument=local.map.merge
 								=
 									inner=*
 								arg
-							library.map.join library.map.apply
-								array=library.map.keys library.map.remove
+							local.map.join local.map.apply
+								array=local.map.keys local.map.remove
 									map=argument
 									key="inner"
 								with=
-									|library.map.join
+									|local.map.join
 										" "
 										arg
 										"="
@@ -888,7 +923,7 @@ displayHtml=
 	|
 		fileName="C:\test.html"
 		file.write
-			file=fileName
+			fileName=fileName
 			text=arg
 		browser fileName
 process=
@@ -905,82 +940,200 @@ browser=
 		fileName="firefox"
 		arguments=arg
 path=
-	|library.map.sum
+	|local.map.sum
 		array=arg
 		with=
 			|mscorlib.Path.Combine
 				arg.previous
 				arg.present
 		start=*
-console=
-	writeLine=
-		|mscorlib.Console.WriteLine
-			arg
-	write=
-		|mscorlib.Console.Write
-			arg
-	readLine=
-		|mscorlib.Console.ReadLine *
 meta=
-	grammar=
-		emptyMap='"
-			"*"
-		"'
-		integer='"
-			("1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9") ("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9")*
-		"'
-		character="
-			<any unicode character> // insert the exact range here, maybe include it directly
-		"
-		string=''"
-			("'")* '"' (character)+ '"' <same number of "'" as at start of string>
-		"''
-		program="
-			indentation statement (sameIndentation statement)* dedentation
-		"
-		newLine="
-			("\n"|"\n\r")
-		"
-		whitespace="
-			(" "|"\t")*
-		"
-		sameIndentation="
-			whitespace newLine <as many tabs as in previous line>
-		"
-		newLine='"
-			("\n" | "\n\r")
-		"'
-		indentation="
-			(<start of file> | (newLine <one tab more than in previous line>))
-		"
-		dedentation="
-			(<end of file> | <next line has one tab less at start of line than this line>)
-		"
-		lookup=''"
-			(~("*"|"="|"|"|"."|"'"|"\""))+ | ("[" (select|string|integer|emptyMap) "]")
-		"''
-		select="
-			lookup ("." lookup)*
-		"
-		function="
-			"|" expression
-		"
-		statement="
-			( ((lookup ("." lookup)* "=")|(("=")?) ) expression) | function)
-		"
-		"everything that is functionally different should have its own rule
-			this also makes sense from the perspective of explaining things
-			"
-		call="
-			select (program | (" " expression))
-		"
-		expression="
-			(emptyMap|integer|string|program|select|call)
-		"
+	introduction="Meta is a small programming language that is designed to be kept in the
+		programmer's head all at once."
+	chapters=
+		Tutorial=
+			introduction="This small tutorial is supposed to guide you through most of Meta's
+				functionality with a few examples."
+			chapters=*
+		[".NET"]=
+			introduction="This part explains how the integration of Meta with .NET works."
+			chapters=
+				Objects=*
+				Classes=*
+				Enumerations=*
+				Delegates=*
+				Events=*
+				Properties=*
+				Indexers=*
+				Methods=*
+		Language=
+			introduction="This part defines the Meta programming language itself."
+			chapters=
+				Maps=
+					explanation="Maps are the foundation of Meta. They are the only data type
+						that exists in Meta. Most programming languages use several or even many
+						different data types. Often, data types only exist in the form of
+						libraries and the only way to build abstractions of data is using
+						a builtin concept of 'classes' or something like this. The reason there
+						are usually several data types is efficiency. Maps are more general than
+						arrays, for example. Most programming languages, however make both 
+						avaiblable, however, even though the interface of a map is more general
+						than that of an array. It is thus possible in these languages to
+						tell the interpreter or compiler which implementation strategy you
+						want to use. If you are willing to take some restrictions, the
+						performance will be better. The program structure will not be any
+						simpler, though. 
+						Likewise, many programming languages use things like 'objects',
+						local variable scope, global variable scope, function parameters and
+						so on as a way to support a restricted form of the map interface.
+						By creating a different concept for every case where something map-like
+						is called for, these concepts can be implemented efficiently very easily.
+						Meta cannot be implemented efficiently very easily, however it can
+						be implemented as efficiently as those other programming languages,
+						although it is a bit more effort. On the other hand, implementing it
+						somewhat inefficient is much easier than implementing any of those other
+						programming languages at all.
+						
+						Meta makes programming much easier by using one and the same interface
+						for all these cases. This also allows much more flexibility, because
+						most programming language designers did not think of all the things
+						programmers would want to do with their language. Since they did not 
+						think of it, they could not optimize it, so it is not included in the
+						language. In Meta, it might not be optimized, but it is possible.
+						Being so general, Meta is also much more concise and easier to read
+						and unserstand. Meta cleanly separates the design, or interface, from
+						the implementation."
+				emptyMap=
+					title="Creating empty maps"
+					tutorial="There is not really much you can with just an empty map.
+						Every empty map is exactly the same as all the others"
+					explanation="Evaluates to a map containing zero key-value pairs."
+					grammar='"
+						'*'
+					"'
+					code="
+						literal=*
+						"
+				select=
+					title="Selecting values"
+					explanation="Evaluates to the value of the last lookup. The first lookup
+						searches its key in the current scope if necessary. Subsequent lookups
+						look up their keys in the previous result without searching.
+					"
+					grammar="
+						lookup ('.' lookup)*
+					"
+					code="
+						select=
+							[1]=<expression>
+							[2]=<expression>
+							[3]=<expression>
+							...
+						"
+				integer=
+					title="Creating integers"
+					explanation="Evaluates to a map representing the given integer. The map
+						is as deep as the number it represents."
+					grammar='"
+						('1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9') ('0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9')*
+					"'
+					code="
+						literal=2342
+						"
+				string=
+					title="Creating strings"
+					explanation="Evaluates to an array containing the provided unicode characters
+						in the form of integers."
+					grammar=''"
+						'''* '"' <any unicode character>+ '"' '''* {same number of ''' as at start of string}
+					code="
+						literal="string"
+						"
+				"''
+				program=
+					title="Creating maps"
+					grammar="
+						indentation statement (sameIndentation statement)* dedentation
+					"
+					explanation="Evaluates to the map that results from executing all statements
+						in a map that is initially empty."
+					subGrammar=
+						NewLine="
+							('\n'|'\n\r')
+						"
+						Whitespace="
+							(' '|'\t')*
+						"
+						SameIndentation="
+							whitespace newLine <as many tabs as in previous line>
+						"
+						Indentation="
+							(<start of file> | (newLine <one tab more than in previous line>))
+						"
+						Dedentation="
+							(<end of file> | <next line has one tab less at start of line than this line>)
+						"
+					code="
+						program=
+							[1]=<statement>
+							[2]=<statement>
+							[3]=<statement>
+							...
+						"
+				statement=
+					title="Assigning values to keys"
+					explanaton="Assigns the result from an expression to a key."
+					grammar="
+						( ( (lookup ('.' lookup)*)? '=')? expression) | function
+					"
+					code="
+						key=
+							[1]=<expression>
+							[2]=<expression>
+							[1]=<expression>
+						value=<expression>
+						"
+				lookup=
+					title="Looking up values"
+					explanation="Is a syntactical element used both in statements and in
+						select expressions."
+					grammar=''"
+						(any unicode character except: '*','=','|','.','"',''','[',']') + 
+						| ("[" (select|string|integer|emptyMap) "]")
+				"''
+				function=
+					title="Creating functions"
+					explanation="Assigns the code-equivalent of 'expression' to the key 'function'
+						in the current map."
+					grammar="
+						'|' expression
+					"
+					code='"
+						key=
+							[1]="function"
+						value=<expression>
+						"'
+				call=
+					title="Calling functions"
+					explanation="Evaluates to the return value from calling the 'select' with an expression
+						as the argument."
+					grammar="
+						select ' '? expression
+					"
+					code="
+						callable=<select>
+						argument=<expression>
+						"
+				expression=
+					title="Creating values"
+					explanation="Anything that returns a value is an expression."
+					grammar="
+						emptyMap|integer|string|program|select|call
+					"
 website=
 	|
-		current=library.map.merge
-			library.map
+		current=local.map.merge
+			local.map
 			html *
 		berliosLogo=
 			|table
@@ -1032,8 +1185,8 @@ website=
 		getId=
 			id=*
 			|
-				parent.id=library.math.increment id
-				current=library.integerToString id
+				parent.id=local.math.increment id
+				current=local.integerToString id
 		items=merge apply
 			array=
 				"chapter"
@@ -1079,7 +1232,7 @@ website=
 									item
 							tags.a
 								id=ids.show
-								style=
+								style=""
 								name=names.show
 								style="display:none"
 								href=join
@@ -1209,7 +1362,6 @@ website=
 									subchapter=
 										title="Conversions to .NET"
 		browser indexPath
-|website *
 documentation=
 	Miscellaneous=
 		text=*
@@ -1225,7 +1377,106 @@ documentation=
 			Call=
 				text=*
 			Program=*
-			Statment=*
+			Statement=*
 			Function=*
 			Literal=*
 	[".NET integration"]=*
+|
+	current=map.merge
+		map
+		logic
+		math
+	html=html *
+	show=
+		|
+			map=arg
+			current=join apply
+				array=keys map
+				with=
+					|
+						key=arg
+						value=map.[key]
+						current=if
+							condition=isString value
+							then=
+								|html.tags.p
+									inner=value
+							else=
+								|show value
+	getTree=
+		addNode=
+			counter=*
+			|
+				parent.counter=add
+					counter
+					1
+		|
+			argument=arg
+			mapKeys=keys arg.map
+			current=join apply
+				array=range length mapKeys
+				with=
+					|
+						console.writeLine addNode.counter
+						value=argument.map.[mapKeys.[arg]]
+						addNode *
+						result=join
+							"d.add("
+							integerToString addNode.counter
+							","
+							integerToString argument.parentNode
+							",'"
+							mapKeys.[arg]
+							"','example01.html');"
+							if
+								condition=not isString value
+								then=
+									|getTree
+										map=value
+										parentNode=addNode.counter
+						current=result
+	displayHtml join
+		'"
+			<head>
+				<title>Destroydrop &raquo; Javascripts &raquo; Tree</title>
+
+				<link rel="StyleSheet" href="dtree.css" type="text/css" />
+				<script type="text/javascript" src="dtree.js"></script>
+
+			</head>
+			<body>
+			<div class="dtree">
+			<script type="text/javascript">
+			
+			
+			<!--
+
+			d = new dTree('d');
+			d.add(0,-1,'Meta');
+			"'
+		getTree
+			map=meta
+			parentNode=*
+		'"
+			document.write(d);
+
+			//-->
+			</script>
+			
+			</div>
+			</body>
+			"'
+		show meta
+		'"d.add(1,0,'Node 1','example01.html');
+			d.add(2,0,'Node 2','example01.html');
+			d.add(3,1,'Node 1.1','example01.html');
+			d.add(4,0,'Node 3','example01.html');
+			d.add(5,3,'Node 1.1.1','example01.html');
+			d.add(6,5,'Node 1.1.1.1','example01.html');
+			d.add(7,0,'Node 4','example01.html');
+			d.add(8,1,'Node 1.2','example01.html');
+			d.add(9,0,'My Pictures','example01.html','Pictures I\'ve taken over the years','','','img/imgfolder.gif');
+			d.add(10,9,'The trip to Iceland','example01.html','Pictures of Gullfoss and Geysir');
+			d.add(11,9,'Mom\'s birthday','example01.html');
+			d.add(12,0,'Recycle Bin','example01.html','','','img/trash.gif');
+		"'
