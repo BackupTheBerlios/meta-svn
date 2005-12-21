@@ -286,7 +286,24 @@ namespace Meta
 				}
 				else if (key.Equals(SpecialKeys.Arg))
 				{
-					selection = selected.Argument;
+					Map x = context;
+					while (x.argument == null)
+					{
+						x = x.Scope;
+					}
+					x = x.Scope;
+					while (x != null && x.argument == null)
+					{
+						x = x.Scope;
+					}
+					if (x != null)
+					{
+						selection = x.argument;
+					}
+					else
+					{
+						selection = null;
+					}
 					//selection = arg;
 				}
 				else if (key.Equals(SpecialKeys.Parent))
@@ -360,6 +377,19 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Pop(Map arg)
+		{
+			Map count=new StrategyMap(arg.Array.Count);
+			Map result = Map.Empty;
+			foreach (KeyValuePair<Map,Map> pair in arg)
+			{
+				if (!pair.Key.Equals(count))
+				{
+					result[pair.Key] = pair.Value;
+				}
+			}
+			return result;
+		}
 		public static Map Remove(Map arg)
 		{
 			Map map = arg["map"];
@@ -532,7 +562,7 @@ namespace Meta
 				argument = value;
 			}
 		}
-		private Map argument=null;
+		public Map argument=null;
 		public abstract bool IsFunction
 		{
 			get;
@@ -4260,7 +4290,6 @@ namespace Meta
 						return null;
 					}
 				}
-
 			}
 			return result;
 		}
