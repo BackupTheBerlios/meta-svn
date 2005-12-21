@@ -3889,10 +3889,10 @@ namespace Meta
 				//if (code.Extent != null && code.Extent.Start.Line == 57)
 				//{
 				//}
-				Map literal;
-				Map function;
-				if (key.Count == 1 && (literal = key[1][CodeKeys.Literal]) != null && (function = literal[CodeKeys.Function]) != null && function.Count == 1 && (function.ContainsKey(CodeKeys.Call) || function.ContainsKey(CodeKeys.Literal) || function.ContainsKey(CodeKeys.Program) || function.ContainsKey(CodeKeys.Select)))
-				//if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
+				//Map literal;
+				//Map function;
+				//if (key.Count == 1 && (literal = key[1][CodeKeys.Literal]) != null && (function = literal[CodeKeys.Function]) != null && function.Count == 1 && (function.ContainsKey(CodeKeys.Call) || function.ContainsKey(CodeKeys.Literal) || function.ContainsKey(CodeKeys.Program) || function.ContainsKey(CodeKeys.Select)))
+				if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
 				{
 					if (code[CodeKeys.Value][CodeKeys.Literal] == null)
 					{

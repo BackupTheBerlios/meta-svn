@@ -214,7 +214,7 @@
 	testClass.instanceEvent.add
 		=
 			|
-				parent.parent.parent.instanceEventChanged=1
+				parent.parent.parent.parent.instanceEventChanged=1
 				current=arg.[1]
 	instanceEvent=testClass.instanceEvent
 	instanceEventResult=testClass.instanceEvent
