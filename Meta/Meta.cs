@@ -53,6 +53,7 @@ namespace Meta
 	}
 	public class SpecialKeys
 	{
+		public static readonly Map Scope = "scope";
 		public static readonly Map Parent="parent";
 		public static readonly Map Arg="arg";
 		public static readonly Map Current="current";
@@ -122,25 +123,39 @@ namespace Meta
 	}
 	public abstract class Expression
 	{
-		public abstract Map Evaluate(Map context,Map arg);
+		public Map Evaluate(Map context)
+		{
+			return Evaluate(context, null);
+		}
+		public Map Evaluate(Map context,Map argument)
+		{
+			//Map current = Map.Empty;
+			Map current = new StrategyMap();
+			current.Parent = context;
+			current.Argument = argument;
+			return EvaluateImplementation(current);
+		}
+		public abstract Map EvaluateImplementation(Map context);//, Map arg);
+		//public abstract Map Evaluate(Map context, Map arg);
 	}
 	public class Call : Expression
 	{
 		private Map callable;
-		private Map parameter;
+		public Map parameter;
 		public Call(Map code)
 		{
 			this.callable = code[CodeKeys.Callable];
 			this.parameter = code[CodeKeys.Argument];
 		}
-		public override Map Evaluate(Map current, Map arg)
+		public override Map EvaluateImplementation(Map current)//, Map arg)
 		{
-			Map function = callable.GetExpression().Evaluate(current, arg);
+			Map function = callable.GetExpression().Evaluate(current);
+			//Map function = callable.GetExpression().Evaluate(current, arg);
 			if (!function.IsFunction)
 			{
 				throw new MetaException("Called map is not a function.", callable.Extent);
 			}
-			Map argument = parameter.GetExpression().Evaluate(current, arg);
+			Map argument = parameter.GetExpression().Evaluate(current);
 			Map result;
 			try
 			{
@@ -169,20 +184,33 @@ namespace Meta
 		{
 			statements = code.Array;
 		}
-		public override Map Evaluate(Map context, Map arg)
+		//public override Map EvaluateImplementation(Map context)//, Map arg)
+		//{
+		//    (context, ref local);
+		//}
+		public override Map EvaluateImplementation(Map current)//, ref Map current)//, Map arg)
 		{
-			Map local = new StrategyMap();
-			Evaluate(context, ref local, arg);
-			return local;
-		}
-		private void Evaluate(Map parent, ref Map current, Map arg)
-		{
-			current.Parent = parent;
+			//current.Parent = parent;
 			foreach (Map statement in statements)
 			{
-				statement.GetStatement().Assign(ref current, arg);
+				statement.GetStatement().Assign(ref current);
 			}
+			return current;
 		}
+		//public override Map EvaluateImplementation(Map context)//, Map arg)
+		//{
+		//    Map local = new StrategyMap();
+		//    EvaluateImplementation(context, ref local);
+		//    return local;
+		//}
+		//private void EvaluateImplementation(Map parent, ref Map current)//, Map arg)
+		//{
+		//    current.Parent = parent;
+		//    foreach (Map statement in statements)
+		//    {
+		//        statement.GetStatement().Assign(ref current);
+		//    }
+		//}
 	}
 	public class Literal : Expression
 	{
@@ -191,23 +219,28 @@ namespace Meta
 		{
 			this.literal = code;
 		}
-		public override Map Evaluate(Map context, Map arg)
+		public override Map EvaluateImplementation(Map context)//, Map arg)
 		{
 			return literal.Copy();
 		}
 	}
 	public class Select : Expression
 	{
-		private Map FindFirstKey(Map keyExpression, Map context, Map arg)
+		private Map FindFirstKey(Map keyExpression, Map context)//, Map arg)
 		{
-			Map key = keyExpression.GetExpression().Evaluate(context, arg);
+			Map key = keyExpression.GetExpression().Evaluate(context);//, arg);
 			Map val;
-			if (key.Equals(new StrategyMap("library")))
+			//if (key.Equals(new StrategyMap("library")))
+			//{
+			//}
+			if (key.Equals(SpecialKeys.Scope))
 			{
+				val = context.Scope;
 			}
-			if (key.Equals(SpecialKeys.Arg))
+			else if (key.Equals(SpecialKeys.Arg))
 			{
-				val = arg;
+				val = context.Argument;
+				//val = arg;
 			}
 			else if (key.Equals(SpecialKeys.Parent))
 			{
@@ -238,14 +271,25 @@ namespace Meta
 		{
 			this.keys = code.Array;
 		}
-		public override Map Evaluate(Map context, Map arg)
+		public override Map EvaluateImplementation(Map context)//, Map arg)
 		{
-			Map selected = FindFirstKey(keys[0], context, arg);
+			Map selected = FindFirstKey(keys[0], context);//, arg);
 			for (int i = 1; i<keys.Count; i++)
 			{
-				Map key = keys[i].GetExpression().Evaluate(context, arg);
+				Map key = keys[i].GetExpression().Evaluate(context);//, arg);
 				Map selection;
-				if (key.Equals(SpecialKeys.Parent))
+
+				// maybe combine this stuff with the stuff in FindFirstKey???
+				if (key.Equals(SpecialKeys.Scope))
+				{
+					selection = selected.Scope;
+				}
+				else if (key.Equals(SpecialKeys.Arg))
+				{
+					selection = selected.Argument;
+					//selection = arg;
+				}
+				else if (key.Equals(SpecialKeys.Parent))
 				{
 					selection = selected.Parent;
 				}
@@ -267,20 +311,20 @@ namespace Meta
 	{
 		// not quite correct, we should rather just cache the array in maps
 		List<Map> keys;
-		Map value;
+		public Map value;
 		public Statement(Map code)
 		{
 			this.keys = code[CodeKeys.Key].Array;
 			this.value = code[CodeKeys.Value];
 		}
-		public void Assign(ref Map context, Map arg)
+		public void Assign(ref Map context)//, Map arg)
 		{
 			Map selected = context;
 			Map key;
 			int i = 0;
 			for (; i+1<keys.Count;)
 			{
-				key = keys[i].GetExpression().Evaluate(context, arg);
+				key = keys[i].GetExpression().Evaluate(context);//, arg);
 				Map selection;
 				if (key.Equals(SpecialKeys.Parent))
 				{
@@ -298,13 +342,14 @@ namespace Meta
 				selected = selection;
 				i++;
 			}
-			Map lastKey = keys[i].GetExpression().Evaluate(context, arg);
-			Map val = value.GetExpression().Evaluate(context, arg);
+			Map lastKey = keys[i].GetExpression().Evaluate(context);//, arg);
+			Map val = value.GetExpression().Evaluate(context);//, arg);
 
 			if (lastKey.Equals(SpecialKeys.Current))
 			{
 				val.Scope = context.Scope;
 				val.Parent = context.Parent;
+				val.Argument = context.Argument;
 				context = val;
 			}
 			else
@@ -440,9 +485,18 @@ namespace Meta
 		{
 			get
 			{
-				return Application.StartupPath;
+				Uri uri=new Uri(Assembly.GetAssembly(typeof(Map)).CodeBase);
+				return Path.GetDirectoryName(uri.AbsolutePath);
+				//return Application.StartupPath;
 			}
 		}
+		//public static string InstallationPath
+		//{
+		//    get
+		//    {
+		//        return Application.StartupPath;
+		//    }
+		//}
 		//public static string InstallationPath
 		//{
 		//    get
@@ -454,6 +508,31 @@ namespace Meta
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
+		public Map Argument
+		{
+			get
+			{
+				Map arg;
+				if (argument != null)
+				{
+					arg = argument;
+				}
+				else if (Scope != null)
+				{
+					arg = Scope.Argument;
+				}
+				else
+				{
+					arg = null;
+				}
+				return arg;
+			}
+			set
+			{
+				argument = value;
+			}
+		}
+		private Map argument=null;
 		public abstract bool IsFunction
 		{
 			get;
@@ -702,6 +781,7 @@ namespace Meta
 				return Keys.Count;
 			}
 		}
+		// rename to Length?
 		public virtual int ArrayCount
 		{
 			get
@@ -770,7 +850,8 @@ namespace Meta
 		public virtual Map Call(Map arg)
 		{
 			Map function = this[CodeKeys.Function];
-			Map result = function.GetExpression().Evaluate(this, arg);
+			Map result = function.GetExpression().Evaluate(this,arg);//, arg);
+			//Map result = function.GetExpression().Evaluate(this);//, arg);
 			return result;
 		}
 		public abstract ICollection<Map> Keys
@@ -920,7 +1001,10 @@ namespace Meta
 		}
 		public override void AppendMap(Map array)
 		{
-			this.values.AddRange(array.Array);
+			foreach (Map map in array.Array)
+			{
+				this.values.Add(map.Copy());
+			}
 		}
 		public override List<Map> Array
 		{
@@ -1043,7 +1127,14 @@ namespace Meta
 		{
 			if (key.IsInteger)
 			{
-				Panic(key, val, new ListStrategy());
+				if (key.Equals(Map.Empty) && val.IsInteger)
+				{
+					Panic(key, val, new IntegerStrategy(0));
+				}
+				else
+				{
+					Panic(key, val, new ListStrategy());
+				}
 			}
 			else
 			{
@@ -1061,7 +1152,17 @@ namespace Meta
 		{
 			get
 			{
-				return this.ContainsKey(CodeKeys.Function);
+				Map function=this[CodeKeys.Function];
+				bool isFunction;
+				if (function != null && (function.ContainsKey(CodeKeys.Call) || function.ContainsKey(CodeKeys.Literal) || function.ContainsKey(CodeKeys.Program) || function.ContainsKey(CodeKeys.Select)))
+				{
+					isFunction = true;
+				}
+				else
+				{
+					isFunction = false;
+				}
+				return isFunction;
 			}
 		}
 		public override int ArrayCount
@@ -2931,7 +3032,7 @@ namespace Meta
 		public static Map Parse(TextReader textReader)
 		{
 			Parsing = true;
-			Map result=Compile(textReader).GetExpression().Evaluate(Map.Empty, Map.Empty);
+			Map result=Compile(textReader).GetExpression().Evaluate(Map.Empty);//, Map.Empty);
 			Parsing = false;
 			return result;
 		}
@@ -2945,6 +3046,8 @@ namespace Meta
 			fileSystem=Parse(Path);
 			fileSystem.Parent = GacStrategy.Gac;
 			fileSystem.Scope = GacStrategy.Gac;
+			// messy, experimental
+			((GacStrategy)GacStrategy.Gac.Strategy).cache["local"] = fileSystem;
 		}
 		public static string Path
 		{
@@ -2989,7 +3092,8 @@ namespace Meta
 			{
 				if (!TryConsume(character))
 				{
-					throw new ApplicationException("Unexpected token " + text[index] + " ,expected " + character);
+					throw new ApplicationException("Unexpected token " + Look() + " ,expected " + character);
+					//throw new ApplicationException("Unexpected token " + text[index] + " ,expected " + character);
 				}
 			}
 			private bool TryConsume(string characters)
@@ -3058,7 +3162,7 @@ namespace Meta
 
 			public char endOfFileChar = (char)65535;
 			public const char indentationChar = '\t';
-			private int indentationCount = -1;
+			public int indentationCount = -1;
 			public const char unixNewLine = '\n';
 			public const string windowsNewLine = "\r\n";
 			public const char functionChar = '|';
@@ -3104,7 +3208,7 @@ namespace Meta
 				}
 				return isIndentation;
 			}
-			private Map Expression()
+			public Map Expression()
 			{
 				if (line > 878)
 				{
@@ -3143,7 +3247,7 @@ namespace Meta
 				}
 				return expression;
 			}
-			private Map Call(Map select)
+			public Map Call(Map select)
 			{
 				if (line > 880)
 				{
@@ -3175,13 +3279,13 @@ namespace Meta
 				EndExpression(extent, call);
 				return call;
 			}
-			bool isStartOfFile = true;
+			public bool isStartOfFile = true;
 			private void Whitespace()
 			{
 				while (TryConsume('\t') || TryConsume(' '))
 				{
 				}
-			}
+			}// rename to Program, make emptyMap a literal
 			private Map NormalProgram()
 			{
 				Extent extent = StartExpression();
@@ -3344,61 +3448,68 @@ namespace Meta
 			public const char stringEscapeChar = '\'';
 			private Map String()
 			{
-				Map @string;
-				Extent extent = StartExpression();
+				try
+				{
+					Map @string;
+					Extent extent = StartExpression();
 
-				if (Look(stringChar) || Look(stringEscapeChar))
-				{
-					int escapeCharCount = 0;
-					while (TryConsume(stringEscapeChar))
+					if (Look(stringChar) || Look(stringEscapeChar))
 					{
-						escapeCharCount++;
-					}
-					Consume(stringChar);
-					string stringText = "";
-					while (true)
-					{
-						if (Look(stringChar))
+						int escapeCharCount = 0;
+						while (TryConsume(stringEscapeChar))
 						{
-							int foundEscapeCharCount = 0;
-							while (foundEscapeCharCount < escapeCharCount && Look(foundEscapeCharCount + 1, stringEscapeChar))
+							escapeCharCount++;
+						}
+						Consume(stringChar);
+						string stringText = "";
+						while (true)
+						{
+							if (Look(stringChar))
 							{
-								foundEscapeCharCount++;
+								int foundEscapeCharCount = 0;
+								while (foundEscapeCharCount < escapeCharCount && Look(foundEscapeCharCount + 1, stringEscapeChar))
+								{
+									foundEscapeCharCount++;
+								}
+								if (foundEscapeCharCount == escapeCharCount)
+								{
+									Consume(stringChar);
+									Consume("".PadLeft(escapeCharCount, stringEscapeChar));
+									break;
+								}
 							}
-							if (foundEscapeCharCount == escapeCharCount)
+							stringText += Look();
+							Consume(Look());
+						}
+						List<string> realLines = new List<string>();
+						string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
+						for (int i = 0; i < lines.Length; i++)
+						{
+							if (i == 0)
 							{
-								Consume(stringChar);
-								Consume("".PadLeft(escapeCharCount, stringEscapeChar));
-								break;
+								realLines.Add(lines[i]);
+							}
+							else
+							{
+								realLines.Add(lines[i].Remove(0, Math.Min(indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentationChar).Length)));
 							}
 						}
-						stringText += Look();
-						Consume(Look());
+						string realText = string.Join("\n", realLines.ToArray());
+						Map literal = new StrategyMap(realText);
+						@string = new StrategyMap();
+						@string[CodeKeys.Literal] = literal;
 					}
-					List<string> realLines = new List<string>();
-					string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
-					for (int i = 0; i < lines.Length; i++)
+					else
 					{
-						if (i == 0)
-						{
-							realLines.Add(lines[i]);
-						}
-						else
-						{
-							realLines.Add(lines[i].Remove(0, Math.Min(indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentationChar).Length)));
-						}
+						@string = null;
 					}
-					string realText = string.Join("\n", realLines.ToArray());
-					Map literal = new StrategyMap(realText);
-					@string = new StrategyMap();
-					@string[CodeKeys.Literal] = literal;
+					EndExpression(extent, @string);
+					return @string;
 				}
-				else
+				catch (Exception e)
 				{
-					@string = null;
+					return null;
 				}
-				EndExpression(extent, @string);
-				return @string;
 			}
 			private Map LookupString()
 			{
@@ -3475,7 +3586,7 @@ namespace Meta
 				EndExpression(extent, select);
 				return select;
 			}
-			private Map Select()
+			public Map Select()
 			{
 				return Select(Keys());
 			}
@@ -3689,7 +3800,8 @@ namespace Meta
 				}
 				foreach (KeyValuePair<Map, Map> entry in map)
 				{
-					if (entry.Key.Equals(CodeKeys.Function))
+					//if (key.Count == 1 && (literal = key[1][CodeKeys.Literal]) != null && (function = literal[CodeKeys.Function]) != null && function.Count == 1 && (function.ContainsKey(CodeKeys.Call) || function.ContainsKey(CodeKeys.Literal) || function.ContainsKey(CodeKeys.Program) || function.ContainsKey(CodeKeys.Select)))
+					if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
 					{
 						text += indentation + Parser.functionChar + Expression(entry.Value, indentation);
 						if (!text.EndsWith(Parser.unixNewLine.ToString()))
@@ -3774,10 +3886,13 @@ namespace Meta
 			{
 				Map key = code[CodeKeys.Key];
 				string text;
-				if (code.Extent != null && code.Extent.Start.Line == 57)
-				{
-				}
-				if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
+				//if (code.Extent != null && code.Extent.Start.Line == 57)
+				//{
+				//}
+				Map literal;
+				Map function;
+				if (key.Count == 1 && (literal = key[1][CodeKeys.Literal]) != null && (function = literal[CodeKeys.Function]) != null && function.Count == 1 && (function.ContainsKey(CodeKeys.Call) || function.ContainsKey(CodeKeys.Literal) || function.ContainsKey(CodeKeys.Program) || function.ContainsKey(CodeKeys.Select)))
+				//if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
 				{
 					if (code[CodeKeys.Value][CodeKeys.Literal] == null)
 					{
@@ -3808,6 +3923,45 @@ namespace Meta
 				}
 				return text;
 			}
+			//public static string Statement(Map code, string indentation, ref int autoKeys)
+			//{
+			//    Map key = code[CodeKeys.Key];
+			//    string text;
+			//    //if (code.Extent != null && code.Extent.Start.Line == 57)
+			//    //{
+			//    //}
+			//    if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
+			//    //if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
+			//    {
+			//        if (code[CodeKeys.Value][CodeKeys.Literal] == null)
+			//        {
+			//        }
+			//        text = indentation + Parser.functionChar + Expression(code[CodeKeys.Value][CodeKeys.Literal], indentation);
+			//    }
+			//    else
+			//    {
+			//        Map autoKey;
+			//        text = indentation;
+			//        Map value = code[CodeKeys.Value];
+			//        if (key.Count == 1 && (autoKey = key[1][CodeKeys.Literal]) != null && autoKey.IsInteger && autoKey.GetInteger() == autoKeys + 1)
+			//        {
+			//            if (code.Extent.Start.Line > 500)
+			//            {
+			//            }
+			//            autoKeys++;
+			//            if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
+			//            {
+			//                text += Parser.statementChar;
+			//            }
+			//        }
+			//        else
+			//        {
+			//            text += Select(code[CodeKeys.Key], indentation) + Parser.statementChar;
+			//        }
+			//        text += Expression(value, indentation);
+			//    }
+			//    return text;
+			//}
 			public static string Literal(Map code, string indentation)
 			{
 				return Value(code, indentation);
@@ -3891,7 +4045,8 @@ namespace Meta
 	{
 		public static readonly StrategyMap Gac = new StrategyMap(new GacStrategy());
 
-		private Map cache = new StrategyMap();
+		public Map cache = new StrategyMap();
+
 		public override MapStrategy CopyImplementation()
 		{
 			return this;

@@ -296,7 +296,7 @@ basicTest=
 		testClass.instanceEvent.add
 			=
 				|
-					parent.parent.parent.instanceEventChanged=1
+					parent.parent.parent.parent.instanceEventChanged=1
 					current=arg.[1]
 		instanceEvent=testClass.instanceEvent
 		instanceEventResult=testClass.instanceEvent
@@ -670,12 +670,6 @@ math=
 					1
 			current=Meta.StrategyMap
 				result
-	increment=
-		documentation="Increments an integer."
-		|
-			result=arg
-			result.[*]=arg
-			current=result
 	add=
 		documentation="Adds integers."
 		|Meta.StrategyMap
@@ -919,6 +913,8 @@ html=
 				"script"
 				"div"
 				"center"
+				"frame"
+				"frameset"
 displayHtml=
 	|
 		fileName="C:\test.html"
@@ -1387,9 +1383,11 @@ documentation=
 		logic
 		math
 	html=html *
+	html=html.tags
 	show=
 		|
-			map=arg
+			showArg=arg
+			map=arg.value
 			current=join apply
 				array=keys map
 				with=
@@ -1399,17 +1397,23 @@ documentation=
 						current=if
 							condition=isString value
 							then=
-								|html.tags.p
-									inner=value
+								|html.a
+									name=join
+										showArg.name
+										key
+									inner=html.p
+										inner=value
 							else=
-								|show value
+								|show
+									value=value
+									name=join
+										showArg.name
+										key
 	getTree=
 		addNode=
 			counter=*
 			|
-				parent.counter=add
-					counter
-					1
+				parent.counter=increment counter
 		|
 			argument=arg
 			mapKeys=keys arg.map
@@ -1417,8 +1421,8 @@ documentation=
 				array=range length mapKeys
 				with=
 					|
-						console.writeLine addNode.counter
-						value=argument.map.[mapKeys.[arg]]
+						key=mapKeys.[arg]
+						value=argument.map.[key]
 						addNode *
 						result=join
 							"d.add("
@@ -1426,57 +1430,106 @@ documentation=
 							","
 							integerToString argument.parentNode
 							",'"
-							mapKeys.[arg]
-							"','example01.html');"
+							join
+								mapKeys.[arg]
+							"','"
+							"text.html#"
+							join
+								argument.name
+								key
+							"','"
+							key
+							"','text"
+							"');"
 							if
 								condition=not isString value
 								then=
 									|getTree
 										map=value
 										parentNode=addNode.counter
+										name=local.map.join
+											argument.name
+											key
 						current=result
-	displayHtml join
-		'"
-			<head>
-				<title>Destroydrop &raquo; Javascripts &raquo; Tree</title>
+	file.write
+		fileName="C:\contents.html"
+		text=join
+			'"
+				<head>
+					<title>Destroydrop &raquo; Javascripts &raquo; Tree</title>
 
-				<link rel="StyleSheet" href="dtree.css" type="text/css" />
-				<script type="text/javascript" src="dtree.js"></script>
+					<link rel="StyleSheet" href="dtree.css" type="text/css" />
+					<script type="text/javascript" src="dtree.js"></script>
 
-			</head>
-			<body>
-			<div class="dtree">
-			<script type="text/javascript">
-			
-			
-			<!--
+				</head>
+				<body>
+				<div class="dtree">
+				<script type="text/javascript">
+				
+				
+				<!--
 
-			d = new dTree('d');
-			d.add(0,-1,'Meta');
-			"'
-		getTree
-			map=meta
-			parentNode=*
-		'"
-			document.write(d);
+				d = new dTree('d');
+				d.add(0,-1,'Meta');
+				"'
+			getTree
+				map=meta
+				parentNode=*
+				name="meta"
+			'"
+				document.write(d);
 
-			//-->
-			</script>
-			
-			</div>
-			</body>
-			"'
-		show meta
-		'"d.add(1,0,'Node 1','example01.html');
-			d.add(2,0,'Node 2','example01.html');
-			d.add(3,1,'Node 1.1','example01.html');
-			d.add(4,0,'Node 3','example01.html');
-			d.add(5,3,'Node 1.1.1','example01.html');
-			d.add(6,5,'Node 1.1.1.1','example01.html');
-			d.add(7,0,'Node 4','example01.html');
-			d.add(8,1,'Node 1.2','example01.html');
-			d.add(9,0,'My Pictures','example01.html','Pictures I\'ve taken over the years','','','img/imgfolder.gif');
-			d.add(10,9,'The trip to Iceland','example01.html','Pictures of Gullfoss and Geysir');
-			d.add(11,9,'Mom\'s birthday','example01.html');
-			d.add(12,0,'Recycle Bin','example01.html','','','img/trash.gif');
-		"'
+				//-->
+				</script>
+				
+				</div>
+				</body>
+				"'
+	file.write
+		fileName="C:\index.html"
+		text=html.frameset
+			cols="20%,80%"
+			inner=join
+				html.frameset
+					rows="60%,40%"
+					inner=join
+						html.frame
+							name="contents"
+							src="contents.html"
+						html.frame
+							name="structure"
+							src="structure.html"
+				html.frame
+					name="text"
+					src="text.html"
+	file.write
+		fileName="C:\text.html"
+		text=show
+			value=meta
+			name="meta"			
+	'"file.write
+		fileName="C:\structure.html"
+		text=getStructure meta.chapters
+	browser "C:\index.html""'
+	subKeys=
+		|
+			argument=arg
+			current=join apply
+				array=keys arg
+				with=
+					|keys scope.arg.[arg]
+	console.write join subKeys meta.chapters
+	unique=
+		|keys merge apply
+			array=arg
+			with=
+				|
+					arg
+	similar=
+		|
+			result=*
+			maps=arg.maps
+			apply
+				array=unique subKeys maps
+				with=
+					|*

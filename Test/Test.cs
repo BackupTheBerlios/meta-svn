@@ -29,29 +29,229 @@ using Meta;
 
 using System;
 using System.Threading;
+using System.Collections.Generic;
 
 
 namespace Test 
 {
 	public class MetaTest:TestRunner
 	{
+		private static int Leaves(Map map)
+		{
+			int count=0;
+			foreach(KeyValuePair<Map,Map> pair in map)
+			{
+				if (pair.Value.IsInteger)
+				{
+					count++;
+				}
+				else
+				{
+					count += Leaves(pair.Value);
+				}
+			}
+			return count;
+
+		}
 		[STAThread]
 		public static void Main(string[] args) 
 		{
 			try
 			{
 				//Sprite ball=new SdlDotNet.Sprites.Sprite()
-				if (args.Length == 1 && args[0] == "-test")
+				if (args.Length == 1)
 				{
-					new MetaTest().Run();
+					if (args[0] == "-test")
+					{
+						new MetaTest().Run();
+					}
+					else if (args[0] == "-i")
+					{
+						Map context = new StrategyMap();
+						context.Parent = FileSystem.fileSystem;
+						while(true)
+						{
+							string code="";
+							string line;
+							Console.Write(">> ");
+							int lines = 0;
+							do
+							{
+								line = Console.ReadLine();
+								code += line;
+								int count = 0;
+								code += FileSystem.Parser.unixNewLine;
+								if (line == "")
+								{
+									if (lines != 0)
+									{
+										break;
+
+									}
+								}
+								else if (!line.StartsWith("\t") && !line.EndsWith("=") && !line.EndsWith("["))
+								{
+									if (new FileSystem.Parser(code, "").Select() == null)
+									{
+										break;
+									}
+									else
+									{
+										FileSystem.Parser parser = new FileSystem.Parser(code, "");
+										parser.isStartOfFile = false;
+										parser.indentationCount = 1;
+										Map statement = parser.Statement(ref count);
+										Expression expression = statement.GetStatement().value.GetExpression();
+										if (expression is Call)
+										{
+											// not quite correct, could be another call
+											if (!(((Call)expression).parameter.GetExpression() is Select))
+											{
+												break;
+											}
+										}
+										else if (!(expression is Select))
+										{
+											break;
+										}
+									}
+									//code += FileSystem.Parser.unixNewLine;
+								}
+
+								lines++;
+								Console.Write(".. ");
+							}
+							while (true);
+							try
+							{
+								//code = code.Trim(' ', '\t', '\n', '\r');
+								FileSystem.Parser parser = new FileSystem.Parser(code, "");
+								parser.indentationCount = 0;
+								int count = FileSystem.fileSystem.ArrayCount;
+								int originalCount = count;
+								parser.isStartOfFile = false;
+								Map statement = parser.Statement(ref count);
+
+								statement.GetStatement().Assign(ref context);//, Map.Empty);
+								//statement.GetStatement().Assign(ref FileSystem.fileSystem, Map.Empty);
+								if (count != originalCount)
+								{
+									Map value=context[originalCount];
+									if (Leaves(value) < 1000)
+									{
+										Console.WriteLine(FileSystem.Serialize.Value(value));
+									}
+									else
+									{
+										Console.WriteLine("Map is too big to display.");
+									}
+								}
+								Console.WriteLine();
+							}
+							catch (Exception e)
+							{
+								Console.WriteLine(e.ToString());
+							}
+
+
+							//Map function = new StrategyMap();
+							//function.Parent = FileSystem.fileSystem;
+							//function[CodeKeys.Function] = map;
+							//function.Call(Map.Empty);
+
+
+							//FileSystem.Parser parser=new FileSystem.Parser(code, "");
+							//Map map = parser.Expression();
+							//Map function=new StrategyMap();
+							//function.Parent = FileSystem.fileSystem;
+							//function[CodeKeys.Function]=map;
+							//function.Call(Map.Empty);
+						}
+						//while(true)
+						//{
+						//    string code="";
+						//    string line;
+						//    Console.Write(">>");
+						//    do
+						//    {
+						//        line = Console.ReadLine();
+						//        code += line;
+						//        int count = 0;
+
+						//        if (new FileSystem.Parser(code, "").Select() == null)
+						//        {
+						//            break;
+						//        }
+						//        else
+						//        {
+						//            FileSystem.Parser parser=new FileSystem.Parser(code, "");
+						//            parser.isStartOfFile = false;
+						//            Map statement=parser.Statement(ref count);
+						//            if (!(statement.GetStatement().value.GetExpression() is Select))
+						//            {
+						//                if(
+						//                break;
+						//            }
+						//            else
+						//            {
+						//                FileSystem.Parser callParser = new FileSystem.Parser(code, "");
+						//                callParser.isStartOfFile = false;
+						//                Map select = callParser.Select();
+						//                Map call = callParser.Call(select);
+						//                if ( call!=null && !(((Call)call.GetExpression()).parameter.GetExpression() is Select))
+						//                {
+						//                    break;
+						//                }
+						//            }
+						//        }
+						//        Console.Write("..");
+						//    }
+						//    while (line != "");
+						//    try
+						//    {
+						//        code = code.Trim(' ', '\t', '\n', '\r');
+						//        FileSystem.Parser parser = new FileSystem.Parser(code, "");
+						//        int count = FileSystem.fileSystem.ArrayCount;
+						//        int originalCount = count;
+						//        parser.isStartOfFile = false;
+						//        Map statement = parser.Statement(ref count);
+
+						//        statement.GetStatement().Assign(ref FileSystem.fileSystem, Map.Empty);
+						//        if (count != originalCount)
+						//        {
+						//            Console.WriteLine(FileSystem.Serialize.Value(FileSystem.fileSystem[originalCount]));
+						//        }
+						//        Console.WriteLine();
+						//    }
+						//    catch (Exception e)
+						//    {
+						//        Console.WriteLine(e.ToString());
+						//    }
+
+
+						//    //Map function = new StrategyMap();
+						//    //function.Parent = FileSystem.fileSystem;
+						//    //function[CodeKeys.Function] = map;
+						//    //function.Call(Map.Empty);
+
+
+						//    //FileSystem.Parser parser=new FileSystem.Parser(code, "");
+						//    //Map map = parser.Expression();
+						//    //Map function=new StrategyMap();
+						//    //function.Parent = FileSystem.fileSystem;
+						//    //function[CodeKeys.Function]=map;
+						//    //function.Call(Map.Empty);
+						//}
+					}
 				}
 				else
 				{
 					try
 					{
 						////LocalStrategy.singleton.map["website"].Call(Map.Empty);//, Map.Empty);
-						//DateTime start = DateTime.Now;
+						DateTime start = DateTime.Now;
 						FileSystem.fileSystem.Call(Map.Empty);
+						Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
 					}
 					catch (Exception e)
 					{

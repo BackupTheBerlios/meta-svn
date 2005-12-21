@@ -5,6 +5,11 @@ Entry (KeyValuePair`2)
 		"ImpliedAutokey"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		2
+	Value (StrategyMap):
+		"Autokey"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"scoping"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
@@ -206,11 +211,6 @@ Entry (KeyValuePair`2)
 				5
 			Value (StrategyMap):
 				"as"''''''''''''''''df"
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		2
-	Value (StrategyMap):
-		"Autokey"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"commandLineArguments"
@@ -2178,7 +2178,7 @@ Entry (KeyValuePair`2)
 																			Key (StrategyMap):
 																				"literal"
 																			Value (StrategyMap):
-																				"library"
+																				"local"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		2
@@ -2221,7 +2221,7 @@ Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								"literal"
 																							Value (StrategyMap):
-																								"library"
+																								"local"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						2
@@ -2428,7 +2428,7 @@ Entry (KeyValuePair`2)
 																																					Key (StrategyMap):
 																																						"literal"
 																																					Value (StrategyMap):
-																																						"library"
+																																						"local"
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				2

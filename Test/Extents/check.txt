@@ -105,7 +105,7 @@ Entry (KeyValuePair`2)
 										Line (Int32):
 											"84"
 										Column (Int32):
-											"28"
+											"26"
 									End (SourcePosition):
 										Line (Int32):
 											"88"
@@ -122,7 +122,7 @@ Entry (KeyValuePair`2)
 												Line (Int32):
 													"84"
 												Column (Int32):
-													"28"
+													"26"
 											End (SourcePosition):
 												Line (Int32):
 													"88"
@@ -139,12 +139,12 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"84"
 														Column (Int32):
-															"28"
+															"26"
 													End (SourcePosition):
 														Line (Int32):
 															"84"
 														Column (Int32):
-															"28"
+															"26"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -161,7 +161,7 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"84"
 																Column (Int32):
-																	"28"
+																	"26"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -178,7 +178,7 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"84"
 																		Column (Int32):
-																			"18"
+																			"16"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -187,7 +187,7 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Extent:
 																			null
-																		"library"
+																		"local"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -199,12 +199,12 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"84"
 																		Column (Int32):
-																			"19"
+																			"17"
 																	End (SourcePosition):
 																		Line (Int32):
 																			"84"
 																		Column (Int32):
-																			"22"
+																			"20"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -225,12 +225,12 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"84"
 																		Column (Int32):
-																			"23"
+																			"21"
 																	End (SourcePosition):
 																		Line (Int32):
 																			"84"
 																		Column (Int32):
-																			"28"
+																			"26"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -251,7 +251,7 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"84"
 														Column (Int32):
-															"28"
+															"26"
 													End (SourcePosition):
 														Line (Int32):
 															"88"
@@ -268,7 +268,7 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"84"
 																Column (Int32):
-																	"28"
+																	"26"
 															End (SourcePosition):
 																Line (Int32):
 																	"88"
@@ -24864,7 +24864,7 @@ Entry (KeyValuePair`2)
 																																Line (Int32):
 																																	"299"
 																																Column (Int32):
-																																	"49"
+																																	"56"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -24881,7 +24881,7 @@ Entry (KeyValuePair`2)
 																																		Line (Int32):
 																																			"299"
 																																		Column (Int32):
-																																			"47"
+																																			"54"
 																																Entry (KeyValuePair`2)
 																																	Key (StrategyMap):
 																																		Extent:
@@ -24976,7 +24976,33 @@ Entry (KeyValuePair`2)
 																																				Line (Int32):
 																																					"299"
 																																				Column (Int32):
-																																					"47"
+																																					"33"
+																																		Entry (KeyValuePair`2)
+																																			Key (StrategyMap):
+																																				Extent:
+																																					null
+																																				"literal"
+																																			Value (StrategyMap):
+																																				Extent:
+																																					null
+																																				"parent"
+																																Entry (KeyValuePair`2)
+																																	Key (StrategyMap):
+																																		Extent:
+																																			null
+																																		5
+																																	Value (StrategyMap):
+																																		Extent (Extent):
+																																			Start (SourcePosition):
+																																				Line (Int32):
+																																					"299"
+																																				Column (Int32):
+																																					"34"
+																																			End (SourcePosition):
+																																				Line (Int32):
+																																					"299"
+																																				Column (Int32):
+																																					"54"
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				Extent:
@@ -24997,12 +25023,12 @@ Entry (KeyValuePair`2)
 																																		Line (Int32):
 																																			"299"
 																																		Column (Int32):
-																																			"48"
+																																			"55"
 																																	End (SourcePosition):
 																																		Line (Int32):
 																																			"299"
 																																		Column (Int32):
-																																			"49"
+																																			"56"
 																																Entry (KeyValuePair`2)
 																																	Key (StrategyMap):
 																																		Extent:
@@ -26001,7 +26027,7 @@ Entry (KeyValuePair`2)
 										Line (Int32):
 											"308"
 										Column (Int32):
-											"37"
+											"35"
 									End (SourcePosition):
 										Line (Int32):
 											"311"
@@ -26018,7 +26044,7 @@ Entry (KeyValuePair`2)
 												Line (Int32):
 													"308"
 												Column (Int32):
-													"37"
+													"35"
 											End (SourcePosition):
 												Line (Int32):
 													"311"
@@ -26035,12 +26061,12 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"308"
 														Column (Int32):
-															"37"
+															"35"
 													End (SourcePosition):
 														Line (Int32):
 															"308"
 														Column (Int32):
-															"37"
+															"35"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -26057,7 +26083,7 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"308"
 																Column (Int32):
-																	"37"
+																	"35"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -26074,7 +26100,7 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"308"
 																		Column (Int32):
-																			"27"
+																			"25"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -26083,7 +26109,7 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Extent:
 																			null
-																		"library"
+																		"local"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -26095,12 +26121,12 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"308"
 																		Column (Int32):
-																			"28"
+																			"26"
 																	End (SourcePosition):
 																		Line (Int32):
 																			"308"
 																		Column (Int32):
-																			"31"
+																			"29"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -26121,12 +26147,12 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"308"
 																		Column (Int32):
-																			"32"
+																			"30"
 																	End (SourcePosition):
 																		Line (Int32):
 																			"308"
 																		Column (Int32):
-																			"37"
+																			"35"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -26147,7 +26173,7 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"308"
 														Column (Int32):
-															"37"
+															"35"
 													End (SourcePosition):
 														Line (Int32):
 															"311"
@@ -26164,7 +26190,7 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"308"
 																Column (Int32):
-																	"37"
+																	"35"
 															End (SourcePosition):
 																Line (Int32):
 																	"311"
@@ -31757,7 +31783,7 @@ Schwaenzchen in die Hoeh."
 																								Line (Int32):
 																									"365"
 																								Column (Int32):
-																									"36"
+																									"34"
 																							End (SourcePosition):
 																								Line (Int32):
 																									"368"
@@ -31774,7 +31800,7 @@ Schwaenzchen in die Hoeh."
 																										Line (Int32):
 																											"365"
 																										Column (Int32):
-																											"36"
+																											"34"
 																									End (SourcePosition):
 																										Line (Int32):
 																											"368"
@@ -31791,12 +31817,12 @@ Schwaenzchen in die Hoeh."
 																												Line (Int32):
 																													"365"
 																												Column (Int32):
-																													"36"
+																													"34"
 																											End (SourcePosition):
 																												Line (Int32):
 																													"365"
 																												Column (Int32):
-																													"36"
+																													"34"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -31813,7 +31839,7 @@ Schwaenzchen in die Hoeh."
 																														Line (Int32):
 																															"365"
 																														Column (Int32):
-																															"36"
+																															"34"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -31830,7 +31856,7 @@ Schwaenzchen in die Hoeh."
 																																Line (Int32):
 																																	"365"
 																																Column (Int32):
-																																	"26"
+																																	"24"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -31839,7 +31865,7 @@ Schwaenzchen in die Hoeh."
 																															Value (StrategyMap):
 																																Extent:
 																																	null
-																																"library"
+																																"local"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -31851,12 +31877,12 @@ Schwaenzchen in die Hoeh."
 																																Line (Int32):
 																																	"365"
 																																Column (Int32):
-																																	"27"
+																																	"25"
 																															End (SourcePosition):
 																																Line (Int32):
 																																	"365"
 																																Column (Int32):
-																																	"32"
+																																	"30"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -31877,12 +31903,12 @@ Schwaenzchen in die Hoeh."
 																																Line (Int32):
 																																	"365"
 																																Column (Int32):
-																																	"33"
+																																	"31"
 																															End (SourcePosition):
 																																Line (Int32):
 																																	"365"
 																																Column (Int32):
-																																	"36"
+																																	"34"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -31903,7 +31929,7 @@ Schwaenzchen in die Hoeh."
 																												Line (Int32):
 																													"365"
 																												Column (Int32):
-																													"54"
+																													"50"
 																											End (SourcePosition):
 																												Line (Int32):
 																													"368"
@@ -31920,7 +31946,7 @@ Schwaenzchen in die Hoeh."
 																														Line (Int32):
 																															"365"
 																														Column (Int32):
-																															"54"
+																															"50"
 																													End (SourcePosition):
 																														Line (Int32):
 																															"368"
@@ -31937,12 +31963,12 @@ Schwaenzchen in die Hoeh."
 																																Line (Int32):
 																																	"365"
 																																Column (Int32):
-																																	"54"
+																																	"50"
 																															End (SourcePosition):
 																																Line (Int32):
 																																	"365"
 																																Column (Int32):
-																																	"54"
+																																	"50"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -31954,12 +31980,12 @@ Schwaenzchen in die Hoeh."
 																																		Line (Int32):
 																																			"365"
 																																		Column (Int32):
-																																			"37"
+																																			"35"
 																																	End (SourcePosition):
 																																		Line (Int32):
 																																			"365"
 																																		Column (Int32):
-																																			"54"
+																																			"50"
 																																Entry (KeyValuePair`2)
 																																	Key (StrategyMap):
 																																		Extent:
@@ -31971,12 +31997,12 @@ Schwaenzchen in die Hoeh."
 																																				Line (Int32):
 																																					"365"
 																																				Column (Int32):
-																																					"37"
+																																					"35"
 																																			End (SourcePosition):
 																																				Line (Int32):
 																																					"365"
 																																				Column (Int32):
-																																					"44"
+																																					"40"
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				Extent:
@@ -31985,7 +32011,7 @@ Schwaenzchen in die Hoeh."
 																																			Value (StrategyMap):
 																																				Extent:
 																																					null
-																																				"library"
+																																				"local"
 																																Entry (KeyValuePair`2)
 																																	Key (StrategyMap):
 																																		Extent:
@@ -31997,12 +32023,12 @@ Schwaenzchen in die Hoeh."
 																																				Line (Int32):
 																																					"365"
 																																				Column (Int32):
-																																					"45"
+																																					"41"
 																																			End (SourcePosition):
 																																				Line (Int32):
 																																					"365"
 																																				Column (Int32):
-																																					"48"
+																																					"44"
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				Extent:
@@ -32023,12 +32049,12 @@ Schwaenzchen in die Hoeh."
 																																				Line (Int32):
 																																					"365"
 																																				Column (Int32):
-																																					"49"
+																																					"45"
 																																			End (SourcePosition):
 																																				Line (Int32):
 																																					"365"
 																																				Column (Int32):
-																																					"54"
+																																					"50"
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				Extent:
@@ -32049,7 +32075,7 @@ Schwaenzchen in die Hoeh."
 																																Line (Int32):
 																																	"365"
 																																Column (Int32):
-																																	"54"
+																																	"50"
 																															End (SourcePosition):
 																																Line (Int32):
 																																	"368"
@@ -32066,7 +32092,7 @@ Schwaenzchen in die Hoeh."
 																																		Line (Int32):
 																																			"365"
 																																		Column (Int32):
-																																			"54"
+																																			"50"
 																																	End (SourcePosition):
 																																		Line (Int32):
 																																			"368"
@@ -32567,7 +32593,7 @@ Schwaenzchen in die Hoeh."
 																																										Line (Int32):
 																																											"370"
 																																										Column (Int32):
-																																											"29"
+																																											"27"
 																																									End (SourcePosition):
 																																										Line (Int32):
 																																											"373"
@@ -32584,7 +32610,7 @@ Schwaenzchen in die Hoeh."
 																																												Line (Int32):
 																																													"370"
 																																												Column (Int32):
-																																													"29"
+																																													"27"
 																																											End (SourcePosition):
 																																												Line (Int32):
 																																													"373"
@@ -32601,12 +32627,12 @@ Schwaenzchen in die Hoeh."
 																																														Line (Int32):
 																																															"370"
 																																														Column (Int32):
-																																															"29"
+																																															"27"
 																																													End (SourcePosition):
 																																														Line (Int32):
 																																															"370"
 																																														Column (Int32):
-																																															"29"
+																																															"27"
 																																												Entry (KeyValuePair`2)
 																																													Key (StrategyMap):
 																																														Extent:
@@ -32623,7 +32649,7 @@ Schwaenzchen in die Hoeh."
 																																																Line (Int32):
 																																																	"370"
 																																																Column (Int32):
-																																																	"29"
+																																																	"27"
 																																														Entry (KeyValuePair`2)
 																																															Key (StrategyMap):
 																																																Extent:
@@ -32640,7 +32666,7 @@ Schwaenzchen in die Hoeh."
 																																																		Line (Int32):
 																																																			"370"
 																																																		Column (Int32):
-																																																			"20"
+																																																			"18"
 																																																Entry (KeyValuePair`2)
 																																																	Key (StrategyMap):
 																																																		Extent:
@@ -32649,7 +32675,7 @@ Schwaenzchen in die Hoeh."
 																																																	Value (StrategyMap):
 																																																		Extent:
 																																																			null
-																																																		"library"
+																																																		"local"
 																																														Entry (KeyValuePair`2)
 																																															Key (StrategyMap):
 																																																Extent:
@@ -32661,12 +32687,12 @@ Schwaenzchen in die Hoeh."
 																																																		Line (Int32):
 																																																			"370"
 																																																		Column (Int32):
-																																																			"21"
+																																																			"19"
 																																																	End (SourcePosition):
 																																																		Line (Int32):
 																																																			"370"
 																																																		Column (Int32):
-																																																			"25"
+																																																			"23"
 																																																Entry (KeyValuePair`2)
 																																																	Key (StrategyMap):
 																																																		Extent:
@@ -32687,12 +32713,12 @@ Schwaenzchen in die Hoeh."
 																																																		Line (Int32):
 																																																			"370"
 																																																		Column (Int32):
-																																																			"26"
+																																																			"24"
 																																																	End (SourcePosition):
 																																																		Line (Int32):
 																																																			"370"
 																																																		Column (Int32):
-																																																			"29"
+																																																			"27"
 																																																Entry (KeyValuePair`2)
 																																																	Key (StrategyMap):
 																																																		Extent:
@@ -32713,7 +32739,7 @@ Schwaenzchen in die Hoeh."
 																																														Line (Int32):
 																																															"370"
 																																														Column (Int32):
-																																															"29"
+																																															"27"
 																																													End (SourcePosition):
 																																														Line (Int32):
 																																															"373"
@@ -32730,7 +32756,7 @@ Schwaenzchen in die Hoeh."
 																																																Line (Int32):
 																																																	"370"
 																																																Column (Int32):
-																																																	"29"
+																																																	"27"
 																																															End (SourcePosition):
 																																																Line (Int32):
 																																																	"373"

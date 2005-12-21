@@ -16,7 +16,7 @@ public partial class _Default : System.Web.UI.Page
     {
 		if (!IsPostBack)
 		{
-			//execute.Attributes.Add("onclick", "clicked()");
+			execute.Attributes.Add("onclick", "clicked()");
 			input.Focus();
 			Session["map"] = new StrategyMap();
 		}
@@ -78,8 +78,9 @@ public partial class _Default : System.Web.UI.Page
 		}
 		catch(Exception exception)
 		{
-			text = exception.ToString();
+			text = exception.ToString().Replace(FileSystem.Parser.unixNewLine.ToString(),"<br>");
 		}
 		output.Text = text;
+		input.Text = input.Text.Trim();
 	}
 }

@@ -84,6 +84,11 @@ Entry (KeyValuePair`2)
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
+				"if"
+			Value (StrategyMap):
+				"if test successful"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
 				"remove"
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)

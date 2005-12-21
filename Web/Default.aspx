@@ -37,7 +37,7 @@
 			if(document.selection)
 			{
 
-					alert("hello");
+//					alert("hello");
 				obj.selection = document.selection.createRange();
 				obj.selection.text = "\t";
 //				event.returnValue = false;
@@ -64,8 +64,8 @@
 		}
 		function clicked()
 		{
-//			alert("Clicked");
-//			buttonClicked=true;
+			alert("Clicked");
+			buttonClicked=true;
 		}
 		function init()
 		{	if(window.event)
@@ -81,6 +81,7 @@
 //			else ;
 		}
 		-->
+
 		</script>
 	</head>
 	<body >
