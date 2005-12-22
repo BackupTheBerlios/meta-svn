@@ -420,7 +420,7 @@ integerToString=
 		current=int.ToString *
 map=
 	pop=
-		|Library.Pop
+		|Meta.Library.Pop
 			arg
 	isInteger=
 		|
@@ -496,6 +496,18 @@ map=
 		documentation="Calls a function as long as the condition function returns 1."
 		|Meta.Library.While
 			arg
+	foreach=
+		|apply
+			array=keys arg.map
+			with=
+				|arg.arg.with
+					value=arg.arg.map.[arg]
+					key=arg
+	loop=
+		|apply
+			array=arg.array
+			with=
+				|*
 	apply=
 		documentation="Calls a function with every value in an array as an argument and returns the results as an array."
 		|applyImplementation
@@ -1125,19 +1137,6 @@ meta=
 				grammar="
 					emptyMap|integer|string|program|select|call
 				"
-js=
-	argumentList=
-		|join
-			"("
-			map.pop map.join map.apply
-				array=arg
-				with=
-					|join
-						"'"
-						arg
-						"'"
-						","
-			")"
 website=
 	|
 		current=local.map.merge
@@ -1390,30 +1389,22 @@ createWebsite=
 			math
 		html=html *
 		show=
-			|
-				showArg=arg
+			|join foreach
 				map=arg.value
-				current=join apply
-					array=keys map
-					with=
-						|
-							key=arg
-							value=map.[key]
-							current=if
-								condition=isString value
-								then=
-									|html.a
-										name=join
-											showArg.name
-											key
-										html.p
-											value
-								else=
-									|show
-										value=value
-										name=join
-											showArg.name
-											key
+				with=
+					|if
+						condition=isString arg.value
+						then=
+							|html.a
+								name=arg.arg.arg.name
+								html.p
+									arg.arg.value
+						else=
+							|show
+								value=arg.arg.value
+								name=join
+									arg.arg.arg.name
+									arg.arg.key
 		getTree=
 			addNode=
 				counter=*
@@ -1461,28 +1452,49 @@ createWebsite=
 													argument.name
 													key
 								current=result
-		debug.print html.a
+		content=
+			|foreach
+				map=arg
+				with=
+					|
+						link="content.html"
+						name="hello world"
+						nodes=if
+							condition=not isString arg.value
+							then=
+								|content arg.arg.value
+		'"debug.print html.a
 			href="source.html"
 			"hello world"
+		debug.print content meta"'
 		structure=
 			|keys merge arg
+		nodes=
+			|join apply
+				array=arg
+				with=
+					|join
+						"d.add"
+						js.argumentList
+							arg.id
+							arg.parentNode
+							arg.name
+							arg.link
+							""
+							arg.target
+						nodes arg
 		tree=
-			|
-				argument=arg
-				current=join apply
-					array=argument
-					with=
-						|
-							value=arg
-							current=if
-								condition=isString value
-								then=
-									|value
-								else=
-									|tree value
-		console.writeLine Meta.FileSystem.Serialize.Value
-			structure meta
-		debug.print tree structure meta
+			|join apply
+				array=arg
+				with=
+					|join
+						=
+							=
+								name="hello"
+								link=arg.link
+						tree arg.nodes
+		x=content meta
+		debug.print tree x
 		websiteDirectory="C:\Projects\Meta\Website"
 		directory.write
 			directory=websiteDirectory
@@ -1526,9 +1538,28 @@ createWebsite=
 				["content.html"]=show
 					value=meta
 					name="meta"
-		browser path.combine
+		'"browser path.combine
 			websiteDirectory
-			"index.html"
+			"index.html""'
+js=
+	argumentList=
+		|map.join
+			"("
+			map.pop map.join map.apply
+				array=arg
+				with=
+					|map.join
+						map.if
+							condition=map.isInteger arg
+							then=
+								|integerToString arg.arg
+							else=
+								|map.join
+									"'"
+									arg.arg
+									"'"
+						","
+			")"
 directory=
 	write=
 		|

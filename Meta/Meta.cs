@@ -287,11 +287,14 @@ namespace Meta
 				else if (key.Equals(SpecialKeys.Arg))
 				{
 					Map x = context;
-					while (x.argument == null)
+					for (int k = 0; k < i; k++)
 					{
+						while (x!= null && x.argument == null)
+						{
+							x = x.Scope;
+						}
 						x = x.Scope;
 					}
-					x = x.Scope;
 					while (x != null && x.argument == null)
 					{
 						x = x.Scope;
@@ -1686,8 +1689,7 @@ namespace Meta
 		}
 	}
 	public delegate object DelegateCreatedForGenericDelegates();
-
-	public class Method: Map
+	public class MethodOverload : Map
 	{
 		public override bool IsFunction
 		{
@@ -1698,7 +1700,7 @@ namespace Meta
 		}
 		protected override Map CopyImplementation()
 		{
-			return new Method(this.name,this.obj,this.type);
+			return new MethodOverload();
 		}
 		public override ICollection<Map> Keys
 		{
@@ -1711,29 +1713,58 @@ namespace Meta
 		{
 			return null;
 		}
-		protected override void Set(Map key,Map val)
+		protected override void Set(Map key, Map val)
+		{
+			throw new ApplicationException("Cannot set key in MethodOverload");
+		}
+	}
+	public class Method : Map
+	{
+		public override bool IsFunction
+		{
+			get
+			{
+				return true;
+			}
+		}
+		protected override Map CopyImplementation()
+		{
+			return new Method(this.name, this.obj, this.type);
+		}
+		public override ICollection<Map> Keys
+		{
+			get
+			{
+				return new List<Map>();
+			}
+		}
+		protected override Map Get(Map key)
+		{
+			return null;
+		}
+		protected override void Set(Map key, Map val)
 		{
 			throw new ApplicationException("Cannot set key in Method");
 		}
 		// refactor
-		public class ArgumentComparer: IComparer<MethodBase>
+		public class ArgumentComparer : IComparer<MethodBase>
 		{
 			public static ArgumentComparer singleton = new ArgumentComparer();
 			public int Compare(MethodBase x, MethodBase y)
 			{
 				int result;
-				MethodBase first=(MethodBase)x;
-				MethodBase second=(MethodBase)y;
-				ParameterInfo[] firstParameters=first.GetParameters();
-				ParameterInfo[] secondParameters=second.GetParameters();
-				if(firstParameters.Length>=1 && firstParameters[0].ParameterType==typeof(string)
-					&& !(secondParameters.Length>=1 && secondParameters[0].ParameterType==typeof(string)))
+				MethodBase first = (MethodBase)x;
+				MethodBase second = (MethodBase)y;
+				ParameterInfo[] firstParameters = first.GetParameters();
+				ParameterInfo[] secondParameters = second.GetParameters();
+				if (firstParameters.Length >= 1 && firstParameters[0].ParameterType == typeof(string)
+					&& !(secondParameters.Length >= 1 && secondParameters[0].ParameterType == typeof(string)))
 				{
-					result=-1;
+					result = -1;
 				}
 				else
 				{
-					result=0;
+					result = 0;
 				}
 				return result;
 			}
@@ -1769,7 +1800,7 @@ namespace Meta
 				ParameterInfo[] parameters = method.GetParameters();
 				for (int i = 0; argumentsMatched && i < parameters.Length; i++)
 				{
-					object arg = Transform.ToDotNet(argument[i+1], parameters[i].ParameterType);
+					object arg = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
 					if (arg != null)
 					{
 						arguments.Add(arg);
@@ -1813,38 +1844,6 @@ namespace Meta
 				throw new ApplicationException("Method " + this.name + " could not be called.");
 			}
 			return Transform.ToMeta(result);
-		}
-		public class EventHandlerContainer
-		{
-			private Map callable;
-			public EventHandlerContainer(Map callable)
-			{
-				this.callable = callable;
-			}
-			public Map Raise(Map argument)
-			{
-				return callable.Call(argument);
-			}
-		}
-		public class MetaDelegate
-		{
-			private Map callable;
-			private Type returnType;
-			public MetaDelegate(Map callable,Type returnType)
-			{
-				this.callable = callable;
-				this.returnType = returnType;
-			}
-			public object Call(object[] arguments)
-			{
-				Map arg = new StrategyMap();
-				foreach (object argument in arguments)
-				{
-					arg.Append(Transform.ToMeta(argument));
-				}
-				Map result = this.callable.Call(arg);
-				return Meta.Transform.ToDotNet(result, this.returnType);
-			}
 		}
 
 		public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
@@ -1892,36 +1891,31 @@ namespace Meta
 			Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
 			return del;
 		}
-		private void Initialize(string name,object obj,Type type)
+		public Method(string name, object obj, Type type)
 		{
-			this.name=name;
-			this.obj=obj;
-			this.type=type;
+			this.name = name;
+			this.obj = obj;
+			this.type = type;
 			List<MemberInfo> methods;
-			if(name==".ctor")
+			if (name == ".ctor")
 			{
-				methods=new List<MemberInfo>(type.GetConstructors());
+				methods = new List<MemberInfo>(type.GetConstructors());
 			}
 			else
 			{
-				methods=new List<MemberInfo>(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+				methods = new List<MemberInfo>(type.GetMember(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static));
 			}
-			overloadedMethods=methods.ToArray();
+			overloadedMethods = methods.ToArray();
 		}
-		public Method(string name,object obj,Type type)
+		public Method(Type type):this(".ctor", null, type)
 		{
-			this.Initialize(name,obj,type);
-		}
-		public Method(Type type)
-		{
-			this.Initialize(".ctor",null,type);
 		}
 		public override bool Equals(object toCompare)
 		{
-			if(toCompare is Method)
+			if (toCompare is Method)
 			{
-				Method Method=(Method)toCompare;
-				if(Method.obj==obj && Method.name.Equals(name) && Method.type.Equals(type))
+				Method Method = (Method)toCompare;
+				if (Method.obj == obj && Method.name.Equals(name) && Method.type.Equals(type))
 				{
 					return true;
 				}
@@ -1939,22 +1933,322 @@ namespace Meta
 		{
 			unchecked
 			{
-				int hash=name.GetHashCode()*type.GetHashCode();
-				if(obj!=null)
+				int hash = name.GetHashCode() * type.GetHashCode();
+				if (obj != null)
 				{
-					hash=hash*obj.GetHashCode();
+					hash = hash * obj.GetHashCode();
 				}
 				return hash;
 			}
 		}
 		private string name;
-		[NonSerialized]
 		protected object obj;
-		[NonSerialized]
 		protected Type type;
-		[NonSerialized]
 		public MemberInfo[] overloadedMethods;
+
+
+		public class EventHandlerContainer
+		{
+			private Map callable;
+			public EventHandlerContainer(Map callable)
+			{
+				this.callable = callable;
+			}
+			public Map Raise(Map argument)
+			{
+				return callable.Call(argument);
+			}
+		}
+		public class MetaDelegate
+		{
+			private Map callable;
+			private Type returnType;
+			public MetaDelegate(Map callable, Type returnType)
+			{
+				this.callable = callable;
+				this.returnType = returnType;
+			}
+			public object Call(object[] arguments)
+			{
+				Map arg = new StrategyMap();
+				foreach (object argument in arguments)
+				{
+					arg.Append(Transform.ToMeta(argument));
+				}
+				Map result = this.callable.Call(arg);
+				return Meta.Transform.ToDotNet(result, this.returnType);
+			}
+		}
+
 	}
+	//public class Method: Map
+	//{
+	//    public override bool IsFunction
+	//    {
+	//        get
+	//        {
+	//            return true;
+	//        }
+	//    }
+	//    protected override Map CopyImplementation()
+	//    {
+	//        return new Method(this.name,this.obj,this.type);
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            return new List<Map>();
+	//        }
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        return null;
+	//    }
+	//    protected override void Set(Map key,Map val)
+	//    {
+	//        throw new ApplicationException("Cannot set key in Method");
+	//    }
+	//    // refactor
+	//    public class ArgumentComparer: IComparer<MethodBase>
+	//    {
+	//        public static ArgumentComparer singleton = new ArgumentComparer();
+	//        public int Compare(MethodBase x, MethodBase y)
+	//        {
+	//            int result;
+	//            MethodBase first=(MethodBase)x;
+	//            MethodBase second=(MethodBase)y;
+	//            ParameterInfo[] firstParameters=first.GetParameters();
+	//            ParameterInfo[] secondParameters=second.GetParameters();
+	//            if(firstParameters.Length>=1 && firstParameters[0].ParameterType==typeof(string)
+	//                && !(secondParameters.Length>=1 && secondParameters[0].ParameterType==typeof(string)))
+	//            {
+	//                result=-1;
+	//            }
+	//            else
+	//            {
+	//                result=0;
+	//            }
+	//            return result;
+	//        }
+	//    }
+	//    public override Map Call(Map argument)
+	//    {
+	//        object result = null;
+	//        bool isExecuted = false;
+	//        List<MethodBase> rightNumberArgumentMethods = new List<MethodBase>();
+	//        int count = argument.ArrayCount;
+	//        if (count == argument.Count)
+	//        {
+	//            foreach (MethodBase method in overloadedMethods)
+	//            {
+	//                if (count == method.GetParameters().Length)
+	//                {
+	//                    rightNumberArgumentMethods.Add(method);
+	//                }
+	//            }
+	//        }
+	//        if (rightNumberArgumentMethods.Count == 0)
+	//        {
+	//            throw new ApplicationException("Method " + this.type.Name + "." + this.name + ": No methods with the right number of arguments.");
+	//        }
+	//        if (rightNumberArgumentMethods.Count > 1)
+	//        {
+	//            rightNumberArgumentMethods.Sort(ArgumentComparer.singleton);
+	//        }
+	//        foreach (MethodBase method in rightNumberArgumentMethods)
+	//        {
+	//            List<object> arguments = new List<object>();
+	//            bool argumentsMatched = true;
+	//            ParameterInfo[] parameters = method.GetParameters();
+	//            for (int i = 0; argumentsMatched && i < parameters.Length; i++)
+	//            {
+	//                object arg = Transform.ToDotNet(argument[i+1], parameters[i].ParameterType);
+	//                if (arg != null)
+	//                {
+	//                    arguments.Add(arg);
+	//                }
+	//                else
+	//                {
+	//                    argumentsMatched = false;
+	//                    break;
+	//                }
+	//            }
+	//            if (argumentsMatched)
+	//            {
+	//                if (method is ConstructorInfo)
+	//                {
+	//                    try
+	//                    {
+	//                        result = ((ConstructorInfo)method).Invoke(arguments.ToArray());
+	//                    }
+	//                    catch (Exception e)
+	//                    {
+	//                        throw e.InnerException;
+	//                    }
+	//                }
+	//                else
+	//                {
+	//                    try
+	//                    {
+	//                        result = method.Invoke(obj, arguments.ToArray());
+	//                    }
+	//                    catch (Exception e)
+	//                    {
+	//                        throw e.InnerException;
+	//                    }
+	//                }
+	//                isExecuted = true;
+	//                break;
+	//            }
+	//        }
+	//        if (!isExecuted)
+	//        {
+	//            throw new ApplicationException("Method " + this.name + " could not be called.");
+	//        }
+	//        return Transform.ToMeta(result);
+	//    }
+	//    public class EventHandlerContainer
+	//    {
+	//        private Map callable;
+	//        public EventHandlerContainer(Map callable)
+	//        {
+	//            this.callable = callable;
+	//        }
+	//        public Map Raise(Map argument)
+	//        {
+	//            return callable.Call(argument);
+	//        }
+	//    }
+	//    public class MetaDelegate
+	//    {
+	//        private Map callable;
+	//        private Type returnType;
+	//        public MetaDelegate(Map callable,Type returnType)
+	//        {
+	//            this.callable = callable;
+	//            this.returnType = returnType;
+	//        }
+	//        public object Call(object[] arguments)
+	//        {
+	//            Map arg = new StrategyMap();
+	//            foreach (object argument in arguments)
+	//            {
+	//                arg.Append(Transform.ToMeta(argument));
+	//            }
+	//            Map result = this.callable.Call(arg);
+	//            return Meta.Transform.ToDotNet(result, this.returnType);
+	//        }
+	//    }
+
+	//    public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
+	//    {
+	//        MethodInfo invoke = delegateType.GetMethod("Invoke");
+	//        ParameterInfo[] parameters = invoke.GetParameters();
+	//        List<Type> arguments = new List<Type>();
+	//        arguments.Add(typeof(MetaDelegate));
+	//        foreach (ParameterInfo parameter in parameters)
+	//        {
+	//            arguments.Add(parameter.ParameterType);
+	//        }
+	//        DynamicMethod hello = new DynamicMethod("EventHandler",
+	//            invoke.ReturnType,
+	//            arguments.ToArray(),
+	//            typeof(Map).Module);
+	//        ILGenerator il = hello.GetILGenerator();
+
+	//        LocalBuilder local = il.DeclareLocal(typeof(object[]));
+	//        il.Emit(OpCodes.Ldc_I4, parameters.Length);
+	//        il.Emit(OpCodes.Newarr, typeof(object));
+	//        il.Emit(OpCodes.Stloc, local);
+
+	//        for (int i = 0; i < parameters.Length; i++)
+	//        {
+	//            il.Emit(OpCodes.Ldloc, local);
+	//            il.Emit(OpCodes.Ldc_I4, i);
+	//            il.Emit(OpCodes.Ldarg, i + 1);
+	//            il.Emit(OpCodes.Stelem_Ref);
+	//        }
+	//        il.Emit(OpCodes.Ldarg_0);
+	//        il.Emit(OpCodes.Ldloc, local);
+	//        il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
+
+	//        if (invoke.ReturnType == typeof(void))
+	//        {
+	//            il.Emit(OpCodes.Pop);
+	//            il.Emit(OpCodes.Ret);
+	//        }
+	//        else
+	//        {
+	//            il.Emit(OpCodes.Castclass, invoke.ReturnType);
+	//            il.Emit(OpCodes.Ret);
+	//        }
+	//        Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
+	//        return del;
+	//    }
+	//    private void Initialize(string name,object obj,Type type)
+	//    {
+	//        this.name=name;
+	//        this.obj=obj;
+	//        this.type=type;
+	//        List<MemberInfo> methods;
+	//        if(name==".ctor")
+	//        {
+	//            methods=new List<MemberInfo>(type.GetConstructors());
+	//        }
+	//        else
+	//        {
+	//            methods=new List<MemberInfo>(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+	//        }
+	//        overloadedMethods=methods.ToArray();
+	//    }
+	//    public Method(string name,object obj,Type type)
+	//    {
+	//        this.Initialize(name,obj,type);
+	//    }
+	//    public Method(Type type)
+	//    {
+	//        this.Initialize(".ctor",null,type);
+	//    }
+	//    public override bool Equals(object toCompare)
+	//    {
+	//        if(toCompare is Method)
+	//        {
+	//            Method Method=(Method)toCompare;
+	//            if(Method.obj==obj && Method.name.Equals(name) && Method.type.Equals(type))
+	//            {
+	//                return true;
+	//            }
+	//            else
+	//            {
+	//                return false;
+	//            }
+	//        }
+	//        else
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    public override int GetHashCode()
+	//    {
+	//        unchecked
+	//        {
+	//            int hash=name.GetHashCode()*type.GetHashCode();
+	//            if(obj!=null)
+	//            {
+	//                hash=hash*obj.GetHashCode();
+	//            }
+	//            return hash;
+	//        }
+	//    }
+	//    private string name;
+	//    [NonSerialized]
+	//    protected object obj;
+	//    [NonSerialized]
+	//    protected Type type;
+	//    [NonSerialized]
+	//    public MemberInfo[] overloadedMethods;
+	//}
 
 	[Serializable]
 	public class TypeMap: DotNetMap
