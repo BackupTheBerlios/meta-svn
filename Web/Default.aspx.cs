@@ -9,6 +9,9 @@ using System.Web.UI.WebControls.WebParts;
 using System.Web.UI.HtmlControls;
 using Meta;
 using System.Collections.Generic;
+using System.Threading;
+using System.Windows.Forms;
+using System.IO;
 
 public partial class _Default : System.Web.UI.Page 
 {
@@ -18,8 +21,12 @@ public partial class _Default : System.Web.UI.Page
 		{
 			execute.Attributes.Add("onclick", "clicked()");
 			input.Focus();
+		}
+		if (Session["map"] == null)
+		{
 			Session["map"] = new StrategyMap();
 		}
+
     }
 	private static int Leaves(Map map)
 	{
@@ -40,7 +47,45 @@ public partial class _Default : System.Web.UI.Page
 	}
 	protected void execute_Click(object sender, EventArgs e)
 	{
-		//code = code.Trim(' ', '\t', '\n', '\r');
+		Thread thread = new Thread(new ThreadStart(Worker));
+		try
+		{
+			Meta.Process.InstallationPath = Path.GetDirectoryName(Page.Request.PhysicalPath);
+			//input.Text = input.Text.Trim();
+			thread.Start();
+			int waited = 0;
+			DateTime start = DateTime.Now;
+			while (thread.ThreadState == ThreadState.Running)
+			{
+
+				Thread.Sleep(100);
+				waited += 100;
+				if ((DateTime.Now - start) > new TimeSpan(0, 0, 0, 2))
+				{
+					output.Text = "Computation could not finish.";
+					thread.Abort();
+				}
+			}
+		}
+		catch (Exception exception)
+		{
+			output.Text = "There was an error:" + exception.ToString();
+			thread.Abort();
+		}
+		finally
+		{
+			try
+			{
+				thread.Abort();
+			}
+			catch
+			{
+			}
+		}
+
+	}
+	private void Worker()
+	{
 		string text;
 		try
 		{
@@ -56,7 +101,7 @@ public partial class _Default : System.Web.UI.Page
 			context.Parent = FileSystem.fileSystem;
 			Map statement = parser.Statement(ref count);
 
-			statement.GetStatement().Assign(ref context, Map.Empty);
+			statement.GetStatement().Assign(ref context);//, Map.Empty);
 			//statement.GetStatement().Assign(ref FileSystem.fileSystem, Map.Empty);
 			if (count != originalCount)
 			{
@@ -76,11 +121,10 @@ public partial class _Default : System.Web.UI.Page
 				text = "";
 			}
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
-			text = exception.ToString().Replace(FileSystem.Parser.unixNewLine.ToString(),"<br>");
+			text = exception.ToString().Replace(FileSystem.Parser.unixNewLine.ToString(), "<br>");
 		}
 		output.Text = text;
-		input.Text = input.Text.Trim();
 	}
 }

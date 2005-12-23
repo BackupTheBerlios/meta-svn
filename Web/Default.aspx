@@ -64,7 +64,7 @@
 		}
 		function clicked()
 		{
-			alert("Clicked");
+//			alert("Clicked");
 			buttonClicked=true;
 		}
 		function init()
@@ -80,6 +80,48 @@
 			}
 //			else ;
 		}
+		function tab(ta)
+		{
+			var ta=document.meta.input
+			if(ta.createTextRange) 
+			{ 
+	   			document.selection.createRange().text="\t";
+			}
+			else if(ta.setSelectionRange)
+			{ 
+				 var t=ta;
+				 var start=t.selectionStart;
+				 var end=t.selectionEnd;
+				 t.value=t.value.substring(0, start)+"\t"+t.value.substr(end);
+//				 t.setSelectionRange(start+1,start+1);
+				 var x=5;
+				 setTimeout(function(){t.focus();},0);
+			}
+		}
+//		 function tab(ta,evt){
+//		   if(ta.createTextRange) { // assume IE's model
+//			 (function(){
+//			   var rng=null;
+//			   ta.onblur=function(){if(rng){rng=null;this.focus();}}
+//			   ta.onkeydown=function(){
+//				 if(event.keyCode==9 && event.ctrlKey)
+//				   (rng=document.selection.createRange()).text="\t";
+//			   }
+//			   ta.onkeydown();
+//			 })();
+//		   } else if(ta.setSelectionRange) { // assume Mozilla's model
+//			 ta.onkeydown=function(evt){
+//			   if(evt.keyCode==9 && evt.ctrlKey) {
+//				 var t=this, start=t.selectionStart, end=t.selectionEnd;
+//				 t.value=t.value.substring(0, start)+"\t"+t.value.substr(end);
+//				 t.setSelectionRange(start+1,start+1);
+//				 setTimeout(function(){t.focus();},1);
+//			   }
+//			 }
+//		   } else {
+//			 ta.onkeydown=null;
+//		   }
+//		} 
 		-->
 
 		</script>
@@ -87,11 +129,11 @@
 	<body >
 		<form action="" id="meta"  name="frm" runat=server>
 			<p id="idP">
-				<asp:TextBox id="input" runat=server Height="108px" TextMode="MultiLine" Width="326px"></asp:TextBox>
+				<asp:TextBox onkeydown="if(event.keyCode==9){return false;}" id="input" runat=server Height="108px" TextMode="MultiLine" Width="326px"></asp:TextBox>
 			</p>
 			<p>
 				&nbsp;
-				<asp:Button onfocus="InsertTab();"
+				<asp:Button AccessKey="E"
 				  ID="execute" runat="server" 
 				  OnClick="execute_Click" Text="Execute" /></p>
 			<p>
