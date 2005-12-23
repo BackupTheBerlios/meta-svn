@@ -216,6 +216,26 @@ basicTest=
 		boolTest=TestClass.boolTest
 		MemberTest=MetaTest.MemberTest
 		memberTest=MemberTest *
+		stringOverload=MemberTest.OverloadedMethod.[
+			mscorlib.String
+		]
+			"hello"
+		integerOverload=MemberTest.OverloadedMethod.[
+			mscorlib.Int32
+		]
+			5
+		memberTestOverload=MemberTest.OverloadedMethod.[
+			MetaTest.MemberTest
+			mscorlib.Int32
+		]
+			memberTest
+			3247
+		memberTestOverload=MemberTest.OverloadedMethod.[
+			MetaTest.MemberTest
+			mscorlib.Int32
+		]
+			memberTest
+			3247
 		MemberTest.classField="a"
 		memberTest.instanceField="b"
 		MemberTest.ClassProperty.set
@@ -326,7 +346,10 @@ basicTest=
 			|
 				x="hello"
 		emptyFunctionResult=emptyFunction *
-		font=["System.Drawing"].Font
+		font=["System.Drawing"].Font.Font.[
+			mscorlib.String
+			mscorlib.Single
+		]
 			"Courier New"
 			10
 		decimalTest=5
@@ -340,7 +363,7 @@ basicTest=
 				hello world!
 				hello!
 				"
-		arrayList=mscorlib.ArrayList *
+		arrayList=mscorlib.ArrayList.ArrayList.[*] *
 		arrayList.Add
 			"hello"
 		arrayListResult=arrayList.Item.get
@@ -354,7 +377,9 @@ basicTest=
 				Köpfchen in das Wasser,
 				Schwaenzchen in die Hoeh."
 		lines=textBox.Lines.get *
-		alleMeineText=lines.GetValue
+		alleMeineText=lines.GetValue.[
+			mscorlib.Int32
+		]
 			1
 		lines.[5]="bwuhahaha"
 		tabText="			hello"
@@ -415,7 +440,9 @@ console=
 integerToString=
 	documentation="Converts an integer to a string."
 	|
-		int=Meta.Integer
+		int=Meta.Integer.[
+			Meta.Map
+		]
 			arg
 		current=int.ToString *
 map=
@@ -553,7 +580,9 @@ map=
 		|
 			object=Meta.ObjectMap
 				arg
-			current=Meta.StrategyMap
+			current=Meta.StrategyMap.StrategyMap.[
+				mscorlib.ICollection
+			]				
 				object.Keys.get *
 	merge=
 		documentation="Combines several maps into one."
@@ -679,63 +708,104 @@ math=
 		documentation="Increments an integer."
 		|
 			result=Meta.Integer.op_Addition
-				Meta.Integer
+				Meta.Integer.Integer.[
+					Meta.Map
+				]
 					arg
-				Meta.Integer
+				Meta.Integer.Integer.[	
+					Meta.Map
+				]
 					1
-			current=Meta.StrategyMap
+			current=Meta.StrategyMap.StrategyMap.[
+				Meta.Integer
+			]
 				result
 	add=
 		documentation="Adds integers."
-		|Meta.StrategyMap
+		|Meta.StrategyMap.StrategyMap.[
+			Meta.Integer
+		]
 			map.sum
 				array=arg
 				with=
 					|Meta.Integer.op_Addition
-						Meta.Integer
+						Meta.Integer.Integer.[
+							Meta.Integer
+						]
 							arg.previous
-						Meta.Integer
+						Meta.Integer.Integer.[
+							Meta.Map
+						]
 							arg.present
-				start=*
+				start=Meta.Integer.Integer.[
+					Meta.Map
+				]
+					*
 	multiply=
 		documentation="Multiplies integers."
-		|Meta.StrategyMap
+		|Meta.StrategyMap.StrategyMap.[
+			Meta.Integer
+		]
 			map.sum
 				array=arg
 				with=
 					|Meta.Integer.op_Multiply
-						Meta.Integer
+						Meta.Integer.Integer.[
+							Meta.Integer
+						]
 							arg.previous
-						Meta.Integer
+						Meta.Integer.Integer.[
+							Meta.Map
+						]
 							arg.present
-				start=1
+				start=Meta.Integer.Integer.[
+					Meta.Map
+				]
+					1
 	greater=
 		documentation="Determines whether the first integer is greater than the second integer."
 		|Meta.Integer.op_GreaterThan
-			Meta.Integer
+			Meta.Integer.Integer.[
+				Meta.Map
+			]
 				arg.[1]
-			Meta.Integer
+			Meta.Integer.Integer.[
+				Meta.Map
+			]
 				arg.[2]
 	smaller=
 		documentation="Determines whether the first integer is smaller than the second integer."
 		|Meta.Integer.op_LessThan
-			Meta.Integer
+			Meta.Integer.Integer.[
+				Meta.Map
+			]
 				arg.[1]
-			Meta.Integer
+			Meta.Integer.Integer.[
+				Meta.Map
+			]
 				arg.[2]
 bitwise=
 	or=
 		documentation="Performs a bitwise or operation on integers."
-		|Meta.StrategyMap
+		|Meta.StrategyMap.StrategyMap.[
+			Meta.Integer
+		]
 			map.sum
 				array=arg
 				with=
 					|Meta.Integer.op_BitwiseOr
-						Meta.Integer
+						Meta.Integer.Integer.[
+							Meta.Integer
+						]
 							arg.previous
-						Meta.Integer
+						Meta.Integer.Integer.[
+							Meta.Map
+						]
 							arg.present
-				start=*
+				start=Meta.Integer.Integer.[
+					Meta.Map
+				]
+					*
 string=
 	lower=
 		documentation="Converts a string to lowercase."

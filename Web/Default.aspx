@@ -80,23 +80,54 @@
 			}
 //			else ;
 		}
-		function tab(ta)
+		function insertTab(ta)
 		{
-			var ta=document.meta.input
 			if(ta.createTextRange) 
 			{ 
 	   			document.selection.createRange().text="\t";
 			}
 			else if(ta.setSelectionRange)
 			{ 
+				 var start=ta.selectionStart;
+				 var end=ta.selectionEnd;
+				 ta.value=ta.value.substring(0, start)+"\t"+ta.value.substr(end);
+				 ta.setSelectionRange(start+1,start+1);
+			}		
+		}
+		function tab()
+		{
+			var ta=document.meta.input
+			if(ta.createTextRange) 
+			{ 
+	   			insertTab(ta);
+			}
+			else if(ta.setSelectionRange)
+			{ 
 				 var t=ta;
-				 var start=t.selectionStart;
-				 var end=t.selectionEnd;
-				 t.value=t.value.substring(0, start)+"\t"+t.value.substr(end);
-//				 t.setSelectionRange(start+1,start+1);
-				 var x=5;
+				 insertTab(ta);
 				 setTimeout(function(){t.focus();},0);
 			}
+		}
+		function enter()
+		{
+			var text=document.meta.input.value;
+			var lines=text.split("\n");
+			var line=lines[lines.length-1];
+			var i=0
+			for(;i<line.length&&line.charCodeAt(i)==9;i++)
+			{
+			}
+			setTimeout(
+				function()
+				{
+					for(var y=0;y<i;y++)
+					{
+						insertTab(document.meta.input);
+					}
+				},
+				0
+			);
+			
 		}
 //		 function tab(ta,evt){
 //		   if(ta.createTextRange) { // assume IE's model
@@ -129,7 +160,7 @@
 	<body >
 		<form action="" id="meta"  name="frm" runat=server>
 			<p id="idP">
-				<asp:TextBox onkeydown="if(event.keyCode==9){return false;}" id="input" runat=server Height="108px" TextMode="MultiLine" Width="326px"></asp:TextBox>
+				<asp:TextBox onkeydown="if(event.keyCode==9){tab();return false;} else if(event.keyCode==13){enter();}" id="input" runat=server Height="279px" TextMode="MultiLine" Width="476px"></asp:TextBox>
 			</p>
 			<p>
 				&nbsp;
@@ -137,7 +168,7 @@
 				  ID="execute" runat="server" 
 				  OnClick="execute_Click" Text="Execute" /></p>
 			<p>
-				<asp:Label ID="output" runat="server" Height="146px" Width="333px"></asp:Label>&nbsp;</p>
+				<asp:Label ID="output" runat="server" Height="220px" Width="476px"></asp:Label>&nbsp;</p>
 		</form>
 	</body>
 </html>

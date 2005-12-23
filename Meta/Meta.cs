@@ -163,8 +163,12 @@ namespace Meta
 			}
 			catch (MetaException e)
 			{
-				e.Stack.Add(MetaException.GetExtentText(callable.Extent)+"Function has thrown an exception.");
+				e.Stack.Add(MetaException.GetExtentText(callable.Extent) + "Function has thrown an exception.");
 				throw e;
+			}
+			catch (Exception e)
+			{
+				throw new MetaException(e.Message, callable.Extent);
 			}
 			if (result == null)
 			{
@@ -440,8 +444,8 @@ namespace Meta
 		}
 		static Process()
 		{
-            string metaDllLocation = Assembly.GetAssembly(typeof(Map)).Location;
-            loadedAssemblies.AddRange(new string[] { metaDllLocation });
+		//    string metaDllLocation = Assembly.GetAssembly(typeof(Map)).Location;
+		//    loadedAssemblies.AddRange(new string[] { metaDllLocation });
 			processes[Thread.CurrentThread]=new Process(null,null);
 		}
 		public Process() : this(FileSystem.fileSystem, new StrategyMap())
@@ -514,13 +518,27 @@ namespace Meta
 				Thread.CurrentThread.Suspend();
 			}
 		}
+		private static string installationPath=null;
 		public static string InstallationPath
 		{
 			get
 			{
-				Uri uri=new Uri(Assembly.GetAssembly(typeof(Map)).CodeBase);
-				return Path.GetDirectoryName(uri.AbsolutePath);
+				string path;
+				if (installationPath == null)
+				{
+					Uri uri = new Uri(Assembly.GetAssembly(typeof(Map)).CodeBase);
+					path = Path.GetDirectoryName(uri.AbsolutePath);
+				}
+				else
+				{
+					path = installationPath;
+				}
+				return path;
 				//return Application.StartupPath;
+			}
+			set
+			{
+				installationPath = value;
 			}
 		}
 		//public static string InstallationPath
@@ -1341,7 +1359,7 @@ namespace Meta
 		}
 		private MapStrategy strategy;
 		// should use EmptyStrategy by default
-		public StrategyMap(ICollection<Map> list)
+		public StrategyMap(System.Collections.ICollection list)
 			: this(new ListStrategy())
 		{
 			int index = 1;
@@ -1351,6 +1369,17 @@ namespace Meta
 				index++;
 			}
 		}
+
+		//public StrategyMap(ICollection<Map> list)
+		//    : this(new ListStrategy())
+		//{
+		//    int index = 1;
+		//    foreach (object entry in list)
+		//    {
+		//        this[index] = Transform.ToMeta(entry);
+		//        index++;
+		//    }
+		//}
 		public StrategyMap(MapStrategy strategy)
 		{
 			this.strategy = strategy;
@@ -1454,7 +1483,7 @@ namespace Meta
 			{
 				MethodInfo invoke=target.GetMethod("Invoke",
 					BindingFlags.Instance|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-				Delegate function=Method.CreateDelegateFromCode(target,meta);
+				Delegate function=MethodOverload.CreateDelegateFromCode(target,meta);
 				dotNet=function;
 			}
 			else if(target.IsArray && meta.Array.Count!=0)
@@ -1689,233 +1718,237 @@ namespace Meta
 		}
 	}
 	public delegate object DelegateCreatedForGenericDelegates();
-	public class MethodOverload : Map
+
+
+	public abstract class MethodImplementation:Map
 	{
-		public override bool IsFunction
+		public MethodImplementation(MethodBase method, object obj, Type type)
 		{
-			get
+			this.method = method;
+			this.obj = obj;
+			this.type = type;
+		}
+		protected MethodBase method;
+		//private string name;
+		protected object obj;
+		protected Type type;
+		public override Map Call(Map argument)
+		{
+			object result;
+			List<object> arguments = new List<object>();
+			bool argumentsMatched = true;
+			ParameterInfo[] parameters = method.GetParameters();
+			for (int i = 0; argumentsMatched && i < parameters.Length; i++)
 			{
-				return true;
-			}
-		}
-		protected override Map CopyImplementation()
-		{
-			return new MethodOverload();
-		}
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				return new List<Map>();
-			}
-		}
-		protected override Map Get(Map key)
-		{
-			return null;
-		}
-		protected override void Set(Map key, Map val)
-		{
-			throw new ApplicationException("Cannot set key in MethodOverload");
-		}
-	}
-	public class Method : Map
-	{
-		public override bool IsFunction
-		{
-			get
-			{
-				return true;
-			}
-		}
-		protected override Map CopyImplementation()
-		{
-			return new Method(this.name, this.obj, this.type);
-		}
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				return new List<Map>();
-			}
-		}
-		protected override Map Get(Map key)
-		{
-			return null;
-		}
-		protected override void Set(Map key, Map val)
-		{
-			throw new ApplicationException("Cannot set key in Method");
-		}
-		// refactor
-		public class ArgumentComparer : IComparer<MethodBase>
-		{
-			public static ArgumentComparer singleton = new ArgumentComparer();
-			public int Compare(MethodBase x, MethodBase y)
-			{
-				int result;
-				MethodBase first = (MethodBase)x;
-				MethodBase second = (MethodBase)y;
-				ParameterInfo[] firstParameters = first.GetParameters();
-				ParameterInfo[] secondParameters = second.GetParameters();
-				if (firstParameters.Length >= 1 && firstParameters[0].ParameterType == typeof(string)
-					&& !(secondParameters.Length >= 1 && secondParameters[0].ParameterType == typeof(string)))
+				object arg = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
+				if (arg != null)
 				{
-					result = -1;
+					arguments.Add(arg);
 				}
 				else
 				{
-					result = 0;
+					Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
+					throw new ApplicationException("Cannot convert argument.");
+					//argumentsMatched = false;
+					//break;
 				}
-				return result;
 			}
-		}
-		public override Map Call(Map argument)
-		{
-			object result = null;
-			bool isExecuted = false;
-			List<MethodBase> rightNumberArgumentMethods = new List<MethodBase>();
-			int count = argument.ArrayCount;
-			if (count == argument.Count)
+			if (method is ConstructorInfo)
 			{
-				foreach (MethodBase method in overloadedMethods)
+				try
 				{
-					if (count == method.GetParameters().Length)
-					{
-						rightNumberArgumentMethods.Add(method);
-					}
+					result = ((ConstructorInfo)method).Invoke(arguments.ToArray());
 				}
-			}
-			if (rightNumberArgumentMethods.Count == 0)
-			{
-				throw new ApplicationException("Method " + this.type.Name + "." + this.name + ": No methods with the right number of arguments.");
-			}
-			if (rightNumberArgumentMethods.Count > 1)
-			{
-				rightNumberArgumentMethods.Sort(ArgumentComparer.singleton);
-			}
-			foreach (MethodBase method in rightNumberArgumentMethods)
-			{
-				List<object> arguments = new List<object>();
-				bool argumentsMatched = true;
-				ParameterInfo[] parameters = method.GetParameters();
-				for (int i = 0; argumentsMatched && i < parameters.Length; i++)
+				catch (Exception e)
 				{
-					object arg = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
-					if (arg != null)
-					{
-						arguments.Add(arg);
-					}
-					else
-					{
-						argumentsMatched = false;
-						break;
-					}
-				}
-				if (argumentsMatched)
-				{
-					if (method is ConstructorInfo)
-					{
-						try
-						{
-							result = ((ConstructorInfo)method).Invoke(arguments.ToArray());
-						}
-						catch (Exception e)
-						{
-							throw e.InnerException;
-						}
-					}
-					else
-					{
-						try
-						{
-							result = method.Invoke(obj, arguments.ToArray());
-						}
-						catch (Exception e)
-						{
-							throw e.InnerException;
-						}
-					}
-					isExecuted = true;
-					break;
+					throw e.InnerException;
 				}
 			}
-			if (!isExecuted)
+			else
 			{
-				throw new ApplicationException("Method " + this.name + " could not be called.");
+				try
+				{
+					result = method.Invoke(obj, arguments.ToArray()); // this isnt such a good idea, it will work automatically for our new version
+				}
+				catch (Exception e)
+				{
+					throw e.InnerException;
+				}
 			}
 			return Transform.ToMeta(result);
 		}
-
-		public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
+	}
+	public class Method : MethodImplementation
+	{//remove
+		public override Map Call(Map arg)
 		{
-			MethodInfo invoke = delegateType.GetMethod("Invoke");
-			ParameterInfo[] parameters = invoke.GetParameters();
-			List<Type> arguments = new List<Type>();
-			arguments.Add(typeof(MetaDelegate));
-			foreach (ParameterInfo parameter in parameters)
+			if (IsFunction)
 			{
-				arguments.Add(parameter.ParameterType);
-			}
-			DynamicMethod hello = new DynamicMethod("EventHandler",
-				invoke.ReturnType,
-				arguments.ToArray(),
-				typeof(Map).Module);
-			ILGenerator il = hello.GetILGenerator();
-
-			LocalBuilder local = il.DeclareLocal(typeof(object[]));
-			il.Emit(OpCodes.Ldc_I4, parameters.Length);
-			il.Emit(OpCodes.Newarr, typeof(object));
-			il.Emit(OpCodes.Stloc, local);
-
-			for (int i = 0; i < parameters.Length; i++)
-			{
-				il.Emit(OpCodes.Ldloc, local);
-				il.Emit(OpCodes.Ldc_I4, i);
-				il.Emit(OpCodes.Ldarg, i + 1);
-				il.Emit(OpCodes.Stelem_Ref);
-			}
-			il.Emit(OpCodes.Ldarg_0);
-			il.Emit(OpCodes.Ldloc, local);
-			il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
-
-			if (invoke.ReturnType == typeof(void))
-			{
-				il.Emit(OpCodes.Pop);
-				il.Emit(OpCodes.Ret);
+				return base.Call(arg);
 			}
 			else
 			{
-				il.Emit(OpCodes.Castclass, invoke.ReturnType);
-				il.Emit(OpCodes.Ret);
+				throw new ApplicationException("Method cannot be called directly, it is overloaded.");
 			}
-			Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
-			return del;
 		}
-		public Method(string name, object obj, Type type)
+		//public override Map Call(Map arg)
+		//{
+		//    if (!IsFunction)
+		//    {
+		//        throw new ApplicationException("Method cannot be called directly, it is overloaded.");
+		//    }
+		//    else
+		//    {
+		//        return CallImplementation(argument);
+		//    }
+		//}
+		//private MethodBase method;
+	    public override bool IsFunction
+	    {
+	        get
+	        {
+	            return method!=null;
+	        }
+	    }
+	    private Dictionary<Map, MethodOverload> overloads;
+	    private Method(Dictionary<Map, MethodOverload> overloads,MethodBase method,object obj,Type type):base(method,obj,type)
+	    {
+	        this.overloads = overloads;
+	    }
+		private static MethodBase GetSingleMethod(string name, object obj, Type type)
 		{
-			this.name = name;
-			this.obj = obj;
-			this.type = type;
-			List<MemberInfo> methods;
-			if (name == ".ctor")
+			if (type.Name == "ObjectMap")
 			{
-				methods = new List<MemberInfo>(type.GetConstructors());
+			}
+			MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj,name));
+			MethodBase singleMethod;
+			if (members.Length == 1)
+			{
+				singleMethod = (MethodBase)members[0];
 			}
 			else
 			{
-				methods = new List<MemberInfo>(type.GetMember(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static));
+				singleMethod = null;
 			}
-			overloadedMethods = methods.ToArray();
+			return singleMethod;
 		}
+		private static BindingFlags GetBindingFlags(object obj,string name)
+		{
+			BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic;
+			if (obj != null || name==".ctor")
+			{
+				bindingFlags |= BindingFlags.Instance;
+			}
+			else
+			{
+				bindingFlags |= BindingFlags.Static;
+			}
+			return bindingFlags;
+		}
+		public Method(string name, object obj, Type type):base(GetSingleMethod(name,obj,type), obj,type)
+	    {
+			MemberInfo[] methods=type.GetMember(name, GetBindingFlags(obj,name));
+			if (type.Name == "Integer")
+			{
+			}
+			// refactor
+			if(methods.Length>1)
+			{
+				this.overloads=new Dictionary<Map,MethodOverload>();
+				foreach (MethodBase method in methods)
+				{
+					Map key=new StrategyMap();
+					foreach (ParameterInfo parameter in method.GetParameters())
+					{
+						key.Append(new TypeMap(parameter.ParameterType));
+					}
+					MethodOverload overload = new MethodOverload(method, obj, type);
+					overloads.Add(key,overload);
+				}
+			}
+			else
+			{
+				this.overloads=null;
+			}
+	    }
 		public Method(Type type):this(".ctor", null, type)
 		{
 		}
+	    protected override Map CopyImplementation()
+	    {
+	        return new Method(overloads,method,obj,type);
+	    }
+	    public override ICollection<Map> Keys
+	    {
+	        get
+	        {
+				ICollection<Map> keys;
+				if (overloads != null)
+				{
+					keys = overloads.Keys;
+				}
+				else
+				{
+					keys = new List<Map>();
+				}
+				return keys;
+	        }
+	    }
+	    protected override Map Get(Map key)
+	    {
+	        MethodOverload value;
+	        overloads.TryGetValue(key, out value);
+	        return value;
+	    }
+	    protected override void Set(Map key, Map val)
+	    {
+	        throw new ApplicationException("Cannot set key in Method.");
+	    }
+	}
+	public class MethodOverload : MethodImplementation
+	{
+	    public override bool IsFunction
+	    {
+	        get
+	        {
+	            return true;
+	        }
+	    }
+	    protected override Map CopyImplementation()
+	    {
+	        return new MethodOverload(this.method, this.obj, this.type);
+	    }
+	    public override ICollection<Map> Keys
+	    {
+	        get
+	        {
+	            return new List<Map>();
+	        }
+	    }
+	    protected override Map Get(Map key)
+	    {
+	        return null;
+	    }
+	    protected override void Set(Map key, Map val)
+	    {
+	        throw new ApplicationException("Cannot set key in MethodOverload");
+	    }
+		//public override Map Call(Map arg)
+		//{
+		//    return CallImplementation(arg);
+		//}
+		public MethodOverload(MethodBase method, object obj, Type type):base(method,obj,type)
+		{
+			//this.obj = obj;
+			//this.type = type;
+			//this.method = method;
+		}
 		public override bool Equals(object toCompare)
 		{
-			if (toCompare is Method)
+			if (toCompare is MethodOverload)
 			{
-				Method Method = (Method)toCompare;
-				if (Method.obj == obj && Method.name.Equals(name) && Method.type.Equals(type))
+				MethodOverload Method = (MethodOverload)toCompare;
+				if (Method.obj == obj && Method.method.Name.Equals(method.Name) && Method.type.Equals(type))
 				{
 					return true;
 				}
@@ -1929,59 +1962,122 @@ namespace Meta
 				return false;
 			}
 		}
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				int hash = name.GetHashCode() * type.GetHashCode();
-				if (obj != null)
-				{
-					hash = hash * obj.GetHashCode();
-				}
-				return hash;
-			}
-		}
-		private string name;
-		protected object obj;
-		protected Type type;
-		public MemberInfo[] overloadedMethods;
+		//public override bool Equals(object toCompare)
+		//{
+		//    if (toCompare is MethodOverload)
+		//    {
+		//        MethodOverload Method = (MethodOverload)toCompare;
+		//        if (Method.obj == obj && Method.name.Equals(name) && Method.type.Equals(type))
+		//        {
+		//            return true;
+		//        }
+		//        else
+		//        {
+		//            return false;
+		//        }
+		//    }
+		//    else
+		//    {
+		//        return false;
+		//    }
+		//}
+	    public override int GetHashCode()
+	    {
+	        unchecked
+	        {
+	            int hash = method.Name.GetHashCode() * type.GetHashCode();
+	            if (obj != null)
+	            {
+	                hash = hash * obj.GetHashCode();
+	            }
+	            return hash;
+	        }
+	    }
+		//private MethodBase method;
+		//private string name;
+		//protected object obj;
+		//protected Type type;
+	    //public MemberInfo[] overloadedMethods;
 
+	    public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
+	    {
+	        MethodInfo invoke = delegateType.GetMethod("Invoke");
+	        ParameterInfo[] parameters = invoke.GetParameters();
+	        List<Type> arguments = new List<Type>();
+	        arguments.Add(typeof(MetaDelegate));
+	        foreach (ParameterInfo parameter in parameters)
+	        {
+	            arguments.Add(parameter.ParameterType);
+	        }
+	        DynamicMethod hello = new DynamicMethod("EventHandler",
+	            invoke.ReturnType,
+	            arguments.ToArray(),
+	            typeof(Map).Module);
+	        ILGenerator il = hello.GetILGenerator();
 
-		public class EventHandlerContainer
-		{
-			private Map callable;
-			public EventHandlerContainer(Map callable)
-			{
-				this.callable = callable;
-			}
-			public Map Raise(Map argument)
-			{
-				return callable.Call(argument);
-			}
-		}
-		public class MetaDelegate
-		{
-			private Map callable;
-			private Type returnType;
-			public MetaDelegate(Map callable, Type returnType)
-			{
-				this.callable = callable;
-				this.returnType = returnType;
-			}
-			public object Call(object[] arguments)
-			{
-				Map arg = new StrategyMap();
-				foreach (object argument in arguments)
-				{
-					arg.Append(Transform.ToMeta(argument));
-				}
-				Map result = this.callable.Call(arg);
-				return Meta.Transform.ToDotNet(result, this.returnType);
-			}
-		}
+	        LocalBuilder local = il.DeclareLocal(typeof(object[]));
+	        il.Emit(OpCodes.Ldc_I4, parameters.Length);
+	        il.Emit(OpCodes.Newarr, typeof(object));
+	        il.Emit(OpCodes.Stloc, local);
 
+	        for (int i = 0; i < parameters.Length; i++)
+	        {
+	            il.Emit(OpCodes.Ldloc, local);
+	            il.Emit(OpCodes.Ldc_I4, i);
+	            il.Emit(OpCodes.Ldarg, i + 1);
+	            il.Emit(OpCodes.Stelem_Ref);
+	        }
+	        il.Emit(OpCodes.Ldarg_0);
+	        il.Emit(OpCodes.Ldloc, local);
+	        il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
+
+	        if (invoke.ReturnType == typeof(void))
+	        {
+	            il.Emit(OpCodes.Pop);
+	            il.Emit(OpCodes.Ret);
+	        }
+	        else
+	        {
+	            il.Emit(OpCodes.Castclass, invoke.ReturnType);
+	            il.Emit(OpCodes.Ret);
+	        }
+	        Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
+	        return del;
+	    }
+	    public class EventHandlerContainer
+	    {
+	        private Map callable;
+	        public EventHandlerContainer(Map callable)
+	        {
+	            this.callable = callable;
+	        }
+	        public Map Raise(Map argument)
+	        {
+	            return callable.Call(argument);
+	        }
+	    }
+	    public class MetaDelegate
+	    {
+	        private Map callable;
+	        private Type returnType;
+	        public MetaDelegate(Map callable, Type returnType)
+	        {
+	            this.callable = callable;
+	            this.returnType = returnType;
+	        }
+	        public object Call(object[] arguments)
+	        {
+	            Map arg = new StrategyMap();
+	            foreach (object argument in arguments)
+	            {
+	                arg.Append(Transform.ToMeta(argument));
+	            }
+	            Map result = this.callable.Call(arg);
+	            return Meta.Transform.ToDotNet(result, this.returnType);
+	        }
+	    }
 	}
-	//public class Method: Map
+	//public class Method : Map
 	//{
 	//    public override bool IsFunction
 	//    {
@@ -1992,7 +2088,7 @@ namespace Meta
 	//    }
 	//    protected override Map CopyImplementation()
 	//    {
-	//        return new Method(this.name,this.obj,this.type);
+	//        return new Method(this.name, this.obj, this.type);
 	//    }
 	//    public override ICollection<Map> Keys
 	//    {
@@ -2005,29 +2101,29 @@ namespace Meta
 	//    {
 	//        return null;
 	//    }
-	//    protected override void Set(Map key,Map val)
+	//    protected override void Set(Map key, Map val)
 	//    {
 	//        throw new ApplicationException("Cannot set key in Method");
 	//    }
 	//    // refactor
-	//    public class ArgumentComparer: IComparer<MethodBase>
+	//    public class ArgumentComparer : IComparer<MethodBase>
 	//    {
 	//        public static ArgumentComparer singleton = new ArgumentComparer();
 	//        public int Compare(MethodBase x, MethodBase y)
 	//        {
 	//            int result;
-	//            MethodBase first=(MethodBase)x;
-	//            MethodBase second=(MethodBase)y;
-	//            ParameterInfo[] firstParameters=first.GetParameters();
-	//            ParameterInfo[] secondParameters=second.GetParameters();
-	//            if(firstParameters.Length>=1 && firstParameters[0].ParameterType==typeof(string)
-	//                && !(secondParameters.Length>=1 && secondParameters[0].ParameterType==typeof(string)))
+	//            MethodBase first = (MethodBase)x;
+	//            MethodBase second = (MethodBase)y;
+	//            ParameterInfo[] firstParameters = first.GetParameters();
+	//            ParameterInfo[] secondParameters = second.GetParameters();
+	//            if (firstParameters.Length >= 1 && firstParameters[0].ParameterType == typeof(string)
+	//                && !(secondParameters.Length >= 1 && secondParameters[0].ParameterType == typeof(string)))
 	//            {
-	//                result=-1;
+	//                result = -1;
 	//            }
 	//            else
 	//            {
-	//                result=0;
+	//                result = 0;
 	//            }
 	//            return result;
 	//        }
@@ -2063,7 +2159,7 @@ namespace Meta
 	//            ParameterInfo[] parameters = method.GetParameters();
 	//            for (int i = 0; argumentsMatched && i < parameters.Length; i++)
 	//            {
-	//                object arg = Transform.ToDotNet(argument[i+1], parameters[i].ParameterType);
+	//                object arg = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
 	//                if (arg != null)
 	//                {
 	//                    arguments.Add(arg);
@@ -2124,7 +2220,7 @@ namespace Meta
 	//    {
 	//        private Map callable;
 	//        private Type returnType;
-	//        public MetaDelegate(Map callable,Type returnType)
+	//        public MetaDelegate(Map callable, Type returnType)
 	//        {
 	//            this.callable = callable;
 	//            this.returnType = returnType;
@@ -2186,36 +2282,36 @@ namespace Meta
 	//        Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
 	//        return del;
 	//    }
-	//    private void Initialize(string name,object obj,Type type)
+	//    private void Initialize(string name, object obj, Type type)
 	//    {
-	//        this.name=name;
-	//        this.obj=obj;
-	//        this.type=type;
+	//        this.name = name;
+	//        this.obj = obj;
+	//        this.type = type;
 	//        List<MemberInfo> methods;
-	//        if(name==".ctor")
+	//        if (name == ".ctor")
 	//        {
-	//            methods=new List<MemberInfo>(type.GetConstructors());
+	//            methods = new List<MemberInfo>(type.GetConstructors());
 	//        }
 	//        else
 	//        {
-	//            methods=new List<MemberInfo>(type.GetMember(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
+	//            methods = new List<MemberInfo>(type.GetMember(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static));
 	//        }
-	//        overloadedMethods=methods.ToArray();
+	//        overloadedMethods = methods.ToArray();
 	//    }
-	//    public Method(string name,object obj,Type type)
+	//    public Method(string name, object obj, Type type)
 	//    {
-	//        this.Initialize(name,obj,type);
+	//        this.Initialize(name, obj, type);
 	//    }
 	//    public Method(Type type)
 	//    {
-	//        this.Initialize(".ctor",null,type);
+	//        this.Initialize(".ctor", null, type);
 	//    }
 	//    public override bool Equals(object toCompare)
 	//    {
-	//        if(toCompare is Method)
+	//        if (toCompare is Method)
 	//        {
-	//            Method Method=(Method)toCompare;
-	//            if(Method.obj==obj && Method.name.Equals(name) && Method.type.Equals(type))
+	//            Method Method = (Method)toCompare;
+	//            if (Method.obj == obj && Method.name.Equals(name) && Method.type.Equals(type))
 	//            {
 	//                return true;
 	//            }
@@ -2233,10 +2329,10 @@ namespace Meta
 	//    {
 	//        unchecked
 	//        {
-	//            int hash=name.GetHashCode()*type.GetHashCode();
-	//            if(obj!=null)
+	//            int hash = name.GetHashCode() * type.GetHashCode();
+	//            if (obj != null)
 	//            {
-	//                hash=hash*obj.GetHashCode();
+	//                hash = hash * obj.GetHashCode();
 	//            }
 	//            return hash;
 	//        }
@@ -2253,11 +2349,33 @@ namespace Meta
 	[Serializable]
 	public class TypeMap: DotNetMap
 	{
+
+		protected override Map Get(Map key)
+		{
+			Map value;
+			if (type.Name == "Font")
+			{
+			}
+			if (key.IsString && key.GetString() == this.type.Name)
+			{
+				value=this.Constructor;
+			}
+			else if (type.IsGenericTypeDefinition && key.Array.TrueForAll(delegate(Map map) { return map is TypeMap; }))
+			{
+				List<Type> types=key.Array.ConvertAll<Type>(new Converter<Map, Type>(delegate(Map map) { return ((TypeMap)map).type; }));
+				value = new TypeMap(type.MakeGenericType(types.ToArray()));
+			}
+			else
+			{
+				value = base.Get(key);
+			}
+			return value;
+		}
 		public override bool IsFunction
 		{
 			get
 			{
-				return true;
+				return Constructor.IsFunction;
 			}
 		}
 		public Type Type
@@ -2267,19 +2385,55 @@ namespace Meta
 				return type;
 			}
 		}
+		public override int GetHashCode()
+		{
+			return 1;
+		}
+		public override bool Equals(object obj)
+		{
+			bool equal;
+			if (obj is TypeMap)
+			{
+				TypeMap typeMap = (TypeMap)obj;
+				equal = typeMap.type == this.type;
+				if (equal)
+				{
+				}
+			}
+			else
+			{
+				equal = false;
+			}
+			return equal;
+		}
 		protected override Map CopyImplementation()
 		{
-			return new TypeMap(type);
+			return new TypeMap(this.obj,this.type);
 		}
-		[NonSerialized]
-		protected Method constructor;
+		//[NonSerialized]
+		//protected Method constructor;
+		private Method Constructor
+		{
+			get
+			{
+				return new Method(type);
+			}
+		}
+		public TypeMap(object obj, Type type):base(obj,type)
+		{
+			//this.constructor = constructor;
+		}
+		//public TypeMap(Method constructor, object obj, Type type):base(obj,type)
+		//{
+		//    this.constructor = constructor;
+		//}
 		public TypeMap(Type targetType):base(null,targetType)
 		{
-			this.constructor=new Method(this.type);
+			//this.constructor=new Method(this.type);
 		}
 		public override Map Call(Map argument)
 		{
-			return constructor.Call(argument);
+			return Constructor.Call(argument);
 		}
 	}
 	[Serializable]
@@ -2739,6 +2893,24 @@ namespace Meta
 	}
 	public abstract class DotNetMap: Map, ISerializeEnumerableSpecial
 	{
+		public override bool IsString
+		{
+			get
+			{
+				return true;
+			}
+		}
+		public override string GetString()
+		{
+			return obj != null ? "object: "+obj.ToString() : "type: "+type.ToString();
+		}
+		public override bool IsInteger
+		{
+			get
+			{
+				return false;
+			}
+		}
 		public override string Serialize()
 		{
 			return obj != null ? this.obj.ToString() : this.type.ToString();
@@ -2789,9 +2961,7 @@ namespace Meta
 			if (key.IsString)
 			{
 				string text = key.GetString();
-				if (text == "Serialize")
-				{
-				}
+
 				MemberInfo[] members = type.GetMember(text, bindingFlags);
 				if (members.Length != 0)
 				{
@@ -2890,7 +3060,7 @@ namespace Meta
 		{
 			EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
 				BindingFlags.Static|BindingFlags.Instance);
-			Delegate eventDelegate=Method.CreateDelegateFromCode(eventInfo.EventHandlerType,code);
+			Delegate eventDelegate=MethodOverload.CreateDelegateFromCode(eventInfo.EventHandlerType,code);
 			return eventDelegate;
 		}
 		public DotNetMap(object obj,Type type)
@@ -4371,11 +4541,15 @@ namespace Meta
 
 		public Map cache = new StrategyMap();
 
+		public GacStrategy()
+		{
+			cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
+		}
 		public override MapStrategy CopyImplementation()
 		{
 			return this;
 		}
-		private bool LoadAssembly(string assemblyName)
+		private bool Load(string assemblyName)
 		{
 			Map key = new StrategyMap(assemblyName);
 			bool loaded;
@@ -4388,19 +4562,9 @@ namespace Meta
 				Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
 				if (assembly != null)
 				{
-					Map val = new StrategyMap();
-					foreach (Type type in assembly.GetExportedTypes())
-					{
-						if (type.DeclaringType == null)
-						{
-							val[type.Name] = new TypeMap(type);
-						}
-					}
-					if (!Process.loadedAssemblies.Contains(assembly.Location))
-					{
-						Process.loadedAssemblies.Add(assembly.Location);
-					}
-					cache[key] = val;
+
+					cache[key] = LoadAssembly(assembly);
+					//cache[key] = val;
 					loaded = true;
 				}
 				else
@@ -4410,10 +4574,62 @@ namespace Meta
 			}
 			return loaded;
 		}
+		private Map LoadAssembly(Assembly assembly)
+		{
+			Map val = new StrategyMap();
+			foreach (Type type in assembly.GetExportedTypes())
+			{
+				if (type.DeclaringType == null)
+				{
+					val[type.Name] = new TypeMap(type);
+				}
+			}
+			//if (!Process.loadedAssemblies.Contains(assembly.FullName))
+			////if (!Process.loadedAssemblies.Contains(assembly.Location))
+			//{
+			//    Process.loadedAssemblies.Add(assembly.FullName);
+			//}
+			return val;
+		}
+		//private bool LoadAssembly(string assemblyName)
+		//{
+		//    Map key = new StrategyMap(assemblyName);
+		//    bool loaded;
+		//    if (cache.ContainsKey(key))
+		//    {
+		//        loaded = true;
+		//    }
+		//    else
+		//    {
+		//        Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
+		//        if (assembly != null)
+		//        {
+		//            Map val = new StrategyMap();
+		//            foreach (Type type in assembly.GetExportedTypes())
+		//            {
+		//                if (type.DeclaringType == null)
+		//                {
+		//                    val[type.Name] = new TypeMap(type);
+		//                }
+		//            }
+		//            if (!Process.loadedAssemblies.Contains(assembly.Location))
+		//            {
+		//                Process.loadedAssemblies.Add(assembly.Location);
+		//            }
+		//            cache[key] = val;
+		//            loaded = true;
+		//        }
+		//        else
+		//        {
+		//            loaded = false;
+		//        }
+		//    }
+		//    return loaded;
+		//}
 		public override Map Get(Map key)
 		{
 			Map val;
-			if (key.IsString && cache.ContainsKey(key) || LoadAssembly(key.GetString()))
+			if (key.IsString && cache.ContainsKey(key) || Load(key.GetString()))
 			{
 				val = cache[key];
 			}
@@ -4447,7 +4663,7 @@ namespace Meta
 			bool containsKey;
 			if (key.IsString)
 			{
-				containsKey = LoadAssembly(key.GetString());
+				containsKey = Load(key.GetString());
 			}
 			else
 			{

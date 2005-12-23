@@ -134,6 +134,26 @@
 	boolTest=TestClass.boolTest
 	MemberTest=MetaTest.MemberTest
 	memberTest=MemberTest *
+	stringOverload=MemberTest.OverloadedMethod.[
+		mscorlib.String
+	]
+		"hello"
+	integerOverload=MemberTest.OverloadedMethod.[
+		mscorlib.Int32
+	]
+		5
+	memberTestOverload=MemberTest.OverloadedMethod.[
+		MetaTest.MemberTest
+		mscorlib.Int32
+	]
+		memberTest
+		3247
+	memberTestOverload=MemberTest.OverloadedMethod.[
+		MetaTest.MemberTest
+		mscorlib.Int32
+	]
+		memberTest
+		3247
 	MemberTest.classField="a"
 	memberTest.instanceField="b"
 	MemberTest.ClassProperty.set
@@ -244,7 +264,10 @@
 		|
 			x="hello"
 	emptyFunctionResult=emptyFunction *
-	font=["System.Drawing"].Font
+	font=["System.Drawing"].Font.Font.[
+		mscorlib.String
+		mscorlib.Single
+	]
 		"Courier New"
 		10
 	decimalTest=5
@@ -258,7 +281,7 @@
 			hello world!
 			hello!
 			"
-	arrayList=mscorlib.ArrayList *
+	arrayList=mscorlib.ArrayList.ArrayList.[*] *
 	arrayList.Add
 		"hello"
 	arrayListResult=arrayList.Item.get
@@ -272,7 +295,9 @@
 			Köpfchen in das Wasser,
 			Schwaenzchen in die Hoeh."
 	lines=textBox.Lines.get *
-	alleMeineText=lines.GetValue
+	alleMeineText=lines.GetValue.[
+		mscorlib.Int32
+	]
 		1
 	lines.[5]="bwuhahaha"
 	tabText="			hello"

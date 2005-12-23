@@ -1312,6 +1312,21 @@ Entry (KeyValuePair`2)
 		testClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		"stringOverload"
+	Value (StrategyMap):
+		"string function, argument+hello"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"integerOverload"
+	Value (StrategyMap):
+		"integer function, argument+5"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"memberTestOverload"
+	Value (StrategyMap):
+		"MemberTest function, argument+testClasses.MemberTest3247"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		4
 	Value (StrategyMap):
 		""

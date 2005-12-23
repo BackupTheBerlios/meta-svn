@@ -56,6 +56,9 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
+			//Type test1 = typeof(Map);
+			//Type test2 = typeof(Map);
+			//bool x = test1 == test2;
 			try
 			{
 				//Sprite ball=new SdlDotNet.Sprites.Sprite()
@@ -355,6 +358,19 @@ namespace testClasses
 	{
 		public static string classField="default";
 		public string instanceField="default";
+
+		public static string OverloadedMethod(string argument)
+		{
+			return "string function, argument+"+argument;
+		}
+		public static string OverloadedMethod(int argument)
+		{
+			return "integer function, argument+" + argument;
+		}
+		public static string OverloadedMethod(MemberTest memberTest,int argument)
+		{
+			return "MemberTest function, argument+" + memberTest + argument;
+		}
 
 		public static string ClassProperty 
 		{
