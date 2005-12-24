@@ -1747,6 +1747,8 @@ namespace Meta
 				}
 				else
 				{
+					AssemblyName name=new AssemblyName();
+					//Assembly.Load(
 					Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
 					throw new ApplicationException("Cannot convert argument.");
 					//argumentsMatched = false;
@@ -4581,7 +4583,16 @@ namespace Meta
 			{
 				if (type.DeclaringType == null)
 				{
-					val[type.Name] = new TypeMap(type);
+					Map selected = val;
+					foreach (string nameSpace in type.Namespace.Split('.'))
+					{
+						if (!selected.ContainsKey(nameSpace))
+						{
+							selected[nameSpace] = new StrategyMap();
+						}
+						selected = selected[nameSpace];
+					}
+					selected[type.Name] = new TypeMap(type);
 				}
 			}
 			//if (!Process.loadedAssemblies.Contains(assembly.FullName))

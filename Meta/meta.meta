@@ -205,7 +205,7 @@ basicTest=
 			|arg
 		argTest=FirstLevel
 			a="z"
-		TestClass=MetaTest.TestClass
+		TestClass=MetaTest.testClasses.TestClass
 		TestClass.NestedClass.field=5
 		nestedClassTest=TestClass.NestedClass.field
 		testClass=TestClass *
@@ -214,25 +214,25 @@ basicTest=
 		testClass.decimalValue=5
 		TestClass.boolTest=1
 		boolTest=TestClass.boolTest
-		MemberTest=MetaTest.MemberTest
+		MemberTest=MetaTest.testClasses.MemberTest
 		memberTest=MemberTest *
 		stringOverload=MemberTest.OverloadedMethod.[
-			mscorlib.String
+			mscorlib.System.String
 		]
 			"hello"
 		integerOverload=MemberTest.OverloadedMethod.[
-			mscorlib.Int32
+			mscorlib.System.Int32
 		]
 			5
 		memberTestOverload=MemberTest.OverloadedMethod.[
-			MetaTest.MemberTest
-			mscorlib.Int32
+			MetaTest.testClasses.MemberTest
+			mscorlib.System.Int32
 		]
 			memberTest
 			3247
 		memberTestOverload=MemberTest.OverloadedMethod.[
-			MetaTest.MemberTest
-			mscorlib.Int32
+			MetaTest.testClasses.MemberTest
+			mscorlib.System.Int32
 		]
 			memberTest
 			3247
@@ -245,7 +245,7 @@ basicTest=
 			MemberTest.ClassProperty.get *
 		instancePropertyValue=memberTest.InstanceProperty.get *
 		interceptedSymbol="/hello/"
-		positionalNoConversion=MetaTest.PositionalNoConversion
+		positionalNoConversion=MetaTest.testClasses.PositionalNoConversion
 			"m"
 			"n"
 			"o"
@@ -253,7 +253,7 @@ basicTest=
 			"r"
 			"s"
 			"t"
-		namedNoConversion=MetaTest.NamedNoConversion
+		namedNoConversion=MetaTest.testClasses.NamedNoConversion
 			=
 				"m"
 				y="n"
@@ -261,7 +261,7 @@ basicTest=
 			=
 				c="t"
 				"r"
-		indexerNoConversion=MetaTest.IndexerNoConversion *
+		indexerNoConversion=MetaTest.testClasses.IndexerNoConversion *
 		indexerNoConversion.Item.set
 			"abc"
 			"hihi"
@@ -346,9 +346,9 @@ basicTest=
 			|
 				x="hello"
 		emptyFunctionResult=emptyFunction *
-		font=["System.Drawing"].Font.Font.[
-			mscorlib.String
-			mscorlib.Single
+		font=["System.Drawing"].System.Drawing.Font.Font.[
+			mscorlib.System.String
+			mscorlib.System.Single
 		]
 			"Courier New"
 			10
@@ -363,12 +363,12 @@ basicTest=
 				hello world!
 				hello!
 				"
-		arrayList=mscorlib.ArrayList.ArrayList.[*] *
+		arrayList=mscorlib.System.Collections.ArrayList.ArrayList.[*] *
 		arrayList.Add
 			"hello"
 		arrayListResult=arrayList.Item.get
 			*
-		textBox=["System.Windows.Forms"].TextBox *
+		textBox=["System.Windows.Forms"].System.Windows.Forms.TextBox *
 		textBox.Text.set
 			"
 				Alle meine Entchen,
@@ -378,7 +378,7 @@ basicTest=
 				Schwaenzchen in die Hoeh."
 		lines=textBox.Lines.get *
 		alleMeineText=lines.GetValue.[
-			mscorlib.Int32
+			mscorlib.System.Int32
 		]
 			1
 		lines.[5]="bwuhahaha"
@@ -440,23 +440,23 @@ console=
 integerToString=
 	documentation="Converts an integer to a string."
 	|
-		int=Meta.Integer.[
-			Meta.Map
+		int=Meta.Meta.Integer.[
+			Meta.Meta.Map
 		]
 			arg
 		current=int.ToString *
 map=
 	pop=
-		|Meta.Library.Pop
+		|Meta.Meta.Library.Pop
 			arg
 	isInteger=
 		|
-			object=Meta.ObjectMap
+			object=Meta.Meta.ObjectMap
 				arg
 			current=object.IsInteger.get *
 	isString=
 		|
-			object=Meta.ObjectMap
+			object=Meta.Meta.ObjectMap
 				arg
 			current=object.IsString.get *
 	if=
@@ -505,7 +505,7 @@ map=
 			current=array
 	remove=
 		documentation="Removes a key from a map."
-		|Meta.Library.Remove
+		|Meta.Meta.Library.Remove
 			arg
 	while=
 		documentation="Calls a function as long as the condition function returns 1."
@@ -521,7 +521,7 @@ map=
 			next.[stop] arg
 	while=
 		documentation="Calls a function as long as the condition function returns 1."
-		|Meta.Library.While
+		|Meta.Meta.Library.While
 			arg
 	foreach=
 		|apply
@@ -557,7 +557,7 @@ map=
 							index=math.add
 								arg.index
 								1
-							object=Meta.ObjectMap
+							object=Meta.Meta.ObjectMap
 								arg.result
 							argument=arg.with arg.array.[arg.index]
 							object.Append
@@ -566,22 +566,22 @@ map=
 				current=next.[stop] arg
 	join=
 		documentation="Concatenates arrays."
-		|Meta.Library.Join
+		|Meta.Meta.Library.Join
 			arg
 	contains=
 		documentation="Determines whether a map contains a key."
 		|
-			object=Meta.ObjectMap
+			object=Meta.Meta.ObjectMap
 				arg.map
 			current=object.ContainsKey
 				arg.key
 	keys=
 		documentation="Returns the keys of a map in an array."
 		|
-			object=Meta.ObjectMap
+			object=Meta.Meta.ObjectMap
 				arg
-			current=Meta.StrategyMap.StrategyMap.[
-				mscorlib.ICollection
+			current=Meta.Meta.StrategyMap.StrategyMap.[
+				mscorlib.System.Collections.ICollection
 			]				
 				object.Keys.get *
 	merge=
@@ -607,7 +607,7 @@ map=
 				array=arg
 				with=
 					|
-						first=Meta.ObjectMap
+						first=Meta.Meta.ObjectMap
 							arg.previous.previous
 						current=
 							equality=logic.and
@@ -622,7 +622,7 @@ map=
 	length=
 		documentation="Returns the length of an array."
 		|
-			map=Meta.ObjectMap
+			map=Meta.Meta.ObjectMap
 				arg
 			current=map.ArrayCount.get *
 	sum=
@@ -707,103 +707,103 @@ math=
 	increment=
 		documentation="Increments an integer."
 		|
-			result=Meta.Integer.op_Addition
-				Meta.Integer.Integer.[
-					Meta.Map
+			result=Meta.Meta.Integer.op_Addition
+				Meta.Meta.Integer.Integer.[
+					Meta.Meta.Map
 				]
 					arg
-				Meta.Integer.Integer.[	
-					Meta.Map
+				Meta.Meta.Integer.Integer.[	
+					Meta.Meta.Map
 				]
 					1
-			current=Meta.StrategyMap.StrategyMap.[
-				Meta.Integer
+			current=Meta.Meta.StrategyMap.StrategyMap.[
+				Meta.Meta.Integer
 			]
 				result
 	add=
 		documentation="Adds integers."
-		|Meta.StrategyMap.StrategyMap.[
-			Meta.Integer
+		|Meta.Meta.StrategyMap.StrategyMap.[
+			Meta.Meta.Integer
 		]
 			map.sum
 				array=arg
 				with=
-					|Meta.Integer.op_Addition
-						Meta.Integer.Integer.[
-							Meta.Integer
+					|Meta.Meta.Integer.op_Addition
+						Meta.Meta.Integer.Integer.[
+							Meta.Meta.Integer
 						]
 							arg.previous
-						Meta.Integer.Integer.[
-							Meta.Map
+						Meta.Meta.Integer.Integer.[
+							Meta.Meta.Map
 						]
 							arg.present
-				start=Meta.Integer.Integer.[
-					Meta.Map
+				start=Meta.Meta.Integer.Integer.[
+					Meta.Meta.Map
 				]
 					*
 	multiply=
 		documentation="Multiplies integers."
-		|Meta.StrategyMap.StrategyMap.[
-			Meta.Integer
+		|Meta.Meta.StrategyMap.StrategyMap.[
+			Meta.Meta.Integer
 		]
 			map.sum
 				array=arg
 				with=
-					|Meta.Integer.op_Multiply
-						Meta.Integer.Integer.[
-							Meta.Integer
+					|Meta.Meta.Integer.op_Multiply
+						Meta.Meta.Integer.Integer.[
+							Meta.Meta.Integer
 						]
 							arg.previous
-						Meta.Integer.Integer.[
-							Meta.Map
+						Meta.Meta.Integer.Integer.[
+							Meta.Meta.Map
 						]
 							arg.present
-				start=Meta.Integer.Integer.[
-					Meta.Map
+				start=Meta.Meta.Integer.Integer.[
+					Meta.Meta.Map
 				]
 					1
 	greater=
 		documentation="Determines whether the first integer is greater than the second integer."
-		|Meta.Integer.op_GreaterThan
-			Meta.Integer.Integer.[
-				Meta.Map
+		|Meta.Meta.Integer.op_GreaterThan
+			Meta.Meta.Integer.Integer.[
+				Meta.Meta.Map
 			]
 				arg.[1]
-			Meta.Integer.Integer.[
-				Meta.Map
+			Meta.Meta.Integer.Integer.[
+				Meta.Meta.Map
 			]
 				arg.[2]
 	smaller=
 		documentation="Determines whether the first integer is smaller than the second integer."
-		|Meta.Integer.op_LessThan
-			Meta.Integer.Integer.[
-				Meta.Map
+		|Meta.Meta.Integer.op_LessThan
+			Meta.Meta.Integer.Integer.[
+				Meta.Meta.Map
 			]
 				arg.[1]
-			Meta.Integer.Integer.[
-				Meta.Map
+			Meta.Meta.Integer.Integer.[
+				Meta.Meta.Map
 			]
 				arg.[2]
 bitwise=
 	or=
 		documentation="Performs a bitwise or operation on integers."
-		|Meta.StrategyMap.StrategyMap.[
-			Meta.Integer
+		|Meta.Meta.StrategyMap.StrategyMap.[
+			Meta.Meta.Integer
 		]
 			map.sum
 				array=arg
 				with=
-					|Meta.Integer.op_BitwiseOr
-						Meta.Integer.Integer.[
-							Meta.Integer
+					|Meta.Meta.Integer.op_BitwiseOr
+						Meta.Meta.Integer.Integer.[
+							Meta.Meta.Integer
 						]
 							arg.previous
-						Meta.Integer.Integer.[
-							Meta.Map
+						Meta.Meta.Integer.Integer.[
+							Meta.Meta.Map
 						]
 							arg.present
-				start=Meta.Integer.Integer.[
-					Meta.Map
+				start=Meta.Meta.Integer.Integer.[
+					Meta.Meta.Map
 				]
 					*
 string=
@@ -927,7 +927,7 @@ libraryTest=
 					current=counter
 			bitwiseTest=local.bitwise.or
 				20
-				["System.Windows.Forms"].Keys.Tab
+				["System.Windows.Forms"].System.Windows.Forms.Keys.Tab
 		current=test
 html=
 	tags=
@@ -1645,6 +1645,6 @@ directory=
 							text=argument.files.[arg]
 debug=
 	print=
-		|console.writeLine Meta.FileSystem.Serialize.Value
+		|console.writeLine Meta.Meta.FileSystem.Serialize.Value
 			arg
 |createWebsite *
