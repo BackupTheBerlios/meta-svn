@@ -168,7 +168,7 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
-				throw new MetaException(e.Message, callable.Extent);
+				throw new MetaException(e.ToString(), callable.Extent);
 			}
 			if (result == null)
 			{
@@ -1737,25 +1737,43 @@ namespace Meta
 		protected Type type;
 		public override Map Call(Map argument)
 		{
+			if (this.method != null && this.method.Name == "add")
+			{
+			}
 			object result;
 			List<object> arguments = new List<object>();
 			bool argumentsMatched = true;
 			ParameterInfo[] parameters = method.GetParameters();
-			for (int i = 0; argumentsMatched && i < parameters.Length; i++)
+			if (parameters.Length == 1)
 			{
-				object arg = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
+				object arg = Transform.ToDotNet(argument, parameters[0].ParameterType);
 				if (arg != null)
 				{
 					arguments.Add(arg);
 				}
 				else
 				{
-					AssemblyName name=new AssemblyName();
-					//Assembly.Load(
-					Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
 					throw new ApplicationException("Cannot convert argument.");
-					//argumentsMatched = false;
-					//break;
+				}
+			}
+			else
+			{
+				for (int i = 0; argumentsMatched && i < parameters.Length; i++)
+				{
+					object arg = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
+					if (arg != null)
+					{
+						arguments.Add(arg);
+					}
+					else
+					{
+						//AssemblyName name = new AssemblyName();
+						//Assembly.Load(
+						//Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
+						throw new ApplicationException("Cannot convert argument.");
+						//argumentsMatched = false;
+						//break;
+					}
 				}
 			}
 			if (method is ConstructorInfo)
@@ -1782,6 +1800,53 @@ namespace Meta
 			}
 			return Transform.ToMeta(result);
 		}
+		//public override Map Call(Map argument)
+		//{
+		//    object result;
+		//    List<object> arguments = new List<object>();
+		//    bool argumentsMatched = true;
+		//    ParameterInfo[] parameters = method.GetParameters();
+		//    for (int i = 0; argumentsMatched && i < parameters.Length; i++)
+		//    {
+		//        object arg = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
+		//        if (arg != null)
+		//        {
+		//            arguments.Add(arg);
+		//        }
+		//        else
+		//        {
+		//            AssemblyName name=new AssemblyName();
+		//            //Assembly.Load(
+		//            Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
+		//            throw new ApplicationException("Cannot convert argument.");
+		//            //argumentsMatched = false;
+		//            //break;
+		//        }
+		//    }
+		//    if (method is ConstructorInfo)
+		//    {
+		//        try
+		//        {
+		//            result = ((ConstructorInfo)method).Invoke(arguments.ToArray());
+		//        }
+		//        catch (Exception e)
+		//        {
+		//            throw e.InnerException;
+		//        }
+		//    }
+		//    else
+		//    {
+		//        try
+		//        {
+		//            result = method.Invoke(obj, arguments.ToArray()); // this isnt such a good idea, it will work automatically for our new version
+		//        }
+		//        catch (Exception e)
+		//        {
+		//            throw e.InnerException;
+		//        }
+		//    }
+		//    return Transform.ToMeta(result);
+		//}
 	}
 	public class Method : MethodImplementation
 	{//remove
@@ -2594,6 +2659,7 @@ namespace Meta
 		public MapStrategy original;
 
 
+		// always use CloneStrategy, only have logic in one place, too complicated to use
 		public CloneStrategy(MapStrategy original)
 		{
 			this.original = original;
@@ -2771,17 +2837,25 @@ namespace Meta
 		public override Map Call(Map argument)
 		{
 			Map result;
-			try
-			{
+			//try
+			//{
 				Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public |
 					BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
 				if (eventDelegate != null)
 				{
 					List<object> arguments = new List<object>();
+					// refactor, with MethodImplementation
 					ParameterInfo[] parameters = eventDelegate.Method.GetParameters();
-					for (int i = 1; i < parameters.Length; i++)
+					if (parameters.Length == 2)
 					{
-						arguments.Add(Transform.ToDotNet((Map)argument[i], parameters[i].ParameterType));
+						arguments.Add(Transform.ToDotNet(argument, parameters[1].ParameterType));
+					}
+					else
+					{
+						for (int i = 1; i < parameters.Length; i++)
+						{
+							arguments.Add(Transform.ToDotNet(argument[i], parameters[i].ParameterType));
+						}
 					}
 					result = Transform.ToMeta(eventDelegate.DynamicInvoke(arguments.ToArray()));
 				}
@@ -2789,12 +2863,27 @@ namespace Meta
 				{
 					result = null;
 				}
-			}
-			catch (Exception e)
-			{
-				result = null;
-			}
-			return result;
+				return result;
+				//if (eventDelegate != null)
+				//{
+				//    List<object> arguments = new List<object>();
+				//    ParameterInfo[] parameters = eventDelegate.Method.GetParameters();
+				//    for (int i = 1; i < parameters.Length; i++)
+				//    {
+				//        arguments.Add(Transform.ToDotNet((Map)argument[i], parameters[i].ParameterType));
+				//    }
+				//    result = Transform.ToMeta(eventDelegate.DynamicInvoke(arguments.ToArray()));
+				//}
+				//else
+				//{
+				//    result = null;
+				//}
+			//}
+			//catch (Exception e)
+			//{
+			//    result = null;
+			//}
+			//return result;
 		}
 		protected override Map CopyImplementation()
 		{
@@ -3487,6 +3576,129 @@ namespace Meta
 		}
 	}
 
+	public abstract class PersistantStrategy:MapStrategy
+	{
+		public abstract void Replace(Map value);
+	}
+	public class FileStrategy : PersistantStrategy
+	{
+		private string fileName;
+		public FileStrategy(string fileName)
+		{
+			this.fileName = fileName;
+		}
+		public override void Replace(Map value)
+		{
+		}
+		public override MapStrategy CopyImplementation()
+		{
+			return new CloneStrategy(this);
+		}
+		private Dictionary<Map, Map> dictionary;
+		private Dictionary<Map, Map> Dictionary
+		{
+			get
+			{
+				if (dictionary == null)
+				{
+					foreach(KeyValuePair<Map,Map> pair in FileSystem.Parse(fileName))
+					{
+						this.map[pair.Key] = pair.Value;
+					}
+				}
+				return dictionary;
+			}
+		}
+		public override void Set(Map key, Map val)
+		{
+			Dictionary[key] = val;
+			Save();
+		}
+		public override Map Get(Map key)
+		{
+			return Dictionary[key];
+		}
+		public override ICollection<Map> Keys
+		{
+			get
+			{
+				return Dictionary.Keys;
+			}
+		}
+		private void Save()
+		{
+		}
+	}
+	public class DirectoryStrategy:PersistantStrategy
+	{
+		private string path;
+		public DirectoryStrategy(string path)
+		{
+			this.path = path;
+		}
+		public override ICollection<Map> Keys
+		{
+			get 
+			{
+				return dictionary.Keys;
+			}
+		}
+		public override void Replace(Map value)
+		{
+		}
+		public override MapStrategy CopyImplementation()
+		{
+			return new CloneStrategy(this);
+		}
+		public override Map Get(Map key)
+		{
+			StrategyMap value;
+			dictionary.TryGetValue(key, out value);
+			return value;
+		}
+		private Dictionary<Map, StrategyMap> Dictionary
+		{
+			get
+			{
+				if (dictionary == null)
+				{
+					foreach (string fileName in Directory.GetFiles(path, "*.meta"))
+					{
+						this.map[fileName] = new StrategyMap(new FileStrategy(fileName));
+					}
+					foreach(string directoryName in Directory.GetDirectories(path))
+					{
+						this.map[directoryName] = new StrategyMap(new DirectoryStrategy(directoryName));
+					}
+				}
+				return dictionary;
+			}
+		}
+		private Dictionary<Map, StrategyMap> dictionary;
+		public override void Set(Map key, Map val)
+		{
+			if (key.IsString)
+			{
+				if (Dictionary.ContainsKey(key))
+				{
+					((PersistantStrategy)dictionary[key].Strategy).Replace(val);
+				}
+				if (key.GetString().IndexOfAny(new char[] { '\\', '/', ':', '?', '"', '<', '>', '|' }) == -1)
+				{
+
+				}
+				else
+				{
+					throw new ApplicationException("Value cannot be saved as file because the key contains illegal characters.");
+				}
+
+			}
+			else
+			{
+				throw new ApplicationException("Value cannot be saved as file because the key is not a string.");
+			}
+		}
+	}
 	public class FileSystem
 	{
 		private static bool parsing=false;
@@ -4625,10 +4837,6 @@ namespace Meta
 		}
 		public override Map Get(Map key)
 		{
-			if (key.ContainsKey("version"))
-			{
-			}
-
 			Map val;
 			if ((key.IsString && cache.ContainsKey(key)) || Load(key))
 			{

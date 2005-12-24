@@ -142,12 +142,10 @@
 	memberTest=MemberTest *
 	stringOverload=MemberTest.OverloadedMethod.[
 		mscorlib.System.String
-	]
-		"hello"
+	] "hello"
 	integerOverload=MemberTest.OverloadedMethod.[
 		mscorlib.System.Int32
-	]
-		5
+	] 5
 	memberTestOverload=MemberTest.OverloadedMethod.[
 		MetaTest.testClasses.MemberTest
 		mscorlib.System.Int32
@@ -162,11 +160,9 @@
 		3247
 	MemberTest.classField="a"
 	memberTest.instanceField="b"
-	MemberTest.ClassProperty.set
-		memberTest.InstanceProperty.get *
+	MemberTest.ClassProperty.set memberTest.InstanceProperty.get *
 	classPropertyValue=MemberTest.ClassProperty.get *
-	memberTest.InstanceProperty.set
-		MemberTest.ClassProperty.get *
+	memberTest.InstanceProperty.set MemberTest.ClassProperty.get *
 	instancePropertyValue=memberTest.InstanceProperty.get *
 	interceptedSymbol="/hello/"
 	positionalNoConversion=MetaTest.testClasses.PositionalNoConversion
@@ -178,19 +174,16 @@
 		"s"
 		"t"
 	namedNoConversion=MetaTest.testClasses.NamedNoConversion
-		=
-			"m"
-			y="n"
+		"m"
+		y="n"
 	namedNoConversionConcatenated=namedNoConversion.Concatenate
-		=
-			c="t"
-			"r"
+		c="t"
+		"r"
 	indexerNoConversion=MetaTest.testClasses.IndexerNoConversion *
 	indexerNoConversion.Item.set
 		"abc"
 		"hihi"
-	indexerNoConversionIndexed=indexerNoConversion.Item.get
-		"abc"
+	indexerNoConversionIndexed=indexerNoConversion.Item.get "abc"
 	interceptedSymbolTwo=1
 	k="hello"
 	xyz="w"
@@ -225,26 +218,21 @@
 		|
 			parent.parent.staticEventChanged=arg
 	TestClass.staticEvent.add
-		=
-			|
-				ChangeStaticEvent 1
-				current=arg.[1]
+		|
+			ChangeStaticEvent 1
+			current=arg.[1]
 	staticEvent=TestClass.staticEvent
 	TestClass.TakeDelegate
-		=
-			|arg.[1]
+		|arg.[1]
 	resultFromDelegate=TestClass.GetResultFromDelegate *
-	staticEventResult=TestClass.staticEvent
-		testClass
+	staticEventResult=TestClass.staticEvent testClass
 	instanceEventChanged=*
 	testClass.instanceEvent.add
-		=
-			|
-				parent.parent.parent.parent.instanceEventChanged=1
-				current=arg.[1]
+		|
+			parent.parent.parent.instanceEventChanged=1
+			current=arg.[1]
 	instanceEvent=testClass.instanceEvent
-	instanceEventResult=testClass.instanceEvent
-		5
+	instanceEventResult=testClass.instanceEvent 5
 	one=1
 	two=2
 	firstIf="unchanged"
@@ -288,23 +276,19 @@
 			hello!
 			"
 	arrayList=mscorlib.System.Collections.ArrayList.ArrayList.[*] *
-	arrayList.Add
-		"hello"
-	arrayListResult=arrayList.Item.get
-		*
+	arrayList.Add "hello"
+	arrayListResult=arrayList.Item.get *
 	textBox=["System.Windows.Forms"].System.Windows.Forms.TextBox *
-	textBox.Text.set
-		"
-			Alle meine Entchen,
-			schwimmen auf dem See,
-			schwimmen auf dem See,
-			Köpfchen in das Wasser,
-			Schwaenzchen in die Hoeh."
+	textBox.Text.set "
+		Alle meine Entchen,
+		schwimmen auf dem See,
+		schwimmen auf dem See,
+		Köpfchen in das Wasser,
+		Schwaenzchen in die Hoeh."
 	lines=textBox.Lines.get *
 	alleMeineText=lines.GetValue.[
 		mscorlib.System.Int32
-	]
-		1
+	] 1
 	lines.[5]="bwuhahaha"
 	tabText="			hello"
 	escapedText="'#'n'''t"
