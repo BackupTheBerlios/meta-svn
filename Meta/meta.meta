@@ -222,12 +222,8 @@ basicTest=
 		].System.Int32
 		MemberTest=MetaTest.testClasses.MemberTest
 		memberTest=MemberTest *
-		stringOverload=MemberTest.OverloadedMethod.[
-			mscorlib.System.String
-		] "hello"
-		integerOverload=MemberTest.OverloadedMethod.[
-			mscorlib.System.Int32
-		] 5
+		stringOverload=MemberTest.OverloadedMethod.[mscorlib.System.String] "hello"
+		integerOverload=MemberTest.OverloadedMethod.[mscorlib.System.Int32] 5
 		memberTestOverload=MemberTest.OverloadedMethod.[
 			MetaTest.testClasses.MemberTest
 			mscorlib.System.Int32
@@ -368,9 +364,7 @@ basicTest=
 			Köpfchen in das Wasser,
 			Schwaenzchen in die Hoeh."
 		lines=textBox.Lines.get *
-		alleMeineText=lines.GetValue.[
-			mscorlib.System.Int32
-		] 1
+		alleMeineText=lines.GetValue.[mscorlib.System.Int32] 1
 		lines.[5]="bwuhahaha"
 		tabText="			hello"
 		escapedText="'#'n'''t"
@@ -428,9 +422,7 @@ console=
 integerToString=
 	documentation="Converts an integer to a string."
 	|
-		int=Meta.Meta.Integer.[
-			Meta.Meta.Map
-		] arg
+		int=Meta.Meta.Integer.[Meta.Meta.Map] arg
 		this=int.ToString *
 map=
 	pop=
@@ -556,9 +548,7 @@ map=
 		documentation="Returns the keys of a map in an array."
 		|
 			object=Meta.Meta.ObjectMap arg
-			this=Meta.Meta.StrategyMap.StrategyMap.[
-				mscorlib.System.Collections.ICollection
-			] object.Keys.get *
+			this=Meta.Meta.StrategyMap.StrategyMap.[mscorlib.System.Collections.ICollection] object.Keys.get *
 	merge=
 		documentation="Combines several maps into one."
 		|sum
@@ -680,85 +670,47 @@ math=
 		documentation="Increments an integer."
 		|
 			result=Meta.Meta.Integer.op_Addition
-				Meta.Meta.Integer.Integer.[
-					Meta.Meta.Map
-				] arg
-				Meta.Meta.Integer.Integer.[	
-					Meta.Meta.Map
-				] 1
-			this=Meta.Meta.StrategyMap.StrategyMap.[
-				Meta.Meta.Integer
-			] result
+				Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg
+				Meta.Meta.Integer.Integer.[Meta.Meta.Map] 1
+			this=Meta.Meta.StrategyMap.StrategyMap.[Meta.Meta.Integer] result
 	add=
 		documentation="Adds integers."
-		|Meta.Meta.StrategyMap.StrategyMap.[
-			Meta.Meta.Integer
-		] map.sum
+		|Meta.Meta.StrategyMap.StrategyMap.[Meta.Meta.Integer] map.sum
 			array=arg
 			with=
 				|Meta.Meta.Integer.op_Addition
-					Meta.Meta.Integer.Integer.[
-						Meta.Meta.Integer
-					] arg.previous
-					Meta.Meta.Integer.Integer.[
-						Meta.Meta.Map
-					] arg.present
-			start=Meta.Meta.Integer.Integer.[
-				Meta.Meta.Map
-			] *
+					Meta.Meta.Integer.Integer.[Meta.Meta.Integer] arg.previous
+					Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.present
+			start=Meta.Meta.Integer.Integer.[Meta.Meta.Map] *
 	multiply=
 		documentation="Multiplies integers."
-		|Meta.Meta.StrategyMap.StrategyMap.[
-			Meta.Meta.Integer
-		] map.sum
+		|Meta.Meta.StrategyMap.StrategyMap.[Meta.Meta.Integer] map.sum
 			array=arg
 			with=
 				|Meta.Meta.Integer.op_Multiply
-					Meta.Meta.Integer.Integer.[
-						Meta.Meta.Integer
-					] arg.previous
-					Meta.Meta.Integer.Integer.[
-						Meta.Meta.Map
-					] arg.present
-			start=Meta.Meta.Integer.Integer.[
-				Meta.Meta.Map
-			] 1
+					Meta.Meta.Integer.Integer.[Meta.Meta.Integer] arg.previous
+					Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.present
+			start=Meta.Meta.Integer.Integer.[Meta.Meta.Map] 1
 	greater=
 		documentation="Determines whether the first integer is greater than the second integer."
 		|Meta.Meta.Integer.op_GreaterThan
-			Meta.Meta.Integer.Integer.[
-				Meta.Meta.Map
-			] arg.[1]
-			Meta.Meta.Integer.Integer.[
-				Meta.Meta.Map
-			] arg.[2]
+			Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.[1]
+			Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.[2]
 	smaller=
 		documentation="Determines whether the first integer is smaller than the second integer."
 		|Meta.Meta.Integer.op_LessThan
-			Meta.Meta.Integer.Integer.[
-				Meta.Meta.Map
-			] arg.[1]
-			Meta.Meta.Integer.Integer.[
-				Meta.Meta.Map
-			] arg.[2]
+			Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.[1]
+			Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.[2]
 bitwise=
 	or=
 		documentation="Performs a bitwise or operation on integers."
-		|Meta.Meta.StrategyMap.StrategyMap.[
-			Meta.Meta.Integer
-		] map.sum
+		|Meta.Meta.StrategyMap.StrategyMap.[Meta.Meta.Integer] map.sum
 			array=arg
 			with=
 				|Meta.Meta.Integer.op_BitwiseOr
-					Meta.Meta.Integer.Integer.[
-						Meta.Meta.Integer
-					] arg.previous
-					Meta.Meta.Integer.Integer.[
-						Meta.Meta.Map
-					] arg.present
-			start=Meta.Meta.Integer.Integer.[
-				Meta.Meta.Map
-			] *
+					Meta.Meta.Integer.Integer.[Meta.Meta.Integer] arg.previous
+					Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.present
+			start=Meta.Meta.Integer.Integer.[Meta.Meta.Map] *
 string=
 	lower=
 		documentation="Converts a string to lowercase."

@@ -1800,53 +1800,6 @@ namespace Meta
 			}
 			return Transform.ToMeta(result);
 		}
-		//public override Map Call(Map argument)
-		//{
-		//    object result;
-		//    List<object> arguments = new List<object>();
-		//    bool argumentsMatched = true;
-		//    ParameterInfo[] parameters = method.GetParameters();
-		//    for (int i = 0; argumentsMatched && i < parameters.Length; i++)
-		//    {
-		//        object arg = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
-		//        if (arg != null)
-		//        {
-		//            arguments.Add(arg);
-		//        }
-		//        else
-		//        {
-		//            AssemblyName name=new AssemblyName();
-		//            //Assembly.Load(
-		//            Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
-		//            throw new ApplicationException("Cannot convert argument.");
-		//            //argumentsMatched = false;
-		//            //break;
-		//        }
-		//    }
-		//    if (method is ConstructorInfo)
-		//    {
-		//        try
-		//        {
-		//            result = ((ConstructorInfo)method).Invoke(arguments.ToArray());
-		//        }
-		//        catch (Exception e)
-		//        {
-		//            throw e.InnerException;
-		//        }
-		//    }
-		//    else
-		//    {
-		//        try
-		//        {
-		//            result = method.Invoke(obj, arguments.ToArray()); // this isnt such a good idea, it will work automatically for our new version
-		//        }
-		//        catch (Exception e)
-		//        {
-		//            throw e.InnerException;
-		//        }
-		//    }
-		//    return Transform.ToMeta(result);
-		//}
 	}
 	public class Method : MethodImplementation
 	{//remove
@@ -1861,18 +1814,6 @@ namespace Meta
 				throw new ApplicationException("Method cannot be called directly, it is overloaded.");
 			}
 		}
-		//public override Map Call(Map arg)
-		//{
-		//    if (!IsFunction)
-		//    {
-		//        throw new ApplicationException("Method cannot be called directly, it is overloaded.");
-		//    }
-		//    else
-		//    {
-		//        return CallImplementation(argument);
-		//    }
-		//}
-		//private MethodBase method;
 	    public override bool IsFunction
 	    {
 	        get
@@ -1887,9 +1828,6 @@ namespace Meta
 	    }
 		private static MethodBase GetSingleMethod(string name, object obj, Type type)
 		{
-			if (type.Name == "ObjectMap")
-			{
-			}
 			MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj,name));
 			MethodBase singleMethod;
 			if (members.Length == 1)
@@ -1927,10 +1865,20 @@ namespace Meta
 				this.overloads=new Dictionary<Map,MethodOverload>();
 				foreach (MethodBase method in methods)
 				{
-					Map key=new StrategyMap();
-					foreach (ParameterInfo parameter in method.GetParameters())
+					Map key;
+
+					ParameterInfo[] parameters=method.GetParameters();
+					if (parameters.Length == 1)
 					{
-						key.Append(new TypeMap(parameter.ParameterType));
+						key = new TypeMap(parameters[0].ParameterType);
+					}
+					else
+					{
+						key=new StrategyMap();
+						foreach (ParameterInfo parameter in parameters)
+						{
+							key.Append(new TypeMap(parameter.ParameterType));
+						}
 					}
 					MethodOverload overload = new MethodOverload(method, obj, type);
 					overloads.Add(key,overload);

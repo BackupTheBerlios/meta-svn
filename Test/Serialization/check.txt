@@ -140,12 +140,8 @@
 	].System.Int32
 	MemberTest=MetaTest.testClasses.MemberTest
 	memberTest=MemberTest *
-	stringOverload=MemberTest.OverloadedMethod.[
-		mscorlib.System.String
-	] "hello"
-	integerOverload=MemberTest.OverloadedMethod.[
-		mscorlib.System.Int32
-	] 5
+	stringOverload=MemberTest.OverloadedMethod.[mscorlib.System.String] "hello"
+	integerOverload=MemberTest.OverloadedMethod.[mscorlib.System.Int32] 5
 	memberTestOverload=MemberTest.OverloadedMethod.[
 		MetaTest.testClasses.MemberTest
 		mscorlib.System.Int32
@@ -286,9 +282,7 @@
 		Köpfchen in das Wasser,
 		Schwaenzchen in die Hoeh."
 	lines=textBox.Lines.get *
-	alleMeineText=lines.GetValue.[
-		mscorlib.System.Int32
-	] 1
+	alleMeineText=lines.GetValue.[mscorlib.System.Int32] 1
 	lines.[5]="bwuhahaha"
 	tabText="			hello"
 	escapedText="'#'n'''t"
