@@ -1302,6 +1302,11 @@ Entry (KeyValuePair`2)
 		1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		"strongNameTest"
+	Value (TypeMap):
+		System.Int32
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"MemberTest"
 	Value (TypeMap):
 		testClasses.MemberTest

@@ -233,6 +233,9 @@ namespace Meta
 		private Map FindFirstKey(Map keyExpression, Map context)//, Map arg)
 		{
 			Map key = keyExpression.GetExpression().Evaluate(context);//, arg);
+			if (key.ContainsKey("version"))
+			{
+			}
 			Map val;
 			//if (key.Equals(new StrategyMap("library")))
 			//{
@@ -555,7 +558,7 @@ namespace Meta
 		//        return @"c:\Projects\meta\Meta";
 		//    }
 		//}
-		public static List<string> loadedAssemblies=new List<string>();
+		//public static List<string> loadedAssemblies=new List<string>();
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
@@ -4551,9 +4554,9 @@ namespace Meta
 		{
 			return this;
 		}
-		private bool Load(string assemblyName)
+		private bool Load(Map key)
 		{
-			Map key = new StrategyMap(assemblyName);
+			//Map key = new StrategyMap(assemblyName);
 			bool loaded;
 			if (cache.ContainsKey(key))
 			{
@@ -4561,17 +4564,40 @@ namespace Meta
 			}
 			else
 			{
-				Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
-				if (assembly != null)
+				if(key.ContainsKey("version"))
 				{
+				}
+				if (key.IsString)
+				{
+					string assemblyName = key.GetString();
+					Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
+					if (assembly != null)
+					{
 
-					cache[key] = LoadAssembly(assembly);
-					//cache[key] = val;
-					loaded = true;
+						cache[key] = LoadAssembly(assembly);
+						loaded = true;
+					}
+					else
+					{
+						loaded = false;
+					}
 				}
 				else
 				{
-					loaded = false;
+					Map version=key["version"];
+					Map publicKeyToken=key["publicKeyToken"];
+					Map culture=key["culture"];
+					Map name=key["name"];
+					if(version!=null && version.IsString && publicKeyToken!=null && publicKeyToken.IsString && culture!=null && culture.IsString && name!=null && name.IsString)
+					{
+						Assembly assembly = Assembly.Load(name.GetString()+",Version="+version.GetString()+",Culture="+culture.GetString()+",Name="+name.GetString());
+						cache[key] = LoadAssembly(assembly);
+						loaded=true;
+					}
+					else
+					{
+						loaded=false;
+					}
 				}
 			}
 			return loaded;
@@ -4595,52 +4621,16 @@ namespace Meta
 					selected[type.Name] = new TypeMap(type);
 				}
 			}
-			//if (!Process.loadedAssemblies.Contains(assembly.FullName))
-			////if (!Process.loadedAssemblies.Contains(assembly.Location))
-			//{
-			//    Process.loadedAssemblies.Add(assembly.FullName);
-			//}
 			return val;
 		}
-		//private bool LoadAssembly(string assemblyName)
-		//{
-		//    Map key = new StrategyMap(assemblyName);
-		//    bool loaded;
-		//    if (cache.ContainsKey(key))
-		//    {
-		//        loaded = true;
-		//    }
-		//    else
-		//    {
-		//        Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
-		//        if (assembly != null)
-		//        {
-		//            Map val = new StrategyMap();
-		//            foreach (Type type in assembly.GetExportedTypes())
-		//            {
-		//                if (type.DeclaringType == null)
-		//                {
-		//                    val[type.Name] = new TypeMap(type);
-		//                }
-		//            }
-		//            if (!Process.loadedAssemblies.Contains(assembly.Location))
-		//            {
-		//                Process.loadedAssemblies.Add(assembly.Location);
-		//            }
-		//            cache[key] = val;
-		//            loaded = true;
-		//        }
-		//        else
-		//        {
-		//            loaded = false;
-		//        }
-		//    }
-		//    return loaded;
-		//}
 		public override Map Get(Map key)
 		{
+			if (key.ContainsKey("version"))
+			{
+			}
+
 			Map val;
-			if (key.IsString && cache.ContainsKey(key) || Load(key.GetString()))
+			if ((key.IsString && cache.ContainsKey(key)) || Load(key))
 			{
 				val = cache[key];
 			}
@@ -4671,16 +4661,18 @@ namespace Meta
 
 		public override bool ContainsKey(Map key)
 		{
-			bool containsKey;
-			if (key.IsString)
-			{
-				containsKey = Load(key.GetString());
-			}
-			else
-			{
-				containsKey = false;
-			}
-			return containsKey;
+			return Load(key);
+
+			//bool containsKey;
+			//if (key.IsString)
+			//{
+			//containsKey = Load(key.GetString());
+			//}
+			//else
+			//{
+			//    containsKey = false;
+			//}
+			//return containsKey;
 		}
 		protected Map cachedAssemblyInfo = new StrategyMap();
 	}
