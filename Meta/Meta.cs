@@ -56,7 +56,7 @@ namespace Meta
 		public static readonly Map Scope = "scope";
 		public static readonly Map Parent="parent";
 		public static readonly Map Arg="arg";
-		public static readonly Map Current="current";
+		public static readonly Map Current="this";
 		public static readonly Map Net = "net";
 		public static readonly Map Local = "local";
 	}
@@ -659,7 +659,7 @@ namespace Meta
 			}
 			return text;
 		}
-		public Map Current
+		public Map This
 		{
 			get
 			{

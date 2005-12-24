@@ -1,6 +1,6 @@
 sdltest=
 	|
-		current=SdlDotNet
+		this=SdlDotNet
 		ball=Sprite
 			"C:\Projects\Meta\Library\Paddle2.png"
 		game
@@ -62,7 +62,7 @@ file=
 			writer.Close *
 game=
 	|
-		current=SdlDotNet
+		this=SdlDotNet
 		Video.SetVideoModeWindow
 			400
 			300
@@ -81,7 +81,7 @@ game=
 					mainFunction *
 basicTest=
 	|
-		current=local.map.merge
+		this=local.map.merge
 			parent
 			=
 				"AssignedToCurrent"
@@ -143,13 +143,13 @@ basicTest=
 			SetB=
 				|
 					parent.parent.b.[1]=arg.value
-					current="changed"
+					this="changed"
 			x=
 				a="b"
 				c="d"
 			=
 				|
-					current.a="b"
+					this.a="b"
 		a="default"
 		b=*
 		aSet=object.SetA *
@@ -173,7 +173,7 @@ basicTest=
 		scopeFromFunctionTest=scopeFromFunction *
 		ReturnEverything=
 			|
-				current=arg
+				this=arg
 		everythingReturned=ReturnEverything
 			"a"
 			"b"
@@ -184,18 +184,18 @@ basicTest=
 			"z"
 		ReturnFunction=
 			|
-				current=
+				this=
 					|
-						current=
+						this=
 							1
 							2
 							3
 		SetCurrent=
 			|
-				current=
+				this=
 					arg=arg
 					x=arg.symbol
-				current=x
+				this=x
 		thisSet=SetCurrent
 			symbol="haha"
 		FirstLevel=
@@ -274,7 +274,7 @@ basicTest=
 		literalFunctionResult=literalFunction *
 		someFunction=
 			|
-				current="simple function this"
+				this="simple function this"
 		callFunction=
 			|someFunction
 		callFunctionResult=callFunction *
@@ -302,7 +302,7 @@ basicTest=
 		TestClass.staticEvent.add
 			|
 				ChangeStaticEvent 1
-				current=arg.[1]
+				this=arg.[1]
 		staticEvent=TestClass.staticEvent
 		TestClass.TakeDelegate
 			|arg.[1]
@@ -312,7 +312,7 @@ basicTest=
 		testClass.instanceEvent.add
 			|
 				parent.parent.parent.instanceEventChanged=1
-				current=arg.[1]
+				this=arg.[1]
 		instanceEvent=testClass.instanceEvent
 		instanceEventResult=testClass.instanceEvent 5
 		one=1
@@ -387,7 +387,7 @@ basicTest=
 							1
 					[*]=
 						|arg
-				current=whileBranches.[whileDecision] arg
+				this=whileBranches.[whileDecision] arg
 		whileCounter=loop 3
 		returnInMap=
 			|
@@ -431,18 +431,18 @@ integerToString=
 		int=Meta.Meta.Integer.[
 			Meta.Meta.Map
 		] arg
-		current=int.ToString *
+		this=int.ToString *
 map=
 	pop=
 		|Meta.Meta.Library.Pop arg
 	isInteger=
 		|
 			object=Meta.Meta.ObjectMap arg
-			current=object.IsInteger.get *
+			this=object.IsInteger.get *
 	isString=
 		|
 			object=Meta.Meta.ObjectMap arg
-			current=object.IsString.get *
+			this=object.IsString.get *
 	if=
 		|
 			argument=merge
@@ -455,12 +455,12 @@ map=
 			cases=
 				[1]=argument.then
 				[*]=argument.else
-			current=cases.[argument.condition] *
+			this=cases.[argument.condition] *
 	repeat=
 		documentation="Repeats an array a given number of times."
 		|
 			argument=arg.array
-			current=join apply
+			this=join apply
 				array=range arg.times
 				with=
 					|argument
@@ -485,8 +485,8 @@ map=
 						limit
 				with=
 					|
-						current=count arg
-			current=array
+						this=count arg
+			this=array
 	remove=
 		documentation="Removes a key from a map."
 		|Meta.Meta.Library.Remove arg
@@ -542,8 +542,8 @@ map=
 							object=Meta.Meta.ObjectMap arg.result
 							argument=arg.with arg.array.[arg.index]
 							object.Append argument
-							result=object.Current.get *
-				current=next.[stop] arg
+							result=object.This.get *
+				this=next.[stop] arg
 	join=
 		documentation="Concatenates arrays."
 		|Meta.Meta.Library.Join arg
@@ -551,12 +551,12 @@ map=
 		documentation="Determines whether a map contains a key."
 		|
 			object=Meta.Meta.ObjectMap arg.map
-			current=object.ContainsKey arg.key
+			this=object.ContainsKey arg.key
 	keys=
 		documentation="Returns the keys of a map in an array."
 		|
 			object=Meta.Meta.ObjectMap arg
-			current=Meta.Meta.StrategyMap.StrategyMap.[
+			this=Meta.Meta.StrategyMap.StrategyMap.[
 				mscorlib.System.Collections.ICollection
 			] object.Keys.get *
 	merge=
@@ -566,13 +566,13 @@ map=
 			with=
 				|
 					overwrite=arg.present
-					current=sum
+					this=sum
 						array=keys arg.present
 						with=
 							|
 								result=arg.previous
 								result.[arg.present]=overwrite.[arg.present]
-								current=result
+								this=result
 						start=arg.previous
 			start=*
 	equal=
@@ -583,7 +583,7 @@ map=
 				with=
 					|
 						first=Meta.Meta.ObjectMap arg.previous.previous
-						current=
+						this=
 							equality=logic.and
 								first.Equals arg.present
 								arg.previous.equality
@@ -591,12 +591,12 @@ map=
 				start=
 					equality=1
 					previous=arg.[1]
-			current=result.equality
+			this=result.equality
 	length=
 		documentation="Returns the length of an array."
 		|
 			map=Meta.Meta.ObjectMap arg
-			current=map.ArrayCount.get *
+			this=map.ArrayCount.get *
 	sum=
 		|sumImplementation
 			index=1
@@ -619,7 +619,7 @@ map=
 								present=arg.array.[arg.index]
 							array=arg.array
 							with=arg.with
-				current=next.[stop] arg
+				this=next.[stop] arg
 logic=
 	not=
 		documentation="Negates a boolean."
@@ -686,7 +686,7 @@ math=
 				Meta.Meta.Integer.Integer.[	
 					Meta.Meta.Map
 				] 1
-			current=Meta.Meta.StrategyMap.StrategyMap.[
+			this=Meta.Meta.StrategyMap.StrategyMap.[
 				Meta.Meta.Integer
 			] result
 	add=
@@ -768,7 +768,7 @@ string=
 				|mscorlib.Char.ToLower arg
 libraryTest=
 	|
-		current=local.map.merge
+		this=local.map.merge
 			parent
 			local.map
 			local.logic
@@ -834,7 +834,7 @@ libraryTest=
 						|add
 							arg
 							1
-					current=apply
+					this=apply
 						with=applyMethod
 						array=
 							1
@@ -876,11 +876,11 @@ libraryTest=
 								10
 						with=
 							|SetCounter increment counter
-					current=counter
+					this=counter
 			bitwiseTest=local.bitwise.or
 				20
 				["System.Windows.Forms"].System.Windows.Forms.Keys.Tab
-		current=test
+		this=test
 html=
 	tags=
 		"link"
@@ -1161,7 +1161,7 @@ meta=
 				"
 website=
 	|
-		current=local.map.merge
+		this=local.map.merge
 			local.map
 			html *
 		berliosLogo=
@@ -1215,7 +1215,7 @@ website=
 			id=*
 			|
 				parent.id=local.math.increment id
-				current=local.integerToString id
+				this=local.integerToString id
 		items=merge apply
 			array=
 				"chapter"
@@ -1325,7 +1325,7 @@ website=
 								name=typeName
 								argument.content
 								tags.br *
-		current=merge
+		this=merge
 			parent
 			items
 		file.write
@@ -1405,7 +1405,7 @@ documentation=
 	[".NET integration"]=*
 createWebsite=
 	|
-		current=map.merge
+		this=map.merge
 			map
 			logic
 			math
@@ -1435,7 +1435,7 @@ createWebsite=
 			|
 				argument=arg
 				mapKeys=keys arg.map
-				current=join
+				this=join
 					join apply
 						array=range length mapKeys
 						with=
@@ -1473,7 +1473,7 @@ createWebsite=
 												name=local.map.join
 													argument.name
 													key
-								current=result
+								this=result
 		content=
 			|foreach
 				map=arg
@@ -1586,7 +1586,7 @@ directory=
 	write=
 		|
 			argument=arg
-			current=map.apply
+			this=map.apply
 				array=map.keys arg.files
 				with=
 					|

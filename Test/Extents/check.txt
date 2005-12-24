@@ -67,7 +67,7 @@ Entry (KeyValuePair`2)
 										Line (Int32):
 											"84"
 										Column (Int32):
-											"10"
+											"7"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										Extent:
@@ -84,7 +84,7 @@ Entry (KeyValuePair`2)
 												Line (Int32):
 													"84"
 												Column (Int32):
-													"10"
+													"7"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -93,7 +93,7 @@ Entry (KeyValuePair`2)
 											Value (StrategyMap):
 												Extent:
 													null
-												"current"
+												"this"
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
@@ -105,7 +105,7 @@ Entry (KeyValuePair`2)
 										Line (Int32):
 											"84"
 										Column (Int32):
-											"26"
+											"23"
 									End (SourcePosition):
 										Line (Int32):
 											"88"
@@ -122,7 +122,7 @@ Entry (KeyValuePair`2)
 												Line (Int32):
 													"84"
 												Column (Int32):
-													"26"
+													"23"
 											End (SourcePosition):
 												Line (Int32):
 													"88"
@@ -139,12 +139,12 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"84"
 														Column (Int32):
-															"26"
+															"23"
 													End (SourcePosition):
 														Line (Int32):
 															"84"
 														Column (Int32):
-															"26"
+															"23"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -156,12 +156,12 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"84"
 																Column (Int32):
-																	"11"
+																	"8"
 															End (SourcePosition):
 																Line (Int32):
 																	"84"
 																Column (Int32):
-																	"26"
+																	"23"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -173,12 +173,12 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"84"
 																		Column (Int32):
-																			"11"
+																			"8"
 																	End (SourcePosition):
 																		Line (Int32):
 																			"84"
 																		Column (Int32):
-																			"16"
+																			"13"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -199,12 +199,12 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"84"
 																		Column (Int32):
-																			"17"
+																			"14"
 																	End (SourcePosition):
 																		Line (Int32):
 																			"84"
 																		Column (Int32):
-																			"20"
+																			"17"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -225,12 +225,12 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"84"
 																		Column (Int32):
-																			"21"
+																			"18"
 																	End (SourcePosition):
 																		Line (Int32):
 																			"84"
 																		Column (Int32):
-																			"26"
+																			"23"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -251,7 +251,7 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"84"
 														Column (Int32):
-															"26"
+															"23"
 													End (SourcePosition):
 														Line (Int32):
 															"88"
@@ -268,7 +268,7 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"84"
 																Column (Int32):
-																	"26"
+																	"23"
 															End (SourcePosition):
 																Line (Int32):
 																	"88"
@@ -6612,7 +6612,7 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"146"
 																												Column (Int32):
-																													"23"
+																													"20"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -6629,7 +6629,7 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"146"
 																														Column (Int32):
-																															"13"
+																															"10"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -6646,7 +6646,7 @@ Entry (KeyValuePair`2)
 																																Line (Int32):
 																																	"146"
 																																Column (Int32):
-																																	"13"
+																																	"10"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -6655,7 +6655,7 @@ Entry (KeyValuePair`2)
 																															Value (StrategyMap):
 																																Extent:
 																																	null
-																																"current"
+																																"this"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -6667,12 +6667,12 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"146"
 																														Column (Int32):
-																															"14"
+																															"11"
 																													End (SourcePosition):
 																														Line (Int32):
 																															"146"
 																														Column (Int32):
-																															"23"
+																															"20"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -7124,7 +7124,7 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"152"
 																												Column (Int32):
-																													"19"
+																													"16"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -7141,7 +7141,7 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"152"
 																														Column (Int32):
-																															"15"
+																															"12"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -7158,7 +7158,7 @@ Entry (KeyValuePair`2)
 																																Line (Int32):
 																																	"152"
 																																Column (Int32):
-																																	"13"
+																																	"10"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -7167,7 +7167,7 @@ Entry (KeyValuePair`2)
 																															Value (StrategyMap):
 																																Extent:
 																																	null
-																																"current"
+																																"this"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -7179,12 +7179,12 @@ Entry (KeyValuePair`2)
 																																Line (Int32):
 																																	"152"
 																																Column (Int32):
-																																	"14"
+																																	"11"
 																															End (SourcePosition):
 																																Line (Int32):
 																																	"152"
 																																Column (Int32):
-																																	"15"
+																																	"12"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -7205,12 +7205,12 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"152"
 																														Column (Int32):
-																															"16"
+																															"13"
 																													End (SourcePosition):
 																														Line (Int32):
 																															"152"
 																														Column (Int32):
-																															"19"
+																															"16"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -9862,7 +9862,7 @@ Entry (KeyValuePair`2)
 																						Line (Int32):
 																							"176"
 																						Column (Int32):
-																							"16"
+																							"13"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -9879,7 +9879,7 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"176"
 																								Column (Int32):
-																									"12"
+																									"9"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -9896,7 +9896,7 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"176"
 																										Column (Int32):
-																											"12"
+																											"9"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -9905,7 +9905,7 @@ Entry (KeyValuePair`2)
 																									Value (StrategyMap):
 																										Extent:
 																											null
-																										"current"
+																										"this"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -9917,12 +9917,12 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"176"
 																								Column (Int32):
-																									"16"
+																									"13"
 																							End (SourcePosition):
 																								Line (Int32):
 																									"176"
 																								Column (Int32):
-																									"16"
+																									"13"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -9934,12 +9934,12 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"176"
 																										Column (Int32):
-																											"13"
+																											"10"
 																									End (SourcePosition):
 																										Line (Int32):
 																											"176"
 																										Column (Int32):
-																											"16"
+																											"13"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -9951,12 +9951,12 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"176"
 																												Column (Int32):
-																													"13"
+																													"10"
 																											End (SourcePosition):
 																												Line (Int32):
 																													"176"
 																												Column (Int32):
-																													"16"
+																													"13"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -10961,7 +10961,7 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"187"
 																								Column (Int32):
-																									"12"
+																									"9"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -10978,7 +10978,7 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"187"
 																										Column (Int32):
-																											"12"
+																											"9"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -10987,7 +10987,7 @@ Entry (KeyValuePair`2)
 																									Value (StrategyMap):
 																										Extent:
 																											null
-																										"current"
+																										"this"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -10999,7 +10999,7 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"187"
 																								Column (Int32):
-																									"13"
+																									"10"
 																							End (SourcePosition):
 																								Line (Int32):
 																									"193"
@@ -11016,7 +11016,7 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"187"
 																										Column (Int32):
-																											"13"
+																											"10"
 																									End (SourcePosition):
 																										Line (Int32):
 																											"193"
@@ -11139,7 +11139,7 @@ Entry (KeyValuePair`2)
 																																						Line (Int32):
 																																							"189"
 																																						Column (Int32):
-																																							"14"
+																																							"11"
 																																				Entry (KeyValuePair`2)
 																																					Key (StrategyMap):
 																																						Extent:
@@ -11156,7 +11156,7 @@ Entry (KeyValuePair`2)
 																																								Line (Int32):
 																																									"189"
 																																								Column (Int32):
-																																									"14"
+																																									"11"
 																																						Entry (KeyValuePair`2)
 																																							Key (StrategyMap):
 																																								Extent:
@@ -11165,7 +11165,7 @@ Entry (KeyValuePair`2)
 																																							Value (StrategyMap):
 																																								Extent:
 																																									null
-																																								"current"
+																																								"this"
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				Extent:
@@ -11177,7 +11177,7 @@ Entry (KeyValuePair`2)
 																																						Line (Int32):
 																																							"189"
 																																						Column (Int32):
-																																							"15"
+																																							"12"
 																																					End (SourcePosition):
 																																						Line (Int32):
 																																							"193"
@@ -11194,7 +11194,7 @@ Entry (KeyValuePair`2)
 																																								Line (Int32):
 																																									"189"
 																																								Column (Int32):
-																																									"15"
+																																									"12"
 																																							End (SourcePosition):
 																																								Line (Int32):
 																																									"193"
@@ -11615,7 +11615,7 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"195"
 																								Column (Int32):
-																									"12"
+																									"9"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -11632,7 +11632,7 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"195"
 																										Column (Int32):
-																											"12"
+																											"9"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -11641,7 +11641,7 @@ Entry (KeyValuePair`2)
 																									Value (StrategyMap):
 																										Extent:
 																											null
-																										"current"
+																										"this"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -11653,7 +11653,7 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"195"
 																								Column (Int32):
-																									"13"
+																									"10"
 																							End (SourcePosition):
 																								Line (Int32):
 																									"198"
@@ -11670,7 +11670,7 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"195"
 																										Column (Int32):
-																											"13"
+																											"10"
 																									End (SourcePosition):
 																										Line (Int32):
 																											"198"
@@ -11958,7 +11958,7 @@ Entry (KeyValuePair`2)
 																						Line (Int32):
 																							"198"
 																						Column (Int32):
-																							"14"
+																							"11"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -11975,7 +11975,7 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"198"
 																								Column (Int32):
-																									"12"
+																									"9"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -11992,7 +11992,7 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"198"
 																										Column (Int32):
-																											"12"
+																											"9"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -12001,7 +12001,7 @@ Entry (KeyValuePair`2)
 																									Value (StrategyMap):
 																										Extent:
 																											null
-																										"current"
+																										"this"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -12013,12 +12013,12 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"198"
 																								Column (Int32):
-																									"14"
+																									"11"
 																							End (SourcePosition):
 																								Line (Int32):
 																									"198"
 																								Column (Int32):
-																									"14"
+																									"11"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -12030,12 +12030,12 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"198"
 																										Column (Int32):
-																											"13"
+																											"10"
 																									End (SourcePosition):
 																										Line (Int32):
 																											"198"
 																										Column (Int32):
-																											"14"
+																											"11"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -12047,12 +12047,12 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"198"
 																												Column (Int32):
-																													"13"
+																													"10"
 																											End (SourcePosition):
 																												Line (Int32):
 																													"198"
 																												Column (Int32):
-																													"14"
+																													"11"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -22302,7 +22302,7 @@ Entry (KeyValuePair`2)
 																						Line (Int32):
 																							"277"
 																						Column (Int32):
-																							"35"
+																							"32"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -22319,7 +22319,7 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"277"
 																								Column (Int32):
-																									"12"
+																									"9"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -22336,7 +22336,7 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"277"
 																										Column (Int32):
-																											"12"
+																											"9"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -22345,7 +22345,7 @@ Entry (KeyValuePair`2)
 																									Value (StrategyMap):
 																										Extent:
 																											null
-																										"current"
+																										"this"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -22357,12 +22357,12 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"277"
 																								Column (Int32):
-																									"13"
+																									"10"
 																							End (SourcePosition):
 																								Line (Int32):
 																									"277"
 																								Column (Int32):
-																									"35"
+																									"32"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -25612,7 +25612,7 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"305"
 																										Column (Int32):
-																											"20"
+																											"17"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -25629,7 +25629,7 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"305"
 																												Column (Int32):
-																													"12"
+																													"9"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -25646,7 +25646,7 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"305"
 																														Column (Int32):
-																															"12"
+																															"9"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -25655,7 +25655,7 @@ Entry (KeyValuePair`2)
 																													Value (StrategyMap):
 																														Extent:
 																															null
-																														"current"
+																														"this"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -25667,12 +25667,12 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"305"
 																												Column (Int32):
-																													"20"
+																													"17"
 																											End (SourcePosition):
 																												Line (Int32):
 																													"305"
 																												Column (Int32):
-																													"20"
+																													"17"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -25684,12 +25684,12 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"305"
 																														Column (Int32):
-																															"13"
+																															"10"
 																													End (SourcePosition):
 																														Line (Int32):
 																															"305"
 																														Column (Int32):
-																															"20"
+																															"17"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -25701,12 +25701,12 @@ Entry (KeyValuePair`2)
 																																Line (Int32):
 																																	"305"
 																																Column (Int32):
-																																	"13"
+																																	"10"
 																															End (SourcePosition):
 																																Line (Int32):
 																																	"305"
 																																Column (Int32):
-																																	"16"
+																																	"13"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -25727,12 +25727,12 @@ Entry (KeyValuePair`2)
 																																Line (Int32):
 																																	"305"
 																																Column (Int32):
-																																	"17"
+																																	"14"
 																															End (SourcePosition):
 																																Line (Int32):
 																																	"305"
 																																Column (Int32):
-																																	"20"
+																																	"17"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -27238,7 +27238,7 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"315"
 																										Column (Int32):
-																											"20"
+																											"17"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -27255,7 +27255,7 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"315"
 																												Column (Int32):
-																													"12"
+																													"9"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -27272,7 +27272,7 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"315"
 																														Column (Int32):
-																															"12"
+																															"9"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -27281,7 +27281,7 @@ Entry (KeyValuePair`2)
 																													Value (StrategyMap):
 																														Extent:
 																															null
-																														"current"
+																														"this"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -27293,12 +27293,12 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"315"
 																												Column (Int32):
-																													"20"
+																													"17"
 																											End (SourcePosition):
 																												Line (Int32):
 																													"315"
 																												Column (Int32):
-																													"20"
+																													"17"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -27310,12 +27310,12 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"315"
 																														Column (Int32):
-																															"13"
+																															"10"
 																													End (SourcePosition):
 																														Line (Int32):
 																															"315"
 																														Column (Int32):
-																															"20"
+																															"17"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -27327,12 +27327,12 @@ Entry (KeyValuePair`2)
 																																Line (Int32):
 																																	"315"
 																																Column (Int32):
-																																	"13"
+																																	"10"
 																															End (SourcePosition):
 																																Line (Int32):
 																																	"315"
 																																Column (Int32):
-																																	"16"
+																																	"13"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -27353,12 +27353,12 @@ Entry (KeyValuePair`2)
 																																Line (Int32):
 																																	"315"
 																																Column (Int32):
-																																	"17"
+																																	"14"
 																															End (SourcePosition):
 																																Line (Int32):
 																																	"315"
 																																Column (Int32):
-																																	"20"
+																																	"17"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -35746,7 +35746,7 @@ Schwaenzchen in die Hoeh."
 																						Line (Int32):
 																							"390"
 																						Column (Int32):
-																							"46"
+																							"43"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -35763,7 +35763,7 @@ Schwaenzchen in die Hoeh."
 																								Line (Int32):
 																									"390"
 																								Column (Int32):
-																									"12"
+																									"9"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -35780,7 +35780,7 @@ Schwaenzchen in die Hoeh."
 																										Line (Int32):
 																											"390"
 																										Column (Int32):
-																											"12"
+																											"9"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -35789,7 +35789,7 @@ Schwaenzchen in die Hoeh."
 																									Value (StrategyMap):
 																										Extent:
 																											null
-																										"current"
+																										"this"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -35801,12 +35801,12 @@ Schwaenzchen in die Hoeh."
 																								Line (Int32):
 																									"390"
 																								Column (Int32):
-																									"42"
+																									"39"
 																							End (SourcePosition):
 																								Line (Int32):
 																									"390"
 																								Column (Int32):
-																									"46"
+																									"43"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -35818,12 +35818,12 @@ Schwaenzchen in die Hoeh."
 																										Line (Int32):
 																											"390"
 																										Column (Int32):
-																											"42"
+																											"39"
 																									End (SourcePosition):
 																										Line (Int32):
 																											"390"
 																										Column (Int32):
-																											"46"
+																											"43"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -35835,12 +35835,12 @@ Schwaenzchen in die Hoeh."
 																												Line (Int32):
 																													"390"
 																												Column (Int32):
-																													"42"
+																													"39"
 																											End (SourcePosition):
 																												Line (Int32):
 																													"390"
 																												Column (Int32):
-																													"42"
+																													"39"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -35852,12 +35852,12 @@ Schwaenzchen in die Hoeh."
 																														Line (Int32):
 																															"390"
 																														Column (Int32):
-																															"13"
+																															"10"
 																													End (SourcePosition):
 																														Line (Int32):
 																															"390"
 																														Column (Int32):
-																															"42"
+																															"39"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -35869,12 +35869,12 @@ Schwaenzchen in die Hoeh."
 																																Line (Int32):
 																																	"390"
 																																Column (Int32):
-																																	"13"
+																																	"10"
 																															End (SourcePosition):
 																																Line (Int32):
 																																	"390"
 																																Column (Int32):
-																																	"26"
+																																	"23"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -35895,12 +35895,12 @@ Schwaenzchen in die Hoeh."
 																																Line (Int32):
 																																	"390"
 																																Column (Int32):
-																																	"27"
+																																	"24"
 																															End (SourcePosition):
 																																Line (Int32):
 																																	"390"
 																																Column (Int32):
-																																	"42"
+																																	"39"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -35912,12 +35912,12 @@ Schwaenzchen in die Hoeh."
 																																		Line (Int32):
 																																			"390"
 																																		Column (Int32):
-																																			"28"
+																																			"25"
 																																	End (SourcePosition):
 																																		Line (Int32):
 																																			"390"
 																																		Column (Int32):
-																																			"41"
+																																			"38"
 																																Entry (KeyValuePair`2)
 																																	Key (StrategyMap):
 																																		Extent:
@@ -35929,12 +35929,12 @@ Schwaenzchen in die Hoeh."
 																																				Line (Int32):
 																																					"390"
 																																				Column (Int32):
-																																					"28"
+																																					"25"
 																																			End (SourcePosition):
 																																				Line (Int32):
 																																					"390"
 																																				Column (Int32):
-																																					"41"
+																																					"38"
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				Extent:
@@ -35955,12 +35955,12 @@ Schwaenzchen in die Hoeh."
 																												Line (Int32):
 																													"390"
 																												Column (Int32):
-																													"46"
+																													"43"
 																											End (SourcePosition):
 																												Line (Int32):
 																													"390"
 																												Column (Int32):
-																													"46"
+																													"43"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -35972,12 +35972,12 @@ Schwaenzchen in die Hoeh."
 																														Line (Int32):
 																															"390"
 																														Column (Int32):
-																															"43"
+																															"40"
 																													End (SourcePosition):
 																														Line (Int32):
 																															"390"
 																														Column (Int32):
-																															"46"
+																															"43"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -35989,12 +35989,12 @@ Schwaenzchen in die Hoeh."
 																																Line (Int32):
 																																	"390"
 																																Column (Int32):
-																																	"43"
+																																	"40"
 																															End (SourcePosition):
 																																Line (Int32):
 																																	"390"
 																																Column (Int32):
-																																	"46"
+																																	"43"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:

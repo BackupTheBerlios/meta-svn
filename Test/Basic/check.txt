@@ -508,7 +508,7 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																"literal"
 															Value (StrategyMap):
-																"current"
+																"this"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												"value"
@@ -560,7 +560,7 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																"literal"
 															Value (StrategyMap):
-																"current"
+																"this"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														2
@@ -797,7 +797,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"current"
+														"this"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										"value"
@@ -881,7 +881,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"current"
+														"this"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										"value"
@@ -935,7 +935,7 @@ Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												"literal"
 																											Value (StrategyMap):
-																												"current"
+																												"this"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								"value"
@@ -1050,7 +1050,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"current"
+														"this"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										"value"
@@ -1152,7 +1152,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"current"
+														"this"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										"value"
@@ -1451,7 +1451,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"current"
+														"this"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										"value"
@@ -1510,7 +1510,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"current"
+														"this"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										"value"
@@ -2614,7 +2614,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"current"
+														"this"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										"value"
