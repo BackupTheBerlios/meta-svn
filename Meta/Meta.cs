@@ -284,6 +284,9 @@ namespace Meta
 			for (int i = 1; i<keys.Count; i++)
 			{
 				Map key = keys[i].GetExpression().Evaluate(context);//, arg);
+				if (key.Equals(new StrategyMap("ICollection`1")))
+				{
+				}
 				Map selection;
 
 				// maybe combine this stuff with the stuff in FindFirstKey???
@@ -1362,7 +1365,7 @@ namespace Meta
 		}
 		private MapStrategy strategy;
 		// should use EmptyStrategy by default
-		public StrategyMap(System.Collections.ICollection list)
+		public StrategyMap(System.Collections.Generic.ICollection<Map> list)
 			: this(new ListStrategy())
 		{
 			int index = 1;
@@ -1915,6 +1918,9 @@ namespace Meta
 	    protected override Map Get(Map key)
 	    {
 	        MethodOverload value;
+			if (key is TypeMap && ((TypeMap)key).Type.Name.StartsWith("ICollection"))
+			{
+			}
 	        overloads.TryGetValue(key, out value);
 	        return value;
 	    }
@@ -2380,7 +2386,16 @@ namespace Meta
 			}
 			else if (type.IsGenericTypeDefinition && key.Array.TrueForAll(delegate(Map map) { return map is TypeMap; }))
 			{
-				List<Type> types=key.Array.ConvertAll<Type>(new Converter<Map, Type>(delegate(Map map) { return ((TypeMap)map).type; }));
+				List<Type> types;
+				if (type.GetGenericArguments().Length == 1)
+				{
+					types = new List<Type>();
+					types.Add(((TypeMap)key).Type);
+				}
+				else
+				{
+					types = key.Array.ConvertAll<Type>(new Converter<Map, Type>(delegate(Map map) { return ((TypeMap)map).type; }));
+				}
 				value = new TypeMap(type.MakeGenericType(types.ToArray()));
 			}
 			else
