@@ -282,6 +282,31 @@ namespace Test
 				return Path.Combine(Directory.GetParent(Process.InstallationPath).FullName, "Test");
 			}
 		}
+		public class Basic : Test
+		{
+			public override object GetResult(out int level)
+			{
+				level = 2;
+				Map argument = new StrategyMap();
+				argument[1] = "first arg";
+				argument[2] = "second=arg";
+				//FileSystem.fileSystem["library"].Parent = FileSystem.fileSystem;
+				//FileSystem.fileSystem["library"].Scope = FileSystem.fileSystem;
+				//FileSystem.fileSystem["basicTest"].Scope = GacStrategy.Gac;
+				return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
+				//return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
+			}
+		}
+
+		public class Library : Test
+		{
+			public override object GetResult(out int level)
+			{
+				level = 2;
+				return FileSystem.fileSystem["library"]["test"].Call(Map.Empty);//, Map.Empty);
+			}
+		}
+
 		public class Serialization : Test
 		{
 			public override object  GetResult(out int level)
@@ -291,25 +316,7 @@ namespace Test
 				return FileSystem.Serialize.Value(map).TrimStart();
 			}
 		}
-		public class Basic : Test
-		{
-			public override object GetResult(out int level)
-			{
-				level = 2;
-				Map argument = new StrategyMap();
-				argument[1] = "first arg";
-				argument[2] = "second=arg";
-				return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
-			}
-		}
-		public class Library : Test
-		{
-			public override object GetResult(out int level)
-			{
-				level = 2;
-				return FileSystem.fileSystem["libraryTest"].Call(Map.Empty);//, Map.Empty);
-			}
-		}
+
 		public class Extents : Test
 		{
 			public override object  GetResult(out int level)
@@ -351,6 +358,7 @@ namespace Test
 
 	}
 }
+// move to Meta
 namespace testClasses
 {
 	[Serializable]

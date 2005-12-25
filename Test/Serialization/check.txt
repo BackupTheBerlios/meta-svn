@@ -1,5 +1,5 @@
 "|
-	this=local.map.merge
+	this=library.map.merge
 		parent
 		=
 			"AssignedToCurrent"
@@ -56,7 +56,7 @@
 		b=*
 		SetA=
 			|
-				parent.parent.a="c"
+				parent.parent.parent.a="c"
 				parent.parent.autoSearch="changed"
 		SetB=
 			|
@@ -233,7 +233,7 @@
 	two=2
 	firstIf="unchanged"
 	secondIf="unchanged"
-	firstIfCondition=local.map.equal
+	firstIfCondition=library.map.equal
 		1
 		one
 	firstIfBranches=
@@ -289,12 +289,12 @@
 	whileCounter=*
 	loop=
 		|
-			whileDecision=local.logic.not local.map.equal
+			whileDecision=library.logic.not library.map.equal
 				arg
 				10
 			whileBranches=
 				=
-					|loop local.math.add
+					|loop library.math.add
 						arg
 						1
 				[*]=

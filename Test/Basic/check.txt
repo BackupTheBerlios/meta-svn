@@ -5,11 +5,6 @@ Entry (KeyValuePair`2)
 		"ImpliedAutokey"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		2
-	Value (StrategyMap):
-		"Autokey"
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
 		"scoping"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
@@ -213,6 +208,11 @@ Entry (KeyValuePair`2)
 				"as"''''''''''''''''df"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		2
+	Value (StrategyMap):
+		"Autokey"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"commandLineArguments"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
@@ -286,30 +286,17 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"a"
 			Value (StrategyMap):
-				"c"
+				"default"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"autoSearch"
 			Value (StrategyMap):
-				"changed"
+				"default"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"b"
 			Value (StrategyMap):
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						1
-					Value (StrategyMap):
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"x"
-							Value (StrategyMap):
-								7
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"z"
-							Value (StrategyMap):
-								1
+				""
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"SetA"
@@ -351,6 +338,15 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														3
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"literal"
+															Value (StrategyMap):
+																"parent"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														4
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
@@ -583,7 +579,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"a"
 	Value (StrategyMap):
-		"default"
+		"c"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"b"
@@ -2198,7 +2194,7 @@ Entry (KeyValuePair`2)
 																			Key (StrategyMap):
 																				"literal"
 																			Value (StrategyMap):
-																				"local"
+																				"library"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		2
@@ -2241,7 +2237,7 @@ Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								"literal"
 																							Value (StrategyMap):
-																								"local"
+																								"library"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						2
@@ -2448,7 +2444,7 @@ Entry (KeyValuePair`2)
 																																					Key (StrategyMap):
 																																						"literal"
 																																					Value (StrategyMap):
-																																						"local"
+																																						"library"
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				2

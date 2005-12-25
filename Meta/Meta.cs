@@ -83,7 +83,7 @@ namespace Meta
 		}
 		public static string GetExtentText(Extent extent)
 		{
-			return "Line " + extent.Start.Line + ", column " + extent.Start.Column + ": ";
+			return extent.FileName+", line " + extent.Start.Line + ", column " + extent.Start.Column + ": ";
 		}
 		public MetaException(string message, Extent extent)
 		{
@@ -233,7 +233,7 @@ namespace Meta
 		private Map FindFirstKey(Map keyExpression, Map context)//, Map arg)
 		{
 			Map key = keyExpression.GetExpression().Evaluate(context);//, arg);
-			if (key.ContainsKey("version"))
+			if (key.Equals(new StrategyMap("Meta")))
 			{
 			}
 			Map val;
@@ -883,7 +883,7 @@ namespace Meta
                     val.Parent = this;
                     Set(key, val);
                 }
-            }
+             }
         }
 		private static Dictionary<Map,Map>internedKeys=new Dictionary<Map,Map>();
 		//private static Map Intern(Map key)
@@ -1248,6 +1248,7 @@ namespace Meta
 
 		public override Map Call(Map arg)
 		{
+			strategy.Panic(new DictionaryStrategy());
 			return base.Call(arg);
 		}
 		public void InitFromStrategy(MapStrategy clone)
@@ -1295,6 +1296,9 @@ namespace Meta
 		}
 		protected override Map Get(Map key)
 		{
+			if (key.Equals(new StrategyMap("Meta")))
+			{
+			}
 			return strategy.Get(key);
 		}
 		protected override void Set(Map key, Map value)
@@ -1308,6 +1312,9 @@ namespace Meta
 			//}
 			//else
 			//{
+			if (key.Equals(new StrategyMap("Meta")))
+			{
+			}
 				strategy.Set(key, value);
 			//}
 			if (Persistant && !FileSystem.Parsing)
@@ -1363,7 +1370,7 @@ namespace Meta
 				strategy.map = this;
 			}
 		}
-		private MapStrategy strategy;
+		protected MapStrategy strategy;
 		// should use EmptyStrategy by default
 		public StrategyMap(System.Collections.Generic.ICollection<Map> list)
 			: this(new ListStrategy())
@@ -1425,7 +1432,7 @@ namespace Meta
 			Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
 			Stream stream=webClient.OpenRead(fullPath.ToString());
 			StreamReader streamReader=new StreamReader(stream);
-			return FileSystem.Parse(streamReader);
+			return FileSystem.Parse(streamReader,"Web");
 		}
 		public override void Set(Map key,Map val)
 		{
@@ -2625,6 +2632,9 @@ namespace Meta
 		// always use CloneStrategy, only have logic in one place, too complicated to use
 		public CloneStrategy(MapStrategy original)
 		{
+			//if (original is DirectoryStrategy || original is FileStrategy)
+			//{
+			//}
 			this.original = original;
 		}
 		public override List<Map> Array
@@ -2732,7 +2742,9 @@ namespace Meta
 		}
 		public override MapStrategy CopyImplementation()
 		{
+			this.map.Strategy = new CloneStrategy(this);
 			return new CloneStrategy(this);
+			//return new CloneStrategy(this);
 		}
 		public DictionaryStrategy(int Count)
 		{
@@ -3456,6 +3468,13 @@ namespace Meta
 	}
 	public class Extent
 	{
+		public string FileName
+		{
+			get
+			{
+				return fileName;
+			}
+		}
 		public static List<Extent> GetExtents(string fileName,int firstLine,int lastLine)
 		{
 			List<Extent> result=new List<Extent>();
@@ -3520,17 +3539,19 @@ namespace Meta
 		}
 		private SourcePosition start;
 		private SourcePosition end;
-		public Extent(SourcePosition start, SourcePosition end)
+		public Extent(SourcePosition start, SourcePosition end,string fileName)
 		{
 			this.start = start;
 			this.end = end;
+			this.fileName = fileName;
 		}
-		public Extent(int startLine,int startColumn,int endLine,int endColumn):this(new SourcePosition(startLine,startColumn),new SourcePosition(endLine,endColumn))
+		private string fileName;
+		public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName):this(new SourcePosition(startLine,startColumn),new SourcePosition(endLine,endColumn),fileName)
 		{
 		}
-		public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn)
+		public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn,string fileName)
 		{
-			Extent extent=new Extent(startLine,startColumn,endLine,endColumn);
+			Extent extent=new Extent(startLine,startColumn,endLine,endColumn,fileName);
 			if(!extents.ContainsKey(extent))
 			{
 				extents.Add(extent,extent);
@@ -3543,125 +3564,133 @@ namespace Meta
 	{
 		public abstract void Replace(Map value);
 	}
-	public class FileStrategy : PersistantStrategy
-	{
-		private string fileName;
-		public FileStrategy(string fileName)
-		{
-			this.fileName = fileName;
-		}
-		public override void Replace(Map value)
-		{
-		}
-		public override MapStrategy CopyImplementation()
-		{
-			return new CloneStrategy(this);
-		}
-		private Dictionary<Map, Map> dictionary;
-		private Dictionary<Map, Map> Dictionary
-		{
-			get
-			{
-				if (dictionary == null)
-				{
-					foreach(KeyValuePair<Map,Map> pair in FileSystem.Parse(fileName))
-					{
-						this.map[pair.Key] = pair.Value;
-					}
-				}
-				return dictionary;
-			}
-		}
-		public override void Set(Map key, Map val)
-		{
-			Dictionary[key] = val;
-			Save();
-		}
-		public override Map Get(Map key)
-		{
-			return Dictionary[key];
-		}
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				return Dictionary.Keys;
-			}
-		}
-		private void Save()
-		{
-		}
-	}
-	public class DirectoryStrategy:PersistantStrategy
-	{
-		private string path;
-		public DirectoryStrategy(string path)
-		{
-			this.path = path;
-		}
-		public override ICollection<Map> Keys
-		{
-			get 
-			{
-				return dictionary.Keys;
-			}
-		}
-		public override void Replace(Map value)
-		{
-		}
-		public override MapStrategy CopyImplementation()
-		{
-			return new CloneStrategy(this);
-		}
-		public override Map Get(Map key)
-		{
-			StrategyMap value;
-			dictionary.TryGetValue(key, out value);
-			return value;
-		}
-		private Dictionary<Map, StrategyMap> Dictionary
-		{
-			get
-			{
-				if (dictionary == null)
-				{
-					foreach (string fileName in Directory.GetFiles(path, "*.meta"))
-					{
-						this.map[fileName] = new StrategyMap(new FileStrategy(fileName));
-					}
-					foreach(string directoryName in Directory.GetDirectories(path))
-					{
-						this.map[directoryName] = new StrategyMap(new DirectoryStrategy(directoryName));
-					}
-				}
-				return dictionary;
-			}
-		}
-		private Dictionary<Map, StrategyMap> dictionary;
-		public override void Set(Map key, Map val)
-		{
-			if (key.IsString)
-			{
-				if (Dictionary.ContainsKey(key))
-				{
-					((PersistantStrategy)dictionary[key].Strategy).Replace(val);
-				}
-				if (key.GetString().IndexOfAny(new char[] { '\\', '/', ':', '?', '"', '<', '>', '|' }) == -1)
-				{
+	//public class FileStrategy : PersistantStrategy
+	//{
+	//    private string fileName;
+	//    public FileStrategy(string fileName)
+	//    {
+	//        this.fileName = fileName;
+	//    }
+	//    public override void Replace(Map value)
+	//    {
+	//    }
+	//    public override MapStrategy CopyImplementation()
+	//    {
+	//        return this;
+	//        //return new CloneStrategy(this);
+	//    }
+	//    private Dictionary<Map, Map> dictionary;
+	//    private Dictionary<Map, Map> Dictionary
+	//    {
+	//        get
+	//        {
+	//            if (dictionary == null)
+	//            {
+	//                dictionary = new Dictionary<Map, Map>();
+	//                foreach(KeyValuePair<Map,Map> pair in FileSystem.Parse(fileName))
+	//                {
+	//                    this.map[pair.Key] = pair.Value;
+	//                    pair.Value.Scope = this.map;
+	//                    pair.Value.Scope = this.map;
+	//                }
+	//            }
+	//            return dictionary;
+	//        }
+	//    }
+	//    public override void Set(Map key, Map val)
+	//    {
+	//        Dictionary[key] = val;
+	//        Save();
+	//    }
+	//    public override Map Get(Map key)
+	//    {
+	//        Map value;
+	//        Dictionary.TryGetValue(key, out value);
+	//        return value;
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            return Dictionary.Keys;
+	//        }
+	//    }
+	//    private void Save()
+	//    {
+	//    }
+	//}
+	//public class DirectoryStrategy:PersistantStrategy
+	//{
+	//    private string path;
+	//    public DirectoryStrategy(string path)
+	//    {
+	//        this.path = path;
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get 
+	//        {
+	//            return Dictionary.Keys;
+	//        }
+	//    }
+	//    public override void Replace(Map value)
+	//    {
+	//    }
+	//    public override MapStrategy CopyImplementation()
+	//    {
+	//        return this;
+	//        //return new CloneStrategy(this);
+	//    }
+	//    public override Map Get(Map key)
+	//    {
+	//        StrategyMap value;
+	//        Dictionary.TryGetValue(key, out value);
+	//        return value;
+	//    }
+	//    private Dictionary<Map, StrategyMap> Dictionary
+	//    {
+	//        get
+	//        {
+	//            if (dictionary == null)
+	//            {
+	//                dictionary = new Dictionary<Map, StrategyMap>();
+	//                foreach (string fileName in Directory.GetFiles(path, "*.meta"))
+	//                {
+	//                    this.map[Path.GetFileNameWithoutExtension(fileName)] = new StrategyMap(new FileStrategy(fileName));
+	//                }
+	//                foreach(string directoryName in Directory.GetDirectories(path))
+	//                {
+	//                    this.map[new DirectoryInfo(directoryName).Name] = new StrategyMap(new DirectoryStrategy(directoryName));
+	//                }
+	//            }
+	//            return dictionary;
+	//        }
+	//    }
+	//    private Dictionary<Map, StrategyMap> dictionary;
+	//    public override void Set(Map key, Map val)
+	//    {
+	//        if (key.IsString)
+	//        {
+	//            if (Dictionary.ContainsKey(key))
+	//            {
+	//                ((PersistantStrategy)Dictionary[key].Strategy).Replace(val);
+	//            }
+	//            if (key.GetString().IndexOfAny(new char[] { '\\', '/', ':', '?', '"', '<', '>', '|' }) == -1)
+	//            {
+	//                dictionary[key] = (StrategyMap)val;
+	//            }
+	//            else
+	//            {
+	//                throw new ApplicationException("Value cannot be saved as file because the key contains illegal characters.");
+	//            }
 
-				}
-				else
-				{
-					throw new ApplicationException("Value cannot be saved as file because the key contains illegal characters.");
-				}
-
-			}
-			else
-			{
-				throw new ApplicationException("Value cannot be saved as file because the key is not a string.");
-			}
-		}
-	}
+	//        }
+	//        else
+	//        {
+	//            throw new ApplicationException("Value cannot be saved as file because the key is not a string.");
+	//        }
+	//    }
+	//}
 	public class FileSystem
 	{
 		private static bool parsing=false;
@@ -3694,42 +3723,85 @@ namespace Meta
 		// rename, refactor
 		public static Map Parse(string filePath)
 		{
-
 			using (TextReader reader = new StreamReader(filePath, Encoding.Default))
 			{
-				Map parsed = Parse(reader);
+				Map parsed = Parse(reader,filePath);
 				// reintroduce this
 				//MakePersistant((StrategyMap)parsed);
+				// why does this map have a parent?
+				//parsed.Parent = GacStrategy.Gac;
+				//parsed.Scope = GacStrategy.Gac;
+				parsed.Parent = null;
+				parsed.Scope = null;
 				return parsed;
 			}
 		}
-		public static Map Parse(TextReader textReader)
+		public static Map Parse(TextReader textReader,string fileName)
 		{
 			Parsing = true;
-			Map result=Compile(textReader).GetExpression().Evaluate(Map.Empty);//, Map.Empty);
+			Map result=Compile(textReader,fileName).GetExpression().Evaluate(Map.Empty);//, Map.Empty);
 			Parsing = false;
 			return result;
 		}
-		public static Map Compile(TextReader textReader)
+		public static Map Compile(TextReader textReader,string fileName)
 		{
-			return new Parser(textReader.ReadToEnd(), FileSystem.Path).Program();
+			return new Parser(textReader.ReadToEnd(), fileName).Program();
 		}
 		public static Map fileSystem;
+		private static Map LoadDirectory(string path)
+		{
+			Map map = new StrategyMap();
+			foreach (string fileName in Directory.GetFiles(path, "*.meta"))
+			{
+				map[Path.GetFileNameWithoutExtension(fileName)] = FileSystem.Parse(fileName);
+			}
+			foreach (string directoryName in Directory.GetDirectories(path))
+			{
+				map[new DirectoryInfo(directoryName).Name] = LoadDirectory(directoryName);
+			}
+			return map;
+		}
 		static FileSystem()
 		{
-			fileSystem=Parse(Path);
-			fileSystem.Parent = GacStrategy.Gac;
-			fileSystem.Scope = GacStrategy.Gac;
+			//fileSystem=new StrategyMap(new DirectoryStrategy(System.IO.Path.Combine(Process.InstallationPath,"Data")));
+			fileSystem=Parse(Path.Combine(Process.InstallationPath,@"Data\basicTest.meta"));
+			//fileSystem = LoadDirectory(Path.Combine(Process.InstallationPath, "Data"));
+			//MakePersistant(fileSystem);
+
+			//fileSystem = Parse(Path);
+			fileSystem.Parent = Gac.gac;
+			fileSystem.Scope = Gac.gac;
 			// messy, experimental
-			((GacStrategy)GacStrategy.Gac.Strategy).cache["local"] = fileSystem;
+			Gac.gac["local"] = fileSystem;
 		}
-		public static string Path
-		{
-			get
-			{
-				return System.IO.Path.Combine(Process.InstallationPath, "meta.meta");
-			}
-		}
+
+		//static FileSystem()
+		//{
+		//    //fileSystem=new StrategyMap(new DirectoryStrategy(System.IO.Path.Combine(Process.InstallationPath,"Data")));
+		//    fileSystem = LoadDirectory(Path.Combine(Process.InstallationPath, "Data"));
+		//    //MakePersistant(fileSystem);
+
+		//    //fileSystem = Parse(Path);
+		//    fileSystem.Parent = GacStrategy.Gac;
+		//    fileSystem.Scope = GacStrategy.Gac;
+		//    // messy, experimental
+		//    ((GacStrategy)GacStrategy.Gac.Strategy).cache["local"] = fileSystem;
+		//}
+		//static FileSystem()
+		//{
+		//    fileSystem=Parse(Path);
+		//    fileSystem.Parent = GacStrategy.Gac;
+		//    fileSystem.Scope = GacStrategy.Gac;
+		//    // messy, experimental
+		//    ((GacStrategy)GacStrategy.Gac.Strategy).cache["local"] = fileSystem;
+		//}
+		//public static string Path
+		//{
+		//    get
+		//    {
+		//        return System.IO.Path.Combine(Process.InstallationPath, "meta.meta");
+		//    }
+		//}
 		public static void Save()
 		{
 			string text = Serialize.MapValue(fileSystem, null).Trim(new char[] { '\n' });
@@ -3989,7 +4061,7 @@ namespace Meta
 								if (!NewLine())
 								{
 									index += 2;
-									throw new MetaException("Expected newline.", new Extent(Position, Position));
+									throw new MetaException("Expected newline.", new Extent(Position, Position, filePath));
 								}
 								else
 								{
@@ -4085,7 +4157,7 @@ namespace Meta
 			}
 			private Extent StartExpression()
 			{
-				return new Extent(Line, Column, 0, 0);
+				return new Extent(Line, Column, 0, 0,filePath);
 			}
 			private void EndExpression(Extent extent, Map expression)
 			{
@@ -4354,7 +4426,7 @@ namespace Meta
 				if (val == null)
 				{
 					SourcePosition position = new SourcePosition(Line, Column);
-					throw new MetaException("Expected value of statement", new Extent(position, position));
+					throw new MetaException("Expected value of statement", new Extent(position, position,filePath));
 				}
 				Map statement = new StrategyMap();
 				statement[CodeKeys.Key] = key;
@@ -4715,31 +4787,30 @@ namespace Meta
 
 		}
 	}
-	public class GacStrategy : MapStrategy
+	public class Gac: StrategyMap
 	{
-		public static readonly StrategyMap Gac = new StrategyMap(new GacStrategy());
+		public static readonly StrategyMap gac = new Gac();
+		//public Map cache = new StrategyMap();
 
-		public Map cache = new StrategyMap();
-
-		public GacStrategy()
+		private Gac()
 		{
-			cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
+			this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
 		}
-		public override MapStrategy CopyImplementation()
-		{
-			return this;
-		}
+		//public override MapStrategy CopyImplementation()
+		//{
+		//    return this;
+		//}
 		private bool Load(Map key)
 		{
 			//Map key = new StrategyMap(assemblyName);
 			bool loaded;
-			if (cache.ContainsKey(key))
+			if (strategy.ContainsKey(key))
 			{
 				loaded = true;
 			}
 			else
 			{
-				if(key.ContainsKey("version"))
+				if (key.ContainsKey("version"))
 				{
 				}
 				if (key.IsString)
@@ -4749,7 +4820,7 @@ namespace Meta
 					if (assembly != null)
 					{
 
-						cache[key] = LoadAssembly(assembly);
+						this[key] = LoadAssembly(assembly);
 						loaded = true;
 					}
 					else
@@ -4759,24 +4830,72 @@ namespace Meta
 				}
 				else
 				{
-					Map version=key["version"];
-					Map publicKeyToken=key["publicKeyToken"];
-					Map culture=key["culture"];
-					Map name=key["name"];
-					if(version!=null && version.IsString && publicKeyToken!=null && publicKeyToken.IsString && culture!=null && culture.IsString && name!=null && name.IsString)
+					Map version = key["version"];
+					Map publicKeyToken = key["publicKeyToken"];
+					Map culture = key["culture"];
+					Map name = key["name"];
+					if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
 					{
-						Assembly assembly = Assembly.Load(name.GetString()+",Version="+version.GetString()+",Culture="+culture.GetString()+",Name="+name.GetString());
-						cache[key] = LoadAssembly(assembly);
-						loaded=true;
+						Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
+						this[key] = LoadAssembly(assembly);
+						loaded = true;
 					}
 					else
 					{
-						loaded=false;
+						loaded = false;
 					}
 				}
 			}
 			return loaded;
 		}
+		//private bool Load(Map key)
+		//{
+		//    //Map key = new StrategyMap(assemblyName);
+		//    bool loaded;
+		//    if (cache.ContainsKey(key))
+		//    {
+		//        loaded = true;
+		//    }
+		//    else
+		//    {
+		//        if (key.ContainsKey("version"))
+		//        {
+		//        }
+		//        if (key.IsString)
+		//        {
+		//            string assemblyName = key.GetString();
+		//            Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
+		//            if (assembly != null)
+		//            {
+
+		//                cache[key] = LoadAssembly(assembly);
+		//                loaded = true;
+		//            }
+		//            else
+		//            {
+		//                loaded = false;
+		//            }
+		//        }
+		//        else
+		//        {
+		//            Map version = key["version"];
+		//            Map publicKeyToken = key["publicKeyToken"];
+		//            Map culture = key["culture"];
+		//            Map name = key["name"];
+		//            if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
+		//            {
+		//                Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
+		//                cache[key] = LoadAssembly(assembly);
+		//                loaded = true;
+		//            }
+		//            else
+		//            {
+		//                loaded = false;
+		//            }
+		//        }
+		//    }
+		//    return loaded;
+		//}
 		private Map LoadAssembly(Assembly assembly)
 		{
 			Map val = new StrategyMap();
@@ -4798,12 +4917,12 @@ namespace Meta
 			}
 			return val;
 		}
-		public override Map Get(Map key)
+		protected override Map Get(Map key)
 		{
 			Map val;
-			if ((key.IsString && cache.ContainsKey(key)) || Load(key))
+			if ((key.IsString && strategy.ContainsKey(key)) || Load(key))
 			{
-				val = cache[key];
+				val = strategy.Get(key);
 			}
 			else
 			{
@@ -4811,10 +4930,27 @@ namespace Meta
 			}
 			return val;
 		}
-		public override void Set(Map key, Map val)
-		{
-			throw new ApplicationException("Cannot set key " + key.ToString() + " in library.");
-		}
+		//public override Map Get(Map key)
+		//{
+		//    Map val;
+		//    if ((key.IsString && cache.ContainsKey(key)) || Load(key))
+		//    {
+		//        val = cache[key];
+		//    }
+		//    else
+		//    {
+		//        val = null;
+		//    }
+		//    return val;
+		//}
+		//protected override void Set(Map key, Map val)
+		//{
+		//    throw new ApplicationException("Cannot set key " + key.ToString() + " in library.");
+		//}
+		//public override void Set(Map key, Map val)
+		//{
+		//    throw new ApplicationException("Cannot set key " + key.ToString() + " in library.");
+		//}
 		public override ICollection<Map> Keys
 		{
 			get
@@ -4822,13 +4958,13 @@ namespace Meta
 				throw new ApplicationException("not implemented.");
 			}
 		}
-		public override int Count
-		{
-			get
-			{
-				return cache.Count;
-			}
-		}
+		//public override int Count
+		//{
+		//    get
+		//    {
+		//        return cache.Count;
+		//    }
+		//}
 
 		public override bool ContainsKey(Map key)
 		{
@@ -4847,6 +4983,138 @@ namespace Meta
 		}
 		protected Map cachedAssemblyInfo = new StrategyMap();
 	}
+	//public class GacStrategy : MapStrategy
+	//{
+	//    public static readonly StrategyMap Gac = new StrategyMap(new GacStrategy());
+
+	//    public Map  cache = new StrategyMap();
+
+	//    public GacStrategy()
+	//    {
+	//        cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
+	//    }
+	//    public override MapStrategy CopyImplementation()
+	//    {
+	//        return this;
+	//    }
+	//    private bool Load(Map key)
+	//    {
+	//        //Map key = new StrategyMap(assemblyName);
+	//        bool loaded;
+	//        if (cache.ContainsKey(key))
+	//        {
+	//            loaded = true;
+	//        }
+	//        else
+	//        {
+	//            if(key.ContainsKey("version"))
+	//            {
+	//            }
+	//            if (key.IsString)
+	//            {
+	//                string assemblyName = key.GetString();
+	//                Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
+	//                if (assembly != null)
+	//                {
+
+	//                    cache[key] = LoadAssembly(assembly);
+	//                    loaded = true;
+	//                }
+	//                else
+	//                {
+	//                    loaded = false;
+	//                }
+	//            }
+	//            else
+	//            {
+	//                Map version=key["version"];
+	//                Map publicKeyToken=key["publicKeyToken"];
+	//                Map culture=key["culture"];
+	//                Map name=key["name"];
+	//                if(version!=null && version.IsString && publicKeyToken!=null && publicKeyToken.IsString && culture!=null && culture.IsString && name!=null && name.IsString)
+	//                {
+	//                    Assembly assembly = Assembly.Load(name.GetString()+",Version="+version.GetString()+",Culture="+culture.GetString()+",Name="+name.GetString());
+	//                    cache[key] = LoadAssembly(assembly);
+	//                    loaded=true;
+	//                }
+	//                else
+	//                {
+	//                    loaded=false;
+	//                }
+	//            }
+	//        }
+	//        return loaded;
+	//    }
+	//    private Map LoadAssembly(Assembly assembly)
+	//    {
+	//        Map val = new StrategyMap();
+	//        foreach (Type type in assembly.GetExportedTypes())
+	//        {
+	//            if (type.DeclaringType == null)
+	//            {
+	//                Map selected = val;
+	//                foreach (string nameSpace in type.Namespace.Split('.'))
+	//                {
+	//                    if (!selected.ContainsKey(nameSpace))
+	//                    {
+	//                        selected[nameSpace] = new StrategyMap();
+	//                    }
+	//                    selected = selected[nameSpace];
+	//                }
+	//                selected[type.Name] = new TypeMap(type);
+	//            }
+	//        }
+	//        return val;
+	//    }
+	//    public override Map Get(Map key)
+	//    {
+	//        Map val;
+	//        if ((key.IsString && cache.ContainsKey(key)) || Load(key))
+	//        {
+	//            val = cache[key];
+	//        }
+	//        else
+	//        {
+	//            val = null;
+	//        }
+	//        return val;
+	//    }
+	//    public override void Set(Map key, Map val)
+	//    {
+	//        throw new ApplicationException("Cannot set key " + key.ToString() + " in library.");
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            throw new ApplicationException("not implemented.");
+	//        }
+	//    }
+	//    public override int Count
+	//    {
+	//        get
+	//        {
+	//            return cache.Count;
+	//        }
+	//    }
+
+	//    public override bool ContainsKey(Map key)
+	//    {
+	//        return Load(key);
+
+	//        //bool containsKey;
+	//        //if (key.IsString)
+	//        //{
+	//        //containsKey = Load(key.GetString());
+	//        //}
+	//        //else
+	//        //{
+	//        //    containsKey = false;
+	//        //}
+	//        //return containsKey;
+	//    }
+	//    protected Map cachedAssemblyInfo = new StrategyMap();
+	//}
 	public class Integer
 	{
 		public static Integer operator | (Integer a, Integer b)
