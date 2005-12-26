@@ -1,0 +1,1337 @@
+license='"
+	Copyright (c) 2005 Christian Staudenmeyer
+	
+	Permission is hereby granted, free of charge, to any person obtaining
+	a copy of this software and associated documentation files (the
+	"Software"), to deal in the Software without restriction, including
+	without limitation the rights to use, copy, modify, merge, publish,
+	distribute, sublicense, and/or sell copies of the Software, and to
+	permit persons to whom the Software is furnished to do so, subject to
+	the following conditions:
+	
+	The above copyright notice and this permission notice shall be
+	included in all copies or substantial portions of the Software.
+	
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+	NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+	BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+	ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE."'
+library=
+	'"
+		Copyright (c) 2005 Christian Staudenmeyer
+		
+		Permission is hereby granted, free of charge, to any person obtaining
+		a copy of this software and associated documentation files (the
+		"Software"), to deal in the Software without restriction, including
+		without limitation the rights to use, copy, modify, merge, publish,
+		distribute, sublicense, and/or sell copies of the Software, and to
+		permit persons to whom the Software is furnished to do so, subject to
+		the following conditions:
+		
+		The above copyright notice and this permission notice shall be
+		included in all copies or substantial portions of the Software.
+		
+		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+		EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+		MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+		NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+		BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+		ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+		CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+		SOFTWARE."'
+	file=
+		write=
+			|
+				mscorlib.Directory.CreateDirectory
+					mscorlib.Path.GetDirectoryName
+						arg.fileName
+				writer=mscorlib.StreamWriter
+					arg.fileName
+				writer.Write
+					arg.text
+				writer.Close *
+	console=
+		writeLine=
+			|mscorlib.Console.WriteLine arg
+		write=
+			|mscorlib.Console.Write arg
+		readLine=
+			|mscorlib.Console.ReadLine *
+	integerToString=
+		documentation="Converts an integer to a string."
+		|
+			int=Meta.Meta.Integer.[Meta.Meta.Map] arg
+			this=int.ToString *
+	map=
+		pop=
+			|Meta.Meta.Library.Pop arg
+		isInteger=
+			|
+				object=Meta.Meta.ObjectMap arg
+				this=object.IsInteger.get *
+		isString=
+			|
+				object=Meta.Meta.ObjectMap arg
+				this=object.IsString.get *
+		if=
+			|
+				argument=merge
+					=
+						else=
+							|*
+						then=
+							|*
+					arg
+				cases=
+					[1]=argument.then
+					[*]=argument.else
+				this=cases.[argument.condition] *
+		repeat=
+			documentation="Repeats an array a given number of times."
+			|
+				argument=arg.array
+				this=join apply
+					array=range arg.times
+					with=
+						|argument
+		range=
+			documentation="Returns an array containing all numbers from 1 to the argument."
+			|
+				array=*
+				counter=1
+				limit=math.add
+					arg
+					1
+				count=
+					|
+						parent.parent.array.[counter]=counter
+						parent.parent.counter=math.add
+							counter
+							1
+				while
+					condition=
+						|math.smaller
+							counter
+							limit
+					with=
+						|
+							this=count arg
+				this=array
+		remove=
+			documentation="Removes a key from a map."
+			|Meta.Meta.Library.Remove arg
+		while=
+			documentation="Calls a function as long as the condition function returns 1."
+			|
+				stop=arg.condition *
+				next=
+					[*]=
+						|*
+					=
+						|
+							arg.with *
+							while arg
+				next.[stop] arg
+		while=
+			documentation="Calls a function as long as the condition function returns 1."
+			|Meta.Meta.Library.While arg
+		foreach=
+			|apply
+				array=keys arg.map
+				with=
+					|arg.arg.with
+						value=arg.arg.map.[arg]
+						key=arg
+		loop=
+			|apply
+				array=arg.array
+				with=
+					|*
+		apply=
+			documentation="Calls a function with every value in an array as an argument and returns the results as an array."
+			|applyImplementation
+				array=arg.array
+				with=arg.with
+				index=1
+				result=*
+			applyImplementation=
+				|
+					stop=math.greater
+						arg.index
+						length arg.array
+					next=
+						=
+							|arg.result
+						[*]=
+							|applyImplementation
+								array=arg.array
+								with=arg.with
+								index=math.add
+									arg.index
+									1
+								object=Meta.Meta.ObjectMap arg.result
+								argument=arg.with arg.array.[arg.index]
+								object.Append argument
+								result=object.This.get *
+					this=next.[stop] arg
+		join=
+			documentation="Concatenates arrays."
+			|Meta.Meta.Library.Join arg
+		contains=
+			documentation="Determines whether a map contains a key."
+			|
+				object=Meta.Meta.ObjectMap arg.map
+				this=object.ContainsKey arg.key
+		keys=
+			documentation="Returns the keys of a map in an array."
+			|
+				object=Meta.Meta.ObjectMap arg
+				this=Meta.Meta.StrategyMap.StrategyMap.[mscorlib.System.Collections.Generic.["ICollection`1"].[Meta.Meta.Map]] object.Keys.get *
+		merge=
+			documentation="Combines several maps into one."
+			|sum
+				array=arg
+				with=
+					|
+						overwrite=arg.present
+						this=sum
+							array=keys arg.present
+							with=
+								|
+									result=arg.previous
+									result.[arg.present]=overwrite.[arg.present]
+									this=result
+							start=arg.previous
+				start=*
+		equal=
+			documentation="Determines whether maps are identical."
+			|
+				result=sum
+					array=arg
+					with=
+						|
+							first=Meta.Meta.ObjectMap arg.previous.previous
+							this=
+								equality=logic.and
+									first.Equals arg.present
+									arg.previous.equality
+								previous=arg.present
+					start=
+						equality=1
+						previous=arg.[1]
+				this=result.equality
+		length=
+			documentation="Returns the length of an array."
+			|
+				map=Meta.Meta.ObjectMap arg
+				this=map.ArrayCount.get *
+		sum=
+			|sumImplementation
+				index=1
+				array=arg.array
+				with=arg.with
+				result=arg.start
+			sumImplementation=
+				|
+					stop=math.greater
+						arg.index
+						length arg.array
+					next=
+						=
+							|arg.result
+						[*]=
+							|sumImplementation
+								index=math.increment arg.index
+								result=arg.with
+									previous=arg.result
+									present=arg.array.[arg.index]
+								array=arg.array
+								with=arg.with
+					this=next.[stop] arg
+	logic=
+		not=
+			documentation="Negates a boolean."
+			|table.[arg]
+			table=
+				[*]=1
+				[1]=*
+		and=
+			documentation="Returns whether all booleans are true."
+			|map.sum
+				array=arg
+				with=
+					|table.[arg]
+				start=1
+			table=
+				[
+					previous=1
+					present=*
+				]=*
+				[
+					previous=*
+					present=1
+				]=*
+				[
+					previous=*
+					present=*
+				]=*
+				[
+					previous=1
+					present=1
+				]=1
+		or=
+			documentation="Returns whether at least one boolean is true."
+			|map.sum
+				array=arg
+				with=
+					|table.[arg]
+				start=*
+			table=
+				[
+					previous=1
+					present=*
+				]=1
+				[
+					previous=*
+					present=1
+				]=1
+				[
+					previous=*
+					present=*
+				]=*
+				[
+					previous=1
+					present=1
+				]=1
+	math=
+		increment=
+			documentation="Increments an integer."
+			|
+				result=Meta.Meta.Integer.op_Addition
+					Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg
+					Meta.Meta.Integer.Integer.[Meta.Meta.Map] 1
+				this=Meta.Meta.StrategyMap.StrategyMap.[Meta.Meta.Integer] result
+		add=
+			documentation="Adds integers."
+			|Meta.Meta.StrategyMap.StrategyMap.[Meta.Meta.Integer] map.sum
+				array=arg
+				with=
+					|Meta.Meta.Integer.op_Addition
+						Meta.Meta.Integer.Integer.[Meta.Meta.Integer] arg.previous
+						Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.present
+				start=Meta.Meta.Integer.Integer.[Meta.Meta.Map] *
+		multiply=
+			documentation="Multiplies integers."
+			|Meta.Meta.StrategyMap.StrategyMap.[Meta.Meta.Integer] map.sum
+				array=arg
+				with=
+					|Meta.Meta.Integer.op_Multiply
+						Meta.Meta.Integer.Integer.[Meta.Meta.Integer] arg.previous
+						Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.present
+				start=Meta.Meta.Integer.Integer.[Meta.Meta.Map] 1
+		greater=
+			documentation="Determines whether the first integer is greater than the second integer."
+			|Meta.Meta.Integer.op_GreaterThan
+				Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.[1]
+				Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.[2]
+		smaller=
+			documentation="Determines whether the first integer is smaller than the second integer."
+			|Meta.Meta.Integer.op_LessThan
+				Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.[1]
+				Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.[2]
+	bitwise=
+		or=
+			documentation="Performs a bitwise or operation on integers."
+			|Meta.Meta.StrategyMap.StrategyMap.[Meta.Meta.Integer] map.sum
+				array=arg
+				with=
+					|Meta.Meta.Integer.op_BitwiseOr
+						Meta.Meta.Integer.Integer.[Meta.Meta.Integer] arg.previous
+						Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.present
+				start=Meta.Meta.Integer.Integer.[Meta.Meta.Map] *
+	string=
+		lower=
+			documentation="Converts a string to lowercase."
+			|library.map.apply
+				array=arg
+				with=
+					|mscorlib.Char.ToLower arg
+	test=
+		|
+			this=library.map.merge
+				parent
+				=
+					library=library
+				library.map
+				library.logic
+				library.math
+			test=
+				booleanTest=
+					not=
+						true=not *
+						false=not 1
+					and=
+						true=and
+							1
+							1
+							1
+							1
+						false=and
+							1
+							*
+							1
+							1
+					or=
+						true=or
+							1
+							1
+							1
+						false=or
+							*
+							*
+							*
+				numberTest=
+					increment=increment 5
+					add=add
+						100
+						1000
+					multiply=multiply
+						19
+						1023
+					greater=greater
+						4
+						1
+					smaller=smaller
+						23
+						2
+				bitwiseTest=
+					or=library.bitwise.or
+						8
+						20
+				mapTest=
+					if=if
+						condition=1
+						then=
+							|"if test successful"
+					remove=remove
+						map=
+							x="hello"
+							y="world"
+						key="x"
+					join=join
+						"abc, "
+						"die Katze lief im Schnee."
+					apply=
+						applyMethod=
+							|add
+								arg
+								1
+						this=apply
+							with=applyMethod
+							array=
+								1
+								2
+								3
+					contains=contains
+						map=
+							x="hello"
+						key="x"
+					keys=keys
+						jjqwv="aeäquq"
+						oere="i ke"
+						"oiq"
+					equal=
+						map=
+							true=equal
+								=
+									x="hello"
+									y="world"
+								=
+									x="hello"
+									y="world"
+							false=equal
+								=
+									x="y"
+									y="z"
+								=
+									x="y"
+									y="a"
+					while=
+						counter=*
+						SetCounter=
+							|
+								parent.parent.counter=arg
+						test=while
+							condition=
+								|smaller
+									counter
+									10
+							with=
+								|SetCounter increment counter
+						this=counter
+				bitwiseTest=library.bitwise.or
+					20
+					["System.Windows.Forms"].System.Windows.Forms.Keys.Tab
+			this=test
+	process=
+		|
+			process=System.Process *
+			startInfo=process.StartInfo.get *
+			startInfo.FileName.set
+				arg.fileName
+			startInfo.Arguments.set
+				arg.arguments
+			process.Start *
+	path=
+		combine=
+			|library.map.sum
+				array=arg
+				with=
+					|mscorlib.Path.Combine
+						arg.previous
+						arg.present
+				start=*
+	directory=
+		write=
+			|
+				argument=arg
+				this=map.apply
+					array=map.keys arg.files
+					with=
+						|
+							file.write
+								fileName=path.combine
+									argument.directory
+									arg
+								text=argument.files.[arg]
+	debug=
+		print=
+			|console.writeLine Meta.Meta.FileSystem.Serialize.Value
+				arg
+testSubDir=
+	testLib=
+		x="hello"
+		y="world"
+		subMap=
+			a="b"
+			c="d"
+	x=
+		a="b"
+		x=
+			x="hello"
+			y="world"
+basicTest=
+	|
+		this=library.map.merge
+			parent
+			=
+				"AssignedToCurrent"
+		scoping=
+			test=
+				scopingValue="right"
+				|scopingValue
+		scopingValue="wrong"
+		scopingTest=scoping.test
+		lexicalScoping=scopingTest *
+		unicodeText="äaba"
+		parent.parent.testSubDir.x=*
+		persistantDeleteTest=testSubDir.x
+		parent.parent.testSubDir.x=
+			a="b"
+			x=
+				x="hello"
+				y="world"
+		integerHashTest=
+			[2]="correct hash content"
+			hashTestData=
+				[*]=
+					[*]=*
+			hashTest=[hashTestData]
+		negativeInteger=100
+		negativeInteger.x="hello"
+		integerIncrementTest=5
+		integerIncrementTest.[*]=integerIncrementTest
+		integerDecrementTest=5
+		integerDecrementTest=integerDecrementTest.[*]
+		persistenceTest=testSubDir
+		literalEscapeTest=
+			"asdf"
+			"asdf"
+			''"as"'df"''
+			'''"as"''df"'''
+			'''''''''''''''''"as"''''''''''''''''df"'''''''''''''''''
+		"ImpliedAutokey"
+		"Autokey"
+		commandLineArguments=arg
+		aMap=
+			a="a"
+		[aMap]="Object"
+		["normal symbol"]="NormalSymbol"
+		lookupSymbol="LookupSymbol"
+		["long key symbol"]="LookupExtendedSymbol"
+		lookedUpMap=[aMap]
+		lookedUpNormalSymbol=["normal symbol"]
+		lookedUpSymbol=lookupSymbol
+		lookedUpLongSymbol=["long key symbol"]
+		object=
+			a="default"
+			autoSearch="default"
+			b=*
+			SetA=
+				|
+					parent.parent.parent.a="c"
+					parent.parent.autoSearch="changed"
+			SetB=
+				|
+					parent.parent.b.[1]=arg.value
+					this="changed"
+			x=
+				a="b"
+				c="d"
+			=
+				|
+					this.a="b"
+		a="default"
+		b=*
+		aSet=object.SetA *
+		bSet=object.SetB
+			value=
+				x=7
+				z=1
+		scopeTest="default"
+		scopeFunction=
+			inScope="right"
+			|
+				parent.parent.scopeTest=inScope
+		inScope="wrong"
+		scopeFunction *
+		scopeFromFunctionData="right"
+		scopeFunctionFunction=
+			scopeFromFunctionData="wrong"
+			|
+				|scopeFromFunctionData
+		scopeFromFunction=scopeFunctionFunction *
+		scopeFromFunctionTest=scopeFromFunction *
+		ReturnEverything=
+			|
+				this=arg
+		everythingReturned=ReturnEverything
+			"a"
+			"b"
+			"c"
+		variableAsArgument=ReturnEverything
+			"x"
+			"y"
+			"z"
+		ReturnFunction=
+			|
+				this=
+					|
+						this=
+							1
+							2
+							3
+		SetCurrent=
+			|
+				this=
+					arg=arg
+					x=arg.symbol
+				this=x
+		thisSet=SetCurrent
+			symbol="haha"
+		FirstLevel=
+			|
+				SecondLevel arg
+		SecondLevel=
+			|arg
+		argTest=FirstLevel
+			a="z"
+		TestClass=MetaTest.testClasses.TestClass
+		TestClass.NestedClass.field=5
+		nestedClassTest=TestClass.NestedClass.field
+		testClass=TestClass *
+		testClass.floatValue=3
+		testClass.doubleValue=4
+		testClass.decimalValue=5
+		TestClass.boolTest=1
+		boolTest=TestClass.boolTest
+		strongNameTest=[
+			version="2.0.0.0"
+			publicKeyToken="b77a5c561934e089"
+			culture="Neutral"
+			name="mscorlib"
+		].System.Int32
+		MemberTest=MetaTest.testClasses.MemberTest
+		memberTest=MemberTest *
+		stringOverload=MemberTest.OverloadedMethod.[mscorlib.System.String] "hello"
+		integerOverload=MemberTest.OverloadedMethod.[mscorlib.System.Int32] 5
+		memberTestOverload=MemberTest.OverloadedMethod.[
+			MetaTest.testClasses.MemberTest
+			mscorlib.System.Int32
+		]
+			memberTest
+			3247
+		memberTestOverload=MemberTest.OverloadedMethod.[
+			MetaTest.testClasses.MemberTest
+			mscorlib.System.Int32
+		]
+			memberTest
+			3247
+		MemberTest.classField="a"
+		memberTest.instanceField="b"
+		MemberTest.ClassProperty.set memberTest.InstanceProperty.get *
+		classPropertyValue=MemberTest.ClassProperty.get *
+		memberTest.InstanceProperty.set MemberTest.ClassProperty.get *
+		instancePropertyValue=memberTest.InstanceProperty.get *
+		interceptedSymbol="/hello/"
+		positionalNoConversion=MetaTest.testClasses.PositionalNoConversion
+			"m"
+			"n"
+			"o"
+		positionalNoConversionConcatenated=positionalNoConversion.Concatenate
+			"r"
+			"s"
+			"t"
+		namedNoConversion=MetaTest.testClasses.NamedNoConversion
+			"m"
+			y="n"
+		namedNoConversionConcatenated=namedNoConversion.Concatenate
+			c="t"
+			"r"
+		indexerNoConversion=MetaTest.testClasses.IndexerNoConversion *
+		indexerNoConversion.Item.set
+			"abc"
+			"hihi"
+		indexerNoConversionIndexed=indexerNoConversion.Item.get "abc"
+		interceptedSymbolTwo=1
+		k="hello"
+		xyz="w"
+		literalFunction=
+			|5
+		literalFunctionResult=literalFunction *
+		someFunction=
+			|
+				this="simple function this"
+		callFunction=
+			|someFunction
+		callFunctionResult=callFunction *
+		delayedFunction=
+			|
+				|
+					x="y"
+		delayedFunctionResult=delayedFunction *
+		value="xyz"
+		selectionFunction=
+			|value
+		selectionFunctionResult=selectionFunction *
+		upperLevel="unchanged"
+		SetUpperLevel=
+			|
+				parent.parent.upperLevel=arg
+		ChangeUpperLevel=
+			|
+				SetUpperLevel "changed"
+		ChangeUpperLevel *
+		staticEventChanged=*
+		ChangeStaticEvent=
+			|
+				parent.parent.staticEventChanged=arg
+		TestClass.staticEvent.add
+			|
+				ChangeStaticEvent 1
+				this=arg.[1]
+		staticEvent=TestClass.staticEvent
+		TestClass.TakeDelegate
+			|arg.[1]
+		resultFromDelegate=TestClass.GetResultFromDelegate *
+		staticEventResult=TestClass.staticEvent testClass
+		instanceEventChanged=*
+		testClass.instanceEvent.add
+			|
+				parent.parent.parent.instanceEventChanged=1
+				this=arg.[1]
+		instanceEvent=testClass.instanceEvent
+		instanceEventResult=testClass.instanceEvent 5
+		one=1
+		two=2
+		firstIf="unchanged"
+		secondIf="unchanged"
+		firstIfCondition=library.map.equal
+			1
+			one
+		firstIfBranches=
+			=
+				|"then"
+			[*]=
+				|"else"
+		firstIf=firstIfBranches.[firstIfCondition] *
+		bigNumber=50020202
+		secondSwitch="unchanged"
+		secondSwitchCases=
+			"one"
+			"two"
+			"three"
+		secondSwitch=secondSwitchCases.[3]
+		emptyMap=*
+		emptyFunction=
+			|
+				x="hello"
+		emptyFunctionResult=emptyFunction *
+		font=["System.Drawing"].System.Drawing.Font.Font.[
+			mscorlib.System.String
+			mscorlib.System.Single
+		]
+			"Courier New"
+			10
+		decimalTest=5
+		fractionTest=40
+		stringTest="hello"
+		stringTest.[6]=stringTest.[1]
+		helloh="hi"
+		stringStrategyHashTest=[stringTest]
+		x=
+			aLongText="
+				hello world!
+				hello!
+				"
+		arrayList=mscorlib.System.Collections.ArrayList.ArrayList.[*] *
+		arrayList.Add "hello"
+		arrayListResult=arrayList.Item.get *
+		textBox=["System.Windows.Forms"].System.Windows.Forms.TextBox *
+		textBox.Text.set "
+			Alle meine Entchen,
+			schwimmen auf dem See,
+			schwimmen auf dem See,
+			Köpfchen in das Wasser,
+			Schwaenzchen in die Hoeh."
+		lines=textBox.Lines.get *
+		alleMeineText=lines.GetValue.[mscorlib.System.Int32] 1
+		lines.[5]="bwuhahaha"
+		tabText="			hello"
+		escapedText="'#'n'''t"
+		whileCounter=*
+		loop=
+			|
+				whileDecision=library.logic.not library.map.equal
+					arg
+					10
+				whileBranches=
+					=
+						|loop library.math.add
+							arg
+							1
+					[*]=
+						|arg
+				this=whileBranches.[whileDecision] arg
+		whileCounter=loop 3
+		returnInMap=
+			|
+				result=arg
+		literalAsArgument=returnInMap 1
+		returnFunction=
+			|
+				|"functionResult"
+		returnArg=
+			|arg
+		myArg=
+			|
+				hello="world"
+		funcReturnTest=returnArg myArg *
+		documentedFunction=
+			doc="This function returns #hello ."
+			|"hello"
+		docFunctionResult=documentedFunction *
+'''''"library=
+	'"
+		Copyright (c) 2005 Christian Staudenmeyer
+		
+		Permission is hereby granted, free of charge, to any person obtaining
+		a copy of this software and associated documentation files (the
+		"Software"), to deal in the Software without restriction, including
+		without limitation the rights to use, copy, modify, merge, publish,
+		distribute, sublicense, and/or sell copies of the Software, and to
+		permit persons to whom the Software is furnished to do so, subject to
+		the following conditions:
+		
+		The above copyright notice and this permission notice shall be
+		included in all copies or substantial portions of the Software.
+		
+		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+		EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+		MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+		NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+		BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+		ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+		CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+		SOFTWARE."'
+	file=
+		write=
+			|
+				mscorlib.Directory.CreateDirectory
+					mscorlib.Path.GetDirectoryName
+						arg.fileName
+				writer=mscorlib.StreamWriter
+					arg.fileName
+				writer.Write
+					arg.text
+				writer.Close *
+	console=
+		writeLine=
+			|mscorlib.Console.WriteLine arg
+		write=
+			|mscorlib.Console.Write arg
+		readLine=
+			|mscorlib.Console.ReadLine *
+	integerToString=
+		documentation="Converts an integer to a string."
+		|
+			int=Meta.Meta.Integer.[Meta.Meta.Map] arg
+			this=int.ToString *
+	map=
+		pop=
+			|Meta.Meta.Library.Pop arg
+		isInteger=
+			|
+				object=Meta.Meta.ObjectMap arg
+				this=object.IsInteger.get *
+		isString=
+			|
+				object=Meta.Meta.ObjectMap arg
+				this=object.IsString.get *
+		if=
+			|
+				argument=merge
+					=
+						else=
+							|*
+						then=
+							|*
+					arg
+				cases=
+					[1]=argument.then
+					[*]=argument.else
+				this=cases.[argument.condition] *
+		repeat=
+			documentation="Repeats an array a given number of times."
+			|
+				argument=arg.array
+				this=join apply
+					array=range arg.times
+					with=
+						|argument
+		range=
+			documentation="Returns an array containing all numbers from 1 to the argument."
+			|
+				array=*
+				counter=1
+				limit=math.add
+					arg
+					1
+				count=
+					|
+						parent.parent.array.[counter]=counter
+						parent.parent.counter=math.add
+							counter
+							1
+				while
+					condition=
+						|math.smaller
+							counter
+							limit
+					with=
+						|
+							this=count arg
+				this=array
+		remove=
+			documentation="Removes a key from a map."
+			|Meta.Meta.Library.Remove arg
+		while=
+			documentation="Calls a function as long as the condition function returns 1."
+			|
+				stop=arg.condition *
+				next=
+					[*]=
+						|*
+					=
+						|
+							arg.with *
+							while arg
+				next.[stop] arg
+		while=
+			documentation="Calls a function as long as the condition function returns 1."
+			|Meta.Meta.Library.While arg
+		foreach=
+			|apply
+				array=keys arg.map
+				with=
+					|arg.arg.with
+						value=arg.arg.map.[arg]
+						key=arg
+		loop=
+			|apply
+				array=arg.array
+				with=
+					|*
+		apply=
+			documentation="Calls a function with every value in an array as an argument and returns the results as an array."
+			|applyImplementation
+				array=arg.array
+				with=arg.with
+				index=1
+				result=*
+			applyImplementation=
+				|
+					stop=math.greater
+						arg.index
+						length arg.array
+					next=
+						=
+							|arg.result
+						[*]=
+							|applyImplementation
+								array=arg.array
+								with=arg.with
+								index=math.add
+									arg.index
+									1
+								object=Meta.Meta.ObjectMap arg.result
+								argument=arg.with arg.array.[arg.index]
+								object.Append argument
+								result=object.This.get *
+					this=next.[stop] arg
+		join=
+			documentation="Concatenates arrays."
+			|Meta.Meta.Library.Join arg
+		contains=
+			documentation="Determines whether a map contains a key."
+			|
+				object=Meta.Meta.ObjectMap arg.map
+				this=object.ContainsKey arg.key
+		keys=
+			documentation="Returns the keys of a map in an array."
+			|
+				object=Meta.Meta.ObjectMap arg
+				this=Meta.Meta.StrategyMap.StrategyMap.[mscorlib.System.Collections.Generic.["ICollection"].[Meta.Meta.Map]] object.Keys.get *
+		merge=
+			documentation="Combines several maps into one."
+			|sum
+				array=arg
+				with=
+					|
+						overwrite=arg.present
+						this=sum
+							array=keys arg.present
+							with=
+								|
+									result=arg.previous
+									result.[arg.present]=overwrite.[arg.present]
+									this=result
+							start=arg.previous
+				start=*
+		equal=
+			documentation="Determines whether maps are identical."
+			|
+				result=sum
+					array=arg
+					with=
+						|
+							first=Meta.Meta.ObjectMap arg.previous.previous
+							this=
+								equality=logic.and
+									first.Equals arg.present
+									arg.previous.equality
+								previous=arg.present
+					start=
+						equality=1
+						previous=arg.[1]
+				this=result.equality
+		length=
+			documentation="Returns the length of an array."
+			|
+				map=Meta.Meta.ObjectMap arg
+				this=map.ArrayCount.get *
+		sum=
+			|sumImplementation
+				index=1
+				array=arg.array
+				with=arg.with
+				result=arg.start
+			sumImplementation=
+				|
+					stop=math.greater
+						arg.index
+						length arg.array
+					next=
+						=
+							|arg.result
+						[*]=
+							|sumImplementation
+								index=math.increment arg.index
+								result=arg.with
+									previous=arg.result
+									present=arg.array.[arg.index]
+								array=arg.array
+								with=arg.with
+					this=next.[stop] arg
+	logic=
+		not=
+			documentation="Negates a boolean."
+			|table.[arg]
+			table=
+				[*]=1
+				[1]=*
+		and=
+			documentation="Returns whether all booleans are true."
+			|map.sum
+				array=arg
+				with=
+					|table.[arg]
+				start=1
+			table=
+				[
+					previous=1
+					present=*
+				]=*
+				[
+					previous=*
+					present=1
+				]=*
+				[
+					previous=*
+					present=*
+				]=*
+				[
+					previous=1
+					present=1
+				]=1
+		or=
+			documentation="Returns whether at least one boolean is true."
+			|map.sum
+				array=arg
+				with=
+					|table.[arg]
+				start=*
+			table=
+				[
+					previous=1
+					present=*
+				]=1
+				[
+					previous=*
+					present=1
+				]=1
+				[
+					previous=*
+					present=*
+				]=*
+				[
+					previous=1
+					present=1
+				]=1
+	math=
+		increment=
+			documentation="Increments an integer."
+			|
+				result=Meta.Meta.Integer.op_Addition
+					Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg
+					Meta.Meta.Integer.Integer.[Meta.Meta.Map] 1
+				this=Meta.Meta.StrategyMap.StrategyMap.[Meta.Meta.Integer] result
+		add=
+			documentation="Adds integers."
+			|Meta.Meta.StrategyMap.StrategyMap.[Meta.Meta.Integer] map.sum
+				array=arg
+				with=
+					|Meta.Meta.Integer.op_Addition
+						Meta.Meta.Integer.Integer.[Meta.Meta.Integer] arg.previous
+						Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.present
+				start=Meta.Meta.Integer.Integer.[Meta.Meta.Map] *
+		multiply=
+			documentation="Multiplies integers."
+			|Meta.Meta.StrategyMap.StrategyMap.[Meta.Meta.Integer] map.sum
+				array=arg
+				with=
+					|Meta.Meta.Integer.op_Multiply
+						Meta.Meta.Integer.Integer.[Meta.Meta.Integer] arg.previous
+						Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.present
+				start=Meta.Meta.Integer.Integer.[Meta.Meta.Map] 1
+		greater=
+			documentation="Determines whether the first integer is greater than the second integer."
+			|Meta.Meta.Integer.op_GreaterThan
+				Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.[1]
+				Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.[2]
+		smaller=
+			documentation="Determines whether the first integer is smaller than the second integer."
+			|Meta.Meta.Integer.op_LessThan
+				Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.[1]
+				Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.[2]
+	bitwise=
+		or=
+			documentation="Performs a bitwise or operation on integers."
+			|Meta.Meta.StrategyMap.StrategyMap.[Meta.Meta.Integer] map.sum
+				array=arg
+				with=
+					|Meta.Meta.Integer.op_BitwiseOr
+						Meta.Meta.Integer.Integer.[Meta.Meta.Integer] arg.previous
+						Meta.Meta.Integer.Integer.[Meta.Meta.Map] arg.present
+				start=Meta.Meta.Integer.Integer.[Meta.Meta.Map] *
+	string=
+		lower=
+			documentation="Converts a string to lowercase."
+			|library.map.apply
+				array=arg
+				with=
+					|mscorlib.Char.ToLower arg
+	test=
+		|
+			this=library.map.merge
+				parent
+				library.map
+				library.logic
+				library.math
+			test=
+				booleanTest=
+					not=
+						true=not *
+						false=not 1
+					and=
+						true=and
+							1
+							1
+							1
+							1
+						false=and
+							1
+							*
+							1
+							1
+					or=
+						true=or
+							1
+							1
+							1
+						false=or
+							*
+							*
+							*
+				numberTest=
+					increment=increment 5
+					add=add
+						100
+						1000
+					multiply=multiply
+						19
+						1023
+					greater=greater
+						4
+						1
+					smaller=smaller
+						23
+						2
+				bitwiseTest=
+					or=library.bitwise.or
+						8
+						20
+				mapTest=
+					if=if
+						condition=1
+						then=
+							|"if test successful"
+					remove=remove
+						map=
+							x="hello"
+							y="world"
+						key="x"
+					join=join
+						"abc, "
+						"die Katze lief im Schnee."
+					apply=
+						applyMethod=
+							|add
+								arg
+								1
+						this=apply
+							with=applyMethod
+							array=
+								1
+								2
+								3
+					contains=contains
+						map=
+							x="hello"
+						key="x"
+					keys=keys
+						jjqwv="aeäquq"
+						oere="i ke"
+						"oiq"
+					equal=
+						map=
+							true=equal
+								=
+									x="hello"
+									y="world"
+								=
+									x="hello"
+									y="world"
+							false=equal
+								=
+									x="y"
+									y="z"
+								=
+									x="y"
+									y="a"
+					while=
+						counter=*
+						SetCounter=
+							|
+								parent.parent.counter=arg
+						test=while
+							condition=
+								|smaller
+									counter
+									10
+							with=
+								|SetCounter increment counter
+						this=counter
+				bitwiseTest=library.bitwise.or
+					20
+					["System.Windows.Forms"].System.Windows.Forms.Keys.Tab
+			this=test
+	process=
+		|
+			process=System.Process *
+			startInfo=process.StartInfo.get *
+			startInfo.FileName.set
+				arg.fileName
+			startInfo.Arguments.set
+				arg.arguments
+			process.Start *
+	path=
+		combine=
+			|library.map.sum
+				array=arg
+				with=
+					|mscorlib.Path.Combine
+						arg.previous
+						arg.present
+				start=*
+	directory=
+		write=
+			|
+				argument=arg
+				this=map.apply
+					array=map.keys arg.files
+					with=
+						|
+							file.write
+								fileName=path.combine
+									argument.directory
+									arg
+								text=argument.files.[arg]
+	debug=
+		print=
+			|console.writeLine Meta.Meta.FileSystem.Serialize.Value
+				arg"'''''

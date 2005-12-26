@@ -56,18 +56,15 @@ namespace Test
 		[STAThread]
 		public static void Main(string[] args) 
 		{
-			//Type test1 = typeof(Map);
-			//Type test2 = typeof(Map);
-			//bool x = test1 == test2;
 			try
 			{
-				//Sprite ball=new SdlDotNet.Sprites.Sprite()
 				if (args.Length == 1)
 				{
 					if (args[0] == "-test")
 					{
 						new MetaTest().Run();
 					}
+					// refactor
 					else if (args[0] == "-i")
 					{
 						Map context = new StrategyMap();
