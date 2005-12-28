@@ -46,7 +46,7 @@ namespace Meta
 	public class SpecialKeys
 	{
 		public static readonly Map Scope = "scope";
-		public static readonly Map Parent="parent";
+		//public static readonly Map Parent="parent";
 		public static readonly Map Arg="arg";
 		public static readonly Map Current="this";
 		public static readonly Map Net = "net";
@@ -213,10 +213,10 @@ namespace Meta
 			{
 				val = context.Argument;
 			}
-			else if (key.Equals(SpecialKeys.Parent))
-			{
-				val = context.Parent;
-			}
+			//else if (key.Equals(SpecialKeys.Parent))
+			//{
+			//    val = context.Parent;
+			//}
 			else if (key.Equals(SpecialKeys.Current))
 			{
 				val = context;
@@ -280,10 +280,10 @@ namespace Meta
 						selection = null;
 					}
 				}
-				else if (key.Equals(SpecialKeys.Parent))
-				{
-					selection = selected.Parent;
-				}
+				//else if (key.Equals(SpecialKeys.Parent))
+				//{
+				//    selection = selected.Parent;
+				//}
 				else
 				{
 					selection = selected[key];

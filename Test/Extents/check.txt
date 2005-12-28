@@ -290,7 +290,7 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"530"
 																		Column (Int32):
-																			"10"
+																			"9"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -327,12 +327,12 @@ Entry (KeyValuePair`2)
 																				Line (Int32):
 																					"530"
 																				Column (Int32):
-																					"10"
+																					"9"
 																			End (SourcePosition):
 																				Line (Int32):
 																					"530"
 																				Column (Int32):
-																					"10"
+																					"9"
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
 																				Extent:
@@ -349,7 +349,7 @@ Entry (KeyValuePair`2)
 																						Line (Int32):
 																							"530"
 																						Column (Int32):
-																							"10"
+																							"9"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -366,7 +366,7 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"530"
 																								Column (Int32):
-																									"10"
+																									"9"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -375,7 +375,7 @@ Entry (KeyValuePair`2)
 																							Value (StrategyMap):
 																								Extent:
 																									null
-																								"parent"
+																								"scope"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:

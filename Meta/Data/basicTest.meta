@@ -363,7 +363,7 @@ library=
 	test=
 		|
 			this=library.map.merge
-				parent
+				scope
 				=
 					library=library
 				library.map
@@ -527,7 +527,7 @@ testSubDir=
 basicTest=
 	|
 		this=library.map.merge
-			parent
+			scope
 			=
 				"AssignedToCurrent"
 		scoping=
@@ -1188,7 +1188,7 @@ basicTest=
 	test=
 		|
 			this=library.map.merge
-				parent
+				scope
 				library.map
 				library.logic
 				library.math

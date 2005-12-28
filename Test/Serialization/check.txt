@@ -1,6 +1,6 @@
 "|
 	this=library.map.merge
-		parent
+		scope
 		=
 			"AssignedToCurrent"
 	scoping=
