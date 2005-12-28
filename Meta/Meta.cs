@@ -46,7 +46,6 @@ namespace Meta
 	public class SpecialKeys
 	{
 		public static readonly Map Scope = "scope";
-		//public static readonly Map Parent="parent";
 		public static readonly Map Arg="arg";
 		public static readonly Map Current="this";
 		public static readonly Map Net = "net";
@@ -122,7 +121,8 @@ namespace Meta
 		public Map Evaluate(Map context,Map argument)
 		{
 			Map current = new StrategyMap();
-			current.Parent = context;
+			//current.Parent = context;
+			current.Scope = context;
 			current.Argument = argument;
 			return EvaluateImplementation(current);
 		}
@@ -137,7 +137,7 @@ namespace Meta
 			this.callable = code[CodeKeys.Callable];
 			this.parameter = code[CodeKeys.Argument];
 		}
-		public override Map EvaluateImplementation(Map current)//, Map arg)
+		public override Map EvaluateImplementation(Map current)
 		{
 			Map function = callable.GetExpression().Evaluate(current);
 			if (!function.IsFunction)
@@ -165,7 +165,7 @@ namespace Meta
 			}
 			// messy, necessary so maps returned from functions change their scope to the map in which the are assigned the first time
 			Map clone = result.Copy();
-			clone.Parent = null;
+			//clone.Parent = null;
 			clone.Scope = null;
 			return clone;
 		}
@@ -254,7 +254,7 @@ namespace Meta
 				Map key = keys[i].GetExpression().Evaluate(context);
 				Map selection;
 
-				// refactor, maybe combine this stuff with the stuff in FindFirstKey???
+				// refactor
 				if (key.Equals(SpecialKeys.Scope))
 				{
 					selection = selected.Scope;
@@ -299,7 +299,6 @@ namespace Meta
 	}
 	public class Statement
 	{
-		// refactor
 		List<Map> keys;
 		public Map value;
 		public Statement(Map code)
@@ -309,43 +308,43 @@ namespace Meta
 		}
 		public void Assign(ref Map context)
 		{
-			Map selected = context;
+			Map selection = context;
 			Map key;
 			int i = 0;
 			for (; i + 1 < keys.Count; )
 			{
 				key = keys[i].GetExpression().Evaluate(context);
-				Map selection;
+
 				if (key.Equals(SpecialKeys.Scope))
 				{
-					selection = selected.Scope;
+					selection = selection.Scope;
 				}
 				else
 				{
-					selection = selected.GetForAssignment(key);
-					//selection = selected[key];
+					selection = selection.GetForAssignment(key);
 				}
 
 				if (selection == null)
 				{
 					Throw.KeyDoesNotExist(key, keys[0].Extent);
 				}
-				selected = selection;
 				i++;
 			}
 			Map lastKey = keys[i].GetExpression().Evaluate(context);
 			Map val = value.GetExpression().Evaluate(context);
-
+			if (lastKey.Equals((Map)"autoSearch"))
+			{
+			}
 			if (lastKey.Equals(SpecialKeys.Current))
 			{
 				val.Scope = context.Scope;
-				val.Parent = context.Parent;
+				//val.Parent = context.Parent;
 				val.Argument = context.Argument;
 				context = val;
 			}
 			else
 			{
-				selected[lastKey] = val;
+				selection[lastKey] = val;
 			}
 		}
 		//public void Assign(ref Map context)
@@ -353,9 +352,12 @@ namespace Meta
 		//    Map selected = context;
 		//    Map key;
 		//    int i = 0;
-		//    for (; i+1<keys.Count;)
+		//    for (; i + 1 < keys.Count; )
 		//    {
 		//        key = keys[i].GetExpression().Evaluate(context);
+		//        if (key.Equals("a")))
+		//        {
+		//        }
 		//        Map selection;
 		//        if (key.Equals(SpecialKeys.Scope))
 		//        {
@@ -363,7 +365,7 @@ namespace Meta
 		//        }
 		//        else
 		//        {
-		//            selection = selected[key];
+		//            selection = selected.GetForAssignment(key);
 		//        }
 
 		//        if (selection == null)
@@ -460,9 +462,6 @@ namespace Meta
 		{
 			program.Call(parameter);
 		}
-
-
-
 		public void Start()
 		{
 			thread.Start();
@@ -792,21 +791,24 @@ namespace Meta
             }
         }
         private Map scope;
-		public virtual Map Parent
-		{
-			get
-			{
-				return parent;
-			}
-			set
-			{
-                if (parent == null && Scope== null)
-                {
-                    Scope = value;
-                }
-				parent=value;
-			}
-		}
+		//public virtual Map Parent
+		//{
+		//    get
+		//    {
+		//        return parent;
+		//    }
+		//    set
+		//    {
+		//        if (parent == null && Scope == null)
+		//        {
+		//            Scope = value;
+		//        }
+		//        else
+		//        {
+		//        }
+		//        parent=value;
+		//    }
+		//}
 		public virtual int Count
 		{
 			get
@@ -855,7 +857,6 @@ namespace Meta
 				if (value != null)
 				{
 					result = value;
-					//result = value.Copy();
 				}
 				else
 				{
@@ -870,7 +871,12 @@ namespace Meta
 					expression = null;
 					statement = null;
                     Map val = value.Copy();
-                    val.Parent = this;
+					//val.Parent = this;
+					if (val.scope == null)
+					{
+						val.scope = this;
+					}
+					//val.scope = this;
                     Set(key, val);
                 }
              }
@@ -891,7 +897,7 @@ namespace Meta
 		{
 			Map clone = CopyImplementation();
 			clone.Scope = Scope;
-			clone.Parent = Parent;
+			//clone.Parent = Parent;
 			clone.Extent = Extent;
 			return clone;
 		}
@@ -1036,7 +1042,7 @@ namespace Meta
 
 		public override Map Call(Map arg)
 		{
-			strategy.Panic(new DictionaryStrategy());
+			//strategy.Panic(new DictionaryStrategy());
 			return base.Call(arg);
 		}
 		public void InitFromStrategy(MapStrategy clone)
@@ -1091,7 +1097,6 @@ namespace Meta
 		}
 		protected override void Set(Map key, Map value)
 		{
-			//isHashCached = false;
 			strategy.Set(key, value);
 			if (Persistant && !FileSystem.Parsing)
 			{
@@ -1133,23 +1138,6 @@ namespace Meta
 			}
 			return isEqual;
 		}
-		//public override bool Equals(object toCompare)
-		//{
-		//    bool isEqual;
-		//    if (Object.ReferenceEquals(toCompare, this))
-		//    {
-		//        isEqual = true;
-		//    }
-		//    else if (toCompare is StrategyMap)
-		//    {
-		//        isEqual = ((StrategyMap)toCompare).strategy.Equal(strategy);
-		//    }
-		//    else
-		//    {
-		//        isEqual = false;
-		//    }
-		//    return isEqual;
-		//}
 		public MapStrategy Strategy
 		{
 			get
@@ -1585,7 +1573,7 @@ namespace Meta
 	}
 	public class Method : MethodImplementation
 	{
-		// refactor, unnecessary
+		// refactor
 		public override Map Call(Map arg)
 		{
 			if (IsFunction)
@@ -1962,6 +1950,10 @@ namespace Meta
 	}
 	public class EmptyStrategy : MapStrategy
 	{
+		public override bool Equal(MapStrategy strategy)
+		{
+			return strategy.Count == 0;
+		}
 		public override ICollection<Map> Keys
 		{
 			get
@@ -1998,7 +1990,6 @@ namespace Meta
 	}
 	public class IntegerStrategy : DataStrategy<Integer>
 	{
-		//private Integer number;
 		public override bool IsInteger
 		{
 			get
@@ -2014,23 +2005,6 @@ namespace Meta
 		{
 			return otherData == data;
 		}
-		//protected override bool SameEqual(Integer obj)
-		//{
-		//    return ((IntegerStrategy)obj).number == number;
-		//}
-		//public override bool Equal(MapStrategy obj)
-		//{
-		//    bool isEqual;
-		//    if (obj is IntegerStrategy)
-		//    {
-		//        isEqual = ((IntegerStrategy)obj).data == data;
-		//    }
-		//    else
-		//    {
-		//        isEqual = base.Equal(obj);
-		//    }
-		//    return isEqual;
-		//}
 		public IntegerStrategy(Integer number)
 		{
 			this.data = new Integer(number);
@@ -2088,7 +2062,6 @@ namespace Meta
 			if (data.Count == otherData.Count)
 			{
 				equal = true;
-				//ListStrategy listStrategy = (ListStrategy)strategy;
 				for (int i = 0; i < data.Count; i++)
 				{
 					if (!this.data[i].Equals(otherData[i]))
@@ -2104,35 +2077,6 @@ namespace Meta
 			}
 			return equal;
 		}
-		//public override bool Equal(MapStrategy strategy)
-		//{
-		//    bool equal;
-		//    if (strategy is ListStrategy)
-		//    {
-		//        if (Count == strategy.Count)
-		//        {
-		//            equal = true;
-		//            ListStrategy listStrategy = (ListStrategy)strategy;
-		//            for (int i = 0; i < data.Count; i++)
-		//            {
-		//                if (!this.data[i].Equals(listStrategy.data[i]))
-		//                {
-		//                    equal = false;
-		//                    break;
-		//                }
-		//            }
-		//        }
-		//        else
-		//        {
-		//            equal = false;
-		//        }
-		//    }
-		//    else
-		//    {
-		//        equal = base.Equal(strategy);
-		//    }
-		//    return equal;
-		//}
 		public override int Count
 		{
 			get
@@ -2179,7 +2123,6 @@ namespace Meta
 			}
 			return containsKey;
 		}
-		//private List<Map> values;
 		public override ICollection<Map> Keys
 		{
 			get
@@ -2274,7 +2217,6 @@ namespace Meta
 			}
 			return equal;
 		}
-		//private Dictionary<Map,Map> dictionary;
 		public DictionaryStrategy():this(2)
 		{
 			if (this.map!= null &&this.IsString && this.GetString() == "abc, ")
@@ -2285,7 +2227,6 @@ namespace Meta
 		{
 			this.map.Strategy = new CloneStrategy(this);
 			return new CloneStrategy(this);
-			//return new CloneStrategy(this);
 		}
 		public DictionaryStrategy(int Count)
 		{
@@ -2334,15 +2275,9 @@ namespace Meta
 	}
 	public class CloneStrategy:DataStrategy<MapStrategy>
 	{
-		//public MapStrategy original;
-
-
 		// always use CloneStrategy, only have logic in one place, too complicated to use
 		public CloneStrategy(MapStrategy original)
 		{
-			//if (original is DirectoryStrategy || original is FileStrategy)
-			//{
-			//}
 			this.data = original;
 		}
 		public override List<Map> Array
@@ -2374,55 +2309,6 @@ namespace Meta
 		{
 			return Object.ReferenceEquals(data,otherData) || otherData.Equal(this.data);
 		}
-		// ????
-		//public override bool Equal(MapStrategy obj)
-		//{
-		//    bool equal;
-		//    if (object.ReferenceEquals(this.data, obj))
-		//    {
-		//        equal = true;
-		//    }
-		//    else
-		//    {
-		//        CloneStrategy cloneStrategy = obj as CloneStrategy;
-		//        if (cloneStrategy != null && object.ReferenceEquals(cloneStrategy.data, this.data))
-		//        {
-		//            equal = true;
-		//        }
-		//        else
-		//        {
-		//            //|| object.ReferenceEquals(this.original)
-		//            equal = data.Equal(obj);
-		//        }
-		//    }
-		//    return equal;
-		//}
-		//public override bool Equal(MapStrategy obj)
-		//{
-		//    bool equal;
-		//    if (object.ReferenceEquals(this.data, obj))
-		//    {
-		//        equal = true;
-		//    }
-		//    else
-		//    {
-		//        CloneStrategy cloneStrategy = obj as CloneStrategy;
-		//        if (cloneStrategy != null && object.ReferenceEquals(cloneStrategy.data, this.data))
-		//        {
-		//            equal = true;
-		//        }
-		//        else
-		//        {
-		//            //|| object.ReferenceEquals(this.original)
-		//            equal = data.Equal(obj);
-		//        }
-		//    }
-		//    return equal;
-		//}
-		//public override bool Equal(MapStrategy obj)
-		//{
-		//    return original.Equal(obj);
-		//}
 		public override int GetHashCode()
 		{
 			return data.GetHashCode();
@@ -2556,10 +2442,11 @@ namespace Meta
 			return Keys.Contains(key);
 		}
 		// rename, only used internally
-		public virtual bool Equal(MapStrategy strategy)
-		{
-			return EqualDefault(strategy);
-		}
+		public abstract bool Equal(MapStrategy strategy);
+		//public virtual bool Equal(MapStrategy strategy)
+		//{
+		//    return EqualDefault(strategy);
+		//}
 		public virtual bool EqualDefault(MapStrategy strategy)
 		{
 			bool isEqual;
@@ -2629,7 +2516,7 @@ namespace Meta
 			}
 			else
 			{
-				equal = base.Equal(strategy);
+				equal = EqualDefault(strategy);
 			}
 			return equal;
 		}
@@ -2893,7 +2780,7 @@ namespace Meta
 					else if (members[0] is EventInfo)
 					{
 						val = new Event(((EventInfo)members[0]), obj, type);
-						val.Parent = this;
+						//val.Parent = this;
 					}
 					else if (members[0] is Type)
 					{
@@ -3324,138 +3211,10 @@ namespace Meta
 			return (Extent)extents[extent];
 		}
 	}
-
 	public abstract class PersistantStrategy:MapStrategy
 	{
 		public abstract void Replace(Map value);
 	}
-	//public class FileStrategy : PersistantStrategy
-	//{
-	//    private string fileName;
-	//    public FileStrategy(string fileName)
-	//    {
-	//        this.fileName = fileName;
-	//    }
-	//    public override void Replace(Map value)
-	//    {
-	//    }
-	//    public override MapStrategy CopyImplementation()
-	//    {
-	//        return this;
-	//        //return new CloneStrategy(this);
-	//    }
-	//    private Dictionary<Map, Map> dictionary;
-	//    private Dictionary<Map, Map> Dictionary
-	//    {
-	//        get
-	//        {
-	//            if (dictionary == null)
-	//            {
-	//                dictionary = new Dictionary<Map, Map>();
-	//                foreach(KeyValuePair<Map,Map> pair in FileSystem.Parse(fileName))
-	//                {
-	//                    this.map[pair.Key] = pair.Value;
-	//                    pair.Value.Scope = this.map;
-	//                    pair.Value.Scope = this.map;
-	//                }
-	//            }
-	//            return dictionary;
-	//        }
-	//    }
-	//    public override void Set(Map key, Map val)
-	//    {
-	//        Dictionary[key] = val;
-	//        Save();
-	//    }
-	//    public override Map Get(Map key)
-	//    {
-	//        Map value;
-	//        Dictionary.TryGetValue(key, out value);
-	//        return value;
-	//    }
-	//    public override ICollection<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            return Dictionary.Keys;
-	//        }
-	//    }
-	//    private void Save()
-	//    {
-	//    }
-	//}
-	//public class DirectoryStrategy:PersistantStrategy
-	//{
-	//    private string path;
-	//    public DirectoryStrategy(string path)
-	//    {
-	//        this.path = path;
-	//    }
-	//    public override ICollection<Map> Keys
-	//    {
-	//        get 
-	//        {
-	//            return Dictionary.Keys;
-	//        }
-	//    }
-	//    public override void Replace(Map value)
-	//    {
-	//    }
-	//    public override MapStrategy CopyImplementation()
-	//    {
-	//        return this;
-	//        //return new CloneStrategy(this);
-	//    }
-	//    public override Map Get(Map key)
-	//    {
-	//        StrategyMap value;
-	//        Dictionary.TryGetValue(key, out value);
-	//        return value;
-	//    }
-	//    private Dictionary<Map, StrategyMap> Dictionary
-	//    {
-	//        get
-	//        {
-	//            if (dictionary == null)
-	//            {
-	//                dictionary = new Dictionary<Map, StrategyMap>();
-	//                foreach (string fileName in Directory.GetFiles(path, "*.meta"))
-	//                {
-	//                    this.map[Path.GetFileNameWithoutExtension(fileName)] = new StrategyMap(new FileStrategy(fileName));
-	//                }
-	//                foreach(string directoryName in Directory.GetDirectories(path))
-	//                {
-	//                    this.map[new DirectoryInfo(directoryName).Name] = new StrategyMap(new DirectoryStrategy(directoryName));
-	//                }
-	//            }
-	//            return dictionary;
-	//        }
-	//    }
-	//    private Dictionary<Map, StrategyMap> dictionary;
-	//    public override void Set(Map key, Map val)
-	//    {
-	//        if (key.IsString)
-	//        {
-	//            if (Dictionary.ContainsKey(key))
-	//            {
-	//                ((PersistantStrategy)Dictionary[key].Strategy).Replace(val);
-	//            }
-	//            if (key.GetString().IndexOfAny(new char[] { '\\', '/', ':', '?', '"', '<', '>', '|' }) == -1)
-	//            {
-	//                dictionary[key] = (StrategyMap)val;
-	//            }
-	//            else
-	//            {
-	//                throw new ApplicationException("Value cannot be saved as file because the key contains illegal characters.");
-	//            }
-
-	//        }
-	//        else
-	//        {
-	//            throw new ApplicationException("Value cannot be saved as file because the key is not a string.");
-	//        }
-	//    }
-	//}
 	public class FileSystem
 	{
 		private static bool parsing=false;
@@ -3491,13 +3250,13 @@ namespace Meta
 			using (TextReader reader = new StreamReader(filePath, Encoding.Default))
 			{
 				Map parsed = Parse(reader,filePath);
-				// reintroduce this
+				// todo: reintroduce this
 				//MakePersistant((StrategyMap)parsed);
 				// why does this map have a parent?
 				//parsed.Parent = GacStrategy.Gac;
 				//parsed.Scope = GacStrategy.Gac;
-				parsed.Parent = null;
-				parsed.Scope = null;
+				//parsed.Parent = null;
+				//parsed.Scope = null;
 				return parsed;
 			}
 		}
@@ -3528,45 +3287,13 @@ namespace Meta
 		}
 		static FileSystem()
 		{
-			//fileSystem=new StrategyMap(new DirectoryStrategy(System.IO.Path.Combine(Process.InstallationPath,"Data")));
+			//fileSystem=LoadDirectory(Path.Combine(Process.InstallationPath,"Data"));
 			fileSystem=Parse(Path.Combine(Process.InstallationPath,@"Data\basicTest.meta"));
-			//fileSystem = LoadDirectory(Path.Combine(Process.InstallationPath, "Data"));
-			//MakePersistant(fileSystem);
-
-			//fileSystem = Parse(Path);
-			fileSystem.Parent = Gac.gac;
+			//fileSystem.Parent = Gac.gac;
 			fileSystem.Scope = Gac.gac;
 			// messy, experimental
 			Gac.gac["local"] = fileSystem;
 		}
-
-		//static FileSystem()
-		//{
-		//    //fileSystem=new StrategyMap(new DirectoryStrategy(System.IO.Path.Combine(Process.InstallationPath,"Data")));
-		//    fileSystem = LoadDirectory(Path.Combine(Process.InstallationPath, "Data"));
-		//    //MakePersistant(fileSystem);
-
-		//    //fileSystem = Parse(Path);
-		//    fileSystem.Parent = GacStrategy.Gac;
-		//    fileSystem.Scope = GacStrategy.Gac;
-		//    // messy, experimental
-		//    ((GacStrategy)GacStrategy.Gac.Strategy).cache["local"] = fileSystem;
-		//}
-		//static FileSystem()
-		//{
-		//    fileSystem=Parse(Path);
-		//    fileSystem.Parent = GacStrategy.Gac;
-		//    fileSystem.Scope = GacStrategy.Gac;
-		//    // messy, experimental
-		//    ((GacStrategy)GacStrategy.Gac.Strategy).cache["local"] = fileSystem;
-		//}
-		//public static string Path
-		//{
-		//    get
-		//    {
-		//        return System.IO.Path.Combine(Process.InstallationPath, "meta.meta");
-		//    }
-		//}
 		public static void Save()
 		{
 			string text = Serialize.MapValue(fileSystem, null).Trim(new char[] { '\n' });
@@ -3604,7 +3331,6 @@ namespace Meta
 				if (!TryConsume(character))
 				{
 					throw new ApplicationException("Unexpected token " + Look() + " ,expected " + character);
-					//throw new ApplicationException("Unexpected token " + text[index] + " ,expected " + character);
 				}
 			}
 			private bool TryConsume(string characters)
@@ -3721,9 +3447,6 @@ namespace Meta
 			}
 			public Map Expression()
 			{
-				if (line > 878)
-				{
-				}
 				Map expression = Integer();
 				if (expression == null)
 				{
@@ -3796,7 +3519,7 @@ namespace Meta
 				while (TryConsume('\t') || TryConsume(' '))
 				{
 				}
-			}// rename to Program, make emptyMap a literal
+			}// refactor, rename to Program, make emptyMap a literal
 			private Map NormalProgram()
 			{
 				Extent extent = StartExpression();
@@ -4311,7 +4034,6 @@ namespace Meta
 				}
 				foreach (KeyValuePair<Map, Map> entry in map)
 				{
-					//if (key.Count == 1 && (literal = key[1][CodeKeys.Literal]) != null && (function = literal[CodeKeys.Function]) != null && function.Count == 1 && (function.ContainsKey(CodeKeys.Call) || function.ContainsKey(CodeKeys.Literal) || function.ContainsKey(CodeKeys.Program) || function.ContainsKey(CodeKeys.Select)))
 					if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
 					{
 						text += indentation + Parser.functionChar + Expression(entry.Value, indentation);
@@ -4397,12 +4119,6 @@ namespace Meta
 			{
 				Map key = code[CodeKeys.Key];
 				string text;
-				//if (code.Extent != null && code.Extent.Start.Line == 57)
-				//{
-				//}
-				//Map literal;
-				//Map function;
-				//if (key.Count == 1 && (literal = key[1][CodeKeys.Literal]) != null && (function = literal[CodeKeys.Function]) != null && function.Count == 1 && (function.ContainsKey(CodeKeys.Call) || function.ContainsKey(CodeKeys.Literal) || function.ContainsKey(CodeKeys.Program) || function.ContainsKey(CodeKeys.Select)))
 				if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
 				{
 					if (code[CodeKeys.Value][CodeKeys.Literal] == null)
@@ -4434,45 +4150,6 @@ namespace Meta
 				}
 				return text;
 			}
-			//public static string Statement(Map code, string indentation, ref int autoKeys)
-			//{
-			//    Map key = code[CodeKeys.Key];
-			//    string text;
-			//    //if (code.Extent != null && code.Extent.Start.Line == 57)
-			//    //{
-			//    //}
-			//    if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
-			//    //if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
-			//    {
-			//        if (code[CodeKeys.Value][CodeKeys.Literal] == null)
-			//        {
-			//        }
-			//        text = indentation + Parser.functionChar + Expression(code[CodeKeys.Value][CodeKeys.Literal], indentation);
-			//    }
-			//    else
-			//    {
-			//        Map autoKey;
-			//        text = indentation;
-			//        Map value = code[CodeKeys.Value];
-			//        if (key.Count == 1 && (autoKey = key[1][CodeKeys.Literal]) != null && autoKey.IsInteger && autoKey.GetInteger() == autoKeys + 1)
-			//        {
-			//            if (code.Extent.Start.Line > 500)
-			//            {
-			//            }
-			//            autoKeys++;
-			//            if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
-			//            {
-			//                text += Parser.statementChar;
-			//            }
-			//        }
-			//        else
-			//        {
-			//            text += Select(code[CodeKeys.Key], indentation) + Parser.statementChar;
-			//        }
-			//        text += Expression(value, indentation);
-			//    }
-			//    return text;
-			//}
 			public static string Literal(Map code, string indentation)
 			{
 				return Value(code, indentation);
@@ -4504,8 +4181,6 @@ namespace Meta
 				}
 				return text;
 			}
-
-
 			private static string StringValue(Map val, string indentation)
 			{
 				string text;
@@ -4549,25 +4224,17 @@ namespace Meta
 			{
 				return number.GetInteger().ToString();
 			}
-
 		}
 	}
 	public class Gac: StrategyMap
 	{
 		public static readonly StrategyMap gac = new Gac();
-		//public Map cache = new StrategyMap();
-
 		private Gac()
 		{
 			this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
 		}
-		//public override MapStrategy CopyImplementation()
-		//{
-		//    return this;
-		//}
 		private bool Load(Map key)
 		{
-			//Map key = new StrategyMap(assemblyName);
 			bool loaded;
 			if (strategy.ContainsKey(key))
 			{
@@ -4613,54 +4280,6 @@ namespace Meta
 			}
 			return loaded;
 		}
-		//private bool Load(Map key)
-		//{
-		//    //Map key = new StrategyMap(assemblyName);
-		//    bool loaded;
-		//    if (cache.ContainsKey(key))
-		//    {
-		//        loaded = true;
-		//    }
-		//    else
-		//    {
-		//        if (key.ContainsKey("version"))
-		//        {
-		//        }
-		//        if (key.IsString)
-		//        {
-		//            string assemblyName = key.GetString();
-		//            Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
-		//            if (assembly != null)
-		//            {
-
-		//                cache[key] = LoadAssembly(assembly);
-		//                loaded = true;
-		//            }
-		//            else
-		//            {
-		//                loaded = false;
-		//            }
-		//        }
-		//        else
-		//        {
-		//            Map version = key["version"];
-		//            Map publicKeyToken = key["publicKeyToken"];
-		//            Map culture = key["culture"];
-		//            Map name = key["name"];
-		//            if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
-		//            {
-		//                Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
-		//                cache[key] = LoadAssembly(assembly);
-		//                loaded = true;
-		//            }
-		//            else
-		//            {
-		//                loaded = false;
-		//            }
-		//        }
-		//    }
-		//    return loaded;
-		//}
 		private Map LoadAssembly(Assembly assembly)
 		{
 			Map val = new StrategyMap();
@@ -4669,14 +4288,6 @@ namespace Meta
 				if (type.DeclaringType == null)
 				{
 					Map selected = val;
-					foreach (string nameSpace in type.Namespace.Split('.'))
-					{
-						if (!selected.ContainsKey(nameSpace))
-						{
-							selected[nameSpace] = new StrategyMap();
-						}
-						selected = selected[nameSpace];
-					}
 					string name;
 					if (type.IsGenericTypeDefinition)
 					{
@@ -4704,27 +4315,6 @@ namespace Meta
 			}
 			return val;
 		}
-		//public override Map Get(Map key)
-		//{
-		//    Map val;
-		//    if ((key.IsString && cache.ContainsKey(key)) || Load(key))
-		//    {
-		//        val = cache[key];
-		//    }
-		//    else
-		//    {
-		//        val = null;
-		//    }
-		//    return val;
-		//}
-		//protected override void Set(Map key, Map val)
-		//{
-		//    throw new ApplicationException("Cannot set key " + key.ToString() + " in library.");
-		//}
-		//public override void Set(Map key, Map val)
-		//{
-		//    throw new ApplicationException("Cannot set key " + key.ToString() + " in library.");
-		//}
 		public override ICollection<Map> Keys
 		{
 			get
@@ -4732,163 +4322,12 @@ namespace Meta
 				throw new ApplicationException("not implemented.");
 			}
 		}
-		//public override int Count
-		//{
-		//    get
-		//    {
-		//        return cache.Count;
-		//    }
-		//}
-
 		public override bool ContainsKey(Map key)
 		{
 			return Load(key);
-
-			//bool containsKey;
-			//if (key.IsString)
-			//{
-			//containsKey = Load(key.GetString());
-			//}
-			//else
-			//{
-			//    containsKey = false;
-			//}
-			//return containsKey;
 		}
 		protected Map cachedAssemblyInfo = new StrategyMap();
 	}
-	//public class GacStrategy : MapStrategy
-	//{
-	//    public static readonly StrategyMap Gac = new StrategyMap(new GacStrategy());
-
-	//    public Map  cache = new StrategyMap();
-
-	//    public GacStrategy()
-	//    {
-	//        cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
-	//    }
-	//    public override MapStrategy CopyImplementation()
-	//    {
-	//        return this;
-	//    }
-	//    private bool Load(Map key)
-	//    {
-	//        //Map key = new StrategyMap(assemblyName);
-	//        bool loaded;
-	//        if (cache.ContainsKey(key))
-	//        {
-	//            loaded = true;
-	//        }
-	//        else
-	//        {
-	//            if(key.ContainsKey("version"))
-	//            {
-	//            }
-	//            if (key.IsString)
-	//            {
-	//                string assemblyName = key.GetString();
-	//                Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
-	//                if (assembly != null)
-	//                {
-
-	//                    cache[key] = LoadAssembly(assembly);
-	//                    loaded = true;
-	//                }
-	//                else
-	//                {
-	//                    loaded = false;
-	//                }
-	//            }
-	//            else
-	//            {
-	//                Map version=key["version"];
-	//                Map publicKeyToken=key["publicKeyToken"];
-	//                Map culture=key["culture"];
-	//                Map name=key["name"];
-	//                if(version!=null && version.IsString && publicKeyToken!=null && publicKeyToken.IsString && culture!=null && culture.IsString && name!=null && name.IsString)
-	//                {
-	//                    Assembly assembly = Assembly.Load(name.GetString()+",Version="+version.GetString()+",Culture="+culture.GetString()+",Name="+name.GetString());
-	//                    cache[key] = LoadAssembly(assembly);
-	//                    loaded=true;
-	//                }
-	//                else
-	//                {
-	//                    loaded=false;
-	//                }
-	//            }
-	//        }
-	//        return loaded;
-	//    }
-	//    private Map LoadAssembly(Assembly assembly)
-	//    {
-	//        Map val = new StrategyMap();
-	//        foreach (Type type in assembly.GetExportedTypes())
-	//        {
-	//            if (type.DeclaringType == null)
-	//            {
-	//                Map selected = val;
-	//                foreach (string nameSpace in type.Namespace.Split('.'))
-	//                {
-	//                    if (!selected.ContainsKey(nameSpace))
-	//                    {
-	//                        selected[nameSpace] = new StrategyMap();
-	//                    }
-	//                    selected = selected[nameSpace];
-	//                }
-	//                selected[type.Name] = new TypeMap(type);
-	//            }
-	//        }
-	//        return val;
-	//    }
-	//    public override Map Get(Map key)
-	//    {
-	//        Map val;
-	//        if ((key.IsString && cache.ContainsKey(key)) || Load(key))
-	//        {
-	//            val = cache[key];
-	//        }
-	//        else
-	//        {
-	//            val = null;
-	//        }
-	//        return val;
-	//    }
-	//    public override void Set(Map key, Map val)
-	//    {
-	//        throw new ApplicationException("Cannot set key " + key.ToString() + " in library.");
-	//    }
-	//    public override ICollection<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            throw new ApplicationException("not implemented.");
-	//        }
-	//    }
-	//    public override int Count
-	//    {
-	//        get
-	//        {
-	//            return cache.Count;
-	//        }
-	//    }
-
-	//    public override bool ContainsKey(Map key)
-	//    {
-	//        return Load(key);
-
-	//        //bool containsKey;
-	//        //if (key.IsString)
-	//        //{
-	//        //containsKey = Load(key.GetString());
-	//        //}
-	//        //else
-	//        //{
-	//        //    containsKey = false;
-	//        //}
-	//        //return containsKey;
-	//    }
-	//    protected Map cachedAssemblyInfo = new StrategyMap();
-	//}
 	public class Integer
 	{
 		public static Integer operator | (Integer a, Integer b)

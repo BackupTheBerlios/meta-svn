@@ -68,8 +68,9 @@ namespace Test
 					else if (args[0] == "-i")
 					{
 						Map context = new StrategyMap();
-						context.Parent = FileSystem.fileSystem;
-						while(true)
+						context.Scope = FileSystem.fileSystem;
+						//context.Parent = FileSystem.fileSystem;
+						while (true)
 						{
 							string code="";
 							string line;
@@ -287,12 +288,24 @@ namespace Test
 				Map argument = new StrategyMap();
 				argument[1] = "first arg";
 				argument[2] = "second=arg";
-				//FileSystem.fileSystem["library"].Parent = FileSystem.fileSystem;
-				//FileSystem.fileSystem["library"].Scope = FileSystem.fileSystem;
-				//FileSystem.fileSystem["basicTest"].Scope = GacStrategy.Gac;
 				return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
 				//return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
 			}
+			//public override object GetResult(out int level)
+			//{
+			//    level = 2;
+			//    Map argument = new StrategyMap();
+			//    argument[1] = "first arg";
+			//    argument[2] = "second=arg";
+			//    //FileSystem.fileSystem["library"].Parent = FileSystem.fileSystem;
+			//    //FileSystem.fileSystem["library"].Scope = FileSystem.fileSystem;
+			//    FileSystem.fileSystem.Scope = Gac.gac;
+			//    FileSystem.fileSystem["library"].Scope = FileSystem.fileSystem;
+			//    FileSystem.fileSystem["basicTest"]["basicTest"].Scope = Gac.gac;
+			//    FileSystem.fileSystem["basicTest"]["basicTest"].Scope = FileSystem.fileSystem;//["local"];
+			//    return FileSystem.fileSystem["basicTest"]["basicTest"].Call(argument);//, Map.Empty);
+			//    //return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
+			//}
 		}
 
 		public class Library : Test

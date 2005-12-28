@@ -343,15 +343,6 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																"literal"
 															Value (StrategyMap):
-																"scope"
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														4
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"literal"
-															Value (StrategyMap):
 																"a"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
@@ -579,7 +570,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"a"
 	Value (StrategyMap):
-		"c"
+		"default"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"b"
