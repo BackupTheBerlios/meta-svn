@@ -325,7 +325,7 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																"literal"
 															Value (StrategyMap):
-																"parent"
+																"scope"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														2
@@ -334,7 +334,7 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																"literal"
 															Value (StrategyMap):
-																"parent"
+																"scope"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														3
@@ -343,7 +343,7 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																"literal"
 															Value (StrategyMap):
-																"parent"
+																"scope"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														4
@@ -378,7 +378,7 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																"literal"
 															Value (StrategyMap):
-																"parent"
+																"scope"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														2
@@ -387,7 +387,7 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																"literal"
 															Value (StrategyMap):
-																"parent"
+																"scope"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														3
@@ -434,7 +434,7 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																"literal"
 															Value (StrategyMap):
-																"parent"
+																"scope"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														2
@@ -443,7 +443,7 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																"literal"
 															Value (StrategyMap):
-																"parent"
+																"scope"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														3
@@ -633,7 +633,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"parent"
+														"scope"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												2
@@ -642,7 +642,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"parent"
+														"scope"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												3
@@ -1685,7 +1685,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"parent"
+														"scope"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												2
@@ -1694,7 +1694,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"parent"
+														"scope"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												3
@@ -1822,7 +1822,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"parent"
+														"scope"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												2
@@ -1831,7 +1831,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"literal"
 													Value (StrategyMap):
-														"parent"
+														"scope"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												3

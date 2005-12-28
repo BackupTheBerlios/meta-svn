@@ -316,14 +316,21 @@ namespace Meta
 			{
 				key = keys[i].GetExpression().Evaluate(context);
 				Map selection;
-				if (key.Equals(SpecialKeys.Parent))
+				//if (key.Equals(SpecialKeys.Parent))
+				//{
+				//    selection = selected.Parent;
+				//}
+				//else
+				//{
+				if (key.Equals(SpecialKeys.Scope))
 				{
-					selection = selected.Parent;
+					selection = selected.Scope;
 				}
 				else
 				{
 					selection = selected[key];
 				}
+				//}
 
 				if (selection == null)
 				{
