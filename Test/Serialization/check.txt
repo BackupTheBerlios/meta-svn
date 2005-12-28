@@ -123,7 +123,7 @@
 		|arg
 	argTest=FirstLevel
 		a="z"
-	TestClass=MetaTest.testClasses.TestClass
+	TestClass=MetaTest.TestClass
 	TestClass.NestedClass.field=5
 	nestedClassTest=TestClass.NestedClass.field
 	testClass=TestClass *
@@ -137,20 +137,20 @@
 		publicKeyToken="b77a5c561934e089"
 		culture="Neutral"
 		name="mscorlib"
-	].System.Int32
-	MemberTest=MetaTest.testClasses.MemberTest
+	].Int32
+	MemberTest=MetaTest.MemberTest
 	memberTest=MemberTest *
-	stringOverload=MemberTest.OverloadedMethod.[mscorlib.System.String] "hello"
-	integerOverload=MemberTest.OverloadedMethod.[mscorlib.System.Int32] 5
+	stringOverload=MemberTest.OverloadedMethod.[mscorlib.String] "hello"
+	integerOverload=MemberTest.OverloadedMethod.[mscorlib.Int32] 5
 	memberTestOverload=MemberTest.OverloadedMethod.[
-		MetaTest.testClasses.MemberTest
-		mscorlib.System.Int32
+		MetaTest.MemberTest
+		mscorlib.Int32
 	]
 		memberTest
 		3247
 	memberTestOverload=MemberTest.OverloadedMethod.[
-		MetaTest.testClasses.MemberTest
-		mscorlib.System.Int32
+		MetaTest.MemberTest
+		mscorlib.Int32
 	]
 		memberTest
 		3247
@@ -161,7 +161,7 @@
 	memberTest.InstanceProperty.set MemberTest.ClassProperty.get *
 	instancePropertyValue=memberTest.InstanceProperty.get *
 	interceptedSymbol="/hello/"
-	positionalNoConversion=MetaTest.testClasses.PositionalNoConversion
+	positionalNoConversion=MetaTest.PositionalNoConversion
 		"m"
 		"n"
 		"o"
@@ -169,13 +169,13 @@
 		"r"
 		"s"
 		"t"
-	namedNoConversion=MetaTest.testClasses.NamedNoConversion
+	namedNoConversion=MetaTest.NamedNoConversion
 		"m"
 		y="n"
 	namedNoConversionConcatenated=namedNoConversion.Concatenate
 		c="t"
 		"r"
-	indexerNoConversion=MetaTest.testClasses.IndexerNoConversion *
+	indexerNoConversion=MetaTest.IndexerNoConversion *
 	indexerNoConversion.Item.set
 		"abc"
 		"hihi"
@@ -254,9 +254,9 @@
 		|
 			x="hello"
 	emptyFunctionResult=emptyFunction *
-	font=["System.Drawing"].System.Drawing.Font.Font.[
-		mscorlib.System.String
-		mscorlib.System.Single
+	font=["System.Drawing"].Font.Font.[
+		mscorlib.String
+		mscorlib.Single
 	]
 		"Courier New"
 		10
@@ -271,10 +271,10 @@
 			hello world!
 			hello!
 			"
-	arrayList=mscorlib.System.Collections.ArrayList.ArrayList.[*] *
+	arrayList=mscorlib.ArrayList.ArrayList.[*] *
 	arrayList.Add "hello"
 	arrayListResult=arrayList.Item.get *
-	textBox=["System.Windows.Forms"].System.Windows.Forms.TextBox *
+	textBox=["System.Windows.Forms"].TextBox *
 	textBox.Text.set "
 		Alle meine Entchen,
 		schwimmen auf dem See,
@@ -282,7 +282,7 @@
 		Köpfchen in das Wasser,
 		Schwaenzchen in die Hoeh."
 	lines=textBox.Lines.get *
-	alleMeineText=lines.GetValue.[mscorlib.System.Int32] 1
+	alleMeineText=lines.GetValue.[mscorlib.Int32] 1
 	lines.[5]="bwuhahaha"
 	tabText="			hello"
 	escapedText="'#'n'''t"
