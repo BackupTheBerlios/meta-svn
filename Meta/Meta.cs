@@ -200,28 +200,32 @@ namespace Meta
 	}
 	public class Select : Expression
 	{
-		private Map FindFirstKey(Map keyExpression, Map context)
+		private Map GetSpecialKey(Map context,Map key)
 		{
-			Map key = keyExpression.GetExpression().Evaluate(context);
 			Map val;
 			if (key.Equals(SpecialKeys.Scope))
 			{
 				val = context.Scope;
 			}
-			// refactor
 			else if (key.Equals(SpecialKeys.Arg))
 			{
 				val = context.Argument;
 			}
-			//else if (key.Equals(SpecialKeys.Parent))
-			//{
-			//    val = context.Parent;
-			//}
 			else if (key.Equals(SpecialKeys.Current))
 			{
 				val = context;
 			}
 			else
+			{
+				val = null;
+			}
+			return val;
+		}
+		private Map FindFirstKey(Map keyExpression, Map context)
+		{
+			Map key = keyExpression.GetExpression().Evaluate(context);
+			Map val=GetSpecialKey(context, key);
+			if (val==null)
 			{
 				Map selected = context;
 				while (!selected.ContainsKey(key))
@@ -280,10 +284,6 @@ namespace Meta
 						selection = null;
 					}
 				}
-				//else if (key.Equals(SpecialKeys.Parent))
-				//{
-				//    selection = selected.Parent;
-				//}
 				else
 				{
 					selection = selected[key];
@@ -299,7 +299,7 @@ namespace Meta
 	}
 	public class Statement
 	{
-		// refactor, not quite correct, we should rather just cache the array in maps
+		// refactor
 		List<Map> keys;
 		public Map value;
 		public Statement(Map code)
@@ -312,25 +312,19 @@ namespace Meta
 			Map selected = context;
 			Map key;
 			int i = 0;
-			for (; i+1<keys.Count;)
+			for (; i + 1 < keys.Count; )
 			{
 				key = keys[i].GetExpression().Evaluate(context);
 				Map selection;
-				//if (key.Equals(SpecialKeys.Parent))
-				//{
-				//    selection = selected.Parent;
-				//}
-				//else
-				//{
 				if (key.Equals(SpecialKeys.Scope))
 				{
 					selection = selected.Scope;
 				}
 				else
 				{
-					selection = selected[key];
+					selection = selected.GetForAssignment(key);
+					//selection = selected[key];
 				}
-				//}
 
 				if (selection == null)
 				{
@@ -354,6 +348,46 @@ namespace Meta
 				selected[lastKey] = val;
 			}
 		}
+		//public void Assign(ref Map context)
+		//{
+		//    Map selected = context;
+		//    Map key;
+		//    int i = 0;
+		//    for (; i+1<keys.Count;)
+		//    {
+		//        key = keys[i].GetExpression().Evaluate(context);
+		//        Map selection;
+		//        if (key.Equals(SpecialKeys.Scope))
+		//        {
+		//            selection = selected.Scope;
+		//        }
+		//        else
+		//        {
+		//            selection = selected[key];
+		//        }
+
+		//        if (selection == null)
+		//        {
+		//            Throw.KeyDoesNotExist(key, keys[0].Extent);
+		//        }
+		//        selected = selection;
+		//        i++;
+		//    }
+		//    Map lastKey = keys[i].GetExpression().Evaluate(context);
+		//    Map val = value.GetExpression().Evaluate(context);
+
+		//    if (lastKey.Equals(SpecialKeys.Current))
+		//    {
+		//        val.Scope = context.Scope;
+		//        val.Parent = context.Parent;
+		//        val.Argument = context.Argument;
+		//        context = val;
+		//    }
+		//    else
+		//    {
+		//        selected[lastKey] = val;
+		//    }
+		//}
 	}
 	public class Library
 	{
@@ -808,11 +842,26 @@ namespace Meta
 				return array;
 			}
 		}
+		public Map GetForAssignment(Map key)
+		{
+			return Get(key);
+		}
         public Map this[Map key]
         {
             get
             {
-                return Get(key);
+                Map value=Get(key);
+				Map result;
+				if (value != null)
+				{
+					result = value;
+					//result = value.Copy();
+				}
+				else
+				{
+					result = null;
+				}
+				return result;
             }
             set
             {
@@ -941,191 +990,7 @@ namespace Meta
 			return new StrategyMap(text);
 		}
 	}
-	public class ListStrategy : MapStrategy
-	{
-		public override bool Equal(MapStrategy strategy)
-		{
-		    bool equal;
-		    if (strategy is ListStrategy)
-		    {
-				if (Count == strategy.Count)
-				{
-					equal = true;
-					ListStrategy listStrategy = (ListStrategy)strategy;
-					for (int i = 0; i < values.Count; i++)
-					{
-						if (!this.values[i].Equals(listStrategy.values[i]))
-						{
-							equal = false;
-							break;
-						}
-					}
-				}
-				else
-				{
-					equal = false;
-				}
-		    }
-		    else
-		    {
-		        equal = base.Equal(strategy);
-		    }
-		    return equal;
-		}
-		public override int Count
-		{
-			get
-			{
-				return values.Count;
-			}
-		}
-		public override void AppendMap(Map array)
-		{
-			foreach (Map map in array.Array)
-			{
-				this.values.Add(map.Copy());
-			}
-		}
-		public override List<Map> Array
-		{
-			get
-			{
-				return this.values;
-			}
-		}
-		public override int GetArrayCount()
-		{
-			return this.values.Count;
-		}
-		public override bool ContainsKey(Map key)
-		{
-			bool containsKey;
-			if (key.IsInteger)
-			{
-				Integer integer = key.GetInteger();
-				if (integer>=1 && integer <= values.Count)
-				{
-					containsKey = true;
-				}
-				else
-				{
-					containsKey = false;
-				}
-			}
-			else
-			{
-				containsKey = false;
-			}
-			return containsKey;
-		}
-		private List<Map> values;
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				List<Map> keys=new List<Map>();
-				int counter=1;
-				foreach (Map value in values)
-				{
-					keys.Add(new StrategyMap(counter));
-					counter++;
-				}
-				return keys;
-			}
-		}
-		public ListStrategy()
-		{
-			this.values=new List<Map>();
-		}
-		public ListStrategy(string text)
-		{
-			this.values = new List<Map>(text.Length);
-			foreach (char c in text)
-			{
-				this.values.Add(new StrategyMap(c));
-			}
-		}
-		public ListStrategy(ListStrategy original)
-		{
-			this.values=new List<Map>(original.values);
-		}
-		public override MapStrategy CopyImplementation()
-		{
-			return new ListStrategy(this);
-		}
-		public override Map Get(Map key)
-		{
-			Map value=null;
-			if (key.IsInteger)
-			{
-				int integer = key.GetInteger().GetInt32();
-				if (integer >= 1 && integer <= values.Count)
-				{
-					value = values[integer - 1];
-				}
-			}
-			return value;
-		}
-		public override void Set(Map key, Map val)
-		{
-			if (key.IsInteger)
-			{
-				int integer = key.GetInteger().GetInt32();
-				if (integer >= 1 && integer <= values.Count)
-				{
-					values[integer-1] = val;
-				}
-				else if (integer == values.Count + 1)
-				{
-					values.Add(val);
-				}
-				else
-				{
-					Panic(key, val);
-				}
-			}
-			else
-			{
-				Panic(key, val);
-			}
-		}
-	}
-	public class EmptyStrategy : MapStrategy
-	{
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				return new List<Map>(0);
-			}
-		}
-		public override MapStrategy CopyImplementation()
-		{
-			return new EmptyStrategy();
-		}
-		public override void Set(Map key, Map val)
-		{
-			if (key.IsInteger)
-			{
-				if (key.Equals(Map.Empty) && val.IsInteger)
-				{
-					Panic(key, val, new IntegerStrategy(0));
-				}
-				else
-				{
-					Panic(key, val, new ListStrategy());
-				}
-			}
-			else
-			{
-				Panic(key, val);
-			}
-		}
-		public override Map Get(Map key)
-		{
-			return null;
-		}
-	}
+
 	public class StrategyMap:Map
 	{
 		public override bool IsFunction
@@ -1259,6 +1124,7 @@ namespace Meta
 			}
 			else if (toCompare is StrategyMap)
 			{
+				//((StrategyMap)toCompare).Strategy.GetType==strategy.GetType()
 				isEqual = ((StrategyMap)toCompare).strategy.Equal(strategy);
 			}
 			else
@@ -1267,6 +1133,23 @@ namespace Meta
 			}
 			return isEqual;
 		}
+		//public override bool Equals(object toCompare)
+		//{
+		//    bool isEqual;
+		//    if (Object.ReferenceEquals(toCompare, this))
+		//    {
+		//        isEqual = true;
+		//    }
+		//    else if (toCompare is StrategyMap)
+		//    {
+		//        isEqual = ((StrategyMap)toCompare).strategy.Equal(strategy);
+		//    }
+		//    else
+		//    {
+		//        isEqual = false;
+		//    }
+		//    return isEqual;
+		//}
 		public MapStrategy Strategy
 		{
 			get
@@ -1307,81 +1190,81 @@ namespace Meta
 		{
 		}
 	}
-	public class RemoteStrategy : MapStrategy
-	{
-		public override MapStrategy CopyImplementation()
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				return null;
-			}
-		}
-		public override Map Get(Map key)
-		{
-			if(!key.IsString)
-			{
-				throw new ApplicationException("key is not a string");
-			}
-			WebClient webClient=new WebClient();
-			Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
-			Stream stream=webClient.OpenRead(fullPath.ToString());
-			StreamReader streamReader=new StreamReader(stream);
-			return FileSystem.Parse(streamReader,"Web");
-		}
-		public override void Set(Map key,Map val)
-		{
-			throw new ApplicationException("Cannot set key in remote map.");
-		}
-		private string address;
-		public RemoteStrategy(string address)
-		{
-			this.address=address;
-		}
-	}
-	public class NetStrategy:MapStrategy
-	{
-		public static readonly StrategyMap Net = new StrategyMap(new NetStrategy());
-		private NetStrategy()
-		{
-		}
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				return new List<Map>();
-			}
-		}
-        public override Map  Get(Map key)
-        {
-            if (!key.IsString)
-            {
-                throw new ApplicationException("need a string here");
-            }
-			Map val;
-			if (key.Equals(SpecialKeys.Local))
-			{
-				val = FileSystem.fileSystem;
-			}
-			else
-			{
-				val=new StrategyMap(new RemoteStrategy(key.GetString()));
-			}
-			return val;
-        }
-        public override void Set(Map key, Map val)
-        {
-			throw new ApplicationException("Cannot set key in Web.");
-        }
-		public override MapStrategy CopyImplementation()
-		{
-			throw new ApplicationException("Not implemented.");
-		}
-		public static NetStrategy singleton=new NetStrategy();
-	}
+	//public class RemoteStrategy : MapStrategy
+	//{
+	//    public override MapStrategy CopyImplementation()
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            return null;
+	//        }
+	//    }
+	//    public override Map Get(Map key)
+	//    {
+	//        if(!key.IsString)
+	//        {
+	//            throw new ApplicationException("key is not a string");
+	//        }
+	//        WebClient webClient=new WebClient();
+	//        Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
+	//        Stream stream=webClient.OpenRead(fullPath.ToString());
+	//        StreamReader streamReader=new StreamReader(stream);
+	//        return FileSystem.Parse(streamReader,"Web");
+	//    }
+	//    public override void Set(Map key,Map val)
+	//    {
+	//        throw new ApplicationException("Cannot set key in remote map.");
+	//    }
+	//    private string address;
+	//    public RemoteStrategy(string address)
+	//    {
+	//        this.address=address;
+	//    }
+	//}
+	//public class NetStrategy:MapStrategy
+	//{
+	//    public static readonly StrategyMap Net = new StrategyMap(new NetStrategy());
+	//    private NetStrategy()
+	//    {
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            return new List<Map>();
+	//        }
+	//    }
+	//    public override Map  Get(Map key)
+	//    {
+	//        if (!key.IsString)
+	//        {
+	//            throw new ApplicationException("need a string here");
+	//        }
+	//        Map val;
+	//        if (key.Equals(SpecialKeys.Local))
+	//        {
+	//            val = FileSystem.fileSystem;
+	//        }
+	//        else
+	//        {
+	//            val=new StrategyMap(new RemoteStrategy(key.GetString()));
+	//        }
+	//        return val;
+	//    }
+	//    public override void Set(Map key, Map val)
+	//    {
+	//        throw new ApplicationException("Cannot set key in Web.");
+	//    }
+	//    public override MapStrategy CopyImplementation()
+	//    {
+	//        throw new ApplicationException("Not implemented.");
+	//    }
+	//    public static NetStrategy singleton=new NetStrategy();
+	//}
 
 	public class Transform
 	{
@@ -2049,7 +1932,6 @@ namespace Meta
 			return Constructor.Call(argument);
 		}
 	}
-	[Serializable]
 	public class ObjectMap: DotNetMap
 	{
 		public override bool IsFunction
@@ -2078,126 +1960,355 @@ namespace Meta
 			return new ObjectMap(obj);
 		}
 	}
-	public abstract class MapStrategy
+	public class EmptyStrategy : MapStrategy
 	{
-		public virtual int GetArrayCount()
-		{
-			return map.GetArrayCountDefault();
-		}
-		public virtual void AppendMap(Map array)
-		{
-			map.AppendMapDefault(array);
-		}
-		public void Panic(MapStrategy newStrategy)
-		{
-			map.Strategy = newStrategy;
-			map.InitFromStrategy(this);
-		}
-		protected void Panic(Map key,Map val)
-		{
-			Panic(key, val, new DictionaryStrategy());
-		}
-		protected void Panic(Map key, Map val,MapStrategy newStrategy)
-		{
-			Panic(newStrategy);
-			map.Strategy.Set(key, val); // why do it like this? this wont assign the parent, which is problematic!!!
-		}
-		public virtual bool IsInteger
+		public override ICollection<Map> Keys
 		{
 			get
 			{
-				return map.IsIntegerDefault;
+				return new List<Map>(0);
 			}
 		}
-		public virtual bool IsString
+		public override MapStrategy CopyImplementation()
 		{
-			get
+			return new EmptyStrategy();
+		}
+		public override void Set(Map key, Map val)
+		{
+			if (key.IsInteger)
 			{
-				return map.IsStringDefault;
-			}
-		}
-		public virtual string GetString()
-		{
-			return map.GetStringDefault();
-		}
-		public virtual Integer GetInteger()
-		{
-			return map.GetIntegerDefault();
-		}
-
-		public StrategyMap map;
-
-		public abstract MapStrategy CopyImplementation();
-		public virtual Map Copy()
-		{
-			StrategyMap clone;
-			MapStrategy strategy = (MapStrategy)this.CopyImplementation();
-			clone=new StrategyMap(strategy);
-            strategy.map = clone;
-			return clone;
-		}
-
-		public virtual List<Map> Array
-		{
-			get
-			{
-				List<Map> array=new List<Map>();
-				for(int i=1;this.ContainsKey(i);i++)
+				if (key.Equals(Map.Empty) && val.IsInteger)
 				{
-					array.Add(this.Get(i));
+					Panic(key, val, new IntegerStrategy(0));
 				}
-				return array;
-			}
-		}
-		public abstract ICollection<Map> Keys
-		{
-			get;
-		}
-		public virtual int Count
-		{
-			get
-			{
-				return Keys.Count;
-			}
-		}
-		public abstract void Set(Map key, Map val);
-		public abstract Map Get(Map key);
-
-		public virtual bool ContainsKey(Map key)
-		{
-			return Keys.Contains(key);
-		}
-		// rename, only used internally
-		public virtual bool Equal(MapStrategy strategy)
-		{
-			bool isEqual;
-			if(Object.ReferenceEquals(strategy,this))
-			{ 
-				isEqual=true;
-			}
-			else if(((MapStrategy)strategy).Count!=this.Count)
-			{
-				isEqual=false;
+				else
+				{
+					Panic(key, val, new ListStrategy());
+				}
 			}
 			else
 			{
-				isEqual=true;
-				foreach(Map key in this.Keys) 
-				{
-					Map otherValue = strategy.Get(key);
-					Map thisValue = Get(key);
-					if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue))
-					{
-					//if (!((MapStrategy)strategy).ContainsKey(key) || !((MapStrategy)strategy).Get(key).Equals(this.Get(key)))
-					//{
-						isEqual=false;
-					}
-				}
+				Panic(key, val);
+			}
+		}
+		public override Map Get(Map key)
+		{
+			return null;
+		}
+	}
+	public class IntegerStrategy : ConcreteMapStrategy<Integer>
+	{
+		private Integer number;
+		public override bool IsInteger
+		{
+			get
+			{
+				return true;
+			}
+		}
+		public override Integer GetInteger()
+		{
+			return number;
+		}
+		//public override bool Equal(MapStrategy obj)
+		//{
+		//    return ((IntegerStrategy)obj).number == number;
+		//}
+		public override bool Equal(MapStrategy obj)
+		{
+			bool isEqual;
+			if (obj is IntegerStrategy)
+			{
+				isEqual = ((IntegerStrategy)obj).number == number;
+			}
+			else
+			{
+				isEqual = base.Equal(obj);
 			}
 			return isEqual;
 		}
+		public IntegerStrategy(Integer number)
+		{
+			this.number = new Integer(number);
+		}
+		public override MapStrategy CopyImplementation()
+		{
+			return new IntegerStrategy(number);
+		}
+		public override ICollection<Map> Keys
+		{
+			get
+			{
+				List<Map> keys = new List<Map>();
+				if (number != 0)
+				{
+					keys.Add(Map.Empty);
+				}
+				return keys;
+			}
+		}
+		public override bool ContainsKey(Map key)
+		{
+			return key.Equals(Map.Empty) && number != 0;
+		}
+		public override Map Get(Map key)
+		{
+			Map value;
+			if (ContainsKey(key))
+			{
+				value = number - 1;
+			}
+			else
+			{
+				value = null;
+			}
+			return value;
+		}
+		public override void Set(Map key, Map value)
+		{
+			if (key.Equals(Map.Empty) && value.IsInteger)
+			{
+				this.number = value.GetInteger()+1;
+			}
+			else
+			{
+				Panic(key, value);
+			}
+		}
 	}
-	public class CloneStrategy:MapStrategy
+	public class ListStrategy : ConcreteMapStrategy<List<Map>>
+	{
+		//public override bool Equal(MapStrategy strategy)
+		//{
+		//    bool equal;
+		//    ListStrategy listStrategy = (ListStrategy)strategy;
+		//    if (Count == strategy.Count)
+		//    {
+		//        equal = true;
+
+		//        for (int i = 0; i < values.Count; i++)
+		//        {
+		//            if (!this.values[i].Equals(listStrategy.values[i]))
+		//            {
+		//                equal = false;
+		//                break;
+		//            }
+		//        }
+		//    }
+		//    else
+		//    {
+		//        equal = false;
+		//    }
+		//    return equal;
+		//}
+		public override bool Equal(MapStrategy strategy)
+		{
+			bool equal;
+			if (strategy is ListStrategy)
+			{
+				if (Count == strategy.Count)
+				{
+					equal = true;
+					ListStrategy listStrategy = (ListStrategy)strategy;
+					for (int i = 0; i < values.Count; i++)
+					{
+						if (!this.values[i].Equals(listStrategy.values[i]))
+						{
+							equal = false;
+							break;
+						}
+					}
+				}
+				else
+				{
+					equal = false;
+				}
+			}
+			else
+			{
+				equal = base.Equal(strategy);
+			}
+			return equal;
+		}
+		public override int Count
+		{
+			get
+			{
+				return values.Count;
+			}
+		}
+		public override void AppendMap(Map array)
+		{
+			foreach (Map map in array.Array)
+			{
+				this.values.Add(map.Copy());
+			}
+		}
+		public override List<Map> Array
+		{
+			get
+			{
+				return this.values;
+			}
+		}
+		public override int GetArrayCount()
+		{
+			return this.values.Count;
+		}
+		public override bool ContainsKey(Map key)
+		{
+			bool containsKey;
+			if (key.IsInteger)
+			{
+				Integer integer = key.GetInteger();
+				if (integer >= 1 && integer <= values.Count)
+				{
+					containsKey = true;
+				}
+				else
+				{
+					containsKey = false;
+				}
+			}
+			else
+			{
+				containsKey = false;
+			}
+			return containsKey;
+		}
+		private List<Map> values;
+		public override ICollection<Map> Keys
+		{
+			get
+			{
+				List<Map> keys = new List<Map>();
+				int counter = 1;
+				foreach (Map value in values)
+				{
+					keys.Add(new StrategyMap(counter));
+					counter++;
+				}
+				return keys;
+			}
+		}
+		public ListStrategy()
+		{
+			this.values = new List<Map>();
+		}
+		public ListStrategy(string text)
+		{
+			this.values = new List<Map>(text.Length);
+			foreach (char c in text)
+			{
+				this.values.Add(new StrategyMap(c));
+			}
+		}
+		public ListStrategy(ListStrategy original)
+		{
+			this.values = new List<Map>(original.values);
+		}
+		public override MapStrategy CopyImplementation()
+		{
+			return new ListStrategy(this);
+		}
+		public override Map Get(Map key)
+		{
+			Map value = null;
+			if (key.IsInteger)
+			{
+				int integer = key.GetInteger().GetInt32();
+				if (integer >= 1 && integer <= values.Count)
+				{
+					value = values[integer - 1];
+				}
+			}
+			return value;
+		}
+		public override void Set(Map key, Map val)
+		{
+			if (key.IsInteger)
+			{
+				int integer = key.GetInteger().GetInt32();
+				if (integer >= 1 && integer <= values.Count)
+				{
+					values[integer - 1] = val;
+				}
+				else if (integer == values.Count + 1)
+				{
+					values.Add(val);
+				}
+				else
+				{
+					Panic(key, val);
+				}
+			}
+			else
+			{
+				Panic(key, val);
+			}
+		}
+	}
+	public class DictionaryStrategy:ConcreteMapStrategy<Dictionary<Map,Map>>
+	{
+		private Dictionary<Map,Map> dictionary;
+		public DictionaryStrategy():this(2)
+		{
+			if (this.map!= null &&this.IsString && this.GetString() == "abc, ")
+			{
+			}
+		}
+		public override MapStrategy CopyImplementation()
+		{
+			this.map.Strategy = new CloneStrategy(this);
+			return new CloneStrategy(this);
+			//return new CloneStrategy(this);
+		}
+		public DictionaryStrategy(int Count)
+		{
+			this.dictionary=new Dictionary<Map,Map>(Count);
+		}
+		public override List<Map> Array
+		{
+			get
+			{
+				List<Map> list=new List<Map>();
+				for(Integer iInteger=new Integer(1);ContainsKey(new StrategyMap(iInteger));iInteger+=1)
+				{
+					list.Add(this.Get(new StrategyMap(iInteger)));
+				}
+				return list;
+			}
+		}
+		public override ICollection<Map> Keys
+		{
+			get
+			{
+				return dictionary.Keys;
+			}
+		}
+		public override int Count
+		{
+			get
+			{
+				return dictionary.Count;
+			}
+		}
+		public override Map  Get(Map key)
+		{
+			Map val;
+            dictionary.TryGetValue(key,out val);
+            return val;
+		}
+		public override void Set(Map key,Map value)
+		{
+			dictionary[key]=value;
+		}
+		public override bool ContainsKey(Map key) 
+		{
+			return dictionary.ContainsKey(key);
+		}
+	}
+	public class CloneStrategy:ConcreteMapStrategy<MapStrategy>
 	{
 		public MapStrategy original;
 
@@ -2304,65 +2415,160 @@ namespace Meta
 			Panic(key,value);
 		}
 	}
-	public class DictionaryStrategy:MapStrategy
+	public abstract class ConcreteMapStrategy<T> : MapStrategy
 	{
-		private Dictionary<Map,Map> dictionary;
-		public DictionaryStrategy():this(2)
+		protected T data;
+	}
+	public abstract class MapStrategy
+	{
+		public virtual int GetArrayCount()
 		{
-			if (this.map!= null &&this.IsString && this.GetString() == "abc, ")
-			{
-			}
+			return map.GetArrayCountDefault();
 		}
-		public override MapStrategy CopyImplementation()
+		public virtual void AppendMap(Map array)
 		{
-			this.map.Strategy = new CloneStrategy(this);
-			return new CloneStrategy(this);
-			//return new CloneStrategy(this);
+			map.AppendMapDefault(array);
 		}
-		public DictionaryStrategy(int Count)
+		public void Panic(MapStrategy newStrategy)
 		{
-			this.dictionary=new Dictionary<Map,Map>(Count);
+			map.Strategy = newStrategy;
+			map.InitFromStrategy(this);
 		}
-		public override List<Map> Array
+		protected void Panic(Map key, Map val)
+		{
+			Panic(key, val, new DictionaryStrategy());
+		}
+		protected void Panic(Map key, Map val, MapStrategy newStrategy)
+		{
+			Panic(newStrategy);
+			map.Strategy.Set(key, val); // why do it like this? this wont assign the parent, which is problematic!!!
+		}
+		public virtual bool IsInteger
 		{
 			get
 			{
-				List<Map> list=new List<Map>();
-				for(Integer iInteger=new Integer(1);ContainsKey(new StrategyMap(iInteger));iInteger+=1)
+				return map.IsIntegerDefault;
+			}
+		}
+		public virtual bool IsString
+		{
+			get
+			{
+				return map.IsStringDefault;
+			}
+		}
+		public virtual string GetString()
+		{
+			return map.GetStringDefault();
+		}
+		public virtual Integer GetInteger()
+		{
+			return map.GetIntegerDefault();
+		}
+
+		public StrategyMap map;
+
+		public abstract MapStrategy CopyImplementation();
+		public virtual Map Copy()
+		{
+			StrategyMap clone;
+			MapStrategy strategy = (MapStrategy)this.CopyImplementation();
+			clone = new StrategyMap(strategy);
+			strategy.map = clone;
+			return clone;
+		}
+
+		public virtual List<Map> Array
+		{
+			get
+			{
+				List<Map> array = new List<Map>();
+				for (int i = 1; this.ContainsKey(i); i++)
 				{
-					list.Add(this.Get(new StrategyMap(iInteger)));
+					array.Add(this.Get(i));
 				}
-				return list;
+				return array;
 			}
 		}
-		public override ICollection<Map> Keys
+		public abstract ICollection<Map> Keys
+		{
+			get;
+		}
+		public virtual int Count
 		{
 			get
 			{
-				return dictionary.Keys;
+				return Keys.Count;
 			}
 		}
-		public override int Count
+		public abstract void Set(Map key, Map val);
+		public abstract Map Get(Map key);
+
+		public virtual bool ContainsKey(Map key)
 		{
-			get
+			return Keys.Contains(key);
+		}
+		// rename, only used internally
+		public virtual bool Equal(MapStrategy strategy)
+		{
+			return EqualDefault(strategy);
+		}
+		public virtual bool EqualDefault(MapStrategy strategy)
+		{
+			bool isEqual;
+			if (Object.ReferenceEquals(strategy, this))
 			{
-				return dictionary.Count;
+				isEqual = true;
 			}
+			else if (((MapStrategy)strategy).Count != this.Count)
+			{
+				isEqual = false;
+			}
+			else
+			{
+				isEqual = true;
+				foreach (Map key in this.Keys)
+				{
+					Map otherValue = strategy.Get(key);
+					Map thisValue = Get(key);
+					if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue))
+					{
+						//if (!((MapStrategy)strategy).ContainsKey(key) || !((MapStrategy)strategy).Get(key).Equals(this.Get(key)))
+						//{
+						isEqual = false;
+					}
+				}
+			}
+			return isEqual;
 		}
-		public override Map  Get(Map key)
-		{
-			Map val;
-            dictionary.TryGetValue(key,out val);
-            return val;
-		}
-		public override void Set(Map key,Map value)
-		{
-			dictionary[key]=value;
-		}
-		public override bool ContainsKey(Map key) 
-		{
-			return dictionary.ContainsKey(key);
-		}
+		//public virtual bool Equal(MapStrategy strategy)
+		//{
+		//    bool isEqual;
+		//    if (Object.ReferenceEquals(strategy, this))
+		//    {
+		//        isEqual = true;
+		//    }
+		//    else if (((MapStrategy)strategy).Count != this.Count)
+		//    {
+		//        isEqual = false;
+		//    }
+		//    else
+		//    {
+		//        isEqual = true;
+		//        foreach (Map key in this.Keys)
+		//        {
+		//            Map otherValue = strategy.Get(key);
+		//            Map thisValue = Get(key);
+		//            if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue))
+		//            {
+		//                //if (!((MapStrategy)strategy).ContainsKey(key) || !((MapStrategy)strategy).Get(key).Equals(this.Get(key)))
+		//                //{
+		//                isEqual = false;
+		//            }
+		//        }
+		//    }
+		//    return isEqual;
+		//}
 	}
 	public class Event:Map
 	{
@@ -2724,86 +2930,7 @@ namespace Meta
 		[NonSerialized]
 		public Type type;
 	}
-	public class IntegerStrategy:MapStrategy
-	{
-		private Integer number;
-		public override bool IsInteger
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override Integer GetInteger()
-		{
-			return number;
-		}
-		public override bool Equal(MapStrategy obj)
-		{
-			bool isEqual;
-			if (obj is IntegerStrategy)
-			{
-				isEqual = ((IntegerStrategy)obj).number == number;
-			}
-			else
-			{
-				isEqual = base.Equal(obj);
-			}
-			return isEqual;
-		}
-		public IntegerStrategy(Integer number)
-		{
-			this.number = new Integer(number);
-		}
-		public override MapStrategy CopyImplementation()
-		{
-			return new IntegerStrategy(number);
-		}
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				List<Map> keys=new List<Map>();
-				if(number!=0)
-				{
-					keys.Add(Map.Empty);
-				}
-				return keys;
-			}
-		}
-		public override Map Get(Map key)
-		{
-			Map result;
-			if(key.Equals(Map.Empty))
-			{
-				if(number==0)
-				{
-					result=null;
-				}
-				else
-				{
-					result=number-1;
-				}
-			}
 
-			else
-			{
-				result=null;
-			}
-				return result;
-		}
-		public override void Set(Map key, Map value)
-		{
-			if (key.Equals(Map.Empty) && value.IsInteger)
-			{
-				this.number += 1;
-			}
-			else
-			{
-				Panic(key, value);
-			}
-		}
-	}
 
 	public interface ISerializeEnumerableSpecial
 	{
