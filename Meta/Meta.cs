@@ -1998,7 +1998,7 @@ namespace Meta
 	}
 	public class IntegerStrategy : ConcreteMapStrategy<Integer>
 	{
-		private Integer number;
+		//private Integer number;
 		public override bool IsInteger
 		{
 			get
@@ -2008,7 +2008,7 @@ namespace Meta
 		}
 		public override Integer GetInteger()
 		{
-			return number;
+			return data;
 		}
 		//public override bool Equal(MapStrategy obj)
 		//{
@@ -2019,7 +2019,7 @@ namespace Meta
 			bool isEqual;
 			if (obj is IntegerStrategy)
 			{
-				isEqual = ((IntegerStrategy)obj).number == number;
+				isEqual = ((IntegerStrategy)obj).data == data;
 			}
 			else
 			{
@@ -2029,18 +2029,18 @@ namespace Meta
 		}
 		public IntegerStrategy(Integer number)
 		{
-			this.number = new Integer(number);
+			this.data = new Integer(number);
 		}
 		public override MapStrategy CopyImplementation()
 		{
-			return new IntegerStrategy(number);
+			return new IntegerStrategy(data);
 		}
 		public override ICollection<Map> Keys
 		{
 			get
 			{
 				List<Map> keys = new List<Map>();
-				if (number != 0)
+				if (data != 0)
 				{
 					keys.Add(Map.Empty);
 				}
@@ -2049,14 +2049,14 @@ namespace Meta
 		}
 		public override bool ContainsKey(Map key)
 		{
-			return key.Equals(Map.Empty) && number != 0;
+			return key.Equals(Map.Empty) && data != 0;
 		}
 		public override Map Get(Map key)
 		{
 			Map value;
 			if (ContainsKey(key))
 			{
-				value = number - 1;
+				value = data - 1;
 			}
 			else
 			{
@@ -2068,7 +2068,7 @@ namespace Meta
 		{
 			if (key.Equals(Map.Empty) && value.IsInteger)
 			{
-				this.number = value.GetInteger()+1;
+				this.data = value.GetInteger()+1;
 			}
 			else
 			{
