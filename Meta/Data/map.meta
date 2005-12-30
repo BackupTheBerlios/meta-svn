@@ -1,0 +1,185 @@
+pop=
+	|Meta.Library.Pop arg
+isInteger=
+	|
+		object=Meta.ObjectMap arg
+		this=object.IsInteger.get *
+isString=
+	|
+		object=Meta.ObjectMap arg
+		this=object.IsString.get *
+if=
+	|
+		argument=merge
+			=
+				else=
+					|*
+				then=
+					|*
+			arg
+		cases=
+			[1]=argument.then
+			[*]=argument.else
+		this=cases.[argument.condition] *
+repeat=
+	documentation="Repeats an array a given number of times."
+	|
+		argument=arg.array
+		this=join apply
+			array=range arg.times
+			with=
+				|argument
+range=
+	documentation="Returns an array containing all numbers from 1 to the argument."
+	|
+		array=*
+		counter=1
+		limit=math.add
+			arg
+			1
+		count=
+			|
+				scope.scope.array.[counter]=counter
+				scope.scope.counter=math.add
+					counter
+					1
+		while
+			condition=
+				|math.smaller
+					counter
+					limit
+			with=
+				|
+					this=count arg
+		this=array
+remove=
+	documentation="Removes a key from a map."
+	|Meta.Library.Remove arg
+while=
+	documentation="Calls a function as long as the condition function returns 1."
+	|
+		stop=arg.condition *
+		next=
+			[*]=
+				|*
+			=
+				|
+					arg.with *
+					while arg
+		next.[stop] arg
+while=
+	documentation="Calls a function as long as the condition function returns 1."
+	|Meta.Library.While arg
+foreach=
+	|apply
+		array=keys arg.map
+		with=
+			|arg.arg.with
+				value=arg.arg.map.[arg]
+				key=arg
+loop=
+	|apply
+		array=arg.array
+		with=
+			|*
+apply=
+	documentation="Calls a function with every value in an array as an argument and returns the results as an array."
+	|applyImplementation
+		array=arg.array
+		with=arg.with
+		index=1
+		result=*
+	applyImplementation=
+		|
+			stop=math.greater
+				arg.index
+				length arg.array
+			next=
+				=
+					|arg.result
+				[*]=
+					|applyImplementation
+						array=arg.array
+						with=arg.with
+						index=math.add
+							arg.index
+							1
+						object=Meta.ObjectMap arg.result
+						argument=arg.with arg.array.[arg.index]
+						object.Append argument
+						result=object.This.get *
+			this=next.[stop] arg
+join=
+	documentation="Concatenates arrays."
+	|Meta.Library.Join arg
+contains=
+	documentation="Determines whether a map contains a key."
+	|
+		object=Meta.ObjectMap arg.map
+		this=object.ContainsKey arg.key
+keys=
+	documentation="Returns the keys of a map in an array."
+	|
+		object=Meta.ObjectMap arg
+		this=Meta.StrategyMap.StrategyMap.[mscorlib.["ICollection`1"].[Meta.Map]] object.Keys.get *
+merge=
+	documentation="Combines several maps into one."
+	|sum
+		array=arg
+		with=
+			|
+				overwrite=arg.present
+				this=sum
+					array=keys arg.present
+					with=
+						|
+							result=arg.previous
+							result.[arg.present]=overwrite.[arg.present]
+							this=result
+					start=arg.previous
+		start=*
+equal=
+	documentation="Determines whether maps are identical."
+	|
+		result=sum
+			array=arg
+			with=
+				|
+					first=Meta.ObjectMap arg.previous.previous
+					this=
+						equality=logic.and
+							first.Equals arg.present
+							arg.previous.equality
+						previous=arg.present
+			start=
+				equality=1
+				previous=arg.[1]
+		this=result.equality
+length=
+	documentation="Returns the length of an array."
+	|
+		map=Meta.ObjectMap arg
+		this=map.ArrayCount.get *
+sum=
+	|sumImplementation
+		index=1
+		array=arg.array
+		with=arg.with
+		result=arg.start
+	sumImplementation=
+		|
+			stop=math.greater
+				arg.index
+				length arg.array
+			next=
+				=
+					|arg.result
+				[*]=
+					|sumImplementation
+						index=math.increment arg.index
+						result=arg.with
+							previous=arg.result
+							present=arg.array.[arg.index]
+						array=arg.array
+						with=arg.with
+			this=next.[stop] arg

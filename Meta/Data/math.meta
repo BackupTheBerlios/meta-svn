@@ -1,0 +1,35 @@
+increment=
+	documentation="Increments an integer."
+	|
+		result=Meta.Integer.op_Addition
+			Meta.Integer.Integer.[Meta.Map] arg
+			Meta.Integer.Integer.[Meta.Map] 1
+		this=Meta.StrategyMap.StrategyMap.[Meta.Integer] result
+add=
+	documentation="Adds integers."
+	|Meta.StrategyMap.StrategyMap.[Meta.Integer] map.sum
+		array=arg
+		with=
+			|Meta.Integer.op_Addition
+				Meta.Integer.Integer.[Meta.Integer] arg.previous
+				Meta.Integer.Integer.[Meta.Map] arg.present
+		start=Meta.Integer.Integer.[Meta.Map] *
+multiply=
+	documentation="Multiplies integers."
+	|Meta.StrategyMap.StrategyMap.[Meta.Integer] map.sum
+		array=arg
+		with=
+			|Meta.Integer.op_Multiply
+				Meta.Integer.Integer.[Meta.Integer] arg.previous
+				Meta.Integer.Integer.[Meta.Map] arg.present
+		start=Meta.Integer.Integer.[Meta.Map] 1
+greater=
+	documentation="Determines whether the first integer is greater than the second integer."
+	|Meta.Integer.op_GreaterThan
+		Meta.Integer.Integer.[Meta.Map] arg.[1]
+		Meta.Integer.Integer.[Meta.Map] arg.[2]
+smaller=
+	documentation="Determines whether the first integer is smaller than the second integer."
+	|Meta.Integer.op_LessThan
+		Meta.Integer.Integer.[Meta.Map] arg.[1]
+		Meta.Integer.Integer.[Meta.Map] arg.[2]

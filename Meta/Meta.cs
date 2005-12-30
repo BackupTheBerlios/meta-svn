@@ -3159,7 +3159,7 @@ namespace Meta
 				//parsed.Parent = GacStrategy.Gac;
 				//parsed.Scope = GacStrategy.Gac;
 				//parsed.Parent = null;
-				//parsed.Scope = null;
+				parsed.Scope = null;
 				return parsed;
 			}
 		}
@@ -3190,8 +3190,8 @@ namespace Meta
 		}
 		static FileSystem()
 		{
-			//fileSystem=LoadDirectory(Path.Combine(Process.InstallationPath,"Data"));
-			fileSystem = Parse(Path.Combine(Process.InstallationPath, @"meta.meta"));
+			fileSystem = LoadDirectory(Path.Combine(Process.InstallationPath, "Data"));
+			//fileSystem = Parse(Path.Combine(Process.InstallationPath, @"meta.meta"));
 			//fileSystem = Parse(Path.Combine(Process.InstallationPath, @"Data\basicTest.meta"));
 			//fileSystem.Parent = Gac.gac;
 			fileSystem.Scope = Gac.gac;
