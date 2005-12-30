@@ -317,7 +317,6 @@ namespace Meta
 			for (; i + 1 < keys.Count; )
 			{
 				key = keys[i].GetExpression().Evaluate(context);
-
 				if (key.Equals(SpecialKeys.Scope))
 				{
 					selection = selection.Scope;
@@ -792,27 +791,41 @@ namespace Meta
 		}
         public Map this[Map key]
         {
-            get
-            {
-                Map value=Get(key);
-				Map result;
-				if (value != null)
-				{
-					result = value;
-				}
-				else
-				{
-					result = null;
-				}
-				return result;
-            }
+			get
+			{
+				return Get(key);
+				//Map result;
+				//if (value != null)
+				//{
+				//    result = value;
+				//}
+				//else
+				//{
+				//    result = null;
+				//}
+				//return result;
+			}
+			//get
+			//{
+			//    Map value=Get(key);
+			//    Map result;
+			//    if (value != null)
+			//    {
+			//        result = value;
+			//    }
+			//    else
+			//    {
+			//        result = null;
+			//    }
+			//    return result;
+			//}
             set
             {
                 if (value != null)
                 {
 					expression = null;
 					statement = null;
-                    Map val = value.Copy();
+                    Map val = value;//.Copy();
 					if (val.scope == null)
 					{
 						val.scope = this;
@@ -835,20 +848,12 @@ namespace Meta
 		}
 		public Map Copy()
 		{
-			Map clone = CopyImplementation();
+			Map clone = CopyData();
 			clone.Scope = Scope;
 			clone.Extent = Extent;
 			return clone;
 		}
-		protected virtual Map CopyImplementation()
-		{
-			Map clone = new StrategyMap();
-			foreach (Map key in this.Keys)
-			{
-				clone[key] = this[key];
-			}
-			return clone;
-		}
+		protected abstract Map CopyData();
 		public virtual bool ContainsKey(Map key)
 		{
 			return Keys.Contains(key);
@@ -1049,10 +1054,9 @@ namespace Meta
 				return strategy.Keys;
 			}
 		}
-		protected override Map CopyImplementation()
+		protected override Map CopyData()
 		{
-			// why does the strategy do the cloning?
-			return strategy.Copy();
+			return strategy.CopyData();
 		}
 		public override bool ContainsKey(Map key)
 		{
@@ -1597,7 +1601,7 @@ namespace Meta
 		public Method(Type type):this(".ctor", null, type)
 		{
 		}
-	    protected override Map CopyImplementation()
+	    protected override Map CopyData()
 	    {
 	        return new Method(overloads,method,obj,type);
 	    }
@@ -1640,7 +1644,7 @@ namespace Meta
 	            return true;
 	        }
 	    }
-	    protected override Map CopyImplementation()
+	    protected override Map CopyData()
 	    {
 	        return new MethodOverload(this.method, this.obj, this.type);
 	    }
@@ -1835,9 +1839,9 @@ namespace Meta
 			}
 			return equal;
 		}
-		protected override Map CopyImplementation()
+		protected override Map CopyData()
 		{
-			return new TypeMap(this.obj,this.type);
+			return new TypeMap(this.type);
 		}
 		private Method Constructor
 		{
@@ -1846,9 +1850,9 @@ namespace Meta
 				return new Method(type);
 			}
 		}
-		public TypeMap(object obj, Type type):base(obj,type)
-		{
-		}
+		//public TypeMap(object obj, Type type):base(obj,type)
+		//{
+		//}
 		public TypeMap(Type targetType):base(null,targetType)
 		{
 		}
@@ -1880,7 +1884,7 @@ namespace Meta
 		{
 			return obj.ToString();
 		}
-		protected override Map CopyImplementation()
+		protected override Map CopyData()
 		{
 			return new ObjectMap(obj);
 		}
@@ -1898,9 +1902,9 @@ namespace Meta
 				return new List<Map>(0);
 			}
 		}
-		public override MapStrategy CopyImplementation()
+		public override Map CopyData()
 		{
-			return new EmptyStrategy();
+			return new StrategyMap(new EmptyStrategy());
 		}
 		public override void Set(Map key, Map val)
 		{
@@ -1946,9 +1950,9 @@ namespace Meta
 		{
 			this.data = new Integer(number);
 		}
-		public override MapStrategy CopyImplementation()
+		public override Map CopyData()
 		{
-			return new IntegerStrategy(data);
+			return new StrategyMap(new IntegerStrategy(data));
 		}
 		public override ICollection<Map> Keys
 		{
@@ -2090,9 +2094,15 @@ namespace Meta
 		{
 			this.data = new List<Map>(original.data);
 		}
-		public override MapStrategy CopyImplementation()
+		public override Map CopyData()
 		{
-			return new ListStrategy(this);
+			// refactor, combine with DictionaryStrategy?
+			StrategyMap copy = new StrategyMap(new ListStrategy());
+			foreach(KeyValuePair<Map,Map> pair in this.map)
+			{
+				copy[pair.Key] = pair.Value;
+			}
+			return copy;
 		}
 		public override Map Get(Map key)
 		{
@@ -2160,11 +2170,22 @@ namespace Meta
 			{
 			}
 		}
-		public override MapStrategy CopyImplementation()
+		public override Map CopyData()
 		{
-			this.map.Strategy = new CloneStrategy(this);
-			return new CloneStrategy(this);
+			StrategyMap copy=new StrategyMap();
+			foreach (KeyValuePair<Map, Map> pair in this.map)
+			{
+				copy[pair.Key] = pair.Value;
+			}
+			return copy;
+			//this.map.Strategy = new CloneStrategy(this);
+			//return new StrategyMap(new CloneStrategy(this));
 		}
+		//public override MapStrategy CopyData()
+		//{
+		//    this.map.Strategy = new CloneStrategy(this);
+		//    return new CloneStrategy(this);
+		//}
 		public DictionaryStrategy(int Count)
 		{
 			this.data=new Dictionary<Map,Map>(Count);
@@ -2210,87 +2231,88 @@ namespace Meta
 			return data.ContainsKey(key);
 		}
 	}
-	public class CloneStrategy:DataStrategy<MapStrategy>
-	{
-		// always use CloneStrategy, only have logic in one place, too complicated to use
-		public CloneStrategy(MapStrategy original)
-		{
-			this.data = original;
-		}
-		public override List<Map> Array
-		{
-			get
-			{
-				return data.Array;
-			}
-		}
-		public override bool ContainsKey(Map key)
-		{
-			return data.ContainsKey (key);
-		}
-		public override int Count
-		{
-			get
-			{
-				return data.Count;
-			}
-		}
-		public override MapStrategy CopyImplementation()
-		{
-			MapStrategy clone=new CloneStrategy(this.data);
-			map.Strategy = new CloneStrategy(this.data);
-			return clone;
+	//public class CloneStrategy : DataStrategy<MapStrategy>
+	//{
+	//    // always use CloneStrategy, only have logic in one place, too complicated to use
+	//    public CloneStrategy(MapStrategy original)
+	//    {
+	//        this.data = original;
+	//    }
+	//    public override List<Map> Array
+	//    {
+	//        get
+	//        {
+	//            return data.Array;
+	//        }
+	//    }
+	//    public override bool ContainsKey(Map key)
+	//    {
+	//        return data.ContainsKey(key);
+	//    }
+	//    public override int Count
+	//    {
+	//        get
+	//        {
+	//            return data.Count;
+	//        }
+	//    }
+	//    public override Map CopyData()
+	//    {
+	//        MapStrategy clone = new CloneStrategy(this.data);
+	//        map.Strategy = new CloneStrategy(this.data);
+	//        return new StrategyMap(clone);
 
-		}
-		protected override bool SameEqual(MapStrategy otherData)
-		{
-			return Object.ReferenceEquals(data,otherData) || otherData.Equal(this.data);
-		}
-		public override int GetHashCode()
-		{
-			return data.GetHashCode();
-		}
-		public override Integer GetInteger()
-		{
-			return data.GetInteger();
-		}
-		public override string GetString()
-		{
-			return data.GetString();
-		}
-		public override bool IsInteger
-		{
-			get
-			{
-				return data.IsInteger;
-			}
-		}
-		public override bool IsString
-		{
-			get
-			{
-				return data.IsString;
-			}
-		}
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				return data.Keys;
-			}
-		}
-		public override Map  Get(Map key)
-		{
-			return data.Get(key);
-		}
-		public override void Set(Map key, Map value)
-		{
-			Panic(key,value);
-		}
-	}
+	//    }
+	//    protected override bool SameEqual(MapStrategy otherData)
+	//    {
+	//        return Object.ReferenceEquals(data, otherData) || otherData.Equal(this.data);
+	//    }
+	//    public override int GetHashCode()
+	//    {
+	//        return data.GetHashCode();
+	//    }
+	//    public override Integer GetInteger()
+	//    {
+	//        return data.GetInteger();
+	//    }
+	//    public override string GetString()
+	//    {
+	//        return data.GetString();
+	//    }
+	//    public override bool IsInteger
+	//    {
+	//        get
+	//        {
+	//            return data.IsInteger;
+	//        }
+	//    }
+	//    public override bool IsString
+	//    {
+	//        get
+	//        {
+	//            return data.IsString;
+	//        }
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            return data.Keys;
+	//        }
+	//    }
+	//    public override Map Get(Map key)
+	//    {
+	//        return data.Get(key);
+	//    }
+	//    public override void Set(Map key, Map value)
+	//    {
+	//        Panic(key, value);
+	//    }
+	//}
 
 	public abstract class MapStrategy
 	{
+
 		public virtual int GetArrayCount()
 		{
 			return map.GetArrayCountDefault();
@@ -2339,15 +2361,15 @@ namespace Meta
 		public StrategyMap map;
 
 
-		public abstract MapStrategy CopyImplementation();
-		public virtual Map Copy()
-		{
-			StrategyMap copy;
-			MapStrategy strategy = (MapStrategy)this.CopyImplementation();
-			copy = new StrategyMap(strategy);
-			strategy.map = copy;
-			return copy;
-		}
+		public abstract Map CopyData();
+		//public virtual Map CopyDataShallow()
+		//{
+		//    StrategyMap copy;
+		//    MapStrategy strategy = (MapStrategy)this.CopyData();
+		//    copy = new StrategyMap(strategy);
+		//    strategy.map = copy;
+		//    return copy;
+		//}
 
 		public virtual List<Map> Array
 		{
@@ -2473,7 +2495,7 @@ namespace Meta
 			}
 			return result;
 		}
-		protected override Map CopyImplementation()
+		protected override Map CopyData()
 		{
 			return new Event(eventInfo,obj,type);
 		}
@@ -2526,7 +2548,7 @@ namespace Meta
 			this.obj=obj;
 			this.type=type;
 		}
-		protected override Map CopyImplementation()
+		protected override Map CopyData()
 		{
 			return new Property(property,obj,type);
 		}
@@ -3110,21 +3132,21 @@ namespace Meta
 				parsing = value;
 			}
 		}
-		private static void MakePersistant(StrategyMap map)
-		{
-			map.Persistant = true;
-			foreach (KeyValuePair<Map, Map> pair in map)
-			{
-				if (pair.Value is StrategyMap)
-				{
-					StrategyMap normalMap = (StrategyMap)pair.Value;
-					if (normalMap.Strategy is DictionaryStrategy || (normalMap.Strategy is CloneStrategy && ((CloneStrategy)normalMap.Strategy).data is DictionaryStrategy))
-					{
-						MakePersistant((StrategyMap)pair.Value);
-					}
-				}
-			}
-		}
+		//private static void MakePersistant(StrategyMap map)
+		//{
+		//    map.Persistant = true;
+		//    foreach (KeyValuePair<Map, Map> pair in map)
+		//    {
+		//        if (pair.Value is StrategyMap)
+		//        {
+		//            StrategyMap normalMap = (StrategyMap)pair.Value;
+		//            if (normalMap.Strategy is DictionaryStrategy || (normalMap.Strategy is CloneStrategy && ((CloneStrategy)normalMap.Strategy).data is DictionaryStrategy))
+		//            {
+		//                MakePersistant((StrategyMap)pair.Value);
+		//            }
+		//        }
+		//    }
+		//}
 		// rename, refactor
 		public static Map Parse(string filePath)
 		{
@@ -3215,6 +3237,7 @@ namespace Meta
 					throw new ApplicationException("Unexpected token " + Look() + " ,expected " + character);
 				}
 			}
+			// refactor
 			private bool TryConsume(string characters)
 			{
 				bool consumed;
@@ -3329,45 +3352,32 @@ namespace Meta
 			}
 			public Map Expression()
 			{
-				Map expression = Integer();
-				if (expression == null)
+				Map expression;
+				if ((expression=EmptyMap()) == null)
 				{
-					expression = String();
-					if (expression == null)
+					if ((expression=Integer()) == null)
 					{
-						expression = Program();
-						if (expression == null)
+						if ((expression=String()) == null)
 						{
-							Map select = Select();
-							if (select != null)
+							if ((expression=Program()) == null)
 							{
-								Map call = Call(select);
-								if (call != null)
+								if ((expression=Select())!=null)
 								{
-									expression = call;
+									Map call;
+									if ((call=Call(expression)) != null)
+									{
+										expression = call;
+									}
 								}
-								else
-								{
-									expression = select;
-								}
-							}
-							else
-							{
-								expression = null;
 							}
 						}
 					}
 				}
-				if (expression != null && expression.Extent == null)
-				{
-				}
 				return expression;
 			}
+			// refactor
 			public Map Call(Map select)
 			{
-				if (line > 880)
-				{
-				}
 				Map call;
 				Extent extent = StartExpression();
 				Map argument;
@@ -3377,7 +3387,7 @@ namespace Meta
 				}
 				else
 				{
-					argument = NormalProgram();
+					argument = Program();
 				}
 				if (argument != null)
 				{
@@ -3385,6 +3395,7 @@ namespace Meta
 					Map callCode = new StrategyMap();
 					callCode[CodeKeys.Callable] = select;
 					callCode[CodeKeys.Argument] = argument;
+					// refactor
 					EndExpression(extent,callCode);
 					call[CodeKeys.Call] = callCode;
 				}
@@ -3401,8 +3412,8 @@ namespace Meta
 				while (TryConsume('\t') || TryConsume(' '))
 				{
 				}
-			}// refactor, rename to Program, make emptyMap a literal
-			private Map NormalProgram()
+			}
+			public Map Program()
 			{
 				Extent extent = StartExpression();
 				Map program;
@@ -3467,14 +3478,7 @@ namespace Meta
 				EndExpression(extent, program);
 				return program;
 			}
-			private SourcePosition Position
-			{
-				get
-				{
-					return new SourcePosition(line, Column);
-				}
-			}
-			private Map EmptyProgram()
+			private Map EmptyMap()
 			{
 				Extent extent = StartExpression();
 				Map program;
@@ -3490,14 +3494,12 @@ namespace Meta
 				EndExpression(extent, program);
 				return program;
 			}
-			public Map Program()
+			private SourcePosition Position
 			{
-				Map program = EmptyProgram();
-				if (program == null)
+				get
 				{
-					program = NormalProgram();
+					return new SourcePosition(line, Column);
 				}
-				return program;
 			}
 			private bool NewLine()
 			{
@@ -3514,6 +3516,7 @@ namespace Meta
 				}
 				return indentation;
 			}
+			// make this more flexible, for example parse all the characters matching these characters
 			private bool LookAny(char[] any)
 			{
 				return Look().ToString().IndexOfAny(any) != -1;
@@ -3672,7 +3675,6 @@ namespace Meta
 				}
 				return lookupAnything;
 			}
-
 			private Map Lookup()
 			{
 				Extent extent = StartExpression();
@@ -3684,7 +3686,6 @@ namespace Meta
 				EndExpression(extent, lookup);
 				return lookup;
 			}
-
 			private Map Select(Map keys)
 			{
 				Map select;
@@ -4123,9 +4124,6 @@ namespace Meta
 			}
 			else
 			{
-				if (key.ContainsKey("version"))
-				{
-				}
 				if (key.IsString)
 				{
 					string assemblyName = key.GetString();
