@@ -20,3 +20,826 @@ license='"
 	ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE."'
+license='"
+	Copyright (c) 2005 Christian Staudenmeyer
+	
+	Permission is hereby granted, free of charge, to any person obtaining
+	a copy of this software and associated documentation files (the
+	"Software"), to deal in the Software without restriction, including
+	without limitation the rights to use, copy, modify, merge, publish,
+	distribute, sublicense, and/or sell copies of the Software, and to
+	permit persons to whom the Software is furnished to do so, subject to
+	the following conditions:
+	
+	The above copyright notice and this permission notice shall be
+	included in all copies or substantial portions of the Software.
+	
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+	NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+	BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+	ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE."'
+testSubDir=
+	testLib=
+		x="hello"
+		y="world"
+		subMap=
+			a="b"
+			c="d"
+	x=
+		a="b"
+		x=
+			x="hello"
+			y="world"
+basicTest=
+	|
+		this=map.merge
+			scope
+			=
+				"AssignedToCurrent"
+		scoping=
+			test=
+				scopingValue="right"
+				|scopingValue
+		scopingValue="wrong"
+		scopingTest=scoping.test
+		lexicalScoping=scopingTest *
+		unicodeText="äaba"
+		scope.scope.testSubDir.x=*
+		persistantDeleteTest=testSubDir.x
+		scope.scope.testSubDir.x=
+			a="b"
+			x=
+				x="hello"
+				y="world"
+		integerHashTest=
+			[2]="correct hash content"
+			hashTestData=
+				[*]=
+					[*]=*
+			hashTest=[hashTestData]
+		negativeInteger=100
+		negativeInteger.x="hello"
+		integerIncrementTest=5
+		integerIncrementTest.[*]=integerIncrementTest
+		integerDecrementTest=5
+		integerDecrementTest=integerDecrementTest.[*]
+		persistenceTest=testSubDir
+		literalEscapeTest=
+			"asdf"
+			"asdf"
+			''"as"'df"''
+			'''"as"''df"'''
+			'''''''''''''''''"as"''''''''''''''''df"'''''''''''''''''
+		"ImpliedAutokey"
+		"Autokey"
+		commandLineArguments=arg
+		aMap=
+			a="a"
+		[aMap]="Object"
+		["normal symbol"]="NormalSymbol"
+		lookupSymbol="LookupSymbol"
+		["long key symbol"]="LookupExtendedSymbol"
+		lookedUpMap=[aMap]
+		lookedUpNormalSymbol=["normal symbol"]
+		lookedUpSymbol=lookupSymbol
+		lookedUpLongSymbol=["long key symbol"]
+		object=
+			a="default"
+			autoSearch="default"
+			b=*
+			SetA=
+				|
+					scope.scope.a="c"
+					scope.scope.autoSearch="changed"
+			SetB=
+				|
+					scope.scope.b.[1]=arg.value
+					this="changed"
+			x=
+				a="b"
+				c="d"
+			=
+				|
+					this.a="b"
+		a="default"
+		b=*
+		aSet=object.SetA *
+		bSet=object.SetB
+			value=
+				x=7
+				z=1
+		scopeTest="default"
+		scopeFunction=
+			inScope="right"
+			|
+				scope.scope.scopeTest=inScope
+		inScope="wrong"
+		scopeFunction *
+		scopeFromFunctionData="right"
+		scopeFunctionFunction=
+			scopeFromFunctionData="wrong"
+			|
+				|scopeFromFunctionData
+		scopeFromFunction=scopeFunctionFunction *
+		scopeFromFunctionTest=scopeFromFunction *
+		ReturnEverything=
+			|
+				this=arg
+		everythingReturned=ReturnEverything
+			"a"
+			"b"
+			"c"
+		variableAsArgument=ReturnEverything
+			"x"
+			"y"
+			"z"
+		ReturnFunction=
+			|
+				this=
+					|
+						this=
+							1
+							2
+							3
+		SetCurrent=
+			|
+				this=
+					arg=arg
+					x=arg.symbol
+				this=x
+		thisSet=SetCurrent
+			symbol="haha"
+		FirstLevel=
+			|
+				SecondLevel arg
+		SecondLevel=
+			|arg
+		argTest=FirstLevel
+			a="z"
+		TestClass=MetaTest.TestClass
+		TestClass.NestedClass.field=5
+		nestedClassTest=TestClass.NestedClass.field
+		testClass=TestClass *
+		testClass.floatValue=3
+		testClass.doubleValue=4
+		testClass.decimalValue=5
+		TestClass.boolTest=1
+		boolTest=TestClass.boolTest
+		strongNameTest=[
+			version="2.0.0.0"
+			publicKeyToken="b77a5c561934e089"
+			culture="Neutral"
+			name="mscorlib"
+		].Int32
+		MemberTest=MetaTest.MemberTest
+		memberTest=MemberTest *
+		stringOverload=MemberTest.OverloadedMethod.[mscorlib.String] "hello"
+		integerOverload=MemberTest.OverloadedMethod.[mscorlib.Int32] 5
+		memberTestOverload=MemberTest.OverloadedMethod.[
+			MetaTest.MemberTest
+			mscorlib.Int32
+		]
+			memberTest
+			3247
+		memberTestOverload=MemberTest.OverloadedMethod.[
+			MetaTest.MemberTest
+			mscorlib.Int32
+		]
+			memberTest
+			3247
+		MemberTest.classField="a"
+		memberTest.instanceField="b"
+		MemberTest.ClassProperty.set memberTest.InstanceProperty.get *
+		classPropertyValue=MemberTest.ClassProperty.get *
+		memberTest.InstanceProperty.set MemberTest.ClassProperty.get *
+		instancePropertyValue=memberTest.InstanceProperty.get *
+		interceptedSymbol="/hello/"
+		positionalNoConversion=MetaTest.PositionalNoConversion
+			"m"
+			"n"
+			"o"
+		positionalNoConversionConcatenated=positionalNoConversion.Concatenate
+			"r"
+			"s"
+			"t"
+		namedNoConversion=MetaTest.NamedNoConversion
+			"m"
+			y="n"
+		namedNoConversionConcatenated=namedNoConversion.Concatenate
+			c="t"
+			"r"
+		indexerNoConversion=MetaTest.IndexerNoConversion *
+		indexerNoConversion.Item.set
+			"abc"
+			"hihi"
+		indexerNoConversionIndexed=indexerNoConversion.Item.get "abc"
+		interceptedSymbolTwo=1
+		k="hello"
+		xyz="w"
+		literalFunction=
+			|5
+		literalFunctionResult=literalFunction *
+		someFunction=
+			|
+				this="simple function this"
+		callFunction=
+			|someFunction
+		callFunctionResult=callFunction *
+		delayedFunction=
+			|
+				|
+					x="y"
+		delayedFunctionResult=delayedFunction *
+		value="xyz"
+		selectionFunction=
+			|value
+		selectionFunctionResult=selectionFunction *
+		upperLevel="unchanged"
+		SetUpperLevel=
+			|
+				scope.scope.upperLevel=arg
+		ChangeUpperLevel=
+			|
+				SetUpperLevel "changed"
+		ChangeUpperLevel *
+		staticEventChanged=*
+		ChangeStaticEvent=
+			|
+				scope.scope.staticEventChanged=arg
+		TestClass.staticEvent.add
+			|
+				ChangeStaticEvent 1
+				this=arg.[1]
+		staticEvent=TestClass.staticEvent
+		TestClass.TakeDelegate
+			|arg.[1]
+		resultFromDelegate=TestClass.GetResultFromDelegate *
+		staticEventResult=TestClass.staticEvent testClass
+		instanceEventChanged=*
+		testClass.instanceEvent.add
+			|
+				scope.scope.scope.instanceEventChanged=1
+				this=arg.[1]
+		instanceEvent=testClass.instanceEvent
+		instanceEventResult=testClass.instanceEvent 5
+		one=1
+		two=2
+		firstIf="unchanged"
+		secondIf="unchanged"
+		firstIfCondition=map.equal
+			1
+			one
+		firstIfBranches=
+			=
+				|"then"
+			[*]=
+				|"else"
+		firstIf=firstIfBranches.[firstIfCondition] *
+		bigNumber=50020202
+		secondSwitch="unchanged"
+		secondSwitchCases=
+			"one"
+			"two"
+			"three"
+		secondSwitch=secondSwitchCases.[3]
+		emptyMap=*
+		emptyFunction=
+			|
+				x="hello"
+		emptyFunctionResult=emptyFunction *
+		font=["System.Drawing"].Font.Font.[
+			mscorlib.String
+			mscorlib.Single
+		]
+			"Courier New"
+			10
+		decimalTest=5
+		fractionTest=40
+		stringTest="hello"
+		stringTest.[6]=stringTest.[1]
+		helloh="hi"
+		stringStrategyHashTest=[stringTest]
+		x=
+			aLongText="
+				hello world!
+				hello!
+				"
+		arrayList=mscorlib.ArrayList.ArrayList.[*] *
+		arrayList.Add "hello"
+		arrayListResult=arrayList.Item.get *
+		textBox=["System.Windows.Forms"].TextBox *
+		textBox.Text.set "
+			Alle meine Entchen,
+			schwimmen auf dem See,
+			schwimmen auf dem See,
+			Köpfchen in das Wasser,
+			Schwaenzchen in die Hoeh."
+		lines=textBox.Lines.get *
+		alleMeineText=lines.GetValue.[mscorlib.Int32] 1
+		lines.[5]="bwuhahaha"
+		tabText="			hello"
+		escapedText="'#'n'''t"
+		whileCounter=*
+		loop=
+			|
+				whileDecision=logic.not map.equal
+					arg
+					10
+				whileBranches=
+					=
+						|loop math.add
+							arg
+							1
+					[*]=
+						|arg
+				this=whileBranches.[whileDecision] arg
+		whileCounter=loop 3
+		returnInMap=
+			|
+				result=arg
+		literalAsArgument=returnInMap 1
+		returnFunction=
+			|
+				|"functionResult"
+		returnArg=
+			|arg
+		myArg=
+			|
+				hello="world"
+		funcReturnTest=returnArg myArg *
+		documentedFunction=
+			doc="This function returns #hello ."
+			|"hello"
+		docFunctionResult=documentedFunction *
+file=
+	write=
+		|
+			mscorlib.Directory.CreateDirectory
+				mscorlib.Path.GetDirectoryName
+					arg.fileName
+			writer=mscorlib.StreamWriter.[mscorlib.String]
+				arg.fileName
+			writer.Write.[mscorlib.String]
+				arg.text
+			writer.Close *
+console=
+	writeLine=
+		|mscorlib.Console.WriteLine.[mscorlib.String] arg
+	write=
+		|mscorlib.Console.Write.[mscorlib.String] arg
+	readLine=
+		|mscorlib.Console.ReadLine *
+integerToString=
+	documentation="Converts an integer to a string."
+	|
+		int=Meta.Integer.[Meta.Map] arg
+		this=int.ToString *
+map=
+	pop=
+		|Meta.Library.Pop arg
+	isInteger=
+		|
+			object=Meta.ObjectMap arg
+			this=object.IsInteger.get *
+	isString=
+		|
+			object=Meta.ObjectMap arg
+			this=object.IsString.get *
+	if=
+		|
+			argument=merge
+				=
+					else=
+						|*
+					then=
+						|*
+				arg
+			cases=
+				[1]=argument.then
+				[*]=argument.else
+			this=cases.[argument.condition] *
+	repeat=
+		documentation="Repeats an array a given number of times."
+		|
+			argument=arg.array
+			this=join apply
+				array=range arg.times
+				with=
+					|argument
+	range=
+		documentation="Returns an array containing all numbers from 1 to the argument."
+		|
+			array=*
+			counter=1
+			limit=math.add
+				arg
+				1
+			count=
+				|
+					scope.scope.array.[counter]=counter
+					scope.scope.counter=math.add
+						counter
+						1
+			while
+				condition=
+					|math.smaller
+						counter
+						limit
+				with=
+					|
+						this=count arg
+			this=array
+	remove=
+		documentation="Removes a key from a map."
+		|Meta.Library.Remove arg
+	while=
+		documentation="Calls a function as long as the condition function returns 1."
+		|
+			stop=arg.condition *
+			next=
+				[*]=
+					|*
+				=
+					|
+						arg.with *
+						while arg
+			next.[stop] arg
+	while=
+		documentation="Calls a function as long as the condition function returns 1."
+		|Meta.Library.While arg
+	foreach=
+		|apply
+			array=keys arg.map
+			with=
+				|arg.arg.with
+					value=arg.arg.map.[arg]
+					key=arg
+	loop=
+		|apply
+			array=arg.array
+			with=
+				|*
+	apply=
+		documentation="Calls a function with every value in an array as an argument and returns the results as an array."
+		|applyImplementation
+			array=arg.array
+			with=arg.with
+			index=1
+			result=*
+		applyImplementation=
+			|
+				stop=math.greater
+					arg.index
+					length arg.array
+				next=
+					=
+						|arg.result
+					[*]=
+						|applyImplementation
+							array=arg.array
+							with=arg.with
+							index=math.add
+								arg.index
+								1
+							object=Meta.ObjectMap arg.result
+							argument=arg.with arg.array.[arg.index]
+							object.Append argument
+							result=object.This.get *
+				this=next.[stop] arg
+	join=
+		documentation="Concatenates arrays."
+		|Meta.Library.Join arg
+	contains=
+		documentation="Determines whether a map contains a key."
+		|
+			object=Meta.ObjectMap arg.map
+			this=object.ContainsKey arg.key
+	keys=
+		documentation="Returns the keys of a map in an array."
+		|
+			object=Meta.ObjectMap arg
+			this=Meta.StrategyMap.StrategyMap.[mscorlib.["ICollection`1"].[Meta.Map]] object.Keys.get *
+	merge=
+		documentation="Combines several maps into one."
+		|sum
+			array=arg
+			with=
+				|
+					overwrite=arg.present
+					this=sum
+						array=keys arg.present
+						with=
+							|
+								result=arg.previous
+								result.[arg.present]=overwrite.[arg.present]
+								this=result
+						start=arg.previous
+			start=*
+	equal=
+		documentation="Determines whether maps are identical."
+		|
+			result=sum
+				array=arg
+				with=
+					|
+						first=Meta.ObjectMap arg.previous.previous
+						this=
+							equality=logic.and
+								first.Equals arg.present
+								arg.previous.equality
+							previous=arg.present
+				start=
+					equality=1
+					previous=arg.[1]
+			this=result.equality
+	length=
+		documentation="Returns the length of an array."
+		|
+			map=Meta.ObjectMap arg
+			this=map.ArrayCount.get *
+	sum=
+		|sumImplementation
+			index=1
+			array=arg.array
+			with=arg.with
+			result=arg.start
+		sumImplementation=
+			|
+				stop=math.greater
+					arg.index
+					length arg.array
+				next=
+					=
+						|arg.result
+					[*]=
+						|sumImplementation
+							index=math.increment arg.index
+							result=arg.with
+								previous=arg.result
+								present=arg.array.[arg.index]
+							array=arg.array
+							with=arg.with
+				this=next.[stop] arg
+logic=
+	not=
+		documentation="Negates a boolean."
+		|table.[arg]
+		table=
+			[*]=1
+			[1]=*
+	and=
+		documentation="Returns whether all booleans are true."
+		|map.sum
+			array=arg
+			with=
+				|table.[arg]
+			start=1
+		table=
+			[
+				previous=1
+				present=*
+			]=*
+			[
+				previous=*
+				present=1
+			]=*
+			[
+				previous=*
+				present=*
+			]=*
+			[
+				previous=1
+				present=1
+			]=1
+	or=
+		documentation="Returns whether at least one boolean is true."
+		|map.sum
+			array=arg
+			with=
+				|table.[arg]
+			start=*
+		table=
+			[
+				previous=1
+				present=*
+			]=1
+			[
+				previous=*
+				present=1
+			]=1
+			[
+				previous=*
+				present=*
+			]=*
+			[
+				previous=1
+				present=1
+			]=1
+math=
+	increment=
+		documentation="Increments an integer."
+		|
+			result=Meta.Integer.op_Addition
+				Meta.Integer.Integer.[Meta.Map] arg
+				Meta.Integer.Integer.[Meta.Map] 1
+			this=Meta.StrategyMap.StrategyMap.[Meta.Integer] result
+	add=
+		documentation="Adds integers."
+		|Meta.StrategyMap.StrategyMap.[Meta.Integer] map.sum
+			array=arg
+			with=
+				|Meta.Integer.op_Addition
+					Meta.Integer.Integer.[Meta.Integer] arg.previous
+					Meta.Integer.Integer.[Meta.Map] arg.present
+			start=Meta.Integer.Integer.[Meta.Map] *
+	multiply=
+		documentation="Multiplies integers."
+		|Meta.StrategyMap.StrategyMap.[Meta.Integer] map.sum
+			array=arg
+			with=
+				|Meta.Integer.op_Multiply
+					Meta.Integer.Integer.[Meta.Integer] arg.previous
+					Meta.Integer.Integer.[Meta.Map] arg.present
+			start=Meta.Integer.Integer.[Meta.Map] 1
+	greater=
+		documentation="Determines whether the first integer is greater than the second integer."
+		|Meta.Integer.op_GreaterThan
+			Meta.Integer.Integer.[Meta.Map] arg.[1]
+			Meta.Integer.Integer.[Meta.Map] arg.[2]
+	smaller=
+		documentation="Determines whether the first integer is smaller than the second integer."
+		|Meta.Integer.op_LessThan
+			Meta.Integer.Integer.[Meta.Map] arg.[1]
+			Meta.Integer.Integer.[Meta.Map] arg.[2]
+bitwise=
+	or=
+		documentation="Performs a bitwise or operation on integers."
+		|Meta.StrategyMap.StrategyMap.[Meta.Integer] map.sum
+			array=arg
+			with=
+				|Meta.Integer.op_BitwiseOr
+					Meta.Integer.Integer.[Meta.Integer] arg.previous
+					Meta.Integer.Integer.[Meta.Map] arg.present
+			start=Meta.Integer.Integer.[Meta.Map] *
+string=
+	lower=
+		documentation="Converts a string to lowercase."
+		|map.apply
+			array=arg
+			with=
+				|mscorlib.Char.ToLower arg
+test=
+	|
+		this=map.merge
+			scope
+			map
+			logic
+			math
+		test=
+			booleanTest=
+				not=
+					true=not *
+					false=not 1
+				and=
+					true=and
+						1
+						1
+						1
+						1
+					false=and
+						1
+						*
+						1
+						1
+				or=
+					true=or
+						1
+						1
+						1
+					false=or
+						*
+						*
+						*
+			numberTest=
+				increment=increment 5
+				add=add
+					100
+					1000
+				multiply=multiply
+					19
+					1023
+				greater=greater
+					4
+					1
+				smaller=smaller
+					23
+					2
+			bitwiseTest=
+				or=bitwise.or
+					8
+					20
+			mapTest=
+				if=if
+					condition=1
+					then=
+						|"if test successful"
+				remove=remove
+					map=
+						x="hello"
+						y="world"
+					key="x"
+				join=join
+					"abc, "
+					"die Katze lief im Schnee."
+				apply=
+					applyMethod=
+						|add
+							arg
+							1
+					this=apply
+						with=applyMethod
+						array=
+							1
+							2
+							3
+				contains=contains
+					map=
+						x="hello"
+					key="x"
+				keys=keys
+					jjqwv="aeäquq"
+					oere="i ke"
+					"oiq"
+				equal=
+					map=
+						true=equal
+							=
+								x="hello"
+								y="world"
+							=
+								x="hello"
+								y="world"
+						false=equal
+							=
+								x="y"
+								y="z"
+							=
+								x="y"
+								y="a"
+				while=
+					counter=*
+					SetCounter=
+						|
+							scope.scope.counter=arg
+					test=while
+						condition=
+							|smaller
+								counter
+								10
+						with=
+							|SetCounter increment counter
+					this=counter
+			bitwiseTest=bitwise.or
+				20
+				["System.Windows.Forms"].Keys.Tab
+		this=test
+process=
+	|
+		process=System.Process *
+		startInfo=process.StartInfo.get *
+		startInfo.FileName.set
+			arg.fileName
+		startInfo.Arguments.set
+			arg.arguments
+		process.Start *
+path=
+	combine=
+		|map.sum
+			array=arg
+			with=
+				|mscorlib.Path.Combine
+					arg.previous
+					arg.present
+			start=*
+directory=
+	write=
+		|
+			argument=arg
+			this=map.apply
+				array=map.keys arg.files
+				with=
+					|
+						file.write
+							fileName=path.combine
+								argument.directory
+								arg
+							text=argument.files.[arg]
+debug=
+	print=
+		|console.writeLine Meta.FileSystem.Serialize.Value
+			arg
+|console.writeLine "hello world"

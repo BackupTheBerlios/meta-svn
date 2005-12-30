@@ -1,5 +1,5 @@
 "|
-	this=library.map.merge
+	this=map.merge
 		scope
 		=
 			"AssignedToCurrent"
@@ -233,7 +233,7 @@
 	two=2
 	firstIf="unchanged"
 	secondIf="unchanged"
-	firstIfCondition=library.map.equal
+	firstIfCondition=map.equal
 		1
 		one
 	firstIfBranches=
@@ -289,12 +289,12 @@
 	whileCounter=*
 	loop=
 		|
-			whileDecision=library.logic.not library.map.equal
+			whileDecision=logic.not map.equal
 				arg
 				10
 			whileBranches=
 				=
-					|loop library.math.add
+					|loop math.add
 						arg
 						1
 				[*]=

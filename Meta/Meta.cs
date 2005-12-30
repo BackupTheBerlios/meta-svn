@@ -47,7 +47,7 @@ namespace Meta
 	{
 		public static readonly Map Scope = "scope";
 		public static readonly Map Arg="arg";
-		public static readonly Map Current="this";
+		public static readonly Map This="this";
 		public static readonly Map Net = "net";
 		public static readonly Map Local = "local";
 	}
@@ -74,7 +74,17 @@ namespace Meta
 		}
 		public static string GetExtentText(Extent extent)
 		{
-			return extent.FileName+", line " + extent.Start.Line + ", column " + extent.Start.Column + ": ";
+			string text;
+			if (extent.FileName != null)
+			{
+				text=extent.FileName + ", line ";
+			}
+			else
+			{
+				text = "Line ";
+			}
+			text+=extent.Start.Line + ", column " + extent.Start.Column + ": ";
+			return text;
 		}
 		public MetaException(string message, Extent extent)
 		{
@@ -109,7 +119,7 @@ namespace Meta
 		}
 		public static void KeyNotFound(Map key,Extent extent)
 		{
-			throw new MetaException("The key "+FileSystem.Serialize.Value(key)+" could not be found.",extent);
+			throw new MetaException("The key "+FileSystem.Serialize.Value(key)+" cannot be found.",extent);
 		}
 	}
 	public abstract class Expression
@@ -121,7 +131,6 @@ namespace Meta
 		public Map Evaluate(Map context,Map argument)
 		{
 			Map current = new StrategyMap();
-			//current.Parent = context;
 			current.Scope = context;
 			current.Argument = argument;
 			return EvaluateImplementation(current);
@@ -163,11 +172,8 @@ namespace Meta
 			{
 				result = Map.Empty;
 			}
-			// messy, necessary so maps returned from functions change their scope to the map in which the are assigned the first time
-			Map clone = result.Copy();
-			//clone.Parent = null;
-			clone.Scope = null;
-			return clone;
+			result.Scope = null;
+			return result;
 		}
 	}
 	public class Program : Expression
@@ -211,7 +217,7 @@ namespace Meta
 			{
 				val = context.Argument;
 			}
-			else if (key.Equals(SpecialKeys.Current))
+			else if (key.Equals(SpecialKeys.This))
 			{
 				val = context;
 			}
@@ -252,12 +258,10 @@ namespace Meta
 			for (int i = 1; i<keys.Count; i++)
 			{
 				Map key = keys[i].GetExpression().Evaluate(context);
-				Map selection;
 
-				// refactor
 				if (key.Equals(SpecialKeys.Scope))
 				{
-					selection = selected.Scope;
+					selected = selected.Scope;
 				}
 				else if (key.Equals(SpecialKeys.Arg))
 				{
@@ -277,22 +281,21 @@ namespace Meta
 					}
 					if (x != null)
 					{
-						selection = x.argument;
+						selected = x.argument;
 					}
 					else
 					{
-						selection = null;
+						selected= null;
 					}
 				}
 				else
 				{
-					selection = selected[key];
+					selected = selected[key];
 				}
-				if (selection == null)
+				if (selected == null)
 				{
 					Throw.KeyDoesNotExist(key, keys[i].Extent);
 				}
-				selected = selection;
 			}
 			return selected;
 		}
@@ -335,7 +338,7 @@ namespace Meta
 			if (lastKey.Equals((Map)"autoSearch"))
 			{
 			}
-			if (lastKey.Equals(SpecialKeys.Current))
+			if (lastKey.Equals(SpecialKeys.This))
 			{
 				val.Scope = context.Scope;
 				//val.Parent = context.Parent;
@@ -347,49 +350,6 @@ namespace Meta
 				selection[lastKey] = val;
 			}
 		}
-		//public void Assign(ref Map context)
-		//{
-		//    Map selected = context;
-		//    Map key;
-		//    int i = 0;
-		//    for (; i + 1 < keys.Count; )
-		//    {
-		//        key = keys[i].GetExpression().Evaluate(context);
-		//        if (key.Equals("a")))
-		//        {
-		//        }
-		//        Map selection;
-		//        if (key.Equals(SpecialKeys.Scope))
-		//        {
-		//            selection = selected.Scope;
-		//        }
-		//        else
-		//        {
-		//            selection = selected.GetForAssignment(key);
-		//        }
-
-		//        if (selection == null)
-		//        {
-		//            Throw.KeyDoesNotExist(key, keys[0].Extent);
-		//        }
-		//        selected = selection;
-		//        i++;
-		//    }
-		//    Map lastKey = keys[i].GetExpression().Evaluate(context);
-		//    Map val = value.GetExpression().Evaluate(context);
-
-		//    if (lastKey.Equals(SpecialKeys.Current))
-		//    {
-		//        val.Scope = context.Scope;
-		//        val.Parent = context.Parent;
-		//        val.Argument = context.Argument;
-		//        context = val;
-		//    }
-		//    else
-		//    {
-		//        selected[lastKey] = val;
-		//    }
-		//}
 	}
 	public class Library
 	{
@@ -791,24 +751,6 @@ namespace Meta
             }
         }
         private Map scope;
-		//public virtual Map Parent
-		//{
-		//    get
-		//    {
-		//        return parent;
-		//    }
-		//    set
-		//    {
-		//        if (parent == null && Scope == null)
-		//        {
-		//            Scope = value;
-		//        }
-		//        else
-		//        {
-		//        }
-		//        parent=value;
-		//    }
-		//}
 		public virtual int Count
 		{
 			get
@@ -871,12 +813,10 @@ namespace Meta
 					expression = null;
 					statement = null;
                     Map val = value.Copy();
-					//val.Parent = this;
 					if (val.scope == null)
 					{
 						val.scope = this;
 					}
-					//val.scope = this;
                     Set(key, val);
                 }
              }
@@ -897,7 +837,6 @@ namespace Meta
 		{
 			Map clone = CopyImplementation();
 			clone.Scope = Scope;
-			//clone.Parent = Parent;
 			clone.Extent = Extent;
 			return clone;
 		}
@@ -1042,7 +981,6 @@ namespace Meta
 
 		public override Map Call(Map arg)
 		{
-			//strategy.Panic(new DictionaryStrategy());
 			return base.Call(arg);
 		}
 		public void InitFromStrategy(MapStrategy clone)
@@ -1129,7 +1067,6 @@ namespace Meta
 			}
 			else if (toCompare is StrategyMap)
 			{
-				//((StrategyMap)toCompare).Strategy.GetType==strategy.GetType()
 				isEqual = ((StrategyMap)toCompare).strategy.Equal(strategy);
 			}
 			else
@@ -1649,7 +1586,7 @@ namespace Meta
 						}
 					}
 					MethodOverload overload = new MethodOverload(method, obj, type);
-					overloads.Add(key,overload);
+					overloads[key]=overload;
 				}
 			}
 			else
@@ -2401,14 +2338,15 @@ namespace Meta
 
 		public StrategyMap map;
 
+
 		public abstract MapStrategy CopyImplementation();
 		public virtual Map Copy()
 		{
-			StrategyMap clone;
+			StrategyMap copy;
 			MapStrategy strategy = (MapStrategy)this.CopyImplementation();
-			clone = new StrategyMap(strategy);
-			strategy.map = clone;
-			return clone;
+			copy = new StrategyMap(strategy);
+			strategy.map = copy;
+			return copy;
 		}
 
 		public virtual List<Map> Array
@@ -2441,12 +2379,8 @@ namespace Meta
 		{
 			return Keys.Contains(key);
 		}
-		// rename, only used internally
 		public abstract bool Equal(MapStrategy strategy);
-		//public virtual bool Equal(MapStrategy strategy)
-		//{
-		//    return EqualDefault(strategy);
-		//}
+
 		public virtual bool EqualDefault(MapStrategy strategy)
 		{
 			bool isEqual;
@@ -2467,42 +2401,12 @@ namespace Meta
 					Map thisValue = Get(key);
 					if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue))
 					{
-						//if (!((MapStrategy)strategy).ContainsKey(key) || !((MapStrategy)strategy).Get(key).Equals(this.Get(key)))
-						//{
 						isEqual = false;
 					}
 				}
 			}
 			return isEqual;
 		}
-		//public virtual bool Equal(MapStrategy strategy)
-		//{
-		//    bool isEqual;
-		//    if (Object.ReferenceEquals(strategy, this))
-		//    {
-		//        isEqual = true;
-		//    }
-		//    else if (((MapStrategy)strategy).Count != this.Count)
-		//    {
-		//        isEqual = false;
-		//    }
-		//    else
-		//    {
-		//        isEqual = true;
-		//        foreach (Map key in this.Keys)
-		//        {
-		//            Map otherValue = strategy.Get(key);
-		//            Map thisValue = Get(key);
-		//            if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue))
-		//            {
-		//                //if (!((MapStrategy)strategy).ContainsKey(key) || !((MapStrategy)strategy).Get(key).Equals(this.Get(key)))
-		//                //{
-		//                isEqual = false;
-		//            }
-		//        }
-		//    }
-		//    return isEqual;
-		//}
 	}
 	public abstract class DataStrategy<T> : MapStrategy
 	{
@@ -2543,53 +2447,31 @@ namespace Meta
 		public override Map Call(Map argument)
 		{
 			Map result;
-			//try
-			//{
-				Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public |
-					BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
-				if (eventDelegate != null)
+			Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public |
+				BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
+			if (eventDelegate != null)
+			{
+				List<object> arguments = new List<object>();
+				// refactor, with MethodImplementation
+				ParameterInfo[] parameters = eventDelegate.Method.GetParameters();
+				if (parameters.Length == 2)
 				{
-					List<object> arguments = new List<object>();
-					// refactor, with MethodImplementation
-					ParameterInfo[] parameters = eventDelegate.Method.GetParameters();
-					if (parameters.Length == 2)
-					{
-						arguments.Add(Transform.ToDotNet(argument, parameters[1].ParameterType));
-					}
-					else
-					{
-						for (int i = 1; i < parameters.Length; i++)
-						{
-							arguments.Add(Transform.ToDotNet(argument[i], parameters[i].ParameterType));
-						}
-					}
-					result = Transform.ToMeta(eventDelegate.DynamicInvoke(arguments.ToArray()));
+					arguments.Add(Transform.ToDotNet(argument, parameters[1].ParameterType));
 				}
 				else
 				{
-					result = null;
+					for (int i = 1; i < parameters.Length; i++)
+					{
+						arguments.Add(Transform.ToDotNet(argument[i], parameters[i].ParameterType));
+					}
 				}
-				return result;
-				//if (eventDelegate != null)
-				//{
-				//    List<object> arguments = new List<object>();
-				//    ParameterInfo[] parameters = eventDelegate.Method.GetParameters();
-				//    for (int i = 1; i < parameters.Length; i++)
-				//    {
-				//        arguments.Add(Transform.ToDotNet((Map)argument[i], parameters[i].ParameterType));
-				//    }
-				//    result = Transform.ToMeta(eventDelegate.DynamicInvoke(arguments.ToArray()));
-				//}
-				//else
-				//{
-				//    result = null;
-				//}
-			//}
-			//catch (Exception e)
-			//{
-			//    result = null;
-			//}
-			//return result;
+				result = Transform.ToMeta(eventDelegate.DynamicInvoke(arguments.ToArray()));
+			}
+			else
+			{
+				result = null;
+			}
+			return result;
 		}
 		protected override Map CopyImplementation()
 		{
@@ -2780,7 +2662,6 @@ namespace Meta
 					else if (members[0] is EventInfo)
 					{
 						val = new Event(((EventInfo)members[0]), obj, type);
-						//val.Parent = this;
 					}
 					else if (members[0] is Type)
 					{
@@ -3263,7 +3144,7 @@ namespace Meta
 		public static Map Parse(TextReader textReader,string fileName)
 		{
 			Parsing = true;
-			Map result=Compile(textReader,fileName).GetExpression().Evaluate(Map.Empty);//, Map.Empty);
+			Map result=Compile(textReader,fileName).GetExpression().Evaluate(Map.Empty);
 			Parsing = false;
 			return result;
 		}
@@ -3288,7 +3169,8 @@ namespace Meta
 		static FileSystem()
 		{
 			//fileSystem=LoadDirectory(Path.Combine(Process.InstallationPath,"Data"));
-			fileSystem=Parse(Path.Combine(Process.InstallationPath,@"Data\basicTest.meta"));
+			fileSystem = Parse(Path.Combine(Process.InstallationPath, @"meta.meta"));
+			//fileSystem = Parse(Path.Combine(Process.InstallationPath, @"Data\basicTest.meta"));
 			//fileSystem.Parent = Gac.gac;
 			fileSystem.Scope = Gac.gac;
 			// messy, experimental
@@ -3541,7 +3423,6 @@ namespace Meta
 						counter++;
 						if (!NewLine() && !Look(endOfFileChar))
 						{
-							//refactor
 							index -= 1;
 							if (!NewLine())
 							{
