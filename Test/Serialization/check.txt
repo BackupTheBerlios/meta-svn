@@ -306,6 +306,11 @@
 	lines=textBox.Lines.get *
 	alleMeineText=lines.GetValue.[mscorlib.Int32] 1
 	lines.[5]="bwuhahaha"
+	form=["System.Windows.Forms"].Form.Form *
+	form.Location.set.[["System.Drawing"].Point]
+		X=5
+		Y=1000
+	automaticConversionTest=form.Location.get.[*] *
 	tabText="			hello"
 	escapedText="'#'n'''t"
 	whileCounter=*

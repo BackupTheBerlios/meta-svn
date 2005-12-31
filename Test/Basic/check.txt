@@ -2157,6 +2157,21 @@ Entry (KeyValuePair`2)
 		"Alle meine Entchen,"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		"form"
+	Value (ObjectMap):
+		System.Windows.Forms.Form, Text: 
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		13
+	Value (StrategyMap):
+		""
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"automaticConversionTest"
+	Value (ObjectMap):
+		{X=5,Y=1000}
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"tabText"
 	Value (StrategyMap):
 		"			hello"
