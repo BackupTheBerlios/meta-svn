@@ -3372,7 +3372,7 @@ namespace Meta
 		}
 		public static Map Compile(TextReader textReader,string fileName)
 		{
-			return new Parser(textReader.ReadToEnd(), fileName).Program();
+			return new Parser(textReader.ReadToEnd(), fileName).Map();
 		}
 		public static Map fileSystem;
 		private static Map LoadDirectory(string path)
@@ -3598,6 +3598,10 @@ namespace Meta
 					// refactor
 					EndExpression(extent,callCode);
 					call[CodeKeys.Call] = callCode;
+					if (!callAllowed)
+					{
+						throw new MetaException("Function may not be called outside of function definition.",argument.Extent);
+					}
 				}
 				else
 				{
@@ -3613,8 +3617,19 @@ namespace Meta
 				{
 				}
 			}
+			public Map Map()
+			{
+				return Program(false);
+			}
 			public Map Program()
 			{
+				return Program(true);
+			}
+			private bool callAllowed;
+			public Map Program(bool allowed)
+			{
+				bool wasAllowed = this.callAllowed;
+				this.callAllowed = allowed;
 				Extent extent = StartExpression();
 				Map program;
 				if (Indentation())
@@ -3676,6 +3691,7 @@ namespace Meta
 					program = null;
 				}
 				EndExpression(extent, program);
+				callAllowed = wasAllowed;
 				return program;
 			}
 			private Map EmptyMap()
@@ -3944,6 +3960,8 @@ namespace Meta
 			public Map Function()
 			{
 				Extent extent = StartExpression();
+				bool wasCallAllowed = callAllowed;
+				callAllowed = true;
 				Map function = null;
 				if (TryConsume(functionChar))
 				{
@@ -3958,6 +3976,7 @@ namespace Meta
 					}
 				}
 				EndExpression(extent, function);
+				callAllowed = wasCallAllowed;
 				return function;
 			}
 			public const char statementChar = '=';

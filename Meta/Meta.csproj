@@ -96,7 +96,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="meta.meta" />
+    <None Include="Data\basicTest.meta" />
+    <None Include="Data\bitwise.meta" />
+    <None Include="Data\library.meta" />
+    <None Include="Data\libraryTest.meta" />
+    <None Include="Data\logic.meta" />
+    <None Include="Data\map.meta" />
+    <None Include="Data\math.meta" />
+    <None Include="Data\testSubDir\testLib.meta" />
+    <None Include="Data\testSubDir\x.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -165,36 +165,11 @@ Entry (KeyValuePair`2)
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
-						"text-base"
-					Value (StrategyMap):
-						""
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						"prop-base"
-					Value (StrategyMap):
-						""
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						"props"
-					Value (StrategyMap):
-						""
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						"wcprops"
-					Value (StrategyMap):
-						""
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
 						"tmp"
 					Value (StrategyMap):
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
-								"text-base"
-							Value (StrategyMap):
-								""
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"prop-base"
+								"wcprops"
 							Value (StrategyMap):
 								""
 						Entry (KeyValuePair`2)
@@ -204,9 +179,34 @@ Entry (KeyValuePair`2)
 								""
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
-								"wcprops"
+								"prop-base"
 							Value (StrategyMap):
 								""
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"text-base"
+							Value (StrategyMap):
+								""
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"wcprops"
+					Value (StrategyMap):
+						""
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"props"
+					Value (StrategyMap):
+						""
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"prop-base"
+					Value (StrategyMap):
+						""
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"text-base"
+					Value (StrategyMap):
+						""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"literalEscapeTest"
