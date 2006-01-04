@@ -305,7 +305,6 @@ license='"
 		Schwaenzchen in die Hoeh."
 	lines=textBox.Lines.get *
 	alleMeineText=lines.GetValue.[mscorlib.Int32] 1
-	lines.[5]="bwuhahaha"
 	form=["System.Windows.Forms"].Form *
 	form.Location.set.[["System.Drawing"].Point]
 		X=5

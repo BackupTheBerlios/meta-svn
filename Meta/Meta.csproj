@@ -98,6 +98,7 @@
   <ItemGroup>
     <None Include="Data\basicTest.meta" />
     <None Include="Data\bitwise.meta" />
+    <None Include="Data\library.meta" />
     <None Include="Data\libraryTest.meta" />
     <None Include="Data\logic.meta" />
     <None Include="Data\map.meta" />

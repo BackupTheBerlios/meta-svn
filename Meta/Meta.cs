@@ -1209,28 +1209,32 @@ namespace Meta
 				Delegate function = MethodOverload.CreateDelegateFromCode(target, meta);
 				dotNet = function;
 			}
-			else if (target.IsArray && meta.Array.Count != 0)
+			//else if (target.IsArray && meta.Array.Count != 0)
+			//{
+			//    Type type = target.GetElementType();
+			//    Array arguments = System.Array.CreateInstance(type, meta.Array.Count);
+			//    bool isElementConverted = true;
+			//    for (int i = 0; i < meta.Count; i++)
+			//    {
+			//        object element = Transform.ToDotNet(meta[i + 1], type);
+			//        if (element != null)
+			//        {
+			//            arguments.SetValue(element, i);
+			//        }
+			//        else
+			//        {
+			//            isElementConverted = false;
+			//            break;
+			//        }
+			//    }
+			//    if (isElementConverted)
+			//    {
+			//        dotNet = arguments;
+			//    }
+			//}
+			if (meta is ClassMap && target == typeof(Type))
 			{
-				Type type = target.GetElementType();
-				Array arguments = System.Array.CreateInstance(type, meta.Array.Count);
-				bool isElementConverted = true;
-				for (int i = 0; i < meta.Count; i++)
-				{
-					object element = Transform.ToDotNet(meta[i + 1], type);
-					if (element != null)
-					{
-						arguments.SetValue(element, i);
-					}
-					else
-					{
-						isElementConverted = false;
-						break;
-					}
-				}
-				if (isElementConverted)
-				{
-					dotNet = arguments;
-				}
+				dotNet = ((ClassMap)meta).type;
 			}
 			else if (target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
 			{
@@ -1347,9 +1351,9 @@ namespace Meta
 							foreach (KeyValuePair<Map, Map> pair in meta)
 							{
 								((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value);
-							} 
+							}
 							//System.Windows.Forms.Form form=System.Windows.Forms.Form();
-							dotNet=result.Object;
+							dotNet = result.Object;
 						}
 						break;
 					case TypeCode.SByte:
@@ -3875,6 +3879,7 @@ namespace Meta
 							}
 						}
 						string realText = string.Join("\n", realLines.ToArray());
+						realText = realText.TrimStart('\n');
 						Map literal = new StrategyMap(realText);
 						@string = new StrategyMap();
 						@string[CodeKeys.Literal] = literal;

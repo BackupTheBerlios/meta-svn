@@ -302,7 +302,6 @@
 		Schwaenzchen in die Hoeh."
 	lines=textBox.Lines.get *
 	alleMeineText=lines.GetValue.[mscorlib.Int32] 1
-	lines.[4]="bwuhahaha"
 	form=["System.Windows.Forms"].Form *
 	form.Location.set.[["System.Drawing"].Point]
 		X=5
