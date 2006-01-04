@@ -1779,14 +1779,14 @@ namespace Meta
 					ParameterInfo[] parameters=method.GetParameters();
 					if (parameters.Length == 1)
 					{
-						key = new TypeMap(parameters[0].ParameterType);
+						key = new ClassMap(parameters[0].ParameterType);
 					}
 					else
 					{
 						key=new StrategyMap();
 						foreach (ParameterInfo parameter in parameters)
 						{
-							key.Append(new TypeMap(parameter.ParameterType));
+							key.Append(new ClassMap(parameter.ParameterType));
 						}
 					}
 					MethodOverload overload = new MethodOverload(method, obj, type);
@@ -1824,10 +1824,17 @@ namespace Meta
 	    protected override Map Get(Map key)
 	    {
 	        MethodOverload value;
-			if (key is TypeMap && ((TypeMap)key).Type.Name.StartsWith("ICollection"))
+			if (key is ClassMap && ((ClassMap)key).Type.Name.StartsWith("ICollection"))
 			{
 			}
-	        overloads.TryGetValue(key, out value);
+			if (overloads == null)
+			{
+				value = null;
+			}
+			else
+			{
+				overloads.TryGetValue(key, out value);
+			}
 	        return value;
 	    }
 	    protected override void Set(Map key, Map val)
@@ -1975,35 +1982,70 @@ namespace Meta
 	        }
 	    }
 	}
-	public class TypeMap: DotNetMap
+	public class ClassMap: DotNetMap
 	{
 		protected override Map Get(Map key)
 		{
 			Map value;
-			if (key.IsString && key.GetString() == this.type.Name)
-			{
-				value=this.Constructor;
-			}
-			else if (type.IsGenericTypeDefinition && key.Array.TrueForAll(delegate(Map map) { return map is TypeMap; }))
+			//if (key.IsString && key.GetString() == this.type.Name)
+			//{
+			//    value = this.Constructor;
+			//    //value = this.Constructor;
+
+			//}
+			if (type.IsGenericTypeDefinition && key.Array.TrueForAll(delegate(Map map) { return map is ClassMap; }))
 			{
 				List<Type> types;
 				if (type.GetGenericArguments().Length == 1)
 				{
 					types = new List<Type>();
-					types.Add(((TypeMap)key).Type);
+					types.Add(((ClassMap)key).Type);
 				}
 				else
 				{
-					types = key.Array.ConvertAll<Type>(new Converter<Map, Type>(delegate(Map map) { return ((TypeMap)map).type; }));
+					types = key.Array.ConvertAll<Type>(new Converter<Map, Type>(delegate(Map map) { return ((ClassMap)map).type; }));
 				}
-				value = new TypeMap(type.MakeGenericType(types.ToArray()));
+				value = new ClassMap(type.MakeGenericType(types.ToArray()));
 			}
 			else
 			{
 				value = base.Get(key);
 			}
+			if (value == null)
+			{
+				value = this.Constructor[key];
+			}
 			return value;
 		}
+		//protected override Map Get(Map key)
+		//{
+		//    Map value;
+		//    if (key.IsString && key.GetString() == this.type.Name)
+		//    {
+		//        value = this.Constructor;
+		//        //value = this.Constructor;
+
+		//    }
+		//    else if (type.IsGenericTypeDefinition && key.Array.TrueForAll(delegate(Map map) { return map is ClassMap; }))
+		//    {
+		//        List<Type> types;
+		//        if (type.GetGenericArguments().Length == 1)
+		//        {
+		//            types = new List<Type>();
+		//            types.Add(((ClassMap)key).Type);
+		//        }
+		//        else
+		//        {
+		//            types = key.Array.ConvertAll<Type>(new Converter<Map, Type>(delegate(Map map) { return ((ClassMap)map).type; }));
+		//        }
+		//        value = new ClassMap(type.MakeGenericType(types.ToArray()));
+		//    }
+		//    else
+		//    {
+		//        value = base.Get(key);
+		//    }
+		//    return value;
+		//}
 		public override bool IsFunction
 		{
 			get
@@ -2025,9 +2067,9 @@ namespace Meta
 		public override bool Equals(object obj)
 		{
 			bool equal;
-			if (obj is TypeMap)
+			if (obj is ClassMap)
 			{
-				TypeMap typeMap = (TypeMap)obj;
+				ClassMap typeMap = (ClassMap)obj;
 				equal = typeMap.type == this.type;
 				if (equal)
 				{
@@ -2041,7 +2083,7 @@ namespace Meta
 		}
 		protected override Map CopyData()
 		{
-			return new TypeMap(this.type);
+			return new ClassMap(this.type);
 		}
 		private Method Constructor
 		{
@@ -2053,7 +2095,7 @@ namespace Meta
 		//public TypeMap(object obj, Type type):base(obj,type)
 		//{
 		//}
-		public TypeMap(Type targetType):base(null,targetType)
+		public ClassMap(Type targetType):base(null,targetType)
 		{
 		}
 		public override Map Call(Map argument)
@@ -2887,7 +2929,7 @@ namespace Meta
 					}
 					else if (members[0] is Type)
 					{
-						val = new TypeMap((Type)members[0]);
+						val = new ClassMap((Type)members[0]);
 					}
 					else
 					{
@@ -4394,7 +4436,7 @@ namespace Meta
 					{
 						name=type.Name;
 					}
-					selected[type.Name] = new TypeMap(type);
+					selected[type.Name] = new ClassMap(type);
 				}
 			}
 			return val;

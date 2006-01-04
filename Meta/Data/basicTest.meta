@@ -276,7 +276,7 @@ license='"
 		|
 			x="hello"
 	emptyFunctionResult=emptyFunction *
-	font=["System.Drawing"].Font.Font.[
+	font=["System.Drawing"].Font.[
 		mscorlib.String
 		mscorlib.Single
 	]
@@ -293,7 +293,7 @@ license='"
 			hello world!
 			hello!
 			"
-	arrayList=mscorlib.ArrayList.ArrayList.[*] *
+	arrayList=mscorlib.ArrayList.[*] *
 	arrayList.Add "hello"
 	arrayListResult=arrayList.Item.get *
 	textBox=["System.Windows.Forms"].TextBox *
@@ -306,7 +306,7 @@ license='"
 	lines=textBox.Lines.get *
 	alleMeineText=lines.GetValue.[mscorlib.Int32] 1
 	lines.[5]="bwuhahaha"
-	form=["System.Windows.Forms"].Form.Form *
+	form=["System.Windows.Forms"].Form *
 	form.Location.set.[["System.Drawing"].Point]
 		X=5
 		Y=1000

@@ -121,7 +121,7 @@ keys=
 	documentation="Returns the keys of a map in an array."
 	|
 		object=Meta.ObjectMap arg
-		this=Meta.StrategyMap.StrategyMap.[mscorlib.["ICollection`1"].[Meta.Map]] object.Keys.get *
+		this=Meta.StrategyMap.[mscorlib.["ICollection`1"].[Meta.Map]] object.Keys.get *
 merge=
 	documentation="Combines several maps into one."
 	|sum

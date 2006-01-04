@@ -1308,7 +1308,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"TestClass"
-	Value (TypeMap):
+	Value (ClassMap):
 		testClasses.TestClass
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -1328,12 +1328,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"strongNameTest"
-	Value (TypeMap):
+	Value (ClassMap):
 		System.Int32
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"MemberTest"
-	Value (TypeMap):
+	Value (ClassMap):
 		testClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
