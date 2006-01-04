@@ -27,7 +27,7 @@ repeat=
 		argument=arg.array
 		this=join apply
 			array=range arg.times
-			with=
+			function=
 				|argument
 range=
 	documentation="Returns an array containing all numbers from 1 to the argument."
@@ -48,7 +48,7 @@ range=
 				|math.smaller
 					counter
 					limit
-			with=
+			function=
 				|
 					this=count arg
 		this=array
@@ -64,7 +64,7 @@ while=
 				|*
 			=
 				|
-					arg.with *
+					arg.function *
 					while arg
 		next.[stop] arg
 while=
@@ -73,20 +73,20 @@ while=
 foreach=
 	|apply
 		array=keys arg.map
-		with=
-			|arg.arg.with
+		function=
+			|arg.arg.function
 				value=arg.arg.map.[arg]
 				key=arg
 loop=
 	|apply
 		array=arg.array
-		with=
+		function=
 			|*
 apply=
 	documentation="Calls a function with every value in an array as an argument and returns the results as an array."
 	|applyImplementation
 		array=arg.array
-		with=arg.with
+		function=arg.function
 		index=1
 		result=*
 	applyImplementation=
@@ -100,12 +100,12 @@ apply=
 				[*]=
 					|applyImplementation
 						array=arg.array
-						with=arg.with
+						function=arg.function
 						index=math.add
 							arg.index
 							1
 						object=Meta.ObjectMap arg.result
-						argument=arg.with arg.array.[arg.index]
+						argument=arg.function arg.array.[arg.index]
 						object.Append argument
 						result=object.This.get *
 			this=next.[stop] arg
@@ -126,12 +126,12 @@ merge=
 	documentation="Combines several maps into one."
 	|sum
 		array=arg
-		with=
+		function=
 			|
 				overwrite=arg.present
 				this=sum
 					array=keys arg.present
-					with=
+					function=
 						|
 							result=arg.previous
 							result.[arg.present]=overwrite.[arg.present]
@@ -143,7 +143,7 @@ equal=
 	|
 		result=sum
 			array=arg
-			with=
+			function=
 				|
 					first=Meta.ObjectMap arg.previous.previous
 					this=
@@ -164,7 +164,7 @@ sum=
 	|sumImplementation
 		index=1
 		array=arg.array
-		with=arg.with
+		function=arg.function
 		result=arg.start
 	sumImplementation=
 		|
@@ -177,9 +177,9 @@ sum=
 				[*]=
 					|sumImplementation
 						index=math.increment arg.index
-						result=arg.with
+						result=arg.function
 							previous=arg.result
 							present=arg.array.[arg.index]
 						array=arg.array
-						with=arg.with
+						function=arg.function
 			this=next.[stop] arg

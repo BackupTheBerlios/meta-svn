@@ -7,7 +7,7 @@ add=
 	documentation="Adds integers."
 	|Meta.StrategyMap.[Meta.Integer] map.sum
 		array=arg
-		with=
+		function=
 			|Meta.Integer.op_Addition
 				Meta.Integer.[Meta.Integer] arg.previous
 				Meta.Integer.[Meta.Map] arg.present
@@ -16,7 +16,7 @@ multiply=
 	documentation="Multiplies integers."
 	|Meta.StrategyMap.[Meta.Integer] map.sum
 		array=arg
-		with=
+		function=
 			|Meta.Integer.op_Multiply
 				Meta.Integer.[Meta.Integer] arg.previous
 				Meta.Integer.[Meta.Map] arg.present

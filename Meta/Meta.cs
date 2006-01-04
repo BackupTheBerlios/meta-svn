@@ -394,7 +394,7 @@ namespace Meta
 		{
 			while (arg["condition"].Call(Map.Empty).GetBoolean())
 			{
-				arg["with"].Call(Map.Empty);
+				arg["function"].Call(Map.Empty);
 			}
 			return Map.Empty;
 		}

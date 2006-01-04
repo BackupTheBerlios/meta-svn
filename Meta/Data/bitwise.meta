@@ -2,7 +2,7 @@ or=
 	documentation="Performs a bitwise or operation on integers."
 	|Meta.StrategyMap.[Meta.Integer] map.sum
 		array=arg
-		with=
+		function=
 			|Meta.Integer.op_BitwiseOr
 				Meta.Integer.[Meta.Integer] arg.previous
 				Meta.Integer.[Meta.Map] arg.present

@@ -8,7 +8,7 @@ and=
 	documentation="Returns whether all booleans are true."
 	|map.sum
 		array=arg
-		with=
+		function=
 			|table.[arg]
 		start=1
 	table=
@@ -32,7 +32,7 @@ or=
 	documentation="Returns whether at least one boolean is true."
 	|map.sum
 		array=arg
-		with=
+		function=
 			|table.[arg]
 		start=*
 	table=
