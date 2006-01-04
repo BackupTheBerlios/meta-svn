@@ -8,8 +8,7 @@ Entry (KeyValuePair`2)
 	Value (StrategyMap):
 		Extent:
 			null
-		"
-Copyright (c) 2005 Christian Staudenmeyer
+		"Copyright (c) 2005 Christian Staudenmeyer
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -31279,8 +31278,7 @@ Entry (KeyValuePair`2)
 															Value (StrategyMap):
 																Extent:
 																	null
-																"
-hello world!
+																"hello world!
 hello!
 "
 				Entry (KeyValuePair`2)
@@ -32354,8 +32352,7 @@ hello!
 													Value (StrategyMap):
 														Extent:
 															null
-														"
-Alle meine Entchen,
+														"Alle meine Entchen,
 schwimmen auf dem See,
 schwimmen auf dem See,
 Köpfchen in das Wasser,
@@ -32969,7 +32966,7 @@ Schwaenzchen in die Hoeh."
 											Value (StrategyMap):
 												Extent:
 													null
-												5
+												4
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:

@@ -1,5 +1,4 @@
-"license='"
-	Copyright (c) 2005 Christian Staudenmeyer
+"license='"Copyright (c) 2005 Christian Staudenmeyer
 	
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the
@@ -289,23 +288,21 @@
 	helloh="hi"
 	stringStrategyHashTest=[stringTest]
 	x=
-		aLongText="
-			hello world!
+		aLongText="hello world!
 			hello!
 			"
 	arrayList=mscorlib.ArrayList.[*] *
 	arrayList.Add "hello"
 	arrayListResult=arrayList.Item.get *
 	textBox=["System.Windows.Forms"].TextBox *
-	textBox.Text.set "
-		Alle meine Entchen,
+	textBox.Text.set "Alle meine Entchen,
 		schwimmen auf dem See,
 		schwimmen auf dem See,
 		Köpfchen in das Wasser,
 		Schwaenzchen in die Hoeh."
 	lines=textBox.Lines.get *
 	alleMeineText=lines.GetValue.[mscorlib.Int32] 1
-	lines.[5]="bwuhahaha"
+	lines.[4]="bwuhahaha"
 	form=["System.Windows.Forms"].Form *
 	form.Location.set.[["System.Drawing"].Point]
 		X=5
