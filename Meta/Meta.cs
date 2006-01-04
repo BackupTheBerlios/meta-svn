@@ -3426,18 +3426,17 @@ namespace Meta
 			}
 			foreach (string directoryName in Directory.GetDirectories(path))
 			{
-				map[new DirectoryInfo(directoryName).Name] = LoadDirectory(directoryName);
+				if ((new DirectoryInfo(directoryName).Attributes & FileAttributes.Hidden) == 0)
+				{
+					map[new DirectoryInfo(directoryName).Name] = LoadDirectory(directoryName);
+				}
 			}
 			return map;
 		}
 		static FileSystem()
 		{
 			fileSystem = LoadDirectory(Path.Combine(Process.InstallationPath, "Data"));
-			//fileSystem = Parse(Path.Combine(Process.InstallationPath, @"meta.meta"));
-			//fileSystem = Parse(Path.Combine(Process.InstallationPath, @"Data\basicTest.meta"));
-			//fileSystem.Parent = Gac.gac;
 			fileSystem.Scope = Gac.gac;
-			// messy, experimental
 			Gac.gac["local"] = fileSystem;
 		}
 		public static void Save()
@@ -3661,7 +3660,12 @@ namespace Meta
 			}
 			public Map Map()
 			{
-				return Program(false);
+				Map map=Program(false);
+				if (!Look(endOfFileChar))
+				{
+					throw new MetaException("Expected end of file",new Extent(line,Column,line,Column,filePath));
+				}
+				return map;
 			}
 			public Map Program()
 			{

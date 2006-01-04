@@ -56,7 +56,8 @@
 		}
 		function submit()
 		{
-			__doPostBack('__Page','');
+			document.meta.submit();
+//			__doPostBack('__Page','');
 //			__doPostBack('testButton','');
 //			__doPost
 			//document.execute.click();
