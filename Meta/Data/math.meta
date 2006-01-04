@@ -1,10 +1,8 @@
 increment=
 	documentation="Increments an integer."
-	|
-		result=Meta.Integer.op_Addition
-			Meta.Integer.[Meta.Map] arg
-			Meta.Integer.[Meta.Map] 1
-		this=Meta.StrategyMap.[Meta.Integer] result
+	|Meta.StrategyMap.[Meta.Integer] Meta.Integer.op_Addition
+		Meta.Integer.[Meta.Map] arg
+		Meta.Integer.[Meta.Map] 1
 add=
 	documentation="Adds integers."
 	|Meta.StrategyMap.[Meta.Integer] map.sum
