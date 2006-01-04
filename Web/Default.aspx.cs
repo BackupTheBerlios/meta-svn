@@ -15,16 +15,48 @@ using System.IO;
 
 public partial class _Default : System.Web.UI.Page 
 {
+	//[System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name="FullTrust")]
+	 //  protected override void Render(HtmlTextWriter writer)
+	 //  {
+	 //    // Converts the Number property to a string and
+	 //// writes it to the containing page.
+	 //    //writer.Write("The Number is " + Number.ToString() + " (" );
+
+	 //// Uses the GetPostBackEventReference method to pass
+	 //// 'inc' to the RaisePostBackEvent method when the link
+	 //// this code creates is clicked.
+	 //    writer.Write("<a href=\"javascript:" + ClientScript.GetPostBackEventReference(PostBackOptions.,"inc") + "\">Increase Number</a>"); 
+
+	 //    writer.Write(" or ");
+
+	 //// Uses the GetPostBackEventReference method to pass
+	 //// 'dec' to the RaisePostBackEvent method when the link
+	 //// this code creates is clicked.
+	 //    writer.Write("<a href=\"javascript:" + Page.GetPostBackEventReference(this,"dec") + "\">Decrease Number</a>");
+	 //  }
+	//}
+	//protected override void Render(HtmlTextWriter output)
+	//{
+	//    output.Write("<a  id=\"" + this.UniqueID + "\" href=\"javascript:" + Page.GetPostBackEventReference(this) + "\">");
+	//    output.Write(" " + this.UniqueID + "</a>");
+	//}
     protected void Page_Load(object sender, EventArgs e)
     {
 		if (!IsPostBack)
 		{
-			execute.Attributes.Add("onclick", "clicked()");
+			//execute.Attributes.Add("onclick", "clicked()");
 			input.Focus();
+			string x=ClientScript.GetPostBackEventReference(new PostBackOptions(this));
+			int asdf = 0;
+			//testButton.Attributes.Add("onclick",ClientScript.GetPostBackEventReference(new PostBackOptions(
 		}
 		if (Session["map"] == null)
 		{
 			Session["map"] = new StrategyMap();
+		}
+		if (IsPostBack)
+		{
+			execute_Click(null, null);
 		}
 
     }
@@ -98,7 +130,7 @@ public partial class _Default : System.Web.UI.Page
 			int count = FileSystem.fileSystem.ArrayCount;
 			int originalCount = count;
 			parser.isStartOfFile = false;
-			context.Parent = FileSystem.fileSystem;
+			context.Scope = FileSystem.fileSystem;
 			Map statement = parser.Statement(ref count);
 
 			statement.GetStatement().Assign(ref context);//, Map.Empty);
