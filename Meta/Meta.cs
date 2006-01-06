@@ -5236,7 +5236,7 @@ namespace Meta
 					// refactor, get rid of this EndExpression stuff
 					EndExpression(extent, callCode);
 					call = Map.Create(CodeKeys.Call, callCode);
-					if (!callAllowed)
+					if (functions==0)
 					{
 						throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
 					}
@@ -5268,11 +5268,12 @@ namespace Meta
 			{
 				return Program(true);
 			}
-			private bool callAllowed;
+			//private bool callAllowed;
+			int functions = 0;
 			public Map Program(bool allowed)
 			{
-				bool wasAllowed = this.callAllowed;
-				this.callAllowed = allowed;
+				//bool wasAllowed = this.callAllowed;
+				//this.callAllowed = allowed;
 				Extent extent = BeginExpression();
 				Map program;
 				if (Indentation())
@@ -5348,7 +5349,7 @@ namespace Meta
 					program = null;
 				}
 				EndExpression(extent, program);
-				callAllowed = wasAllowed;
+				//callAllowed = wasAllowed;
 				return program;
 			}
 			private void EmptyLine()
@@ -5763,8 +5764,9 @@ namespace Meta
 			public Map Function()
 			{
 				Extent extent = BeginExpression();
-				bool wasCallAllowed = callAllowed;
-				callAllowed = true;
+				//bool wasCallAllowed = callAllowed;
+				functions++;
+				//callAllowed = true;
 				Map function = null;
 				if (TryConsume(functionChar))
 				{
@@ -5779,7 +5781,8 @@ namespace Meta
 					}
 				}
 				EndExpression(extent, function);
-				callAllowed = wasCallAllowed;
+				//callAllowed = wasCallAllowed;
+				functions--;
 				return function;
 			}
 			public const char statementChar = '=';
