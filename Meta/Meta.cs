@@ -3332,7 +3332,7 @@ namespace Meta
 		}
 		public static Map Compile(TextReader textReader,string fileName)
 		{
-			return new Parser(textReader.ReadToEnd(), fileName).GetMap();
+			return new Parser(textReader.ReadToEnd(), fileName).program.Get();
 		}
 		public static Map fileSystem;
 		private static Map LoadDirectory(string path)
@@ -5063,7 +5063,20 @@ namespace Meta
 				this.index = 0;
 				this.text = text;
 				this.filePath = filePath;
-				function.parser = this;
+				//new List<FieldInfo>(this.GetType().GetFields()).FindAll(delegate(FieldInfo field)
+				//    {return field.FieldType == typeof(Expression)}).ForEach(delegate(FieldInfo
+				//    {
+				//        Expression expression = (Expression)field.GetValue(this);
+				//        expression.parser = this;
+				//    }
+				//}
+				foreach (FieldInfo field in this.GetType().GetFields())
+				{
+					if (field.FieldType == typeof(Expression))
+					{
+						((Expression)field.GetValue(this)).parser = this;
+					}
+				}
 			}
 			private void Consume(string characters)
 			{
@@ -5164,6 +5177,9 @@ namespace Meta
 			public const char callChar = ' ';
 			public const char selectChar = '.';
 
+			public const char stringEscapeChar = '\'';
+			public const char statementChar = '=';
+
 			// we need some sort of guessing mode
 			private bool TryConsumeNewLine(string text)
 			{
@@ -5204,7 +5220,7 @@ namespace Meta
 					{
 						if ((expression = String()) == null)
 						{
-							if ((expression = Program()) == null)
+							if ((expression = program.Get()) == null)
 							{
 								if ((expression = Select()) != null)
 								{
@@ -5221,6 +5237,39 @@ namespace Meta
 				return expression;
 			}
 			// refactor
+			//public Expression call=new Expression(delegate(Parser parser) {
+			//    Map call;
+			//    //Extent extent = BeginExpression();
+			//    Map argument;
+			//    if (parser.TryConsume(callChar))
+			//    {
+			//        argument = parser.GetExpression();
+			//    }
+			//    else
+			//    {
+			//        argument = parser.Program();
+			//    }
+			//    if (argument != null)
+			//    {
+			//        Map callCode = new StrategyMap(
+			//            CodeKeys.Callable, select,
+			//            CodeKeys.Argument, argument);
+			//        // refactor, get rid of this EndExpression stuff
+			//        EndExpression(extent, callCode);
+			//        call = new StrategyMap(CodeKeys.Call, callCode);
+			//        if (functions == 0)
+			//        {
+			//            throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
+			//        }
+			//    }
+			//    else
+			//    {
+			//        call = null;
+			//    }
+			//    EndExpression(extent, call);
+			//    return call;
+			//});
+			// convert this last
 			public Map Call(Map select)
 			{
 				Map call;
@@ -5232,7 +5281,7 @@ namespace Meta
 				}
 				else
 				{
-					argument = Program();
+					argument = program.Get();
 				}
 				if (argument != null)
 				{
@@ -5242,7 +5291,7 @@ namespace Meta
 					// refactor, get rid of this EndExpression stuff
 					EndExpression(extent, callCode);
 					call = new StrategyMap(CodeKeys.Call, callCode);
-					if (functions==0)
+					if (functions == 0)
 					{
 						throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
 					}
@@ -5261,86 +5310,152 @@ namespace Meta
 				{
 				}
 			}
-			public Map GetMap()
-			{
-				Map map = Program(false);
-				if (!Look(endOfFileChar))
-				{
-					throw new MetaException("Expected end of file", new Extent(line, Column, line, Column, filePath));
-				}
-				return map;
-			}
-			public Map Program()
-			{
-				return Program(true);
-			}
+			//public Map GetMap()
+			//{
+			//    Map map = Program();
+			//    if (!Look(endOfFileChar))
+			//    {
+			//        throw new MetaException("Expected end of file", new Extent(line, Column, line, Column, filePath));
+			//    }
+			//    return map;
+			//}
 			int functions = 0;
-			public Map Program(bool allowed)
+			public Expression program = new Expression(CodeKeys.Program,delegate(Parser parser)
 			{
-				Extent extent = BeginExpression();
+				Extent extent = parser.BeginExpression();
 				Map program;
-				if (Indentation())
+				Map statements;
+				if (parser.Indentation())
 				{
 					program = new StrategyMap();
 					// use a loop here
 					int counter = 1;
 					int defaultKey = 1;
-					Map statements = new StrategyMap();
-					while (!Look(endOfFileChar))
+					statements = new StrategyMap();
+					while (!parser.Look(parser.endOfFileChar))
 					{
-						Map statement = function.Get();
+						Map statement = parser.function.Get();
 						if (statement == null)
 						{
-							statement = Statement(ref defaultKey);
+							statement = parser.Statement(ref defaultKey);
 						}
 						statements[counter] = statement;
 						counter++;
-						if (!TryNewLine() && !Look(endOfFileChar))
+						if (!parser.TryNewLine() && !parser.Look(parser.endOfFileChar))
 						{
-							index -= 1;
-							if (!TryNewLine())
+							parser.index -= 1;
+							if (!parser.TryNewLine())
 							{
-								index -= 1;
-								if (!TryNewLine())
+								parser.index -= 1;
+								if (!parser.TryNewLine())
 								{
-									index += 2;
-									throw new MetaException("Expected newline.", new Extent(Position, Position, filePath));
+									parser.index += 2;
+									throw new MetaException("Expected newline.", new Extent(parser.Position, parser.Position, parser.filePath));
 								}
 								else
 								{
-									line--;
+									parser.line--;
 								}
 							}
 							else
 							{
-								line--;
+								parser.line--;
 							}
 						}
-						string newIndentation = GetIndentation();
-						if (newIndentation.Length < indentationCount)
+						string newIndentation = parser.GetIndentation();
+						if (newIndentation.Length < parser.indentationCount)
 						{
-							indentationCount--;
+							parser.indentationCount--;
 							break;
 						}
-						else if (newIndentation.Length == indentationCount)
+						else if (newIndentation.Length == parser.indentationCount)
 						{
-							Consume(newIndentation);
+							parser.Consume(newIndentation);
 						}
 						else
 						{
-							throw new MetaException("incorrect indentation", extent);
+							// refactor
+							throw new SyntaxException("incorrect indentation",parser.filePath,parser.line, parser.Column);
 						}
 					}
-					EndExpression(extent, statements);
-					program[CodeKeys.Program] = statements;
+					parser.EndExpression(extent, statements);
+					//program[CodeKeys.Program] = statements;
 				}
 				else
 				{
-					program = null;
+					statements = null;
+					//program = null;
 				}
-				EndExpression(extent, program);
-				return program;
-			}
+				//parser.EndExpression(extent, program);
+				return statements;
+				//return program;
+			});
+			//public Map Program()
+			//{
+			//    Extent extent = BeginExpression();
+			//    Map program;
+			//    if (Indentation())
+			//    {
+			//        program = new StrategyMap();
+			//        // use a loop here
+			//        int counter = 1;
+			//        int defaultKey = 1;
+			//        Map statements = new StrategyMap();
+			//        while (!Look(endOfFileChar))
+			//        {
+			//            Map statement = function.Get();
+			//            if (statement == null)
+			//            {
+			//                statement = Statement(ref defaultKey);
+			//            }
+			//            statements[counter] = statement;
+			//            counter++;
+			//            if (!TryNewLine() && !Look(endOfFileChar))
+			//            {
+			//                index -= 1;
+			//                if (!TryNewLine())
+			//                {
+			//                    index -= 1;
+			//                    if (!TryNewLine())
+			//                    {
+			//                        index += 2;
+			//                        throw new MetaException("Expected newline.", new Extent(Position, Position, filePath));
+			//                    }
+			//                    else
+			//                    {
+			//                        line--;
+			//                    }
+			//                }
+			//                else
+			//                {
+			//                    line--;
+			//                }
+			//            }
+			//            string newIndentation = GetIndentation();
+			//            if (newIndentation.Length < indentationCount)
+			//            {
+			//                indentationCount--;
+			//                break;
+			//            }
+			//            else if (newIndentation.Length == indentationCount)
+			//            {
+			//                Consume(newIndentation);
+			//            }
+			//            else
+			//            {
+			//                throw new MetaException("incorrect indentation", extent);
+			//            }
+			//        }
+			//        EndExpression(extent, statements);
+			//        program[CodeKeys.Program] = statements;
+			//    }
+			//    else
+			//    {
+			//        program = null;
+			//    }
+			//    EndExpression(extent, program);
+			//    return program;
+			//}
 			private Map EmptyMap()
 			{
 				Extent extent = BeginExpression();
@@ -5430,7 +5545,6 @@ namespace Meta
 				EndExpression(extent, integer);
 				return integer;
 			}
-			public const char stringEscapeChar = '\'';
 			private Map String()
 			{
 				try
@@ -5614,17 +5728,25 @@ namespace Meta
 				{
 					Extent extent = parser.BeginExpression();
 					Map expression=parseFunction(parser);
+					// refactor
+					// refactor
+					if (expression != null && identifier!=null)
+					{
+						expression = new StrategyMap(identifier, expression);
+					}
 					parser.EndExpression(extent, expression);
 					return expression;
 				}
 				public Parser parser;
-				public Expression(ParseFunction parseFunction)
+				private Map identifier;
+				public Expression(Map identifier,ParseFunction parseFunction)
 				{
+					this.identifier = identifier;
 					this.parseFunction = parseFunction;
 				}
 				private ParseFunction parseFunction;
 			}
-			public Expression function = new Expression(delegate(Parser parser)
+			public Expression function = new Expression(null,delegate(Parser parser)
 			{
 				parser.functions++;
 				Map function = null;
@@ -5641,30 +5763,6 @@ namespace Meta
 				parser.functions--;
 				return function;
 			});
-			//public Map Function()
-			//{
-
-			//}
-			//public Map Function()
-			//{
-			//    Extent extent = BeginExpression();
-			//    functions++;
-			//    Map function = null;
-			//    if (TryConsume(functionChar))
-			//    {
-			//        Map expression = Expression();
-			//        if (expression != null)
-			//        {
-			//            function = new StrategyMap(
-			//                CodeKeys.Key, CreateDefaultKey(CodeKeys.Function),
-			//                CodeKeys.Value, new StrategyMap(CodeKeys.Literal, expression));
-			//        }
-			//    }
-			//    EndExpression(extent, function);
-			//    functions--;
-			//    return function;
-			//}
-			public const char statementChar = '=';
 			public Map Statement(ref int count)
 			{
 				Extent extent = BeginExpression();
