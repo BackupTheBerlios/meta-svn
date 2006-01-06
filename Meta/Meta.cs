@@ -531,15 +531,15 @@ namespace Meta
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
-		public static Map Create(params Map[] maps)
-		{
-			Map map=new StrategyMap();
-			for (int i = 0; i + 2 <= maps.Length; i += 2)
-			{
-				map[maps[i]] = maps[i + 1];
-			}
-			return map;
-		}
+		//public static Map Create(params Map[] maps)
+		//{
+		//    Map map=new StrategyMap();
+		//    for (int i = 0; i + 2 <= maps.Length; i += 2)
+		//    {
+		//        map[maps[i]] = maps[i + 1];
+		//    }
+		//    return map;
+		//}
 		public Map Argument
 		{
 			get
@@ -977,6 +977,13 @@ namespace Meta
 
 	public class StrategyMap:Map
 	{
+		public StrategyMap(params Map[] maps):this()
+		{
+			for (int i = 0; i + 2 <= maps.Length; i += 2)
+			{
+				this[maps[i]] = maps[i + 1];
+			}
+		}
 		public override bool IsFunction
 		{
 			get
@@ -5230,12 +5237,12 @@ namespace Meta
 				}
 				if (argument != null)
 				{
-					Map callCode = Map.Create(
+					Map callCode = new StrategyMap(
 						CodeKeys.Callable, select,
 						CodeKeys.Argument, argument);
 					// refactor, get rid of this EndExpression stuff
 					EndExpression(extent, callCode);
-					call = Map.Create(CodeKeys.Call, callCode);
+					call = new StrategyMap(CodeKeys.Call, callCode);
 					if (functions==0)
 					{
 						throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
@@ -5268,17 +5275,15 @@ namespace Meta
 			{
 				return Program(true);
 			}
-			//private bool callAllowed;
 			int functions = 0;
 			public Map Program(bool allowed)
 			{
-				//bool wasAllowed = this.callAllowed;
-				//this.callAllowed = allowed;
 				Extent extent = BeginExpression();
 				Map program;
 				if (Indentation())
 				{
 					program = new StrategyMap();
+					// use a loop here
 					int counter = 1;
 					int defaultKey = 1;
 					Map statements = new StrategyMap();
@@ -5349,155 +5354,15 @@ namespace Meta
 					program = null;
 				}
 				EndExpression(extent, program);
-				//callAllowed = wasAllowed;
 				return program;
 			}
-			private void EmptyLine()
-			{
-				NewLine();
-				NewLine();
-			}
-
-			// guesser should be some kind of parser itself
-			// when a guess is not atomic, you should use a guesser that keeps track of the guess
-			//private class Guesser
-			//{
-			//    private int guessing;
-			//    private bool Guess(char c)
-			//    {
-			//        return parser.text[guessing] == c;
-			//    }
-			//    private bool Look()
-			//    {
-			//    }
-			//    private bool Guess(string text)
-			//    {
-
-			//    }
-			//    public void Whitespace()
-			//    {
-			//        for (int i = 0; Guess(space) || Guess(tab); i++)
-			//        {
-			//        }
-			//    }
-			//    public bool NewLine()
-			//    {
-			//        return Guess(unixNewLine) || Guess(windowsNewLine);
-			//    }
-			//    private Parser parser;
-			//    public Guesser(Parser parser)
-			//    {
-			//        this.parser = parser;
-			//        this.guessing = parser.index;
-			//    }
-			//}
-			//private bool LookEmptyLine()
-			//{
-			//    Guesser guess=new Guesser(this);
-			//    guess.Whitespace();
-			//    bool emptyLine;
-			//    if (guess.NewLine())
-			//    {
-			//        guess.Whitespace();
-			//        if (guess.NewLine())
-			//        {
-			//            emptyLine = true;
-			//        }
-			//        else
-			//        {
-			//            emptyLine = false;
-			//        }
-			//    }
-			//    else
-			//    {
-			//        emptyLine = false;
-			//    }
-			//    return emptyLine;
-			//    //string whitespace = "";
-			//    //for (int i = 0; Look(i) == space || Look(i) == tab; i++)
-			//    //{
-			//    //    whitespace += Look(i);
-			//    //}
-			//    //if(Look(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text));
-
-			//}
-			//public Map Program(bool allowed)
-			//{
-			//    bool wasAllowed = this.callAllowed;
-			//    this.callAllowed = allowed;
-			//    Extent extent = BeginExpression();
-			//    Map program;
-			//    if (Indentation())
-			//    {
-			//        program = new StrategyMap();
-			//        int counter = 1;
-			//        int defaultKey = 1;
-			//        Map statements = new StrategyMap();
-			//        while (!Look(endOfFileChar))
-			//        {
-			//            Map statement = Function();
-			//            if (statement == null)
-			//            {
-			//                statement = Statement(ref defaultKey);
-			//            }
-			//            statements[counter] = statement;
-			//            counter++;
-			//            if (!NewLine() && !Look(endOfFileChar))
-			//            {
-			//                index -= 1;
-			//                if (!NewLine())
-			//                {
-			//                    index -= 1;
-			//                    if (!NewLine())
-			//                    {
-			//                        index += 2;
-			//                        throw new MetaException("Expected newline.", new Extent(Position, Position, filePath));
-			//                    }
-			//                    else
-			//                    {
-			//                        line--;
-			//                    }
-			//                }
-			//                else
-			//                {
-			//                    line--;
-			//                }
-			//            }
-			//            string newIndentation = GetIndentation();
-
-			//            if (newIndentation.Length < indentationCount)
-			//            {
-			//                indentationCount--;
-			//                break;
-			//            }
-			//            else if (newIndentation.Length == indentationCount)
-			//            {
-			//                Consume(newIndentation);
-			//            }
-			//            else
-			//            {
-			//                throw new MetaException("incorrect indentation", extent);
-			//            }
-			//        }
-			//        EndExpression(extent, statements);
-			//        program[CodeKeys.Program] = statements;
-			//    }
-			//    else
-			//    {
-			//        program = null;
-			//    }
-			//    EndExpression(extent, program);
-			//    callAllowed = wasAllowed;
-			//    return program;
-			//}
 			private Map EmptyMap()
 			{
 				Extent extent = BeginExpression();
 				Map program;
 				if (TryConsume(emptyMapChar))
 				{
-					program = new StrategyMap();
-					program[CodeKeys.Literal] = new StrategyMap();
+					program = new StrategyMap(CodeKeys.Literal, Map.Empty);
 				}
 				else
 				{
@@ -5571,7 +5436,7 @@ namespace Meta
 					{
 						integerString += ConsumeGet();
 					}
-					integer = Map.Create(CodeKeys.Literal, Meta.Integer.ParseInteger(integerString));
+					integer = new StrategyMap(CodeKeys.Literal, Meta.Integer.ParseInteger(integerString));
 
 					//Map literal = new StrategyMap(Meta.Integer.ParseInteger(integerString));
 					//integer = new StrategyMap();
@@ -5636,7 +5501,7 @@ namespace Meta
 						string realText = string.Join("\n", realLines.ToArray());
 						realText = realText.TrimStart('\n');
 
-						@string=Map.Create(CodeKeys.Literal,realText);
+						@string=new StrategyMap(CodeKeys.Literal,realText);
 						//Map literal = new StrategyMap(realText);
 						//@string = new StrategyMap();
 						//@string[CodeKeys.Literal] = literal;
@@ -5668,7 +5533,7 @@ namespace Meta
 				Map lookup;
 				if (lookupString.Length > 0)
 				{
-					lookup = Map.Create(CodeKeys.Literal,lookupString);
+					lookup = new StrategyMap(CodeKeys.Literal,lookupString);
 					//lookup = new StrategyMap();
 					//lookup[CodeKeys.Literal] = new StrategyMap(lookupString);
 				}
@@ -5717,7 +5582,7 @@ namespace Meta
 				Extent extent = BeginExpression();
 				if (keys != null)
 				{
-					select = Map.Create(CodeKeys.Select, keys);
+					select = new StrategyMap(CodeKeys.Select, keys);
 				}
 				else
 				{
@@ -5776,9 +5641,9 @@ namespace Meta
 					Map expression = Expression();
 					if (expression != null)
 					{
-						function = Map.Create(
+						function = new StrategyMap(
 							CodeKeys.Key, CreateDefaultKey(CodeKeys.Function),
-							CodeKeys.Value, Map.Create(CodeKeys.Literal, expression));
+							CodeKeys.Value, new StrategyMap(CodeKeys.Literal, expression));
 					}
 				}
 				EndExpression(extent, function);
@@ -5823,9 +5688,10 @@ namespace Meta
 					SourcePosition position = new SourcePosition(Line, Column);
 					throw new MetaException("Expected value of statement", new Extent(position, position, filePath));
 				}
-				Map statement = Map.Create(
+				Map statement = new StrategyMap(
 					CodeKeys.Key, key,
 					CodeKeys.Value, val);
+
 				EndExpression(extent, statement);
 				return statement;
 			}
@@ -5833,7 +5699,7 @@ namespace Meta
 			private const char tab = '\t';
 			private Map CreateDefaultKey(Map literal)
 			{
-				return Map.Create(1, Map.Create(CodeKeys.Literal, literal));
+				return new StrategyMap(1, new StrategyMap(CodeKeys.Literal, literal));
 			}
 			private int line = 1;
 			private int Line
