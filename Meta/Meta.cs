@@ -5055,6 +5055,30 @@ namespace Meta
 		//}
 		public class Parser
 		{
+			public class Expression
+			{
+				public Map Get()
+				{
+					Extent extent = parser.BeginExpression();
+					Map expression = parseFunction(parser);
+					// refactor
+					// refactor
+					if (expression != null && identifier != null)
+					{
+						expression = new StrategyMap(identifier, expression);
+					}
+					parser.EndExpression(extent, expression);
+					return expression;
+				}
+				public Parser parser;
+				private Map identifier;
+				public Expression(Map identifier, ParseFunction parseFunction)
+				{
+					this.identifier = identifier;
+					this.parseFunction = parseFunction;
+				}
+				private ParseFunction parseFunction;
+			}
 			private string text;
 			private int index;
 			private string filePath;
@@ -5063,14 +5087,7 @@ namespace Meta
 				this.index = 0;
 				this.text = text;
 				this.filePath = filePath;
-				//new List<FieldInfo>(this.GetType().GetFields()).FindAll(delegate(FieldInfo field)
-				//    {return field.FieldType == typeof(Expression)}).ForEach(delegate(FieldInfo
-				//    {
-				//        Expression expression = (Expression)field.GetValue(this);
-				//        expression.parser = this;
-				//    }
-				//}
-				foreach (FieldInfo field in this.GetType().GetFields())
+				foreach (FieldInfo field in this.GetType().GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance))
 				{
 					if (field.FieldType == typeof(Expression))
 					{
@@ -5097,7 +5114,6 @@ namespace Meta
 					throw new ApplicationException("Unexpected token " + Look() + " ,expected " + character);
 				}
 			}
-			// refactor
 			private bool TryConsume(string characters)
 			{
 				bool consumed;
@@ -5179,8 +5195,9 @@ namespace Meta
 
 			public const char stringEscapeChar = '\'';
 			public const char statementChar = '=';
+			private const char space = ' ';
+			private const char tab = '\t';
 
-			// we need some sort of guessing mode
 			private bool TryConsumeNewLine(string text)
 			{
 				string whitespace = "";
@@ -5214,47 +5231,115 @@ namespace Meta
 			public Map GetExpression()
 			{
 				Map expression;
-				if ((expression = EmptyMap()) == null)
+				if ((expression = EmptyMap.Get()) == null)
 				{
-					if ((expression = Integer()) == null)
+					if ((expression = Integer.Get()) == null)
 					{
-						if ((expression = String()) == null)
+						if ((expression = String.Get()) == null)
 						{
 							if ((expression = program.Get()) == null)
 							{
-								if ((expression = Select()) != null)
+								if ((expression = Call()) == null)
 								{
-									Map call;
-									if ((call = Call(expression)) != null)
-									{
-										expression = call;
-									}
+									expression = Select();
 								}
+
 							}
 						}
 					}
 				}
 				return expression;
 			}
-			// refactor
-			//public Expression call=new Expression(delegate(Parser parser) {
-			//    Map call;
-			//    //Extent extent = BeginExpression();
-			//    Map argument;
-			//    if (parser.TryConsume(callChar))
+			//public Map GetExpression()
+			//{
+			//    Map expression;
+			//    if ((expression = EmptyMap.Get()) == null)
 			//    {
-			//        argument = parser.GetExpression();
+			//        if ((expression = Integer.Get()) == null)
+			//        {
+			//            if ((expression = String.Get()) == null)
+			//            {
+			//                if ((expression = program.Get()) == null)
+			//                {
+			//                    if ((expression = Select()) != null)
+			//                    {
+			//                        Map call;
+			//                        if ((call = Call(expression)) != null)
+			//                        {
+			//                            expression = call;
+			//                        }
+			//                    }
+			//                }
+			//            }
+			//        }
+			//    }
+			//    return expression;
+			//}
+			public Map Call()
+			{
+				Map call;
+				Extent extent = BeginExpression();
+				int oldIndex = index;
+				int oldLine = line;
+				int oldColumn = Column;
+				Map select = Select();
+				if (select != null)
+				{
+					Map argument;
+					if (TryConsume(callChar))
+					{
+						argument = GetExpression();
+					}
+					else
+					{
+						argument = program.Get();
+					}
+					if (argument != null)
+					{
+						Map callCode = new StrategyMap(
+							CodeKeys.Callable, select,
+							CodeKeys.Argument, argument);
+						EndExpression(extent, callCode);
+						call = new StrategyMap(CodeKeys.Call, callCode);
+						if (functions == 0)
+						{
+							throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
+						}
+					}
+					else
+					{
+						index = oldIndex;
+						line = oldLine;
+						call = null;
+					}
+					EndExpression(extent, call);
+				}
+				else
+				{
+					index = oldIndex;
+					line = oldLine;
+					call = null;
+				}
+				return call;
+			}
+			//public Map Call(Map select)
+			//{
+			//    Map call;
+			//    Extent extent = BeginExpression();
+			//    Map argument;
+			//    if (TryConsume(callChar))
+			//    {
+			//        argument = GetExpression();
 			//    }
 			//    else
 			//    {
-			//        argument = parser.Program();
+			//        argument = program.Get();
 			//    }
 			//    if (argument != null)
 			//    {
 			//        Map callCode = new StrategyMap(
 			//            CodeKeys.Callable, select,
 			//            CodeKeys.Argument, argument);
-			//        // refactor, get rid of this EndExpression stuff
 			//        EndExpression(extent, callCode);
 			//        call = new StrategyMap(CodeKeys.Call, callCode);
 			//        if (functions == 0)
@@ -5268,41 +5353,7 @@ namespace Meta
 			//    }
 			//    EndExpression(extent, call);
 			//    return call;
-			//});
-			// convert this last
-			public Map Call(Map select)
-			{
-				Map call;
-				Extent extent = BeginExpression();
-				Map argument;
-				if (TryConsume(callChar))
-				{
-					argument = GetExpression();
-				}
-				else
-				{
-					argument = program.Get();
-				}
-				if (argument != null)
-				{
-					Map callCode = new StrategyMap(
-						CodeKeys.Callable, select,
-						CodeKeys.Argument, argument);
-					// refactor, get rid of this EndExpression stuff
-					EndExpression(extent, callCode);
-					call = new StrategyMap(CodeKeys.Call, callCode);
-					if (functions == 0)
-					{
-						throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
-					}
-				}
-				else
-				{
-					call = null;
-				}
-				EndExpression(extent, call);
-				return call;
-			}
+			//}
 			public bool isStartOfFile = true;
 			private void Whitespace()
 			{
@@ -5310,15 +5361,6 @@ namespace Meta
 				{
 				}
 			}
-			//public Map GetMap()
-			//{
-			//    Map map = Program();
-			//    if (!Look(endOfFileChar))
-			//    {
-			//        throw new MetaException("Expected end of file", new Extent(line, Column, line, Column, filePath));
-			//    }
-			//    return map;
-			//}
 			int functions = 0;
 			public Expression program = new Expression(CodeKeys.Program,delegate(Parser parser)
 			{
@@ -5328,7 +5370,6 @@ namespace Meta
 				if (parser.Indentation())
 				{
 					program = new StrategyMap();
-					// use a loop here
 					int counter = 1;
 					int defaultKey = 1;
 					statements = new StrategyMap();
@@ -5374,103 +5415,30 @@ namespace Meta
 						}
 						else
 						{
-							// refactor
 							throw new SyntaxException("incorrect indentation",parser.filePath,parser.line, parser.Column);
 						}
 					}
 					parser.EndExpression(extent, statements);
-					//program[CodeKeys.Program] = statements;
 				}
 				else
 				{
 					statements = null;
-					//program = null;
 				}
-				//parser.EndExpression(extent, program);
 				return statements;
-				//return program;
 			});
-			//public Map Program()
-			//{
-			//    Extent extent = BeginExpression();
-			//    Map program;
-			//    if (Indentation())
-			//    {
-			//        program = new StrategyMap();
-			//        // use a loop here
-			//        int counter = 1;
-			//        int defaultKey = 1;
-			//        Map statements = new StrategyMap();
-			//        while (!Look(endOfFileChar))
-			//        {
-			//            Map statement = function.Get();
-			//            if (statement == null)
-			//            {
-			//                statement = Statement(ref defaultKey);
-			//            }
-			//            statements[counter] = statement;
-			//            counter++;
-			//            if (!TryNewLine() && !Look(endOfFileChar))
-			//            {
-			//                index -= 1;
-			//                if (!TryNewLine())
-			//                {
-			//                    index -= 1;
-			//                    if (!TryNewLine())
-			//                    {
-			//                        index += 2;
-			//                        throw new MetaException("Expected newline.", new Extent(Position, Position, filePath));
-			//                    }
-			//                    else
-			//                    {
-			//                        line--;
-			//                    }
-			//                }
-			//                else
-			//                {
-			//                    line--;
-			//                }
-			//            }
-			//            string newIndentation = GetIndentation();
-			//            if (newIndentation.Length < indentationCount)
-			//            {
-			//                indentationCount--;
-			//                break;
-			//            }
-			//            else if (newIndentation.Length == indentationCount)
-			//            {
-			//                Consume(newIndentation);
-			//            }
-			//            else
-			//            {
-			//                throw new MetaException("incorrect indentation", extent);
-			//            }
-			//        }
-			//        EndExpression(extent, statements);
-			//        program[CodeKeys.Program] = statements;
-			//    }
-			//    else
-			//    {
-			//        program = null;
-			//    }
-			//    EndExpression(extent, program);
-			//    return program;
-			//}
-			private Map EmptyMap()
+			private Expression EmptyMap = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
-				Extent extent = BeginExpression();
 				Map program;
-				if (TryConsume(emptyMapChar))
+				if (parser.TryConsume(emptyMapChar))
 				{
-					program = new StrategyMap(CodeKeys.Literal, Map.Empty);
+					program = Map.Empty;
 				}
 				else
 				{
 					program = null;
 				}
-				EndExpression(extent, program);
 				return program;
-			}
+			});
 			private SourcePosition Position
 			{
 				get
@@ -5500,7 +5468,6 @@ namespace Meta
 				}
 				return indentation;
 			}
-			// make this more flexible, for example parse all the characters matching these characters
 			private bool LookAny(char[] any)
 			{
 				return Look().ToString().IndexOfAny(any) != -1;
@@ -5524,61 +5491,57 @@ namespace Meta
 					expression.Extent = extent;
 				}
 			}
-			private Map Integer()
+			private Expression Integer = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
 				Map integer;
-				Extent extent = BeginExpression();
-				if (LookAny(firstIntegerChars))
+				if (parser.LookAny(parser.firstIntegerChars))
 				{
 					string integerString = "";
-					integerString += ConsumeGet();
-					while (LookAny(integerChars))
+					integerString += parser.ConsumeGet();
+					while (parser.LookAny(parser.integerChars))
 					{
-						integerString += ConsumeGet();
+						integerString += parser.ConsumeGet();
 					}
-					integer = new StrategyMap(CodeKeys.Literal, Meta.Integer.ParseInteger(integerString));
+					integer = Meta.Integer.ParseInteger(integerString);
 				}
 				else
 				{
 					integer = null;
 				}
-				EndExpression(extent, integer);
 				return integer;
-			}
-			private Map String()
+			});
+			private Expression String = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
 				try
 				{
 					Map @string;
-					Extent extent = BeginExpression();
-
-					if (Look(stringChar) || Look(stringEscapeChar))
+					if (parser.Look(stringChar) || parser.Look(stringEscapeChar))
 					{
 						int escapeCharCount = 0;
-						while (TryConsume(stringEscapeChar))
+						while (parser.TryConsume(stringEscapeChar))
 						{
 							escapeCharCount++;
 						}
-						Consume(stringChar);
+						parser.Consume(stringChar);
 						string stringText = "";
 						while (true)
 						{
-							if (Look(stringChar))
+							if (parser.Look(stringChar))
 							{
 								int foundEscapeCharCount = 0;
-								while (foundEscapeCharCount < escapeCharCount && Look(foundEscapeCharCount + 1, stringEscapeChar))
+								while (foundEscapeCharCount < escapeCharCount && parser.Look(foundEscapeCharCount + 1, stringEscapeChar))
 								{
 									foundEscapeCharCount++;
 								}
 								if (foundEscapeCharCount == escapeCharCount)
 								{
-									Consume(stringChar);
-									Consume("".PadLeft(escapeCharCount, stringEscapeChar));
+									parser.Consume(stringChar);
+									parser.Consume("".PadLeft(escapeCharCount, stringEscapeChar));
 									break;
 								}
 							}
-							stringText += Look();
-							Consume(Look());
+							stringText += parser.Look();
+							parser.Consume(parser.Look());
 						}
 						List<string> realLines = new List<string>();
 						string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
@@ -5590,50 +5553,47 @@ namespace Meta
 							}
 							else
 							{
-								realLines.Add(lines[i].Remove(0, Math.Min(indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentationChar).Length)));
+								realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentationChar).Length)));
 							}
 						}
 						string realText = string.Join("\n", realLines.ToArray());
 						realText = realText.TrimStart('\n');
 
-						@string=new StrategyMap(CodeKeys.Literal,realText);
+						@string = realText;
 					}
 					else
 					{
 						@string = null;
 					}
-					EndExpression(extent, @string);
 					return @string;
 				}
 				catch (Exception e)
 				{
 					return null;
 				}
-			}
-			private Map LookupString()
+			});
+			private Expression LookupString = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
 				string lookupString = "";
-				Extent extent = BeginExpression();
-				if (LookExcept(lookupStringForbiddenChars) && LookExcept(lookupStringFirstCharAdditionalForbiddenChars))
+				if (parser.LookExcept(lookupStringForbiddenChars) && parser.LookExcept(parser.lookupStringFirstCharAdditionalForbiddenChars))
 				{
-					while (LookExcept(lookupStringForbiddenChars))
+					while (parser.LookExcept(lookupStringForbiddenChars))
 					{
-						lookupString += Look();
-						Consume(Look());
+						lookupString += parser.Look();
+						parser.Consume(parser.Look());
 					}
 				}
 				Map lookup;
 				if (lookupString.Length > 0)
 				{
-					lookup = new StrategyMap(CodeKeys.Literal,lookupString);
+					lookup = lookupString;
 				}
 				else
 				{
 					lookup = null;
 				}
-				EndExpression(extent, lookup);
 				return lookup;
-			}
+			});
 			private bool LookExcept(char[] exceptions)
 			{
 				List<char> list = new List<char>(exceptions);
@@ -5658,7 +5618,7 @@ namespace Meta
 			private Map Lookup()
 			{
 				Extent extent = BeginExpression();
-				Map lookup = LookupString();
+				Map lookup = LookupString.Get();
 				if (lookup == null)
 				{
 					lookup = LookupAnything();
@@ -5683,18 +5643,16 @@ namespace Meta
 			}
 			public Map Select()
 			{
-				return Select(Keys());
+				return Select(Keys.Get());
 			}
-			// create some sort of loop here
-			private Map Keys()
+			private Expression Keys = new Expression(null, delegate(Parser parser)
 			{
-				Extent extent = BeginExpression();
 				Map lookups = new StrategyMap();
 				int counter = 1;
 				Map lookup;
 				while (true)
 				{
-					lookup = Lookup();
+					lookup = parser.Lookup();
 					if (lookup != null)
 					{
 						lookups[counter] = lookup;
@@ -5704,7 +5662,7 @@ namespace Meta
 					{
 						break;
 					}
-					if (!TryConsume(selectChar))
+					if (!parser.TryConsume(selectChar))
 					{
 						break;
 					}
@@ -5718,34 +5676,10 @@ namespace Meta
 				{
 					keys = null;
 				}
-				EndExpression(extent, lookups);
 				return keys;
-			}
+			});
 			public delegate Map ParseFunction(Parser parser);
-			public class Expression
-			{
-				public Map Get()
-				{
-					Extent extent = parser.BeginExpression();
-					Map expression=parseFunction(parser);
-					// refactor
-					// refactor
-					if (expression != null && identifier!=null)
-					{
-						expression = new StrategyMap(identifier, expression);
-					}
-					parser.EndExpression(extent, expression);
-					return expression;
-				}
-				public Parser parser;
-				private Map identifier;
-				public Expression(Map identifier,ParseFunction parseFunction)
-				{
-					this.identifier = identifier;
-					this.parseFunction = parseFunction;
-				}
-				private ParseFunction parseFunction;
-			}
+
 			public Expression function = new Expression(null,delegate(Parser parser)
 			{
 				parser.functions++;
@@ -5766,7 +5700,8 @@ namespace Meta
 			public Map Statement(ref int count)
 			{
 				Extent extent = BeginExpression();
-				Map key = Keys();
+				int oldIndex = index;
+				Map key = Keys.Get();
 				Map val;
 				if (key != null && TryConsume(statementChar))
 				{
@@ -5774,18 +5709,18 @@ namespace Meta
 				}
 				else
 				{
+					index = oldIndex;
 					TryConsume(statementChar);
 					if (key != null)
 					{
-						Map select = Select(key);
-						Map call = Call(select);
+						Map call = Call();
 						if (call != null)
 						{
 							val = call;
 						}
 						else
 						{
-							val = select;
+							val = Select();
 						}
 					}
 					else
@@ -5807,8 +5742,50 @@ namespace Meta
 				EndExpression(extent, statement);
 				return statement;
 			}
-			private const char space = ' ';
-			private const char tab = '\t';
+			//public Map Statement(ref int count)
+			//{
+			//    Extent extent = BeginExpression();
+			//    Map key = Keys.Get();
+			//    Map val;
+			//    if (key != null && TryConsume(statementChar))
+			//    {
+			//        val = GetExpression();
+			//    }
+			//    else
+			//    {
+			//        TryConsume(statementChar);
+			//        if (key != null)
+			//        {
+			//            Map select = Select(key);
+			//            Map call = Call(select);
+			//            if (call != null)
+			//            {
+			//                val = call;
+			//            }
+			//            else
+			//            {
+			//                val = select;
+			//            }
+			//        }
+			//        else
+			//        {
+			//            val = GetExpression();
+			//        }
+			//        key = CreateDefaultKey(count);
+			//        count++;
+			//    }
+			//    if (val == null)
+			//    {
+			//        SourcePosition position = new SourcePosition(Line, Column);
+			//        throw new MetaException("Expected value of statement", new Extent(position, position, filePath));
+			//    }
+			//    Map statement = new StrategyMap(
+			//        CodeKeys.Key, key,
+			//        CodeKeys.Value, val);
+
+			//    EndExpression(extent, statement);
+			//    return statement;
+			//}
 			private Map CreateDefaultKey(Map literal)
 			{
 				return new StrategyMap(1, new StrategyMap(CodeKeys.Literal, literal));
@@ -5825,16 +5802,8 @@ namespace Meta
 			{
 				get
 				{
-					// mono
-					try
-					{
-						int startPos = Math.Min(index, text.Length - 1);
-						return index - text.LastIndexOf('\n', startPos);
-					}
-					catch
-					{
-						return 0;
-					}
+					int startPos = Math.Min(index, text.Length - 1);
+					return index - text.LastIndexOf('\n', startPos);
 				}
 			}
 		}
