@@ -1209,32 +1209,9 @@ namespace Meta
 				Delegate function = MethodOverload.CreateDelegateFromCode(target, meta);
 				dotNet = function;
 			}
-			//else if (target.IsArray && meta.Array.Count != 0)
-			//{
-			//    Type type = target.GetElementType();
-			//    Array arguments = System.Array.CreateInstance(type, meta.Array.Count);
-			//    bool isElementConverted = true;
-			//    for (int i = 0; i < meta.Count; i++)
-			//    {
-			//        object element = Transform.ToDotNet(meta[i + 1], type);
-			//        if (element != null)
-			//        {
-			//            arguments.SetValue(element, i);
-			//        }
-			//        else
-			//        {
-			//            isElementConverted = false;
-			//            break;
-			//        }
-			//    }
-			//    if (isElementConverted)
-			//    {
-			//        dotNet = arguments;
-			//    }
-			//}
-			if (meta is ClassMap && target == typeof(Type))
+			if (meta is TypeMap && target == typeof(Type))
 			{
-				dotNet = ((ClassMap)meta).type;
+				dotNet = ((TypeMap)meta).type;
 			}
 			else if (target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
 			{
@@ -1398,164 +1375,6 @@ namespace Meta
 			}
 			return dotNet;
 		}
-		//public static object ToDotNet(Map meta,Type target)
-		//{
-		//    object dotNet=null;
-		//    if((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
-		//        && meta.ContainsKey(CodeKeys.Function))
-		//    {
-		//        MethodInfo invoke=target.GetMethod("Invoke",
-		//            BindingFlags.Instance|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic);
-		//        Delegate function=MethodOverload.CreateDelegateFromCode(target,meta);
-		//        dotNet=function;
-		//    }
-		//    else if(target.IsArray && meta.Array.Count!=0)
-		//    {
-		//        Type type=target.GetElementType();
-		//        Array arguments=System.Array.CreateInstance(type,meta.Array.Count);
-		//        bool isElementConverted=true;
-		//        for(int i=0;i<meta.Count;i++)
-		//        {
-		//            object element = Transform.ToDotNet(meta[i + 1], type);
-		//            if (element!=null)
-		//            {
-		//                arguments.SetValue(element,i);
-		//            }
-		//            else
-		//            {
-		//                isElementConverted = false;
-		//                break;
-		//            }
-		//        }
-		//        if(isElementConverted)
-		//        {
-		//            dotNet=arguments;
-		//        }
-		//    }
-		//    else if(target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
-		//    { 
-		//        dotNet=Enum.ToObject(target,meta.GetInteger().GetInt32());
-		//    }
-		//    else 
-		//    {
-		//        switch(Type.GetTypeCode(target))
-		//        {
-		//            case TypeCode.Boolean:
-		//                if(IsIntegerInRange(meta,0,1))
-		//                {
-		//                    if(meta.GetInteger()==0)
-		//                    {
-		//                        dotNet=false;
-		//                    }
-		//                    else if(meta.GetInteger()==1)
-		//                    {
-		//                        dotNet=true;
-		//                    }
-		//                }
-		//                break;
-		//            case TypeCode.Byte:
-		//                if(IsIntegerInRange(meta,new Integer(Byte.MinValue),new Integer(Byte.MaxValue)))
-		//                {
-		//                    dotNet=Convert.ToByte(meta.GetInteger().GetInt32());
-		//                }
-		//                break;
-		//            case TypeCode.Char:
-		//                if(IsIntegerInRange(meta,(int)Char.MinValue,(int)Char.MaxValue))
-		//                {
-		//                    dotNet=Convert.ToChar(meta.GetInteger().GetInt64());
-		//                }
-		//                break;
-		//            case TypeCode.DateTime:
-		//                dotNet = null;
-		//                break;
-		//            case TypeCode.DBNull:
-		//                if(meta.IsInteger && meta.GetInteger()==0)
-		//                {
-		//                    dotNet=DBNull.Value;
-		//                }
-		//                break;
-		//            case TypeCode.Decimal:
-		//                if(IsIntegerInRange(meta,new Integer((double)decimal.MinValue),new Integer((double)decimal.MaxValue)))
-		//                {
-		//                    dotNet=(decimal)(meta.GetInteger().GetInt64());
-		//                }
-		//                break;
-		//            case TypeCode.Double:
-		//                if(IsIntegerInRange(meta,new Integer(double.MinValue),new Integer(double.MaxValue)))
-		//                {
-		//                    dotNet=(double)(meta.GetInteger().GetInt64());
-		//                }
-		//                break;
-		//            case TypeCode.Int16:
-		//                if(IsIntegerInRange(meta,Int16.MinValue,Int16.MaxValue))
-		//                {
-		//                    dotNet=Convert.ToInt16(meta.GetInteger().GetInt64());
-		//                }
-		//                break;
-		//            case TypeCode.Int32:
-		//                if(IsIntegerInRange(meta,(Integer)Int32.MinValue,Int32.MaxValue))
-		//                    {
-		//                    dotNet=meta.GetInteger().GetInt32();
-		//                }
-		//                break;
-		//            case TypeCode.Int64:
-		//                if(IsIntegerInRange(meta,new Integer(Int64.MinValue),new Integer(Int64.MaxValue)))
-		//                {
-		//                    dotNet=Convert.ToInt64(meta.GetInteger().GetInt64());
-		//                }
-		//                break;
-		//            case TypeCode.Object:
-		//                if(meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).type))
-		//                {
-		//                    dotNet=((ObjectMap)meta).obj;
-		//                }
-		//                else if(target.IsAssignableFrom(meta.GetType()))
-		//                {
-		//                    dotNet=meta;
-		//                }
-		//                break;
-		//            case TypeCode.SByte:
-		//                if(IsIntegerInRange(meta,(Integer)SByte.MinValue,(Integer)SByte.MaxValue))
-		//                {
-		//                    dotNet=Convert.ToSByte(meta.GetInteger().GetInt64());
-		//                }
-		//                break;
-		//            case TypeCode.Single:
-		//                if(IsIntegerInRange(meta,new Integer(Single.MinValue),new Integer(Single.MaxValue)))
-		//                {
-		//                    dotNet=(float)meta.GetInteger().GetInt64();
-		//                }
-		//                break;
-		//            case TypeCode.String:
-		//                if(meta.IsString)
-		//                {
-		//                    dotNet=meta.GetString();
-		//                }
-		//                break;
-		//            case TypeCode.UInt16:
-		//                if(IsIntegerInRange(meta,new Integer(UInt16.MinValue),new Integer(UInt16.MaxValue)))
-		//                {
-		//                    dotNet=Convert.ToUInt16(meta.GetInteger().GetInt64());
-		//                }
-		//                break;
-		//            case TypeCode.UInt32:
-		//                if(IsIntegerInRange(meta,new Integer(UInt32.MinValue),new Integer(UInt32.MaxValue)))
-		//                {
-		//                    dotNet=Convert.ToUInt32(meta.GetInteger().GetInt64());
-		//                }
-		//                break;
-		//            case TypeCode.UInt64:
-		//                if(IsIntegerInRange(meta,new Integer(UInt64.MinValue),new Integer(UInt64.MaxValue)))
-		//                {
-		//                    dotNet=Convert.ToUInt64(meta.GetInteger().GetInt64());
-		//                }
-		//                break;
-		//            default:
-		//                throw new ApplicationException("not implemented");
-		//        }
-		//    }
-		//    return dotNet;
-		//}
 		public static bool IsIntegerInRange(Map meta,Integer minValue,Integer maxValue)
 		{
 			return meta.IsInteger && meta.GetInteger()>=minValue && meta.GetInteger()<=maxValue;
@@ -1783,14 +1602,14 @@ namespace Meta
 					ParameterInfo[] parameters=method.GetParameters();
 					if (parameters.Length == 1)
 					{
-						key = new ClassMap(parameters[0].ParameterType);
+						key = new TypeMap(parameters[0].ParameterType);
 					}
 					else
 					{
 						key=new StrategyMap();
 						foreach (ParameterInfo parameter in parameters)
 						{
-							key.Append(new ClassMap(parameter.ParameterType));
+							key.Append(new TypeMap(parameter.ParameterType));
 						}
 					}
 					MethodOverload overload = new MethodOverload(method, obj, type);
@@ -1828,7 +1647,7 @@ namespace Meta
 	    protected override Map Get(Map key)
 	    {
 	        MethodOverload value;
-			if (key is ClassMap && ((ClassMap)key).Type.Name.StartsWith("ICollection"))
+			if (key is TypeMap && ((TypeMap)key).Type.Name.StartsWith("ICollection"))
 			{
 			}
 			if (overloads == null)
@@ -1986,7 +1805,7 @@ namespace Meta
 	        }
 	    }
 	}
-	public class ClassMap: DotNetMap
+	public class TypeMap: DotNetMap
 	{
 		protected override Map Get(Map key)
 		{
@@ -1997,19 +1816,19 @@ namespace Meta
 			//    //value = this.Constructor;
 
 			//}
-			if (type.IsGenericTypeDefinition && key.Array.TrueForAll(delegate(Map map) { return map is ClassMap; }))
+			if (type.IsGenericTypeDefinition && key.Array.TrueForAll(delegate(Map map) { return map is TypeMap; }))
 			{
 				List<Type> types;
 				if (type.GetGenericArguments().Length == 1)
 				{
 					types = new List<Type>();
-					types.Add(((ClassMap)key).Type);
+					types.Add(((TypeMap)key).Type);
 				}
 				else
 				{
-					types = key.Array.ConvertAll<Type>(new Converter<Map, Type>(delegate(Map map) { return ((ClassMap)map).type; }));
+					types = key.Array.ConvertAll<Type>(new Converter<Map, Type>(delegate(Map map) { return ((TypeMap)map).type; }));
 				}
-				value = new ClassMap(type.MakeGenericType(types.ToArray()));
+				value = new TypeMap(type.MakeGenericType(types.ToArray()));
 			}
 			else
 			{
@@ -2071,9 +1890,9 @@ namespace Meta
 		public override bool Equals(object obj)
 		{
 			bool equal;
-			if (obj is ClassMap)
+			if (obj is TypeMap)
 			{
-				ClassMap typeMap = (ClassMap)obj;
+				TypeMap typeMap = (TypeMap)obj;
 				equal = typeMap.type == this.type;
 				if (equal)
 				{
@@ -2087,7 +1906,7 @@ namespace Meta
 		}
 		protected override Map CopyData()
 		{
-			return new ClassMap(this.type);
+			return new TypeMap(this.type);
 		}
 		private Method Constructor
 		{
@@ -2099,7 +1918,7 @@ namespace Meta
 		//public TypeMap(object obj, Type type):base(obj,type)
 		//{
 		//}
-		public ClassMap(Type targetType):base(null,targetType)
+		public TypeMap(Type targetType):base(null,targetType)
 		{
 		}
 		public override Map Call(Map argument)
@@ -2933,7 +2752,7 @@ namespace Meta
 					}
 					else if (members[0] is Type)
 					{
-						val = new ClassMap((Type)members[0]);
+						val = new TypeMap((Type)members[0]);
 					}
 					else
 					{
@@ -4445,7 +4264,7 @@ namespace Meta
 					{
 						name=type.Name;
 					}
-					selected[type.Name] = new ClassMap(type);
+					selected[type.Name] = new TypeMap(type);
 				}
 			}
 			return val;
