@@ -5063,6 +5063,7 @@ namespace Meta
 				this.index = 0;
 				this.text = text;
 				this.filePath = filePath;
+				function.parser = this;
 			}
 			private void Consume(string characters)
 			{
@@ -5146,8 +5147,6 @@ namespace Meta
 				}
 				return character;
 			}
-
-
 			public char endOfFileChar = (char)65535;
 			public const char indentationChar = '\t';
 			public int indentationCount = -1;
@@ -5196,7 +5195,7 @@ namespace Meta
 				}
 				return isIndentation;
 			}
-			public Map Expression()
+			public Map GetExpression()
 			{
 				Map expression;
 				if ((expression = EmptyMap()) == null)
@@ -5229,7 +5228,7 @@ namespace Meta
 				Map argument;
 				if (TryConsume(callChar))
 				{
-					argument = Expression();
+					argument = GetExpression();
 				}
 				else
 				{
@@ -5289,7 +5288,7 @@ namespace Meta
 					Map statements = new StrategyMap();
 					while (!Look(endOfFileChar))
 					{
-						Map statement = Function();
+						Map statement = function.Get();
 						if (statement == null)
 						{
 							statement = Statement(ref defaultKey);
@@ -5318,20 +5317,6 @@ namespace Meta
 							}
 						}
 						string newIndentation = GetIndentation();
-						//if (LookEmptyLine())
-						//{
-						//    string newIndent = GetIndentation();
-						//    if (newIndent.Length < indentationCount)
-						//    {
-						//        indentationCount--;
-						//        break;
-						//    }
-						//    else if (newIndent.Length == indentationCount)
-						//    {
-						//        EmptyLine();
-						//        Consume(newIndent);
-						//    }
-						//}
 						if (newIndentation.Length < indentationCount)
 						{
 							indentationCount--;
@@ -5437,10 +5422,6 @@ namespace Meta
 						integerString += ConsumeGet();
 					}
 					integer = new StrategyMap(CodeKeys.Literal, Meta.Integer.ParseInteger(integerString));
-
-					//Map literal = new StrategyMap(Meta.Integer.ParseInteger(integerString));
-					//integer = new StrategyMap();
-					//integer[CodeKeys.Literal] = literal;
 				}
 				else
 				{
@@ -5502,9 +5483,6 @@ namespace Meta
 						realText = realText.TrimStart('\n');
 
 						@string=new StrategyMap(CodeKeys.Literal,realText);
-						//Map literal = new StrategyMap(realText);
-						//@string = new StrategyMap();
-						//@string[CodeKeys.Literal] = literal;
 					}
 					else
 					{
@@ -5534,8 +5512,6 @@ namespace Meta
 				if (lookupString.Length > 0)
 				{
 					lookup = new StrategyMap(CodeKeys.Literal,lookupString);
-					//lookup = new StrategyMap();
-					//lookup[CodeKeys.Literal] = new StrategyMap(lookupString);
 				}
 				else
 				{
@@ -5555,7 +5531,7 @@ namespace Meta
 				Map lookupAnything;
 				if (TryConsume(lookupStartChar))
 				{
-					lookupAnything = Expression();
+					lookupAnything = GetExpression();
 					while (TryConsume(indentationChar)) ;
 					Consume(lookupEndChar);
 				}
@@ -5631,25 +5607,63 @@ namespace Meta
 				EndExpression(extent, lookups);
 				return keys;
 			}
-			public Map Function()
+			public delegate Map ParseFunction(Parser parser);
+			public class Expression
 			{
-				Extent extent = BeginExpression();
-				functions++;
-				Map function = null;
-				if (TryConsume(functionChar))
+				public Map Get()
 				{
-					Map expression = Expression();
+					Extent extent = parser.BeginExpression();
+					Map expression=parseFunction(parser);
+					parser.EndExpression(extent, expression);
+					return expression;
+				}
+				public Parser parser;
+				public Expression(ParseFunction parseFunction)
+				{
+					this.parseFunction = parseFunction;
+				}
+				private ParseFunction parseFunction;
+			}
+			public Expression function = new Expression(delegate(Parser parser)
+			{
+				parser.functions++;
+				Map function = null;
+				if (parser.TryConsume(functionChar))
+				{
+					Map expression = parser.GetExpression();
 					if (expression != null)
 					{
 						function = new StrategyMap(
-							CodeKeys.Key, CreateDefaultKey(CodeKeys.Function),
+							CodeKeys.Key, parser.CreateDefaultKey(CodeKeys.Function),
 							CodeKeys.Value, new StrategyMap(CodeKeys.Literal, expression));
 					}
 				}
-				EndExpression(extent, function);
-				functions--;
+				parser.functions--;
 				return function;
-			}
+			});
+			//public Map Function()
+			//{
+
+			//}
+			//public Map Function()
+			//{
+			//    Extent extent = BeginExpression();
+			//    functions++;
+			//    Map function = null;
+			//    if (TryConsume(functionChar))
+			//    {
+			//        Map expression = Expression();
+			//        if (expression != null)
+			//        {
+			//            function = new StrategyMap(
+			//                CodeKeys.Key, CreateDefaultKey(CodeKeys.Function),
+			//                CodeKeys.Value, new StrategyMap(CodeKeys.Literal, expression));
+			//        }
+			//    }
+			//    EndExpression(extent, function);
+			//    functions--;
+			//    return function;
+			//}
 			public const char statementChar = '=';
 			public Map Statement(ref int count)
 			{
@@ -5658,7 +5672,7 @@ namespace Meta
 				Map val;
 				if (key != null && TryConsume(statementChar))
 				{
-					val = Expression();
+					val = GetExpression();
 				}
 				else
 				{
@@ -5678,7 +5692,7 @@ namespace Meta
 					}
 					else
 					{
-						val = Expression();
+						val = GetExpression();
 					}
 					key = CreateDefaultKey(count);
 					count++;
