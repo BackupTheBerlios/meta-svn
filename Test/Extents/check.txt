@@ -1314,7 +1314,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -1564,7 +1564,7 @@ Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										Extent:
 											null
-										"program"
+										"literal"
 									Value (StrategyMap):
 										Extent:
 											null
@@ -2568,7 +2568,7 @@ Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
 																									null
-																								"program"
+																								"literal"
 																							Value (StrategyMap):
 																								Extent:
 																									null
@@ -2662,7 +2662,7 @@ Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"program"
+																														"literal"
 																													Value (StrategyMap):
 																														Extent:
 																															null
@@ -2688,7 +2688,7 @@ Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
 																													null
-																												"program"
+																												"literal"
 																											Value (StrategyMap):
 																												Extent:
 																													null
@@ -3212,7 +3212,7 @@ Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
 													null
-												"program"
+												"literal"
 											Value (StrategyMap):
 												Extent:
 													null
@@ -3504,7 +3504,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -5738,7 +5738,7 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
 																	null
-																"program"
+																"literal"
 															Value (StrategyMap):
 																Extent:
 																	null
@@ -7390,7 +7390,7 @@ Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										Extent:
 											null
-										"program"
+										"literal"
 									Value (StrategyMap):
 										Extent:
 											null
@@ -7596,7 +7596,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -8846,7 +8846,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -9486,7 +9486,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -9666,7 +9666,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -13822,7 +13822,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -15240,7 +15240,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -17756,7 +17756,7 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"program"
+																		"literal"
 																	Value (StrategyMap):
 																		Extent:
 																			null
@@ -17988,7 +17988,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -18348,7 +18348,7 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"program"
+																		"literal"
 																	Value (StrategyMap):
 																		Extent:
 																			null
@@ -18580,7 +18580,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -20444,7 +20444,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -21642,7 +21642,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -22290,7 +22290,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -22818,7 +22818,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -23288,7 +23288,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -24226,7 +24226,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -24312,7 +24312,7 @@ Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										Extent:
 											null
-										"program"
+										"literal"
 									Value (StrategyMap):
 										Extent:
 											null
@@ -25960,7 +25960,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -26286,7 +26286,7 @@ Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										Extent:
 											null
-										"program"
+										"literal"
 									Value (StrategyMap):
 										Extent:
 											null
@@ -28288,7 +28288,7 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"program"
+																		"literal"
 																	Value (StrategyMap):
 																		Extent:
 																			null
@@ -28638,7 +28638,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -29340,7 +29340,7 @@ Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										Extent:
 											null
-										"program"
+										"literal"
 									Value (StrategyMap):
 										Extent:
 											null
@@ -29784,7 +29784,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -31482,7 +31482,7 @@ hello!
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"program"
+																		"literal"
 																	Value (StrategyMap):
 																		Extent:
 																			null
@@ -31508,7 +31508,7 @@ hello!
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -31928,7 +31928,7 @@ hello!
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -32134,7 +32134,7 @@ hello!
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -32584,7 +32584,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -33082,7 +33082,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -33794,7 +33794,7 @@ Schwaenzchen in die Hoeh."
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"program"
+																		"literal"
 																	Value (StrategyMap):
 																		Extent:
 																			null
@@ -33820,7 +33820,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null
@@ -34078,7 +34078,7 @@ Schwaenzchen in die Hoeh."
 									Key (StrategyMap):
 										Extent:
 											null
-										"program"
+										"literal"
 									Value (StrategyMap):
 										Extent:
 											null
@@ -35458,7 +35458,7 @@ Schwaenzchen in die Hoeh."
 																															Key (StrategyMap):
 																																Extent:
 																																	null
-																																"program"
+																																"literal"
 																															Value (StrategyMap):
 																																Extent:
 																																	null
@@ -37530,7 +37530,7 @@ Schwaenzchen in die Hoeh."
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"program"
+																		"literal"
 																	Value (StrategyMap):
 																		Extent:
 																			null
@@ -37966,7 +37966,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"program"
+														"literal"
 													Value (StrategyMap):
 														Extent:
 															null

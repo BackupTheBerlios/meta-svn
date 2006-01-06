@@ -2512,7 +2512,7 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
-																				"program"
+																				"literal"
 																			Value (StrategyMap):
 																				""
 														Entry (KeyValuePair`2)

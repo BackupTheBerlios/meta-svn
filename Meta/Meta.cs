@@ -5497,7 +5497,7 @@ namespace Meta
 				if (TryConsume(emptyMapChar))
 				{
 					program = new StrategyMap();
-					program[CodeKeys.Program] = new StrategyMap();
+					program[CodeKeys.Literal] = new StrategyMap();
 				}
 				else
 				{
@@ -5571,9 +5571,11 @@ namespace Meta
 					{
 						integerString += ConsumeGet();
 					}
-					Map literal = new StrategyMap(Meta.Integer.ParseInteger(integerString));
-					integer = new StrategyMap();
-					integer[CodeKeys.Literal] = literal;
+					integer = Map.Create(CodeKeys.Literal, Meta.Integer.ParseInteger(integerString));
+
+					//Map literal = new StrategyMap(Meta.Integer.ParseInteger(integerString));
+					//integer = new StrategyMap();
+					//integer[CodeKeys.Literal] = literal;
 				}
 				else
 				{
@@ -5633,9 +5635,11 @@ namespace Meta
 						}
 						string realText = string.Join("\n", realLines.ToArray());
 						realText = realText.TrimStart('\n');
-						Map literal = new StrategyMap(realText);
-						@string = new StrategyMap();
-						@string[CodeKeys.Literal] = literal;
+
+						@string=Map.Create(CodeKeys.Literal,realText);
+						//Map literal = new StrategyMap(realText);
+						//@string = new StrategyMap();
+						//@string[CodeKeys.Literal] = literal;
 					}
 					else
 					{
@@ -5664,8 +5668,9 @@ namespace Meta
 				Map lookup;
 				if (lookupString.Length > 0)
 				{
-					lookup = new StrategyMap();
-					lookup[CodeKeys.Literal] = new StrategyMap(lookupString);
+					lookup = Map.Create(CodeKeys.Literal,lookupString);
+					//lookup = new StrategyMap();
+					//lookup[CodeKeys.Literal] = new StrategyMap(lookupString);
 				}
 				else
 				{
@@ -5712,8 +5717,7 @@ namespace Meta
 				Extent extent = BeginExpression();
 				if (keys != null)
 				{
-					select = new StrategyMap();
-					select[CodeKeys.Select] = keys;
+					select = Map.Create(CodeKeys.Select, keys);
 				}
 				else
 				{
@@ -5726,6 +5730,7 @@ namespace Meta
 			{
 				return Select(Keys());
 			}
+			// create some sort of loop here
 			private Map Keys()
 			{
 				Extent extent = BeginExpression();
@@ -5774,25 +5779,15 @@ namespace Meta
 						function = Map.Create(
 							CodeKeys.Key, CreateDefaultKey(CodeKeys.Function),
 							CodeKeys.Value, Map.Create(CodeKeys.Literal, expression));
-
-						//function = new StrategyMap();
-						//function[CodeKeys.Key] = CreateDefaultKey(CodeKeys.Function);
-						//Map literal = new StrategyMap();
-						//literal[CodeKeys.Literal] = expression;
-						//function[CodeKeys.Value] = literal;
 					}
 				}
 				EndExpression(extent, function);
-				//callAllowed = wasCallAllowed;
 				functions--;
 				return function;
 			}
 			public const char statementChar = '=';
 			public Map Statement(ref int count)
 			{
-				if (line > 25)
-				{
-				}
 				Extent extent = BeginExpression();
 				Map key = Keys();
 				Map val;
@@ -5820,7 +5815,7 @@ namespace Meta
 					{
 						val = Expression();
 					}
-					key = CreateDefaultKey(new StrategyMap((Integer)count));
+					key = CreateDefaultKey(count);
 					count++;
 				}
 				if (val == null)
@@ -5828,9 +5823,9 @@ namespace Meta
 					SourcePosition position = new SourcePosition(Line, Column);
 					throw new MetaException("Expected value of statement", new Extent(position, position, filePath));
 				}
-				Map statement = new StrategyMap();
-				statement[CodeKeys.Key] = key;
-				statement[CodeKeys.Value] = val;
+				Map statement = Map.Create(
+					CodeKeys.Key, key,
+					CodeKeys.Value, val);
 				EndExpression(extent, statement);
 				return statement;
 			}
@@ -5838,11 +5833,7 @@ namespace Meta
 			private const char tab = '\t';
 			private Map CreateDefaultKey(Map literal)
 			{
-				Map key = new StrategyMap();
-				Map firstKey = new StrategyMap();
-				firstKey[CodeKeys.Literal] = literal;
-				key[1] = firstKey;
-				return key;
+				return Map.Create(1, Map.Create(CodeKeys.Literal, literal));
 			}
 			private int line = 1;
 			private int Line
