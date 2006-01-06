@@ -3332,7 +3332,7 @@ namespace Meta
 		}
 		public static Map Compile(TextReader textReader,string fileName)
 		{
-			return new Parser(textReader.ReadToEnd(), fileName).program.Get();
+			return new Parser(textReader.ReadToEnd(), fileName).Program.Get();
 		}
 		public static Map fileSystem;
 		private static Map LoadDirectory(string path)
@@ -5059,22 +5059,71 @@ namespace Meta
 			{
 				public Map Get()
 				{
+					int oldIndex = parser.index;
+					int oldLine = parser.line;
+					//int oldColumn = parser.Column;
+
 					Extent extent = parser.BeginExpression();
-					Map expression = parseFunction(parser);
-					// refactor
-					// refactor
+					Map expression;
+					if (condition == null)
+					{
+						expression = parseFunction(parser);
+					}
+					else
+					{
+						if (parser.TryConsume(condition))
+						{
+							expression = parseFunction(parser);
+						}
+						else
+						{
+							expression = null;
+						}
+					}
+
 					parser.EndExpression(extent, expression);
 					if (expression != null && identifier != null)
 					{
 						expression = new StrategyMap(identifier, expression);
 					}
+					if (expression == null)
+					{
+						parser.index = oldIndex;
+						parser.line = oldLine;
+					}
 					return expression;
 				}
+				//public Map Get()
+				//{
+				//    int oldIndex = parser.index;
+				//    int oldLine = parser.line;
+				//    //int oldColumn = parser.Column;
+
+				//    Extent extent = parser.BeginExpression();
+				//    Map expression = parseFunction(parser);
+				//    parser.EndExpression(extent, expression);
+				//    if (expression != null && identifier != null)
+				//    {
+				//        expression = new StrategyMap(identifier, expression);
+				//    }
+				//    if (expression == null)
+				//    {
+				//        parser.index = oldIndex;
+				//        parser.line = oldLine;
+				//    }
+				//    return expression;
+				//}
 				public Parser parser;
 				private Map identifier;
+				private string condition;
 				public Expression(Map identifier, ParseFunction parseFunction)
+					: this(identifier, null, parseFunction)
+				{
+				}
+				public Expression(Map identifier, string condition, ParseFunction parseFunction)
 				{
 					this.identifier = identifier;
+					this.condition = condition;
 					this.parseFunction = parseFunction;
 				}
 				private ParseFunction parseFunction;
@@ -5117,7 +5166,7 @@ namespace Meta
 			private bool TryConsume(string characters)
 			{
 				bool consumed;
-				if (index + characters.Length < text.Length && text.Substring(index, characters.Length) == characters)
+				if (index + characters.Length <= text.Length && text.Substring(index, characters.Length) == characters)
 				{
 
 					consumed = true;
@@ -5128,6 +5177,9 @@ namespace Meta
 				}
 				else
 				{
+					if (Look('*') && characters == "*")
+					{
+					}
 					consumed = false;
 				}
 				return consumed;
@@ -5172,11 +5224,11 @@ namespace Meta
 				}
 				else
 				{
-					character = endOfFileChar;
+					character = endOfFile;
 				}
 				return character;
 			}
-			public char endOfFileChar = (char)65535;
+			public char endOfFile = (char)65535;
 			public const char indentationChar = '\t';
 			public int indentationCount = -1;
 			public const char unixNewLine = '\n';
@@ -5237,7 +5289,7 @@ namespace Meta
 					{
 						if ((expression = String.Get()) == null)
 						{
-							if ((expression = program.Get()) == null)
+							if ((expression = Program.Get()) == null)
 							{
 								if ((expression = Call.Get()) == null)
 								{
@@ -5253,9 +5305,7 @@ namespace Meta
 			public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
 			{
 				Map call;
-				int oldIndex = parser.index;
-				int oldLine = parser.line;
-				int oldColumn = parser.Column;
+				//And(parser.Select,Or(And(callChar,program),
 				Map select = parser.Select.Get();
 				if (select != null)
 				{
@@ -5266,7 +5316,7 @@ namespace Meta
 					}
 					else
 					{
-						argument = parser.program.Get();
+						argument = parser.Program.Get();
 					}
 					if (argument != null)
 					{
@@ -5281,15 +5331,11 @@ namespace Meta
 					}
 					else
 					{
-						parser.index = oldIndex;
-						parser.line = oldLine;
 						call = null;
 					}
 				}
 				else
 				{
-					parser.index = oldIndex;
-					parser.line = oldLine;
 					call = null;
 				}
 				return call;
@@ -5302,7 +5348,7 @@ namespace Meta
 				}
 			}
 			int functions = 0;
-			public Expression program = new Expression(CodeKeys.Program,delegate(Parser parser)
+			public Expression Program = new Expression(CodeKeys.Program,delegate(Parser parser)
 			{
 				Map program;
 				Map statements;
@@ -5312,16 +5358,16 @@ namespace Meta
 					int counter = 1;
 					int defaultKey = 1;
 					statements = new StrategyMap();
-					while (!parser.Look(parser.endOfFileChar))
+					while (!parser.Look(parser.endOfFile))
 					{
-						Map statement = parser.function.Get();
+						Map statement = parser.Function.Get();
 						if (statement == null)
 						{
 							statement = parser.Statement(ref defaultKey);
 						}
 						statements[counter] = statement;
 						counter++;
-						if (!parser.TryNewLine() && !parser.Look(parser.endOfFileChar))
+						if (!parser.TryNewLine() && !parser.Look(parser.endOfFile))
 						{
 							parser.index -= 1;
 							if (!parser.TryNewLine())
@@ -5364,18 +5410,9 @@ namespace Meta
 				}
 				return statements;
 			});
-			private Expression EmptyMap = new Expression(CodeKeys.Literal, delegate(Parser parser)
+			private Expression EmptyMap = new Expression(CodeKeys.Literal, emptyMapChar.ToString(), delegate(Parser parser)
 			{
-				Map program;
-				if (parser.TryConsume(emptyMapChar))
-				{
-					program = Map.Empty;
-				}
-				else
-				{
-					program = null;
-				}
-				return program;
+				return Map.Empty;
 			});
 			private SourcePosition Position
 			{
@@ -5535,7 +5572,7 @@ namespace Meta
 			private bool LookExcept(char[] exceptions)
 			{
 				List<char> list = new List<char>(exceptions);
-				list.Add(endOfFileChar);
+				list.Add(endOfFile);
 				return Look().ToString().IndexOfAny(list.ToArray()) == -1;
 			}
 			private Map LookupAnything()
@@ -5611,7 +5648,7 @@ namespace Meta
 			});
 			public delegate Map ParseFunction(Parser parser);
 
-			public Expression function = new Expression(null,delegate(Parser parser)
+			public Expression Function = new Expression(null,delegate(Parser parser)
 			{
 				parser.functions++;
 				Map function = null;
@@ -5630,7 +5667,6 @@ namespace Meta
 			});
 			public Map Statement(ref int count)
 			{
-				Extent extent = BeginExpression();
 				int oldIndex = index;
 				Map key = Keys.Get();
 				Map val;
@@ -5669,8 +5705,6 @@ namespace Meta
 				Map statement = new StrategyMap(
 					CodeKeys.Key, key,
 					CodeKeys.Value, val);
-
-				EndExpression(extent, statement);
 				return statement;
 			}
 			private Map CreateDefaultKey(Map literal)
@@ -5878,9 +5912,6 @@ namespace Meta
 					Map value = code[CodeKeys.Value];
 					if (key.Count == 1 && (autoKey = key[1][CodeKeys.Literal]) != null && autoKey.IsInteger && autoKey.GetInteger() == autoKeys + 1)
 					{
-						if (code.Extent.Start.Line > 500)
-						{
-						}
 						autoKeys++;
 						if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
 						{
