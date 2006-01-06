@@ -5063,11 +5063,11 @@ namespace Meta
 					Map expression = parseFunction(parser);
 					// refactor
 					// refactor
+					parser.EndExpression(extent, expression);
 					if (expression != null && identifier != null)
 					{
 						expression = new StrategyMap(identifier, expression);
 					}
-					parser.EndExpression(extent, expression);
 					return expression;
 				}
 				public Parser parser;
@@ -5239,9 +5239,9 @@ namespace Meta
 						{
 							if ((expression = program.Get()) == null)
 							{
-								if ((expression = Call()) == null)
+								if ((expression = Call.Get()) == null)
 								{
-									expression = Select();
+									expression = Select.Get();
 								}
 
 							}
@@ -5250,110 +5250,50 @@ namespace Meta
 				}
 				return expression;
 			}
-			//public Map GetExpression()
-			//{
-			//    Map expression;
-			//    if ((expression = EmptyMap.Get()) == null)
-			//    {
-			//        if ((expression = Integer.Get()) == null)
-			//        {
-			//            if ((expression = String.Get()) == null)
-			//            {
-			//                if ((expression = program.Get()) == null)
-			//                {
-			//                    if ((expression = Select()) != null)
-			//                    {
-			//                        Map call;
-			//                        if ((call = Call(expression)) != null)
-			//                        {
-			//                            expression = call;
-			//                        }
-			//                    }
-			//                }
-			//            }
-			//        }
-			//    }
-			//    return expression;
-			//}
-			public Map Call()
+			public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
 			{
 				Map call;
-				Extent extent = BeginExpression();
-				int oldIndex = index;
-				int oldLine = line;
-				int oldColumn = Column;
-				Map select = Select();
+				int oldIndex = parser.index;
+				int oldLine = parser.line;
+				int oldColumn = parser.Column;
+				Map select = parser.Select.Get();
 				if (select != null)
 				{
 					Map argument;
-					if (TryConsume(callChar))
+					if (parser.TryConsume(callChar))
 					{
-						argument = GetExpression();
+						argument = parser.GetExpression();
 					}
 					else
 					{
-						argument = program.Get();
+						argument = parser.program.Get();
 					}
 					if (argument != null)
 					{
 						Map callCode = new StrategyMap(
 							CodeKeys.Callable, select,
 							CodeKeys.Argument, argument);
-						EndExpression(extent, callCode);
-						call = new StrategyMap(CodeKeys.Call, callCode);
-						if (functions == 0)
+						call = callCode;
+						if (parser.functions == 0)
 						{
 							throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
 						}
 					}
 					else
 					{
-						index = oldIndex;
-						line = oldLine;
+						parser.index = oldIndex;
+						parser.line = oldLine;
 						call = null;
 					}
-					EndExpression(extent, call);
 				}
 				else
 				{
-					index = oldIndex;
-					line = oldLine;
+					parser.index = oldIndex;
+					parser.line = oldLine;
 					call = null;
 				}
 				return call;
-			}
-			//public Map Call(Map select)
-			//{
-			//    Map call;
-			//    Extent extent = BeginExpression();
-			//    Map argument;
-			//    if (TryConsume(callChar))
-			//    {
-			//        argument = GetExpression();
-			//    }
-			//    else
-			//    {
-			//        argument = program.Get();
-			//    }
-			//    if (argument != null)
-			//    {
-			//        Map callCode = new StrategyMap(
-			//            CodeKeys.Callable, select,
-			//            CodeKeys.Argument, argument);
-			//        EndExpression(extent, callCode);
-			//        call = new StrategyMap(CodeKeys.Call, callCode);
-			//        if (functions == 0)
-			//        {
-			//            throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
-			//        }
-			//    }
-			//    else
-			//    {
-			//        call = null;
-			//    }
-			//    EndExpression(extent, call);
-			//    return call;
-			//}
+			});
 			public bool isStartOfFile = true;
 			private void Whitespace()
 			{
@@ -5364,7 +5304,6 @@ namespace Meta
 			int functions = 0;
 			public Expression program = new Expression(CodeKeys.Program,delegate(Parser parser)
 			{
-				Extent extent = parser.BeginExpression();
 				Map program;
 				Map statements;
 				if (parser.Indentation())
@@ -5418,7 +5357,6 @@ namespace Meta
 							throw new SyntaxException("incorrect indentation",parser.filePath,parser.line, parser.Column);
 						}
 					}
-					parser.EndExpression(extent, statements);
 				}
 				else
 				{
@@ -5615,36 +5553,29 @@ namespace Meta
 				}
 				return lookupAnything;
 			}
-			private Map Lookup()
+			private Expression Lookup = new Expression(null, delegate(Parser parser)
 			{
-				Extent extent = BeginExpression();
-				Map lookup = LookupString.Get();
+				Map lookup = parser.LookupString.Get();
 				if (lookup == null)
 				{
-					lookup = LookupAnything();
+					lookup = parser.LookupAnything();
 				}
-				EndExpression(extent, lookup);
 				return lookup;
-			}
-			private Map Select(Map keys)
+			});
+			private Expression Select = new Expression(CodeKeys.Select, delegate(Parser parser)
 			{
+				Map keys = parser.Keys.Get();
 				Map select;
-				Extent extent = BeginExpression();
 				if (keys != null)
 				{
-					select = new StrategyMap(CodeKeys.Select, keys);
+					select = keys;
 				}
 				else
 				{
 					select = null;
 				}
-				EndExpression(extent, select);
 				return select;
-			}
-			public Map Select()
-			{
-				return Select(Keys.Get());
-			}
+			});
 			private Expression Keys = new Expression(null, delegate(Parser parser)
 			{
 				Map lookups = new StrategyMap();
@@ -5652,7 +5583,7 @@ namespace Meta
 				Map lookup;
 				while (true)
 				{
-					lookup = parser.Lookup();
+					lookup = parser.Lookup.Get();
 					if (lookup != null)
 					{
 						lookups[counter] = lookup;
@@ -5713,14 +5644,14 @@ namespace Meta
 					TryConsume(statementChar);
 					if (key != null)
 					{
-						Map call = Call();
+						Map call = Call.Get();
 						if (call != null)
 						{
 							val = call;
 						}
 						else
 						{
-							val = Select();
+							val = Select.Get();
 						}
 					}
 					else
@@ -5742,50 +5673,6 @@ namespace Meta
 				EndExpression(extent, statement);
 				return statement;
 			}
-			//public Map Statement(ref int count)
-			//{
-			//    Extent extent = BeginExpression();
-			//    Map key = Keys.Get();
-			//    Map val;
-			//    if (key != null && TryConsume(statementChar))
-			//    {
-			//        val = GetExpression();
-			//    }
-			//    else
-			//    {
-			//        TryConsume(statementChar);
-			//        if (key != null)
-			//        {
-			//            Map select = Select(key);
-			//            Map call = Call(select);
-			//            if (call != null)
-			//            {
-			//                val = call;
-			//            }
-			//            else
-			//            {
-			//                val = select;
-			//            }
-			//        }
-			//        else
-			//        {
-			//            val = GetExpression();
-			//        }
-			//        key = CreateDefaultKey(count);
-			//        count++;
-			//    }
-			//    if (val == null)
-			//    {
-			//        SourcePosition position = new SourcePosition(Line, Column);
-			//        throw new MetaException("Expected value of statement", new Extent(position, position, filePath));
-			//    }
-			//    Map statement = new StrategyMap(
-			//        CodeKeys.Key, key,
-			//        CodeKeys.Value, val);
-
-			//    EndExpression(extent, statement);
-			//    return statement;
-			//}
 			private Map CreateDefaultKey(Map literal)
 			{
 				return new StrategyMap(1, new StrategyMap(CodeKeys.Literal, literal));
