@@ -531,6 +531,15 @@ namespace Meta
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
+		public static Map Create(params Map[] maps)
+		{
+			Map map=new StrategyMap();
+			for (int i = 0; i + 2 <= maps.Length; i += 2)
+			{
+				map[maps[i]] = maps[i + 1];
+			}
+			return map;
+		}
 		public Map Argument
 		{
 			get
@@ -3316,7 +3325,7 @@ namespace Meta
 		}
 		public static Map Compile(TextReader textReader,string fileName)
 		{
-			return new Parser(textReader.ReadToEnd(), fileName).Map();
+			return new Parser(textReader.ReadToEnd(), fileName).GetMap();
 		}
 		public static Map fileSystem;
 		private static Map LoadDirectory(string path)
@@ -5221,13 +5230,12 @@ namespace Meta
 				}
 				if (argument != null)
 				{
-					call = new StrategyMap();
-					Map callCode = new StrategyMap();
-					callCode[CodeKeys.Callable] = select;
-					callCode[CodeKeys.Argument] = argument;
-					// refactor
+					Map callCode = Map.Create(
+						CodeKeys.Callable, select,
+						CodeKeys.Argument, argument);
+					// refactor, get rid of this EndExpression stuff
 					EndExpression(extent, callCode);
-					call[CodeKeys.Call] = callCode;
+					call = Map.Create(CodeKeys.Call, callCode);
 					if (!callAllowed)
 					{
 						throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
@@ -5247,7 +5255,7 @@ namespace Meta
 				{
 				}
 			}
-			public Map Map()
+			public Map GetMap()
 			{
 				Map map = Program(false);
 				if (!Look(endOfFileChar))
