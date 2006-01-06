@@ -1265,7 +1265,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"nestedClassTest"
-	Value (StrategyMap):
+	Value (ObjectMap):
 		5
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -1275,8 +1275,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"boolTest"
-	Value (StrategyMap):
-		1
+	Value (ObjectMap):
+		True
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"strongNameTest"
@@ -1295,38 +1295,38 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"stringOverload"
-	Value (StrategyMap):
-		"string function, argument+hello"
+	Value (ObjectMap):
+		string function, argument+hello
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"integerOverload"
-	Value (StrategyMap):
-		"integer function, argument+5"
+	Value (ObjectMap):
+		integer function, argument+5
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"memberTestOverload"
-	Value (StrategyMap):
-		"MemberTest function, argument+testClasses.MemberTest3247"
+	Value (ObjectMap):
+		MemberTest function, argument+testClasses.MemberTest3247
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		4
-	Value (StrategyMap):
-		""
+	Value (ObjectMap):
+		System.Object
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"classPropertyValue"
-	Value (StrategyMap):
-		"b"
+	Value (ObjectMap):
+		b
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		5
-	Value (StrategyMap):
-		""
+	Value (ObjectMap):
+		System.Object
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"instancePropertyValue"
-	Value (StrategyMap):
-		"b"
+	Value (ObjectMap):
+		b
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"interceptedSymbol"
@@ -1340,8 +1340,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"positionalNoConversionConcatenated"
-	Value (StrategyMap):
-		"rstmno"
+	Value (ObjectMap):
+		rstmno
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"namedNoConversion"
@@ -1350,8 +1350,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"namedNoConversionConcatenated"
-	Value (StrategyMap):
-		"rnulltmnnull"
+	Value (ObjectMap):
+		rnulltmnnull
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"indexerNoConversion"
@@ -1360,13 +1360,13 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		6
-	Value (StrategyMap):
-		""
+	Value (ObjectMap):
+		System.Object
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"indexerNoConversionIndexed"
-	Value (StrategyMap):
-		"abchihiunchangedYunchangedZabc"
+	Value (ObjectMap):
+		abchihiunchangedYunchangedZabc
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"interceptedSymbolTwo"
@@ -1842,8 +1842,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		8
-	Value (StrategyMap):
-		""
+	Value (ObjectMap):
+		System.Object
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"staticEvent"
@@ -1856,13 +1856,13 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		9
-	Value (StrategyMap):
-		""
+	Value (ObjectMap):
+		System.Object
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"resultFromDelegate"
-	Value (StrategyMap):
-		"argumentString"
+	Value (ObjectMap):
+		argumentString
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"staticEventResult"
@@ -1876,8 +1876,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		10
-	Value (StrategyMap):
-		""
+	Value (ObjectMap):
+		System.Object
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"instanceEvent"
@@ -1890,8 +1890,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"instanceEventResult"
-	Value (StrategyMap):
-		5
+	Value (ObjectMap):
+		Meta.StrategyMap
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"one"
@@ -2077,8 +2077,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		11
-	Value (StrategyMap):
-		""
+	Value (ObjectMap):
+		0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"arrayListResult"
@@ -2093,8 +2093,8 @@ schwimmen auf dem Se...
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		12
-	Value (StrategyMap):
-		""
+	Value (ObjectMap):
+		System.Object
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"lines"
@@ -2103,8 +2103,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"alleMeineText"
-	Value (StrategyMap):
-		"schwimmen auf dem See,"
+	Value (ObjectMap):
+		schwimmen auf dem See,
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"form"
@@ -2113,8 +2113,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		13
-	Value (StrategyMap):
-		""
+	Value (ObjectMap):
+		System.Object
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"automaticConversionTest"

@@ -23,11 +23,11 @@ multiply=
 		start=Meta.Integer.[Meta.Map] 1
 greater=
 	documentation="Determines whether the first integer is greater than the second integer."
-	|Meta.Integer.op_GreaterThan
+	|Meta.StrategyMap.[mscorlib.Boolean] Meta.Integer.op_GreaterThan
 		Meta.Integer.[Meta.Map] arg.[1]
 		Meta.Integer.[Meta.Map] arg.[2]
 smaller=
 	documentation="Determines whether the first integer is smaller than the second integer."
-	|Meta.Integer.op_LessThan
+	|Meta.StrategyMap.[mscorlib.Boolean] Meta.Integer.op_LessThan
 		Meta.Integer.[Meta.Map] arg.[1]
 		Meta.Integer.[Meta.Map] arg.[2]

@@ -5,5 +5,5 @@ or=
 		function=
 			|Meta.Integer.op_BitwiseOr
 				Meta.Integer.[Meta.Integer] arg.previous
-				Meta.Integer.[Meta.Map] arg.present
+				Meta.Integer.[Meta.Map] Meta.Transform.ToMeta arg.present
 		start=Meta.Integer.[Meta.Map] *

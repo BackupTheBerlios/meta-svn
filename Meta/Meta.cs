@@ -1093,6 +1093,10 @@ namespace Meta
 			}
 		}
 		protected MapStrategy strategy;
+		public StrategyMap(bool boolean)
+			: this(new Integer(boolean))
+		{
+		}
 		public StrategyMap(System.Collections.Generic.ICollection<Map> list)
 			: this(new ListStrategy())
 		{
@@ -1110,6 +1114,10 @@ namespace Meta
 			this.strategy.map = this;
 		}
 		public StrategyMap():this(new DictionaryStrategy())
+		{
+		}
+		public StrategyMap(int i)
+			: this(new Integer(i))
 		{
 		}
 		public StrategyMap(Integer number):this(new IntegerStrategy(number))
@@ -1278,6 +1286,11 @@ namespace Meta
 						{
 							dotNet = meta.GetInteger().GetInt32();
 						}
+						//// TODO: add this for all integers, and other types
+						//else if (meta is ObjectMap && ((ObjectMap)meta).Object is Int32)
+						//{
+						//    dotNet = (Int32)((ObjectMap)meta).Object;
+						//}
 						break;
 					case TypeCode.Int64:
 						if (IsIntegerInRange(meta, new Integer(Int64.MinValue), new Integer(Int64.MaxValue)))
@@ -1303,6 +1316,7 @@ namespace Meta
 							ObjectMap result;
 							if (constructor != null)
 							{
+								// should this always be an ObjectMap? What if we are calling the constructor of a Map?
 								result = new ObjectMap(target.GetConstructor(new Type[] { }).Invoke(new object[] { }));
 							}
 							else if (target.IsValueType)
@@ -1373,11 +1387,36 @@ namespace Meta
 						throw new ApplicationException("not implemented");
 				}
 			}
+			if (dotNet == null)
+			{
+				if(meta is ObjectMap && ((ObjectMap)meta).type==target)
+				{
+					dotNet = ((ObjectMap)meta).Object;
+				}
+			}
 			return dotNet;
 		}
 		public static bool IsIntegerInRange(Map meta,Integer minValue,Integer maxValue)
 		{
 			return meta.IsInteger && meta.GetInteger()>=minValue && meta.GetInteger()<=maxValue;
+		}
+		public static Map ToSimpleMeta(object dotNet)
+		{
+			Map meta;
+			// i'm not sure about this
+			if (dotNet == null)
+			{
+				meta = new ObjectMap(null, typeof(Object));
+			}
+			else if (dotNet is Map)
+			{
+				meta = (Map)dotNet;
+			}
+			else
+			{
+				meta = new ObjectMap(dotNet);
+			}
+			return meta;
 		}
 		public static Map ToMeta(object dotNet)
 		{
@@ -1481,6 +1520,12 @@ namespace Meta
 			ParameterInfo[] parameters = method.GetParameters();
 			if (parameters.Length == 1)
 			{
+				if (parameters[0].ParameterType.Name == "Int32")
+				{
+				}
+				if (this.method.Name.StartsWith("set_Instance"))
+				{
+				}
 				object arg = Transform.ToDotNet(argument, parameters[0].ParameterType);
 				if (arg != null)
 				{
@@ -1529,7 +1574,8 @@ namespace Meta
 					throw e.InnerException;
 				}
 			}
-			return Transform.ToMeta(result);
+			return Transform.ToSimpleMeta(result);
+			//return Transform.ToMeta(result);
 		}
 	}
 	public class Method : MethodImplementation
@@ -1798,8 +1844,9 @@ namespace Meta
 	            Map arg = new StrategyMap();
 	            foreach (object argument in arguments)
 	            {
-	                arg.Append(Transform.ToMeta(argument));
-	            }
+					arg.Append(Transform.ToSimpleMeta(argument));
+					//arg.Append(Transform.ToMeta(argument));
+				}
 	            Map result = this.callable.Call(arg);
 	            return Meta.Transform.ToDotNet(result, this.returnType);
 	        }
@@ -1941,6 +1988,10 @@ namespace Meta
 			{
 				return obj;
 			}
+		}
+		public ObjectMap(object target, Type type)
+			: base(target, type)
+		{
 		}
 		public ObjectMap(object target):base(target,target.GetType())
 		{
@@ -2552,7 +2603,8 @@ namespace Meta
 						arguments.Add(Transform.ToDotNet(argument[i], parameters[i].ParameterType));
 					}
 				}
-				result = Transform.ToMeta(eventDelegate.DynamicInvoke(arguments.ToArray()));
+				result = new ObjectMap(eventDelegate.DynamicInvoke(arguments.ToArray()));
+				//result = Transform.ToMeta(eventDelegate.DynamicInvoke(arguments.ToArray()));
 			}
 			else
 			{
@@ -2666,13 +2718,14 @@ namespace Meta
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
-		public override string GetString()
-		{
-			return obj != null ? "object: "+obj.ToString() : "type: "+type.ToString();
-		}
+		// pretty incorrect, i think, remove this if possible
+		//public override string GetString()
+		//{
+		//    return obj != null ? "object: "+obj.ToString() : "type: "+type.ToString();
+		//}
 		public override bool IsInteger
 		{
 			get
@@ -2744,7 +2797,8 @@ namespace Meta
 					}
 					else if (members[0] is FieldInfo)
 					{
-						val = Transform.ToMeta(type.GetField(text).GetValue(obj));
+						val = Transform.ToSimpleMeta(type.GetField(text).GetValue(obj));
+						//val = Transform.ToMeta(type.GetField(text).GetValue(obj));
 					}
 					else if (members[0] is EventInfo)
 					{

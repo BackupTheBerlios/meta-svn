@@ -2,11 +2,11 @@ pop=
 	|Meta.Library.Pop arg
 isInteger=
 	|
-		object=Meta.ObjectMap arg
+		object=Meta.ObjectMap.[mscorlib.Object] arg
 		this=object.IsInteger.get *
 isString=
 	|
-		object=Meta.ObjectMap arg
+		object=Meta.ObjectMap.[mscorlib.Object] arg
 		this=object.IsString.get *
 if=
 	|
@@ -104,7 +104,7 @@ apply=
 						index=math.add
 							arg.index
 							1
-						object=Meta.ObjectMap arg.result
+						object=Meta.ObjectMap.[mscorlib.Object] arg.result
 						argument=arg.function arg.array.[arg.index]
 						object.Append argument
 						result=object.This.get *
@@ -115,12 +115,12 @@ join=
 contains=
 	documentation="Determines whether a map contains a key."
 	|
-		object=Meta.ObjectMap arg.map
-		this=object.ContainsKey arg.key
+		object=Meta.ObjectMap.[mscorlib.Object] arg.map
+		this=Meta.StrategyMap.[mscorlib.Boolean] object.ContainsKey arg.key
 keys=
 	documentation="Returns the keys of a map in an array."
 	|
-		object=Meta.ObjectMap arg
+		object=Meta.ObjectMap.[mscorlib.Object] arg
 		this=Meta.StrategyMap.[mscorlib.["ICollection`1"].[Meta.Map]] object.Keys.get *
 merge=
 	documentation="Combines several maps into one."
@@ -145,10 +145,10 @@ equal=
 			array=arg
 			function=
 				|
-					first=Meta.ObjectMap arg.previous.previous
+					first=Meta.ObjectMap.[mscorlib.Object] arg.previous.previous
 					this=
 						equality=logic.and
-							first.Equals arg.present
+							Meta.StrategyMap.[mscorlib.Boolean] first.Equals arg.present
 							arg.previous.equality
 						previous=arg.present
 			start=
@@ -158,8 +158,8 @@ equal=
 length=
 	documentation="Returns the length of an array."
 	|
-		map=Meta.ObjectMap arg
-		this=map.ArrayCount.get *
+		map=Meta.ObjectMap.[mscorlib.Object] arg
+		this=Meta.StrategyMap.[mscorlib.Int32] map.ArrayCount.get *
 sum=
 	|sumImplementation
 		index=1
