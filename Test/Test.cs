@@ -142,7 +142,7 @@ namespace Test
 					}
 					else
 					{
-						Map function = FileSystem.Parse(args[0]);
+						Map function = FileSystem.ParseFile(args[0]);
 						function.Scope = FileSystem.fileSystem;
 						int autoKeys = 0;
 						Map argument=new StrategyMap();

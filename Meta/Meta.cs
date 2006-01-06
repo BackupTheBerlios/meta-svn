@@ -3292,11 +3292,11 @@ namespace Meta
 		//    }
 		//}
 		// rename, refactor
-		public static Map Parse(string filePath)
+		public static Map ParseFile(string filePath)
 		{
 			using (TextReader reader = new StreamReader(filePath, Encoding.Default))
 			{
-				Map parsed = Parse(reader,filePath);
+				Map parsed = ParseFile(reader,filePath);
 				// todo: reintroduce this
 				//MakePersistant((StrategyMap)parsed);
 				// why does this map have a parent?
@@ -3307,7 +3307,7 @@ namespace Meta
 				return parsed;
 			}
 		}
-		public static Map Parse(TextReader textReader,string fileName)
+		public static Map ParseFile(TextReader textReader,string fileName)
 		{
 			Parsing = true;
 			Map result=Compile(textReader,fileName).GetExpression().Evaluate(Map.Empty);
@@ -3324,7 +3324,7 @@ namespace Meta
 			Map map = new StrategyMap();
 			foreach (string fileName in Directory.GetFiles(path, "*.meta"))
 			{
-				map[Path.GetFileNameWithoutExtension(fileName)] = FileSystem.Parse(fileName);
+				map[Path.GetFileNameWithoutExtension(fileName)] = FileSystem.ParseFile(fileName);
 			}
 			foreach (string directoryName in Directory.GetDirectories(path))
 			{
@@ -3350,6 +3350,1693 @@ namespace Meta
 			}
 			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath,"meta.meta"), text,Encoding.Default);
 		}
+		//private class Guesser
+		//{
+		//    private int guessing;
+		//    private bool Guess(char c)
+		//    {
+		//        return parser.text[guessing] == c;
+		//    }
+		//    private bool Look()
+		//    {
+		//    }
+		//    private bool Guess(string text)
+		//    {
+
+		//    }
+		//    public void Whitespace()
+		//    {
+		//        for (int i = 0; Guess(space) || Guess(tab); i++)
+		//        {
+		//        }
+		//    }
+		//    public bool NewLine()
+		//    {
+		//        return Guess(unixNewLine) || Guess(windowsNewLine);
+		//    }
+		//    private Parser parser;
+		//    public Guesser(Parser parser)
+		//    {
+		//        this.parser = parser;
+		//        this.guessing = parser.index;
+		//    }
+		//}
+
+		//public class XParse : Tester
+		//{
+		//}
+		public class ParseFunction
+		{
+			protected Parse parse;
+			private Parser parser;
+			public ParseFunction(Parser parser,Parse parse)
+			{
+				this.parse = parse;
+			}
+			public Map Get()
+			{
+				return parse(parser);
+			}
+
+		}
+		public delegate Map Parse(Parser parser);
+
+		//public class Parser
+		//{
+		//    public Parser(object a, object b)
+		//    {
+		//        function.Get();
+		//        function=new ParseFunction(this,delegate(Parser parser) {
+		//            return null;
+		//        });
+		//    }
+		//    public ParseFunction function;
+
+
+
+
+
+
+
+
+
+
+		//    public Map Statement(ref int x)
+		//    {
+		//        return null;
+		//    }
+		//    public bool isStartOfFile;
+		//    public int indentationCount;
+		//    public Map Map()
+		//    {
+		//        return null;
+		//    }
+		//    public static char[] lookupStringForbiddenChars = null;
+		//    public const char endOfFileChar = (char)65535;
+		//    public const char indentationChar = '\t';
+		//    public const char unixNewLine = '\n';
+		//    public const string windowsNewLine = "\r\n";
+		//    public const char functionChar = '|';
+		//    public const char stringChar = '\"';
+		//    public char[] integerChar = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		//    public char[] integerStartChar = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		//    public const char lookupStartChar = '[';
+		//    public const char lookupEndChar = ']';
+		//    public static char[] lookupStringForbiddenChar = new char[] { callChar, indentationChar, '\r', '\n', statementChar, selectChar, stringEscapeChar, functionChar, stringChar, lookupStartChar, lookupEndChar, emptyMapChar };
+		//    //public char[] lookupStringFirstForbidden = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		//    public const char emptyMapChar = '*';
+		//    public const char callChar = ' ';
+		//    public const char selectChar = '.';
+		//    public const char stringEscapeChar = '\'';
+		//    public const char statementChar = '=';
+		//    private const char spaceChar = ' ';
+		//    private const char tabChar = '\t';
+		////public class ParserTest
+		////{
+		////    public Map EmptyMap(Parser parser)
+		////    {
+		////        return null;
+		////    }
+		////    public Map Expression()
+		////    {
+		////        //new ParseFunction.Parse(EmptyMap);
+		////        EmptyMap;
+		////        Integer;
+		////        String();
+		////        Program();
+		////        Call();
+		////        Select();
+		////    }
+		////    //public Map Expression()
+		////    //{
+		////    //    if ((expression = EmptyMap()) == null)
+		////    //    {
+		////    //        if ((expression = Integer()) == null)
+		////    //        {
+		////    //            if ((expression = String()) == null)
+		////    //            {
+		////    //                if ((expression = Program()) == null)
+		////    //                {
+		////    //                    if ((expression = Select()) != null)
+		////    //                    {
+		////    //                        Map call;
+		////    //                        if ((call = Call(expression)) != null)
+		////    //                        {
+		////    //                            expression = call;
+		////    //                        }
+		////    //                    }
+		////    //                }
+		////    //            }
+		////    //        }
+		////    //    }
+		////    //    return expression;
+		////    //}
+		////    // refactor
+		////    public Map Call()
+		////    {
+		////        Or
+		////            callChar;
+		////            Expression;
+
+		////            Program;
+
+		////            new StrategyMap(
+		////                CodeKeys.Call, new StrategyMap(
+		////                    CodeKeys.Callable, select,
+		////                    CodeKeys.Argument, argument
+		////            ));
+		////        // refactor
+				
+
+		////        call = new StrategyMap();
+		////        Map callCode = new StrategyMap();
+		////        callCode[CodeKeys.Callable] = select;
+		////        callCode[CodeKeys.Argument] = argument;
+		////        // refactor
+		////        call[CodeKeys.Call] = callCode;
+		////    }
+		////    //public Map Call(Map select)
+		////    //{
+		////    //    Map call;
+		////    //    Extent extent = BeginExpression();
+		////    //    Map argument;
+		////    //    if (TryConsume(callChar))
+		////    //    {
+		////    //        argument = Expression();
+		////    //    }
+		////    //    else
+		////    //    {
+		////    //        argument = Program();
+		////    //    }
+		////    //    if (argument != null)
+		////    //    {
+		////    //        call = new StrategyMap();
+		////    //        Map callCode = new StrategyMap();
+		////    //        callCode[CodeKeys.Callable] = select;
+		////    //        callCode[CodeKeys.Argument] = argument;
+		////    //        // refactor
+		////    //        EndExpression(extent, callCode);
+		////    //        call[CodeKeys.Call] = callCode;
+		////    //        if (!callAllowed)
+		////    //        {
+		////    //            throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
+		////    //        }
+		////    //    }
+		////    //    else
+		////    //    {
+		////    //        call = null;
+		////    //    }
+		////    //    EndExpression(extent, call);
+		////    //    return call;
+		////    //}
+		////    private void Whitespace()
+		////    {
+		////        tab;
+		////        space;
+		////    }
+		////    public Map Map()
+		////    {
+		////        Program;
+		////        endOfFileChar;
+		////        return map;
+		////    }
+		////    int counter = 1;
+		////    int defaultKey = 1;
+
+		////    public Map Program(bool allowed)
+		////    {
+		////        Indentation;
+		////        new StrategyMap(
+		////            CodeKeys.Program,
+		////            Loop(
+		////                endOfFileChar;
+		////                Statement(ref defaultKey);
+		////                string newIndentation = GetIndentation();
+		////                if (newIndentation.Length < indentationCount)
+		////                {
+		////                    indentationCount--;
+		////                    break;
+		////                }
+		////                else if (newIndentation.Length == indentationCount)
+		////                {
+		////                    Consume(newIndentation);
+		////                }
+		////                else
+		////                {
+		////                    throw new MetaException("incorrect indentation", extent);
+		////                }));
+		////    }
+		////    //public Map Program(bool allowed)
+		////    //{
+		////    //    bool wasAllowed = this.callAllowed;
+		////    //    this.callAllowed = allowed;
+		////    //    Extent extent = BeginExpression();
+		////    //    Map program;
+		////    //    if (Indentation())
+		////    //    {
+		////    //        program = new StrategyMap();
+		////    //        int counter = 1;
+		////    //        int defaultKey = 1;
+		////    //        Map statements = new StrategyMap();
+		////    //        while (!Look(endOfFileChar))
+		////    //        {
+		////    //            Map statement = Function();
+		////    //            if (statement == null)
+		////    //            {
+		////    //                statement = Statement(ref defaultKey);
+		////    //            }
+		////    //            statements[counter] = statement;
+		////    //            counter++;
+		////    //            if (!TryNewLine() && !Look(endOfFileChar))
+		////    //            {
+		////    //                position -= 1;
+		////    //                if (!TryNewLine())
+		////    //                {
+		////    //                    position -= 1;
+		////    //                    if (!TryNewLine())
+		////    //                    {
+		////    //                        position += 2;
+		////    //                        throw new MetaException("Expected newline.", new Extent(Position, Position, filePath));
+		////    //                    }
+		////    //                    else
+		////    //                    {
+		////    //                        line--;
+		////    //                    }
+		////    //                }
+		////    //                else
+		////    //                {
+		////    //                    line--;
+		////    //                }
+		////    //            }
+		////    //            string newIndentation = GetIndentation();
+		////    //            //if (LookEmptyLine())
+		////    //            //{
+		////    //            //    string newIndent = GetIndentation();
+		////    //            //    if (newIndent.Length < indentationCount)
+		////    //            //    {
+		////    //            //        indentationCount--;
+		////    //            //        break;
+		////    //            //    }
+		////    //            //    else if (newIndent.Length == indentationCount)
+		////    //            //    {
+		////    //            //        EmptyLine();
+		////    //            //        Consume(newIndent);
+		////    //            //    }
+		////    //            //}
+		////    //            if (newIndentation.Length < indentationCount)
+		////    //            {
+		////    //                indentationCount--;
+		////    //                break;
+		////    //            }
+		////    //            else if (newIndentation.Length == indentationCount)
+		////    //            {
+		////    //                Consume(newIndentation);
+		////    //            }
+		////    //            else
+		////    //            {
+		////    //                throw new MetaException("incorrect indentation", extent);
+		////    //            }
+		////    //        }
+		////    //        EndExpression(extent, statements);
+		////    //        program[CodeKeys.Program] = statements;
+		////    //    }
+		////    //    else
+		////    //    {
+		////    //        program = null;
+		////    //    }
+		////    //    EndExpression(extent, program);
+		////    //    callAllowed = wasAllowed;
+		////    //    return program;
+		////    //}
+		////    private void EmptyLine()
+		////    {
+		////        NewLine();
+		////        NewLine();
+		////    }
+
+		////    // guesser should be some kind of parser itself
+		////    // when a guess is not atomic, you should use a guesser that keeps track of the guess
+
+		////    //private bool LookEmptyLine()
+		////    //{
+		////    //    Guesser guess=new Guesser(this);
+		////    //    guess.Whitespace();
+		////    //    bool emptyLine;
+		////    //    if (guess.NewLine())
+		////    //    {
+		////    //        guess.Whitespace();
+		////    //        if (guess.NewLine())
+		////    //        {
+		////    //            emptyLine = true;
+		////    //        }
+		////    //        else
+		////    //        {
+		////    //            emptyLine = false;
+		////    //        }
+		////    //    }
+		////    //    else
+		////    //    {
+		////    //        emptyLine = false;
+		////    //    }
+		////    //    return emptyLine;
+		////    //    //string whitespace = "";
+		////    //    //for (int i = 0; Look(i) == space || Look(i) == tab; i++)
+		////    //    //{
+		////    //    //    whitespace += Look(i);
+		////    //    //}
+		////    //    //if(Look(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text));
+
+		////    //}
+		////    //public Map Program(bool allowed)
+		////    //{
+		////    //    bool wasAllowed = this.callAllowed;
+		////    //    this.callAllowed = allowed;
+		////    //    Extent extent = BeginExpression();
+		////    //    Map program;
+		////    //    if (Indentation())
+		////    //    {
+		////    //        program = new StrategyMap();
+		////    //        int counter = 1;
+		////    //        int defaultKey = 1;
+		////    //        Map statements = new StrategyMap();
+		////    //        while (!Look(endOfFileChar))
+		////    //        {
+		////    //            Map statement = Function();
+		////    //            if (statement == null)
+		////    //            {
+		////    //                statement = Statement(ref defaultKey);
+		////    //            }
+		////    //            statements[counter] = statement;
+		////    //            counter++;
+		////    //            if (!NewLine() && !Look(endOfFileChar))
+		////    //            {
+		////    //                index -= 1;
+		////    //                if (!NewLine())
+		////    //                {
+		////    //                    index -= 1;
+		////    //                    if (!NewLine())
+		////    //                    {
+		////    //                        index += 2;
+		////    //                        throw new MetaException("Expected newline.", new Extent(Position, Position, filePath));
+		////    //                    }
+		////    //                    else
+		////    //                    {
+		////    //                        line--;
+		////    //                    }
+		////    //                }
+		////    //                else
+		////    //                {
+		////    //                    line--;
+		////    //                }
+		////    //            }
+		////    //            string newIndentation = GetIndentation();
+
+		////    //            if (newIndentation.Length < indentationCount)
+		////    //            {
+		////    //                indentationCount--;
+		////    //                break;
+		////    //            }
+		////    //            else if (newIndentation.Length == indentationCount)
+		////    //            {
+		////    //                Consume(newIndentation);
+		////    //            }
+		////    //            else
+		////    //            {
+		////    //                throw new MetaException("incorrect indentation", extent);
+		////    //            }
+		////    //        }
+		////    //        EndExpression(extent, statements);
+		////    //        program[CodeKeys.Program] = statements;
+		////    //    }
+		////    //    else
+		////    //    {
+		////    //        program = null;
+		////    //    }
+		////    //    EndExpression(extent, program);
+		////    //    callAllowed = wasAllowed;
+		////    //    return program;
+		////    //}
+		////    private Map EmptyMap()
+		////    {
+		////        emptyMapChar;
+		////        Map.Make(
+		////            CodeKeys.Literal,
+		////            Map.Empty);
+		////        // vielleicht:
+		////        emptyMapChar =
+		////        Map.Make(
+		////            CodeKeys.Literal,
+		////            Map.Empty);
+		////    }
+
+		////    //private Map EmptyMap()
+		////    //{
+		////    //    Extent extent = BeginExpression();
+		////    //    Map program;
+		////    //    if (TryConsume(emptyMapChar))
+		////    //    {
+		////    //        program = new StrategyMap();
+		////    //        program[CodeKeys.Program] = new StrategyMap();
+		////    //    }
+		////    //    else
+		////    //    {
+		////    //        program = null;
+		////    //    }
+		////    //    EndExpression(extent, program);
+		////    //    return program;
+		////    //}
+		////    private Map Integer()
+		////    {
+		////        firstIntegerChars;
+		////        Map literal = new StrategyMap(Meta.Integer.ParseInteger(integerString));
+		////        integer = new StrategyMap();
+		////        integer[CodeKeys.Literal] = literal;
+		////        Loop
+		////            integerChars
+		////        EndExpression(extent, integer);
+		////        return integer;
+		////    }
+		////    //private Map Integer()
+		////    //{
+		////    //    Map integer;
+		////    //    Extent extent = BeginExpression();
+		////    //    if (LookAny(firstIntegerChars))
+		////    //    {
+		////    //        string integerString = "";
+		////    //        integerString += ConsumeGet();
+		////    //        while (LookAny(integerChars))
+		////    //        {
+		////    //            integerString += ConsumeGet();
+		////    //        }
+		////    //        Map literal = new StrategyMap(Meta.Integer.ParseInteger(integerString));
+		////    //        integer = new StrategyMap();
+		////    //        integer[CodeKeys.Literal] = literal;
+		////    //    }
+		////    //    else
+		////    //    {
+		////    //        integer = null;
+		////    //    }
+		////    //    EndExpression(extent, integer);
+		////    //    return integer;
+		////    //}
+		////    public const char stringEscapeChar = '\'';
+		////    private Map String()
+		////    {
+		////        Loop
+		////            stringEscapeChar;
+		////        stringChar
+		////        newLine
+		////        Map.Make(
+		////            CodeKeys.Literal
+		////            Loop
+		////                if stringChar
+		////                newLine
+		////                indentation
+		////                Loop
+		////                    foundEscapeCharCount == escapeCharCount)
+		////                    {
+		////                        break;
+		////                    }
+		////                }
+		////    }
+		////    //private Map String()
+		////    //{
+		////    //    try
+		////    //    {
+		////    //        Map @string;
+		////    //        Extent extent = BeginExpression();
+
+		////    //        if (Look(stringChar) || Look(stringEscapeChar))
+		////    //        {
+		////    //            int escapeCharCount = 0;
+		////    //            while (TryConsume(stringEscapeChar))
+		////    //            {
+		////    //                escapeCharCount++;
+		////    //            }
+		////    //            Consume(stringChar);
+		////    //            string stringText = "";
+		////    //            while (true)
+		////    //            {
+		////    //                if (Look(stringChar))
+		////    //                {
+		////    //                    int foundEscapeCharCount = 0;
+		////    //                    while (foundEscapeCharCount < escapeCharCount && Look(foundEscapeCharCount + 1, stringEscapeChar))
+		////    //                    {
+		////    //                        foundEscapeCharCount++;
+		////    //                    }
+		////    //                    if (foundEscapeCharCount == escapeCharCount)
+		////    //                    {
+		////    //                        Consume(stringChar);
+		////    //                        Consume("".PadLeft(escapeCharCount, stringEscapeChar));
+		////    //                        break;
+		////    //                    }
+		////    //                }
+		////    //                stringText += Look();
+		////    //                Consume(Look());
+		////    //            }
+		////    //            List<string> realLines = new List<string>();
+		////    //            string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
+		////    //            for (int i = 0; i < lines.Length; i++)
+		////    //            {
+		////    //                if (i == 0)
+		////    //                {
+		////    //                    realLines.Add(lines[i]);
+		////    //                }
+		////    //                else
+		////    //                {
+		////    //                    realLines.Add(lines[i].Remove(0, Math.Min(indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentationChar).Length)));
+		////    //                }
+		////    //            }
+		////    //            string realText = string.Join("\n", realLines.ToArray());
+		////    //            realText = realText.TrimStart('\n');
+		////    //            Map literal = new StrategyMap(realText);
+		////    //            @string = new StrategyMap();
+		////    //            @string[CodeKeys.Literal] = literal;
+		////    //        }
+		////    //        else
+		////    //        {
+		////    //            @string = null;
+		////    //        }
+		////    //        EndExpression(extent, @string);
+		////    //        return @string;
+		////    //    }
+		////    //    catch (Exception e)
+		////    //    {
+		////    //        return null;
+		////    //    }
+		////    //}
+		////    private Map LookupString()
+		////    {
+		////        Except
+		////            lookupStringForbiddenChars lookupStringFirstCharAdditionalForbiddenChars
+
+
+		////        Map.Make 
+		////            CodeKeys.Literal
+		////            Loop
+		////                Except
+		////                    lookupStringForbiddenChars
+		////    }
+		////    //private Map LookupString()
+		////    //{
+		////    //    string lookupString = "";
+		////    //    Extent extent = BeginExpression();
+		////    //    if (LookExcept(lookupStringForbiddenChars) && LookExcept(lookupStringFirstCharAdditionalForbiddenChars))
+		////    //    {
+		////    //        while (LookExcept(lookupStringForbiddenChars))
+		////    //        {
+		////    //            lookupString += Look();
+		////    //            Consume(Look());
+		////    //        }
+		////    //    }
+		////    //    Map lookup;
+		////    //    if (lookupString.Length > 0)
+		////    //    {
+		////    //        lookup = new StrategyMap();
+		////    //        lookup[CodeKeys.Literal] = new StrategyMap(lookupString);
+		////    //    }
+		////    //    else
+		////    //    {
+		////    //        lookup = null;
+		////    //    }
+		////    //    EndExpression(extent, lookup);
+		////    //    return lookup;
+		////    //}
+		////    //private Map Select(Map keys)
+		////    //{
+		////    //    Map select;
+		////    //    Extent extent = BeginExpression();
+		////    //    if (keys != null)
+		////    //    {
+		////    //        select = new StrategyMap();
+		////    //        select[CodeKeys.Select] = keys;
+		////    //    }
+		////    //    else
+		////    //    {
+		////    //        select = null;
+		////    //    }
+		////    //    EndExpression(extent, select);
+		////    //    return select;
+		////    //}
+		////    private Map Keys()
+		////    {
+		////        Loop
+		////            Lookup();
+		////            selectChar;
+		////    }
+		////    //private Map Keys()
+		////    //{
+		////    //    Extent extent = BeginExpression();
+		////    //    Map lookups = new StrategyMap();
+		////    //    int counter = 1;
+		////    //    Map lookup;
+		////    //    while (true)
+		////    //    {
+		////    //        lookup = Lookup();
+		////    //        if (lookup != null)
+		////    //        {
+		////    //            lookups[counter] = lookup;
+		////    //            counter++;
+		////    //        }
+		////    //        else
+		////    //        {
+		////    //            break;
+		////    //        }
+		////    //        if (!TryConsume(selectChar))
+		////    //        {
+		////    //            break;
+		////    //        }
+		////    //    }
+		////    //    Map keys;
+		////    //    if (counter > 1)
+		////    //    {
+		////    //        keys = lookups;
+		////    //    }
+		////    //    else
+		////    //    {
+		////    //        keys = null;
+		////    //    }
+		////    //    EndExpression(extent, lookups);
+		////    //    return keys;
+		////    //}
+		////    public Map Function()
+		////    {
+		////        Map.Make(
+		////            CodeKeys.Key,CreateDefaultKey(CodeKeys.Function),
+		////            CodeKeys.Value, Map.Make(
+		////                CodeKeys.Literal,
+		////            functionChar,
+		////            Expression));
+		////    }
+		////    //public Map Function()
+		////    //{
+		////    //    Extent extent = BeginExpression();
+		////    //    bool wasCallAllowed = callAllowed;
+		////    //    callAllowed = true;
+		////    //    Map function = null;
+		////    //    if (TryConsume(functionChar))
+		////    //    {
+		////    //        Map expression = Expression();
+		////    //        if (expression != null)
+		////    //        {
+		////    //            function = new StrategyMap();
+		////    //            function[CodeKeys.Key] = CreateDefaultKey(CodeKeys.Function);
+		////    //            Map literal = new StrategyMap();
+		////    //            literal[CodeKeys.Literal] = expression;
+		////    //            function[CodeKeys.Value] = literal;
+		////    //        }
+		////    //    }
+		////    //    EndExpression(extent, function);
+		////    //    callAllowed = wasCallAllowed;
+		////    //    return function;
+		////    //}
+		////    public const char statementChar = '=';
+		////    public Map Statement(ref int count)
+		////    {
+		////        Map.Make(
+		////            CodeKeys.Key,key,
+		////            CodeKeys.Value, val,
+
+		////        Keys
+		////        Or
+		////            statementChar
+		////            Expression();
+					
+		////            Or
+		////                Optional statementChar;
+		////                Or
+		////                    Call
+		////                    Select
+					
+		////                Expression();
+		////                key = CreateDefaultKey(new StrategyMap((Integer)count)));
+		////    }
+		////    //public Map Statement(ref int count)
+		////    //{
+		////    //    if (line > 25)
+		////    //    {
+		////    //    }
+		////    //    Extent extent = BeginExpression();
+		////    //    Map key = Keys();
+		////    //    Map val;
+		////    //    if (key != null && TryConsume(statementChar))
+		////    //    {
+		////    //        val = Expression();
+		////    //    }
+		////    //    else
+		////    //    {
+		////    //        TryConsume(statementChar);
+		////    //        if (key != null)
+		////    //        {
+		////    //            Map select = Select(key);
+		////    //            Map call = Call(select);
+		////    //            if (call != null)
+		////    //            {
+		////    //                val = call;
+		////    //            }
+		////    //            else
+		////    //            {
+		////    //                val = select;
+		////    //            }
+		////    //        }
+		////    //        else
+		////    //        {
+		////    //            val = Expression();
+		////    //        }
+		////    //        key = CreateDefaultKey(new StrategyMap((Integer)count));
+		////    //        count++;
+		////    //    }
+		////    //    if (val == null)
+		////    //    {
+		////    //        SourcePosition position = new SourcePosition(Line, Column);
+		////    //        throw new MetaException("Expected value of statement", new Extent(position, position, filePath));
+		////    //    }
+		////    //    Map statement = new StrategyMap();
+		////    //    statement[CodeKeys.Key] = key;
+		////    //    statement[CodeKeys.Value] = val;
+		////    //    EndExpression(extent, statement);
+		////    //    return statement;
+		////    //}
+		////    //private Map CreateDefaultKey(Map literal)
+		////    //{
+		////    //    Map key = new StrategyMap();
+		////    //    Map firstKey = new StrategyMap();
+		////    //    firstKey[CodeKeys.Literal] = literal;
+		////    //    key[1] = firstKey;
+		////    //    return key;
+		////    //}
+
+		////    }
+		//}
+
+
+
+		//public class Syntax
+		//{
+		//    public const char endOfFile = (char)65535;
+		//    public const char indentation = '\t';
+		//    public const char unixNewLine = '\n';
+		//    public const string windowsNewLine = "\r\n";
+		//    public const char function = '|';
+		//    public const char @string = '\"';
+		//    public char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		//    public char[] integerStart = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		//    public const char lookupStart = '[';
+		//    public const char lookupEnd = ']';
+		//    public static char[] lookupStringForbidden = new char[] { callChar, indentationChar, '\r', '\n', statementChar, selectChar, stringEscapeChar, functionChar, stringChar, lookupStartChar, lookupEndChar, emptyMapChar };
+		//    //public char[] lookupStringFirstForbidden = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		//    public const char emptyMap = '*';
+		//    public const char call = ' ';
+		//    public const char select = '.';
+		//    public const char stringEscape = '\'';
+		//    public const char statement = '=';
+		//    private const char space = ' ';
+		//    private const char tab = '\t';
+		//}
+
+
+
+		//public class ParserY
+		//{
+		//    private string text;
+		//    private int position;
+
+		//    public Map Map()
+		//    {
+		//    }
+		//    public Map Expression()
+		//    {
+		//    }
+		//    public Map Call()
+		//    {
+		//    }
+		//    public Map EmptyMap()
+		//    {
+		//    }
+		//    public Map Integer()
+		//    {
+		//    }
+		//    public Map String()
+		//    {
+		//    }
+		//    public Map Select()
+		//    {
+		//    }
+		//    public Map Program()
+		//    {
+		//    }
+		//    public Map Statement()
+		//    {
+		//    }
+		//    public Parser(string text)
+		//    {
+		//    }
+		//    public abstract class Expression
+		//    {
+		//        private Extent extent;
+		//        private Map expression;
+		//        protected Parser parser;
+		//        public Map Parse()
+		//        {
+		//            extent=new Extent(Line, Column, 0, 0, filePath);
+		//            expression = Parse();
+		//            if (expression != null)
+		//            {
+		//                extent.End.Line = Line;
+		//                extent.End.Column = Column;
+		//                expression.Extent = extent;
+		//            }
+		//            return expression;
+		//        }
+		//        public abstract Map DoParse();
+		//    }
+		//    private int functions=0;
+		//    private Function function;
+		//    public class Function:Expression
+		//    {
+		//        public override Map DoParse()
+		//        {
+		//            functions++;
+		//            Map function = null;
+		//            Consume(functionChar);
+		//            Expression();
+
+
+		//            default
+		//            if (TryConsume(functionChar))
+		//            {
+		//                Map expression = Expression();
+		//                if (expression != null)
+		//                {
+		//                    function = new StrategyMap();
+		//                    function[CodeKeys.Key] = CreateDefaultKey(CodeKeys.Function);
+		//                    Map literal = new StrategyMap();
+		//                    literal[CodeKeys.Literal] = expression;
+		//                    function[CodeKeys.Value] = literal;
+		//                }
+		//            }
+		//            EndExpression(extent, function);
+		//            functions--;
+		//            return function;
+		//        }
+		//    }
+		//    public int indentationCount = -1;
+		//}
+
+
+
+
+
+
+		//public class ParserX
+		//{
+		//    private string text;
+		//    private int position;
+		//    private string filePath;
+		//    public ParserX(string text, string filePath)
+		//    {
+		//        this.position = 0;
+		//        this.text = text;
+		//        this.filePath = filePath;
+		//    }
+		//    private void Consume(string characters)
+		//    {
+		//        foreach (char character in characters)
+		//        {
+		//            Consume(character);
+		//        }
+		//    }
+		//    private void Consume()
+		//    {
+		//        Consume(Look());
+		//    }
+		//    private void Consume(char character)
+		//    {
+		//        if (!TryConsume(character))
+		//        {
+		//            throw new ApplicationException("Unexpected token " + Look() + " ,expected " + character);
+		//        }
+		//    }
+
+		//    // refactor
+		//    private bool TryConsume(string characters)
+		//    {
+		//        bool consumed;
+		//        if (position + characters.Length < text.Length && text.Substring(position, characters.Length) == characters)
+		//        {
+
+		//            consumed = true;
+		//            foreach (char c in characters)
+		//            {
+		//                Consume(c);
+		//            }
+		//        }
+		//        else
+		//        {
+		//            consumed = false;
+		//        }
+		//        return consumed;
+		//    }
+		//    private bool TryConsume(char character)
+		//    {
+		//        bool consumed;
+		//        if (position < text.Length && text[position] == character)
+		//        {
+		//            if (character == unixNewLine)
+		//            {
+		//                line++;
+		//            }
+		//            position++;
+		//            consumed = true;
+		//        }
+		//        else
+		//        {
+		//            consumed = false;
+		//        }
+		//        return consumed;
+		//    }
+		//    private bool Look(int lookAhead, char character)
+		//    {
+		//        return Look(lookAhead) == character;
+		//    }
+		//    private bool Look(char character)
+		//    {
+		//        return Look(0, character);
+		//    }
+		//    private char Look()
+		//    {
+		//        return Look(0);
+		//    }
+		//    private char Look(int lookahead)
+		//    {
+		//        char character;
+		//        int i = position + lookahead;
+		//        if (i < text.Length)
+		//        {
+		//            character = text[position + lookahead];
+		//        }
+		//        else
+		//        {
+		//            character = endOfFileChar;
+		//        }
+		//        return character;
+		//    }
+
+
+		//    public char endOfFileChar = (char)65535;
+		//    public const char indentationChar = '\t';
+		//    public int indentationCount = -1;
+		//    public const char unixNewLine = '\n';
+		//    public const string windowsNewLine = "\r\n";
+		//    public const char functionChar = '|';
+		//    public const char stringChar = '\"';
+		//    public char[] integerChars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		//    public char[] firstIntegerChars = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		//    public const char lookupStartChar = '[';
+		//    public const char lookupEndChar = ']';
+		//    public static char[] lookupStringForbiddenChars = new char[] { callChar, indentationChar, '\r', '\n', statementChar, selectChar, stringEscapeChar, functionChar, stringChar, lookupStartChar, lookupEndChar, emptyMapChar };
+		//    public char[] lookupStringFirstCharAdditionalForbiddenChars = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		//    public const char emptyMapChar = '*';
+		//    public const char callChar = ' ';
+		//    public const char selectChar = '.';
+
+		//    // we need some sort of guessing mode
+		//    private bool TryConsumeNewLine(string text)
+		//    {
+		//        string whitespace = "";
+		//        for (int i = 0; Look(i) == space || Look(i) == tab; i++)
+		//        {
+		//            whitespace += Look(i);
+		//        }
+		//        return TryConsume(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text);
+		//    }
+		//    private bool Indentation()
+		//    {
+		//        string indentationString = "".PadLeft(indentationCount + 1, indentationChar);
+		//        bool isIndentation;
+		//        if (TryConsumeNewLine(indentationString))
+		//        {
+		//            indentationCount++;
+		//            isIndentation = true;
+		//        }
+		//        else if (isStartOfFile)
+		//        {
+		//            isStartOfFile = false;
+		//            indentationCount++;
+		//            isIndentation = true;
+		//        }
+		//        else
+		//        {
+		//            isIndentation = false;
+		//        }
+		//        return isIndentation;
+		//    }
+		//    public Map Expression()
+		//    {
+		//        Map expression;
+		//        if ((expression = EmptyMap()) == null)
+		//        {
+		//            if ((expression = Integer()) == null)
+		//            {
+		//                if ((expression = String()) == null)
+		//                {
+		//                    if ((expression = Program()) == null)
+		//                    {
+		//                        if ((expression = Select()) != null)
+		//                        {
+		//                            Map call;
+		//                            if ((call = Call(expression)) != null)
+		//                            {
+		//                                expression = call;
+		//                            }
+		//                        }
+		//                    }
+		//                }
+		//            }
+		//        }
+		//        return expression;
+		//    }
+		//    // refactor
+		//    public Map Call(Map select)
+		//    {
+		//        Map call;
+		//        Extent extent = BeginExpression();
+		//        Map argument;
+		//        if (TryConsume(callChar))
+		//        {
+		//            argument = Expression();
+		//        }
+		//        else
+		//        {
+		//            argument = Program();
+		//        }
+		//        if (argument != null)
+		//        {
+		//            call = new StrategyMap();
+		//            Map callCode = new StrategyMap();
+		//            callCode[CodeKeys.Callable] = select;
+		//            callCode[CodeKeys.Argument] = argument;
+		//            // refactor
+		//            EndExpression(extent, callCode);
+		//            call[CodeKeys.Call] = callCode;
+		//            if (!callAllowed)
+		//            {
+		//                throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
+		//            }
+		//        }
+		//        else
+		//        {
+		//            call = null;
+		//        }
+		//        EndExpression(extent, call);
+		//        return call;
+		//    }
+		//    public bool isStartOfFile = true;
+		//    private void Whitespace()
+		//    {
+		//        while (TryConsume('\t') || TryConsume(' '))
+		//        {
+		//        }
+		//    }
+		//    public Map Map()
+		//    {
+		//        Map map = Program(false);
+		//        if (!Look(endOfFileChar))
+		//        {
+		//            throw new MetaException("Expected end of file", new Extent(line, Column, line, Column, filePath));
+		//        }
+		//        return map;
+		//    }
+		//    public Map Program()
+		//    {
+		//        return Program(true);
+		//    }
+		//    private bool callAllowed;
+		//    public Map Program(bool allowed)
+		//    {
+		//        bool wasAllowed = this.callAllowed;
+		//        this.callAllowed = allowed;
+		//        Extent extent = BeginExpression();
+		//        Map program;
+		//        if (Indentation())
+		//        {
+		//            program = new StrategyMap();
+		//            int counter = 1;
+		//            int defaultKey = 1;
+		//            Map statements = new StrategyMap();
+		//            while (!Look(endOfFileChar))
+		//            {
+		//                Map statement = Function();
+		//                if (statement == null)
+		//                {
+		//                    statement = Statement(ref defaultKey);
+		//                }
+		//                statements[counter] = statement;
+		//                counter++;
+		//                if (!TryNewLine() && !Look(endOfFileChar))
+		//                {
+		//                    position -= 1;
+		//                    if (!TryNewLine())
+		//                    {
+		//                        position -= 1;
+		//                        if (!TryNewLine())
+		//                        {
+		//                            position += 2;
+		//                            throw new MetaException("Expected newline.", new Extent(Position, Position, filePath));
+		//                        }
+		//                        else
+		//                        {
+		//                            line--;
+		//                        }
+		//                    }
+		//                    else
+		//                    {
+		//                        line--;
+		//                    }
+		//                }
+		//                string newIndentation = GetIndentation();
+		//                //if (LookEmptyLine())
+		//                //{
+		//                //    string newIndent = GetIndentation();
+		//                //    if (newIndent.Length < indentationCount)
+		//                //    {
+		//                //        indentationCount--;
+		//                //        break;
+		//                //    }
+		//                //    else if (newIndent.Length == indentationCount)
+		//                //    {
+		//                //        EmptyLine();
+		//                //        Consume(newIndent);
+		//                //    }
+		//                //}
+		//                if (newIndentation.Length < indentationCount)
+		//                {
+		//                    indentationCount--;
+		//                    break;
+		//                }
+		//                else if (newIndentation.Length == indentationCount)
+		//                {
+		//                    Consume(newIndentation);
+		//                }
+		//                else
+		//                {
+		//                    throw new MetaException("incorrect indentation", extent);
+		//                }
+		//            }
+		//            EndExpression(extent, statements);
+		//            program[CodeKeys.Program] = statements;
+		//        }
+		//        else
+		//        {
+		//            program = null;
+		//        }
+		//        EndExpression(extent, program);
+		//        callAllowed = wasAllowed;
+		//        return program;
+		//    }
+		//    private void EmptyLine()
+		//    {
+		//        NewLine();
+		//        NewLine();
+		//    }
+
+		//    // guesser should be some kind of parser itself
+		//    // when a guess is not atomic, you should use a guesser that keeps track of the guess
+
+		//    //private bool LookEmptyLine()
+		//    //{
+		//    //    Guesser guess=new Guesser(this);
+		//    //    guess.Whitespace();
+		//    //    bool emptyLine;
+		//    //    if (guess.NewLine())
+		//    //    {
+		//    //        guess.Whitespace();
+		//    //        if (guess.NewLine())
+		//    //        {
+		//    //            emptyLine = true;
+		//    //        }
+		//    //        else
+		//    //        {
+		//    //            emptyLine = false;
+		//    //        }
+		//    //    }
+		//    //    else
+		//    //    {
+		//    //        emptyLine = false;
+		//    //    }
+		//    //    return emptyLine;
+		//    //    //string whitespace = "";
+		//    //    //for (int i = 0; Look(i) == space || Look(i) == tab; i++)
+		//    //    //{
+		//    //    //    whitespace += Look(i);
+		//    //    //}
+		//    //    //if(Look(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text));
+
+		//    //}
+		//    //public Map Program(bool allowed)
+		//    //{
+		//    //    bool wasAllowed = this.callAllowed;
+		//    //    this.callAllowed = allowed;
+		//    //    Extent extent = BeginExpression();
+		//    //    Map program;
+		//    //    if (Indentation())
+		//    //    {
+		//    //        program = new StrategyMap();
+		//    //        int counter = 1;
+		//    //        int defaultKey = 1;
+		//    //        Map statements = new StrategyMap();
+		//    //        while (!Look(endOfFileChar))
+		//    //        {
+		//    //            Map statement = Function();
+		//    //            if (statement == null)
+		//    //            {
+		//    //                statement = Statement(ref defaultKey);
+		//    //            }
+		//    //            statements[counter] = statement;
+		//    //            counter++;
+		//    //            if (!NewLine() && !Look(endOfFileChar))
+		//    //            {
+		//    //                index -= 1;
+		//    //                if (!NewLine())
+		//    //                {
+		//    //                    index -= 1;
+		//    //                    if (!NewLine())
+		//    //                    {
+		//    //                        index += 2;
+		//    //                        throw new MetaException("Expected newline.", new Extent(Position, Position, filePath));
+		//    //                    }
+		//    //                    else
+		//    //                    {
+		//    //                        line--;
+		//    //                    }
+		//    //                }
+		//    //                else
+		//    //                {
+		//    //                    line--;
+		//    //                }
+		//    //            }
+		//    //            string newIndentation = GetIndentation();
+
+		//    //            if (newIndentation.Length < indentationCount)
+		//    //            {
+		//    //                indentationCount--;
+		//    //                break;
+		//    //            }
+		//    //            else if (newIndentation.Length == indentationCount)
+		//    //            {
+		//    //                Consume(newIndentation);
+		//    //            }
+		//    //            else
+		//    //            {
+		//    //                throw new MetaException("incorrect indentation", extent);
+		//    //            }
+		//    //        }
+		//    //        EndExpression(extent, statements);
+		//    //        program[CodeKeys.Program] = statements;
+		//    //    }
+		//    //    else
+		//    //    {
+		//    //        program = null;
+		//    //    }
+		//    //    EndExpression(extent, program);
+		//    //    callAllowed = wasAllowed;
+		//    //    return program;
+		//    //}
+		//    private Map EmptyMap()
+		//    {
+		//        Extent extent = BeginExpression();
+		//        Map program;
+		//        if (TryConsume(emptyMapChar))
+		//        {
+		//            program = new StrategyMap();
+		//            program[CodeKeys.Program] = new StrategyMap();
+		//        }
+		//        else
+		//        {
+		//            program = null;
+		//        }
+		//        EndExpression(extent, program);
+		//        return program;
+		//    }
+		//    private SourcePosition Position
+		//    {
+		//        get
+		//        {
+		//            return new SourcePosition(line, Column);
+		//        }
+		//    }
+		//    private void NewLine()
+		//    {
+		//        if (!TryNewLine())
+		//        {
+		//            throw new SyntaxException("Excpected newline.", filePath, this.Line, this.Column);
+		//        }
+		//    }
+		//    private bool TryNewLine()
+		//    {
+		//        return TryConsumeNewLine("");
+		//    }
+		//    private string GetIndentation()
+		//    {
+		//        int i = 0;
+		//        string indentation = "";
+		//        while (Look(i) == indentationChar)
+		//        {
+		//            indentation += Look(i);
+		//            i++;
+		//        }
+		//        return indentation;
+		//    }
+		//    // make this more flexible, for example parse all the characters matching these characters
+		//    private bool LookAny(char[] any)
+		//    {
+		//        return Look().ToString().IndexOfAny(any) != -1;
+		//    }
+		//    private char ConsumeGet()
+		//    {
+		//        char character = Look();
+		//        Consume(character);
+		//        return character;
+		//    }
+		//    private Extent BeginExpression()
+		//    {
+		//        return new Extent(Line, Column, 0, 0, filePath);
+		//    }
+		//    private void EndExpression(Extent extent, Map expression)
+		//    {
+		//        if (expression != null)
+		//        {
+		//            extent.End.Line = Line;
+		//            extent.End.Column = Column;
+		//            expression.Extent = extent;
+		//        }
+		//    }
+		//    private Map Integer()
+		//    {
+		//        Map integer;
+		//        Extent extent = BeginExpression();
+		//        if (LookAny(firstIntegerChars))
+		//        {
+		//            string integerString = "";
+		//            integerString += ConsumeGet();
+		//            while (LookAny(integerChars))
+		//            {
+		//                integerString += ConsumeGet();
+		//            }
+		//            Map literal = new StrategyMap(Meta.Integer.ParseInteger(integerString));
+		//            integer = new StrategyMap();
+		//            integer[CodeKeys.Literal] = literal;
+		//        }
+		//        else
+		//        {
+		//            integer = null;
+		//        }
+		//        EndExpression(extent, integer);
+		//        return integer;
+		//    }
+		//    public const char stringEscapeChar = '\'';
+		//    private Map String()
+		//    {
+		//        try
+		//        {
+		//            Map @string;
+		//            Extent extent = BeginExpression();
+
+		//            if (Look(stringChar) || Look(stringEscapeChar))
+		//            {
+		//                int escapeCharCount = 0;
+		//                while (TryConsume(stringEscapeChar))
+		//                {
+		//                    escapeCharCount++;
+		//                }
+		//                Consume(stringChar);
+		//                string stringText = "";
+		//                while (true)
+		//                {
+		//                    if (Look(stringChar))
+		//                    {
+		//                        int foundEscapeCharCount = 0;
+		//                        while (foundEscapeCharCount < escapeCharCount && Look(foundEscapeCharCount + 1, stringEscapeChar))
+		//                        {
+		//                            foundEscapeCharCount++;
+		//                        }
+		//                        if (foundEscapeCharCount == escapeCharCount)
+		//                        {
+		//                            Consume(stringChar);
+		//                            Consume("".PadLeft(escapeCharCount, stringEscapeChar));
+		//                            break;
+		//                        }
+		//                    }
+		//                    stringText += Look();
+		//                    Consume(Look());
+		//                }
+		//                List<string> realLines = new List<string>();
+		//                string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
+		//                for (int i = 0; i < lines.Length; i++)
+		//                {
+		//                    if (i == 0)
+		//                    {
+		//                        realLines.Add(lines[i]);
+		//                    }
+		//                    else
+		//                    {
+		//                        realLines.Add(lines[i].Remove(0, Math.Min(indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentationChar).Length)));
+		//                    }
+		//                }
+		//                string realText = string.Join("\n", realLines.ToArray());
+		//                realText = realText.TrimStart('\n');
+		//                Map literal = new StrategyMap(realText);
+		//                @string = new StrategyMap();
+		//                @string[CodeKeys.Literal] = literal;
+		//            }
+		//            else
+		//            {
+		//                @string = null;
+		//            }
+		//            EndExpression(extent, @string);
+		//            return @string;
+		//        }
+		//        catch (Exception e)
+		//        {
+		//            return null;
+		//        }
+		//    }
+		//    private Map LookupString()
+		//    {
+		//        string lookupString = "";
+		//        Extent extent = BeginExpression();
+		//        if (LookExcept(lookupStringForbiddenChars) && LookExcept(lookupStringFirstCharAdditionalForbiddenChars))
+		//        {
+		//            while (LookExcept(lookupStringForbiddenChars))
+		//            {
+		//                lookupString += Look();
+		//                Consume(Look());
+		//            }
+		//        }
+		//        Map lookup;
+		//        if (lookupString.Length > 0)
+		//        {
+		//            lookup = new StrategyMap();
+		//            lookup[CodeKeys.Literal] = new StrategyMap(lookupString);
+		//        }
+		//        else
+		//        {
+		//            lookup = null;
+		//        }
+		//        EndExpression(extent, lookup);
+		//        return lookup;
+		//    }
+		//    private bool LookExcept(char[] exceptions)
+		//    {
+		//        List<char> list = new List<char>(exceptions);
+		//        list.Add(endOfFileChar);
+		//        return Look().ToString().IndexOfAny(list.ToArray()) == -1;
+		//    }
+		//    private Map LookupAnything()
+		//    {
+		//        Map lookupAnything;
+		//        if (TryConsume(lookupStartChar))
+		//        {
+		//            lookupAnything = Expression();
+		//            while (TryConsume(indentationChar)) ;
+		//            Consume(lookupEndChar);
+		//        }
+		//        else
+		//        {
+		//            lookupAnything = null;
+		//        }
+		//        return lookupAnything;
+		//    }
+		//    private Map Lookup()
+		//    {
+		//        Extent extent = BeginExpression();
+		//        Map lookup = LookupString();
+		//        if (lookup == null)
+		//        {
+		//            lookup = LookupAnything();
+		//        }
+		//        EndExpression(extent, lookup);
+		//        return lookup;
+		//    }
+		//    private Map Select(Map keys)
+		//    {
+		//        Map select;
+		//        Extent extent = BeginExpression();
+		//        if (keys != null)
+		//        {
+		//            select = new StrategyMap();
+		//            select[CodeKeys.Select] = keys;
+		//        }
+		//        else
+		//        {
+		//            select = null;
+		//        }
+		//        EndExpression(extent, select);
+		//        return select;
+		//    }
+		//    public Map Select()
+		//    {
+		//        return Select(Keys());
+		//    }
+		//    private Map Keys()
+		//    {
+		//        Extent extent = BeginExpression();
+		//        Map lookups = new StrategyMap();
+		//        int counter = 1;
+		//        Map lookup;
+		//        while (true)
+		//        {
+		//            lookup = Lookup();
+		//            if (lookup != null)
+		//            {
+		//                lookups[counter] = lookup;
+		//                counter++;
+		//            }
+		//            else
+		//            {
+		//                break;
+		//            }
+		//            if (!TryConsume(selectChar))
+		//            {
+		//                break;
+		//            }
+		//        }
+		//        Map keys;
+		//        if (counter > 1)
+		//        {
+		//            keys = lookups;
+		//        }
+		//        else
+		//        {
+		//            keys = null;
+		//        }
+		//        EndExpression(extent, lookups);
+		//        return keys;
+		//    }
+		//    public Map Function()
+		//    {
+		//        Extent extent = BeginExpression();
+		//        bool wasCallAllowed = callAllowed;
+		//        callAllowed = true;
+		//        Map function = null;
+		//        if (TryConsume(functionChar))
+		//        {
+		//            Map expression = Expression();
+		//            if (expression != null)
+		//            {
+		//                function = new StrategyMap();
+		//                function[CodeKeys.Key] = CreateDefaultKey(CodeKeys.Function);
+		//                Map literal = new StrategyMap();
+		//                literal[CodeKeys.Literal] = expression;
+		//                function[CodeKeys.Value] = literal;
+		//            }
+		//        }
+		//        EndExpression(extent, function);
+		//        callAllowed = wasCallAllowed;
+		//        return function;
+		//    }
+		//    public const char statementChar = '=';
+		//    public Map Statement(ref int count)
+		//    {
+		//        if (line > 25)
+		//        {
+		//        }
+		//        Extent extent = BeginExpression();
+		//        Map key = Keys();
+		//        Map val;
+		//        if (key != null && TryConsume(statementChar))
+		//        {
+		//            val = Expression();
+		//        }
+		//        else
+		//        {
+		//            TryConsume(statementChar);
+		//            if (key != null)
+		//            {
+		//                Map select = Select(key);
+		//                Map call = Call(select);
+		//                if (call != null)
+		//                {
+		//                    val = call;
+		//                }
+		//                else
+		//                {
+		//                    val = select;
+		//                }
+		//            }
+		//            else
+		//            {
+		//                val = Expression();
+		//            }
+		//            key = CreateDefaultKey(new StrategyMap((Integer)count));
+		//            count++;
+		//        }
+		//        if (val == null)
+		//        {
+		//            SourcePosition position = new SourcePosition(Line, Column);
+		//            throw new MetaException("Expected value of statement", new Extent(position, position, filePath));
+		//        }
+		//        Map statement = new StrategyMap();
+		//        statement[CodeKeys.Key] = key;
+		//        statement[CodeKeys.Value] = val;
+		//        EndExpression(extent, statement);
+		//        return statement;
+		//    }
+		//    private const char space = ' ';
+		//    private const char tab = '\t';
+		//    private Map CreateDefaultKey(Map literal)
+		//    {
+		//        Map key = new StrategyMap();
+		//        Map firstKey = new StrategyMap();
+		//        firstKey[CodeKeys.Literal] = literal;
+		//        key[1] = firstKey;
+		//        return key;
+		//    }
+		//    private int line = 1;
+		//    private int Line
+		//    {
+		//        get
+		//        {
+		//            return line;
+		//        }
+		//    }
+		//    private int Column
+		//    {
+		//        get
+		//        {
+		//            // mono
+		//            try
+		//            {
+		//                int startPos = Math.Min(position, text.Length - 1);
+		//                return position - text.LastIndexOf('\n', startPos);
+		//            }
+		//            catch
+		//            {
+		//                return 0;
+		//            }
+		//        }
+		//    }
+		//}
 		public class Parser
 		{
 			private string text;
@@ -3496,18 +5183,18 @@ namespace Meta
 			public Map Expression()
 			{
 				Map expression;
-				if ((expression=EmptyMap()) == null)
+				if ((expression = EmptyMap()) == null)
 				{
-					if ((expression=Integer()) == null)
+					if ((expression = Integer()) == null)
 					{
-						if ((expression=String()) == null)
+						if ((expression = String()) == null)
 						{
-							if ((expression=Program()) == null)
+							if ((expression = Program()) == null)
 							{
-								if ((expression=Select())!=null)
+								if ((expression = Select()) != null)
 								{
 									Map call;
-									if ((call=Call(expression)) != null)
+									if ((call = Call(expression)) != null)
 									{
 										expression = call;
 									}
@@ -3539,11 +5226,11 @@ namespace Meta
 					callCode[CodeKeys.Callable] = select;
 					callCode[CodeKeys.Argument] = argument;
 					// refactor
-					EndExpression(extent,callCode);
+					EndExpression(extent, callCode);
 					call[CodeKeys.Call] = callCode;
 					if (!callAllowed)
 					{
-						throw new MetaException("Function may not be called outside of function definition.",argument.Extent);
+						throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
 					}
 				}
 				else
@@ -3562,10 +5249,10 @@ namespace Meta
 			}
 			public Map Map()
 			{
-				Map map=Program(false);
+				Map map = Program(false);
 				if (!Look(endOfFileChar))
 				{
-					throw new MetaException("Expected end of file",new Extent(line,Column,line,Column,filePath));
+					throw new MetaException("Expected end of file", new Extent(line, Column, line, Column, filePath));
 				}
 				return map;
 			}
@@ -3852,7 +5539,7 @@ namespace Meta
 			}
 			private Extent BeginExpression()
 			{
-				return new Extent(Line, Column, 0, 0,filePath);
+				return new Extent(Line, Column, 0, 0, filePath);
 			}
 			private void EndExpression(Extent extent, Map expression)
 			{
@@ -4126,7 +5813,7 @@ namespace Meta
 				if (val == null)
 				{
 					SourcePosition position = new SourcePosition(Line, Column);
-					throw new MetaException("Expected value of statement", new Extent(position, position,filePath));
+					throw new MetaException("Expected value of statement", new Extent(position, position, filePath));
 				}
 				Map statement = new StrategyMap();
 				statement[CodeKeys.Key] = key;
