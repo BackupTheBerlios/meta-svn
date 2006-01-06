@@ -58,6 +58,30 @@ namespace Meta
 		public static readonly Map Get="get";
 		public static readonly Map Set="set";
 	}
+	public class Mono
+	{
+		public static string ReadAllText(string path)
+		{
+			using (StreamReader reader = new StreamReader(path))
+			{
+				return reader.ReadToEnd();
+			}
+		}
+		public static void WriteAllText(string path, string text,Encoding encoding)
+		{
+			using (StreamWriter writer = new StreamWriter(path,false,encoding))
+			{
+				writer.Write(text);
+			}
+		}
+	}
+	public class SyntaxException:MetaException
+	{
+		public SyntaxException(string message,string fileName, int line, int column)
+			: base(message, new Extent(line, column, line, column,fileName))
+		{
+		}
+	}
 	public class MetaException:ApplicationException
 	{
 		public List<string> InvocationList
@@ -2990,7 +3014,8 @@ namespace Meta
 					File.WriteAllText(resultPath, resultText, Encoding.Default);
 					File.WriteAllText(resultCopyPath, resultText, Encoding.Default);
 
-					bool successful = File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath));
+					bool successful = Mono.ReadAllText(resultPath).Equals(Mono.ReadAllText(checkPath));
+					//bool successful = File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath));
 
 					if (!successful)
 					{
@@ -3437,7 +3462,7 @@ namespace Meta
 			public const char callChar = ' ';
 			public const char selectChar = '.';
 
-
+			// we need some sort of guessing mode
 			private bool TryConsumeNewLine(string text)
 			{
 				string whitespace = "";
@@ -3497,7 +3522,7 @@ namespace Meta
 			public Map Call(Map select)
 			{
 				Map call;
-				Extent extent = StartExpression();
+				Extent extent = BeginExpression();
 				Map argument;
 				if (TryConsume(callChar))
 				{
@@ -3553,7 +3578,7 @@ namespace Meta
 			{
 				bool wasAllowed = this.callAllowed;
 				this.callAllowed = allowed;
-				Extent extent = StartExpression();
+				Extent extent = BeginExpression();
 				Map program;
 				if (Indentation())
 				{
@@ -3570,13 +3595,13 @@ namespace Meta
 						}
 						statements[counter] = statement;
 						counter++;
-						if (!NewLine() && !Look(endOfFileChar))
+						if (!TryNewLine() && !Look(endOfFileChar))
 						{
 							index -= 1;
-							if (!NewLine())
+							if (!TryNewLine())
 							{
 								index -= 1;
-								if (!NewLine())
+								if (!TryNewLine())
 								{
 									index += 2;
 									throw new MetaException("Expected newline.", new Extent(Position, Position, filePath));
@@ -3592,6 +3617,20 @@ namespace Meta
 							}
 						}
 						string newIndentation = GetIndentation();
+						//if (LookEmptyLine())
+						//{
+						//    string newIndent = GetIndentation();
+						//    if (newIndent.Length < indentationCount)
+						//    {
+						//        indentationCount--;
+						//        break;
+						//    }
+						//    else if (newIndent.Length == indentationCount)
+						//    {
+						//        EmptyLine();
+						//        Consume(newIndent);
+						//    }
+						//}
 						if (newIndentation.Length < indentationCount)
 						{
 							indentationCount--;
@@ -3617,9 +3656,147 @@ namespace Meta
 				callAllowed = wasAllowed;
 				return program;
 			}
+			private void EmptyLine()
+			{
+				NewLine();
+				NewLine();
+			}
+
+			// guesser should be some kind of parser itself
+			// when a guess is not atomic, you should use a guesser that keeps track of the guess
+			//private class Guesser
+			//{
+			//    private int guessing;
+			//    private bool Guess(char c)
+			//    {
+			//        return parser.text[guessing] == c;
+			//    }
+			//    private bool Look()
+			//    {
+			//    }
+			//    private bool Guess(string text)
+			//    {
+
+			//    }
+			//    public void Whitespace()
+			//    {
+			//        for (int i = 0; Guess(space) || Guess(tab); i++)
+			//        {
+			//        }
+			//    }
+			//    public bool NewLine()
+			//    {
+			//        return Guess(unixNewLine) || Guess(windowsNewLine);
+			//    }
+			//    private Parser parser;
+			//    public Guesser(Parser parser)
+			//    {
+			//        this.parser = parser;
+			//        this.guessing = parser.index;
+			//    }
+			//}
+			//private bool LookEmptyLine()
+			//{
+			//    Guesser guess=new Guesser(this);
+			//    guess.Whitespace();
+			//    bool emptyLine;
+			//    if (guess.NewLine())
+			//    {
+			//        guess.Whitespace();
+			//        if (guess.NewLine())
+			//        {
+			//            emptyLine = true;
+			//        }
+			//        else
+			//        {
+			//            emptyLine = false;
+			//        }
+			//    }
+			//    else
+			//    {
+			//        emptyLine = false;
+			//    }
+			//    return emptyLine;
+			//    //string whitespace = "";
+			//    //for (int i = 0; Look(i) == space || Look(i) == tab; i++)
+			//    //{
+			//    //    whitespace += Look(i);
+			//    //}
+			//    //if(Look(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text));
+
+			//}
+			//public Map Program(bool allowed)
+			//{
+			//    bool wasAllowed = this.callAllowed;
+			//    this.callAllowed = allowed;
+			//    Extent extent = BeginExpression();
+			//    Map program;
+			//    if (Indentation())
+			//    {
+			//        program = new StrategyMap();
+			//        int counter = 1;
+			//        int defaultKey = 1;
+			//        Map statements = new StrategyMap();
+			//        while (!Look(endOfFileChar))
+			//        {
+			//            Map statement = Function();
+			//            if (statement == null)
+			//            {
+			//                statement = Statement(ref defaultKey);
+			//            }
+			//            statements[counter] = statement;
+			//            counter++;
+			//            if (!NewLine() && !Look(endOfFileChar))
+			//            {
+			//                index -= 1;
+			//                if (!NewLine())
+			//                {
+			//                    index -= 1;
+			//                    if (!NewLine())
+			//                    {
+			//                        index += 2;
+			//                        throw new MetaException("Expected newline.", new Extent(Position, Position, filePath));
+			//                    }
+			//                    else
+			//                    {
+			//                        line--;
+			//                    }
+			//                }
+			//                else
+			//                {
+			//                    line--;
+			//                }
+			//            }
+			//            string newIndentation = GetIndentation();
+
+			//            if (newIndentation.Length < indentationCount)
+			//            {
+			//                indentationCount--;
+			//                break;
+			//            }
+			//            else if (newIndentation.Length == indentationCount)
+			//            {
+			//                Consume(newIndentation);
+			//            }
+			//            else
+			//            {
+			//                throw new MetaException("incorrect indentation", extent);
+			//            }
+			//        }
+			//        EndExpression(extent, statements);
+			//        program[CodeKeys.Program] = statements;
+			//    }
+			//    else
+			//    {
+			//        program = null;
+			//    }
+			//    EndExpression(extent, program);
+			//    callAllowed = wasAllowed;
+			//    return program;
+			//}
 			private Map EmptyMap()
 			{
-				Extent extent = StartExpression();
+				Extent extent = BeginExpression();
 				Map program;
 				if (TryConsume(emptyMapChar))
 				{
@@ -3640,7 +3817,14 @@ namespace Meta
 					return new SourcePosition(line, Column);
 				}
 			}
-			private bool NewLine()
+			private void NewLine()
+			{
+				if (!TryNewLine())
+				{
+					throw new SyntaxException("Excpected newline.", filePath, this.Line, this.Column);
+				}
+			}
+			private bool TryNewLine()
 			{
 				return TryConsumeNewLine("");
 			}
@@ -3666,7 +3850,7 @@ namespace Meta
 				Consume(character);
 				return character;
 			}
-			private Extent StartExpression()
+			private Extent BeginExpression()
 			{
 				return new Extent(Line, Column, 0, 0,filePath);
 			}
@@ -3682,7 +3866,7 @@ namespace Meta
 			private Map Integer()
 			{
 				Map integer;
-				Extent extent = StartExpression();
+				Extent extent = BeginExpression();
 				if (LookAny(firstIntegerChars))
 				{
 					string integerString = "";
@@ -3708,7 +3892,7 @@ namespace Meta
 				try
 				{
 					Map @string;
-					Extent extent = StartExpression();
+					Extent extent = BeginExpression();
 
 					if (Look(stringChar) || Look(stringEscapeChar))
 					{
@@ -3772,7 +3956,7 @@ namespace Meta
 			private Map LookupString()
 			{
 				string lookupString = "";
-				Extent extent = StartExpression();
+				Extent extent = BeginExpression();
 				if (LookExcept(lookupStringForbiddenChars) && LookExcept(lookupStringFirstCharAdditionalForbiddenChars))
 				{
 					while (LookExcept(lookupStringForbiddenChars))
@@ -3817,7 +4001,7 @@ namespace Meta
 			}
 			private Map Lookup()
 			{
-				Extent extent = StartExpression();
+				Extent extent = BeginExpression();
 				Map lookup = LookupString();
 				if (lookup == null)
 				{
@@ -3829,7 +4013,7 @@ namespace Meta
 			private Map Select(Map keys)
 			{
 				Map select;
-				Extent extent = StartExpression();
+				Extent extent = BeginExpression();
 				if (keys != null)
 				{
 					select = new StrategyMap();
@@ -3848,7 +4032,7 @@ namespace Meta
 			}
 			private Map Keys()
 			{
-				Extent extent = StartExpression();
+				Extent extent = BeginExpression();
 				Map lookups = new StrategyMap();
 				int counter = 1;
 				Map lookup;
@@ -3883,7 +4067,7 @@ namespace Meta
 			}
 			public Map Function()
 			{
-				Extent extent = StartExpression();
+				Extent extent = BeginExpression();
 				bool wasCallAllowed = callAllowed;
 				callAllowed = true;
 				Map function = null;
@@ -3906,7 +4090,10 @@ namespace Meta
 			public const char statementChar = '=';
 			public Map Statement(ref int count)
 			{
-				Extent extent = StartExpression();
+				if (line > 25)
+				{
+				}
+				Extent extent = BeginExpression();
 				Map key = Keys();
 				Map val;
 				if (key != null && TryConsume(statementChar))
@@ -3969,8 +4156,16 @@ namespace Meta
 			{
 				get
 				{
-					int startPos = Math.Min(index, text.Length - 1);
-					return index - text.LastIndexOf('\n', startPos);
+					// mono
+					try
+					{
+						int startPos = Math.Min(index, text.Length - 1);
+						return index - text.LastIndexOf('\n', startPos);
+					}
+					catch
+					{
+						return 0;
+					}
 				}
 			}
 		}

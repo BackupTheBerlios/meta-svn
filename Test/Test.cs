@@ -30,6 +30,7 @@ using Meta;
 using System;
 using System.Threading;
 using System.Collections.Generic;
+using SdlDotNet;
 
 
 namespace Test 
@@ -58,6 +59,7 @@ namespace Test
 		{
 			try
 			{
+				//Map map=FileSystem.Parse(@"C:\Projects\Meta\Meta\Data\basicTest.meta");
 				//if (args.Length == 1)
 				//{
 					if (args[0] == "-test")
