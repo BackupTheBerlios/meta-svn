@@ -5764,20 +5764,22 @@ namespace Meta
 			public Map Function()
 			{
 				Extent extent = BeginExpression();
-				//bool wasCallAllowed = callAllowed;
 				functions++;
-				//callAllowed = true;
 				Map function = null;
 				if (TryConsume(functionChar))
 				{
 					Map expression = Expression();
 					if (expression != null)
 					{
-						function = new StrategyMap();
-						function[CodeKeys.Key] = CreateDefaultKey(CodeKeys.Function);
-						Map literal = new StrategyMap();
-						literal[CodeKeys.Literal] = expression;
-						function[CodeKeys.Value] = literal;
+						function = Map.Create(
+							CodeKeys.Key, CreateDefaultKey(CodeKeys.Function),
+							CodeKeys.Value, Map.Create(CodeKeys.Literal, expression));
+
+						//function = new StrategyMap();
+						//function[CodeKeys.Key] = CreateDefaultKey(CodeKeys.Function);
+						//Map literal = new StrategyMap();
+						//literal[CodeKeys.Literal] = expression;
+						//function[CodeKeys.Value] = literal;
 					}
 				}
 				EndExpression(extent, function);
