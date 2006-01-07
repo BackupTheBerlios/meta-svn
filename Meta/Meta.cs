@@ -5521,38 +5521,13 @@ namespace Meta
 					if (parser.functions == 0)
 					{
 						return null;
-						//throw new SyntaxException("Function may not be called outside of function definition.", parser);
 					}
 					else
 					{
 						return Map.Empty;
 					}
-				}))))).Match(parser);//.Match(parser);
+				}))))).Match(parser);
 			});
-			//public Expression Call = new Expression(null, delegate(Parser parser)
-			//{
-			//    return new Sequence(
-			//        new Assignment(
-			//            CodeKeys.Call,
-			//            new Sequence(
-			//                new Assignment(CodeKeys.Callable, parser.Select),
-			//                new Assignment(CodeKeys.Argument, new Or(
-			//                    new Sequence(new Match(new CharRule(callChar)), new SingleAssignment(parser.GetExpression)),
-			//                    parser.Program
-			//                )), new Match(new DelegateRule(delegate(Parser p)
-			//    {
-			//        if (parser.functions == 0)
-			//        {
-			//            return null;
-			//            //throw new SyntaxException("Function may not be called outside of function definition.", parser);
-			//        }
-			//        else
-			//        {
-			//            return Map.Empty;
-			//        }
-			//    }))))).Match(parser);//.Match(parser);
-			//});
-
 			public bool isStartOfFile = true;
 
 			private int functions = 0;
@@ -5839,21 +5814,34 @@ namespace Meta
 				return keys;
 			});
 			public delegate Map ParseFunction(Parser parser);
-
-			public Expression Function = new Expression(null,new Condition(functionChar),delegate(Parser parser)
+			public Expression Function = new Expression(delegate(Parser parser)
 			{
 				parser.functions++;
-				Map functionMap = null;
-				Map expression = (Map)parser.GetExpression.Match(parser);
-				if (expression != null)
-				{
-					functionMap = new StrategyMap(
-						CodeKeys.Key, parser.CreateDefaultKey(CodeKeys.Function),
-						CodeKeys.Value, new StrategyMap(CodeKeys.Literal, expression));
-				}
+				Map result=new Sequence(
+					new Match(new CharRule(functionChar)),
+					new Assignment(CodeKeys.Key, new DelegateRule(delegate(Parser p)
+					{
+						return p.CreateDefaultKey(CodeKeys.Function);
+					})),
+					new Assignment(CodeKeys.Value,
+						new Sequence(new Assignment(CodeKeys.Literal,parser.GetExpression)))).Match(parser);
 				parser.functions--;
-				return functionMap;
+				return result;
 			});
+			//public Expression Function = new Expression(null,new Condition(functionChar),delegate(Parser parser)
+			//{
+			//    parser.functions++;
+			//    Map functionMap = null;
+			//    Map expression = (Map)parser.GetExpression.Match(parser);
+			//    if (expression != null)
+			//    {
+			//        functionMap = new StrategyMap(
+			//            CodeKeys.Key, parser.CreateDefaultKey(CodeKeys.Function),
+			//            CodeKeys.Value, new StrategyMap(CodeKeys.Literal, expression));
+			//    }
+			//    parser.functions--;
+			//    return functionMap;
+			//});
 			public Map GetStatement(ref int count)
 			{
 				int oldIndex = index;
