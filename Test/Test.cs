@@ -117,7 +117,7 @@ namespace Test
 								int count = FileSystem.fileSystem.ArrayCount;
 								int originalCount = count;
 								parser.isStartOfFile = false;
-								Map statement = parser.Statement(ref count);
+								Map statement = parser.GetStatement(ref count);
 
 								statement.GetStatement().Assign(ref context);
 								if (count != originalCount)
@@ -224,17 +224,7 @@ namespace Test
 				return Path.Combine(Directory.GetParent(Process.InstallationPath).FullName, "Test");
 			}
 		}
-		public class Extents : Test
-		{
-			public override object GetResult(out int level)
-			{
-				level = 1;
-				Map argument = Map.Empty;
-				argument[1] = "first arg";
-				argument[2] = "second=arg";
-				return FileSystem.fileSystem["basicTest"];
-			}
-		}
+
 		public class Basic : Test
 		{
 			public override object GetResult(out int level)
@@ -266,7 +256,17 @@ namespace Test
 			}
 		}
 
-
+		public class Extents : Test
+		{
+			public override object GetResult(out int level)
+			{
+				level = 1;
+				Map argument = Map.Empty;
+				argument[1] = "first arg";
+				argument[2] = "second=arg";
+				return FileSystem.fileSystem["basicTest"];
+			}
+		}
 		//[Test]
 		//public object Serialization()
 		//{

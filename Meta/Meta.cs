@@ -5066,9 +5066,33 @@ namespace Meta
 
 		public class Parser
 		{
+			public char endOfFile = (char)65535;
+			public const char indentation = '\t';
+			public int indentationCount = -1;
+			public const char unixNewLine = '\n';
+			public const string windowsNewLine = "\r\n";
+			public const char functionChar = '|';
+			public const char stringChar = '\"';
+			public char[] integerChars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			public char[] firstIntegerChars = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			public const char lookupStartChar = '[';
+			public const char lookupEndChar = ']';
+			public static char[] lookupStringForbiddenChars = new char[] { callChar, indentation, '\r', '\n', statementChar, selectChar, stringEscapeChar, functionChar, stringChar, lookupStartChar, lookupEndChar, emptyMapChar };
+			public char[] lookupStringFirstCharAdditionalForbiddenChars = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			public const char emptyMapChar = '*';
+			public const char callChar = ' ';
+			public const char selectChar = '.';
+
+			public const char stringEscapeChar = '\'';
+			public const char statementChar = '=';
+			private const char space = ' ';
+			private const char tab = '\t';
+
+
+
 			public class Expression:Rule
 			{
-				public override Map DoMatch(Parser parser)
+				protected override Map DoMatch(Parser parser)
 				{
 					return Get();
 				}
@@ -5145,23 +5169,11 @@ namespace Meta
 					}
 					return result;
 				}
-				//public Map Match(Parser parser)
-				//{
-				//    int oldIndex = parser.index;
-				//    int oldLine = parser.line;
-				//    object result = DoMatch(parser);
-				//    if (result == null)
-				//    {
-				//        parser.index = oldIndex;
-				//        parser.line=oldLine;
-				//    }
-				//    return result;
-				//}
-				public abstract Map DoMatch(Parser parser);
+				protected abstract Map DoMatch(Parser parser);
 			}
 			public class CharRule : Rule
 			{
-			    public override Map DoMatch(Parser parser)
+			    protected override Map DoMatch(Parser parser)
 			    {
 					Map matched;
 			        if(parser.LookAny(chars))
@@ -5182,7 +5194,7 @@ namespace Meta
 			}
 			public class CharExceptRule : Rule
 			{
-				public override Map DoMatch(Parser parser)
+				protected override Map DoMatch(Parser parser)
 				{
 					Map matched;
 					if (parser.LookExcept(chars))
@@ -5209,7 +5221,7 @@ namespace Meta
 					this.text = text;
 				}
 				// return matched string??
-				public override Map DoMatch(Parser parser)
+				protected override Map DoMatch(Parser parser)
 				{
 					return parser.TryConsume(text);
 					//string result = parser.TryConsume(text);
@@ -5239,12 +5251,13 @@ namespace Meta
 			}
 			public class DelegateRule : Rule
 			{
+
 				private ParseFunction parseFunction;
 				public DelegateRule(ParseFunction parseFunction)
 				{
 					this.parseFunction = parseFunction;
 				}
-				public override Map DoMatch(Parser parser)
+				protected override Map DoMatch(Parser parser)
 				{
 					return parseFunction(parser);
 				}
@@ -5364,56 +5377,16 @@ namespace Meta
 				}
 			}
 
-			public char endOfFile = (char)65535;
-			public const char indentation = '\t';
-			public int indentationCount = -1;
-			public const char unixNewLine = '\n';
-			public const string windowsNewLine = "\r\n";
-			public const char functionChar = '|';
-			public const char stringChar = '\"';
-			public char[] integerChars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-			public char[] firstIntegerChars = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-			public const char lookupStartChar = '[';
-			public const char lookupEndChar = ']';
-			public static char[] lookupStringForbiddenChars = new char[] { callChar, indentation, '\r', '\n', statementChar, selectChar, stringEscapeChar, functionChar, stringChar, lookupStartChar, lookupEndChar, emptyMapChar };
-			public char[] lookupStringFirstCharAdditionalForbiddenChars = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-			public const char emptyMapChar = '*';
-			public const char callChar = ' ';
-			public const char selectChar = '.';
-
-			public const char stringEscapeChar = '\'';
-			public const char statementChar = '=';
-			private const char space = ' ';
-			private const char tab = '\t';
 
 			private bool TryConsumeNewLine(string text)
 			{
 				string whitespace = "";
-				//List<char> list = (List<char>)
-				//    new Sequence(
-				//        new StringRule(text),
-				//        new Loop<char>(
-				//            new Or(
-				//                new CharRule(space),
-				//                new CharRule(tab))
-				//            ),
-				//        new Or(new CharRule(unixNewLine), new StringRule(windowsNewLine))).Match(this);
-				//return list != null;
 				for (int i = 0; Look(i) == space || Look(i) == tab; i++)
 				{
 					whitespace += Look(i);
 				}
 				return TryConsume(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text);
 			}
-			//private bool TryConsumeNewLine(string text)
-			//{
-			//    string whitespace = "";
-			//    for (int i = 0; Look(i) == space || Look(i) == tab; i++)
-			//    {
-			//        whitespace += Look(i);
-			//    }
-			//    return TryConsume(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text);
-			//}
 			private bool Indentation()
 			{
 				string indentationString = "".PadLeft(indentationCount + 1, indentation);
@@ -5436,16 +5409,16 @@ namespace Meta
 				return isIndentation;
 			}
 			public class Or : Rule
-			{// rename
-				private Rule[] expressions;
+			{
+				private Rule[] cases;
 				public Or(params Rule[] expressions)
 				{
-					this.expressions = expressions;
+					this.cases = expressions;
 				}
-				public override Map DoMatch(Parser parser)
+				protected override Map DoMatch(Parser parser)
 				{
 					Map result = null;
-					foreach (Rule expression in expressions)
+					foreach (Rule expression in cases)
 					{
 						result = (Map)expression.Match(parser);
 						if (result != null)
@@ -5456,38 +5429,60 @@ namespace Meta
 					return result;
 				}
 			}
+			public abstract class Action
+			{
+				public abstract bool Execute(Parser parser, Map result,bool keepStrings);
+			}
+			public class Assignment:Action
+			{
+				private Map key;
+				private Rule rule;
+				public Assignment(Rule rule):this(null,rule)
+				{
+				}
+				public Assignment(Map key, Rule rule)
+				{
+					this.key = key;
+					this.rule = rule;
+				}
+				public override bool Execute(Parser parser, Map result,bool keepStrings)
+				{
+					Map matched=rule.Match(parser);
+					if (matched!=null && matched is Map && !(!keepStrings && ((Map)matched).IsString))
+					{
+						result.Append((Map)matched);
+					}
+					return matched != null;
+				}
+				//public override Map Execute(Parser parser,Map result)
+				//{
+				//    return rule.Match(parser);
+				//}
+			}
 			public class Sequence : Rule
 			{
-				private Rule[] rules;
+				private Assignment[] rules;
 				private bool keepIntegers;
-				public Sequence(params Rule[] rules):this(true,rules)
+				public Sequence(params Assignment[] rules)
+					: this(true, rules)
 				{
 				}
-				public Sequence(bool keepIntegers,params Rule[] rules)
+				public Sequence(bool keepIntegers, params Assignment[] rules)
 				{
-					this.keepIntegers=keepIntegers;
+					this.keepIntegers = keepIntegers;
 					this.rules = rules;
 				}
-				public override Map DoMatch(Parser parser)
+				protected override Map DoMatch(Parser parser)
 				{
 					Map result = new StrategyMap();
-					//List<Map> result = new List<Map>();
 					bool success = true;
-					foreach (Rule rule in rules)
+					foreach (Assignment rule in rules)
 					{
-						object matched = rule.Match(parser);
-						if (matched == null)
+						bool matched = rule.Execute(parser, result,keepIntegers);
+						if (!matched)
 						{
 							success = false;
 							break;
-						}
-						else
-						{
-							if (matched is Map && !(!keepIntegers && ((Map)matched).IsString))
-							{
-								result.Append((Map)matched);
-								//result.AppendMap((Map)matched);
-							}
 						}
 					}
 					if (!success)
@@ -5503,13 +5498,13 @@ namespace Meta
 						return result;
 					}
 				}
-				//public override Map DoMatch(Parser parser)
+				//protected override Map DoMatch(Parser parser)
 				//{
-				//    List<Map> result = new List<Map>();
+				//    Map result = new StrategyMap();
 				//    bool success = true;
-				//    foreach (Rule rule in rules)
+				//    foreach (Assignment rule in rules)
 				//    {
-				//        object matched = rule.Match(parser);
+				//        object matched = rule.Execute(parser,result);
 				//        if (matched == null)
 				//        {
 				//            success = false;
@@ -5517,9 +5512,9 @@ namespace Meta
 				//        }
 				//        else
 				//        {
-				//            if (matched is Map)
+				//            if (matched is Map && !(!keepIntegers && ((Map)matched).IsString))
 				//            {
-				//                result.Add((Map)matched);
+				//                result.Append((Map)matched);
 				//            }
 				//        }
 				//    }
@@ -5529,7 +5524,7 @@ namespace Meta
 				//    }
 				//    else if (result.Count == 1)
 				//    {
-				//        return result[0];
+				//        return result[1];
 				//    }
 				//    else
 				//    {
@@ -5537,6 +5532,52 @@ namespace Meta
 				//    }
 				//}
 			}
+			//public class Sequence : Rule
+			//{
+			//    private Rule[] rules;
+			//    private bool keepIntegers;
+			//    public Sequence(params Rule[] rules):this(true,rules)
+			//    {
+			//    }
+			//    public Sequence(bool keepIntegers,params Rule[] rules)
+			//    {
+			//        this.keepIntegers=keepIntegers;
+			//        this.rules = rules;
+			//    }
+			//    protected override Map DoMatch(Parser parser)
+			//    {
+			//        Map result = new StrategyMap();
+			//        bool success = true;
+			//        foreach (Rule rule in rules)
+			//        {
+			//            object matched = rule.Match(parser);
+			//            if (matched == null)
+			//            {
+			//                success = false;
+			//                break;
+			//            }
+			//            else
+			//            {
+			//                if (matched is Map && !(!keepIntegers && ((Map)matched).IsString))
+			//                {
+			//                    result.Append((Map)matched);
+			//                }
+			//            }
+			//        }
+			//        if (!success)
+			//        {
+			//            return null;
+			//        }
+			//        else if (result.Count == 1)
+			//        {
+			//            return result[1];
+			//        }
+			//        else
+			//        {
+			//            return result;
+			//        }
+			//    }
+			//}
 			public Rule GetExpression;
 			public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
 			{
@@ -5544,16 +5585,15 @@ namespace Meta
 				Map select = parser.Select.Get();
 				if (select != null)
 				{
-					Map argument=(Map)new Or(
-						new Sequence(false,new CharRule(callChar), parser.GetExpression),
+					Map argument = (Map)new Or(
+						new Sequence(false, new Assignment(new CharRule(callChar)), new Assignment(parser.GetExpression)),
 						parser.Program
 					).Match(parser);
 					if (argument != null)
 					{
-						Map callCode = new StrategyMap(
+						call = new StrategyMap(
 							CodeKeys.Callable, select,
 							CodeKeys.Argument, argument);
-						call = callCode;
 						if (parser.functions == 0)
 						{
 							throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
@@ -5570,6 +5610,37 @@ namespace Meta
 				}
 				return call;
 			});
+			//public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
+			//{
+			//    Map call;
+			//    Map select = parser.Select.Get();
+			//    if (select != null)
+			//    {
+			//        Map argument=(Map)new Or(
+			//            new Sequence(false,new CharRule(callChar), parser.GetExpression),
+			//            parser.Program
+			//        ).Match(parser);
+			//        if (argument != null)
+			//        {
+			//            call = new StrategyMap(
+			//                CodeKeys.Callable, select,
+			//                CodeKeys.Argument, argument);
+			//            if (parser.functions == 0)
+			//            {
+			//                throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
+			//            }
+			//        }
+			//        else
+			//        {
+			//            call = null;
+			//        }
+			//    }
+			//    else
+			//    {
+			//        call = null;
+			//    }
+			//    return call;
+			//});
 			public bool isStartOfFile = true;
 
 			int functions = 0;
@@ -5588,7 +5659,7 @@ namespace Meta
 						Map statement = parser.Function.Get();
 						if (statement == null)
 						{
-							statement = parser.Statement(ref defaultKey);
+							statement = parser.GetStatement(ref defaultKey);
 						}
 						statements[counter] = statement;
 						counter++;
@@ -5665,15 +5736,6 @@ namespace Meta
 			}
 			private string GetIndentation()
 			{
-				//List<char> list=(List<char>)new Loop<char>(new CharRule(indentation)).Match(this);
-				//if (list. == null)
-				//{
-				//    return null;
-				//}
-				//else
-				//{
-				//    return new string(list.ToArray());
-				//}
 				int i = 0;
 				string indentationString = "";
 				while (Look(i) == indentation)
@@ -5699,19 +5761,6 @@ namespace Meta
 				}
 				return lookupAnything;
 			});
-			//private Extent BeginExpression()
-			//{
-			//    return new Extent(Line, Column, 0, 0, file);
-			//}
-			//private void EndExpression(Extent extent, Map expression)
-			//{
-			//    if (expression != null)
-			//    {
-			//        extent.End.Line = Line;
-			//        extent.End.Column = Column;
-			//        expression.Extent = extent;
-			//    }
-			//}
 			private Expression Integer = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
 				Map integer;
@@ -5794,7 +5843,7 @@ namespace Meta
 			});
 			public class Loop : Rule
 			{
-				public override Map DoMatch(Parser parser)
+				protected override Map DoMatch(Parser parser)
 				{
 					Map list = new StrategyMap();
 					Map result;
@@ -5804,28 +5853,10 @@ namespace Meta
 						{
 							result = Convert.ToChar(result.GetString());
 						}
-						//if (result is string)
-						//{
-						//    result = Convert.ToChar(result);
-						//}
 						list.Append(result);
 					}
 					return list;
 				}
-				//public override object DoMatch(Parser parser)
-				//{
-				//    List<T> list = new List<T>();
-				//    object result;
-				//    while ((result = rule.Match(parser)) != null)
-				//    {
-				//        if (result is string)
-				//        {
-				//            result = Convert.ToChar(result);
-				//        }
-				//        list.Add((T)result);
-				//    }
-				//    return list;
-				//}
 				private Rule rule;
 				public Loop(Rule rule)
 				{
@@ -5900,18 +5931,18 @@ namespace Meta
 			public Expression Function = new Expression(null,new Condition(functionChar),delegate(Parser parser)
 			{
 				parser.functions++;
-				Map function = null;
+				Map functionMap = null;
 				Map expression = (Map)parser.GetExpression.Match(parser);
 				if (expression != null)
 				{
-					function = new StrategyMap(
+					functionMap = new StrategyMap(
 						CodeKeys.Key, parser.CreateDefaultKey(CodeKeys.Function),
 						CodeKeys.Value, new StrategyMap(CodeKeys.Literal, expression));
 				}
 				parser.functions--;
-				return function;
+				return functionMap;
 			});
-			public Map Statement(ref int count)
+			public Map GetStatement(ref int count)
 			{
 				int oldIndex = index;
 				Map key = Keys.Get();
