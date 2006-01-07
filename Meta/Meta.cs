@@ -5638,19 +5638,11 @@ namespace Meta
 			private Expression Whitespace = new Expression(delegate(Parser parser)
 			{
 				return new Loop(new Or(new CharRule(tab), new CharRule(space))).Match(parser);
-				//while (TryConsume('\t') || TryConsume(' '))
-				//{
-				//}
 			});
-			//private void Whitespace()
-			//{
-			//    while (TryConsume('\t') || TryConsume(' '))
-			//    {
-			//    }
-			//}
-			private Expression EmptyMap = new Expression(CodeKeys.Literal, new Condition(emptyMapChar), delegate(Parser parser)
+			private Expression EmptyMap = new Expression(delegate(Parser parser)
 			{
-				return Map.Empty;
+				return new Sequence(new Assignment(CodeKeys.Literal,
+					new Sequence(new Match(new CharRule(emptyMapChar)),new SingleAssignment(new Literal(Map.Empty))))).Match(parser);
 			});
 			private SourcePosition Position
 			{
