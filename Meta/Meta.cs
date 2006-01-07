@@ -5058,8 +5058,12 @@ namespace Meta
 
 		public class Parser
 		{
-			public class Expression
+			public class Expression:Rule
 			{
+				public override Map Match(Parser parser)
+				{
+					return Get();
+				}
 				public virtual Map Get()
 				{
 					int oldIndex = parser.index;
@@ -5124,8 +5128,12 @@ namespace Meta
 				private Rule rule;
 				public RealExpression(Rule rule)
 				{
-					this.rule=rule;
+					this.rule = rule;
 				}
+				//public RealExpression(Rule rule)
+				//{
+				//    this.rule=rule;
+				//}
 			}
 			public class Condition
 			{
@@ -5141,13 +5149,56 @@ namespace Meta
 			}
 			private string text;
 			private int index;
+			// rename
 			private string filePath;
+			//public class CharRule : Rule
+			//{
+			//    public override Map Match(Parser parser)
+			//    {
+			//        parser.TryConsume(c);
+			//    }
+			//    public CharRule(char c)
+			//    {
+			//        this.c = c;
+			//    }
+			//    private char c;
+			//    //private char[] chars;
+			//    //public CharRule(char[] chars)
+			//    //{
+			//    //    this.chars = chars;
+			//    //}
+			//}
+			public class DelegateRule : Rule
+			{
+				private ParseFunction parseFunction;
+				public DelegateRule(ParseFunction parseFunction)
+				{
+					this.parseFunction = parseFunction;
+				}
+				public override Map Match(Parser parser)
+				{
+					return parseFunction(parser);
+				}
+			}
 			public Parser(string text, string filePath)
 			{
 				this.index = 0;
 				this.text = text;
 				this.filePath = filePath;
+
+				//Call=new RealExpression(
+				//    new Map[] { CodeKeys.Call, CodeKeys.Argument },
+				//    new Sequence(Select, new Or(new Sequence(new CharRule(callChar), GetExpression), Program, new DelegateRule( delegate(Parser parser)
+				//{
+
+				//    if (parser.functions == 0)
+				//    {
+				//        throw new SyntaxException("Function may not be called outside of function definition.", parser.filePath, parser.line,parser.Column );
+				//    }
+				//    return null;
+				//}))));
 				GetExpression=new RealExpression(new Or(EmptyMap,Integer,String,Program,Call,Select));
+
 				foreach (FieldInfo field in this.GetType().GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance))
 				{
 					if (field.FieldType == typeof(Expression))
@@ -5295,8 +5346,8 @@ namespace Meta
 			}
 			public class Or:Rule
 			{
-				private Expression[] expressions;
-				public Or(params Expression[] expressions)
+				private Rule[] expressions;
+				public Or(params Rule[] expressions)
 				{
 					this.expressions = expressions;
 				}
@@ -5314,29 +5365,38 @@ namespace Meta
 					return result;					
 				}
 			}
-			public Expression GetExpression;
-			//public Map GetExpression()
+			//public class Sequence : Rule
 			//{
-			//    Map expression;
-			//    if ((expression = EmptyMap.Get()) == null)
+			//    private Rule[] rules;
+			//    public Sequence(params Rule[] rules)
 			//    {
-			//        if ((expression = Integer.Get()) == null)
+			//        this.rules = rules;
+			//    }
+			//    public override Map Match(Parser parser)
+			//    {
+			//        int oldIndex=parser.index;
+			//        int oldLIne = parser.line;
+			//        List<Map> result = new List<Map>();
+			//        foreach (Rule rule in rules)
 			//        {
-			//            if ((expression = String.Get()) == null)
+			//            Map matched = rule.Match(rules);
+			//            if (matched == null)
 			//            {
-			//                if ((expression = Program.Get()) == null)
+			//                break;
+			//            }
+			//            else
+			//            {
+			//                if (result is Map)
 			//                {
-			//                    if ((expression = Call.Get()) == null)
-			//                    {
-			//                        expression = Select.Get();
-			//                    }
-
+			//                    result.Add((Map)matched);
 			//                }
 			//            }
 			//        }
+			//        return result;
 			//    }
-			//    return expression;
 			//}
+			public Expression GetExpression;
+			//public Expression Call;
 			public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
 			{
 				Map call;
