@@ -5593,12 +5593,61 @@ namespace Meta
 				}
 				return statements;
 			});
-			private void Whitespace()
+			public Map GetStatement(ref int count)
 			{
-				while (TryConsume('\t') || TryConsume(' '))
+				int oldIndex = index;
+				Map key = Keys.Get();
+				Map val;
+				if (key != null && TryConsume(statementChar))
 				{
+					val = (Map)GetExpression.Match(this);
 				}
+				else
+				{
+					index = oldIndex;
+					TryConsume(statementChar);
+					if (key != null)
+					{
+						Map call = Call.Get();
+						if (call != null)
+						{
+							val = call;
+						}
+						else
+						{
+							val = Select.Get();
+						}
+					}
+					else
+					{
+						val = (Map)GetExpression.Match(this);
+					}
+					key = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, count));
+					count++;
+				}
+				if (val == null)
+				{
+					SourcePosition position = new SourcePosition(Line, Column);
+					throw new MetaException("Expected value of statement", new Extent(position, position, file));
+				}
+				Map statement = new StrategyMap(
+					CodeKeys.Key, key,
+					CodeKeys.Value, val);
+				return statement;
 			}
+			private Expression Whitespace = new Expression(delegate(Parser parser)
+			{
+				return new Loop(new Or(new CharRule(tab), new CharRule(space))).Match(parser);
+				//while (TryConsume('\t') || TryConsume(' '))
+				//{
+				//}
+			});
+			//private void Whitespace()
+			//{
+			//    while (TryConsume('\t') || TryConsume(' '))
+			//    {
+			//    }
+			//}
 			private Expression EmptyMap = new Expression(CodeKeys.Literal, new Condition(emptyMapChar), delegate(Parser parser)
 			{
 				return Map.Empty;
@@ -5813,81 +5862,35 @@ namespace Meta
 				}
 				return keys;
 			});
+			public class Literal:Rule
+			{
+				private Map literal;
+				public Literal(Map literal)
+				{
+					this.literal=literal;
+				}
+				protected override Map  DoMatch(Parser parser)
+				{
+					return literal;
+				}
+			}
 			public delegate Map ParseFunction(Parser parser);
 			public Expression Function = new Expression(delegate(Parser parser)
 			{
 				parser.functions++;
 				Map result=new Sequence(
 					new Match(new CharRule(functionChar)),
-					new Assignment(CodeKeys.Key, new DelegateRule(delegate(Parser p)
-					{
-						return p.CreateDefaultKey(CodeKeys.Function);
-					})),
+					new Assignment(CodeKeys.Key, new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, CodeKeys.Function)))),
 					new Assignment(CodeKeys.Value,
 						new Sequence(new Assignment(CodeKeys.Literal,parser.GetExpression)))).Match(parser);
 				parser.functions--;
 				return result;
 			});
-			//public Expression Function = new Expression(null,new Condition(functionChar),delegate(Parser parser)
+
+			//private Map CreateDefaultKey(Map literal)
 			//{
-			//    parser.functions++;
-			//    Map functionMap = null;
-			//    Map expression = (Map)parser.GetExpression.Match(parser);
-			//    if (expression != null)
-			//    {
-			//        functionMap = new StrategyMap(
-			//            CodeKeys.Key, parser.CreateDefaultKey(CodeKeys.Function),
-			//            CodeKeys.Value, new StrategyMap(CodeKeys.Literal, expression));
-			//    }
-			//    parser.functions--;
-			//    return functionMap;
-			//});
-			public Map GetStatement(ref int count)
-			{
-				int oldIndex = index;
-				Map key = Keys.Get();
-				Map val;
-				if (key != null && TryConsume(statementChar))
-				{
-					val = (Map)GetExpression.Match(this);
-				}
-				else
-				{
-					index = oldIndex;
-					TryConsume(statementChar);
-					if (key != null)
-					{
-						Map call = Call.Get();
-						if (call != null)
-						{
-							val = call;
-						}
-						else
-						{
-							val = Select.Get();
-						}
-					}
-					else
-					{
-						val = (Map)GetExpression.Match(this);
-					}
-					key = CreateDefaultKey(count);
-					count++;
-				}
-				if (val == null)
-				{
-					SourcePosition position = new SourcePosition(Line, Column);
-					throw new MetaException("Expected value of statement", new Extent(position, position, file));
-				}
-				Map statement = new StrategyMap(
-					CodeKeys.Key, key,
-					CodeKeys.Value, val);
-				return statement;
-			}
-			private Map CreateDefaultKey(Map literal)
-			{
-				return new StrategyMap(1, new StrategyMap(CodeKeys.Literal, literal));
-			}
+			//    return new StrategyMap(1, new StrategyMap(CodeKeys.Literal, literal));
+			//}
 			private int line = 1;
 			public string File
 			{
