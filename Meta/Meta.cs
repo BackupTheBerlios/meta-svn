@@ -5060,7 +5060,7 @@ namespace Meta
 		{
 			public class Expression:Rule
 			{
-				public override object Match(Parser parser)
+				public override object DoMatch(Parser parser)
 				{
 					return Get();
 				}
@@ -5121,11 +5121,23 @@ namespace Meta
 			}
 			public abstract class Rule
 			{
-				public abstract object Match(Parser parser);
+				public object Match(Parser parser)
+				{
+					int oldIndex = parser.index;
+					int oldLine = parser.line;
+					object result = DoMatch(parser);
+					if (result == null)
+					{
+						parser.index = oldIndex;
+						parser.line=oldLine;
+					}
+					return result;
+				}
+				public abstract object DoMatch(Parser parser);
 			}
-			public class CharsRule : Rule
+			public class CharRule : Rule
 			{
-			    public override object Match(Parser parser)
+			    public override object DoMatch(Parser parser)
 			    {
 					string matched;
 			        if(parser.LookAny(chars))
@@ -5138,7 +5150,7 @@ namespace Meta
 					}
 					return matched;
 			    }
-			    public CharsRule(params char[] chars)
+			    public CharRule(params char[] chars)
 			    {
 			        this.chars = chars;
 			    }
@@ -5151,7 +5163,7 @@ namespace Meta
 				{
 					this.text = text;
 				}
-				public override object Match(Parser parser)
+				public override object DoMatch(Parser parser)
 				{
 					return parser.TryConsume(text);
 				}
@@ -5175,7 +5187,7 @@ namespace Meta
 				{
 					this.parseFunction = parseFunction;
 				}
-				public override object Match(Parser parser)
+				public override object DoMatch(Parser parser)
 				{
 					return parseFunction(parser);
 				}
@@ -5352,7 +5364,7 @@ namespace Meta
 				{
 					this.expressions = expressions;
 				}
-				public override object Match(Parser parser)
+				public override object DoMatch(Parser parser)
 				{
 					Map result=null;
 					foreach (Expression expression in expressions)
@@ -5366,36 +5378,49 @@ namespace Meta
 					return result;					
 				}
 			}
-			//public class Sequence : Rule
-			//{
-			//    private Rule[] rules;
-			//    public Sequence(params Rule[] rules)
-			//    {
-			//        this.rules = rules;
-			//    }
-			//    public override Map Match(Parser parser)
-			//    {
-			//        int oldIndex=parser.index;
-			//        int oldLIne = parser.line;
-			//        List<Map> result = new List<Map>();
-			//        foreach (Rule rule in rules)
-			//        {
-			//            Map matched = rule.Match(rules);
-			//            if (matched == null)
-			//            {
-			//                break;
-			//            }
-			//            else
-			//            {
-			//                if (result is Map)
-			//                {
-			//                    result.Add((Map)matched);
-			//                }
-			//            }
-			//        }
-			//        return result;
-			//    }
-			//}
+			public class Sequence : Rule
+			{
+				private Rule[] rules;
+				public Sequence(params Rule[] rules)
+				{
+					this.rules = rules;
+				}
+				public override object DoMatch(Parser parser)
+				{
+					//int oldIndex = parser.index;
+					//int oldLIne = parser.line;
+					List<Map> result = new List<Map>();
+					bool success = true;
+					foreach (Rule rule in rules)
+					{
+						object matched = rule.Match(parser);
+						if (matched == null)
+						{
+							success = false;
+							break;
+						}
+						else
+						{
+							if (matched is Map)
+							{
+								result.Add((Map)matched);
+							}
+						}
+					}
+					if (!success)
+					{
+						return null;
+					}
+					else if (result.Count == 1)
+					{
+						return result[0];
+					}
+					else
+					{
+						return result;
+					}
+				}
+			}
 			public Rule GetExpression;
 			//public Expression Call;
 			public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
@@ -5405,14 +5430,21 @@ namespace Meta
 				if (select != null)
 				{
 					Map argument;
-					if (parser.TryConsume(callChar))
+					if ((argument=(Map)new Sequence(new CharRule(callChar),parser.GetExpression).Match(parser))!=null)
 					{
-						argument = (Map)parser.GetExpression.Match(parser);
 					}
 					else
 					{
 						argument = parser.Program.Get();
 					}
+					//if (new CharRule(callChar).Match(parser) != null)
+					//{
+					//    argument = (Map)parser.GetExpression.Match(parser);
+					//}
+					//else
+					//{
+					//    argument = parser.Program.Get();
+					//}
 					if (argument != null)
 					{
 						Map callCode = new StrategyMap(
@@ -5435,6 +5467,44 @@ namespace Meta
 				}
 				return call;
 			});
+			//public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
+			//{
+			//    Map call;
+			//    Map select = parser.Select.Get();
+			//    if (select != null)
+			//    {
+			//        Map argument;
+			//        if (new CharRule(callChar).Match(parser)!=null)
+			//        //if (parser.TryConsume(callChar))
+			//        {
+			//            argument = (Map)parser.GetExpression.Match(parser);
+			//        }
+			//        else
+			//        {
+			//            argument = parser.Program.Get();
+			//        }
+			//        if (argument != null)
+			//        {
+			//            Map callCode = new StrategyMap(
+			//                CodeKeys.Callable, select,
+			//                CodeKeys.Argument, argument);
+			//            call = callCode;
+			//            if (parser.functions == 0)
+			//            {
+			//                throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
+			//            }
+			//        }
+			//        else
+			//        {
+			//            call = null;
+			//        }
+			//    }
+			//    else
+			//    {
+			//        call = null;
+			//    }
+			//    return call;
+			//});
 			public bool isStartOfFile = true;
 			private void Whitespace()
 			{
@@ -5613,7 +5683,7 @@ namespace Meta
 						{
 							escapeCharCount++;
 						}
-						new CharsRule(stringChar).Match(parser);
+						new CharRule(stringChar).Match(parser);
 						//parser.Consume(stringChar);
 						string stringText = "";
 						while (true)
@@ -5627,13 +5697,12 @@ namespace Meta
 								}
 								if (foundEscapeCharCount == escapeCharCount)
 								{
-									new CharsRule(stringChar).Match(parser);
+									new CharRule(stringChar).Match(parser);
 									new StringRule("".PadLeft(escapeCharCount, stringEscapeChar)).Match(parser);
 									break;
 								}
 							}
-							stringText += parser.Look();
-							parser.Consume(parser.Look());
+							stringText += new CharRule(parser.Look()).Match(parser);
 						}
 						List<string> realLines = new List<string>();
 						string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
