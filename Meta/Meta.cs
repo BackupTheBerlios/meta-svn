@@ -5138,24 +5138,24 @@ namespace Meta
 					}
 					return matched;
 			    }
-			    public CharsRule(char[] chars)
+			    public CharsRule(params char[] chars)
 			    {
 			        this.chars = chars;
 			    }
 			    private char[] chars;
 			}
-			//public class RealExpression : Expression
-			//{
-			//    public override Map Get()
-			//    {
-			//        return (Map)rule.Match(parser);
-			//    }
-			//    private Rule rule;
-			//    public RealExpression(Rule rule)
-			//    {
-			//        this.rule = rule;
-			//    }
-			//}
+			public class StringRule : Rule
+			{
+				private string text;
+				public StringRule(string text)
+				{
+					this.text = text;
+				}
+				public override object Match(Parser parser)
+				{
+					return parser.TryConsume(text);
+				}
+			}
 			public class Condition
 			{
 				public Condition(char c)
@@ -5168,11 +5168,6 @@ namespace Meta
 					return parser.TryConsume(c);
 				}
 			}
-			private string text;
-			private int index;
-			// rename
-			private string filePath;
-
 			public class DelegateRule : Rule
 			{
 				private ParseFunction parseFunction;
@@ -5185,11 +5180,16 @@ namespace Meta
 					return parseFunction(parser);
 				}
 			}
+
+			private string text;
+			private int index;
+			private string file;
+
 			public Parser(string text, string filePath)
 			{
 				this.index = 0;
 				this.text = text;
-				this.filePath = filePath;
+				this.file = filePath;
 
 				//Call=new RealExpression(
 				//    new Map[] { CodeKeys.Call, CodeKeys.Argument },
@@ -5345,10 +5345,6 @@ namespace Meta
 				}
 				return isIndentation;
 			}
-			//public abstract class Rule
-			//{
-			//    public abstract Map Match(Parser parser);
-			//}
 			public class Or:Rule
 			{
 				private Rule[] expressions;
@@ -5475,7 +5471,7 @@ namespace Meta
 								if (!parser.TryNewLine())
 								{
 									parser.index += 2;
-									throw new MetaException("Expected newline.", new Extent(parser.Position, parser.Position, parser.filePath));
+									throw new MetaException("Expected newline.", new Extent(parser.Position, parser.Position, parser.file));
 								}
 								else
 								{
@@ -5499,7 +5495,7 @@ namespace Meta
 						}
 						else
 						{
-							throw new SyntaxException("incorrect indentation",parser.filePath,parser.line, parser.Column);
+							throw new SyntaxException("incorrect indentation",parser.file,parser.line, parser.Column);
 						}
 					}
 				}
@@ -5524,7 +5520,7 @@ namespace Meta
 			{
 				if (!TryNewLine())
 				{
-					throw new SyntaxException("Excpected newline.", filePath, this.Line, this.Column);
+					throw new SyntaxException("Excpected newline.", file, this.Line, this.Column);
 				}
 			}
 			private bool TryNewLine()
@@ -5552,9 +5548,30 @@ namespace Meta
 				Consume(character);
 				return character;
 			}
+			private bool LookExcept(char[] exceptions)
+			{
+				List<char> list = new List<char>(exceptions);
+				list.Add(endOfFile);
+				return Look().ToString().IndexOfAny(list.ToArray()) == -1;
+			}
+			private Map LookupAnything()
+			{
+				Map lookupAnything;
+				if (TryConsume(lookupStartChar))
+				{
+					lookupAnything = (Map)GetExpression.Match(this);
+					while (TryConsume(indentationChar)) ;
+					Consume(lookupEndChar);
+				}
+				else
+				{
+					lookupAnything = null;
+				}
+				return lookupAnything;
+			}
 			private Extent BeginExpression()
 			{
-				return new Extent(Line, Column, 0, 0, filePath);
+				return new Extent(Line, Column, 0, 0, file);
 			}
 			private void EndExpression(Extent extent, Map expression)
 			{
@@ -5596,7 +5613,8 @@ namespace Meta
 						{
 							escapeCharCount++;
 						}
-						parser.Consume(stringChar);
+						new CharsRule(stringChar).Match(parser);
+						//parser.Consume(stringChar);
 						string stringText = "";
 						while (true)
 						{
@@ -5609,8 +5627,8 @@ namespace Meta
 								}
 								if (foundEscapeCharCount == escapeCharCount)
 								{
-									parser.Consume(stringChar);
-									parser.Consume("".PadLeft(escapeCharCount, stringEscapeChar));
+									new CharsRule(stringChar).Match(parser);
+									new StringRule("".PadLeft(escapeCharCount, stringEscapeChar)).Match(parser);
 									break;
 								}
 							}
@@ -5668,27 +5686,6 @@ namespace Meta
 				}
 				return lookup;
 			});
-			private bool LookExcept(char[] exceptions)
-			{
-				List<char> list = new List<char>(exceptions);
-				list.Add(endOfFile);
-				return Look().ToString().IndexOfAny(list.ToArray()) == -1;
-			}
-			private Map LookupAnything()
-			{
-				Map lookupAnything;
-				if (TryConsume(lookupStartChar))
-				{
-					lookupAnything = (Map)GetExpression.Match(this);
-					while (TryConsume(indentationChar)) ;
-					Consume(lookupEndChar);
-				}
-				else
-				{
-					lookupAnything = null;
-				}
-				return lookupAnything;
-			}
 			private Expression Lookup = new Expression(null, delegate(Parser parser)
 			{
 				Map lookup = parser.LookupString.Get();
@@ -5796,7 +5793,7 @@ namespace Meta
 				if (val == null)
 				{
 					SourcePosition position = new SourcePosition(Line, Column);
-					throw new MetaException("Expected value of statement", new Extent(position, position, filePath));
+					throw new MetaException("Expected value of statement", new Extent(position, position, file));
 				}
 				Map statement = new StrategyMap(
 					CodeKeys.Key, key,
