@@ -99,15 +99,22 @@ namespace Meta
 		public static string GetExtentText(Extent extent)
 		{
 			string text;
-			if (extent.FileName != null)
+			if (extent != null)
 			{
-				text=extent.FileName + ", line ";
+				if (extent.FileName != null)
+				{
+					text = extent.FileName + ", line ";
+				}
+				else
+				{
+					text = "Line ";
+				}
+				text += extent.Start.Line + ", column " + extent.Start.Column + ": ";
 			}
 			else
 			{
-				text = "Line ";
+				text = "Unknown location.";
 			}
-			text+=extent.Start.Line + ", column " + extent.Start.Column + ": ";
 			return text;
 		}
 		public MetaException(string message, Extent extent)
@@ -570,6 +577,7 @@ namespace Meta
 			get;
 		}
 
+		// rename
 		public virtual void AppendMap(Map array)
 		{
 			AppendMapDefault(array);
@@ -5060,7 +5068,7 @@ namespace Meta
 		{
 			public class Expression:Rule
 			{
-				public override object DoMatch(Parser parser)
+				public override Map DoMatch(Parser parser)
 				{
 					return Get();
 				}
@@ -5125,25 +5133,37 @@ namespace Meta
 			}
 			public abstract class Rule
 			{
-				public object Match(Parser parser)
+				public Map Match(Parser parser)
 				{
 					int oldIndex = parser.index;
 					int oldLine = parser.line;
-					object result = DoMatch(parser);
+					Map result = DoMatch(parser);
 					if (result == null)
 					{
 						parser.index = oldIndex;
-						parser.line=oldLine;
+						parser.line = oldLine;
 					}
 					return result;
 				}
-				public abstract object DoMatch(Parser parser);
+				//public Map Match(Parser parser)
+				//{
+				//    int oldIndex = parser.index;
+				//    int oldLine = parser.line;
+				//    object result = DoMatch(parser);
+				//    if (result == null)
+				//    {
+				//        parser.index = oldIndex;
+				//        parser.line=oldLine;
+				//    }
+				//    return result;
+				//}
+				public abstract Map DoMatch(Parser parser);
 			}
 			public class CharRule : Rule
 			{
-			    public override object DoMatch(Parser parser)
+			    public override Map DoMatch(Parser parser)
 			    {
-					string matched;
+					Map matched;
 			        if(parser.LookAny(chars))
 					{
 						matched = parser.ConsumeGet().ToString();
@@ -5162,9 +5182,9 @@ namespace Meta
 			}
 			public class CharExceptRule : Rule
 			{
-				public override object DoMatch(Parser parser)
+				public override Map DoMatch(Parser parser)
 				{
-					string matched;
+					Map matched;
 					if (parser.LookExcept(chars))
 					{
 						matched = parser.ConsumeGet().ToString();
@@ -5188,9 +5208,21 @@ namespace Meta
 				{
 					this.text = text;
 				}
-				public override object DoMatch(Parser parser)
+				// return matched string??
+				public override Map DoMatch(Parser parser)
 				{
 					return parser.TryConsume(text);
+					//string result = parser.TryConsume(text);
+					//Map map;
+					//if (result == null)
+					//{
+					//    map = null;
+					//}
+					//else
+					//{
+					//    map = result;
+					//}
+					//return map;
 				}
 			}
 			public class Condition
@@ -5212,7 +5244,7 @@ namespace Meta
 				{
 					this.parseFunction = parseFunction;
 				}
-				public override object DoMatch(Parser parser)
+				public override Map DoMatch(Parser parser)
 				{
 					return parseFunction(parser);
 				}
@@ -5410,7 +5442,7 @@ namespace Meta
 				{
 					this.expressions = expressions;
 				}
-				public override object DoMatch(Parser parser)
+				public override Map DoMatch(Parser parser)
 				{
 					Map result = null;
 					foreach (Rule expression in expressions)
@@ -5427,13 +5459,19 @@ namespace Meta
 			public class Sequence : Rule
 			{
 				private Rule[] rules;
-				public Sequence(params Rule[] rules)
+				private bool keepIntegers;
+				public Sequence(params Rule[] rules):this(true,rules)
 				{
+				}
+				public Sequence(bool keepIntegers,params Rule[] rules)
+				{
+					this.keepIntegers=keepIntegers;
 					this.rules = rules;
 				}
-				public override object DoMatch(Parser parser)
+				public override Map DoMatch(Parser parser)
 				{
-					List<Map> result = new List<Map>();
+					Map result = new StrategyMap();
+					//List<Map> result = new List<Map>();
 					bool success = true;
 					foreach (Rule rule in rules)
 					{
@@ -5445,9 +5483,10 @@ namespace Meta
 						}
 						else
 						{
-							if (matched is Map)
+							if (matched is Map && !(!keepIntegers && ((Map)matched).IsString))
 							{
-								result.Add((Map)matched);
+								result.Append((Map)matched);
+								//result.AppendMap((Map)matched);
 							}
 						}
 					}
@@ -5457,13 +5496,46 @@ namespace Meta
 					}
 					else if (result.Count == 1)
 					{
-						return result[0];
+						return result[1];
 					}
 					else
 					{
 						return result;
 					}
 				}
+				//public override Map DoMatch(Parser parser)
+				//{
+				//    List<Map> result = new List<Map>();
+				//    bool success = true;
+				//    foreach (Rule rule in rules)
+				//    {
+				//        object matched = rule.Match(parser);
+				//        if (matched == null)
+				//        {
+				//            success = false;
+				//            break;
+				//        }
+				//        else
+				//        {
+				//            if (matched is Map)
+				//            {
+				//                result.Add((Map)matched);
+				//            }
+				//        }
+				//    }
+				//    if (!success)
+				//    {
+				//        return null;
+				//    }
+				//    else if (result.Count == 1)
+				//    {
+				//        return result[0];
+				//    }
+				//    else
+				//    {
+				//        return result;
+				//    }
+				//}
 			}
 			public Rule GetExpression;
 			public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
@@ -5473,7 +5545,7 @@ namespace Meta
 				if (select != null)
 				{
 					Map argument=(Map)new Or(
-						new Sequence(new CharRule(callChar), parser.GetExpression),
+						new Sequence(false,new CharRule(callChar), parser.GetExpression),
 						parser.Program
 					).Match(parser);
 					if (argument != null)
@@ -5689,7 +5761,7 @@ namespace Meta
 									break;
 								}
 							}
-							stringText += new CharRule(parser.Look()).Match(parser);
+							stringText += new CharRule(parser.Look()).Match(parser).GetString();
 						}
 						List<string> realLines = new List<string>();
 						string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
@@ -5720,22 +5792,40 @@ namespace Meta
 					return null;
 				}
 			});
-			public class Loop<T> : Rule
+			public class Loop : Rule
 			{
-				public override object DoMatch(Parser parser)
+				public override Map DoMatch(Parser parser)
 				{
-					List<T> list = new List<T>();
-					object result;
+					Map list = new StrategyMap();
+					Map result;
 					while ((result = rule.Match(parser)) != null)
 					{
-						if (result is string)
+						if (result.IsString)
 						{
-							result = Convert.ToChar(result);
+							result = Convert.ToChar(result.GetString());
 						}
-						list.Add((T)result);
+						//if (result is string)
+						//{
+						//    result = Convert.ToChar(result);
+						//}
+						list.Append(result);
 					}
 					return list;
 				}
+				//public override object DoMatch(Parser parser)
+				//{
+				//    List<T> list = new List<T>();
+				//    object result;
+				//    while ((result = rule.Match(parser)) != null)
+				//    {
+				//        if (result is string)
+				//        {
+				//            result = Convert.ToChar(result);
+				//        }
+				//        list.Add((T)result);
+				//    }
+				//    return list;
+				//}
 				private Rule rule;
 				public Loop(Rule rule)
 				{
@@ -5747,8 +5837,11 @@ namespace Meta
 				string lookupString = "";
 				if (parser.LookExcept(lookupStringForbiddenChars) && parser.LookExcept(parser.lookupStringFirstCharAdditionalForbiddenChars))
 				{
-					List<char> list = (List<char>)new Loop<char>(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
-					lookupString += new string((char[])list.ToArray());
+					Map list = new Loop(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
+					//List<char> list = (List<char>)new Loop(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
+
+					lookupString += list.GetString();
+					//lookupString += new string((char[])list.ToArray());
 				}
 				Map lookup;
 				if (lookupString.Length > 0)
