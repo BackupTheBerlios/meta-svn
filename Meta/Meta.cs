@@ -5053,25 +5053,29 @@ namespace Meta
 		//        }
 		//    }
 		//}
+
+
+
 		public class Parser
 		{
 			public class Expression
 			{
-				public Map Get()
+				public virtual Map Get()
 				{
 					int oldIndex = parser.index;
 					int oldLine = parser.line;
-					//int oldColumn = parser.Column;
 
 					Extent extent = parser.BeginExpression();
 					Map expression;
+
+
 					if (condition == null)
 					{
 						expression = parseFunction(parser);
 					}
 					else
 					{
-						if (parser.TryConsume(condition))
+						if (condition.Test(parser))
 						{
 							expression = parseFunction(parser);
 						}
@@ -5093,40 +5097,47 @@ namespace Meta
 					}
 					return expression;
 				}
-				//public Map Get()
-				//{
-				//    int oldIndex = parser.index;
-				//    int oldLine = parser.line;
-				//    //int oldColumn = parser.Column;
-
-				//    Extent extent = parser.BeginExpression();
-				//    Map expression = parseFunction(parser);
-				//    parser.EndExpression(extent, expression);
-				//    if (expression != null && identifier != null)
-				//    {
-				//        expression = new StrategyMap(identifier, expression);
-				//    }
-				//    if (expression == null)
-				//    {
-				//        parser.index = oldIndex;
-				//        parser.line = oldLine;
-				//    }
-				//    return expression;
-				//}
 				public Parser parser;
 				private Map identifier;
-				private string condition;
+				private Condition condition;
 				public Expression(Map identifier, ParseFunction parseFunction)
 					: this(identifier, null, parseFunction)
 				{
 				}
-				public Expression(Map identifier, string condition, ParseFunction parseFunction)
+				public Expression(Map identifier, Condition condition, ParseFunction parseFunction)
 				{
 					this.identifier = identifier;
 					this.condition = condition;
 					this.parseFunction = parseFunction;
 				}
+				protected Expression()
+				{
+				}
 				private ParseFunction parseFunction;
+			}
+			public class RealExpression : Expression
+			{
+				public override Map Get()
+				{
+					return rule.Match(parser);
+				}
+				private Rule rule;
+				public RealExpression(Rule rule)
+				{
+					this.rule=rule;
+				}
+			}
+			public class Condition
+			{
+				public Condition(char c)
+				{
+					this.c = c;
+				}
+				private char c;
+				public bool Test(Parser parser)
+				{
+					return parser.TryConsume(c);
+				}
 			}
 			private string text;
 			private int index;
@@ -5136,6 +5147,7 @@ namespace Meta
 				this.index = 0;
 				this.text = text;
 				this.filePath = filePath;
+				GetExpression=new RealExpression(new Or(EmptyMap,Integer,String,Program,Call,Select));
 				foreach (FieldInfo field in this.GetType().GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance))
 				{
 					if (field.FieldType == typeof(Expression))
@@ -5177,9 +5189,6 @@ namespace Meta
 				}
 				else
 				{
-					if (Look('*') && characters == "*")
-					{
-					}
 					consumed = false;
 				}
 				return consumed;
@@ -5280,39 +5289,64 @@ namespace Meta
 				}
 				return isIndentation;
 			}
-			public Map GetExpression()
+			public abstract class Rule
 			{
-				Map expression;
-				if ((expression = EmptyMap.Get()) == null)
+				public abstract Map Match(Parser parser);
+			}
+			public class Or:Rule
+			{
+				private Expression[] expressions;
+				public Or(params Expression[] expressions)
 				{
-					if ((expression = Integer.Get()) == null)
+					this.expressions = expressions;
+				}
+				public override Map Match(Parser parser)
+				{
+					Map result=null;
+					foreach (Expression expression in expressions)
 					{
-						if ((expression = String.Get()) == null)
+						result = expression.Get();
+						if (result != null)
 						{
-							if ((expression = Program.Get()) == null)
-							{
-								if ((expression = Call.Get()) == null)
-								{
-									expression = Select.Get();
-								}
-
-							}
+							break;
 						}
 					}
+					return result;					
 				}
-				return expression;
 			}
+			public Expression GetExpression;
+			//public Map GetExpression()
+			//{
+			//    Map expression;
+			//    if ((expression = EmptyMap.Get()) == null)
+			//    {
+			//        if ((expression = Integer.Get()) == null)
+			//        {
+			//            if ((expression = String.Get()) == null)
+			//            {
+			//                if ((expression = Program.Get()) == null)
+			//                {
+			//                    if ((expression = Call.Get()) == null)
+			//                    {
+			//                        expression = Select.Get();
+			//                    }
+
+			//                }
+			//            }
+			//        }
+			//    }
+			//    return expression;
+			//}
 			public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
 			{
 				Map call;
-				//And(parser.Select,Or(And(callChar,program),
 				Map select = parser.Select.Get();
 				if (select != null)
 				{
 					Map argument;
 					if (parser.TryConsume(callChar))
 					{
-						argument = parser.GetExpression();
+						argument = parser.GetExpression.Get();
 					}
 					else
 					{
@@ -5410,7 +5444,7 @@ namespace Meta
 				}
 				return statements;
 			});
-			private Expression EmptyMap = new Expression(CodeKeys.Literal, emptyMapChar.ToString(), delegate(Parser parser)
+			private Expression EmptyMap = new Expression(CodeKeys.Literal, new Condition(emptyMapChar), delegate(Parser parser)
 			{
 				return Map.Empty;
 			});
@@ -5580,7 +5614,7 @@ namespace Meta
 				Map lookupAnything;
 				if (TryConsume(lookupStartChar))
 				{
-					lookupAnything = GetExpression();
+					lookupAnything = GetExpression.Get();
 					while (TryConsume(indentationChar)) ;
 					Consume(lookupEndChar);
 				}
@@ -5648,19 +5682,16 @@ namespace Meta
 			});
 			public delegate Map ParseFunction(Parser parser);
 
-			public Expression Function = new Expression(null,delegate(Parser parser)
+			public Expression Function = new Expression(null,new Condition(functionChar),delegate(Parser parser)
 			{
 				parser.functions++;
 				Map function = null;
-				if (parser.TryConsume(functionChar))
+				Map expression = parser.GetExpression.Get();
+				if (expression != null)
 				{
-					Map expression = parser.GetExpression();
-					if (expression != null)
-					{
-						function = new StrategyMap(
-							CodeKeys.Key, parser.CreateDefaultKey(CodeKeys.Function),
-							CodeKeys.Value, new StrategyMap(CodeKeys.Literal, expression));
-					}
+					function = new StrategyMap(
+						CodeKeys.Key, parser.CreateDefaultKey(CodeKeys.Function),
+						CodeKeys.Value, new StrategyMap(CodeKeys.Literal, expression));
 				}
 				parser.functions--;
 				return function;
@@ -5672,7 +5703,7 @@ namespace Meta
 				Map val;
 				if (key != null && TryConsume(statementChar))
 				{
-					val = GetExpression();
+					val = GetExpression.Get();
 				}
 				else
 				{
@@ -5692,7 +5723,7 @@ namespace Meta
 					}
 					else
 					{
-						val = GetExpression();
+						val = GetExpression.Get();
 					}
 					key = CreateDefaultKey(count);
 					count++;
