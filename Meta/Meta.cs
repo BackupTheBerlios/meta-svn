@@ -5156,6 +5156,27 @@ namespace Meta
 			    }
 			    private char[] chars;
 			}
+			public class CharExceptRule : Rule
+			{
+				public override object DoMatch(Parser parser)
+				{
+					string matched;
+					if (parser.LookExcept(chars))
+					{
+						matched = parser.ConsumeGet().ToString();
+					}
+					else
+					{
+						matched = null;
+					}
+					return matched;
+				}
+				public CharExceptRule(params char[] chars)
+				{
+					this.chars = chars;
+				}
+				private char[] chars;
+			}
 			public class StringRule : Rule
 			{
 				private string text;
@@ -5450,23 +5471,10 @@ namespace Meta
 				Map select = parser.Select.Get();
 				if (select != null)
 				{
-					Map argument=(Map)new Or(new Sequence(new CharRule(callChar), parser.GetExpression),
-							parser.Program).Match(parser);
-					//if ((argument=(Map)new Sequence(new CharRule(callChar),parser.GetExpression).Match(parser))!=null)
-					//{
-					//}
-					//else
-					//{
-					//    argument = parser.Program.Get();
-					//}
-					//if (new CharRule(callChar).Match(parser) != null)
-					//{
-					//    argument = (Map)parser.GetExpression.Match(parser);
-					//}
-					//else
-					//{
-					//    argument = parser.Program.Get();
-					//}
+					Map argument=(Map)new Or(
+						new Sequence(new CharRule(callChar), parser.GetExpression),
+						parser.Program
+					).Match(parser);
 					if (argument != null)
 					{
 						Map callCode = new StrategyMap(
@@ -5489,51 +5497,8 @@ namespace Meta
 				}
 				return call;
 			});
-			//public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
-			//{
-			//    Map call;
-			//    Map select = parser.Select.Get();
-			//    if (select != null)
-			//    {
-			//        Map argument;
-			//        if (new CharRule(callChar).Match(parser)!=null)
-			//        //if (parser.TryConsume(callChar))
-			//        {
-			//            argument = (Map)parser.GetExpression.Match(parser);
-			//        }
-			//        else
-			//        {
-			//            argument = parser.Program.Get();
-			//        }
-			//        if (argument != null)
-			//        {
-			//            Map callCode = new StrategyMap(
-			//                CodeKeys.Callable, select,
-			//                CodeKeys.Argument, argument);
-			//            call = callCode;
-			//            if (parser.functions == 0)
-			//            {
-			//                throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
-			//            }
-			//        }
-			//        else
-			//        {
-			//            call = null;
-			//        }
-			//    }
-			//    else
-			//    {
-			//        call = null;
-			//    }
-			//    return call;
-			//});
 			public bool isStartOfFile = true;
-			private void Whitespace()
-			{
-				while (TryConsume('\t') || TryConsume(' '))
-				{
-				}
-			}
+
 			int functions = 0;
 			public Expression Program = new Expression(CodeKeys.Program,delegate(Parser parser)
 			{
@@ -5597,6 +5562,12 @@ namespace Meta
 				}
 				return statements;
 			});
+			private void Whitespace()
+			{
+				while (TryConsume('\t') || TryConsume(' '))
+				{
+				}
+			}
 			private Expression EmptyMap = new Expression(CodeKeys.Literal, new Condition(emptyMapChar), delegate(Parser parser)
 			{
 				return Map.Empty;
@@ -5755,16 +5726,57 @@ namespace Meta
 					return null;
 				}
 			});
+			public class Loop<T> : Rule
+			{
+				public override object DoMatch(Parser parser)
+				{
+					List<T> list = new List<T>();
+					object result;
+					while ((result = rule.Match(parser)) != null)
+					{
+						if (result is string)
+						{
+							result = Convert.ToChar(result);
+						}
+						list.Add((T)result);
+					}
+					return list;
+				}
+				private Rule rule;
+				public Loop(Rule rule)
+				{
+					this.rule = rule;
+				}
+			}
+			//public class Loop : Rule
+			//{
+			//    public override object DoMatch(Parser parser)
+			//    {
+			//        List<object> list = new List<object>();
+			//        object result;
+			//        while ((result = rule.Match(parser)) != null)
+			//        {
+			//            list.Add(result);
+			//        }
+			//        return list;
+			//    }
+			//    private Rule rule;
+			//    public Loop(Rule rule)
+			//    {
+			//        this.rule = rule;
+			//    }
+			//}
 			private Expression LookupString = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
 				string lookupString = "";
 				if (parser.LookExcept(lookupStringForbiddenChars) && parser.LookExcept(parser.lookupStringFirstCharAdditionalForbiddenChars))
 				{
-					while (parser.LookExcept(lookupStringForbiddenChars))
-					{
-						lookupString += parser.Look();
-						parser.Consume(parser.Look());
-					}
+					List<char> list = (List<char>)new Loop<char>(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
+					lookupString += new string((char[])list.ToArray());
+					//while (parser.LookExcept(lookupStringForbiddenChars))
+					//{
+					//    lookupString += new ExceptCharRule().Match(parser);
+					//}
 				}
 				Map lookup;
 				if (lookupString.Length > 0)
