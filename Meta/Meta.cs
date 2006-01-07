@@ -5184,6 +5184,9 @@ namespace Meta
 					Map matched;
 			        if(parser.LookAny(chars))
 					{
+						//matched = new StrategyMap((int)parser.ConsumeGet());
+						//matched = new StrategyMap((int)parser.ConsumeGet());
+						//matched = new StrategyMap((int)Convert.ToChar(parser.ConsumeGet().ToString()));
 						matched = parser.ConsumeGet().ToString();
 					}
 					else
@@ -5205,6 +5208,10 @@ namespace Meta
 					Map matched;
 					if (parser.LookExcept(chars))
 					{
+						//matched = Convert.ToChar(new StrategyMap(parser.ConsumeGet().ToString()).GetString());
+						//matched = new StrategyMap((int)parser.ConsumeGet());
+						//matched = new StrategyMap((int)parser.ConsumeGet());
+						//matched = new StrategyMap((int)Convert.ToChar(parser.ConsumeGet().ToString()));
 						matched = parser.ConsumeGet().ToString();
 					}
 					else
@@ -5261,11 +5268,34 @@ namespace Meta
 			private int index;
 			public string file;
 
+			private int line = 1;
+			public string File
+			{
+				get
+				{
+					return file;
+				}
+			}
+			public int Line
+			{
+				get
+				{
+					return line;
+				}
+			}
+			public int Column
+			{
+				get
+				{
+					int startPos = Math.Min(index, text.Length - 1);
+					return index - text.LastIndexOf('\n', startPos);
+				}
+			}
+
 			private void Consume(string characters)
 			{
 				foreach (char character in characters)
 				{
-
 					Consume(character);
 				}
 			}
@@ -5531,6 +5561,21 @@ namespace Meta
 			public bool isStartOfFile = true;
 
 			private int functions = 0;
+			private bool TryNewLine()
+			{
+				return TryConsumeNewLine("");
+			}
+			private string GetIndentation()
+			{
+				int i = 0;
+				string indentationString = "";
+				while (Look(i) == indentation)
+				{
+					indentationString += Look(i);
+					i++;
+				}
+				return indentationString;
+			}
 			public Expression Program = new Expression(CodeKeys.Program,delegate(Parser parser)
 			{
 				Map program;
@@ -5651,44 +5696,29 @@ namespace Meta
 					return new SourcePosition(line, Column);
 				}
 			}
-			private void NewLine()
-			{
-				if (!TryNewLine())
-				{
-					throw new SyntaxException("Excpected newline.", file, this.Line, this.Column);
-				}
-			}
-			private bool TryNewLine()
-			{
-				return TryConsumeNewLine("");
-			}
-			private string GetIndentation()
-			{
-				int i = 0;
-				string indentationString = "";
-				while (Look(i) == indentation)
-				{
-					indentationString += Look(i);
-					i++;
-				}
-				return indentationString;
-			}
 
-			private Expression LookupAnything = new Expression(null, delegate(Parser parser)
+			private Expression LookupAnything = new Expression(delegate(Parser parser)
 			{
-				Map lookupAnything;
-				if (parser.TryConsume(lookupStartChar))
-				{
-					lookupAnything = (Map)parser.GetExpression.Match(parser);
-					while (parser.TryConsume(indentation)) ;
-					parser.Consume(lookupEndChar);
-				}
-				else
-				{
-					lookupAnything = null;
-				}
-				return lookupAnything;
+				return new Sequence(new Match(new CharRule(lookupStartChar)),
+					new SingleAssignment(parser.GetExpression),
+					new Match(new Loop(new CharRule(indentation))),
+					new Match(new CharRule(lookupEndChar))).Match(parser);
 			});
+			//private Expression LookupAnything = new Expression(null, delegate(Parser parser)
+			//{
+			//    Map lookupAnything;
+			//    if (parser.TryConsume(lookupStartChar))
+			//    {
+			//        lookupAnything = (Map)parser.GetExpression.Match(parser);
+			//        while (parser.TryConsume(indentation)) ;
+			//        parser.Consume(lookupEndChar);
+			//    }
+			//    else
+			//    {
+			//        lookupAnything = null;
+			//    }
+			//    return lookupAnything;
+			//});
 			private Expression Integer = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
 				Map integer;
@@ -5769,6 +5799,18 @@ namespace Meta
 					return null;
 				}
 			});
+			public class Literal : Rule
+			{
+				private Map literal;
+				public Literal(Map literal)
+				{
+					this.literal = literal;
+				}
+				protected override Map DoMatch(Parser parser)
+				{
+					return literal;
+				}
+			}
 			public class Loop : Rule
 			{
 				protected override Map DoMatch(Parser parser)
@@ -5813,6 +5855,28 @@ namespace Meta
 				}
 				return lookup;
 			});
+			//private Expression LookupString = new Expression(CodeKeys.Literal, delegate(Parser parser)
+			//{
+			//    string lookupString = "";
+			//    if (parser.LookExcept(lookupStringForbiddenChars) && parser.LookExcept(parser.lookupStringFirstCharAdditionalForbiddenChars))
+			//    {
+			//        Map list = new Loop(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
+			//        //List<char> list = (List<char>)new Loop(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
+
+			//        lookupString += list.GetString();
+			//        //lookupString += new string((char[])list.ToArray());
+			//    }
+			//    Map lookup;
+			//    if (lookupString.Length > 0)
+			//    {
+			//        lookup = lookupString;
+			//    }
+			//    else
+			//    {
+			//        lookup = null;
+			//    }
+			//    return lookup;
+			//});
 			private Expression Lookup = new Expression(null, delegate(Parser parser)
 			{
 				return (Map)new Or(parser.LookupString,parser.LookupAnything).Match(parser);
@@ -5854,18 +5918,6 @@ namespace Meta
 				}
 				return keys;
 			});
-			public class Literal:Rule
-			{
-				private Map literal;
-				public Literal(Map literal)
-				{
-					this.literal=literal;
-				}
-				protected override Map  DoMatch(Parser parser)
-				{
-					return literal;
-				}
-			}
 			public delegate Map ParseFunction(Parser parser);
 			public Expression Function = new Expression(delegate(Parser parser)
 			{
@@ -5878,34 +5930,6 @@ namespace Meta
 				parser.functions--;
 				return result;
 			});
-
-			//private Map CreateDefaultKey(Map literal)
-			//{
-			//    return new StrategyMap(1, new StrategyMap(CodeKeys.Literal, literal));
-			//}
-			private int line = 1;
-			public string File
-			{
-				get
-				{
-					return file;
-				}
-			}
-			public int Line
-			{
-				get
-				{
-					return line;
-				}
-			}
-			public int Column
-			{
-				get
-				{
-					int startPos = Math.Min(index, text.Length - 1);
-					return index - text.LastIndexOf('\n', startPos);
-				}
-			}
 		}
 		public class Serialize
 		{
