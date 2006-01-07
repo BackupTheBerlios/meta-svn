@@ -5617,21 +5617,36 @@ namespace Meta
 				list.Add(endOfFile);
 				return Look().ToString().IndexOfAny(list.ToArray()) == -1;
 			}
-			private Map LookupAnything()
+			private Expression LookupAnything = new Expression(null, delegate(Parser parser)
 			{
 				Map lookupAnything;
-				if (TryConsume(lookupStartChar))
+				if (parser.TryConsume(lookupStartChar))
 				{
-					lookupAnything = (Map)GetExpression.Match(this);
-					while (TryConsume(indentationChar)) ;
-					Consume(lookupEndChar);
+					lookupAnything = (Map)parser.GetExpression.Match(parser);
+					while (parser.TryConsume(indentationChar)) ;
+					parser.Consume(lookupEndChar);
 				}
 				else
 				{
 					lookupAnything = null;
 				}
 				return lookupAnything;
-			}
+			});
+			//private Map LookupAnything()
+			//{
+			//    Map lookupAnything;
+			//    if (TryConsume(lookupStartChar))
+			//    {
+			//        lookupAnything = (Map)GetExpression.Match(this);
+			//        while (TryConsume(indentationChar)) ;
+			//        Consume(lookupEndChar);
+			//    }
+			//    else
+			//    {
+			//        lookupAnything = null;
+			//    }
+			//    return lookupAnything;
+			//}
 			private Extent BeginExpression()
 			{
 				return new Extent(Line, Column, 0, 0, file);
@@ -5748,24 +5763,6 @@ namespace Meta
 					this.rule = rule;
 				}
 			}
-			//public class Loop : Rule
-			//{
-			//    public override object DoMatch(Parser parser)
-			//    {
-			//        List<object> list = new List<object>();
-			//        object result;
-			//        while ((result = rule.Match(parser)) != null)
-			//        {
-			//            list.Add(result);
-			//        }
-			//        return list;
-			//    }
-			//    private Rule rule;
-			//    public Loop(Rule rule)
-			//    {
-			//        this.rule = rule;
-			//    }
-			//}
 			private Expression LookupString = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
 				string lookupString = "";
@@ -5773,10 +5770,6 @@ namespace Meta
 				{
 					List<char> list = (List<char>)new Loop<char>(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
 					lookupString += new string((char[])list.ToArray());
-					//while (parser.LookExcept(lookupStringForbiddenChars))
-					//{
-					//    lookupString += new ExceptCharRule().Match(parser);
-					//}
 				}
 				Map lookup;
 				if (lookupString.Length > 0)
@@ -5791,13 +5784,18 @@ namespace Meta
 			});
 			private Expression Lookup = new Expression(null, delegate(Parser parser)
 			{
-				Map lookup = parser.LookupString.Get();
-				if (lookup == null)
-				{
-					lookup = parser.LookupAnything();
-				}
+				Map lookup = (Map)new Or(parser.LookupString,parser.LookupAnything).Match(parser);
 				return lookup;
 			});
+			//private Expression Lookup = new Expression(null, delegate(Parser parser)
+			//{
+			//    Map lookup = parser.LookupString.Get();
+			//    if (lookup == null)
+			//    {
+			//        lookup = parser.LookupAnything();
+			//    }
+			//    return lookup;
+			//});
 			private Expression Select = new Expression(CodeKeys.Select, delegate(Parser parser)
 			{
 				Map keys = parser.Keys.Get();
