@@ -5060,7 +5060,7 @@ namespace Meta
 		{
 			public class Expression:Rule
 			{
-				public override Map Match(Parser parser)
+				public override object Match(Parser parser)
 				{
 					return Get();
 				}
@@ -5119,22 +5119,43 @@ namespace Meta
 				}
 				private ParseFunction parseFunction;
 			}
-			public class RealExpression : Expression
+			public abstract class Rule
 			{
-				public override Map Get()
-				{
-					return rule.Match(parser);
-				}
-				private Rule rule;
-				public RealExpression(Rule rule)
-				{
-					this.rule = rule;
-				}
-				//public RealExpression(Rule rule)
-				//{
-				//    this.rule=rule;
-				//}
+				public abstract object Match(Parser parser);
 			}
+			public class CharsRule : Rule
+			{
+			    public override object Match(Parser parser)
+			    {
+					string matched;
+			        if(parser.LookAny(chars))
+					{
+						matched = parser.ConsumeGet().ToString();
+					}
+					else
+					{
+						matched=null;
+					}
+					return matched;
+			    }
+			    public CharsRule(char[] chars)
+			    {
+			        this.chars = chars;
+			    }
+			    private char[] chars;
+			}
+			//public class RealExpression : Expression
+			//{
+			//    public override Map Get()
+			//    {
+			//        return (Map)rule.Match(parser);
+			//    }
+			//    private Rule rule;
+			//    public RealExpression(Rule rule)
+			//    {
+			//        this.rule = rule;
+			//    }
+			//}
 			public class Condition
 			{
 				public Condition(char c)
@@ -5151,23 +5172,7 @@ namespace Meta
 			private int index;
 			// rename
 			private string filePath;
-			//public class CharRule : Rule
-			//{
-			//    public override Map Match(Parser parser)
-			//    {
-			//        parser.TryConsume(c);
-			//    }
-			//    public CharRule(char c)
-			//    {
-			//        this.c = c;
-			//    }
-			//    private char c;
-			//    //private char[] chars;
-			//    //public CharRule(char[] chars)
-			//    //{
-			//    //    this.chars = chars;
-			//    //}
-			//}
+
 			public class DelegateRule : Rule
 			{
 				private ParseFunction parseFunction;
@@ -5175,7 +5180,7 @@ namespace Meta
 				{
 					this.parseFunction = parseFunction;
 				}
-				public override Map Match(Parser parser)
+				public override object Match(Parser parser)
 				{
 					return parseFunction(parser);
 				}
@@ -5197,7 +5202,7 @@ namespace Meta
 				//    }
 				//    return null;
 				//}))));
-				GetExpression=new RealExpression(new Or(EmptyMap,Integer,String,Program,Call,Select));
+				GetExpression=new Or(EmptyMap,Integer,String,Program,Call,Select);
 
 				foreach (FieldInfo field in this.GetType().GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance))
 				{
@@ -5340,10 +5345,10 @@ namespace Meta
 				}
 				return isIndentation;
 			}
-			public abstract class Rule
-			{
-				public abstract Map Match(Parser parser);
-			}
+			//public abstract class Rule
+			//{
+			//    public abstract Map Match(Parser parser);
+			//}
 			public class Or:Rule
 			{
 				private Rule[] expressions;
@@ -5351,7 +5356,7 @@ namespace Meta
 				{
 					this.expressions = expressions;
 				}
-				public override Map Match(Parser parser)
+				public override object Match(Parser parser)
 				{
 					Map result=null;
 					foreach (Expression expression in expressions)
@@ -5395,7 +5400,7 @@ namespace Meta
 			//        return result;
 			//    }
 			//}
-			public Expression GetExpression;
+			public Rule GetExpression;
 			//public Expression Call;
 			public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
 			{
@@ -5406,7 +5411,7 @@ namespace Meta
 					Map argument;
 					if (parser.TryConsume(callChar))
 					{
-						argument = parser.GetExpression.Get();
+						argument = (Map)parser.GetExpression.Match(parser);
 					}
 					else
 					{
@@ -5674,7 +5679,7 @@ namespace Meta
 				Map lookupAnything;
 				if (TryConsume(lookupStartChar))
 				{
-					lookupAnything = GetExpression.Get();
+					lookupAnything = (Map)GetExpression.Match(this);
 					while (TryConsume(indentationChar)) ;
 					Consume(lookupEndChar);
 				}
@@ -5746,7 +5751,7 @@ namespace Meta
 			{
 				parser.functions++;
 				Map function = null;
-				Map expression = parser.GetExpression.Get();
+				Map expression = (Map)parser.GetExpression.Match(parser);
 				if (expression != null)
 				{
 					function = new StrategyMap(
@@ -5763,7 +5768,7 @@ namespace Meta
 				Map val;
 				if (key != null && TryConsume(statementChar))
 				{
-					val = GetExpression.Get();
+					val = (Map)GetExpression.Match(this);
 				}
 				else
 				{
@@ -5783,7 +5788,7 @@ namespace Meta
 					}
 					else
 					{
-						val = GetExpression.Get();
+						val = (Map)GetExpression.Match(this);
 					}
 					key = CreateDefaultKey(count);
 					count++;
