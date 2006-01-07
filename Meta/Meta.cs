@@ -77,6 +77,10 @@ namespace Meta
 	}
 	public class SyntaxException:MetaException
 	{
+		public SyntaxException(string message, FileSystem.Parser parser)
+			: this(message, parser.File, parser.Line, parser.Column)
+		{
+		}
 		public SyntaxException(string message,string fileName, int line, int column)
 			: base(message, new Extent(line, column, line, column,fileName))
 		{
@@ -5265,7 +5269,7 @@ namespace Meta
 
 			private string text;
 			private int index;
-			private string file;
+			public string file;
 
 			private void Consume(string characters)
 			{
@@ -5437,24 +5441,26 @@ namespace Meta
 					this.rule = rule;
 				}
 
-				public abstract bool Execute(Parser parser, Map result);
+				public abstract bool Execute(Parser parser, ref Map result);
 			}
 			public class Assignment:Action
 			{
 				private Map key;
-				public Assignment(Rule rule):this(null,rule)
-				{
-				}
+				//public Assignment(Rule rule):this(null,rule)
+				//{
+				//}
 				public Assignment(Map key, Rule rule):base(rule)
 				{
 					this.key = key;
 				}
-				public override bool Execute(Parser parser, Map result)
+				public override bool Execute(Parser parser, ref Map result)
 				{
 					Map matched=rule.Match(parser);
-					if (matched!=null)
+					if (matched!=null && key!=null)
 					{
-						result.Append((Map)matched);
+						//result=((Map)matched);
+						//result.Append((Map)matched);
+						result[key] = matched;
 					}
 					return matched != null;
 				}
@@ -5464,7 +5470,7 @@ namespace Meta
 				public Match(Rule rule):base(rule)
 				{
 				}
-				public override bool Execute(Parser parser, Map result)
+				public override bool Execute(Parser parser, ref Map result)
 				{
 					return rule.Match(parser)!=null;
 				}
@@ -5482,7 +5488,7 @@ namespace Meta
 					bool success = true;
 					foreach (Action rule in rules)
 					{
-						bool matched = rule.Execute(parser, result);
+						bool matched = rule.Execute(parser, ref result);
 						if (!matched)
 						{
 							success = false;
@@ -5493,10 +5499,10 @@ namespace Meta
 					{
 						return null;
 					}
-					else if (result.Count == 1)
-					{
-						return result[1];
-					}
+					//else if (result.Count == 1)
+					//{
+					//    return result[1];
+					//}
 					else
 					{
 						return result;
@@ -5504,41 +5510,81 @@ namespace Meta
 				}
 			}
 			public Rule GetExpression;
+			public class SingleAssignment : Action
+			{
+				public SingleAssignment(Rule rule):base(rule)
+				{
+				}
+				public override bool Execute(Parser parser, ref Map result)
+				{
+					Map map = rule.Match(parser);
+
+					if (map != null)
+					{
+						result = map;
+					}
+					return map!=null;
+				}
+			}
 			public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
 			{
-				Map call;
-				Map select = parser.Select.Get();
-				if (select != null)
-				{
-					Map argument = (Map)new Or(
-						new Sequence(new Match(new CharRule(callChar)), new Assignment(parser.GetExpression)),
+				Map call=new Sequence(
+					new Assignment(CodeKeys.Callable,parser.Select),
+					new Assignment(CodeKeys.Argument,new Or(
+						new Sequence(new Match(new CharRule(callChar)), new SingleAssignment(parser.GetExpression)),
 						parser.Program
-					).Match(parser);
-					//Map argument = (Map)new Or(
-					//    new Sequence(false, new Assignment(new CharRule(callChar)), new Assignment(parser.GetExpression)),
-					//    parser.Program
-					//).Match(parser);
-					if (argument != null)
-					{
-						call = new StrategyMap(
-							CodeKeys.Callable, select,
-							CodeKeys.Argument, argument);
-						if (parser.functions == 0)
+					))).Match(parser);
+					//if (argument != null)
+					//{
+					//    call = new StrategyMap(
+					//        CodeKeys.Argument, argument);
+						if (call!=null && parser.functions == 0)
 						{
-							throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
+							throw new SyntaxException("Function may not be called outside of function definition.",parser);
 						}
-					}
-					else
-					{
-						call = null;
-					}
-				}
-				else
-				{
-					call = null;
-				}
+				//    }
+				//    else
+				//    {
+				//        call = null;
+				//    }
+				//}
+				//else
+				//{
+				//    call = null;
+				//}
 				return call;
 			});
+			//public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
+			//{
+			//    Map call;
+			//    Map select = parser.Select.Get();
+			//    if (select != null)
+			//    {
+			//        Map argument = (Map)new Or(
+			//            new Sequence(new Match(new CharRule(callChar)), new Assignment(parser.GetExpression)),
+			//            parser.Program
+			//        ).Match(parser);
+			//        if (argument != null)
+			//        {
+			//            call = new StrategyMap(
+			//                CodeKeys.Callable, select,
+			//                CodeKeys.Argument, argument);
+			//            if (parser.functions == 0)
+			//            {
+			//                throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
+			//            }
+			//        }
+			//        else
+			//        {
+			//            call = null;
+			//        }
+			//    }
+			//    else
+			//    {
+			//        call = null;
+			//    }
+			//    return call;
+			//});
 
 			//public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
 			//{
@@ -5950,14 +5996,21 @@ namespace Meta
 				return new StrategyMap(1, new StrategyMap(CodeKeys.Literal, literal));
 			}
 			private int line = 1;
-			private int Line
+			public string File
+			{
+				get
+				{
+					return file;
+				}
+			}
+			public int Line
 			{
 				get
 				{
 					return line;
 				}
 			}
-			private int Column
+			public int Column
 			{
 				get
 				{
