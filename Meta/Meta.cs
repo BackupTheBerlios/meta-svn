@@ -5142,6 +5142,10 @@ namespace Meta
 				public Parser parser;
 				private Map identifier;
 				private Condition condition;
+				public Expression(ParseFunction parseFunction)
+					: this(null, parseFunction)
+				{
+				}
 				public Expression(Map identifier, ParseFunction parseFunction)
 					: this(identifier, null, parseFunction)
 				{
@@ -5502,25 +5506,52 @@ namespace Meta
 					return map!=null;
 				}
 			}
-			public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
+			public Expression Call = new Expression(delegate(Parser parser)
 			{
 				return new Sequence(
-					new Assignment(CodeKeys.Callable,parser.Select),
-					new Assignment(CodeKeys.Argument,new Or(
-						new Sequence(new Match(new CharRule(callChar)), new SingleAssignment(parser.GetExpression)),
-						parser.Program
-					)),new Match(new DelegateRule(delegate(Parser p){
-						if (parser.functions == 0)
-						{
-							return null;
-							//throw new SyntaxException("Function may not be called outside of function definition.", parser);
-						}
-						else
-						{
-							return Map.Empty;
-						}
-					}))).Match(parser);
+					new Assignment(
+						CodeKeys.Call,
+						new Sequence(
+							new Assignment(CodeKeys.Callable, parser.Select),
+							new Assignment(CodeKeys.Argument, new Or(
+								new Sequence(new Match(new CharRule(callChar)), new SingleAssignment(parser.GetExpression)),
+								parser.Program
+							)), new Match(new DelegateRule(delegate(Parser p)
+				{
+					if (parser.functions == 0)
+					{
+						return null;
+						//throw new SyntaxException("Function may not be called outside of function definition.", parser);
+					}
+					else
+					{
+						return Map.Empty;
+					}
+				}))))).Match(parser);//.Match(parser);
 			});
+			//public Expression Call = new Expression(null, delegate(Parser parser)
+			//{
+			//    return new Sequence(
+			//        new Assignment(
+			//            CodeKeys.Call,
+			//            new Sequence(
+			//                new Assignment(CodeKeys.Callable, parser.Select),
+			//                new Assignment(CodeKeys.Argument, new Or(
+			//                    new Sequence(new Match(new CharRule(callChar)), new SingleAssignment(parser.GetExpression)),
+			//                    parser.Program
+			//                )), new Match(new DelegateRule(delegate(Parser p)
+			//    {
+			//        if (parser.functions == 0)
+			//        {
+			//            return null;
+			//            //throw new SyntaxException("Function may not be called outside of function definition.", parser);
+			//        }
+			//        else
+			//        {
+			//            return Map.Empty;
+			//        }
+			//    }))))).Match(parser);//.Match(parser);
+			//});
 
 			public bool isStartOfFile = true;
 
