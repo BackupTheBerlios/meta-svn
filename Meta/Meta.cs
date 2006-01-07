@@ -5092,8 +5092,6 @@ namespace Meta
 			private const char space = ' ';
 			private const char tab = '\t';
 
-
-
 			public class Expression:Rule
 			{
 				protected override Map DoMatch(Parser parser)
@@ -5224,21 +5222,9 @@ namespace Meta
 				{
 					this.text = text;
 				}
-				// return matched string??
 				protected override Map DoMatch(Parser parser)
 				{
 					return parser.TryConsume(text);
-					//string result = parser.TryConsume(text);
-					//Map map;
-					//if (result == null)
-					//{
-					//    map = null;
-					//}
-					//else
-					//{
-					//    map = result;
-					//}
-					//return map;
 				}
 			}
 			public class Condition
@@ -5381,7 +5367,6 @@ namespace Meta
 				}
 			}
 
-
 			private bool TryConsumeNewLine(string text)
 			{
 				string whitespace = "";
@@ -5446,9 +5431,6 @@ namespace Meta
 			public class Assignment:Action
 			{
 				private Map key;
-				//public Assignment(Rule rule):this(null,rule)
-				//{
-				//}
 				public Assignment(Map key, Rule rule):base(rule)
 				{
 					this.key = key;
@@ -5458,8 +5440,6 @@ namespace Meta
 					Map matched=rule.Match(parser);
 					if (matched!=null && key!=null)
 					{
-						//result=((Map)matched);
-						//result.Append((Map)matched);
 						result[key] = matched;
 					}
 					return matched != null;
@@ -5499,10 +5479,6 @@ namespace Meta
 					{
 						return null;
 					}
-					//else if (result.Count == 1)
-					//{
-					//    return result[1];
-					//}
 					else
 					{
 						return result;
@@ -5528,129 +5504,27 @@ namespace Meta
 			}
 			public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
 			{
-				Map call=new Sequence(
+				return new Sequence(
 					new Assignment(CodeKeys.Callable,parser.Select),
 					new Assignment(CodeKeys.Argument,new Or(
 						new Sequence(new Match(new CharRule(callChar)), new SingleAssignment(parser.GetExpression)),
 						parser.Program
-					))).Match(parser);
-					//if (argument != null)
-					//{
-					//    call = new StrategyMap(
-					//        CodeKeys.Argument, argument);
-						if (call!=null && parser.functions == 0)
+					)),new Match(new DelegateRule(delegate(Parser p){
+						if (parser.functions == 0)
 						{
-							throw new SyntaxException("Function may not be called outside of function definition.",parser);
+							return null;
+							//throw new SyntaxException("Function may not be called outside of function definition.", parser);
 						}
-				//    }
-				//    else
-				//    {
-				//        call = null;
-				//    }
-				//}
-				//else
-				//{
-				//    call = null;
-				//}
-				return call;
+						else
+						{
+							return Map.Empty;
+						}
+					}))).Match(parser);
 			});
-			//public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
-			//{
-			//    Map call;
-			//    Map select = parser.Select.Get();
-			//    if (select != null)
-			//    {
-			//        Map argument = (Map)new Or(
-			//            new Sequence(new Match(new CharRule(callChar)), new Assignment(parser.GetExpression)),
-			//            parser.Program
-			//        ).Match(parser);
-			//        if (argument != null)
-			//        {
-			//            call = new StrategyMap(
-			//                CodeKeys.Callable, select,
-			//                CodeKeys.Argument, argument);
-			//            if (parser.functions == 0)
-			//            {
-			//                throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
-			//            }
-			//        }
-			//        else
-			//        {
-			//            call = null;
-			//        }
-			//    }
-			//    else
-			//    {
-			//        call = null;
-			//    }
-			//    return call;
-			//});
 
-			//public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
-			//{
-			//    Map call;
-			//    Map select = parser.Select.Get();
-			//    if (select != null)
-			//    {
-			//        Map argument = (Map)new Or(
-			//            new Sequence(false, new Assignment(new CharRule(callChar)), new Assignment(parser.GetExpression)),
-			//            parser.Program
-			//        ).Match(parser);
-			//        if (argument != null)
-			//        {
-			//            call = new StrategyMap(
-			//                CodeKeys.Callable, select,
-			//                CodeKeys.Argument, argument);
-			//            if (parser.functions == 0)
-			//            {
-			//                throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
-			//            }
-			//        }
-			//        else
-			//        {
-			//            call = null;
-			//        }
-			//    }
-			//    else
-			//    {
-			//        call = null;
-			//    }
-			//    return call;
-			//});
-			//public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
-			//{
-			//    Map call;
-			//    Map select = parser.Select.Get();
-			//    if (select != null)
-			//    {
-			//        Map argument=(Map)new Or(
-			//            new Sequence(false,new CharRule(callChar), parser.GetExpression),
-			//            parser.Program
-			//        ).Match(parser);
-			//        if (argument != null)
-			//        {
-			//            call = new StrategyMap(
-			//                CodeKeys.Callable, select,
-			//                CodeKeys.Argument, argument);
-			//            if (parser.functions == 0)
-			//            {
-			//                throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
-			//            }
-			//        }
-			//        else
-			//        {
-			//            call = null;
-			//        }
-			//    }
-			//    else
-			//    {
-			//        call = null;
-			//    }
-			//    return call;
-			//});
 			public bool isStartOfFile = true;
 
-			int functions = 0;
+			private int functions = 0;
 			public Expression Program = new Expression(CodeKeys.Program,delegate(Parser parser)
 			{
 				Map program;
