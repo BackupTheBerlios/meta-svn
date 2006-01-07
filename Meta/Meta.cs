@@ -5357,7 +5357,7 @@ namespace Meta
 				}
 				return isIndentation;
 			}
-			public class Or:Rule
+			public class Or : Rule
 			{
 				private Rule[] expressions;
 				public Or(params Rule[] expressions)
@@ -5366,18 +5366,39 @@ namespace Meta
 				}
 				public override object DoMatch(Parser parser)
 				{
-					Map result=null;
-					foreach (Expression expression in expressions)
+					Map result = null;
+					foreach (Rule expression in expressions)
 					{
-						result = expression.Get();
+						result = (Map)expression.Match(parser);
 						if (result != null)
 						{
 							break;
 						}
 					}
-					return result;					
+					return result;
 				}
 			}
+			//public class Or:Rule
+			//{
+			//    private Rule[] expressions;
+			//    public Or(params Rule[] expressions)
+			//    {
+			//        this.expressions = expressions;
+			//    }
+			//    public override object DoMatch(Parser parser)
+			//    {
+			//        Map result=null;
+			//        foreach (Expression expression in expressions)
+			//        {
+			//            result = expression.Get();
+			//            if (result != null)
+			//            {
+			//                break;
+			//            }
+			//        }
+			//        return result;					
+			//    }
+			//}
 			public class Sequence : Rule
 			{
 				private Rule[] rules;
@@ -5429,14 +5450,15 @@ namespace Meta
 				Map select = parser.Select.Get();
 				if (select != null)
 				{
-					Map argument;
-					if ((argument=(Map)new Sequence(new CharRule(callChar),parser.GetExpression).Match(parser))!=null)
-					{
-					}
-					else
-					{
-						argument = parser.Program.Get();
-					}
+					Map argument=(Map)new Or(new Sequence(new CharRule(callChar), parser.GetExpression),
+							parser.Program).Match(parser);
+					//if ((argument=(Map)new Sequence(new CharRule(callChar),parser.GetExpression).Match(parser))!=null)
+					//{
+					//}
+					//else
+					//{
+					//    argument = parser.Program.Get();
+					//}
 					//if (new CharRule(callChar).Match(parser) != null)
 					//{
 					//    argument = (Map)parser.GetExpression.Match(parser);
