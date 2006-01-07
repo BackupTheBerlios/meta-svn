@@ -5431,54 +5431,58 @@ namespace Meta
 			}
 			public abstract class Action
 			{
-				public abstract bool Execute(Parser parser, Map result,bool keepStrings);
+				protected Rule rule;
+				public Action(Rule rule)
+				{
+					this.rule = rule;
+				}
+
+				public abstract bool Execute(Parser parser, Map result);
 			}
 			public class Assignment:Action
 			{
 				private Map key;
-				private Rule rule;
 				public Assignment(Rule rule):this(null,rule)
 				{
 				}
-				public Assignment(Map key, Rule rule)
+				public Assignment(Map key, Rule rule):base(rule)
 				{
 					this.key = key;
-					this.rule = rule;
 				}
-				public override bool Execute(Parser parser, Map result,bool keepStrings)
+				public override bool Execute(Parser parser, Map result)
 				{
 					Map matched=rule.Match(parser);
-					if (matched!=null && matched is Map && !(!keepStrings && ((Map)matched).IsString))
+					if (matched!=null)
 					{
 						result.Append((Map)matched);
 					}
 					return matched != null;
 				}
-				//public override Map Execute(Parser parser,Map result)
-				//{
-				//    return rule.Match(parser);
-				//}
+			}
+			public class Match : Action
+			{
+				public Match(Rule rule):base(rule)
+				{
+				}
+				public override bool Execute(Parser parser, Map result)
+				{
+					return rule.Match(parser)!=null;
+				}
 			}
 			public class Sequence : Rule
 			{
-				private Assignment[] rules;
-				private bool keepIntegers;
-				public Sequence(params Assignment[] rules)
-					: this(true, rules)
+				private Action[] rules;
+				public Sequence(params Action[] rules)
 				{
-				}
-				public Sequence(bool keepIntegers, params Assignment[] rules)
-				{
-					this.keepIntegers = keepIntegers;
 					this.rules = rules;
 				}
 				protected override Map DoMatch(Parser parser)
 				{
 					Map result = new StrategyMap();
 					bool success = true;
-					foreach (Assignment rule in rules)
+					foreach (Action rule in rules)
 					{
-						bool matched = rule.Execute(parser, result,keepIntegers);
+						bool matched = rule.Execute(parser, result);
 						if (!matched)
 						{
 							success = false;
@@ -5498,86 +5502,7 @@ namespace Meta
 						return result;
 					}
 				}
-				//protected override Map DoMatch(Parser parser)
-				//{
-				//    Map result = new StrategyMap();
-				//    bool success = true;
-				//    foreach (Assignment rule in rules)
-				//    {
-				//        object matched = rule.Execute(parser,result);
-				//        if (matched == null)
-				//        {
-				//            success = false;
-				//            break;
-				//        }
-				//        else
-				//        {
-				//            if (matched is Map && !(!keepIntegers && ((Map)matched).IsString))
-				//            {
-				//                result.Append((Map)matched);
-				//            }
-				//        }
-				//    }
-				//    if (!success)
-				//    {
-				//        return null;
-				//    }
-				//    else if (result.Count == 1)
-				//    {
-				//        return result[1];
-				//    }
-				//    else
-				//    {
-				//        return result;
-				//    }
-				//}
 			}
-			//public class Sequence : Rule
-			//{
-			//    private Rule[] rules;
-			//    private bool keepIntegers;
-			//    public Sequence(params Rule[] rules):this(true,rules)
-			//    {
-			//    }
-			//    public Sequence(bool keepIntegers,params Rule[] rules)
-			//    {
-			//        this.keepIntegers=keepIntegers;
-			//        this.rules = rules;
-			//    }
-			//    protected override Map DoMatch(Parser parser)
-			//    {
-			//        Map result = new StrategyMap();
-			//        bool success = true;
-			//        foreach (Rule rule in rules)
-			//        {
-			//            object matched = rule.Match(parser);
-			//            if (matched == null)
-			//            {
-			//                success = false;
-			//                break;
-			//            }
-			//            else
-			//            {
-			//                if (matched is Map && !(!keepIntegers && ((Map)matched).IsString))
-			//                {
-			//                    result.Append((Map)matched);
-			//                }
-			//            }
-			//        }
-			//        if (!success)
-			//        {
-			//            return null;
-			//        }
-			//        else if (result.Count == 1)
-			//        {
-			//            return result[1];
-			//        }
-			//        else
-			//        {
-			//            return result;
-			//        }
-			//    }
-			//}
 			public Rule GetExpression;
 			public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
 			{
@@ -5586,9 +5511,13 @@ namespace Meta
 				if (select != null)
 				{
 					Map argument = (Map)new Or(
-						new Sequence(false, new Assignment(new CharRule(callChar)), new Assignment(parser.GetExpression)),
+						new Sequence(new Match(new CharRule(callChar)), new Assignment(parser.GetExpression)),
 						parser.Program
 					).Match(parser);
+					//Map argument = (Map)new Or(
+					//    new Sequence(false, new Assignment(new CharRule(callChar)), new Assignment(parser.GetExpression)),
+					//    parser.Program
+					//).Match(parser);
 					if (argument != null)
 					{
 						call = new StrategyMap(
@@ -5610,6 +5539,38 @@ namespace Meta
 				}
 				return call;
 			});
+
+			//public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
+			//{
+			//    Map call;
+			//    Map select = parser.Select.Get();
+			//    if (select != null)
+			//    {
+			//        Map argument = (Map)new Or(
+			//            new Sequence(false, new Assignment(new CharRule(callChar)), new Assignment(parser.GetExpression)),
+			//            parser.Program
+			//        ).Match(parser);
+			//        if (argument != null)
+			//        {
+			//            call = new StrategyMap(
+			//                CodeKeys.Callable, select,
+			//                CodeKeys.Argument, argument);
+			//            if (parser.functions == 0)
+			//            {
+			//                throw new MetaException("Function may not be called outside of function definition.", argument.Extent);
+			//            }
+			//        }
+			//        else
+			//        {
+			//            call = null;
+			//        }
+			//    }
+			//    else
+			//    {
+			//        call = null;
+			//    }
+			//    return call;
+			//});
 			//public Expression Call = new Expression(CodeKeys.Call, delegate(Parser parser)
 			//{
 			//    Map call;
