@@ -5710,7 +5710,6 @@ namespace Meta
 													{
 														parser.index += 2;
 														throw new SyntaxException("Expected newline.", parser);//new Extent(parser.Position, parser.Position, parser.file));
-														//throw new MetaException("Expected newline.", new Extent(parser.Position, parser.Position, parser.file));
 													}
 													else
 													{
@@ -5727,22 +5726,47 @@ namespace Meta
 					Map statement = Statement.Match(parser);
 					statements[counter] = statement;
 
-					while (!parser.Look(parser.endOfFile))
+					Map maps=new Loop(new Sequence(new Match( new DelegateRule(delegate(Parser p)
 					{
-						if (new Or(
-							new StringRule("".PadLeft(parser.indentationCount, indentation)),
-							new DelegateRule(delegate(Parser p)
-							{
-								parser.indentationCount--;
-								return null;
-							})).Match(parser) == null)
+						if(!parser.Look(parser.endOfFile))
 						{
-							break;
+							return Map.Empty;
 						}
-
-						statement=Statement.Match(parser);
-						statements[counter] = statement;
+						else
+						{
+							return null;
+						}
+					})),
+					new Match(new Or(
+								new StringRule("".PadLeft(parser.indentationCount, indentation)),
+								new DelegateRule(delegate(Parser p)
+								{
+									parser.indentationCount--;
+									return null;
+								}))),
+						new SingleAssignment(Statement))).Match(parser);
+							//statements[counter] = statement;
+						//}
+					foreach (Map map in maps.Array)
+					{
+						statements.Append(map);
 					}
+					//while (!parser.Look(parser.endOfFile))
+					//{
+					//    if (new Or(
+					//        new StringRule("".PadLeft(parser.indentationCount, indentation)),
+					//        new DelegateRule(delegate(Parser p)
+					//        {
+					//            parser.indentationCount--;
+					//            return null;
+					//        })).Match(parser) == null)
+					//    {
+					//        break;
+					//    }
+
+					//    statement=Statement.Match(parser);
+					//    statements[counter] = statement;
+					//}
 				}
 				else
 				{
