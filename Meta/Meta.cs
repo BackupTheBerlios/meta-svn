@@ -5592,6 +5592,53 @@ namespace Meta
 					return Map.Empty;
 				}
 			}
+
+			public class Flatten : Action
+			{
+				public Flatten(Rule rule)
+					: base(rule)
+				{
+				}
+				public override bool Execute(Parser parser, ref Map result)
+				{
+					Map matched = rule.Match(parser);
+					if (matched != null)
+					{
+						foreach (Map map in matched.Array)
+						{
+							result.Append(map);
+						}
+					}
+					return matched != null;
+				}
+			}
+			public delegate Map CustomActionDelegate(Map map);
+			public class CustomAction : Action
+			{
+				private CustomActionDelegate action;
+				public CustomAction(CustomActionDelegate action, Rule rule)
+					: base(rule)
+				{
+					this.action = action;
+				}
+				public override bool Execute(Parser parser, ref Map result)
+				{
+					Map map = rule.Match(parser);
+					if (map != null)
+					{
+						result = this.action(result);
+					}
+					// TODO: refactor
+					return map != null;
+				}
+			}
+			public class Nothing : Rule
+			{
+				protected override Map DoMatch(Parser parser)
+				{
+					return Map.Empty;
+				}
+			}
 			public Expression Call = new Expression(delegate(Parser parser)
 			{
 				return new Sequence(
@@ -5617,10 +5664,14 @@ namespace Meta
 			public bool isStartOfFile = true;
 
 			private int functions = 0;
-			private bool TryNewLine()
-			{
-				return TryConsumeNewLine("");
-			}
+			//private bool TryNewLine()
+			//{
+			//    return EndOfLine.Match(this) != null;
+			//}
+			//private bool TryNewLine()
+			//{
+			//    return TryConsumeNewLine("");
+			//}
 			private string GetIndentation()
 			{
 				int i = 0;
@@ -5666,13 +5717,17 @@ namespace Meta
 						}
 						statements[counter] = statement;
 						counter++;
-						if (!parser.TryNewLine() && !parser.Look(parser.endOfFile))
+						
+						if (parser.EndOfLine.Match(parser) == null && !parser.Look(parser.endOfFile))
+						//if (!parser.TryNewLine() && !parser.Look(parser.endOfFile))
 						{
 							parser.index -= 1;
-							if (!parser.TryNewLine())
+							if (parser.EndOfLine.Match(parser) == null)
+							//if (!parser.TryNewLine())
 							{
 								parser.index -= 1;
-								if (!parser.TryNewLine())
+								if (parser.EndOfLine.Match(parser) == null)
+								//if (!parser.TryNewLine())
 								{
 									parser.index += 2;
 									throw new MetaException("Expected newline.", new Extent(parser.Position, parser.Position, parser.file));
@@ -5781,16 +5836,6 @@ namespace Meta
 					return null;
 				}
 			});
-
-			private bool TryConsumeNewLine(string text)
-			{
-				string whitespace = "";
-				for (int i = 0; Look(i) == space || Look(i) == tab; i++)
-				{
-					whitespace += Look(i);
-				}
-				return TryConsume(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text);
-			}
 			private Expression Indentation = new Expression(delegate(Parser parser)
 			{
 				string indentationString = "".PadLeft(parser.indentationCount + 1, indentation);
@@ -5836,68 +5881,6 @@ namespace Meta
 						new StringRule(windowsNewLine)))).Match(parser);
 
 			});
-			//private Expression Indentation = new Expression(delegate(Parser parser)
-			//{
-			//    string indentationString = "".PadLeft(parser.indentationCount + 1, indentation);
-
-			//    if (parser.isStartOfFile)
-			//    {
-			//        parser.isStartOfFile = false;
-			//        parser.indentationCount++;
-			//        return Map.Empty;
-			//    }
-			//    else if (new Sequence(new Match(parser.EndOfLine),new Match(new StringRule(indentationString))).Match(parser)!=null)
-			//    {
-			//        parser.indentationCount++;
-			//        return Map.Empty;
-			//    }
-
-			//    else
-			//    {
-			//        return null;
-			//    }
-			//});
-			//private Expression Indentation = new Expression(delegate(Parser parser)
-			//{
-			//    string indentationString = "".PadLeft(parser.indentationCount + 1, indentation);
-
-			//    if (parser.TryConsumeNewLine(indentationString))
-			//    {
-			//        parser.indentationCount++;
-			//        return Map.Empty;
-			//    }
-			//    else if (parser.isStartOfFile)
-			//    {
-			//        parser.isStartOfFile = false;
-			//        parser.indentationCount++;
-			//        return Map.Empty;
-			//    }
-			//    else
-			//    {
-			//        return null;
-			//    }
-			//});
-			//private bool Indentation()
-			//{
-			//    string indentationString = "".PadLeft(indentationCount + 1, indentation);
-			//    bool isIndentation;
-			//    if (TryConsumeNewLine(indentationString))
-			//    {
-			//        indentationCount++;
-			//        isIndentation = true;
-			//    }
-			//    else if (isStartOfFile)
-			//    {
-			//        isStartOfFile = false;
-			//        indentationCount++;
-			//        isIndentation = true;
-			//    }
-			//    else
-			//    {
-			//        isIndentation = false;
-			//    }
-			//    return isIndentation;
-			//}
 			private Expression Whitespace = new Expression(delegate(Parser parser)
 			{
 				return new Loop(new Or(new CharRule(tab), new CharRule(space))).Match(parser);
@@ -5922,51 +5905,6 @@ namespace Meta
 					new Match(new Loop(new CharRule(indentation))),
 					new Match(new CharRule(lookupEndChar))).Match(parser);
 			});
-			public class Flatten : Action
-			{
-				public Flatten(Rule rule):base(rule)
-				{
-				}
-				public override bool Execute(Parser parser, ref Map result)
-				{
-					Map matched=rule.Match(parser);
-					if (matched != null)
-					{
-						foreach (Map map in matched.Array)
-						{
-							result.Append(map);
-						}
-					}
-					return matched!=null;
-				}
-			}
-			public delegate Map CustomActionDelegate(Map map);
-			public class CustomAction : Action
-			{
-				private CustomActionDelegate action;
-				public CustomAction(CustomActionDelegate action, Rule rule)
-					: base(rule)
-				{
-					this.action = action;
-				}
-				public override bool Execute(Parser parser, ref Map result)
-				{
-					Map map=rule.Match(parser);
-					if (map != null)
-					{
-						result=this.action(result);
-					}
-					// TODO: refactor
-					return map!=null;
-				}
-			}
-			public class Nothing : Rule
-			{
-				protected override Map DoMatch(Parser parser)
-				{
-					return Map.Empty;
-				}
-			}
 			private Expression Integer = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
 				Map integer=new Sequence(new Flatten(new CharRule(parser.firstIntegerChars)),
