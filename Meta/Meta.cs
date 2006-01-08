@@ -5856,8 +5856,10 @@ namespace Meta
 						}
 					),
 				new Sequence(
-						new Match(new Sequence(new Match(parser.EndOfLine),new Match(new StringRule(indentationString)))),
-						//new Match(new StringRule(indentationString)),
+						new Match(
+							new Sequence(
+								new Match(parser.EndOfLine),
+								new Match(new StringRule(indentationString)))),
 						new Match(new DelegateRule(delegate(Parser p)
 							{
 								parser.indentationCount++;
@@ -5905,96 +5907,22 @@ namespace Meta
 					new Match(new Loop(new CharRule(indentation))),
 					new Match(new CharRule(lookupEndChar))).Match(parser);
 			});
-			private Expression Integer = new Expression(CodeKeys.Literal, delegate(Parser parser)
+			private Expression Integer = new Expression(delegate(Parser parser)
 			{
-				Map integer=new Sequence(new Flatten(new CharRule(parser.firstIntegerChars)),
+				return new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new Flatten(new CharRule(parser.firstIntegerChars)),
 					new Flatten(new Loop(new CharRule(parser.integerChars))),
 					new CustomAction(delegate(Map map)
 						{
 							return Meta.Integer.ParseInteger(map.GetString());
-						},new Nothing())).Match(parser);
-				return integer;
+						},new Nothing())))).Match(parser);
 			});
-			//private Expression String = new Expression(CodeKeys.Literal, delegate(Parser parser)
-			//{
-			//    if (parser.text.Substring(parser.index).StartsWith("\""))
-			//    {
-			//    }
-			//    try
-			//    {
-			//        Map @string;
-			//        int escapeCharCount = 0;
-			//        Map stringMap=new Sequence(
-			//            new Match(new Loop(new Sequence(
-			//                    new Match(new CharRule(stringEscapeChar)),
-			//                    new Match(new DelegateRule(delegate(Parser p)
-			//                    {
-			//                        escapeCharCount++;
-			//                        return Map.Empty;
-			//                    }))))),
-			//            new Match(new CharRule(stringChar)),
-			//            new Flatten(
-			//                new Loop(
-			//                    new Sequence(
-			//                        new Match(new DelegateRule(delegate(Parser p)
-			//                        {
-			//                            if (p.Look(stringChar))
-			//                            {
-			//                                int foundEscapeCharCount = 0;
-			//                                while (foundEscapeCharCount < escapeCharCount && p.Look(foundEscapeCharCount + 1, stringEscapeChar))
-			//                                {
-			//                                    foundEscapeCharCount++;
-			//                                }
-			//                                if (foundEscapeCharCount == escapeCharCount)
-			//                                {
-			//                                    new CharRule(stringChar).Match(p);
-			//                                    new StringRule("".PadLeft(escapeCharCount, stringEscapeChar)).Match(p);
-			//                                    return null;
-			//                                }
-			//                            }
-			//                            return Map.Empty;
-			//                        })),
-			//                        new Flatten(new CharRule(parser.Look())))))).Match(parser);
-			//        if(stringMap!=null)
-			//        {
-			//            string stringText = stringMap.GetString();
-			//            List<string> realLines = new List<string>();
-			//            string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
-			//            for (int i = 0; i < lines.Length; i++)
-			//            {
-			//                if (i == 0)
-			//                {
-			//                    realLines.Add(lines[i]);
-			//                }
-			//                else
-			//                {
-			//                    realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentation).Length)));
-			//                }
-			//            }
-			//            string realText = string.Join("\n", realLines.ToArray());
-			//            realText = realText.TrimStart('\n');
-
-			//            @string = realText;
-			//        }
-			//        else
-			//        {
-			//            @string = null;
-			//        }
-			//        return @string;
-			//    }
-			//    catch (Exception e)
-			//    {
-			//        return null;
-			//    }
-			//});
-
 			private Expression LookupString = new Expression(delegate(Parser parser)
 			{
 				return new Sequence(
 					new Assignment(CodeKeys.Literal,new OneOrMore(new CharExceptRule(lookupStringForbiddenChars))
 					)).Match(parser);
 			});
-			private Expression Lookup = new Expression(null, delegate(Parser parser)
+			private Expression Lookup = new Expression(delegate(Parser parser)
 			{
 				return (Map)new Or(parser.LookupString,parser.LookupAnything).Match(parser);
 			});
