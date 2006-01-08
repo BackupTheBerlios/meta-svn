@@ -5401,37 +5401,6 @@ namespace Meta
 					}
 				}
 			}
-
-			private bool TryConsumeNewLine(string text)
-			{
-				string whitespace = "";
-				for (int i = 0; Look(i) == space || Look(i) == tab; i++)
-				{
-					whitespace += Look(i);
-				}
-				return TryConsume(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text);
-			}
-			private bool Indentation()
-			{
-				string indentationString = "".PadLeft(indentationCount + 1, indentation);
-				bool isIndentation;
-				if (TryConsumeNewLine(indentationString))
-				{
-					indentationCount++;
-					isIndentation = true;
-				}
-				else if (isStartOfFile)
-				{
-					isStartOfFile = false;
-					indentationCount++;
-					isIndentation = true;
-				}
-				else
-				{
-					isIndentation = false;
-				}
-				return isIndentation;
-			}
 			public class Or : Rule
 			{
 				private Rule[] cases;
@@ -5557,7 +5526,7 @@ namespace Meta
 					Map result;
 					while ((result = rule.Match(parser)) != null)
 					{
-						if (result.IsString)
+						if (result.IsString && result.GetString().Length==1)
 						{
 							result = Convert.ToChar(result.GetString());
 						}
@@ -5579,7 +5548,7 @@ namespace Meta
 					Map result;
 					while ((result = rule.Match(parser)) != null)
 					{
-						if (result.IsString)
+						if (result.IsString && result.GetString().Length==1)
 						{
 							result = Convert.ToChar(result.GetString());
 						}
@@ -5598,6 +5567,19 @@ namespace Meta
 				public OneOrMore(Rule rule)
 				{
 					this.rule = rule;
+				}
+			}
+			public class Optional : Rule
+			{
+				private Rule rule;
+				public Optional(Rule rule)
+				{
+					this.rule = rule;
+				}
+				protected override Map DoMatch(Parser parser)
+				{
+					rule.Match(parser);
+					return Map.Empty;
 				}
 			}
 			public Expression Call = new Expression(delegate(Parser parser)
@@ -5717,18 +5699,129 @@ namespace Meta
 				}
 				return statements;
 			});
-			public class Optional:Rule
+			private Expression String = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
-				private Rule rule;
-				public Optional(Rule rule)
+				try
 				{
-					this.rule=rule;
+					Map @string;
+					if (parser.Look(stringChar) || parser.Look(stringEscapeChar))
+					{
+						int escapeCharCount = 0;
+						while (parser.TryConsume(stringEscapeChar))
+						{
+							escapeCharCount++;
+						}
+						new CharRule(stringChar).Match(parser);
+						string stringText = "";
+						new Loop(
+							new Sequence(
+								new Match(new DelegateRule(delegate(Parser p)
+								{
+									if (parser.Look(stringChar))
+									{
+										int foundEscapeCharCount = 0;
+										while (foundEscapeCharCount < escapeCharCount && parser.Look(foundEscapeCharCount + 1, stringEscapeChar))
+										{
+											foundEscapeCharCount++;
+										}
+										if (foundEscapeCharCount == escapeCharCount)
+										{
+											//new CharRule(stringChar).Match(parser);
+											//new StringRule("".PadLeft(escapeCharCount, stringEscapeChar)).Match(parser);
+											return null;
+											//break;
+										}
+									}
+									return Map.Empty;
+								})),
+								
+								new Match(new DelegateRule(delegate(Parser p)
+								{
+									stringText += new CharRule(parser.Look()).Match(parser).GetString();
+									return Map.Empty;
+								}
+								))
+						)).Match(parser);
+						new CharRule(stringChar).Match(parser);
+						new StringRule("".PadLeft(escapeCharCount, stringEscapeChar)).Match(parser);
+
+						//while (true)
+						//{
+						//    if (parser.Look(stringChar))
+						//    {
+						//        int foundEscapeCharCount = 0;
+						//        while (foundEscapeCharCount < escapeCharCount && parser.Look(foundEscapeCharCount + 1, stringEscapeChar))
+						//        {
+						//            foundEscapeCharCount++;
+						//        }
+						//        if (foundEscapeCharCount == escapeCharCount)
+						//        {
+						//            new CharRule(stringChar).Match(parser);
+						//            new StringRule("".PadLeft(escapeCharCount, stringEscapeChar)).Match(parser);
+						//            break;
+						//        }
+						//    }
+						//    stringText += new CharRule(parser.Look()).Match(parser).GetString();
+						//}
+						List<string> realLines = new List<string>();
+						string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
+						for (int i = 0; i < lines.Length; i++)
+						{
+							if (i == 0)
+							{
+								realLines.Add(lines[i]);
+							}
+							else
+							{
+								realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentation).Length)));
+							}
+						}
+						string realText = string.Join("\n", realLines.ToArray());
+						realText = realText.TrimStart('\n');
+
+						@string = realText;
+					}
+					else
+					{
+						@string = null;
+					}
+					return @string;
 				}
-				protected override Map DoMatch(Parser parser)
+				catch (Exception e)
 				{
-					rule.Match(parser);
-					return Map.Empty;
+					return null;
 				}
+			});
+
+			private bool TryConsumeNewLine(string text)
+			{
+				string whitespace = "";
+				for (int i = 0; Look(i) == space || Look(i) == tab; i++)
+				{
+					whitespace += Look(i);
+				}
+				return TryConsume(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text);
+			}
+			private bool Indentation()
+			{
+				string indentationString = "".PadLeft(indentationCount + 1, indentation);
+				bool isIndentation;
+				if (TryConsumeNewLine(indentationString))
+				{
+					indentationCount++;
+					isIndentation = true;
+				}
+				else if (isStartOfFile)
+				{
+					isStartOfFile = false;
+					indentationCount++;
+					isIndentation = true;
+				}
+				else
+				{
+					isIndentation = false;
+				}
+				return isIndentation;
 			}
 			private Expression Whitespace = new Expression(delegate(Parser parser)
 			{
@@ -5809,25 +5902,6 @@ namespace Meta
 						},new Nothing())).Match(parser);
 				return integer;
 			});
-			//private Expression Integer = new Expression(CodeKeys.Literal, delegate(Parser parser)
-			//{
-			//    Map integer;
-			//    if (parser.LookAny(parser.firstIntegerChars))
-			//    {
-			//        string integerString = "";
-			//        integerString += parser.ConsumeGet();
-			//        while (parser.LookAny(parser.integerChars))
-			//        {
-			//            integerString += parser.ConsumeGet();
-			//        }
-			//        integer = Meta.Integer.ParseInteger(integerString);
-			//    }
-			//    else
-			//    {
-			//        integer = null;
-			//    }
-			//    return integer;
-			//});
 			//private Expression String = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			//{
 			//    if (parser.text.Substring(parser.index).StartsWith("\""))
@@ -5900,67 +5974,7 @@ namespace Meta
 			//        return null;
 			//    }
 			//});
-			private Expression String = new Expression(CodeKeys.Literal, delegate(Parser parser)
-			{
-				try
-				{
-					Map @string;
-					if (parser.Look(stringChar) || parser.Look(stringEscapeChar))
-					{
-						int escapeCharCount = 0;
-						while (parser.TryConsume(stringEscapeChar))
-						{
-							escapeCharCount++;
-						}
-						new CharRule(stringChar).Match(parser);
-						string stringText = "";
-						while (true)
-						{
-							if (parser.Look(stringChar))
-							{
-								int foundEscapeCharCount = 0;
-								while (foundEscapeCharCount < escapeCharCount && parser.Look(foundEscapeCharCount + 1, stringEscapeChar))
-								{
-									foundEscapeCharCount++;
-								}
-								if (foundEscapeCharCount == escapeCharCount)
-								{
-									new CharRule(stringChar).Match(parser);
-									new StringRule("".PadLeft(escapeCharCount, stringEscapeChar)).Match(parser);
-									break;
-								}
-							}
-							stringText += new CharRule(parser.Look()).Match(parser).GetString();
-						}
-						List<string> realLines = new List<string>();
-						string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
-						for (int i = 0; i < lines.Length; i++)
-						{
-							if (i == 0)
-							{
-								realLines.Add(lines[i]);
-							}
-							else
-							{
-								realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentation).Length)));
-							}
-						}
-						string realText = string.Join("\n", realLines.ToArray());
-						realText = realText.TrimStart('\n');
 
-						@string = realText;
-					}
-					else
-					{
-						@string = null;
-					}
-					return @string;
-				}
-				catch (Exception e)
-				{
-					return null;
-				}
-			});
 			private Expression LookupString = new Expression(delegate(Parser parser)
 			{
 				return new Sequence(
@@ -5976,67 +5990,11 @@ namespace Meta
 				return new Sequence(new Assignment(CodeKeys.Select, parser.Keys)).Match(parser);
 			});
 			private Expression Keys = new Expression(delegate(Parser parser)
-				{
-					//Map lookups = new StrategyMap();
-					//int counter = 1;
-					//Map lookup;
-					Map keys=new Sequence(new Assignment(1,parser.Lookup),
-						new Flatten(new Loop(new Sequence(new Match(new CharRule(selectChar)),new SingleAssignment(parser.Lookup)
-						)))).Match(parser);
-					//    }
-					//    else
-					//    {
-					//        break;
-					//    }
-					//    if (!parser.TryConsume(selectChar))
-					//    {
-					//        break;
-					//    }
-					//}
-					//Map keys;
-					//if (counter > 1)
-					//{
-					//    keys = lookups;
-					//}
-					//else
-					//{
-					//    keys = null;
-					//}
-					return keys;
-				});
-			//private Expression Keys = new Expression(delegate(Parser parser)
-			//{
-			//    Map lookups = new StrategyMap();
-			//    int counter = 1;
-			//    Map lookup;
-			//    while (true)
-			//    {
-			//        lookup = parser.Lookup.Get();
-			//        if (lookup != null)
-			//        {
-			//            lookups[counter] = lookup;
-			//            counter++;
-			//        }
-			//        else
-			//        {
-			//            break;
-			//        }
-			//        if (!parser.TryConsume(selectChar))
-			//        {
-			//            break;
-			//        }
-			//    }
-			//    Map keys;
-			//    if (counter > 1)
-			//    {
-			//        keys = lookups;
-			//    }
-			//    else
-			//    {
-			//        keys = null;
-			//    }
-			//    return keys;
-			//});
+			{
+				return new Sequence(new Assignment(1,parser.Lookup),
+					new Flatten(new Loop(new Sequence(new Match(new CharRule(selectChar)),new SingleAssignment(parser.Lookup)
+					)))).Match(parser);
+			});
 			public delegate Map ParseFunction(Parser parser);
 			public Expression Function = new Expression(delegate(Parser parser)
 			{
