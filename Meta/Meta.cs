@@ -5082,7 +5082,9 @@ namespace Meta
 			public const char lookupStartChar = '[';
 			public const char lookupEndChar = ']';
 			public static char[] lookupStringForbiddenChars = new char[] { callChar, indentation, '\r', '\n', statementChar, selectChar, stringEscapeChar, functionChar, stringChar, lookupStartChar, lookupEndChar, emptyMapChar };
-			public char[] lookupStringFirstCharAdditionalForbiddenChars = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			// rename, make static
+			public static char[] lookupStringFirstCharAdditionalForbiddenChars = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			public static char[] lookupStringFirstForbiddenChars;
 			public const char emptyMapChar = '*';
 			public const char callChar = ' ';
 			public const char selectChar = '.';
@@ -5184,9 +5186,6 @@ namespace Meta
 					Map matched;
 			        if(parser.LookAny(chars))
 					{
-						//matched = new StrategyMap((int)parser.ConsumeGet());
-						//matched = new StrategyMap((int)parser.ConsumeGet());
-						//matched = new StrategyMap((int)Convert.ToChar(parser.ConsumeGet().ToString()));
 						matched = parser.ConsumeGet().ToString();
 					}
 					else
@@ -5208,10 +5207,6 @@ namespace Meta
 					Map matched;
 					if (parser.LookExcept(chars))
 					{
-						//matched = Convert.ToChar(new StrategyMap(parser.ConsumeGet().ToString()).GetString());
-						//matched = new StrategyMap((int)parser.ConsumeGet());
-						//matched = new StrategyMap((int)parser.ConsumeGet());
-						//matched = new StrategyMap((int)Convert.ToChar(parser.ConsumeGet().ToString()));
 						matched = parser.ConsumeGet().ToString();
 					}
 					else
@@ -5389,6 +5384,10 @@ namespace Meta
 				this.index = 0;
 				this.text = text;
 				this.file = filePath;
+				//
+				List<char> list = new List<char>(lookupStringForbiddenChars);
+				list.AddRange(lookupStringFirstCharAdditionalForbiddenChars);
+				lookupStringFirstForbiddenChars = list.ToArray();
 
 				GetExpression=new Or(EmptyMap,Integer,String,Program,Call,Select);
 
@@ -5534,6 +5533,69 @@ namespace Meta
 						result = map;
 					}
 					return map!=null;
+				}
+			}
+			public class Literal : Rule
+			{
+				private Map literal;
+				public Literal(Map literal)
+				{
+					this.literal = literal;
+				}
+				protected override Map DoMatch(Parser parser)
+				{
+					return literal;
+				}
+			}
+			public class Loop : Rule
+			{
+				protected override Map DoMatch(Parser parser)
+				{
+					Map list = new StrategyMap();
+					Map result;
+					while ((result = rule.Match(parser)) != null)
+					{
+						if (result.IsString)
+						{
+							result = Convert.ToChar(result.GetString());
+						}
+						list.Append(result);
+					}
+					return list;
+				}
+				private Rule rule;
+				public Loop(Rule rule)
+				{
+					this.rule = rule;
+				}
+			}
+			public class OneOrMore : Rule
+			{
+				protected override Map DoMatch(Parser parser)
+				{
+					Map list = new StrategyMap();
+					Map result;
+					while ((result = rule.Match(parser)) != null)
+					{
+						if (result.IsString)
+						{
+							result = Convert.ToChar(result.GetString());
+						}
+						list.Append(result);
+					}
+					if (list.Count == 0)
+					{
+						return null;
+					}
+					else
+					{
+						return list;
+					}
+				}
+				private Rule rule;
+				public OneOrMore(Rule rule)
+				{
+					this.rule = rule;
 				}
 			}
 			public Expression Call = new Expression(delegate(Parser parser)
@@ -5704,21 +5766,6 @@ namespace Meta
 					new Match(new Loop(new CharRule(indentation))),
 					new Match(new CharRule(lookupEndChar))).Match(parser);
 			});
-			//private Expression LookupAnything = new Expression(null, delegate(Parser parser)
-			//{
-			//    Map lookupAnything;
-			//    if (parser.TryConsume(lookupStartChar))
-			//    {
-			//        lookupAnything = (Map)parser.GetExpression.Match(parser);
-			//        while (parser.TryConsume(indentation)) ;
-			//        parser.Consume(lookupEndChar);
-			//    }
-			//    else
-			//    {
-			//        lookupAnything = null;
-			//    }
-			//    return lookupAnything;
-			//});
 			private Expression Integer = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
 				Map integer;
@@ -5799,50 +5846,58 @@ namespace Meta
 					return null;
 				}
 			});
-			public class Literal : Rule
-			{
-				private Map literal;
-				public Literal(Map literal)
-				{
-					this.literal = literal;
-				}
-				protected override Map DoMatch(Parser parser)
-				{
-					return literal;
-				}
-			}
-			public class Loop : Rule
-			{
-				protected override Map DoMatch(Parser parser)
-				{
-					Map list = new StrategyMap();
-					Map result;
-					while ((result = rule.Match(parser)) != null)
-					{
-						if (result.IsString)
-						{
-							result = Convert.ToChar(result.GetString());
-						}
-						list.Append(result);
-					}
-					return list;
-				}
-				private Rule rule;
-				public Loop(Rule rule)
-				{
-					this.rule = rule;
-				}
-			}
+			//public class Collector : Action
+			//{
+
+			//}
+			//private Expression LookupString = new Expression(CodeKeys.Literal, delegate(Parser parser)
+			//{
+			//    //string lookupString = "";
+			//    if (parser.text.Substring(parser.index).StartsWith("1"))
+			//    {
+			//    }
+			//    return new OneOrMore(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
+
+			//    //    lookupString += list.GetString();
+			//    //}
+			//    //Map lookup;
+			//    //if (lookupString.Length > 0)
+			//    //{
+			//    //    lookup = lookupString;
+			//    //}
+			//    //else
+			//    //{
+			//    //    lookup = null;
+			//    //}
+			//    //return lookup;
+			//});
+			//private Expression LookupString = new Expression(CodeKeys.Literal, delegate(Parser parser)
+			//{
+			//    //string lookupString = "";
+			//    return new Sequence(new Match(new CharExceptRule(lookupStringFirstForbiddenChars)),
+			//    new SingleAssignment(new Loop(new CharExceptRule(lookupStringForbiddenChars)))).Match(parser);
+
+			//    //    lookupString += list.GetString();
+			//    //}
+			//    //Map lookup;
+			//    //if (lookupString.Length > 0)
+			//    //{
+			//    //    lookup = lookupString;
+			//    //}
+			//    //else
+			//    //{
+			//    //    lookup = null;
+			//    //}
+			//    //return lookup;
+			//});
 			private Expression LookupString = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
 				string lookupString = "";
-				if (parser.LookExcept(lookupStringForbiddenChars) && parser.LookExcept(parser.lookupStringFirstCharAdditionalForbiddenChars))
+				if (parser.LookExcept(lookupStringForbiddenChars) && parser.LookExcept(lookupStringFirstCharAdditionalForbiddenChars))
 				{
 					Map list = new Loop(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
-					//List<char> list = (List<char>)new Loop(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
 
 					lookupString += list.GetString();
-					//lookupString += new string((char[])list.ToArray());
 				}
 				Map lookup;
 				if (lookupString.Length > 0)
@@ -5855,28 +5910,6 @@ namespace Meta
 				}
 				return lookup;
 			});
-			//private Expression LookupString = new Expression(CodeKeys.Literal, delegate(Parser parser)
-			//{
-			//    string lookupString = "";
-			//    if (parser.LookExcept(lookupStringForbiddenChars) && parser.LookExcept(parser.lookupStringFirstCharAdditionalForbiddenChars))
-			//    {
-			//        Map list = new Loop(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
-			//        //List<char> list = (List<char>)new Loop(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
-
-			//        lookupString += list.GetString();
-			//        //lookupString += new string((char[])list.ToArray());
-			//    }
-			//    Map lookup;
-			//    if (lookupString.Length > 0)
-			//    {
-			//        lookup = lookupString;
-			//    }
-			//    else
-			//    {
-			//        lookup = null;
-			//    }
-			//    return lookup;
-			//});
 			private Expression Lookup = new Expression(null, delegate(Parser parser)
 			{
 				return (Map)new Or(parser.LookupString,parser.LookupAnything).Match(parser);
