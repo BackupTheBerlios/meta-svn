@@ -5791,36 +5791,37 @@ namespace Meta
 				}
 				return TryConsume(whitespace + unixNewLine + text) || TryConsume(whitespace + windowsNewLine + text);
 			}
-			//private Expression Indentation = new Expression(delegate(Parser parser)
-			//{
-			//    string indentationString = "".PadLeft(parser.indentationCount + 1, indentation);
+			private Expression Indentation = new Expression(delegate(Parser parser)
+			{
+				string indentationString = "".PadLeft(parser.indentationCount + 1, indentation);
 
-			//    return new Or(
-			//        new DelegateRule(delegate(Parser p)
-			//            {
-			//                if (p.isStartOfFile)
-			//                {
-			//                    p.isStartOfFile = false;
-			//                    p.indentationCount++;
-			//                    return Map.Empty;
-			//                }
-			//                else
-			//                {
-			//                    return null;
-			//                }
-			//            }
-			//        ),
-			//    new Sequence(
-			//            new Match(new StringRule(indentationString)),
-			//            new Match(new DelegateRule(delegate(Parser p)
-			//                {
-			//                    parser.indentationCount++;
-			//                    return Map.Empty;
-			//                })))
+				return new Or(
+					new DelegateRule(delegate(Parser p)
+						{
+							if (p.isStartOfFile)
+							{
+								p.isStartOfFile = false;
+								p.indentationCount++;
+								return Map.Empty;
+							}
+							else
+							{
+								return null;
+							}
+						}
+					),
+				new Sequence(
+						new Match(new Sequence(new Match(parser.EndOfLine),new Match(new StringRule(indentationString)))),
+						//new Match(new StringRule(indentationString)),
+						new Match(new DelegateRule(delegate(Parser p)
+							{
+								parser.indentationCount++;
+								return Map.Empty;
+							})))
 
-			//        ).Match(parser);
+					).Match(parser);
 
-			//});
+			});
 			private Expression EndOfLine = new Expression(delegate(Parser parser)
 			{
 				return new Sequence(
@@ -5835,27 +5836,27 @@ namespace Meta
 						new StringRule(windowsNewLine)))).Match(parser);
 
 			});
-			private Expression Indentation = new Expression(delegate(Parser parser)
-			{
-				string indentationString = "".PadLeft(parser.indentationCount + 1, indentation);
+			//private Expression Indentation = new Expression(delegate(Parser parser)
+			//{
+			//    string indentationString = "".PadLeft(parser.indentationCount + 1, indentation);
 
-				if (parser.isStartOfFile)
-				{
-					parser.isStartOfFile = false;
-					parser.indentationCount++;
-					return Map.Empty;
-				}
-				else if (new Sequence(new Match(parser.EndOfLine),new Match(new StringRule(indentationString))).Match(parser)!=null)
-				{
-					parser.indentationCount++;
-					return Map.Empty;
-				}
+			//    if (parser.isStartOfFile)
+			//    {
+			//        parser.isStartOfFile = false;
+			//        parser.indentationCount++;
+			//        return Map.Empty;
+			//    }
+			//    else if (new Sequence(new Match(parser.EndOfLine),new Match(new StringRule(indentationString))).Match(parser)!=null)
+			//    {
+			//        parser.indentationCount++;
+			//        return Map.Empty;
+			//    }
 
-				else
-				{
-					return null;
-				}
-			});
+			//    else
+			//    {
+			//        return null;
+			//    }
+			//});
 			//private Expression Indentation = new Expression(delegate(Parser parser)
 			//{
 			//    string indentationString = "".PadLeft(parser.indentationCount + 1, indentation);
