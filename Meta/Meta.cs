@@ -2322,7 +2322,6 @@ namespace Meta
 					Map value;
 					otherData.TryGetValue(pair.Key,out value);
 					if (!pair.Value.Equals(value))
-					//if (!pair.Value.Equals(otherData[pair.Key]))
 					{
 						equal = false;
 						break;
@@ -5755,25 +5754,92 @@ namespace Meta
 					new Match(new Loop(new CharRule(indentation))),
 					new Match(new CharRule(lookupEndChar))).Match(parser);
 			});
+			public class Flatten : Action
+			{
+				public Flatten(Rule rule):base(rule)
+				{
+				}
+				public override bool Execute(Parser parser, ref Map result)
+				{
+					Map matched=rule.Match(parser);
+					if (matched != null)
+					{
+						foreach (Map map in matched.Array)
+						{
+							result.Append(map);
+						}
+					}
+					return matched!=null;
+				}
+			}
+			public delegate Map CustomActionDelegate(Map map);
+			public class CustomAction : Action
+			{
+				private CustomActionDelegate action;
+				public CustomAction(CustomActionDelegate action, Rule rule)
+					: base(rule)
+				{
+					this.action = action;
+				}
+				public override bool Execute(Parser parser, ref Map result)
+				{
+					Map map=rule.Match(parser);
+					if (map != null)
+					{
+						result=this.action(result);
+					}
+					// TODO: refactor
+					return map!=null;
+				}
+			}
+			public class Nothing : Rule
+			{
+				protected override Map DoMatch(Parser parser)
+				{
+					return Map.Empty;
+				}
+			}
 			private Expression Integer = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
-				Map integer;
-				if (parser.LookAny(parser.firstIntegerChars))
+				//Map integer;
+				if (parser.text.Substring(parser.index).StartsWith("100"))
 				{
-					string integerString = "";
-					integerString += parser.ConsumeGet();
-					while (parser.LookAny(parser.integerChars))
-					{
-						integerString += parser.ConsumeGet();
-					}
-					integer = Meta.Integer.ParseInteger(integerString);
 				}
-				else
-				{
-					integer = null;
-				}
+				Map integer=new Sequence(new Flatten(new CharRule(parser.firstIntegerChars)),
+					new Flatten(new Loop(new CharRule(parser.integerChars))),
+					new CustomAction(delegate(Map map)
+						{
+							return Meta.Integer.ParseInteger(map.GetString());
+						},new Nothing())).Match(parser);
+				//    {
+				//        integerString += parser.ConsumeGet();
+				//    }
+				//}
+				//else
+				//{
+				//    integer = null;
+				//}
 				return integer;
 			});
+			//private Expression Integer = new Expression(CodeKeys.Literal, delegate(Parser parser)
+			//{
+			//    Map integer;
+			//    if (parser.LookAny(parser.firstIntegerChars))
+			//    {
+			//        string integerString = "";
+			//        integerString += parser.ConsumeGet();
+			//        while (parser.LookAny(parser.integerChars))
+			//        {
+			//            integerString += parser.ConsumeGet();
+			//        }
+			//        integer = Meta.Integer.ParseInteger(integerString);
+			//    }
+			//    else
+			//    {
+			//        integer = null;
+			//    }
+			//    return integer;
+			//});
 			private Expression String = new Expression(CodeKeys.Literal, delegate(Parser parser)
 			{
 				try
@@ -5835,79 +5901,21 @@ namespace Meta
 					return null;
 				}
 			});
-			//public class Collector : Action
-			//{
-
-			//}
-			private Expression LookupString = new Expression(CodeKeys.Literal, delegate(Parser parser)
+			private Expression LookupString = new Expression(delegate(Parser parser)
 			{
-				//string lookupString = "";
-				//if (parser.text.Substring(parser.index).StartsWith("1"))
-				//{
-				//}
-				return new OneOrMore(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
-
-				//    lookupString += list.GetString();
-				//}
-				//Map lookup;
-				//if (lookupString.Length > 0)
-				//{
-				//    lookup = lookupString;
-				//}
-				//else
-				//{
-				//    lookup = null;
-				//}
-				//return lookup;
+				return new Sequence(
+					new Assignment(CodeKeys.Literal,new OneOrMore(new CharExceptRule(lookupStringForbiddenChars))
+					)).Match(parser);
 			});
-			//private Expression LookupString = new Expression(CodeKeys.Literal, delegate(Parser parser)
-			//{
-			//    //string lookupString = "";
-			//    return new Sequence(new Match(new CharExceptRule(lookupStringFirstForbiddenChars)),
-			//    new SingleAssignment(new Loop(new CharExceptRule(lookupStringForbiddenChars)))).Match(parser);
-
-			//    //    lookupString += list.GetString();
-			//    //}
-			//    //Map lookup;
-			//    //if (lookupString.Length > 0)
-			//    //{
-			//    //    lookup = lookupString;
-			//    //}
-			//    //else
-			//    //{
-			//    //    lookup = null;
-			//    //}
-			//    //return lookup;
-			//});
-			//private Expression LookupString = new Expression(CodeKeys.Literal, delegate(Parser parser)
-			//{
-			//    string lookupString = "";
-			//    if (parser.LookExcept(lookupStringForbiddenChars) && parser.LookExcept(lookupStringFirstCharAdditionalForbiddenChars))
-			//    {
-			//        Map list = new Loop(new CharExceptRule(lookupStringForbiddenChars)).Match(parser);
-
-			//        lookupString += list.GetString();
-			//    }
-			//    Map lookup;
-			//    if (lookupString.Length > 0)
-			//    {
-			//        lookup = lookupString;
-			//    }
-			//    else
-			//    {
-			//        lookup = null;
-			//    }
-			//    return lookup;
-			//});
 			private Expression Lookup = new Expression(null, delegate(Parser parser)
 			{
 				return (Map)new Or(parser.LookupString,parser.LookupAnything).Match(parser);
 			});
-			private Expression Select = new Expression(CodeKeys.Select, delegate(Parser parser)
+			private Expression Select = new Expression(delegate(Parser parser)
 			{
-				return parser.Keys.Get();
+				return new Sequence(new Assignment(CodeKeys.Select, parser.Keys)).Match(parser);
 			});
-			private Expression Keys = new Expression(null, delegate(Parser parser)
+			private Expression Keys = new Expression(delegate(Parser parser)
 			{
 				Map lookups = new StrategyMap();
 				int counter = 1;
