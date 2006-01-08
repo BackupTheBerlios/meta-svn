@@ -5676,7 +5676,6 @@ namespace Meta
 					program = new StrategyMap();
 					int counter = 0;
 					int defaultKey = 1;
-					statements = new StrategyMap();
 
 					Rule Statement=new Sequence(
 							new SingleAssignment(
@@ -5723,12 +5722,43 @@ namespace Meta
 											}
 											return Map.Empty;
 										})));
-					Map statement = Statement.Match(parser);
-					statements[counter] = statement;
 
-					Map maps=new Loop(new Sequence(new Match( new DelegateRule(delegate(Parser p)
+					//statements=new Sequence(
+					//    new Assignment(1,Statement),
+					//    new Flatten(
+					//        new Loop(
+					//            new Sequence(
+					//                new Match(new DelegateRule(delegate(Parser p)
+					//                    {
+					//                        if (!parser.Look(parser.endOfFile))
+					//                        {
+					//                            return Map.Empty;
+					//                        }
+					//                        else
+					//                        {
+					//                            return null;
+					//                        }
+					//                    })),
+					//                new Match(new Or(
+					//                    new StringRule("".PadLeft(parser.indentationCount, indentation)),
+					//                    new DelegateRule(delegate(Parser p)
+					//                    {
+					//                        parser.indentationCount--;
+					//                        return null;
+					//                    }))),
+					//                    new SingleAssignment(Statement))))).Match(parser);
+					////foreach (Map map in maps.Array)
+					////{
+					////    statements.Append(map);
+					////}
+
+					//statements = new Sequence(new Assignment(1, Statement)).Match(parser);
+
+					statements = new StrategyMap(1, Statement.Match(parser));
+
+					Map maps = new Loop(new Sequence(new Match(new DelegateRule(delegate(Parser p)
 					{
-						if(!parser.Look(parser.endOfFile))
+						if (!parser.Look(parser.endOfFile))
 						{
 							return Map.Empty;
 						}
@@ -5745,28 +5775,10 @@ namespace Meta
 									return null;
 								}))),
 						new SingleAssignment(Statement))).Match(parser);
-							//statements[counter] = statement;
-						//}
 					foreach (Map map in maps.Array)
 					{
 						statements.Append(map);
 					}
-					//while (!parser.Look(parser.endOfFile))
-					//{
-					//    if (new Or(
-					//        new StringRule("".PadLeft(parser.indentationCount, indentation)),
-					//        new DelegateRule(delegate(Parser p)
-					//        {
-					//            parser.indentationCount--;
-					//            return null;
-					//        })).Match(parser) == null)
-					//    {
-					//        break;
-					//    }
-
-					//    statement=Statement.Match(parser);
-					//    statements[counter] = statement;
-					//}
 				}
 				else
 				{
@@ -5788,7 +5800,7 @@ namespace Meta
 						}
 						new CharRule(stringChar).Match(parser);
 						string stringText = "";
-						new Loop(
+						Map textMap=new Loop(
 							new Sequence(
 								new Match(new DelegateRule(delegate(Parser p)
 								{
@@ -5806,14 +5818,9 @@ namespace Meta
 									}
 									return Map.Empty;
 								})),
-								
-								new Match(new DelegateRule(delegate(Parser p)
-								{
-									stringText += new CharRule(parser.Look()).Match(parser).GetString();
-									return Map.Empty;
-								}
-								))
+								new SingleAssignment(new CharExceptRule())
 						)).Match(parser);
+						stringText = textMap.GetString();
 						new CharRule(stringChar).Match(parser);
 						new StringRule("".PadLeft(escapeCharCount, stringEscapeChar)).Match(parser);
 
@@ -5846,6 +5853,78 @@ namespace Meta
 					return null;
 				}
 			});
+			//private Expression String = new Expression(CodeKeys.Literal, delegate(Parser parser)
+			//{
+			//    try
+			//    {
+			//        Map @string;
+			//        if (parser.Look(stringChar) || parser.Look(stringEscapeChar))
+			//        {
+			//            int escapeCharCount = 0;
+			//            while (parser.TryConsume(stringEscapeChar))
+			//            {
+			//                escapeCharCount++;
+			//            }
+			//            new CharRule(stringChar).Match(parser);
+			//            string stringText = "";
+			//            new Loop(
+			//                new Sequence(
+			//                    new Match(new DelegateRule(delegate(Parser p)
+			//                    {
+			//                        if (parser.Look(stringChar))
+			//                        {
+			//                            int foundEscapeCharCount = 0;
+			//                            while (foundEscapeCharCount < escapeCharCount && parser.Look(foundEscapeCharCount + 1, stringEscapeChar))
+			//                            {
+			//                                foundEscapeCharCount++;
+			//                            }
+			//                            if (foundEscapeCharCount == escapeCharCount)
+			//                            {
+			//                                return null;
+			//                            }
+			//                        }
+			//                        return Map.Empty;
+			//                    })),
+								
+			//                    new Match(new DelegateRule(delegate(Parser p)
+			//                    {
+			//                        stringText += new CharRule(parser.Look()).Match(parser).GetString();
+			//                        return Map.Empty;
+			//                    }
+			//                    ))
+			//            )).Match(parser);
+			//            new CharRule(stringChar).Match(parser);
+			//            new StringRule("".PadLeft(escapeCharCount, stringEscapeChar)).Match(parser);
+
+			//            List<string> realLines = new List<string>();
+			//            string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
+			//            for (int i = 0; i < lines.Length; i++)
+			//            {
+			//                if (i == 0)
+			//                {
+			//                    realLines.Add(lines[i]);
+			//                }
+			//                else
+			//                {
+			//                    realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentation).Length)));
+			//                }
+			//            }
+			//            string realText = string.Join("\n", realLines.ToArray());
+			//            realText = realText.TrimStart('\n');
+
+			//            @string = realText;
+			//        }
+			//        else
+			//        {
+			//            @string = null;
+			//        }
+			//        return @string;
+			//    }
+			//    catch (Exception e)
+			//    {
+			//        return null;
+			//    }
+			//});
 
 			public Expression Function = new Expression(delegate(Parser parser)
 			{
