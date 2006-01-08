@@ -5677,56 +5677,84 @@ namespace Meta
 					int counter = 0;
 					int defaultKey = 1;
 					statements = new StrategyMap();
-					while (!parser.Look(parser.endOfFile))
-					{
-						Map statement=new Sequence(
+					//while (true)
 
-								new SingleAssignment(new Or(parser.Function,
-									new Or(
-										new Sequence(
-											new Assignment(CodeKeys.Key, parser.Keys),
-											new Match(new CharRule(statementChar)),
-											new Assignment(CodeKeys.Value, parser.GetExpression)),
-										new Sequence(
-											new Match(new Optional(new CharRule(statementChar))),
-											new Assignment(CodeKeys.Value, parser.GetExpression),
-											new Assignment(CodeKeys.Key,
-												new DelegateRule(delegate(Parser p)
-												{
-													Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, defaultKey));
-													defaultKey++;
-													return map;
-												}
-												)))))),
-										new Match(new DelegateRule(delegate(Parser p)
-										{
-											counter++;
-											if (parser.EndOfLine.Match(parser) == null && !parser.Look(parser.endOfFile))
+						Rule Statement=new Sequence(
+								//new Match(new DelegateRule(delegate(Parser pa)
+								//{
+								//    if (parser.line > 22)
+								//    {
+								//    }
+								//    if (new Or(
+								//        new StringRule("".PadLeft(parser.indentationCount, indentation)),
+								//        new DelegateRule(delegate(Parser p)
+								//        {
+								//            parser.indentationCount--;
+								//            return null;
+								//        })).Match(parser) == null)
+								//    {
+								//        return null;
+								//        //break;
+								//    }
+								//    return Map.Empty;
+								//})),
+								new SingleAssignment(
+									new Or(parser.Function,
+										new Or(
+											new Sequence(
+												new Assignment(CodeKeys.Key, parser.Keys),
+												new Match(new CharRule(statementChar)),
+												new Assignment(CodeKeys.Value, parser.GetExpression)),
+											new Sequence(
+												new Match(new Optional(new CharRule(statementChar))),
+												new Assignment(CodeKeys.Value, parser.GetExpression),
+												new Assignment(CodeKeys.Key,
+													new DelegateRule(delegate(Parser p)
+													{
+														Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, defaultKey));
+														defaultKey++;
+														return map;
+													}
+													)))))),
+											new Match(new DelegateRule(delegate(Parser p)
 											{
-												parser.index -= 1;
-												if (parser.EndOfLine.Match(parser) == null)
+												counter++;
+												if (parser.EndOfLine.Match(parser) == null && !parser.Look(parser.endOfFile))
 												{
 													parser.index -= 1;
 													if (parser.EndOfLine.Match(parser) == null)
 													{
-														parser.index += 2;
-														throw new SyntaxException("Expected newline.", parser);//new Extent(parser.Position, parser.Position, parser.file));
-														//throw new MetaException("Expected newline.", new Extent(parser.Position, parser.Position, parser.file));
+														parser.index -= 1;
+														if (parser.EndOfLine.Match(parser) == null)
+														{
+															parser.index += 2;
+															throw new SyntaxException("Expected newline.", parser);//new Extent(parser.Position, parser.Position, parser.file));
+															//throw new MetaException("Expected newline.", new Extent(parser.Position, parser.Position, parser.file));
+														}
+														else
+														{
+															parser.line--;
+														}
 													}
 													else
 													{
 														parser.line--;
 													}
 												}
-												else
-												{
-													parser.line--;
-												}
-											}
-											return Map.Empty;
-										}))).Match(parser);
+												return Map.Empty;
+											})));
+					while (!parser.Look(parser.endOfFile))
+					{
+						Map statement=Statement.Match(parser);
+						if (statement == null)
+						{
+							break;
+						}
 						statements[counter] = statement;
-						//string newIndentation = parser.GetIndentation();
+						if (parser.Look(parser.endOfFile))
+						{
+							break;
+						}
 						if (new Or(
 							new StringRule("".PadLeft(parser.indentationCount, indentation)),
 							new DelegateRule(delegate(Parser p)
@@ -5737,34 +5765,6 @@ namespace Meta
 						{
 							break;
 						}
-						//}
-						//if (new StringRule("".PadLeft(parser.indentationCount, indentation)).Match(parser) != null)// newIndentation.Length == parser.indentationCount)
-						//{
-						//}
-						//else
-						//{
-						//    parser.indentationCount--;
-						//    break;
-						//}
-
-						//string newIndentation = parser.GetIndentation();
-						//if (new StringRule("".PadLeft(parser.indentationCount,indentation)).Match(parser)!=null)// newIndentation.Length == parser.indentationCount)
-						//{
-						//}
-						//else
-						//{
-						//    parser.indentationCount--;
-						//    break;
-						//}
-						//else if (newIndentation.Length < parser.indentationCount)
-						//{
-						//    parser.indentationCount--;
-						//    break;
-						//}
-						//else
-						//{
-						//    throw new SyntaxException("incorrect indentation", parser.file, parser.line, parser.Column);
-						//}
 					}
 				}
 				else
