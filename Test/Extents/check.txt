@@ -289,31 +289,6 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"key"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				1
-																			Value (StrategyMap):
-																				Extent:
-																					null
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
-																						"literal"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						1
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
 																		"value"
 																	Value (StrategyMap):
 																		Extent:
@@ -370,14 +345,6 @@ Entry (KeyValuePair`2)
 																										Column (Int32):
 																											"8"
 																								"scope"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																2
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -402,7 +369,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						2
+																						1
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -440,31 +415,6 @@ Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
 																									null
-																								"key"
-																							Value (StrategyMap):
-																								Extent:
-																									null
-																								Entry (KeyValuePair`2)
-																									Key (StrategyMap):
-																										Extent:
-																											null
-																										1
-																									Value (StrategyMap):
-																										Extent:
-																											null
-																										Entry (KeyValuePair`2)
-																											Key (StrategyMap):
-																												Extent:
-																													null
-																												"literal"
-																											Value (StrategyMap):
-																												Extent:
-																													null
-																												1
-																						Entry (KeyValuePair`2)
-																							Key (StrategyMap):
-																								Extent:
-																									null
 																								"value"
 																							Value (StrategyMap):
 																								Extent:
@@ -487,6 +437,56 @@ Entry (KeyValuePair`2)
 																												Column (Int32):
 																													"23"
 																										"AssignedToCurrent"
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								"key"
+																							Value (StrategyMap):
+																								Extent:
+																									null
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										1
+																									Value (StrategyMap):
+																										Extent:
+																											null
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												Extent:
+																													null
+																												"literal"
+																											Value (StrategyMap):
+																												Extent:
+																													null
+																												1
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"literal"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						2
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -3681,31 +3681,6 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"key"
-													Value (StrategyMap):
-														Extent:
-															null
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																1
-															Value (StrategyMap):
-																Extent:
-																	null
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
-																		"literal"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		1
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														Extent:
-															null
 														"value"
 													Value (StrategyMap):
 														Extent:
@@ -3728,6 +3703,31 @@ Entry (KeyValuePair`2)
 																		Column (Int32):
 																			"9"
 																"asdf"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"key"
+													Value (StrategyMap):
+														Extent:
+															null
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent:
+																	null
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		1
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -3736,6 +3736,32 @@ Entry (KeyValuePair`2)
 											Value (StrategyMap):
 												Extent:
 													null
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"value"
+													Value (StrategyMap):
+														Extent:
+															null
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																"literal"
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"58"
+																		Column (Int32):
+																			"3"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"58"
+																		Column (Int32):
+																			"9"
+																"asdf"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -3761,32 +3787,6 @@ Entry (KeyValuePair`2)
 																		Extent:
 																			null
 																		2
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														Extent:
-															null
-														"value"
-													Value (StrategyMap):
-														Extent:
-															null
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																"literal"
-															Value (StrategyMap):
-																Extent (Extent):
-																	Start (SourcePosition):
-																		Line (Int32):
-																			"58"
-																		Column (Int32):
-																			"3"
-																	End (SourcePosition):
-																		Line (Int32):
-																			"58"
-																		Column (Int32):
-																			"9"
-																"asdf"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -3795,31 +3795,6 @@ Entry (KeyValuePair`2)
 											Value (StrategyMap):
 												Extent:
 													null
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														Extent:
-															null
-														"key"
-													Value (StrategyMap):
-														Extent:
-															null
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																1
-															Value (StrategyMap):
-																Extent:
-																	null
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
-																		"literal"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		3
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -3846,14 +3821,6 @@ Entry (KeyValuePair`2)
 																		Column (Int32):
 																			"15"
 																"as"'df"
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												4
-											Value (StrategyMap):
-												Extent:
-													null
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -3878,7 +3845,15 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Extent:
 																			null
-																		4
+																		3
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												4
+											Value (StrategyMap):
+												Extent:
+													null
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -3905,14 +3880,6 @@ Entry (KeyValuePair`2)
 																		Column (Int32):
 																			"18"
 																"as"''df"
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												5
-											Value (StrategyMap):
-												Extent:
-													null
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -3937,7 +3904,15 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Extent:
 																			null
-																		5
+																		4
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												5
+											Value (StrategyMap):
+												Extent:
+													null
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -3964,6 +3939,31 @@ Entry (KeyValuePair`2)
 																		Column (Int32):
 																			"60"
 																"as"''''''''''''''''df"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"key"
+													Value (StrategyMap):
+														Extent:
+															null
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent:
+																	null
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		5
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -3972,31 +3972,6 @@ Entry (KeyValuePair`2)
 					Value (StrategyMap):
 						Extent:
 							null
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								Extent:
-									null
-								"key"
-							Value (StrategyMap):
-								Extent:
-									null
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										Extent:
-											null
-										1
-									Value (StrategyMap):
-										Extent:
-											null
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												"literal"
-											Value (StrategyMap):
-												Extent:
-													null
-												1
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
@@ -4023,14 +3998,6 @@ Entry (KeyValuePair`2)
 												Column (Int32):
 													"18"
 										"ImpliedAutokey"
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						Extent:
-							null
-						20
-					Value (StrategyMap):
-						Extent:
-							null
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
@@ -4055,7 +4022,15 @@ Entry (KeyValuePair`2)
 											Value (StrategyMap):
 												Extent:
 													null
-												2
+												1
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						20
+					Value (StrategyMap):
+						Extent:
+							null
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
@@ -4082,6 +4057,31 @@ Entry (KeyValuePair`2)
 												Column (Int32):
 													"11"
 										"Autokey"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent:
+									null
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"literal"
+											Value (StrategyMap):
+												Extent:
+													null
+												2
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -6855,31 +6855,6 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"key"
-													Value (StrategyMap):
-														Extent:
-															null
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																1
-															Value (StrategyMap):
-																Extent:
-																	null
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
-																		"literal"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		1
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														Extent:
-															null
 														"value"
 													Value (StrategyMap):
 														Extent:
@@ -7097,6 +7072,31 @@ Entry (KeyValuePair`2)
 																																Column (Int32):
 																																	"15"
 																														"b"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"key"
+													Value (StrategyMap):
+														Extent:
+															null
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent:
+																	null
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		1
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -8557,31 +8557,6 @@ Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
 									null
-								"key"
-							Value (StrategyMap):
-								Extent:
-									null
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										Extent:
-											null
-										1
-									Value (StrategyMap):
-										Extent:
-											null
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												"literal"
-											Value (StrategyMap):
-												Extent:
-													null
-												3
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								Extent:
-									null
 								"value"
 							Value (StrategyMap):
 								Extent (Extent):
@@ -8689,6 +8664,31 @@ Entry (KeyValuePair`2)
 														Extent:
 															null
 														""
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent:
+									null
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"literal"
+											Value (StrategyMap):
+												Extent:
+													null
+												3
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -9935,31 +9935,6 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"key"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				1
-																			Value (StrategyMap):
-																				Extent:
-																					null
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
-																						"literal"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						1
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
 																		"value"
 																	Value (StrategyMap):
 																		Extent:
@@ -9982,14 +9957,6 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"a"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																2
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -10014,7 +9981,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						2
+																						1
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -10041,14 +10016,6 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"b"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																3
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -10073,7 +10040,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						3
+																						2
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																3
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -10100,6 +10075,31 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"c"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"literal"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						3
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -10282,31 +10282,6 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"key"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				1
-																			Value (StrategyMap):
-																				Extent:
-																					null
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
-																						"literal"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						1
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
 																		"value"
 																	Value (StrategyMap):
 																		Extent:
@@ -10329,14 +10304,6 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"x"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																2
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -10361,7 +10328,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						2
+																						1
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -10388,14 +10363,6 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"y"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																3
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -10420,7 +10387,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						3
+																						2
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																3
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -10447,6 +10422,31 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"z"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"literal"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						3
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -10864,31 +10864,6 @@ Entry (KeyValuePair`2)
 																																									Key (StrategyMap):
 																																										Extent:
 																																											null
-																																										"key"
-																																									Value (StrategyMap):
-																																										Extent:
-																																											null
-																																										Entry (KeyValuePair`2)
-																																											Key (StrategyMap):
-																																												Extent:
-																																													null
-																																												1
-																																											Value (StrategyMap):
-																																												Extent:
-																																													null
-																																												Entry (KeyValuePair`2)
-																																													Key (StrategyMap):
-																																														Extent:
-																																															null
-																																														"literal"
-																																													Value (StrategyMap):
-																																														Extent:
-																																															null
-																																														1
-																																								Entry (KeyValuePair`2)
-																																									Key (StrategyMap):
-																																										Extent:
-																																											null
 																																										"value"
 																																									Value (StrategyMap):
 																																										Extent:
@@ -10911,14 +10886,6 @@ Entry (KeyValuePair`2)
 																																														Column (Int32):
 																																															"8"
 																																												1
-																																						Entry (KeyValuePair`2)
-																																							Key (StrategyMap):
-																																								Extent:
-																																									null
-																																								2
-																																							Value (StrategyMap):
-																																								Extent:
-																																									null
 																																								Entry (KeyValuePair`2)
 																																									Key (StrategyMap):
 																																										Extent:
@@ -10943,7 +10910,15 @@ Entry (KeyValuePair`2)
 																																													Value (StrategyMap):
 																																														Extent:
 																																															null
-																																														2
+																																														1
+																																						Entry (KeyValuePair`2)
+																																							Key (StrategyMap):
+																																								Extent:
+																																									null
+																																								2
+																																							Value (StrategyMap):
+																																								Extent:
+																																									null
 																																								Entry (KeyValuePair`2)
 																																									Key (StrategyMap):
 																																										Extent:
@@ -10970,14 +10945,6 @@ Entry (KeyValuePair`2)
 																																														Column (Int32):
 																																															"8"
 																																												2
-																																						Entry (KeyValuePair`2)
-																																							Key (StrategyMap):
-																																								Extent:
-																																									null
-																																								3
-																																							Value (StrategyMap):
-																																								Extent:
-																																									null
 																																								Entry (KeyValuePair`2)
 																																									Key (StrategyMap):
 																																										Extent:
@@ -11002,7 +10969,15 @@ Entry (KeyValuePair`2)
 																																													Value (StrategyMap):
 																																														Extent:
 																																															null
-																																														3
+																																														2
+																																						Entry (KeyValuePair`2)
+																																							Key (StrategyMap):
+																																								Extent:
+																																									null
+																																								3
+																																							Value (StrategyMap):
+																																								Extent:
+																																									null
 																																								Entry (KeyValuePair`2)
 																																									Key (StrategyMap):
 																																										Extent:
@@ -11029,6 +11004,31 @@ Entry (KeyValuePair`2)
 																																														Column (Int32):
 																																															"8"
 																																												3
+																																								Entry (KeyValuePair`2)
+																																									Key (StrategyMap):
+																																										Extent:
+																																											null
+																																										"key"
+																																									Value (StrategyMap):
+																																										Extent:
+																																											null
+																																										Entry (KeyValuePair`2)
+																																											Key (StrategyMap):
+																																												Extent:
+																																													null
+																																												1
+																																											Value (StrategyMap):
+																																												Extent:
+																																													null
+																																												Entry (KeyValuePair`2)
+																																													Key (StrategyMap):
+																																														Extent:
+																																															null
+																																														"literal"
+																																													Value (StrategyMap):
+																																														Extent:
+																																															null
+																																														3
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -12097,31 +12097,6 @@ Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
 																							null
-																						"key"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						Entry (KeyValuePair`2)
-																							Key (StrategyMap):
-																								Extent:
-																									null
-																								1
-																							Value (StrategyMap):
-																								Extent:
-																									null
-																								Entry (KeyValuePair`2)
-																									Key (StrategyMap):
-																										Extent:
-																											null
-																										"literal"
-																									Value (StrategyMap):
-																										Extent:
-																											null
-																										1
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
 																						"value"
 																					Value (StrategyMap):
 																						Extent (Extent):
@@ -12263,6 +12238,31 @@ Entry (KeyValuePair`2)
 																																		Column (Int32):
 																																			"19"
 																																"arg"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"key"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								1
+																							Value (StrategyMap):
+																								Extent:
+																									null
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (StrategyMap):
+																										Extent:
+																											null
+																										1
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -15695,31 +15695,6 @@ Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
 																							null
-																						"key"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						Entry (KeyValuePair`2)
-																							Key (StrategyMap):
-																								Extent:
-																									null
-																								1
-																							Value (StrategyMap):
-																								Extent:
-																									null
-																								Entry (KeyValuePair`2)
-																									Key (StrategyMap):
-																										Extent:
-																											null
-																										"literal"
-																									Value (StrategyMap):
-																										Extent:
-																											null
-																										1
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
 																						"value"
 																					Value (StrategyMap):
 																						Extent:
@@ -15811,14 +15786,6 @@ Entry (KeyValuePair`2)
 																														Column (Int32):
 																															"22"
 																												"MemberTest"
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				2
-																			Value (StrategyMap):
-																				Extent:
-																					null
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -15843,7 +15810,15 @@ Entry (KeyValuePair`2)
 																									Value (StrategyMap):
 																										Extent:
 																											null
-																										2
+																										1
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				2
+																			Value (StrategyMap):
+																				Extent:
+																					null
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -15939,6 +15914,31 @@ Entry (KeyValuePair`2)
 																														Column (Int32):
 																															"17"
 																												"Int32"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"key"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								1
+																							Value (StrategyMap):
+																								Extent:
+																									null
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (StrategyMap):
+																										Extent:
+																											null
+																										2
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -15972,31 +15972,6 @@ Entry (KeyValuePair`2)
 															Value (StrategyMap):
 																Extent:
 																	null
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
-																		"key"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				1
-																			Value (StrategyMap):
-																				Extent:
-																					null
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
-																						"literal"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						1
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -16057,14 +16032,6 @@ Entry (KeyValuePair`2)
 																										Column (Int32):
 																											"13"
 																								"memberTest"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																2
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -16089,7 +16056,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						2
+																						1
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -16116,6 +16091,31 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"7"
 																				3247
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"literal"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						2
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -16342,31 +16342,6 @@ Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
 																							null
-																						"key"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						Entry (KeyValuePair`2)
-																							Key (StrategyMap):
-																								Extent:
-																									null
-																								1
-																							Value (StrategyMap):
-																								Extent:
-																									null
-																								Entry (KeyValuePair`2)
-																									Key (StrategyMap):
-																										Extent:
-																											null
-																										"literal"
-																									Value (StrategyMap):
-																										Extent:
-																											null
-																										1
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
 																						"value"
 																					Value (StrategyMap):
 																						Extent:
@@ -16458,14 +16433,6 @@ Entry (KeyValuePair`2)
 																														Column (Int32):
 																															"22"
 																												"MemberTest"
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				2
-																			Value (StrategyMap):
-																				Extent:
-																					null
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -16490,7 +16457,15 @@ Entry (KeyValuePair`2)
 																									Value (StrategyMap):
 																										Extent:
 																											null
-																										2
+																										1
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				2
+																			Value (StrategyMap):
+																				Extent:
+																					null
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -16586,6 +16561,31 @@ Entry (KeyValuePair`2)
 																														Column (Int32):
 																															"17"
 																												"Int32"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"key"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								1
+																							Value (StrategyMap):
+																								Extent:
+																									null
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (StrategyMap):
+																										Extent:
+																											null
+																										2
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -16619,31 +16619,6 @@ Entry (KeyValuePair`2)
 															Value (StrategyMap):
 																Extent:
 																	null
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
-																		"key"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				1
-																			Value (StrategyMap):
-																				Extent:
-																					null
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
-																						"literal"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						1
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -16704,14 +16679,6 @@ Entry (KeyValuePair`2)
 																										Column (Int32):
 																											"13"
 																								"memberTest"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																2
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -16736,7 +16703,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						2
+																						1
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -16763,6 +16738,31 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"7"
 																				3247
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"literal"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						2
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -17013,31 +17013,6 @@ Entry (KeyValuePair`2)
 					Value (StrategyMap):
 						Extent:
 							null
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								Extent:
-									null
-								"key"
-							Value (StrategyMap):
-								Extent:
-									null
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										Extent:
-											null
-										1
-									Value (StrategyMap):
-										Extent:
-											null
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												"literal"
-											Value (StrategyMap):
-												Extent:
-													null
-												4
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
@@ -17374,6 +17349,31 @@ Entry (KeyValuePair`2)
 																		Extent:
 																			null
 																		""
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent:
+									null
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"literal"
+											Value (StrategyMap):
+												Extent:
+													null
+												4
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -17623,31 +17623,6 @@ Entry (KeyValuePair`2)
 					Value (StrategyMap):
 						Extent:
 							null
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								Extent:
-									null
-								"key"
-							Value (StrategyMap):
-								Extent:
-									null
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										Extent:
-											null
-										1
-									Value (StrategyMap):
-										Extent:
-											null
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												"literal"
-											Value (StrategyMap):
-												Extent:
-													null
-												5
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
@@ -17984,6 +17959,31 @@ Entry (KeyValuePair`2)
 																		Extent:
 																			null
 																		""
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent:
+									null
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"literal"
+											Value (StrategyMap):
+												Extent:
+													null
+												5
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -18528,31 +18528,6 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"key"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				1
-																			Value (StrategyMap):
-																				Extent:
-																					null
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
-																						"literal"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						1
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
 																		"value"
 																	Value (StrategyMap):
 																		Extent:
@@ -18575,14 +18550,6 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"m"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																2
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -18607,7 +18574,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						2
+																						1
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -18634,14 +18609,6 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"n"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																3
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -18666,7 +18633,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						3
+																						2
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																3
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -18693,6 +18668,31 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"o"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"literal"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						3
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -18910,31 +18910,6 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"key"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				1
-																			Value (StrategyMap):
-																				Extent:
-																					null
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
-																						"literal"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						1
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
 																		"value"
 																	Value (StrategyMap):
 																		Extent:
@@ -18957,14 +18932,6 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"r"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																2
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -18989,7 +18956,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						2
+																						1
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -19016,14 +18991,6 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"s"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																3
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -19048,7 +19015,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						3
+																						2
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																3
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -19075,6 +19050,31 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"t"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"literal"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						3
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -19292,31 +19292,6 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"key"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				1
-																			Value (StrategyMap):
-																				Extent:
-																					null
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
-																						"literal"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						1
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
 																		"value"
 																	Value (StrategyMap):
 																		Extent:
@@ -19339,6 +19314,31 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"m"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"literal"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						1
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -19728,31 +19728,6 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"key"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				1
-																			Value (StrategyMap):
-																				Extent:
-																					null
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
-																						"literal"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						1
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
 																		"value"
 																	Value (StrategyMap):
 																		Extent:
@@ -19775,6 +19750,31 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"6"
 																				"r"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"literal"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						1
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -19993,31 +19993,6 @@ Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
 									null
-								"key"
-							Value (StrategyMap):
-								Extent:
-									null
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										Extent:
-											null
-										1
-									Value (StrategyMap):
-										Extent:
-											null
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												"literal"
-											Value (StrategyMap):
-												Extent:
-													null
-												6
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								Extent:
-									null
 								"value"
 							Value (StrategyMap):
 								Extent (Extent):
@@ -20206,31 +20181,6 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"key"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				1
-																			Value (StrategyMap):
-																				Extent:
-																					null
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
-																						"literal"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						1
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
 																		"value"
 																	Value (StrategyMap):
 																		Extent:
@@ -20253,14 +20203,6 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"8"
 																				"abc"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																2
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -20285,7 +20227,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						2
+																						1
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -20312,6 +20262,56 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"9"
 																				"hihi"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"literal"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						2
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent:
+									null
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"literal"
+											Value (StrategyMap):
+												Extent:
+													null
+												6
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -23307,31 +23307,6 @@ Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
 																							null
-																						"key"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						Entry (KeyValuePair`2)
-																							Key (StrategyMap):
-																								Extent:
-																									null
-																								1
-																							Value (StrategyMap):
-																								Extent:
-																									null
-																								Entry (KeyValuePair`2)
-																									Key (StrategyMap):
-																										Extent:
-																											null
-																										"literal"
-																									Value (StrategyMap):
-																										Extent:
-																											null
-																										1
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
 																						"value"
 																					Value (StrategyMap):
 																						Extent (Extent):
@@ -23439,6 +23414,31 @@ Entry (KeyValuePair`2)
 																														Column (Int32):
 																															"27"
 																												"changed"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"key"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								1
+																							Value (StrategyMap):
+																								Extent:
+																									null
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (StrategyMap):
+																										Extent:
+																											null
+																										1
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -23447,31 +23447,6 @@ Entry (KeyValuePair`2)
 					Value (StrategyMap):
 						Extent:
 							null
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								Extent:
-									null
-								"key"
-							Value (StrategyMap):
-								Extent:
-									null
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										Extent:
-											null
-										1
-									Value (StrategyMap):
-										Extent:
-											null
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												"literal"
-											Value (StrategyMap):
-												Extent:
-													null
-												7
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
@@ -23583,6 +23558,31 @@ Entry (KeyValuePair`2)
 														Extent:
 															null
 														""
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent:
+									null
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"literal"
+											Value (StrategyMap):
+												Extent:
+													null
+												7
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -24031,31 +24031,6 @@ Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
 									null
-								"key"
-							Value (StrategyMap):
-								Extent:
-									null
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										Extent:
-											null
-										1
-									Value (StrategyMap):
-										Extent:
-											null
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												"literal"
-											Value (StrategyMap):
-												Extent:
-													null
-												8
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								Extent:
-									null
 								"value"
 							Value (StrategyMap):
 								Extent (Extent):
@@ -24319,31 +24294,6 @@ Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
 																											null
-																										"key"
-																									Value (StrategyMap):
-																										Extent:
-																											null
-																										Entry (KeyValuePair`2)
-																											Key (StrategyMap):
-																												Extent:
-																													null
-																												1
-																											Value (StrategyMap):
-																												Extent:
-																													null
-																												Entry (KeyValuePair`2)
-																													Key (StrategyMap):
-																														Extent:
-																															null
-																														"literal"
-																													Value (StrategyMap):
-																														Extent:
-																															null
-																														1
-																								Entry (KeyValuePair`2)
-																									Key (StrategyMap):
-																										Extent:
-																											null
 																										"value"
 																									Value (StrategyMap):
 																										Extent (Extent):
@@ -24451,6 +24401,31 @@ Entry (KeyValuePair`2)
 																																		Column (Int32):
 																																			"23"
 																																1
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										"key"
+																									Value (StrategyMap):
+																										Extent:
+																											null
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												Extent:
+																													null
+																												1
+																											Value (StrategyMap):
+																												Extent:
+																													null
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														Extent:
+																															null
+																														"literal"
+																													Value (StrategyMap):
+																														Extent:
+																															null
+																														1
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -24606,6 +24581,31 @@ Entry (KeyValuePair`2)
 																																		Column (Int32):
 																																			"15"
 																																1
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent:
+									null
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"literal"
+											Value (StrategyMap):
+												Extent:
+													null
+												8
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -24769,31 +24769,6 @@ Entry (KeyValuePair`2)
 					Value (StrategyMap):
 						Extent:
 							null
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								Extent:
-									null
-								"key"
-							Value (StrategyMap):
-								Extent:
-									null
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										Extent:
-											null
-										1
-									Value (StrategyMap):
-										Extent:
-											null
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												"literal"
-											Value (StrategyMap):
-												Extent:
-													null
-												9
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
@@ -25084,6 +25059,31 @@ Entry (KeyValuePair`2)
 																												Column (Int32):
 																													"10"
 																										1
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent:
+									null
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"literal"
+											Value (StrategyMap):
+												Extent:
+													null
+												9
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -25624,31 +25624,6 @@ Entry (KeyValuePair`2)
 					Value (StrategyMap):
 						Extent:
 							null
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								Extent:
-									null
-								"key"
-							Value (StrategyMap):
-								Extent:
-									null
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										Extent:
-											null
-										1
-									Value (StrategyMap):
-										Extent:
-											null
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												"literal"
-											Value (StrategyMap):
-												Extent:
-													null
-												10
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
@@ -26250,6 +26225,31 @@ Entry (KeyValuePair`2)
 																																		Column (Int32):
 																																			"15"
 																																1
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent:
+									null
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"literal"
+											Value (StrategyMap):
+												Extent:
+													null
+												10
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -27172,31 +27172,6 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"key"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				1
-																			Value (StrategyMap):
-																				Extent:
-																					null
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
-																						"literal"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						1
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
 																		"value"
 																	Value (StrategyMap):
 																		Extent:
@@ -27219,14 +27194,6 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"4"
 																				1
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																2
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -27251,7 +27218,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						2
+																						1
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -27312,6 +27287,31 @@ Entry (KeyValuePair`2)
 																										Column (Int32):
 																											"6"
 																								"one"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"literal"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						2
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -27405,31 +27405,6 @@ Entry (KeyValuePair`2)
 											Value (StrategyMap):
 												Extent:
 													null
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														Extent:
-															null
-														"key"
-													Value (StrategyMap):
-														Extent:
-															null
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																1
-															Value (StrategyMap):
-																Extent:
-																	null
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
-																		"literal"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		1
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -27531,6 +27506,31 @@ Entry (KeyValuePair`2)
 																										Column (Int32):
 																											"11"
 																								"then"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"key"
+													Value (StrategyMap):
+														Extent:
+															null
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent:
+																	null
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		1
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -28192,31 +28192,6 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"key"
-													Value (StrategyMap):
-														Extent:
-															null
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																1
-															Value (StrategyMap):
-																Extent:
-																	null
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
-																		"literal"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		1
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														Extent:
-															null
 														"value"
 													Value (StrategyMap):
 														Extent:
@@ -28239,14 +28214,6 @@ Entry (KeyValuePair`2)
 																		Column (Int32):
 																			"8"
 																"one"
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												2
-											Value (StrategyMap):
-												Extent:
-													null
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -28271,7 +28238,15 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Extent:
 																			null
-																		2
+																		1
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												2
+											Value (StrategyMap):
+												Extent:
+													null
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -28298,14 +28273,6 @@ Entry (KeyValuePair`2)
 																		Column (Int32):
 																			"8"
 																"two"
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												3
-											Value (StrategyMap):
-												Extent:
-													null
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -28330,7 +28297,15 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Extent:
 																			null
-																		3
+																		2
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												3
+											Value (StrategyMap):
+												Extent:
+													null
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -28357,6 +28332,31 @@ Entry (KeyValuePair`2)
 																		Column (Int32):
 																			"10"
 																"three"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"key"
+													Value (StrategyMap):
+														Extent:
+															null
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent:
+																	null
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"literal"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		3
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -29241,31 +29241,6 @@ Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
 																							null
-																						"key"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						Entry (KeyValuePair`2)
-																							Key (StrategyMap):
-																								Extent:
-																									null
-																								1
-																							Value (StrategyMap):
-																								Extent:
-																									null
-																								Entry (KeyValuePair`2)
-																									Key (StrategyMap):
-																										Extent:
-																											null
-																										"literal"
-																									Value (StrategyMap):
-																										Extent:
-																											null
-																										1
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
 																						"value"
 																					Value (StrategyMap):
 																						Extent:
@@ -29357,14 +29332,6 @@ Entry (KeyValuePair`2)
 																														Column (Int32):
 																															"18"
 																												"String"
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				2
-																			Value (StrategyMap):
-																				Extent:
-																					null
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -29389,7 +29356,15 @@ Entry (KeyValuePair`2)
 																									Value (StrategyMap):
 																										Extent:
 																											null
-																										2
+																										1
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				2
+																			Value (StrategyMap):
+																				Extent:
+																					null
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
 																						Extent:
@@ -29485,6 +29460,31 @@ Entry (KeyValuePair`2)
 																														Column (Int32):
 																															"18"
 																												"Single"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"key"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								1
+																							Value (StrategyMap):
+																								Extent:
+																									null
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (StrategyMap):
+																										Extent:
+																											null
+																										2
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -29522,31 +29522,6 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"key"
-																	Value (StrategyMap):
-																		Extent:
-																			null
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				1
-																			Value (StrategyMap):
-																				Extent:
-																					null
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						Extent:
-																							null
-																						"literal"
-																					Value (StrategyMap):
-																						Extent:
-																							null
-																						1
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
 																		"value"
 																	Value (StrategyMap):
 																		Extent:
@@ -29569,14 +29544,6 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"16"
 																				"Courier New"
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																Extent:
-																	null
-																2
-															Value (StrategyMap):
-																Extent:
-																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -29601,7 +29568,15 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Extent:
 																							null
-																						2
+																						1
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent:
+																	null
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -29628,6 +29603,31 @@ Entry (KeyValuePair`2)
 																						Column (Int32):
 																							"5"
 																				10
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent:
+																			null
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"literal"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						2
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -30733,31 +30733,6 @@ hello!
 							Key (StrategyMap):
 								Extent:
 									null
-								"key"
-							Value (StrategyMap):
-								Extent:
-									null
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										Extent:
-											null
-										1
-									Value (StrategyMap):
-										Extent:
-											null
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												"literal"
-											Value (StrategyMap):
-												Extent:
-													null
-												11
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								Extent:
-									null
 								"value"
 							Value (StrategyMap):
 								Extent (Extent):
@@ -30900,6 +30875,31 @@ hello!
 																Column (Int32):
 																	"23"
 														"hello"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent:
+									null
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"literal"
+											Value (StrategyMap):
+												Extent:
+													null
+												11
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -31359,31 +31359,6 @@ hello!
 							Key (StrategyMap):
 								Extent:
 									null
-								"key"
-							Value (StrategyMap):
-								Extent:
-									null
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										Extent:
-											null
-										1
-									Value (StrategyMap):
-										Extent:
-											null
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												"literal"
-											Value (StrategyMap):
-												Extent:
-													null
-												12
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								Extent:
-									null
 								"value"
 							Value (StrategyMap):
 								Extent (Extent):
@@ -31565,6 +31540,31 @@ schwimmen auf dem See,
 schwimmen auf dem See,
 Köpfchen in das Wasser,
 Schwaenzchen in die Hoeh."
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent:
+									null
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"literal"
+											Value (StrategyMap):
+												Extent:
+													null
+												12
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -32334,31 +32334,6 @@ Schwaenzchen in die Hoeh."
 							Key (StrategyMap):
 								Extent:
 									null
-								"key"
-							Value (StrategyMap):
-								Extent:
-									null
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										Extent:
-											null
-										1
-									Value (StrategyMap):
-										Extent:
-											null
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												Extent:
-													null
-												"literal"
-											Value (StrategyMap):
-												Extent:
-													null
-												13
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								Extent:
-									null
 								"value"
 							Value (StrategyMap):
 								Extent (Extent):
@@ -32811,6 +32786,31 @@ Schwaenzchen in die Hoeh."
 																						Column (Int32):
 																							"9"
 																				1000
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent:
+									null
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"literal"
+											Value (StrategyMap):
+												Extent:
+													null
+												13
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -33833,31 +33833,6 @@ Schwaenzchen in die Hoeh."
 																																			Key (StrategyMap):
 																																				Extent:
 																																					null
-																																				"key"
-																																			Value (StrategyMap):
-																																				Extent:
-																																					null
-																																				Entry (KeyValuePair`2)
-																																					Key (StrategyMap):
-																																						Extent:
-																																							null
-																																						1
-																																					Value (StrategyMap):
-																																						Extent:
-																																							null
-																																						Entry (KeyValuePair`2)
-																																							Key (StrategyMap):
-																																								Extent:
-																																									null
-																																								"literal"
-																																							Value (StrategyMap):
-																																								Extent:
-																																									null
-																																								1
-																																		Entry (KeyValuePair`2)
-																																			Key (StrategyMap):
-																																				Extent:
-																																					null
 																																				"value"
 																																			Value (StrategyMap):
 																																				Extent:
@@ -33914,14 +33889,6 @@ Schwaenzchen in die Hoeh."
 																																												Column (Int32):
 																																													"8"
 																																										"arg"
-																																Entry (KeyValuePair`2)
-																																	Key (StrategyMap):
-																																		Extent:
-																																			null
-																																		2
-																																	Value (StrategyMap):
-																																		Extent:
-																																			null
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				Extent:
@@ -33946,7 +33913,15 @@ Schwaenzchen in die Hoeh."
 																																							Value (StrategyMap):
 																																								Extent:
 																																									null
-																																								2
+																																								1
+																																Entry (KeyValuePair`2)
+																																	Key (StrategyMap):
+																																		Extent:
+																																			null
+																																		2
+																																	Value (StrategyMap):
+																																		Extent:
+																																			null
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				Extent:
@@ -33973,6 +33948,31 @@ Schwaenzchen in die Hoeh."
 																																								Column (Int32):
 																																									"7"
 																																						10
+																																		Entry (KeyValuePair`2)
+																																			Key (StrategyMap):
+																																				Extent:
+																																					null
+																																				"key"
+																																			Value (StrategyMap):
+																																				Extent:
+																																					null
+																																				Entry (KeyValuePair`2)
+																																					Key (StrategyMap):
+																																						Extent:
+																																							null
+																																						1
+																																					Value (StrategyMap):
+																																						Extent:
+																																							null
+																																						Entry (KeyValuePair`2)
+																																							Key (StrategyMap):
+																																								Extent:
+																																									null
+																																								"literal"
+																																							Value (StrategyMap):
+																																								Extent:
+																																									null
+																																								2
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
 																				Extent:
@@ -34066,31 +34066,6 @@ Schwaenzchen in die Hoeh."
 																									Value (StrategyMap):
 																										Extent:
 																											null
-																										Entry (KeyValuePair`2)
-																											Key (StrategyMap):
-																												Extent:
-																													null
-																												"key"
-																											Value (StrategyMap):
-																												Extent:
-																													null
-																												Entry (KeyValuePair`2)
-																													Key (StrategyMap):
-																														Extent:
-																															null
-																														1
-																													Value (StrategyMap):
-																														Extent:
-																															null
-																														Entry (KeyValuePair`2)
-																															Key (StrategyMap):
-																																Extent:
-																																	null
-																																"literal"
-																															Value (StrategyMap):
-																																Extent:
-																																	null
-																																1
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -34408,31 +34383,6 @@ Schwaenzchen in die Hoeh."
 																																																	Key (StrategyMap):
 																																																		Extent:
 																																																			null
-																																																		"key"
-																																																	Value (StrategyMap):
-																																																		Extent:
-																																																			null
-																																																		Entry (KeyValuePair`2)
-																																																			Key (StrategyMap):
-																																																				Extent:
-																																																					null
-																																																				1
-																																																			Value (StrategyMap):
-																																																				Extent:
-																																																					null
-																																																				Entry (KeyValuePair`2)
-																																																					Key (StrategyMap):
-																																																						Extent:
-																																																							null
-																																																						"literal"
-																																																					Value (StrategyMap):
-																																																						Extent:
-																																																							null
-																																																						1
-																																																Entry (KeyValuePair`2)
-																																																	Key (StrategyMap):
-																																																		Extent:
-																																																			null
 																																																		"value"
 																																																	Value (StrategyMap):
 																																																		Extent:
@@ -34489,14 +34439,6 @@ Schwaenzchen in die Hoeh."
 																																																										Column (Int32):
 																																																											"10"
 																																																								"arg"
-																																														Entry (KeyValuePair`2)
-																																															Key (StrategyMap):
-																																																Extent:
-																																																	null
-																																																2
-																																															Value (StrategyMap):
-																																																Extent:
-																																																	null
 																																																Entry (KeyValuePair`2)
 																																																	Key (StrategyMap):
 																																																		Extent:
@@ -34521,7 +34463,15 @@ Schwaenzchen in die Hoeh."
 																																																					Value (StrategyMap):
 																																																						Extent:
 																																																							null
-																																																						2
+																																																						1
+																																														Entry (KeyValuePair`2)
+																																															Key (StrategyMap):
+																																																Extent:
+																																																	null
+																																																2
+																																															Value (StrategyMap):
+																																																Extent:
+																																																	null
 																																																Entry (KeyValuePair`2)
 																																																	Key (StrategyMap):
 																																																		Extent:
@@ -34548,6 +34498,56 @@ Schwaenzchen in die Hoeh."
 																																																						Column (Int32):
 																																																							"8"
 																																																				1
+																																																Entry (KeyValuePair`2)
+																																																	Key (StrategyMap):
+																																																		Extent:
+																																																			null
+																																																		"key"
+																																																	Value (StrategyMap):
+																																																		Extent:
+																																																			null
+																																																		Entry (KeyValuePair`2)
+																																																			Key (StrategyMap):
+																																																				Extent:
+																																																					null
+																																																				1
+																																																			Value (StrategyMap):
+																																																				Extent:
+																																																					null
+																																																				Entry (KeyValuePair`2)
+																																																					Key (StrategyMap):
+																																																						Extent:
+																																																							null
+																																																						"literal"
+																																																					Value (StrategyMap):
+																																																						Extent:
+																																																							null
+																																																						2
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												Extent:
+																													null
+																												"key"
+																											Value (StrategyMap):
+																												Extent:
+																													null
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														Extent:
+																															null
+																														1
+																													Value (StrategyMap):
+																														Extent:
+																															null
+																														Entry (KeyValuePair`2)
+																															Key (StrategyMap):
+																																Extent:
+																																	null
+																																"literal"
+																															Value (StrategyMap):
+																																Extent:
+																																	null
+																																1
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
