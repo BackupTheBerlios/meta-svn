@@ -5653,7 +5653,33 @@ namespace Meta
 						Map statement = parser.Function.Get();
 						if (statement == null)
 						{
-							statement = parser.GetStatement(ref defaultKey);
+							//statement = parser.GetStatement(ref defaultKey);
+							//int oldIndex = index;
+							statement = new Or(
+								new Sequence(
+									new Assignment(CodeKeys.Key, parser.Keys),
+									new Match(new CharRule(statementChar)),
+									new Assignment(CodeKeys.Value, parser.GetExpression)),
+								new Sequence(
+									new Match(new Optional(new CharRule(statementChar))),
+									new Assignment(CodeKeys.Value, parser.GetExpression),
+									new Assignment(CodeKeys.Key,
+										new DelegateRule(delegate(Parser p)
+										{
+											Map map=new StrategyMap(1, new StrategyMap(CodeKeys.Literal, defaultKey));
+											defaultKey++;
+											return map;
+											//return new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, count)));
+										}
+										)))).Match(parser);
+							//if (val == null)
+							//{
+							//    throw new SyntaxException("Expected value of statement", this);
+							//}
+							//Map statement = new StrategyMap(
+							//    CodeKeys.Key, key,
+							//    CodeKeys.Value, val);
+							//return statement;
 						}
 						statements[counter] = statement;
 						counter++;
@@ -5700,48 +5726,117 @@ namespace Meta
 				}
 				return statements;
 			});
-			public Map GetStatement(ref int count)
+			public class Optional:Rule
 			{
-				int oldIndex = index;
-				Map key = Keys.Get();
-				Map val;
-				if (key != null && TryConsume(statementChar))
+				private Rule rule;
+				public Optional(Rule rule)
 				{
-					val = (Map)GetExpression.Match(this);
+					this.rule=rule;
 				}
-				else
+				protected override Map DoMatch(Parser parser)
 				{
-					index = oldIndex;
-					TryConsume(statementChar);
-					if (key != null)
-					{
-						Map call = Call.Get();
-						if (call != null)
-						{
-							val = call;
-						}
-						else
-						{
-							val = Select.Get();
-						}
-					}
-					else
-					{
-						val = (Map)GetExpression.Match(this);
-					}
-					key = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, count));
-					count++;
+					rule.Match(parser);
+					return Map.Empty;
 				}
-				if (val == null)
-				{
-					SourcePosition position = new SourcePosition(Line, Column);
-					throw new MetaException("Expected value of statement", new Extent(position, position, file));
-				}
-				Map statement = new StrategyMap(
-					CodeKeys.Key, key,
-					CodeKeys.Value, val);
-				return statement;
 			}
+			//public Map GetStatement(ref int count)
+			//{
+			//    //int oldIndex = index;
+			//    Map statement = new Or(
+			//        new Sequence(
+			//            new Assignment(CodeKeys.Key, Keys),
+			//            new Match(new CharRule(statementChar)),
+			//            new Assignment(CodeKeys.Value, GetExpression)),
+			//        new Sequence(
+			//            new Match(new Optional(new CharRule(statementChar))),
+			//            new Assignment(CodeKeys.Value, GetExpression),
+			//            new Assignment(CodeKeys.Key,
+			//                new DelegateRule(delegate(Parser parser)
+			//                {
+			//                    //count++;
+			//                    return new StrategyMap(1, new StrategyMap(CodeKeys.Literal, 1));
+			//                    //return new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, count)));
+			//                }
+			//                )))).Match(this);
+			//    //if (val == null)
+			//    //{
+			//    //    throw new SyntaxException("Expected value of statement", this);
+			//    //}
+			//    //Map statement = new StrategyMap(
+			//    //    CodeKeys.Key, key,
+			//    //    CodeKeys.Value, val);
+			//    return statement;
+			//}
+			//public Map GetStatement(ref int count)
+			//{
+			//    //int oldIndex = index;
+			//    Map statement=new Or(
+			//        new Sequence(
+			//            new Assignment(CodeKeys.Key,Keys),
+			//            new Match(new CharRule(statementChar)),
+			//            new Assignment(CodeKeys.Value,GetExpression)),
+			//        new Sequence(
+			//            new Match(new Optional(new CharRule(statementChar))),
+			//            new Assignment(CodeKeys.Value,GetExpression),
+			//            new Assignment(CodeKeys.Key,
+			//                new DelegateRule(delegate(Parser parser)
+			//                {
+			//                    //count++;
+			//                    return new StrategyMap(1, new StrategyMap(CodeKeys.Literal, 1));
+			//                    //return new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, count)));
+			//                }
+			//                )))).Match(this);
+			//    //if (val == null)
+			//    //{
+			//    //    throw new SyntaxException("Expected value of statement", this);
+			//    //}
+			//    //Map statement = new StrategyMap(
+			//    //    CodeKeys.Key, key,
+			//    //    CodeKeys.Value, val);
+			//    return statement;
+			//}
+			//public Map GetStatement(ref int count)
+			//{
+			//    int oldIndex = index;
+			//    Map key = Keys.Get();
+			//    Map val;
+			//    if (key != null && TryConsume(statementChar))
+			//    {
+			//        val = (Map)GetExpression.Match(this);
+			//    }
+			//    else
+			//    {
+			//        index = oldIndex;
+			//        TryConsume(statementChar);
+			//        if (key != null)
+			//        {
+			//            Map call = Call.Get();
+			//            if (call != null)
+			//            {
+			//                val = call;
+			//            }
+			//            else
+			//            {
+			//                val = Select.Get();
+			//            }
+			//        }
+			//        else
+			//        {
+			//            val = (Map)GetExpression.Match(this);
+			//        }
+			//        key = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, count));
+			//        count++;
+			//    }
+			//    if (val == null)
+			//    {
+			//        SourcePosition position = new SourcePosition(Line, Column);
+			//        throw new MetaException("Expected value of statement", new Extent(position, position, file));
+			//    }
+			//    Map statement = new StrategyMap(
+			//        CodeKeys.Key, key,
+			//        CodeKeys.Value, val);
+			//    return statement;
+			//}
 			private Expression Whitespace = new Expression(delegate(Parser parser)
 			{
 				return new Loop(new Or(new CharRule(tab), new CharRule(space))).Match(parser);
