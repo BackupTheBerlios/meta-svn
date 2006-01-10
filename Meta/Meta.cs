@@ -989,6 +989,7 @@ namespace Meta
 
 	public class StrategyMap:Map
 	{
+		// rename argument
 		public StrategyMap(params Map[] maps):this()
 		{
 			for (int i = 0; i + 2 <= maps.Length; i += 2)
@@ -5110,34 +5111,18 @@ namespace Meta
 					int oldLine = parser.line;
 
 					Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
-					Map expression;
+					Map expression = parseFunction(parser);
 
-
-					//if (condition == null)
-					//{
-						expression = parseFunction(parser);
-					//}
-					//else
-					//{
-					//    if (condition.Test(parser))
-					//    {
-					//        expression = parseFunction(parser);
-					//    }
-					//    else
-					//    {
-					//        expression = null;
-					//    }
-					//}
 					if (expression != null)
 					{
 						extent.End.Line = parser.Line;
 						extent.End.Column = parser.Column;
 						expression.Extent = extent;
 					}
-					if (expression != null && identifier != null)
-					{
-						expression = new StrategyMap(identifier, expression);
-					}
+					//if (expression != null && identifier != null)
+					//{
+					//    expression = new StrategyMap(identifier, expression);
+					//}
 					if (expression == null)
 					{
 						parser.index = oldIndex;
@@ -5146,19 +5131,19 @@ namespace Meta
 					return expression;
 				}
 				public Parser parser;
-				private Map identifier;
+				//private Map identifier;
 				//private Condition condition;
-				public Expression(ParseFunction parseFunction)
-					: this(null, parseFunction)
-				{
-				}
+				//public Expression(ParseFunction parseFunction)
+				//    : this(null, parseFunction)
+				//{
+				//}
 				//public Expression(Map identifier, ParseFunction parseFunction)
 				//    : this(identifier, null, parseFunction)
 				//{
 				//}
-				public Expression(Map identifier, ParseFunction parseFunction)
+				public Expression(ParseFunction parseFunction)
 				{
-					this.identifier = identifier;
+					//this.identifier = identifier;
 					//this.condition = condition;
 					this.parseFunction = parseFunction;
 				}
@@ -5642,7 +5627,7 @@ namespace Meta
 				}
 			}
 
-			public Expression Program = new Expression(CodeKeys.Program, delegate(Parser parser)
+			public Expression Program = new Expression(delegate(Parser parser)
 			{
 				Map program;
 				Map statements;
@@ -5759,9 +5744,17 @@ namespace Meta
 				{
 					statements = null;
 				}
-				return statements;
+				if (statements != null)
+				{
+					return new StrategyMap(CodeKeys.Program, statements);
+				}
+				else
+				{
+					return null;
+				}
+				//return statements;
 			});
-			private Expression String = new Expression(CodeKeys.Literal, delegate(Parser parser)
+			private Expression String = new Expression(delegate(Parser parser)
 			{
 				Map @string;
 				if (parser.Look(stringChar) || parser.Look(stringEscapeChar))
@@ -5822,6 +5815,15 @@ namespace Meta
 				else
 				{
 					@string = null;
+				}
+				// rename
+				if (@string != null)
+				{
+					return new StrategyMap(CodeKeys.Literal, @string);
+				}
+				else
+				{
+					return null;
 				}
 				return @string;
 			});
